@@ -1,20 +1,20 @@
-import React from 'react'
+import {createContext, useContext, useMemo} from 'react'
 
 import {createPortalGroup_INTERNAL} from './lib/Portal'
 
 type PortalContext = React.ElementType<{children: React.ReactNode}>
 
-export const Context = React.createContext({} as PortalContext)
+export const Context = createContext({} as PortalContext)
 Context.displayName = 'BottomSheetPortalContext'
 
-export const useBottomSheetPortal_INTERNAL = () => React.useContext(Context)
+export const useBottomSheetPortal_INTERNAL = () => useContext(Context)
 
 export function BottomSheetPortalProvider({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const portal = React.useMemo(() => {
+  const portal = useMemo(() => {
     return createPortalGroup_INTERNAL()
   }, [])
 

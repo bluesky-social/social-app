@@ -18,6 +18,10 @@ on:
         description: Runtime version (in x.x.x format) that this update is for
         required: true
 
+# Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
+permissions:
+  contents: read
+
 jobs:
   bundleDeploy:
     if: github.repository == 'bluesky-social/social-app'
@@ -48,7 +52,7 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
 
@@ -56,17 +60,17 @@ jobs:
         if: ${{ github.ref != 'refs/heads/main' }}
         run: git fetch origin main:main --depth 100
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: package.json
           cache: pnpm
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@main
+        uses: bluesky-social/github-actions/fingerprint-native@b5556913e4aef3964cfd5936d0add3fc0d809bdb # v0.1.0
         with:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}
@@ -75,7 +79,8 @@ jobs:
         run: pnpm intl:build 2>&1 | tee i18n.log
 
       - name: Check for i18n compilation errors
-        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
+        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation
+          errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
       - name: Lint check
         run: pnpm lint
@@ -87,7 +92,7 @@ jobs:
         run: pnpm typecheck
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@v9
+        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
           eas-version: '19.0.5'
@@ -96,7 +101,7 @@ jobs:
 
       - name: 🪛 Setup jq
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        uses: dcarbone/install-jq-action@v2
+        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
 
       # eas.json not used here, set EXPO_PUBLIC_ENV
       - name: Env
@@ -137,7 +142,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
           path: most-recent-testflight-commit.txt
@@ -157,7 +162,9 @@ jobs:
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
-    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected && github.repository == 'bluesky-social/social-app' }}
+    if: ${{ inputs.channel != 'production' &&
+      needs.bundleDeploy.outputs.changes-detected && github.repository ==
+      'bluesky-social/social-app' }}
     steps:
       - name: Check for EXPO_TOKEN
         run: >
@@ -167,20 +174,20 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 5
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: package.json
           cache: pnpm
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@v9
+        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
         with:
           eas-version: '19.0.5'
           packager: 'pnpm --allow-build=dtrace-provider'
@@ -189,17 +196,23 @@ jobs:
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - uses: maxim-lobanov/setup-xcode@v1
+      - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
           xcode-version: "26.4"
 
-      - name: ☕️ Setup Cocoapods
-        uses: maxim-lobanov/setup-cocoapods@v1
-        with:
-          version: 1.16.2
+      - name: ☕️ Assert Cocoapods version
+        run: |
+          EXPECTED=1.16.2
+          ACTUAL=$(pod --version)
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "Expected Cocoapods $EXPECTED but runner has $ACTUAL."
+            echo "The version ships preinstalled with the macOS runner image: https://github.com/actions/runner-images/blob/main/images/macos/macos-26-Readme.md"
+            echo "If the runner image changed, update EXPECTED here or reinstall the pinned version."
+            exit 1
+          fi
 
       - name: 💾 Cache Pods
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         id: pods-cache
         with:
           path: ./ios/Pods
@@ -282,7 +295,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: ${{ inputs.channel == 'testflight' }}
         with:
           path: most-recent-testflight-commit.txt
@@ -303,7 +316,9 @@ jobs:
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
-    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected && github.repository == 'bluesky-social/social-app'}}
+    if: ${{ inputs.channel != 'production' &&
+      needs.bundleDeploy.outputs.changes-detected && github.repository ==
+      'bluesky-social/social-app'}}
 
     steps:
       - name: Check for EXPO_TOKEN
@@ -314,26 +329,26 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 5
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
 
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: package.json
           cache: pnpm
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@v9
+        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
         with:
           eas-version: '19.0.5'
           packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@ad2b38190b15e4d6bdf0c97fb4fca8412226d287 # v5.3.0
         with:
           distribution: "temurin"
           java-version: "17"
@@ -368,17 +383,49 @@ jobs:
           pnpm use-build-number-with-bump
           pnpm eas build -p android
           --profile testflight-android
-          --local --output build.apk --non-interactive
+          --local --output build.aab --non-interactive
+
+      - name: 📚 Get version from package.json
+        id: get-build-info
+        run: bash scripts/setGitHubOutput.sh
+
+      - name: 🚀 Submit to Google Play
+        run: pnpm eas submit -p android --profile testflight-android --non-interactive --path
+          build.aab
+
+      - name: 🔧 Setup bundletool
+        uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
+        with:
+          version: "1.18.3"
+
+      - name: 🔑 Decode keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode >
+          keystore.jks
+
+      - name: 📦 Build signed universal APK
+        run: |
+          bundletool build-apks \
+            --bundle=build.aab \
+            --output=universal.apks \
+            --mode=universal \
+            --ks=keystore.jks \
+            --ks-pass=pass:${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+            --ks-key-alias=${{ secrets.ANDROID_KEY_ALIAS }} \
+            --key-pass=pass:${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: 📋 Rename to .zip for extraction
+        run: mv universal.apks universal.zip
+
+      - name: 📦 Extract universal APK
+        run: unzip -p universal.zip universal.apk > build.apk
 
       - name: ⏰ Get a timestamp
         id: timestamp
-        uses: nanzm/get-time-action@master
-        with:
-          format: "MM-DD-HH-mm-ss"
+        run: echo "time=$(date -u +'%m-%d-%H-%M-%S')" >> "$GITHUB_OUTPUT"
 
       - name: 🚀 Upload Artifact
         id: upload-artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           retention-days: 30
           compression-level: 0
@@ -386,7 +433,7 @@ jobs:
           path: build.apk
 
       - name: 🔔 Notify Slack
-        uses: slackapi/slack-github-action@v3.0.3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
           webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           webhook-type: incoming-webhook
@@ -396,7 +443,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         if: ${{ inputs.channel != 'testflight' && inputs.channel != 'production' }}
         with:
           path: most-recent-testflight-commit.txt

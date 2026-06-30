@@ -3,21 +3,30 @@ import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {type ChatBskyActorGetStatus, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
-import {type MessagesTabNavigatorParams} from '#/lib/routes/types'
+import {
+  type MessagesTabNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {listenSoftReset} from '#/state/events'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
-import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
+import {useUnreadCountsQuery} from '#/state/queries/messages/get-unread-counts'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
+import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
@@ -30,6 +39,7 @@ import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotate'
 import {BubbleSmile_Stroke2_Corner2_Rounded_Large as BubbleSmileIcon} from '#/components/icons/Bubble'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {Inbox_Stroke2_Corner2_Rounded_Large as InboxLargeIcon} from '#/components/icons/Inbox'
 import {
@@ -40,9 +50,11 @@ import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/component
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
+import * as Menu from '#/components/Menu'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
-import {IS_NATIVE} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatListItem} from './components/ChatListItem'
 import {InboxRequests} from './components/InboxRequests'
@@ -101,6 +113,12 @@ export function MessagesScreenInner({navigation, route}: Props) {
   const newChatControl = useDialogControl()
   const {data: chatStatus} = useChatActorStatusQuery()
   const pushToConversation = route.params?.pushToConversation
+  const pushToNewGroupChat = route.params?.pushToNewGroupChat
+  // Tracks whether the next new-chat dialog open should start directly on the
+  // group-chat creation step. Set when deep-linked via `pushToNewGroupChat`,
+  // and reset to `false` whenever the dialog is opened through the normal FAB/
+  // button path so it never gets stuck in group mode.
+  const [startNewChatInGroupChat, setStartNewChatInGroupChat] = useState(false)
 
   // Whenever we have `pushToConversation` set, it means we pressed a notification for a chat without being on
   // this tab. We should immediately push to the conversation after pressing the notification.
@@ -138,6 +156,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
   )
 
   const openChatControl = useCallback(() => {
+    setStartNewChatInGroupChat(false)
     newChatControl.open()
   }, [newChatControl])
 
@@ -149,6 +168,50 @@ export function MessagesScreenInner({navigation, route}: Props) {
       </Trans>,
     ],
   })
+
+  // Deep link into the group-chat creation step of the new-chat dialog. Mirrors
+  // the `pushToConversation` pattern: open the dialog (respecting the same
+  // email-verification gating as the normal new-chat button) starting directly
+  // in group mode, then clear the param so it can fire again later.
+  const openGroupChatControl = useCallback(() => {
+    setStartNewChatInGroupChat(true)
+    newChatControl.open()
+  }, [newChatControl])
+  const wrappedOpenGroupChatControl = requireEmailVerification(
+    openGroupChatControl,
+    {
+      instructions: [
+        <Trans key="new-group-chat">
+          Before you can message another user, you must first verify your email.
+        </Trans>,
+      ],
+    },
+  )
+  // Stable reference to the (otherwise per-render) opener so the effect below
+  // doesn't list it as a dependency - if it did, clearing the param would
+  // re-run the effect and its cleanup would cancel the pending open.
+  const openGroupChat = useNonReactiveCallback(wrappedOpenGroupChatControl)
+  // Deep link into the group-chat creation step of the new-chat dialog. The
+  // dialog control isn't attached synchronously when navigating onto this
+  // screen, so defer the open by a tick. We clear the param *after* opening
+  // (inside the timeout) so clearing doesn't cancel the pending open.
+  useEffect(() => {
+    if (!pushToNewGroupChat) return
+    const timeout = setTimeout(() => {
+      openGroupChat()
+      if (IS_WEB) {
+        // `navigation.setParams({pushToNewGroupChat: undefined})` serializes the
+        // literal string "undefined" into the query on web (see router build()),
+        // so strip the param with the history API instead.
+        const url = new URL(window.location.href)
+        url.searchParams.delete('pushToNewGroupChat')
+        history.replaceState(null, '', url.pathname + url.search + url.hash)
+      } else {
+        navigation.setParams({pushToNewGroupChat: undefined})
+      }
+    }, 100)
+    return () => clearTimeout(timeout)
+  }, [navigation, pushToNewGroupChat, openGroupChat])
 
   if (isWithinSplitView) {
     return (
@@ -173,7 +236,12 @@ export function MessagesScreenInner({navigation, route}: Props) {
           }
           style={[a.h_full, a.justify_center, a.pb_5xl]}
         />
-        <NewChat onNewChat={onNewChat} control={newChatControl} />
+        <NewChat
+          onNewChat={onNewChat}
+          control={newChatControl}
+          startInGroupChat={startNewChatInGroupChat}
+          onClose={() => setStartNewChatInGroupChat(false)}
+        />
       </>
     )
   }
@@ -182,7 +250,12 @@ export function MessagesScreenInner({navigation, route}: Props) {
     <Layout.Screen testID="messagesScreen">
       <Header newChatControl={newChatControl} chatStatus={chatStatus} />
       <ChatList newChatControl={newChatControl} chatStatus={chatStatus} />
-      <NewChat onNewChat={onNewChat} control={newChatControl} />
+      <NewChat
+        onNewChat={onNewChat}
+        control={newChatControl}
+        startInGroupChat={startNewChatInGroupChat}
+        onClose={() => setStartNewChatInGroupChat(false)}
+      />
     </Layout.Screen>
   )
 }
@@ -198,6 +271,7 @@ export function ChatList({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const aa = useAgeAssurance()
   const scrollElRef: ListRef = useAnimatedRef()
   const {isWithinSplitView} = useIsWithinSplitView()
 
@@ -226,23 +300,22 @@ export function ChatList({
     isError,
     error,
     refetch,
-  } = useListConvosQuery({status: 'accepted'})
+  } = useListConvosQuery({
+    status: 'accepted',
+    kind: aa.flags.groupChatDisabled ? 'direct' : 'all',
+  })
 
   const {refetch: refetchInbox} = useListConvosQuery({
     status: 'request',
+    kind: aa.flags.groupChatDisabled ? 'direct' : 'all',
   })
 
   useRefreshOnFocus(refetch)
   useRefreshOnFocus(refetchInbox)
 
-  const leftConvos = useLeftConvos()
-
   const conversations = useMemo(() => {
     if (data?.pages) {
-      const conversations = data.pages
-        .flatMap(page => page.convos)
-        // filter out convos that are actively being left
-        .filter(convo => !leftConvos.includes(convo.id))
+      const conversations = data.pages.flatMap(page => page.convos)
 
       return conversations.map(
         convo =>
@@ -254,7 +327,7 @@ export function ChatList({
       ) satisfies ListItem[]
     }
     return []
-  }, [data, leftConvos, selectedChat])
+  }, [data, selectedChat])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -450,7 +523,6 @@ export function Header({
   const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const requireEmailVerification = useRequireEmailVerification()
-  const leftConvos = useLeftConvos()
   const {isWithinSplitView} = useIsWithinSplitView()
 
   // In split view, the left column (and this header) stays mounted while the
@@ -458,21 +530,8 @@ export function Header({
   // on repeated clicks, so navigate instead to dedupe by route + params.
   const action = isWithinSplitView ? 'navigate' : 'push'
 
-  const {data: unreadInboxData, hasNextPage: hasMoreRequests} =
-    useListConvosQuery({
-      status: 'request',
-      readState: 'unread',
-    })
-
-  const inboxAllConvos =
-    unreadInboxData?.pages
-      .flatMap(page => page.convos)
-      .filter(
-        convo =>
-          !leftConvos.includes(convo.id) &&
-          !convo.muted &&
-          convo.members.every(member => member.handle !== 'missing.invalid'),
-      ) ?? []
+  const {data: unreadCounts} = useUnreadCountsQuery()
+  const requestCount = unreadCounts?.unreadRequestConvos ?? 0
 
   const openChatControl = useCallback(() => {
     newChatControl.open()
@@ -497,21 +556,23 @@ export function Header({
 
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
             <InboxRequests
-              count={inboxAllConvos.length}
-              more={hasMoreRequests}
+              count={requestCount}
               variant="solid"
               action={action}
             />
-            <Link
-              to="/messages/settings"
-              action={action}
-              label={l`Chat settings`}
-              size="small"
-              color="secondary"
-              shape="round"
-              style={[a.justify_center]}>
-              <ButtonIcon icon={SettingsIcon} />
-            </Link>
+            <ChatSettingsMenu action={action}>
+              {({props}) => (
+                <Button
+                  {...props}
+                  label={l`Chat options`}
+                  size="small"
+                  color="secondary"
+                  shape="round"
+                  style={[a.justify_center]}>
+                  <ButtonIcon icon={SettingsIcon} />
+                </Button>
+              )}
+            </ChatSettingsMenu>
             {!chatStatus?.chatDisabled && (
               <Button
                 label={l`New chat`}
@@ -532,25 +593,77 @@ export function Header({
               <Trans>Chats</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
-          <InboxRequests
-            count={inboxAllConvos.length}
-            more={hasMoreRequests}
-            variant="ghost"
-          />
+          <InboxRequests count={requestCount} variant="ghost" />
           <Layout.Header.Slot>
-            <Link
-              to="/messages/settings"
-              label={l`Chat settings`}
-              size="small"
-              variant="ghost"
-              color="secondary"
-              shape="round"
-              style={[a.justify_center]}>
-              <ButtonIcon icon={SettingsIcon} size="lg" />
-            </Link>
+            <ChatSettingsMenu action={action}>
+              {({props}) => (
+                <Button
+                  {...props}
+                  label={l`Chat options`}
+                  size="small"
+                  variant="ghost"
+                  color="secondary"
+                  shape="round"
+                  style={[a.justify_center]}>
+                  <ButtonIcon icon={SettingsIcon} size="lg" />
+                </Button>
+              )}
+            </ChatSettingsMenu>
           </Layout.Header.Slot>
         </>
       )}
     </Layout.Header.Outer>
+  )
+}
+
+function ChatSettingsMenu({
+  action,
+  children,
+}: {
+  action: 'navigate' | 'push'
+  children: React.ComponentProps<typeof Menu.Trigger>['children']
+}) {
+  const {t: l} = useLingui()
+  const navigation = useNavigation<NavigationProp>()
+
+  const {mutate: markAllChatsRead} = useUpdateAllRead('accepted', {
+    onMutate: () => {
+      Toast.show(l`Marked all chats as read`, {type: 'success'})
+    },
+    onError: () => {
+      Toast.show(l`Failed to mark all chats as read`, {type: 'error'})
+    },
+  })
+
+  return (
+    <Menu.Root>
+      <Menu.Trigger label={l`Chat options`}>{children}</Menu.Trigger>
+      <Menu.Outer>
+        <Menu.Group>
+          <Menu.Item
+            label={l`Mark all chats as read`}
+            onPress={() => markAllChatsRead()}>
+            <Menu.ItemIcon icon={CircleCheckIcon} />
+            <Menu.ItemText>
+              <Trans>Mark all chats as read</Trans>
+            </Menu.ItemText>
+          </Menu.Item>
+          <Menu.Item
+            label={l`Chat settings`}
+            onPress={() => {
+              if (action === 'navigate') {
+                navigation.navigate('MessagesSettings')
+              } else {
+                navigation.push('MessagesSettings')
+              }
+            }}>
+            <Menu.ItemIcon icon={SettingsIcon} />
+            <Menu.ItemText>
+              <Trans>Chat settings</Trans>
+            </Menu.ItemText>
+          </Menu.Item>
+        </Menu.Group>
+      </Menu.Outer>
+    </Menu.Root>
   )
 }

@@ -23,7 +23,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
-import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
+import {useUnreadCountsQuery} from '#/state/queries/messages/get-unread-counts'
 import {useListConvoRequests} from '#/state/queries/messages/list-conversation-requests'
 import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {EmptyState} from '#/view/com/util/EmptyState'
@@ -70,16 +70,12 @@ export function MessagesInboxScreenInner({}: Props) {
   const listConvosQuery = useListConvoRequests()
   const {data} = listConvosQuery
 
-  const leftConvos = useLeftConvos()
-
   const conversations = useMemo<RequestItem[]>(() => {
     if (!data?.pages) return []
     const items: RequestItem[] = []
     for (const page of data.pages) {
       for (const item of page.requests) {
         if (ChatBskyConvoDefs.isConvoView(item)) {
-          // filter out convos that are actively being left
-          if (leftConvos.includes(item.id)) continue
           items.push({type: 'incoming', view: item})
         } else if (ChatBskyGroupDefs.isJoinRequestConvoView(item)) {
           items.push({type: 'outgoing', view: item})
@@ -87,18 +83,10 @@ export function MessagesInboxScreenInner({}: Props) {
       }
     }
     return items
-  }, [data, leftConvos])
+  }, [data])
 
-  const hasUnreadConvos = useMemo(() => {
-    return conversations.some(
-      item =>
-        item.type === 'incoming' &&
-        item.view.members.every(
-          member => member.handle !== 'missing.invalid',
-        ) &&
-        item.view.unreadCount > 0,
-    )
-  }, [conversations])
+  const {data: unreadCounts} = useUnreadCountsQuery()
+  const hasUnreadConvos = (unreadCounts?.unreadRequestConvos ?? 0) > 0
 
   return (
     <Layout.Screen testID="messagesInboxScreen">

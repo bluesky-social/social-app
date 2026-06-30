@@ -34,7 +34,7 @@ export function IncomingRequestListItem({
   return (
     <View style={[a.relative, a.flex_1]}>
       <ChatListItem convo={convo.view} showMenu={false}>
-        {convo.primaryMember && (
+        {convo.kind === 'direct' && convo.primaryMember && (
           <View style={[a.pt_xs, a.pb_2xs]}>
             <KnownFollowers
               profile={convo.primaryMember}
@@ -72,7 +72,7 @@ export function IncomingRequestListItem({
                   <AcceptChatButton convo={convo.view} currentScreen="list" />
                 ) : null}
                 <RejectMenu
-                  convo={convo.view}
+                  convo={convo}
                   profile={convo.primaryMember}
                   showDeleteConvo
                   currentScreen="list"

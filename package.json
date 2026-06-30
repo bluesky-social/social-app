@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.123.0",
+  "version": "1.126.0",
   "private": true,
   "engines": {
     "node": ">=24.15.0"
@@ -8,7 +8,7 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.5.0",
+      "version": "11.9.0",
       "onFail": "warn"
     },
     "runtime": {
@@ -59,7 +59,7 @@
     "test-watch": "NODE_ENV=test jest --watchAll",
     "test-ci": "NODE_ENV=test jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "NODE_ENV=test jest --coverage",
-    "lint": "eslint --cache --quiet src",
+    "lint": "eslint --cache --quiet src modules",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
     "typecheck": "tsgo --project ./tsconfig.check.json",
@@ -93,8 +93,8 @@
     "prettier": "prettier --check ."
   },
   "dependencies": {
-    "@atproto/api": "0.20.9",
-    "@atproto/syntax": "0.6.1",
+    "@atproto/api": "0.20.22",
+    "@atproto/syntax": "0.6.3",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.14",
@@ -103,12 +103,11 @@
     "@bsky.app/expo-image-crop-tool": "^0.5.1",
     "@bsky.app/expo-scroll-edge-effect": "^0.1.4",
     "@bsky.app/expo-translate-text": "^0.2.9",
-    "@bsky.app/peek-menu": "^0.2.4",
+    "@bsky.app/peek-menu": "^0.3.1",
     "@bsky.app/react-native-mmkv": "2.12.5",
-    "@bsky.app/sift": "^0.3.8",
-    "@bsky.app/tapper": "^0.5.7",
+    "@bsky.app/sift": "^0.3.9",
+    "@bsky.app/tapper": "^0.6.1",
     "@bsky.app/video": "0.3.6",
-    "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.12.5",
@@ -204,6 +203,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.shuffle": "^4.2.0",
     "lodash.throttle": "^4.1.1",
+    "mediabunny": "^1.25.3",
     "multiformats": "^13.4.2",
     "nanoid": "^5.0.5",
     "normalize-url": "^8.0.0",
@@ -295,7 +295,6 @@
     "jest-junit": "^16.0.0",
     "lint-staged": "^13.2.3",
     "prettier": "^3.8.3",
-    "react-native-dotenv": "^3.4.11",
     "react-refresh": "^0.14.0",
     "svgo": "^3.3.2",
     "ts-plugin-sort-import-suggestions": "^1.0.4",
@@ -331,7 +330,7 @@
       "^await-lock$": "<rootDir>/node_modules/await-lock/build/AwaitLock.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|@discord|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|multiformats|uint8arrays|@ipld/.*|cborg|await-lock)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|multiformats|uint8arrays|@ipld/.*|cborg|await-lock)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",

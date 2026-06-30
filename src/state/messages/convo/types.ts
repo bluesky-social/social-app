@@ -1,7 +1,7 @@
 import {
   type $Typed,
   type AppBskyEmbedRecord,
-  type BskyAgent,
+  type AtpAgent,
   type ChatBskyActorDefs,
   type ChatBskyConvoDefs,
   type ChatBskyConvoSendMessage,
@@ -13,7 +13,7 @@ import {type ConvoWithDetails} from '#/components/dms/util'
 
 export type ConvoParams = {
   convoId: string
-  agent: BskyAgent
+  agent: AtpAgent
   events: MessagesEventBus
   placeholderData?: {
     convo: ChatBskyConvoDefs.ConvoView
@@ -113,6 +113,7 @@ type SendMessage = (
     | $Typed<AppBskyEmbedRecord.View>
     | $Typed<ChatBskyEmbedJoinLink.View>
     | undefined,
+  optimisticReplyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
 ) => void
 type FetchMessageHistory = () => Promise<void>
 type MarkConvoAccepted = () => void

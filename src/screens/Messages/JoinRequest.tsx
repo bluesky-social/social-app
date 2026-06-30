@@ -1,6 +1,8 @@
+import {useEffect} from 'react'
 import {View} from 'react-native'
 import {ImageBackground} from 'expo-image'
-import {moderateProfile} from '@atproto/api'
+import {ChatBskyGroupDefs, moderateProfile} from '@atproto/api'
+import {type ThemeName} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
@@ -17,11 +19,25 @@ import {ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon} from '#/
 import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 const desktopDarkBg = require('../../../assets/images/chat-desktop-bg-dark.webp')
+const desktopDimBg = require('../../../assets/images/chat-desktop-bg-dim.webp')
 const desktopLightBg = require('../../../assets/images/chat-desktop-bg-light.webp')
 const mobileDarkBg = require('../../../assets/images/chat-mobile-bg-dark.webp')
+const mobileDimBg = require('../../../assets/images/chat-mobile-bg-dim.webp')
 const mobileLightBg = require('../../../assets/images/chat-mobile-bg-light.webp')
+
+function getBackgroundImage(themeName: ThemeName, gtMobile: boolean) {
+  switch (themeName) {
+    case 'dark':
+      return gtMobile ? desktopDarkBg : mobileDarkBg
+    case 'dim':
+      return gtMobile ? desktopDimBg : mobileDimBg
+    default:
+      return gtMobile ? desktopLightBg : mobileLightBg
+  }
+}
 
 type Props = {
   setScreenState: (state: LoggedOutScreenState) => void
@@ -30,9 +46,14 @@ type Props = {
 export function JoinRequest({setScreenState}: Props) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
 
   const {gtMobile, gtTablet} = useBreakpoints()
   const moderationOpts = useModerationOpts()
+
+  useEffect(() => {
+    ax.metric('groupchat:landingPage:view', {hasSession: false})
+  }, [ax])
 
   // Get code from context (logged-out only)
   const contextJoinRequest = useActiveGroupChatJoinRequest()
@@ -43,18 +64,9 @@ export function JoinRequest({setScreenState}: Props) {
     hasSession: false,
   })
 
-  const isDarkMode = t.name !== 'light'
-  const background = gtMobile
-    ? isDarkMode
-      ? desktopDarkBg
-      : desktopLightBg
-    : isDarkMode
-      ? mobileDarkBg
-      : mobileLightBg
+  const background = getBackgroundImage(t.name, gtMobile)
 
-  const requiresApproval = data?.joinLinkPreviews[0]?.requireApproval
-  const requiresFollow =
-    data?.joinLinkPreviews[0]?.joinRule === 'followedByOwner'
+  const joinLinkPreview = data?.joinLinkPreviews[0]
 
   return (
     <View style={[a.util_screen_outer, a.w_full, t.atoms.bg_contrast_25]}>
@@ -69,7 +81,9 @@ export function JoinRequest({setScreenState}: Props) {
             a.justify_center,
             a.align_center,
           ]}>
-          {error ? (
+          {error ||
+          (data &&
+            !ChatBskyGroupDefs.isJoinLinkPreviewView(joinLinkPreview)) ? (
             <Wrapper>
               <ChainLinkBrokenIcon fill={t.palette.primary_500} size="3xl" />
               <Text
@@ -80,22 +94,17 @@ export function JoinRequest({setScreenState}: Props) {
                   a.font_semi_bold,
                   t.atoms.text,
                 ]}>
-                {l`This invite link has expired`}
+                <Trans>Chat invite link no longer available</Trans>
               </Text>
               <ActionButtons setScreenState={setScreenState} />
             </Wrapper>
-          ) : data && moderationOpts ? (
+          ) : data &&
+            moderationOpts &&
+            ChatBskyGroupDefs.isJoinLinkPreviewView(joinLinkPreview) ? (
             <Wrapper>
               <AvatarBubbles
-                profiles={[
-                  data.joinLinkPreviews[0].owner,
-                  ...Array(
-                    Math.min(
-                      3,
-                      Math.max(0, data.joinLinkPreviews[0].memberCount - 1),
-                    ),
-                  ).fill(undefined),
-                ]}
+                profiles={[joinLinkPreview.owner]}
+                count={joinLinkPreview.memberCount}
                 size={135}
               />
               <View style={[a.gap_2xs]}>
@@ -127,9 +136,11 @@ export function JoinRequest({setScreenState}: Props) {
                         a.leading_snug,
                         t.atoms.text_contrast_medium,
                       ]}>
-                      <Trans comment="The number of active group chat members out of the total number allowed.">
-                        {data.joinLinkPreviews[0].memberCount}/
-                        {data.joinLinkPreviews[0].memberLimit}
+                      <Trans
+                        context="group-chat-member-count"
+                        comment="The number of active group chat members out of the total number allowed.">
+                        {joinLinkPreview.memberCount}/
+                        {joinLinkPreview.memberLimit}
                       </Trans>
                     </Text>
                   </View>
@@ -142,7 +153,7 @@ export function JoinRequest({setScreenState}: Props) {
                     a.font_bold,
                     t.atoms.text,
                   ]}>
-                  {data.joinLinkPreviews[0].name}
+                  {joinLinkPreview.name}
                 </Text>
               </View>
               <View style={[a.w_full]}>
@@ -166,17 +177,17 @@ export function JoinRequest({setScreenState}: Props) {
                     <Trans comment="The owner (creator) of a group chat.">
                       By{' '}
                       {createSanitizedDisplayName(
-                        data.joinLinkPreviews[0].owner,
+                        joinLinkPreview.owner,
                         true,
                         moderateProfile(
-                          data.joinLinkPreviews[0].owner,
+                          joinLinkPreview.owner,
                           moderationOpts,
                         ).ui('displayName'),
                       )}
                     </Trans>
                   </Text>
                   <ProfileBadges
-                    profile={data.joinLinkPreviews[0].owner}
+                    profile={joinLinkPreview.owner}
                     size="sm"
                     style={{marginTop: -4}}
                   />
@@ -190,7 +201,7 @@ export function JoinRequest({setScreenState}: Props) {
                     t.atoms.text_contrast_medium,
                     a.max_w_full,
                   ]}>
-                  {sanitizeHandle(data.joinLinkPreviews[0].owner.handle, '@')}
+                  {sanitizeHandle(joinLinkPreview.owner.handle, '@')}
                 </Text>
               </View>
               <Text
@@ -200,17 +211,16 @@ export function JoinRequest({setScreenState}: Props) {
                   a.leading_snug,
                   t.atoms.text_contrast_high,
                 ]}>
-                {requiresApproval
+                {joinLinkPreview.requireApproval
                   ? l`Sign in to request access to this group chat.`
                   : l`Sign in to accept invite.`}{' '}
-                {requiresFollow &&
+                {joinLinkPreview.joinRule === 'followedByOwner' &&
                   l`Only people ${createSanitizedDisplayName(
-                    data.joinLinkPreviews[0].owner,
+                    joinLinkPreview.owner,
                     true,
-                    moderateProfile(
-                      data.joinLinkPreviews[0].owner,
-                      moderationOpts,
-                    ).ui('displayName'),
+                    moderateProfile(joinLinkPreview.owner, moderationOpts).ui(
+                      'displayName',
+                    ),
                   )} follows can join.`}
               </Text>
               <ActionButtons setScreenState={setScreenState} />

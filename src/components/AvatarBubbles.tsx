@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react'
+import {useEffect} from 'react'
 import {View} from 'react-native'
 import Animated, {
   Easing,
@@ -8,12 +8,10 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
-import {
-  moderateProfile,
-  type ModerationOpts,
-  type ModerationUI,
-} from '@atproto/api'
+import {moderateProfile} from '@atproto/api'
 
+import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -33,10 +31,10 @@ export function AvatarBubbles({
   profiles: allProfiles,
   self = false,
   size = 120,
-  moderationOpts,
+  count,
 }: {
   animate?: boolean
-  profiles: (bsky.profile.AnyProfileView | undefined)[]
+  profiles: bsky.profile.AnyProfileView[]
   /**
    * By default, when there are more than 2 profiles, the current user is
    * filtered out (so you don't see yourself among your own group's members).
@@ -45,19 +43,21 @@ export function AvatarBubbles({
    */
   self?: boolean
   size?: number
-  moderationOpts?: ModerationOpts
+  /**
+   * The true number of members, used to decide how many bubbles to render when
+   * it exceeds the number of `profiles` we have on hand (e.g. an invite preview
+   * that only carries a few member profiles for a much larger group). Slots
+   * without a profile render as placeholders. Defaults to `profiles.length`.
+   */
+  count?: number
 }) {
   const {currentAccount} = useSession()
   const profiles =
     !self && allProfiles.length > 2
-      ? allProfiles.filter(p => !p || p.did !== currentAccount?.did)
+      ? allProfiles.filter(p => p.did !== currentAccount?.did)
       : allProfiles
-  const moderations = useMemo(() => {
-    if (!moderationOpts) return []
-    return profiles.map(p => {
-      return p && moderateProfile(p, moderationOpts)
-    })
-  }, [profiles, moderationOpts])
+
+  const bubbleCount = Math.max(profiles.length, count ?? 0)
 
   const scale = size / 120
   const marginOffset = size < 120 ? -2 : 0
@@ -89,7 +89,7 @@ export function AvatarBubbles({
   }, [animate, p0, p1, p2, p3])
 
   const scales = [p0, p1, p2, p3]
-  const layouts = getLayouts(profiles.length)
+  const layouts = getLayouts(bubbleCount)
 
   return (
     <Animated.View style={[a.p_2xs, {height: size, width: size}]}>
@@ -110,7 +110,6 @@ export function AvatarBubbles({
             y={layout.y}
             zIndex={layout.zIndex}
             includeProfileBorder={layout.border}
-            moderation={moderations[i]?.ui('avatar')}
           />
         ))}
       </View>
@@ -119,14 +118,13 @@ export function AvatarBubbles({
 }
 
 function AvatarBubble({
-  profile,
+  profile: profileUnshadowed,
   scale,
   size,
   x,
   y,
   zIndex,
   includeProfileBorder,
-  moderation,
 }: {
   profile?: bsky.profile.AnyProfileView
   scale: SharedValue<number>
@@ -135,13 +133,14 @@ function AvatarBubble({
   y: number
   zIndex?: number
   includeProfileBorder?: boolean
-  moderation?: ModerationUI
 }) {
   const t = useTheme()
-
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{translateX: x}, {translateY: y}, {scale: scale.get()}],
   }))
+
+  const profile = useMaybeProfileShadow(profileUnshadowed)
+  const moderationOpts = useModerationOpts()
 
   return (
     <Animated.View
@@ -156,14 +155,14 @@ function AvatarBubble({
         zIndex != null && {zIndex},
         animatedStyle,
       ]}>
-      {profile ? (
+      {profile && moderationOpts ? (
         <UserAvatar
           avatar={profile.avatar}
           size={size}
           type="user"
           hideLiveBadge
           noBorder
-          moderation={moderation}
+          moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
         />
       ) : (
         <AvatarPlaceholder size={size} />

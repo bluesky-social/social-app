@@ -225,6 +225,14 @@ export function useNotificationsRegistration() {
   }, [currentAccount, getAndRegisterPushToken, registerPushToken, aa])
 }
 
+/**
+ * Tracks whether we have already shown the OS notification permission prompt
+ * during this app session. On Android `canAskAgain` stays true after a single
+ * in-app denial, so without this guard a later call site (e.g. Home after
+ * Login) would surface a second prompt. Resets on app restart.
+ */
+let hasRequestedPermissionsThisSession = false
+
 export function useRequestNotificationsPermission() {
   const ax = useAnalytics()
   const {currentAccount} = useSession()
@@ -249,7 +257,31 @@ export function useRequestNotificationsPermission() {
       return
     }
 
-    const res = await Notifications.requestPermissionsAsync()
+    if (hasRequestedPermissionsThisSession) {
+      return
+    }
+    hasRequestedPermissionsThisSession = true
+
+    const res = await Notifications.requestPermissionsAsync({
+      ios: {
+        /*
+         * These three default to true when no argument is passed to
+         * `requestPermissionsAsync`, but passing an options object opts out of
+         * that default, so we have to set them explicitly to preserve the
+         * existing behavior.
+         */
+        allowAlert: true,
+        allowBadge: true,
+        allowSound: true,
+        /*
+         * Adds an in-app notification settings button to the system Settings
+         * screen for Bluesky. When tapped, iOS calls back into the app, which
+         * we route to the in-app notification settings (see the
+         * NotificationSettings module in expo-bluesky-swiss-army).
+         */
+        provideAppNotificationSettings: true,
+      },
+    })
 
     ax.metric(`notifications:request`, {
       context: context,

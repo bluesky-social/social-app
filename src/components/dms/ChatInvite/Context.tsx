@@ -1,6 +1,6 @@
 import {createContext, useContext} from 'react'
-import {type ChatBskyGroupDefs} from '@atproto/api'
 
+import {type ChatInvitePreview} from '#/state/queries/join-links'
 import {type ButtonColor} from '#/components/Button'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 
@@ -22,11 +22,21 @@ export type ChatInviteAction = {
   side: 'left' | 'right'
 }
 
+/**
+ * The resolved state of a chat invite:
+ * - `loading`: the preview is still being fetched.
+ * - `error`: the fetch failed (e.g. network). Surfaces may want to fall back to
+ *   a plain link rather than show a chat-specific error.
+ * - `unavailable`: the preview resolved but the link is disabled, invalid, or an
+ *   unrecognized variant - there's nothing to join.
+ * - `available`: a usable `JoinLinkPreviewView` is present.
+ */
+export type ChatInviteStatus = 'loading' | 'error' | 'unavailable' | 'available'
+
 export type ChatInviteContextValue = {
   code: string
-  loading: boolean
-  error: boolean
-  preview: ChatBskyGroupDefs.JoinLinkPreviewView | undefined
+  status: ChatInviteStatus
+  preview: ChatInvitePreview | undefined
   /**
    * The derived action descriptor. Undefined while loading or when there's no
    * preview to act on.

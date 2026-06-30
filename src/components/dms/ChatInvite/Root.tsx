@@ -1,22 +1,28 @@
 import {setStringAsync} from 'expo-clipboard'
-import {type ChatBskyGroupDefs} from '@atproto/api'
+import {ChatBskyGroupDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
-import {useJoinLinkPreviewsQuery} from '#/state/queries/join-links'
+import {
+  type ChatInvitePreview,
+  useJoinLinkPreviewsQuery,
+} from '#/state/queries/join-links'
 import {useSession} from '#/state/session'
 import {type ButtonColor} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon} from '#/components/icons/ArrowBoxRight'
 import {ChainLink_Stroke2_Corner0_Rounded as LinkIcon} from '#/components/icons/ChainLink'
-import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
-import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import * as Toast from '#/components/Toast'
-import {type ChatInviteAction, ChatInviteProvider} from './Context'
+import {
+  type ChatInviteAction,
+  ChatInviteProvider,
+  type ChatInviteStatus,
+} from './Context'
 
 /**
  * Headless data + state owner for a chat invite. Fetches the join link preview
@@ -34,7 +40,7 @@ export function Root({
   children,
 }: {
   code: string
-  initialPreview?: ChatBskyGroupDefs.JoinLinkPreviewView
+  initialPreview?: ChatInvitePreview
   /**
    * The convo this invite is being viewed within, if any. When the invite
    * links to the same chat, the action becomes "Copy link" instead of
@@ -59,12 +65,23 @@ export function Root({
   })
 
   const preview = data?.joinLinkPreviews[0]
-  const loading = isPending && !preview
+
+  let status: ChatInviteStatus
+  if (isPending && !preview) {
+    status = 'loading'
+  } else if (error) {
+    status = 'error'
+  } else if (ChatBskyGroupDefs.isJoinLinkPreviewView(preview)) {
+    status = 'available'
+  } else {
+    // Resolved to a disabled/invalid/unrecognized preview - nothing to join.
+    status = 'unavailable'
+  }
 
   let action: ChatInviteAction | undefined
-  if (preview) {
+  if (ChatBskyGroupDefs.isJoinLinkPreviewView(preview)) {
     const convoId = preview.convo?.id
-    const isFollowing = preview.owner.viewer?.following ?? false
+    const isFollowing = preview.owner.viewer?.followedBy ?? false
     const hasRequested = !convoId && preview.viewer?.requestedAt != null
 
     if (convoId && convoId === currentConvoId) {
@@ -78,7 +95,7 @@ export function Root({
         color: 'primary',
         disabled: false,
         onPress: () => {
-          void setStringAsync(`https://bsky.app/c/${preview.code}`)
+          void setStringAsync(`https://bsky.app/chat/${preview.code}`)
           Toast.show(l`Copied to clipboard`, {type: 'success'})
         },
       }
@@ -99,12 +116,7 @@ export function Root({
       let icon: React.ComponentType<SVGIconProps> = JoinIcon
       let label = preview.requireApproval ? l`Request to join` : l`Join`
       let color: ButtonColor = 'primary'
-      if (preview.enabledStatus !== 'enabled') {
-        canJoin = false
-        icon = WarningIcon
-        label = l`Chat invite link no longer available`
-        color = 'secondary'
-      } else if (preview.memberCount >= preview.memberLimit) {
+      if (preview.memberCount >= preview.memberLimit) {
         canJoin = false
         icon = HandIcon
         label = l`This chat is full`
@@ -138,8 +150,7 @@ export function Root({
   }
 
   return (
-    <ChatInviteProvider
-      value={{code, loading, error: !!error, preview, action, hasFixedHeight}}>
+    <ChatInviteProvider value={{code, status, preview, action, hasFixedHeight}}>
       {children}
     </ChatInviteProvider>
   )

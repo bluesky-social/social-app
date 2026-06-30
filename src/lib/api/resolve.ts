@@ -1,8 +1,7 @@
 import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
-  type BskyAgent,
-  type ChatBskyGroupDefs,
+  type AtpAgent,
   type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
@@ -28,6 +27,7 @@ import {
 } from '#/lib/strings/url-helpers'
 import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
+import {type ChatInvitePreview} from '#/state/queries/join-links'
 import {type Gif} from '#/features/gifPicker/types'
 import {createGIFDescription} from '../gif-alt-text'
 
@@ -77,7 +77,7 @@ type ResolvedChatInvite = {
   type: 'chat-invite'
   uri: string
   code: string
-  view?: ChatBskyGroupDefs.JoinLinkPreviewView
+  view?: ChatInvitePreview
 }
 
 export type ResolvedLink =
@@ -95,7 +95,7 @@ export class EmbeddingDisabledError extends Error {
 }
 
 export async function resolveLink(
-  agent: BskyAgent,
+  agent: AtpAgent,
   uri: string,
 ): Promise<ResolvedLink> {
   if (isShortLink(uri)) {
@@ -217,7 +217,7 @@ export async function resolveLink(
 }
 
 export async function resolveGif(
-  agent: BskyAgent,
+  agent: AtpAgent,
   gif: Gif,
 ): Promise<ResolvedExternalLink> {
   const gifUrl = gif.media_formats.gif.url
@@ -259,7 +259,7 @@ function getFileSlug(url: string | undefined): string | undefined {
 }
 
 async function resolveExternal(
-  agent: BskyAgent,
+  agent: AtpAgent,
   uri: string,
 ): Promise<ResolvedExternalLink> {
   const result = await getLinkMeta(agent, uri)

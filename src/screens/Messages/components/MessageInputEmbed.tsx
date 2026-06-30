@@ -52,12 +52,12 @@ export function useMessageEmbed() {
   const navigation = useNavigation<NavigationProp>()
   const embedFromParams = route.params.embed
 
-  const [embed, setEmbedState] = useState<MessageEmbedState | undefined>(
+  const [embed, setEmbed] = useState<MessageEmbedState | undefined>(
     embedFromParams ? {type: 'post', uri: embedFromParams} : undefined,
   )
 
   if (embedFromParams && embed?.type !== 'post') {
-    setEmbedState({type: 'post', uri: embedFromParams})
+    setEmbed({type: 'post', uri: embedFromParams})
   }
 
   return {
@@ -68,7 +68,7 @@ export function useMessageEmbed() {
           // Only the post embed is reflected in the route param (used by the
           // share-to-DM intent flow); invites are local-only.
           navigation.setParams({embed: ''})
-          setEmbedState(undefined)
+          setEmbed(undefined)
           return
         }
 
@@ -77,7 +77,7 @@ export function useMessageEmbed() {
         if (isBskyChatInviteUrl(embedUrl)) {
           const code = getChatInviteCodeFromUrl(embedUrl)
           if (code) {
-            setEmbedState({type: 'invite', code})
+            setEmbed({type: 'invite', code})
           }
           return
         }
@@ -86,7 +86,7 @@ export function useMessageEmbed() {
           const url = convertBskyAppUrlIfNeeded(embedUrl)
           const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
           const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
-          setEmbedState({type: 'post', uri})
+          setEmbed({type: 'post', uri})
         }
       },
       [embedFromParams, navigation],
@@ -303,25 +303,14 @@ function MessageInputInviteEmbed({
 }
 
 function MessageInputInviteEmbedBody() {
-  const t = useTheme()
-  const {loading, preview} = ChatInvite.useChatInvite()
+  const {status} = ChatInvite.useChatInvite()
 
-  if (loading) {
-    return (
-      <View style={[{minHeight: 64}, a.justify_center, a.align_center]}>
-        <Loader />
-      </View>
-    )
+  if (status === 'loading') {
+    return <ChatInvite.Loading style={{minHeight: 64}} />
   }
 
-  if (!preview) {
-    return (
-      <View style={[{minHeight: 64}, a.justify_center, a.align_center]}>
-        <Text style={[a.text_center, t.atoms.text_contrast_medium, a.italic]}>
-          <Trans>Could not load invite</Trans>
-        </Text>
-      </View>
-    )
+  if (status !== 'available') {
+    return <ChatInvite.Unavailable style={{minHeight: 64}} />
   }
 
   return <ChatInvite.Card size="small" />

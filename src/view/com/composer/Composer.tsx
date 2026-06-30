@@ -50,14 +50,15 @@ import {
   AppBskyDraftCreateDraft,
   AppBskyUnspeccedDefs,
   type AppBskyUnspeccedGetPostThreadV2,
+  type AtpAgent,
   AtUri,
-  type BskyAgent,
+  ChatBskyGroupDefs,
   type RichText,
 } from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import {useQueries, useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
@@ -69,9 +70,11 @@ import {
   MAX_GRAPHEME_LENGTH,
   SUPPORTED_MIME_TYPES,
   type SupportedMimeTypes,
+  VIDEO_MAX_DURATION_MS,
 } from '#/lib/constants'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {mimeToExt} from '#/lib/media/video/util'
 import {useCallOnce} from '#/lib/once'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -85,7 +88,6 @@ import {
   createComposerImage,
   pasteImage,
 } from '#/state/gallery'
-import {useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   fromPostLanguages,
@@ -95,6 +97,7 @@ import {
 } from '#/state/preferences/languages'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
+import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
@@ -133,7 +136,14 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {
+  IS_ANDROID,
+  IS_IOS,
+  IS_LIQUID_GLASS,
+  IS_NATIVE,
+  IS_WEB,
+  IS_WEB_SAFARI,
+} from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
@@ -171,7 +181,7 @@ import {
   type VideoState,
 } from './state/video'
 import {type TextInputRef} from './text-input/TextInput.types'
-import {getVideoMetadata} from './videos/pickVideo'
+import {getVideoMetadata} from './videos/metadata'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
 type CancelRef = {
@@ -274,7 +284,6 @@ export const ComposePost = ({
     useSaveDraftMutation()
   const {mutate: cleanupPublishedDraft} = useCleanupPublishedDraftMutation()
   const {closeAllDialogs} = useDialogStateControlContext()
-  const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
   const navigation = useNavigation<NavigationProp>()
 
@@ -378,8 +387,34 @@ export const ComposePost = ({
   )
 
   const selectVideo = useCallback(
-    (postId: string, asset: ImagePickerAsset) => {
+    async (postId: string, asset: ImagePickerAsset) => {
+      /*
+       * Share-extension deeplinks deliver a video URI without duration, so
+       * probe before we decide whether to compress. The picker and web paste
+       * paths already populate duration upstream.
+       */
+      if (asset.duration == null && IS_NATIVE) {
+        try {
+          const probed = await getVideoMetadata(asset.uri)
+          asset = {
+            ...asset,
+            mimeType: probed.mimeType ?? asset.mimeType,
+            width: probed.width ?? asset.width,
+            height: probed.height ?? asset.height,
+            duration: probed.duration,
+          }
+        } catch (e) {
+          logger.warn('selectVideo: duration probe failed', {safeMessage: e})
+        }
+      }
+
       const abortController = new AbortController()
+      const telemetry = createVideoTelemetry({
+        asset,
+        signal: abortController.signal,
+        metric: ax.metric,
+      })
+      telemetry.picked()
       composerDispatch({
         type: 'update_post',
         postId: postId,
@@ -387,8 +422,30 @@ export const ComposePost = ({
           type: 'embed_add_video',
           asset,
           abortController,
+          telemetry,
         },
       })
+
+      /*
+       * Fail early on duration so we don't spend time compressing a video the
+       * server would reject anyway.
+       */
+      if (asset.duration != null && asset.duration > VIDEO_MAX_DURATION_MS) {
+        composerDispatch({
+          type: 'update_post',
+          postId: postId,
+          postAction: {
+            type: 'embed_update_video',
+            videoAction: {
+              type: 'to_error',
+              error: l`Videos must be less than 3 minutes long.`,
+              signal: abortController.signal,
+            },
+          },
+        })
+        return
+      }
+
       void processVideo(
         asset,
         videoAction => {
@@ -405,14 +462,15 @@ export const ComposePost = ({
         currentDid,
         abortController.signal,
         i18n,
+        telemetry,
       )
     },
-    [i18n, agent, currentDid, composerDispatch],
+    [l, i18n, agent, currentDid, composerDispatch, ax.metric],
   )
 
   const onInitVideo = useNonReactiveCallback(() => {
     if (initVideoUri) {
-      selectVideo(activePost.id, initVideoUri)
+      void selectVideo(activePost.id, initVideoUri)
     }
   })
 
@@ -487,6 +545,12 @@ export const ComposePost = ({
 
         // Start video processing using existing flow
         const abortController = new AbortController()
+        const telemetry = createVideoTelemetry({
+          asset,
+          signal: abortController.signal,
+          metric: ax.metric,
+        })
+        telemetry.picked()
         composerDispatch({
           type: 'update_post',
           postId,
@@ -494,8 +558,25 @@ export const ComposePost = ({
             type: 'embed_add_video',
             asset,
             abortController,
+            telemetry,
           },
         })
+
+        if (asset.duration != null && asset.duration > VIDEO_MAX_DURATION_MS) {
+          composerDispatch({
+            type: 'update_post',
+            postId,
+            postAction: {
+              type: 'embed_update_video',
+              videoAction: {
+                type: 'to_error',
+                error: l`Videos must be less than 3 minutes long.`,
+                signal: abortController.signal,
+              },
+            },
+          })
+          return
+        }
 
         // Restore alt text immediately
         if (videoInfo.altText) {
@@ -552,6 +633,7 @@ export const ComposePost = ({
           currentDid,
           abortController.signal,
           i18n,
+          telemetry,
         )
       } catch (e) {
         logger.error('Failed to restore video from draft', {
@@ -560,7 +642,7 @@ export const ComposePost = ({
         })
       }
     },
-    [i18n, agent, currentDid, composerDispatch],
+    [l, i18n, agent, currentDid, composerDispatch, ax.metric],
   )
 
   const handleSelectDraft = useCallback(
@@ -617,7 +699,7 @@ export const ComposePost = ({
       // This is async but we don't await - videos process in the background
       for (const [postIndex, videoInfo] of restoredVideos) {
         const postId = posts[postIndex].id
-        restoreVideo(postId, videoInfo)
+        void restoreVideo(postId, videoInfo)
       }
     },
     [composerDispatch, restoreVideo, ax],
@@ -826,7 +908,7 @@ export const ComposePost = ({
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
-        if (closeAllDialogs() || closeAllModals()) {
+        if (closeAllDialogs()) {
           return true
         }
         onPressCancel()
@@ -836,7 +918,7 @@ export const ComposePost = ({
     return () => {
       backHandler.remove()
     }
-  }, [onPressCancel, closeAllDialogs, closeAllModals])
+  }, [onPressCancel, closeAllDialogs])
 
   const missingAltError = useMemo(() => {
     if (!requireAltTextEnabled) {
@@ -865,8 +947,27 @@ export const ComposePost = ({
     }
   }, [thread, requireAltTextEnabled, l])
 
+  // Subscribe to the resolve-link cache for any link URIs in the thread so we
+  // can detect chat invites that resolved to no preview (revoked/expired) and
+  // block publishing - otherwise the post would go out without the embed.
+  const linkUris = thread.posts
+    .filter(post => post.embed.link)
+    .map(post => post.embed.link!.uri)
+  const linkQueries = useQueries({
+    queries: linkUris.map(uri => ({
+      ...resolveLinkQueryOptions(agent, uri),
+      enabled: false,
+    })),
+  })
+  const hasUnavailableChatInvite = linkQueries.some(
+    q =>
+      q.data?.type === 'chat-invite' &&
+      !ChatBskyGroupDefs.isJoinLinkPreviewView(q.data.view),
+  )
+
   const canPost =
     !missingAltError &&
+    !hasUnavailableChatInvite &&
     thread.posts.some(post => !isEmptyPost(post)) &&
     thread.posts.every(
       post =>
@@ -952,6 +1053,15 @@ export const ComposePost = ({
           langs: currentLanguages,
         })
       ).uris[0]
+
+      // Fire published event for every video that made it into the post.
+      // The status guard upstream ensures each video.telemetry is present and
+      // processing has completed by this point.
+      for (const post of filteredThread.posts) {
+        if (post.embed.media?.type === 'video') {
+          post.embed.media.video.telemetry?.published()
+        }
+      }
 
       /*
        * Wait for app view to have received the post(s). If this fails, it's
@@ -1042,6 +1152,20 @@ export const ComposePost = ({
           postCount: filteredThread.posts.length,
           isReply: !!replyTo,
         })
+      }
+      if (postUri) {
+        for (const q of linkQueries) {
+          const resolved = q.data
+          if (
+            resolved?.type === 'chat-invite' &&
+            ChatBskyGroupDefs.isJoinLinkPreviewView(resolved.view)
+          ) {
+            ax.metric('groupchat:inviteLink:shared', {
+              convoId: resolved.view.convoId,
+              method: 'post',
+            })
+          }
+        }
       }
     }
     if (postUri && !replyTo) {
@@ -1136,6 +1260,7 @@ export const ComposePost = ({
     loadedDraftCreatedAt,
     emptyPostsPromptControl,
     getFilteredThread,
+    linkQueries,
   ])
 
   const handleConfirmSkipEmpty = () => {
@@ -1200,6 +1325,24 @@ export const ComposePost = ({
       }
     }
   }, [composerState])
+
+  useEffect(() => {
+    // Safari ignores `overscroll-behavior`, so horizontal trackpad swipes over
+    // the composer (e.g. on a quote post) can still trigger the browser's
+    // back/forward navigation gesture. Suppress predominantly-horizontal wheel
+    // events so the history-nav gesture never fires. Chrome and Firefox are
+    // covered by the `overscrollBehaviorX: 'contain'` style on the ScrollView.
+    if (!IS_WEB_SAFARI) return
+    const el =
+      scrollViewRef.current?.getScrollableNode() as unknown as HTMLElement | null
+    if (!el) return
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
+      e.preventDefault()
+    }
+    el.addEventListener('wheel', onWheel, {passive: false})
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [scrollViewRef])
 
   const isLastThreadedPost = thread.posts.length > 1 && nextPost === undefined
   const {
@@ -1306,6 +1449,11 @@ export const ComposePost = ({
               web({
                 scrollbarGutter: 'stable',
                 scrollbarColor: `${t.palette.contrast_200} transparent`,
+                // Prevent horizontal trackpad swipes from triggering the
+                // browser's back/forward overscroll-navigation gesture.
+                // Handles Chrome and Firefox; Safari is handled separately
+                // via a wheel listener since it ignores overscroll-behavior.
+                overscrollBehaviorX: 'contain',
               }),
             ]}
             keyboardShouldPersistTaps="always"
@@ -1437,7 +1585,10 @@ let ComposerPost = memo(function ComposerPost({
   canRemovePost: boolean
   canRemoveQuote: boolean
   onClearVideo: (postId: string) => void
-  onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
+  onSelectVideo: (
+    postId: string,
+    asset: ImagePickerAsset,
+  ) => void | Promise<void>
   onError: (error: string) => void
   onPublish: (richtext: RichText) => void
 }) {
@@ -1497,7 +1648,7 @@ let ComposerPost = memo(function ComposerPost({
         const file = await fetch(uri)
           .then(res => res.blob())
           .then(blob => new File([blob], name, {type: mimeType}))
-        onSelectVideo(post.id, await getVideoMetadata(file))
+        void onSelectVideo(post.id, await getVideoMetadata(file))
       } else {
         const res = await pasteImage(uri)
         onImageAdd([res])
@@ -1959,7 +2110,10 @@ function ComposerFooter({
   dispatch: (action: PostAction) => void
   showAddButton: boolean
   onError: (error: string) => void
-  onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
+  onSelectVideo: (
+    postId: string,
+    asset: ImagePickerAsset,
+  ) => void | Promise<void>
   onAddPost: () => void
   currentLanguages: string[]
   onSelectLanguage?: (language: string) => void
@@ -2040,9 +2194,9 @@ function ComposerFooter({
 
           onImageAdd(selectedImages)
         } else if (type === 'video') {
-          onSelectVideo(post.id, assets[0])
+          void onSelectVideo(post.id, assets[0])
         } else if (type === 'gif') {
-          onSelectVideo(post.id, assets[0])
+          void onSelectVideo(post.id, assets[0])
         }
       }
 
@@ -2292,7 +2446,7 @@ function useKeyboardVerticalOffset() {
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  agent: AtpAgent,
   uri: string,
   fn: (res: AppBskyUnspeccedGetPostThreadV2.Response) => boolean,
 ) {

@@ -6,7 +6,6 @@ import {
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {isNetworkError} from '#/lib/strings/errors'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useWithdrawJoinGroupChatRequest} from '#/state/queries/messages/withdraw-join-group-chat'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -25,8 +24,6 @@ export function OutgoingRequestListItem({
   const {t: l} = useLingui()
 
   const prompt = Prompt.usePromptControl()
-
-  const moderationOpts = useModerationOpts()
 
   const {mutate: withdrawRequest, isPending: isWithdrawPending} =
     useWithdrawJoinGroupChatRequest({
@@ -66,17 +63,19 @@ export function OutgoingRequestListItem({
               (hovered || pressed || focused) && t.atoms.bg_contrast_25,
             ]}>
             <AvatarBubbles
-              profiles={[
-                convoView?.owner ?? undefined,
-                ...Array(
-                  Math.min(3, Math.max(0, convoView.memberCount - 1)),
-                ).fill(undefined),
-              ]}
+              profiles={[convoView.owner]}
+              count={convoView.memberCount}
               size={48}
-              moderationOpts={moderationOpts}
             />
             <View style={[a.flex_1]}>
-              <View style={[a.w_full, a.flex_row, a.align_center, a.pb_2xs]}>
+              <View
+                style={[
+                  a.w_full,
+                  a.flex_row,
+                  a.align_center,
+                  a.gap_xs,
+                  a.pb_2xs,
+                ]}>
                 <View style={[a.flex_shrink]}>
                   <Text
                     emoji
@@ -85,8 +84,8 @@ export function OutgoingRequestListItem({
                     {convoView.name}
                   </Text>
                 </View>
-                <View style={[a.pl_xs]}>
-                  <TimeElapsed timestamp={convoView.requestedAt}>
+                {convoView.viewer?.requestedAt ? (
+                  <TimeElapsed timestamp={convoView.viewer.requestedAt}>
                     {({timeElapsed}) => (
                       <Text
                         style={[
@@ -98,7 +97,7 @@ export function OutgoingRequestListItem({
                       </Text>
                     )}
                   </TimeElapsed>
-                </View>
+                ) : null}
               </View>
               <Text
                 numberOfLines={1}

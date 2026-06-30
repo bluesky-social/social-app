@@ -36,8 +36,8 @@ import {
 } from '#/state/session/types'
 import {useOnboardingDispatch} from '#/state/shell/onboarding'
 import {
-  clearAgeAssuranceData,
-  clearAgeAssuranceDataForDid,
+  clearAgeAssuranceServerDataForAll,
+  clearAgeAssuranceServerDataForDid,
 } from '#/ageAssurance/data'
 
 const StateContext = createContext<SessionStateContext>({
@@ -203,7 +203,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
       if (prevState.currentAgentState.did) {
-        clearAgeAssuranceDataForDid({did: prevState.currentAgentState.did})
+        clearAgeAssuranceServerDataForDid({
+          did: prevState.currentAgentState.did,
+        })
         void clearPersistedQueryStorage(prevState.currentAgentState.did)
       }
       // reset onboarding flow on logout
@@ -234,7 +236,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         },
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
-      clearAgeAssuranceData()
+      clearAgeAssuranceServerDataForAll()
       for (const account of prevState.accounts) {
         void clearPersistedQueryStorage(account.did)
       }
@@ -304,7 +306,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         accountDid: account.did,
       })
       addSessionDebugLog({type: 'method:end', method: 'removeAccount', account})
-      clearAgeAssuranceDataForDid({did: account.did})
+      clearAgeAssuranceServerDataForDid({did: account.did})
     },
     [store, cancelPendingTask],
   )

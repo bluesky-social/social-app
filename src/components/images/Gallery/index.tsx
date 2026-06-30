@@ -55,6 +55,13 @@ interface GalleryProps {
   onPressIn?: (index: number) => void
   viewContext?: PostEmbedViewContext
   isWithinQuote?: boolean
+  // Post context for the in-feed carousel swipe metric. Omit for non-post
+  // contexts (no event will be emitted).
+  metricsPostContext?: {
+    postUri: string
+    postAuthorDid: string
+    feedDescriptor?: string
+  }
 }
 
 const Context = createContext<{
@@ -99,6 +106,7 @@ export function Gallery({
   onPressIn,
   viewContext,
   isWithinQuote,
+  metricsPostContext,
 }: GalleryProps) {
   const {t: l} = useLingui()
   const ax = useAnalytics()
@@ -107,7 +115,6 @@ export function Gallery({
   const bps = useBreakpoints()
   const window = useWindowDimensions()
   const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage
-  const hideBadges = isWithinQuote
   const contentHeight = useMemo(() => {
     if (isWithinChat) {
       return 120
@@ -169,13 +176,17 @@ export function Gallery({
   const emitSwipeMetric = useMemo(
     () =>
       debounce((fromIndex: number, toIndex: number) => {
-        ax.metric('post:gallery:swipe', {
+        if (!metricsPostContext) return
+        ax.metric('post:photoEmbed:carouselSwipe', {
           fromImage: fromIndex + 1, // convert to 1-based index for easier analysis
           toImage: toIndex + 1, // convert to 1-based index for easier analysis
           totalImages: images.length,
+          postUri: metricsPostContext.postUri,
+          postAuthorDid: metricsPostContext.postAuthorDid,
+          feedDescriptor: metricsPostContext.feedDescriptor,
         })
       }, 200),
-    [ax, images.length],
+    [ax, images.length, metricsPostContext],
   )
 
   const setCurrentIndex = (index: number) => {
@@ -238,7 +249,6 @@ export function Gallery({
               onPress?.(index, [containerRef], [dims])
             }
             onPressIn={() => onPressIn?.(index)}
-            hideBadge={isWithinQuote}
           />
         ))}
       </View>
@@ -277,10 +287,6 @@ export function Gallery({
           renderItem={({item, index}) => {
             const openLightboxAtIndex = onPress
               ? () => {
-                  ax.metric('post:gallery:openLightbox', {
-                    fromImage: index + 1, // convert to 1-based index for easier analysis
-                    totalImages: images.length,
-                  })
                   const refs: AnimatedRef<any>[] = []
                   const dims: (Dimensions | null)[] = []
                   for (let i = 0; i < images.length; i++) {
@@ -292,7 +298,6 @@ export function Gallery({
               : undefined
             return (
               <GalleryImage
-                hideBadges={hideBadges}
                 largeAltBadge={largeAltBadge}
                 image={item}
                 contentHeight={contentHeight}
@@ -388,7 +393,6 @@ function GalleryImage({
   imageCount,
   onWidthChange,
   itemRef,
-  hideBadges,
   largeAltBadge,
   onContainerRef,
   onThumbDims,
@@ -402,7 +406,6 @@ function GalleryImage({
   imageCount: number
   onWidthChange: (index: number, width: number) => void
   itemRef: (node: View | null) => void
-  hideBadges?: boolean
   largeAltBadge?: boolean
   onContainerRef: (index: number, ref: AnimatedRef<any>) => void
   onThumbDims: (index: number, dims: Dimensions) => void
@@ -491,7 +494,7 @@ function GalleryImage({
             useAppleWebpCodec
           />
 
-          {!hideBadges && imageCount > 1 ? (
+          {imageCount > 1 ? (
             <View
               accessible={false}
               pointerEvents="none"
@@ -515,12 +518,16 @@ function GalleryImage({
                   a.font_bold,
                   largeAltBadge ? a.text_xs : {fontSize: 8},
                 ]}>
-                {index + 1}/{imageCount}
+                <Trans
+                  context="gallery-badge-image-position-numbers"
+                  comment="Badge showing the current image position out of the total number of images in a gallery.">
+                  {index + 1}/{imageCount}
+                </Trans>
               </Text>
             </View>
           ) : null}
 
-          {(hasAlt || isCropped) && !hideBadges ? (
+          {hasAlt || isCropped ? (
             <View
               accessible={false}
               style={[
@@ -537,6 +544,7 @@ function GalleryImage({
               ]}>
               {isCropped && (
                 <View
+                  accessible={false}
                   style={[
                     a.rounded_sm,
                     a.p_xs,
@@ -556,6 +564,7 @@ function GalleryImage({
               )}
               {hasAlt && (
                 <View
+                  accessible={false}
                   style={[
                     a.justify_center,
                     a.rounded_sm,

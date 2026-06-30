@@ -6,6 +6,7 @@ import {
   type TargetedEvent,
 } from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
+import {useLingui} from '@lingui/react/macro'
 import {
   type LinkProps as RNLinkProps,
   StackActions,
@@ -25,12 +26,14 @@ import {
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
-import {useModalControls} from '#/state/modals'
+import {useInAppBrowser} from '#/state/preferences/in-app-browser'
 import {atoms as a, flatten, type TextStyleProp, useTheme, web} from '#/alf'
 import {Button, type ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {ArrowShareRight_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowShareRight'
+import * as PeekMenu from '#/components/PeekMenu'
 import {Text, type TextProps} from '#/components/Typography'
-import {IS_NATIVE, IS_WEB} from '#/env'
+import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
 import {useGlobalDialogsControlContext} from './dialogs/Context'
 
@@ -87,6 +90,13 @@ type BaseLinkProps = {
   shouldProxy?: boolean
 
   /**
+   * iOS only. Wraps the link in a peek menu: long-pressing previews the live
+   * page in an in-app browser (morphing into it on tap when the in-app browser
+   * preference is on), with a share action in the menu. No-op elsewhere.
+   */
+  peek?: boolean
+
+  /**
    * Web only
    */
   onMouseEnter?: () => void
@@ -129,7 +139,6 @@ export function useLink({
   }
 
   const isExternal = isExternalUrl(href)
-  const {closeModal} = useModalControls()
   const {linkWarningDialogControl} = useGlobalDialogsControlContext()
   const openLink = useOpenLink()
   const groupChatJoinIntent = useGroupChatJoinIntent()
@@ -177,8 +186,6 @@ export function useLink({
           ) {
             void openLink(href)
           } else {
-            closeModal() // close any active modals
-
             const [screen, params] = router.matchPath(href) as [
               screen: keyof AllNavigatorParams,
               params?: RouteParams,
@@ -231,7 +238,6 @@ export function useLink({
       isExternal,
       href,
       openLink,
-      closeModal,
       action,
       navigation,
       overridePresentation,
@@ -275,11 +281,19 @@ export function useLink({
     [outerOnLongPress, handleLongPress, shareOnLongPress],
   )
 
+  // Opens the link through the normal external flow (consent dialog, in-app
+  // browser, or system browser per preference). Used by the peek menu when the
+  // in-app browser is off, so committing the peek behaves like a plain tap.
+  const openExternally = useCallback(() => {
+    void openLink(href, overridePresentation, shouldProxy)
+  }, [openLink, href, overridePresentation, shouldProxy])
+
   return {
     isExternal,
     href,
     onPress,
     onLongPress,
+    openExternally,
   }
 }
 
@@ -305,9 +319,10 @@ export function Link({
   download,
   shouldProxy,
   overridePresentation,
+  peek,
   ...rest
 }: LinkProps) {
-  const {href, isExternal, onPress, onLongPress} = useLink({
+  const {href, isExternal, onPress, onLongPress, openExternally} = useLink({
     to,
     displayText: typeof children === 'string' ? children : '',
     action,
@@ -317,7 +332,10 @@ export function Link({
     overridePresentation,
   })
 
-  return (
+  // Peek is iOS-only and only makes sense for external web links.
+  const peekEnabled = Boolean(peek && IS_IOS && isExternal)
+
+  const button = (
     <Button
       {...rest}
       style={[a.justify_start, rest.style]}
@@ -325,7 +343,11 @@ export function Link({
       accessibilityRole="link"
       href={href}
       onPress={download ? undefined : onPress}
-      onLongPress={onLongPress}
+      // When peeking, the native long-press drives the context menu. A
+      // simultaneous RN long-press recognizer fights it — cancelling the tap
+      // and breaking the lift animation — so leave long-press to native and
+      // surface sharing through the peek menu instead.
+      onLongPress={peekEnabled ? undefined : onLongPress}
       {...web({
         hrefAttrs: {
           target: download ? undefined : isExternal ? 'blank' : undefined,
@@ -339,6 +361,74 @@ export function Link({
       })}>
       {children}
     </Button>
+  )
+
+  if (peekEnabled) {
+    // Match the lift radius to whatever the consumer styled the link with, so
+    // the peek animation clips to the same corners as the rendered card.
+    const borderRadius = flatten(rest.style)?.borderRadius
+    return (
+      <LinkPeek
+        href={href}
+        onPreviewPress={openExternally}
+        shouldProxy={shouldProxy}
+        borderRadius={typeof borderRadius === 'number' ? borderRadius : 0}>
+        {button}
+      </LinkPeek>
+    )
+  }
+
+  return button
+}
+
+/**
+ * iOS peek-menu wrapper for an external `Link`. Long-pressing previews the live
+ * page in an in-app browser; the in-app-browser preference decides whether
+ * tapping the peek morphs into the browser or hands off to the normal link flow
+ * via `onPreviewPress`. The menu carries a Share action.
+ */
+function LinkPeek({
+  href,
+  onPreviewPress,
+  shouldProxy,
+  borderRadius,
+  children,
+}: {
+  href: string
+  onPreviewPress: () => void
+  shouldProxy?: boolean
+  borderRadius: number
+  children: React.ReactNode
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const useInAppBrowserPref = useInAppBrowser()
+
+  return (
+    <PeekMenu.Root>
+      <PeekMenu.Trigger
+        preview={{
+          type: 'link',
+          url: shouldProxy ? createProxiedUrl(href) : href,
+          // Only morph natively when the user has explicitly opted in. When the
+          // preference is unset (undefined), defer to the JS flow so the consent
+          // dialog can show.
+          useInAppBrowser: useInAppBrowserPref === true,
+          browserToolbarColor: t.atoms.bg.backgroundColor,
+          browserControlsColor: t.palette.primary_500,
+        }}
+        borderRadius={borderRadius}
+        // Fires only when not morphing natively (in-app browser off/unset).
+        onPreviewPress={onPreviewPress}>
+        {children}
+      </PeekMenu.Trigger>
+      <PeekMenu.Menu>
+        <PeekMenu.MenuItem id="share" onSelect={() => void shareUrl(href)}>
+          <PeekMenu.MenuItemIcon icon={ShareIcon} />
+          <PeekMenu.MenuItemText>{l`Share`}</PeekMenu.MenuItemText>
+        </PeekMenu.MenuItem>
+      </PeekMenu.Menu>
+    </PeekMenu.Root>
   )
 }
 

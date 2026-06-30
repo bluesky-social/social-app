@@ -8,7 +8,7 @@ import {JoinRequestEmbedBody} from '#/components/Post/Embed/JoinRequestEmbed'
 
 /**
  * Renders a chat invite link found in an `app.bsky.embed.external` embed (e.g.
- * a `bsky.app/c/<code>` link posted to the feed) as a join request card,
+ * a `bsky.app/chat/<code>` link posted to the feed) as a join request card,
  * falling back to a plain external embed if the invite can't be resolved.
  */
 export function ChatInviteEmbed({
@@ -38,9 +38,9 @@ function ChatInviteEmbedBody({
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) {
-  const {error} = ChatInvite.useChatInvite()
+  const {status} = ChatInvite.useChatInvite()
 
-  if (error) {
+  if (status === 'error') {
     return <ExternalEmbed link={link} onOpen={onOpen} style={style} />
   }
 

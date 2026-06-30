@@ -1,12 +1,11 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type ChatBskyGroupDefs} from '@atproto/api'
-import {Trans} from '@lingui/react/macro'
 
+import {
+  type ChatInvitePreview,
+  isKnownJoinLinkPreview,
+} from '#/state/queries/join-links'
 import {atoms as a, useTheme} from '#/alf'
 import * as ChatInvite from '#/components/dms/ChatInvite'
-import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
 
 const JOIN_REQUEST_EMBED_HEIGHT = 140
 
@@ -23,11 +22,12 @@ export function JoinRequestEmbed({
   onOpen,
 }: {
   code?: string
-  preview?: ChatBskyGroupDefs.JoinLinkPreviewView
+  preview?: ChatInvitePreview
   style?: StyleProp<ViewStyle>
   onOpen?: () => void
 }) {
-  const resolvedCode = code ?? preview?.code
+  const resolvedCode =
+    code ?? (isKnownJoinLinkPreview(preview) ? preview.code : undefined)
   if (!resolvedCode) return null
 
   return (
@@ -53,62 +53,29 @@ export function JoinRequestEmbedBody({
   onOpen?: () => void
 }) {
   const t = useTheme()
-  const {loading, preview} = ChatInvite.useChatInvite()
+  const {status} = ChatInvite.useChatInvite()
 
-  if (loading) {
-    return (
-      <View
-        style={[
-          a.align_center,
-          a.justify_center,
-          a.p_lg,
-          a.border,
-          a.rounded_lg,
-          t.atoms.border_contrast_high,
-          {height: JOIN_REQUEST_EMBED_HEIGHT},
-          style,
-        ]}>
-        <Loader size="md" fill={t.atoms.text.color} />
-      </View>
-    )
+  const box = [
+    a.border,
+    a.rounded_lg,
+    t.atoms.border_contrast_low,
+    {height: JOIN_REQUEST_EMBED_HEIGHT},
+  ]
+
+  if (status === 'loading') {
+    return <ChatInvite.Loading style={[box, a.p_lg, style]} />
   }
 
-  if (!preview) {
+  if (status !== 'available') {
     return (
-      <View
-        style={[
-          a.flex_row,
-          a.align_center,
-          a.justify_center,
-          a.p_lg,
-          a.gap_xs,
-          a.border,
-          a.rounded_lg,
-          t.atoms.border_contrast_high,
-          t.atoms.bg_contrast_25,
-          {height: JOIN_REQUEST_EMBED_HEIGHT},
-          style,
-        ]}>
-        <WarningIcon size="md" fill={t.atoms.text_contrast_medium.color} />
-        <Text style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium]}>
-          <Trans>Chat invite link no longer available</Trans>
-        </Text>
-      </View>
+      <ChatInvite.Unavailable
+        style={[box, a.p_lg, t.atoms.bg_contrast_25, style]}
+      />
     )
   }
 
   return (
-    <View
-      style={[
-        a.justify_between,
-        a.border,
-        a.rounded_lg,
-        a.p_lg,
-        a.gap_lg,
-        t.atoms.border_contrast_high,
-        {height: JOIN_REQUEST_EMBED_HEIGHT},
-        style,
-      ]}>
+    <View style={[a.justify_between, a.p_lg, a.gap_lg, box, style]}>
       <ChatInvite.Card size="large" />
       <ChatInvite.JoinButton onPress={onOpen} />
     </View>

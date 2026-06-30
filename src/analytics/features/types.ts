@@ -9,11 +9,12 @@ export enum Features {
   ImportContactsOnboardingDisable = 'import_contacts:onboarding:disable',
   ImportContactsSettingsDisable = 'import_contacts:settings:disable',
   LiveNowBetaDisable = 'live_now_beta:disable',
-  GroupChatsEnable = 'group_chats:enable',
-  GroupChatsHasBeenReleased = 'group_chats:has_been_released',
-  DmsNewMessageComposerEnable = 'dms:new_message_composer:enable',
+  GroupChatsDisable = 'group_chats:disable',
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
+  NotificationsExpandedProfileCardEnable = 'notifications:expanded_profile_card:enable',
+  SearchV2Enable = 'search_v2:enable',
+  AdvancedSearchV2Enable = 'advanced_search_v2:enable',
 
   AATest = 'aa-test',
 }

@@ -1,10 +1,6 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {
-  ChatBskyConvoDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
@@ -12,7 +8,6 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useSession} from '#/state/session'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -25,10 +20,10 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_LIQUID_GLASS} from '#/env'
 import {type ConvoWithDetails} from './util'
 
-const PFP_SIZE = IS_WEB ? 40 : Layout.HEADER_SLOT_SIZE
+const PFP_SIZE = 40
 
 export function MessagesListHeader({convo}: {convo?: ConvoWithDetails | null}) {
   const t = useTheme()
@@ -47,7 +42,7 @@ export function MessagesListHeader({convo}: {convo?: ConvoWithDetails | null}) {
           convo.kind === 'direct' ? (
             <ProfileHeaderReady convo={convo} moderationOpts={moderationOpts} />
           ) : (
-            <GroupHeaderReady convo={convo} moderationOpts={moderationOpts} />
+            <GroupHeaderReady convo={convo} />
           )
         ) : (
           <>
@@ -88,7 +83,6 @@ function ProfileHeaderReady({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {currentAccount} = useSession()
   const profile = useProfileShadow(convo.primaryMember)
 
   const moderation = moderateProfile(profile, moderationOpts)
@@ -110,12 +104,6 @@ function ProfileHeaderReady({
     : createSanitizedDisplayName(profile, true, moderation.ui('displayName'))
   const handle = isDeletedAccount ? null : sanitizeHandle(profile.handle, '@')
 
-  const latestReportableMessage =
-    ChatBskyConvoDefs.isMessageView(convo.view.lastMessage) &&
-    convo.view.lastMessage.sender?.did !== currentAccount?.did
-      ? convo.view.lastMessage
-      : undefined
-
   return (
     <Wrapper
       heading={
@@ -133,7 +121,8 @@ function ProfileHeaderReady({
             <View style={[a.flex_row, a.align_center, a.flex_1, web(a.mb_2xs)]}>
               <Text
                 style={[a.text_lg, a.font_semi_bold, a.flex_shrink]}
-                numberOfLines={1}>
+                numberOfLines={1}
+                emoji>
                 {displayName}
               </Text>
               <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
@@ -151,11 +140,10 @@ function ProfileHeaderReady({
       }
       settings={
         <ConvoMenu
-          convo={convo.view}
+          convo={convo}
           profile={profile}
           currentScreen="conversation"
           blockInfo={blockInfo}
-          latestReportableMessage={latestReportableMessage}
         />
       }
     />
@@ -164,10 +152,8 @@ function ProfileHeaderReady({
 
 function GroupHeaderReady({
   convo,
-  moderationOpts,
 }: {
   convo: Extract<ConvoWithDetails, {kind: 'group'}>
-  moderationOpts: ModerationOpts
 }) {
   const {t: l} = useLingui()
 
@@ -190,15 +176,12 @@ function GroupHeaderReady({
                   },
                 }
           }>
-          <AvatarBubbles
-            size={40}
-            profiles={convo.members}
-            moderationOpts={moderationOpts}
-          />
+          <AvatarBubbles size={PFP_SIZE} profiles={convo.members} />
           <View style={[a.flex_row, a.flex_1, a.align_center]}>
             <Text
               style={[a.text_lg, a.font_semi_bold, a.flex_shrink]}
-              numberOfLines={1}>
+              numberOfLines={1}
+              emoji>
               {convo.details.name}
             </Text>
             <MuteStatus muted={convo.view.muted} />
