@@ -683,7 +683,7 @@ export function MessagesList({
             <KeyboardStickyView
               style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
               onLayout={onInputLayout}
-              minimumOffset={bottomInset}
+              minimumOffset={IS_WEB ? 0 : bottomInset}
               offset={{
                 closed: platform({
                   ios: tokens.space.lg, // hide bottom padding when closed

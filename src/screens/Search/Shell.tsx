@@ -537,6 +537,7 @@ export function SearchScreenShell({
                   )}
                   <View style={[a.flex_1]}>
                     <SearchInput
+                      testID="searchScreenInput"
                       ref={textInput}
                       value={searchText}
                       onFocus={onSearchInputFocus}
