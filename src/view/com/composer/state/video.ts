@@ -288,6 +288,7 @@ export async function processVideo(
         dispatch({type: 'update_progress', progress: trunc2dp(num), signal})
       },
       signal,
+      onProbe: metadata => telemetry.probed(metadata),
     })
   } catch (e) {
     const message = getCompressErrorMessage(e, i18n)

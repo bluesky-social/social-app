@@ -18,3 +18,20 @@ export type CompressedVideo = {
   // bytes were actually re-encoded.
   passthroughReason?: VideoCompressSkipReason
 }
+
+// Source container metadata read off the input before any encoding decision.
+// Same shape across native (expo-bluesky-video-compress probe) and web
+// (mediabunny Input + track inspection). Numbers are raw - no bucketing.
+export type ProbedMetadata = {
+  mimeType: string
+  codec: string
+  width: number
+  height: number
+  duration: number
+  bitrate: number
+  fileSize: number
+  hasAudio: boolean
+  frameRate: number
+  rotation: number
+  isHDR: boolean
+}

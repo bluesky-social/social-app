@@ -23,7 +23,7 @@ import {
   COMPRESSION_MIN_SIZE_BYTES,
   COMPRESSION_TARGET_BITRATE,
 } from './constants'
-import {type CompressedVideo} from './types'
+import {type CompressedVideo, type ProbedMetadata} from './types'
 
 // Codecs to try in order of preference
 // avc (H.264) is most compatible, vp9/vp8 are fallbacks for WebM
@@ -34,9 +34,10 @@ export async function compressVideo(
   opts?: {
     signal?: AbortSignal
     onProgress?: (progress: number) => void
+    onProbe?: (metadata: ProbedMetadata) => void
   },
 ): Promise<CompressedVideo> {
-  const {onProgress, signal} = opts || {}
+  const {onProgress, signal, onProbe} = opts || {}
 
   logger.debug('compress: starting', {
     uri: asset.uri.slice(0, 50),
@@ -48,6 +49,18 @@ export async function compressVideo(
 
   const isGif = blob.type === 'image/gif'
   const hasCodecs = hasWebCodecs()
+
+  // Probe pass: extract source metadata via mediabunny before any compression
+  // decision. Fires before doCompression so the probed event lands ahead of
+  // compressCompleted/compressSkipped in the funnel. GIFs and missing
+  // WebCodecs both skip - mediabunny needs a parseable container + decoder.
+  if (onProbe && !isGif && hasCodecs) {
+    try {
+      onProbe(await probeWithMediaBunny(blob))
+    } catch (e) {
+      logger.debug('video probe failed', {safeMessage: e})
+    }
+  }
 
   logger.debug('compress: fetched blob', {
     size: blob.size,
@@ -95,6 +108,44 @@ export async function compressVideo(
     bytes: await blob.arrayBuffer(),
     mimeType: blob.type || 'video/mp4',
     passthroughReason: fallbackReason,
+  }
+}
+
+async function probeWithMediaBunny(blob: Blob): Promise<ProbedMetadata> {
+  const input = new Input({source: new BlobSource(blob), formats: ALL_FORMATS})
+  try {
+    const videoTrack = await input.getPrimaryVideoTrack()
+    if (!videoTrack) {
+      throw new Error('No video track found')
+    }
+    const audioTrack = await input.getPrimaryAudioTrack()
+    const [codec, codedWidth, codedHeight, rotation, isHDR, stats, duration] =
+      await Promise.all([
+        videoTrack.getCodec(),
+        videoTrack.getCodedWidth(),
+        videoTrack.getCodedHeight(),
+        videoTrack.getRotation(),
+        videoTrack.hasHighDynamicRange(),
+        // Sample a small fixed slice instead of scanning the whole file - we
+        // only want an approximate bitrate / frame rate for telemetry.
+        videoTrack.computePacketStats(100),
+        input.computeDuration(),
+      ])
+    return {
+      mimeType: blob.type || 'video/mp4',
+      codec: codec ?? 'unknown',
+      width: codedWidth,
+      height: codedHeight,
+      duration,
+      bitrate: Math.round(stats.averageBitrate),
+      fileSize: blob.size,
+      hasAudio: audioTrack !== null,
+      frameRate: stats.averagePacketRate,
+      rotation,
+      isHDR,
+    }
+  } finally {
+    input.dispose()
   }
 }
 

@@ -121,7 +121,9 @@ export default function HashtagScreen({
                 <Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
                 {author && (
                   <Layout.Header.SubtitleText>
-                    {_(msg`From @${sanitizedAuthor}`)}
+                    {author.startsWith('did:')
+                      ? _(msg`From ${sanitizedAuthor}`)
+                      : _(msg`From @${sanitizedAuthor}`)}
                   </Layout.Header.SubtitleText>
                 )}
               </Layout.Header.Content>
@@ -172,11 +174,9 @@ function HashtagScreenTab({
   const isCashtag = fullTag.startsWith('$')
 
   const queryParam = useMemo(() => {
-    // Cashtags need # prefix for search: "#$BTC" or "#$BTC from:author"
-    const searchTag = isCashtag ? `#${fullTag}` : fullTag
-    if (!author) return searchTag
-    return `${searchTag} from:${author}`
-  }, [fullTag, author, isCashtag])
+    // Cashtags need # prefix for search: "#$BTC"
+    return isCashtag ? `#${fullTag}` : fullTag
+  }, [fullTag, isCashtag])
 
   const {
     data,
@@ -188,7 +188,7 @@ function HashtagScreenTab({
     refetch,
     fetchNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: queryParam, sort, enabled: active})
+  } = useSearchPostsQuery({query: queryParam, sort, enabled: active, author})
 
   const posts = useMemo(() => {
     return data?.pages.flatMap(page => page.posts) || []
