@@ -51,7 +51,7 @@ jobs:
           aws-region: us-east-2
 
       - name: Claude review
-        uses: anthropics/claude-code-action@9dd8b95a392eb34b6f5fb56cf5a64cb735912d4b # v1.0.150
+        uses: anthropics/claude-code-action@30544b674398ee15c84819bd87caf8a87e8c7b55 # v1.0.154
         with:
           use_bedrock: 'true'
           additional_permissions: |
