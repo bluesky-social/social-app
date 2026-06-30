@@ -8,6 +8,7 @@ export const KWS_SUPPORTED_LANGS = [
   {value: 'en', label: 'English'},
   {value: 'ar', label: 'العربية'},
   {value: 'zh-Hans', label: '简体中文'},
+  {value: 'cs', label: 'Čeština'},
   {value: 'nl', label: 'Nederlands'},
   {value: 'tl', label: 'Filipino'},
   {value: 'fr', label: 'Français'},

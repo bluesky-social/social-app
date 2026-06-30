@@ -104,7 +104,10 @@ export function useSearchPostsQuery({
           let canReuse = true
           for (let key in selectArgs) {
             if (selectArgs.hasOwnProperty(key)) {
-              if ((selectArgs as any)[key] !== (lastArgs as any)[key]) {
+              if (
+                (selectArgs as Record<string, unknown>)[key] !==
+                (lastArgs as Record<string, unknown>)[key]
+              ) {
                 // Can't do reuse anything if any input has changed.
                 canReuse = false
                 break
