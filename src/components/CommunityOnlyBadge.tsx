@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -20,6 +20,10 @@ export function CommunityOnlyBadge() {
   const t = useTheme()
   const {_} = useLingui()
   const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    return () => setVisible(false)
+  }, [])
 
   return (
     <Tooltip.Outer
