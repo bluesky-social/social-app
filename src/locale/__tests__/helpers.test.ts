@@ -1,5 +1,3 @@
-import {expect, test} from '@jest/globals'
-
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
 

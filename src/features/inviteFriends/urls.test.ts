@@ -1,5 +1,3 @@
-import {describe, expect, it} from '@jest/globals'
-
 import {getInviteDisplayUrl, getInviteShareUrl} from './urls'
 
 describe('invite URLs', () => {

@@ -1,10 +1,10 @@
-import {jest} from '@jest/globals'
+import {vi} from 'vitest'
 
 import {transparentifyColor} from '../colorGeneration'
 
 describe('transparentifyColor', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('converts hsl() to hsla()', () => {

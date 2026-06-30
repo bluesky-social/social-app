@@ -1,4 +1,3 @@
-import {describe, expect, it} from '@jest/globals'
 import tldts from 'tldts'
 
 import {isEmailMaybeInvalid} from '#/lib/strings/email'

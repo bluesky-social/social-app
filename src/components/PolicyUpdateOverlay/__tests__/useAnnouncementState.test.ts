@@ -1,11 +1,11 @@
-import {describe, test} from '@jest/globals'
+import {vi} from 'vitest'
 
 import {
   computeCompletedState,
   syncCompletedState,
 } from '#/components/PolicyUpdateOverlay/usePolicyUpdateState'
 
-jest.mock('../../../state/queries/nuxs')
+vi.mock('../../../state/queries/nuxs')
 
 describe('computeCompletedState', () => {
   test(`initial state`, () => {
@@ -67,8 +67,8 @@ describe('computeCompletedState', () => {
 describe('syncCompletedState', () => {
   describe('!nuxIsReady', () => {
     test(`!completedForDevice, no-op`, () => {
-      const save = jest.fn()
-      const setCompletedForDevice = jest.fn()
+      const save = vi.fn()
+      const setCompletedForDevice = vi.fn()
       syncCompletedState({
         nuxIsReady: false,
         nuxIsCompleted: false,
@@ -83,8 +83,8 @@ describe('syncCompletedState', () => {
     })
 
     test(`completedForDevice, no-op`, () => {
-      const save = jest.fn()
-      const setCompletedForDevice = jest.fn()
+      const save = vi.fn()
+      const setCompletedForDevice = vi.fn()
       syncCompletedState({
         nuxIsReady: false,
         nuxIsCompleted: false,
@@ -103,8 +103,8 @@ describe('syncCompletedState', () => {
     describe(`!nuxIsCompleted`, () => {
       describe(`!nuxIsOptimisticallyCompleted`, () => {
         test(`!completedForDevice, no-op`, () => {
-          const save = jest.fn()
-          const setCompletedForDevice = jest.fn()
+          const save = vi.fn()
+          const setCompletedForDevice = vi.fn()
           syncCompletedState({
             nuxIsReady: true,
             nuxIsCompleted: false,
@@ -119,8 +119,8 @@ describe('syncCompletedState', () => {
         })
 
         test(`completedForDevice, syncs to server`, () => {
-          const save = jest.fn()
-          const setCompletedForDevice = jest.fn()
+          const save = vi.fn()
+          const setCompletedForDevice = vi.fn()
           syncCompletedState({
             nuxIsReady: true,
             nuxIsCompleted: false,
@@ -141,8 +141,8 @@ describe('syncCompletedState', () => {
        */
       describe(`nuxIsOptimisticallyCompleted`, () => {
         test(`completedForDevice, no-op`, () => {
-          const save = jest.fn()
-          const setCompletedForDevice = jest.fn()
+          const save = vi.fn()
+          const setCompletedForDevice = vi.fn()
           syncCompletedState({
             nuxIsReady: true,
             nuxIsCompleted: false,
@@ -160,8 +160,8 @@ describe('syncCompletedState', () => {
 
     describe(`nuxIsCompleted`, () => {
       test(`!completedForDevice, syncs to device`, () => {
-        const save = jest.fn()
-        const setCompletedForDevice = jest.fn()
+        const save = vi.fn()
+        const setCompletedForDevice = vi.fn()
         syncCompletedState({
           nuxIsReady: true,
           nuxIsCompleted: true,
@@ -176,8 +176,8 @@ describe('syncCompletedState', () => {
       })
 
       test(`completedForDevice, no-op`, () => {
-        const save = jest.fn()
-        const setCompletedForDevice = jest.fn()
+        const save = vi.fn()
+        const setCompletedForDevice = vi.fn()
         syncCompletedState({
           nuxIsReady: true,
           nuxIsCompleted: true,

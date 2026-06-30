@@ -1,19 +1,19 @@
-import {beforeAll, describe, expect, jest, test} from '@jest/globals'
 import * as Sentry from '@sentry/react-native'
 import {nanoid} from 'nanoid/non-secure'
+import {vi} from 'vitest'
 
 import {Logger} from '#/logger'
 import {sentryTransport} from '#/logger/transports/sentry'
 import {LogLevel} from '#/logger/types'
 
-jest.mock('@sentry/react-native', () => ({
-  addBreadcrumb: jest.fn(),
-  captureException: jest.fn(),
-  captureMessage: jest.fn(),
+vi.mock('@sentry/react-native', () => ({
+  addBreadcrumb: vi.fn(),
+  captureException: vi.fn(),
+  captureMessage: vi.fn(),
 }))
 
 beforeAll(() => {
-  jest.useFakeTimers()
+  vi.useFakeTimers()
 })
 
 describe('general functionality', () => {
@@ -41,7 +41,7 @@ describe('general functionality', () => {
     const timestamp = Date.now()
     const logger = new Logger({})
 
-    const mockTransport = jest.fn()
+    const mockTransport = vi.fn()
 
     logger.addTransport(mockTransport)
 
@@ -63,7 +63,7 @@ describe('general functionality', () => {
       metadata: {bar: true},
     })
 
-    const mockTransport = jest.fn()
+    const mockTransport = vi.fn()
 
     logger.addTransport(mockTransport)
 
@@ -83,7 +83,7 @@ describe('general functionality', () => {
     const timestamp = Date.now()
     const logger = new Logger({})
 
-    const mockTransport = jest.fn()
+    const mockTransport = vi.fn()
 
     const remove = logger.addTransport(mockTransport)
 
@@ -181,7 +181,7 @@ describe('general functionality', () => {
       level: 'log',
       timestamp: sentryTimestamp,
     })
-    jest.runAllTimers()
+    vi.runAllTimers()
     expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
       level: 'log',
       tags: {category: 'logger'},
@@ -203,7 +203,7 @@ describe('general functionality', () => {
       level: 'warning',
       timestamp: sentryTimestamp,
     })
-    jest.runAllTimers()
+    vi.runAllTimers()
     expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
       level: 'warning',
       tags: {category: 'logger'},
@@ -262,7 +262,7 @@ describe('general functionality', () => {
   test('add/remove transport', () => {
     const timestamp = Date.now()
     const logger = new Logger({})
-    const mockTransport = jest.fn()
+    const mockTransport = vi.fn()
 
     const remove = logger.addTransport(mockTransport)
 
@@ -286,7 +286,7 @@ describe('general functionality', () => {
 
 describe('create', () => {
   test('create', () => {
-    const mockTransport = jest.fn()
+    const mockTransport = vi.fn()
     const timestamp = Date.now()
     const message = nanoid()
     const logger = Logger.create(Logger.Context.Default)
@@ -306,7 +306,7 @@ describe('create', () => {
 
 describe('debug contexts', () => {
   test('specific', () => {
-    const mockTransport = jest.fn()
+    const mockTransport = vi.fn()
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
@@ -328,7 +328,7 @@ describe('debug contexts', () => {
   })
 
   test('namespaced', () => {
-    const mockTransport = jest.fn()
+    const mockTransport = vi.fn()
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
@@ -351,7 +351,7 @@ describe('debug contexts', () => {
   })
 
   test('ignores inactive', () => {
-    const mockTransport = jest.fn()
+    const mockTransport = vi.fn()
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
@@ -380,7 +380,7 @@ describe('supports levels', () => {
       level: LogLevel.Debug,
     })
     const message = nanoid()
-    const mockTransport = jest.fn()
+    const mockTransport = vi.fn()
 
     logger.addTransport(mockTransport)
 
@@ -428,7 +428,7 @@ describe('supports levels', () => {
       level: LogLevel.Info,
     })
     const message = nanoid()
-    const mockTransport = jest.fn()
+    const mockTransport = vi.fn()
 
     logger.addTransport(mockTransport)
 
@@ -451,7 +451,7 @@ describe('supports levels', () => {
       level: LogLevel.Warn,
     })
     const message = nanoid()
-    const mockTransport = jest.fn()
+    const mockTransport = vi.fn()
 
     logger.addTransport(mockTransport)
 
@@ -477,7 +477,7 @@ describe('supports levels', () => {
       level: LogLevel.Error,
     })
     const message = nanoid()
-    const mockTransport = jest.fn()
+    const mockTransport = vi.fn()
 
     logger.addTransport(mockTransport)
 

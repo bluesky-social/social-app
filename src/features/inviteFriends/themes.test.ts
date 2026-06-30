@@ -1,5 +1,3 @@
-import {describe, expect, it} from '@jest/globals'
-
 import {getInviteTheme, INVITE_THEME_KEYS, INVITE_THEMES} from './themes'
 
 describe('invite themes', () => {

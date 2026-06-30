@@ -100,7 +100,7 @@ jobs:
         run: pnpm intl:build
       - name: Run tests
         run: |
-          NODE_ENV=test pnpm test --forceExit --shard=${{ matrix.shard }}/${{ strategy.job-total }}
+          pnpm test --shard=${{ matrix.shard }}/${{ strategy.job-total }} --outputFile.junit=junit-${{ matrix.shard }}.xml
   # Aggregates the sharded test results into a single stable check name so branch
   # protection can require "Run tests" regardless of how many shards run.
   # The result is asserted in `run` (not `if`) so a malformed expression can

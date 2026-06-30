@@ -1,39 +1,41 @@
-jest.mock('#/storage', () => ({
+import {vi} from 'vitest'
+
+vi.mock('#/storage', () => ({
   device: {
-    get: jest.fn(),
-    set: jest.fn(),
+    get: vi.fn(),
+    set: vi.fn(),
   },
 }))
 
-jest.mock('#/analytics/identifiers/util', () => ({
-  isSessionIdExpired: jest.fn(),
+vi.mock('#/analytics/identifiers/util', () => ({
+  isSessionIdExpired: vi.fn(),
 }))
 
-jest.mock('#/lib/appState', () => ({
-  onAppStateChange: jest.fn(() => ({remove: jest.fn()})),
+vi.mock('#/lib/appState', () => ({
+  onAppStateChange: vi.fn(() => ({remove: vi.fn()})),
 }))
 
 beforeEach(() => {
-  jest.resetModules()
-  jest.clearAllMocks()
+  vi.resetModules()
+  vi.clearAllMocks()
 })
 
-function getMocks() {
-  const {device} = require('#/storage')
-  const {isSessionIdExpired} = require('#/analytics/identifiers/util')
+async function getMocks() {
+  const {device} = await import('#/storage')
+  const {isSessionIdExpired} = await import('#/analytics/identifiers/util')
   return {
-    device: jest.mocked(device),
-    isSessionIdExpired: jest.mocked(isSessionIdExpired),
+    device: vi.mocked(device),
+    isSessionIdExpired: vi.mocked(isSessionIdExpired),
   }
 }
 
 describe('session initialization', () => {
-  it('creates new session and sets timestamp when none exists', () => {
-    const {device, isSessionIdExpired} = getMocks()
+  it('creates new session and sets timestamp when none exists', async () => {
+    const {device, isSessionIdExpired} = await getMocks()
     device.get.mockReturnValue(undefined)
     isSessionIdExpired.mockReturnValue(false)
 
-    const {getInitialSessionId} = require('./session')
+    const {getInitialSessionId} = await import('./session')
     const id = getInitialSessionId()
 
     expect(id).toBeDefined()
@@ -45,8 +47,8 @@ describe('session initialization', () => {
     )
   })
 
-  it('reuses existing session when not expired', () => {
-    const {device, isSessionIdExpired} = getMocks()
+  it('reuses existing session when not expired', async () => {
+    const {device, isSessionIdExpired} = await getMocks()
     const existingId = 'existing-session-id'
     device.get.mockImplementation((key: string[]) => {
       if (key[0] === 'nativeSessionId') return existingId
@@ -55,13 +57,13 @@ describe('session initialization', () => {
     })
     isSessionIdExpired.mockReturnValue(false)
 
-    const {getInitialSessionId} = require('./session')
+    const {getInitialSessionId} = await import('./session')
 
     expect(getInitialSessionId()).toBe(existingId)
   })
 
-  it('creates new session when existing is expired', () => {
-    const {device, isSessionIdExpired} = getMocks()
+  it('creates new session when existing is expired', async () => {
+    const {device, isSessionIdExpired} = await getMocks()
     const existingId = 'existing-session-id'
     device.get.mockImplementation((key: string[]) => {
       if (key[0] === 'nativeSessionId') return existingId
@@ -70,7 +72,7 @@ describe('session initialization', () => {
     })
     isSessionIdExpired.mockReturnValue(true)
 
-    const {getInitialSessionId} = require('./session')
+    const {getInitialSessionId} = await import('./session')
     const id = getInitialSessionId()
 
     expect(id).not.toBe(existingId)

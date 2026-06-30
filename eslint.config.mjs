@@ -197,8 +197,6 @@ export default defineConfig(
         'error',
         {
           whitelist: [
-            // test files only
-            '@jest/globals',
             // we only use a really simple util from this, and we know it will be present
             'expo-modules-core',
             // this is a dep for @atproto/api, but we absolutely need them in sync, so just
@@ -304,13 +302,23 @@ export default defineConfig(
   },
 
   /**
+   * Root config files - Node.js imports are fine
+   */
+  {
+    files: ['vitest.config.ts', 'vitest/**/*.{js,ts}'],
+    rules: {
+      'import-x/no-nodejs-modules': 'off',
+    },
+  },
+
+  /**
    * Test files configuration
    */
   {
     files: ['**/__tests__/**/*.{js,jsx,ts,tsx}', '**/*.test.{js,jsx,ts,tsx}'],
     languageOptions: {
       globals: {
-        ...globals.jest,
+        ...globals.vitest,
       },
     },
   },
