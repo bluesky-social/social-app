@@ -31,13 +31,17 @@ export function ImageEmbed({
   const {openLightbox} = useLightboxControls()
   const images: AppBskyEmbedImages.ViewImage[] =
     embed.type === 'gallery'
-      ? embed.view.items.filter(AppBskyEmbedGallery.isViewImage).map(item => ({
-          thumb: item.thumbnail,
-          fullsize: item.fullsize,
-          alt: item.alt,
-          aspectRatio: item.aspectRatio,
-        }))
-      : embed.view.images
+      ? (Array.isArray(embed.view.items) ? embed.view.items : [])
+          .filter(AppBskyEmbedGallery.isViewImage)
+          .map(item => ({
+            thumb: item.thumbnail,
+            fullsize: item.fullsize,
+            alt: item.alt,
+            aspectRatio: item.aspectRatio,
+          }))
+      : Array.isArray(embed.view.images)
+        ? embed.view.images
+        : []
   const useExpandedLayout =
     embed.type === 'gallery'
       ? images.length > MAX_GRID_IMAGES
