@@ -225,6 +225,14 @@ export function useNotificationsRegistration() {
   }, [currentAccount, getAndRegisterPushToken, registerPushToken, aa])
 }
 
+/**
+ * Tracks whether we have already shown the OS notification permission prompt
+ * during this app session. On Android `canAskAgain` stays true after a single
+ * in-app denial, so without this guard a later call site (e.g. Home after
+ * Login) would surface a second prompt. Resets on app restart.
+ */
+let hasRequestedPermissionsThisSession = false
+
 export function useRequestNotificationsPermission() {
   const ax = useAnalytics()
   const {currentAccount} = useSession()
@@ -248,6 +256,11 @@ export function useRequestNotificationsPermission() {
     if (context === 'Home' && !currentAccount) {
       return
     }
+
+    if (hasRequestedPermissionsThisSession) {
+      return
+    }
+    hasRequestedPermissionsThisSession = true
 
     const res = await Notifications.requestPermissionsAsync({
       ios: {
