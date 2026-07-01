@@ -256,6 +256,9 @@ function ImageView({
   // Hold the neighbor window at 0 until the open animation completes, so we
   // only decode the active image during the most memory-constrained moment.
   // Mirrors the orientation-unlock gate below.
+  // Hold the neighbor window at 0 until the open animation completes, so we
+  // only decode the active image during the most memory-constrained moment.
+  // Mirrors the orientation-unlock gate below.
   useAnimatedReaction(
     () => openProgress.get() === 1,
     isOpen => {
@@ -264,6 +267,14 @@ function ImageView({
       }
     },
   )
+
+  // On a rotation remount openProgress is already 1, so the reaction above
+  // never sees a change; seed the flag directly for that case.
+  useEffect(() => {
+    if (openProgress.get() === 1) {
+      setHasFullyOpened(true)
+    }
+  }, [openProgress])
 
   const containerStyle = useAnimatedStyle(() => {
     if (openProgress.get() < 1) {
