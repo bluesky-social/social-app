@@ -27,7 +27,7 @@ jobs:
       pull-requests: write
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
 
@@ -116,7 +116,7 @@ jobs:
       pull-requests: write
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 100
 
@@ -134,7 +134,8 @@ jobs:
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@ebc6aa6d7466dc1e78b1e832041b7b81f6f95030 # v0.1.0
+        timeout-minutes: 5
+        uses: bluesky-social/github-actions/fingerprint-native@b5556913e4aef3964cfd5936d0add3fc0d809bdb # v0.1.0
         with:
           profile: pull-request
 
@@ -162,3 +163,19 @@ jobs:
         with:
           header: fingerprint-diff
           delete: true
+
+      - name: 🏷️ Label as fingerprint changed
+        if: ${{ steps.fingerprint.outputs.includes-changes }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr edit "$PR_NUMBER" --add-label "bot: fingerprint changed" || true
+
+      - name: 🏷️ Remove fingerprint changed label
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr edit "$PR_NUMBER" --remove-label "bot: fingerprint changed" || true
