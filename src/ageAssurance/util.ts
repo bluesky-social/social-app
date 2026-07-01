@@ -16,6 +16,7 @@ import {
   type AgeAssuranceMetadata,
   type AgeAssuranceState,
 } from '#/ageAssurance/types'
+import {IS_WEB} from '#/env'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 
 /**
@@ -187,6 +188,8 @@ export function computeAgeAssuranceFlags({
     : false
   const adultContentDisabled =
     state.access !== AgeAssuranceAccess.Full || isDeclaredUnderAdultAge
+  const allowsDeviceVerification =
+    regionAllowsDeviceVerification(regionConfig) && !IS_WEB
 
   return {
     isAgeRestricted,
@@ -196,5 +199,6 @@ export function computeAgeAssuranceFlags({
     isDeclaredUnderAdultAge,
     isOverRegionMinAccessAge,
     isOverAppMinAccessAge,
+    allowsDeviceVerification,
   }
 }
