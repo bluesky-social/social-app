@@ -199,7 +199,10 @@ export function InterestTabs({
   }, [])
 
   return (
-    <View style={[a.relative, a.flex_row]}>
+    // `collapsable={false}` keeps this as a real host view on the new arch so
+    // that a wrapping GestureDetector (e.g. BlockDrawerGesture) can attach to
+    // it - otherwise this layout-only view gets flattened away.
+    <View collapsable={false} style={[a.relative, a.flex_row]}>
       <DraggableScrollView
         ref={listRef}
         contentContainerStyle={[

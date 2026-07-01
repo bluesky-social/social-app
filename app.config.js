@@ -31,7 +31,7 @@ module.exports = function (_config) {
     ...(IS_DEV || IS_TESTFLIGHT ? [] : []),
   ]
 
-  const UPDATES_ENABLED = IS_TESTFLIGHT || IS_PRODUCTION
+  const UPDATES_ENABLED = false // TODO: revert before merging // IS_TESTFLIGHT || IS_PRODUCTION
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
 
@@ -55,7 +55,6 @@ module.exports = function (_config) {
       icon: './assets/app-icons/ios_icon_default_next.png',
       userInterfaceStyle: 'automatic',
       primaryColor: '#006AFF',
-      newArchEnabled: false,
       ios: {
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',

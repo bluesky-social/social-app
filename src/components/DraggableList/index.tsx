@@ -237,8 +237,8 @@ function SortableItem<T>({
   itemKey: string
   itemCount: number
   itemHeight: number
-  state: Animated.SharedValue<DragState>
-  dragY: Animated.SharedValue<number>
+  state: SharedValue<DragState>
+  dragY: SharedValue<number>
   scrollCompensation: SharedValue<number>
   isGestureActive: SharedValue<boolean>
   measureDone: SharedValue<boolean>
