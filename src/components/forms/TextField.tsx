@@ -22,6 +22,7 @@ import {
   useTheme,
   web,
 } from '#/alf'
+import {AutosizedTextarea} from '#/components/forms/AutosizedTextarea'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
@@ -163,6 +164,8 @@ export type InputProps = Omit<
    * behaviour, but for now just pass `null` if you want no placeholder -sfn
    */
   placeholder?: string | null | undefined
+  minRows?: number
+  maxRows?: number
 }
 
 export function createInput(Component: typeof TextInput) {
@@ -176,6 +179,8 @@ export function createInput(Component: typeof TextInput) {
     isInvalid,
     inputRef,
     style,
+    minRows = 3,
+    maxRows = 15,
     ...rest
   }: InputProps) {
     const t = useTheme()
@@ -186,6 +191,8 @@ export function createInput(Component: typeof TextInput) {
     const {chromeHover, chromeFocus, chromeError, chromeErrorHover} =
       useSharedInputStyles()
 
+    const {multiline, ...inputRest} = rest
+
     if (!withinRoot) {
       return (
         <Root isInvalid={isInvalid}>
@@ -195,6 +202,8 @@ export function createInput(Component: typeof TextInput) {
             value={value}
             onChangeText={onChangeText}
             isInvalid={isInvalid}
+            minRows={minRows}
+            maxRows={maxRows}
             {...rest}
           />
         </Root>
@@ -213,8 +222,8 @@ export function createInput(Component: typeof TextInput) {
       {
         // paddingVertical doesn't work w/multiline - esb
         lineHeight: a.text_md.fontSize * 1.2,
-        textAlignVertical: rest.multiline ? 'top' : undefined,
-        minHeight: rest.multiline ? 80 : undefined,
+        textAlignVertical: multiline ? 'top' : undefined,
+        minHeight: multiline ? 80 : undefined,
         minWidth: 0,
         paddingTop: 13,
         paddingBottom: 13,
@@ -248,29 +257,48 @@ export function createInput(Component: typeof TextInput) {
       )
     }
 
+    const handleFocus: TextInputProps['onFocus'] = e => {
+      ctx.onFocus()
+      onFocus?.(e)
+    }
+    const handleBlur: TextInputProps['onBlur'] = e => {
+      ctx.onBlur()
+      onBlur?.(e)
+    }
+
+    const sharedProps = {
+      accessibilityLabel: label,
+      value,
+      onChangeText,
+      onFocus: handleFocus,
+      onBlur: handleBlur,
+      placeholder: placeholder === null ? undefined : placeholder || label,
+      placeholderTextColor: t.palette.contrast_500,
+      keyboardAppearance:
+        t.name === 'light' ? ('light' as const) : ('dark' as const),
+      style: flattened,
+    }
+
     return (
       <>
-        <Component
-          accessibilityHint={undefined}
-          hitSlop={HITSLOP_20}
-          {...rest}
-          accessibilityLabel={label}
-          ref={refs}
-          value={value}
-          onChangeText={onChangeText}
-          onFocus={e => {
-            ctx.onFocus()
-            onFocus?.(e)
-          }}
-          onBlur={e => {
-            ctx.onBlur()
-            onBlur?.(e)
-          }}
-          placeholder={placeholder === null ? undefined : placeholder || label}
-          placeholderTextColor={t.palette.contrast_500}
-          keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          style={flattened}
-        />
+        {multiline ? (
+          <AutosizedTextarea
+            {...inputRest}
+            {...sharedProps}
+            label={label}
+            minRows={minRows}
+            maxRows={maxRows}
+            ref={refs}
+          />
+        ) : (
+          <Component
+            accessibilityHint={undefined}
+            hitSlop={HITSLOP_20}
+            {...rest}
+            {...sharedProps}
+            ref={refs}
+          />
+        )}
 
         <View
           style={[
