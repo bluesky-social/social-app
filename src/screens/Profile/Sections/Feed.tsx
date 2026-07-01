@@ -28,6 +28,7 @@ interface FeedSectionProps {
   ref?: React.Ref<SectionRef>
   feed: FeedDescriptor
   headerHeight: number
+  collapsedHeaderHeight: number
   isFocused: boolean
   scrollElRef: ListRef
   ignoreFilterFor?: string
@@ -41,6 +42,7 @@ export function ProfileFeedSection({
   ref,
   feed,
   headerHeight,
+  collapsedHeaderHeight,
   isFocused,
   scrollElRef,
   ignoreFilterFor,
@@ -110,6 +112,8 @@ export function ProfileFeedSection({
           shouldUseAdjustedNumToRender ? adjustedInitialNumToRender : undefined
         }
         isVideoFeed={isVideoFeed}
+        adjustScrollIndicators
+        collapsedHeaderHeight={collapsedHeaderHeight}
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
