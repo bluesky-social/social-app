@@ -14,7 +14,13 @@ import {
 import {useFocusEffect} from '@react-navigation/native'
 
 type StateContext = {
+  // Set to 1 to hide the footer entirely for a screen (e.g. video feed). Driven
+  // by the add/subtract counters below.
   footerMode: SharedValue<number>
+  // Set between 0 and 1 to hide the footer in response to scrolling, mirroring
+  // the home header. Driven by MainScrollProvider, and reset to 0 when the
+  // scrolling feed loses focus so other tabs never inherit a hidden bar.
+  footerScrollMode: SharedValue<number>
 }
 type SetContext = {
   add: () => void
@@ -28,6 +34,7 @@ setContext.displayName = 'MinimalModeSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const footerMode = useSharedValue(0)
+  const footerScrollMode = useSharedValue(0)
 
   const setModeWorklet = useCallback(
     (v: boolean) => {
@@ -68,8 +75,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const value = useMemo(
     () => ({
       footerMode,
+      footerScrollMode,
     }),
-    [footerMode],
+    [footerMode, footerScrollMode],
   )
   return (
     <stateContext.Provider value={value}>
