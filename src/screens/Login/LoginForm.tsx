@@ -263,7 +263,7 @@ export const LoginForm = ({
           hitSlop={HITSLOP_10}
           onPress={onPressForgotPassword}>
           <ButtonText style={[t.atoms.text_contrast_medium]}>
-            Forgot Password?
+            <Trans>Forgot Password?</Trans>
           </ButtonText>
         </Button>
       </View>

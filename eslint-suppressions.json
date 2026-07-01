@@ -1126,49 +1126,7 @@
       "count": 2
     }
   },
-  "src/screens/Login/ChooseAccountForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/screens/Login/ForgotPasswordForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
-  "src/screens/Login/SetNewPasswordForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
   "src/screens/Login/index.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "react-hooks/purity": {
-      "count": 1
-    },
     "react-hooks/refs": {
       "count": 1
     },

@@ -1,8 +1,8 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, View} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {errHasMsg} from '@atproto/common-web'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
@@ -42,7 +42,7 @@ export const ForgotPasswordForm = ({
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const onPressSelectService = useCallback(() => {
     Keyboard.dismiss()
@@ -50,7 +50,7 @@ export const ForgotPasswordForm = ({
 
   const onPressNext = async () => {
     if (!EmailValidator.validate(email)) {
-      return setError(_(msg`Your email appears to be invalid.`))
+      return setError(l`Your email appears to be invalid.`)
     }
 
     setError('')
@@ -60,18 +60,15 @@ export const ForgotPasswordForm = ({
       const agent = new Agent(null, {service: serviceUrl})
       await agent.com.atproto.server.requestPasswordReset({email})
       onEmailSent()
-    } catch (e: any) {
-      const errMsg = e.toString()
-      logger.warn('Failed to request password reset', {error: e})
+    } catch (err) {
+      logger.warn('Failed to request password reset', {error: err})
       setIsProcessing(false)
-      if (isNetworkError(e)) {
+      if (isNetworkError(errHasMsg)) {
         setError(
-          _(
-            msg`Unable to contact your service. Please check your Internet connection.`,
-          ),
+          l`Unable to contact your service. Please check your Internet connection.`,
         )
       } else {
-        setError(cleanError(errMsg))
+        setError(cleanError(err))
       }
     }
   }
@@ -98,7 +95,7 @@ export const ForgotPasswordForm = ({
           <TextField.Icon icon={At} />
           <TextField.Input
             testID="forgotPasswordEmail"
-            label={_(msg`Enter your email address`)}
+            label={l`Enter your email address`}
             autoCapitalize="none"
             autoFocus
             autoCorrect={false}
@@ -106,25 +103,22 @@ export const ForgotPasswordForm = ({
             value={email}
             onChangeText={setEmail}
             editable={!isProcessing}
-            accessibilityHint={_(msg`Sets email for password reset`)}
+            accessibilityHint={l`Sets email for password reset`}
           />
         </TextField.Root>
       </View>
-
       <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
         <Trans>
           Enter the email you used to create your account. We'll send you a
           "reset code" so you can set a new password.
         </Trans>
       </Text>
-
       <FormError error={error} />
-
       <View style={[web([a.flex_row, a.align_center]), a.pt_md]}>
         {IS_WEB && (
           <>
             <Button
-              label={_(msg`Back`)}
+              label={l`Back`}
               color="secondary"
               size="large"
               onPress={onPressBack}>
@@ -137,7 +131,7 @@ export const ForgotPasswordForm = ({
         )}
         {!serviceDescription ? (
           <Button
-            label={_(msg`Connecting to service...`)}
+            label={l`Connecting to service...`}
             size="large"
             color="secondary"
             disabled>
@@ -146,11 +140,11 @@ export const ForgotPasswordForm = ({
           </Button>
         ) : (
           <Button
-            label={_(msg`Next`)}
-            accessibilityHint={_(msg`Navigates to the next screen`)}
+            label={l`Next`}
+            accessibilityHint={l`Navigates to the next screen`}
             color="primary"
             size="large"
-            onPress={onPressNext}
+            onPress={() => void onPressNext()}
             disabled={isProcessing}>
             <ButtonText>
               <Trans>Next</Trans>
@@ -171,8 +165,8 @@ export const ForgotPasswordForm = ({
         <Button
           testID="skipSendEmailButton"
           onPress={onEmailSent}
-          label={_(msg`Go to next`)}
-          accessibilityHint={_(msg`Navigates to the next screen`)}
+          label={l`Go to next`}
+          accessibilityHint={l`Navigates to the next screen`}
           size="large"
           variant="ghost"
           color="secondary">
