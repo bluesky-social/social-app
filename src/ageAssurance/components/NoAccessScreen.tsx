@@ -71,7 +71,7 @@ export function NoAccessScreen() {
   const aa = useAgeAssurance()
   const isBlocked = aa.state.status === aa.Status.Blocked
   const isAARegion = !!region
-  const hasDeclaredAge = metadata?.declaredAge !== undefined
+  const hasDeclaredAge = aa.flags.hasDeclaredAge
   const canUpdateBirthday =
     isBirthdateUpdateAllowed || isLegacyBirthdateBug(metadata?.birthdate || '')
 

@@ -199,6 +199,7 @@ export function computeAgeAssuranceFlags({
     adultContentDisabled,
     chatDisabled,
     groupChatDisabled,
+    hasDeclaredAge: metadata?.declaredAge !== undefined,
     isDeclaredUnderAdultAge,
     isOverRegionMinAccessAge,
     isOverAppMinAccessAge,

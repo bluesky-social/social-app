@@ -51,6 +51,7 @@ const AgeAssuranceStateContext = createContext<{
     adultContentDisabled: false,
     chatDisabled: false,
     groupChatDisabled: false,
+    hasDeclaredAge: false,
     isDeclaredUnderAdultAge: false,
     isOverRegionMinAccessAge: false,
     isOverAppMinAccessAge: false,

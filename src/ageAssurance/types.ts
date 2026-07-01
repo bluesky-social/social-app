@@ -51,6 +51,7 @@ export type AgeAssuranceFlags = {
   adultContentDisabled: boolean
   chatDisabled: boolean
   groupChatDisabled: boolean
+  hasDeclaredAge: boolean
   isDeclaredUnderAdultAge: boolean
   isOverRegionMinAccessAge: boolean
   isOverAppMinAccessAge: boolean
