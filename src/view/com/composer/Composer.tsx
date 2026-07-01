@@ -373,7 +373,11 @@ export const ComposePost = ({
       initText,
       initMention,
       initInteractionSettings: preferences?.postInteractionSettings,
-      initBlackskyOnly: isForcedBlackskyOnly || blackskyOnlyDefault,
+      // Replies inherit their parent's audience: forced on for community
+      // parents, forced off for public parents. The sticky default only
+      // applies to top-level posts.
+      initBlackskyOnly:
+        isForcedBlackskyOnly || (!replyTo && blackskyOnlyDefault),
     },
     createComposerState,
   )
