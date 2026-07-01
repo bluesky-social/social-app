@@ -65,6 +65,7 @@ import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import * as ProfileCard from '#/components/ProfileCard'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import * as Prompt from '#/components/Prompt'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
 import * as Toast from '#/components/Toast'
@@ -784,6 +785,7 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
     profileShadow,
     'ProfileCard',
   )
+  const unfollowPromptControl = Prompt.usePromptControl()
 
   // Don't show button if not logged in or for own profile
   if (!hasSession || profile.did === currentAccount?.did) {
@@ -812,10 +814,7 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
     }
   }
 
-  const onPressUnfollow = async (e: GestureResponderEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-
+  const doUnfollow = async () => {
     try {
       await queueUnfollow()
       Toast.show(
@@ -863,7 +862,11 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
           color="secondary"
           size="small"
           style={[a.self_start]}
-          onPress={onPressUnfollow}>
+          onPress={(e: GestureResponderEvent) => {
+            e.preventDefault()
+            e.stopPropagation()
+            unfollowPromptControl.open()
+          }}>
           <ButtonIcon icon={CheckIcon} />
           <ButtonText>
             <Trans>Following</Trans>
@@ -882,6 +885,19 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
           </ButtonText>
         </Button>
       )}
+
+      <Prompt.Basic
+        control={unfollowPromptControl}
+        title={_(msg`Unfollow?`)}
+        description={_(
+          msg`Are you sure you want to unfollow ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+          )}?`,
+        )}
+        onConfirm={() => void doUnfollow()}
+        confirmButtonCta={_(msg`Unfollow`)}
+        confirmButtonColor="negative"
+      />
     </View>
   )
 }
