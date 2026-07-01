@@ -330,10 +330,10 @@ function AccessSection() {
     ? dateDiff(lastInitiatedAt, new Date(), 'down')
     : null
   const allowsDeviceVerification = region && aa.flags.allowsDeviceVerification
-  const verifyCta = hasInitiated
-    ? _(msg`Verify again`)
-    : allowsDeviceVerification
-      ? _(msg`Share age data`)
+  const verifyCta = allowsDeviceVerification
+    ? _(msg`Share age data`)
+    : hasInitiated
+      ? _(msg`Verify again`)
       : _(msg`Verify now`)
 
   const [isVerifyingDevice, setIsVerifyingDevice] = useState(false)
