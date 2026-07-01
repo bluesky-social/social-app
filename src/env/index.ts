@@ -5,12 +5,23 @@ import {BUNDLE_IDENTIFIER, IS_TESTFLIGHT, RELEASE_VERSION} from '#/env/common'
 
 export * from '#/env/common'
 
-// for some reason Platform.OS === 'ios' AND Platform.Version is undefined in our CI unit tests -sfn
-const iOSMajorVersion =
+/**
+ * The major version number of the current iOS device (e.g. `26` for iOS 26.x),
+ * or `0` on non-iOS platforms.
+ *
+ * Note: for some reason Platform.OS === 'ios' AND Platform.Version is undefined
+ * in our CI unit tests -sfn
+ */
+export const IOS_MAJOR_VERSION: number =
   Platform.OS === 'ios' && typeof Platform.Version === 'string'
     ? parseInt(Platform.Version.split('.')[0], 10)
     : 0
-const androidPlatformVersion =
+/**
+ * The Android API level of the current device (e.g. `23` for Android 6.0), or
+ * `0` on non-Android platforms. Note this is the API level, not the marketing
+ * version.
+ */
+export const ANDROID_API_LEVEL: number =
   Platform.OS === 'android' && typeof Platform.Version === 'number'
     ? Platform.Version
     : 0
@@ -52,8 +63,7 @@ export const IS_WEB_FIREFOX: boolean = false
  */
 export const IS_HIGH_DPI: boolean = true
 // ideally we'd use isLiquidGlassAvailable() from expo-glass-effect but checking iOS version is good enough for now
-export const IS_LIQUID_GLASS: boolean = iOSMajorVersion >= 26
+export const IS_LIQUID_GLASS: boolean = IOS_MAJOR_VERSION >= 26
 // So we can avoid attempting on-device translation when we know it's unsupported.
 export const IS_TRANSLATION_SUPPORTED: boolean =
-  (IS_IOS && iOSMajorVersion >= 18) ||
-  (IS_ANDROID && androidPlatformVersion > 22)
+  (IS_IOS && IOS_MAJOR_VERSION >= 18) || (IS_ANDROID && ANDROID_API_LEVEL > 22)

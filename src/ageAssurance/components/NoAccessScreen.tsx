@@ -45,7 +45,6 @@ import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAs
 import {
   getAgeAssuranceDataFromDeviceSignals,
   isLegacyBirthdateBug,
-  regionAllowsDeviceVerification,
   useAgeAssuranceRegionConfig,
 } from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
@@ -330,8 +329,7 @@ function AccessSection() {
   const diff = lastInitiatedAt
     ? dateDiff(lastInitiatedAt, new Date(), 'down')
     : null
-  const allowsDeviceVerification =
-    region && regionAllowsDeviceVerification(region)
+  const allowsDeviceVerification = region && aa.flags.allowsDeviceVerification
   const verifyCta = hasInitiated
     ? _(msg`Verify again`)
     : allowsDeviceVerification

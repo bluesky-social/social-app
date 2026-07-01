@@ -8,7 +8,11 @@ import {
 
 import {getAge} from '#/lib/strings/time'
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/const'
-import {FALLBACK_REGION_CONFIG, MIN_ACCESS_AGE} from '#/ageAssurance/const'
+import {
+  DEVICE_SIGNALS_SUPPORTED,
+  FALLBACK_REGION_CONFIG,
+  MIN_ACCESS_AGE,
+} from '#/ageAssurance/const'
 import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
 import {
   AgeAssuranceAccess,
@@ -16,7 +20,6 @@ import {
   type AgeAssuranceMetadata,
   type AgeAssuranceState,
 } from '#/ageAssurance/types'
-import {IS_WEB} from '#/env'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 
 /**
@@ -189,7 +192,7 @@ export function computeAgeAssuranceFlags({
   const adultContentDisabled =
     state.access !== AgeAssuranceAccess.Full || isDeclaredUnderAdultAge
   const allowsDeviceVerification =
-    regionAllowsDeviceVerification(regionConfig) && !IS_WEB
+    DEVICE_SIGNALS_SUPPORTED && regionAllowsDeviceVerification(regionConfig)
 
   return {
     isAgeRestricted,

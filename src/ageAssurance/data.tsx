@@ -23,6 +23,7 @@ import {
 } from '#/state/birthdate'
 import {fetchActorDeclarationRecord} from '#/state/queries/messages/actor-declaration'
 import {useAgent, useSession} from '#/state/session'
+import {DEVICE_SIGNALS_SUPPORTED} from '#/ageAssurance/const'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
 import {
@@ -34,7 +35,7 @@ import {
   getBirthdateStringFromAge,
   isLegacyBirthdateBug,
 } from '#/ageAssurance/util'
-import {IS_DEV, IS_NATIVE} from '#/env'
+import {IS_DEV} from '#/env'
 import {useGeolocation} from '#/geolocation'
 import {device} from '#/storage'
 
@@ -506,7 +507,7 @@ export async function getDeviceSignals(): Promise<
 > {
   if (debug.enabled && debug.useMockDeviceSignalsAPIResponse)
     return debug.resolve(debug.deviceSignals)
-  if (!IS_NATIVE) return undefined
+  if (!DEVICE_SIGNALS_SUPPORTED) return undefined
   try {
     return await AgeRange.requestAgeRangeAsync({
       threshold1: 13,
