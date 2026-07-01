@@ -27,6 +27,9 @@ interface Props {
   ref?: React.Ref<PagerRef>
   initialPage?: number
   renderTabBar: RenderTabBarFn
+  // Optional content rendered in place of the pages, below the tab bar. Used to
+  // show inline content (e.g. Explore) without changing the selected page.
+  renderContentOverlay?: () => JSX.Element | null
   onPageSelected?: (index: number) => void
 }
 
@@ -35,6 +38,7 @@ export function Pager({
   children,
   initialPage = 0,
   renderTabBar,
+  renderContentOverlay,
   onPageSelected,
 }: React.PropsWithChildren<Props>) {
   const [selectedPage, setSelectedPage] = useState(initialPage)
@@ -80,6 +84,8 @@ export function Pager({
     [selectedPage, setSelectedPage, onPageSelected],
   )
 
+  const overlay = renderContentOverlay?.()
+
   return (
     <View style={s.hContentRegion}>
       {renderTabBar({
@@ -89,11 +95,12 @@ export function Pager({
       })}
       {Children.map(children, (child, i) => (
         <View
-          style={selectedPage === i ? a.flex_1 : a.hidden}
+          style={selectedPage === i && !overlay ? a.flex_1 : a.hidden}
           key={`page-${i}`}>
           {child}
         </View>
       ))}
+      {overlay && <View style={a.flex_1}>{overlay}</View>}
     </View>
   )
 }

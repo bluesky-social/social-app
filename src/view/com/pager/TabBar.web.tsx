@@ -1,7 +1,9 @@
 import {useCallback, useEffect, useRef} from 'react'
 import {type ScrollView, StyleSheet, View} from 'react-native'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {Text} from '#/components/Typography'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {DraggableScrollView} from './DraggableScrollView'
@@ -15,6 +17,11 @@ export interface TabBarProps {
 
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
+  // When provided, an "add" button is shown at the right end of the tab bar.
+  onPressAdd?: () => void
+  // When true, the add button is shown as selected and the feed tabs are
+  // shown as unselected.
+  addActive?: boolean
 }
 
 // How much of the previous/next item we're showing
@@ -27,8 +34,11 @@ export function TabBar({
   items,
   onSelect,
   onPressSelected,
+  onPressAdd,
+  addActive,
 }: TabBarProps) {
   const t = useTheme()
+  const {t: l} = useLingui()
   const scrollElRef = useRef<ScrollView>(null)
   const itemRefs = useRef<Array<Element>>([])
   const {gtMobile} = useBreakpoints()
@@ -99,9 +109,10 @@ export function TabBar({
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         ref={scrollElRef}
+        style={a.flex_1}
         contentContainerStyle={styles.contentContainer}>
         {items.map((item, i) => {
-          const selected = i === selectedPage
+          const selected = i === selectedPage && !addActive
           return (
             <PressableWithHover
               testID={`${testID}-selector-${i}`}
@@ -139,6 +150,32 @@ export function TabBar({
           )
         })}
       </DraggableScrollView>
+      {onPressAdd && (
+        <PressableWithHover
+          testID={`${testID}-add`}
+          style={styles.addButton}
+          hoverStyle={t.atoms.bg_contrast_25}
+          onPress={onPressAdd}
+          accessibilityRole="button"
+          accessibilityState={{selected: addActive}}
+          accessibilityLabel={l`Discover new feeds`}
+          accessibilityHint="">
+          <PlusIcon
+            size="md"
+            fill={
+              addActive
+                ? t.atoms.text.color
+                : t.atoms.text_contrast_medium.color
+            }
+          />
+          <View
+            style={[
+              styles.itemIndicator,
+              addActive && {backgroundColor: t.palette.primary_500},
+            ]}
+          />
+        </PressableWithHover>
+      )}
       <View style={[t.atoms.border_contrast_low, styles.outerBottomBorder]} />
     </View>
   )
@@ -160,6 +197,13 @@ const desktopStyles = StyleSheet.create({
     paddingTop: 14,
     paddingHorizontal: 14,
     justifyContent: 'center',
+  },
+  addButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 14,
+    paddingHorizontal: 14,
+    paddingBottom: 10 + 3,
   },
   itemInner: {
     alignItems: 'center',
@@ -202,6 +246,13 @@ const mobileStyles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 10,
     justifyContent: 'center',
+  },
+  addButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 10,
+    paddingHorizontal: 10,
+    paddingBottom: 10 + 3,
   },
   itemInner: {
     flexGrow: 1,
