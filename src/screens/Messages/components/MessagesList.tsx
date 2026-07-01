@@ -86,6 +86,8 @@ import {MessagesListGroupInfoPanel} from './MessagesListGroupInfoPanel'
 import {MessagesListInfoPanel} from './MessagesListInfoPanel'
 import {KeyboardStickyView} from './vendor/KeyboardStickyView'
 
+const SATURATING_SCROLL_OFFSET = 1e7
+
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
     <View
@@ -311,7 +313,6 @@ export function MessagesList({
    * content clamps to the true bottom just as well on both, so we use one that
    * fits comfortably in int32. (APP-2223)
    */
-  const SATURATING_SCROLL_OFFSET = 1e7
   const scrollSendToBottom = useCallback(() => {
     flatListRef.current?.scrollToOffset({
       offset: SATURATING_SCROLL_OFFSET,
