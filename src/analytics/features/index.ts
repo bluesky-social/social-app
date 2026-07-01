@@ -16,7 +16,7 @@ setPolyfills({
     getItem: key => {
       return CACHE.getString(key) ?? null
     },
-    setItem: async (key, value) => {
+    setItem: (key, value) => {
       CACHE.set(key, value)
     },
   },
@@ -45,15 +45,13 @@ export const features = new GrowthBook({
  * that case, we may see a flash of uncustomized content until the
  * initialization completes.
  */
-export const init = new Promise<void>(async y => {
-  const res = await features.init({timeout: TIMEOUT_INIT})
+export const init = features.init({timeout: TIMEOUT_INIT}).then(res => {
   if (!res.success) {
     logger.warn('GrowthBook initialization failed or timed out', {
       source: res.source,
       safeMessage: res.error?.toString(),
     })
   }
-  y()
 })
 
 /**
@@ -81,7 +79,7 @@ export function setAttributes({
   session,
   preferences,
 }: Metadata) {
-  features.setAttributes({
+  void features.setAttributes({
     deviceId: base.deviceId,
     sessionId: base.sessionId,
     platform: base.platform,

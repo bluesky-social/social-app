@@ -103,17 +103,6 @@
       "count": 1
     }
   },
-  "src/analytics/features/index.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/require-await": {
-      "count": 1
-    }
-  },
   "src/analytics/identifiers/session.test.ts": {
     "@typescript-eslint/no-unsafe-call": {
       "count": 9
