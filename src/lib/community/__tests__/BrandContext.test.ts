@@ -35,5 +35,36 @@ describe('BrandContext defaults', () => {
       {type: 'timeline', value: 'following', pinned: true},
       {type: 'feed', value: VIDEO_FEED_URI, pinned: true},
     ])
+
+    expect(DEFAULT_BRAND_CONFIG.theme.brand).toEqual({
+      black: '#070C0C',
+      white: '#F8FAF9',
+      twilight: '#161E27',
+      gray300: '#C8CAC9',
+      gray400: '#9C9E9E',
+      gray600: '#6A6A6A',
+      primaryLight: '#6060E9',
+      primaryLightTint: '#EAEBFC',
+      primaryDark: '#8686FF',
+      primaryDarkTint: '#464985',
+      secondary: '#D2FC51',
+      secondaryTint: '#F1FECB',
+      negative: '#F40B42',
+    })
+    expect(DEFAULT_BRAND_CONFIG.theme.colorScale).toEqual({
+      primary_25: '#EAEBFC',
+      primary_50: '#DCDDFA',
+      primary_100: '#C6C8F5',
+      primary_200: '#B0B3F0',
+      primary_300: '#989CED',
+      primary_400: '#8286E7',
+      primary_500: '#6060E9',
+      primary_600: '#5252C3',
+      primary_700: '#4545A8',
+      primary_800: '#38388D',
+      primary_900: '#2B2B71',
+      primary_950: '#1E1E56',
+      primary_975: '#13133B',
+    })
   })
 })
