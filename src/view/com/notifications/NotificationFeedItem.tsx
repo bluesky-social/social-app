@@ -36,6 +36,7 @@ import {niceDate} from '#/lib/strings/time'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {type FeedNotification} from '#/state/queries/notifications/feed'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
@@ -65,6 +66,7 @@ import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import * as ProfileCard from '#/components/ProfileCard'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import * as Prompt from '#/components/Prompt'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
 import * as Toast from '#/components/Toast'
@@ -779,10 +781,21 @@ function ExpandListPressable({
 function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
+  const moderationOpts = useModerationOpts()
   const profileShadow = useProfileShadow(profile)
+  const moderation = useMemo(
+    () =>
+      moderationOpts ? moderateProfile(profile, moderationOpts) : undefined,
+    [profile, moderationOpts],
+  )
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profileShadow,
     'ProfileCard',
+  )
+  const unUnfollowPromptControl = Prompt.usePromptControl()
+  const displayName = sanitizeDisplayName(
+    profile.displayName || profile.handle,
+    moderation?.ui('displayName'),
   )
 
   // Don't show button if not logged in or for own profile
@@ -812,7 +825,13 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
     }
   }
 
-  const onPressUnfollow = async (e: GestureResponderEvent) => {
+  const onPressUnfollow = (e: GestureResponderEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    unUnfollowPromptControl.open()
+  }
+
+  const onConfirmUnfollow = async (e: GestureResponderEvent) => {
     e.preventDefault()
     e.stopPropagation()
 
@@ -856,33 +875,47 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   )
 
   return (
-    <View style={[a.pt_sm]}>
-      {isFollowing ? (
-        <Button
-          label={followingLabel}
-          color="secondary"
-          size="small"
-          style={[a.self_start]}
-          onPress={onPressUnfollow}>
-          <ButtonIcon icon={CheckIcon} />
-          <ButtonText>
-            <Trans>Following</Trans>
-          </ButtonText>
-        </Button>
-      ) : (
-        <Button
-          label={isFollowedBy ? _(msg`Follow back`) : _(msg`Follow`)}
-          color="primary"
-          size="small"
-          style={[a.self_start]}
-          onPress={onPressFollow}>
-          <ButtonIcon icon={PlusIcon} />
-          <ButtonText>
-            {isFollowedBy ? <Trans>Follow back</Trans> : <Trans>Follow</Trans>}
-          </ButtonText>
-        </Button>
-      )}
-    </View>
+    <>
+      <View style={[a.pt_sm]}>
+        {isFollowing ? (
+          <Button
+            label={followingLabel}
+            color="secondary"
+            size="small"
+            style={[a.self_start]}
+            onPress={onPressUnfollow}>
+            <ButtonIcon icon={CheckIcon} />
+            <ButtonText>
+              <Trans>Following</Trans>
+            </ButtonText>
+          </Button>
+        ) : (
+          <Button
+            label={isFollowedBy ? _(msg`Follow back`) : _(msg`Follow`)}
+            color="primary"
+            size="small"
+            style={[a.self_start]}
+            onPress={onPressFollow}>
+            <ButtonIcon icon={PlusIcon} />
+            <ButtonText>
+              {isFollowedBy ? (
+                <Trans>Follow back</Trans>
+              ) : (
+                <Trans>Follow</Trans>
+              )}
+            </ButtonText>
+          </Button>
+        )}
+      </View>
+      <Prompt.Basic
+        control={unUnfollowPromptControl}
+        title={_(msg`Unfollow?`)}
+        description={_(msg`Are you sure you want to unfollow ${displayName}?`)}
+        onConfirm={e => void onConfirmUnfollow(e)}
+        confirmButtonCta={_(msg`Unfollow?`)}
+        cancelButtonCta={_(msg`Cancel`)}
+      />
+    </>
   )
 }
 

@@ -1,4 +1,12 @@
-import {memo, useCallback, useEffect, useMemo, useReducer, useRef} from 'react'
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -37,6 +45,7 @@ import {Loader} from '#/components/Loader'
 import * as Pills from '#/components/Pills'
 import {Portal} from '#/components/Portal'
 import {ProfileBadges} from '#/components/ProfileBadges'
+import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
@@ -60,22 +69,11 @@ const floatingMiddlewares = [
 ]
 
 export function ProfileHoverCard(props: ProfileHoverCardProps) {
-  const prefetchProfileQuery = usePrefetchProfileQuery()
-  const prefetchedProfile = useRef(false)
-  const onPointerMove = () => {
-    if (!prefetchedProfile.current) {
-      prefetchedProfile.current = true
-      prefetchProfileQuery(props.did)
-    }
-  }
-
   if (props.disable || IS_WEB_TOUCH_DEVICE) {
     return props.children
   } else {
     return (
-      <View
-        onPointerMove={onPointerMove}
-        style={[a.flex_shrink, props.inline && a.inline, props.style]}>
+      <View style={[a.flex_shrink, props.inline && a.inline, props.style]}>
         <ProfileHoverCardInner {...props} />
       </View>
     )
@@ -111,6 +109,7 @@ const HIDE_DURATION = 200
 
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const navigation = useNavigation<NavigationProp>()
+  const {_} = useLingui()
 
   const {refs, floatingStyles} = useFloating({
     middleware: floatingMiddlewares,
@@ -271,7 +270,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 
   const prefetchProfileQuery = usePrefetchProfileQuery()
   const prefetchedProfile = useRef(false)
-  const prefetchIfNeeded = useCallback(async () => {
+  const prefetchIfNeeded = useCallback(() => {
     if (!prefetchedProfile.current) {
       prefetchedProfile.current = true
       prefetchProfileQuery(props.did)
@@ -307,6 +306,23 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     dispatch('pressed')
   }, [dispatch])
 
+  const unfollowPromptControl = Prompt.usePromptControl()
+  const unfollowFnRef = useRef<(() => void) | null>(null)
+  const [unfollowDisplayName, setUnfollowDisplayName] = useState('')
+
+  const onRequestUnfollowPrompt = useCallback(
+    ({displayName, unfollow}: {displayName: string; unfollow: () => void}) => {
+      setUnfollowDisplayName(displayName)
+      unfollowFnRef.current = unfollow
+      unfollowPromptControl.open()
+    },
+    [unfollowPromptControl],
+  )
+
+  const onConfirmUnfollow = useCallback(() => {
+    unfollowFnRef.current?.()
+  }, [])
+
   const isVisible =
     currentState.stage === 'showing' ||
     currentState.stage === 'might-hide' ||
@@ -337,11 +353,26 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
             onPointerEnter={onPointerEnterCard}
             onPointerLeave={onPointerLeaveCard}>
             <div style={{willChange: 'transform', ...animationStyle}}>
-              <Card did={props.did} hide={onPress} navigation={navigation} />
+              <Card
+                did={props.did}
+                hide={onPress}
+                navigation={navigation}
+                onRequestUnfollowPrompt={onRequestUnfollowPrompt}
+              />
             </div>
           </div>
         </Portal>
       )}
+      <Prompt.Basic
+        control={unfollowPromptControl}
+        title={_(msg`Unfollow?`)}
+        description={_(
+          msg`Are you sure you want to unfollow ${unfollowDisplayName}?`,
+        )}
+        onConfirm={onConfirmUnfollow}
+        confirmButtonCta={_(msg`Unfollow`)}
+        cancelButtonCta={_(msg`Cancel`)}
+      />
     </View>
   )
 }
@@ -350,10 +381,15 @@ let Card = ({
   did,
   hide,
   navigation,
+  onRequestUnfollowPrompt,
 }: {
   did: string
   hide: () => void
   navigation: NavigationProp
+  onRequestUnfollowPrompt: (data: {
+    displayName: string
+    unfollow: () => void
+  }) => void
 }): React.ReactNode => {
   const t = useTheme()
 
@@ -395,7 +431,12 @@ let Card = ({
             onPressOpenProfile={onPressOpenProfile}
           />
         ) : (
-          <Inner profile={data} moderationOpts={moderationOpts} hide={hide} />
+          <Inner
+            profile={data}
+            moderationOpts={moderationOpts}
+            hide={hide}
+            onRequestUnfollowPrompt={onRequestUnfollowPrompt}
+          />
         )
       ) : (
         <View
@@ -417,10 +458,15 @@ function Inner({
   profile,
   moderationOpts,
   hide,
+  onRequestUnfollowPrompt,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hide: () => void
+  onRequestUnfollowPrompt: (data: {
+    displayName: string
+    unfollow: () => void
+  }) => void
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
@@ -434,7 +480,12 @@ function Inner({
   const {follow, unfollow} = useFollowMethods({
     profile: profileShadow,
     logContext: 'ProfileHoverCard',
+    moderation,
   })
+  const displayName = sanitizeDisplayName(
+    profile.displayName || sanitizeHandle(profile.handle),
+    moderation.ui('displayName'),
+  )
   const isBlockedUser =
     profile.viewer?.blocking ||
     profile.viewer?.blockedBy ||
@@ -495,7 +546,15 @@ function Inner({
                   : _(msg`Follow`)
               }
               style={[a.rounded_full]}
-              onPress={profileShadow.viewer?.following ? unfollow : follow}>
+              onPress={
+                profileShadow.viewer?.following
+                  ? () =>
+                      onRequestUnfollowPrompt({
+                        displayName,
+                        unfollow,
+                      })
+                  : follow
+              }>
               <ButtonIcon
                 position="left"
                 icon={profileShadow.viewer?.following ? Check : Plus}

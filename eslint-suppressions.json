@@ -376,9 +376,6 @@
       "count": 2
     },
     "@typescript-eslint/no-floating-promises": {
-      "count": 3
-    },
-    "@typescript-eslint/require-await": {
       "count": 1
     },
     "react-hooks/immutability": {
@@ -2098,7 +2095,7 @@
       "count": 3
     },
     "@typescript-eslint/no-misused-promises": {
-      "count": 3
+      "count": 2
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 2
