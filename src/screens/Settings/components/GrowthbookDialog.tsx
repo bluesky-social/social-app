@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import {Pressable, View} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 
@@ -5,11 +6,13 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {atoms as a, native, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {ArrowRotateClockwise_Stroke2_Corner0_Rounded as ArrowRotate} from '#/components/icons/ArrowRotate'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {Features, features} from '#/analytics/features'
+import {Features, features, refresh} from '#/analytics/features'
 
 export function GrowthbookDialog({
   control,
@@ -47,12 +50,45 @@ function GrowthbookDialogInner() {
         ]}>
         <CurrentProfile />
       </View>
+      <View style={[a.pb_lg, a.mb_lg, a.border_b, t.atoms.border_contrast_low]}>
+        <RefreshButton />
+      </View>
       <View style={[a.gap_md]}>
         {Object.entries(Features).map(([name, key]) => (
           <FeatureRow key={key} name={name} featureKey={key} />
         ))}
       </View>
     </Dialog.ScrollableInner>
+  )
+}
+
+function RefreshButton() {
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  const onPress = () => {
+    setIsRefreshing(true)
+    refresh({strategy: 'prefer-fresh-gates'})
+      .then(() => {
+        Toast.show('Refreshed feature flags', {type: 'success'})
+      })
+      .catch(() => {
+        Toast.show('Failed to refresh feature flags', {type: 'error'})
+      })
+      .finally(() => {
+        setIsRefreshing(false)
+      })
+  }
+
+  return (
+    <Button
+      label="Refresh feature flags"
+      onPress={onPress}
+      disabled={isRefreshing}
+      color="secondary"
+      size="small">
+      <ButtonIcon icon={ArrowRotate} />
+      <ButtonText>Refresh feature flags</ButtonText>
+    </Button>
   )
 }
 
@@ -110,7 +146,7 @@ function CurrentProfile() {
     Toast.show('Copied did to clipboard', {type: 'success'})
   }
 
-  return (
+  return profile && moderationOpts ? (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel="Copy DID"
@@ -118,21 +154,19 @@ function CurrentProfile() {
       onPress={onPressDid}
       hitSlop={native({top: 8, bottom: 8, left: 8, right: 8})}
       style={[a.gap_sm]}>
-      {profile && moderationOpts ? (
-        <ProfileCard.Header>
-          <ProfileCard.Avatar
-            profile={profile}
-            moderationOpts={moderationOpts}
-            disabledPreview
-          />
-          <ProfileCard.NameAndHandle
-            profile={profile}
-            moderationOpts={moderationOpts}
-          />
-        </ProfileCard.Header>
-      ) : null}
+      <ProfileCard.Header>
+        <ProfileCard.Avatar
+          profile={profile}
+          moderationOpts={moderationOpts}
+          disabledPreview
+        />
+        <ProfileCard.NameAndHandle
+          profile={profile}
+          moderationOpts={moderationOpts}
+        />
+      </ProfileCard.Header>
     </Pressable>
-  )
+  ) : null
 }
 
 function FeatureValue({value}: {value: unknown}) {
