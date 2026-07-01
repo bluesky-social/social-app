@@ -1,13 +1,12 @@
-import {useCallback, useRef, useState} from 'react'
+import {useRef, useState} from 'react'
 import {Keyboard, type TextInput, View} from 'react-native'
 import {
   ComAtprotoServerCreateSession,
   type ComAtprotoServerDescribeServer,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
+import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
@@ -15,14 +14,15 @@ import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {atoms as a, ios, useTheme, web} from '#/alf'
+import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
-import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
-import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
-import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
+import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
+import {Eye_Stroke2_Corner0_Rounded as EyeIcon} from '#/components/icons/Eye'
+import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon} from '#/components/icons/EyeSlash'
+import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
+import {Ticket_Stroke2_Corner0_Rounded as TicketIcon} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_IOS, IS_WEB} from '#/env'
@@ -36,7 +36,7 @@ export const LoginForm = ({
   serviceDescription,
   initialHandle,
   setError,
-  setServiceUrl,
+  // setServiceUrl,
   onPressRetryConnect,
   onPressBack,
   onPressForgotPassword,
@@ -61,21 +61,19 @@ export const LoginForm = ({
     'none' | 'identifier' | 'password' | '2fa'
   >('none')
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] = useState(false)
-  const identifierValueRef = useRef<string>(initialHandle || '')
-  const passwordValueRef = useRef<string>('')
+  const identifierValueRef = useRef(initialHandle || '')
+  const passwordValueRef = useRef('')
   const [authFactorToken, setAuthFactorToken] = useState('')
   const identifierRef = useRef<TextInput>(null)
   const passwordRef = useRef<TextInput>(null)
-  const hasFocusedOnce = useRef<boolean>(false)
-  const {_} = useLingui()
+  const hasFocusedOnce = useRef(false)
+  const [hasPassword, setHasPassword] = useState(false)
+  const [revealPassword, setRevealPassword] = useState(false)
+  const {t: l} = useLingui()
   const {login} = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
-
-  const onPressSelectService = useCallback(() => {
-    Keyboard.dismiss()
-  }, [])
 
   const onPressNext = async () => {
     if (isProcessing) return
@@ -87,13 +85,13 @@ export const LoginForm = ({
     const password = passwordValueRef.current
 
     if (!identifier) {
-      setError(_(msg`Please enter your username`))
+      setError(l`Please enter your username`)
       setErrorField('identifier')
       return
     }
 
     if (!password) {
-      setError(_(msg`Please enter your password`))
+      setError(l`Please enter your password`)
       setErrorField('password')
       return
     }
@@ -136,12 +134,13 @@ export const LoginForm = ({
       onAttemptSuccess()
       setShowLoggedOut(false)
       setHasCheckedForStarterPack(true)
-      requestNotificationsPermission('Login')
-    } catch (e: any) {
-      const errMsg = e.toString()
+      void requestNotificationsPermission('Login')
+    } catch (err) {
+      const errMsg = String(err)
       setIsProcessing(false)
       if (
-        e instanceof ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
+        err instanceof
+        ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
       ) {
         setIsAuthFactorTokenNeeded(true)
       } else {
@@ -150,7 +149,7 @@ export const LoginForm = ({
           logger.debug('Failed to login due to invalid 2fa token', {
             error: errMsg,
           })
-          setError(_(msg`Invalid 2FA confirmation code.`))
+          setError(l`Invalid 2FA confirmation code.`)
           setErrorField('2fa')
         } else if (
           errMsg.includes('Authentication Required') ||
@@ -159,13 +158,11 @@ export const LoginForm = ({
           logger.debug('Failed to login due to invalid credentials', {
             error: errMsg,
           })
-          setError(_(msg`Incorrect username or password`))
-        } else if (isNetworkError(e)) {
+          setError(l`Incorrect username or password`)
+        } else if (isNetworkError(err)) {
           logger.warn('Failed to login due to network error', {error: errMsg})
           setError(
-            _(
-              msg`Unable to contact your service. Please check your Internet connection.`,
-            ),
+            l`Unable to contact your service. Please check your Internet connection.`,
           )
         } else {
           logger.warn('Failed to login', {error: errMsg})
@@ -179,98 +176,96 @@ export const LoginForm = ({
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
       <View>
         <TextField.LabelText>
-          <Trans>Hosting provider</Trans>
+          <Trans>Username or email</Trans>
         </TextField.LabelText>
-        <HostingProvider
-          serviceUrl={serviceUrl}
-          onSelectServiceUrl={setServiceUrl}
-          onOpenDialog={onPressSelectService}
-        />
+        <TextField.Root isInvalid={errorField === 'identifier'}>
+          <TextField.Icon icon={AtIcon} />
+          <TextField.Input
+            testID="loginUsernameInput"
+            inputRef={identifierRef}
+            label={l`Username or email address`}
+            placeholder={null}
+            autoCapitalize="none"
+            autoFocus={!IS_IOS}
+            autoCorrect={false}
+            autoComplete="username"
+            returnKeyType="next"
+            textContentType="username"
+            defaultValue={initialHandle || ''}
+            onChangeText={v => {
+              identifierValueRef.current = v
+              if (errorField) setErrorField('none')
+            }}
+            onSubmitEditing={() => {
+              passwordRef.current?.focus()
+            }}
+            blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
+            editable={!isProcessing}
+            accessibilityHint={l`Enter the username or email address you used when you created your account`}
+          />
+        </TextField.Root>
       </View>
+
       <View>
         <TextField.LabelText>
-          <Trans>Account</Trans>
+          <Trans>Password</Trans>
         </TextField.LabelText>
-        <View style={[a.gap_sm]}>
-          <TextField.Root isInvalid={errorField === 'identifier'}>
-            <TextField.Icon icon={At} />
-            <TextField.Input
-              testID="loginUsernameInput"
-              inputRef={identifierRef}
-              label={_(msg`Username or email address`)}
-              autoCapitalize="none"
-              autoFocus={!IS_IOS}
-              autoCorrect={false}
-              autoComplete="username"
-              returnKeyType="next"
-              textContentType="username"
-              defaultValue={initialHandle || ''}
-              onChangeText={v => {
-                identifierValueRef.current = v
-                if (errorField) setErrorField('none')
-              }}
-              onSubmitEditing={() => {
-                passwordRef.current?.focus()
-              }}
-              blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-              editable={!isProcessing}
-              accessibilityHint={_(
-                msg`Enter the username or email address you used when you created your account`,
-              )}
-            />
-          </TextField.Root>
+        <TextField.Root isInvalid={errorField === 'password'}>
+          <TextField.Icon icon={LockIcon} />
+          <TextField.Input
+            testID="loginPasswordInput"
+            inputRef={passwordRef}
+            label={l`Password`}
+            placeholder={null}
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoComplete="current-password"
+            returnKeyType="done"
+            enablesReturnKeyAutomatically={true}
+            secureTextEntry={!revealPassword}
+            onChangeText={v => {
+              passwordValueRef.current = v
+              if (errorField) setErrorField('none')
+              setHasPassword(!!v)
+            }}
+            onSubmitEditing={() => void onPressNext()}
+            blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
+            editable={!isProcessing}
+            accessibilityHint={l`Enter your password`}
+            onLayout={
+              IS_IOS
+                ? () => {
+                    if (hasFocusedOnce.current) return
+                    hasFocusedOnce.current = true
+                    // kinda dumb, but if we use `autoFocus` to focus
+                    // the username input, it happens before the password
+                    // input gets rendered. this breaks the password autofill
+                    // on iOS (it only does the username part). delaying
+                    // it until both inputs are rendered fixes the autofill -sfn
+                    identifierRef.current?.focus()
+                  }
+                : undefined
+            }
+            hitSlop={{...HITSLOP_20, right: 0}}
+          />
+          <RevealPasswordButton
+            active={revealPassword}
+            hasPassword={hasPassword}
+            onPress={() => setRevealPassword(r => !r)}
+          />
+        </TextField.Root>
 
-          <TextField.Root isInvalid={errorField === 'password'}>
-            <TextField.Icon icon={Lock} />
-            <TextField.Input
-              testID="loginPasswordInput"
-              inputRef={passwordRef}
-              label={_(msg`Password`)}
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoComplete="current-password"
-              returnKeyType="done"
-              enablesReturnKeyAutomatically={true}
-              secureTextEntry={true}
-              clearButtonMode="while-editing"
-              onChangeText={v => {
-                passwordValueRef.current = v
-                if (errorField) setErrorField('none')
-              }}
-              onSubmitEditing={onPressNext}
-              blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
-              editable={!isProcessing}
-              accessibilityHint={_(msg`Enter your password`)}
-              onLayout={ios(() => {
-                if (hasFocusedOnce.current) return
-                hasFocusedOnce.current = true
-                // kinda dumb, but if we use `autoFocus` to focus
-                // the username input, it happens before the password
-                // input gets rendered. this breaks the password autofill
-                // on iOS (it only does the username part). delaying
-                // it until both inputs are rendered fixes the autofill -sfn
-                identifierRef.current?.focus()
-              })}
-            />
-            <Button
-              testID="forgotPasswordButton"
-              onPress={onPressForgotPassword}
-              label={_(msg`Forgot password?`)}
-              accessibilityHint={_(msg`Opens password reset form`)}
-              variant="solid"
-              color="secondary"
-              style={[
-                a.rounded_sm,
-                // t.atoms.bg_contrast_100,
-                {marginLeft: 'auto', left: 6, padding: 6},
-                a.z_10,
-              ]}>
-              <ButtonText>
-                <Trans>Forgot?</Trans>
-              </ButtonText>
-            </Button>
-          </TextField.Root>
-        </View>
+        <Button
+          label={l`Forgot Password?`}
+          accessibilityHint={l`Reset your password by sending a code to your email`}
+          style={[a.mt_md, a.self_start]}
+          hoverStyle={{opacity: 0.5}}
+          hitSlop={HITSLOP_10}
+          onPress={onPressForgotPassword}>
+          <ButtonText style={[t.atoms.text_contrast_medium]}>
+            Forgot Password?
+          </ButtonText>
+        </Button>
       </View>
       {isAuthFactorTokenNeeded && (
         <View>
@@ -278,10 +273,10 @@ export const LoginForm = ({
             <Trans>2FA Confirmation</Trans>
           </TextField.LabelText>
           <TextField.Root isInvalid={errorField === '2fa'}>
-            <TextField.Icon icon={Ticket} />
+            <TextField.Icon icon={TicketIcon} />
             <TextField.Input
               testID="loginAuthFactorTokenInput"
-              label={_(msg`Confirmation code`)}
+              label={l`Confirmation code`}
               autoCapitalize="none"
               autoFocus
               autoCorrect={false}
@@ -293,11 +288,9 @@ export const LoginForm = ({
                 setAuthFactorToken(text)
                 if (errorField) setErrorField('none')
               }}
-              onSubmitEditing={onPressNext}
+              onSubmitEditing={() => void onPressNext()}
               editable={!isProcessing}
-              accessibilityHint={_(
-                msg`Input the code which has been emailed to you`,
-              )}
+              accessibilityHint={l`Input the code which has been emailed to you`}
               style={{
                 textTransform: authFactorToken === '' ? 'none' : 'uppercase',
               }}
@@ -314,7 +307,7 @@ export const LoginForm = ({
       <View style={[a.pt_md, web([a.justify_between, a.flex_row])]}>
         {IS_WEB && (
           <Button
-            label={_(msg`Back`)}
+            label={l`Back`}
             color="secondary"
             size="large"
             onPress={onPressBack}>
@@ -326,8 +319,8 @@ export const LoginForm = ({
         {!serviceDescription && error ? (
           <Button
             testID="loginRetryButton"
-            label={_(msg`Retry`)}
-            accessibilityHint={_(msg`Retries signing in`)}
+            label={l`Retry`}
+            accessibilityHint={l`Retries signing in`}
             color="primary_subtle"
             size="large"
             onPress={onPressRetryConnect}>
@@ -337,7 +330,7 @@ export const LoginForm = ({
           </Button>
         ) : !serviceDescription ? (
           <Button
-            label={_(msg`Connecting to service...`)}
+            label={l`Connecting to service...`}
             size="large"
             color="secondary"
             disabled>
@@ -347,11 +340,11 @@ export const LoginForm = ({
         ) : (
           <Button
             testID="loginNextButton"
-            label={_(msg`Sign in`)}
-            accessibilityHint={_(msg`Navigates to the next screen`)}
+            label={l`Sign in`}
+            accessibilityHint={l`Navigates to the next screen`}
             color="primary"
             size="large"
-            onPress={onPressNext}>
+            onPress={() => void onPressNext()}>
             <ButtonText>
               <Trans>Sign in</Trans>
             </ButtonText>
@@ -360,5 +353,44 @@ export const LoginForm = ({
         )}
       </View>
     </FormContainer>
+  )
+}
+
+function RevealPasswordButton({
+  active,
+  hasPassword,
+  onPress,
+}: {
+  active: boolean
+  hasPassword: boolean
+  onPress: () => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const context = TextField.useTextFieldContext()
+
+  const Icon = !active ? EyeSlashIcon : EyeIcon
+
+  if (!hasPassword && !context.focused) return null
+
+  return (
+    <View style={[a.z_10, a.pl_sm, {marginRight: tokens.space.xs * -1}]}>
+      <Button
+        testID="showPasswordButton"
+        onPress={onPress}
+        label={active ? l`Hide password` : l`Reveal password`}
+        color="secondary"
+        size="small"
+        shape="round"
+        style={[a.bg_transparent]}
+        hitSlop={tokens.space.sm}>
+        <Icon
+          size="md"
+          style={[
+            context.focused ? t.atoms.text : t.atoms.text_contrast_medium,
+          ]}
+        />
+      </Button>
+    </View>
   )
 }
