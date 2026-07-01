@@ -2,6 +2,7 @@ import {useMemo} from 'react'
 import {type StyleProp, type TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 
+import {normalizeLineSeparators} from '#/lib/strings/line-separators'
 import {toShortUrl} from '#/lib/strings/url-helpers'
 import {atoms as a, flatten, type TextStyleProp} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
@@ -70,9 +71,10 @@ export function RichText({
   const interactiveStyles = [plainStyles, interactiveStyle]
 
   const {text, facets} = richText
+  const displayText = normalizeLineSeparators(text)
 
   if (!facets?.length) {
-    if (isOnlyEmoji(text)) {
+    if (isOnlyEmoji(displayText)) {
       const flattenedStyle = flatten(style) ?? {}
       const fontSize =
         (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
@@ -86,7 +88,7 @@ export function RichText({
           onTextLayout={onTextLayout}
           // @ts-ignore web only -prf
           dataSet={WORD_WRAP}>
-          {text}
+          {displayText}
         </Text>
       )
     }
@@ -101,7 +103,7 @@ export function RichText({
         onTextLayout={onTextLayout}
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
-        {text}
+        {displayText}
       </Text>
     )
   }
@@ -130,14 +132,14 @@ export function RichText({
             dataSet={WORD_WRAP}
             shouldProxy={shouldProxyLinks}
             onPress={onLinkPress}>
-            {segment.text}
+            {normalizeLineSeparators(segment.text)}
           </InlineLinkText>
         </ProfileHoverCard>,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
       const isValidLink = URL_REGEX.test(link.uri)
       if (!isValidLink || disableLinks) {
-        els.push(toShortUrl(segment.text))
+        els.push(toShortUrl(normalizeLineSeparators(segment.text)))
       } else {
         els.push(
           <InlineLinkText
@@ -151,7 +153,7 @@ export function RichText({
             shouldProxy={shouldProxyLinks}
             onPress={onLinkPress}
             emoji>
-            {toShortUrl(segment.text)}
+            {toShortUrl(normalizeLineSeparators(segment.text))}
           </InlineLinkText>,
         )
       }
@@ -171,7 +173,7 @@ export function RichText({
         />,
       )
     } else {
-      els.push(segment.text)
+      els.push(normalizeLineSeparators(segment.text))
     }
     key++
   }
