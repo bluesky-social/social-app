@@ -54,6 +54,7 @@ const AgeAssuranceStateContext = createContext<{
     isDeclaredUnderAdultAge: false,
     isOverRegionMinAccessAge: false,
     isOverAppMinAccessAge: false,
+    allowsDeviceVerification: false,
   },
 })
 

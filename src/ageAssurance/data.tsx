@@ -1,4 +1,5 @@
 import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
+import * as AgeRange from 'expo-age-range'
 import {
   type AppBskyAgeassuranceDefs,
   type AppBskyAgeassuranceGetConfig,
@@ -24,12 +25,17 @@ import {fetchActorDeclarationRecord} from '#/state/queries/messages/actor-declar
 import {useAgent, useSession} from '#/state/session'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
-import {type AgeAssuranceMetadata} from '#/ageAssurance/types'
 import {
+  type AgeAssuranceDeviceSignals,
+  type AgeAssuranceMetadata,
+} from '#/ageAssurance/types'
+import {
+  createRegionKey,
   getBirthdateStringFromAge,
   isLegacyBirthdateBug,
 } from '#/ageAssurance/util'
-import {IS_DEV} from '#/env'
+import {IS_DEV, IS_NATIVE} from '#/env'
+import {useGeolocation} from '#/geolocation'
 import {device} from '#/storage'
 
 /**
@@ -485,6 +491,172 @@ export function useOtherRequiredDataQuery() {
   )
 }
 
+export function createDeviceSignalsQueryKey({did}: {did: string}) {
+  return ['device-signals', did]
+}
+/**
+ * Prompts the native OS age API. Returns the raw response, or undefined if the
+ * platform can't provide one.
+ *
+ * Native-only: on web `expo-age-range` returns a misleading default (e.g.
+ * `{lowerBound: 18}`), so we never call it there — web users fall back to KWS.
+ */
+export async function getDeviceSignals(): Promise<
+  AgeRange.AgeRangeResponse | undefined
+> {
+  if (debug.enabled && debug.useMockDeviceSignalsAPIResponse)
+    return debug.resolve(debug.deviceSignals)
+  if (!IS_NATIVE) return undefined
+  try {
+    return await AgeRange.requestAgeRangeAsync({
+      threshold1: 13,
+      threshold2: 16,
+      threshold3: 18,
+    })
+  } catch (err) {
+    const e = err as Error
+    logger.error(`getDeviceSignals: failed to get device signals`, {
+      safeMessage: e.message,
+    })
+    return undefined
+  }
+}
+/**
+ * The raw region-keyed map of device signals (all regions). Used internally by
+ * the query + writer, which operate on the full map. Most consumers want
+ * {@link getDeviceSignalsFromCacheForRegion}, which resolves to the
+ * current region.
+ */
+export function getDeviceSignalsMapFromCache({
+  did,
+}: {
+  did: string
+}): AgeAssuranceDeviceSignals | undefined {
+  return qc.getQueryData<AgeAssuranceDeviceSignals>(
+    createDeviceSignalsQueryKey({did}),
+  )
+}
+/**
+ * Returns the device signals for the region the user is currently in, or
+ * undefined.
+ */
+export function getDeviceSignalsFromCacheForRegion({
+  did,
+  region,
+}: {
+  did: string
+  region: AppBskyAgeassuranceDefs.ConfigRegion
+}): AgeRange.AgeRangeResponse | undefined {
+  const regionKey = createRegionKey(region)
+  return getDeviceSignalsMapFromCache({did})?.[regionKey]
+}
+/**
+ * Stores freshly granted device signals into the (persisted) cache under the
+ * region they were captured in, merging with any signals already stored for
+ * other regions. Notifies the disabled `useDeviceSignalsQuery` observer so the
+ * AA state recomputes.
+ *
+ * Device assurance is client-side only (it can't be verified server-side) and
+ * region-bound — keying by region is what binds it. See
+ * {@link AgeAssuranceDeviceSignals}.
+ */
+export function setDeviceSignalsForRegion({
+  did,
+  region,
+  signals,
+}: {
+  did: string
+  region: {countryCode: string; regionCode?: string}
+  signals: AgeRange.AgeRangeResponse
+}) {
+  const regionKey = createRegionKey(region)
+  qc.setQueryData<AgeAssuranceDeviceSignals | undefined>(
+    createDeviceSignalsQueryKey({did}),
+    prev => ({...prev, [regionKey]: signals}),
+  )
+}
+export async function prefetchDeviceSignals({agent}: {agent: AtpAgent}) {
+  const did = getDidFromAgentSession(agent)
+  if (!did) return
+
+  /**
+   * Device signals are restored from the persisted cache only — we never call
+   * the native age API during prefetch, since that would prompt the OS for
+   * users who haven't opted in. Awaiting cache hydration ensures any previously
+   * granted signals are available before the AA state is first computed. The
+   * user can (re)grant access later via the NoAccessScreen verify flow.
+   */
+  await cacheHydrationPromise
+  const cached = getDeviceSignalsMapFromCache({did})
+  logger.debug(
+    `prefetchDeviceSignals: ${cached ? 'restored from cache' : 'no cache'}`,
+    cached,
+  )
+
+  /*
+   * Future silent-refresh path (intentionally left commented out). The OS
+   * returns a previously granted age range without re-prompting, so once a
+   * region is already cached we could refresh it on load instead of waiting for
+   * the user to re-verify. We don't do this yet because the native call can
+   * still surface a prompt for users who never opted in, so it must stay gated
+   * behind an explicit grant for now.
+   *
+   * const geolocation = device.get(['mergedGeolocation'])
+   * if (cached && geolocation?.countryCode) {
+   *   const signals = await getDeviceSignals()
+   *   if (signals) {
+   *     setDeviceSignalsForRegion({did, region: geolocation, signals})
+   *   }
+   * }
+   */
+}
+export function useDeviceSignalsQuery() {
+  const agent = useAgent()
+  const did = getDidFromAgentSession(agent)
+  const {data: config} = useConfigQuery()
+  const geolocation = useGeolocation()
+  /*
+   * Resolve the matched config region (no fallback) and key off it, so the read
+   * stays symmetric with the write (see `setDeviceSignalsForRegion`). When
+   * geolocation matches no AA region there's no device grant to surface.
+   */
+  const regionConfig = config
+    ? getAgeAssuranceRegionConfig(config, {
+        countryCode: geolocation.countryCode ?? '',
+        regionCode: geolocation.regionCode,
+      })
+    : undefined
+  const regionKey = regionConfig ? createRegionKey(regionConfig) : undefined
+
+  return useQuery(
+    {
+      /**
+       * Disabled so we never auto-call the native age API on load — that would
+       * prompt the OS for every logged-in user. We restore from the persisted
+       * cache (via `initialData`) and otherwise only update reactively when the
+       * user explicitly verifies (see `getDeviceSignals` +
+       * `setDeviceSignalsForRegion` in the NoAccessScreen verify flow).
+       *
+       * A future enhancement could silently refresh here when already cached,
+       * since the OS returns the granted result without re-prompting.
+       */
+      enabled: false,
+      initialData: getDeviceSignalsMapFromCache({did: did!}),
+      queryKey: createDeviceSignalsQueryKey({did: did!}),
+      queryFn() {
+        // Never auto-fetches (see `enabled: false`); the verify flow writes the
+        // region-keyed signals directly via `setDeviceSignalsForRegion`.
+        return getDeviceSignalsMapFromCache({did: did!})
+      },
+      // The cache holds the full region-keyed map (the writer merges into it);
+      // `select` resolves it to the current region for consumers without
+      // mutating the cached value.
+      select: map => (map && regionKey ? map[regionKey] : undefined),
+    },
+    qc,
+  )
+}
+
 /**
  * Helper to prefetch all age assurance data from the server.
  */
@@ -494,6 +666,7 @@ export function prefetchAgeAssuranceServerData({agent}: {agent: AtpAgent}) {
     configPrefetchPromise,
     prefetchServerState({agent}),
     prefetchOtherRequiredData({agent}),
+    prefetchDeviceSignals({agent}),
   ])
 }
 
@@ -525,6 +698,14 @@ export type AgeAssuranceServerData = {
    */
   state: AppBskyAgeassuranceDefs.State | undefined
   metadata: AgeAssuranceMetadata | undefined
+  /**
+   * The native on-device age signals for the region the user is currently in,
+   * if they've granted access there. Already resolved from the region-keyed
+   * cache (see `getDeviceSignalsFromCacheForRegion`), so a grant from
+   * another region won't appear here. Only consumed for regions that permit
+   * device verification.
+   */
+  deviceSignals: AgeRange.AgeRangeResponse | undefined
 }
 const AgeAssuranceServerDataContext = createContext<AgeAssuranceServerData>({
   config: undefined,
@@ -534,6 +715,7 @@ const AgeAssuranceServerDataContext = createContext<AgeAssuranceServerData>({
     declaredAge: undefined,
     birthdate: undefined,
   },
+  deviceSignals: undefined,
 })
 export function useAgeAssuranceServerDataContext() {
   return useContext(AgeAssuranceServerDataContext)
@@ -547,6 +729,8 @@ export function AgeAssuranceServerDataProvider({
   const serverState = useServerStateQuery()
   const {state, metadata} = serverState.data || {}
   const {data} = useOtherRequiredDataQuery()
+  // `select` resolves the cached region-keyed map to the current region.
+  const {data: deviceSignals} = useDeviceSignalsQuery()
   const ctx = useMemo(
     () => ({
       config,
@@ -559,8 +743,9 @@ export function AgeAssuranceServerDataProvider({
           : undefined,
         birthdate: data?.birthdate,
       },
+      deviceSignals,
     }),
-    [config, state, data, metadata],
+    [config, state, data, metadata, deviceSignals],
   )
   return (
     <AgeAssuranceServerDataContext.Provider value={ctx}>

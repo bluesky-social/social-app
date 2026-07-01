@@ -1,4 +1,5 @@
 import {useMemo} from 'react'
+import type * as AgeRange from 'expo-age-range'
 import {
   type AppBskyAgeassuranceDefs,
   getAgeAssuranceRegionConfig,
@@ -15,6 +16,7 @@ import {
   type AgeAssuranceMetadata,
   type AgeAssuranceState,
 } from '#/ageAssurance/types'
+import {IS_WEB} from '#/env'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 
 /**
@@ -34,6 +36,72 @@ export function getAgeAssuranceRegionConfigWithFallback(
   })
 
   return region || FALLBACK_REGION_CONFIG
+}
+
+/**
+ * Returns the verification methods permitted for a region *in addition to* the
+ * always-supported KWS flow. Empty when the region doesn't specify any (the
+ * historical KWS-only behavior).
+ */
+export function getRegionAdditionalVerificationMethods(
+  region: AppBskyAgeassuranceDefs.ConfigRegion,
+): NonNullable<
+  AppBskyAgeassuranceDefs.ConfigRegion['additionalVerificationMethods']
+> {
+  return region.additionalVerificationMethods ?? []
+}
+
+/**
+ * Whether a region permits satisfying age assurance via the native on-device
+ * age APIs (Apple Declared Age Range / Google Play Age Signals).
+ */
+export function regionAllowsDeviceVerification(
+  region: AppBskyAgeassuranceDefs.ConfigRegion,
+): boolean {
+  return getRegionAdditionalVerificationMethods(region).includes('device')
+}
+
+/**
+ * Builds the cache key for a region's device signals — a `country[-region]`
+ * string (e.g. `US-TX` or `GB`). This is the key under which on-device
+ * assurance is stored and read back, which is what binds a grant to its capture
+ * region.
+ */
+export function createRegionKey(region: {
+  countryCode: string
+  regionCode?: string
+}): string {
+  return region.regionCode
+    ? `${region.countryCode}-${region.regionCode}`
+    : region.countryCode
+}
+
+/**
+ * Derives age assurance data from native device signals for the given region,
+ * but only when the region permits device verification. The signals are
+ * expected to already be resolved to the user's current region (see
+ * `getDeviceSignalsFromCacheForRegion`), so a grant captured in another region
+ * won't reach here.
+ *
+ * The OS-provided `lowerBound` is the minimum age the platform will attest to,
+ * which maps onto the `assuredAge` input of the rule engine (i.e.
+ * `IfAssuredOverAge`/`IfAssuredUnderAge` rules).
+ *
+ * Always returns an object (so callers can spread it unconditionally); fields
+ * are populated only when device verification applies and the OS provided
+ * usable data.
+ */
+export function getAgeAssuranceDataFromDeviceSignals(
+  region: AppBskyAgeassuranceDefs.ConfigRegion,
+  deviceSignals: AgeRange.AgeRangeResponse | undefined,
+): {
+  assuredAge?: number
+} {
+  if (!regionAllowsDeviceVerification(region)) return {}
+  const lowerBound = deviceSignals?.lowerBound
+  return {
+    assuredAge: typeof lowerBound === 'number' ? lowerBound : undefined,
+  }
 }
 
 /**
@@ -120,6 +188,8 @@ export function computeAgeAssuranceFlags({
     : false
   const adultContentDisabled =
     state.access !== AgeAssuranceAccess.Full || isDeclaredUnderAdultAge
+  const allowsDeviceVerification =
+    regionAllowsDeviceVerification(regionConfig) && !IS_WEB
 
   return {
     isAgeRestricted,
@@ -129,5 +199,6 @@ export function computeAgeAssuranceFlags({
     isDeclaredUnderAdultAge,
     isOverRegionMinAccessAge,
     isOverAppMinAccessAge,
+    allowsDeviceVerification,
   }
 }
