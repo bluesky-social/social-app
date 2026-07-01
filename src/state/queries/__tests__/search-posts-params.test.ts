@@ -26,6 +26,23 @@ describe(`extractSearchPostsParams`, () => {
       input: `cats to:alice`,
       output: {q: `cats`, mentions: `alice`},
     },
+    // `me` is resolved by the backend, so the :me operators stay in q verbatim
+    // instead of being lifted into author/mentions.
+    {
+      name: `keeps from:me in q verbatim`,
+      input: `cats from:me`,
+      output: {q: `cats from:me`},
+    },
+    {
+      name: `keeps to:me in q verbatim`,
+      input: `cats to:me`,
+      output: {q: `cats to:me`},
+    },
+    {
+      name: `keeps mentions:me in q verbatim`,
+      input: `cats mentions:me`,
+      output: {q: `cats mentions:me`},
+    },
     {
       name: `accumulates multiple hashtags into tag[]`,
       input: `#cats #dogs`,
