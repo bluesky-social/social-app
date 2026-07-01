@@ -1143,26 +1143,6 @@
       "count": 1
     }
   },
-  "src/screens/Login/LoginForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
-    },
-    "react-hooks/refs": {
-      "count": 1
-    }
-  },
   "src/screens/Login/SetNewPasswordForm.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
