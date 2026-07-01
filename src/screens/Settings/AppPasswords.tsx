@@ -12,6 +12,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {useIsBlackskyPds} from '#/lib/hooks/useIsBlackskyPds'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
@@ -44,6 +45,7 @@ import * as SettingsList from './components/SettingsList'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export function AppPasswordsScreen({}: Props) {
   const {_} = useLingui()
+  const brand = useBrand()
   const {currentAccount} = useSession()
   const isOauth = currentAccount?.isOauthSession === true
   const isBskyPds = useIsBlackskyPds()
@@ -155,8 +157,9 @@ export function AppPasswordsScreen({}: Props) {
             <SettingsList.Item>
               <Admonition type="tip" style={[a.flex_1]}>
                 <Trans>
-                  Use app passwords to sign in to other Blacksky clients without
-                  giving full access to your account or password.
+                  Use app passwords to sign in to other{' '}
+                  {brand.metadata.displayName} clients without giving full
+                  access to your account or password.
                 </Trans>
               </Admonition>
             </SettingsList.Item>

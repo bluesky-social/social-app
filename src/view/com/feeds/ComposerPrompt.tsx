@@ -4,6 +4,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
   useCameraPermission,
@@ -28,6 +29,7 @@ export function ComposerPrompt() {
   const t = useTheme()
   const ax = useAnalytics()
   const {_} = useLingui()
+  const brand = useBrand()
   const {openComposer} = useOpenComposer()
   const profile = useCurrentAccountProfile()
   const [hover, setHover] = useState(false)
@@ -190,7 +192,7 @@ export function ComposerPrompt() {
             a.text_md,
             {includeFontPadding: false},
           ]}>
-          <Trans>What's poppin'?</Trans>
+          {brand.messages.composerPlaceholder}
         </Text>
         <View style={[a.flex_row, a.gap_md]}>
           {IS_NATIVE && (

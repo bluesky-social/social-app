@@ -6,7 +6,14 @@ import {
   type Emoji,
 } from '#/screens/Onboarding/StepProfile/types'
 
-type OnboardingScreen = 'profile' | 'interests' | 'finished'
+type OnboardingScreen =
+  | 'profile'
+  | 'interests'
+  | 'suggested-accounts'
+  | 'suggested-starterpacks'
+  | 'find-contacts-intro'
+  | 'find-contacts'
+  | 'finished'
 
 export type OnboardingState = {
   screens: Record<OnboardingScreen, boolean>
@@ -62,10 +69,28 @@ export type OnboardingAction =
         | undefined
     }
 
-export function createInitialOnboardingState(): OnboardingState {
+export function createInitialOnboardingState(
+  {
+    suggestedAccountsStepEnabled,
+    starterPacksStepEnabled,
+    findContactsStepEnabled,
+  }: {
+    suggestedAccountsStepEnabled: boolean
+    starterPacksStepEnabled: boolean
+    findContactsStepEnabled: boolean
+  } = {
+    suggestedAccountsStepEnabled: true,
+    starterPacksStepEnabled: true,
+    findContactsStepEnabled: false,
+  },
+): OnboardingState {
   const screens: OnboardingState['screens'] = {
     profile: true,
     interests: true,
+    'suggested-accounts': suggestedAccountsStepEnabled,
+    'suggested-starterpacks': starterPacksStepEnabled,
+    'find-contacts-intro': findContactsStepEnabled,
+    'find-contacts': findContactsStepEnabled,
     finished: true,
   }
 
@@ -119,7 +144,11 @@ export function reducer(
       break
     }
     case 'finish': {
-      next = createInitialOnboardingState()
+      next = createInitialOnboardingState({
+        suggestedAccountsStepEnabled: s.screens['suggested-accounts'],
+        starterPacksStepEnabled: s.screens['suggested-starterpacks'],
+        findContactsStepEnabled: s.screens['find-contacts'],
+      })
       break
     }
     case 'setInterestsStepResults': {

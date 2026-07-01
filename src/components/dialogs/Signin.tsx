@@ -4,6 +4,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Logo} from '#/view/icons/Logo'
@@ -28,6 +29,7 @@ export function SigninDialog() {
 function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
   const t = useTheme()
   const {_} = useLingui()
+  const brand = useBrand()
   const {gtMobile} = useBreakpoints()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
@@ -44,7 +46,7 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Sign in to Blacksky or create a new account`)}
+      label={_(msg`Sign in to ${brand.web.title} or create a new account`)}
       style={[gtMobile ? {width: 'auto', maxWidth: 420} : a.w_full]}>
       <View style={[!IS_NATIVE && a.p_2xl]}>
         <View
@@ -73,7 +75,7 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
               maxWidth: 300,
             },
           ]}>
-          <Trans>Sign in or create your account to join the cookout!</Trans>
+          {brand.messages.primaryCTA}
         </Text>
 
         <View style={[a.flex_col, a.gap_md]}>

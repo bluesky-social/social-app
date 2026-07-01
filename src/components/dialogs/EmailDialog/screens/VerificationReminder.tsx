@@ -1,6 +1,7 @@
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogContext} from '#/components/Dialog'
@@ -18,6 +19,7 @@ export function VerificationReminder({
 }: ScreenProps<ScreenID.VerificationReminder>) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const brand = useBrand()
   const {gtPhone, gtMobile} = useBreakpoints()
   const control = useDialogContext()
 
@@ -61,7 +63,7 @@ export function VerificationReminder({
         <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
           <Trans>
             Your email has not yet been verified. Please verify your email in
-            order to enjoy all the features of Blacksky.
+            order to enjoy all the features of {brand.metadata.displayName}.
           </Trans>
         </Text>
       </View>

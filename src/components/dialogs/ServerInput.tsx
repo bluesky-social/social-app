@@ -4,6 +4,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {BSKY_SERVICE} from '#/lib/constants'
 import * as persisted from '#/state/persisted'
 import {useSession} from '#/state/session'
@@ -18,7 +19,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
-type SegmentedControlOptions = typeof BSKY_SERVICE | 'custom'
+type SegmentedControlOptions = 'branded' | 'custom'
 
 export function ServerInputDialog({
   control,
@@ -28,25 +29,27 @@ export function ServerInputDialog({
   onSelect: (url: string) => void
 }) {
   const ax = useAnalytics()
+  const brand = useBrand()
   const formRef = useRef<DialogInnerRef>(null)
+  const brandPds = brand.services.pds.url || BSKY_SERVICE
 
   // persist these options between dialog open/close
   const [fixedOption, setFixedOption] =
-    useState<SegmentedControlOptions>(BSKY_SERVICE)
+    useState<SegmentedControlOptions>('branded')
   const [previousCustomAddress, setPreviousCustomAddress] = useState('')
 
   const onClose = useCallback(() => {
     const result = formRef.current?.getFormState()
     if (result) {
       onSelect(result)
-      if (result !== BSKY_SERVICE) {
+      if (result !== brandPds) {
         setPreviousCustomAddress(result)
       }
     }
     ax.metric('signin:hostingProviderPressed', {
-      hostingProviderDidChange: fixedOption !== BSKY_SERVICE,
+      hostingProviderDidChange: fixedOption !== 'branded',
     })
-  }, [ax, onSelect, fixedOption])
+  }, [ax, onSelect, fixedOption, brandPds])
 
   return (
     <Dialog.Outer
@@ -59,6 +62,7 @@ export function ServerInputDialog({
         fixedOption={fixedOption}
         setFixedOption={setFixedOption}
         initialCustomAddress={previousCustomAddress}
+        brandPds={brandPds}
       />
     </Dialog.Outer>
   )
@@ -71,14 +75,17 @@ function DialogInner({
   fixedOption,
   setFixedOption,
   initialCustomAddress,
+  brandPds,
 }: {
   formRef: React.Ref<DialogInnerRef>
   fixedOption: SegmentedControlOptions
   setFixedOption: (opt: SegmentedControlOptions) => void
   initialCustomAddress: string
+  brandPds: string
 }) {
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
+  const brand = useBrand()
   const t = useTheme()
   const {accounts} = useSession()
   const {gtMobile} = useBreakpoints()
@@ -98,7 +105,7 @@ function DialogInner({
             return null
           }
         } else {
-          url = fixedOption
+          url = brandPds
         }
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
           if (url === 'localhost' || url.startsWith('localhost:')) {
@@ -119,7 +126,7 @@ function DialogInner({
         return url
       },
     }),
-    [customAddress, fixedOption, pdsAddressHistory],
+    [brandPds, customAddress, fixedOption, pdsAddressHistory],
   )
 
   const isFirstTimeUser = accounts.length === 0
@@ -140,10 +147,10 @@ function DialogInner({
           onChange={setFixedOption}>
           <SegmentedControl.Item
             testID="bskyServiceSelectBtn"
-            value={BSKY_SERVICE}
-            label={_(msg`Blacksky`)}>
+            value="branded"
+            label={brand.metadata.displayName}>
             <SegmentedControl.ItemText>
-              {_(msg`Blacksky`)}
+              {brand.metadata.displayName}
             </SegmentedControl.ItemText>
           </SegmentedControl.Item>
           <SegmentedControl.Item
@@ -151,18 +158,18 @@ function DialogInner({
             value="custom"
             label={_(msg`Custom`)}>
             <SegmentedControl.ItemText>
-              {_(msg`Custom`)}
+              <Trans>Custom</Trans>
             </SegmentedControl.ItemText>
           </SegmentedControl.Item>
         </SegmentedControl.Root>
 
-        {fixedOption === BSKY_SERVICE && isFirstTimeUser && (
+        {fixedOption === 'branded' && isFirstTimeUser && (
           <View role="tabpanel">
             <Admonition type="tip">
               <Trans>
-                Blacksky is an open network where you can choose your own
-                provider. If you're new here, we recommend sticking with the
-                default Blacksky option.
+                {brand.metadata.displayName} is an open network where you can
+                choose your own provider. If you're new here, we recommend
+                sticking with the default {brand.metadata.displayName} option.
               </Trans>
             </Admonition>
           </View>
@@ -212,8 +219,9 @@ function DialogInner({
               </Trans>
             ) : (
               <Trans>
-                Blacksky is an open network where you can choose your hosting
-                provider. If you're a developer, you can host your own server.
+                {brand.metadata.displayName} is an open network where you can
+                choose your hosting provider. If you're a developer, you can
+                host your own server.
               </Trans>
             )}{' '}
             <InlineLinkText

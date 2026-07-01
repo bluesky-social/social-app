@@ -12,46 +12,52 @@
  * HTML & BODY STYLES IN `web/index.html` and `bskyweb/templates/base.html`
  */
 :root {
+  --brand-bg-light: #f8faf9;
+  --brand-bg-dark: #070c0c;
+  --brand-bg-dim: #161e27;
+  --brand-selection-light: #d2fc51;
+  --brand-selection-dark: #464985;
+  --brand-hue: 240;
   --text: #070c0c;
   --background: #f8faf9;
-  --backgroundLight: hsl(240, 20%, 95%);
+  --backgroundLight: hsl(var(--brand-hue), 20%, 95%);
 }
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
     --text: #f8faf9;
-    --background: #070c0c;
-    --backgroundLight: hsl(240, 20%, 20%);
+    --background: var(--brand-bg-dark);
+    --backgroundLight: hsl(var(--brand-hue), 20%, 20%);
   }
 }
 
 html.theme--light {
   --text: #070c0c;
-  --background: #f8faf9;
-  --backgroundLight: hsl(240, 20%, 95%);
-  background-color: #f8faf9;
+  --background: var(--brand-bg-light);
+  --backgroundLight: hsl(var(--brand-hue), 20%, 95%);
+  background-color: var(--brand-bg-light);
   ::selection {
-    background: #d2fc51;
+    background: var(--brand-selection-light);
   }
 }
 html.theme--dark {
   color-scheme: dark;
-  background-color: #070c0c;
+  background-color: var(--brand-bg-dark);
   --text: #f8faf9;
-  --background: #070c0c;
-  --backgroundLight: hsl(240, 20%, 20%);
+  --background: var(--brand-bg-dark);
+  --backgroundLight: hsl(var(--brand-hue), 20%, 20%);
   ::selection {
-    background: #464985;
+    background: var(--brand-selection-dark);
   }
 }
 html.theme--dim {
   color-scheme: dark;
-  background-color: #161e27;
+  background-color: var(--brand-bg-dim);
   --text: #f8faf9;
-  --background: #161e27;
-  --backgroundLight: hsl(240, 20%, 10%);
+  --background: var(--brand-bg-dim);
+  --backgroundLight: hsl(var(--brand-hue), 20%, 10%);
   ::selection {
-    background: #464985;
+    background: var(--brand-selection-dark);
   }
 }
 

@@ -8,9 +8,11 @@ export const STARTERPACK_HEIGHT = 630
 export const STARTERPACK_WIDTH = 1200
 export const TILE_SIZE = STARTERPACK_HEIGHT / 3
 
-const GRADIENT_TOP = '#464985'
-const GRADIENT_BOTTOM = '#8686FF'
-const IMAGE_STROKE = '#6060E9'
+const GRADIENT_TOP = process.env.BRAND_GRADIENT_TOP || '#464985'
+const GRADIENT_BOTTOM = process.env.BRAND_GRADIENT_BOTTOM || '#8686FF'
+const IMAGE_STROKE = process.env.BRAND_IMAGE_STROKE || '#6060E9'
+const BRAND_CTA = process.env.BRAND_CTA || 'Join the cookout'
+const BRAND_NAME = process.env.BRAND_NAME || 'Blacksky'
 
 export function StarterPack(props: {
   starterPack: AppBskyGraphDefs.StarterPackView
@@ -106,7 +108,7 @@ export function StarterPack(props: {
             padding: 60,
             fontSize: 40,
           }}>
-          JOIN THE COOKOUT
+          {BRAND_CTA.toUpperCase()}
         </div>
         <div style={{display: 'flex'}}>
           {imagesAcross.map((image, i) => {
@@ -143,7 +145,7 @@ export function StarterPack(props: {
             justifyContent: 'center',
             padding: '30px 30px 10px',
           }}>
-          on <Cluster width="65" style={{margin: '-7px 10px 0'}} /> Blacksky
+          on <Cluster width="65" style={{margin: '-7px 10px 0'}} /> {BRAND_NAME}
         </div>
       </div>
     </div>

@@ -9,10 +9,7 @@ import './style.css'
 // `127.0.0.1` and the new origin can't read that state, so the flow
 // silently restarts without a session. Normalize to 127.0.0.1 on entry,
 // before any OAuth state is read or written.
-if (
-  typeof window !== 'undefined' &&
-  window.location.hostname === 'localhost'
-) {
+if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
   const url = new URL(window.location.href)
   url.hostname = '127.0.0.1'
   window.location.replace(url.toString())
@@ -24,6 +21,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
 import * as Sentry from '@sentry/react-native'
 
+import {BrandProvider, useBrand} from '#/lib/community/BrandContext'
 import {Provider as HotkeysProvider} from '#/lib/hotkeys'
 import {QueryProvider} from '#/lib/react-query'
 import {ThemeProvider} from '#/lib/ThemeContext'
@@ -96,6 +94,7 @@ function InnerApp() {
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
+  const brand = useBrand()
   const {t: l} = useLingui()
   const hasCheckedLanding = useLandingEntry()
 
@@ -127,7 +126,12 @@ function InnerApp() {
   }, [l])
 
   return (
-    <Alf theme={theme}>
+    <Alf
+      theme={theme}
+      brandColors={brand.theme.brand}
+      brandHue={brand.theme.hue}
+      brandBgHue={brand.theme.bgHue}
+      brandColorScale={brand.theme.colorScale}>
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
           <Splash isReady={isReady && hasCheckedLanding}>
@@ -211,33 +215,35 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <AppConfigProvider>
-      <A11yProvider>
-        <KeyboardControllerProvider>
-          <OnboardingProvider>
-            <AnalyticsContext>
-              <SessionProvider>
-                <PrefsStateProvider>
-                  <I18nProvider>
-                    <ShellStateProvider>
-                      <DialogStateProvider>
-                        <LightboxStateProvider>
-                          <PortalProvider>
-                            <LandingProvider>
-                              <InnerApp />
-                            </LandingProvider>
-                          </PortalProvider>
-                        </LightboxStateProvider>
-                      </DialogStateProvider>
-                    </ShellStateProvider>
-                  </I18nProvider>
-                </PrefsStateProvider>
-              </SessionProvider>
-            </AnalyticsContext>
-          </OnboardingProvider>
-        </KeyboardControllerProvider>
-      </A11yProvider>
-    </AppConfigProvider>
+    <BrandProvider>
+      <AppConfigProvider>
+        <A11yProvider>
+          <KeyboardControllerProvider>
+            <OnboardingProvider>
+              <AnalyticsContext>
+                <SessionProvider>
+                  <PrefsStateProvider>
+                    <I18nProvider>
+                      <ShellStateProvider>
+                        <DialogStateProvider>
+                          <LightboxStateProvider>
+                            <PortalProvider>
+                              <LandingProvider>
+                                <InnerApp />
+                              </LandingProvider>
+                            </PortalProvider>
+                          </LightboxStateProvider>
+                        </DialogStateProvider>
+                      </ShellStateProvider>
+                    </I18nProvider>
+                  </PrefsStateProvider>
+                </SessionProvider>
+              </AnalyticsContext>
+            </OnboardingProvider>
+          </KeyboardControllerProvider>
+        </A11yProvider>
+      </AppConfigProvider>
+    </BrandProvider>
   )
 }
 

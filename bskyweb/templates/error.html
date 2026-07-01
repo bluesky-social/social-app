@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block head_title %}Error {{ statusCode }} - Blacksky{% endblock %}
+{% block head_title %}Error {{ statusCode }} - {{ brandName }}{% endblock %}
 
 {% block noscript_extra %}
   {%- if statusCode == 404 %}

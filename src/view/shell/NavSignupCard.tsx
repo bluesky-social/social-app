@@ -4,6 +4,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Logo} from '#/view/icons/Logo'
@@ -15,6 +16,7 @@ import {Text} from '#/components/Typography'
 
 let NavSignupCard = ({}: {}): React.ReactNode => {
   const {_} = useLingui()
+  const brand = useBrand()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
 
@@ -31,14 +33,14 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
 
   return (
     <View style={[{maxWidth: 245}]}>
-      <Link to="/" label="Blacksky - Home">
+      <Link to="/" label={`${brand.web.title} - Home`}>
         <Logo width={32} />
       </Link>
 
       <View style={[a.pt_lg]}>
         <Text
           style={[a.text_3xl, a.font_bold, {lineHeight: a.text_3xl.fontSize}]}>
-          <Trans>Join the Cookout</Trans>
+          {brand.messages.primaryCTA}
         </Text>
       </View>
 

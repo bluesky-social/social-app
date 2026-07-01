@@ -10,7 +10,8 @@ import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED} from '#/lib/constants'
+import {useBrand} from '#/lib/community/BrandContext'
+import {TIMELINE_SAVED_FEED} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {
   type CommonNavigatorParams,
@@ -64,6 +65,7 @@ function SavedFeedsInner({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const brand = useBrand()
   const {gtMobile} = useBreakpoints()
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
@@ -132,7 +134,7 @@ function SavedFeedsInner({
             <NoSavedFeedsOfAnyType
               onAddRecommendedFeeds={() =>
                 setCurrentFeeds(
-                  RECOMMENDED_SAVED_FEEDS.map(f => ({
+                  brand.feeds.defaultPinned.map(f => ({
                     ...f,
                     id: TID.nextStr(),
                   })),
@@ -251,6 +253,7 @@ function SavedFeedsA11y({
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
+  const brand = useBrand()
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
   const navigation = useNavigation<NavigationProp>()
@@ -323,7 +326,7 @@ function SavedFeedsA11y({
             <NoSavedFeedsOfAnyType
               onAddRecommendedFeeds={() =>
                 setCurrentFeeds(
-                  RECOMMENDED_SAVED_FEEDS.map(f => ({
+                  brand.feeds.defaultPinned.map(f => ({
                     ...f,
                     id: TID.nextStr(),
                   })),

@@ -4,6 +4,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
@@ -32,6 +33,7 @@ export const SplashScreen = ({
 }) => {
   const {_} = useLingui()
   const t = useTheme()
+  const brand = useBrand()
   const {isTabletOrMobile: IS_WEB_MOBILE} = useWebMediaQueries()
   const [showClipOverlay, setShowClipOverlay] = useState(false)
 
@@ -95,7 +97,7 @@ export const SplashScreen = ({
                   a.font_semi_bold,
                   t.atoms.text_contrast_medium,
                 ]}>
-                <Trans>What's poppin'?</Trans>
+                {brand.messages.splashTagline}
               </Text>
             </View>
 
@@ -107,7 +109,7 @@ export const SplashScreen = ({
                 onPress={onPressCreateAccount}
                 label={_(msg`Create new account`)}
                 accessibilityHint={_(
-                  msg`Opens flow to create a new Blacksky account`,
+                  msg`Opens flow to create a new ${brand.web.title} account`,
                 )}
                 size="large"
                 variant="solid"
@@ -121,7 +123,7 @@ export const SplashScreen = ({
                 onPress={onPressSignin}
                 label={_(msg`Sign in`)}
                 accessibilityHint={_(
-                  msg`Opens flow to sign in to your existing Blacksky account`,
+                  msg`Opens flow to sign in to your existing ${brand.web.title} account`,
                 )}
                 size="large"
                 variant="solid"
@@ -130,24 +132,17 @@ export const SplashScreen = ({
                   <Trans>Sign in</Trans>
                 </ButtonText>
               </Button>
-              <Text
-                style={[
-                  a.text_sm,
-                  a.leading_snug,
-                  t.atoms.text_contrast_medium,
-                  a.pt_md,
-                ]}>
-                <Trans>
-                  Migrating from Bluesky? Use{' '}
-                  <InlineLinkText
-                    label={_(msg`move.blacksky.community`)}
-                    to="https://move.blacksky.community"
-                    style={[a.text_sm]}>
-                    move.blacksky.community
-                  </InlineLinkText>{' '}
-                  to move your followers, posts, and media to Blacksky.
-                </Trans>
-              </Text>
+              {brand.messages.migrationMessage && (
+                <Text
+                  style={[
+                    a.text_sm,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                    a.pt_md,
+                  ]}>
+                  {brand.messages.migrationMessage}
+                </Text>
+              )}
             </View>
           </ErrorBoundary>
         </View>
@@ -164,6 +159,7 @@ export const SplashScreen = ({
 function Footer() {
   const t = useTheme()
   const {_} = useLingui()
+  const brand = useBrand()
 
   return (
     <View
@@ -182,23 +178,23 @@ function Footer() {
         t.atoms.border_contrast_medium,
       ]}>
       <InlineLinkText
-        label={_(msg`Learn more about Blacksky`)}
-        to="https://www.blackskyweb.xyz">
+        label={_(msg`Learn more about ${brand.web.title}`)}
+        to={brand.web.links.about}>
         <Trans>About</Trans>
       </InlineLinkText>
       <InlineLinkText
-        label={_(msg`Blacksky Terms of Service`)}
-        to="https://www.blackskyweb.xyz/about/support/tos">
+        label={_(msg`${brand.web.title} Terms of Service`)}
+        to={brand.web.links.tos}>
         <Trans>Terms</Trans>
       </InlineLinkText>
       <InlineLinkText
-        label={_(msg`Blacksky Privacy Policy`)}
-        to="https://www.blackskyweb.xyz/about/support/privacy-policy">
+        label={_(msg`${brand.web.title} Privacy Policy`)}
+        to={brand.web.links.privacy}>
         <Trans>Privacy</Trans>
       </InlineLinkText>
       <InlineLinkText
-        label={_(msg`Blacksky on GitHub`)}
-        to="https://github.com/blacksky-algorithms">
+        label={_(msg`${brand.web.title} on GitHub`)}
+        to={brand.web.links.github}>
         <Trans>GitHub</Trans>
       </InlineLinkText>
 

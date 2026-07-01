@@ -4,7 +4,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {RECOMMENDED_SAVED_FEEDS} from '#/lib/constants'
+import {useBrand} from '#/lib/community/BrandContext'
 import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -23,13 +23,14 @@ export function NoSavedFeedsOfAnyType({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const brand = useBrand()
   const {isPending, mutateAsync: overwriteSavedFeeds} =
     useOverwriteSavedFeedsMutation()
 
   const addRecommendedFeeds = async () => {
     onAddRecommendedFeeds?.()
     await overwriteSavedFeeds(
-      RECOMMENDED_SAVED_FEEDS.map(f => ({
+      brand.feeds.defaultPinned.map(f => ({
         ...f,
         id: TID.nextStr(),
       })),

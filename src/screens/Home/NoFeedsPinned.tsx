@@ -5,7 +5,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED} from '#/lib/constants'
+import {useBrand} from '#/lib/community/BrandContext'
 import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences'
 import {CenteredView} from '#/view/com/util/Views'
@@ -24,44 +24,36 @@ export function NoFeedsPinned({
 }) {
   const {_} = useLingui()
   const headerOffset = useHeaderOffset()
+  const brand = useBrand()
   const {isPending, mutateAsync: overwriteSavedFeeds} =
     useOverwriteSavedFeedsMutation()
 
   const addRecommendedFeeds = useCallback(async () => {
-    let skippedTimeline = false
-    let skippedDiscover = false
-    let remainingSavedFeeds = []
+    const defaults = brand.feeds.defaultPinned
+    const defaultValues = new Set(defaults.map(f => f.value))
 
-    // remove first instance of both timeline and discover, since we're going to overwrite them
-    for (const savedFeed of preferences.savedFeeds) {
-      if (savedFeed.type === 'timeline' && !skippedTimeline) {
-        skippedTimeline = true
-      } else if (
-        savedFeed.value === DISCOVER_SAVED_FEED.value &&
-        !skippedDiscover
-      ) {
-        skippedDiscover = true
-      } else {
-        remainingSavedFeeds.push(savedFeed)
+    // Remove first instance of each default feed, since we're going to
+    // prepend them as pinned.
+    const removed = new Set<string>()
+    const remainingSavedFeeds = preferences.savedFeeds.filter(savedFeed => {
+      if (defaultValues.has(savedFeed.value) && !removed.has(savedFeed.value)) {
+        removed.add(savedFeed.value)
+        return false
       }
-    }
+      return true
+    })
 
     const toSave = [
-      {
-        ...DISCOVER_SAVED_FEED,
+      ...defaults.map(f => ({
+        ...f,
         pinned: true,
         id: TID.nextStr(),
-      },
-      {
-        ...TIMELINE_SAVED_FEED,
-        pinned: true,
-        id: TID.nextStr(),
-      },
+      })),
       ...remainingSavedFeeds,
     ]
 
     await overwriteSavedFeeds(toSave)
-  }, [overwriteSavedFeeds, preferences.savedFeeds])
+  }, [overwriteSavedFeeds, preferences.savedFeeds, brand.feeds.defaultPinned])
 
   return (
     <CenteredView sideBorders style={[a.h_full_vh]}>

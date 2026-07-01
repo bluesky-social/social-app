@@ -3,7 +3,9 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useOnboardingCommunityStarterPacksQuery} from '#/state/queries/useOnboardingCommunityStarterPacksQuery'
 import {useOnboardingSuggestedStarterPacksQuery} from '#/state/queries/useOnboardingSuggestedStarterPacksQuery'
 import {
   OnboardingControls,
@@ -22,8 +24,21 @@ export function StepSuggestedStarterpacks() {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const moderationOpts = useModerationOpts()
+  const brand = useBrand()
 
   const {state, dispatch} = useOnboardingInternalState()
+
+  // When a community DID is configured, source starter packs from that DID's
+  // authored packs. Otherwise, fall back to Bluesky's AI-suggested packs.
+  const communityDid = brand.metadata.communityDid
+  const communityQuery = useOnboardingCommunityStarterPacksQuery({
+    did: communityDid ?? undefined,
+    enabled: !!communityDid,
+  })
+  const bskyQuery = useOnboardingSuggestedStarterPacksQuery({
+    enabled: !communityDid,
+    overrideInterests: state.interestsStepResults.selectedInterests,
+  })
 
   const {
     data: suggestedStarterPacks,
@@ -31,10 +46,7 @@ export function StepSuggestedStarterpacks() {
     isError,
     isRefetching,
     refetch,
-  } = useOnboardingSuggestedStarterPacksQuery({
-    enabled: true,
-    overrideInterests: state.interestsStepResults.selectedInterests,
-  })
+  } = communityDid ? communityQuery : bskyQuery
 
   return (
     <View style={[a.align_start, a.gap_sm]} testID="onboardingInterests">

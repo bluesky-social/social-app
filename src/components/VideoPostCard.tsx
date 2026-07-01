@@ -17,7 +17,7 @@ import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useTheme} from '#/alf'
-import {BLUE_HUE} from '#/alf/util/colorGeneration'
+import {DEFAULT_BLUE_HUE} from '#/alf/util/colorGeneration'
 import {select} from '#/alf/util/themeSelector'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {EyeSlash_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/EyeSlash'
@@ -33,7 +33,7 @@ function getBlackColor(t: ReturnType<typeof useTheme>) {
   return select(t.name, {
     light: t.palette.black,
     dark: t.atoms.bg_contrast_25.backgroundColor,
-    dim: `hsl(${BLUE_HUE}, 28%, 6%)`,
+    dim: `hsl(${DEFAULT_BLUE_HUE}, 28%, 6%)`,
   })
 }
 

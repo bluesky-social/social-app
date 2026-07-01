@@ -74,8 +74,12 @@ export type SignupAction =
   | {type: 'finish'}
   | {type: 'setStep'; value: SignupStep}
   | {type: 'setServiceUrl'; value: string}
-  | {type: 'setServiceDescription'; value: ServiceDescription | undefined}
-  | {type: 'setUserDomain'; value: string} // ADD THIS NEW ACTION TYPE
+  | {
+      type: 'setServiceDescription'
+      value: ServiceDescription | undefined
+      availableHandles?: string[]
+    }
+  | {type: 'setUserDomain'; value: string}
   | {type: 'setEmail'; value: string}
   | {type: 'setPassword'; value: string}
   | {type: 'setDateOfBirth'; value: Date}
@@ -167,9 +171,18 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
     case 'setServiceDescription': {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 
+      const domains = a.value?.availableUserDomains ?? []
+      const allowed = a.availableHandles
+      const filtered =
+        allowed && allowed.length > 0
+          ? domains.filter(d => allowed.includes(d))
+          : domains
+
       next.serviceDescription = a.value
-      if (a.value?.availableUserDomains?.[0]) {
-        next.userDomain = a.value.availableUserDomains[0]
+        ? {...a.value, availableUserDomains: filtered}
+        : a.value
+      if (filtered[0]) {
+        next.userDomain = filtered[0]
       }
       next.isLoading = false
       break

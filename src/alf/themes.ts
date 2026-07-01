@@ -1,8 +1,9 @@
 import {type Palette, type Theme} from '@bsky.app/alf'
 
+import {type BrandColors} from '#/lib/community/types'
 import {atoms} from '#/alf/atoms'
 import {
-  BLUE_HUE,
+  DEFAULT_BLUE_HUE,
   defaultScale,
   dimScale,
   GREEN_HUE,
@@ -10,11 +11,10 @@ import {
 } from '#/alf/util/colorGeneration'
 
 /** ----------------------------------------------------------------
- *  Core brand swatches lifted 1-for-1 from the guideline pages.
- *  (Add or rename here - _never_ inside a palette - to keep ALF's
- *  public API unchanged.)
+ *  Default brand swatches. These are the fallback values used when
+ *  no community brand config is provided at runtime.
  * ----------------------------------------------------------------*/
-export const BRAND = {
+export const DEFAULT_BRAND: BrandColors = {
   /* Neutrals */
   black: '#070C0C',
   white: '#F8FAF9',
@@ -35,14 +35,18 @@ export const BRAND = {
 
   /* Negative / Brand red */
   negative: '#F40B42',
-} as const
+}
+
+/** @deprecated Use DEFAULT_BRAND instead */
+export const BRAND = DEFAULT_BRAND
 
 export const themes = createThemes({
   hues: {
-    primary: BLUE_HUE,
+    primary: DEFAULT_BLUE_HUE,
     negative: RED_HUE,
     positive: GREEN_HUE,
   },
+  brand: DEFAULT_BRAND,
 })
 
 /**
@@ -74,12 +78,17 @@ export const defaultTheme = themes.light
 
 export function createThemes({
   hues,
+  brand = DEFAULT_BRAND,
+  colorScale,
 }: {
   hues: {
     primary: number
     negative: number
     positive: number
+    bg?: number
   }
+  brand?: BrandColors
+  colorScale?: Record<string, string>
 }): {
   lightPalette: Palette
   darkPalette: Palette
@@ -88,6 +97,8 @@ export function createThemes({
   dark: Theme
   dim: Theme
 } {
+  const bgHue = hues.bg ?? hues.primary
+
   /**
    * ----------------------------------------------------------------
    *  _All_ runtime-visible tokens are hard-coded to match the guide.
@@ -95,48 +106,48 @@ export function createThemes({
    * ----------------------------------------------------------------*/
   const color = {
     like: '#EC4899',
-    trueBlack: BRAND.black,
+    trueBlack: brand.black,
 
     /* ----------  Neutral Scale (white -> black) ---------- */
-    gray_0: BRAND.white,
+    gray_0: brand.white,
     gray_25: '#F2F4F4',
     gray_50: '#E8EAEA',
     gray_100: '#DFE1E1',
-    gray_200: BRAND.gray300, // #C8CAC9
+    gray_200: brand.gray300, // #C8CAC9
     gray_300: '#B6B8B8',
-    gray_400: BRAND.gray400, // #9C9E9E
+    gray_400: brand.gray400, // #9C9E9E
     gray_500: '#818383',
-    gray_600: BRAND.gray600, // #6A6A6A
+    gray_600: brand.gray600, // #6A6A6A
     gray_700: '#4F5050',
     gray_800: '#353636',
     gray_900: '#1F2020',
     gray_950: '#121313',
     gray_975: '#0B0C0C',
-    gray_1000: BRAND.black,
+    gray_1000: brand.black,
 
     /* ----------  Primary (violet) - light palette anchor ---------- */
-    primary_25: BRAND.primaryLightTint,
-    primary_50: '#DCDDFA',
-    primary_100: '#C6C8F5',
-    primary_200: '#B0B3F0',
-    primary_300: '#989CED',
-    primary_400: '#8286E7',
-    primary_500: BRAND.primaryLight,
-    primary_600: '#5252C3',
-    primary_700: '#4545A8',
-    primary_800: '#38388D',
-    primary_900: '#2B2B71',
-    primary_950: '#1E1E56',
-    primary_975: '#13133B',
+    primary_25: colorScale?.primary_25 ?? brand.primaryLightTint,
+    primary_50: colorScale?.primary_50 ?? '#DCDDFA',
+    primary_100: colorScale?.primary_100 ?? '#C6C8F5',
+    primary_200: colorScale?.primary_200 ?? '#B0B3F0',
+    primary_300: colorScale?.primary_300 ?? '#989CED',
+    primary_400: colorScale?.primary_400 ?? '#8286E7',
+    primary_500: colorScale?.primary_500 ?? brand.primaryLight,
+    primary_600: colorScale?.primary_600 ?? '#5252C3',
+    primary_700: colorScale?.primary_700 ?? '#4545A8',
+    primary_800: colorScale?.primary_800 ?? '#38388D',
+    primary_900: colorScale?.primary_900 ?? '#2B2B71',
+    primary_950: colorScale?.primary_950 ?? '#1E1E56',
+    primary_975: colorScale?.primary_975 ?? '#13133B',
 
     /* ----------  "Positive / Success" lime scale ---------- */
-    green_25: BRAND.secondaryTint,
+    green_25: brand.secondaryTint,
     green_50: '#EAFDD1',
     green_100: '#DAFCAB',
     green_200: '#C8FC80',
     green_300: '#BBFB66',
     green_400: '#AEFA59',
-    green_500: BRAND.secondary,
+    green_500: brand.secondary,
     green_600: '#A0EC46',
     green_700: '#82C838',
     green_800: '#66942A',
@@ -151,7 +162,7 @@ export function createThemes({
     red_200: '#FF9AB3',
     red_300: '#FF7396',
     red_400: '#FF4B78',
-    red_500: BRAND.negative, // #F40B42
+    red_500: brand.negative, // #F40B42
     red_600: '#C00A32',
     red_700: '#920826',
     red_800: '#630619',
@@ -161,8 +172,8 @@ export function createThemes({
   } as const
 
   const lightPalette = {
-    white: BRAND.white,
-    black: BRAND.black,
+    white: brand.white,
+    black: brand.black,
     pink: color.like,
     yellow: color.like,
     like: color.like,
@@ -183,13 +194,13 @@ export function createThemes({
     contrast_975: color.gray_975,
     contrast_1000: color.gray_1000,
 
-    primary_25: BRAND.primaryLightTint,
+    primary_25: brand.primaryLightTint,
     primary_50: color.primary_50,
     primary_100: color.primary_100,
     primary_200: color.primary_200,
     primary_300: color.primary_300,
     primary_400: color.primary_400,
-    primary_500: BRAND.primaryLight,
+    primary_500: brand.primaryLight,
     primary_600: color.primary_600,
     primary_700: color.primary_700,
     primary_800: color.primary_800,
@@ -227,8 +238,8 @@ export function createThemes({
   } as const
 
   const darkPalette: Palette = {
-    white: BRAND.white,
-    black: BRAND.black,
+    white: brand.white,
+    black: brand.black,
     pink: color.like,
     yellow: color.like,
     like: color.like,
@@ -249,13 +260,13 @@ export function createThemes({
     contrast_975: color.gray_25,
     contrast_1000: color.gray_0,
 
-    primary_25: BRAND.primaryDarkTint,
+    primary_25: brand.primaryDarkTint,
     primary_50: color.primary_950,
     primary_100: color.primary_900,
     primary_200: color.primary_800,
     primary_300: color.primary_700,
     primary_400: color.primary_600,
-    primary_500: BRAND.primaryDark,
+    primary_500: brand.primaryDark,
     primary_600: color.primary_400,
     primary_700: color.primary_300,
     primary_800: color.primary_200,
@@ -294,38 +305,38 @@ export function createThemes({
 
   const dimPalette: Palette = {
     ...darkPalette,
-    black: BRAND.twilight,
+    black: brand.twilight,
     like: color.like,
 
-    contrast_0: `hsl(${hues.primary}, 28%, ${dimScale[0]}%)`,
-    contrast_25: `hsl(${hues.primary}, 28%, ${dimScale[1]}%)`,
-    contrast_50: `hsl(${hues.primary}, 28%, ${dimScale[2]}%)`,
-    contrast_100: `hsl(${hues.primary}, 28%, ${dimScale[3]}%)`,
-    contrast_200: `hsl(${hues.primary}, 28%, ${dimScale[4]}%)`,
-    contrast_300: `hsl(${hues.primary}, 24%, ${dimScale[5]}%)`,
-    contrast_400: `hsl(${hues.primary}, 24%, ${dimScale[6]}%)`,
-    contrast_500: `hsl(${hues.primary}, 20%, ${dimScale[7]}%)`,
-    contrast_600: `hsl(${hues.primary}, 20%, ${dimScale[8]}%)`,
-    contrast_700: `hsl(${hues.primary}, 20%, ${dimScale[9]}%)`,
-    contrast_800: `hsl(${hues.primary}, 20%, ${dimScale[10]}%)`,
-    contrast_900: `hsl(${hues.primary}, 20%, ${dimScale[11]}%)`,
-    contrast_950: `hsl(${hues.primary}, 20%, ${dimScale[12]}%)`,
-    contrast_975: `hsl(${hues.primary}, 20%, ${dimScale[13]}%)`,
-    contrast_1000: `hsl(${hues.primary}, 20%, ${dimScale[14]}%)`,
+    contrast_0: `hsl(${bgHue}, 28%, ${dimScale[0]}%)`,
+    contrast_25: `hsl(${bgHue}, 28%, ${dimScale[1]}%)`,
+    contrast_50: `hsl(${bgHue}, 28%, ${dimScale[2]}%)`,
+    contrast_100: `hsl(${bgHue}, 28%, ${dimScale[3]}%)`,
+    contrast_200: `hsl(${bgHue}, 28%, ${dimScale[4]}%)`,
+    contrast_300: `hsl(${bgHue}, 24%, ${dimScale[5]}%)`,
+    contrast_400: `hsl(${bgHue}, 24%, ${dimScale[6]}%)`,
+    contrast_500: `hsl(${bgHue}, 20%, ${dimScale[7]}%)`,
+    contrast_600: `hsl(${bgHue}, 20%, ${dimScale[8]}%)`,
+    contrast_700: `hsl(${bgHue}, 20%, ${dimScale[9]}%)`,
+    contrast_800: `hsl(${bgHue}, 20%, ${dimScale[10]}%)`,
+    contrast_900: `hsl(${bgHue}, 20%, ${dimScale[11]}%)`,
+    contrast_950: `hsl(${bgHue}, 20%, ${dimScale[12]}%)`,
+    contrast_975: `hsl(${bgHue}, 20%, ${dimScale[13]}%)`,
+    contrast_1000: `hsl(${bgHue}, 20%, ${dimScale[14]}%)`,
 
-    primary_25: `hsl(240, 15%, ${dimScale[1]}%)`,
-    primary_50: `hsl(240, 18%, ${dimScale[2]}%)`,
-    primary_100: `hsl(240, 22%, ${dimScale[3]}%)`,
-    primary_200: `hsl(240, 25%, ${dimScale[4]}%)`,
-    primary_300: `hsl(240, 28%, ${dimScale[5]}%)`,
-    primary_400: `hsl(240, 32%, ${dimScale[6]}%)`,
-    primary_500: `hsl(240, 35%, ${dimScale[7]}%)`,
-    primary_600: `hsl(240, 38%, ${dimScale[8]}%)`,
-    primary_700: `hsl(240, 42%, ${dimScale[9]}%)`,
-    primary_800: `hsl(240, 45%, ${dimScale[10]}%)`,
-    primary_900: `hsl(240, 48%, ${dimScale[11]}%)`,
-    primary_950: `hsl(240, 50%, ${dimScale[12]}%)`,
-    primary_975: `hsl(240, 55%, ${dimScale[13]}%)`,
+    primary_25: `hsl(${hues.primary}, 15%, ${dimScale[1]}%)`,
+    primary_50: `hsl(${hues.primary}, 18%, ${dimScale[2]}%)`,
+    primary_100: `hsl(${hues.primary}, 22%, ${dimScale[3]}%)`,
+    primary_200: `hsl(${hues.primary}, 25%, ${dimScale[4]}%)`,
+    primary_300: `hsl(${hues.primary}, 28%, ${dimScale[5]}%)`,
+    primary_400: `hsl(${hues.primary}, 32%, ${dimScale[6]}%)`,
+    primary_500: `hsl(${hues.primary}, 35%, ${dimScale[7]}%)`,
+    primary_600: `hsl(${hues.primary}, 38%, ${dimScale[8]}%)`,
+    primary_700: `hsl(${hues.primary}, 42%, ${dimScale[9]}%)`,
+    primary_800: `hsl(${hues.primary}, 45%, ${dimScale[10]}%)`,
+    primary_900: `hsl(${hues.primary}, 48%, ${dimScale[11]}%)`,
+    primary_950: `hsl(${hues.primary}, 50%, ${dimScale[12]}%)`,
+    primary_975: `hsl(${hues.primary}, 55%, ${dimScale[13]}%)`,
 
     positive_25: `hsl(${hues.positive}, 50%, ${dimScale[1]}%)`,
     positive_50: `hsl(${hues.positive}, 60%, ${dimScale[2]}%)`,
@@ -377,16 +388,16 @@ export function createThemes({
         color: lightPalette.white,
       },
       bg: {
-        backgroundColor: lightPalette.white,
+        backgroundColor: brand.bgLight || lightPalette.white,
       },
       bg_contrast_25: {
-        backgroundColor: `hsl(${hues.primary}, 20%, ${defaultScale[13]}%)`,
+        backgroundColor: `hsl(${bgHue}, 20%, ${defaultScale[13]}%)`,
       },
       bg_contrast_50: {
-        backgroundColor: `hsl(${hues.primary}, 20%, ${defaultScale[12]}%)`,
+        backgroundColor: `hsl(${bgHue}, 20%, ${defaultScale[12]}%)`,
       },
       bg_contrast_100: {
-        backgroundColor: `hsl(${hues.primary}, 20%, ${defaultScale[11]}%)`,
+        backgroundColor: `hsl(${bgHue}, 20%, ${defaultScale[11]}%)`,
       },
       bg_contrast_200: {
         backgroundColor: lightPalette.contrast_200,
@@ -471,16 +482,16 @@ export function createThemes({
         color: darkPalette.black,
       },
       bg: {
-        backgroundColor: darkPalette.black,
+        backgroundColor: brand.bgDark || darkPalette.black,
       },
       bg_contrast_25: {
-        backgroundColor: `hsl(${hues.primary}, 28%, ${defaultScale[1]}%)`,
+        backgroundColor: `hsl(${bgHue}, 28%, ${defaultScale[1]}%)`,
       },
       bg_contrast_50: {
-        backgroundColor: `hsl(${hues.primary}, 28%, ${defaultScale[2]}%)`,
+        backgroundColor: `hsl(${bgHue}, 28%, ${defaultScale[2]}%)`,
       },
       bg_contrast_100: {
-        backgroundColor: `hsl(${hues.primary}, 28%, ${defaultScale[3]}%)`,
+        backgroundColor: `hsl(${bgHue}, 28%, ${defaultScale[3]}%)`,
       },
       bg_contrast_200: {
         backgroundColor: darkPalette.contrast_200,
@@ -572,7 +583,7 @@ export function createThemes({
         color: dimPalette.black,
       },
       bg: {
-        backgroundColor: dimPalette.black,
+        backgroundColor: brand.bgDim || dimPalette.black,
       },
       bg_contrast_25: {
         backgroundColor: dimPalette.contrast_25,

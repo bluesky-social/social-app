@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
@@ -43,6 +44,7 @@ export function ChangePasswordDialog({
 
 function Inner() {
   const {_} = useLingui()
+  const brand = useBrand()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const control = Dialog.useDialogContext()
@@ -69,7 +71,7 @@ function Inner() {
     Done: {
       title: _(msg`Password changed`),
       message: _(
-        msg`Your password has been changed successfully! Please use your new password when you sign in to Blacksky from now on.`,
+        msg`Your password has been changed successfully! Please use your new password when you sign in to ${brand.metadata.displayName} from now on.`,
       ),
     },
   }

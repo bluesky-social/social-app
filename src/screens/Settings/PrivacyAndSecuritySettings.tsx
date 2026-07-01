@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {useIsBlackskyPds} from '#/lib/hooks/useIsBlackskyPds'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useNotificationDeclarationQuery} from '#/state/queries/activity-subscriptions'
@@ -29,6 +30,7 @@ type Props = NativeStackScreenProps<
 >
 export function PrivacyAndSecuritySettingsScreen({}: Props) {
   const {_} = useLingui()
+  const brand = useBrand()
   const t = useTheme()
   const {currentAccount} = useSession()
   const isOauth = currentAccount?.isOauthSession === true
@@ -138,21 +140,23 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
                 <Admonition.Content>
                   <Admonition.Text>
                     <Trans>
-                      Note: Blacksky is an open and public network. This setting
-                      only limits the visibility of your content on the Blacksky
-                      app and website, and other apps may not respect this
-                      setting. Your content may still be shown to logged-out
-                      users by other apps and websites.
+                      Note: {brand.metadata.displayName} is an open and public
+                      network. This setting only limits the visibility of your
+                      content on the {brand.metadata.displayName} app and
+                      website, and other apps may not respect this setting. Your
+                      content may still be shown to logged-out users by other
+                      apps and websites.
                     </Trans>
                   </Admonition.Text>
                   <Admonition.Text>
                     <InlineLinkText
                       label={_(
-                        msg`Learn more about what is public on Blacksky.`,
+                        msg`Learn more about what is public on ${brand.metadata.displayName}.`,
                       )}
-                      to="https://www.blackskyweb.xyz/about/support/privacy-policy">
+                      to={brand.web.links.privacy}>
                       <Trans>
-                        Learn more about what is public on Blacksky.
+                        Learn more about what is public on{' '}
+                        {brand.metadata.displayName}.
                       </Trans>
                     </InlineLinkText>
                   </Admonition.Text>

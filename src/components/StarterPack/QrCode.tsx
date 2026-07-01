@@ -6,6 +6,7 @@ import type ViewShot from 'react-native-view-shot'
 import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
@@ -28,6 +29,7 @@ export function QrCode({
   link: string
   ref: React.Ref<ViewShot>
 }) {
+  const brand = useBrand()
   const {record} = starterPack
 
   if (
@@ -69,7 +71,7 @@ export function QrCode({
               a.text_center,
               {color: 'white', fontSize: 18},
             ]}>
-            <Trans>Join the cookout</Trans>
+            {brand.messages.primaryCTA}
           </Text>
           <View style={[a.rounded_sm, a.overflow_hidden]}>
             <QrCodeInner link={link} />
@@ -129,7 +131,7 @@ export function QrCodeInner({link}: {link: string}) {
             zIndex: 1,
             padding: 4,
           }}>
-          <Logo width={logoArea.width - 14} height={logoArea.height - 14} />
+          <Logo width={logoArea.width - 14} />
         </View>
       )}
       <QRCode
