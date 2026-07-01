@@ -93,8 +93,8 @@
     "prettier": "prettier --check ."
   },
   "dependencies": {
-    "@atproto/api": "0.20.23",
-    "@atproto/syntax": "0.6.3",
+    "@atproto/api": "0.20.25",
+    "@atproto/syntax": "0.6.4",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.14",
