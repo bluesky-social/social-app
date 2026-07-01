@@ -9,6 +9,7 @@ import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {ArrowRotateClockwise_Stroke2_Corner0_Rounded as ArrowRotate} from '#/components/icons/ArrowRotate'
+import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -86,7 +87,7 @@ function RefreshButton() {
       disabled={isRefreshing}
       color="secondary"
       size="small">
-      <ButtonIcon icon={ArrowRotate} />
+      <ButtonIcon icon={isRefreshing ? Loader : ArrowRotate} />
       <ButtonText>Refresh feature flags</ButtonText>
     </Button>
   )
