@@ -58,7 +58,7 @@ export function AboutSettingsScreen({}: Props) {
           Toast.show(
             _(
               msg({
-                message: `Cache cleared, freed ${i18n.number(
+                message: `Image cache cleared, freed ${i18n.number(
                   Math.abs(sizeDiffBytes / 1024 / 1024),
                   {
                     notation: 'compact',
@@ -71,7 +71,7 @@ export function AboutSettingsScreen({}: Props) {
             ),
           )
         } else {
-          Toast.show(_(msg`Cache cleared`))
+          Toast.show(_(msg`Image cache cleared`))
         }
       },
     })
@@ -131,11 +131,11 @@ export function AboutSettingsScreen({}: Props) {
           {IS_NATIVE && (
             <SettingsList.PressableItem
               onPress={() => onClearImageCache()}
-              label={_(msg`Clear cache`)}
+              label={_(msg`Clear image cache`)}
               disabled={isClearingImageCache}>
               <SettingsList.ItemIcon icon={BroomSparkleIcon} />
               <SettingsList.ItemText>
-                <Trans>Clear cache</Trans>
+                <Trans>Clear image cache</Trans>
               </SettingsList.ItemText>
               {isClearingImageCache && <SettingsList.ItemIcon icon={Loader} />}
             </SettingsList.PressableItem>
