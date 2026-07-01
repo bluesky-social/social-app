@@ -7,6 +7,7 @@ import {
 } from '@atproto/api'
 
 import {getAge} from '#/lib/strings/time'
+import {regionName} from '#/locale/helpers'
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/const'
 import {
   DEVICE_SIGNALS_SUPPORTED,
@@ -21,6 +22,7 @@ import {
   type AgeAssuranceState,
 } from '#/ageAssurance/types'
 import {type Geolocation, useGeolocation} from '#/geolocation'
+import {USRegionNameToRegionCode} from '#/geolocation/util'
 
 /**
  * Get age assurance region config based on geolocation, with fallback to
@@ -205,4 +207,28 @@ export function computeAgeAssuranceFlags({
     isOverAppMinAccessAge,
     allowsDeviceVerification,
   }
+}
+
+const USRegionCodeToRegionName: {[regionCode: string]: string} =
+  Object.fromEntries(
+    Object.entries(USRegionNameToRegionCode).map(([name, code]) => [
+      code,
+      name,
+    ]),
+  )
+export function createGeolocationString(
+  geolocation: Geolocation,
+  appLang: string,
+): string | undefined {
+  const {countryCode, regionCode} = geolocation
+  if (!countryCode) return undefined
+  const country = regionName(countryCode, appLang)
+  // If `regionName` couldn't resolve a real name and fell through to the raw
+  // code, we'd rather show nothing than a bare ISO code in the prose.
+  if (country === countryCode) return undefined
+  if (regionCode && countryCode === 'US') {
+    const state = USRegionCodeToRegionName[regionCode]
+    if (state) return `${state}, ${country}`
+  }
+  return country
 }

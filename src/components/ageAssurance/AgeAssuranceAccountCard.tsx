@@ -2,7 +2,6 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {regionName} from '#/locale/helpers'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
@@ -22,40 +21,10 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
+import {createGeolocationString} from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-import {
-  type Geolocation,
-  useDeviceGeolocationApi,
-  useGeolocation,
-} from '#/geolocation'
-import {USRegionNameToRegionCode} from '#/geolocation/util'
-import {device, useStorage} from '#/storage'
-
-const USRegionCodeToRegionName: {[regionCode: string]: string} =
-  Object.fromEntries(
-    Object.entries(USRegionNameToRegionCode).map(([name, code]) => [
-      code,
-      name,
-    ]),
-  )
-
-function formatRegion(
-  geolocation: Geolocation,
-  appLang: string,
-): string | undefined {
-  const {countryCode, regionCode} = geolocation
-  if (!countryCode) return undefined
-  const country = regionName(countryCode, appLang)
-  // If `regionName` couldn't resolve a real name and fell through to the raw
-  // code, we'd rather show nothing than a bare ISO code in the prose.
-  if (country === countryCode) return undefined
-  if (regionCode && countryCode === 'US') {
-    const state = USRegionCodeToRegionName[regionCode]
-    if (state) return `${state}, ${country}`
-  }
-  return country
-}
+import {useDeviceGeolocationApi, useGeolocation} from '#/geolocation'
 
 export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
   const aa = useAgeAssurance()
@@ -220,13 +189,12 @@ function RegionNotice() {
   const {t: l, i18n} = useLingui()
   const aa = useAgeAssurance()
   const geolocation = useGeolocation()
-  const [deviceGeolocation] = useStorage(device, ['deviceGeolocation'])
   const {setDeviceGeolocation} = useDeviceGeolocationApi()
   const computeAgeAssuranceRegionAccess = useComputeAgeAssuranceRegionAccess()
   const locationControl = Dialog.useDialogControl()
 
-  const region = formatRegion(geolocation, i18n.locale)
-  const isGPS = !!deviceGeolocation?.countryCode && IS_NATIVE
+  const region = createGeolocationString(geolocation, i18n.locale)
+  const isGPS = !!geolocation.deviceGeolocation?.countryCode && IS_NATIVE
 
   return (
     <>
@@ -258,8 +226,7 @@ function RegionNotice() {
           {isGPS ? (
             <Trans>
               Based on your device's location, we think you're in{' '}
-              <Text style={[a.text_sm, a.font_bold]}>{region}</Text>. This
-              estimate may be inaccurate if you're using a VPN.
+              <Text style={[a.text_sm, a.font_bold]}>{region}</Text>.
             </Trans>
           ) : (
             <Trans>

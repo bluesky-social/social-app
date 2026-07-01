@@ -43,19 +43,20 @@ import {logger} from '#/ageAssurance/logger'
 import {unsafeGetAndComputeAgeAssurance} from '#/ageAssurance/state'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
 import {
+  createGeolocationString,
   getAgeAssuranceDataFromDeviceSignals,
   isLegacyBirthdateBug,
   useAgeAssuranceRegionConfig,
 } from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
-import {useDeviceGeolocationApi} from '#/geolocation'
+import {useDeviceGeolocationApi, useGeolocation} from '#/geolocation'
 
 const textStyles = [a.text_md, a.leading_snug]
 
 export function NoAccessScreen() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const ax = useAnalytics()
   const {gtPhone} = useBreakpoints()
   const insets = useSafeAreaInsets()
@@ -67,6 +68,10 @@ export function NoAccessScreen() {
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const {logoutCurrentAccount} = useSessionApi()
   const createSupportLink = useCreateSupportLink()
+  const geolocation = useGeolocation()
+  const {setDeviceGeolocation} = useDeviceGeolocationApi()
+  const locationControl = Dialog.useDialogControl()
+  const computeAgeAssuranceRegionAccess = useComputeAgeAssuranceRegionAccess()
 
   const aa = useAgeAssurance()
   const isBlocked = aa.state.status === aa.Status.Blocked
@@ -74,6 +79,8 @@ export function NoAccessScreen() {
   const hasDeclaredAge = aa.flags.hasDeclaredAge
   const canUpdateBirthday =
     isBirthdateUpdateAllowed || isLegacyBirthdateBug(metadata?.birthdate || '')
+  const geolocationString = createGeolocationString(geolocation, i18n.locale)
+  const isUsingGPS = !!geolocation.deviceGeolocation?.countryCode && IS_NATIVE
 
   useEffect(() => {
     // just counting overall hits here
@@ -188,6 +195,78 @@ export function NoAccessScreen() {
                           access the app.
                         </Trans>
                       </Text>
+
+                      {region && (
+                        <Text style={[textStyles]}>
+                          {isUsingGPS ? (
+                            <Trans>
+                              Based on your device's location, we think you're
+                              in{' '}
+                              <Text style={[textStyles, a.font_bold]}>
+                                {geolocationString}
+                              </Text>
+                              .
+                            </Trans>
+                          ) : (
+                            <>
+                              <Trans>
+                                Based on your network, we think you're in{' '}
+                                <Text style={[textStyles, a.font_bold]}>
+                                  {geolocationString}
+                                </Text>
+                                . This estimate may be inaccurate if you're
+                                using a VPN.
+                              </Trans>{' '}
+                              {IS_NATIVE && (
+                                <>
+                                  <Trans>
+                                    You can also{' '}
+                                    <SimpleInlineLinkText
+                                      label={_(msg`Update your location`)}
+                                      {...createStaticClick(() => {
+                                        locationControl.open()
+                                      })}
+                                      style={[textStyles]}>
+                                      tap here to update your location with GPS.
+                                    </SimpleInlineLinkText>
+                                  </Trans>
+
+                                  <DeviceLocationRequestDialog
+                                    control={locationControl}
+                                    onLocationAcquired={props => {
+                                      const access =
+                                        computeAgeAssuranceRegionAccess(
+                                          props.geolocation,
+                                        )
+                                      if (access !== aa.Access.Full) {
+                                        props.disableDialogAction()
+                                        props.setDialogError(
+                                          _(
+                                            msg`We're sorry, but based on your device's location, you are currently located in a region that requires age assurance.`,
+                                          ),
+                                        )
+                                      } else {
+                                        props.closeDialog(() => {
+                                          // set this after close!
+                                          setDeviceGeolocation(
+                                            props.geolocation,
+                                          )
+                                          Toast.show(
+                                            _(msg`Thanks! You're all set.`),
+                                            {
+                                              type: 'success',
+                                            },
+                                          )
+                                        })
+                                      }
+                                    }}
+                                  />
+                                </>
+                              )}
+                            </>
+                          )}
+                        </Text>
+                      )}
 
                       {!aa.flags.isOverRegionMinAccessAge && (
                         <Text style={[textStyles]}>
@@ -312,10 +391,7 @@ function AccessSection() {
   const ax = useAnalytics()
   const control = useDialogControl()
   const appealControl = Dialog.useDialogControl()
-  const locationControl = Dialog.useDialogControl()
   const getTimeAgo = useGetTimeAgo()
-  const {setDeviceGeolocation} = useDeviceGeolocationApi()
-  const computeAgeAssuranceRegionAccess = useComputeAgeAssuranceRegionAccess()
   const {currentAccount} = useSession()
   const region = useAgeAssuranceRegionConfig()
 
@@ -505,50 +581,6 @@ function AccessSection() {
             </View>
           </>
         )}
-
-        <View style={[a.gap_xs]}>
-          {IS_NATIVE && (
-            <>
-              <Admonition>
-                <Trans>
-                  Is your location not accurate?{' '}
-                  <SimpleInlineLinkText
-                    label={_(msg`Update your location`)}
-                    {...createStaticClick(() => {
-                      locationControl.open()
-                    })}>
-                    Tap here to update your location with GPS.
-                  </SimpleInlineLinkText>
-                </Trans>
-              </Admonition>
-
-              <DeviceLocationRequestDialog
-                control={locationControl}
-                onLocationAcquired={props => {
-                  const access = computeAgeAssuranceRegionAccess(
-                    props.geolocation,
-                  )
-                  if (access !== aa.Access.Full) {
-                    props.disableDialogAction()
-                    props.setDialogError(
-                      _(
-                        msg`We're sorry, but based on your device's location, you are currently located in a region that requires age assurance.`,
-                      ),
-                    )
-                  } else {
-                    props.closeDialog(() => {
-                      // set this after close!
-                      setDeviceGeolocation(props.geolocation)
-                      Toast.show(_(msg`Thanks! You're all set.`), {
-                        type: 'success',
-                      })
-                    })
-                  }
-                }}
-              />
-            </>
-          )}
-        </View>
       </View>
     </>
   )

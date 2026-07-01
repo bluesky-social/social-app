@@ -9,24 +9,22 @@ import {type OtherRequiredData} from '#/ageAssurance/data'
 import {IS_DEV, IS_E2E} from '#/env'
 import {type Geolocation} from '#/geolocation'
 
-export const enabled = (IS_DEV && false) || IS_E2E
+export const enabled = (IS_DEV && true) || IS_E2E
 
 export const geolocation: Geolocation | undefined = enabled
   ? {
-      countryCode: 'AA',
-      regionCode: undefined,
+      countryCode: 'US',
+      regionCode: 'TX',
     }
   : undefined
 
-const deviceGeolocationEnabled = false || IS_E2E
-export const deviceGeolocation: Geolocation | undefined =
-  enabled && deviceGeolocationEnabled
-    ? {
-        countryCode: 'AA',
-        regionCode: undefined,
-        ...geolocation,
-      }
-    : undefined
+export const deviceGeolocation: Geolocation | undefined = enabled
+  ? {
+      countryCode: 'AA',
+      regionCode: undefined,
+      ...geolocation,
+    }
+  : undefined
 
 export const otherRequiredData: OtherRequiredData = {
   birthdate: new Date(2000, 12, 1).toISOString(),
