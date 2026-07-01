@@ -52,6 +52,8 @@ export function GifPickerItem({
           accessibilityLabel={gif.title}
           accessibilityHint=""
           cachePolicy="none"
+          priority="low"
+          recyclingKey={gif.id}
           accessibilityIgnoresInvertColors
         />
       )}
