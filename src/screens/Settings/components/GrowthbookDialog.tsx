@@ -31,6 +31,8 @@ export function GrowthbookDialog({
 function GrowthbookDialogInner() {
   const t = useTheme()
 
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
   return (
     <Dialog.ScrollableInner
       label="Growthbook features"
@@ -52,20 +54,32 @@ function GrowthbookDialogInner() {
         <CurrentProfile />
       </View>
       <View style={[a.pb_lg, a.mb_lg, a.border_b, t.atoms.border_contrast_low]}>
-        <RefreshButton />
+        <RefreshButton
+          isRefreshing={isRefreshing}
+          setIsRefreshing={setIsRefreshing}
+        />
       </View>
       <View style={[a.gap_md]}>
         {Object.entries(Features).map(([name, key]) => (
-          <FeatureRow key={key} name={name} featureKey={key} />
+          <FeatureRow
+            key={key}
+            name={name}
+            featureKey={key}
+            isRefreshing={isRefreshing}
+          />
         ))}
       </View>
     </Dialog.ScrollableInner>
   )
 }
 
-function RefreshButton() {
-  const [isRefreshing, setIsRefreshing] = useState(false)
-
+function RefreshButton({
+  isRefreshing,
+  setIsRefreshing,
+}: {
+  isRefreshing: boolean
+  setIsRefreshing: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   const onPress = () => {
     setIsRefreshing(true)
     refresh({strategy: 'prefer-fresh-gates'})
@@ -93,7 +107,15 @@ function RefreshButton() {
   )
 }
 
-function FeatureRow({name, featureKey}: {name: string; featureKey: string}) {
+function FeatureRow({
+  name,
+  featureKey,
+  isRefreshing,
+}: {
+  name: string
+  featureKey: string
+  isRefreshing: boolean
+}) {
   const t = useTheme()
   const value = features.evalFeature(featureKey).value
 
@@ -123,7 +145,7 @@ function FeatureRow({name, featureKey}: {name: string; featureKey: string}) {
           {featureKey}
         </Text>
       </View>
-      <FeatureValue value={value} />
+      {isRefreshing ? <Loader size="sm" /> : <FeatureValue value={value} />}
     </Pressable>
   )
 }
