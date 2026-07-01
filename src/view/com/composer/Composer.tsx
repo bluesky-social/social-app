@@ -13,7 +13,6 @@ import {
   ActivityIndicator,
   BackHandler,
   Keyboard,
-  KeyboardAvoidingView,
   type LayoutChangeEvent,
   ScrollView,
   type StyleProp,
@@ -21,6 +20,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
@@ -72,7 +72,6 @@ import {
   type SupportedMimeTypes,
   VIDEO_MAX_DURATION_MS,
 } from '#/lib/constants'
-import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {mimeToExt} from '#/lib/media/video/util'
@@ -287,7 +286,6 @@ export const ComposePost = ({
   const {data: preferences} = usePreferencesQuery()
   const navigation = useNavigation<NavigationProp>()
 
-  const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
@@ -856,17 +854,9 @@ export const ComposePost = ({
   const viewStyles = useMemo(
     () => ({
       paddingTop: IS_ANDROID ? insets.top : 0,
-      paddingBottom:
-        // iOS - when keyboard is closed, keep the bottom bar in the safe area
-        (IS_IOS && !isKeyboardVisible) ||
-        // Android - Android >=35 KeyboardAvoidingView adds double padding when
-        // keyboard is closed, so we subtract that in the offset and add it back
-        // here when the keyboard is open
-        (IS_ANDROID && isKeyboardVisible)
-          ? insets.bottom
-          : 0,
+      paddingBottom: insets.bottom,
     }),
-    [insets, isKeyboardVisible],
+    [insets.top, insets.bottom],
   )
 
   const onPressCancel = useCallback(() => {
@@ -1100,13 +1090,13 @@ export const ComposePost = ({
             posts,
           }
         }
-      } catch (waitErr: any) {
+      } catch (waitErr) {
         logger.info(`composer: waiting for app view failed`, {
           safeMessage: waitErr,
         })
       }
-    } catch (e: any) {
-      logger.error(e, {
+    } catch (e) {
+      logger.error(e instanceof Error ? e : String(e), {
         message: `Composer: create post failed`,
         hasImages: filteredThread.posts.some(
           p =>
@@ -1115,7 +1105,7 @@ export const ComposePost = ({
         ),
       })
 
-      let err = cleanError(e.message)
+      let err = e instanceof Error ? cleanError(e.message) : String(e)
       if (
         e instanceof apilib.ReplyDeletedError ||
         err.includes('not locate record')
@@ -1417,8 +1407,8 @@ export const ComposePost = ({
             publishingStage={publishingStage}
             topBarAnimatedStyle={topBarAnimatedStyle}
             onCancel={onPressCancel}
-            onPublish={onPressPublish}
-            onSelectDraft={handleSelectDraft}
+            onPublish={() => void onPressPublish()}
+            onSelectDraft={draft => void handleSelectDraft(draft)}
             onSaveDraft={saveCurrentDraft}
             onDiscard={handleClearComposer}
             isEmpty={isComposerEmpty}
@@ -1531,7 +1521,7 @@ export const ComposePost = ({
               {allPostsWithinLimit && (
                 <Prompt.Action
                   cta={composerState.draftId ? l`Save changes` : l`Save draft`}
-                  onPress={handleSaveDraft}
+                  onPress={() => void handleSaveDraft()}
                   color="primary"
                 />
               )}
@@ -1694,7 +1684,7 @@ let ComposerPost = memo(function ComposerPost({
               postId: post.id,
             })
           }}
-          onPhotoPasted={onPhotoPasted}
+          onPhotoPasted={uri => void onPhotoPasted(uri)}
           onNewLink={onNewLink}
           onError={onError}
           onPressPublish={onPublish}
@@ -2188,7 +2178,7 @@ function ComposerFooter({
             }),
           ).catch(e => {
             logger.error(`createComposerImage failed`, {
-              safeMessage: e.message,
+              safeMessage: e instanceof Error ? e.message : String(e),
             })
           })
 
@@ -2425,24 +2415,31 @@ function useScrollTracker({
 }
 
 function useKeyboardVerticalOffset() {
-  const {top, bottom} = useSafeAreaInsets()
+  const insets = useSafeAreaInsets()
 
-  // Android etc
-  if (!IS_IOS) {
-    // need to account for the edge-to-edge nav bar
-    return bottom * -1
+  // the keyboardavoidingview has bottom padding to avoid being obscured by the safe area when keyboard is closed.
+  // however, this leads to a gap when the keyboard is open. we account for that by subtracting the bottom inset when open.
+  let keyboardVerticalOffset = insets.bottom * -1
+
+  // iOS requires a bit of extra offset to account for the native sheet not being at the top of the screen
+  if (IS_IOS) {
+    // they ditched the gap behaviour on 26
+    if (IS_LIQUID_GLASS) {
+      keyboardVerticalOffset += insets.top
+    }
+
+    // iPhone SE
+    else if (insets.top === 20) {
+      keyboardVerticalOffset += 40
+    }
+
+    // all other iPhones on <26
+    else {
+      keyboardVerticalOffset += insets.top + 10
+    }
   }
 
-  // they ditched the gap behaviour on 26
-  if (IS_LIQUID_GLASS) {
-    return top
-  }
-
-  // iPhone SE
-  if (top === 20) return 40
-
-  // all other iPhones on <26
-  return top + 10
+  return keyboardVerticalOffset
 }
 
 async function whenAppViewReady(
