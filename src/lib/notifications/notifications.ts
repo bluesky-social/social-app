@@ -55,7 +55,7 @@ async function _registerPushToken({
     notyLogger.debug(`registerPushToken: success`)
   } catch (error) {
     if (!isNetworkError(error)) {
-      notyLogger.error(`registerPushToken: failed`, {safeMessage: error})
+      notyLogger.warn(`registerPushToken: failed`, {safeMessage: error})
     }
   }
 }
