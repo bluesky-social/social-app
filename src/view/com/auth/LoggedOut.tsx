@@ -89,6 +89,15 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     setActiveLanding(undefined)
   }, [clearRequestedAccount, onDismiss, setActiveLanding])
 
+  const onPressBack = useCallback(() => {
+    if (screenState === initialScreenState) {
+      onDismiss?.()
+      return
+    }
+
+    setScreenState(initialScreenState)
+  }, [screenState, initialScreenState, setScreenState, onDismiss])
+
   return (
     <View
       testID="noSessionView"
@@ -136,14 +145,10 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           />
         ) : undefined}
         {screenState === ScreenState.S_Login ? (
-          <Login
-            onPressBack={() => {
-              setScreenState(initialScreenState)
-            }}
-          />
+          <Login onPressBack={onPressBack} />
         ) : undefined}
         {screenState === ScreenState.S_CreateAccount ? (
-          <Signup onPressBack={() => setScreenState(initialScreenState)} />
+          <Signup onPressBack={onPressBack} />
         ) : undefined}
       </ErrorBoundary>
     </View>
