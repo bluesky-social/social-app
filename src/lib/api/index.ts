@@ -441,15 +441,17 @@ async function resolveReply(agent: AtpAgent, replyTo: string) {
       post?: {
         uri: string
         cid: string
-        replyRoot?: string
-        replyRootCid?: string
+        record?: AppBskyFeedPost.Record
       }
     }
     if (data.post) {
       const parentRef = {uri: data.post.uri, cid: data.post.cid}
+      // A reply inherits its parent's root; the parent is only the root
+      // when it is itself a top-level post.
+      const parentRootRef = data.post.record?.reply?.root
       const rootRef =
-        data.post.replyRoot && data.post.replyRootCid
-          ? {uri: data.post.replyRoot, cid: data.post.replyRootCid}
+        parentRootRef?.uri && parentRootRef?.cid
+          ? {uri: parentRootRef.uri, cid: parentRootRef.cid}
           : parentRef
       return {root: rootRef, parent: parentRef}
     }
