@@ -1,9 +1,7 @@
 import {useCallback, useEffect} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
@@ -46,7 +44,7 @@ const textStyles = [a.text_md, a.leading_snug]
 
 export function NoAccessScreen() {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const ax = useAnalytics()
   const {gtPhone} = useBreakpoints()
   const insets = useSafeAreaInsets()
@@ -117,7 +115,7 @@ export function NoAccessScreen() {
         <Trans>
           If you believe your birthdate is incorrect, you can update it by{' '}
           <SimpleInlineLinkText
-            label={_(msg`Click here to update your birthdate`)}
+            label={l`Click here to update your birthdate`}
             style={[textStyles]}
             {...createStaticClick(() => {
               ax.metric('ageAssurance:noAccessScreen:openBirthdateDialog', {})
@@ -206,7 +204,7 @@ export function NoAccessScreen() {
                               <>
                                 {' '}
                                 <SimpleInlineLinkText
-                                  label={_(msg`Update your location`)}
+                                  label={l`Update your location`}
                                   {...createStaticClick(() => {
                                     locationControl.open()
                                   })}
@@ -225,20 +223,15 @@ export function NoAccessScreen() {
                                     if (access !== aa.Access.Full) {
                                       props.disableDialogAction()
                                       props.setDialogError(
-                                        _(
-                                          msg`We're sorry, but based on your device's location, you are currently located in a region that requires age assurance.`,
-                                        ),
+                                        l`We're sorry, but based on your device's location, you are currently located in a region that requires age assurance.`,
                                       )
                                     } else {
                                       props.closeDialog(() => {
                                         // set this after close!
                                         setDeviceGeolocation(props.geolocation)
-                                        Toast.show(
-                                          _(msg`Thanks! You're all set.`),
-                                          {
-                                            type: 'success',
-                                          },
-                                        )
+                                        Toast.show(l`Thanks! You're all set.`, {
+                                          type: 'success',
+                                        })
                                       })
                                     }
                                   }}
@@ -297,7 +290,7 @@ export function NoAccessScreen() {
                   <Button
                     color="primary"
                     size="large"
-                    label={_(msg`Click here to update your birthdate`)}
+                    label={l`Click here to update your birthdate`}
                     onPress={() => birthdateControl.open()}>
                     <ButtonText>
                       <Trans>Add your birthdate</Trans>
@@ -321,7 +314,7 @@ export function NoAccessScreen() {
                 <Trans>
                   To log out,{' '}
                   <SimpleInlineLinkText
-                    label={_(msg`Click here to log out`)}
+                    label={l`Click here to log out`}
                     {...createStaticClick(() => {
                       onPressLogout()
                     })}
@@ -330,7 +323,7 @@ export function NoAccessScreen() {
                   </SimpleInlineLinkText>
                   . Or if you’d prefer, you can{' '}
                   <SimpleInlineLinkText
-                    label={_(msg`Click here to delete your account`)}
+                    label={l`Click here to delete your account`}
                     {...createStaticClick(() => {
                       ax.metric(
                         'ageAssurance:noAccessScreen:openDeleteAccountDialog',
@@ -369,7 +362,7 @@ export function NoAccessScreen() {
 
 function AccessSection() {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const ax = useAnalytics()
   const control = useDialogControl()
   const appealControl = Dialog.useDialogControl()
@@ -407,7 +400,7 @@ function AccessSection() {
               You are currently unable to access Bluesky's Age Assurance flow.
               Please{' '}
               <SimpleInlineLinkText
-                label={_(msg`Contact our moderation team`)}
+                label={l`Contact our moderation team`}
                 {...createStaticClick(() => {
                   appealControl.open()
                   ax.metric('ageAssurance:appealDialogOpen', {})
@@ -442,7 +435,7 @@ function AccessSection() {
                     device, and will therefore only work on this device.
                     Alternatively,{' '}
                     <SimpleInlineLinkText
-                      label={_(msg`Verify now using KWS`)}
+                      label={l`Verify now using KWS`}
                       {...createStaticClick(() => {
                         openInitDialog()
                       })}>
