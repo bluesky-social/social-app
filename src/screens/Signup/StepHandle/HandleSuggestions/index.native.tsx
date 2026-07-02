@@ -1,25 +1,23 @@
 import Animated, {Easing, FadeInDown, FadeOut} from 'react-native-reanimated'
-import {type ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, native, useTheme} from '#/alf'
 import {borderRadius} from '#/alf/tokens'
 import {Button} from '#/components/Button'
 import {Text} from '#/components/Typography'
+import {type HandleSuggestionsProps} from './shared'
 
+/**
+ * Native: suggestions render inline beneath the availability error, animating
+ * in with the surrounding requirement stack. See index.tsx for the web variant,
+ * which floats them in a Sift dropdown anchored to the input.
+ */
 export function HandleSuggestions({
   suggestions,
   onSelect,
-}: {
-  suggestions: ComAtprotoTempCheckHandleAvailability.Suggestion[]
-  onSelect: (
-    suggestions: ComAtprotoTempCheckHandleAvailability.Suggestion,
-  ) => void
-}) {
+}: HandleSuggestionsProps) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Animated.View
@@ -39,12 +37,10 @@ export function HandleSuggestions({
       ]}>
       {suggestions.map((suggestion, index) => (
         <Button
-          label={_(
-            msg({
-              message: `Select ${suggestion.handle}`,
-              comment: `Accessibility label for a username suggestion in the account creation flow`,
-            }),
-          )}
+          label={l({
+            message: `Select ${suggestion.handle}`,
+            comment: `Accessibility label for a username suggestion in the account creation flow`,
+          })}
           key={index}
           onPress={() => onSelect(suggestion)}
           hoverStyle={[t.atoms.bg_contrast_25]}
