@@ -106,11 +106,17 @@ export function extractSearchPostsParams(query: string): ExtractedSearchParams {
 
     switch (op) {
       case 'from':
-        result.author ??= value
+        /*
+         * `me` is resolved to the viewer by the backend, so leave it in the
+         * query text verbatim rather than lifting it into a structured param.
+         */
+        if (value === 'me') remaining.push(token)
+        else result.author ??= value
         break
       case 'mentions':
       case 'to':
-        result.mentions ??= value
+        if (value === 'me') remaining.push(token)
+        else result.mentions ??= value
         break
       case 'domain':
         result.domain ??= value
