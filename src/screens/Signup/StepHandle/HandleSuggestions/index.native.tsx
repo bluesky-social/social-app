@@ -41,7 +41,7 @@ export function HandleSuggestions({
             message: `Select ${suggestion.handle}`,
             comment: `Accessibility label for a username suggestion in the account creation flow`,
           })}
-          key={index}
+          key={suggestion.handle}
           onPress={() => onSelect(suggestion)}
           hoverStyle={[t.atoms.bg_contrast_25]}
           style={[
