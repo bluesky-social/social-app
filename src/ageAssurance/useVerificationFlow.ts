@@ -46,13 +46,16 @@ export function useAgeAssuranceVerificationFlow({
   const aa = useAgeAssurance()
   const hasInitiated = !!aa.state.lastInitiatedAt
   const allowsDeviceVerification = region && aa.flags.allowsDeviceVerification
-  const verifyCta = allowsDeviceVerification
-    ? l`Share age data`
-    : hasInitiated
-      ? l`Verify again`
-      : l`Verify now`
 
   const [isVerifying, setIsVerifying] = useState(false)
+  const [deviceSignalsFailed, setDeviceSignalsFailed] = useState(false)
+
+  const verifyCta =
+    allowsDeviceVerification && !deviceSignalsFailed
+      ? l`Share age data`
+      : hasInitiated
+        ? l`Verify again`
+        : l`Verify now`
 
   const openInitDialog = useCallback(() => {
     initDialogControl.open()
@@ -80,7 +83,7 @@ export function useAgeAssuranceVerificationFlow({
      * a response at all: `getDeviceSignals` handles its own errors and returns
      * undefined (e.g. on web or failure).
      */
-    if (allowsDeviceVerification) {
+    if (allowsDeviceVerification && !deviceSignalsFailed) {
       // Show a loading state while the OS age prompt is up.
       setIsVerifying(true)
       let signals: AgeRange.AgeRangeResponse | undefined
@@ -131,6 +134,7 @@ export function useAgeAssuranceVerificationFlow({
           l`Hmm, it seems your device was unable to share age information with us.`,
           {type: 'warning'},
         )
+        setDeviceSignalsFailed(true)
         return
       }
       logger.debug(
@@ -146,6 +150,8 @@ export function useAgeAssuranceVerificationFlow({
     allowsDeviceVerification,
     aa,
     l,
+    deviceSignalsFailed,
+    setDeviceSignalsFailed,
   ])
 
   return {
@@ -153,5 +159,6 @@ export function useAgeAssuranceVerificationFlow({
     openInitDialog,
     isVerifying,
     verifyCta,
+    deviceSignalsFailed,
   }
 }

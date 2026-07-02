@@ -384,8 +384,15 @@ function AccessSection() {
   const diff = lastInitiatedAt
     ? dateDiff(lastInitiatedAt, new Date(), 'down')
     : null
-  const {onPressVerify, openInitDialog, isVerifying, verifyCta} =
-    useAgeAssuranceVerificationFlow({initDialogControl: control})
+  const {
+    onPressVerify,
+    openInitDialog,
+    isVerifying,
+    verifyCta,
+    deviceSignalsFailed,
+  } = useAgeAssuranceVerificationFlow({initDialogControl: control})
+  const useDeviceSignals =
+    aa.flags.allowsDeviceVerification && !deviceSignalsFailed
 
   return (
     <>
@@ -426,7 +433,7 @@ function AccessSection() {
                 <ButtonText>{verifyCta}</ButtonText>
               </Button>
 
-              {aa.flags.allowsDeviceVerification ? (
+              {useDeviceSignals ? (
                 <Text
                   style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
                   <Trans>
