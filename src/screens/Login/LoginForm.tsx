@@ -588,7 +588,6 @@ function HostingProviderIndicator({
   const t = useTheme()
   const {t: l} = useLingui()
 
-  console.log(state)
   return (
     <Button
       label={l`Change hosting provider`}
