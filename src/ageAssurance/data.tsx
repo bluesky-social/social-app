@@ -501,6 +501,10 @@ export function createDeviceSignalsQueryKey({did}: {did: string}) {
  *
  * Native-only: on web `expo-age-range` returns a misleading default (e.g.
  * `{lowerBound: 18}`), so we never call it there — web users fall back to KWS.
+ *
+ * If this method throws for whatever reason, we catch and log the error and
+ * return undefined. The caller should treat undefined as "no device signals
+ * available" and fall back to KWS.
  */
 export async function getDeviceSignals(): Promise<
   AgeRange.AgeRangeResponse | undefined

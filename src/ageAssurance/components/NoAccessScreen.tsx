@@ -419,6 +419,11 @@ function AccessSection() {
   }, [control, ax, hasInitiated])
 
   const onPressVerify = useCallback(async () => {
+    const did = currentAccount?.did
+
+    // Just for typescript, this screen won't be shown without a logged in user
+    if (!did) return
+
     /*
      * In regions that permit on-device verification, try the native age API
      * first. We tag the result with the current region (device assurance is
@@ -434,7 +439,6 @@ function AccessSection() {
      * a session DID.
      */
     if (allowsDeviceVerification) {
-      const did = currentAccount?.did
       // Show a loading state while the OS age prompt is up.
       setIsVerifyingDevice(true)
       let signals: AgeRange.AgeRangeResponse | undefined
@@ -443,7 +447,7 @@ function AccessSection() {
       } finally {
         setIsVerifyingDevice(false)
       }
-      if (signals && did) {
+      if (signals) {
         const {assuredAge} = getAgeAssuranceDataFromDeviceSignals(
           region,
           signals,
