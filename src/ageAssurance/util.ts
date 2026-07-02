@@ -139,25 +139,38 @@ const ACCESS_RANK: Record<string, number> = {
  *    path to more access even when the rule-engine level would still be `none`.
  *
  * We answer by simulating the real rule engine: hold `accountCreatedAt` and
- * `assuredAge` fixed and re-run access for a set of candidate declared ages
- * drawn from the region's declared-age rule thresholds and its `minAccessAge`.
- * If any candidate yields strictly more access, or crosses `minAccessAge` when
- * the current declared age doesn't, a birthdate update could help. Simulating
- * rather than statically inspecting rules means first-match precedence (e.g. an
- * assured/account rule pre-empting a declared rule) is handled correctly for
- * free.
+ * the device-derived `assuredAge` fixed and re-run access for a set of
+ * candidate declared ages drawn from the region's declared-age rule thresholds
+ * and its `minAccessAge`. If any candidate yields strictly more access, or
+ * crosses `minAccessAge` when the current declared age doesn't, a birthdate
+ * update could help. Simulating rather than statically inspecting rules means
+ * first-match precedence (e.g. an assured/account rule pre-empting a declared
+ * rule) is handled correctly for free.
+ *
+ * `deviceSignals` must be passed so the baseline matches the user's *real*
+ * computed access (see `computeAgeAssuranceState`, which derives `assuredAge`
+ * the same way). Without it, a device-assured user's baseline would compute
+ * lower than their actual access and we'd claim a birthdate update helps when
+ * it can't - and account-date rules would flip on when they're really skipped
+ * (the engine bypasses them whenever `assuredAge` is set).
  */
 export function canBirthdateUpdateIncreaseAccess({
   region,
   metadata,
+  deviceSignals,
 }: {
   region: AppBskyAgeassuranceDefs.ConfigRegion
   metadata?: AgeAssuranceMetadata
+  deviceSignals?: AgeRange.AgeRangeResponse
 }): boolean {
+  const {assuredAge} = getAgeAssuranceDataFromDeviceSignals(
+    region,
+    deviceSignals,
+  )
   const baseline = computeAgeAssuranceRegionAccess(region, {
     accountCreatedAt: metadata?.accountCreatedAt,
     declaredAge: metadata?.declaredAge,
-    assuredAge: metadata?.assuredAge,
+    assuredAge,
   })
   const baselineRank =
     ACCESS_RANK[baseline?.access ?? AgeAssuranceAccess.Unknown]
@@ -191,7 +204,7 @@ export function canBirthdateUpdateIncreaseAccess({
     const result = computeAgeAssuranceRegionAccess(region, {
       accountCreatedAt: metadata?.accountCreatedAt,
       declaredAge,
-      assuredAge: metadata?.assuredAge,
+      assuredAge,
     })
     const rank = ACCESS_RANK[result?.access ?? AgeAssuranceAccess.Unknown]
     const overMin = declaredAge >= region.minAccessAge

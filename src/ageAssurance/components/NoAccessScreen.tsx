@@ -53,7 +53,7 @@ export function NoAccessScreen() {
   const birthdateControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
   const deleteAccountControl = useDialogControl()
-  const {metadata} = useAgeAssuranceServerDataContext()
+  const {metadata, deviceSignals} = useAgeAssuranceServerDataContext()
   const region = useAgeAssuranceRegionConfig()
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const {logoutCurrentAccount} = useSessionApi()
@@ -67,7 +67,8 @@ export function NoAccessScreen() {
   const isAARegion = !!region
   const hasDeclaredAge = aa.flags.hasDeclaredAge
   const birthdateMightIncreaseAccess = Boolean(
-    region && canBirthdateUpdateIncreaseAccess({region, metadata}),
+    region &&
+    canBirthdateUpdateIncreaseAccess({region, metadata, deviceSignals}),
   )
   const canUpdateBirthday =
     (isBirthdateUpdateAllowed ||
