@@ -364,16 +364,23 @@ export function usePostDeleteMutation() {
           'community.blacksky.feed.deletePost',
           {body: {uri}},
         )
+        // A post already gone from the appview is a successful outcome — a
+        // retry after a partial failure must not surface as an error.
         if (!res.ok) {
-          const err = await res.json().catch(() => ({}))
-          throw new Error(err.message || `deletePost failed: ${res.status}`)
+          const err = (await res.json().catch(() => ({}))) as {error?: string}
+          if (err.error !== 'PostNotFound') {
+            throw new Error(err.error || `deletePost failed: ${res.status}`)
+          }
         }
-        // Also delete the stub record from PDS
-        await agent.com.atproto.repo.deleteRecord({
-          repo: parsedUri.hostname,
-          collection: COMMUNITY_POST_COLLECTION,
-          rkey: parsedUri.rkey,
-        })
+        // Best-effort: the appview is the source of truth for community
+        // post visibility; a failed stub delete must not strand the delete.
+        await agent.com.atproto.repo
+          .deleteRecord({
+            repo: parsedUri.hostname,
+            collection: COMMUNITY_POST_COLLECTION,
+            rkey: parsedUri.rkey,
+          })
+          .catch(() => {})
       } else {
         await agent.deletePost(uri)
       }
