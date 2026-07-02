@@ -5,6 +5,7 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {DEFAULT_SERVICE, PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {isNetworkError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {Agent} from '#/state/session/agent'
 
@@ -22,7 +23,13 @@ export const RQKEY = (identifier: string) => [RQKEY_ROOT, identifier]
 async function resolveDidDoc(did: string): Promise<DidDocument | null> {
   if (did.startsWith('did:plc:')) {
     const res = await fetch(`https://plc.directory/${did}`)
-    if (!res.ok) return null
+    if (!res.ok) {
+      logger.debug('pds-detection: plc.directory returned non-ok status', {
+        did,
+        status: res.status,
+      })
+      return null
+    }
     return (await res.json()) as DidDocument
   }
   if (did.startsWith('did:web:')) {
@@ -36,39 +43,29 @@ async function resolveDidDoc(did: string): Promise<DidDocument | null> {
     const res = await fetch(
       `https://${decodeURIComponent(domain)}/.well-known/did.json`,
     )
-    if (!res.ok) return null
+    if (!res.ok) {
+      logger.debug(
+        'pds-detection: did:web .well-known returned non-ok status',
+        {
+          did,
+          status: res.status,
+        },
+      )
+      return null
+    }
     return (await res.json()) as DidDocument
   }
+  logger.debug('pds-detection: unsupported DID method', {did})
   return null
 }
 
 /**
- * Whether a PDS endpoint is operated by Bluesky. This covers the entryway
- * (bsky.social) and the `*.host.bsky.network` shards that back regular
- * Bluesky accounts. Accounts on these hosts should sign in via the entryway
- * (the default service), which routes to the correct shard internally, so
- * they are treated as "default" rather than a detected third-party provider.
- */
-function isBlueskyHostedPds(pdsUrl: string): boolean {
-  try {
-    const {hostname} = new URL(pdsUrl)
-    return (
-      hostname === 'bsky.social' ||
-      hostname === 'host.bsky.network' ||
-      hostname.endsWith('.host.bsky.network')
-    )
-  } catch {
-    return false
-  }
-}
-
-/**
- * Resolve the third-party PDS endpoint that hosts a given identifier (handle
- * or DID).
+ * Resolve the PDS that hosts a given identifier (handle or DID).
  *
- * Returns the PDS URL, or `null` if the identifier resolves to a
- * Bluesky-operated host (use the entryway instead) or cannot be resolved to a
- * PDS at all (unknown handle, broken identity, unsupported DID method).
+ * Returns the PDS URL declared by the identifier's DID document, verbatim, or
+ * `null` when the identifier cannot be resolved to a PDS at all (unknown
+ * handle, broken identity, unsupported DID method).
+ *
  * Rethrows only on genuine network errors, so a "not found" during typing
  * stays quiet.
  */
@@ -85,12 +82,28 @@ export async function resolvePdsForIdentifier(
       const res = await agent.resolveHandle({handle: norm})
       did = res.data.did
     }
+    logger.debug('pds-detection: resolved identifier to DID', {
+      identifier: norm,
+      did,
+    })
     const doc = await resolveDidDoc(did)
+    logger.debug('pds-detection: resolved DID doc', {
+      did,
+      foundDoc: !!doc,
+    })
     if (!doc) return null
     const pds = getPdsEndpoint(doc)
-    if (!pds || isBlueskyHostedPds(pds)) return null
-    return pds
+    logger.debug('pds-detection: got PDS endpoint', {
+      did,
+      pds: pds ?? null,
+    })
+    return pds ?? null
   } catch (err) {
+    logger.debug('pds-detection: resolution failed', {
+      identifier: norm,
+      error: String(err),
+      isNetworkError: isNetworkError(err),
+    })
     if (isNetworkError(err)) throw err
     return null
   }
@@ -107,10 +120,8 @@ export type HostingProviderState =
   | {status: 'email'}
   /** A resolution query is in flight for the current identifier. */
   | {status: 'detecting'}
-  /** Resolved to a non-default PDS. */
+  /** Resolved to a PDS endpoint. */
   | {status: 'detected'; pdsUrl: string}
-  /** Resolved to the default PDS (or resolved to nothing usable). */
-  | {status: 'default'}
   /** The handle did not resolve, or resolution failed quietly. */
   | {status: 'unresolved'}
   /** The user manually selected a provider. */
@@ -121,9 +132,12 @@ export type HostingProviderState =
  * types, with a manual override escape hatch.
  *
  * The effective `service` is `override ?? detected ?? defaultService`.
- * Detection never blocks submission: `resolveService` awaits any in-flight
- * detection against the current (non-debounced) identifier so that pressing
- * "Sign in" mid-detection waits for resolution and then continues.
+ * `resolveService` awaits any in-flight detection against the current
+ * (non-debounced) identifier so that pressing "Sign in" mid-detection waits
+ * for resolution and then continues. It falls back to `defaultService` for
+ * anything that legitimately can't resolve a PDS (emails, bare usernames,
+ * unknown handles) but rethrows genuine network errors, so a flaky connection
+ * fails the login instead of silently submitting to the default server.
  */
 export function useHostingProvider({
   identifier,
@@ -169,8 +183,6 @@ export function useHostingProvider({
     state = {status: 'detecting'}
   } else if (query.isError || query.data == null) {
     state = {status: 'unresolved'}
-  } else if (query.data === defaultService) {
-    state = {status: 'default'}
   } else {
     state = {status: 'detected', pdsUrl: query.data}
   }
@@ -189,16 +201,19 @@ export function useHostingProvider({
       // Emails and bare usernames can't resolve a PDS on their own.
       if (norm.includes('@')) return defaultService
       if (!norm.includes('.') && !norm.startsWith('did:')) return defaultService
-      try {
-        const pds = await queryClient.ensureQueryData({
-          queryKey: RQKEY(norm),
-          queryFn: () => resolvePdsForIdentifier(norm),
-          staleTime: STALE.MINUTES.FIVE,
-        })
-        return pds ?? defaultService
-      } catch {
-        return defaultService
-      }
+      /*
+       * `resolvePdsForIdentifier` only throws on genuine network errors;
+       * anything unresolvable (unknown handle, broken identity) resolves to
+       * `null`, which we treat as the default service. Network errors are left
+       * to propagate so the caller can fail the login rather than silently
+       * submit the password to the wrong server.
+       */
+      const pdsUrl = await queryClient.ensureQueryData({
+        queryKey: RQKEY(norm),
+        queryFn: () => resolvePdsForIdentifier(norm),
+        staleTime: STALE.MINUTES.FIVE,
+      })
+      return pdsUrl ?? defaultService
     },
   }
 }

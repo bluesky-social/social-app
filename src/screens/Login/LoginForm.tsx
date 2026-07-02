@@ -10,27 +10,35 @@ import {DEFAULT_SERVICE, HITSLOP_10, HITSLOP_20} from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
-import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {toNiceHostingUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
-import {useHostingProvider} from '#/state/queries/pds-detection'
+import {
+  type HostingProviderState,
+  useHostingProvider,
+} from '#/state/queries/pds-detection'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {atoms as a, tokens, useTheme, web} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {ServerInputDialog} from '#/components/dialogs/ServerInput'
-import {FormError} from '#/components/forms/FormError'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
+import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon} from '#/components/icons/Chevron'
+import {Envelope_Stroke2_Corner0_Rounded as EmailIcon} from '#/components/icons/Envelope'
 import {Eye_Stroke2_Corner0_Rounded as EyeIcon} from '#/components/icons/Eye'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon} from '#/components/icons/EyeSlash'
 import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as TicketIcon} from '#/components/icons/Ticket'
+import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_IOS, IS_WEB} from '#/env'
+import {IS_IOS} from '#/env'
+import {HostingProviderDialog} from './components/HostingProviderDialog'
 import {FormContainer} from './FormContainer'
+
+const DEBUG = false
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -68,6 +76,7 @@ export const LoginForm = ({
   const identifierValueRef = useRef(initialHandle || '')
   const passwordValueRef = useRef('')
   const [identifier, setIdentifier] = useState(initialHandle || '')
+  const [identifierFocused, setIdentifierFocused] = useState(false)
   const [authFactorToken, setAuthFactorToken] = useState('')
   const identifierRef = useRef<TextInput>(null)
   const passwordRef = useRef<TextInput>(null)
@@ -84,7 +93,17 @@ export const LoginForm = ({
     identifier,
     defaultService: serviceUrl,
   })
-  const isNonDefaultProvider = hostingProvider.service !== DEFAULT_SERVICE
+  const {gtMobile} = useBreakpoints()
+
+  /*
+   * Surface an inline error on the username field only once detection has
+   * settled on an unresolvable identifier and the user has moved on from the
+   * field. Hidden while focused so we don't nag mid-type, and it clears
+   * automatically when the identifier resolves or an override is set (both
+   * move `state.status` away from 'unresolved').
+   */
+  const showUnresolvedError =
+    hostingProvider.state.status === 'unresolved' && !identifierFocused
 
   const onPressNext = async () => {
     if (isProcessing) return
@@ -194,19 +213,32 @@ export const LoginForm = ({
 
   return (
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
-      <ServerInputDialog
+      <HostingProviderDialog
         control={serverInputControl}
-        onSelect={url => {
+        currentOverride={
+          hostingProvider.state.status === 'overridden'
+            ? hostingProvider.state.pdsUrl
+            : null
+        }
+        isEmail={hostingProvider.state.status === 'email'}
+        onSelectManual={url => {
           hostingProvider.override(url)
           setServiceUrl(url)
+        }}
+        onSelectAutomatic={() => {
+          hostingProvider.clearOverride()
+          setServiceUrl(DEFAULT_SERVICE)
         }}
       />
       <View>
         <TextField.LabelText>
           <Trans>Username or email</Trans>
         </TextField.LabelText>
-        <TextField.Root isInvalid={errorField === 'identifier'}>
-          <TextField.Icon icon={AtIcon} />
+        <TextField.Root
+          isInvalid={errorField === 'identifier' || showUnresolvedError}>
+          <TextField.Icon
+            icon={hostingProvider.state.status === 'email' ? EmailIcon : AtIcon}
+          />
           <TextField.Input
             testID="loginUsernameInput"
             inputRef={identifierRef}
@@ -224,6 +256,8 @@ export const LoginForm = ({
               setIdentifier(v)
               if (errorField) setErrorField('none')
             }}
+            onFocus={() => setIdentifierFocused(true)}
+            onBlur={() => setIdentifierFocused(false)}
             onSubmitEditing={() => {
               passwordRef.current?.focus()
             }}
@@ -232,6 +266,30 @@ export const LoginForm = ({
             accessibilityHint={l`Enter the username or email address you used when you created your account`}
           />
         </TextField.Root>
+        {showUnresolvedError && (
+          <Text
+            style={[
+              a.text_sm,
+              a.leading_snug,
+              a.mt_sm,
+              {color: t.palette.negative_500},
+            ]}>
+            <Trans>
+              We couldn’t find an account with that username. Double-check it
+              for typos, or{' '}
+              <InlineLinkText
+                label={l`Set your hosting provider manually`}
+                style={[a.text_sm, a.leading_snug]}
+                {...createStaticClick(() => {
+                  Keyboard.dismiss()
+                  serverInputControl.open()
+                })}>
+                set your hosting provider manually
+              </InlineLinkText>
+              .
+            </Trans>
+          </Text>
+        )}
       </View>
 
       <View>
@@ -295,25 +353,6 @@ export const LoginForm = ({
           </ButtonText>
         </Button>
       </View>
-
-      <Button
-        label={l`Change hosting provider`}
-        accessibilityHint={l`Opens a dialog to change the hosting provider you sign in to`}
-        style={[a.self_start]}
-        hoverStyle={{opacity: 0.5}}
-        hitSlop={HITSLOP_10}
-        onPress={() => {
-          Keyboard.dismiss()
-          serverInputControl.open()
-        }}>
-        <ButtonText style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {isNonDefaultProvider ? (
-            <Trans>Provider: {toNiceDomain(hostingProvider.service)}</Trans>
-          ) : (
-            <Trans>Advanced: change hosting provider</Trans>
-          )}
-        </ButtonText>
-      </Button>
       {isAuthFactorTokenNeeded && (
         <View>
           <TextField.LabelText>
@@ -350,18 +389,36 @@ export const LoginForm = ({
           </Text>
         </View>
       )}
-      <FormError error={error} />
-      <View style={[a.pt_md, web([a.justify_between, a.flex_row])]}>
-        {IS_WEB && (
-          <Button
-            label={l`Back`}
-            color="secondary"
-            size="large"
-            onPress={onPressBack}>
-            <ButtonText>
-              <Trans>Back</Trans>
-            </ButtonText>
-          </Button>
+
+      {error && <Admonition type="error">{error}</Admonition>}
+
+      <View
+        style={[
+          a.pt_md,
+          gtMobile && [a.justify_between, a.flex_row, a.gap_sm],
+        ]}>
+        {gtMobile && (
+          <>
+            <Button
+              label={l`Back`}
+              color="secondary"
+              size="large"
+              onPress={onPressBack}>
+              <ButtonText>
+                <Trans>Back</Trans>
+              </ButtonText>
+            </Button>
+
+            <View style={[a.ml_auto]}>
+              <HostingProviderIndicator
+                state={hostingProvider.state}
+                onPress={() => {
+                  Keyboard.dismiss()
+                  serverInputControl.open()
+                }}
+              />
+            </View>
+          </>
         )}
         {!serviceDescription && error ? (
           <Button
@@ -399,6 +456,22 @@ export const LoginForm = ({
           </Button>
         )}
       </View>
+
+      {DEBUG && (
+        <Text style={a.text_xs}>
+          {JSON.stringify(hostingProvider.state, null, 2)}
+        </Text>
+      )}
+
+      {!gtMobile && (
+        <HostingProviderIndicator
+          state={hostingProvider.state}
+          onPress={() => {
+            Keyboard.dismiss()
+            serverInputControl.open()
+          }}
+        />
+      )}
     </FormContainer>
   )
 }
@@ -439,5 +512,39 @@ function RevealPasswordButton({
         />
       </Button>
     </View>
+  )
+}
+
+function HostingProviderIndicator({
+  state,
+  onPress,
+}: {
+  state: HostingProviderState
+  onPress: () => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  console.log(state)
+  return (
+    <Button
+      label={l`Change hosting provider`}
+      accessibilityHint={l`Opens a dialog to change the hosting provider you sign in to`}
+      style={[a.mt_auto, a.mb_sm, a.self_center]}
+      size="small"
+      color="secondary"
+      variant="ghost"
+      onPress={onPress}>
+      <ButtonText style={[t.atoms.text_contrast_medium, a.font_normal]}>
+        {state.status === 'detected' || state.status === 'overridden' ? (
+          <Trans>Hosting provider: {toNiceHostingUrl(state.pdsUrl)}</Trans>
+        ) : state.status === 'email' ? (
+          <Trans>Hosting provider: Bluesky</Trans>
+        ) : (
+          <Trans>Hosting provider</Trans>
+        )}
+      </ButtonText>
+      <TinyChevronIcon width={8} style={[t.atoms.text_contrast_medium]} />
+    </Button>
   )
 }

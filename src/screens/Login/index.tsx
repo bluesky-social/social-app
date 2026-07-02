@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react'
-import {KeyboardAvoidingView} from 'react-native'
+import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {useLingui} from '@lingui/react/macro'
 
@@ -212,7 +212,8 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
         <KeyboardAvoidingView
           testID="signIn"
           behavior="padding"
-          style={a.flex_1}>
+          style={a.flex_1}
+          automaticOffset>
           <AuthLayout.Header.Outer>
             <AuthLayout.Header.BackButton />
             <AuthLayout.Header.Content />
@@ -226,7 +227,8 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
             <LayoutAnimationConfig skipEntering>
               <ScreenTransition
                 key={currentForm}
-                direction={screenTransitionDirection}>
+                direction={screenTransitionDirection}
+                style={a.flex_1}>
                 {content}
               </ScreenTransition>
             </LayoutAnimationConfig>

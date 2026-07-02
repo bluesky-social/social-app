@@ -7,8 +7,8 @@ import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
 import {Agent} from '#/state/session/agent'
 import {atoms as a, web} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {FormError} from '#/components/forms/FormError'
 import * as TextField from '#/components/forms/TextField'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
@@ -149,7 +149,7 @@ export const SetNewPasswordForm = ({
           />
         </TextField.Root>
       </View>
-      <FormError error={error} />
+      {error && <Admonition type="error">{error}</Admonition>}
       <View style={[web([a.flex_row, a.align_center]), a.pt_lg]}>
         {IS_WEB && (
           <>

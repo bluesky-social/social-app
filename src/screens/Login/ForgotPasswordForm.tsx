@@ -9,8 +9,8 @@ import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {Agent} from '#/state/session/agent'
 import {atoms as a, useTheme, web} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
@@ -112,7 +112,7 @@ export const ForgotPasswordForm = ({
           "reset code" so you can set a new password.
         </Trans>
       </Text>
-      <FormError error={error} />
+      {error && <Admonition type="error">{error}</Admonition>}
       <View style={[web([a.flex_row, a.align_center]), a.pt_md]}>
         {IS_WEB && (
           <>
