@@ -150,6 +150,23 @@ index 8b6571698fc5dd091a0d8980a33bb40295faf305..27c97bfeb6f13907c89f1d85f2bb8b8a
        reactChoreographer.postFrameCallback(ReactChoreographer.CallbackType.IDLE_EVENT, this)
      }
    }
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
+index 216bb23beb023ef6c3ae814c17e05bccbda7fc91..6ad5cc1d9ed5b8cd2df08ad77adca56c6bb58ff4 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
+@@ -386,9 +386,10 @@ - (TextMeasurement)_measureTextStorage:(NSTextStorage *)textStorage
+     size.height = enumeratedLinesHeight;
+   }
+ 
++  CGFloat epsilon = 0.001;
+   size = (CGSize){
+-      ceil(size.width * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
+-      ceil(size.height * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
++    ceil((size.width + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
++    ceil((size.height + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
+ 
+   __block auto attachments = TextMeasurement::Attachments{};
+ 
 diff --git a/third-party-podspecs/fmt.podspec b/third-party-podspecs/fmt.podspec
 index 2f38990e226c13f483aaf1b986302d4094243814..9b02e481e290299be20a6f09c42056ff51695e9b 100644
 --- a/third-party-podspecs/fmt.podspec
