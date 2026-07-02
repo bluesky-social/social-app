@@ -358,29 +358,26 @@ export function usePostDeleteMutation() {
     mutationFn: async ({uri}) => {
       const parsedUri = new AtUri(uri)
       if (parsedUri.collection === COMMUNITY_POST_COLLECTION) {
-        // Delete from community DB via appview
+        // Both deletes are idempotent, so ordering is safe and a retry after
+        // any partial failure converges to both being gone. Remove the PDS
+        // stub first (deleteRecord is a no-op if already absent)...
+        await agent.com.atproto.repo.deleteRecord({
+          repo: parsedUri.hostname,
+          collection: COMMUNITY_POST_COLLECTION,
+          rkey: parsedUri.rkey,
+        })
+        // ...then the appview copy, treating already-gone as success.
         const res = await communityXrpc(
           agent,
           'community.blacksky.feed.deletePost',
           {body: {uri}},
         )
-        // A post already gone from the appview is a successful outcome — a
-        // retry after a partial failure must not surface as an error.
         if (!res.ok) {
           const err = (await res.json().catch(() => ({}))) as {error?: string}
           if (err.error !== 'PostNotFound') {
             throw new Error(err.error || `deletePost failed: ${res.status}`)
           }
         }
-        // Best-effort: the appview is the source of truth for community
-        // post visibility; a failed stub delete must not strand the delete.
-        await agent.com.atproto.repo
-          .deleteRecord({
-            repo: parsedUri.hostname,
-            collection: COMMUNITY_POST_COLLECTION,
-            rkey: parsedUri.rkey,
-          })
-          .catch(() => {})
       } else {
         await agent.deletePost(uri)
       }
