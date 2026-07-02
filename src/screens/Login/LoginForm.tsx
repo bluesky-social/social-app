@@ -6,16 +6,20 @@ import {
 } from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
+import {DEFAULT_SERVICE, HITSLOP_10, HITSLOP_20} from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
+import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
+import {useHostingProvider} from '#/state/queries/pds-detection'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {ServerInputDialog} from '#/components/dialogs/ServerInput'
 import {FormError} from '#/components/forms/FormError'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
@@ -36,7 +40,7 @@ export const LoginForm = ({
   serviceDescription,
   initialHandle,
   setError,
-  // setServiceUrl,
+  setServiceUrl,
   onPressRetryConnect,
   onPressBack,
   onPressForgotPassword,
@@ -63,6 +67,7 @@ export const LoginForm = ({
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] = useState(false)
   const identifierValueRef = useRef(initialHandle || '')
   const passwordValueRef = useRef('')
+  const [identifier, setIdentifier] = useState(initialHandle || '')
   const [authFactorToken, setAuthFactorToken] = useState('')
   const identifierRef = useRef<TextInput>(null)
   const passwordRef = useRef<TextInput>(null)
@@ -74,6 +79,12 @@ export const LoginForm = ({
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
+  const serverInputControl = useDialogControl()
+  const hostingProvider = useHostingProvider({
+    identifier,
+    defaultService: serviceUrl,
+  })
+  const isNonDefaultProvider = hostingProvider.service !== DEFAULT_SERVICE
 
   const onPressNext = async () => {
     if (isProcessing) return
@@ -104,6 +115,7 @@ export const LoginForm = ({
       if (
         !identifier.includes('@') && // not an email
         !identifier.includes('.') && // not a domain
+        !identifier.startsWith('did:') && // not a DID
         serviceDescription &&
         serviceDescription.availableUserDomains.length > 0
       ) {
@@ -121,10 +133,18 @@ export const LoginForm = ({
         }
       }
 
+      /*
+       * Await autodetection against the current identifier before logging in.
+       * If detection is still in flight this waits for it (bypassing the
+       * debounce); otherwise it resolves near-instantly from cache. Falls back
+       * to the default service on anything unresolvable.
+       */
+      const service = await hostingProvider.resolveService(identifier)
+
       // TODO remove double login
       await login(
         {
-          service: serviceUrl,
+          service,
           identifier: fullIdent,
           password,
           authFactorToken: authFactorToken.trim(),
@@ -174,6 +194,13 @@ export const LoginForm = ({
 
   return (
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
+      <ServerInputDialog
+        control={serverInputControl}
+        onSelect={url => {
+          hostingProvider.override(url)
+          setServiceUrl(url)
+        }}
+      />
       <View>
         <TextField.LabelText>
           <Trans>Username or email</Trans>
@@ -194,6 +221,7 @@ export const LoginForm = ({
             defaultValue={initialHandle || ''}
             onChangeText={v => {
               identifierValueRef.current = v
+              setIdentifier(v)
               if (errorField) setErrorField('none')
             }}
             onSubmitEditing={() => {
@@ -267,6 +295,25 @@ export const LoginForm = ({
           </ButtonText>
         </Button>
       </View>
+
+      <Button
+        label={l`Change hosting provider`}
+        accessibilityHint={l`Opens a dialog to change the hosting provider you sign in to`}
+        style={[a.self_start]}
+        hoverStyle={{opacity: 0.5}}
+        hitSlop={HITSLOP_10}
+        onPress={() => {
+          Keyboard.dismiss()
+          serverInputControl.open()
+        }}>
+        <ButtonText style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          {isNonDefaultProvider ? (
+            <Trans>Provider: {toNiceDomain(hostingProvider.service)}</Trans>
+          ) : (
+            <Trans>Advanced: change hosting provider</Trans>
+          )}
+        </ButtonText>
+      </Button>
       {isAuthFactorTokenNeeded && (
         <View>
           <TextField.LabelText>
