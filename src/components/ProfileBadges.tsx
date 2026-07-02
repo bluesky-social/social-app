@@ -5,7 +5,7 @@ import {atoms as a, useAlf, type ViewStyleProp} from '#/alf'
 import {useNativeFontScale} from '#/alf/util/dimensions'
 import {BotBadge, BotBadgeButton, isBotAccount} from '#/components/BotBadge'
 import {PeerModBadge, PeerModBadgeButton} from '#/components/PeerModBadge'
-import {isPeerModDid} from '#/state/queries/peer-mod-permissions'
+import {hasKnownBadge} from '#/lib/badges'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
@@ -56,9 +56,9 @@ export function ProfileBadges({
     fonts: {scaleMultiplier: alfScaleMultiplier},
   } = useAlf()
 
-  const isPeerMod = isPeerModDid(shadowed.did)
+  const hasBadges = hasKnownBadge(shadowed)
 
-  if (!verification.showBadge && !isBotAccount(shadowed) && !isPeerMod)
+  if (!verification.showBadge && !isBotAccount(shadowed) && !hasBadges)
     return null
 
   const isOnTheSmallSide = size === 'xs' || size === 'sm'

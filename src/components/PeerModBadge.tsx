@@ -3,7 +3,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {isPeerModDid} from '#/state/queries/peer-mod-permissions'
+import {hasBadge, PEER_MOD_BADGE} from '#/lib/badges'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -19,7 +19,7 @@ export function PeerModBadge({
   width: number
 }) {
   const t = useTheme()
-  if (!isPeerModDid(profile.did)) return null
+  if (!hasBadge(profile, PEER_MOD_BADGE)) return null
   return (
     <View>
       <PeerModIcon width={width} fill={t.palette.primary_500} />
@@ -37,7 +37,7 @@ export function PeerModBadgeButton({
   const t = useTheme()
   const {_} = useLingui()
   const control = Dialog.useDialogControl()
-  if (!isPeerModDid(profile.did)) return null
+  if (!hasBadge(profile, PEER_MOD_BADGE)) return null
   return (
     <>
       <Button

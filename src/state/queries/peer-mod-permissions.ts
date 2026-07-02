@@ -1,7 +1,6 @@
 import {useQuery} from '@tanstack/react-query'
 
 import {communityXrpc} from '#/lib/api/community'
-import {PEER_MOD_DIDS} from '#/lib/constants'
 import {useAgent, useSession} from '#/state/session'
 
 const GET_MY_PERMISSIONS_METHOD = 'community.blacksky.moderation.getMyPermissions'
@@ -18,7 +17,7 @@ export type PeerModPermissions = {
 
 /**
  * Whether the signed-in user is a peer-moderator. Backed by the appview's
- * PEER_MOD_DIDS allowlist. Cached aggressively; the affordances gated by
+ * peer-moderator badge. Cached aggressively; the affordances gated by
  * this are mod tooling, not security boundaries — the server re-checks on
  * every applyLabel/removeLabel call.
  */
@@ -40,9 +39,4 @@ export function useMyPeerModPermissions() {
       }
     },
   })
-}
-
-// Mirrors the appview's PEER_MOD_DIDS env; flip to a public list endpoint when one exists.
-export function isPeerModDid(did: string | undefined): boolean {
-  return !!did && did in PEER_MOD_DIDS
 }

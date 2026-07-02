@@ -28,13 +28,6 @@ export const CARD_ASPECT_RATIO = 1200 / 630
 // -prf
 export const JOINED_THIS_WEEK = 560000 // estimate as of 12/18/24
 
-// Client-side mirror of the appview's PEER_MOD_DIDS allowlist; bump on roster change.
-export const PEER_MOD_DIDS: Record<string, true> = {
-  'did:plc:w4xbfzo7kqfes5zb7r6qv3rw': true,
-  'did:plc:v2zokqmhtb4trssgokog5342': true,
-  'did:plc:b3ethzamzumrezs4y7pibj6b': true,
-}
-
 export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
   'did:plc:oisofpd7lj26yvgiivf3lxsi': true, // hailey.at
   'did:plc:p2cp5gopk7mgjegy6wadk3ep': true, // samuel.bsky.team
