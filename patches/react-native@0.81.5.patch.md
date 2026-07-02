@@ -11,3 +11,8 @@ in the RN repo: https://github.com/facebook/react-native/issues/43388
 Patching `RCTRefreshControl.m` and `RCTRefreshControl.h` to add a new `forwarderBeginRefreshing` method to the class.
 This method is used by `ExpoScrollForwarder` to initiate a refresh of the underlying `UIScrollView` from inside that
 module.
+
+## RCTTextLayoutManager.mm Patch - Text overflows instead of wrapping on the last line
+
+Issue: https://github.com/react/react-native/issues/53450#issuecomment-3298157830 
+Bandaid fix taken from: https://github.com/react/react-native/commit/581d643a9e59fd88f93757f80194e1efd11bd0e5
