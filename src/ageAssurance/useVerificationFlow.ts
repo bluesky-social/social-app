@@ -48,6 +48,13 @@ export function useAgeAssuranceVerificationFlow({
   const allowsDeviceVerification = region && aa.flags.allowsDeviceVerification
 
   const [isVerifying, setIsVerifying] = useState(false)
+  /*
+   * In-memory only, and scoped to this hook instance: each surface using this
+   * hook tracks its own failure, and a remount (or another surface) starts
+   * fresh and will offer the device flow again. That's intentional for now -
+   * it's a soft "don't immediately re-offer" signal, not a persisted judgment
+   * that the device can't provide signals.
+   */
   const [deviceSignalsFailed, setDeviceSignalsFailed] = useState(false)
 
   const verifyCta =

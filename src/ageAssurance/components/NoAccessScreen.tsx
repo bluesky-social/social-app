@@ -178,7 +178,7 @@ export function NoAccessScreen() {
                           </Trans>
                         </Text>
 
-                        {region && (
+                        {region && geolocationString && (
                           <Text style={[textStyles]}>
                             {isUsingGPS ? (
                               <Trans>
