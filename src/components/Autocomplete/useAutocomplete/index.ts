@@ -2,6 +2,7 @@ import {useCallback, useMemo} from 'react'
 import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {keepPreviousData, useQuery} from '@tanstack/react-query'
 
+import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
@@ -14,6 +15,8 @@ import {
   type AutocompleteProfile,
 } from '#/components/Autocomplete/types'
 import {useEmojiSearch} from './useEmojiSearch'
+
+const QUERY_DEBOUNCE_MS = 150
 
 const DEFAULT_MOD_OPTS = {
   userDid: undefined,
@@ -34,6 +37,10 @@ export function useAutocomplete({
   const agent = useAgent()
   const moderationOpts = useModerationOpts()
   const emojiSearch = useEmojiSearch()
+  // Debounce the value that drives the network request, so we don't refetch
+  // and re-render the dropdown on every keystroke. Live `q` is still used in
+  // `select` below for the search-fallback row so it tracks the input.
+  const debouncedQ = useDebouncedValue(q, QUERY_DEBOUNCE_MS)
 
   const query = useQuery({
     staleTime: STALE.MINUTES.ONE,
@@ -41,19 +48,19 @@ export function useAutocomplete({
       'autocomplete',
       {
         type,
-        query: q,
+        query: debouncedQ,
       },
     ],
     async queryFn() {
       if (type === 'profile') {
         // TODO return recents
-        if (!q) return []
+        if (!debouncedQ) return []
 
         // Going from "foo" to "foo." should not clear matches.
-        q = q.toLowerCase().trim().replace(/\.$/, '')
+        const normalized = debouncedQ.toLowerCase().trim().replace(/\.$/, '')
 
         const res = await agent.searchActorsTypeahead({
-          q,
+          q: normalized,
           limit: limit || 8,
         })
 
@@ -64,7 +71,7 @@ export function useAutocomplete({
           profile,
         }))
       } else if (type === 'emoji') {
-        return emojiSearch(q, limit || 8)
+        return emojiSearch(debouncedQ, limit || 8)
       }
 
       return []
