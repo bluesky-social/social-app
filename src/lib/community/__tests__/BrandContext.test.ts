@@ -66,5 +66,7 @@ describe('BrandContext defaults', () => {
       primary_950: '#1E1E56',
       primary_975: '#13133B',
     })
+    expect(DEFAULT_BRAND_CONFIG.theme.css.selectionLight).toBe('#D2FC51')
+    expect(DEFAULT_BRAND_CONFIG.theme.css.selectionDark).toBe('#464985')
   })
 })

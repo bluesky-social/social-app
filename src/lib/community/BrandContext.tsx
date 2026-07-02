@@ -113,6 +113,11 @@ function resolveBrandConfig(): ComputedBrandConfig {
       bgHue: DEFAULT_BLUE_HUE,
       brand: BLACKSKY_BRAND,
       colorScale: BLACKSKY_PRIMARY_SCALE,
+      css: {
+        ...config.theme.css,
+        selectionLight: '#D2FC51',
+        selectionDark: '#464985',
+      },
     },
   }
 }
