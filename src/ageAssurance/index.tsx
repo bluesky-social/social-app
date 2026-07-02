@@ -1,8 +1,6 @@
 import {createContext, useCallback, useContext, useMemo} from 'react'
 
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
-import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
-import {useAgent} from '#/state/session'
 import {Provider as RedirectOverlayProvider} from '#/ageAssurance/components/RedirectOverlay'
 import {
   AgeAssuranceServerDataProvider,
@@ -80,7 +78,6 @@ export function Provider({children}: {children: React.ReactNode}) {
 }
 
 function InnerProvider({children}: {children: React.ReactNode}) {
-  const agent = useAgent()
   const state = useAgeAssuranceState()
   const {metadata, deviceSignals} = useAgeAssuranceServerDataContext()
   const regionConfig = useAgeAssuranceRegionConfigWithFallback()
@@ -99,15 +96,8 @@ function InnerProvider({children}: {children: React.ReactNode}) {
           isAgeRestricted: true,
         })
       }
-      if (flags.chatDisabled || flags.groupChatDisabled) {
-        void restrictChatSettings({
-          agent,
-          restrictIncoming: flags.chatDisabled,
-          restrictGroupInvites: flags.groupChatDisabled,
-        })
-      }
     },
-    [agent, getAndRegisterPushToken, regionConfig, metadata, deviceSignals],
+    [getAndRegisterPushToken, regionConfig, metadata, deviceSignals],
   )
   useOnAgeAssuranceAccessUpdate(handleAccessUpdate)
 
