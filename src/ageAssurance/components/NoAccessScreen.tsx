@@ -216,53 +216,50 @@ export function NoAccessScreen() {
                                 </Text>
                                 . This estimate may be inaccurate if you're
                                 using a VPN.
-                              </Trans>{' '}
-                              {IS_NATIVE && (
-                                <>
-                                  <Trans>
-                                    You can also{' '}
-                                    <SimpleInlineLinkText
-                                      label={_(msg`Update your location`)}
-                                      {...createStaticClick(() => {
-                                        locationControl.open()
-                                      })}
-                                      style={[textStyles]}>
-                                      tap here to update your location with GPS.
-                                    </SimpleInlineLinkText>
-                                  </Trans>
-
-                                  <DeviceLocationRequestDialog
-                                    control={locationControl}
-                                    onLocationAcquired={props => {
-                                      const access =
-                                        computeAgeAssuranceRegionAccess(
-                                          props.geolocation,
-                                        )
-                                      if (access !== aa.Access.Full) {
-                                        props.disableDialogAction()
-                                        props.setDialogError(
-                                          _(
-                                            msg`We're sorry, but based on your device's location, you are currently located in a region that requires age assurance.`,
-                                          ),
-                                        )
-                                      } else {
-                                        props.closeDialog(() => {
-                                          // set this after close!
-                                          setDeviceGeolocation(
-                                            props.geolocation,
-                                          )
-                                          Toast.show(
-                                            _(msg`Thanks! You're all set.`),
-                                            {
-                                              type: 'success',
-                                            },
-                                          )
-                                        })
-                                      }
-                                    }}
-                                  />
-                                </>
-                              )}
+                              </Trans>
+                            </>
+                          )}
+                          {IS_NATIVE && (
+                            <>
+                              {' '}
+                              <SimpleInlineLinkText
+                                label={_(msg`Update your location`)}
+                                {...createStaticClick(() => {
+                                  locationControl.open()
+                                })}
+                                style={[textStyles]}>
+                                <Trans>
+                                  Tap here to update your location via GPS.
+                                </Trans>
+                              </SimpleInlineLinkText>
+                              <DeviceLocationRequestDialog
+                                control={locationControl}
+                                onLocationAcquired={props => {
+                                  const access =
+                                    computeAgeAssuranceRegionAccess(
+                                      props.geolocation,
+                                    )
+                                  if (access !== aa.Access.Full) {
+                                    props.disableDialogAction()
+                                    props.setDialogError(
+                                      _(
+                                        msg`We're sorry, but based on your device's location, you are currently located in a region that requires age assurance.`,
+                                      ),
+                                    )
+                                  } else {
+                                    props.closeDialog(() => {
+                                      // set this after close!
+                                      setDeviceGeolocation(props.geolocation)
+                                      Toast.show(
+                                        _(msg`Thanks! You're all set.`),
+                                        {
+                                          type: 'success',
+                                        },
+                                      )
+                                    })
+                                  }
+                                }}
+                              />
                             </>
                           )}
                         </Text>
