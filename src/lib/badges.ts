@@ -21,7 +21,14 @@ export function hasBadge(profile: ProfileLike, badge: string): boolean {
 }
 
 // Badges the client has artwork for; unknown slugs render nothing.
-export const KNOWN_BADGES = new Set([PEER_MOD_BADGE])
+export const KNOWN_BADGES = new Set([
+  PEER_MOD_BADGE,
+  'community-builder',
+  'financial-supporter-1',
+  'financial-supporter-2',
+  'financial-supporter-3',
+  'tech-support',
+])
 
 export function hasKnownBadge(profile: ProfileLike): boolean {
   return getActorBadges(profile).some(b => KNOWN_BADGES.has(b))

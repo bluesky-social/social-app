@@ -4,7 +4,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {atoms as a, useAlf, type ViewStyleProp} from '#/alf'
 import {useNativeFontScale} from '#/alf/util/dimensions'
 import {BotBadge, BotBadgeButton, isBotAccount} from '#/components/BotBadge'
-import {PeerModBadge, PeerModBadgeButton} from '#/components/PeerModBadge'
+import {ActorBadgeButtons, ActorBadges} from '#/components/badges'
 import {hasKnownBadge} from '#/lib/badges'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
@@ -29,7 +29,7 @@ const botIconSizes: Record<Size, number> = {
   xl: 23,
 } as const
 
-const peerModIconSizes: Record<Size, number> = {
+const badgeIconSizes: Record<Size, number> = {
   xs: 12,
   sm: 14,
   md: 16,
@@ -69,7 +69,7 @@ export function ProfileBadges({
 
   const verificationIconWidth = verificationIconSizes[size] * scaleMultiplier
   const botIconWidth = botIconSizes[size] * scaleMultiplier
-  const peerModIconWidth = peerModIconSizes[size] * scaleMultiplier
+  const badgeIconWidth = badgeIconSizes[size] * scaleMultiplier
 
   return (
     <View
@@ -85,7 +85,7 @@ export function ProfileBadges({
             profile={shadowed}
             width={verificationIconWidth}
           />
-          <PeerModBadgeButton profile={shadowed} width={peerModIconWidth} />
+          <ActorBadgeButtons profile={shadowed} width={badgeIconWidth} />
           <BotBadgeButton profile={shadowed} width={botIconWidth} />
         </>
       ) : (
@@ -96,7 +96,7 @@ export function ProfileBadges({
               width={verificationIconWidth}
             />
           )}
-          <PeerModBadge profile={shadowed} width={peerModIconWidth} />
+          <ActorBadges profile={shadowed} width={badgeIconWidth} />
           <BotBadge profile={shadowed} width={botIconWidth} />
         </>
       )}
