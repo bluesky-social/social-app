@@ -18,6 +18,7 @@ import {
 import {communityXrpc} from '#/lib/api/community'
 import {FeedTuner} from '#/lib/api/feed-manip'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
@@ -196,11 +197,34 @@ export function useCommunityFeedSlices(
   feedItems: AppBskyFeedDefs.FeedViewPost[],
 ): CommunityFeedSlice[] {
   const moderationOpts = useModerationOpts()
+  const {data: preferences} = usePreferencesQuery()
 
   return useMemo(() => {
     if (!moderationOpts) return []
-    const tuner = new FeedTuner([])
-    const raw = tuner.tune(feedItems)
+    // A reply only resurfaces its thread when the root author is
+    // continuing their own thread; other people's replies stay in the
+    // thread view. Stands in for followedRepliesOnly, which would pass
+    // everything here since the whole community is "followed".
+    const surfaced = feedItems.filter(item => {
+      const reply = (item.post.record as AppBskyFeedPost.Record)?.reply
+      if (!reply?.root?.uri) return true
+      return new AtUri(reply.root.uri).host === item.post.author.did
+    })
+    // Same tuner stack as the Following feed (see useFeedTuners).
+    const tunerFns = [FeedTuner.removeOrphans]
+    if (preferences?.feedViewPrefs.hideReposts) {
+      tunerFns.push(FeedTuner.removeReposts)
+    }
+    if (preferences?.feedViewPrefs.hideReplies) {
+      tunerFns.push(FeedTuner.removeReplies)
+    }
+    if (preferences?.feedViewPrefs.hideQuotePosts) {
+      tunerFns.push(FeedTuner.removeQuotePosts)
+    }
+    tunerFns.push(FeedTuner.dedupThreads)
+    tunerFns.push(FeedTuner.removeMutedThreads)
+    const tuner = new FeedTuner(tunerFns)
+    const raw = tuner.tune(surfaced)
 
     return raw
       .map((slice, sliceIdx) => {
