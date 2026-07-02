@@ -13,6 +13,37 @@ const RQKEY_ROOT = 'pds-detection'
 export const RQKEY = (identifier: string) => [RQKEY_ROOT, identifier]
 
 /**
+ * Per-request timeout for identity/PDS resolution network calls. Without it a
+ * hanging plc.directory / did:web `.well-known` fetch (or handle resolution)
+ * could leave the sign-in button spinning indefinitely.
+ */
+const RESOLVE_TIMEOUT = 20e3
+
+/**
+ * Run a resolution network op with a per-request timeout. `run` receives an
+ * `AbortSignal` that fires after `RESOLVE_TIMEOUT`, so callers that support
+ * cancellation (fetch, the XRPC client) abort the in-flight request. A timeout
+ * is surfaced as a network error so the caller fails the login rather than
+ * silently falling back to the default service.
+ */
+async function withResolveTimeout<T>(
+  run: (signal: AbortSignal) => Promise<T>,
+): Promise<T> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), RESOLVE_TIMEOUT)
+  try {
+    return await run(controller.signal)
+  } catch (err) {
+    if (controller.signal.aborted) {
+      throw new Error('Network request failed: resolution timed out')
+    }
+    throw err
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+/**
  * Resolve a DID document without a session.
  *
  * `com.atproto.identity.resolveIdentity` would give us the DID doc in a single
@@ -20,9 +51,12 @@ export const RQKEY = (identifier: string) => [RQKEY_ROOT, identifier]
  * appview, so it is unusable here. Instead we resolve the DID doc directly:
  * `did:plc` via the PLC directory, `did:web` via its `.well-known` endpoint.
  */
-async function resolveDidDoc(did: string): Promise<DidDocument | null> {
+async function resolveDidDoc(
+  did: string,
+  signal?: AbortSignal,
+): Promise<DidDocument | null> {
   if (did.startsWith('did:plc:')) {
-    const res = await fetch(`https://plc.directory/${did}`)
+    const res = await fetch(`https://plc.directory/${did}`, {signal})
     if (!res.ok) {
       logger.debug('pds-detection: plc.directory returned non-ok status', {
         did,
@@ -42,6 +76,7 @@ async function resolveDidDoc(did: string): Promise<DidDocument | null> {
     if (domain.includes(':')) return null
     const res = await fetch(
       `https://${decodeURIComponent(domain)}/.well-known/did.json`,
+      {signal},
     )
     if (!res.ok) {
       logger.debug(
@@ -79,14 +114,16 @@ export async function resolvePdsForIdentifier(
     if (norm.startsWith('did:')) {
       did = norm
     } else {
-      const res = await agent.resolveHandle({handle: norm})
+      const res = await withResolveTimeout(signal =>
+        agent.resolveHandle({handle: norm}, {signal}),
+      )
       did = res.data.did
     }
     logger.debug('pds-detection: resolved identifier to DID', {
       identifier: norm,
       did,
     })
-    const doc = await resolveDidDoc(did)
+    const doc = await withResolveTimeout(signal => resolveDidDoc(did, signal))
     logger.debug('pds-detection: resolved DID doc', {
       did,
       foundDoc: !!doc,

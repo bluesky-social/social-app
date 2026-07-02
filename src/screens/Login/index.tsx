@@ -36,7 +36,13 @@ const OrderedForms = [
   Forms.PasswordUpdated,
 ] as const
 
-export const Login = ({onPressBack}: {onPressBack: () => void}) => {
+export const Login = ({
+  onPressBack,
+  onPressCreateAccount,
+}: {
+  onPressBack: () => void
+  onPressCreateAccount: () => void
+}) => {
   const {t: l} = useLingui()
   const failedAttemptCountRef = useRef(0)
   const [startTime] = useState(() => Date.now())
@@ -151,6 +157,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           onPressBack={goBack}
           onPressForgotPassword={onPressForgotPassword}
           onPressRetryConnect={() => void refetchService()}
+          onPressCreateAccount={onPressCreateAccount}
         />
       )
       break

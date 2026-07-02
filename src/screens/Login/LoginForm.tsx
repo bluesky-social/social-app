@@ -19,8 +19,8 @@ import {
 } from '#/state/queries/pds-detection'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
-import {Admonition} from '#/components/Admonition'
+import {atoms as a, native, tokens, useBreakpoints, useTheme} from '#/alf'
+import * as Admonition from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -54,6 +54,7 @@ export const LoginForm = ({
   onPressForgotPassword,
   onAttemptSuccess,
   onAttemptFailed,
+  onPressCreateAccount,
 }: {
   error: string
   serviceUrl: string
@@ -66,6 +67,7 @@ export const LoginForm = ({
   onPressForgotPassword: () => void
   onAttemptSuccess: () => void
   onAttemptFailed: () => void
+  onPressCreateAccount: () => void
 }) => {
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState(false)
@@ -73,6 +75,7 @@ export const LoginForm = ({
     'none' | 'identifier' | 'password' | '2fa'
   >('none')
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] = useState(false)
+  const [showResolveError, setShowResolveError] = useState(false)
   const identifierValueRef = useRef(initialHandle || '')
   const passwordValueRef = useRef('')
   const [identifier, setIdentifier] = useState(initialHandle || '')
@@ -110,6 +113,7 @@ export const LoginForm = ({
     Keyboard.dismiss()
     setError('')
     setErrorField('none')
+    setShowResolveError(false)
 
     const identifier = identifierValueRef.current.toLowerCase().trim()
     const password = passwordValueRef.current
@@ -156,9 +160,19 @@ export const LoginForm = ({
        * Await autodetection against the current identifier before logging in.
        * If detection is still in flight this waits for it (bypassing the
        * debounce); otherwise it resolves near-instantly from cache. Falls back
-       * to the default service on anything unresolvable.
+       * to the default service on anything unresolvable, but a network error
+       * throws - in that case we must NOT log in, since we can't be sure which
+       * server to send the password to.
        */
-      const service = await hostingProvider.resolveService(identifier)
+      let service: string
+      try {
+        service = await hostingProvider.resolveService(identifier)
+      } catch (err) {
+        logger.debug('Failed to resolve hosting provider', {error: String(err)})
+        setIsProcessing(false)
+        setShowResolveError(true)
+        return
+      }
 
       // TODO remove double login
       await login(
@@ -255,6 +269,7 @@ export const LoginForm = ({
               identifierValueRef.current = v
               setIdentifier(v)
               if (errorField) setErrorField('none')
+              if (showResolveError) setShowResolveError(false)
             }}
             onFocus={() => setIdentifierFocused(true)}
             onBlur={() => setIdentifierFocused(false)}
@@ -390,7 +405,41 @@ export const LoginForm = ({
         </View>
       )}
 
-      {error && <Admonition type="error">{error}</Admonition>}
+      {/*
+       * At most one error is visible at a time. The inline username error
+       * (under the field) wins; otherwise the resolution-failure error takes
+       * precedence over the generic form error.
+       */}
+      {!showUnresolvedError &&
+        (showResolveError ? (
+          <Admonition.Outer type="error">
+            <Admonition.Row>
+              <Admonition.Icon />
+              <Admonition.Content>
+                <Admonition.Text>
+                  <Trans>
+                    We couldn’t verify your hosting provider. Check your
+                    internet connection, or{' '}
+                    <InlineLinkText
+                      label={l`Set your hosting provider manually`}
+                      style={[a.text_sm, a.leading_snug]}
+                      {...createStaticClick(() => {
+                        Keyboard.dismiss()
+                        serverInputControl.open()
+                      })}>
+                      set your hosting provider manually
+                    </InlineLinkText>
+                    .
+                  </Trans>
+                </Admonition.Text>
+              </Admonition.Content>
+            </Admonition.Row>
+          </Admonition.Outer>
+        ) : (
+          error && (
+            <Admonition.Admonition type="error">{error}</Admonition.Admonition>
+          )
+        ))}
 
       <View
         style={[
@@ -462,6 +511,20 @@ export const LoginForm = ({
           {JSON.stringify(hostingProvider.state, null, 2)}
         </Text>
       )}
+
+      <Text style={[a.text_md, native([a.text_center, a.mx_auto]), a.mt_sm]}>
+        New to Bluesky?{' '}
+        <InlineLinkText
+          label={l`Sign up`}
+          to="#"
+          style={[a.text_md, native(a.text_center)]}
+          onPress={evt => {
+            evt.preventDefault()
+            onPressCreateAccount()
+          }}>
+          <Trans>Sign up</Trans>
+        </InlineLinkText>
+      </Text>
 
       {!gtMobile && (
         <HostingProviderIndicator
