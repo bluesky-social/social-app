@@ -1,7 +1,8 @@
 import {useMemo} from 'react'
 import type * as AgeRange from 'expo-age-range'
 import {
-  type AppBskyAgeassuranceDefs,
+  AppBskyAgeassuranceDefs,
+  computeAgeAssuranceRegionAccess,
   getAgeAssuranceRegionConfig,
   type ModerationPrefs,
 } from '@atproto/api'
@@ -107,6 +108,97 @@ export function getAgeAssuranceDataFromDeviceSignals(
   return {
     assuredAge: typeof lowerBound === 'number' ? lowerBound : undefined,
   }
+}
+
+/**
+ * Ranks access levels from most to least restrictive so we can compare two
+ * outcomes. Higher number = more access.
+ */
+const ACCESS_RANK: Record<string, number> = {
+  [AgeAssuranceAccess.None]: 0,
+  [AgeAssuranceAccess.Safe]: 1,
+  [AgeAssuranceAccess.Full]: 2,
+  // `unknown` isn't a real granted level; treat it as the floor.
+  [AgeAssuranceAccess.Unknown]: -1,
+}
+
+/**
+ * Whether correcting the user's declared age (i.e. updating their birthdate)
+ * could meaningfully improve their standing in the current region.
+ *
+ * There are two ways a birthdate update can help:
+ *
+ * 1. Raising the rule-engine access level. Some regions grant `safe`/`full` off
+ *    a sufficient *declared* age, so a user whose birthdate is wrong (too young)
+ *    can unlock more by correcting it. Other regions gate higher access purely
+ *    on an *assured* age (or account date), where a declared age changes
+ *    nothing.
+ * 2. Crossing the region's `minAccessAge`. Below it the user is hard-blocked
+ *    with no verify path (see `isOverRegionMinAccessAge` gating in the
+ *    NoAccessScreen); crossing it unlocks the verify flow, which is itself a
+ *    path to more access even when the rule-engine level would still be `none`.
+ *
+ * We answer by simulating the real rule engine: hold `accountCreatedAt` and
+ * `assuredAge` fixed and re-run access for a set of candidate declared ages
+ * drawn from the region's declared-age rule thresholds and its `minAccessAge`.
+ * If any candidate yields strictly more access, or crosses `minAccessAge` when
+ * the current declared age doesn't, a birthdate update could help. Simulating
+ * rather than statically inspecting rules means first-match precedence (e.g. an
+ * assured/account rule pre-empting a declared rule) is handled correctly for
+ * free.
+ */
+export function canBirthdateUpdateIncreaseAccess({
+  region,
+  metadata,
+}: {
+  region: AppBskyAgeassuranceDefs.ConfigRegion
+  metadata?: AgeAssuranceMetadata
+}): boolean {
+  const baseline = computeAgeAssuranceRegionAccess(region, {
+    accountCreatedAt: metadata?.accountCreatedAt,
+    declaredAge: metadata?.declaredAge,
+    assuredAge: metadata?.assuredAge,
+  })
+  const baselineRank =
+    ACCESS_RANK[baseline?.access ?? AgeAssuranceAccess.Unknown]
+  const baselineOverMin =
+    metadata?.declaredAge !== undefined &&
+    metadata.declaredAge >= region.minAccessAge
+
+  /*
+   * Candidate declared ages to probe: each declared-age rule's threshold and
+   * the region's `minAccessAge`, plus one below each (to cover
+   * `IfDeclaredUnderAge` and the min-age boundary). Anything a birthdate edit
+   * could achieve is captured by crossing one of these thresholds, so we don't
+   * need to sweep every integer.
+   */
+  const thresholds = new Set<number>([region.minAccessAge])
+  for (const rule of region.rules) {
+    if (
+      AppBskyAgeassuranceDefs.isConfigRegionRuleIfDeclaredOverAge(rule) ||
+      AppBskyAgeassuranceDefs.isConfigRegionRuleIfDeclaredUnderAge(rule)
+    ) {
+      thresholds.add(rule.age)
+    }
+  }
+  const candidates = new Set<number>()
+  for (const threshold of thresholds) {
+    candidates.add(threshold)
+    candidates.add(Math.max(0, threshold - 1))
+  }
+
+  for (const declaredAge of candidates) {
+    const result = computeAgeAssuranceRegionAccess(region, {
+      accountCreatedAt: metadata?.accountCreatedAt,
+      declaredAge,
+      assuredAge: metadata?.assuredAge,
+    })
+    const rank = ACCESS_RANK[result?.access ?? AgeAssuranceAccess.Unknown]
+    const overMin = declaredAge >= region.minAccessAge
+    if (rank > baselineRank || (overMin && !baselineOverMin)) return true
+  }
+
+  return false
 }
 
 /**

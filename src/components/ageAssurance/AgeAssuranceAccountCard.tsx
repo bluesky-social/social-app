@@ -235,20 +235,20 @@ function RegionNotice() {
               estimate may be inaccurate if you're using a VPN.
             </Trans>
           )}
-        </Text>
-      )}
-
-      {IS_NATIVE && (
-        <Text style={[a.text_sm, a.leading_snug]}>
-          <Trans>
-            <InlineLinkText
-              label={l`Update your location`}
-              {...createStaticClick(() => {
-                locationControl.open()
-              })}>
-              Tap here to update your location with GPS.
-            </InlineLinkText>
-          </Trans>
+          {IS_NATIVE && (
+            <Text style={[a.text_sm, a.leading_snug]}>
+              {' '}
+              <Trans>
+                <InlineLinkText
+                  label={l`Update your location`}
+                  {...createStaticClick(() => {
+                    locationControl.open()
+                  })}>
+                  Tap here to update your location with GPS.
+                </InlineLinkText>
+              </Trans>
+            </Text>
+          )}
         </Text>
       )}
     </>
