@@ -164,6 +164,7 @@ export interface CommunityFeedSliceItem extends HydratedCommunityPost {
 export interface CommunityFeedSlice {
   _reactKey: string
   items: CommunityFeedSliceItem[]
+  isIncompleteThread: boolean
 }
 
 /**
@@ -217,6 +218,7 @@ export function useCommunityFeedSlices(
         return {
           _reactKey: slice._reactKey || `slice-${sliceIdx}`,
           items,
+          isIncompleteThread: slice.isIncompleteThread,
         }
       })
       .filter(slice => slice.items.length > 0)

@@ -15,6 +15,7 @@ import {
 import {useSession} from '#/state/session'
 import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
 import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
+import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
@@ -22,6 +23,20 @@ import {atoms as a, useTheme} from '#/alf'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+
+type CommunityFeedRow =
+  | {
+      type: 'sliceItem'
+      slice: CommunityFeedSlice
+      indexInSlice: number
+      showReplyTo: boolean
+      reactKey: string
+    }
+  | {
+      type: 'viewFullThread'
+      uri: string
+      reactKey: string
+    }
 
 export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
   const {_} = useLingui()
@@ -52,15 +67,47 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
 
   const slices = useCommunityFeedSlices(feedItems)
   const rows = useMemo(() => {
-    const out: Array<{
-      slice: CommunityFeedSlice
-      indexInSlice: number
-      reactKey: string
-    }> = []
+    const out: CommunityFeedRow[] = []
     slices.forEach(slice => {
-      slice.items.forEach((item, i) => {
-        out.push({slice, indexInSlice: i, reactKey: item._reactKey})
-      })
+      // Deep threads collapse to root + gap + last two, like the Following feed.
+      if (slice.isIncompleteThread && slice.items.length >= 3) {
+        const beforeLast = slice.items.length - 2
+        const last = slice.items.length - 1
+        out.push({
+          type: 'sliceItem',
+          slice,
+          indexInSlice: 0,
+          showReplyTo: false,
+          reactKey: slice.items[0]._reactKey,
+        })
+        out.push({
+          type: 'viewFullThread',
+          uri: slice.items[0].uri,
+          reactKey: `${slice._reactKey}-viewFullThread`,
+        })
+        for (const i of [beforeLast, last]) {
+          out.push({
+            type: 'sliceItem',
+            slice,
+            indexInSlice: i,
+            showReplyTo:
+              i === beforeLast &&
+              slice.items[i].parentAuthor?.did !==
+                slice.items[i].post.author.did,
+            reactKey: slice.items[i]._reactKey,
+          })
+        }
+      } else {
+        slice.items.forEach((item, i) => {
+          out.push({
+            type: 'sliceItem',
+            slice,
+            indexInSlice: i,
+            showReplyTo: i === 0,
+            reactKey: item._reactKey,
+          })
+        })
+      }
     })
     return out
   }, [slices])
@@ -94,15 +141,11 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
   }, [scrollElRef, headerOffset, refetch])
 
   const renderItem = useCallback(
-    ({
-      item,
-      index,
-    }: ListRenderItemInfo<{
-      slice: CommunityFeedSlice
-      indexInSlice: number
-      reactKey: string
-    }>) => {
-      const {slice, indexInSlice} = item
+    ({item, index}: ListRenderItemInfo<CommunityFeedRow>) => {
+      if (item.type === 'viewFullThread') {
+        return <ViewFullThread uri={item.uri} />
+      }
+      const {slice, indexInSlice, showReplyTo} = item
       const sliceItem = slice.items[indexInSlice]
       return (
         <PostFeedItem
@@ -113,7 +156,7 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
           reqId={undefined}
           moderation={sliceItem.moderation}
           parentAuthor={sliceItem.parentAuthor}
-          showReplyTo={indexInSlice === 0}
+          showReplyTo={showReplyTo}
           isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
           isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
           isThreadLastChild={
