@@ -9,12 +9,12 @@ import {type OtherRequiredData} from '#/ageAssurance/data'
 import {IS_DEV, IS_E2E} from '#/env'
 import {type Geolocation} from '#/geolocation'
 
-export const enabled = (IS_DEV && true) || IS_E2E
+export const enabled = (IS_DEV && false) || IS_E2E
 
 export const geolocation: Geolocation | undefined = enabled
   ? {
-      countryCode: 'US',
-      regionCode: 'TX',
+      countryCode: 'AA',
+      regionCode: undefined,
     }
   : undefined
 
