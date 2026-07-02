@@ -1,10 +1,7 @@
-import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import type * as AgeRange from 'expo-age-range'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
@@ -25,15 +22,9 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
-import {getDeviceSignals, setDeviceSignalsForRegion} from '#/ageAssurance/data'
-import {logger} from '#/ageAssurance/logger'
-import {unsafeGetAndComputeAgeAssurance} from '#/ageAssurance/state'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
-import {
-  createGeolocationString,
-  getAgeAssuranceDataFromDeviceSignals,
-  useAgeAssuranceRegionConfig,
-} from '#/ageAssurance/util'
+import {useAgeAssuranceVerificationFlow} from '#/ageAssurance/useVerificationFlow'
+import {createGeolocationString} from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {useDeviceGeolocationApi, useGeolocation} from '#/geolocation'
@@ -59,8 +50,6 @@ function Inner({style}: ViewStyleProp & {}) {
   const appealControl = Dialog.useDialogControl()
   const getTimeAgo = useGetTimeAgo()
   const {gtPhone} = useBreakpoints()
-  const {currentAccount} = useSession()
-  const region = useAgeAssuranceRegionConfig()
 
   const copy = useAgeAssuranceCopy()
   const aa = useAgeAssurance()
@@ -74,101 +63,13 @@ function Inner({style}: ViewStyleProp & {}) {
   const diff = lastInitiatedAt
     ? dateDiff(lastInitiatedAt, new Date(), 'down')
     : null
-  const allowsDeviceVerification = region && aa.flags.allowsDeviceVerification
-  const verifyCta = allowsDeviceVerification
-    ? l`Share age data`
-    : hasInitiated
-      ? l`Verify again`
-      : l`Verify now`
-
-  const [isVerifyingDevice, setIsVerifyingDevice] = useState(false)
-
-  const openKwsDialog = useCallback(() => {
-    control.open()
-    ax.metric('ageAssurance:initDialogOpen', {
-      hasInitiatedPreviously: hasInitiated,
-    })
-  }, [control, ax, hasInitiated])
-
-  const onPressVerify = useCallback(async () => {
-    const did = currentAccount?.did
-
-    // Just for typescript, this card won't be shown without a logged in user
-    if (!did) return
-
-    /*
-     * In regions that permit on-device verification, try the native age API
-     * first. We tag the result with the current region (device assurance is
-     * region-bound — a TX grant only counts in TX) and, if it's sufficient,
-     * persist it client-side so the AA state recompute lifts the gate.
-     *
-     * Once the OS returns a response we stay on the device path and report the
-     * outcome via a toast (sufficient, under-age, or no usable data) rather than
-     * silently falling back — users can still opt into KWS via the inline link.
-     * We only fall through to the KWS dialog below when the device can't give us
-     * a response at all: `getDeviceSignals` handles its own errors and returns
-     * undefined (e.g. on web or failure).
-     */
-    if (allowsDeviceVerification) {
-      // Show a loading state while the OS age prompt is up.
-      setIsVerifyingDevice(true)
-      let signals: AgeRange.AgeRangeResponse | undefined
-      try {
-        signals = await getDeviceSignals()
-      } finally {
-        setIsVerifyingDevice(false)
-      }
-      if (signals) {
-        const {assuredAge} = getAgeAssuranceDataFromDeviceSignals(
-          region,
-          signals,
-        )
-        if (assuredAge !== undefined) {
-          // Persist (keyed by this region) so the AA state recomputes from the
-          // cache write. Recompute here too so we can react to the outcome: a
-          // sufficient age lifts the gate (nothing more to do), but the device
-          // may report an age below the region's threshold, in which case
-          // access stays `none` and we tell the user.
-          setDeviceSignalsForRegion({did, region, signals})
-          const {state} = unsafeGetAndComputeAgeAssurance({did})
-          if (state.access === aa.Access.None) {
-            Toast.show(
-              l`We're sorry, but based on the data shared by your device, you are not old enough to access Bluesky.`,
-              {type: 'info'},
-            )
-          } else if (state.access === aa.Access.Unknown) {
-            Toast.show(
-              l`Hmm, it seems we weren't able to compute your level of access. Please try again.`,
-              {type: 'warning'},
-            )
-          } else {
-            Toast.show(l`Thanks! You're all set.`, {
-              type: 'success',
-            })
-          }
-          return
-        }
-        // We got a device response but it carried no usable age information.
-        Toast.show(
-          l`Hmm, it seems your device was unable to share age information with us.`,
-          {type: 'warning'},
-        )
-        return
-      }
-      logger.debug(
-        `onPressVerify: no device signals available (web/error), falling back to KWS`,
-      )
-    }
-
-    openKwsDialog()
-  }, [
-    region,
-    currentAccount?.did,
+  const {
+    onPressVerify,
     openKwsDialog,
+    isVerifyingDevice,
     allowsDeviceVerification,
-    aa,
-    l,
-  ])
+    verifyCta,
+  } = useAgeAssuranceVerificationFlow({initDialogControl: control})
 
   return (
     <>
