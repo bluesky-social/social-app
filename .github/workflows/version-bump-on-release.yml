@@ -9,6 +9,13 @@ on:
   # Allow manual runs for testing the bump/PR flow without a real release.
   workflow_dispatch:
 
+# Serialize runs: Apple delivers the release webhook at least once, so two
+# near-simultaneous deliveries could otherwise race the dedup check against
+# branch creation. A single concurrency group forces them to run one at a time.
+concurrency:
+  group: version-bump-on-release
+  cancel-in-progress: false
+
 # Least privilege: we only need to push a branch (contents) and open a PR.
 permissions:
   contents: write
@@ -70,10 +77,12 @@ jobs:
           # the write-back only touches the "version" line. Verify that.
           jq --indent 2 --arg v "$NEXT" '.version = $v' package.json > package.json.tmp
           mv package.json.tmp package.json
-          CHANGED="$(git diff --unified=0 package.json | grep -c '^[+-][[:space:]]*"version"' || true)"
-          # Expect exactly one removed and one added "version" line.
-          if [ "$CHANGED" != "2" ]; then
-            echo "Unexpected package.json diff - refusing to continue:"
+          # Abort if anything other than the single version line changed. numstat
+          # reports "<added>\t<removed>" per file; a clean bump is exactly one line
+          # added and one removed, so any jq reformatting elsewhere trips this.
+          CHANGED="$(git diff --numstat package.json | awk '{print $1"+"$2}')"
+          if [ "$CHANGED" != "1+1" ]; then
+            echo "Unexpected diff in package.json (expected exactly one changed line):"
             git diff package.json
             exit 1
           fi
