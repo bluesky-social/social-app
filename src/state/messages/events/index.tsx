@@ -17,6 +17,15 @@ export function useMessagesEventBus() {
   return ctx
 }
 
+/**
+ * Like useMessagesEventBus, but returns null instead of throwing when there's
+ * no bus (e.g. when logged out, where the provider supplies a null value).
+ * Use this from always-mounted consumers that may run without a session.
+ */
+export function useMaybeMessagesEventBus() {
+  return useContext(MessagesEventBusContext)
+}
+
 export function MessagesEventBusProvider({
   children,
 }: {
