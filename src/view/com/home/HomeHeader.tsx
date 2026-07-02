@@ -27,13 +27,15 @@ export function HomeHeader(
     })
   }, [feeds, hasSession])
 
+  const showFeedsLink = hasSession && !hasPinnedCustom
+
   const items = useMemo(() => {
     const pinnedNames = feeds.map(f => f.displayName)
-    if (!hasPinnedCustom) {
+    if (showFeedsLink) {
       return pinnedNames.concat('Feeds ✨')
     }
     return pinnedNames
-  }, [hasPinnedCustom, feeds])
+  }, [showFeedsLink, feeds])
 
   const onPressFeedsLink = useCallback(() => {
     navigation.navigate('Feeds')
@@ -41,28 +43,30 @@ export function HomeHeader(
 
   const onSelect = useCallback(
     (index: number) => {
-      if (!hasPinnedCustom && index === items.length - 1) {
+      if (showFeedsLink && index === items.length - 1) {
         onPressFeedsLink()
       } else if (onSelectProp) {
         onSelectProp(index)
       }
     },
-    [items.length, onPressFeedsLink, onSelectProp, hasPinnedCustom],
+    [items.length, onPressFeedsLink, onSelectProp, showFeedsLink],
   )
 
   return (
     <HomeHeaderLayout tabBarAnchor={props.tabBarAnchor}>
-      <TabBar
-        key={items.join(',')}
-        onPressSelected={props.onPressSelected}
-        selectedPage={props.selectedPage}
-        onSelect={onSelect}
-        testID={props.testID}
-        items={items}
-        dragProgress={props.dragProgress}
-        dragState={props.dragState}
-        transparent
-      />
+      {items.length > 1 && (
+        <TabBar
+          key={items.join(',')}
+          onPressSelected={props.onPressSelected}
+          selectedPage={props.selectedPage}
+          onSelect={onSelect}
+          testID={props.testID}
+          items={items}
+          dragProgress={props.dragProgress}
+          dragState={props.dragState}
+          transparent
+        />
+      )}
     </HomeHeaderLayout>
   )
 }
