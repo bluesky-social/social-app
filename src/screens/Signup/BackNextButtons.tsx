@@ -15,6 +15,7 @@ export interface BackNextButtonsProps {
   onBackPress: () => void
   onNextPress?: () => void
   onRetryPress?: () => void
+  overrideBackText?: string
   overrideNextText?: string
 }
 
@@ -26,6 +27,7 @@ export function BackNextButtons({
   onBackPress,
   onNextPress,
   onRetryPress,
+  overrideBackText,
   overrideNextText,
 }: BackNextButtonsProps) {
   const {_} = useLingui()
@@ -39,7 +41,7 @@ export function BackNextButtons({
         size="large"
         onPress={onBackPress}>
         <ButtonText>
-          <Trans>Back</Trans>
+          {overrideBackText ? overrideBackText : <Trans>Back</Trans>}
         </ButtonText>
       </Button>
       {!hideNext &&

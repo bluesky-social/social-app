@@ -367,6 +367,7 @@ export function StepInfo({
         onBackPress={onPressBack}
         onNextPress={onNextPress}
         onRetryPress={refetchServer}
+        overrideBackText={l`Cancel`}
         overrideNextText={hasWarnedEmail ? l`It's correct` : undefined}
       />
     </>
