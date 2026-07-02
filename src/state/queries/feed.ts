@@ -27,7 +27,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {GCTIME, STALE} from '#/state/queries'
 import {RQKEY as listQueryKey} from '#/state/queries/list'
-import {fetchCommunityMembership} from '#/state/queries/community-membership'
+import {useCommunityMembership} from '#/state/queries/community-membership'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {createQueryKey} from '#/state/queries/util'
 import {useAgent, useSession} from '#/state/session'
@@ -581,6 +581,19 @@ export function usePinnedFeedsInfos() {
   const agent = useAgent()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
+  const {data: isCommunityMember = false} = useCommunityMembership()
+
+  // The query itself is cached and persisted indefinitely; membership is
+  // applied as a derived view so gate changes surface without a refetch.
+  const injectCommunity = useCallback(
+    (feeds: SavedFeedSourceInfo[]) => {
+      if (!isCommunityMember) return feeds
+      const result = [...feeds]
+      result.splice(Math.min(1, result.length), 0, COMMUNITY_FEED_STUB)
+      return result
+    },
+    [isCommunityMember],
+  )
 
   return useQuery({
     queryKey: createPinnedFeedInfosQueryKey(
@@ -590,6 +603,7 @@ export function usePinnedFeedsInfos() {
     gcTime: GCTIME.INFINITY,
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
+    select: injectCommunity,
     queryFn: async () => {
       if (!hasSession) {
         return [PWI_DISCOVER_FEED_STUB]
@@ -661,12 +675,6 @@ export function usePinnedFeedsInfos() {
             contentMode: undefined,
           })
         }
-      }
-      // Inject Community feed after the first item (Following), members only
-      const isMember = await fetchCommunityMembership(agent)
-      if (isMember) {
-        const insertIndex = Math.min(1, result.length)
-        result.splice(insertIndex, 0, COMMUNITY_FEED_STUB)
       }
       return result
     },
