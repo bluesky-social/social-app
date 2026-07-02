@@ -231,6 +231,7 @@ function DialogInner({
 
         <View style={[a.py_xs]}>
           <Text
+            nativeID="dialog-description"
             style={[t.atoms.text_contrast_medium, a.text_sm, a.leading_snug]}>
             <Trans>
               Bluesky is an open network where you can choose your hosting

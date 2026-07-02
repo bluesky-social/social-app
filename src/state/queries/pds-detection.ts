@@ -13,6 +13,17 @@ const RQKEY_ROOT = 'pds-detection'
 export const RQKEY = (identifier: string) => [RQKEY_ROOT, identifier]
 
 /**
+ * Normalize a login identifier for detection: lowercase, trim, and strip a
+ * single leading `@`. Handles are often typed as `@alice.example.com`; without
+ * stripping the `@` the identifier looks like an email and detection is
+ * disabled. A real email (`a@b.com`) has no leading `@`, so it still contains
+ * an `@` after normalization and classifies as an email correctly.
+ */
+function normalizeIdentifier(identifier: string): string {
+  return identifier.trim().toLowerCase().replace(/^@/, '')
+}
+
+/**
  * Per-request timeout for identity/PDS resolution network calls. Without it a
  * hanging plc.directory / did:web `.well-known` fetch (or handle resolution)
  * could leave the sign-in button spinning indefinitely.
@@ -44,12 +55,28 @@ async function withResolveTimeout<T>(
 }
 
 /**
+ * Whether a non-ok HTTP status from an identity fetch is server-side or
+ * transient (5xx or 429) rather than a genuine "not found / invalid" (other
+ * 4xx). Transient statuses must not be treated as "identity doesn't exist",
+ * since that would silently fall back to the default service.
+ */
+function isTransientHttpStatus(status: number): boolean {
+  return status >= 500 || status === 429
+}
+
+/**
  * Resolve a DID document without a session.
  *
  * `com.atproto.identity.resolveIdentity` would give us the DID doc in a single
  * call, but it requires auth on the entryway and is not implemented on the
  * appview, so it is unusable here. Instead we resolve the DID doc directly:
  * `did:plc` via the PLC directory, `did:web` via its `.well-known` endpoint.
+ *
+ * Returns `null` for a genuine "not found / invalid" response (a 4xx or an
+ * unsupported DID method). Throws a network error for transient server-side
+ * failures (5xx, 429) so the caller fails the login rather than silently
+ * submitting the password to the default service during, e.g., a plc.directory
+ * blip.
  */
 async function resolveDidDoc(
   did: string,
@@ -62,6 +89,11 @@ async function resolveDidDoc(
         did,
         status: res.status,
       })
+      if (isTransientHttpStatus(res.status)) {
+        throw new Error(
+          `Network request failed: plc.directory returned ${res.status}`,
+        )
+      }
       return null
     }
     return (await res.json()) as DidDocument
@@ -86,6 +118,11 @@ async function resolveDidDoc(
           status: res.status,
         },
       )
+      if (isTransientHttpStatus(res.status)) {
+        throw new Error(
+          `Network request failed: did:web .well-known returned ${res.status}`,
+        )
+      }
       return null
     }
     return (await res.json()) as DidDocument
@@ -107,7 +144,7 @@ async function resolveDidDoc(
 export async function resolvePdsForIdentifier(
   identifier: string,
 ): Promise<string | null> {
-  const norm = identifier.toLowerCase().trim()
+  const norm = normalizeIdentifier(identifier)
   const agent = new Agent(null, {service: PUBLIC_BSKY_SERVICE})
   try {
     let did: string
@@ -159,8 +196,18 @@ export type HostingProviderState =
   | {status: 'detecting'}
   /** Resolved to a PDS endpoint. */
   | {status: 'detected'; pdsUrl: string}
-  /** The handle did not resolve, or resolution failed quietly. */
+  /**
+   * The handle genuinely did not resolve (unknown handle, broken identity).
+   * This is the only state that should admonish the user about typos.
+   */
   | {status: 'unresolved'}
+  /**
+   * Resolution failed for a network/transient reason (offline, plc.directory
+   * 5xx). Distinct from `unresolved` because it is not evidence the handle is
+   * invalid, so the UI must not suggest a typo. Pressing "Sign in" surfaces the
+   * connectivity error via `resolveService` re-throwing.
+   */
+  | {status: 'error'}
   /** The user manually selected a provider. */
   | {status: 'overridden'; pdsUrl: string}
 
@@ -192,7 +239,7 @@ export function useHostingProvider({
   const queryClient = useQueryClient()
   const [override, setOverride] = useState<string | null>(null)
 
-  const normalized = identifier.toLowerCase().trim()
+  const normalized = normalizeIdentifier(identifier)
   const isEmail = normalized.includes('@')
   const isPlausibleHandle =
     !!normalized &&
@@ -216,8 +263,22 @@ export function useHostingProvider({
     state = {status: 'email'}
   } else if (!isPlausibleHandle) {
     state = {status: 'idle'}
+  } else if (normalized !== debounced) {
+    /*
+     * The identifier changed but the debounce hasn't caught up, so the query is
+     * still keyed on the old value. Report 'detecting' rather than the stale
+     * query state, which would otherwise show the previous handle's PDS as
+     * 'detected'.
+     */
+    state = {status: 'detecting'}
   } else if (query.isPending || query.isFetching) {
     state = {status: 'detecting'}
+  } else if (query.isError && isNetworkError(query.error)) {
+    /*
+     * A network/transient failure is not evidence the handle is invalid, so
+     * report 'error' instead of 'unresolved' to avoid a misleading typo hint.
+     */
+    state = {status: 'error'}
   } else if (query.isError || query.data == null) {
     state = {status: 'unresolved'}
   } else {
@@ -234,7 +295,7 @@ export function useHostingProvider({
     clearOverride: () => setOverride(null),
     resolveService: async (currentIdentifier: string) => {
       if (override != null) return override
-      const norm = currentIdentifier.toLowerCase().trim()
+      const norm = normalizeIdentifier(currentIdentifier)
       // Emails and bare usernames can't resolve a PDS on their own.
       if (norm.includes('@')) return defaultService
       if (!norm.includes('.') && !norm.startsWith('did:')) return defaultService

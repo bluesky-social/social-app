@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, View} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {errHasMsg} from '@atproto/common-web'
 import {Trans, useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
@@ -62,7 +61,7 @@ export const ForgotPasswordForm = ({
     } catch (err) {
       logger.warn('Failed to request password reset', {error: err})
       setIsProcessing(false)
-      if (isNetworkError(errHasMsg)) {
+      if (isNetworkError(err)) {
         setError(
           l`Unable to contact your service. Please check your Internet connection.`,
         )

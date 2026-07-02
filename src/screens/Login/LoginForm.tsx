@@ -38,8 +38,6 @@ import {IS_IOS} from '#/env'
 import {HostingProviderDialog} from './components/HostingProviderDialog'
 import {FormContainer} from './FormContainer'
 
-const DEBUG = false
-
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
 export const LoginForm = ({
@@ -505,12 +503,6 @@ export const LoginForm = ({
           </Button>
         )}
       </View>
-
-      {DEBUG && (
-        <Text style={a.text_xs}>
-          {JSON.stringify(hostingProvider.state, null, 2)}
-        </Text>
-      )}
 
       <Text style={[a.text_md, native([a.text_center, a.mx_auto]), a.mt_sm]}>
         New to Bluesky?{' '}
