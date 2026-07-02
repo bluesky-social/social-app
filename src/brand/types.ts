@@ -129,6 +129,32 @@ export type Brand = BrandConfig & {
       small: number
     }
   }
+
+  /**
+   * Copy + actions for the web-only one-time welcome modal shown to signed-out
+   * visitors on the homepage (`src/components/WelcomeModal.tsx`). Brand-identity
+   * copy (headline / subtitle / attribution) is stored as plain strings here
+   * rather than Lingui-extracted, because it is brand-specific and may be in the
+   * brand's own language (e.g. MDParivaar is Hindi). Omit the whole block to
+   * suppress the modal for a brand.
+   */
+  welcomeModal?: {
+    /** Headline copy. `\n` is rendered as a line break. */
+    headline: string
+    subtitle?: string
+    /** Optional attribution line under the headline, e.g. "- Shri A. Nagaraj". */
+    attribution?: string
+    /** Primary CTA label; opens the signup flow. */
+    primaryLabel: string
+    /** Secondary CTA label. */
+    secondaryLabel: string
+    /**
+     * Where the secondary CTA points. When set, the secondary button opens this
+     * URL in a new tab. When omitted, the secondary button just dismisses the
+     * modal (preserves Bluesky's "Explore the app" behavior).
+     */
+    requestInviteUrl?: string
+  }
 }
 
 /**
