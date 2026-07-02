@@ -73,6 +73,12 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
     expect(state.until).toBe('2024-02-01')
   })
 
+  it(`keeps from:me in the query box rather than lifting it into a row`, () => {
+    const state = parseAdvancedSearch('from:me', {})
+    expect(state.query).toBe('from:me')
+    expect(state.filters.find(f => f.field === 'authors')).toBeUndefined()
+  })
+
   it(`merges a query-box operator with the matching filter param`, () => {
     const state = parseAdvancedSearch('hi from:bob', {author: 'alice'})
     expect(state.query).toBe('hi')

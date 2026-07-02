@@ -86,6 +86,8 @@ import {MessagesListGroupInfoPanel} from './MessagesListGroupInfoPanel'
 import {MessagesListInfoPanel} from './MessagesListInfoPanel'
 import {KeyboardStickyView} from './vendor/KeyboardStickyView'
 
+const SATURATING_SCROLL_OFFSET = 1e7
+
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
     <View
@@ -198,39 +200,52 @@ export function MessagesList({
     [inputHeightUI],
   )
 
-  // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
-  // are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
-  // the bottom.
+  /**
+   * We need to keep track of when the scroll offset is at the bottom of the list
+   * to know when to scroll as new items are added to the list. For example, if
+   * the user is scrolled up to view older messages, we don't want to scroll to
+   * the bottom.
+   */
   const isAtBottom = useSharedValue(true)
 
-  // Set when the local user sends a message so we follow it to the end even
-  // from a scrolled-up position. On native, onContentSizeChange can't be relied
-  // on: with maintainVisibleContentPosition anchored to item 0, appending a
-  // message below the viewport reports no content-size change, so that callback
-  // never fires for the send. We watch the rendered item count instead and
-  // scroll imperatively once our pending message lands (APP-2223). On web,
-  // onContentSizeChange also fires for the send, so the scroll may run from both
-  // paths - both target the end, so the result is correct.
+  /**
+   * Set when the local user sends a message so we follow it to the end even
+   * from a scrolled-up position. On native, onContentSizeChange can't be relied
+   * on: with maintainVisibleContentPosition anchored to item 0, appending a
+   * message below the viewport reports no content-size change, so that callback
+   * never fires for the send. We watch the rendered item count instead and
+   * scroll imperatively once our pending message lands (APP-2223). On web,
+   * onContentSizeChange also fires for the send, so the scroll may run from both
+   * paths - both target the end, so the result is correct.
+   */
   const pendingSendScroll = useRef(false)
 
-  // Handle for the in-flight send-scroll burst (see startSendScrollBurst). Held
-  // here so the re-init effect below can cancel a burst that belongs to the
-  // previous convo lifecycle.
+  /**
+   * Handle for the in-flight send-scroll burst (see startSendScrollBurst). Held
+   * here so the re-init effect below can cancel a burst that belongs to the
+   * previous convo lifecycle.
+   */
   const sendScrollRaf = useRef(0)
 
-  // This will be used on web to assist in determining if we need to maintain the content offset
+  /** This will be used on web to assist in determining if we need to maintain the content offset */
   const isAtTop = useSharedValue(true)
 
-  // Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
-  // onStartReached to fire.
+  /**
+   * Used to keep track of the current content height. We'll need this in
+   * `onScroll` so we know when to start allowing onStartReached to fire.
+   */
   const prevContentHeight = useRef(0)
   const prevItemCount = useRef(0)
 
-  // Tracks whether the initial scroll-to-bottom has been triggered. Separated from isAtBottom so that contentInset
-  // (which causes an early onScroll with negative offset) can't prevent the first scroll.
-  // Reset when hasScrolled goes back to false (e.g. convo re-initialization after backgrounding).
-  // `didInitialScroll` is the reactive mirror of the ref so the reveal effect below can depend on it; the ref
-  // itself stays as the synchronous re-entry guard inside onContentSizeChange.
+  /**
+   * Tracks whether the initial scroll-to-bottom has been triggered. Separated
+   * from isAtBottom so that contentInset (which causes an early onScroll with
+   * negative offset) can't prevent the first scroll. Reset when hasScrolled goes
+   * back to false (e.g. convo re-initialization after backgrounding).
+   * `didInitialScroll` is the reactive mirror of the ref so the reveal effect
+   * below can depend on it; the ref itself stays as the synchronous re-entry
+   * guard inside onContentSizeChange.
+   */
   const hasInitiallyScrolled = useRef(false)
   const [didInitialScroll, setDidInitialScroll] = useState(false)
   const prevHasScrolled = useRef(hasScrolled)
@@ -238,9 +253,11 @@ export function MessagesList({
     if (prevHasScrolled.current && !hasScrolled) {
       hasInitiallyScrolled.current = false
       setDidInitialScroll(false)
-      // Drop any unfired send pin and stop an in-flight scroll burst: the
-      // initial-scroll path owns positioning during re-init, and the pending
-      // message they referred to belongs to the previous lifecycle.
+      /*
+       * Drop any unfired send pin and stop an in-flight scroll burst: the
+       * initial-scroll path owns positioning during re-init, and the pending
+       * message they referred to belongs to the previous lifecycle.
+       */
       pendingSendScroll.current = false
       cancelAnimationFrame(sendScrollRaf.current)
       sendScrollRaf.current = 0
@@ -248,12 +265,17 @@ export function MessagesList({
     prevHasScrolled.current = hasScrolled
   }, [hasScrolled])
 
-  // Reveal the list once history has finished loading. We can't reveal earlier because the list isn't inverted -
-  // we must scroll to the bottom (newest message) before fading in, or the user sees a flash of top-anchored content.
-  // This is purely state-driven so it doesn't depend on a layout callback firing: a firehose-delivered message can
-  // dedupe against the fetched history and produce no content-size change, in which case nothing would otherwise
-  // reveal the list and it would stay hidden forever (APP-2238). Either the initial scroll has run, or there's
-  // nothing to scroll (empty convo) - both are safe to reveal once !isFetchingHistory.
+  /*
+   * Reveal the list once history has finished loading. We can't reveal earlier
+   * because the list isn't inverted - we must scroll to the bottom (newest
+   * message) before fading in, or the user sees a flash of top-anchored content.
+   * This is purely state-driven so it doesn't depend on a layout callback
+   * firing: a firehose-delivered message can dedupe against the fetched history
+   * and produce no content-size change, in which case nothing would otherwise
+   * reveal the list and it would stay hidden forever (APP-2238). Either the
+   * initial scroll has run, or there's nothing to scroll (empty convo) - both
+   * are safe to reveal once !isFetchingHistory.
+   */
   useEffect(() => {
     if (hasScrolled || convoState.isFetchingHistory) return
     if (didInitialScroll || renderItems.length === 0) {
@@ -277,29 +299,41 @@ export function MessagesList({
     }
   }, [convoState.status])
 
-  // Scroll to a saturating offset rather than scrollToEnd: when the keyboard is
-  // open, KeyboardChatScrollView lifts the content via extraContentPadding, and
-  // scrollToEnd's internal target is unaware of that lift, so it lands short by
-  // the keyboard height. An over-large offset clamps to the true bottom.
+  /**
+   * Scroll to a saturating offset rather than scrollToEnd: when the keyboard is
+   * open, KeyboardChatScrollView lifts the content via extraContentPadding, and
+   * scrollToEnd's internal target is unaware of that lift, so it lands short by
+   * the keyboard height. An over-large offset clamps to the true bottom.
+   *
+   * The offset must stay within Android's native scroll range: View.scrollTo
+   * takes a 32-bit int, so Number.MAX_SAFE_INTEGER (~9e15) overflows and lands
+   * on a garbage position - the list paints blank and maintainVisibleContent
+   * Position then re-anchors to index 0 (the top). iOS uses a CGFloat offset and
+   * clamps MAX_SAFE_INTEGER fine, but a value larger than any conceivable chat
+   * content clamps to the true bottom just as well on both, so we use one that
+   * fits comfortably in int32. (APP-2223)
+   */
   const scrollSendToBottom = useCallback(() => {
     flatListRef.current?.scrollToOffset({
-      offset: Number.MAX_SAFE_INTEGER,
+      offset: SATURATING_SCROLL_OFFSET,
       animated: true,
     })
   }, [flatListRef])
 
-  // A single scroll can't follow a send to the bottom: a multi-line send settles
-  // over several layout passes (the tall pending item being measured, then the
-  // composer collapsing back to one line), and the content bottom keeps moving
-  // after the scroll target was clamped. We can't drive this off the composer's
-  // height drop either - that signal is global, outlives the send, and races the
-  // pending-message append. Instead we re-assert the saturating scroll across a
-  // short window keyed to the send. Each call re-clamps to the *current* true
-  // bottom, so the last one lands settled regardless of how many passes it took.
-  // The burst is bounded and self-terminating, so it can't leak into a later
-  // unrelated resize, and it polls geometry rather than depending on
-  // onContentSizeChange (which doesn't fire for the send append on native - see
-  // the pendingSendScroll declaration).
+  /**
+   * A single scroll can't follow a send to the bottom: a multi-line send settles
+   * over several layout passes (the tall pending item being measured, then the
+   * composer collapsing back to one line), and the content bottom keeps moving
+   * after the scroll target was clamped. We can't drive this off the composer's
+   * height drop either - that signal is global, outlives the send, and races the
+   * pending-message append. Instead we re-assert the saturating scroll across a
+   * short window keyed to the send. Each call re-clamps to the *current* true
+   * bottom, so the last one lands settled regardless of how many passes it took.
+   * The burst is bounded and self-terminating, so it can't leak into a later
+   * unrelated resize, and it polls geometry rather than depending on
+   * onContentSizeChange (which doesn't fire for the send append on native - see
+   * the pendingSendScroll declaration).
+   */
   const stopSendScrollBurst = useCallback(() => {
     cancelAnimationFrame(sendScrollRaf.current)
     sendScrollRaf.current = 0
@@ -318,11 +352,13 @@ export function MessagesList({
   // Cancel any in-flight burst on unmount.
   useEffect(() => stopSendScrollBurst, [stopSendScrollBurst])
 
-  // Follow a just-sent message to the end. This runs when the rendered item
-  // count changes, but only fires once the tail item is our own optimistic
-  // pending message (pending-message items are local-only). That way a foreign
-  // message arriving between send and our append doesn't consume the pin or yank
-  // a scrolled-up reader down to it - the pin waits for our message to land.
+  /*
+   * Follow a just-sent message to the end. This runs when the rendered item
+   * count changes, but only fires once the tail item is our own optimistic
+   * pending message (pending-message items are local-only). That way a foreign
+   * message arriving between send and our append doesn't consume the pin or yank
+   * a scrolled-up reader down to it - the pin waits for our message to land.
+   */
   useEffect(() => {
     if (!pendingSendScroll.current) return
     if (renderItems.at(-1)?.type !== 'pending-message') return
@@ -332,20 +368,28 @@ export function MessagesList({
 
   // -- Scroll handling
 
-  // Every time the content size changes, that means one of two things is happening:
-  // 1. New messages are being added from the log or from a message you have sent
-  // 2. Old messages are being prepended to the top
-  //
-  // The first time that the content size changes is when the initial items are rendered. Because we cannot rely on
-  // `initialScrollIndex`, we need to immediately scroll to the bottom of the list. That scroll will not be animated.
-  //
-  // Subsequent resizes will only scroll to the bottom if the user is at the bottom of the list (within 100 pixels of
-  // the bottom). Therefore, any new messages that come in or are sent will result in an animated scroll to end. However
-  // we will not scroll whenever new items get prepended to the top.
+  /**
+   * Every time the content size changes, that means one of two things is happening:
+   * 1. New messages are being added from the log or from a message you have sent
+   * 2. Old messages are being prepended to the top
+   *
+   * The first time that the content size changes is when the initial items are
+   * rendered. Because we cannot rely on `initialScrollIndex`, we need to
+   * immediately scroll to the bottom of the list. That scroll will not be
+   * animated.
+   *
+   * Subsequent resizes will only scroll to the bottom if the user is at the
+   * bottom of the list (within 100 pixels of the bottom). Therefore, any new
+   * messages that come in or are sent will result in an animated scroll to end.
+   * However we will not scroll whenever new items get prepended to the top.
+   */
   const onContentSizeChange = useCallback(
     (_: number, height: number) => {
-      // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
-      // previous off whenever we add new content to the previous offset whenever we add new content to the list.
+      /*
+       * Because web does not have `maintainVisibleContentPosition` support, we
+       * will need to manually scroll to the previous offset whenever we add new
+       * content to the list.
+       */
       if (IS_WEB && isAtTop.get() && hasScrolled) {
         flatListRef.current?.scrollToOffset({
           offset: height - prevContentHeight.current,
@@ -353,10 +397,14 @@ export function MessagesList({
         })
       }
 
-      // Initial scroll to bottom — unconditional, not gated on isAtBottom. This is separated because contentInset
-      // can cause an early onScroll with a negative offset that sets isAtBottom to false before we get here.
-      // Empty convos take this path too (once history is done). Revealing the list is handled by the effect above,
-      // which fires once history finishes - we just record that the scroll has happened.
+      /*
+       * Initial scroll to bottom - unconditional, not gated on isAtBottom. This
+       * is separated because contentInset can cause an early onScroll with a
+       * negative offset that sets isAtBottom to false before we get here. Empty
+       * convos take this path too (once history is done). Revealing the list is
+       * handled by the effect above, which fires once history finishes - we just
+       * record that the scroll has happened.
+       */
       if (
         !hasInitiallyScrolled.current &&
         (renderItems.length > 0 || !convoState.isFetchingHistory)
@@ -371,10 +419,14 @@ export function MessagesList({
 
       // Subsequent: auto-scroll only if user is at the bottom
       if (isAtBottom.get()) {
-        // If the size of the content is changing by more than the height of the screen, then we don't
-        // want to scroll further than the start of all the new content. Since we are storing the previous offset,
-        // we can just scroll the user to that offset and add a little bit of padding. We'll also show the pill
-        // that can be pressed to immediately scroll to the end.
+        /*
+         * If the size of the content is changing by more than the height of the
+         * screen, then we don't want to scroll further than the start of all the
+         * new content. Since we are storing the previous offset, we can just
+         * scroll the user to that offset and add a little bit of padding. We'll
+         * also show the pill that can be pressed to immediately scroll to the
+         * end.
+         */
         if (
           didBackground.current &&
           hasScrolled &&
@@ -392,9 +444,11 @@ export function MessagesList({
         } else {
           flatListRef.current?.scrollToOffset({
             offset: height,
-            // only animate when new items were appended - pure layout growth
-            // (e.g. the composer spacer getting its height on web) should
-            // snap instantly rather than visibly scrolling
+            /*
+             * only animate when new items were appended - pure layout growth
+             * (e.g. the composer spacer getting its height on web) should snap
+             * instantly rather than visibly scrolling
+             */
             animated:
               hasScrolled &&
               height > prevContentHeight.current &&
@@ -429,8 +483,11 @@ export function MessagesList({
       layoutHeight.set(e.layoutMeasurement.height)
       const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
 
-      // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
-      // when a new message is added, hence the 100 pixel offset
+      /*
+       * Most apps have a little bit of space the user can scroll past while
+       * still automatically scrolling to the bottom when a new message is added,
+       * hence the 100 pixel offset
+       */
       isAtBottom.set(e.contentSize.height - 100 < bottomOffset)
       isAtTop.set(e.contentOffset.y <= 1)
 
@@ -461,9 +518,12 @@ export function MessagesList({
     ) => {
       let rt = new RichText({text: text.trimEnd()}, {cleanNewlines: true})
 
-      // detect facets without resolution first - this is used to see if there's
-      // any post links in the text that we can embed. We do this first because
-      // we want to remove the post link from the text, re-trim, then detect facets
+      /*
+       * detect facets without resolution first - this is used to see if there's
+       * any post links in the text that we can embed. We do this first because
+       * we want to remove the post link from the text, re-trim, then detect
+       * facets
+       */
       rt.detectFacetsWithoutResolution()
 
       let embed:
@@ -476,8 +536,10 @@ export function MessagesList({
         | undefined
       let replyTo: ChatBskyConvoDefs.ReplyRef | undefined
 
-      // Find the embedded link facet and, if it's at the start or end of the
-      // message, remove it from the text (the embed card replaces it).
+      /**
+       * Find the embedded link facet and, if it's at the start or end of the
+       * message, remove it from the text (the embed card replaces it).
+       */
       const stripLinkFacet = (predicate: (uri: string) => boolean) => {
         const linkFacet = rt.facets?.find(facet =>
           facet.features.find(
@@ -517,8 +579,10 @@ export function MessagesList({
               if (!isBskyPostUrl(uri)) return false
               const url = convertBskyAppUrlIfNeeded(uri)
               const [_0, _1, _2, rkey] = url.split('/').filter(Boolean)
-              // this might have a handle instead of a DID
-              // so just compare the rkey - not particularly dangerous
+              /*
+               * this might have a handle instead of a DID so just compare the
+               * rkey - not particularly dangerous
+               */
               return post.uri.endsWith(rkey)
             })
           }
@@ -556,9 +620,11 @@ export function MessagesList({
         setHasScrolled(true)
       }
 
-      // Sending your own message should always take you to it, regardless of
-      // current scroll position. The effect watching renderItems.length scrolls
-      // to the end once the pending message is appended.
+      /*
+       * Sending your own message should always take you to it, regardless of
+       * current scroll position. The effect watching renderItems.length scrolls
+       * to the end once the pending message is appended.
+       */
       pendingSendScroll.current = true
 
       convoState.sendMessage(
@@ -614,10 +680,12 @@ export function MessagesList({
     })
   }, [flatListRef])
 
-  // Scroll to a message by id, if it's currently loaded in the list. Per the
-  // feature scope, we don't fetch history to find unloaded messages - tapping a
-  // reply to an out-of-window message is a no-op. Returns whether the message
-  // was found, so the caller knows whether to flash it.
+  /**
+   * Scroll to a message by id, if it's currently loaded in the list. Per the
+   * feature scope, we don't fetch history to find unloaded messages - tapping a
+   * reply to an out-of-window message is a no-op. Returns whether the message
+   * was found, so the caller knows whether to flash it.
+   */
   const scrollToMessage = useNonReactiveCallback((messageId: string) => {
     const index = renderItems.findIndex(
       item =>
@@ -897,9 +965,11 @@ function getFooterState(
   const isRequest =
     convoState.convo.view.status === 'request' && !hasAcceptOverride
 
-  // For group chats, the request footer is driven purely off status: the owner
-  // is always 'accepted' so never sees it, while members the owner added are
-  // 'request' until they accept. This holds even before any messages load.
+  /*
+   * For group chats, the request footer is driven purely off status: the owner
+   * is always 'accepted' so never sees it, while members the owner added are
+   * 'request' until they accept. This holds even before any messages load.
+   */
   if (convoState.convo.kind === 'group' && isRequest) {
     return 'request'
   }
@@ -912,11 +982,13 @@ function getFooterState(
     }
   }
 
-  // For direct chats, only show the request footer once there's a message. The
-  // viewer's status stays 'request' until they send their first message, so an
-  // empty direct request is one the viewer started themselves (show the
-  // composer), whereas any message present must be an incoming one from the
-  // other user (show the accept/reject footer).
+  /*
+   * For direct chats, only show the request footer once there's a message. The
+   * viewer's status stays 'request' until they send their first message, so an
+   * empty direct request is one the viewer started themselves (show the
+   * composer), whereas any message present must be an incoming one from the
+   * other user (show the accept/reject footer).
+   */
   if (isRequest) {
     return 'request'
   }

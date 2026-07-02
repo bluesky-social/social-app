@@ -319,18 +319,18 @@ let SearchScreenPostResults = ({
 }): React.ReactNode => {
   const ax = useAnalytics()
   const {t: l} = useLingui()
-  const {currentAccount, hasSession} = useSession()
+  const {hasSession} = useSession()
   const [isPTR, setIsPTR] = useState(false)
   const trackPostView = usePostViewTracking('SearchResults')
 
   const searchV2Enabled = ax.features.enabled(ax.features.SearchV2Enable)
 
   const augmentedV2Query = useMemo(() => {
-    return augmentSearchQuery(query || '', {did: currentAccount?.did})
-  }, [query, currentAccount])
+    return augmentSearchQuery(query || '')
+  }, [query])
   const augmentedV1Query = useMemo(() => {
-    return augmentSearchQuery(queryWithParams || '', {did: currentAccount?.did})
-  }, [queryWithParams, currentAccount])
+    return augmentSearchQuery(queryWithParams || '')
+  }, [queryWithParams])
 
   /*
    * Both hooks are called to keep hook order stable; `enabled` ensures only the
