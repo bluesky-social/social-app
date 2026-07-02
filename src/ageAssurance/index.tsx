@@ -51,9 +51,12 @@ const AgeAssuranceStateContext = createContext<{
     adultContentDisabled: false,
     chatDisabled: false,
     groupChatDisabled: false,
+    hasDeclaredAge: false,
     isDeclaredUnderAdultAge: false,
     isOverRegionMinAccessAge: false,
     isOverAppMinAccessAge: false,
+    allowsDeviceVerification: false,
+    hasSharedDeviceSignals: false,
   },
 })
 
@@ -79,7 +82,7 @@ export function Provider({children}: {children: React.ReactNode}) {
 function InnerProvider({children}: {children: React.ReactNode}) {
   const agent = useAgent()
   const state = useAgeAssuranceState()
-  const {metadata} = useAgeAssuranceServerDataContext()
+  const {metadata, deviceSignals} = useAgeAssuranceServerDataContext()
   const regionConfig = useAgeAssuranceRegionConfigWithFallback()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
 
@@ -89,6 +92,7 @@ function InnerProvider({children}: {children: React.ReactNode}) {
         state: s,
         regionConfig,
         metadata,
+        deviceSignals,
       })
       if (flags.isAgeRestricted) {
         void getAndRegisterPushToken({
@@ -103,7 +107,7 @@ function InnerProvider({children}: {children: React.ReactNode}) {
         })
       }
     },
-    [agent, getAndRegisterPushToken, regionConfig, metadata],
+    [agent, getAndRegisterPushToken, regionConfig, metadata, deviceSignals],
   )
   useOnAgeAssuranceAccessUpdate(handleAccessUpdate)
 
@@ -118,11 +122,12 @@ function InnerProvider({children}: {children: React.ReactNode}) {
             state,
             regionConfig,
             metadata,
+            deviceSignals,
           }),
         }
         logger.debug(`useAgeAssurance`, res)
         return res
-      }, [state, metadata, regionConfig])}>
+      }, [state, metadata, regionConfig, deviceSignals])}>
       {children}
     </AgeAssuranceStateContext.Provider>
   )
