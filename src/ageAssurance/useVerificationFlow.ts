@@ -28,12 +28,10 @@ import {useAnalytics} from '#/analytics'
  *   prompts the OS age API, persists a sufficient result (region-bound), and
  *   toasts the outcome; otherwise (or on any missing/failed device response) it
  *   opens the KWS dialog.
- * - `openKwsDialog`: opens the KWS dialog directly (for the inline "use KWS"
+ * - `openInitDialog`: opens the KWS dialog directly (for the inline "use KWS"
  *   link), emitting the same metric as the fallback path.
- * - `isVerifyingDevice`: true while the OS age prompt is up, for a button
+ * - `isVerifying`: true while the OS age prompt is up, for a button
  *   loading state.
- * - `allowsDeviceVerification`: whether this region + device supports the
- *   on-device flow, for CTA/copy branching.
  * - `verifyCta`: the localized button label for the current mode.
  */
 export function useAgeAssuranceVerificationFlow({
@@ -54,9 +52,9 @@ export function useAgeAssuranceVerificationFlow({
       ? l`Verify again`
       : l`Verify now`
 
-  const [isVerifyingDevice, setIsVerifyingDevice] = useState(false)
+  const [isVerifying, setIsVerifying] = useState(false)
 
-  const openKwsDialog = useCallback(() => {
+  const openInitDialog = useCallback(() => {
     initDialogControl.open()
     ax.metric('ageAssurance:initDialogOpen', {
       hasInitiatedPreviously: hasInitiated,
@@ -84,12 +82,12 @@ export function useAgeAssuranceVerificationFlow({
      */
     if (allowsDeviceVerification) {
       // Show a loading state while the OS age prompt is up.
-      setIsVerifyingDevice(true)
+      setIsVerifying(true)
       let signals: AgeRange.AgeRangeResponse | undefined
       try {
         signals = await getDeviceSignals()
       } finally {
-        setIsVerifyingDevice(false)
+        setIsVerifying(false)
       }
       if (signals) {
         const {assuredAge} = getAgeAssuranceDataFromDeviceSignals(
@@ -140,11 +138,11 @@ export function useAgeAssuranceVerificationFlow({
       )
     }
 
-    openKwsDialog()
+    openInitDialog()
   }, [
     region,
     currentAccount?.did,
-    openKwsDialog,
+    openInitDialog,
     allowsDeviceVerification,
     aa,
     l,
@@ -152,9 +150,8 @@ export function useAgeAssuranceVerificationFlow({
 
   return {
     onPressVerify,
-    openKwsDialog,
-    isVerifyingDevice,
-    allowsDeviceVerification,
+    openInitDialog,
+    isVerifying,
     verifyCta,
   }
 }

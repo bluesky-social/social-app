@@ -56,6 +56,7 @@ export type AgeAssuranceFlags = {
   isOverRegionMinAccessAge: boolean
   isOverAppMinAccessAge: boolean
   allowsDeviceVerification: boolean
+  hasSharedDeviceSignals: boolean
 }
 
 export function parseStatusFromString(raw: string) {

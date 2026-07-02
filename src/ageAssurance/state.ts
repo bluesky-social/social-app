@@ -188,6 +188,7 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
       state: computed,
       regionConfig: region,
       metadata,
+      deviceSignals,
     }),
   }
 }

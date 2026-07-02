@@ -266,10 +266,12 @@ export function computeAgeAssuranceFlags({
   state,
   regionConfig,
   metadata,
+  deviceSignals,
 }: {
   state: AgeAssuranceState
   regionConfig: AppBskyAgeassuranceDefs.ConfigRegion
   metadata?: AgeAssuranceMetadata
+  deviceSignals?: AgeRange.AgeRangeResponse
 }): AgeAssuranceFlags {
   const isAgeRestricted = state.access !== AgeAssuranceAccess.Full
   const chatDisabled = isAgeRestricted
@@ -287,6 +289,7 @@ export function computeAgeAssuranceFlags({
     state.access !== AgeAssuranceAccess.Full || isDeclaredUnderAdultAge
   const allowsDeviceVerification =
     DEVICE_SIGNALS_SUPPORTED && regionAllowsDeviceVerification(regionConfig)
+  const hasSharedDeviceSignals = deviceSignals?.lowerBound !== undefined
 
   return {
     isAgeRestricted,
@@ -298,6 +301,7 @@ export function computeAgeAssuranceFlags({
     isOverRegionMinAccessAge,
     isOverAppMinAccessAge,
     allowsDeviceVerification,
+    hasSharedDeviceSignals,
   }
 }
 

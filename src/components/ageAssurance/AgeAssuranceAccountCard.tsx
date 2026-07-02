@@ -63,13 +63,8 @@ function Inner({style}: ViewStyleProp & {}) {
   const diff = lastInitiatedAt
     ? dateDiff(lastInitiatedAt, new Date(), 'down')
     : null
-  const {
-    onPressVerify,
-    openKwsDialog,
-    isVerifyingDevice,
-    allowsDeviceVerification,
-    verifyCta,
-  } = useAgeAssuranceVerificationFlow({initDialogControl: control})
+  const {onPressVerify, openInitDialog, isVerifying, verifyCta} =
+    useAgeAssuranceVerificationFlow({initDialogControl: control})
 
   return (
     <>
@@ -150,14 +145,18 @@ function Inner({style}: ViewStyleProp & {}) {
                 <Button
                   label={verifyCta}
                   size="small"
-                  color={hasInitiated ? 'secondary' : 'primary'}
-                  disabled={isVerifyingDevice}
+                  color={
+                    hasInitiated || aa.flags.hasSharedDeviceSignals
+                      ? 'secondary'
+                      : 'primary'
+                  }
+                  disabled={isVerifying}
                   onPress={() => void onPressVerify()}>
-                  <ButtonIcon icon={isVerifyingDevice ? Loader : ShieldIcon} />
+                  <ButtonIcon icon={isVerifying ? Loader : ShieldIcon} />
                   <ButtonText>{verifyCta}</ButtonText>
                 </Button>
 
-                {allowsDeviceVerification ? (
+                {aa.flags.allowsDeviceVerification ? (
                   <Text
                     style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
                     <Trans>
@@ -167,7 +166,7 @@ function Inner({style}: ViewStyleProp & {}) {
                       <InlineLinkText
                         label={l`Verify now using KWS`}
                         {...createStaticClick(() => {
-                          openKwsDialog()
+                          openInitDialog()
                         })}>
                         you can use our trusted partner, KWS
                       </InlineLinkText>
