@@ -120,6 +120,19 @@ export type Events = {
     hostingProviderDidChange: boolean
   }
   'signin:hostingProviderFailedResolution': {}
+  'signin:pdsResolve:success': {
+    durationMs: number
+    isBlueskySocial: boolean
+  }
+  'signin:pdsResolve:failure': {
+    reason:
+      | 'invalid_handle'
+      | 'handle_not_found'
+      | 'did_doc_failed'
+      | 'no_pds_in_doc'
+      | 'network'
+  }
+  'signin:customServerUsed': {}
   'signin:success': {
     failedAttemptsCount: number
     isUsingCustomProvider: boolean
