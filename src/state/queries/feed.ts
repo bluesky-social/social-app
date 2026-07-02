@@ -27,6 +27,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {GCTIME, STALE} from '#/state/queries'
 import {RQKEY as listQueryKey} from '#/state/queries/list'
+import {fetchCommunityMembership} from '#/state/queries/community-membership'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {createQueryKey} from '#/state/queries/util'
 import {useAgent, useSession} from '#/state/session'
@@ -661,9 +662,12 @@ export function usePinnedFeedsInfos() {
           })
         }
       }
-      // Inject Community feed after the first item (Following)
-      const insertIndex = Math.min(1, result.length)
-      result.splice(insertIndex, 0, COMMUNITY_FEED_STUB)
+      // Inject Community feed after the first item (Following), members only
+      const isMember = await fetchCommunityMembership(agent)
+      if (isMember) {
+        const insertIndex = Math.min(1, result.length)
+        result.splice(insertIndex, 0, COMMUNITY_FEED_STUB)
+      }
       return result
     },
   })

@@ -100,6 +100,7 @@ import {
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
+import {useCommunityMembership} from '#/state/queries/community-membership'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
@@ -358,6 +359,7 @@ export const ComposePost = ({
 
   const blackskyOnlyDefault = useBlackskyOnlyDefault()
   const setBlackskyOnlyDefault = useSetBlackskyOnlyDefault()
+  const {data: isCommunityMember = false} = useCommunityMembership()
 
   // Force Blacksky-Only when the thread targets a community post — replies
   // and quotes of a community post can only land in the community.
@@ -375,9 +377,10 @@ export const ComposePost = ({
       initInteractionSettings: preferences?.postInteractionSettings,
       // Replies inherit their parent's audience: forced on for community
       // parents, forced off for public parents. The sticky default only
-      // applies to top-level posts.
+      // applies to top-level posts, and only for community members.
       initBlackskyOnly:
-        isForcedBlackskyOnly || (!replyTo && blackskyOnlyDefault),
+        isForcedBlackskyOnly ||
+        (!replyTo && isCommunityMember && blackskyOnlyDefault),
     },
     createComposerState,
   )
@@ -1987,6 +1990,7 @@ function ComposerPills({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const {data: isCommunityMember = false} = useCommunityMembership()
   const media = post.embed.media
   const hasMedia =
     media?.type === 'images' ||
@@ -2025,7 +2029,7 @@ function ComposerPills({
             style={bottomBarAnimatedStyle}
           />
         )}
-        {isReply && !isForcedBlackskyOnly ? null : (
+        {!isCommunityMember || (isReply && !isForcedBlackskyOnly) ? null : (
           <Toggle.Item
             name="blacksky_only"
             label={l`Blacksky Only`}
