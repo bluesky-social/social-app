@@ -243,7 +243,8 @@ function ProfileScreenLoaded({
   const hasLabeler = !!profile.associated?.labeler
   const showFiltersTab = hasLabeler
   const showPostsTab = true
-  const showCommunityTab = hasSession
+  // Community posts surface on the home Community tab only, not profiles.
+  const showCommunityTab = false
   const showRepliesTab = hasSession
   const showMediaTab = !hasLabeler
   const showVideosTab = !hasLabeler
