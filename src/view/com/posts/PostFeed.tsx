@@ -309,7 +309,7 @@ let PostFeed = ({
       }
     } catch (e) {
       if (!isNetworkError(e)) {
-        logger.error('Poll latest failed', {feed, message: String(e)})
+        logger.warn('Poll latest failed', {feed, message: String(e)})
       }
     }
   })

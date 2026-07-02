@@ -1,5 +1,5 @@
 import {LayoutAnimation, View} from 'react-native'
-import {AppBskyEmbedRecord, ChatBskyEmbedJoinLink} from '@atproto/api'
+import {type ChatBskyConvoDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_20} from '#/lib/constants'
@@ -8,6 +8,7 @@ import {useConvoActive} from '#/state/messages/convo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useMessageReplies} from '#/components/dms/MessageReplies'
+import {useReplyPreviewText} from '#/components/dms/replyPreview'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 
@@ -16,14 +17,26 @@ import {Text} from '#/components/Typography'
  * being replied to, with a button to cancel the reply.
  */
 export function MessageInputReply() {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const convo = useConvoActive()
-  const {replyTo, clearReply} = useMessageReplies()
+  const {replyTo} = useMessageReplies()
 
   if (!replyTo) {
     return null
   }
+
+  return <MessageInputReplyInner replyTo={replyTo} />
+}
+
+function MessageInputReplyInner({
+  replyTo,
+}: {
+  replyTo: ChatBskyConvoDefs.MessageView
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const convo = useConvoActive()
+  const {clearReply} = useMessageReplies()
+  const getReplyPreviewText = useReplyPreviewText()
+  const {text, subtle} = getReplyPreviewText(replyTo)
 
   const onRemove = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -34,19 +47,6 @@ export function MessageInputReply() {
   const displayName = senderProfile
     ? createSanitizedDisplayName(senderProfile, false)
     : null
-
-  let text = replyTo.text
-  let subtle = false
-  if (!text.trim()) {
-    subtle = true
-    if (ChatBskyEmbedJoinLink.isView(replyTo.embed)) {
-      text = l`(chat invite link)`
-    } else if (AppBskyEmbedRecord.isView(replyTo.embed)) {
-      text = l`(contains embedded content)`
-    } else {
-      text = l`No text`
-    }
-  }
 
   return (
     <View
@@ -82,7 +82,7 @@ export function MessageInputReply() {
       <Button
         label={l`Cancel reply`}
         onPress={onRemove}
-        style={[a.px_2xs]}
+        style={[a.px_2xs, {transform: [{translateX: 2}]}]}
         hitSlop={HITSLOP_20}>
         <XIcon size="xs" style={t.atoms.text_contrast_high} />
       </Button>

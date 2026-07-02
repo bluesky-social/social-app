@@ -1,8 +1,7 @@
 import {useEffect} from 'react'
 import * as Notifications from 'expo-notifications'
 import {AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {CommonActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -108,6 +107,7 @@ let lastHandledNotificationDateDedupe = 0
 
 export function useNotificationsHandler() {
   const ax = useAnalytics()
+  // eslint-disable-next-line react-compiler/react-compiler
   const logger = ax.logger.useChild(ax.logger.Context.Notifications)
   const queryClient = useQueryClient()
   const {currentAccount, accounts} = useSession()
@@ -116,7 +116,7 @@ export function useNotificationsHandler() {
   const {currentConvoId} = useCurrentConvoId()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   // On Android, we cannot control which sound is used for a notification on Android
   // 28 or higher. Instead, we have to configure a notification channel ahead of time
@@ -129,14 +129,12 @@ export function useNotificationsHandler() {
     // NOTE: I don't think that it will retroactively move them into the group
     // if the channels already exist. no big deal imo -sfn
     const CHAT_GROUP = 'chat'
-    Notifications.setNotificationChannelGroupAsync(CHAT_GROUP, {
-      name: _(msg`Chat`),
-      description: _(
-        msg`You can choose whether chat notifications have sound in the chat settings within the app`,
-      ),
+    void Notifications.setNotificationChannelGroupAsync(CHAT_GROUP, {
+      name: l`Chat`,
+      description: l`You can choose whether chat notifications have sound in the chat settings within the app`,
     })
-    Notifications.setNotificationChannelAsync('chat-messages', {
-      name: _(msg`Chat messages - sound`),
+    void Notifications.setNotificationChannelAsync('chat-messages', {
+      name: l`Chat messages - sound`,
       groupId: CHAT_GROUP,
       importance: Notifications.AndroidImportance.MAX,
       sound: 'dm.mp3',
@@ -144,8 +142,8 @@ export function useNotificationsHandler() {
       vibrationPattern: [250],
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
     })
-    Notifications.setNotificationChannelAsync('chat-messages-muted', {
-      name: _(msg`Chat messages - silent`),
+    void Notifications.setNotificationChannelAsync('chat-messages-muted', {
+      name: l`Chat messages - silent`,
       groupId: CHAT_GROUP,
       importance: Notifications.AndroidImportance.MAX,
       sound: null,
@@ -154,70 +152,70 @@ export function useNotificationsHandler() {
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
     })
 
-    Notifications.setNotificationChannelAsync(
+    void Notifications.setNotificationChannelAsync(
       'like' satisfies NotificationReason,
       {
-        name: _(msg`Likes`),
+        name: l`Likes`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
-    Notifications.setNotificationChannelAsync(
+    void Notifications.setNotificationChannelAsync(
       'repost' satisfies NotificationReason,
       {
-        name: _(msg`Reposts`),
+        name: l`Reposts`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
-    Notifications.setNotificationChannelAsync(
+    void Notifications.setNotificationChannelAsync(
       'reply' satisfies NotificationReason,
       {
-        name: _(msg`Replies`),
+        name: l`Replies`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
-    Notifications.setNotificationChannelAsync(
+    void Notifications.setNotificationChannelAsync(
       'mention' satisfies NotificationReason,
       {
-        name: _(msg`Mentions`),
+        name: l`Mentions`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
-    Notifications.setNotificationChannelAsync(
+    void Notifications.setNotificationChannelAsync(
       'quote' satisfies NotificationReason,
       {
-        name: _(msg`Quotes`),
+        name: l`Quotes`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
-    Notifications.setNotificationChannelAsync(
+    void Notifications.setNotificationChannelAsync(
       'follow' satisfies NotificationReason,
       {
-        name: _(msg`New followers`),
+        name: l`New followers`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
-    Notifications.setNotificationChannelAsync(
+    void Notifications.setNotificationChannelAsync(
       'like-via-repost' satisfies NotificationReason,
       {
-        name: _(msg`Likes of your reposts`),
+        name: l`Likes of your reposts`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
-    Notifications.setNotificationChannelAsync(
+    void Notifications.setNotificationChannelAsync(
       'repost-via-repost' satisfies NotificationReason,
       {
-        name: _(msg`Reposts of your reposts`),
+        name: l`Reposts of your reposts`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
-    Notifications.setNotificationChannelAsync(
+    void Notifications.setNotificationChannelAsync(
       'subscribed-post' satisfies NotificationReason,
       {
-        name: _(msg`Activity from others`),
+        name: l`Activity from others`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
-  }, [_])
+  }, [l])
 
   useEffect(() => {
     const handleNotification = (payload?: NotificationPayload) => {
@@ -237,7 +235,7 @@ export function useNotificationsHandler() {
 
           const account = accounts.find(a => a.did === payload.recipientDid)
           if (account) {
-            onPressSwitchAccount(account, 'Notification')
+            void onPressSwitchAccount(account, 'Notification')
           } else {
             setShowLoggedOut(true)
           }
@@ -305,10 +303,10 @@ export function useNotificationsHandler() {
     }
 
     Notifications.setNotificationHandler({
-      handleNotification: async e => {
+      handleNotification: e => {
         const payload = getNotificationPayload(e)
 
-        if (!payload) return DEFAULT_HANDLER_OPTIONS
+        if (!payload) return Promise.resolve(DEFAULT_HANDLER_OPTIONS)
 
         logger.debug('useNotificationsHandler: incoming', {e, payload})
 
@@ -323,17 +321,17 @@ export function useNotificationsHandler() {
             payload.reason === 'chat-removed-from-group' ||
             payload.reason === 'chat-join-request-rejected' ||
             payload.convoId !== currentConvoId
-          return {
+          return Promise.resolve({
             shouldShowList: shouldAlert,
             shouldShowBanner: shouldAlert,
             shouldPlaySound: false,
             shouldSetBadge: false,
-          } satisfies Notifications.NotificationBehavior
+          } satisfies Notifications.NotificationBehavior)
         }
 
         // Any notification other than a chat message should invalidate the unread page
         invalidateCachedUnreadPage()
-        return DEFAULT_HANDLER_OPTIONS
+        return Promise.resolve(DEFAULT_HANDLER_OPTIONS)
       },
     })
 
@@ -363,14 +361,14 @@ export function useNotificationsHandler() {
           })
 
           invalidateCachedUnreadPage()
-          truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
+          void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
 
           if (
             payload.reason === 'mention' ||
             payload.reason === 'quote' ||
             payload.reason === 'reply'
           ) {
-            truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
+            void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
           }
 
           logger.debug('Notifications: handleNotification', {
@@ -379,7 +377,7 @@ export function useNotificationsHandler() {
           })
 
           handleNotification(payload)
-          Notifications.dismissAllNotificationsAsync()
+          void Notifications.dismissAllNotificationsAsync()
           // Also clear the native `lastResponse` cache. Otherwise a subsequent
           // `getLastNotificationResponse()` (e.g. on an account-switch remount,
           // which re-runs `handlePushNotificationEntry`) would replay this

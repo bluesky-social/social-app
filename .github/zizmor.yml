@@ -16,3 +16,12 @@ rules:
   superfluous-actions:
     ignore:
       - build-submit-android.yml
+
+  # Upstream pins bluesky-social/github-actions/fingerprint-native to a SHA
+  # whose `# v0.1.0` version comment does not match the pinned commit. This is
+  # upstream's own pin in upstream-maintained workflows; not actionable in the
+  # fork. (The rule stays active for our own pinned actions.)
+  ref-version-mismatch:
+    ignore:
+      - bundle-deploy-eas-update.yml
+      - pull-request-commit.yml

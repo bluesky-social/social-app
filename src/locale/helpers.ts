@@ -169,6 +169,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.ast
       case 'ca':
         return AppLanguage.ca
+      case 'cs':
+        return AppLanguage.cs
       case 'cy':
         return AppLanguage.cy
       case 'da':
