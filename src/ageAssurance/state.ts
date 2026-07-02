@@ -3,7 +3,6 @@ import type * as AgeRange from 'expo-age-range'
 import {
   type AppBskyAgeassuranceDefs,
   computeAgeAssuranceRegionAccess,
-  getAgeAssuranceRegionConfig,
 } from '@atproto/api'
 
 import {getAge} from '#/lib/strings/time'
@@ -27,6 +26,7 @@ import {
 import {
   computeAgeAssuranceFlags,
   getAgeAssuranceDataFromDeviceSignals,
+  getAgeAssuranceRegionConfigForGeolocation,
   getAgeAssuranceRegionConfigWithFallback,
 } from '#/ageAssurance/util'
 import {type Geolocation, useGeolocation} from '#/geolocation'
@@ -159,10 +159,10 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
    * skip the lookup rather than keying off FALLBACK_REGION_CONFIG. This keeps
    * the read key symmetric with the write (see `setDeviceSignalsForRegion`).
    */
-  const deviceRegion = getAgeAssuranceRegionConfig(config, {
-    countryCode: geolocation.countryCode ?? '',
-    regionCode: geolocation.regionCode,
-  })
+  const deviceRegion = getAgeAssuranceRegionConfigForGeolocation(
+    config,
+    geolocation,
+  )
   const deviceSignals = deviceRegion
     ? getDeviceSignalsFromCacheForRegion({did, region: deviceRegion})
     : undefined

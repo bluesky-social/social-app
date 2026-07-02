@@ -26,22 +26,40 @@ import {type Geolocation, useGeolocation} from '#/geolocation'
 import {USRegionNameToRegionCode} from '#/geolocation/util'
 
 /**
+ * Resolves a geolocation to its matched age assurance region config, or
+ * undefined when the geolocation matches no AA region.
+ *
+ * This is the single source of truth for geolocation -> region resolution.
+ * Device signals are written and read back under a key derived from the
+ * matched region (see `createRegionKey`), so every site that resolves a region
+ * for that purpose MUST go through this helper - independent re-implementations
+ * risk desyncing the write and read keys and silently losing grants.
+ */
+export function getAgeAssuranceRegionConfigForGeolocation(
+  config: AppBskyAgeassuranceDefs.Config,
+  geolocation: Geolocation,
+): AppBskyAgeassuranceDefs.ConfigRegion | undefined {
+  return getAgeAssuranceRegionConfig(config, {
+    countryCode: geolocation.countryCode ?? '',
+    regionCode: geolocation.regionCode,
+  })
+}
+
+/**
  * Get age assurance region config based on geolocation, with fallback to
  * app defaults if no region config is found.
  *
- * See {@link getAgeAssuranceRegionConfig} for the generic option, which can
- * return undefined if the geolocation does not match any AA region.
+ * See {@link getAgeAssuranceRegionConfigForGeolocation} for the generic option,
+ * which can return undefined if the geolocation does not match any AA region.
  */
 export function getAgeAssuranceRegionConfigWithFallback(
   config: AppBskyAgeassuranceDefs.Config,
   geolocation: Geolocation,
 ): AppBskyAgeassuranceDefs.ConfigRegion {
-  const region = getAgeAssuranceRegionConfig(config, {
-    countryCode: geolocation.countryCode ?? '',
-    regionCode: geolocation.regionCode,
-  })
-
-  return region || FALLBACK_REGION_CONFIG
+  return (
+    getAgeAssuranceRegionConfigForGeolocation(config, geolocation) ||
+    FALLBACK_REGION_CONFIG
+  )
 }
 
 /**
@@ -225,10 +243,7 @@ export function useAgeAssuranceRegionConfig() {
   return useMemo(() => {
     if (!config) return
     // use generic helper, we want to potentially return undefined
-    return getAgeAssuranceRegionConfig(config, {
-      countryCode: geolocation.countryCode ?? '',
-      regionCode: geolocation.regionCode,
-    })
+    return getAgeAssuranceRegionConfigForGeolocation(config, geolocation)
   }, [config, geolocation])
 }
 

@@ -6,7 +6,6 @@ import {
   type AppBskyAgeassuranceGetState,
   AtpAgent,
   type ChatBskyActorDeclaration,
-  getAgeAssuranceRegionConfig,
 } from '@atproto/api'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {focusManager, QueryClient, useQuery} from '@tanstack/react-query'
@@ -32,6 +31,7 @@ import {
 } from '#/ageAssurance/types'
 import {
   createRegionKey,
+  getAgeAssuranceRegionConfigForGeolocation,
   getBirthdateStringFromAge,
   isLegacyBirthdateBug,
 } from '#/ageAssurance/util'
@@ -317,10 +317,7 @@ export function useServerStateQuery() {
       const isAArequired = Boolean(
         config &&
         geolocation &&
-        !!getAgeAssuranceRegionConfig(config, {
-          countryCode: geolocation?.countryCode ?? '',
-          regionCode: geolocation?.regionCode,
-        }),
+        getAgeAssuranceRegionConfigForGeolocation(config, geolocation),
       )
 
       // only refetch when needed
@@ -626,10 +623,7 @@ export function useDeviceSignalsQuery() {
    * geolocation matches no AA region there's no device grant to surface.
    */
   const regionConfig = config
-    ? getAgeAssuranceRegionConfig(config, {
-        countryCode: geolocation.countryCode ?? '',
-        regionCode: geolocation.regionCode,
-      })
+    ? getAgeAssuranceRegionConfigForGeolocation(config, geolocation)
     : undefined
   const regionKey = regionConfig ? createRegionKey(regionConfig) : undefined
 
