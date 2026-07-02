@@ -63,6 +63,7 @@ module.exports = function (_config) {
       ios: {
         supportsTablet: false,
         bundleIdentifier: brand.bundleId,
+        appleTeamId: process.env.EXPO_APPLE_TEAM_ID,
         config: {
           usesNonExemptEncryption: false,
         },
@@ -85,6 +86,7 @@ module.exports = function (_config) {
             'an',
             'ast',
             'ca',
+            'cs',
             'cy',
             'da',
             'de',

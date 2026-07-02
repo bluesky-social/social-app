@@ -5,6 +5,7 @@
 import {type Platform} from 'react-native'
 
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
+import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
@@ -774,6 +775,7 @@ export type Events = {
 
   'search:query': {
     source: 'typed' | 'history' | 'autocomplete'
+    filterCount: number
   }
 
   'search:results:loaded': {
@@ -796,6 +798,18 @@ export type Events = {
   'search:autocomplete:press': {
     profileDid: string
     position: number
+  }
+
+  'search:advanced:press': {
+    filterCount: number
+  }
+
+  'search:shareLink:press': {
+    filterCount: number
+  }
+
+  'search:addFilter:press': {
+    filterCount: number
   }
 
   'progressGuide:hide': {}
@@ -1319,7 +1333,7 @@ export type Events = {
   'invite:action:scan': {}
   // user changed the QR card color theme
   'invite:theme:change': {
-    themeKey: 'dawn' | 'day' | 'dusk' | 'night'
+    themeKey: 'dawn' | 'sunlight' | 'day' | 'dusk' | 'twilight' | 'night'
   }
   // QR scanner decoded a code; result indicates whether it resolved to a profile
   'invite:scanner:scanned': {
@@ -1331,4 +1345,118 @@ export type Events = {
   'invite:followersPromo:press': {}
   // user dismissed the empty-followers promo banner
   'invite:followersPromo:dismiss': {}
+
+  // === Video upload funnel (Frontend Spec section D) ===
+  // Every event carries uploadId (client-generated UUID, ties one upload
+  // session end-to-end) + engine (compression engine id, e.g.
+  // native:react-native-compressor@1.13.0). jobId is added once the server
+  // returns it. Sizes / codecs / dimensions / timings only - never content.
+  'video:upload:picked': {
+    uploadId: string
+    engine: string
+    sourceMimeType?: string
+    sourceBytes?: number
+    sourceDurationMs?: number
+    sourceWidth?: number
+    sourceHeight?: number
+  }
+  'video:upload:compressStarted': {
+    uploadId: string
+    engine: string
+    sourceBytes?: number
+  }
+  // Native-only. Raw container metadata returned by the new module's probe()
+  // (bitrate, codec, HDR, frame rate, rotation, etc.). Fires once per upload
+  // between compressStarted and the compressSkipped/compressCompleted decision.
+  // The web (mediabunny) and legacy rn-compressor engines do not surface this.
+  'video:upload:probed': {
+    uploadId: string
+    engine: string
+    mimeType: string
+    codec: string
+    width: number
+    height: number
+    duration: number
+    bitrate: number
+    fileSize: number
+    hasAudio: boolean
+    frameRate: number
+    rotation: number
+    isHDR: boolean
+  }
+  'video:upload:compressCompleted': {
+    uploadId: string
+    engine: string
+    bytesIn?: number
+    bytesOut: number
+    outputMimeType: string
+    elapsedMs: number
+  }
+  'video:upload:compressSkipped': {
+    uploadId: string
+    engine: string
+    skipReason: VideoCompressSkipReason
+    bytes: number
+    mimeType: string
+    elapsedMs: number
+  }
+  'video:upload:compressFailed': {
+    uploadId: string
+    engine: string
+    errorClass: string
+    elapsedMs: number
+  }
+  'video:upload:uploadStarted': {
+    uploadId: string
+    engine: string
+    bytes: number
+  }
+  'video:upload:uploadCompleted': {
+    uploadId: string
+    engine: string
+    jobId: string
+    bytes: number
+    elapsedMs: number
+    throughputBytesPerSec: number
+  }
+  'video:upload:uploadFailed': {
+    uploadId: string
+    engine: string
+    bytes: number
+    errorClass: string
+    elapsedMs: number
+  }
+  'video:upload:processingStarted': {
+    uploadId: string
+    engine: string
+    jobId: string
+  }
+  'video:upload:processingCompleted': {
+    uploadId: string
+    engine: string
+    jobId: string
+    elapsedMs: number
+  }
+  'video:upload:processingFailed': {
+    uploadId: string
+    engine: string
+    jobId: string
+    errorClass: string
+    elapsedMs: number
+  }
+  'video:upload:published': {
+    uploadId: string
+    engine: string
+    jobId: string
+    // wall-clock from picked to published
+    totalElapsedMs: number
+  }
+  // The event that measures the actual problem: users giving up mid-wait.
+  'video:upload:abandoned': {
+    uploadId: string
+    engine: string
+    phase: 'compress' | 'upload' | 'processing'
+    jobId?: string
+    elapsedInPhaseMs: number
+  }
 }

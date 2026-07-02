@@ -52,7 +52,7 @@ func TestRenderBase_NoindexMeta(t *testing.T) {
 
 func TestRenderPost_EmitsJSONLD(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hello")
-	ld, err := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
+	ld, err := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", "", hideEmbedLabels, hideReplyLabels)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -81,7 +81,7 @@ func TestRenderPost_OGImageMatchesJSONLD(t *testing.T) {
 	thumb1 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/abc@jpeg"
 	thumb2 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/def@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "look", withImages(thumb1, thumb2))
-	ld, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
+	ld, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", "", hideEmbedLabels, hideReplyLabels)
 	html := renderTemplate(t, "post.html", pongo2.Context{
 		"postView":     pv,
 		"requestURI":   "https://bsky.app/profile/alice.bsky.social/post/abc123",
@@ -113,7 +113,7 @@ func TestRenderPost_OGImageMatchesJSONLD_Gallery(t *testing.T) {
 	thumb2 := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/g2@jpeg"
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "gallery", withGallery(thumb1, thumb2))
 	thumbs := extractPostMedia(pv, false)
-	ld, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
+	ld, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", "", hideEmbedLabels, hideReplyLabels)
 	html := renderTemplate(t, "post.html", pongo2.Context{
 		"postView":     pv,
 		"requestURI":   "https://bsky.app/profile/alice.bsky.social/post/abc123",
@@ -142,7 +142,7 @@ func TestRenderPost_OGImageMatchesJSONLD_Gallery(t *testing.T) {
 func TestRenderPost_FallsBackToCanonicalizeFilter(t *testing.T) {
 	// Without canonicalURL, the template falls back to requestURI|canonicalize_url.
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hi")
-	ld, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	ld, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	html := renderTemplate(t, "post.html", pongo2.Context{
 		"postView":   pv,
 		"requestURI": "https://bsky.app/profile/alice.bsky.social/post/abc123?utm=foo",
@@ -208,7 +208,7 @@ func TestRenderProfile_AuthRequiredEmitsJSONLD(t *testing.T) {
 // og:url and <link rel="canonical"> must emit the same URL.
 func TestRenderPost_OGUrlMatchesCanonical(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hi")
-	ld, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	ld, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	canonical := "https://bsky.app/profile/alice.bsky.social/post/abc123"
 	html := renderTemplate(t, "post.html", pongo2.Context{
 		"postView":     pv,
@@ -233,7 +233,7 @@ func TestRenderPost_OGUrlMatchesCanonical(t *testing.T) {
 // video without a thumbnail dropped og:video entirely.
 func TestRenderPost_VideoWithoutThumbnailEmitsOGVideo(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "watch")
-	ld, _ := buildPostJSONLD(pv, nil, "u", hideEmbedLabels, hideReplyLabels)
+	ld, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
 	videoURL := "https://video.bsky.app/v.m3u8"
 	html := renderTemplate(t, "post.html", pongo2.Context{
 		"postView":     pv,
@@ -286,7 +286,7 @@ func TestRenderProfile_AuthRequiredNoindex(t *testing.T) {
 // flip of the noindex flag for indexable pages.
 func TestRenderPost_PublicNoNoindex(t *testing.T) {
 	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hello")
-	ld, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", hideEmbedLabels, hideReplyLabels)
+	ld, _ := buildPostJSONLD(pv, nil, "https://bsky.app/profile/alice.bsky.social/post/abc123", "", hideEmbedLabels, hideReplyLabels)
 	html := renderTemplate(t, "post.html", pongo2.Context{
 		"postView":     pv,
 		"requestURI":   "https://bsky.app/profile/alice.bsky.social/post/abc123",

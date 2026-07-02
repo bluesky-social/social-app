@@ -17,6 +17,7 @@ import {AppLanguage} from '#/locale/languages'
 import {messages as messagesAn} from '#/locale/locales/an/messages'
 import {messages as messagesAst} from '#/locale/locales/ast/messages'
 import {messages as messagesCa} from '#/locale/locales/ca/messages'
+import {messages as messagesCs} from '#/locale/locales/cs/messages'
 import {messages as messagesCy} from '#/locale/locales/cy/messages'
 import {messages as messagesDa} from '#/locale/locales/da/messages'
 import {messages as messagesDe} from '#/locale/locales/de/messages'
@@ -89,6 +90,16 @@ export async function dynamicActivate(locale: AppLanguage) {
         import('@formatjs/intl-pluralrules/locale-data/ca.js'),
         import('@formatjs/intl-numberformat/locale-data/ca.js'),
         import('@formatjs/intl-displaynames/locale-data/ca.js'),
+      ])
+      return dateLocale
+    }
+    case AppLanguage.cs: {
+      i18n.loadAndActivate({locale, messages: messagesCs})
+      const [dateLocale] = await Promise.all([
+        import('date-fns/locale/cs').then(m => m.cs),
+        import('@formatjs/intl-pluralrules/locale-data/cs.js'),
+        import('@formatjs/intl-numberformat/locale-data/cs.js'),
+        import('@formatjs/intl-displaynames/locale-data/cs.js'),
       ])
       return dateLocale
     }

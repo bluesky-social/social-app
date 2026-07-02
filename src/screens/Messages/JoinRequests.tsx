@@ -212,7 +212,7 @@ function JoinRequestsList({
     useJoinRequestMutation('reject', convoId, {
       onSuccess: () => {
         ax.metric('groupchat:owner:joinRequest:reject', {convoId})
-        Toast.show(l`Request ignored.`)
+        Toast.show(l`Request rejected.`)
         if (getRemainingRequestCount() < 1) {
           navigation.replace('MessagesConversationSettings', {
             conversation: convoId,
@@ -220,7 +220,7 @@ function JoinRequestsList({
         }
       },
       onError: error => {
-        let errorMessage = l`Failed to ignore join request`
+        let errorMessage = l`Failed to reject join request`
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
         } else if (
@@ -230,7 +230,7 @@ function JoinRequestsList({
         } else if (
           error instanceof ChatBskyGroupRejectJoinRequest.InsufficientRoleError
         ) {
-          errorMessage = l`Only admins can ignore join requests.`
+          errorMessage = l`Only admins can reject join requests.`
         }
         Toast.show(errorMessage, {type: 'error'})
       },

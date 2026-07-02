@@ -627,23 +627,39 @@ func (srv *Server) WebPost(c echo.Context) error {
 
 	identifier := handleOrDID.Normalize().String()
 
-	// requires two fetches: first fetch profile (!)
-	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, identifier)
-	if err != nil {
-		log.Warnf("failed to fetch profile for: %s\t%v", identifier, err)
-		return c.Render(http.StatusOK, "post.html", data)
-	}
-	unauthedViewingOkay := !profileRequiresAuth(pv)
-
 	req := c.Request()
 	requestURI := fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+
+	// Fetch the post thread directly. The AT-URI authority accepts either a
+	// handle or a DID (the appview resolves it), so we skip the separate
+	// ActorGetProfile call and source identity, the canonical URL, and the
+	// auth gate from the thread response's author view instead.
+	// parentHeight=80 (the lexicon default) pulls the reply's ancestor chain
+	// up to the root in nearly all threads, letting isPartOf resolve from this
+	// response without a separate FeedGetPosts call.
+	uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", identifier, rkey)
+	tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, 80, uri)
+	if err != nil {
+		log.Warnf("failed to fetch post: %s\t%v", uri, err)
+		return c.Render(http.StatusOK, "post.html", data)
+	}
+
+	threadView := tpv.Thread.FeedDefs_ThreadViewPost
+	if threadView == nil || threadView.Post == nil || threadView.Post.Author == nil {
+		return c.Render(http.StatusOK, "post.html", data)
+	}
+	postView := threadView.Post
 
 	// Always prefer the handle-form URL so JSON-LD `url` and
 	// <link rel="canonical"> match. Falls back to requestURI when the
 	// handle is unusable (template strips query/fragment).
-	canonicalURL := bskyPostURL(pv.Handle, rkey.String())
+	canonicalURL := bskyPostURL(postView.Author.Handle, rkey.String())
 
-	if !unauthedViewingOkay {
+	// Gate before populating any post content into the template so that
+	// !no-unauthenticated posts never leak text/media. The appview returns the
+	// post (with the author self-label) to unauthed callers, so we detect the
+	// label here rather than via a profile fetch.
+	if postAuthorRequiresAuth(postView) {
 		// Provide minimal OpenGraph data for auth-required posts
 		data["requestURI"] = requestURI
 		if canonicalURL != "" {
@@ -652,26 +668,13 @@ func (srv *Server) WebPost(c echo.Context) error {
 		data["requiresAuth"] = true
 		data["noindex"] = true
 		data["nofollow"] = true
-		data["profileHandle"] = pv.Handle
-		if pv.DisplayName != nil {
-			data["profileDisplayName"] = *pv.DisplayName
+		data["profileHandle"] = postView.Author.Handle
+		if postView.Author.DisplayName != nil {
+			data["profileDisplayName"] = *postView.Author.DisplayName
 		}
 		return c.Render(http.StatusOK, "post.html", data)
 	}
 
-	// then fetch the post thread (with extra context)
-	uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", pv.Did, rkey)
-	tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, 0, uri)
-	if err != nil {
-		log.Warnf("failed to fetch post: %s\t%v", uri, err)
-		return c.Render(http.StatusOK, "post.html", data)
-	}
-
-	threadView := tpv.Thread.FeedDefs_ThreadViewPost
-	if threadView == nil || threadView.Post == nil {
-		return c.Render(http.StatusOK, "post.html", data)
-	}
-	postView := threadView.Post
 	data["postView"] = postView
 	data["requestURI"] = requestURI
 	if canonicalURL != "" {
@@ -701,7 +704,32 @@ func (srv *Server) WebPost(c echo.Context) error {
 	if jsonldURL == "" {
 		jsonldURL = requestURI
 	}
-	if jsonld, err := buildPostJSONLD(postView, threadView.Replies, jsonldURL, hideEmbedLabels, hideReplyLabels); err == nil {
+
+	// Best-effort: resolve a reply's thread root to its handle-form canonical
+	// URL for isPartOf. Prefer the root already present in the thread response
+	// (parentHeight=80); fall back to a bounded FeedGetPosts only when the
+	// chain is truncated (very deep thread) or broken by a blocked/not-found
+	// ancestor. On timeout, error, or an unresolvable root we omit isPartOf
+	// rather than point at a non-indexable page.
+	isPartOfURL := ""
+	if rootURI := threadRootURI(postView); rootURI != "" {
+		if rootPost := findRootPostInParents(threadView, rootURI); rootPost != nil && rootPost.Author != nil {
+			isPartOfURL = bskyPostURLFromATURI(rootPost.Author.Handle, rootURI)
+		} else {
+			pctx, cancel := context.WithTimeout(ctx, 1*time.Second)
+			if posts, perr := appbsky.FeedGetPosts(pctx, srv.xrpcc, []string{rootURI}); perr != nil {
+				log.Warnf("failed to resolve thread root post for isPartOf: %s\t%v", rootURI, perr)
+			} else if len(posts.Posts) > 0 && posts.Posts[0].Author != nil {
+				// Handle-form only (no DID fallback): isPartOf must match the
+				// root page's handle-form canonical, so an unusable handle omits
+				// isPartOf rather than point at a non-canonical DID-form URL.
+				isPartOfURL = bskyPostURLFromATURI(posts.Posts[0].Author.Handle, rootURI)
+			}
+			cancel()
+		}
+	}
+
+	if jsonld, err := buildPostJSONLD(postView, threadView.Replies, jsonldURL, isPartOfURL, hideEmbedLabels, hideReplyLabels); err == nil {
 		data["postJSONLD"] = jsonld
 	} else {
 		log.Warnf("failed to build post JSON-LD for %s: %v", uri, err)
