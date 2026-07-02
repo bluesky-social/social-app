@@ -24,9 +24,9 @@ import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {usePreemptivelyCompleteActivePolicyUpdate} from '#/components/PolicyUpdateOverlay/usePreemptivelyCompleteActivePolicyUpdate'
 import * as Toast from '#/components/Toast'
+import {MIN_ACCESS_AGE} from '#/ageAssurance/const'
 import {
   isUnderAge,
-  MIN_ACCESS_AGE,
   useAgeAssuranceRegionConfigWithFallback,
 } from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
@@ -311,17 +311,10 @@ export function StepInfo({
                     <Admonition.Icon />
                     <Admonition.Content>
                       <Admonition.Text>
-                        {!isOverAppMinAccessAge ? (
-                          <Plural
-                            value={MIN_ACCESS_AGE}
-                            other="You must be # years of age or older to create an account."
-                          />
-                        ) : (
-                          <Plural
-                            value={aaRegionConfig.minAccessAge}
-                            other="You must be # years of age or older to create an account in your region."
-                          />
-                        )}
+                        <Plural
+                          value={aaRegionConfig.minAccessAge}
+                          other="You must be # years of age or older to create an account in your region."
+                        />
                       </Admonition.Text>
                       {IS_NATIVE &&
                         !isDeviceGeolocationGranted &&
@@ -330,11 +323,11 @@ export function StepInfo({
                             <Trans>
                               Have we got your location wrong?{' '}
                               <SimpleInlineLinkText
-                                label={l`Tap here to confirm your location with GPS.`}
+                                label={l`Tap here to update your location with GPS.`}
                                 {...createStaticClick(() => {
                                   locationControl.open()
                                 })}>
-                                Tap here to confirm your location with GPS.
+                                Tap here to update your location with GPS.
                               </SimpleInlineLinkText>
                             </Trans>
                           </Admonition.Text>

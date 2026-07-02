@@ -15,6 +15,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {GlassContainer} from 'expo-glass-effect'
+import {type $Typed, type ChatBskyConvoDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
@@ -26,12 +27,17 @@ import {
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
 import {atoms as a, platform, tokens, useTheme} from '#/alf'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
 import {GlassView} from '#/components/GlassView'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
+import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
 import {ComposerContainer} from './MessageComposer'
-import {useExtractEmbedFromFacets} from './MessageInputEmbed'
+import {
+  type MessageEmbedState,
+  useExtractEmbedFromFacets,
+} from './MessageInputEmbed'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
@@ -40,20 +46,27 @@ const MIN_HEIGHT = 40
 export function MessageInput({
   textInputId,
   onSendMessage,
-  hasEmbed,
+  messageEmbed,
   setEmbed,
   children,
+  loading = false,
 }: {
   textInputId?: string
-  onSendMessage: (message: string) => Promise<void> | void
-  hasEmbed: boolean
+  onSendMessage: (
+    message: string,
+    embed?: MessageEmbedState,
+    replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
+  ) => Promise<void> | void
+  messageEmbed: MessageEmbedState | undefined
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
+  loading?: boolean
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
   const playHaptic = useHaptics()
   const {getDraft, clearDraft} = useMessageDraft()
+  const {replyTo, clearReply} = useMessageReplies()
 
   // Input layout
   const {top: topInset} = useSafeAreaInsets()
@@ -67,15 +80,16 @@ export function MessageInput({
   const [shouldEnforceClear, setShouldEnforceClear] = useState(false)
 
   const {needsEmailVerification} = useEmail()
+  const editable = !needsEmailVerification && !loading
 
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)
 
   const onSubmit = useCallback(() => {
-    if (needsEmailVerification) {
+    if (!editable) {
       return
     }
-    if (!hasEmbed && message.trim() === '') {
+    if (!messageEmbed && message.trim() === '') {
       return
     }
     if (countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
@@ -86,8 +100,13 @@ export function MessageInput({
     }
     clearDraft()
     playHaptic()
+    // Capture the embed before clearing - the deferred send below reads it.
+    const embed = messageEmbed
     setEmbed(undefined)
     setMessage('')
+    // Capture the reply before clearing - the deferred send below reads it.
+    const reply = replyTo
+    clearReply()
     if (IS_IOS) {
       setShouldEnforceClear(true)
     }
@@ -100,11 +119,17 @@ export function MessageInput({
     }
 
     requestAnimationFrame(() => {
-      void onSendMessage(message)
+      void onSendMessage(
+        message,
+        embed,
+        reply
+          ? {...reply, $type: 'chat.bsky.convo.defs#messageView'}
+          : undefined,
+      )
     })
   }, [
-    needsEmailVerification,
-    hasEmbed,
+    editable,
+    messageEmbed,
     message,
     clearDraft,
     onSendMessage,
@@ -112,6 +137,8 @@ export function MessageInput({
     setEmbed,
     inputRef,
     l,
+    replyTo,
+    clearReply,
   ])
 
   useFocusedInputHandler(
@@ -140,7 +167,7 @@ export function MessageInput({
   }))
 
   const submitDisabled =
-    needsEmailVerification || (!hasEmbed && message.trim().length === 0)
+    !editable || (!messageEmbed && message.trim().length === 0)
 
   const blur = useCallback(() => {
     inputRef.current?.blur()
@@ -158,7 +185,6 @@ export function MessageInput({
 
   return (
     <ComposerContainer>
-      {children}
       <GlassContainer
         style={[a.flex_row, a.align_end, a.gap_sm]}
         spacing={tokens.space.xs}>
@@ -168,6 +194,7 @@ export function MessageInput({
           style={[a.flex_1, a.rounded_xl, {minHeight: MIN_HEIGHT}]}
           tintColor={t.palette.contrast_50}
           fallbackStyle={[t.atoms.bg_contrast_50]}>
+          {children}
           <AnimatedTextInput
             nativeID={textInputId}
             accessibilityLabel={l`Message input field`}
@@ -209,7 +236,7 @@ export function MessageInput({
             ref={inputRef}
             hitSlop={HITSLOP_10}
             animatedProps={animatedProps}
-            editable={!needsEmailVerification}
+            editable={editable}
           />
         </GlassView>
         <GlassView
@@ -226,7 +253,11 @@ export function MessageInput({
           }}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={l`Send message`}
+            accessibilityLabel={
+              loading
+                ? l({message: 'Loading chat…', context: 'placeholder'})
+                : l({message: 'Message', context: 'action'})
+            }
             accessibilityHint=""
             hitSlop={HITSLOP_10}
             style={[
@@ -240,11 +271,15 @@ export function MessageInput({
             ]}
             onPress={onSubmit}
             disabled={submitDisabled}>
-            <PaperPlaneIcon
-              size="md"
-              fill={t.palette.white}
-              style={[a.mb_2xs]}
-            />
+            {loading ? (
+              <Loader size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+            ) : (
+              <PaperPlaneIcon
+                size="md"
+                fill={t.palette.white}
+                style={[a.mb_2xs]}
+              />
+            )}
           </Pressable>
         </GlassView>
       </GlassContainer>

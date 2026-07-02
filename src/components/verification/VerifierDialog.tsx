@@ -88,6 +88,7 @@ function Inner({
             alt={_(
               msg`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
             )}
+            useAppleWebpCodec
           />
         </View>
 

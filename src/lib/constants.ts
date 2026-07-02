@@ -17,6 +17,7 @@ export const BSKY_SERVICE_DID = brand.pds.serviceDid
 export const PUBLIC_BSKY_SERVICE = brand.pds.publicService
 export const DEFAULT_SERVICE = BSKY_SERVICE
 export const HELP_DESK_URL = brand.links.helpDesk
+export const CHAT_SERVICE = 'https://api.bsky.chat'
 export const EMBED_SERVICE = brand.links.embedService
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = brand.links.download
@@ -72,6 +73,8 @@ export const MAX_DRAFT_GRAPHEME_LENGTH = 1000
 
 export const MAX_DM_GRAPHEME_LENGTH = 1000
 
+export const MAX_GROUP_NAME_GRAPHEME_LENGTH = 50
+
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
 // but increasing limit per user feedback
 export const MAX_ALT_TEXT = 2000
@@ -102,10 +105,14 @@ export const STAGING_FEEDS = [
   `feedgen|${STAGING_DEFAULT_FEED('thevids')}`,
 ]
 
-export const POST_IMG_MAX = {
-  width: 2000,
-  height: 2000,
-  size: 1000000,
+export const IMAGE_SIZE_CONFIG_POSTS = {
+  maxDimension: 4000,
+  maxSize: 2000000,
+}
+
+export const IMAGE_SIZE_CONFIG_2K_1MB = {
+  maxDimension: 2000,
+  maxSize: 1000000,
 }
 
 export const STAGING_LINK_META_PROXY =
@@ -188,7 +195,8 @@ export const VIDEO_MAX_DURATION_MS = 3 * 60 * 1000 // 3 minutes in milliseconds
  * Maximum size of a video in megabytes, _not_ mebibytes. Backend uses
  * ISO megabytes.
  */
-export const VIDEO_MAX_SIZE = 1000 * 1000 * 100 // 100mb
+export const VIDEO_MAX_SIZE_MB = 300
+export const VIDEO_MAX_SIZE = VIDEO_MAX_SIZE_MB * 1000 * 1000 // 300mb
 
 export const SUPPORTED_MIME_TYPES = [
   'video/mp4',

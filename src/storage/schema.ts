@@ -1,5 +1,6 @@
 import {type ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
 import {type Gif} from '#/features/gifPicker/types'
+import {type InviteThemeKey} from '#/features/inviteFriends/themes'
 import {type Geolocation} from '#/geolocation/types'
 
 /**
@@ -61,6 +62,11 @@ export type Device = {
   demoMode: boolean
   activitySubscriptionsNudged?: boolean
   threadgateNudged?: boolean
+  inviteFriendsFollowersPromoDismissed?: boolean
+  /**
+   * Selected color theme for the Invite Friends QR card.
+   */
+  inviteFriendsThemeKey?: InviteThemeKey
 
   /**
    * Policy update overlays. New IDs are required for each new announcement.

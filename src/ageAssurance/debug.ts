@@ -26,35 +26,8 @@ export const deviceGeolocation: Geolocation | undefined =
       }
     : undefined
 
-export const config: AppBskyAgeassuranceDefs.Config = {
-  regions: [
-    {
-      countryCode: 'AA',
-      regionCode: undefined,
-      minAccessAge: 13,
-      rules: [
-        {
-          $type: ids.Default,
-          access: 'full',
-        },
-      ],
-    },
-    {
-      countryCode: 'BB',
-      regionCode: undefined,
-      minAccessAge: 16,
-      rules: [
-        {
-          $type: ids.Default,
-          access: 'full',
-        },
-      ],
-    },
-  ],
-}
-
 export const otherRequiredData: OtherRequiredData = {
-  birthdate: new Date(2000, 1, 1).toISOString(),
+  birthdate: new Date(2010, 12, 1).toISOString(),
 }
 
 const serverStateEnabled = false || IS_E2E
@@ -71,6 +44,218 @@ export const serverState: AppBskyAgeassuranceGetState.OutputSchema | undefined =
         },
       }
     : undefined
+
+export const config: AppBskyAgeassuranceDefs.Config = {
+  regions: [
+    {
+      countryCode: 'AA',
+      regionCode: undefined,
+      minAccessAge: 13,
+      rules: [
+        {
+          $type: ids.Default,
+          access: 'full',
+        },
+      ],
+    },
+    {
+      countryCode: 'GB',
+      minAccessAge: 13,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 13,
+          access: 'safe',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'AU',
+      minAccessAge: 16,
+      rules: [
+        {
+          date: '2025-12-10T00:00:00Z',
+          access: 'none',
+          $type: ids.IfAccountNewerThan,
+        },
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 16,
+          access: 'safe',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 16,
+          access: 'safe',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'US',
+      regionCode: 'SD',
+      minAccessAge: 13,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 13,
+          access: 'safe',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'US',
+      regionCode: 'WY',
+      minAccessAge: 13,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 13,
+          access: 'safe',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'US',
+      regionCode: 'OH',
+      minAccessAge: 13,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 13,
+          access: 'safe',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'US',
+      regionCode: 'MS',
+      minAccessAge: 18,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'US',
+      regionCode: 'VA',
+      minAccessAge: 16,
+      rules: [
+        {
+          age: 16,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 16,
+          access: 'full',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'US',
+      regionCode: 'TN',
+      minAccessAge: 18,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'BR',
+      minAccessAge: 13,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          age: 13,
+          access: 'safe',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+  ],
+}
 
 export async function resolve<T>(data: T) {
   await new Promise(y => setTimeout(y, 500)) // simulate network

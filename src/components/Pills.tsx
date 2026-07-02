@@ -172,7 +172,7 @@ export function FollowsYou({size = 'sm'}: CommonProps) {
   return (
     <View style={[variantStyles, a.justify_center, t.atoms.bg_contrast_50]}>
       <Text style={[a.text_xs, a.leading_tight]}>
-        <Trans>Follows You</Trans>
+        <Trans>Follows you</Trans>
       </Text>
     </View>
   )

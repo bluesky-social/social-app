@@ -126,9 +126,9 @@ modules/BlueskyClip/
 
 ## Development Notes
 
-- The App Clip is built as part of the main Xcode project when running `yarn prebuild`
+- The App Clip is built as part of the main Xcode project when running `pnpm prebuild`
 - Source files are copied during the prebuild process, not directly referenced
-- Changes to Swift files require running `yarn prebuild` to take effect
+- Changes to Swift files require running `pnpm prebuild` to take effect
 - The App Clip shares the same version number as the main app
 - App Clips have a 15MB size limit (enforced by Apple)
 - Users can convert an App Clip session into a full app install without losing data (via shared App Group)

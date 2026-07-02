@@ -266,6 +266,7 @@ module.exports = function (_config) {
               deploymentTarget: '15.1',
               buildReactNativeFromSource: true,
               ccacheEnabled: IS_DEV,
+              cxxLanguageStandard: 'c++23',
               extraPods: [
                 {
                   name: 'MCEmojiPicker',
@@ -352,7 +353,7 @@ module.exports = function (_config) {
           },
         ],
         [
-          '@mozzius/expo-dynamic-app-icon',
+          '@bsky.app/expo-dynamic-app-icon',
           {
             /**
              * Default set

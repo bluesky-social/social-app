@@ -139,6 +139,7 @@
   <meta name="theme-color">
   <meta name="application-name" content="{{ brand.Name }}">
   <meta name="generator" content="bskyweb">
+  {% if noindex %}<meta name="robots" content="noindex{% if nofollow %}, nofollow{% endif %}">{% endif %}
   <meta property="og:site_name" content="{{ brand.SiteName }}">
   <meta property="og:logo" content="{{ favicon }}">
   {%- if brand.TwitterHandle %}

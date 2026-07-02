@@ -105,6 +105,7 @@ function GermLogo({size}: {size: 'small' | 'large'}) {
       source={require('../../../../assets/images/germ_logo.webp')}
       accessibilityIgnoresInvertColors={false}
       contentFit="cover"
+      useAppleWebpCodec
       style={[
         a.rounded_full,
         size === 'large' ? {width: 32, height: 32} : {width: 16, height: 16},
