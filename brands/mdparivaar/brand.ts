@@ -101,7 +101,7 @@ const brand: Brand = {
     appviewDid: 'did:web:api.bsky.app',
   },
 
-  appAccountDid: 'did:plc:z72i7hdynmk6r22z27h6tvur',
+  appAccountDid: 'did:plc:ieyfjh6ystyufa3a7pi3jw5q', // @coseeker.com
 
   defaultFeeds: [
     {
