@@ -13,7 +13,6 @@ import {
   KeyboardGestureArea,
 } from 'react-native-keyboard-controller'
 import Animated, {
-  FadeIn,
   runOnJS,
   type ScrollEvent,
   type SharedValue,
@@ -186,6 +185,14 @@ export function MessagesList({
       listOpacity.set(0)
     }
   }, [hasScrolled, listOpacity])
+
+  // Recreate FadeIn for the footer with a shared value so we can start from a
+  // non-zero opacity instead of fully transparent. (Needed for GlassView to work properly)
+  const footerOpacity = useSharedValue(0.05)
+
+  useEffect(() => {
+    footerOpacity.set(withTiming(1, {duration: 200}))
+  }, [footerOpacity])
 
   const inputHeightUI = useSharedValue(0)
   const [inputHeightJS, setInputHeightJS] = useState(0)
@@ -753,6 +760,10 @@ export function MessagesList({
     opacity: listOpacity.get(),
   }))
 
+  const animatedFooterStyle = useAnimatedStyle(() => ({
+    opacity: footerOpacity.get(),
+  }))
+
   return (
     <InviteLinkDialogProvider convo={convoState.convo}>
       <MessageRepliesProvider scrollToMessage={scrollToMessage}>
@@ -841,7 +852,7 @@ export function MessagesList({
                 opened: 0,
               }}>
               {footer ?? (
-                <Animated.View entering={FadeIn.duration(200)}>
+                <Animated.View style={animatedFooterStyle}>
                   <ConversationFooter
                     convoState={convoState}
                     hasAcceptOverride={hasAcceptOverride}>
