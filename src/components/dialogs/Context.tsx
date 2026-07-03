@@ -17,6 +17,7 @@ export type StatefulControl<T> = {
 type ControlsContext = {
   mutedWordsDialogControl: Control
   signinDialogControl: Control
+  invalidHandleDialogControl: Control
   inAppBrowserConsentControl: StatefulControl<string>
   emailDialogControl: StatefulControl<Screen>
   linkWarningDialogControl: StatefulControl<{
@@ -44,6 +45,7 @@ export function useGlobalDialogsControlContext() {
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const mutedWordsDialogControl = Dialog.useDialogControl()
   const signinDialogControl = Dialog.useDialogControl()
+  const invalidHandleDialogControl = Dialog.useDialogControl()
   const inAppBrowserConsentControl = useStatefulDialogControl<string>()
   const emailDialogControl = useStatefulDialogControl<Screen>()
   const linkWarningDialogControl = useStatefulDialogControl<{
@@ -61,6 +63,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     () => ({
       mutedWordsDialogControl,
       signinDialogControl,
+      invalidHandleDialogControl,
       inAppBrowserConsentControl,
       emailDialogControl,
       linkWarningDialogControl,
@@ -70,6 +73,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [
       mutedWordsDialogControl,
       signinDialogControl,
+      invalidHandleDialogControl,
       inAppBrowserConsentControl,
       emailDialogControl,
       linkWarningDialogControl,

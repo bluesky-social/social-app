@@ -88,6 +88,13 @@ export type Account = {
   lastSelectedHomeFeed?: string
 
   /**
+   * The ISO date string of when the invalid handle dialog was last dismissed
+   * for this account. While within the snooze window, the dialog won't
+   * auto-open again (but can still be opened from the profile header).
+   */
+  invalidHandleDialogSnoozedAt?: string
+
+  /**
    * Recently selected GIFs in the GIF picker. Most recent first, capped at 20.
    */
   recentGifs?: Gif[]
