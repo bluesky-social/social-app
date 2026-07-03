@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -52,7 +51,7 @@ function getInitialScreenState(requestedAccountSwitchTo?: string): ScreenState {
 }
 
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const t = useTheme()
   const insets = useSafeAreaInsets()
@@ -89,6 +88,31 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     setActiveLanding(undefined)
   }, [clearRequestedAccount, onDismiss, setActiveLanding])
 
+  /*
+   * Back from the login or create-account step. Where it returns depends on how
+   * the view was entered:
+   * - Entered on the splash or a landing screen (starter pack, group chat
+   *   invite): return there, i.e. the screen the user actually saw first.
+   * - Dropped directly onto login/create-account (e.g. tapping "Create
+   *   account" elsewhere in the app): there is no preceding screen in this
+   *   view, so dismiss it. Fall back to the splash when the view cannot be
+   *   dismissed (native with no session), since that is its natural root.
+   */
+  const onPressBack = useCallback(() => {
+    if (
+      initialScreenState === ScreenState.S_Login ||
+      initialScreenState === ScreenState.S_CreateAccount
+    ) {
+      if (onDismiss) {
+        onPressDismiss()
+      } else {
+        setScreenState(ScreenState.S_LoginOrCreateAccount)
+      }
+    } else {
+      setScreenState(initialScreenState)
+    }
+  }, [initialScreenState, onDismiss, onPressDismiss])
+
   return (
     <View
       testID="noSessionView"
@@ -100,7 +124,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
       <ErrorBoundary>
         {onDismiss && screenState === ScreenState.S_LoginOrCreateAccount ? (
           <Button
-            label={_(msg`Go back`)}
+            label={l`Go back`}
             variant="solid"
             color="secondary_inverted"
             size="small"
@@ -136,14 +160,10 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           />
         ) : undefined}
         {screenState === ScreenState.S_Login ? (
-          <Login
-            onPressBack={() => {
-              setScreenState(initialScreenState)
-            }}
-          />
+          <Login onPressBack={onPressBack} />
         ) : undefined}
         {screenState === ScreenState.S_CreateAccount ? (
-          <Signup onPressBack={() => setScreenState(initialScreenState)} />
+          <Signup onPressBack={onPressBack} />
         ) : undefined}
       </ErrorBoundary>
     </View>
