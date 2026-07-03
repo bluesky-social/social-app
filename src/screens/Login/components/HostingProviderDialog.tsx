@@ -152,11 +152,11 @@ function DialogInner({
         <Text
           nativeID="dialog-title"
           style={[a.text_2xl, a.font_bold, a.pr_5xl]}>
-          <Trans>Choose your account provider</Trans>
+          <Trans>Choose your hosting provider</Trans>
         </Text>
         <SegmentedControl.Root
           type="tabs"
-          label={l`Account provider`}
+          label={l`Hosting provider`}
           value={fixedOption}
           onChange={setFixedOption}>
           <SegmentedControl.Item

@@ -355,7 +355,7 @@ export const LoginForm = ({
         </TextField.Root>
 
         <Button
-          label={l`Forgot Password?`}
+          label={l`Forgot password?`}
           accessibilityHint={l`Reset your password by sending a code to your email`}
           style={[a.mt_md, a.self_start]}
           hoverStyle={{opacity: 0.5}}
