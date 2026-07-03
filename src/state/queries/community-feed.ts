@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {
-  type AppBskyFeedDefs,
+  AppBskyFeedDefs,
   type AppBskyFeedPost,
   AtUri,
   jsonToLex,
@@ -289,6 +289,19 @@ export function* findAllPostsInQueryData(
         const quotedPost = getEmbeddedPost(item.post.embed)
         if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
           yield embedViewRecordToPostView(quotedPost)
+        }
+
+        // Reply-context rows render in slices too; without these, likes on
+        // a parent/root row never reach the shadow cache.
+        if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
+          if (didOrHandleUriMatches(atUri, item.reply.parent)) {
+            yield item.reply.parent
+          }
+        }
+        if (AppBskyFeedDefs.isPostView(item.reply?.root)) {
+          if (didOrHandleUriMatches(atUri, item.reply.root)) {
+            yield item.reply.root
+          }
         }
       }
     }

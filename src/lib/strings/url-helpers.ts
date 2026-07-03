@@ -80,9 +80,9 @@ export function toShortUrl(url: string): string {
 
 export function toShareUrl(url: string): string {
   if (!url.startsWith('https')) {
-    const urlp = new URL(BSKY_APP_HOST)
-    urlp.pathname = url
-    url = urlp.toString()
+    // Parse as a relative URL so a query string survives; assigning to
+    // pathname percent-encodes the '?' into the path.
+    url = new URL(url, BSKY_APP_HOST).toString()
   }
   return url
 }
