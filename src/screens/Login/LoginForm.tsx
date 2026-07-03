@@ -456,7 +456,7 @@ export const LoginForm = ({
               </ButtonText>
             </Button>
 
-            <View style={[a.ml_auto]}>
+            <View style={[a.flex_shrink, a.justify_center, a.ml_auto]}>
               <HostingProviderIndicator
                 state={hostingProvider.state}
                 onPress={() => {
@@ -505,17 +505,19 @@ export const LoginForm = ({
       </View>
 
       <Text style={[a.text_md, native([a.text_center, a.mx_auto]), a.mt_sm]}>
-        New to Bluesky?{' '}
-        <InlineLinkText
-          label={l`Sign up`}
-          to="#"
-          style={[a.text_md, native(a.text_center)]}
-          onPress={evt => {
-            evt.preventDefault()
-            onPressCreateAccount()
-          }}>
-          <Trans>Sign up</Trans>
-        </InlineLinkText>
+        <Trans>
+          New to Bluesky?{' '}
+          <InlineLinkText
+            label={l`Sign up`}
+            to="#"
+            style={[a.text_md, native(a.text_center)]}
+            onPress={evt => {
+              evt.preventDefault()
+              onPressCreateAccount()
+            }}>
+            Sign up
+          </InlineLinkText>
+        </Trans>
       </Text>
 
       {!gtMobile && (
@@ -579,17 +581,20 @@ function HostingProviderIndicator({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const {gtMobile} = useBreakpoints()
 
   return (
     <Button
       label={l`Change hosting provider`}
       accessibilityHint={l`Opens a dialog to change the hosting provider you sign in to`}
-      style={[a.mt_auto, a.mb_sm, a.self_center]}
+      style={[!gtMobile && [a.mt_auto, a.mb_sm, a.self_center]]}
       size="small"
       color="secondary"
       variant="ghost"
       onPress={onPress}>
-      <ButtonText style={[t.atoms.text_contrast_medium, a.font_normal]}>
+      <ButtonText
+        style={[t.atoms.text_contrast_medium, a.font_normal]}
+        numberOfLines={1}>
         {state.status === 'detected' || state.status === 'overridden' ? (
           <Trans>Hosting provider: {toNiceHostingUrl(state.pdsUrl)}</Trans>
         ) : state.status === 'email' ? (

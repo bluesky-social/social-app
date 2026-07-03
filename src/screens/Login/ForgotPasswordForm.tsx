@@ -134,7 +134,9 @@ export const ForgotPasswordForm = ({
             color="secondary"
             disabled>
             <ButtonIcon icon={Loader} />
-            <ButtonText>Connecting...</ButtonText>
+            <ButtonText>
+              <Trans>Connecting…</Trans>
+            </ButtonText>
           </Button>
         ) : (
           <Button
