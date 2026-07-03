@@ -257,7 +257,7 @@ export const LoginForm = ({
             label={l`Username or email address`}
             placeholder={null}
             autoCapitalize="none"
-            autoFocus={!IS_IOS}
+            autoFocus={!IS_IOS && !initialHandle}
             autoCorrect={false}
             autoComplete="username"
             returnKeyType="next"
@@ -288,15 +288,12 @@ export const LoginForm = ({
               {color: t.palette.negative_500},
             ]}>
             <Trans>
-              We couldn’t find an account with that username. Double-check it
-              for typos, or{' '}
+              We couldn't find an account with that username. Please check that
+              you've typed it correctly, or{' '}
               <InlineLinkText
-                label={l`Set your hosting provider manually`}
+                label={l`set your hosting provider manually`}
                 style={[a.text_sm, a.leading_snug]}
-                {...createStaticClick(() => {
-                  Keyboard.dismiss()
-                  serverInputControl.open()
-                })}>
+                {...createStaticClick(() => serverInputControl.open())}>
                 set your hosting provider manually
               </InlineLinkText>
               .
@@ -317,6 +314,7 @@ export const LoginForm = ({
             label={l`Password`}
             placeholder={null}
             autoCapitalize="none"
+            autoFocus={!IS_IOS && !!initialHandle}
             autoCorrect={false}
             autoComplete="current-password"
             returnKeyType="done"
@@ -336,12 +334,18 @@ export const LoginForm = ({
                 ? () => {
                     if (hasFocusedOnce.current) return
                     hasFocusedOnce.current = true
-                    // kinda dumb, but if we use `autoFocus` to focus
-                    // the username input, it happens before the password
-                    // input gets rendered. this breaks the password autofill
-                    // on iOS (it only does the username part). delaying
-                    // it until both inputs are rendered fixes the autofill -sfn
-                    identifierRef.current?.focus()
+                    // kinda dumb, but if we use `autoFocus` to focus an
+                    // input, it happens before the password input gets
+                    // rendered. this breaks the password autofill on iOS (it
+                    // only does the username part). delaying it until both
+                    // inputs are rendered fixes the autofill. when a handle is
+                    // prefilled we focus the password field directly so the
+                    // user can go straight to typing it -sfn
+                    if (initialHandle) {
+                      passwordRef.current?.focus()
+                    } else {
+                      identifierRef.current?.focus()
+                    }
                   }
                 : undefined
             }
@@ -421,10 +425,7 @@ export const LoginForm = ({
                     <InlineLinkText
                       label={l`Set your hosting provider manually`}
                       style={[a.text_sm, a.leading_snug]}
-                      {...createStaticClick(() => {
-                        Keyboard.dismiss()
-                        serverInputControl.open()
-                      })}>
+                      {...createStaticClick(() => serverInputControl.open())}>
                       set your hosting provider manually
                     </InlineLinkText>
                     .
@@ -506,12 +507,8 @@ export const LoginForm = ({
           New to Bluesky?{' '}
           <InlineLinkText
             label={l`Sign up`}
-            to="#"
             style={[a.text_md, native(a.text_center)]}
-            onPress={evt => {
-              evt.preventDefault()
-              onPressCreateAccount()
-            }}>
+            {...createStaticClick(() => onPressCreateAccount())}>
             Sign up
           </InlineLinkText>
         </Trans>
