@@ -31,7 +31,6 @@ export function HostingProviderDialog({
   isEmail,
   onSelectManual,
   onSelectAutomatic,
-  onClose: onCloseProp,
 }: {
   control: Dialog.DialogOuterProps['control']
   /**
@@ -47,12 +46,6 @@ export function HostingProviderDialog({
   isEmail: boolean
   onSelectManual: (url: string) => void
   onSelectAutomatic: () => void
-  /**
-   * Called after the dialog has closed and the selection has been dispatched
-   * (for any reason: Done button, backdrop dismiss, or drag-down). On native
-   * this fires after the close animation completes.
-   */
-  onClose?: () => void
 }) {
   const ax = useAnalytics()
   const formRef = useRef<DialogInnerRef>(null)
@@ -77,8 +70,7 @@ export function HostingProviderDialog({
     ax.metric('signin:hostingProviderPressed', {
       hostingProviderDidChange: nextOverride !== currentOverride,
     })
-    onCloseProp?.()
-  }, [ax, onSelectManual, onSelectAutomatic, currentOverride, onCloseProp])
+  }, [ax, onSelectManual, onSelectAutomatic, currentOverride])
 
   return (
     <Dialog.Outer
