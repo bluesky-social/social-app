@@ -79,6 +79,17 @@ export async function post(
     return postCommunity(agent, queryClient, opts)
   }
 
+  // A public post must never carry a community post in its embed; the
+  // routing above sends those to postCommunity, so reaching here with one
+  // is a bug we refuse rather than leak community content publicly.
+  if (
+    thread.posts.some(p =>
+      p.embed.quote?.uri?.includes(COMMUNITY_POST_COLLECTION),
+    )
+  ) {
+    throw new Error('Public posts cannot embed a community post')
+  }
+
   let replyPromise:
     | Promise<AppBskyFeedPost.Record['reply']>
     | AppBskyFeedPost.Record['reply']
