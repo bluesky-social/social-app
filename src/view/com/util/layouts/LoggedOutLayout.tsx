@@ -72,7 +72,15 @@ export const LoggedOutLayout = ({
             style={a.flex_1}
             contentContainerStyle={styles.scrollViewContentContainer}
             keyboardShouldPersistTaps="handled"
-            keyboardDismissMode="on-drag">
+            /*
+             * RNW implements `on-drag` by blurring the focused element on ANY
+             * scroll event - including the one Firefox fires when swapping
+             * splash -> login content resizes the scroller - which kills the
+             * login form's autofocus. It doesn't appear to do anything anyways
+             * on web (judging by iOS safari, which keeps the keyboard open
+             * regardless of scrolling) -sfn
+             */
+            keyboardDismissMode={IS_WEB ? 'none' : 'on-drag'}>
             <View style={[styles.contentWrapper, IS_WEB && a.my_auto]}>
               {children}
             </View>
