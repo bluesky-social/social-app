@@ -11,8 +11,8 @@ import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostRepostedBy'>
 export const PostRepostedByScreen = ({route}: Props) => {
-  const {name, rkey} = route.params
-  const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
+  const {name, rkey, collection} = route.params
+  const uri = makeRecordUri(name, collection || 'app.bsky.feed.post', rkey)
   const {data: post} = usePostQuery(uri)
 
   let quoteCount

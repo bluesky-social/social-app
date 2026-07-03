@@ -206,6 +206,15 @@ export function useCommunityFeedSlices(
     // thread view. Stands in for followedRepliesOnly, which would pass
     // everything here since the whole community is "followed".
     const surfaced = feedItems.filter(item => {
+      // Blocked/muted authors never surface, same as the Following feed.
+      const authorViewer = item.post.author.viewer
+      if (
+        authorViewer?.blocking ||
+        authorViewer?.blockedBy ||
+        authorViewer?.muted
+      ) {
+        return false
+      }
       const reply = (item.post.record as AppBskyFeedPost.Record)?.reply
       if (!reply?.root?.uri) return true
       return new AtUri(reply.root.uri).host === item.post.author.did

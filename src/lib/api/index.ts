@@ -318,6 +318,27 @@ async function postCommunity(
     if (labels) {
       submitBody.labels = labels
     }
+    // Interaction gates: root posts only for threadgates, community $types.
+    if (!reply && thread.threadgate.some(tg => tg.type !== 'everybody')) {
+      submitBody.threadgateAllow = (
+        threadgateAllowUISettingToAllowRecordValue(thread.threadgate) ?? []
+      ).map(rule => ({
+        ...rule,
+        $type: String(rule.$type).replace(
+          'app.bsky.feed.threadgate',
+          'community.blacksky.feed.threadgate',
+        ),
+      }))
+    }
+    if (thread.postgate.embeddingRules?.length) {
+      submitBody.embeddingRules = thread.postgate.embeddingRules.map(rule => ({
+        ...rule,
+        $type: (rule.$type as string).replace(
+          'app.bsky.feed.postgate',
+          'community.blacksky.feed.postgate',
+        ),
+      }))
+    }
 
     try {
       const submitRes = await communityXrpc(
