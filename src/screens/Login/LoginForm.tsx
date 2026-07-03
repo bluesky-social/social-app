@@ -459,10 +459,7 @@ export const LoginForm = ({
             <View style={[a.flex_shrink, a.justify_center, a.ml_auto]}>
               <HostingProviderIndicator
                 state={hostingProvider.state}
-                onPress={() => {
-                  Keyboard.dismiss()
-                  serverInputControl.open()
-                }}
+                onPress={() => serverInputControl.open()}
               />
             </View>
           </>
@@ -523,10 +520,7 @@ export const LoginForm = ({
       {!gtMobile && (
         <HostingProviderIndicator
           state={hostingProvider.state}
-          onPress={() => {
-            Keyboard.dismiss()
-            serverInputControl.open()
-          }}
+          onPress={() => serverInputControl.open()}
         />
       )}
     </FormContainer>
