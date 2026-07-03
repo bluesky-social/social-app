@@ -81,7 +81,7 @@ export const ChooseAccountForm = ({
       <View>
         {IS_WEB && (
           <TextField.LabelText>
-            <Trans>Sign in as...</Trans>
+            <Trans>Sign in as…</Trans>
           </TextField.LabelText>
         )}
         <AccountList

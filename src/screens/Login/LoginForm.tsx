@@ -479,13 +479,13 @@ export const LoginForm = ({
           </Button>
         ) : !serviceDescription ? (
           <Button
-            label={l`Connecting to service...`}
+            label={l`Connecting to service…`}
             size="large"
             color="secondary"
             disabled>
             <ButtonIcon icon={Loader} />
             <ButtonText>
-              <Trans>Connecting...</Trans>
+              <Trans>Connecting…</Trans>
             </ButtonText>
           </Button>
         ) : (
