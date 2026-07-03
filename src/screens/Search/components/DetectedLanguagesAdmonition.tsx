@@ -5,7 +5,6 @@ import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {codeToLanguageName} from '#/locale/helpers'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useSearchPostsV2Query} from '#/state/queries/search-posts-v2'
-import {useSession} from '#/state/session'
 import {type SearchFilters} from '#/screens/Search/searchParams'
 import {Admonition} from '#/components/Admonition'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
@@ -34,12 +33,8 @@ export function DetectedLanguagesAdmonition({
   onPressLanguage: (code: string) => void
 }) {
   const {appLanguage} = useLanguagePrefs()
-  const {currentAccount} = useSession()
 
-  const augmentedQuery = useMemo(
-    () => augmentSearchQuery(query || '', {did: currentAccount?.did}),
-    [query, currentAccount],
-  )
+  const augmentedQuery = useMemo(() => augmentSearchQuery(query || ''), [query])
 
   const {data} = useSearchPostsV2Query({
     query: augmentedQuery,

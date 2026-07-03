@@ -93,8 +93,8 @@
     "prettier": "prettier --check ."
   },
   "dependencies": {
-    "@atproto/api": "0.20.22",
-    "@atproto/syntax": "0.6.3",
+    "@atproto/api": "0.20.25",
+    "@atproto/syntax": "0.6.4",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.14",
@@ -156,6 +156,7 @@
     "emoji-regex": "^10.4.0",
     "eventemitter3": "^5.0.1",
     "expo": "54.0.34",
+    "expo-age-range": "0.2.18",
     "expo-application": "~7.0.8",
     "expo-blur": "~15.0.8",
     "expo-build-properties": "~1.0.10",
