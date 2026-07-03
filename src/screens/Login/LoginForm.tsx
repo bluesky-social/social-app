@@ -34,7 +34,7 @@ import {Ticket_Stroke2_Corner0_Rounded as TicketIcon} from '#/components/icons/T
 import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_WEB} from '#/env'
 import {HostingProviderDialog} from './components/HostingProviderDialog'
 import {FormContainer} from './FormContainer'
 
@@ -82,6 +82,20 @@ export const LoginForm = ({
   const identifierRef = useRef<TextInput>(null)
   const passwordRef = useRef<TextInput>(null)
   const hasFocusedOnce = useRef(false)
+  /*
+   * Whether a handle was prefilled at mount. Drives which field autofocuses on
+   * open (the password field, so the user can go straight to typing it) and
+   * which field a dialog-close returns focus to before any manual focus. Uses
+   * the mount-time value deliberately, not the live `identifier` state.
+   */
+  const [hasInitialHandle] = useState(() => !!initialHandle)
+  /*
+   * Tracks the most recently focused of the two inputs so the hosting-provider
+   * dialog can restore focus to it on close.
+   */
+  const lastFocusedField = useRef<'identifier' | 'password'>(
+    hasInitialHandle ? 'password' : 'identifier',
+  )
   const [hasPassword, setHasPassword] = useState(false)
   const [revealPassword, setRevealPassword] = useState(false)
   const {t: l} = useLingui()
@@ -241,6 +255,23 @@ export const LoginForm = ({
           hostingProvider.clearOverride()
           setServiceUrl(DEFAULT_SERVICE)
         }}
+        onClose={() => {
+          const ref =
+            lastFocusedField.current === 'password'
+              ? passwordRef
+              : identifierRef
+          if (IS_WEB) {
+            /*
+             * The web dialog traps focus (Radix FocusScope) and restores it to
+             * the previously-focused element as it unmounts, which happens
+             * after this callback runs. Defer past that teardown so our focus
+             * isn't immediately stolen back.
+             */
+            requestAnimationFrame(() => ref.current?.focus())
+          } else {
+            ref.current?.focus()
+          }
+        }}
       />
       <View>
         <TextField.LabelText>
@@ -257,7 +288,7 @@ export const LoginForm = ({
             label={l`Username or email address`}
             placeholder={null}
             autoCapitalize="none"
-            autoFocus={!IS_IOS}
+            autoFocus={!IS_IOS && !hasInitialHandle}
             autoCorrect={false}
             autoComplete="username"
             returnKeyType="next"
@@ -269,7 +300,10 @@ export const LoginForm = ({
               if (errorField) setErrorField('none')
               if (showResolveError) setShowResolveError(false)
             }}
-            onFocus={() => setIdentifierFocused(true)}
+            onFocus={() => {
+              setIdentifierFocused(true)
+              lastFocusedField.current = 'identifier'
+            }}
             onBlur={() => setIdentifierFocused(false)}
             onSubmitEditing={() => {
               passwordRef.current?.focus()
@@ -317,6 +351,7 @@ export const LoginForm = ({
             label={l`Password`}
             placeholder={null}
             autoCapitalize="none"
+            autoFocus={!IS_IOS && hasInitialHandle}
             autoCorrect={false}
             autoComplete="current-password"
             returnKeyType="done"
@@ -327,6 +362,9 @@ export const LoginForm = ({
               if (errorField) setErrorField('none')
               setHasPassword(!!v)
             }}
+            onFocus={() => {
+              lastFocusedField.current = 'password'
+            }}
             onSubmitEditing={() => void onPressNext()}
             blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
             editable={!isProcessing}
@@ -336,12 +374,18 @@ export const LoginForm = ({
                 ? () => {
                     if (hasFocusedOnce.current) return
                     hasFocusedOnce.current = true
-                    // kinda dumb, but if we use `autoFocus` to focus
-                    // the username input, it happens before the password
-                    // input gets rendered. this breaks the password autofill
-                    // on iOS (it only does the username part). delaying
-                    // it until both inputs are rendered fixes the autofill -sfn
-                    identifierRef.current?.focus()
+                    // kinda dumb, but if we use `autoFocus` to focus an
+                    // input, it happens before the password input gets
+                    // rendered. this breaks the password autofill on iOS (it
+                    // only does the username part). delaying it until both
+                    // inputs are rendered fixes the autofill. when a handle is
+                    // prefilled we focus the password field directly so the
+                    // user can go straight to typing it -sfn
+                    if (hasInitialHandle) {
+                      passwordRef.current?.focus()
+                    } else {
+                      identifierRef.current?.focus()
+                    }
                   }
                 : undefined
             }
