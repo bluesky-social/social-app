@@ -26,8 +26,10 @@ export function ThemePicker({
 
   const labels: Record<InviteThemeKey, string> = {
     dawn: l`Dawn`,
+    sunlight: l`Sunlight`,
     day: l`Day`,
     dusk: l`Dusk`,
+    twilight: l`Twilight`,
     night: l`Night`,
   }
 

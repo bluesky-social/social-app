@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import {type ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'

@@ -3,6 +3,7 @@ import {AppState, type AppStateStatus, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {AppBskyGraphStarterpack} from '@atproto/api'
+import {tokens} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
@@ -222,20 +223,27 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                       a.align_center,
                     ]}>
                     <AppLanguageDropdown />
-                    <Text
-                      style={[
-                        a.flex_1,
-                        t.atoms.text_contrast_medium,
-                        !gtMobile && a.text_md,
-                      ]}>
-                      <Trans>Having trouble?</Trans>{' '}
-                      <InlineLinkText
-                        label={l`Contact support`}
-                        to={FEEDBACK_FORM_URL({email: state.email})}
-                        style={[!gtMobile && a.text_md]}>
-                        <Trans>Contact support</Trans>
-                      </InlineLinkText>
-                    </Text>
+                    <View
+                      style={
+                        gtMobile
+                          ? [a.flex_1, a.flex, a.flex_row, a.justify_end]
+                          : []
+                      }>
+                      <Text
+                        style={[
+                          t.atoms.text_contrast_medium,
+                          !gtMobile && a.text_md,
+                          {paddingInline: tokens.space.sm},
+                        ]}>
+                        <Trans>Having trouble?</Trans>{' '}
+                        <InlineLinkText
+                          label={l`Contact support`}
+                          to={FEEDBACK_FORM_URL({email: state.email})}
+                          style={[!gtMobile && a.text_md]}>
+                          <Trans>Contact support</Trans>
+                        </InlineLinkText>
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </ScreenTransition>

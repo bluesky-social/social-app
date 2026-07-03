@@ -1,4 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
+import type * as AgeRange from 'expo-age-range'
 import {
   type AppBskyAgeassuranceDefs,
   computeAgeAssuranceRegionAccess,
@@ -8,6 +9,7 @@ import {getAge} from '#/lib/strings/time'
 import {useSession} from '#/state/session'
 import {
   getConfigFromCache,
+  getDeviceSignalsFromCacheForRegion,
   getOtherRequiredDataFromCache,
   getServerStateFromCache,
   useAgeAssuranceServerDataContext,
@@ -23,6 +25,8 @@ import {
 } from '#/ageAssurance/types'
 import {
   computeAgeAssuranceFlags,
+  getAgeAssuranceDataFromDeviceSignals,
+  getAgeAssuranceRegionConfigForGeolocation,
   getAgeAssuranceRegionConfigWithFallback,
 } from '#/ageAssurance/util'
 import {type Geolocation, useGeolocation} from '#/geolocation'
@@ -39,12 +43,14 @@ function computeAgeAssuranceState({
   config,
   state,
   metadata,
+  deviceSignals,
 }: {
   hasSession: boolean
   geolocation: Geolocation
   config?: AppBskyAgeassuranceDefs.Config
   state?: AppBskyAgeassuranceDefs.State
   metadata?: AgeAssuranceMetadata
+  deviceSignals?: AgeRange.AgeRangeResponse
 }) {
   /**
    * This is where we control logged-out moderation prefs. It's all
@@ -93,10 +99,19 @@ function computeAgeAssuranceState({
    * Otherwise, we need to compute the access based on the latest data. For
    * accounts with an accurate birthdate, our default fallback rules should
    * ensure correct access.
+   *
+   * In regions that permit on-device verification, the OS-provided age range
+   * is treated as an assured age and fed into the rule engine, where it
+   * matches `IfAssuredOverAge`/`IfAssuredUnderAge` rules.
    */
+  const {assuredAge} = getAgeAssuranceDataFromDeviceSignals(
+    region,
+    deviceSignals,
+  )
   const result = computeAgeAssuranceRegionAccess(region, {
     accountCreatedAt: metadata?.accountCreatedAt,
     declaredAge: metadata?.declaredAge,
+    assuredAge,
   })
   const computed = {
     lastInitiatedAt: state?.lastInitiatedAt,
@@ -138,6 +153,19 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
   }
 
   const region = getAgeAssuranceRegionConfigWithFallback(config, geolocation)
+  /*
+   * Device signals are keyed off the matched config region (no fallback): if
+   * geolocation matches no AA region there's no device grant to read, so we
+   * skip the lookup rather than keying off FALLBACK_REGION_CONFIG. This keeps
+   * the read key symmetric with the write (see `setDeviceSignalsForRegion`).
+   */
+  const deviceRegion = getAgeAssuranceRegionConfigForGeolocation(
+    config,
+    geolocation,
+  )
+  const deviceSignals = deviceRegion
+    ? getDeviceSignalsFromCacheForRegion({did, region: deviceRegion})
+    : undefined
   const metadata: AgeAssuranceMetadata = {
     accountCreatedAt: state.metadata?.accountCreatedAt,
     declaredAge: requiredData?.birthdate
@@ -151,6 +179,7 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
     geolocation,
     state: state.state,
     metadata,
+    deviceSignals,
   })
 
   return {
@@ -159,6 +188,7 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
       state: computed,
       regionConfig: region,
       metadata,
+      deviceSignals,
     }),
   }
 }
@@ -166,7 +196,8 @@ export function unsafeGetAndComputeAgeAssurance({did}: {did: string}) {
 export function useAgeAssuranceState(): AgeAssuranceState {
   const {hasSession} = useSession()
   const geolocation = useGeolocation()
-  const {config, state, metadata} = useAgeAssuranceServerDataContext()
+  const {config, state, metadata, deviceSignals} =
+    useAgeAssuranceServerDataContext()
 
   return useMemo(
     () =>
@@ -176,8 +207,9 @@ export function useAgeAssuranceState(): AgeAssuranceState {
         geolocation,
         state,
         metadata,
+        deviceSignals,
       }),
-    [hasSession, geolocation, config, state, metadata],
+    [hasSession, geolocation, config, state, metadata, deviceSignals],
   )
 }
 

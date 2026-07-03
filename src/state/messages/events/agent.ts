@@ -392,7 +392,7 @@ export class MessagesEventBus {
       }
     } catch (e: any) {
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
-        logger.error(`poll events failed`, {
+        logger.warn(`poll events failed`, {
           safeMessage: e.message,
         })
       }

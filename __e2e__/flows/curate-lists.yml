@@ -135,7 +135,8 @@ appId: xyz.blueskyweb.app
 
 - tapOn:
     id: "bottomBarSearchBtn"
-- tapOn: "Search for posts, users[,]? or feeds"
+- tapOn:
+    id: "searchScreenInput"
 - inputText: "bob"
 - tapOn:
     id: "searchAutoCompleteResult-bob.test"
@@ -145,21 +146,21 @@ appId: xyz.blueskyweb.app
     id: "profileHeaderDropdownBtn"
 - tapOn: "Add to Lists"
 - assertVisible:
-    id: "userAddRemoveListsModal"
+    id: "userAddRemoveListsDialog"
 - tapOn:
     id: "user-bob.test-addBtn"
 - tapOn:
     id: "doneBtn"
 - assertNotVisible:
-    id: "userAddRemoveListsModal"
+    id: "userAddRemoveListsDialog"
 - tapOn:
     id: "profileHeaderDropdownBtn"
 - tapOn: "Add to Lists"
 - assertVisible:
-    id: "userAddRemoveListsModal"
+    id: "userAddRemoveListsDialog"
 - tapOn:
     id: "user-bob.test-addBtn"
 - tapOn:
     id: "doneBtn"
 - assertNotVisible:
-    id: "userAddRemoveListsModal"
+    id: "userAddRemoveListsDialog"

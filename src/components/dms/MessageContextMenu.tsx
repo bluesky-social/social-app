@@ -1,5 +1,6 @@
 import {memo, useCallback} from 'react'
 import {Platform} from 'react-native'
+import {type GestureType} from 'react-native-gesture-handler'
 import * as Clipboard from 'expo-clipboard'
 import {
   type ChatBskyConvoDefs,
@@ -20,6 +21,8 @@ import {atoms as a} from '#/alf'
 import * as ContextMenu from '#/components/ContextMenu'
 import {type TriggerProps} from '#/components/ContextMenu/types'
 import {useMessageDialogs} from '#/components/dms/MessageOverlays'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
+import {ArrowCornerDownRight_Stroke2_Corner2_Rounded as ReplyIcon} from '#/components/icons/ArrowCornerDownRight'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
 import {Language_Stroke2_Corner2_Rounded as LanguageIcon} from '#/components/icons/Language'
@@ -36,19 +39,40 @@ export let MessageContextMenu = ({
   senderProfile,
   moderationOpts,
   children,
+  swipeGesture,
 }: {
   message: ChatBskyConvoDefs.MessageView
   senderProfile?: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts | undefined
   children: TriggerProps['children']
+  /**
+   * Native only. A swipe gesture (swipe-to-reply) composed into the trigger's
+   * gesture group so it's mutually exclusive with the tap and long-press.
+   */
+  swipeGesture?: GestureType
 }): React.ReactNode => {
   const {t: l, i18n} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const convo = useConvoActive()
   const {openDeleteMessage, openReportMessage} = useMessageDialogs()
+  const {setReply} = useMessageReplies()
   const langPrefs = useLanguagePrefs()
   const translate = useGoogleTranslate()
+
+  const onReply = useCallback(() => {
+    setReply(message)
+  }, [setReply, message])
+  // On web, the menu is a Radix dropdown that restores focus to the trigger on
+  // close. When Reply moves focus to the composer, don't let Radix steal it
+  // back. Checking activeElement (rather than tracking reply intent) also
+  // handles re-replying to the same message, where the composer's focus effect
+  // bails on an unchanged reply target and focus should stay on the trigger.
+  const onCloseAutoFocus = useCallback((event: Event) => {
+    if (document.activeElement && document.activeElement !== document.body) {
+      event.preventDefault()
+    }
+  }, [])
 
   const isFromSelf = message.sender?.did === currentAccount?.did
   const isGroupChatEnabled = !ax.features.enabled(ax.features.GroupChatsDisable)
@@ -141,7 +165,8 @@ export let MessageContextMenu = ({
         label={l`Message options`}
         contentLabel={l`Message from @${
           sender?.handle ?? 'unknown' // should always be defined
-        }: ${message.text}`}>
+        }: ${message.text}`}
+        swipeGesture={swipeGesture}>
         {children}
       </ContextMenu.Trigger>
 
@@ -150,7 +175,15 @@ export let MessageContextMenu = ({
         label={l`Sent at ${i18n.date(new Date(message.sentAt), {
           timeStyle: 'short',
         })}`}
-        style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}>
+        style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}
+        onCloseAutoFocus={onCloseAutoFocus}>
+        <ContextMenu.Item
+          testID="messageDropdownReplyBtn"
+          label={l`Reply`}
+          onPress={onReply}>
+          <ContextMenu.ItemIcon icon={ReplyIcon} position="left" />
+          <ContextMenu.ItemText>{l`Reply`}</ContextMenu.ItemText>
+        </ContextMenu.Item>
         {message.text.length > 0 && (
           <>
             <ContextMenu.Item
@@ -172,7 +205,6 @@ export let MessageContextMenu = ({
           </>
         )}
         <ContextMenu.Item
-          destructive
           testID="messageDropdownDeleteBtn"
           label={l`Delete message for me`}
           onPress={() => openDeleteMessage(message)}>
@@ -181,7 +213,6 @@ export let MessageContextMenu = ({
         </ContextMenu.Item>
         {!isFromSelf && (
           <ContextMenu.Item
-            destructive
             testID="messageDropdownReportBtn"
             label={l`Report message`}
             onPress={() => openReportMessage(message, senderProfile)}>

@@ -1,14 +1,8 @@
 import {useCallback, useEffect} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
-import {
-  SupportCode,
-  useCreateSupportLink,
-} from '#/lib/hooks/useCreateSupportLink'
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
 import {useSessionApi} from '#/state/session'
@@ -27,6 +21,7 @@ import {DeviceLocationRequestDialog} from '#/components/dialogs/DeviceLocationRe
 import {Full as Logo} from '#/components/icons/Logo'
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -34,37 +29,51 @@ import {BottomSheetOutlet} from '#/../modules/bottom-sheet'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
+import {useAgeAssuranceVerificationFlow} from '#/ageAssurance/useVerificationFlow'
 import {
+  canBirthdateUpdateIncreaseAccess,
+  createGeolocationString,
   isLegacyBirthdateBug,
   useAgeAssuranceRegionConfig,
 } from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
-import {useDeviceGeolocationApi} from '#/geolocation'
+import {useDeviceGeolocationApi, useGeolocation} from '#/geolocation'
 
 const textStyles = [a.text_md, a.leading_snug]
 
 export function NoAccessScreen() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l, i18n} = useLingui()
   const ax = useAnalytics()
   const {gtPhone} = useBreakpoints()
   const insets = useSafeAreaInsets()
   const birthdateControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
   const deleteAccountControl = useDialogControl()
-  const {metadata} = useAgeAssuranceServerDataContext()
+  const {metadata, deviceSignals} = useAgeAssuranceServerDataContext()
   const region = useAgeAssuranceRegionConfig()
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const {logoutCurrentAccount} = useSessionApi()
-  const createSupportLink = useCreateSupportLink()
+  const geolocation = useGeolocation()
+  const {setDeviceGeolocation} = useDeviceGeolocationApi()
+  const locationControl = Dialog.useDialogControl()
+  const computeAgeAssuranceRegionAccess = useComputeAgeAssuranceRegionAccess()
 
   const aa = useAgeAssurance()
   const isBlocked = aa.state.status === aa.Status.Blocked
   const isAARegion = !!region
-  const hasDeclaredAge = metadata?.declaredAge !== undefined
+  const hasDeclaredAge = aa.flags.hasDeclaredAge
+  const birthdateMightIncreaseAccess = Boolean(
+    region &&
+    canBirthdateUpdateIncreaseAccess({region, metadata, deviceSignals}),
+  )
   const canUpdateBirthday =
-    isBirthdateUpdateAllowed || isLegacyBirthdateBug(metadata?.birthdate || '')
+    (isBirthdateUpdateAllowed ||
+      isLegacyBirthdateBug(metadata?.birthdate || '')) &&
+    birthdateMightIncreaseAccess
+  const geolocationString = createGeolocationString(geolocation, i18n.locale)
+  const isUsingGPS = !!geolocation.deviceGeolocation?.countryCode && IS_NATIVE
 
   useEffect(() => {
     // just counting overall hits here
@@ -106,7 +115,7 @@ export function NoAccessScreen() {
         <Trans>
           If you believe your birthdate is incorrect, you can update it by{' '}
           <SimpleInlineLinkText
-            label={_(msg`Click here to update your birthdate`)}
+            label={l`Click here to update your birthdate`}
             style={[textStyles]}
             {...createStaticClick(() => {
               ax.metric('ageAssurance:noAccessScreen:openBirthdateDialog', {})
@@ -120,20 +129,7 @@ export function NoAccessScreen() {
 
       {orgAdmonition}
     </>
-  ) : (
-    <Text style={[textStyles]}>
-      <Trans>
-        If you believe your birthdate is incorrect, please{' '}
-        <SimpleInlineLinkText
-          to={createSupportLink({code: SupportCode.AA_BIRTHDATE})}
-          label={_(msg`Click here to contact our support team`)}
-          style={[textStyles]}>
-          contact our support team
-        </SimpleInlineLinkText>
-        .
-      </Trans>
-    </Text>
-  )
+  ) : null
 
   return (
     <>
@@ -164,80 +160,147 @@ export function NoAccessScreen() {
               <AgeAssuranceBadge />
             </View>
 
-            {hasDeclaredAge ? (
-              <>
-                {isAARegion ? (
-                  <>
+            <View style={[a.gap_lg]}>
+              {hasDeclaredAge ? (
+                <>
+                  {isAARegion ? (
+                    <>
+                      <View style={[a.gap_lg]}>
+                        <Text style={[textStyles]}>
+                          <Trans>Hey there!</Trans>
+                        </Text>
+                        <Text style={[textStyles]}>
+                          <Trans>
+                            You are accessing Bluesky from a region that legally
+                            requires us to verify your age before allowing you
+                            to access the app.
+                          </Trans>
+                        </Text>
+
+                        {region && geolocationString && (
+                          <Text style={[textStyles]}>
+                            {isUsingGPS ? (
+                              <Trans>
+                                Based on your device's location, we think you're
+                                in{' '}
+                                <Text style={[textStyles, a.font_bold]}>
+                                  {geolocationString}
+                                </Text>
+                                .
+                              </Trans>
+                            ) : (
+                              <>
+                                <Trans>
+                                  Based on your network, we think you're in{' '}
+                                  <Text style={[textStyles, a.font_bold]}>
+                                    {geolocationString}
+                                  </Text>
+                                  . This estimate may be inaccurate if you're
+                                  using a VPN.
+                                </Trans>
+                              </>
+                            )}
+                            {IS_NATIVE && (
+                              <>
+                                {' '}
+                                <SimpleInlineLinkText
+                                  label={l`Update your location`}
+                                  {...createStaticClick(() => {
+                                    locationControl.open()
+                                  })}
+                                  style={[textStyles]}>
+                                  <Trans>
+                                    Tap here to update your location with GPS.
+                                  </Trans>
+                                </SimpleInlineLinkText>
+                                <DeviceLocationRequestDialog
+                                  control={locationControl}
+                                  onLocationAcquired={props => {
+                                    const access =
+                                      computeAgeAssuranceRegionAccess(
+                                        props.geolocation,
+                                      )
+                                    if (access !== aa.Access.Full) {
+                                      props.disableDialogAction()
+                                      props.setDialogError(
+                                        l`We're sorry, but based on your device's location, you are currently located in a region that requires age assurance.`,
+                                      )
+                                    } else {
+                                      props.closeDialog(() => {
+                                        // set this after close!
+                                        setDeviceGeolocation(props.geolocation)
+                                        Toast.show(l`Thanks! You're all set.`, {
+                                          type: 'success',
+                                        })
+                                      })
+                                    }
+                                  }}
+                                />
+                              </>
+                            )}
+                          </Text>
+                        )}
+
+                        {!aa.flags.isOverRegionMinAccessAge && (
+                          <Text style={[textStyles]}>
+                            <Trans>
+                              Unfortunately, your declared age indicates that
+                              you are not old enough to access Bluesky in your
+                              region.
+                            </Trans>
+                          </Text>
+                        )}
+
+                        {!isBlocked && birthdateUpdateText}
+                      </View>
+
+                      {aa.flags.isOverRegionMinAccessAge && <AccessSection />}
+                    </>
+                  ) : (
                     <View style={[a.gap_lg]}>
                       <Text style={[textStyles]}>
-                        <Trans>Hey there!</Trans>
-                      </Text>
-                      <Text style={[textStyles]}>
                         <Trans>
-                          You are accessing Bluesky from a region that legally
-                          requires us to verify your age before allowing you to
-                          access the app.
+                          Unfortunately, the birthdate you have saved to your
+                          profile makes you too young to access Bluesky.
                         </Trans>
                       </Text>
 
-                      {!aa.flags.isOverRegionMinAccessAge && (
-                        <Text style={[textStyles]}>
-                          <Trans>
-                            Unfortunately, your declared age indicates that you
-                            are not old enough to access Bluesky in your region.
-                          </Trans>
-                        </Text>
-                      )}
-
-                      {!isBlocked && birthdateUpdateText}
+                      {birthdateUpdateText}
                     </View>
+                  )}
+                </>
+              ) : (
+                <View style={[a.gap_lg]}>
+                  <Text style={[textStyles]}>
+                    <Trans>Hi there!</Trans>
+                  </Text>
+                  <Text style={[textStyles]}>
+                    <Trans>
+                      In order to provide an age-appropriate experience, we need
+                      to know your birthdate. This is a one-time thing, and your
+                      data will be kept private.
+                    </Trans>
+                  </Text>
+                  <Text style={[textStyles]}>
+                    <Trans>
+                      Set your birthdate below and we'll get you back to posting
+                      and exploring in no time!
+                    </Trans>
+                  </Text>
+                  <Button
+                    color="primary"
+                    size="large"
+                    label={l`Click here to update your birthdate`}
+                    onPress={() => birthdateControl.open()}>
+                    <ButtonText>
+                      <Trans>Add your birthdate</Trans>
+                    </ButtonText>
+                  </Button>
 
-                    {aa.flags.isOverRegionMinAccessAge && <AccessSection />}
-                  </>
-                ) : (
-                  <View style={[a.gap_lg]}>
-                    <Text style={[textStyles]}>
-                      <Trans>
-                        Unfortunately, the birthdate you have saved to your
-                        profile makes you too young to access Bluesky.
-                      </Trans>
-                    </Text>
-
-                    {birthdateUpdateText}
-                  </View>
-                )}
-              </>
-            ) : (
-              <View style={[a.gap_lg]}>
-                <Text style={[textStyles]}>
-                  <Trans>Hi there!</Trans>
-                </Text>
-                <Text style={[textStyles]}>
-                  <Trans>
-                    In order to provide an age-appropriate experience, we need
-                    to know your birthdate. This is a one-time thing, and your
-                    data will be kept private.
-                  </Trans>
-                </Text>
-                <Text style={[textStyles]}>
-                  <Trans>
-                    Set your birthdate below and we'll get you back to posting
-                    and exploring in no time!
-                  </Trans>
-                </Text>
-                <Button
-                  color="primary"
-                  size="large"
-                  label={_(msg`Click here to update your birthdate`)}
-                  onPress={() => birthdateControl.open()}>
-                  <ButtonText>
-                    <Trans>Add your birthdate</Trans>
-                  </ButtonText>
-                </Button>
-
-                {orgAdmonition}
-              </View>
-            )}
+                  {orgAdmonition}
+                </View>
+              )}
+            </View>
 
             <View style={[a.pt_lg, a.gap_xl, {maxWidth: 280}]}>
               <Logo width={120} textFill={t.atoms.text.color} />
@@ -251,7 +314,7 @@ export function NoAccessScreen() {
                 <Trans>
                   To log out,{' '}
                   <SimpleInlineLinkText
-                    label={_(msg`Click here to log out`)}
+                    label={l`Click here to log out`}
                     {...createStaticClick(() => {
                       onPressLogout()
                     })}
@@ -260,7 +323,7 @@ export function NoAccessScreen() {
                   </SimpleInlineLinkText>
                   . Or if you’d prefer, you can{' '}
                   <SimpleInlineLinkText
-                    label={_(msg`Click here to delete your account`)}
+                    label={l`Click here to delete your account`}
                     {...createStaticClick(() => {
                       ax.metric(
                         'ageAssurance:noAccessScreen:openDeleteAccountDialog',
@@ -299,14 +362,11 @@ export function NoAccessScreen() {
 
 function AccessSection() {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const ax = useAnalytics()
   const control = useDialogControl()
   const appealControl = Dialog.useDialogControl()
-  const locationControl = Dialog.useDialogControl()
   const getTimeAgo = useGetTimeAgo()
-  const {setDeviceGeolocation} = useDeviceGeolocationApi()
-  const computeAgeAssuranceRegionAccess = useComputeAgeAssuranceRegionAccess()
 
   const aa = useAgeAssurance()
   const {status, lastInitiatedAt} = aa.state
@@ -318,6 +378,15 @@ function AccessSection() {
   const diff = lastInitiatedAt
     ? dateDiff(lastInitiatedAt, new Date(), 'down')
     : null
+  const {
+    onPressVerify,
+    openInitDialog,
+    isVerifying,
+    verifyCta,
+    deviceSignalsFailed,
+  } = useAgeAssuranceVerificationFlow({initDialogControl: control})
+  const useDeviceSignals =
+    aa.flags.allowsDeviceVerification && !deviceSignalsFailed
 
   return (
     <>
@@ -331,7 +400,7 @@ function AccessSection() {
               You are currently unable to access Bluesky's Age Assurance flow.
               Please{' '}
               <SimpleInlineLinkText
-                label={_(msg`Contact our moderation team`)}
+                label={l`Contact our moderation team`}
                 {...createStaticClick(() => {
                   appealControl.open()
                   ax.metric('ageAssurance:appealDialogOpen', {})
@@ -345,26 +414,38 @@ function AccessSection() {
           <>
             <View style={[a.gap_md]}>
               <Button
-                label={_(msg`Verify now`)}
+                label={verifyCta}
                 size="large"
-                color={hasInitiated ? 'secondary' : 'primary'}
-                onPress={() => {
-                  control.open()
-                  ax.metric('ageAssurance:initDialogOpen', {
-                    hasInitiatedPreviously: hasInitiated,
-                  })
-                }}>
-                <ButtonIcon icon={ShieldIcon} />
-                <ButtonText>
-                  {hasInitiated ? (
-                    <Trans>Verify again</Trans>
-                  ) : (
-                    <Trans>Verify now</Trans>
-                  )}
-                </ButtonText>
+                color={
+                  hasInitiated || aa.flags.hasSharedDeviceSignals
+                    ? 'secondary'
+                    : 'primary'
+                }
+                disabled={isVerifying}
+                onPress={() => void onPressVerify()}>
+                <ButtonIcon icon={isVerifying ? Loader : ShieldIcon} />
+                <ButtonText>{verifyCta}</ButtonText>
               </Button>
 
-              {lastInitiatedAt && timeAgo && diff ? (
+              {useDeviceSignals ? (
+                <Text
+                  style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
+                  <Trans>
+                    Sharing your age data uses information stored on your
+                    device, and will therefore only work on this device.
+                    Alternatively,{' '}
+                    <SimpleInlineLinkText
+                      label={l`Verify now using KWS`}
+                      {...createStaticClick(() => {
+                        openInitDialog()
+                      })}>
+                      you can use our trusted partner, KWS
+                    </SimpleInlineLinkText>
+                    , to complete your verification and enable access on all
+                    platforms.
+                  </Trans>
+                </Text>
+              ) : lastInitiatedAt && timeAgo && diff ? (
                 <Text
                   style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}
                   title={i18n.date(lastInitiatedAt, {
@@ -380,56 +461,12 @@ function AccessSection() {
               ) : (
                 <Text
                   style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
-                  <Trans>Age assurance only takes a few minutes</Trans>
+                  <Trans>Age assurance only takes a few minutes.</Trans>
                 </Text>
               )}
             </View>
           </>
         )}
-
-        <View style={[a.gap_xs]}>
-          {IS_NATIVE && (
-            <>
-              <Admonition>
-                <Trans>
-                  Is your location not accurate?{' '}
-                  <SimpleInlineLinkText
-                    label={_(msg`Update your location`)}
-                    {...createStaticClick(() => {
-                      locationControl.open()
-                    })}>
-                    Tap here to update your location with GPS.
-                  </SimpleInlineLinkText>{' '}
-                </Trans>
-              </Admonition>
-
-              <DeviceLocationRequestDialog
-                control={locationControl}
-                onLocationAcquired={props => {
-                  const access = computeAgeAssuranceRegionAccess(
-                    props.geolocation,
-                  )
-                  if (access !== aa.Access.Full) {
-                    props.disableDialogAction()
-                    props.setDialogError(
-                      _(
-                        msg`We're sorry, but based on your device's location, you are currently located in a region that requires age assurance.`,
-                      ),
-                    )
-                  } else {
-                    props.closeDialog(() => {
-                      // set this after close!
-                      setDeviceGeolocation(props.geolocation)
-                      Toast.show(_(msg`Thanks! You're all set.`), {
-                        type: 'success',
-                      })
-                    })
-                  }
-                }}
-              />
-            </>
-          )}
-        </View>
       </View>
     </>
   )

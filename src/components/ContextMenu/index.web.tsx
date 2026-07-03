@@ -34,14 +34,16 @@ export function Outer({
   children,
   label,
   style,
+  onCloseAutoFocus,
 }: {
   children: React.ReactNode
   label?: string
   style?: StyleProp<ViewStyle>
+  onCloseAutoFocus?: (event: Event) => void
 }) {
   const t = useTheme()
   return (
-    <Menu.Outer style={style}>
+    <Menu.Outer style={style} onCloseAutoFocus={onCloseAutoFocus}>
       {label ? (
         <Text
           numberOfLines={1}
