@@ -35,3 +35,12 @@ export const TREE_VIEW_BELOW_DESKTOP = 6
  * seam transform relies on that, see `createSeam` in PostThread/reader.ts.
  */
 export const READER_VIEW_BELOW = 20
+
+/**
+ * Upper bound on continuation fetches when extending an OP self-thread past
+ * the server's depth cap, i.e. at most `(SELF_THREAD_CHAIN_MAX_FETCHES + 1) *
+ * <server depth cap>` chain posts load per view. The appview currently
+ * serves at most 10 levels per request regardless of the requested `below`.
+ * See `extendSelfThreadChain`.
+ */
+export const SELF_THREAD_CHAIN_MAX_FETCHES = 10
