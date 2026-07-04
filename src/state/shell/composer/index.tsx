@@ -118,7 +118,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           return prevOpts
         }
         if(opts.text === ""){
-          await useDraftsQuery().onSuccess((drafts) => {
+          await useDraftsQuery({onError: () => {
+            Toast.show(_(msg`Failed to load draft`), {type: 'error'})
+          }}).onSuccess((drafts) => {
             const draft = drafts.find(d => d.id === state.draftId) 
             setState(draft)
           })
