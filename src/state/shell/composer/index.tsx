@@ -8,6 +8,7 @@ import {
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
+import { useSaveDraftMutation, useDraftsQuery } from '#/view/com/composer/drafts/state/queries'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {postUriToRelativePath, toBskyAppUrl} from '#/lib/strings/url-helpers'
@@ -78,7 +79,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = useState<StateContext>()
   const queryClient = useQueryClient()
 
-  const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
+  const openComposer = async useNonReactiveCallback((opts: ComposerOpts) =>{
     if (opts.quote) {
       const path = postUriToRelativePath(opts.quote.uri)
       if (path) {
@@ -109,8 +110,27 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setState(prevOpts => {
         if (prevOpts) {
           // Never replace an already open composer.
+          await useSaveDraftMutation().mutate(prevOpts, {
+            onError: () => {
+              Toast.show(_(msg`Failed to save draft`), {type: 'error'})
+            },
+          })  
           return prevOpts
         }
+        if(opts.text === ""){
+          await useDraftsQuery().onSuccess((drafts) => {
+            const draft = drafts.find(d => d.id === state.draftId) 
+            setState(draft)
+          })
+        }
+        await useSaveDraftMutation().mutate(opts, {
+          onError: () => {
+            Toast.show(_(msg`Failed to save draft`), {type: 'error'})
+          },oonSuccess: (draftId) => {
+
+          setState(draftId)
+          }
+        })  
         return opts
       })
     }
