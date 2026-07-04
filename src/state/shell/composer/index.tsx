@@ -128,8 +128,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             setState(draft)
           })
           opts.text = state.draft.text 
-        }
-        await useSaveDraftMutation().mutate(opts, {
+        } else {
+          await useSaveDraftMutation().mutate(opts, {
           onError: () => {
             Toast.show(_(msg`Failed to save draft`), {type: 'error'})
           },
@@ -137,6 +137,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             setState(draftId)
           }
         })  
+        }
         return opts
       })
     }
