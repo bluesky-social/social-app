@@ -122,6 +122,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             const draft = drafts.find(d => d.id === state.draftId) 
             setState(draft)
           })
+          opts.text = state.draft.text 
         }
         await useSaveDraftMutation().mutate(opts, {
           onError: () => {
