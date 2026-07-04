@@ -1,4 +1,4 @@
-import {type ReactNode, useMemo} from 'react'
+import {Fragment, type ReactNode, useMemo} from 'react'
 import {type StyleProp, type TextStyle, View} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 
@@ -36,6 +36,13 @@ export type RichTextProps = TextStyleProp &
     emojiMultiplier?: number
     shouldProxyLinks?: boolean
     /**
+     * Rendered inline after the last text segment, so it flows with the final
+     * line and wraps with the text, e.g. the thread position indicator in the
+     * post thread's linear view. Must be text-compatible (a string or nested
+     * <Text>).
+     */
+    trailing?: ReactNode
+    /**
      * DANGEROUS: Disable facet lexicon validation
      *
      * `detectFacetsWithoutResolution()` generates technically invalid facets,
@@ -64,6 +71,7 @@ export function RichText({
   onTextLayout,
   shouldProxyLinks,
   disableMentionFacetValidation,
+  trailing,
 }: RichTextProps) {
   const richText = useMemo(() => {
     if (value instanceof RichTextAPI) {
@@ -107,6 +115,7 @@ export function RichText({
           // @ts-ignore web only -prf
           dataSet={WORD_WRAP}>
           {parts.map(p => p.node)}
+          {trailing}
         </Text>
       )
     }
@@ -137,6 +146,9 @@ export function RichText({
       } else {
         run.push(part.node)
       }
+    }
+    if (trailing) {
+      run.push(<Fragment key="trailing">{trailing}</Fragment>)
     }
     flushRun()
     // NOTE: posts with a fenced block in a full view render as a <View
@@ -170,6 +182,7 @@ export function RichText({
           // @ts-ignore web only -prf
           dataSet={WORD_WRAP}>
           {text}
+          {trailing}
         </Text>
       )
     }
