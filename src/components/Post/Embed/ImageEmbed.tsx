@@ -19,8 +19,6 @@ import {useAnalytics} from '#/analytics'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
 
-const MAX_GRID_IMAGES = 4
-
 export function ImageEmbed({
   embed,
   ...rest
@@ -38,9 +36,16 @@ export function ImageEmbed({
           aspectRatio: item.aspectRatio,
         }))
       : embed.view.images
+  /*
+   * The gallery embed type implies the carousel layout: >4 images always
+   * publishes as a gallery, and the composer's layout toggle experiment
+   * publishes 2-4 images as a gallery when the user opts into the carousel.
+   * Legacy `images` embeds keep the grid unless the viewer-side gate flips
+   * them to the carousel.
+   */
   const useExpandedLayout =
     embed.type === 'gallery'
-      ? images.length > MAX_GRID_IMAGES
+      ? true
       : ax.features.enabled(ax.features.PostGalleryEmbedEnable)
 
   const layout: 'single' | 'grid' | 'carousel' =

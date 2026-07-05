@@ -111,6 +111,7 @@ import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn
 import {GifAltTextDialog} from '#/view/com/composer/GifAltText'
 import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
+import {ImageLayoutBtn} from '#/view/com/composer/photos/ImageLayoutBtn'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
@@ -164,6 +165,7 @@ import {
   type SelectMediaButtonProps,
 } from './SelectMediaButton'
 import {
+  canToggleImageLayout,
   type ComposerAction,
   composerReducer,
   createComposerState,
@@ -2026,6 +2028,7 @@ function ComposerPills({
   bottomBarAnimatedStyle: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
+  const ax = useAnalytics()
   const media = post.embed.media
   const hasMedia =
     media?.type === 'images' ||
@@ -2074,6 +2077,23 @@ function ComposerPills({
                 postAction: {
                   type: 'update_labels',
                   labels: nextLabels,
+                },
+              })
+            }}
+          />
+        ) : null}
+        {canToggleImageLayout(media) &&
+        ax.features.enabled(ax.features.ComposerImageLayoutToggleEnable) ? (
+          <ImageLayoutBtn
+            layout={media.type === 'gallery' ? 'carousel' : 'grid'}
+            imageCount={media.images.length}
+            onChange={nextLayout => {
+              dispatch({
+                type: 'update_post',
+                postId: post.id,
+                postAction: {
+                  type: 'embed_set_image_layout',
+                  layout: nextLayout,
                 },
               })
             }}

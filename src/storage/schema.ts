@@ -62,6 +62,7 @@ export type Device = {
   demoMode: boolean
   activitySubscriptionsNudged?: boolean
   threadgateNudged?: boolean
+  imageLayoutNudged?: boolean
   inviteFriendsFollowersPromoDismissed?: boolean
   /**
    * Selected color theme for the Invite Friends QR card.

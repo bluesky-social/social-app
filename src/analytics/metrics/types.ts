@@ -260,6 +260,11 @@ export type Events = {
   'composer:threadgate:open': {
     nudged: boolean
   }
+  'composer:imageLayout:toggle': {
+    layout: 'grid' | 'carousel'
+    imageCount: number
+    nudged: boolean
+  }
   'composer:threadgate:save': {
     replyOptions: string
     quotesEnabled: boolean
