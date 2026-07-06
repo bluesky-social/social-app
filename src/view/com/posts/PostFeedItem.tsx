@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo, useState} from 'react'
+import {memo, useCallback, useMemo, useRef, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -171,6 +171,7 @@ let FeedItemInner = ({
   const {currentAccount} = useSession()
 
   const [hover, setHover] = useState(false)
+  const postCopyAsImageRef = useRef<View>(null)
 
   const [href] = useMemo(() => {
     const urip = new AtUri(post.uri)
@@ -326,6 +327,7 @@ let FeedItemInner = ({
   return (
     <GalleryBleed>
       <Link
+        ref={postCopyAsImageRef}
         testID={`feedItem-by-${post.author.handle}`}
         style={outerStyles}
         href={href}
@@ -442,6 +444,7 @@ let FeedItemInner = ({
               threadgateRecord={threadgateRecord}
               onShowLess={onShowLess}
               viaRepost={viaRepost}
+              postCopyAsImageRef={postCopyAsImageRef}
             />
           </View>
 

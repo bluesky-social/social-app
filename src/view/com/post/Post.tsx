@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -155,11 +155,14 @@ function PostInner({
   }, [queryClient, post.author, outerOnBeforePress])
 
   const [hover, setHover] = useState(false)
+  const postCopyAsImageRef = useRef<View>(null)
 
   return (
     <GalleryBleed>
       <Link
+        ref={postCopyAsImageRef}
         href={itemHref}
+        noFeedback
         style={[
           styles.outer,
           t.atoms.border_contrast_low,
@@ -266,6 +269,7 @@ function PostInner({
               richText={richText}
               onPressReply={onPressReply}
               logContext="Post"
+              postCopyAsImageRef={postCopyAsImageRef}
             />
           </View>
         </View>

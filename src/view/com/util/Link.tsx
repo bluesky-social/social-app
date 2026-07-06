@@ -43,6 +43,7 @@ type Event =
 interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   testID?: string
   style?: StyleProp<ViewStyle>
+  ref?: React.Ref<View>
   href?: string
   title?: string
   children?: React.ReactNode
@@ -75,6 +76,7 @@ export const Link = memo(function Link({
   accessibilityActions,
   onAccessibilityAction,
   dataSet: dataSetProp,
+  ref,
   ...props
 }: Props) {
   const t = useTheme()
@@ -139,7 +141,7 @@ export const Link = memo(function Link({
             color: t.atoms.bg_contrast_25.backgroundColor,
           }}>
           {/* @ts-ignore web only -prf */}
-          <View style={style} href={anchorHref}>
+          <View ref={ref} style={style} href={anchorHref}>
             {children ? children : <Text>{title || 'link'}</Text>}
           </View>
         </Pressable>
@@ -150,6 +152,7 @@ export const Link = memo(function Link({
   const Com = props.hoverStyle ? PressableWithHover : Pressable
   return (
     <Com
+      ref={ref}
       testID={testID}
       style={style}
       onPress={onPress}
