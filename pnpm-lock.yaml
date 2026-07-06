@@ -547,6 +547,9 @@ importers:
       hls.js:
         specifier: ^1.6.2
         version: 1.6.16
+      html-to-image:
+        specifier: ^1.11.13
+        version: 1.11.13
       idb-keyval:
         specifier: ^6.2.2
         version: 6.2.2
@@ -5967,6 +5970,9 @@ packages:
     resolution: {integrity: sha512-YXxSlJBZTP7RS3tWnQw74ooKa6L9b9i9QYXY21eUEvhZ3u9XLfv6OnFsQq6RxkhHygsaUMvYsZRV5rU/OVNZxw==}
     engines: {node: '>=12'}
     hasBin: true
+
+  html-to-image@1.11.13:
+    resolution: {integrity: sha512-cuOPoI7WApyhBElTTb9oqsawRvZ0rHhaHwghRLlTuffoD1B2aDemlCruLeZrUIIdvG7gs9xeELEPm6PhuASqrg==}
 
   html-webpack-plugin@5.6.7:
     resolution: {integrity: sha512-md+vXtdCAe60s1k6AU3dUyMJnDxUyQAwfwPKoLisvgUF1IXjtlLsk2se54+qfL9Mdm26bbwvjJybpNx48NKRLw==}
@@ -15569,6 +15575,8 @@ snapshots:
       param-case: 3.0.4
       relateurl: 0.2.7
       terser: 5.47.1
+
+  html-to-image@1.11.13: {}
 
   html-webpack-plugin@5.6.7(webpack@5.106.2(postcss@8.5.14)):
     dependencies:
