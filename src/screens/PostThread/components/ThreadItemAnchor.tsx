@@ -1,4 +1,4 @@
-import {memo, useMemo} from 'react'
+import {memo, useMemo, useRef} from 'react'
 import {Text as RNText, View} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -181,6 +181,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const {currentAccount, hasSession} = useSession()
   const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
   const formatPostStatCount = useFormatPostStatCount()
+  const postCopyAsImageRef = useRef<View>(null)
 
   const post = postShadow
   const record = item.value.post.record
@@ -311,6 +312,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       <ThreadItemAnchorParentReplyLine isRoot={isRoot} />
       <GalleryBleed>
         <View
+          ref={postCopyAsImageRef}
           testID={`postThreadItem-by-${post.author.handle}`}
           style={[
             {
@@ -541,6 +543,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   feedContext={postSource?.post?.feedContext}
                   reqId={postSource?.post?.reqId}
                   viaRepost={viaRepost}
+                  postCopyAsImageRef={postCopyAsImageRef}
                 />
               </FeedFeedbackProvider>
             </View>
