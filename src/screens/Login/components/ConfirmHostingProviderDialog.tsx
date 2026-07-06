@@ -1,3 +1,4 @@
+import {Fragment} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -83,42 +84,61 @@ function DialogInner({
           </Trans>
         </Text>
 
-        <View style={[a.rounded_md, a.border, t.atoms.border_contrast_high]}>
-          <View style={[a.flex_row, a.align_center, a.gap_md, a.p_md]}>
-            <GlobeIcon
-              size="sm"
-              style={[t.atoms.text_contrast_medium, native(a.mt_2xs)]}
-            />
-            <Text numberOfLines={1} style={[a.flex_1, a.text_md]}>
-              {host}
-            </Text>
-          </View>
-          <View style={[a.border_t, t.atoms.border_contrast_high]} />
-          <View style={[a.flex_row, a.align_center, a.gap_md, a.p_md]}>
-            <PersonIcon
-              size="sm"
-              style={[t.atoms.text_contrast_medium, native(a.mt_2xs)]}
-            />
-            <Text emoji numberOfLines={1} style={[a.flex_1, a.text_md]}>
-              {identifier}
-            </Text>
-          </View>
-          <View style={[a.border_t, t.atoms.border_contrast_high]} />
-          <View style={[a.flex_row, a.align_center, a.gap_md, a.p_md]}>
-            <KeyIcon
-              size="sm"
-              style={[t.atoms.text_contrast_medium, native(a.mt_2xs)]}
-            />
-            <Text numberOfLines={1} style={[a.flex_1, a.text_md]}>
-              {'•'.repeat(passwordLength)}
-            </Text>
-          </View>
+        <View
+          style={[
+            a.rounded_md,
+            a.border,
+            t.atoms.border_contrast_medium,
+            a.overflow_hidden,
+          ]}>
+          {[
+            {
+              type: 'host',
+              icon: GlobeIcon,
+              value: host,
+            },
+            {
+              type: 'identifier',
+              icon: PersonIcon,
+              value: identifier,
+            },
+            {
+              type: 'password',
+              icon: KeyIcon,
+              value: '•'.repeat(passwordLength),
+            },
+          ].map((c, i) => (
+            <Fragment key={c.type}>
+              {i !== 0 && (
+                <View style={[a.border_t, t.atoms.border_contrast_medium]} />
+              )}
+              <View
+                style={[
+                  a.flex_row,
+                  a.align_center,
+                  a.gap_sm,
+                  a.px_md,
+                  t.atoms.bg_contrast_25,
+                  {paddingVertical: 10},
+                ]}>
+                <c.icon
+                  size="sm"
+                  style={[t.atoms.text_contrast_low, native(a.mt_2xs)]}
+                />
+                <Text
+                  numberOfLines={1}
+                  style={[t.atoms.text_contrast_high, a.flex_1, a.text_sm]}>
+                  {c.value}
+                </Text>
+              </View>
+            </Fragment>
+          ))}
         </View>
 
         <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
           <Trans>
-            Just a security thing :) You won’t see this next time you sign in
-            with this account.
+            This is just a one-time security check, since we haven't seen this
+            account on this device before.
           </Trans>
         </Text>
 
