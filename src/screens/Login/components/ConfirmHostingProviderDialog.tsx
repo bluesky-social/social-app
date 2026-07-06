@@ -1,7 +1,7 @@
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
@@ -84,22 +84,31 @@ function DialogInner({
         </Text>
 
         <View style={[a.rounded_md, a.border, t.atoms.border_contrast_high]}>
-          <View style={[a.flex_row, a.align_start, a.gap_md, a.p_md]}>
-            <GlobeIcon size="sm" style={[t.atoms.text_contrast_medium]} />
+          <View style={[a.flex_row, a.align_center, a.gap_md, a.p_md]}>
+            <GlobeIcon
+              size="sm"
+              style={[t.atoms.text_contrast_medium, native(a.mt_2xs)]}
+            />
             <Text numberOfLines={1} style={[a.flex_1, a.text_md]}>
               {host}
             </Text>
           </View>
           <View style={[a.border_t, t.atoms.border_contrast_high]} />
-          <View style={[a.flex_row, a.align_start, a.gap_md, a.p_md]}>
-            <PersonIcon size="sm" style={[t.atoms.text_contrast_medium]} />
+          <View style={[a.flex_row, a.align_center, a.gap_md, a.p_md]}>
+            <PersonIcon
+              size="sm"
+              style={[t.atoms.text_contrast_medium, native(a.mt_2xs)]}
+            />
             <Text emoji numberOfLines={1} style={[a.flex_1, a.text_md]}>
               {identifier}
             </Text>
           </View>
           <View style={[a.border_t, t.atoms.border_contrast_high]} />
-          <View style={[a.flex_row, a.align_start, a.gap_md, a.p_md]}>
-            <KeyIcon size="sm" style={[t.atoms.text_contrast_medium]} />
+          <View style={[a.flex_row, a.align_center, a.gap_md, a.p_md]}>
+            <KeyIcon
+              size="sm"
+              style={[t.atoms.text_contrast_medium, native(a.mt_2xs)]}
+            />
             <Text numberOfLines={1} style={[a.flex_1, a.text_md]}>
               {'•'.repeat(passwordLength)}
             </Text>
