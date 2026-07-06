@@ -1,6 +1,7 @@
 // Regex from the go implementation
 // https://github.com/bluesky-social/indigo/blob/main/atproto/syntax/handle.go#L10
 import {forceLTR} from '#/lib/strings/bidi'
+import {Trans} from "@lingui/react/macro";
 
 const VALIDATE_REGEX =
   /^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/
@@ -32,7 +33,7 @@ export function sanitizeHandle(
 ): string {
   const lowercasedWithPrefix = `${prefix}${handle.toLocaleLowerCase()}`
   return isInvalidHandle(handle)
-    ? '⚠Invalid Handle'
+    ? {_(msg`⚠Invalid Handle`)}
     : forceLeftToRight
       ? forceLTR(lowercasedWithPrefix)
       : lowercasedWithPrefix
