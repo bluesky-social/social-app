@@ -26,7 +26,7 @@ import {type Metrics, metrics} from '#/analytics/metrics'
 import * as refParams from '#/analytics/misc/refParams'
 import * as env from '#/env'
 import {useGeolocationServiceResponse} from '#/geolocation/service'
-import {device} from '#/storage'
+import {device, useStorage} from '#/storage'
 
 export * as utils from '#/analytics/utils'
 export const features = {init, refresh}
@@ -141,6 +141,7 @@ export function AnalyticsContext({
   const sessionId = useSessionId()
   const geolocation = useGeolocationServiceResponse()
   const parentContext = useContext(Context)
+  const [isBetaUser] = useStorage(device, ['isBetaUser'])
   const childContext = useMemo(() => {
     const combinedMetadata = {
       ...parentContext.metadata,
@@ -148,6 +149,7 @@ export function AnalyticsContext({
       base: {
         ...parentContext.metadata.base,
         sessionId,
+        isBetaUser,
       },
       geolocation,
     }
@@ -166,7 +168,7 @@ export function AnalyticsContext({
       },
     }
     return context
-  }, [sessionId, geolocation, parentContext, metadata])
+  }, [parentContext, metadata, sessionId, isBetaUser, geolocation])
   return <Context.Provider value={childContext}>{children}</Context.Provider>
 }
 

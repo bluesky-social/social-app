@@ -58,6 +58,13 @@ export type Device = {
   mergedGeolocation?: Geolocation
 
   trendingBetaEnabled: boolean
+  /**
+   * Cached from preferences (`bskyAppState.isBetaUser`) so the GrowthBook
+   * `isBetaUser` attribute can be set synchronously at analytics init, before
+   * beta-gated features (e.g. SearchV2Enable) are first evaluated. Written back
+   * when preferences load.
+   */
+  isBetaUser?: boolean
   devMode: boolean
   demoMode: boolean
   activitySubscriptionsNudged?: boolean
