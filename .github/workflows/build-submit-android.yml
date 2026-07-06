@@ -62,7 +62,7 @@ jobs:
           cache: pnpm
 
       - name: 🪛 Setup jq
-        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
+        uses: dcarbone/install-jq-action@4fcb5062d7ce9bc4382d1a352d19ba3ba2c317c1 # v4.0.1
 
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
