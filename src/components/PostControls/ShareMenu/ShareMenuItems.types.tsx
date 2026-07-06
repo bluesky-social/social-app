@@ -1,3 +1,4 @@
+import {type RefObject} from 'react'
 import {type PressableProps, type StyleProp, type ViewStyle} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -19,4 +20,5 @@ export interface ShareMenuItemsProps {
   timestamp: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShare: () => void
+  postCopyAsImageRef?: RefObject<unknown>
 }
