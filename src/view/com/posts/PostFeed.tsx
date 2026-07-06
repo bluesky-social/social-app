@@ -966,13 +966,15 @@ let PostFeed = ({
           const totalImages = AppBskyEmbedGallery.isView(post.embed)
             ? post.embed.items.filter(AppBskyEmbedGallery.isViewImage).length
             : post.embed.images.length
-          const useExpandedLayout = AppBskyEmbedGallery.isView(post.embed)
-            ? totalImages > 4
-            : ax.features.enabled(ax.features.PostGalleryEmbedEnable)
+          /*
+           * Keep in sync with the layout decision in ImageEmbed: gallery
+           * embeds render as the carousel, legacy `images` embeds as the
+           * grid.
+           */
           const layout =
             totalImages === 1
               ? 'single'
-              : useExpandedLayout
+              : AppBskyEmbedGallery.isView(post.embed)
                 ? 'carousel'
                 : 'grid'
 

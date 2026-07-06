@@ -11,7 +11,7 @@ export enum Features {
   LiveNowBetaDisable = 'live_now_beta:disable',
   GroupChatsDisable = 'group_chats:disable',
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
-  PostGalleryEmbedEnable = 'post_gallery_embed:enable',
+  ComposerImageLayoutToggleEnable = 'composer:image_layout_toggle:enable',
   NotificationsExpandedProfileCardEnable = 'notifications:expanded_profile_card:enable',
   SearchV2Enable = 'search_v2:enable',
   AdvancedSearchV2Enable = 'advanced_search_v2:enable',

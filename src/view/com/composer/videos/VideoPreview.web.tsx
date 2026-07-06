@@ -8,6 +8,7 @@ import {useAutoplayDisabled} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a} from '#/alf'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Toast from '#/components/Toast'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
@@ -42,9 +43,7 @@ export function VideoPreview({
 
   return (
     <View style={[a.pt_xs]}>
-      <ConstrainedImage
-        aspectRatio={constrained || 1}
-        minMobileAspectRatio={14 / 9}>
+      <ConstrainedImage aspectRatio={constrained || 1}>
         <View style={[a.flex_1, {backgroundColor: 'black'}]}>
           {video.mimeType === 'image/gif' ? (
             <img
@@ -83,6 +82,7 @@ export function VideoPreview({
             </>
           )}
           <ExternalEmbedRemoveBtn onRemove={clear} />
+          <MediaInsetBorder />
         </View>
       </ConstrainedImage>
     </View>

@@ -36,7 +36,7 @@ export function SubtitleDialogBtn(props: Props) {
   const {_} = useLingui()
 
   return (
-    <View style={[a.flex_row, a.my_xs]}>
+    <View style={[a.flex_row]}>
       <Button
         label={IS_WEB ? _(msg`Captions & alt text`) : _(msg`Alt text`)}
         accessibilityHint={
@@ -46,7 +46,6 @@ export function SubtitleDialogBtn(props: Props) {
         }
         size="small"
         color="secondary"
-        variant="ghost"
         onPress={() => {
           if (Keyboard.isVisible()) Keyboard.dismiss()
           control.open()

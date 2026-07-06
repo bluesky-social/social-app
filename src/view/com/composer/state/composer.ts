@@ -82,9 +82,18 @@ export type PostDraft = {
 export type PostAction =
   | {type: 'update_richtext'; richtext: RichText}
   | {type: 'update_labels'; labels: SelfLabel[]}
-  | {type: 'embed_add_images'; images: ComposerImage[]}
+  | {
+      type: 'embed_add_images'
+      images: ComposerImage[]
+      preferredLayout?: ImageLayout
+    }
   | {type: 'embed_update_image'; image: ComposerImage}
-  | {type: 'embed_remove_image'; image: ComposerImage}
+  | {
+      type: 'embed_remove_image'
+      image: ComposerImage
+      preferredLayout?: ImageLayout
+    }
+  | {type: 'embed_set_image_layout'; layout: ImageLayout}
   | {
       type: 'embed_add_video'
       asset: ImagePickerAsset
@@ -173,19 +182,49 @@ export const LEGACY_IMAGES_EMBED_MAX = 4
 export const MAX_GALLERY_IMAGES = 10
 
 /**
- * Picks the embed variant for a set of images. <=4 lands in the legacy
- * `app.bsky.embed.images` shape; >4 promotes to `app.bsky.embed.gallery`.
- * Anything beyond the gallery cap is dropped by the hard slice; callers
- * should already have enforced the cap upstream (picker, paste, etc),
- * and the reducer logs a warning when the cap is exceeded so the UI
- * layer can surface a toast.
+ * How a set of images is displayed in the final post. Maps to the embed
+ * variant: `grid` is the legacy `app.bsky.embed.images` shape, `carousel`
+ * is the newer `app.bsky.embed.gallery` shape.
+ */
+export type ImageLayout = 'grid' | 'carousel'
+
+/**
+ * Whether the user can pick between the grid and carousel layouts for the
+ * given media. Only image media with 2 to 4 images qualifies: a single
+ * image renders the same either way, and >4 images always requires the
+ * gallery embed.
+ */
+export function canToggleImageLayout(
+  media: EmbedDraft['media'],
+): media is ImagesMedia | GalleryMedia {
+  return (
+    (media?.type === 'images' || media?.type === 'gallery') &&
+    media.images.length >= 2 &&
+    media.images.length <= LEGACY_IMAGES_EMBED_MAX
+  )
+}
+
+/**
+ * Picks the embed variant for a set of images. A single image always uses the
+ * legacy `app.bsky.embed.images` shape (it renders identically either way) and
+ * >4 images always promote to `app.bsky.embed.gallery`. For 2-4 images the
+ * `preferredLayout` decides: `carousel` uses the gallery shape, `grid` (the
+ * default) keeps the legacy images shape. Anything beyond the gallery cap is
+ * dropped by the hard slice; callers should already have enforced the cap
+ * upstream (picker, paste, etc), and the reducer logs a warning when the cap
+ * is exceeded so the UI layer can surface a toast.
  */
 function imagesToMediaVariant(
   images: ComposerImage[],
+  preferredLayout: ImageLayout = 'grid',
 ): ImagesMedia | GalleryMedia {
-  return images.length <= LEGACY_IMAGES_EMBED_MAX
-    ? {type: 'images', images: images.slice(0, LEGACY_IMAGES_EMBED_MAX)}
-    : {type: 'gallery', images: images.slice(0, MAX_GALLERY_IMAGES)}
+  if (images.length > LEGACY_IMAGES_EMBED_MAX) {
+    return {type: 'gallery', images: images.slice(0, MAX_GALLERY_IMAGES)}
+  }
+  if (images.length >= 2 && preferredLayout === 'carousel') {
+    return {type: 'gallery', images}
+  }
+  return {type: 'images', images: images.slice(0, LEGACY_IMAGES_EMBED_MAX)}
 }
 
 export function composerReducer(
@@ -385,12 +424,19 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
         })
       }
       if (!prevMedia) {
-        nextMedia = imagesToMediaVariant(action.images)
+        nextMedia = imagesToMediaVariant(action.images, action.preferredLayout)
       } else if (prevMedia.type === 'images' || prevMedia.type === 'gallery') {
-        nextMedia = imagesToMediaVariant([
-          ...prevMedia.images,
-          ...action.images,
-        ])
+        /*
+         * Re-pick using the caller's current effective preference. Because an
+         * explicit toggle also persists to that preference, this keeps the
+         * shape consistent as the set grows: a carousel preference stays
+         * gallery, a grid preference stays legacy images. The count guards in
+         * imagesToMediaVariant still force gallery past the legacy cap.
+         */
+        nextMedia = imagesToMediaVariant(
+          [...prevMedia.images, ...action.images],
+          action.preferredLayout,
+        )
       }
       return {
         ...state,
@@ -438,10 +484,17 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
             nextLabels = []
           }
         } else {
-          // Re-pick the variant so a gallery that shrinks to <=4 demotes
-          // back to the legacy `app.bsky.embed.images` shape - keeps old
-          // clients rendering it when possible.
-          nextMedia = imagesToMediaVariant(remainingImages)
+          /*
+           * Re-pick using the caller's current effective preference so a
+           * gallery that shrinks to <=4 demotes back to legacy `images` for
+           * grid users (keeping old clients rendering it), while a carousel
+           * preference keeps it a gallery. imagesToMediaVariant still forces
+           * gallery above the legacy cap and images for a lone remaining image.
+           */
+          nextMedia = imagesToMediaVariant(
+            remainingImages,
+            action.preferredLayout,
+          )
         }
         return {
           ...state,
@@ -453,6 +506,31 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
         }
       }
       return state
+    }
+    case 'embed_set_image_layout': {
+      const prevMedia = state.embed.media
+      /*
+       * Only 2-4 images can move between the two shapes: adding or removing
+       * images re-picks the variant via imagesToMediaVariant, so an explicit
+       * layout choice only holds while the count stays in that range.
+       */
+      if (!canToggleImageLayout(prevMedia)) {
+        return state
+      }
+      const nextType = action.layout === 'carousel' ? 'gallery' : 'images'
+      if (prevMedia.type === nextType) {
+        return state
+      }
+      return {
+        ...state,
+        embed: {
+          ...state.embed,
+          media: {
+            type: nextType,
+            images: prevMedia.images,
+          },
+        },
+      }
     }
     case 'embed_add_video': {
       const prevMedia = state.embed.media
@@ -621,12 +699,18 @@ export function createComposerState({
   initText,
   initMention,
   initImageUris,
+  initImageLayout = 'grid',
   initQuoteUri,
   initInteractionSettings,
 }: {
   initText: string | undefined
   initMention: string | undefined
   initImageUris: ComposerOpts['imageUris']
+  /**
+   * Preferred layout for a fresh 2-4 image set supplied via `initImageUris`
+   * (e.g. share intents). Defaults to `grid` to preserve legacy behavior.
+   */
+  initImageLayout?: ImageLayout
   initQuoteUri: string | undefined
   initInteractionSettings:
     | AppBskyActorDefs.PostInteractionSettingsPref
@@ -634,7 +718,10 @@ export function createComposerState({
 }): ComposerState {
   let media: ImagesMedia | GalleryMedia | undefined
   if (initImageUris?.length) {
-    media = imagesToMediaVariant(createInitialImages(initImageUris))
+    media = imagesToMediaVariant(
+      createInitialImages(initImageUris),
+      initImageLayout,
+    )
   }
   let quote: Link | undefined
   if (initQuoteUri) {

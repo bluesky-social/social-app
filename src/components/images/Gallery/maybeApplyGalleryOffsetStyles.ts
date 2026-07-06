@@ -10,7 +10,6 @@ import {
 
 import {unique} from '#/lib/moderation'
 import {type AppModerationCause} from '#/components/Pills'
-import {Features, features} from '#/analytics/features'
 import * as bsky from '#/types/bsky'
 
 export const POST_META_NO_CONTENT_OFFSET = {paddingTop: 10}
@@ -37,13 +36,6 @@ export function maybeApplyGalleryOffsetStyles(
     return
   }
 
-  // The gate only controls whether legacy image embeds opt into the new
-  // expanded gallery layout. Gallery embeds always render expanded by item
-  // count, so their offset must apply regardless of the gate.
-  const isPostGalleryEmbedEnabled = features.isOn(
-    Features.PostGalleryEmbedEnable,
-  )
-
   /*
    * First check if we even have images
    */
@@ -68,10 +60,8 @@ export function maybeApplyGalleryOffsetStyles(
     )
   let hasImages = false
   if (isImageEmbed) {
-    if (!isPostGalleryEmbedEnabled) return
-    // one image, not a gallery
-    if (embed.images.length === 1) return
-    hasImages = true
+    // legacy image embeds render as the grid, which needs no offset
+    return
   }
   if (isGalleryEmbed) {
     // single (or empty) gallery - no offset needed
@@ -85,9 +75,8 @@ export function maybeApplyGalleryOffsetStyles(
         AppBskyEmbedImages.isMain,
       )
     ) {
-      if (!isPostGalleryEmbedEnabled) return
-      // one image, not a gallery
-      if (embed.media.images.length === 1) return
+      // legacy image embeds render as the grid, which needs no offset
+      return
     }
     if (
       bsky.dangerousIsType<AppBskyEmbedGallery.Main>(
