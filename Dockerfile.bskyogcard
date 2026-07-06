@@ -9,7 +9,7 @@ WORKDIR /app
 COPY ./bskyogcard/package.json ./
 COPY ./bskyogcard/pnpm-lock.yaml ./
 COPY ./bskyogcard/pnpm-workspace.yaml ./
-RUN npm install --global pnpm@11.5.2
+RUN npm install --global pnpm@11.10.0
 RUN pnpm install --frozen-lockfile
 
 COPY ./bskyogcard ./
