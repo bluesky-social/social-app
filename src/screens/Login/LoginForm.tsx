@@ -34,7 +34,7 @@ import {Ticket_Stroke2_Corner0_Rounded as TicketIcon} from '#/components/icons/T
 import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_NATIVE} from '#/env'
 import {ConfirmHostingProviderDialog} from './components/ConfirmHostingProviderDialog'
 import {HostingProviderDialog} from './components/HostingProviderDialog'
 import {FormContainer} from './FormContainer'
@@ -562,17 +562,19 @@ export const LoginForm = ({
         )}
       </View>
 
-      <Text style={[a.text_md, native([a.text_center, a.mx_auto]), a.mt_sm]}>
-        <Trans>
-          New to Bluesky?{' '}
-          <InlineLinkText
-            label={l`Sign up`}
-            style={[a.text_md, native(a.text_center)]}
-            {...createStaticClick(() => onPressCreateAccount())}>
-            Sign up
-          </InlineLinkText>
-        </Trans>
-      </Text>
+      {IS_NATIVE && (
+        <Text style={[a.text_md, native([a.text_center, a.mx_auto]), a.mt_sm]}>
+          <Trans>
+            New to Bluesky?{' '}
+            <InlineLinkText
+              label={l`Sign up`}
+              style={[a.text_md, native(a.text_center)]}
+              {...createStaticClick(() => onPressCreateAccount())}>
+              Sign up
+            </InlineLinkText>
+          </Trans>
+        </Text>
+      )}
 
       {!gtMobile && (
         <HostingProviderIndicator
