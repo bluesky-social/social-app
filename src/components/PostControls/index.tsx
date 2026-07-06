@@ -1,4 +1,4 @@
-import {memo, useMemo, useState} from 'react'
+import {memo, type RefObject, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -55,6 +55,7 @@ let PostControls = ({
   viaRepost,
   variant,
   forceGoogleTranslate = false,
+  postCopyAsImageRef,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -71,6 +72,7 @@ let PostControls = ({
   viaRepost?: {uri: string; cid: string}
   variant?: 'compact' | 'normal' | 'large'
   forceGoogleTranslate?: boolean
+  postCopyAsImageRef?: RefObject<unknown>
 }): React.ReactNode => {
   const ax = useAnalytics()
   const t = useTheme()
@@ -328,6 +330,7 @@ let PostControls = ({
           timestamp={post.indexedAt}
           threadgateRecord={threadgateRecord}
           onShare={onShare}
+          postCopyAsImageRef={postCopyAsImageRef}
           hitSlop={{
             left: secondaryControlSpacingStyles.gap / 2,
             right: secondaryControlSpacingStyles.gap / 2,
