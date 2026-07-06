@@ -33,7 +33,7 @@ RUN mkdir --parents $NVM_DIR && \
 RUN \. "$NVM_DIR/nvm.sh" && \
   nvm install $NODE_VERSION && \
   nvm use $NODE_VERSION && \
-  npm install --global pnpm@11.9.0 && \
+  npm install --global pnpm@11.10.0 && \
   pnpm install --frozen-lockfile && \
   cd bskyembed && pnpm install --frozen-lockfile && cd .. && \
   pnpm intl:build && \
