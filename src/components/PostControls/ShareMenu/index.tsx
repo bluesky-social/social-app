@@ -1,4 +1,4 @@
-import {memo, useMemo, useState} from 'react'
+import {memo, type RefObject, useMemo, useState} from 'react'
 import {type Insets} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -35,6 +35,7 @@ let ShareMenuButton = ({
   onShare,
   hitSlop,
   logContext,
+  postCopyAsImageRef,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -46,6 +47,7 @@ let ShareMenuButton = ({
   onShare: () => void
   hitSlop?: Insets
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+  postCopyAsImageRef?: RefObject<unknown>
 }): React.ReactNode => {
   const ax = useAnalytics()
   const {_} = useLingui()
@@ -120,6 +122,7 @@ let ShareMenuButton = ({
             timestamp={timestamp}
             threadgateRecord={threadgateRecord}
             onShare={onShare}
+            postCopyAsImageRef={postCopyAsImageRef}
           />
         )}
       </Menu.Root>
