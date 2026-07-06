@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo, useState} from 'react'
+import {memo, useCallback, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -314,10 +314,13 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
     setLimitLines(false)
   }, [setLimitLines])
 
+  const postCopyAsImageRef = useRef<View>(null)
+
   return (
     <ThreadItemTreePostOuterWrapper item={item}>
       <SubtleHoverWrapper>
         <PostHider
+          ref={postCopyAsImageRef}
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
           disabled={overrides?.moderation === true}
@@ -383,6 +386,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                     onPressReply={onPressReply}
                     logContext="PostThreadItem"
                     threadgateRecord={threadgateRecord}
+                    postCopyAsImageRef={postCopyAsImageRef}
                   />
                   <DebugFieldDisplay subject={post} />
                 </View>
