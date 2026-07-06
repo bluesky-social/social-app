@@ -23,11 +23,13 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {ThreadPositionChip} from '#/screens/PostThread/components/ThreadPositionChip'
 import {
   LINEAR_AVI_WIDTH,
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
 } from '#/screens/PostThread/const'
+import {type ThreadPostPosition} from '#/screens/PostThread/reader'
 import {atoms as a, useTheme} from '#/alf'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -60,6 +62,11 @@ export type ThreadItemPostProps = {
    * Adjusts the hover overlay, e.g. to start at the reader bracket edge.
    */
   hoverStyle?: StyleProp<ViewStyle>
+  /**
+   * Set in linear view when this post is part of a self-thread: renders a
+   * "(x/n)" position chip at the end of the post text.
+   */
+  threadPosition?: ThreadPostPosition
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }
@@ -68,6 +75,7 @@ export function ThreadItemPost({
   item,
   overrides,
   hoverStyle,
+  threadPosition,
   onPostSuccess,
   threadgateRecord,
 }: ThreadItemPostProps) {
@@ -84,6 +92,7 @@ export function ThreadItemPost({
       threadgateRecord={threadgateRecord}
       overrides={overrides}
       hoverStyle={hoverStyle}
+      threadPosition={threadPosition}
       onPostSuccess={onPostSuccess}
     />
   )
@@ -193,6 +202,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   postShadow,
   overrides,
   hoverStyle,
+  threadPosition,
   onPostSuccess,
   threadgateRecord,
 }: ThreadItemPostProps & {
@@ -334,6 +344,11 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}
                     shouldProxyLinks={true}
+                    trailing={
+                      threadPosition ? (
+                        <ThreadPositionChip threadPosition={threadPosition} />
+                      ) : undefined
+                    }
                   />
                   {limitLines && (
                     <ShowMoreTextButton
@@ -341,6 +356,12 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                       onPress={onPressShowMore}
                     />
                   )}
+                </View>
+              ) : threadPosition ? (
+                // Text-less posts (e.g. image-only) still show their position
+                // so the numbering reads without gaps.
+                <View style={[a.mb_2xs]}>
+                  <ThreadPositionChip threadPosition={threadPosition} />
                 </View>
               ) : undefined}
               <TranslatedPost hideTranslateLink post={post} />

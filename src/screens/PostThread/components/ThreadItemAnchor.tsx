@@ -29,6 +29,7 @@ import {
   ReaderSeamControls,
 } from '#/screens/PostThread/components/ReaderSeamControls'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
+import {ThreadPositionChip} from '#/screens/PostThread/components/ThreadPositionChip'
 import {
   LINEAR_AVI_WIDTH,
   OUTER_SPACE,
@@ -39,6 +40,7 @@ import {
 import {
   type ReaderSeam as ReaderSeamData,
   type ThreadPostItem,
+  type ThreadPostPosition,
 } from '#/screens/PostThread/reader'
 import {atoms as a, useTheme} from '#/alf'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
@@ -68,6 +70,7 @@ export type ThreadItemAnchorReaderSeam = ReaderSeamData & {
 export function ThreadItemAnchor({
   item,
   readerSeam,
+  threadPosition,
   onPostSuccess,
   threadgateRecord,
   postSource,
@@ -78,6 +81,11 @@ export function ThreadItemAnchor({
    * controls and replies into a seam below the post body.
    */
   readerSeam?: ThreadItemAnchorReaderSeam
+  /**
+   * Set in linear view when the anchor is part of a self-thread: renders a
+   * "(x/n)" position chip at the end of the post text.
+   */
+  threadPosition?: ThreadPostPosition
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
   postSource?: PostSource
@@ -97,6 +105,7 @@ export function ThreadItemAnchor({
       item={item}
       isRoot={isRoot}
       readerSeam={readerSeam}
+      threadPosition={threadPosition}
       postShadow={postShadow}
       onPostSuccess={onPostSuccess}
       threadgateRecord={threadgateRecord}
@@ -175,6 +184,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   item,
   isRoot,
   readerSeam,
+  threadPosition,
   postShadow,
   onPostSuccess,
   threadgateRecord,
@@ -183,6 +193,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   item: ThreadPostItem
   isRoot: boolean
   readerSeam?: ThreadItemAnchorReaderSeam
+  threadPosition?: ThreadPostPosition
   postShadow: Shadow<AppBskyFeedDefs.PostView>
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
@@ -379,8 +390,19 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                         style={[a.flex_1, a.text_lg]}
                         authorHandle={post.author.handle}
                         shouldProxyLinks={true}
+                        trailing={
+                          threadPosition ? (
+                            <ThreadPositionChip
+                              threadPosition={threadPosition}
+                            />
+                          ) : undefined
+                        }
                       />
                     </View>
+                  ) : threadPosition ? (
+                    // Text-less anchors (e.g. image-only) still show their
+                    // position so the numbering reads without gaps.
+                    <ThreadPositionChip threadPosition={threadPosition} />
                   ) : undefined}
                   <TranslatedPost post={post} postTextStyle={[a.text_lg]} />
                   {post.embed && (

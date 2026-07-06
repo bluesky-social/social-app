@@ -19,6 +19,7 @@ import {
   createCacheMutator,
   getThreadPlaceholder,
 } from '#/state/queries/usePostThread/queryCache'
+import {extendSelfThreadChain} from '#/state/queries/usePostThread/selfThreadChain'
 import {
   buildThread,
   sortAndAnnotateThreadItems,
@@ -96,6 +97,32 @@ export function usePostThread({
         sort: sort,
       })
 
+      let threadData = data.thread || []
+
+      /*
+       * An OP self-thread longer than the depth the server serves arrives
+       * truncated. Reader view reads the whole chain and linear view numbers
+       * it with "(x/n)" chips, so extend it with follow-up fetches anchored
+       * progressively deeper.
+       */
+      if (apiView === 'linear') {
+        threadData = await extendSelfThreadChain({
+          thread: threadData,
+          fetchBelow: async anchorUri => {
+            const {data: more} = await agent.app.bsky.unspecced.getPostThreadV2(
+              {
+                anchor: anchorUri,
+                above: false,
+                branchingFactor: LINEAR_VIEW_BF,
+                below,
+                sort: sort,
+              },
+            )
+            return more.thread || []
+          },
+        })
+      }
+
       /*
        * Initialize `ctx.meta` to track if we know we have additional replies
        * we could fetch once we hit the end.
@@ -112,7 +139,7 @@ export function usePostThread({
       }
 
       const result = {
-        thread: data.thread || [],
+        thread: threadData,
         threadgate: data.threadgate,
         hasOtherReplies: !!ctx.meta.hasOtherReplies,
       }

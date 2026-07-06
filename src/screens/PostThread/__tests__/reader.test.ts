@@ -1,6 +1,7 @@
 import {type ThreadItem} from '#/state/queries/usePostThread/types'
 import {
   buildReaderThread,
+  computeSelfThreadPositions,
   type ReaderSegmentItem,
   type ThreadPostItem,
 } from '../reader'
@@ -14,6 +15,8 @@ function post({
   opThread = false,
   moreReplies = 0,
   replyCount = 0,
+  isReply = false,
+  moreParents = false,
 }: {
   rkey: string
   depth: number
@@ -21,6 +24,8 @@ function post({
   opThread?: boolean
   moreReplies?: number
   replyCount?: number
+  isReply?: boolean
+  moreParents?: boolean
 }): ThreadPostItem {
   const uri = `at://${did}/app.bsky.feed.post/${rkey}`
   return {
@@ -32,11 +37,12 @@ function post({
       post: {
         uri,
         author: {did, handle: 'user.test'},
-        record: {},
+        record: isReply ? {reply: {root: {uri: 'at://root'}}} : {},
         replyCount,
       },
       opThread,
       moreReplies,
+      moreParents,
     },
     isBlurred: false,
     moderation: {},
@@ -222,5 +228,171 @@ describe('buildReaderThread', () => {
 
     expect(items[0]).toBe(parent)
     expect(items[1]).toBe(anchor)
+  })
+})
+
+describe('computeSelfThreadPositions', () => {
+  it('numbers the OP chain from the root', () => {
+    const root = post({rkey: 'a', depth: 0})
+    const one = post({rkey: 'b', depth: 1, opThread: true, isReply: true})
+    const two = post({rkey: 'c', depth: 2, opThread: true, isReply: true})
+    const positions = computeSelfThreadPositions([root, composer, one, two])
+
+    expect(positions?.get(root.uri)).toEqual({position: 1, postCount: 3})
+    expect(positions?.get(one.uri)).toEqual({position: 2, postCount: 3})
+    expect(positions?.get(two.uri)).toEqual({position: 3, postCount: 3})
+  })
+
+  it('numbers across parents when anchored mid-chain', () => {
+    const root = post({rkey: 'a', depth: -2})
+    const parent = post({rkey: 'b', depth: -1, opThread: true, isReply: true})
+    const anchor = post({rkey: 'c', depth: 0, opThread: true, isReply: true})
+    const below = post({rkey: 'd', depth: 1, opThread: true, isReply: true})
+    const positions = computeSelfThreadPositions([root, parent, anchor, below])
+
+    expect(positions?.get(root.uri)).toEqual({position: 1, postCount: 4})
+    expect(positions?.get(anchor.uri)).toEqual({position: 3, postCount: 4})
+    expect(positions?.get(below.uri)).toEqual({position: 4, postCount: 4})
+  })
+
+  it('returns undefined when there is no chain', () => {
+    const root = post({rkey: 'a', depth: 0})
+    const reply = post({
+      rkey: 'b',
+      depth: 1,
+      did: 'did:plc:other',
+      isReply: true,
+    })
+
+    expect(computeSelfThreadPositions([root, reply])).toBeUndefined()
+  })
+
+  it('numbers a reply chain by another author', () => {
+    const root = post({rkey: 'a', depth: 0})
+    const replyA = post({
+      rkey: 'b',
+      depth: 1,
+      did: 'did:plc:other',
+      isReply: true,
+    })
+    const replyB = post({
+      rkey: 'c',
+      depth: 2,
+      did: 'did:plc:other',
+      isReply: true,
+    })
+    const positions = computeSelfThreadPositions([root, replyA, replyB])
+
+    expect(positions?.get(root.uri)).toBeUndefined()
+    expect(positions?.get(replyA.uri)).toEqual({position: 1, postCount: 2})
+    expect(positions?.get(replyB.uri)).toEqual({position: 2, postCount: 2})
+  })
+
+  it('finds the continuation among non-adjacent siblings of the anchor', () => {
+    const root = post({rkey: 'a', depth: 0})
+    const other = post({
+      rkey: 'b',
+      depth: 1,
+      did: 'did:plc:other',
+      isReply: true,
+    })
+    const one = post({rkey: 'c', depth: 1, opThread: true, isReply: true})
+    const two = post({rkey: 'd', depth: 2, opThread: true, isReply: true})
+    const positions = computeSelfThreadPositions([root, other, one, two])
+
+    expect(positions?.get(root.uri)).toEqual({position: 1, postCount: 3})
+    expect(positions?.get(one.uri)).toEqual({position: 2, postCount: 3})
+    expect(positions?.get(two.uri)).toEqual({position: 3, postCount: 3})
+    expect(positions?.get(other.uri)).toBeUndefined()
+  })
+
+  it('skips chains whose start has no hydrated parent', () => {
+    const notRoot = post({rkey: 'b', depth: 0, opThread: true, isReply: true})
+    const below = post({rkey: 'c', depth: 1, opThread: true, isReply: true})
+
+    expect(computeSelfThreadPositions([notRoot, below])).toBeUndefined()
+  })
+
+  it('skips chains truncated above, without renumbering their tail', () => {
+    const truncated = post({
+      rkey: 'a',
+      depth: -1,
+      opThread: true,
+      isReply: true,
+      moreParents: true,
+    })
+    const anchor = post({rkey: 'b', depth: 0, opThread: true, isReply: true})
+    const below = post({rkey: 'c', depth: 1, opThread: true, isReply: true})
+
+    expect(
+      computeSelfThreadPositions([truncated, anchor, below]),
+    ).toBeUndefined()
+  })
+
+  it('skips a non-OP chain cut off by the depth cap', () => {
+    const root = post({rkey: 'a', depth: 0})
+    const replyA = post({
+      rkey: 'b',
+      depth: 1,
+      did: 'did:plc:other',
+      isReply: true,
+    })
+    const replyB = post({
+      rkey: 'c',
+      depth: 2,
+      did: 'did:plc:other',
+      isReply: true,
+      moreReplies: 1,
+    })
+    const readMore: ThreadItem = {
+      type: 'readMore',
+      key: `readMore:${replyB.uri}`,
+      depth: 3,
+      href: '/x',
+      moreReplies: 1,
+      skippedIndentIndices: new Set(),
+    }
+    const positions = computeSelfThreadPositions([
+      root,
+      replyA,
+      replyB,
+      readMore,
+    ])
+
+    expect(positions).toBeUndefined()
+  })
+
+  it('numbers the OP chain even with a trailing read more', () => {
+    const root = post({rkey: 'a', depth: 0})
+    const one = post({rkey: 'b', depth: 1, opThread: true, isReply: true})
+    const two = post({rkey: 'c', depth: 2, opThread: true, isReply: true})
+    const readMore: ThreadItem = {
+      type: 'readMore',
+      key: `readMore:${two.uri}`,
+      depth: 3,
+      href: '/x',
+      moreReplies: 2,
+      skippedIndentIndices: new Set(),
+    }
+    const positions = computeSelfThreadPositions([root, one, two, readMore])
+
+    expect(positions?.get(two.uri)).toEqual({position: 3, postCount: 3})
+  })
+
+  it('ends the chain at an interloper and numbers only the prefix', () => {
+    const root = post({rkey: 'a', depth: 0})
+    const one = post({rkey: 'b', depth: 1, opThread: true, isReply: true})
+    const interloper = post({
+      rkey: 'c',
+      depth: 2,
+      did: 'did:plc:other',
+      opThread: true,
+      isReply: true,
+    })
+    const positions = computeSelfThreadPositions([root, one, interloper])
+
+    expect(positions?.get(root.uri)).toEqual({position: 1, postCount: 2})
+    expect(positions?.get(one.uri)).toEqual({position: 2, postCount: 2})
+    expect(positions?.get(interloper.uri)).toBeUndefined()
   })
 })
