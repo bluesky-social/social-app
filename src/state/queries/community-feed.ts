@@ -254,7 +254,21 @@ export function useCommunityFeedSlices(
           isIncompleteThread: slice.isIncompleteThread,
         }
       })
-      .filter(slice => slice.items.length > 0)
+      .filter(slice => {
+        // Nuclear block: drop the whole thread if any author in it is
+        // blocked or blocking the viewer, matching the standard app.
+        const hasBlock = slice.items.some(item => {
+          const v = item.post.author.viewer
+          return !!(v?.blocking || v?.blockedBy)
+        })
+        if (hasBlock) return false
+        // Drop items the moderation engine filters from list contexts
+        // (hidden-for-me posts, muted authors, etc.).
+        slice.items = slice.items.filter(
+          item => !item.moderation.ui('contentList').filter,
+        )
+        return slice.items.length > 0
+      })
   }, [feedItems, moderationOpts])
 }
 
