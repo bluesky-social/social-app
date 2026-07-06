@@ -416,17 +416,19 @@ export const LoginForm = ({
           />
         </TextField.Root>
 
-        <Button
-          label={l`Forgot password?`}
-          accessibilityHint={l`Reset your password by sending a code to your email`}
-          style={[a.mt_md, a.self_start]}
-          hoverStyle={{opacity: 0.5}}
-          hitSlop={HITSLOP_10}
-          onPress={onPressForgotPassword}>
-          <ButtonText style={[t.atoms.text_contrast_medium]}>
-            <Trans>Forgot password?</Trans>
-          </ButtonText>
-        </Button>
+        {!isAuthFactorTokenNeeded && (
+          <Button
+            label={l`Forgot password?`}
+            accessibilityHint={l`Reset your password by sending a code to your email`}
+            style={[a.mt_md, a.self_start]}
+            hoverStyle={{opacity: 0.5}}
+            hitSlop={HITSLOP_10}
+            onPress={onPressForgotPassword}>
+            <ButtonText style={[t.atoms.text_contrast_medium]}>
+              <Trans>Forgot password?</Trans>
+            </ButtonText>
+          </Button>
+        )}
       </View>
       {isAuthFactorTokenNeeded && (
         <View>
