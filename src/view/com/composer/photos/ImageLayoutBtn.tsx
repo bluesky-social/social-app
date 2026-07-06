@@ -3,7 +3,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Carousel_Stroke2_Corner0_Rounded as CarouselIcon} from '#/components/icons/Carousel'
-import {GridSquare2x2_Stroke2_Corner0_Rounded as GridIcon} from '#/components/icons/GridSquare'
+import {LayoutGrid_Stroke2_Corner0_Rounded as GridIcon} from '#/components/icons/LayouGrid'
 import * as Tooltip from '#/components/Tooltip'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -90,10 +90,7 @@ export function ImageLayoutBtn({
       </Tooltip.Target>
       <Tooltip.TextBubble>
         <Text>
-          <Trans>
-            You can now choose to display your images in the new carousel
-            format.
-          </Trans>
+          <Trans>Choose how your images are displayed</Trans>
         </Text>
       </Tooltip.TextBubble>
     </Tooltip.Outer>
