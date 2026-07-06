@@ -77,9 +77,9 @@ function DialogInner({
 
         <Text nativeID="dialog-description" style={[a.text_md, a.leading_snug]}>
           <Trans>
-            Your handle and password will be shared with{' '}
+            Your username and password will be shared with{' '}
             <Text style={[a.text_md, a.leading_snug, a.font_bold]}>{host}</Text>
-            . If you don’t recognize this provider, double-check your handle.
+            . If you don’t recognize this provider, double-check your username.
           </Trans>
         </Text>
 
