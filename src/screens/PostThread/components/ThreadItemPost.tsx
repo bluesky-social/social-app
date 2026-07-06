@@ -1,4 +1,11 @@
-import {memo, type ReactNode, useCallback, useMemo, useState} from 'react'
+import {
+  memo,
+  type ReactNode,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -253,11 +260,13 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   }, [setLimitLines])
 
   const {isActive: live} = useActorStatus(post.author)
+  const postCopyAsImageRef = useRef<View>(null)
 
   return (
     <SubtleHoverWrapper>
       <ThreadItemPostOuterWrapper item={item} overrides={overrides}>
         <PostHider
+          ref={postCopyAsImageRef}
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
           disabled={overrides?.moderation === true}
@@ -360,6 +369,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 onPressReply={onPressReply}
                 logContext="PostThreadItem"
                 threadgateRecord={threadgateRecord}
+                postCopyAsImageRef={postCopyAsImageRef}
               />
               <DebugFieldDisplay subject={post} />
             </View>
