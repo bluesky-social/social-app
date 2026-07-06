@@ -2044,9 +2044,9 @@ function ComposerPills({
 
   return (
     <Animated.View
-      style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
+      style={[a.flex_row, a.py_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
       <ScrollView
-        contentContainerStyle={[a.gap_sm]}
+        contentContainerStyle={[a.gap_sm, a.px_sm]}
         horizontal={true}
         bounces={false}
         keyboardShouldPersistTaps="always"
