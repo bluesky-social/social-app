@@ -4,6 +4,9 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
+import {Key_Stroke2_Corner2_Rounded as KeyIcon} from '#/components/icons/Key'
+import {Person_Stroke2_Corner0_Rounded as PersonIcon} from '#/components/icons/Person'
 import {Text} from '#/components/Typography'
 
 /**
@@ -17,6 +20,7 @@ export function ConfirmHostingProviderDialog({
   control,
   host,
   identifier,
+  passwordLength,
   onConfirm,
 }: {
   control: Dialog.DialogOuterProps['control']
@@ -24,12 +28,22 @@ export function ConfirmHostingProviderDialog({
   host: string
   /** The full handle (or DID) being signed in. */
   identifier: string
+  /**
+   * The length of the typed password, used to render a masked placeholder in
+   * the summary card. The password itself is deliberately never passed in.
+   */
+  passwordLength: number
   onConfirm: () => void
 }) {
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-      <DialogInner host={host} identifier={identifier} onConfirm={onConfirm} />
+      <DialogInner
+        host={host}
+        identifier={identifier}
+        passwordLength={passwordLength}
+        onConfirm={onConfirm}
+      />
     </Dialog.Outer>
   )
 }
@@ -37,25 +51,17 @@ export function ConfirmHostingProviderDialog({
 function DialogInner({
   host,
   identifier,
+  passwordLength,
   onConfirm,
 }: {
   host: string
   identifier: string
+  passwordLength: number
   onConfirm: () => void
 }) {
   const control = Dialog.useDialogContext()
   const {t: l} = useLingui()
   const t = useTheme()
-
-  /*
-   * Handles are displayed with an `@` prefix; DIDs are shown verbatim. Emails
-   * never reach this dialog - they resolve to the default (Bluesky-hosted)
-   * service. Applied to the interpolated value rather than as literal text
-   * inside <Trans> so the prefix wraps together with the handle.
-   */
-  const displayIdentifier = identifier.startsWith('did:')
-    ? identifier
-    : `@${identifier}`
 
   return (
     <Dialog.ScrollableInner
@@ -66,24 +72,44 @@ function DialogInner({
         <Text
           nativeID="dialog-title"
           style={[a.text_2xl, a.font_bold, a.pr_5xl]}>
-          <Trans>Continue with {host}?</Trans>
+          <Trans>Everything look right?</Trans>
         </Text>
 
-        <Text nativeID="dialog-description" style={[a.text_md]}>
+        <Text nativeID="dialog-description" style={[a.text_md, a.leading_snug]}>
           <Trans>
-            <Text emoji style={[a.text_md, a.font_bold]}>
-              {displayIdentifier}
-            </Text>{' '}
-            is hosted by <Text style={[a.text_md, a.font_bold]}>{host}</Text>.
-            Your password will be sent to{' '}
-            <Text style={[a.text_md, a.font_bold]}>{host}</Text> to sign you in.
+            Your handle and password will be shared with{' '}
+            <Text style={[a.text_md, a.leading_snug, a.font_bold]}>{host}</Text>
+            . If you don’t recognize this provider, double-check your handle.
           </Trans>
         </Text>
 
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+        <View style={[a.rounded_md, a.border, t.atoms.border_contrast_high]}>
+          <View style={[a.flex_row, a.align_start, a.gap_md, a.p_md]}>
+            <GlobeIcon size="sm" style={[t.atoms.text_contrast_medium]} />
+            <Text numberOfLines={1} style={[a.flex_1, a.text_md]}>
+              {host}
+            </Text>
+          </View>
+          <View style={[a.border_t, t.atoms.border_contrast_high]} />
+          <View style={[a.flex_row, a.align_start, a.gap_md, a.p_md]}>
+            <PersonIcon size="sm" style={[t.atoms.text_contrast_medium]} />
+            <Text emoji numberOfLines={1} style={[a.flex_1, a.text_md]}>
+              {identifier}
+            </Text>
+          </View>
+          <View style={[a.border_t, t.atoms.border_contrast_high]} />
+          <View style={[a.flex_row, a.align_start, a.gap_md, a.p_md]}>
+            <KeyIcon size="sm" style={[t.atoms.text_contrast_medium]} />
+            <Text numberOfLines={1} style={[a.flex_1, a.text_md]}>
+              {'•'.repeat(passwordLength)}
+            </Text>
+          </View>
+        </View>
+
+        <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
           <Trans>
-            If you don’t recognize this provider, go back and double-check your
-            username.
+            Just a security thing :) You won’t see this next time you sign in
+            with this account.
           </Trans>
         </Text>
 
@@ -92,7 +118,7 @@ function DialogInner({
           size="large"
           onPress={() => control.close(() => onConfirm())}
           label={l`Continue`}
-          accessibilityHint={l`Sends your password to the hosting provider and signs in`}>
+          accessibilityHint={l`Continue signing in`}>
           <ButtonText>
             <Trans>Continue</Trans>
           </ButtonText>

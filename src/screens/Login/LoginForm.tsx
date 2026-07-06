@@ -96,6 +96,7 @@ export const LoginForm = ({
   const [pendingLogin, setPendingLogin] = useState<{
     service: string
     fullIdent: string
+    passwordLength: number
   } | null>(null)
   const hostingProvider = useHostingProvider({
     identifier,
@@ -261,7 +262,7 @@ export const LoginForm = ({
 
     if (needsConfirmation) {
       setIsProcessing(false)
-      setPendingLogin({service, fullIdent})
+      setPendingLogin({service, fullIdent, passwordLength: password.length})
       confirmHostingProviderControl.open()
       return
     }
@@ -292,6 +293,7 @@ export const LoginForm = ({
         control={confirmHostingProviderControl}
         host={toNiceHostingUrl(pendingLogin?.service ?? '')}
         identifier={pendingLogin?.fullIdent ?? ''}
+        passwordLength={pendingLogin?.passwordLength ?? 0}
         onConfirm={() => {
           if (pendingLogin) {
             void attemptLogin(pendingLogin.service, pendingLogin.fullIdent)
