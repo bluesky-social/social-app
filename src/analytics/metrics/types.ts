@@ -1079,6 +1079,7 @@ export type Events = {
     position?: number
   }
   'share:press:copyLink': {}
+  'share:press:copyAsImage': {}
   'share:press:nativeShare': {}
   'share:press:openDmSearch': {}
   'share:press:dmSelected': {}
