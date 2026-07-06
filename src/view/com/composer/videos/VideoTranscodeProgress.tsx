@@ -37,7 +37,7 @@ export function VideoTranscodeProgress({
     <View style={[a.pt_xs]}>
       <ConstrainedImage
         aspectRatio={constrained || 1}
-        minMobileAspectRatio={14 / 9}>
+        minMobileAspectRatio={6 / 5}>
         <View
           style={[
             a.flex_1,

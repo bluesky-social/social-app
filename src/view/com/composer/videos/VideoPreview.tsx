@@ -9,6 +9,7 @@ import {useAutoplayDisabled} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a} from '#/alf'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {VideoTranscodeBackdrop} from './VideoTranscodeBackdrop'
 
@@ -44,7 +45,7 @@ export function VideoPreview({
     <View style={[a.pt_xs]}>
       <ConstrainedImage
         aspectRatio={constrained || 1}
-        minMobileAspectRatio={14 / 9}>
+        minMobileAspectRatio={6 / 5}>
         <View style={[a.flex_1, {backgroundColor: 'black'}]}>
           <View style={[a.absolute, a.inset_0]}>
             <VideoTranscodeBackdrop uri={asset.uri} />
@@ -78,6 +79,7 @@ export function VideoPreview({
               <PlayButtonIcon />
             </View>
           )}
+          <MediaInsetBorder />
         </View>
       </ConstrainedImage>
     </View>

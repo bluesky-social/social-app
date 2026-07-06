@@ -19,8 +19,7 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Dimensions} from '#/lib/media/types'
 import {colors} from '#/lib/styles'
 import {type ComposerImage, cropImage} from '#/state/gallery'
-import {atoms as a, tokens, useTheme} from '#/alf'
-import {Admonition} from '#/components/Admonition'
+import {tokens, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Pencil_Stroke2_Corner0_Rounded as PencilIcon} from '#/components/icons/Pencil'
@@ -33,6 +32,7 @@ import {IS_IOS, IS_NATIVE} from '#/env'
 import {type PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
+import {useGetPreferredImageLayout} from './usePreferredImageLayout'
 
 const IMAGE_GAP = 8
 
@@ -68,6 +68,7 @@ interface GalleryInnerProps extends GalleryProps {
 
 const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
   const {isMobile} = useWebMediaQueries()
+  const getPreferredLayout = useGetPreferredImageLayout()
 
   const {altTextControlStyle, imageControlsStyle, imageStyle} = useMemo(() => {
     // Cap columns at 4 so tiles stay tappable when MAX_GALLERY_IMAGES is high;
@@ -105,35 +106,29 @@ const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
   }, [images.length, containerInfo, isMobile])
 
   return images.length !== 0 ? (
-    <>
-      <View testID="selectedPhotosView" style={styles.gallery}>
-        {images.map(image => {
-          return (
-            <GalleryItem
-              key={image.source.id}
-              image={image}
-              altTextControlStyle={altTextControlStyle}
-              imageControlsStyle={imageControlsStyle}
-              imageStyle={imageStyle}
-              onChange={next => {
-                dispatch({type: 'embed_update_image', image: next})
-              }}
-              onRemove={() => {
-                dispatch({type: 'embed_remove_image', image})
-              }}
-            />
-          )
-        })}
-      </View>
-      {images.some(image => !image.alt) && (
-        <Admonition type="info" style={[a.mt_sm]}>
-          <Trans>
-            Alt text describes images for blind and low-vision users, and helps
-            give context to everyone.
-          </Trans>
-        </Admonition>
-      )}
-    </>
+    <View testID="selectedPhotosView" style={styles.gallery}>
+      {images.map(image => {
+        return (
+          <GalleryItem
+            key={image.source.id}
+            image={image}
+            altTextControlStyle={altTextControlStyle}
+            imageControlsStyle={imageControlsStyle}
+            imageStyle={imageStyle}
+            onChange={next => {
+              dispatch({type: 'embed_update_image', image: next})
+            }}
+            onRemove={() => {
+              dispatch({
+                type: 'embed_remove_image',
+                image,
+                preferredLayout: getPreferredLayout(),
+              })
+            }}
+          />
+        )
+      })}
+    </View>
   ) : null
 }
 

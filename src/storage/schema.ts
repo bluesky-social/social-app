@@ -92,4 +92,14 @@ export type Account = {
    * Recently selected GIFs in the GIF picker. Most recent first, capped at 20.
    */
   recentGifs?: Gif[]
+
+  /**
+   * Preferred layout for how 2 to 4 images are displayed in a new post:
+   * `grid` publishes the legacy `app.bsky.embed.images` embed, `carousel`
+   * publishes the newer `app.bsky.embed.gallery` embed. Defaults to
+   * `carousel` when unset, and is only consulted while the composer image
+   * layout toggle experiment is enabled. Typed as an inline union rather than
+   * importing `ImageLayout` from composer state to avoid a circular import.
+   */
+  composerImageLayout?: 'grid' | 'carousel'
 }

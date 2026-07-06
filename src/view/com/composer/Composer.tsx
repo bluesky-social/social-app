@@ -75,6 +75,7 @@ import {
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {mimeToExt} from '#/lib/media/video/util'
+import {type SelfLabel} from '#/lib/moderation'
 import {useCallOnce} from '#/lib/once'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
@@ -114,6 +115,7 @@ import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {ImageLayoutBtn} from '#/view/com/composer/photos/ImageLayoutBtn'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
+import {useGetPreferredImageLayout} from '#/view/com/composer/photos/usePreferredImageLayout'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
@@ -145,6 +147,7 @@ import {
   IS_WEB_SAFARI,
 } from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
+import {setComposerImageLayout} from '#/storage/hooks/composer-image-layout'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   draftToComposerPosts,
@@ -215,6 +218,7 @@ function useAddImagesWithCap(
   dispatchPostAction: (action: PostAction) => void,
 ) {
   const {t: l} = useLingui()
+  const getPreferredLayout = useGetPreferredImageLayout()
   return useCallback(
     (next: ComposerImage[]) => {
       const result = applyGalleryCap(currentCount, next)
@@ -244,9 +248,10 @@ function useAddImagesWithCap(
       dispatchPostAction({
         type: 'embed_add_images',
         images: result.accepted,
+        preferredLayout: getPreferredLayout(),
       })
     },
-    [currentCount, dispatchPostAction, l],
+    [currentCount, dispatchPostAction, l, getPreferredLayout],
   )
 }
 
@@ -352,10 +357,12 @@ export const ComposePost = ({
     setLanguageNudgeAt(prev => (now - prev > 10_000 ? now : prev))
   }
 
+  const getPreferredImageLayout = useGetPreferredImageLayout()
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
     {
       initImageUris,
+      initImageLayout: getPreferredImageLayout(),
       initQuoteUri: initQuote?.uri,
       initText,
       initMention,
@@ -1361,7 +1368,6 @@ export const ComposePost = ({
       />
       <ComposerPills
         isReply={!!replyTo}
-        post={activePost}
         thread={composerState.thread}
         dispatch={composerDispatch}
         bottomBarAnimatedStyle={bottomBarAnimatedStyle}
@@ -1746,6 +1752,7 @@ let ComposerPost = memo(function ComposerPost({
       <ComposerEmbeds
         canRemoveQuote={canRemoveQuote}
         embed={post.embed}
+        labels={post.labels}
         dispatch={dispatchPost}
         clearVideo={() => onClearVideo(post.id)}
         isActivePost={isActive}
@@ -1902,14 +1909,98 @@ function AltTextReminder({error}: {error: string}) {
   )
 }
 
+/**
+ * Row of media-related buttons (video alt text/captions, content warnings,
+ * image layout) shown directly beneath the media preview. Lives per-post so
+ * each threaded post's buttons target its own media via the post-scoped
+ * `dispatch`.
+ */
+function ComposerEmbedButtons({
+  embed,
+  labels,
+  dispatch,
+}: {
+  embed: EmbedDraft
+  labels: SelfLabel[]
+  dispatch: (action: PostAction) => void
+}) {
+  const ax = useAnalytics()
+  const {currentAccount} = useSession()
+  const media = embed.media
+  const hasMedia =
+    media?.type === 'images' ||
+    media?.type === 'gallery' ||
+    media?.type === 'gif' ||
+    media?.type === 'video'
+  const hasLink = !!embed.link
+  const canToggleLayout =
+    canToggleImageLayout(media) &&
+    ax.features.enabled(ax.features.ComposerImageLayoutToggleEnable)
+
+  if (!hasMedia && !hasLink) {
+    return null
+  }
+
+  return (
+    <View style={[a.flex_row, a.flex_wrap, a.gap_sm, a.mt_sm]}>
+      {media?.type === 'video' ? (
+        <SubtitleDialogBtn
+          defaultAltText={media.video.altText}
+          saveAltText={altText =>
+            dispatch({
+              type: 'embed_update_video',
+              videoAction: {
+                type: 'update_alt_text',
+                altText,
+                signal: media.video.abortController.signal,
+              },
+            })
+          }
+          captions={media.video.captions}
+          setCaptions={updater => {
+            dispatch({
+              type: 'embed_update_video',
+              videoAction: {
+                type: 'update_captions',
+                updater,
+                signal: media.video.abortController.signal,
+              },
+            })
+          }}
+        />
+      ) : null}
+      {/* Content warnings apply to any media or link embed. */}
+      <LabelsBtn
+        labels={labels}
+        onChange={nextLabels => {
+          dispatch({type: 'update_labels', labels: nextLabels})
+        }}
+      />
+      {canToggleLayout ? (
+        <ImageLayoutBtn
+          layout={media.type === 'gallery' ? 'carousel' : 'grid'}
+          imageCount={media.images.length}
+          onChange={nextLayout => {
+            // Persist as the account-level default for future posts.
+            setComposerImageLayout(currentAccount?.did, nextLayout)
+            dispatch({type: 'embed_set_image_layout', layout: nextLayout})
+          }}
+        />
+      ) : null}
+    </View>
+  )
+}
+
 function ComposerEmbeds({
   embed,
+  labels,
   dispatch,
   clearVideo,
   canRemoveQuote,
   isActivePost,
 }: {
   embed: EmbedDraft
+  labels: SelfLabel[]
   dispatch: (action: PostAction) => void
   clearVideo: () => void
   canRemoveQuote: boolean
@@ -1969,33 +2060,10 @@ function ComposerEmbeds({
                   clear={clearVideo}
                 />
               ) : null)}
-            <SubtitleDialogBtn
-              defaultAltText={video.altText}
-              saveAltText={altText =>
-                dispatch({
-                  type: 'embed_update_video',
-                  videoAction: {
-                    type: 'update_alt_text',
-                    altText,
-                    signal: video.abortController.signal,
-                  },
-                })
-              }
-              captions={video.captions}
-              setCaptions={updater => {
-                dispatch({
-                  type: 'embed_update_video',
-                  videoAction: {
-                    type: 'update_captions',
-                    updater,
-                    signal: video.abortController.signal,
-                  },
-                })
-              }}
-            />
           </Animated.View>
         )}
       </LayoutAnimationConfig>
+      <ComposerEmbedButtons embed={embed} labels={labels} dispatch={dispatch} />
       {embed.quote?.uri ? (
         <View
           style={[a.pb_sm, video ? [a.pt_md] : [a.pt_xl], IS_WEB && [a.pb_md]]}>
@@ -2017,28 +2085,20 @@ function ComposerEmbeds({
 function ComposerPills({
   isReply,
   thread,
-  post,
   dispatch,
   bottomBarAnimatedStyle,
 }: {
   isReply: boolean
   thread: ThreadDraft
-  post: PostDraft
   dispatch: (action: ComposerAction) => void
   bottomBarAnimatedStyle: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
-  const ax = useAnalytics()
-  const media = post.embed.media
-  const hasMedia =
-    media?.type === 'images' ||
-    media?.type === 'gallery' ||
-    media?.type === 'gif' ||
-    media?.type === 'video'
-  const hasLink = !!post.embed.link
+  const {gtMobile} = useBreakpoints()
 
-  // Don't render anything if no pills are going to be displayed
-  if (isReply && !hasMedia && !hasLink) {
+  // Replies can't set a threadgate, and the labels/layout buttons now live
+  // beneath each post's media, so there are no pills to show for a reply.
+  if (isReply) {
     return null
   }
 
@@ -2046,59 +2106,25 @@ function ComposerPills({
     <Animated.View
       style={[a.flex_row, a.py_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
       <ScrollView
-        contentContainerStyle={[a.gap_sm, a.px_sm]}
+        contentContainerStyle={[a.gap_sm, gtMobile ? a.px_lg : a.px_sm]}
         horizontal={true}
         bounces={false}
         keyboardShouldPersistTaps="always"
         showsHorizontalScrollIndicator={false}>
-        {isReply ? null : (
-          <ThreadgateBtn
-            postgate={thread.postgate}
-            onChangePostgate={nextPostgate => {
-              dispatch({type: 'update_postgate', postgate: nextPostgate})
-            }}
-            threadgateAllowUISettings={thread.threadgate}
-            onChangeThreadgateAllowUISettings={nextThreadgate => {
-              dispatch({
-                type: 'update_threadgate',
-                threadgate: nextThreadgate,
-              })
-            }}
-            style={bottomBarAnimatedStyle}
-          />
-        )}
-        {hasMedia || hasLink ? (
-          <LabelsBtn
-            labels={post.labels}
-            onChange={nextLabels => {
-              dispatch({
-                type: 'update_post',
-                postId: post.id,
-                postAction: {
-                  type: 'update_labels',
-                  labels: nextLabels,
-                },
-              })
-            }}
-          />
-        ) : null}
-        {canToggleImageLayout(media) &&
-        ax.features.enabled(ax.features.ComposerImageLayoutToggleEnable) ? (
-          <ImageLayoutBtn
-            layout={media.type === 'gallery' ? 'carousel' : 'grid'}
-            imageCount={media.images.length}
-            onChange={nextLayout => {
-              dispatch({
-                type: 'update_post',
-                postId: post.id,
-                postAction: {
-                  type: 'embed_set_image_layout',
-                  layout: nextLayout,
-                },
-              })
-            }}
-          />
-        ) : null}
+        <ThreadgateBtn
+          postgate={thread.postgate}
+          onChangePostgate={nextPostgate => {
+            dispatch({type: 'update_postgate', postgate: nextPostgate})
+          }}
+          threadgateAllowUISettings={thread.threadgate}
+          onChangeThreadgateAllowUISettings={nextThreadgate => {
+            dispatch({
+              type: 'update_threadgate',
+              threadgate: nextThreadgate,
+            })
+          }}
+          style={bottomBarAnimatedStyle}
+        />
       </ScrollView>
     </Animated.View>
   )
