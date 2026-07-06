@@ -117,7 +117,7 @@ function InnerApp() {
           await features.init
         }
       } catch (e) {
-        logger.error('session: resumeSession failed', {message: e})
+        logger.warn('session: resumeSession failed', {message: e})
       } finally {
         setIsReady(true)
       }

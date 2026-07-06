@@ -10,49 +10,14 @@
       "count": 2
     }
   },
-  "modules/bottom-sheet/src/BottomSheetPortal.tsx": {
-    "no-restricted-imports": {
-      "count": 1
-    }
-  },
-  "modules/bottom-sheet/src/lib/Portal.tsx": {
-    "no-restricted-imports": {
-      "count": 1
-    }
-  },
   "modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider.tsx": {
     "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
-    "no-restricted-imports": {
       "count": 1
     }
   },
   "modules/expo-background-notification-handler/src/ExpoBackgroundNotificationHandlerModule.web.ts": {
     "@typescript-eslint/require-await": {
       "count": 4
-    }
-  },
-  "modules/expo-bluesky-gif-view/src/GifView.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
-    },
-    "no-restricted-imports": {
-      "count": 1
-    }
-  },
-  "modules/expo-bluesky-gif-view/src/GifView.web.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
-    "@typescript-eslint/require-await": {
-      "count": 2
     }
   },
   "modules/expo-bluesky-swiss-army/src/PlatformInfo/index.native.ts": {
@@ -88,23 +53,10 @@
     },
     "@typescript-eslint/no-unsafe-member-access": {
       "count": 1
-    },
-    "no-restricted-imports": {
-      "count": 1
     }
   },
   "modules/expo-bluesky-swiss-army/src/VisibilityView/index.tsx": {
     "@typescript-eslint/require-await": {
-      "count": 1
-    }
-  },
-  "modules/expo-bluesky-swiss-army/src/VisibilityView/types.ts": {
-    "no-restricted-imports": {
-      "count": 1
-    }
-  },
-  "modules/expo-emoji-picker/src/EmojiPickerView.tsx": {
-    "no-restricted-imports": {
       "count": 1
     }
   },
@@ -207,11 +159,6 @@
   },
   "src/components/AppLanguageDropdown.tsx": {
     "@typescript-eslint/no-unsafe-enum-comparison": {
-      "count": 1
-    }
-  },
-  "src/components/Autocomplete/Autocomplete.tsx": {
-    "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
   },
@@ -946,14 +893,6 @@
       "count": 1
     }
   },
-  "src/lib/hooks/useNotificationHandler.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 16
-    },
-    "@typescript-eslint/require-await": {
-      "count": 1
-    }
-  },
   "src/lib/hooks/useOTAUpdates.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -985,11 +924,6 @@
   },
   "src/lib/hooks/useTLDs.ts": {
     "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/lib/hooks/useTabFocusEffect.ts": {
-    "react-hooks/set-state-in-effect": {
       "count": 1
     }
   },
@@ -1124,25 +1058,9 @@
       "count": 1
     }
   },
-  "src/logger/transports/sentry.ts": {
-    "@typescript-eslint/no-unsafe-enum-comparison": {
-      "count": 3
-    }
-  },
   "src/logger/types.ts": {
     "@typescript-eslint/no-redundant-type-constituents": {
       "count": 1
-    }
-  },
-  "src/screens/Bookmarks/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
     }
   },
   "src/screens/Deactivated.tsx": {
@@ -1908,14 +1826,6 @@
       "count": 2
     }
   },
-  "src/state/queries/search-posts.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
-    }
-  },
   "src/state/queries/starter-packs.ts": {
     "@typescript-eslint/require-await": {
       "count": 1
@@ -2006,18 +1916,6 @@
     }
   },
   "src/view/com/composer/Composer.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    },
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
-    },
     "react-hooks/immutability": {
       "count": 2
     },
@@ -2104,11 +2002,6 @@
       "count": 2
     },
     "react-hooks/set-state-in-effect": {
-      "count": 1
-    }
-  },
-  "src/view/com/composer/videos/pickVideo.web.ts": {
-    "@typescript-eslint/no-misused-promises": {
       "count": 1
     }
   },
@@ -2349,14 +2242,6 @@
       "count": 3
     }
   },
-  "src/view/com/util/ViewSelector.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 6
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
   "src/view/com/util/Views.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -2370,14 +2255,6 @@
   "src/view/com/util/forms/Button.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
-    }
-  },
-  "src/view/screens/Debug.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
     }
   },
   "src/view/screens/Feeds.tsx": {

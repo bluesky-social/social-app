@@ -1,13 +1,11 @@
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
+import {UNREAD_REQUEST_CAP} from '#/state/queries/messages/get-unread-counts'
 import {atoms as a} from '#/alf'
 import {ButtonIcon, ButtonText} from '#/components/Button'
 import {Inbox_Stroke2_Corner2_Rounded as InboxIcon} from '#/components/icons/Inbox'
 import {Link} from '#/components/Link'
-
-// The server caps unreadRequestConvos at 11, where 11 means "any more than 10".
-const REQUEST_COUNT_CAP = 11
 
 export function InboxRequests({
   count,
@@ -21,7 +19,7 @@ export function InboxRequests({
   const {t: l} = useLingui()
 
   const unread = count > 0
-  const overflow = count >= REQUEST_COUNT_CAP
+  const overflow = count >= UNREAD_REQUEST_CAP
 
   const label = !unread
     ? l({
@@ -30,8 +28,8 @@ export function InboxRequests({
       })
     : overflow
       ? l({
-          message: `10+ requests`,
-          comment: 'Displayed when the number of requests is greater than 10',
+          message: `${UNREAD_REQUEST_CAP - 1}+ requests`,
+          comment: 'Displayed when the number of requests exceeds the cap',
         })
       : plural(count, {
           one: '# request',
@@ -55,9 +53,9 @@ export function InboxRequests({
             <ButtonText style={[a.text_md, a.font_bold]}>
               {overflow
                 ? l({
-                    message: `10+`,
+                    message: `${UNREAD_REQUEST_CAP - 1}+`,
                     comment:
-                      'Displayed when the number of requests is greater than 10',
+                      'Displayed when the number of requests exceeds the cap – for example, 99+ requests',
                   })
                 : count}
             </ButtonText>

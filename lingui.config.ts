@@ -7,6 +7,7 @@ export default defineConfig({
     'an',
     'ast',
     'ca',
+    'cs',
     'cy',
     'da',
     'de',

@@ -132,7 +132,7 @@ export function Root({children}: {children: React.ReactNode}) {
   const onHoverableTouchUp = useCallback((id: string) => {
     const hoverable = hoverables.current.get(id)
     if (!hoverable) {
-      logger.warn(`No such hoverable with id ${id}`)
+      logger.warn(`No such hoverable`, {id})
       return
     }
     hoverable.onTouchUp()
@@ -615,6 +615,8 @@ export function Outer({
   label?: string
   style?: StyleProp<ViewStyle>
   align?: 'left' | 'right'
+  /** Web only. Native restores focus differently. */
+  onCloseAutoFocus?: (event: Event) => void
 }) {
   const t = useTheme()
   const context = useContextMenuContext()

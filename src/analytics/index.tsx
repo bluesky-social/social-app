@@ -1,5 +1,6 @@
 import {createContext, useContext, useMemo} from 'react'
 import {Platform} from 'react-native'
+import {type Result} from '@growthbook/growthbook-react'
 
 import {Logger} from '#/logger'
 import {
@@ -195,6 +196,39 @@ export function AnalyticsContext({
 }
 
 /**
+ * GrowthBook attribute name for the did. Must match the key used in
+ * `setAttributes` (`#/analytics/features`) and the assignment unit configured
+ * in the GrowthBook dashboard.
+ */
+const DID_HASH_ATTRIBUTE = 'did'
+
+/**
+ * Builds the session metadata override for an exposure event so the event's
+ * `did` is sourced from the unit GrowthBook actually bucketed on
+ * (`result.hashValue`) rather than from ambient React session metadata. This
+ * keeps the `did` and the variation in sync, since both then come from the
+ * same evaluation. See APP-2461.
+ *
+ * Only did-bucketed experiments are overridden. Experiments bucketed on
+ * another attribute (e.g. `deviceId`) have a `hashValue` that is not a did, so
+ * we leave their session metadata untouched and let the ambient did stand.
+ */
+function sessionMetadataForResult(
+  parentContext: AnalyticsBaseContextType,
+  result: Result<unknown>,
+): MergeableMetadata | undefined {
+  if (result.hashAttribute !== DID_HASH_ATTRIBUTE) return undefined
+  const {session} = parentContext.metadata
+  if (!session) return undefined
+  return {
+    session: {
+      ...session,
+      did: result.hashValue,
+    },
+  }
+}
+
+/**
  * Feature gates provider. Decorates the parent analytics context with
  * feature gate capabilities. Should be mounted within `AnalyticsContext`,
  * and below the `<Fragment key={did} />` breaker in `App.<platform>.tsx`.
@@ -210,22 +244,46 @@ export function AnalyticsFeaturesContext({
    * Side-effects: we need to synchronously set these during the same render
    * cycle. These calls do not trigger re-renders, they just set properties on
    * the singleton GrowthBook instance.
+   *
+   * Order matters here. We register the tracking callbacks _before_ calling
+   * `setAttributes`, because `setAttributes` triggers a synchronous
+   * re-evaluation that can fire exposure events. Registering first guarantees
+   * those events run through this render's callback (with this render's
+   * metadata) rather than a stale callback left over from a previous render,
+   * e.g. after an account switch remounts this provider via the
+   * `<Fragment key={did} />` breaker in `App.<platform>.tsx`. See APP-2461.
+   *
+   * We deliberately keep these synchronous rather than moving them into a
+   * `useEffect`: `setAttributes` must run before children evaluate gates (or
+   * they bucket on the previous account's attributes), and the feature usage
+   * callback has no deferred-replay, so a feature evaluated before it is
+   * registered would lose its `feature:viewed` event entirely.
    */
-  setAttributes(parentContext.metadata)
   feats.setTrackingCallback((experiment, result) => {
-    parentContext.metric('experiment:viewed', {
-      experimentId: experiment.key,
-      variationId: result.key,
-    })
+    parentContext.metric(
+      'experiment:viewed',
+      {
+        experimentId: experiment.key,
+        variationId: result.key,
+      },
+      sessionMetadataForResult(parentContext, result),
+    )
   })
   feats.setFeatureUsageCallback((feature, result) => {
-    parentContext.metric('feature:viewed', {
-      featureId: feature,
-      featureResultValue: result.value,
-      experimentId: result.experiment?.key,
-      variationId: result.experimentResult?.key,
-    })
+    parentContext.metric(
+      'feature:viewed',
+      {
+        featureId: feature,
+        featureResultValue: result.value,
+        experimentId: result.experiment?.key,
+        variationId: result.experimentResult?.key,
+      },
+      result.experimentResult
+        ? sessionMetadataForResult(parentContext, result.experimentResult)
+        : undefined,
+    )
   })
+  setAttributes(parentContext.metadata)
 
   const childContext = useMemo<AnalyticsContextType>(() => {
     return {

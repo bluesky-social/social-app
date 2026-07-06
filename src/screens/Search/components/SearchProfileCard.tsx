@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -10,13 +10,14 @@ import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {atoms as a, useTheme} from '#/alf'
 import {Link} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
+import type * as bsky from '#/types/bsky'
 
 export function SearchProfileCard({
   profile,
   moderationOpts,
   onPress: onPressInner,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onPress?: () => void
 }) {

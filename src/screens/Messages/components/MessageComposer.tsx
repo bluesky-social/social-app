@@ -77,6 +77,15 @@ export function MessageComposer({
     composerInternalApiRef.current?.input?.focus()
   }, [replyTo, composerInternalApiRef])
 
+  // On web, focus the input once the conversation is ready. The composer also
+  // mounts during the loading state (when it isn't editable), so a mount-time
+  // autoFocus would fire too early to land focus.
+  useEffect(() => {
+    if (IS_WEB && editable) {
+      composerInternalApiRef.current?.input?.focus()
+    }
+  }, [editable, composerInternalApiRef])
+
   // Android interactive dismiss sometimes doesn't blur the input
   const blur = useNonReactiveCallback(() => {
     composerInternalApiRef.current?.input?.blur()
@@ -243,16 +252,15 @@ export function MessageComposer({
                 placeholder={
                   loading
                     ? l({message: 'Loading chat…', context: 'placeholder'})
-                    : l({message: 'Message', context: 'action'})
+                    : l({message: 'Message', context: 'description'})
                 }
                 autocompletePlacement="top-start"
                 internalApiRef={composerInternalApiRef}
                 defaultValue={text}
                 editable={editable}
-                autoFocus={IS_WEB}
                 maxRows={12}
                 outerStyle={[a.flex_1]}
-                contentTextStyle={[a.text_md, a.leading_snug]}
+                contentTextStyle={[a.text_input, a.leading_snug]}
                 contentPaddingStyle={{
                   paddingLeft: 16,
                   paddingTop: 10,
@@ -334,8 +342,7 @@ function SubmitButton({
   )
 }
 
-// TODO: remove export when MessageInput is deleted
-export function ComposerContainer({children}: {children: React.ReactNode}) {
+function ComposerContainer({children}: {children: React.ReactNode}) {
   const {bottom: bottomInset} = useSafeAreaInsets()
   const {progress} = useReanimatedKeyboardAnimation()
   const t = useTheme()
@@ -369,7 +376,7 @@ export function ComposerContainer({children}: {children: React.ReactNode}) {
             web: [
               a.pt_xs,
               a.pl_lg,
-              a.pb_lg,
+              {paddingBottom: tokens.space.lg + bottomInset},
               // prevent overlap with the scrollbar, which looks ugly
               a.pr_sm, // sm + sm = lg
               {width: `calc(100% - ${tokens.space.sm}px)` as '100%'},

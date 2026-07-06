@@ -41,11 +41,7 @@ import {ModeratedFeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
 import {ModeratedListEmbed} from './ListEmbed'
 import {PostPlaceholder as PostPlaceholderText} from './PostPlaceholder'
-import {
-  type CommonProps,
-  type EmbedProps,
-  type PostEmbedViewContext,
-} from './types'
+import {type CommonProps, type EmbedProps, PostEmbedViewContext} from './types'
 import {VideoEmbed} from './VideoEmbed'
 
 export {PostEmbedViewContext} from './types'
@@ -373,7 +369,7 @@ export function QuoteEmbed({
   return (
     <GalleryBleed>
       <View
-        style={[a.mt_sm]}
+        style={[viewContext !== PostEmbedViewContext.ChatMessage && a.mt_sm]}
         onPointerEnter={linkDisabled ? undefined : onPointerEnter}
         onPointerLeave={linkDisabled ? undefined : onPointerLeave}>
         <ContentHider

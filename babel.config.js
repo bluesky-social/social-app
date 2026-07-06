@@ -1,3 +1,4 @@
+/** @param {import('@babel/core').ConfigAPI} api */
 module.exports = function (api) {
   api.cache(true)
   const isTestEnv = process.env.NODE_ENV === 'test'
@@ -18,19 +19,6 @@ module.exports = function (api) {
     plugins: [
       '@lingui/babel-plugin-lingui-macro',
       ['babel-plugin-react-compiler', {target: '19'}],
-      [
-        'module:react-native-dotenv',
-        {
-          envName: 'APP_ENV',
-          moduleName: '@env',
-          path: '.env',
-          blocklist: null,
-          allowlist: null,
-          safe: false,
-          allowUndefined: true,
-          verbose: false,
-        },
-      ],
       [
         'module-resolver',
         {

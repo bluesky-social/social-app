@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.126.0",
+  "version": "1.127.0",
   "private": true,
   "engines": {
     "node": ">=24.15.0"
@@ -8,7 +8,7 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.7.0",
+      "version": "11.9.0",
       "onFail": "warn"
     },
     "runtime": {
@@ -100,17 +100,16 @@
     "generate-webpack-stats-file": "EXPO_PUBLIC_GENERATE_STATS=1 pnpm build-web",
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 pnpm build-web",
     "icons:optimize": "svgo -f ./assets/icons",
-    "prettier": "prettier --check .",
-    "update-actions": "pnpm dlx actions-up --min-age 7"
+    "prettier": "prettier --check ."
   },
   "dependencies": {
-    "@atproto/api": "0.20.15",
+    "@atproto/api": "0.20.25",
     "@atproto/jwk": "0.6.0",
     "@atproto/jwk-jose": "0.1.11",
     "@atproto/jwk-webcrypto": "0.2.0",
     "@atproto/oauth-client": "0.5.14",
     "@atproto/oauth-client-browser": "0.3.40",
-    "@atproto/syntax": "0.6.1",
+    "@atproto/syntax": "0.6.4",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.14",
@@ -173,6 +172,7 @@
     "emoji-regex": "^10.4.0",
     "eventemitter3": "^5.0.1",
     "expo": "54.0.34",
+    "expo-age-range": "0.2.18",
     "expo-application": "~7.0.8",
     "expo-blur": "~15.0.8",
     "expo-build-properties": "~1.0.10",
@@ -221,6 +221,7 @@
     "lodash.shuffle": "^4.2.0",
     "lodash.throttle": "^4.1.1",
     "lowlight": "^3.3.0",
+    "mediabunny": "^1.25.3",
     "multiformats": "^13.4.2",
     "nanoid": "^5.0.5",
     "normalize-url": "^8.0.0",
@@ -312,7 +313,6 @@
     "jest-junit": "^16.0.0",
     "lint-staged": "^13.2.3",
     "prettier": "^3.8.3",
-    "react-native-dotenv": "^3.4.11",
     "react-refresh": "^0.14.0",
     "svgo": "^3.3.2",
     "ts-plugin-sort-import-suggestions": "^1.0.4",
