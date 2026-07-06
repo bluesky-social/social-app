@@ -1,4 +1,4 @@
-FROM node:24.15.0-alpine3.22 AS build
+FROM node:24.18.0-alpine3.23 AS build
 
 # Tells pnpm to run non-interactively (needed for install/script steps)
 ENV CI=true
@@ -19,7 +19,7 @@ RUN pnpm install-fonts && pnpm build
 RUN pnpm install --prod --ignore-scripts --prefer-offline
 
 # Uses assets from build stage to reduce build size
-FROM node:24.15.0-alpine3.22
+FROM node:24.18.0-alpine3.23
 
 RUN apk add --update dumb-init
 
