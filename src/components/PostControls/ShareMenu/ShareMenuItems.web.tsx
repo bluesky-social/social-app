@@ -1,10 +1,15 @@
 import {memo, useMemo} from 'react'
-import {AtUri} from '@atproto/api'
+import {
+  AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedVideo,
+  AtUri,
+} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {copyPostAsImage} from '#/lib/media/copy-post-as-image'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
@@ -18,6 +23,7 @@ import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
+import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
 import {useAgeAssurance} from '#/ageAssurance'
@@ -31,6 +37,7 @@ let ShareMenuItems = ({
   record,
   timestamp,
   onShare: onShareProp,
+  postCopyAsImageRef,
 }: ShareMenuItemsProps): React.ReactNode => {
   const ax = useAnalytics()
   const {hasSession} = useSession()
@@ -57,11 +64,28 @@ let ShareMenuItems = ({
     )
   }, [postAuthor])
 
+  const hasVideoEmbed = useMemo(() => {
+    const embed = post.embed
+    if (!embed) return false
+    if (AppBskyEmbedVideo.isView(embed)) return true
+    if (AppBskyEmbedRecordWithMedia.isView(embed)) {
+      return AppBskyEmbedVideo.isView(embed.media)
+    }
+    return false
+  }, [post.embed])
+
   const onCopyLink = () => {
     ax.metric('share:press:copyLink', {})
     const url = toShareUrl(href)
     shareUrl(url)
     onShareProp()
+  }
+
+  const onCopyAsImage = async () => {
+    ax.metric('share:press:copyAsImage', {})
+    onShareProp()
+
+    await copyPostAsImage(postCopyAsImageRef)
   }
 
   const onSelectChatToShareTo = (conversation: string) => {
@@ -111,6 +135,18 @@ let ShareMenuItems = ({
               <Trans>Send via direct message</Trans>
             </Menu.ItemText>
             <Menu.ItemIcon icon={Send} position="right" />
+          </Menu.Item>
+        )}
+
+        {!hideInPWI && !hasVideoEmbed && (
+          <Menu.Item
+            testID="postDropdownCopyAsImageBtn"
+            label={_(msg`Copy as image`)}
+            onPress={() => void onCopyAsImage()}>
+            <Menu.ItemText>
+              <Trans>Copy as image</Trans>
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={ImageIcon} position="right" />
           </Menu.Item>
         )}
 
