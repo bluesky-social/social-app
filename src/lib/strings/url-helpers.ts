@@ -104,6 +104,23 @@ export function toNiceHostingUrl(url: string): string {
   }
 }
 
+/**
+ * Whether the given service URL points at a Bluesky-operated PDS. True when the
+ * host is `bsky.social` (the {@link BSKY_SERVICE} host) or ends with
+ * `.host.bsky.network`. Returns false if the URL can't be parsed.
+ */
+export function isBlueskyHostedUrl(url: string): boolean {
+  try {
+    const {host} = new URL(url)
+    return (
+      host === new URL(BSKY_SERVICE).host ||
+      host.endsWith(BSKY_HOSTING_ENDSWITH)
+    )
+  } catch {
+    return false
+  }
+}
+
 export function isBskyAppUrl(url: string): boolean {
   return url.startsWith('https://bsky.app/')
 }

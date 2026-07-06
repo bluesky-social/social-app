@@ -132,18 +132,20 @@ async function resolveDidDoc(
 }
 
 /**
- * Resolve the PDS that hosts a given identifier (handle or DID).
+ * Resolve the identity behind a given identifier (handle or DID).
  *
- * Returns the PDS URL declared by the identifier's DID document, verbatim, or
- * `null` when the identifier cannot be resolved to a PDS at all (unknown
- * handle, broken identity, unsupported DID method).
+ * Returns the resolved DID together with the PDS URL declared by its DID
+ * document (verbatim). `pdsUrl` is `null` when the DID resolved but its
+ * document declares no PDS endpoint. Returns `null` altogether when the
+ * identifier itself cannot be resolved (unknown handle, broken identity,
+ * unsupported DID method).
  *
  * Rethrows only on genuine network errors, so a "not found" during typing
  * stays quiet.
  */
 export async function resolvePdsForIdentifier(
   identifier: string,
-): Promise<string | null> {
+): Promise<{did: string; pdsUrl: string | null} | null> {
   const norm = normalizeIdentifier(identifier)
   const agent = new Agent(null, {service: PUBLIC_BSKY_SERVICE})
   try {
@@ -171,7 +173,7 @@ export async function resolvePdsForIdentifier(
       did,
       pds: pds ?? null,
     })
-    return pds ?? null
+    return {did, pdsUrl: pds ?? null}
   } catch (err) {
     logger.debug('pds-detection: resolution failed', {
       identifier: norm,
@@ -218,10 +220,13 @@ export type HostingProviderState =
  * The effective `service` is `override ?? detected ?? defaultService`.
  * `resolveService` awaits any in-flight detection against the current
  * (non-debounced) identifier so that pressing "Sign in" mid-detection waits
- * for resolution and then continues. It falls back to `defaultService` for
- * anything that legitimately can't resolve a PDS (emails, bare usernames,
- * unknown handles) but rethrows genuine network errors, so a flaky connection
- * fails the login instead of silently submitting to the default server.
+ * for resolution and then continues. It resolves to `{service, did}`: the
+ * service to log in against, plus the identifier's resolved DID (`null` when
+ * no DID was resolved - manual override, email, or bare username). It falls
+ * back to `defaultService` for anything that legitimately can't resolve a PDS
+ * (emails, bare usernames, unknown handles) but rethrows genuine network
+ * errors, so a flaky connection fails the login instead of silently
+ * submitting to the default server.
  */
 export function useHostingProvider({
   identifier,
@@ -234,7 +239,9 @@ export function useHostingProvider({
   service: string
   override: (url: string) => void
   clearOverride: () => void
-  resolveService: (currentIdentifier: string) => Promise<string>
+  resolveService: (
+    currentIdentifier: string,
+  ) => Promise<{service: string; did: string | null}>
 } {
   const queryClient = useQueryClient()
   const [override, setOverride] = useState<string | null>(null)
@@ -279,10 +286,10 @@ export function useHostingProvider({
      * report 'error' instead of 'unresolved' to avoid a misleading typo hint.
      */
     state = {status: 'error'}
-  } else if (query.isError || query.data == null) {
+  } else if (query.isError || query.data == null || query.data.pdsUrl == null) {
     state = {status: 'unresolved'}
   } else {
-    state = {status: 'detected', pdsUrl: query.data}
+    state = {status: 'detected', pdsUrl: query.data.pdsUrl}
   }
 
   const service =
@@ -294,11 +301,13 @@ export function useHostingProvider({
     override: (url: string) => setOverride(url),
     clearOverride: () => setOverride(null),
     resolveService: async (currentIdentifier: string) => {
-      if (override != null) return override
+      if (override != null) return {service: override, did: null}
       const norm = normalizeIdentifier(currentIdentifier)
       // Emails and bare usernames can't resolve a PDS on their own.
-      if (norm.includes('@')) return defaultService
-      if (!norm.includes('.') && !norm.startsWith('did:')) return defaultService
+      if (norm.includes('@')) return {service: defaultService, did: null}
+      if (!norm.includes('.') && !norm.startsWith('did:')) {
+        return {service: defaultService, did: null}
+      }
       /*
        * `resolvePdsForIdentifier` only throws on genuine network errors;
        * anything unresolvable (unknown handle, broken identity) resolves to
@@ -306,12 +315,16 @@ export function useHostingProvider({
        * to propagate so the caller can fail the login rather than silently
        * submit the password to the wrong server.
        */
-      const pdsUrl = await queryClient.ensureQueryData({
+      const resolved = await queryClient.ensureQueryData({
         queryKey: RQKEY(norm),
         queryFn: () => resolvePdsForIdentifier(norm),
         staleTime: STALE.MINUTES.FIVE,
       })
-      return pdsUrl ?? defaultService
+      // The DID is known even when its doc declares no PDS endpoint.
+      return {
+        service: resolved?.pdsUrl ?? defaultService,
+        did: resolved?.did ?? null,
+      }
     },
   }
 }

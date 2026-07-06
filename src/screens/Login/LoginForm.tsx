@@ -10,14 +10,14 @@ import {DEFAULT_SERVICE, HITSLOP_10, HITSLOP_20} from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
-import {toNiceHostingUrl} from '#/lib/strings/url-helpers'
+import {isBlueskyHostedUrl, toNiceHostingUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {
   type HostingProviderState,
   useHostingProvider,
 } from '#/state/queries/pds-detection'
-import {useSessionApi} from '#/state/session'
+import {useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {atoms as a, native, tokens, useBreakpoints, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
@@ -35,6 +35,7 @@ import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
+import {ConfirmHostingProviderDialog} from './components/ConfirmHostingProviderDialog'
 import {HostingProviderDialog} from './components/HostingProviderDialog'
 import {FormContainer} from './FormContainer'
 
@@ -86,10 +87,16 @@ export const LoginForm = ({
   const [revealPassword, setRevealPassword] = useState(false)
   const {t: l} = useLingui()
   const {login} = useSessionApi()
+  const {accounts} = useSession()
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
   const serverInputControl = useDialogControl()
+  const confirmHostingProviderControl = useDialogControl()
+  const [pendingLogin, setPendingLogin] = useState<{
+    service: string
+    fullIdent: string
+  } | null>(null)
   const hostingProvider = useHostingProvider({
     identifier,
     defaultService: serviceUrl,
@@ -106,72 +113,17 @@ export const LoginForm = ({
   const showUnresolvedError =
     hostingProvider.state.status === 'unresolved' && !identifierFocused
 
-  const onPressNext = async () => {
-    if (isProcessing) return
-    Keyboard.dismiss()
-    setError('')
-    setErrorField('none')
-    setShowResolveError(false)
-
-    const identifier = identifierValueRef.current.toLowerCase().trim()
+  /**
+   * Performs the actual login attempt against a resolved service. Reads the
+   * password and 2FA token from the current form state, and manages
+   * `setIsProcessing` itself: it stays processing on success (the app
+   * transitions away) and clears it on any failure.
+   */
+  const attemptLogin = async (service: string, fullIdent: string) => {
     const password = passwordValueRef.current
-
-    if (!identifier) {
-      setError(l`Please enter your username`)
-      setErrorField('identifier')
-      return
-    }
-
-    if (!password) {
-      setError(l`Please enter your password`)
-      setErrorField('password')
-      return
-    }
-
     setIsProcessing(true)
 
     try {
-      // try to guess the handle if the user just gave their own username
-      let fullIdent = identifier
-      if (
-        !identifier.includes('@') && // not an email
-        !identifier.includes('.') && // not a domain
-        !identifier.startsWith('did:') && // not a DID
-        serviceDescription &&
-        serviceDescription.availableUserDomains.length > 0
-      ) {
-        let matched = false
-        for (const domain of serviceDescription.availableUserDomains) {
-          if (fullIdent.endsWith(domain)) {
-            matched = true
-          }
-        }
-        if (!matched) {
-          fullIdent = createFullHandle(
-            identifier,
-            serviceDescription.availableUserDomains[0],
-          )
-        }
-      }
-
-      /*
-       * Await autodetection against the current identifier before logging in.
-       * If detection is still in flight this waits for it (bypassing the
-       * debounce); otherwise it resolves near-instantly from cache. Falls back
-       * to the default service on anything unresolvable, but a network error
-       * throws - in that case we must NOT log in, since we can't be sure which
-       * server to send the password to.
-       */
-      let service: string
-      try {
-        service = await hostingProvider.resolveService(identifier)
-      } catch (err) {
-        logger.debug('Failed to resolve hosting provider', {error: String(err)})
-        setIsProcessing(false)
-        setShowResolveError(true)
-        return
-      }
-
       // TODO remove double login
       await login(
         {
@@ -223,6 +175,100 @@ export const LoginForm = ({
     }
   }
 
+  const onPressNext = async () => {
+    if (isProcessing) return
+    Keyboard.dismiss()
+    setError('')
+    setErrorField('none')
+    setShowResolveError(false)
+
+    const identifier = identifierValueRef.current.toLowerCase().trim()
+    const password = passwordValueRef.current
+
+    if (!identifier) {
+      setError(l`Please enter your username`)
+      setErrorField('identifier')
+      return
+    }
+
+    if (!password) {
+      setError(l`Please enter your password`)
+      setErrorField('password')
+      return
+    }
+
+    setIsProcessing(true)
+
+    // try to guess the handle if the user just gave their own username
+    let fullIdent = identifier
+    if (
+      !identifier.includes('@') && // not an email
+      !identifier.includes('.') && // not a domain
+      !identifier.startsWith('did:') && // not a DID
+      serviceDescription &&
+      serviceDescription.availableUserDomains.length > 0
+    ) {
+      let matched = false
+      for (const domain of serviceDescription.availableUserDomains) {
+        if (fullIdent.endsWith(domain)) {
+          matched = true
+        }
+      }
+      if (!matched) {
+        fullIdent = createFullHandle(
+          identifier,
+          serviceDescription.availableUserDomains[0],
+        )
+      }
+    }
+
+    /*
+     * Await autodetection against the current identifier before logging in.
+     * If detection is still in flight this waits for it (bypassing the
+     * debounce); otherwise it resolves near-instantly from cache. Falls back
+     * to the default service on anything unresolvable, but a network error
+     * throws - in that case we must NOT log in, since we can't be sure which
+     * server to send the password to.
+     */
+    let service: string
+    let did: string | null
+    try {
+      ;({service, did} = await hostingProvider.resolveService(identifier))
+    } catch (err) {
+      logger.debug('Failed to resolve hosting provider', {error: String(err)})
+      setIsProcessing(false)
+      setShowResolveError(true)
+      return
+    }
+
+    /*
+     * If detection landed on a non-Bluesky server, confirm before sending the
+     * password, to guard against typosquatted handles capturing credentials. A
+     * manual override is skipped: choosing a server by hand is explicit user
+     * consent, so only auto-detected hosts need the guard. An identity the
+     * user has signed into on this device before is also trusted: a
+     * typosquatted handle would resolve to the attacker's different DID, so
+     * DID membership in the account list is the correct skip condition
+     * (handles and hosts are not stable keys - service URLs drift and pdsUrl
+     * is often unset).
+     */
+    const isKnownAccount =
+      did != null && accounts.some(account => account.did === did)
+    const needsConfirmation =
+      !isBlueskyHostedUrl(service) &&
+      hostingProvider.state.status !== 'overridden' &&
+      !isKnownAccount
+
+    if (needsConfirmation) {
+      setIsProcessing(false)
+      setPendingLogin({service, fullIdent})
+      confirmHostingProviderControl.open()
+      return
+    }
+
+    await attemptLogin(service, fullIdent)
+  }
+
   return (
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
       <HostingProviderDialog
@@ -240,6 +286,16 @@ export const LoginForm = ({
         onSelectAutomatic={() => {
           hostingProvider.clearOverride()
           setServiceUrl(DEFAULT_SERVICE)
+        }}
+      />
+      <ConfirmHostingProviderDialog
+        control={confirmHostingProviderControl}
+        host={toNiceHostingUrl(pendingLogin?.service ?? '')}
+        identifier={pendingLogin?.fullIdent ?? ''}
+        onConfirm={() => {
+          if (pendingLogin) {
+            void attemptLogin(pendingLogin.service, pendingLogin.fullIdent)
+          }
         }}
       />
       <View>
