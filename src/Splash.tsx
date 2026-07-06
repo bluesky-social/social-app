@@ -126,7 +126,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
       opacity: interpolate(
         outroAppOpacity.get(),
         [0, 0.1, 0.2, 1],
-        [0.01, 0.02, 1, 1], // first two values cant be 0 for the iOS blur/glass effects to work, the values obtained by trial and error
+        [0.02, 0.02, 1, 1], // first two values cant be 0 for the iOS blur/glass effects to work, the values obtained by trial and error
         'clamp',
       ),
     }
