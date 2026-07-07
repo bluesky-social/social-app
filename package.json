@@ -3,17 +3,17 @@
   "version": "1.127.0",
   "private": true,
   "engines": {
-    "node": ">=24.15.0"
+    "node": ">=24.18.0"
   },
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.9.0",
+      "version": "11.10.0",
       "onFail": "warn"
     },
     "runtime": {
       "name": "node",
-      "version": "^24.15.0",
+      "version": "^24.18.0",
       "onFail": "download"
     }
   },
@@ -94,6 +94,7 @@
   },
   "dependencies": {
     "@atproto/api": "0.20.25",
+    "@atproto/common-web": "0.5.3",
     "@atproto/syntax": "0.6.4",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
