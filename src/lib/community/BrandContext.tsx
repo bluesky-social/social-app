@@ -62,6 +62,12 @@ const BLACKSKY_CONFIG: RawCommunityConfig = {
       main: 'https://blacksky.community',
       shortlink: 'https://go.blacksky.community',
     },
+    links: {
+      privacy: 'https://blackskyweb.xyz/about/support/privacy-policy',
+      tos: 'https://www.blackskyweb.xyz/about/support/tos',
+      community: 'https://assembly.blacksky.community/8bbfunvvau',
+      contribute: '/support',
+    },
   },
 }
 

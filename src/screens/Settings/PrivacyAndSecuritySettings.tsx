@@ -153,7 +153,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
                       label={_(
                         msg`Learn more about what is public on ${brand.metadata.displayName}.`,
                       )}
-                      to={brand.web.links.privacy}>
+                      to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
                       <Trans>
                         Learn more about what is public on{' '}
                         {brand.metadata.displayName}.

@@ -104,6 +104,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           <>
             <InlineLinkText
               to={brand.web.links.contribute}
+              style={[t.atoms.text_contrast_medium]}
               label={_(msg`Support Us`)}>
               {_(msg`Support Us`)}
             </InlineLinkText>
@@ -114,21 +115,31 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           <>
             <InlineLinkText
               to={brand.web.links.community}
+              style={[t.atoms.text_contrast_medium]}
               label={_(msg`Discussion`)}>
               {_(msg`Discussion`)}
             </InlineLinkText>
             {' \u2022 '}
           </>
         ) : null}
-        <InlineLinkText to={brand.web.links.privacy} label={_(msg`Privacy`)}>
+        <InlineLinkText
+          to={brand.web.links.privacy}
+          style={[t.atoms.text_contrast_medium]}
+          label={_(msg`Privacy`)}>
           {_(msg`Privacy`)}
         </InlineLinkText>
         {' \u2022 '}
-        <InlineLinkText to={brand.web.links.tos} label={_(msg`Terms`)}>
+        <InlineLinkText
+          to={brand.web.links.tos}
+          style={[t.atoms.text_contrast_medium]}
+          label={_(msg`Terms`)}>
           {_(msg`Terms`)}
         </InlineLinkText>
         {' \u2022 '}
-        <InlineLinkText label={_(msg`Help`)} to={HELP_DESK_URL}>
+        <InlineLinkText
+          label={_(msg`Help`)}
+          to={HELP_DESK_URL}
+          style={[t.atoms.text_contrast_medium]}>
           {_(msg`Help`)}
         </InlineLinkText>
       </Text>
