@@ -40,7 +40,7 @@ const TIMEOUT_PREFER_FRESH_GATES = 1500
 export const features = new GrowthBook({
   apiHost: env.GROWTHBOOK_API_HOST,
   clientKey: env.GROWTHBOOK_CLIENT_KEY,
-  enableDevMode: __DEV__,
+  enableDevMode: env.IS_INTERNAL,
 })
 
 /**
