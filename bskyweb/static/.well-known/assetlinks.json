@@ -3,9 +3,9 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "community.blacksky",
+      "package_name": "community.blacksky.app",
       "sha256_cert_fingerprints":
-        ["C1:4D:3C:6B:B5:D6:D9:AE:CF:C5:0B:BC:C1:9B:29:6D:D4:E6:87:46:36:D5:4C:1A:64:1C:14:08:BF:7E:F9:62", "FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C"]
+        ["3C:E4:09:29:B4:37:76:3C:47:AE:A8:5B:52:B2:15:54:CC:6E:24:A8:A3:E0:40:BB:34:FF:46:B4:6A:F3:BF:DD", "2B:21:9F:58:BB:AC:F0:F1:D4:F2:95:82:06:9D:1B:93:56:B3:DA:62:2A:23:EB:10:81:3F:D2:12:40:6B:71:E0"]
     }
   }
 ]
