@@ -98,6 +98,38 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
   }
 }
 
+/**
+ * Walks a GrowthBook condition tree to determine whether it targets the given
+ * attribute. Conditions can nest via the logical operators `$and`, `$or`,
+ * `$nor` (arrays of sub-conditions) and `$not` (a single sub-condition), so a
+ * flat scan of the top-level keys would miss e.g.
+ * `{$and: [{isBetaUser: true}, ...]}`. Dot-notation access (e.g.
+ * `isBetaUser.foo`) counts as targeting the attribute as well.
+ */
+function conditionTargetsAttribute(
+  condition: unknown,
+  attribute: string,
+): boolean {
+  if (!condition || typeof condition !== 'object') return false
+
+  for (const [key, value] of Object.entries(condition)) {
+    if (key === attribute || key.startsWith(`${attribute}.`)) return true
+
+    if (key === '$and' || key === '$or' || key === '$nor') {
+      if (
+        Array.isArray(value) &&
+        value.some(sub => conditionTargetsAttribute(sub, attribute))
+      ) {
+        return true
+      }
+    } else if (key === '$not') {
+      if (conditionTargetsAttribute(value, attribute)) return true
+    }
+  }
+
+  return false
+}
+
 export function getTargetedFeatures(i18n: I18n) {
   const allFeatures = features.getFeatures()
   const targetedFeatures: {key: Features; name: string; description: string}[] =
@@ -106,22 +138,10 @@ export function getTargetedFeatures(i18n: I18n) {
     // Check if the feature contains any rules
     if (!feature.rules) continue
 
-    // Determine if any rule targets the specified attribute
-    const hasTargeting = feature.rules.some(rule => {
-      // If the rule has targeting conditions, parse them
-      if (rule.condition) {
-        // Condition objects map attribute names (e.g., {"country": "US"})
-        const targetedAttributes = Object.keys(rule.condition)
-
-        // Handle standard attributes or MongoDB-style $operators
-        return targetedAttributes.some(
-          attr =>
-            attr === BETA_USER_ATTRIBUTE ||
-            attr.startsWith(`${BETA_USER_ATTRIBUTE} `),
-        )
-      }
-      return false
-    })
+    // Determine if any rule targets the beta user attribute
+    const hasTargeting = feature.rules.some(rule =>
+      conditionTargetsAttribute(rule.condition, BETA_USER_ATTRIBUTE),
+    )
 
     if (hasTargeting) {
       const featureName = getFeatureDescription(featureKey as Features, i18n)

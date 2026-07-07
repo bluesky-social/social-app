@@ -1,6 +1,6 @@
 /**
  * If a feature is in the beta program, be sure to add a localized description
- * for it via getFeatureName().
+ * for it via getFeatureDescription().
  */
 export enum Features {
   // core flags

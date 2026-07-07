@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Linking, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -37,7 +37,25 @@ export function BetaFeaturesSettingsScreen({}: Props) {
   const isBetaUser = preferences?.bskyAppState?.isBetaUser ?? false
   const [isPending, setIsPending] = useState(false)
 
-  const betaFeatures = getTargetedFeatures(i18n)
+  /*
+   * `getTargetedFeatures` reads the GrowthBook singleton synchronously, but
+   * gates arrive asynchronously (from `init` on mount, or `refresh` after a
+   * toggle). Hold the result in state and re-read whenever fresh gates land so
+   * the list reflects the latest evaluation instead of a stale render.
+   */
+  const [betaFeatures, setBetaFeatures] = useState(() =>
+    getTargetedFeatures(i18n),
+  )
+
+  useEffect(() => {
+    let cancelled = false
+    void features.refresh({strategy: 'prefer-fresh-gates'}).then(() => {
+      if (!cancelled) setBetaFeatures(getTargetedFeatures(i18n))
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [i18n])
 
   const onChange = async (next: boolean) => {
     try {
@@ -49,14 +67,22 @@ export function BetaFeaturesSettingsScreen({}: Props) {
        * are evaluated.
        */
       device.set(['isBetaUser'], next)
-      // re-evaluate feature gates against the new attribute in-session
-      void features.refresh({strategy: 'prefer-fresh-gates'})
     } catch (e) {
       logger.error('Failed to toggle beta features', {safeMessage: e})
       Toast.show(l`Something went wrong, please try again.`, {type: 'error'})
+      return
     } finally {
       setIsPending(false)
     }
+    /*
+     * The toggle already succeeded; re-evaluate feature gates against the new
+     * attribute in-session as a best-effort follow-up. A failure here should
+     * not surface as a toggle error.
+     */
+    try {
+      await features.refresh({strategy: 'prefer-fresh-gates'})
+      setBetaFeatures(getTargetedFeatures(i18n))
+    } catch {}
   }
 
   const onPressShareFeedback = () => {
