@@ -35,6 +35,29 @@ on:
       build-number:
         description: iOS build number
         value: ${{ jobs.build.outputs.build-number }}
+    secrets:
+      EXPO_TOKEN:
+        required: true
+      ENV_TOKEN:
+        required: true
+      SENTRY_DSN:
+        required: true
+      BITDRIFT_API_KEY:
+        required: true
+      EXPO_PUBLIC_GCP_PROJECT_ID:
+        required: true
+      GOOGLE_SERVICES_TOKEN:
+        required: true
+      SENTRY_AUTH_TOKEN:
+        required: true
+      ASC_KEY_ID:
+        required: true
+      ASC_ISSUER_ID:
+        required: true
+      ASC_KEY_P8_BASE64:
+        required: true
+      SLACK_CLIENT_ALERT_WEBHOOK:
+        required: true
 
 # Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
 permissions:

@@ -23,6 +23,31 @@ on:
       version-code:
         description: Android version code
         value: ${{ jobs.build.outputs.version-code }}
+    secrets:
+      EXPO_TOKEN:
+        required: true
+      ENV_TOKEN:
+        required: true
+      SENTRY_DSN:
+        required: true
+      BITDRIFT_API_KEY:
+        required: true
+      EXPO_PUBLIC_GCP_PROJECT_ID:
+        required: true
+      GOOGLE_SERVICES_TOKEN:
+        required: true
+      SENTRY_AUTH_TOKEN:
+        required: true
+      SLACK_CLIENT_ALERT_WEBHOOK:
+        required: true
+      ANDROID_KEYSTORE_BASE64:
+        required: true
+      ANDROID_KEYSTORE_PASSWORD:
+        required: true
+      ANDROID_KEY_ALIAS:
+        required: true
+      ANDROID_KEY_PASSWORD:
+        required: true
 
 # Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
 permissions:
@@ -238,11 +263,14 @@ jobs:
       - name: 📎 Attach APK to GitHub Release
         id: attach
         if: ${{ steps.release-check.outputs.exists == 'true' }}
-        uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3.0.1
-        with:
-          tag_name: ${{ github.ref_name }}
-          files: Bluesky-${{ needs.build.outputs.package-version }}.apk
-          fail_on_unmatched_files: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          APK: Bluesky-${{ needs.build.outputs.package-version }}.apk
+        run: |
+          gh release upload "$TAG" "$APK" --clobber
+          url=$(gh release view "$TAG" --json url --jq .url)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: 🔔 Notify Slack of Release Attachment
         if: ${{ steps.release-check.outputs.exists == 'true' }}
