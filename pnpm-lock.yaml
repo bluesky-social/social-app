@@ -244,6 +244,9 @@ importers:
       '@atproto/api':
         specifier: 0.20.25
         version: 0.20.25
+      '@atproto/common-web':
+        specifier: 0.5.3
+        version: 0.5.3
       '@atproto/syntax':
         specifier: 0.6.4
         version: 0.6.4

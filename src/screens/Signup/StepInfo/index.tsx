@@ -14,7 +14,6 @@ import * as Dialog from '#/components/Dialog'
 import {DeviceLocationRequestDialog} from '#/components/dialogs/DeviceLocationRequestDialog'
 import * as DateField from '#/components/forms/DateField'
 import {type DateFieldRef} from '#/components/forms/DateField/types'
-import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
@@ -172,7 +171,11 @@ export function StepInfo({
   return (
     <>
       <View style={[a.gap_md, a.pt_lg]}>
-        <FormError error={state.error} />
+        {state.error && (
+          <Admonition.Admonition type="error">
+            {state.error}
+          </Admonition.Admonition>
+        )}
         <HostingProvider
           minimal
           serviceUrl={state.serviceUrl}

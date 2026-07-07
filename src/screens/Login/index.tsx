@@ -1,8 +1,7 @@
 import {useEffect, useRef, useState} from 'react'
-import {KeyboardAvoidingView} from 'react-native'
+import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'
@@ -37,10 +36,16 @@ const OrderedForms = [
   Forms.PasswordUpdated,
 ] as const
 
-export const Login = ({onPressBack}: {onPressBack: () => void}) => {
-  const {_} = useLingui()
+export const Login = ({
+  onPressBack,
+  onPressCreateAccount,
+}: {
+  onPressBack: () => void
+  onPressCreateAccount: () => void
+}) => {
+  const {t: l} = useLingui()
   const failedAttemptCountRef = useRef(0)
-  const startTimeRef = useRef(Date.now())
+  const [startTime] = useState(() => Date.now())
 
   const {accounts} = useSession()
   const {requestedAccountSwitchTo} = useLoggedOutView()
@@ -92,9 +97,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   useEffect(() => {
     if (serviceError) {
       setError(
-        _(
-          msg`Unable to contact your service. Please check your Internet connection.`,
-        ),
+        l`Unable to contact your service. Please check your Internet connection.`,
       )
       logger.warn(`Failed to fetch service description for ${serviceUrl}`, {
         error: String(serviceError),
@@ -103,7 +106,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     } else {
       setError('')
     }
-  }, [serviceError, serviceUrl, _])
+  }, [serviceError, serviceUrl, l, ax])
 
   const onPressForgotPassword = () => {
     gotoForm(Forms.ForgotPassword)
@@ -121,7 +124,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const onAttemptSuccess = () => {
     ax.metric('signin:success', {
       isUsingCustomProvider: serviceUrl !== DEFAULT_SERVICE,
-      timeTakenSeconds: Math.round((Date.now() - startTimeRef.current) / 1000),
+      timeTakenSeconds: Math.round((Date.now() - startTime) / 1000),
       failedAttemptsCount: failedAttemptCountRef.current,
     })
   }
@@ -137,8 +140,8 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
 
   switch (currentForm) {
     case Forms.Login:
-      title = _(msg`Sign in`)
-      description = _(msg`Enter your username and password`)
+      title = l`Sign in`
+      description = l`Enter your username and password`
       goBack = () =>
         accounts.length ? gotoForm(Forms.ChooseAccount) : handlePressBack()
       content = (
@@ -153,13 +156,14 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           setServiceUrl={setServiceUrl}
           onPressBack={goBack}
           onPressForgotPassword={onPressForgotPassword}
-          onPressRetryConnect={refetchService}
+          onPressRetryConnect={() => void refetchService()}
+          onPressCreateAccount={onPressCreateAccount}
         />
       )
       break
     case Forms.ChooseAccount:
-      title = _(msg`Sign in`)
-      description = _(msg`Select from an existing account`)
+      title = l`Sign in`
+      description = l`Select from an existing account`
       goBack = handlePressBack
       content = (
         <ChooseAccountForm
@@ -169,8 +173,8 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       )
       break
     case Forms.ForgotPassword:
-      title = _(msg`Forgot Password`)
-      description = _(msg`Let's get your password reset!`)
+      title = l`Forgot Password`
+      description = l`Let's get your password reset!`
       goBack = () => gotoForm(Forms.Login)
       content = (
         <ForgotPasswordForm
@@ -185,8 +189,8 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       )
       break
     case Forms.SetNewPassword:
-      title = _(msg`Forgot Password`)
-      description = _(msg`Let's get your password reset!`)
+      title = l`Forgot Password`
+      description = l`Let's get your password reset!`
       goBack = () => gotoForm(Forms.ForgotPassword)
       content = (
         <SetNewPasswordForm
@@ -199,8 +203,8 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       )
       break
     case Forms.PasswordUpdated:
-      title = _(msg`Password updated`)
-      description = _(msg`You can now sign in with your new password.`)
+      title = l`Password updated`
+      description = l`You can now sign in with your new password.`
       content = (
         <PasswordUpdatedForm onPressNext={() => gotoForm(Forms.Login)} />
       )
@@ -215,7 +219,8 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
         <KeyboardAvoidingView
           testID="signIn"
           behavior="padding"
-          style={a.flex_1}>
+          style={a.flex_1}
+          automaticOffset>
           <AuthLayout.Header.Outer>
             <AuthLayout.Header.BackButton />
             <AuthLayout.Header.Content />
@@ -229,7 +234,8 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
             <LayoutAnimationConfig skipEntering>
               <ScreenTransition
                 key={currentForm}
-                direction={screenTransitionDirection}>
+                direction={screenTransitionDirection}
+                style={a.flex_1}>
                 {content}
               </ScreenTransition>
             </LayoutAnimationConfig>
