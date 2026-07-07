@@ -68,6 +68,11 @@ export function useLikedBySampleQuery({uri}: {uri: string | undefined}) {
     },
     staleTime: STALE.MINUTES.FIVE,
     enabled: !!uri,
+    /*
+     * Consumers fall back to a plain like count when this query fails, so
+     * failing fast is preferable to amplifying getLikes load with retries.
+     */
+    retry: 1,
   })
 }
 

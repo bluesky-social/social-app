@@ -1,5 +1,6 @@
 import {View} from 'react-native'
 import {type AppBskyFeedDefs, AtUri, moderateProfile} from '@atproto/api'
+import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -36,13 +37,19 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   const moderationOpts = useModerationOpts()
   const formatPostStatCount = useFormatPostStatCount()
   const ax = useAnalytics()
-  const knownLikersEnabled = ax.features.enabled(
-    ax.features.PostThreadKnownLikersEnable,
-  )
 
   const likeCount = post.likeCount ?? 0
-  const enabled = knownLikersEnabled && hasSession && likeCount > 0
-  const {data} = useLikedBySampleQuery({uri: enabled ? post.uri : undefined})
+  /*
+   * Check the gate last: GrowthBook logs an exposure per evaluation, so only
+   * evaluate for viewers who could actually see the treatment.
+   */
+  const knownLikersEnabled =
+    hasSession &&
+    likeCount > 0 &&
+    ax.features.enabled(ax.features.PostThreadKnownLikersEnable)
+  const {data} = useLikedBySampleQuery({
+    uri: knownLikersEnabled ? post.uri : undefined,
+  })
 
   if (likeCount === 0) return null
 
@@ -93,6 +100,23 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   })
   const others = likeCount - names.length
 
+  /*
+   * The row link's a11y label mirrors the visible sentence so screen readers
+   * announce the social proof.
+   */
+  const othersLabel = plural(others, {
+    one: `${formatPostStatCount(others)} other`,
+    other: `${formatPostStatCount(others)} others`,
+  })
+  const rowLabel =
+    names.length >= 2
+      ? others > 0
+        ? l`${names[0].displayName}, ${names[1].displayName}, and ${othersLabel} like this`
+        : l`${names[0].displayName} and ${names[1].displayName} like this`
+      : others > 0
+        ? l`${names[0].displayName} and ${othersLabel} like this`
+        : l`${names[0].displayName} likes this`
+
   const textStyle = [a.text_md, t.atoms.text_contrast_medium]
   const nameStyle = [a.text_md, a.font_semi_bold, t.atoms.text]
 
@@ -124,7 +148,7 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
     <View style={[a.w_full, a.flex_row]}>
       <Link
         to={likesHref}
-        label={l`Likes on this post`}
+        label={rowLabel}
         style={[a.flex_row, a.align_center, a.gap_sm, a.flex_shrink]}>
         <AvatarStack profiles={knownLikers.slice(0, 3)} size={AVI_SIZE} />
         <Text
