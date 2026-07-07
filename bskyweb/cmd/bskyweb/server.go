@@ -273,6 +273,12 @@ func serve(cctx *cli.Context) error {
 		return http.FS(fsys)
 	}())
 
+	// serve /.well-known/* on every instance. these static files (apple-app-site-association,
+	// assetlinks.json, security.txt) are brand-independent — the client is a single native binary
+	// shared across all communities, so every domain must advertise the same iOS App ID / Android
+	// package. without this route universal links fail the OS association check and open in the browser.
+	e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
+
 	// enable some special endpoints for the "canonical" deployment (bsky.app). not having these enabled should *not* impact regular operation
 	if canonicalInstance {
 		e.GET("/ips-v4", echo.WrapHandler(staticHandler))
@@ -280,7 +286,6 @@ func serve(cctx *cli.Context) error {
 		e.GET("/security.txt", func(c echo.Context) error {
 			return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
 		})
-		e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
 	}
 
 	// default to permissive, but Disallow all if flag set
