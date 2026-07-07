@@ -11,7 +11,8 @@ appId: xyz.blueskyweb.app
 - tapOn: "Sign in"
 - tapOn:
     id: "selectServiceButton"
-- tapOn: "Custom"
+- tapOn:
+    id: "manualSelectBtn"
 - tapOn:
     id: "customServerTextInput"
 - inputText: "http://localhost:3000"
@@ -20,7 +21,8 @@ appId: xyz.blueskyweb.app
       platform: Android
     commands:
       - hideKeyboard
-- tapOn: "Done"
+- tapOn:
+    id: "doneBtn"
 - tapOn:
     id: "loginUsernameInput"
 - inputText: "Alice"
