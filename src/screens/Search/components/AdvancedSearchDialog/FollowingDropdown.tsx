@@ -19,7 +19,7 @@ export function FollowingDropdown({
   const {t: l} = useLingui()
 
   const options: {value: FollowingFilter; label: string}[] = [
-    {value: 'everyone', label: l`Everyone`},
+    {value: 'everyone', label: l`Anyone`},
     {value: 'following', label: l`People you follow`},
   ]
   const currentLabel =
