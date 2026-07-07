@@ -102,6 +102,7 @@ export type ThreadDraft = {
   posts: PostDraft[]
   postgate: AppBskyFeedPostgate.Record
   threadgate: ThreadgateAllowUISetting[]
+  blackskyOnly: boolean
 }
 
 export type ComposerState = {
@@ -121,6 +122,7 @@ export type ComposerState = {
 export type ComposerAction =
   | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
   | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
+  | {type: 'toggle_blacksky_only'}
   | {
       type: 'update_post'
       postId: string
@@ -208,6 +210,16 @@ export function composerReducer(
         thread: {
           ...state.thread,
           threadgate: action.threadgate,
+        },
+      }
+    }
+    case 'toggle_blacksky_only': {
+      return {
+        ...state,
+        isDirty: true,
+        thread: {
+          ...state.thread,
+          blackskyOnly: !state.thread.blackskyOnly,
         },
       }
     }
@@ -324,6 +336,7 @@ export function composerReducer(
             createdAt: new Date().toString(),
             allow: threadgateAllow,
           }),
+          blackskyOnly: false,
         },
       }
     }
@@ -617,6 +630,7 @@ export function createComposerState({
   initImageUris,
   initQuoteUri,
   initInteractionSettings,
+  initBlackskyOnly,
 }: {
   initText: string | undefined
   initMention: string | undefined
@@ -625,6 +639,7 @@ export function createComposerState({
   initInteractionSettings:
     | AppBskyActorDefs.PostInteractionSettingsPref
     | undefined
+  initBlackskyOnly?: boolean
 }): ComposerState {
   let media: ImagesMedia | GalleryMedia | undefined
   if (initImageUris?.length) {
@@ -745,6 +760,7 @@ export function createComposerState({
         createdAt: new Date().toString(),
         allow: initInteractionSettings?.threadgateAllowRules,
       }),
+      blackskyOnly: !!initBlackskyOnly,
     },
   }
 }

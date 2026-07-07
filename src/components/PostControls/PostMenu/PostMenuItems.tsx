@@ -45,6 +45,7 @@ import {
   useProfileBlockMutationQueue,
   useProfileMuteMutationQueue,
 } from '#/state/queries/profile'
+import {useMyPeerModPermissions} from '#/state/queries/peer-mod-permissions'
 import {
   InvalidInteractionSettingsError,
   MAX_HIDDEN_REPLIES,
@@ -73,6 +74,7 @@ import {
   Mute_Stroke2_Corner0_Rounded as Mute,
   Mute_Stroke2_Corner0_Rounded as MuteIcon,
 } from '#/components/icons/Mute'
+import {PeerModerator_Stroke2_Corner0_Rounded as PeerModBadge} from '#/components/icons/PeerModerator'
 import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Person'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
@@ -85,6 +87,10 @@ import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/War
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {BlockDialog} from '#/components/moderation/BlockDialog'
+import {
+  LabelDialog,
+  useLabelDialogControl,
+} from '#/components/moderation/LabelDialog'
 import {
   ReportDialog,
   useReportDialogControl,
@@ -136,6 +142,7 @@ let PostMenuItems = ({
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const blockPromptControl = useDialogControl()
   const reportDialogControl = useReportDialogControl()
+  const labelDialogControl = useLabelDialogControl()
   const deletePromptControl = useDialogControl()
   const postInteractionSettingsDialogControl = useDialogControl()
   const quotePostDetachConfirmControl = useDialogControl()
@@ -156,6 +163,12 @@ let PostMenuItems = ({
 
   const rootUri = record.reply?.root?.uri || postUri
   const isReply = Boolean(record.reply)
+  const isCommunityPost = useMemo(
+    () => new AtUri(postUri).collection === 'community.blacksky.feed.post',
+    [postUri],
+  )
+  const {data: peerModPerms} = useMyPeerModPermissions()
+  const canLabelPost = !!peerModPerms?.isPeerMod && isCommunityPost
   const [isThreadMuted, muteThread, unmuteThread] = useThreadMuteMutationQueue(
     post,
     rootUri,
@@ -182,7 +195,9 @@ let PostMenuItems = ({
 
   const href = useMemo(() => {
     const urip = new AtUri(postUri)
-    return makeProfileLink(postAuthor, 'post', urip.rkey)
+    const link = makeProfileLink(postAuthor, 'post', urip.rkey)
+    const isCommunity = urip.collection === 'community.blacksky.feed.post'
+    return isCommunity ? `${link}?collection=${urip.collection}` : link
   }, [postUri, postAuthor])
 
   const onDeletePost = () => {
@@ -199,7 +214,10 @@ let PostMenuItems = ({
             (params.name === currentAccount.handle ||
               params.name === currentAccount.did)
           ) {
-            const currentHref = makeProfileLink(postAuthor, 'post', params.rkey)
+            const currentLink = makeProfileLink(postAuthor, 'post', params.rkey)
+            const currentHref = params.collection
+              ? `${currentLink}?collection=${params.collection}`
+              : currentLink
             if (currentHref === href && navigation.canGoBack()) {
               navigation.goBack()
             }
@@ -725,13 +743,32 @@ let PostMenuItems = ({
                     </Menu.Item>
                   )}
 
-                  <Menu.Item
-                    testID="postDropdownReportBtn"
-                    label={l`Report post`}
-                    onPress={() => reportDialogControl.open()}>
-                    <Menu.ItemText>{l`Report post`}</Menu.ItemText>
-                    <Menu.ItemIcon icon={Warning} position="right" />
-                  </Menu.Item>
+                  {canLabelPost ? (
+                    <>
+                      <Menu.Item
+                        testID="postDropdownLabelBtn"
+                        label={l`Label post`}
+                        onPress={() => labelDialogControl.open()}>
+                        <Menu.ItemText>{l`Label post`}</Menu.ItemText>
+                        <Menu.ItemIcon icon={PeerModBadge} position="right" />
+                      </Menu.Item>
+                      <Menu.Item
+                        testID="postDropdownEscalateBtn"
+                        label={l`Escalate post`}
+                        onPress={() => reportDialogControl.open()}>
+                        <Menu.ItemText>{l`Escalate post`}</Menu.ItemText>
+                        <Menu.ItemIcon icon={Warning} position="right" />
+                      </Menu.Item>
+                    </>
+                  ) : (
+                    <Menu.Item
+                      testID="postDropdownReportBtn"
+                      label={l`Report post`}
+                      onPress={() => reportDialogControl.open()}>
+                      <Menu.ItemText>{l`Report post`}</Menu.ItemText>
+                      <Menu.ItemIcon icon={Warning} position="right" />
+                    </Menu.Item>
+                  )}
                 </>
               )}
 
@@ -792,6 +829,12 @@ let PostMenuItems = ({
           })
         }}
       />
+      {canLabelPost && (
+        <LabelDialog
+          control={labelDialogControl}
+          subject={{uri: postUri, cid: postCid}}
+        />
+      )}
       <PostInteractionSettingsDialog
         control={postInteractionSettingsDialogControl}
         postUri={post.uri}

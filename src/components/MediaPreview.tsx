@@ -57,7 +57,7 @@ export function Embed({
     // of filter().slice().map() so we stop at 4 viewable items rather than
     // walking every item in a 10-image gallery.
     const tiles: React.ReactNode[] = []
-    for (const item of e.view.items) {
+    for (const item of Array.isArray(e.view.items) ? e.view.items : []) {
       if (tiles.length >= 4) break
       if (!AppBskyEmbedGallery.isViewImage(item)) continue
       if (peekable) {

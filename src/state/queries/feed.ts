@@ -29,6 +29,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {GCTIME, STALE} from '#/state/queries'
 import {RQKEY as listQueryKey} from '#/state/queries/list'
+import {useCommunityMembership} from '#/state/queries/community-membership'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {createQueryKey} from '#/state/queries/util'
 import {useAgent, useSession} from '#/state/session'
@@ -551,12 +552,52 @@ const createPinnedFeedInfosQueryKey = (
     },
   )
 
+const COMMUNITY_FEED_STUB: SavedFeedSourceInfo = {
+  type: 'feed',
+  displayName: 'Community',
+  uri: 'community',
+  feedDescriptor: 'community',
+  route: {
+    href: '/',
+    name: 'Home',
+    params: {},
+  },
+  cid: '',
+  avatar: '',
+  description: new RichText({text: ''}),
+  creatorDid: '',
+  creatorHandle: '',
+  likeCount: 0,
+  likeUri: '',
+  savedFeed: {
+    id: 'community',
+    type: 'feed',
+    value: 'community',
+    pinned: true,
+  },
+  contentMode: undefined,
+}
+
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
   const agent = useAgent()
   const brand = useBrand()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
+  const {data: isCommunityMember = false} = useCommunityMembership()
+
+  // The query itself is cached and persisted indefinitely; membership is
+  // applied as a derived view so gate changes surface without a refetch.
+  const injectCommunity = useCallback(
+    (feeds: SavedFeedSourceInfo[]) => {
+      if (!isCommunityMember) return feeds
+      const result = [...feeds]
+      result.splice(Math.min(1, result.length), 0, COMMUNITY_FEED_STUB)
+      return result
+    },
+    [isCommunityMember],
+  )
+
   const brandPinnedValues = useMemo(
     () => brand.feeds.defaultPinned?.map(f => f.value) ?? [],
     [brand.feeds.defaultPinned],
@@ -570,6 +611,7 @@ export function usePinnedFeedsInfos() {
     gcTime: GCTIME.INFINITY,
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
+    select: injectCommunity,
     queryFn: async () => {
       if (!hasSession) {
         const brandPinned = (brand.feeds.defaultPinned ?? []).filter(

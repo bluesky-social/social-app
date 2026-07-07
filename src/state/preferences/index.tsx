@@ -1,5 +1,6 @@
 import {Provider as AltTextRequiredProvider} from './alt-text-required'
 import {Provider as AutoplayProvider} from './autoplay'
+import {Provider as BlackskyOnlyDefaultProvider} from './blacksky-only-default'
 import {Provider as DisableHapticsProvider} from './disable-haptics'
 import {Provider as ExternalEmbedsProvider} from './external-embeds-prefs'
 import {Provider as HiddenPostsProvider} from './hidden-posts'
@@ -16,6 +17,10 @@ export {
   useSetRequireAltTextEnabled,
 } from './alt-text-required'
 export {useAutoplayDisabled, useSetAutoplayDisabled} from './autoplay'
+export {
+  useBlackskyOnlyDefault,
+  useSetBlackskyOnlyDefault,
+} from './blacksky-only-default'
 export {useHapticsDisabled, useSetHapticsDisabled} from './disable-haptics'
 export {
   useExternalEmbedsPrefs,
@@ -39,7 +44,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
                     <UsedStarterPacksProvider>
                       <SubtitlesProvider>
                         <TrendingSettingsProvider>
-                          <KawaiiProvider>{children}</KawaiiProvider>
+                          <BlackskyOnlyDefaultProvider>
+                            <KawaiiProvider>{children}</KawaiiProvider>
+                          </BlackskyOnlyDefaultProvider>
                         </TrendingSettingsProvider>
                       </SubtitlesProvider>
                     </UsedStarterPacksProvider>

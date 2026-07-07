@@ -8,11 +8,13 @@ import {
   type AppBskyEmbedVideo,
   AppBskyFeedPost,
   type AtpAgent,
+  AtUri,
   BlobRef,
   ChatBskyGroupDefs,
   type ComAtprotoLabelDefs,
   type ComAtprotoRepoApplyWrites,
   type ComAtprotoRepoStrongRef,
+  jsonToLex,
   RichText,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
@@ -23,6 +25,7 @@ import {sha256} from 'js-sha256'
 import {CID} from 'multiformats/cid'
 import * as Hasher from 'multiformats/hashes/hasher'
 
+import {communityXrpc} from '#/lib/api/community'
 import {IMAGE_SIZE_CONFIG_POSTS} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
@@ -47,6 +50,8 @@ import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
 
+const COMMUNITY_POST_COLLECTION = 'community.blacksky.feed.post'
+
 interface PostOpts {
   thread: ThreadDraft
   replyTo?: string
@@ -61,6 +66,29 @@ export async function post(
 ) {
   const thread = opts.thread
   opts.onStateChange?.(t`Processing...`)
+
+  // Route to community post endpoint if the user explicitly toggled
+  // Blacksky-Only, is replying to a community post, or is quoting one.
+  const isReplyToCommunityPost =
+    opts.replyTo && opts.replyTo.includes(COMMUNITY_POST_COLLECTION)
+  const isQuoteOfCommunityPost = thread.posts.some(p =>
+    p.embed.quote?.uri?.includes(COMMUNITY_POST_COLLECTION),
+  )
+
+  if (thread.blackskyOnly || isReplyToCommunityPost || isQuoteOfCommunityPost) {
+    return postCommunity(agent, queryClient, opts)
+  }
+
+  // A public post must never carry a community post in its embed; the
+  // routing above sends those to postCommunity, so reaching here with one
+  // is a bug we refuse rather than leak community content publicly.
+  if (
+    thread.posts.some(p =>
+      p.embed.quote?.uri?.includes(COMMUNITY_POST_COLLECTION),
+    )
+  ) {
+    throw new Error('Public posts cannot embed a community post')
+  }
 
   let replyPromise:
     | Promise<AppBskyFeedPost.Record['reply']>
@@ -197,6 +225,214 @@ export async function post(
   return {uris}
 }
 
+async function postCommunity(
+  agent: AtpAgent,
+  queryClient: QueryClient,
+  opts: PostOpts,
+) {
+  const thread = opts.thread
+
+  let replyPromise:
+    | Promise<AppBskyFeedPost.Record['reply']>
+    | AppBskyFeedPost.Record['reply']
+    | undefined
+  if (opts.replyTo) {
+    replyPromise = resolveReply(agent, opts.replyTo)
+  }
+
+  let langs = opts.langs
+  if (opts.langs) {
+    langs = opts.langs.slice(0, 3)
+  }
+
+  const did = agent.assertDid
+  const writes: $Typed<ComAtprotoRepoApplyWrites.Create>[] = []
+  const uris: string[] = []
+
+  let now = new Date()
+  let tid: TID | undefined
+
+  for (let i = 0; i < thread.posts.length; i++) {
+    const draft = thread.posts[i]
+
+    const rtPromise = resolveRT(agent, draft.richtext)
+    const embedPromise = resolveEmbed(
+      agent,
+      queryClient,
+      draft,
+      opts.onStateChange,
+    )
+    let labels: $Typed<ComAtprotoLabelDefs.SelfLabels> | undefined
+    if (draft.labels.length) {
+      labels = {
+        $type: 'com.atproto.label.defs#selfLabels',
+        values: draft.labels.map(val => ({val})),
+      }
+    }
+
+    now.setMilliseconds(now.getMilliseconds() + 1)
+    tid = TID.next(tid)
+    const rkey = tid.toString()
+    const uri = `at://${did}/${COMMUNITY_POST_COLLECTION}/${rkey}`
+    uris.push(uri)
+
+    const rt = await rtPromise
+    const embed = await embedPromise
+    const reply = await replyPromise
+
+    // Step 1: Build the canonical record for CID computation
+    // This MUST match the structure the appview uses for CID verification
+    const createdAt = now.toISOString()
+    const canonicalRecord: Record<string, unknown> = {
+      $type: COMMUNITY_POST_COLLECTION,
+      text: rt.text,
+      createdAt,
+    }
+    if (rt.facets?.length) {
+      canonicalRecord.facets = rt.facets
+    }
+    if (langs?.length) {
+      canonicalRecord.langs = langs
+    }
+    if (embed) {
+      canonicalRecord.embed = embed
+    }
+    if (reply) {
+      canonicalRecord.reply = reply
+    }
+
+    // Step 2: Compute CID locally - this is the SOURCE OF TRUTH for integrity
+    const cid = await computeCid(
+      canonicalRecord as unknown as AppBskyFeedPost.Record,
+    )
+
+    // Step 3: Submit to appview with expectedCid for verification
+    opts.onStateChange?.(t`Submitting to community...`)
+    const submitBody: Record<string, unknown> = {
+      rkey,
+      text: rt.text,
+      createdAt,
+      expectedCid: cid, // Appview will verify this matches
+    }
+    if (rt.facets?.length) {
+      submitBody.facets = rt.facets
+    }
+    if (reply) {
+      submitBody.reply = reply
+    }
+    if (embed) {
+      submitBody.embed = embed
+    }
+    if (langs?.length) {
+      submitBody.langs = langs
+    }
+    if (labels) {
+      submitBody.labels = labels
+    }
+    // Interaction gates: root posts only for threadgates, community $types.
+    if (!reply && thread.threadgate.some(tg => tg.type !== 'everybody')) {
+      submitBody.threadgateAllow = (
+        threadgateAllowUISettingToAllowRecordValue(thread.threadgate) ?? []
+      ).map(rule => ({
+        ...rule,
+        $type: String(rule.$type).replace(
+          'app.bsky.feed.threadgate',
+          'community.blacksky.feed.threadgate',
+        ),
+      }))
+    }
+    if (thread.postgate.embeddingRules?.length) {
+      submitBody.embeddingRules = thread.postgate.embeddingRules.map(rule => ({
+        ...rule,
+        $type: (rule.$type as string).replace(
+          'app.bsky.feed.postgate',
+          'community.blacksky.feed.postgate',
+        ),
+      }))
+    }
+
+    try {
+      const submitRes = await communityXrpc(
+        agent,
+        'community.blacksky.feed.submitPost',
+        {body: submitBody},
+      )
+      if (!submitRes.ok) {
+        const errBody = (await submitRes.json().catch(() => ({}))) as {
+          message?: string
+        }
+        throw new Error(errBody.message || `HTTP ${submitRes.status}`)
+      }
+      // Appview returns the verified CID - should match our local computation
+      const submitData = (await submitRes.json()) as {cid?: string}
+      if (submitData?.cid !== cid) {
+        logger.warn(`CID mismatch: local=${cid}, server=${submitData?.cid}`)
+      }
+    } catch (e) {
+      logger.error(`Failed to submit community post content`, {
+        safeMessage: e instanceof Error ? e.message : String(e),
+      })
+      throw new Error(t`Failed to submit community post. Please try again.`)
+    }
+
+    // Step 4: Build stub record for PDS with CLIENT-COMPUTED CID
+    const stubRecord: Record<string, unknown> = {
+      $type: COMMUNITY_POST_COLLECTION,
+      createdAt,
+      cid, // Client's own CID - source of truth for integrity verification
+    }
+    // The PDS only protects blobs that are referenced from a record on the
+    // repo (enumBlobRefs walks the record tree). Mirror the embed onto the
+    // stub so external-thumb / image / video / gallery blobs stay alive for
+    // the post's lifetime. Text / facets / langs / reply remain appview-only.
+    if (embed) {
+      stubRecord.embed = embed
+    }
+
+    writes.push({
+      $type: 'com.atproto.repo.applyWrites#create',
+      collection: COMMUNITY_POST_COLLECTION,
+      rkey,
+      value: stubRecord,
+    })
+
+    // Prepare ref for next post in thread
+    const ref = {
+      cid: await computeCid(stubRecord as unknown as AppBskyFeedPost.Record),
+      uri,
+    }
+    replyPromise = {
+      root: reply?.root ?? ref,
+      parent: ref,
+    }
+  }
+
+  // Write stubs to PDS
+  try {
+    await agent.com.atproto.repo.applyWrites({
+      repo: agent.assertDid,
+      writes,
+      validate: false,
+    })
+  } catch (e) {
+    logger.error(`Failed to write community post stubs`, {
+      safeMessage: e instanceof Error ? e.message : String(e),
+    })
+    if (isNetworkError(e)) {
+      throw new Error(
+        t`Post failed to upload. Please check your Internet connection and try again.`,
+      )
+    } else {
+      throw e
+    }
+  }
+
+  void queryClient.invalidateQueries({queryKey: ['community-timeline']})
+  void queryClient.invalidateQueries({queryKey: ['community-feed']})
+
+  return {uris}
+}
+
 async function resolveRT(agent: AtpAgent, richtext: RichText) {
   const trimmedText = richtext.text
     // Trim leading whitespace-only lines (but don't break ASCII art).
@@ -218,6 +454,43 @@ export class ReplyDeletedError extends Error {
 }
 
 async function resolveReply(agent: AtpAgent, replyTo: string) {
+  const replyToUrip = new AtUri(replyTo)
+
+  // Community posts are fetched from the appview, not the standard feed API.
+  if (replyToUrip.collection === COMMUNITY_POST_COLLECTION) {
+    const res = await communityXrpc(
+      agent,
+      'community.blacksky.feed.getCommunityPost',
+      {params: {uri: replyTo}},
+    )
+    if (!res.ok) {
+      logger.error('Failed to fetch parent community post for reply', {
+        uri: replyTo,
+      })
+      return undefined
+    }
+    const data = jsonToLex(await res.json()) as {
+      post?: {
+        uri: string
+        cid: string
+        record?: AppBskyFeedPost.Record
+      }
+    }
+    if (data.post) {
+      const parentRef = {uri: data.post.uri, cid: data.post.cid}
+      // A reply inherits its parent's root; the parent is only the root
+      // when it is itself a top-level post.
+      const parentRootRef = data.post.record?.reply?.root
+      const rootRef =
+        parentRootRef?.uri && parentRootRef?.cid
+          ? {uri: parentRootRef.uri, cid: parentRootRef.cid}
+          : parentRef
+      return {root: rootRef, parent: parentRef}
+    }
+    return undefined
+  }
+
+  // Standard Bluesky post
   const {data} = await agent.app.bsky.feed.getPosts({
     uris: [replyTo],
   })

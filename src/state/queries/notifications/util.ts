@@ -8,12 +8,14 @@ import {
   type AppBskyNotificationListNotifications,
   type AtpAgent,
   hasMutedWord,
+  jsonToLex,
   moderateNotification,
   type ModerationOpts,
 } from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
+import {communityXrpc} from '#/lib/api/community'
 import {labelIsHideableOffense} from '#/lib/moderation'
 import * as bsky from '#/types/bsky'
 import {precacheProfile} from '../profile'
@@ -217,9 +219,12 @@ async function fetchSubjects(
   starterPacks: Map<string, AppBskyGraphDefs.StarterPackViewBasic>
 }> {
   const postUris = new Set<string>()
+  const communityPostUris = new Set<string>()
   const packUris = new Set<string>()
   for (const notif of groupedNotifs) {
-    if (notif.subjectUri?.includes('app.bsky.feed.post')) {
+    if (notif.subjectUri?.includes('community.blacksky.feed.post')) {
+      communityPostUris.add(notif.subjectUri)
+    } else if (notif.subjectUri?.includes('app.bsky.feed.post')) {
       postUris.add(notif.subjectUri)
     } else if (
       notif.notification.reasonSubject?.includes('app.bsky.graph.starterpack')
@@ -237,6 +242,21 @@ async function fetchSubjects(
         .catch(_e => [] as AppBskyFeedDefs.PostView[]),
     ),
   )
+  const communityPostsResults = await Promise.all(
+    Array.from(communityPostUris).map(uri =>
+      communityXrpc(agent, 'community.blacksky.feed.getCommunityPost', {
+        params: {uri},
+      })
+        .then(async res => {
+          if (!res.ok) return undefined
+          const data = jsonToLex(await res.json()) as {
+            post?: AppBskyFeedDefs.PostView
+          }
+          return data.post
+        })
+        .catch(() => undefined),
+    ),
+  )
   const packsChunks = await Promise.all(
     packUriChunks.map(uris =>
       agent.app.bsky.graph
@@ -251,6 +271,9 @@ async function fetchSubjects(
     if (AppBskyFeedPost.isRecord(post.record)) {
       postsMap.set(post.uri, post)
     }
+  }
+  for (const post of communityPostsResults) {
+    if (post) postsMap.set(post.uri, post)
   }
   for (const pack of packsChunks.flat()) {
     if (AppBskyGraphStarterpack.isRecord(pack.record)) {

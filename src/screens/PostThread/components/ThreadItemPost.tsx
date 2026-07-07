@@ -212,7 +212,9 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   const threadRootUri = record.reply?.root?.uri || post.uri
   const postHref = useMemo(() => {
     const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey)
+    const link = makeProfileLink(post.author, 'post', urip.rkey)
+    const isCommunity = urip.collection === 'community.blacksky.feed.post'
+    return isCommunity ? `${link}?collection=${urip.collection}` : link
   }, [post.uri, post.author])
   const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
     threadgateRecord,

@@ -136,6 +136,7 @@ const schema = z.object({
   repostCarouselEnabled: z.boolean().optional(),
   hideFollowNotifications: z.boolean().optional(),
   showLinkInHandle: z.boolean().optional(),
+  blackskyOnlyDefault: z.boolean().optional(),
 
   /** @deprecated */
   mutedThreads: z.array(z.string()),

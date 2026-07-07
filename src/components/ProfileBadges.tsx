@@ -4,6 +4,8 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {atoms as a, useAlf, type ViewStyleProp} from '#/alf'
 import {useNativeFontScale} from '#/alf/util/dimensions'
 import {BotBadge, BotBadgeButton, isBotAccount} from '#/components/BotBadge'
+import {ActorBadgeButtons, ActorBadges} from '#/components/badges'
+import {hasKnownBadge} from '#/lib/badges'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
@@ -27,6 +29,14 @@ const botIconSizes: Record<Size, number> = {
   xl: 23,
 } as const
 
+const badgeIconSizes: Record<Size, number> = {
+  xs: 12,
+  sm: 14,
+  md: 16,
+  lg: 20,
+  xl: 24,
+} as const
+
 export function ProfileBadges({
   profile,
   interactive = false,
@@ -46,8 +56,10 @@ export function ProfileBadges({
     fonts: {scaleMultiplier: alfScaleMultiplier},
   } = useAlf()
 
-  // if nothing to show, don't render the container at all
-  if (!verification.showBadge && !isBotAccount(shadowed)) return null
+  const hasBadges = hasKnownBadge(shadowed)
+
+  if (!verification.showBadge && !isBotAccount(shadowed) && !hasBadges)
+    return null
 
   const isOnTheSmallSide = size === 'xs' || size === 'sm'
 
@@ -57,6 +69,7 @@ export function ProfileBadges({
 
   const verificationIconWidth = verificationIconSizes[size] * scaleMultiplier
   const botIconWidth = botIconSizes[size] * scaleMultiplier
+  const badgeIconWidth = badgeIconSizes[size] * scaleMultiplier
 
   return (
     <View
@@ -72,6 +85,7 @@ export function ProfileBadges({
             profile={shadowed}
             width={verificationIconWidth}
           />
+          <ActorBadgeButtons profile={shadowed} width={badgeIconWidth} />
           <BotBadgeButton profile={shadowed} width={botIconWidth} />
         </>
       ) : (
@@ -82,6 +96,7 @@ export function ProfileBadges({
               width={verificationIconWidth}
             />
           )}
+          <ActorBadges profile={shadowed} width={badgeIconWidth} />
           <BotBadge profile={shadowed} width={botIconWidth} />
         </>
       )}

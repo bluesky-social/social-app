@@ -81,11 +81,16 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
   const anyoneCanReply =
     settings.length === 1 && settings[0].type === 'everybody'
   const noOneCanReply = settings.length === 1 && settings[0].type === 'nobody'
+  const isCommunityPost = post.uri.includes('community.blacksky.feed.post')
   const description = anyoneCanReply
-    ? _(msg`Everybody can reply`)
+    ? isCommunityPost
+      ? _(msg`Every community member can reply`)
+      : _(msg`Everybody can reply`)
     : noOneCanReply
       ? _(msg`Replies disabled`)
-      : _(msg`Some people can reply`)
+      : isCommunityPost
+        ? _(msg`Some community members can reply`)
+        : _(msg`Some people can reply`)
 
   const onPressOpen = () => {
     if (IS_NATIVE && Keyboard.isVisible()) {
@@ -276,7 +281,11 @@ function Rules({
             out of date.
           </Trans>
         ) : settings[0].type === 'everybody' ? (
-          <Trans>Everybody can reply to this post.</Trans>
+          post.uri.includes('community.blacksky.feed.post') ? (
+            <Trans>Every community member can reply to this post.</Trans>
+          ) : (
+            <Trans>Everybody can reply to this post.</Trans>
+          )
         ) : settings[0].type === 'nobody' ? (
           <Trans>Replies to this post are disabled.</Trans>
         ) : (

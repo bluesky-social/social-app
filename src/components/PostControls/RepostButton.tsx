@@ -26,6 +26,7 @@ interface Props {
   onQuote: () => void
   big?: boolean
   embeddingDisabled: boolean
+  repostDisabled?: boolean
 }
 
 let RepostButton = ({
@@ -35,6 +36,7 @@ let RepostButton = ({
   onQuote,
   big,
   embeddingDisabled,
+  repostDisabled,
 }: Props): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -46,7 +48,7 @@ let RepostButton = ({
 
   const onLongPress = () =>
     requireAuth(() => {
-      if (embeddingDisabled) {
+      if (embeddingDisabled || repostDisabled) {
         dialogControl.open()
       } else {
         onQuote()
@@ -101,6 +103,7 @@ let RepostButton = ({
           onRepost={onRepost}
           onQuote={onQuote}
           embeddingDisabled={embeddingDisabled}
+          repostDisabled={repostDisabled}
         />
       </Dialog.Outer>
     </>
@@ -114,11 +117,13 @@ let RepostButtonDialogInner = ({
   onRepost,
   onQuote,
   embeddingDisabled,
+  repostDisabled,
 }: {
   isReposted: boolean
   onRepost: () => void
   onQuote: () => void
   embeddingDisabled: boolean
+  repostDisabled?: boolean
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -147,19 +152,36 @@ let RepostButtonDialogInner = ({
       <View style={a.gap_xl}>
         <View style={a.gap_xs}>
           <Button
+            disabled={repostDisabled}
             style={[a.justify_start, a.px_md, a.gap_sm]}
             label={
-              isReposted
-                ? _(msg`Remove repost`)
-                : _(msg({message: `Repost`, context: 'action'}))
+              repostDisabled
+                ? _(msg`Reposts disabled`)
+                : isReposted
+                  ? _(msg`Remove repost`)
+                  : _(msg({message: `Repost`, context: 'action'}))
             }
             onPress={onPressRepost}
             size="large"
             variant="ghost"
             color="primary">
-            <RepostIcon size="lg" fill={t.palette.primary_500} />
-            <Text style={[a.font_semi_bold, a.text_xl]}>
-              {isReposted ? (
+            <RepostIcon
+              size="lg"
+              fill={
+                repostDisabled
+                  ? t.atoms.text_contrast_low.color
+                  : t.palette.primary_500
+              }
+            />
+            <Text
+              style={[
+                a.font_semi_bold,
+                a.text_xl,
+                repostDisabled && t.atoms.text_contrast_low,
+              ]}>
+              {repostDisabled ? (
+                <Trans>Reposts disabled</Trans>
+              ) : isReposted ? (
                 <Trans>Remove repost</Trans>
               ) : (
                 <Trans context="action">Repost</Trans>

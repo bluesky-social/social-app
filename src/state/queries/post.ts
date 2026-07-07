@@ -7,6 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {communityXrpc} from '#/lib/api/community'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {type Shadow} from '#/state/cache/types'
@@ -348,12 +349,38 @@ function usePostUnrepostMutation(
   })
 }
 
+const COMMUNITY_POST_COLLECTION = 'community.blacksky.feed.post'
+
 export function usePostDeleteMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
   return useMutation<void, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await agent.deletePost(uri)
+      const parsedUri = new AtUri(uri)
+      if (parsedUri.collection === COMMUNITY_POST_COLLECTION) {
+        // Both deletes are idempotent, so ordering is safe and a retry after
+        // any partial failure converges to both being gone. Remove the PDS
+        // stub first (deleteRecord is a no-op if already absent)...
+        await agent.com.atproto.repo.deleteRecord({
+          repo: parsedUri.hostname,
+          collection: COMMUNITY_POST_COLLECTION,
+          rkey: parsedUri.rkey,
+        })
+        // ...then the appview copy, treating already-gone as success.
+        const res = await communityXrpc(
+          agent,
+          'community.blacksky.feed.deletePost',
+          {body: {uri}},
+        )
+        if (!res.ok) {
+          const err = (await res.json().catch(() => ({}))) as {error?: string}
+          if (err.error !== 'PostNotFound') {
+            throw new Error(err.error || `deletePost failed: ${res.status}`)
+          }
+        }
+      } else {
+        await agent.deletePost(uri)
+      }
     },
     onSuccess(_, variables) {
       updatePostShadow(queryClient, variables.uri, {isDeleted: true})

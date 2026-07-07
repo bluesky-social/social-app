@@ -58,6 +58,7 @@ type PostsUriList = string
 
 export type FeedDescriptor =
   | 'following'
+  | 'community'
   | `author|${ActorDid}|${AuthorFilter}`
   | `feedgen|${FeedUri}`
   | `likes|${ActorDid}`

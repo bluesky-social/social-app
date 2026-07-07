@@ -171,9 +171,11 @@ export function useBskyProfileQuery({did}: {did: string | undefined}) {
 export function useProfilesQuery({
   handles,
   maintainData,
+  enabled,
 }: {
   handles: string[]
   maintainData?: boolean
+  enabled?: boolean
 }) {
   const agent = useAgent()
   return useQuery({
@@ -184,6 +186,7 @@ export function useProfilesQuery({
       return res.data
     },
     placeholderData: maintainData ? keepPreviousData : undefined,
+    enabled,
   })
 }
 

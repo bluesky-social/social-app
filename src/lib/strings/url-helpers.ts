@@ -112,9 +112,9 @@ export function toShortUrl(url: string): string {
 
 export function toShareUrl(url: string): string {
   if (!url.startsWith('https')) {
-    const urlp = new URL(BSKY_APP_HOST)
-    urlp.pathname = url
-    url = urlp.toString()
+    // Parse as a relative URL so a query string survives; assigning to
+    // pathname percent-encodes the '?' into the path.
+    url = new URL(url, BSKY_APP_HOST).toString()
   }
   return url
 }
@@ -285,12 +285,15 @@ export function postUriToRelativePath(
   options?: {handle?: string},
 ): string | undefined {
   try {
-    const {hostname, rkey} = new AtUri(uri)
+    const {hostname, rkey, collection} = new AtUri(uri)
     const handleOrDid =
       options?.handle && !isInvalidHandle(options.handle)
         ? options.handle
         : hostname
-    return `/profile/${handleOrDid}/post/${rkey}`
+    const base = `/profile/${handleOrDid}/post/${rkey}`
+    return collection && collection !== 'app.bsky.feed.post'
+      ? `${base}?collection=${collection}`
+      : base
   } catch {
     return undefined
   }

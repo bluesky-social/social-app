@@ -1,4 +1,4 @@
-import {memo, useMemo} from 'react'
+import {useCallback, memo, useMemo} from 'react'
 import {Text as RNText, View} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -200,18 +200,19 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const authorHref = makeProfileLink(post.author)
   const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did
 
-  const likesHref = useMemo(() => {
-    const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
-  }, [post.uri, post.author])
-  const repostsHref = useMemo(() => {
-    const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
-  }, [post.uri, post.author])
-  const quotesHref = useMemo(() => {
-    const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
-  }, [post.uri, post.author])
+  const statHref = useCallback(
+    (suffix: string) => {
+      const urip = new AtUri(post.uri)
+      const link = makeProfileLink(post.author, 'post', urip.rkey, suffix)
+      return urip.collection === 'community.blacksky.feed.post'
+        ? `${link}?collection=${urip.collection}`
+        : link
+    },
+    [post.uri, post.author],
+  )
+  const likesHref = useMemo(() => statHref('liked-by'), [statHref])
+  const repostsHref = useMemo(() => statHref('reposted-by'), [statHref])
+  const quotesHref = useMemo(() => statHref('quotes'), [statHref])
 
   const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
     threadgateRecord,

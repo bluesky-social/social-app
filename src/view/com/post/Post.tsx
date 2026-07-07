@@ -123,7 +123,10 @@ function PostInner({
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const itemUrip = new AtUri(post.uri)
-  const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey)
+  const isCommunityPost = itemUrip.collection === 'community.blacksky.feed.post'
+  const itemHref = isCommunityPost
+    ? `${makeProfileLink(post.author, 'post', itemUrip.rkey)}?collection=${itemUrip.collection}`
+    : makeProfileLink(post.author, 'post', itemUrip.rkey)
   let replyAuthorDid = ''
   if (record.reply) {
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)

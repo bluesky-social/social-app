@@ -16,17 +16,27 @@ export async function pickVideo(): Promise<ImagePickerResult> {
   document.body.appendChild(input)
 
   return new Promise(resolve => {
+    let settled = false
+    const finish = (result: ImagePickerResult) => {
+      if (settled) return
+      settled = true
+      try {
+        document.body.removeChild(input)
+      } catch {}
+      resolve(result)
+    }
     input.addEventListener('change', async () => {
-      if (input.files) {
-        const file = input.files[0]
-        resolve({
+      if (input.files && input.files[0]) {
+        finish({
           canceled: false,
-          assets: [await getVideoMetadata(file)],
+          assets: [await getVideoMetadata(input.files[0])],
         })
       } else {
-        resolve({canceled: true, assets: null})
+        finish({canceled: true, assets: null})
       }
-      document.body.removeChild(input)
+    })
+    input.addEventListener('cancel', () => {
+      finish({canceled: true, assets: null})
     })
 
     const event = new MouseEvent('click')
@@ -34,11 +44,8 @@ export async function pickVideo(): Promise<ImagePickerResult> {
   })
 }
 
-// TODO: we're converting to a dataUrl here, and then converting back to an
-// ArrayBuffer in the compressVideo function. This is a bit wasteful, but it
-// lets us use the ImagePickerAsset type, which the rest of the code expects.
-// We should unwind this and just pass the ArrayBuffer/objectUrl through the system
-// instead of a string -sfn
+// Return an object URL for the picked File so we don't read the whole video
+// into a base64 string just to read its width/height/duration.
 export function getVideoMetadata(
   file: File | string,
 ): Promise<ImagePickerAsset> {
@@ -46,55 +53,42 @@ export function getVideoMetadata(
     throw new Error(
       'getVideoMetadata was passed a uri, when on web it should be a File',
     )
+  const uri = URL.createObjectURL(file)
   return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => {
-      const uri = reader.result as string
-
-      if (file.type === 'image/gif') {
-        const img = new Image()
-        img.onload = () => {
-          resolve({
-            uri,
-            mimeType: 'image/gif',
-            width: img.width,
-            height: img.height,
-            // todo: calculate gif duration. seems possible if you read the bytes
-            // https://codepen.io/Ryman/pen/nZpYwY
-            // for now let's just let the server reject it, since that seems uncommon -sfn
-            duration: null,
-          })
-        }
-        img.onerror = (_ev, _source, _lineno, _colno, error) => {
-          console.log('Failed to grab GIF metadata', error)
-          reject(new Error('Failed to grab GIF metadata'))
-        }
-        img.src = uri
-      } else {
-        const video = document.createElement('video')
-        const blobUrl = URL.createObjectURL(file)
-
-        video.preload = 'metadata'
-        video.src = blobUrl
-
-        video.onloadedmetadata = () => {
-          URL.revokeObjectURL(blobUrl)
-          resolve({
-            uri,
-            mimeType: file.type,
-            width: video.videoWidth,
-            height: video.videoHeight,
-            // convert seconds to ms
-            duration: video.duration * 1000,
-          })
-        }
-        video.onerror = (_ev, _source, _lineno, _colno, error) => {
-          URL.revokeObjectURL(blobUrl)
-          console.log('Failed to grab video metadata', error)
-          reject(new Error('Failed to grab video metadata'))
-        }
+    if (file.type === 'image/gif') {
+      const img = new Image()
+      img.onload = () => {
+        resolve({
+          uri,
+          mimeType: 'image/gif',
+          width: img.width,
+          height: img.height,
+          // TODO: real GIF duration (see https://codepen.io/Ryman/pen/nZpYwY); rare in practice.
+          duration: null,
+        })
+      }
+      img.onerror = (_ev, _source, _lineno, _colno, error) => {
+        console.log('Failed to grab GIF metadata', error)
+        reject(new Error('Failed to grab GIF metadata'))
+      }
+      img.src = uri
+    } else {
+      const video = document.createElement('video')
+      video.preload = 'metadata'
+      video.src = uri
+      video.onloadedmetadata = () => {
+        resolve({
+          uri,
+          mimeType: file.type,
+          width: video.videoWidth,
+          height: video.videoHeight,
+          duration: video.duration * 1000,
+        })
+      }
+      video.onerror = (_ev, _source, _lineno, _colno, error) => {
+        console.log('Failed to grab video metadata', error)
+        reject(new Error('Failed to grab video metadata'))
       }
     }
-    reader.readAsDataURL(file)
   })
 }

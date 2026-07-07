@@ -439,8 +439,15 @@ export function MessagesList({
 
             stripLinkFacet(uri => {
               if (!isBskyPostUrl(uri)) return false
-              const url = convertBskyAppUrlIfNeeded(uri)
-              const [_0, _1, _2, rkey] = url.split('/').filter(Boolean)
+              const stripped = convertBskyAppUrlIfNeeded(uri)
+              const path = (() => {
+                try {
+                  return new URL(stripped, 'http://_').pathname
+                } catch {
+                  return stripped.split('?')[0]
+                }
+              })()
+              const [_0, _1, _2, rkey] = path.split('/').filter(Boolean)
               // this might have a handle instead of a DID
               // so just compare the rkey - not particularly dangerous
               return post.uri.endsWith(rkey)

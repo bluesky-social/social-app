@@ -86,7 +86,9 @@ let ShareMenuButton = ({
   const onNativeLongPress = () => {
     ax.metric('share:press:nativeShare', {})
     const urip = new AtUri(post.uri)
-    const href = makeProfileLink(post.author, 'post', urip.rkey)
+    const link = makeProfileLink(post.author, 'post', urip.rkey)
+    const isCommunity = urip.collection === 'community.blacksky.feed.post'
+    const href = isCommunity ? `${link}?collection=${urip.collection}` : link
     const url = toShareUrl(href)
     shareUrl(url)
     onShare()

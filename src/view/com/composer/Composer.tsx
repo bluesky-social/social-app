@@ -87,7 +87,11 @@ import {
   createComposerImage,
   pasteImage,
 } from '#/state/gallery'
-import {useRequireAltTextEnabled} from '#/state/preferences'
+import {
+  useBlackskyOnlyDefault,
+  useRequireAltTextEnabled,
+  useSetBlackskyOnlyDefault,
+} from '#/state/preferences'
 import {
   fromPostLanguages,
   toPostLanguages,
@@ -97,6 +101,7 @@ import {
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
+import {useCommunityMembership} from '#/state/queries/community-membership'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
@@ -109,6 +114,7 @@ import {
 } from '#/view/com/composer/ExternalEmbed'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {GifAltTextDialog} from '#/view/com/composer/GifAltText'
+import {CommunityOnlyBadge} from '#/components/CommunityOnlyBadge'
 import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
@@ -126,6 +132,7 @@ import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as EmojiPicker from '#/components/EmojiPicker'
+import * as Toggle from '#/components/forms/Toggle'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
@@ -351,6 +358,16 @@ export const ComposePost = ({
     setLanguageNudgeAt(prev => (now - prev > 10_000 ? now : prev))
   }
 
+  const blackskyOnlyDefault = useBlackskyOnlyDefault()
+  const setBlackskyOnlyDefault = useSetBlackskyOnlyDefault()
+  const {data: isCommunityMember = false} = useCommunityMembership()
+
+  // Force Blacksky-Only when the thread targets a community post — replies
+  // and quotes of a community post can only land in the community.
+  const isForcedBlackskyOnly =
+    (!!replyTo?.uri && replyTo.uri.includes('community.blacksky.feed.post')) ||
+    (!!initQuote?.uri && initQuote.uri.includes('community.blacksky.feed.post'))
+
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
     {
@@ -359,6 +376,12 @@ export const ComposePost = ({
       initText,
       initMention,
       initInteractionSettings: preferences?.postInteractionSettings,
+      // Replies inherit their parent's audience: forced on for community
+      // parents, forced off for public parents. The sticky default only
+      // applies to top-level posts, and only for community members.
+      initBlackskyOnly:
+        isForcedBlackskyOnly ||
+        (!replyTo && isCommunityMember && blackskyOnlyDefault),
     },
     createComposerState,
   )
@@ -1143,8 +1166,19 @@ export const ComposePost = ({
             <Toast.Action
               label={l`View post`}
               onPress={() => {
-                const {host: name, rkey} = new AtUri(postUri)
-                navigation.navigate('PostThread', {name, rkey})
+                const urip = new AtUri(postUri)
+                const params: {
+                  name: string
+                  rkey: string
+                  collection?: string
+                } = {
+                  name: urip.host,
+                  rkey: urip.rkey,
+                }
+                if (urip.collection !== 'app.bsky.feed.post') {
+                  params.collection = urip.collection
+                }
+                navigation.navigate('PostThread', params)
               }}>
               <Trans context="Action to view the post the user just created">
                 View
@@ -1290,6 +1324,8 @@ export const ComposePost = ({
         thread={composerState.thread}
         dispatch={composerDispatch}
         bottomBarAnimatedStyle={bottomBarAnimatedStyle}
+        isForcedBlackskyOnly={isForcedBlackskyOnly}
+        setBlackskyOnlyDefault={setBlackskyOnlyDefault}
       />
       <ComposerFooter
         post={activePost}
@@ -1946,14 +1982,20 @@ function ComposerPills({
   post,
   dispatch,
   bottomBarAnimatedStyle,
+  isForcedBlackskyOnly,
+  setBlackskyOnlyDefault,
 }: {
   isReply: boolean
   thread: ThreadDraft
   post: PostDraft
   dispatch: (action: ComposerAction) => void
   bottomBarAnimatedStyle: StyleProp<ViewStyle>
+  isForcedBlackskyOnly: boolean
+  setBlackskyOnlyDefault: (v: boolean) => void
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
+  const {data: isCommunityMember = false} = useCommunityMembership()
   const media = post.embed.media
   const hasMedia =
     media?.type === 'images' ||
@@ -1962,8 +2004,7 @@ function ComposerPills({
     media?.type === 'video'
   const hasLink = !!post.embed.link
 
-  // Don't render anything if no pills are going to be displayed
-  if (isReply && !hasMedia && !hasLink) {
+  if (isReply && !hasMedia && !hasLink && !isForcedBlackskyOnly) {
     return null
   }
 
@@ -1971,6 +2012,7 @@ function ComposerPills({
     <Animated.View
       style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
       <ScrollView
+        style={[a.flex_1]}
         contentContainerStyle={[a.gap_sm]}
         horizontal={true}
         bounces={false}
@@ -1992,6 +2034,24 @@ function ComposerPills({
             style={bottomBarAnimatedStyle}
           />
         )}
+        {!isCommunityMember || (isReply && !isForcedBlackskyOnly) ? null : (
+          <Toggle.Item
+            name="blacksky_only"
+            label={l`Blacksky Only`}
+            value={thread.blackskyOnly}
+            disabled={isForcedBlackskyOnly}
+            onChange={() => {
+              const next = !thread.blackskyOnly
+              dispatch({type: 'toggle_blacksky_only'})
+              setBlackskyOnlyDefault(next)
+            }}
+            style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <Toggle.LabelText>
+              <Trans>Blacksky Only</Trans>
+            </Toggle.LabelText>
+            <Toggle.Switch />
+          </Toggle.Item>
+        )}
         {hasMedia || hasLink ? (
           <LabelsBtn
             labels={post.labels}
@@ -2008,6 +2068,11 @@ function ComposerPills({
           />
         ) : null}
       </ScrollView>
+      {thread.blackskyOnly && (
+        <View style={[a.justify_end, a.pl_sm, a.align_end]}>
+          <CommunityOnlyBadge />
+        </View>
+      )}
     </Animated.View>
   )
 }
