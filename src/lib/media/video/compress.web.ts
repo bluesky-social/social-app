@@ -44,8 +44,12 @@ export async function compressVideo(
     hasWebCodecs: hasWebCodecs(),
   })
 
-  const response = await fetch(asset.uri)
-  const blob = await response.blob()
+  /*
+   * Prefer the original File over re-fetching the blob URL. A fetch round
+   * trip copies the bytes and fails with a bare TypeError if the URL was
+   * revoked or the read fails - the top web compressFailed error class.
+   */
+  const blob = asset.file ?? (await (await fetch(asset.uri)).blob())
 
   const isGif = blob.type === 'image/gif'
   const hasCodecs = hasWebCodecs()
