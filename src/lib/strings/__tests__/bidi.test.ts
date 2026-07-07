@@ -1,4 +1,4 @@
-import {describe, expect, it} from '@jest/globals'
+import {describe, expect, it, jest} from '@jest/globals'
 
 /*
  * bidi.ts reads IS_WEB at call time, so a getter lets each test pick the
@@ -13,8 +13,8 @@ jest.mock('#/env', () => ({
 
 import {forceLTR} from '../bidi'
 
-const LEFT_TO_RIGHT_EMBEDDING = '‪'
-const POP_DIRECTIONAL_FORMATTING = '‬'
+const LEFT_TO_RIGHT_EMBEDDING = '\u202A'
+const POP_DIRECTIONAL_FORMATTING = '\u202C'
 
 describe('forceLTR', () => {
   it('wraps the string in directional formatting characters on native', () => {
