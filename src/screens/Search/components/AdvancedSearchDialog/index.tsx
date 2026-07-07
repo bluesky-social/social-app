@@ -158,81 +158,97 @@ function DialogInner({
     {
       all: l({
         message: 'cats dogs',
-        comment: 'Advanced search: Example of an “all of these words” search',
+        comment:
+          'Advanced search: Example of an “all of these words” search. Paired with “cows pigs”.',
       }),
       none: l({
         message: 'cows pigs',
-        comment: 'Advanced search: Example of a “none of these words” search',
+        comment:
+          'Advanced search: Example of a “none of these words” search. Paired with “cats dogs”.',
       }),
     },
     {
       all: l({
         message: 'mustangs broncos',
-        comment: 'Advanced search: Example of an “all of these words” search',
+        comment:
+          'Advanced search: Example of an “all of these words” search. Paired with “cars trucks”.',
       }),
       none: l({
         message: 'cars trucks',
-        comment: 'Advanced search: Example of a “none of these words” search',
+        comment:
+          'Advanced search: Example of a “none of these words” search. Paired with “mustangs broncos”.',
       }),
     },
     {
       all: l({
         message: 'spring summer',
-        comment: 'Advanced search: Example of an “all of these words” search',
+        comment:
+          'Advanced search: Example of an “all of these words” search. Paired with “fall winter”.',
       }),
       none: l({
         message: 'fall winter',
-        comment: 'Advanced search: Example of a “none of these words” search',
+        comment:
+          'Advanced search: Example of a “none of these words” search. Paired with “spring summer”.',
       }),
     },
     {
       all: l({
         message: 'allegro vivace',
-        comment: 'Advanced search: Example of an “all of these words” search',
+        comment:
+          'Advanced search: Example of an “all of these words” search. Paired with “lento adagio”.',
       }),
       none: l({
         message: 'lento adagio',
-        comment: 'Advanced search: Example of a “none of these words” search',
+        comment:
+          'Advanced search: Example of a “none of these words” search. Paired with “allegro vivace”.',
       }),
     },
     {
       all: l({
         message: 'spaniels terriers',
-        comment: 'Advanced search: Example of an “all of these words” search',
+        comment:
+          'Advanced search: Example of an “all of these words” search. Paired with “dachshunds pugs”.',
       }),
       none: l({
         message: 'dachshunds pugs',
-        comment: 'Advanced search: Example of a “none of these words” search',
+        comment:
+          'Advanced search: Example of a “none of these words” search. Paired with “spaniels terriers”.',
       }),
     },
     {
       all: l({
         message: 'blue black',
-        comment: 'Advanced search: Example of an “all of these words” search',
+        comment:
+          'Advanced search: Example of an “all of these words” search. Paired with “white gold”.',
       }),
       none: l({
         message: 'white gold',
-        comment: 'Advanced search: Example of a “none of these words” search',
+        comment:
+          'Advanced search: Example of a “none of these words” search. Paired with “blue black”.',
       }),
     },
     {
       all: l({
         message: 'unstoppable force',
-        comment: 'Advanced search: Example of an “all of these words” search',
+        comment:
+          'Advanced search: Example of an “all of these words” search. Paired with “immovable object”.',
       }),
       none: l({
         message: 'immovable object',
-        comment: 'Advanced search: Example of a “none of these words” search',
+        comment:
+          'Advanced search: Example of a “none of these words” search. Paired with “unstoppable force”.',
       }),
     },
     {
       all: l({
         message: 'parsley sage',
-        comment: 'Advanced search: Example of an “all of these words” search',
+        comment:
+          'Advanced search: Example of an “all of these words” search. Paired with “rosemary thyme”.',
       }),
       none: l({
         message: 'rosemary thyme',
-        comment: 'Advanced search: Example of a “none of these words” search',
+        comment:
+          'Advanced search: Example of a “none of these words” search. Paired with “parsley sage”.',
       }),
     },
   ]
