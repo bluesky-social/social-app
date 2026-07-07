@@ -20,7 +20,7 @@ export function BetaUserStorageSync() {
     if (isBetaUser === undefined) return
     /*
      * Guard against a redundant write on every warm boot. Writing triggers the
-     * storage change listener, which remounts the analytics subtree.
+     * storage change listener, which re-renders the analytics subtree.
      */
     if (device.get(['isBetaUser']) === isBetaUser) return
     device.set(['isBetaUser'], isBetaUser)
