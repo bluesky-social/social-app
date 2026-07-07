@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import {View} from 'react-native'
 import {type ModerationCause} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -11,8 +12,10 @@ import {listUriToHref} from '#/lib/strings/url-helpers'
 import {useSession} from '#/state/session'
 import {atoms as a, useGutters, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
+import {AppealForm} from '#/components/moderation/AppealForm'
 import {type AppModerationCause} from '#/components/Pills'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
@@ -47,6 +50,18 @@ function ModerationDetailsDialogInner({
   const desc = useModerationCauseDescription(modcause)
   const {currentAccount} = useSession()
   const timeDiff = useGetTimeAgo({future: true})
+  const [isAppealing, setIsAppealing] = useState(false)
+
+  /*
+   * Appeal eligibility: only for label causes on content belonging to the
+   * current user, where the label was not self-applied.
+   */
+  const canAppeal =
+    modcause?.type === 'label' &&
+    !!currentAccount &&
+    modcause.label.src !== currentAccount.did &&
+    (modcause.label.uri === currentAccount.did ||
+      modcause.label.uri.startsWith(`at://${currentAccount.did}/`))
 
   let name
   let description
@@ -136,6 +151,23 @@ function ModerationDetailsDialogInner({
 
   const sourceName =
     desc.source || desc.sourceDisplayName || _(msg`an unknown labeler`)
+
+  if (isAppealing && modcause?.type === 'label') {
+    return (
+      <Dialog.ScrollableInner
+        label={_(msg`Appeal label`)}
+        style={web({
+          maxWidth: 460,
+        })}>
+        <AppealForm
+          label={modcause.label}
+          control={control}
+          onPressBack={() => setIsAppealing(false)}
+        />
+        <Dialog.Close />
+      </Dialog.ScrollableInner>
+    )
+  }
 
   return (
     <Dialog.ScrollableInner
@@ -228,6 +260,20 @@ function ModerationDetailsDialogInner({
                   </View>
                 )}
               </View>
+              {canAppeal && (
+                <View style={[a.flex_row, a.justify_end, a.mt_sm]}>
+                  <Button
+                    variant="solid"
+                    color="secondary"
+                    size="small"
+                    label={_(msg`Appeal this label`)}
+                    onPress={() => setIsAppealing(true)}>
+                    <ButtonText>
+                      <Trans>Appeal</Trans>
+                    </ButtonText>
+                  </Button>
+                </View>
+              )}
             </>
           )}
         </View>

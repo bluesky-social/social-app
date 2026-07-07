@@ -30,7 +30,6 @@ import {
   maybeApplyGalleryOffsetStyles,
 } from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
-import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {PostRepliedTo} from '#/components/Post/PostRepliedTo'
@@ -215,7 +214,6 @@ function PostInner({
             {replyAuthorDid !== '' && (
               <PostRepliedTo parentAuthor={replyAuthorDid} />
             )}
-            <LabelsOnMyPost post={post} />
             <ContentHider
               modui={moderation.ui('contentView')}
               style={styles.contentHider}

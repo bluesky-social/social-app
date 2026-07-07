@@ -1,5 +1,5 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyFeedDefs, type ComAtprotoLabelDefs} from '@atproto/api'
+import {type ComAtprotoLabelDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural} from '@lingui/react/macro'
@@ -19,12 +19,10 @@ import {
 } from '#/components/moderation/LabelsOnMeDialog'
 
 export function LabelsOnMe({
-  type,
   labels,
   size,
   style,
 }: {
-  type: 'account' | 'content'
   labels: ComAtprotoLabelDefs.Label[] | undefined
   size?: ButtonSize
   style?: StyleProp<ViewStyle>
@@ -47,7 +45,7 @@ export function LabelsOnMe({
 
   return (
     <View style={[a.flex_row, style]}>
-      <LabelsOnMeDialog control={control} labels={labels} type={type} />
+      <LabelsOnMeDialog control={control} labels={labels} type="account" />
 
       <Button
         variant="solid"
@@ -59,37 +57,13 @@ export function LabelsOnMe({
         }}>
         <ButtonIcon position="left" icon={CircleInfo} />
         <ButtonText style={[a.leading_snug]}>
-          {type === 'account' ? (
-            <Plural
-              value={labels.length}
-              one="# account label"
-              other="# account labels"
-            />
-          ) : (
-            <Plural
-              value={labels.length}
-              one="# content label"
-              other="# content labels"
-            />
-          )}
+          <Plural
+            value={labels.length}
+            one="# account label"
+            other="# account labels"
+          />
         </ButtonText>
       </Button>
     </View>
-  )
-}
-
-export function LabelsOnMyPost({
-  post,
-  style,
-}: {
-  post: AppBskyFeedDefs.PostView
-  style?: StyleProp<ViewStyle>
-}) {
-  const {currentAccount} = useSession()
-  if (post.author.did !== currentAccount?.did) {
-    return null
-  }
-  return (
-    <LabelsOnMe type="content" labels={post.labels} size="tiny" style={style} />
   )
 }
