@@ -1,10 +1,11 @@
+import {View} from 'react-native'
 import {type AppBskyFeedDefs, AtUri, moderateProfile} from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useLikedByQuery} from '#/state/queries/post-liked-by'
+import {useLikedBySampleQuery} from '#/state/queries/post-liked-by'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
@@ -12,6 +13,7 @@ import {InlineLinkText, Link} from '#/components/Link'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 const AVI_SIZE = 20
 
@@ -21,10 +23,11 @@ const AVI_SIZE = 20
  * "Liked by A, B, and N others" - in place of the plain "N likes" text,
  * which it falls back to otherwise.
  *
- * Known likers are sourced client-side from the first page of `getLikes`, so
- * they are a sample of the most recent likers, not an exhaustive list. Only
- * the faces and names are affected by sampling - the "N others" count is
- * derived from the post's total like count.
+ * Known likers are sourced client-side from a single `getLikes` request (100
+ * likes, the API max per page), so they are a sample of the most recent
+ * likers, not an exhaustive list. Only the faces and names are affected by
+ * sampling - the "N others" count is derived from the post's total like
+ * count.
  */
 export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
@@ -32,33 +35,33 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   const {hasSession, currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
   const formatPostStatCount = useFormatPostStatCount()
+  const ax = useAnalytics()
+  const knownLikersEnabled = ax.features.enabled(
+    ax.features.PostThreadKnownLikersEnable,
+  )
 
   const likeCount = post.likeCount ?? 0
-  const enabled = hasSession && likeCount > 0
-  const {data} = useLikedByQuery(enabled ? post.uri : undefined)
+  const enabled = knownLikersEnabled && hasSession && likeCount > 0
+  const {data} = useLikedBySampleQuery({uri: enabled ? post.uri : undefined})
 
   if (likeCount === 0) return null
 
   const urip = new AtUri(post.uri)
   const likesHref = makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
 
-  /*
-   * Only the first page, even if the liked-by screen has loaded more into
-   * this same query cache. This keeps the sample bounds consistent and
-   * avoids reflowing the row as more pages arrive.
-   */
-  const knownLikers = moderationOpts
-    ? (data?.pages[0]?.likes ?? [])
-        .map(like => like.actor)
-        .filter(
-          actor =>
-            actor.did !== currentAccount?.did &&
-            actor.viewer?.following &&
-            !actor.viewer.muted &&
-            !actor.viewer.blocking &&
-            !actor.viewer.blockedBy,
-        )
-    : []
+  const knownLikers =
+    knownLikersEnabled && moderationOpts
+      ? (data?.likes ?? [])
+          .map(like => like.actor)
+          .filter(
+            actor =>
+              actor.did !== currentAccount?.did &&
+              actor.viewer?.following &&
+              !actor.viewer.muted &&
+              !actor.viewer.blocking &&
+              !actor.viewer.blockedBy,
+          )
+      : []
 
   if (knownLikers.length === 0) {
     return (
@@ -112,24 +115,41 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   )
 
   return (
-    <Link
-      to={likesHref}
-      label={l`Likes on this post`}
-      /*
-       * Full width so the social proof always sits on its own line within
-       * the wrapping stats row, rather than wrapping mid-row and orphaning
-       * whichever count stat comes last.
-       */
-      style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-      <AvatarStack profiles={knownLikers.slice(0, 3)} size={AVI_SIZE} />
-      <Text
-        testID="knownLikersStat"
-        numberOfLines={1}
-        style={[a.flex_shrink, textStyle]}>
-        {names.length >= 2 ? (
-          others > 0 ? (
-            <Trans comment="Social proof on the likes stat; the bolded names are people the viewer follows who liked the post, and the count is the remaining number of likes">
-              {nameLink(names[0])}, {nameLink(names[1])}, and{' '}
+    /*
+     * The full-width wrapper keeps the social proof on its own line within
+     * the wrapping stats row, rather than wrapping mid-row and orphaning
+     * whichever count stat comes last. The link itself hugs its content so
+     * the empty space to the right of the text is not pressable.
+     */
+    <View style={[a.w_full, a.flex_row]}>
+      <Link
+        to={likesHref}
+        label={l`Likes on this post`}
+        style={[a.flex_row, a.align_center, a.gap_sm, a.flex_shrink]}>
+        <AvatarStack profiles={knownLikers.slice(0, 3)} size={AVI_SIZE} />
+        <Text
+          testID="knownLikersStat"
+          numberOfLines={1}
+          style={[a.flex_shrink, textStyle]}>
+          {names.length >= 2 ? (
+            others > 0 ? (
+              <Trans comment="Social proof on the likes stat; the bolded names are people the viewer follows who liked the post, and the count is the remaining number of likes">
+                {nameLink(names[0])}, {nameLink(names[1])}, and{' '}
+                <Plural
+                  value={others}
+                  one={`${formatPostStatCount(others)} other`}
+                  other={`${formatPostStatCount(others)} others`}
+                />{' '}
+                like this
+              </Trans>
+            ) : (
+              <Trans comment="Social proof on the likes stat; the bolded names are people the viewer follows who liked the post and are its only likes">
+                {nameLink(names[0])} and {nameLink(names[1])} like this
+              </Trans>
+            )
+          ) : others > 0 ? (
+            <Trans comment="Social proof on the likes stat; the bolded name is a person the viewer follows who liked the post, and the count is the remaining number of likes">
+              {nameLink(names[0])} and{' '}
               <Plural
                 value={others}
                 one={`${formatPostStatCount(others)} other`}
@@ -138,26 +158,12 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
               like this
             </Trans>
           ) : (
-            <Trans comment="Social proof on the likes stat; the bolded names are people the viewer follows who liked the post and are its only likes">
-              {nameLink(names[0])} and {nameLink(names[1])} like this
+            <Trans comment="Social proof on the likes stat; the bolded name is a person the viewer follows who liked the post and is its only like">
+              {nameLink(names[0])} likes this
             </Trans>
-          )
-        ) : others > 0 ? (
-          <Trans comment="Social proof on the likes stat; the bolded name is a person the viewer follows who liked the post, and the count is the remaining number of likes">
-            {nameLink(names[0])} and{' '}
-            <Plural
-              value={others}
-              one={`${formatPostStatCount(others)} other`}
-              other={`${formatPostStatCount(others)} others`}
-            />{' '}
-            like this
-          </Trans>
-        ) : (
-          <Trans comment="Social proof on the likes stat; the bolded name is a person the viewer follows who liked the post and is its only like">
-            {nameLink(names[0])} likes this
-          </Trans>
-        )}
-      </Text>
-    </Link>
+          )}
+        </Text>
+      </Link>
+    </View>
   )
 }
