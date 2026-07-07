@@ -23,6 +23,31 @@ on:
       version-code:
         description: Android version code
         value: ${{ jobs.build.outputs.version-code }}
+    secrets:
+      EXPO_TOKEN:
+        required: true
+      ENV_TOKEN:
+        required: true
+      SENTRY_DSN:
+        required: true
+      BITDRIFT_API_KEY:
+        required: true
+      EXPO_PUBLIC_GCP_PROJECT_ID:
+        required: true
+      GOOGLE_SERVICES_TOKEN:
+        required: true
+      SENTRY_AUTH_TOKEN:
+        required: true
+      SLACK_CLIENT_ALERT_WEBHOOK:
+        required: true
+      ANDROID_KEYSTORE_BASE64:
+        required: true
+      ANDROID_KEYSTORE_PASSWORD:
+        required: true
+      ANDROID_KEY_ALIAS:
+        required: true
+      ANDROID_KEY_PASSWORD:
+        required: true
 
 # Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
 permissions:
@@ -62,7 +87,7 @@ jobs:
           cache: pnpm
 
       - name: 🪛 Setup jq
-        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
+        uses: dcarbone/install-jq-action@4fcb5062d7ce9bc4382d1a352d19ba3ba2c317c1 # v4.0.1
 
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
@@ -74,7 +99,7 @@ jobs:
           packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - uses: actions/setup-java@ad2b38190b15e4d6bdf0c97fb4fca8412226d287 # v5.3.0
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
         with:
           distribution: "temurin"
           java-version: "17"
@@ -183,7 +208,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         if: ${{ inputs.profile == 'testflight-android' }}
         with:
           path: most-recent-testflight-commit.txt
@@ -238,11 +263,14 @@ jobs:
       - name: 📎 Attach APK to GitHub Release
         id: attach
         if: ${{ steps.release-check.outputs.exists == 'true' }}
-        uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3.0.1
-        with:
-          tag_name: ${{ github.ref_name }}
-          files: Bluesky-${{ needs.build.outputs.package-version }}.apk
-          fail_on_unmatched_files: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          APK: Bluesky-${{ needs.build.outputs.package-version }}.apk
+        run: |
+          gh release upload "$TAG" "$APK" --clobber
+          url=$(gh release view "$TAG" --json url --jq .url)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: 🔔 Notify Slack of Release Attachment
         if: ${{ steps.release-check.outputs.exists == 'true' }}
