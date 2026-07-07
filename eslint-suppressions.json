@@ -1430,11 +1430,6 @@
       "count": 1
     }
   },
-  "src/screens/Signup/StepHandle/index.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/screens/Signup/StepInfo/Policies.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
