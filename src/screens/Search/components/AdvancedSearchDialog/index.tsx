@@ -456,7 +456,7 @@ function DialogInner({
             </Admonition>
           )}
           <Button
-            label={l`Add an additional search filter`}
+            label={l`Add another search filter`}
             size="small"
             color="secondary"
             disabled={filters.length >= MAX_FILTERS}

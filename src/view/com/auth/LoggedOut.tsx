@@ -160,7 +160,12 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           />
         ) : undefined}
         {screenState === ScreenState.S_Login ? (
-          <Login onPressBack={onPressBack} />
+          <Login
+            onPressBack={onPressBack}
+            onPressCreateAccount={() => {
+              setScreenState(ScreenState.S_CreateAccount)
+            }}
+          />
         ) : undefined}
         {screenState === ScreenState.S_CreateAccount ? (
           <Signup onPressBack={onPressBack} />

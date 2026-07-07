@@ -35,6 +35,29 @@ on:
       build-number:
         description: iOS build number
         value: ${{ jobs.build.outputs.build-number }}
+    secrets:
+      EXPO_TOKEN:
+        required: true
+      ENV_TOKEN:
+        required: true
+      SENTRY_DSN:
+        required: true
+      BITDRIFT_API_KEY:
+        required: true
+      EXPO_PUBLIC_GCP_PROJECT_ID:
+        required: true
+      GOOGLE_SERVICES_TOKEN:
+        required: true
+      SENTRY_AUTH_TOKEN:
+        required: true
+      ASC_KEY_ID:
+        required: true
+      ASC_ISSUER_ID:
+        required: true
+      ASC_KEY_P8_BASE64:
+        required: true
+      SLACK_CLIENT_ALERT_WEBHOOK:
+        required: true
 
 # Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
 permissions:
@@ -73,7 +96,7 @@ jobs:
           cache: pnpm
 
       - name: 🪛 Setup jq
-        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
+        uses: dcarbone/install-jq-action@4fcb5062d7ce9bc4382d1a352d19ba3ba2c317c1 # v4.0.1
 
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
@@ -101,7 +124,7 @@ jobs:
           fi
 
       - name: 💾 Cache Pods
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         id: pods-cache
         with:
           path: ./ios/Pods
@@ -261,7 +284,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         if: ${{ inputs.profile == 'testflight' }}
         with:
           path: most-recent-testflight-commit.txt

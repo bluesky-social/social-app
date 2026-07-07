@@ -1,13 +1,9 @@
 import {useCallback, useImperativeHandle, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
-import {BSKY_SERVICE} from '#/lib/constants'
 import * as persisted from '#/state/persisted'
-import {useSession} from '#/state/session'
-import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -18,35 +14,63 @@ import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
-type SegmentedControlOptions = typeof BSKY_SERVICE | 'custom'
+type SegmentedControlOptions = 'automatic' | 'manual'
 
-export function ServerInputDialog({
+/**
+ * Login-specific fork of the server-input dialog. Instead of picking between
+ * "Bluesky" and a custom URL, the user chooses between "Automatic" (the PDS is
+ * autodetected from the typed identifier) and "Manual" (an explicit PDS URL).
+ *
+ * Selecting Automatic clears any manual override; selecting Manual with a
+ * non-empty address sets it. A Manual selection with an empty address is
+ * treated as Automatic.
+ */
+export function HostingProviderDialog({
   control,
-  onSelect,
+  currentOverride,
+  isEmail,
+  onSelectManual,
+  onSelectAutomatic,
 }: {
   control: Dialog.DialogOuterProps['control']
-  onSelect: (url: string) => void
+  /**
+   * The PDS URL currently forced by a manual override, or `null` when
+   * detection is automatic. Determines which tab the dialog opens on.
+   */
+  currentOverride: string | null
+  /**
+   * Whether the typed identifier is an email address. Emails cannot resolve
+   * to a PDS, so the Automatic tab explains that detection is unavailable and
+   * the default service will be used instead.
+   */
+  isEmail: boolean
+  onSelectManual: (url: string) => void
+  onSelectAutomatic: () => void
 }) {
   const ax = useAnalytics()
   const formRef = useRef<DialogInnerRef>(null)
 
   // persist these options between dialog open/close
-  const [fixedOption, setFixedOption] =
-    useState<SegmentedControlOptions>(BSKY_SERVICE)
-  const [previousCustomAddress, setPreviousCustomAddress] = useState('')
+  const [fixedOption, setFixedOption] = useState<SegmentedControlOptions>(
+    currentOverride ? 'manual' : 'automatic',
+  )
+  const [previousCustomAddress, setPreviousCustomAddress] = useState(
+    currentOverride ?? '',
+  )
 
   const onClose = useCallback(() => {
     const result = formRef.current?.getFormState()
-    if (result) {
-      onSelect(result)
-      if (result !== BSKY_SERVICE) {
-        setPreviousCustomAddress(result)
-      }
+    const nextOverride = result ?? null
+    if (nextOverride) {
+      onSelectManual(nextOverride)
+      setPreviousCustomAddress(nextOverride)
+    } else {
+      onSelectAutomatic()
     }
     ax.metric('signin:hostingProviderPressed', {
-      hostingProviderDidChange: fixedOption !== BSKY_SERVICE,
+      hostingProviderDidChange: nextOverride !== currentOverride,
     })
-  }, [ax, onSelect, fixedOption])
+  }, [ax, onSelectManual, onSelectAutomatic, currentOverride])
 
   return (
     <Dialog.Outer
@@ -59,6 +83,7 @@ export function ServerInputDialog({
         fixedOption={fixedOption}
         setFixedOption={setFixedOption}
         initialCustomAddress={previousCustomAddress}
+        isEmail={isEmail}
       />
     </Dialog.Outer>
   )
@@ -71,17 +96,17 @@ function DialogInner({
   fixedOption,
   setFixedOption,
   initialCustomAddress,
+  isEmail,
 }: {
   formRef: React.Ref<DialogInnerRef>
   fixedOption: SegmentedControlOptions
   setFixedOption: (opt: SegmentedControlOptions) => void
   initialCustomAddress: string
+  isEmail: boolean
 }) {
   const control = Dialog.useDialogContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
-  const {accounts} = useSession()
-  const {gtMobile} = useBreakpoints()
   const [customAddress, setCustomAddress] = useState(initialCustomAddress)
   const [pdsAddressHistory, setPdsAddressHistory] = useState<string[]>(
     persisted.get('pdsAddressHistory') || [],
@@ -91,14 +116,12 @@ function DialogInner({
     formRef,
     () => ({
       getFormState: () => {
-        let url
-        if (fixedOption === 'custom') {
-          url = customAddress.trim().toLowerCase()
-          if (!url) {
-            return null
-          }
-        } else {
-          url = fixedOption
+        if (fixedOption !== 'manual') {
+          return null
+        }
+        let url = customAddress.trim().toLowerCase()
+        if (!url) {
+          return null
         }
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
           if (url === 'localhost' || url.startsWith('localhost:')) {
@@ -108,12 +131,10 @@ function DialogInner({
           }
         }
 
-        if (fixedOption === 'custom') {
-          if (!pdsAddressHistory.includes(url)) {
-            const newHistory = [url, ...pdsAddressHistory.slice(0, 4)]
-            setPdsAddressHistory(newHistory)
-            persisted.write('pdsAddressHistory', newHistory)
-          }
+        if (!pdsAddressHistory.includes(url)) {
+          const newHistory = [url, ...pdsAddressHistory.slice(0, 4)]
+          setPdsAddressHistory(newHistory)
+          void persisted.write('pdsAddressHistory', newHistory)
         }
 
         return url
@@ -122,53 +143,58 @@ function DialogInner({
     [customAddress, fixedOption, pdsAddressHistory],
   )
 
-  const isFirstTimeUser = accounts.length === 0
-
   return (
     <Dialog.ScrollableInner
       accessibilityDescribedBy="dialog-description"
       accessibilityLabelledBy="dialog-title"
-      style={web({maxWidth: 500})}>
+      style={web([{maxWidth: 400, borderRadius: 36}])}>
       <View style={[a.relative, a.gap_md, a.w_full]}>
-        <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
+        <Text
+          nativeID="dialog-title"
+          style={[a.text_2xl, a.font_bold, a.pr_5xl]}>
           <Trans>Choose your hosting provider</Trans>
         </Text>
         <SegmentedControl.Root
           type="tabs"
-          label={_(msg`Hosting provider`)}
+          label={l`Hosting provider`}
           value={fixedOption}
           onChange={setFixedOption}>
           <SegmentedControl.Item
-            testID="bskyServiceSelectBtn"
-            value={BSKY_SERVICE}
-            label={_(msg`Bluesky`)}>
+            testID="automaticSelectBtn"
+            value="automatic"
+            label={l`Automatic`}>
             <SegmentedControl.ItemText>
-              {_(msg`Bluesky`)}
+              {l`Automatic`}
             </SegmentedControl.ItemText>
           </SegmentedControl.Item>
           <SegmentedControl.Item
-            testID="customSelectBtn"
-            value="custom"
-            label={_(msg`Custom`)}>
-            <SegmentedControl.ItemText>
-              {_(msg`Custom`)}
-            </SegmentedControl.ItemText>
+            testID="manualSelectBtn"
+            value="manual"
+            label={l`Manual`}>
+            <SegmentedControl.ItemText>{l`Manual`}</SegmentedControl.ItemText>
           </SegmentedControl.Item>
         </SegmentedControl.Root>
 
-        {fixedOption === BSKY_SERVICE && isFirstTimeUser && (
+        {fixedOption === 'automatic' && (
           <View role="tabpanel">
             <Admonition type="tip">
-              <Trans>
-                Bluesky is an open network where you can choose your own
-                provider. If you're new here, we recommend sticking with the
-                default Bluesky Social option.
-              </Trans>
+              {isEmail ? (
+                <Trans>
+                  Your hosting provider can’t be detected from an email address,
+                  so the default Bluesky service will be used. Enter your
+                  username instead, or set your provider manually.
+                </Trans>
+              ) : (
+                <Trans>
+                  Your hosting provider is detected automatically from the
+                  username you enter.
+                </Trans>
+              )}
             </Admonition>
           </View>
         )}
 
-        {fixedOption === 'custom' && (
+        {fixedOption === 'manual' && (
           <View role="tabpanel">
             <TextField.LabelText nativeID="address-input-label">
               <Trans>Server address</Trans>
@@ -205,42 +231,32 @@ function DialogInner({
 
         <View style={[a.py_xs]}>
           <Text
+            nativeID="dialog-description"
             style={[t.atoms.text_contrast_medium, a.text_sm, a.leading_snug]}>
-            {isFirstTimeUser ? (
-              <Trans>
-                If you're a developer, you can host your own server.
-              </Trans>
-            ) : (
-              <Trans>
-                Bluesky is an open network where you can choose your hosting
-                provider. If you're a developer, you can host your own server.
-              </Trans>
-            )}{' '}
+            <Trans>
+              Bluesky is an open network where you can choose your hosting
+              provider. If you're a developer, you can host your own server.
+            </Trans>{' '}
             <InlineLinkText
-              label={_(msg`Learn more about self hosting your PDS.`)}
+              label={l`Learn more about self hosting your PDS.`}
               to="https://atproto.com/guides/self-hosting">
               <Trans>Learn more.</Trans>
             </InlineLinkText>
           </Text>
         </View>
 
-        <View style={gtMobile && [a.flex_row, a.justify_end]}>
-          <Button
-            testID="doneBtn"
-            variant="solid"
-            color="primary"
-            size={platform({
-              native: 'large',
-              web: 'small',
-            })}
-            onPress={() => control.close()}
-            label={_(msg`Done`)}>
-            <ButtonText>
-              <Trans>Done</Trans>
-            </ButtonText>
-          </Button>
-        </View>
+        <Button
+          testID="doneBtn"
+          color="primary"
+          size="large"
+          onPress={() => control.close()}
+          label={l`Done`}>
+          <ButtonText>
+            <Trans>Done</Trans>
+          </ButtonText>
+        </Button>
       </View>
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
