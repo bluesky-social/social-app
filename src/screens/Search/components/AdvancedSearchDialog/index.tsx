@@ -165,6 +165,76 @@ function DialogInner({
         comment: 'Advanced search: Example of a “none of these words” search',
       }),
     },
+    {
+      all: l({
+        message: 'mustangs broncos',
+        comment: 'Advanced search: Example of an “all of these words” search',
+      }),
+      none: l({
+        message: 'cars trucks',
+        comment: 'Advanced search: Example of a “none of these words” search',
+      }),
+    },
+    {
+      all: l({
+        message: 'spring summer',
+        comment: 'Advanced search: Example of an “all of these words” search',
+      }),
+      none: l({
+        message: 'fall winter',
+        comment: 'Advanced search: Example of a “none of these words” search',
+      }),
+    },
+    {
+      all: l({
+        message: 'allegro vivace',
+        comment: 'Advanced search: Example of an “all of these words” search',
+      }),
+      none: l({
+        message: 'lento adagio',
+        comment: 'Advanced search: Example of a “none of these words” search',
+      }),
+    },
+    {
+      all: l({
+        message: 'spaniels terriers',
+        comment: 'Advanced search: Example of an “all of these words” search',
+      }),
+      none: l({
+        message: 'dachshunds pugs',
+        comment: 'Advanced search: Example of a “none of these words” search',
+      }),
+    },
+    {
+      all: l({
+        message: 'blue black',
+        comment: 'Advanced search: Example of an “all of these words” search',
+      }),
+      none: l({
+        message: 'white gold',
+        comment: 'Advanced search: Example of a “none of these words” search',
+      }),
+    },
+    {
+      all: l({
+        message: 'unstoppable force',
+        comment: 'Advanced search: Example of an “all of these words” search',
+      }),
+      none: l({
+        message: 'immovable object',
+        comment: 'Advanced search: Example of a “none of these words” search',
+      }),
+    },
+    {
+      all: l({
+        message: 'parsley sage',
+        comment: 'Advanced search: Example of an “all of these words” search',
+      }),
+      none: l({
+        message: 'rosemary thyme',
+        comment: 'Advanced search: Example of a “none of these words” search',
+      }),
+    },
   ]
 
   // eslint-disable-next-line react/hook-use-state
