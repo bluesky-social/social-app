@@ -640,6 +640,7 @@ function HostingProviderIndicator({
 
   return (
     <Button
+      testID="selectServiceButton"
       label={l`Change hosting provider`}
       accessibilityHint={l`Opens a dialog to change the hosting provider you sign in to`}
       style={[!gtMobile && [a.mt_auto, a.mb_sm, a.self_center]]}
