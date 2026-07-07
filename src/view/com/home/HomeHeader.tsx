@@ -12,7 +12,7 @@ export function HomeHeader(
   props: RenderTabBarFnProps & {
     testID?: string
     onPressSelected: () => void
-    feeds: FeedSourceInfo[]
+    feeds: Pick<FeedSourceInfo, 'displayName' | 'uri'>[]
   },
 ) {
   const {feeds, onSelect: onSelectProp} = props

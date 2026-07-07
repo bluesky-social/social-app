@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 
-{% block head_title %}Blacksky{% endblock %}
+{% block head_title %}{{ brandTitle }}{% endblock %}
 
 {% block html_head_extra -%}
-  <meta property="og:title" content="Blacksky" />
-  <meta name="twitter:title" content="Blacksky" />
+  <meta property="og:title" content="{{ brandTitle }}" />
+  <meta name="twitter:title" content="{{ brandTitle }}" />
 
-  <meta name="description" content="Decentralized social media built for community power, culture, and collective freedom." />
-  <meta name="og:description" content="Decentralized social media built for community power, culture, and collective freedom." />
-  <meta name="twitter:description" content="Decentralized social media built for community power, culture, and collective freedom." />
+  <meta name="description" content="{{ brandDescription }}" />
+  <meta name="og:description" content="{{ brandDescription }}" />
+  <meta name="twitter:description" content="{{ brandDescription }}" />
 
-  <meta property="og:url" content="https://blacksky.community" />
-  <meta name="twitter:url" content="https://blacksky.community" />
+  <meta property="og:url" content="{{ brandDomain }}" />
+  <meta name="twitter:url" content="{{ brandDomain }}" />
 
-  <meta property="og:image" content="https://blacksky.community/static/social-card-default-gradient.png" />
-  <meta property="twitter:image" content="https://blacksky.community/static/social-card-default-gradient.png"  />
+  <meta property="og:image" content="{{ brandSocialCard }}" />
+  <meta property="twitter:image" content="{{ brandSocialCard }}"  />
 
-  <meta name="twitter:site" content="@blacksky_algorithms" />
+  <meta name="twitter:site" content="{{ brandTwitterSite }}" />
   <meta name="twitter:card" content="summary_large_image" />
 {%- endblock %}
 

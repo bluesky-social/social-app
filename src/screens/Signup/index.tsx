@@ -7,6 +7,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
@@ -37,6 +38,7 @@ import * as bsky from '#/types/bsky'
 export function Signup({onPressBack}: {onPressBack: () => void}) {
   const ax = useAnalytics()
   const {_} = useLingui()
+  const brand = useBrand()
   const t = useTheme()
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
@@ -51,6 +53,13 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       value: ax,
     })
   }, [ax])
+
+  // Use the brand-configured PDS instead of the hardcoded default
+  useEffect(() => {
+    if (brand.services.pds.url) {
+      dispatch({type: 'setServiceUrl', value: brand.services.pds.url})
+    }
+  }, [brand.services.pds.url])
 
   const activeStarterPack = useActiveStarterPack()
   const {
@@ -82,7 +91,11 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
 
   useEffect(() => {
     if (isError) {
-      dispatch({type: 'setServiceDescription', value: undefined})
+      dispatch({
+        type: 'setServiceDescription',
+        value: undefined,
+        availableHandles: brand.services.pds.availableHandles,
+      })
       dispatch({
         type: 'setError',
         value: _(
@@ -90,10 +103,14 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
         ),
       })
     } else if (serviceInfo) {
-      dispatch({type: 'setServiceDescription', value: serviceInfo})
+      dispatch({
+        type: 'setServiceDescription',
+        value: serviceInfo,
+        availableHandles: brand.services.pds.availableHandles,
+      })
       dispatch({type: 'setError', value: ''})
     }
-  }, [_, serviceInfo, isError])
+  }, [_, serviceInfo, isError, brand.services.pds.availableHandles])
 
   useEffect(() => {
     if (state.pendingSubmit) {
@@ -134,7 +151,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
         <LoggedOutLayout
           leadin=""
           title={_(msg`Create Account`)}
-          description={_(msg`Welcome to the cookout!`)}
+          description={brand.messages.welcomeMessage}
           scrollable>
           <View testID="createAccount" style={a.flex_1}>
             {showStarterPackCard &&

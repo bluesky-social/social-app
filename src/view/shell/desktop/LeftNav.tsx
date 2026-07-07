@@ -5,6 +5,7 @@ import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
@@ -544,6 +545,8 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
   const {getState} = useNavigation()
   const {openComposer} = useOpenComposer()
   const {t: l} = useLingui()
+  const brand = useBrand()
+  const {leftNavMinimal} = useLayoutBreakpoints()
   const [isFetchingHandle, setIsFetchingHandle] = useState(false)
   const fetchHandle = useFetchHandle()
 
@@ -598,7 +601,11 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
         <ButtonIcon icon={EditBigIcon} size={minimal ? 'lg' : 'sm'} />
         {!minimal && (
           <ButtonText>
-            <Trans context="action">New post</Trans>
+            {leftNavMinimal ? (
+              <Trans context="action">New post</Trans>
+            ) : (
+              `New ${brand.messages.postButtonLabel}`
+            )}
           </ButtonText>
         )}
       </Button>

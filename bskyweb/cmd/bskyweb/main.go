@@ -114,6 +114,33 @@ func run(args []string) {
 					Required: false,
 					EnvVars:  []string{"BSKY_CANONICAL_INSTANCE"},
 				},
+				&cli.StringFlag{
+					Name:     "brand-config",
+					Usage:    "path to community brand config JSON file",
+					Required: false,
+					Value:    "",
+					EnvVars:  []string{"BRAND_CONFIG"},
+				},
+				&cli.StringFlag{
+					Name:     "config-api-url",
+					Usage:    "base URL of the Brand Config API (enables multi-brand mode)",
+					Required: false,
+					Value:    "",
+					EnvVars:  []string{"BRAND_CONFIG_API_URL"},
+				},
+				&cli.StringSliceFlag{
+					Name:     "frame-ancestors",
+					Usage:    "list of origins allowed to iframe this app (sets CSP frame-ancestors, disables X-Frame-Options)",
+					Required: false,
+					EnvVars:  []string{"FRAME_ANCESTORS"},
+				},
+				&cli.StringFlag{
+					Name:     "brand-host-override",
+					Usage:    "override the HTTP Host used for brand config resolution (for local development)",
+					Required: false,
+					Value:    "",
+					EnvVars:  []string{"BRAND_HOST_OVERRIDE"},
+				},
 				&cli.BoolFlag{
 					Name:     "robots-disallow-all",
 					Usage:    "Crawling is allowed by default. Enable this flag to Disallow all",

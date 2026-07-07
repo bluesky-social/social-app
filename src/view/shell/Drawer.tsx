@@ -12,6 +12,7 @@ import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
@@ -183,6 +184,7 @@ export {DrawerProfileCard}
 
 let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   const t = useTheme()
+  const brand = useBrand()
   const insets = useSafeAreaInsets()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
@@ -311,6 +313,18 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     Linking.openURL(HELP_DESK_URL)
   }, [])
 
+  const onPressDiscuss = useCallback(() => {
+    if (brand.web.links.community) {
+      Linking.openURL(brand.web.links.community)
+    }
+  }, [brand.web.links.community])
+
+  const onPressContribute = useCallback(() => {
+    if (brand.web.links.contribute) {
+      Linking.openURL(brand.web.links.contribute)
+    }
+  }, [brand.web.links.contribute])
+
   // rendering
   // =
 
@@ -391,6 +405,10 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
       <DrawerFooter
         onPressFeedback={onPressFeedback}
         onPressHelp={onPressHelp}
+        onPressDiscuss={onPressDiscuss}
+        onPressContribute={onPressContribute}
+        showDiscuss={!!brand.web.links.community}
+        showContribute={!!brand.web.links.contribute}
       />
       <InviteFriendsDialog control={inviteFriendsControl} />
     </View>
@@ -402,9 +420,17 @@ export {DrawerContent}
 let DrawerFooter = ({
   onPressFeedback,
   onPressHelp,
+  onPressDiscuss,
+  onPressContribute,
+  showDiscuss,
+  showContribute,
 }: {
   onPressFeedback: () => void
   onPressHelp: () => void
+  onPressDiscuss: () => void
+  onPressContribute: () => void
+  showDiscuss: boolean
+  showContribute: boolean
 }): React.ReactNode => {
   const {_} = useLingui()
   const insets = useSafeAreaInsets()
@@ -434,6 +460,19 @@ let DrawerFooter = ({
           <Trans>Feedback</Trans>
         </ButtonText>
       </Button>
+      {showDiscuss ? (
+        <Button
+          label={_(msg`Begin Discussion`)}
+          size="small"
+          variant="solid"
+          color="secondary"
+          onPress={onPressDiscuss}>
+          <ButtonIcon icon={Message} position="left" />
+          <ButtonText>
+            <Trans>Discussion</Trans>
+          </ButtonText>
+        </Button>
+      ) : null}
       <Button
         label={_(msg`Get help`)}
         size="small"
@@ -447,6 +486,21 @@ let DrawerFooter = ({
           <Trans>Help</Trans>
         </ButtonText>
       </Button>
+      {showContribute ? (
+        <Button
+          label={_(msg`Support Us`)}
+          size="small"
+          variant="outline"
+          color="secondary"
+          onPress={onPressContribute}
+          style={{
+            backgroundColor: 'transparent',
+          }}>
+          <ButtonText>
+            <Trans>Support Us</Trans>
+          </ButtonText>
+        </Button>
+      ) : null}
     </View>
   )
 }
@@ -768,18 +822,19 @@ function ExtraLinks() {
   const {_} = useLingui()
   const t = useTheme()
   const kawaii = useKawaiiMode()
+  const brand = useBrand()
 
   return (
     <View style={[a.flex_col, a.gap_md, a.flex_wrap]}>
       <InlineLinkText
         style={[a.text_md]}
         label={_(msg`Terms of Service`)}
-        to="https://www.blackskyweb.xyz/about/support/tos">
+        to={brand.web.links.tos}>
         <Trans>Terms of Service</Trans>
       </InlineLinkText>
       <InlineLinkText
         style={[a.text_md]}
-        to="https://www.blackskyweb.xyz/about/support/privacy-policy"
+        to={brand.web.links.privacy}
         label={_(msg`Privacy Policy`)}>
         <Trans>Privacy Policy</Trans>
       </InlineLinkText>

@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {gateDeactivateAccount} from '#/lib/api/gatekeeper'
+import {useBrand} from '#/lib/community/BrandContext'
 import {useIsBlackskyPds} from '#/lib/hooks/useIsBlackskyPds'
 import {logger} from '#/logger'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
@@ -38,6 +39,7 @@ function DeactivateAccountDialogInner({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const brand = useBrand()
   const agent = useAgent()
   const {currentAccount} = useSession()
   const {logoutCurrentAccount} = useSessionApi()
@@ -109,8 +111,8 @@ function DeactivateAccountDialogInner({
       <Prompt.DescriptionText>
         <Trans>
           Your profile, posts, feeds, and lists will no longer be visible to
-          other Blacksky users. You can reactivate your account at any time by
-          logging in.
+          other {brand.metadata.displayName} users. You can reactivate your
+          account at any time by logging in.
         </Trans>
       </Prompt.DescriptionText>
 

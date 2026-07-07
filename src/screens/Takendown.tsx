@@ -9,6 +9,7 @@ import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {
   BLUESKY_MOD_SERVICE_HEADERS,
   MAX_REPORT_REASON_GRAPHEME_LENGTH,
@@ -30,6 +31,7 @@ const COL_WIDTH = 400
 export function Takendown() {
   const {_} = useLingui()
   const t = useTheme()
+  const brand = useBrand()
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
@@ -210,10 +212,12 @@ export function Takendown() {
                 <Trans>
                   Your account was found to be in violation of the{' '}
                   <SimpleInlineLinkText
-                    label={_(msg`Blacksky Terms of Service`)}
-                    to="https://www.blackskyweb.xyz/about/support/tos"
+                    label={_(
+                      msg`${brand.metadata.displayName} Terms of Service`,
+                    )}
+                    to={brand.web.links.tos}
                     style={[a.text_md, a.leading_snug]}>
-                    Blacksky Terms of Service
+                    {brand.metadata.displayName} Terms of Service
                   </SimpleInlineLinkText>
                   . You have been sent an email outlining the specific violation
                   and suspension period, if applicable. You can appeal this

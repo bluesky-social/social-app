@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {HELP_DESK_URL} from '#/lib/constants'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
@@ -45,6 +46,7 @@ function useWebQueryParams() {
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const t = useTheme()
   const {_} = useLingui()
+  const brand = useBrand()
   const {hasSession} = useSession()
   const kawaii = useKawaiiMode()
   const gutters = useGutters(['base', 0, 'base', 'wide'])
@@ -98,42 +100,35 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
       {showExploreScreenDuplicatedContent && <SidebarTrendingTopics />}
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
-        <InlineLinkText
-          to="/support"
-          style={[t.atoms.text_contrast_medium]}
-          label={_(msg`Support Us`)}>
-          {_(msg`Support Us`)}
-        </InlineLinkText>
-        <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
-        {hasSession && (
+        {brand.web.links.contribute ? (
           <>
             <InlineLinkText
-              to="https://assembly.blacksky.community/8bbfunvvau"
-              style={[t.atoms.text_contrast_medium]}
+              to={brand.web.links.contribute}
+              label={_(msg`Support Us`)}>
+              {_(msg`Support Us`)}
+            </InlineLinkText>
+            {' \u2022 '}
+          </>
+        ) : null}
+        {hasSession && brand.web.links.community ? (
+          <>
+            <InlineLinkText
+              to={brand.web.links.community}
               label={_(msg`Discussion`)}>
               {_(msg`Discussion`)}
             </InlineLinkText>
-            <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
+            {' \u2022 '}
           </>
-        )}
-        <InlineLinkText
-          to="https://www.blackskyweb.xyz/about/support/privacy-policy"
-          style={[t.atoms.text_contrast_medium]}
-          label={_(msg`Privacy`)}>
+        ) : null}
+        <InlineLinkText to={brand.web.links.privacy} label={_(msg`Privacy`)}>
           {_(msg`Privacy`)}
         </InlineLinkText>
-        <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
-        <InlineLinkText
-          to="https://www.blackskyweb.xyz/about/support/tos"
-          style={[t.atoms.text_contrast_medium]}
-          label={_(msg`Terms`)}>
+        {' \u2022 '}
+        <InlineLinkText to={brand.web.links.tos} label={_(msg`Terms`)}>
           {_(msg`Terms`)}
         </InlineLinkText>
-        <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
-        <InlineLinkText
-          label={_(msg`Help`)}
-          to={HELP_DESK_URL}
-          style={[t.atoms.text_contrast_medium]}>
+        {' \u2022 '}
+        <InlineLinkText label={_(msg`Help`)} to={HELP_DESK_URL}>
           {_(msg`Help`)}
         </InlineLinkText>
       </Text>

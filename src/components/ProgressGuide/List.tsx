@@ -9,6 +9,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {
@@ -29,6 +30,7 @@ const TOTAL_AVATARS = 10
 export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
   const t = useTheme()
   const {_} = useLingui()
+  const brand = useBrand()
   const {gtPhone} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
   const {currentAccount} = useSession()
@@ -112,7 +114,9 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
               current={guide.numFollows + 1}
               total={7 + 1}
               title={_(msg`Follow 7 accounts`)}
-              subtitle={_(msg`Blacksky is better with friends!`)}
+              subtitle={_(
+                msg`${brand.metadata.displayName} is better with friends!`,
+              )}
             />
           </>
         )}

@@ -14,12 +14,8 @@ import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
-import {
-  BSKY_APP_ACCOUNT_DID,
-  DISCOVER_SAVED_FEED,
-  TIMELINE_SAVED_FEED,
-  VIDEO_SAVED_FEED,
-} from '#/lib/constants'
+import {useBrand} from '#/lib/community/BrandContext'
+import {BLACKSKY_COMMUNITY_DID, BSKY_APP_ACCOUNT_DID} from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
@@ -41,7 +37,11 @@ import {
   type OnboardingState,
   useOnboardingInternalState,
 } from '#/screens/Onboarding/state'
-import {bulkWriteFollows} from '#/screens/Onboarding/util'
+import {
+  bulkWriteFollows,
+  resolveFollowDids,
+  resolveStarterPackUri,
+} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
@@ -59,6 +59,7 @@ export function StepFinished() {
   const queryClient = useQueryClient()
   const agent = useAgent()
   const requestNotificationsPermission = useRequestNotificationsPermission()
+  const brand = useBrand()
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
@@ -70,10 +71,13 @@ export function StepFinished() {
     let starterPack: AppBskyGraphDefs.StarterPackView | undefined
     let listItems: AppBskyGraphDefs.ListItemView[] | undefined
 
-    if (activeStarterPack?.uri) {
+    // Use the active starter pack (from link) or fall back to community config default
+    const starterPackUri = resolveStarterPackUri(activeStarterPack?.uri, brand)
+
+    if (starterPackUri) {
       try {
         const spRes = await agent.app.bsky.graph.getStarterPack({
-          starterPack: activeStarterPack.uri,
+          starterPack: starterPackUri,
         })
         starterPack = spRes.data.starterPack
       } catch (e) {
@@ -99,7 +103,11 @@ export function StepFinished() {
       await Promise.all([
         bulkWriteFollows(
           agent,
-          [BSKY_APP_ACCOUNT_DID, ...(listItems?.map(i => i.subject.did) ?? [])],
+          resolveFollowDids(
+            [BSKY_APP_ACCOUNT_DID, BLACKSKY_COMMUNITY_DID],
+            brand,
+            listItems?.map(i => i.subject.did) ?? [],
+          ),
           starterPack
             ? {uri: starterPack.uri, cid: starterPack.cid}
             : undefined,
@@ -108,21 +116,14 @@ export function StepFinished() {
           // Interests need to get saved first, then we can write the feeds to prefs
           await agent.setInterestsPref({tags: selectedInterests})
 
-          // Default feeds that every user should have pinned when landing in the app
-          const feedsToSave: AppBskyActorDefs.SavedFeed[] = [
-            {
-              ...DISCOVER_SAVED_FEED,
+          // Default feeds that every user should have pinned when landing in
+          // the app, sourced from the active brand config so non-Blacksky
+          // brands don't end up with Blacksky's feed URIs after onboarding.
+          const feedsToSave: AppBskyActorDefs.SavedFeed[] =
+            brand.feeds.defaultPinned.map(f => ({
+              ...f,
               id: TID.nextStr(),
-            },
-            {
-              ...TIMELINE_SAVED_FEED,
-              id: TID.nextStr(),
-            },
-            {
-              ...VIDEO_SAVED_FEED,
-              id: TID.nextStr(),
-            },
-          ]
+            }))
 
           // Any starter pack feeds will be pinned _after_ the defaults
           if (starterPack && starterPack.feeds?.length) {
@@ -231,6 +232,7 @@ export function StepFinished() {
     ax,
     queryClient,
     agent,
+    brand,
     dispatch,
     onboardDispatch,
     activeStarterPack,

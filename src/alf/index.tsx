@@ -1,6 +1,7 @@
 import {createContext, useCallback, useContext, useMemo, useState} from 'react'
 import {type Theme, type ThemeName, utils as baseUtils} from '@bsky.app/alf'
 
+import {type BrandColors} from '#/lib/community/types'
 import {
   computeFontScaleMultiplier,
   getFontFamily,
@@ -8,11 +9,14 @@ import {
   setFontFamily as persistFontFamily,
   setFontScale as persistFontScale,
 } from '#/alf/fonts'
-import {themes} from '#/alf/themes'
+import {createThemes, themes} from '#/alf/themes'
 import {
   contrastRatio,
   darken,
+  DEFAULT_BLUE_HUE,
+  GREEN_HUE,
   lighten,
+  RED_HUE,
   rgbToHex,
 } from '#/alf/util/colorGeneration'
 import {type Device} from '#/storage'
@@ -73,9 +77,17 @@ export function ThemeProvider({
   children,
   theme: themeName,
   themesOverride,
+  brandColors,
+  brandHue,
+  brandBgHue,
+  brandColorScale,
 }: React.PropsWithChildren<{
   theme: ThemeName
   themesOverride?: Partial<typeof themes>
+  brandColors?: BrandColors
+  brandHue?: number
+  brandBgHue?: number
+  brandColorScale?: Record<string, string>
 }>) {
   const [fontScale, setFontScale] = useState<Alf['fonts']['scale']>(() =>
     getFontScale(),
@@ -102,15 +114,30 @@ export function ThemeProvider({
     [setFontFamily],
   )
 
-  const value = useMemo<Alf>(() => {
-    const t = {
-      ...themes,
+  const resolvedThemes = useMemo(() => {
+    const baseThemes = brandColors
+      ? createThemes({
+          hues: {
+            primary: brandHue ?? DEFAULT_BLUE_HUE,
+            negative: RED_HUE,
+            positive: GREEN_HUE,
+            bg: brandBgHue ?? brandHue ?? DEFAULT_BLUE_HUE,
+          },
+          brand: brandColors,
+          colorScale: brandColorScale,
+        })
+      : themes
+    return {
+      ...baseThemes,
       ...themesOverride,
     }
-    return {
-      themes: t,
+  }, [brandColors, brandHue, brandBgHue, brandColorScale, themesOverride])
+
+  const value = useMemo<Alf>(
+    () => ({
+      themes: resolvedThemes,
       themeName: themeName,
-      theme: t[themeName],
+      theme: resolvedThemes[themeName],
       fonts: {
         scale: fontScale,
         scaleMultiplier: fontScaleMultiplier,
@@ -119,16 +146,17 @@ export function ThemeProvider({
         setFontFamily: setFontFamilyAndPersist,
       },
       flags: {},
-    }
-  }, [
-    themeName,
-    fontScale,
-    setFontScaleAndPersist,
-    fontFamily,
-    setFontFamilyAndPersist,
-    fontScaleMultiplier,
-    themesOverride,
-  ])
+    }),
+    [
+      resolvedThemes,
+      themeName,
+      fontScale,
+      setFontScaleAndPersist,
+      fontFamily,
+      setFontFamilyAndPersist,
+      fontScaleMultiplier,
+    ],
+  )
 
   return <Context.Provider value={value}>{children}</Context.Provider>
 }

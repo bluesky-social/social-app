@@ -4,6 +4,7 @@ import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {DEFAULT_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
@@ -39,6 +40,7 @@ const OrderedForms = [
 
 export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const {_} = useLingui()
+  const brand = useBrand()
   const failedAttemptCountRef = useRef(0)
 
   const {accounts} = useSession()
@@ -49,7 +51,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
 
   const [error, setError] = useState('')
   const [serviceUrl, setServiceUrl] = useState(
-    requestedAccount?.service || DEFAULT_SERVICE,
+    requestedAccount?.service || brand.services.pds.url || DEFAULT_SERVICE,
   )
   const [initialHandle, setInitialHandle] = useState(
     requestedAccount?.handle || '',

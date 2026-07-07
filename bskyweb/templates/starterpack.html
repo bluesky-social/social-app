@@ -9,18 +9,18 @@
   <meta property="og:image" content="{{ imgThumbUrl }}">
   <meta property="twitter:image" content="{{ imgThumbUrl }}">
   {%- else -%}
-  <meta property="og:image" content="https://blacksky.community/static/social-card-default-gradient.png" />
-  <meta property="twitter:image" content="https://blacksky.community/static/social-card-default-gradient.png"  />
+  <meta property="og:image" content="{{ brandSocialCard }}" />
+  <meta property="twitter:image" content="{{ brandSocialCard }}"  />
   {% endif -%}
   <meta name="twitter:card" content="summary_large_image" />
   {%- if title %}
   <meta property="og:title" content="{{ title }}" />
   <meta name="twitter:title" content="{{ title }}" />
   {%- else -%}
-  <meta property="og:title" content="Blacksky" />
-  <meta name="twitter:title" content="Blacksky" />
+  <meta property="og:title" content="{{ brandTitle }}" />
+  <meta name="twitter:title" content="{{ brandTitle }}" />
   {% endif -%}
-  <meta name="description" content="Join the cookout" />
-  <meta name="og:description" content="Join the cookout" />
-  <meta name="twitter:description" content="Join the cookout" />
+  <meta name="description" content="{{ brandPrimaryCTA }}" />
+  <meta name="og:description" content="{{ brandPrimaryCTA }}" />
+  <meta name="twitter:description" content="{{ brandPrimaryCTA }}" />
 {%- endblock %}

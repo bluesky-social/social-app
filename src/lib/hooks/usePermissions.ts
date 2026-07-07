@@ -2,13 +2,14 @@ import {Linking} from 'react-native'
 import {useCameraPermissions as useExpoCameraPermissions} from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library'
 
+import {DEFAULT_BRAND_CONFIG} from '#/lib/community/BrandContext'
 import {Alert} from '#/view/com/util/Alert'
 import {IS_WEB} from '#/env'
 
 const openPermissionAlert = (perm: string) => {
   Alert.alert(
     'Permission needed',
-    `Blacksky does not have permission to access your ${perm}.`,
+    `${DEFAULT_BRAND_CONFIG.metadata.displayName} does not have permission to access your ${perm}.`,
     [
       {
         text: 'Cancel',

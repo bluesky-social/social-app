@@ -2,15 +2,15 @@
 
 {% block head_title %}
 {%- if feedView -%}
-  {{ feedView.DisplayName }} by @{{ feedView.Creator.Handle }} | Blacksky Feed
+  {{ feedView.DisplayName }} by @{{ feedView.Creator.Handle }} | {{ brandName }} Feed
 {%- else -%}
-  Blacksky
+  {{ brandTitle }}
 {%- endif -%}
 {% endblock %}
 
 {% block html_head_extra -%}
 {%- if feedView -%}
-  <meta property="og:site_name" content="Blacksky">
+  <meta property="og:site_name" content="{{ brandName }}">
   <meta property="og:type" content="website">
   {%- if requestURI %}
   <meta property="og:url" content="{{ requestURI }}">

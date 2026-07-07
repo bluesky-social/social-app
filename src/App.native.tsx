@@ -13,6 +13,7 @@ import * as SystemUI from 'expo-system-ui'
 import {useLingui} from '@lingui/react/macro'
 import * as Sentry from '@sentry/react-native'
 
+import {BrandProvider, useBrand} from '#/lib/community/BrandContext'
 import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottomBarBorder'
 import {QueryProvider} from '#/lib/react-query'
 import {ThemeProvider} from '#/lib/ThemeContext'
@@ -100,6 +101,7 @@ function InnerApp() {
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
+  const brand = useBrand()
   const {t: l} = useLingui()
   const hasCheckedLanding = useLandingEntry()
 
@@ -131,7 +133,12 @@ function InnerApp() {
   }, [l])
 
   return (
-    <Alf theme={theme}>
+    <Alf
+      theme={theme}
+      brandColors={brand.theme.brand}
+      brandHue={brand.theme.hue}
+      brandBgHue={brand.theme.bgHue}
+      brandColorScale={brand.theme.colorScale}>
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
           <Splash isReady={isReady && hasCheckedLanding}>
@@ -215,38 +222,40 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <AppConfigProvider>
-      <A11yProvider>
-        <KeyboardControllerProvider preload={false}>
-          <OnboardingProvider>
-            <AnalyticsContext>
-              <SessionProvider>
-                <PrefsStateProvider>
-                  <I18nProvider>
-                    <ShellStateProvider>
-                      <DialogStateProvider>
-                        <LightboxStateProvider>
-                          <PortalProvider>
-                            <BottomSheetProvider>
-                              <LandingProvider>
-                                <SafeAreaProvider
-                                  initialMetrics={initialWindowMetrics}>
-                                  <InnerApp />
-                                </SafeAreaProvider>
-                              </LandingProvider>
-                            </BottomSheetProvider>
-                          </PortalProvider>
-                        </LightboxStateProvider>
-                      </DialogStateProvider>
-                    </ShellStateProvider>
-                  </I18nProvider>
-                </PrefsStateProvider>
-              </SessionProvider>
-            </AnalyticsContext>
-          </OnboardingProvider>
-        </KeyboardControllerProvider>
-      </A11yProvider>
-    </AppConfigProvider>
+    <BrandProvider>
+      <AppConfigProvider>
+        <A11yProvider>
+          <KeyboardControllerProvider preload={false}>
+            <OnboardingProvider>
+              <AnalyticsContext>
+                <SessionProvider>
+                  <PrefsStateProvider>
+                    <I18nProvider>
+                      <ShellStateProvider>
+                        <DialogStateProvider>
+                          <LightboxStateProvider>
+                            <PortalProvider>
+                              <BottomSheetProvider>
+                                <LandingProvider>
+                                  <SafeAreaProvider
+                                    initialMetrics={initialWindowMetrics}>
+                                    <InnerApp />
+                                  </SafeAreaProvider>
+                                </LandingProvider>
+                              </BottomSheetProvider>
+                            </PortalProvider>
+                          </LightboxStateProvider>
+                        </DialogStateProvider>
+                      </ShellStateProvider>
+                    </I18nProvider>
+                  </PrefsStateProvider>
+                </SessionProvider>
+              </AnalyticsContext>
+            </OnboardingProvider>
+          </KeyboardControllerProvider>
+        </A11yProvider>
+      </AppConfigProvider>
+    </BrandProvider>
   )
 }
 

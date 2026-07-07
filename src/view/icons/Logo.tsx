@@ -1,30 +1,41 @@
 import {forwardRef} from 'react'
-import {StyleSheet, type TextProps} from 'react-native'
-import Svg, {
-  Defs,
-  G,
-  Path,
-  type PathProps,
-  Rect,
-  type SvgProps,
-} from 'react-native-svg'
+import {Image, type ImageProps, StyleSheet} from 'react-native'
+import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
 
+import {useBrand} from '#/lib/community/BrandContext'
 import {useTheme} from '#/alf'
 
 const ratio = 243 / 285
 
 type Props = {
-  fill?: PathProps['fill']
-  style?: TextProps['style']
-} & Omit<SvgProps, 'style'>
+  style?: ImageProps['style']
+  width?: number
+  fill?: string
+}
 
-export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
-  const {fill, ...rest} = props
-  const styles = StyleSheet.flatten(props.style)
+function isRemoteAsset(path: string): boolean {
+  return path.startsWith('http://') || path.startsWith('https://')
+}
+
+export const Logo = forwardRef<Image, Props>(function LogoImpl(props, ref) {
+  const {width = 32, style, fill, ...rest} = props
+  const brand = useBrand()
   const t = useTheme()
-  const _fill = fill || styles?.color || t.atoms.text.color
-  // @ts-ignore it's fiiiiine
-  const size = parseInt(rest.width || 32)
+  const size = width
+
+  if (isRemoteAsset(brand.assets.logo)) {
+    return (
+      <Image
+        ref={ref}
+        source={{uri: brand.assets.logo}}
+        accessibilityIgnoresInvertColors
+        style={[{width: size, height: size}, StyleSheet.flatten(style)]}
+        {...rest}
+      />
+    )
+  }
+
+  const _fill = fill || t.atoms.text.color
 
   return (
     <Svg
@@ -32,8 +43,7 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
       // @ts-ignore it's fiiiiine
       ref={ref}
       viewBox="0 0 285 243"
-      {...rest}
-      style={[{width: size, height: size * ratio}, styles]}>
+      style={[{width: size, height: size * ratio}, StyleSheet.flatten(style)]}>
       <G clipPath="url(#clip0_1011_989)">
         <Path
           d="M148.846 144.562C148.846 159.75 161.158 172.062 176.346 172.062H207.012V185.865H176.346C161.158 185.865 148.846 198.177 148.846 213.365V243.045H136.029V213.365C136.029 198.177 123.717 185.865 108.529 185.865H77.8633V172.062H108.529C123.717 172.062 136.029 159.75 136.029 144.562V113.896H148.846V144.562Z"
@@ -53,9 +63,9 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
         />
       </G>
       <Defs>
-        <clipPath id="clip0_1011_989">
+        <ClipPath id="clip0_1011_989">
           <Rect width="285" height="243" fill={_fill} />
-        </clipPath>
+        </ClipPath>
       </Defs>
     </Svg>
   )

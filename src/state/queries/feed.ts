@@ -22,6 +22,8 @@ import {
 } from '@tanstack/react-query'
 
 import {getProxyHeadersForFeed} from '#/lib/api/feed/utils'
+import {useBrand} from '#/lib/community/BrandContext'
+import {DEFAULT_DISCOVERY_FEEDS} from '#/lib/community/configGenerator'
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -351,10 +353,18 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 export function useGetBlackskyFeedsQuery(options?: GetPopularFeedsOptions) {
   const {hasSession} = useSession()
   const agent = useAgent()
+  const brand = useBrand()
   const limit = options?.limit || 10
   const {data: preferences} = usePreferencesQuery()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
+
+  // Computed config guarantees discoveryFeeds is populated (configGenerator
+  // falls back to DEFAULT_DISCOVERY_FEEDS). Defensive fallback here guards
+  // against older server configs that may not include the field yet.
+  const discoveryFeeds = brand.feeds.discoveryFeeds?.length
+    ? brand.feeds.discoveryFeeds
+    : DEFAULT_DISCOVERY_FEEDS
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = useMemo(
@@ -374,18 +384,10 @@ export function useGetBlackskyFeedsQuery(options?: GetPopularFeedsOptions) {
     string | undefined
   >({
     enabled: Boolean(moderationOpts) && options?.enabled !== false,
-    queryKey: createGetPopularFeedsQueryKey(options),
+    queryKey: [...createGetPopularFeedsQueryKey(options), discoveryFeeds],
     queryFn: async () => {
       const res = await agent.app.bsky.feed.getFeedGenerators({
-        feeds: [
-          'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky-trend',
-          'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky',
-          'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky-edu',
-          'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky-op',
-          'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky-videos',
-          'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky-photos',
-          'at://did:plc:3guzzweuqraryl3rdkimjamk/app.bsky.feed.generator/for-you',
-        ],
+        feeds: discoveryFeeds,
       })
 
       // precache feeds
@@ -579,6 +581,7 @@ const COMMUNITY_FEED_STUB: SavedFeedSourceInfo = {
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
   const agent = useAgent()
+  const brand = useBrand()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
   const {data: isCommunityMember = false} = useCommunityMembership()
@@ -595,10 +598,15 @@ export function usePinnedFeedsInfos() {
     [isCommunityMember],
   )
 
+  const brandPinnedValues = useMemo(
+    () => brand.feeds.defaultPinned?.map(f => f.value) ?? [],
+    [brand.feeds.defaultPinned],
+  )
+
   return useQuery({
     queryKey: createPinnedFeedInfosQueryKey(
       'pinned',
-      pinnedItems.map(f => f.value),
+      hasSession ? pinnedItems.map(f => f.value) : brandPinnedValues,
     ),
     gcTime: GCTIME.INFINITY,
     staleTime: STALE.INFINITY,
@@ -606,7 +614,41 @@ export function usePinnedFeedsInfos() {
     select: injectCommunity,
     queryFn: async () => {
       if (!hasSession) {
-        return [PWI_DISCOVER_FEED_STUB]
+        const brandPinned = (brand.feeds.defaultPinned ?? []).filter(
+          f => f.type !== 'timeline',
+        )
+        if (brandPinned.length === 0) {
+          return [PWI_DISCOVER_FEED_STUB]
+        }
+        const feedUris = brandPinned
+          .filter(f => f.type === 'feed')
+          .map(f => f.value)
+
+        const resolved = new Map<string, FeedSourceInfo>()
+        if (feedUris.length > 0) {
+          const res = await agent.app.bsky.feed.getFeedGenerators({
+            feeds: feedUris,
+          })
+          for (const feedView of res.data.feeds) {
+            resolved.set(feedView.uri, hydrateFeedGenerator(feedView))
+          }
+        }
+
+        const result: SavedFeedSourceInfo[] = []
+        for (const item of brandPinned) {
+          const feedInfo = resolved.get(item.value)
+          if (feedInfo) {
+            result.push({
+              ...feedInfo,
+              savedFeed: {id: `brand-${item.value}`, ...item},
+            })
+          } else if (item.type === 'feed') {
+            console.warn(
+              `[BrandFeeds] Pinned feed not resolved, skipping: ${item.value}`,
+            )
+          }
+        }
+        return result
       }
 
       let resolved = new Map<string, FeedSourceInfo>()

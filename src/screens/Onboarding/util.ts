@@ -10,6 +10,7 @@ import {TID} from '@atproto/common-web'
 import chunk from 'lodash.chunk'
 
 import {until} from '#/lib/async/until'
+import {type ComputedBrandConfig} from '#/lib/community/types'
 
 export async function bulkWriteFollows(
   agent: AtpAgent,
@@ -56,6 +57,36 @@ export async function bulkWriteFollows(
     )
   }
   return followUris
+}
+
+/**
+ * Resolves which starter pack URI to use during onboarding.
+ * Prefers the active starter pack (from a link click) over the community config default.
+ */
+export function resolveStarterPackUri(
+  activeStarterPackUri: string | undefined,
+  brandConfig: ComputedBrandConfig,
+): string | undefined {
+  return activeStarterPackUri || brandConfig.onboarding.starterPack || undefined
+}
+
+/**
+ * Builds the deduplicated list of DIDs to auto-follow during onboarding.
+ * Merges hardcoded community DIDs, brand config auto-follow DIDs,
+ * and starter pack list member DIDs.
+ */
+export function resolveFollowDids(
+  hardcodedDids: string[],
+  brandConfig: ComputedBrandConfig,
+  starterPackMemberDids: string[],
+): string[] {
+  return [
+    ...new Set([
+      ...hardcodedDids,
+      ...brandConfig.onboarding.autoFollowDids,
+      ...starterPackMemberDids,
+    ]),
+  ]
 }
 
 async function whenFollowsIndexed(
