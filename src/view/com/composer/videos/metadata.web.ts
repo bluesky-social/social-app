@@ -73,6 +73,7 @@ async function getMetadataWithWebCodecs(
 
     return {
       uri: blobUrl,
+      file,
       mimeType: file.type,
       width: videoTrack.displayWidth,
       height: videoTrack.displayHeight,
@@ -93,6 +94,7 @@ async function getMetadataWithBrowserAPIs(
       img.onload = () => {
         resolve({
           uri: blobUrl,
+          file,
           mimeType: 'image/gif',
           width: img.width,
           height: img.height,
@@ -112,6 +114,7 @@ async function getMetadataWithBrowserAPIs(
       video.onloadedmetadata = () => {
         resolve({
           uri: blobUrl,
+          file,
           mimeType: file.type,
           width: video.videoWidth,
           height: video.videoHeight,
