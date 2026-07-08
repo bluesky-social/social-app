@@ -11,7 +11,7 @@ export const BSKY_SERVICE = 'https://blacksky.app'
 export const BSKY_SERVICE_DID = 'did:web:bsky.social'
 export const PUBLIC_BSKY_SERVICE = 'https://api.blacksky.community'
 export const DEFAULT_SERVICE = BSKY_SERVICE
-export const HELP_DESK_URL = `mailto:support@blacksky.app`
+export const HELP_DESK_URL = `https://docs.blacksky.community/using-blacksky`
 export const CHAT_SERVICE = 'https://api.bsky.chat'
 export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
@@ -39,7 +39,7 @@ export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
   'did:plc:2dzyut5lxna5ljiaasgeuffz': true, // darrin.bsky.team
 }
 
-const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}`
+const BASE_FEEDBACK_FORM_URL = `mailto:support@blacksky.app`
 export function FEEDBACK_FORM_URL(_params: {
   email?: string
   handle?: string
