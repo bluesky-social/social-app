@@ -661,7 +661,7 @@ function ChatSettingsMenu({
             </Menu.ItemText>
           </Menu.Item>
           <Menu.Item
-            label={l`Mark all chats as read`}
+            label={l`Mark all requests as read`}
             onPress={() => markAllRequestsRead()}>
             <Menu.ItemIcon icon={InboxIcon} />
             <Menu.ItemText>
