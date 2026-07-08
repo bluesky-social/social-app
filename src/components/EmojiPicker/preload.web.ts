@@ -24,9 +24,9 @@ export function useWebPreloadEmoji({immediate}: {immediate?: boolean} = {}) {
         import(/* webpackChunkName: "emoji-mart" */ 'emoji-mart'),
         import(/* webpackChunkName: "emoji-mart-data" */ '@emoji-mart/data'),
       ])
-      init({data})
+      await init({data})
     } catch (e) {}
   }, [])
-  if (immediate) preload()
+  if (immediate) void preload()
   return preload
 }
