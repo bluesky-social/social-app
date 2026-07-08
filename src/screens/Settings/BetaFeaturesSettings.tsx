@@ -1,20 +1,20 @@
 import {useEffect, useState} from 'react'
-import {Linking, View} from 'react-native'
+import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {
   usePreferencesQuery,
   useSetIsBetaUserMutation,
 } from '#/state/queries/preferences'
-import {useSession} from '#/state/session'
+import {BetaFeaturesFeedbackDialog} from '#/screens/Settings/components/BetaFeaturesFeedbackDialog'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
@@ -30,14 +30,15 @@ type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'BetaFeaturesSettings'
 >
+
 export function BetaFeaturesSettingsScreen({}: Props) {
   const t = useTheme()
   const {t: l, i18n} = useLingui()
-  const {currentAccount} = useSession()
   const {data: preferences} = usePreferencesQuery()
   const {mutateAsync: setIsBetaUser} = useSetIsBetaUserMutation()
   const isBetaUser = preferences?.bskyAppState?.isBetaUser ?? false
   const [isPending, setIsPending] = useState(false)
+  const feedbackControl = Dialog.useDialogControl()
 
   /*
    * `getTargetedFeatures` reads the GrowthBook singleton synchronously, but
@@ -91,13 +92,9 @@ export function BetaFeaturesSettingsScreen({}: Props) {
   }
 
   const onPressShareFeedback = () => {
-    void Linking.openURL(
-      FEEDBACK_FORM_URL({
-        email: currentAccount?.email,
-        handle: currentAccount?.handle,
-      }),
-    )
+    feedbackControl.open()
   }
+
   const canSubmitFeedback =
     !isPending && isBetaUser && (betaFeatures.length > 0 || IS_INTERNAL)
 
@@ -224,6 +221,11 @@ export function BetaFeaturesSettingsScreen({}: Props) {
           </View>
         </SettingsList.Container>
       </Layout.Content>
+
+      <BetaFeaturesFeedbackDialog
+        control={feedbackControl}
+        betaFeatureKeys={betaFeatures.map(feature => feature.key)}
+      />
     </Layout.Screen>
   )
 }
