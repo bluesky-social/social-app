@@ -1,6 +1,6 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {ALL_FORMATS, BlobSource, Input} from 'mediabunny'
 
+import {loadMediaBunny} from '#/lib/media/video/mediabunny'
 import {logger} from '#/logger'
 
 export function hasWebCodecs(): boolean {
@@ -55,6 +55,7 @@ async function getMetadataWithWebCodecs(
   file: File,
   blobUrl: string,
 ): Promise<ImagePickerAsset> {
+  const {ALL_FORMATS, BlobSource, Input} = await loadMediaBunny()
   const input = new Input({
     source: new BlobSource(file),
     formats: ALL_FORMATS,
