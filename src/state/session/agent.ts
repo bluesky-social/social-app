@@ -350,6 +350,30 @@ class BskyAppAgent extends BskyAgent {
     super({
       service,
       async fetch(...args) {
+        // getPreferences/putPreferences are PDS-local methods. The agent's
+        // global appview proxy header must not reach them, or a PDS whose
+        // default appview differs from ours (e.g. bsky.network) forwards them
+        // to the Blacksky appview, which 501s — breaking the app for accounts
+        // not hosted on the Blacksky PDS.
+        const input = args[0] as string | URL | Request
+        const url =
+          typeof input === 'string'
+            ? input
+            : input instanceof URL
+              ? input.href
+              : input.url
+        if (
+          url &&
+          (url.includes('app.bsky.actor.getPreferences') ||
+            url.includes('app.bsky.actor.putPreferences'))
+        ) {
+          const init = args[1] as RequestInit | undefined
+          if (init?.headers) {
+            const headers = new Headers(init.headers)
+            headers.delete('atproto-proxy')
+            init.headers = headers
+          }
+        }
         let success = false
         try {
           const result = await realFetch(...args)
