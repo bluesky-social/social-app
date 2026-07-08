@@ -22,6 +22,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {features} from '#/analytics'
 import {getTargetedFeatures} from '#/analytics/features'
+import {IS_WEB} from '#/env'
 import {device} from '#/storage'
 
 type Props = NativeStackScreenProps<
@@ -135,10 +136,9 @@ export function BetaFeaturesSettingsScreen({}: Props) {
 
           <View style={[a.px_xl, a.gap_md]}>
             <Admonition type="info">
-              <Trans>
-                Beta features may be unstable. Some changes may require
-                restarting the app.
-              </Trans>
+              {IS_WEB
+                ? l`Beta features may be unstable. Some changes may require reloading the app.`
+                : l`Beta features may be unstable. Some changes may require restarting the app.`}
             </Admonition>
 
             <Button
