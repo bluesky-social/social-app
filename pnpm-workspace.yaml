@@ -43,6 +43,7 @@ patchedDependencies:
 minimumReleaseAgeExclude:
   - '@atproto/*'
   - '@bsky.app/*'
+  # TODO: remove once these are old enough
   - 'typescript'
   - '@typescript/typescript-aix-ppc64@7.0.2'
   - '@typescript/typescript-darwin-arm64@7.0.2'
