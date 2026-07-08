@@ -28,6 +28,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {DM_SERVICE_HEADERS, MAX_POST_LINES} from '#/lib/constants'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
 import {makeProfileLink} from '#/lib/routes/links'
+import {postUriToRelativePath} from '#/lib/strings/url-helpers'
 import {type NavigationProp} from '#/lib/routes/types'
 import {forceLTR} from '#/lib/strings/bidi'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -110,8 +111,7 @@ let NotificationFeedItem = ({
       case 'like-via-repost':
       case 'repost-via-repost': {
         if (item.subjectUri) {
-          const urip = new AtUri(item.subjectUri)
-          return `/profile/${urip.host}/post/${urip.rkey}`
+          return postUriToRelativePath(item.subjectUri) ?? ''
         }
         break
       }
@@ -124,8 +124,7 @@ let NotificationFeedItem = ({
       case 'reply':
       case 'mention':
       case 'quote': {
-        const uripReply = new AtUri(item.notification.uri)
-        return `/profile/${uripReply.host}/post/${uripReply.rkey}`
+        return postUriToRelativePath(item.notification.uri) ?? ''
       }
       case 'feedgen-like':
       case 'starterpack-joined': {
