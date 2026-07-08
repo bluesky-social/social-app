@@ -154,26 +154,6 @@ function DialogInner({
   const scrollRef = useRef<ScrollView>(null)
   const filtersSectionRef = useRef<View>(null)
 
-  const suggestions = [
-    {
-      all: l({
-        message: 'cats dogs',
-        comment:
-          'Advanced search: Example of an “all of these words” search. Paired with “cows pigs”.',
-      }),
-      none: l({
-        message: 'cows pigs',
-        comment:
-          'Advanced search: Example of a “none of these words” search. Paired with “cats dogs”.',
-      }),
-    },
-  ]
-
-  // eslint-disable-next-line react/hook-use-state
-  const [suggestion] = useState(() =>
-    Math.floor(Math.random() * suggestions.length),
-  )
-
   function addFilter() {
     if (filters.length >= MAX_FILTERS) return
     /*
@@ -281,7 +261,11 @@ function DialogInner({
           <ClearableInput
             label={l`Search query`}
             defaultValue={query}
-            placeholder={suggestions[suggestion].all}
+            placeholder={l({
+              message: 'cats dogs',
+              comment:
+                'Advanced search: Example of an “all of these words” search. Paired with “cows pigs”.',
+            })}
             onChangeText={setQuery}
             onSubmitEditing={handlePressSearch}
           />
@@ -311,7 +295,11 @@ function DialogInner({
             <ClearableInput
               label={l`None of these words`}
               defaultValue={negatedWords}
-              placeholder={suggestions[suggestion].none}
+              placeholder={l({
+                message: 'cows pigs',
+                comment:
+                  'Advanced search: Example of a “none of these words” search. Paired with “cats dogs”.',
+              })}
               onChangeText={setNegatedWords}
               onSubmitEditing={handlePressSearch}
             />
