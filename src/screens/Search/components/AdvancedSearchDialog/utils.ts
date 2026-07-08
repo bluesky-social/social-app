@@ -15,9 +15,9 @@ export type MediaFilter = 'all' | 'media' | 'video'
 
 /**
  * Whether to limit results to authors the user follows. Serializes into the
- * `following` sibling param ('following' -> following:true, everyone -> unset).
+ * `following` sibling param ('following' -> following:true, anyone -> unset).
  */
-export type FollowingFilter = 'everyone' | 'following'
+export type FollowingFilter = 'anyone' | 'following'
 
 export type FilterField = 'authors' | 'mentions' | 'domains' | 'urls' | 'tags'
 
@@ -260,7 +260,7 @@ export function parseAdvancedSearch(
     language: lang,
     replies,
     media,
-    following: filters.following === 'true' ? 'following' : 'everyone',
+    following: filters.following === 'true' ? 'following' : 'anyone',
     since: since && isValidDate(since) ? since : '',
     until: until && isValidDate(until) ? until : '',
     filters: filterRows,
