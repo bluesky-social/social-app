@@ -154,7 +154,7 @@ export function BetaFeaturesSettingsScreen({}: Props) {
             </Button>
 
             {betaFeatures.length < 1 ? (
-              <View style={[a.align_center, a.gap_xs, a.py_4xl]}>
+              <View style={[a.align_center, a.gap_xs, a.py_5xl]}>
                 <BeakerIcon
                   size="4xl"
                   fill={t.palette.contrast_100}
