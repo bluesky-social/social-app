@@ -1,5 +1,13 @@
-import {createContext, useContext, useEffect, useMemo, useRef} from 'react'
-import EmojiPicker from '@emoji-mart/react'
+import {
+  createContext,
+  lazy,
+  Suspense,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
+import {View} from 'react-native'
 import {DropdownMenu} from 'radix-ui'
 
 import {useA11y} from '#/state/a11y'
@@ -15,6 +23,24 @@ import {
 } from './types'
 
 export * from './types'
+
+/**
+ * The emoji-mart picker is code-split into its own chunk (`emoji-mart`) so its
+ * weight stays out of the main bundle and is only fetched when the picker
+ * actually mounts (i.e. when the dropdown opens). {@link useWebPreloadEmoji}
+ * warms the same chunk ahead of time.
+ */
+const EmojiPickerLazy = lazy(
+  () => import(/* webpackChunkName: "emoji-mart" */ '@emoji-mart/react'),
+)
+
+/**
+ * Fixed-size placeholder shown while the emoji-mart chunk loads, sized to match
+ * emoji-mart's default picker so the dropdown doesn't visually jump when the
+ * real picker mounts.
+ */
+const PICKER_WIDTH = 352
+const PICKER_HEIGHT = 435
 
 const EmojiPickerContext = createContext<{
   onEmojiSelect: (emoji: Emoji) => void
@@ -124,16 +150,21 @@ export function Picker({keepOpenWhenShiftHeld = true}: PickerProps) {
         <div
           onWheel={evt => evt.stopPropagation()}
           style={flatten([!reduceMotionEnabled && a.zoom_fade_in])}>
-          <EmojiPicker
-            autoFocus
-            onEmojiSelect={(emoji: Emoji) => {
-              onEmojiSelect(emoji)
+          <Suspense
+            fallback={
+              <View style={{width: PICKER_WIDTH, height: PICKER_HEIGHT}} />
+            }>
+            <EmojiPickerLazy
+              autoFocus
+              onEmojiSelect={(emoji: Emoji) => {
+                onEmojiSelect(emoji)
 
-              if (!keepOpenWhenShiftHeld || !isShiftDown.current) {
-                control.close()
-              }
-            }}
-          />
+                if (!keepOpenWhenShiftHeld || !isShiftDown.current) {
+                  control.close()
+                }
+              }}
+            />
+          </Suspense>
         </div>
       </DropdownMenu.Content>
     </DropdownMenu.Portal>
