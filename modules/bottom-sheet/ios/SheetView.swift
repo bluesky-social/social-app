@@ -32,9 +32,12 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   var cornerRadius: CGFloat?
   var sourceViewTag: Int?
   var minHeight = 0.0
-  var maxHeight: CGFloat! {
+  // getScreenHeight() is nil when no window scene is connected yet (e.g. during
+  // prewarming or a background launch). A nil here previously trapped in
+  // clampHeight, so fall back to the full screen bounds instead.
+  var maxHeight: CGFloat = UIScreen.main.bounds.height {
     didSet {
-      let screenHeight = Util.getScreenHeight() ?? 0
+      let screenHeight = Util.getScreenHeight() ?? UIScreen.main.bounds.height
       if maxHeight > screenHeight {
         maxHeight = screenHeight
       }
@@ -77,7 +80,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   required init (appContext: AppContext? = nil) {
     super.init(appContext: appContext)
-    self.maxHeight = Util.getScreenHeight()
+    self.maxHeight = Util.getScreenHeight() ?? UIScreen.main.bounds.height
     self.touchHandler = RCTTouchHandler(bridge: appContext?.reactBridge)
     SheetManager.shared.add(self)
   }
