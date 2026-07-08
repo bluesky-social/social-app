@@ -41,7 +41,7 @@ export function ClearableDateField({
          */
         value={active ? value : ''}
         placeholder={l({
-          message: 'Any time',
+          message: 'Any date',
           comment: 'Placeholder text for a date picker',
         })}
         accessibilityHint={accessibilityHint}

@@ -14,7 +14,7 @@ const emptySerializeState = {
   language: '',
   replies: 'all' as const,
   media: 'all' as const,
-  following: 'everyone' as const,
+  following: 'anyone' as const,
   dateSince: '',
   dateSinceActive: false,
   dateUntil: '',
@@ -145,10 +145,10 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
     expect(out.filters.following).toBe('true')
   })
 
-  it(`leaves the following param unset for everyone`, () => {
+  it(`leaves the following param unset for anyone`, () => {
     const out = serializeAdvancedSearch({
       ...emptySerializeState,
-      following: 'everyone',
+      following: 'anyone',
     })
     expect(out.filters.following).toBeUndefined()
   })
@@ -157,7 +157,7 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
     expect(parseAdvancedSearch('', {following: 'true'}).following).toBe(
       'following',
     )
-    expect(parseAdvancedSearch('', {}).following).toBe('everyone')
+    expect(parseAdvancedSearch('', {}).following).toBe('anyone')
   })
 
   it(`strips redundant markers from filter values on serialize`, () => {
@@ -177,7 +177,7 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
       language: '',
       replies: 'all',
       media: 'all',
-      following: 'everyone',
+      following: 'anyone',
       dateSince: '',
       dateSinceActive: false,
       dateUntil: '',

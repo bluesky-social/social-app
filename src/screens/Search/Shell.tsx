@@ -540,6 +540,24 @@ export function SearchScreenShell({
                     value={filters.lang ?? ''}
                     onChange={onChangeLang}
                   />
+                ) : showFilters && advancedSearchV2Enabled ? (
+                  <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                    <AdvancedSearchDialog
+                      disabled={activeTab > 1}
+                      q={searchText}
+                      filters={filters}
+                      onSubmit={onSubmitAdvanced}
+                    />
+                    <Button
+                      accessibilityRole="button"
+                      size="small"
+                      color="secondary"
+                      shape="round"
+                      label={l`Share this search`}
+                      onPress={onShareSearch}>
+                      <ButtonIcon icon={ShareIcon} />
+                    </Button>
+                  </View>
                 ) : (
                   <Layout.Header.Slot />
                 )}
@@ -558,19 +576,19 @@ export function SearchScreenShell({
                 />
               )}
 
-              <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs]}>
+              <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_sm]}>
                 <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
                   {showAutocomplete && (
                     <Button
                       label={l`Cancel search`}
-                      size="large"
+                      size="small"
                       variant="ghost"
                       color="secondary"
                       shape="round"
                       style={[a.px_sm]}
                       onPress={onPressCancelSearch}
                       hitSlop={HITSLOP_10}>
-                      <ButtonIcon icon={ArrowLeftIcon} />
+                      <ButtonIcon icon={ArrowLeftIcon} size="lg" />
                     </Button>
                   )}
                   <View style={[a.flex_1]}>
@@ -591,6 +609,25 @@ export function SearchScreenShell({
                     />
                   </View>
                 </View>
+                {showFilters && !showHeader && advancedSearchV2Enabled ? (
+                  <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                    <AdvancedSearchDialog
+                      disabled={activeTab > 1}
+                      q={searchText}
+                      filters={filters}
+                      onSubmit={onSubmitAdvanced}
+                    />
+                    <Button
+                      accessibilityRole="button"
+                      size="small"
+                      color="secondary"
+                      shape="round"
+                      label={l`Share this search`}
+                      onPress={onShareSearch}>
+                      <ButtonIcon icon={ShareIcon} />
+                    </Button>
+                  </View>
+                ) : null}
               </View>
 
               {showFilters && !showHeader && !advancedSearchV2Enabled && (
@@ -601,25 +638,6 @@ export function SearchScreenShell({
                   />
                 </View>
               )}
-
-              {showFilters && advancedSearchV2Enabled ? (
-                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                  <AdvancedSearchDialog
-                    q={searchText}
-                    filters={filters}
-                    onSubmit={onSubmitAdvanced}
-                  />
-                  <Button
-                    accessibilityRole="button"
-                    size="small"
-                    color="secondary"
-                    shape="round"
-                    label={l`Share this search`}
-                    onPress={onShareSearch}>
-                    <ButtonIcon icon={ShareIcon} />
-                  </Button>
-                </View>
-              ) : null}
             </View>
           </View>
         </Layout.Center>
