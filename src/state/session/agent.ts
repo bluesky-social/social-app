@@ -350,6 +350,26 @@ class BskyAppAgent extends BskyAgent {
     super({
       service,
       async fetch(...args) {
+        // PDS-local prefs methods must not carry the appview proxy header.
+        const input = args[0] as string | URL | Request
+        const url =
+          typeof input === 'string'
+            ? input
+            : input instanceof URL
+              ? input.href
+              : input.url
+        if (
+          url &&
+          (url.includes('app.bsky.actor.getPreferences') ||
+            url.includes('app.bsky.actor.putPreferences'))
+        ) {
+          const init = args[1] as RequestInit | undefined
+          if (init?.headers) {
+            const headers = new Headers(init.headers)
+            headers.delete('atproto-proxy')
+            init.headers = headers
+          }
+        }
         let success = false
         try {
           const result = await realFetch(...args)
