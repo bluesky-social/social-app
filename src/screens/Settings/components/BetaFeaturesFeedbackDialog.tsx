@@ -25,10 +25,19 @@ export function BetaFeaturesFeedbackDialog({
    */
   betaFeatureKeys: string[]
 }) {
+  const [feedback, setFeedback] = useState('')
+
   return (
-    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+    <Dialog.Outer
+      control={control}
+      nativeOptions={{preventExpansion: true}}
+      onClose={() => setFeedback('')}>
       <Dialog.Handle />
-      <BetaFeaturesFeedbackDialogInner betaFeatureKeys={betaFeatureKeys} />
+      <BetaFeaturesFeedbackDialogInner
+        betaFeatureKeys={betaFeatureKeys}
+        feedback={feedback}
+        setFeedback={setFeedback}
+      />
       <Dialog.Close />
     </Dialog.Outer>
   )
@@ -36,14 +45,17 @@ export function BetaFeaturesFeedbackDialog({
 
 function BetaFeaturesFeedbackDialogInner({
   betaFeatureKeys,
+  feedback,
+  setFeedback,
 }: {
   betaFeatureKeys: string[]
+  feedback: string
+  setFeedback: (value: string) => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
   const control = Dialog.useDialogContext()
   const {currentAccount} = useSession()
-  const [feedback, setFeedback] = useState('')
 
   const {mutate: onSubmit, isPending} = useMutation({
     mutationFn: () => {
