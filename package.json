@@ -62,7 +62,7 @@
     "lint": "oxlint --quiet src modules",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
-    "typecheck": "tsgo --project ./tsconfig.check.json",
+    "typecheck": "tsc --project ./tsconfig.check.json",
     "e2e:mock-server": "cd dev-env && pnpm start",
     "e2e:build": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
     "e2e:build-android": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:android",
@@ -270,7 +270,6 @@
     "@types/psl": "1.1.1",
     "@types/react": "^19.1.17",
     "@types/react-dom": "^19.1.11",
-    "@typescript/native-preview": "^7.0.0-dev.20260428.1",
     "babel-jest": "^29.7.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-compiler": "19.1.0-rc.3",
@@ -295,7 +294,7 @@
     "react-refresh": "^0.14.0",
     "svgo": "^3.3.2",
     "ts-plugin-sort-import-suggestions": "^1.0.4",
-    "typescript": "^6.0.2",
+    "typescript": "^7.0.2",
     "webpack-bundle-analyzer": "^4.10.1"
   },
   "jest": {
