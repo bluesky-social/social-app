@@ -26,6 +26,11 @@ function errorClass(e: unknown): string {
   return 'Unknown'
 }
 
+function errorMessage(e: unknown): string {
+  const message = e instanceof Error ? e.message : String(e)
+  return message.slice(0, 256)
+}
+
 export type VideoTelemetry = {
   readonly uploadId: string
   readonly engine: string
@@ -208,6 +213,7 @@ export function createVideoTelemetry({
         uploadId,
         engine,
         errorClass: errorClass(e),
+        errorMessage: errorMessage(e),
         elapsedMs: Date.now() - phaseStartedAt,
       })
       endTxn('error')

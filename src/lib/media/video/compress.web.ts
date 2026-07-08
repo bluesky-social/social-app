@@ -1,17 +1,8 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
-  ALL_FORMATS,
   type AudioCodec,
-  BlobSource,
-  BufferTarget,
-  canEncodeAudio,
-  canEncodeVideo,
-  Conversion,
-  Input,
-  Mp4OutputFormat,
-  Output,
+  type Input as MediaBunnyInput,
   type VideoCodec,
-  WebMOutputFormat,
 } from 'mediabunny'
 
 import {VIDEO_MAX_SIZE} from '#/lib/constants'
@@ -23,6 +14,7 @@ import {
   COMPRESSION_MIN_SIZE_BYTES,
   COMPRESSION_TARGET_BITRATE,
 } from './constants'
+import {loadMediaBunny} from './mediabunny'
 import {type CompressedVideo, type ProbedMetadata} from './types'
 
 // Codecs to try in order of preference
@@ -44,8 +36,12 @@ export async function compressVideo(
     hasWebCodecs: hasWebCodecs(),
   })
 
-  const response = await fetch(asset.uri)
-  const blob = await response.blob()
+  /*
+   * Prefer the original File over re-fetching the blob URL. A fetch round
+   * trip copies the bytes and fails with a bare TypeError if the URL was
+   * revoked or the read fails - the top web compressFailed error class.
+   */
+  const blob = asset.file ?? (await (await fetch(asset.uri)).blob())
 
   const isGif = blob.type === 'image/gif'
   const hasCodecs = hasWebCodecs()
@@ -112,6 +108,7 @@ export async function compressVideo(
 }
 
 async function probeWithMediaBunny(blob: Blob): Promise<ProbedMetadata> {
+  const {ALL_FORMATS, BlobSource, Input} = await loadMediaBunny()
   const input = new Input({source: new BlobSource(blob), formats: ALL_FORMATS})
   try {
     const videoTrack = await input.getPrimaryVideoTrack()
@@ -153,6 +150,7 @@ async function findEncodableVideoCodec(
   width: number,
   height: number,
 ): Promise<{codec: VideoCodec; useWebM: boolean} | null> {
+  const {canEncodeVideo} = await loadMediaBunny()
   for (const codec of VIDEO_CODECS) {
     const canEncode = await canEncodeVideo(codec, {
       width,
@@ -179,9 +177,10 @@ const AUDIO_CODECS_MP4: AudioCodec[] = ['aac']
 const AUDIO_CODECS_WEBM: AudioCodec[] = ['opus', 'vorbis']
 
 async function findEncodableAudioCodec(
-  audioTrack: Awaited<ReturnType<Input['getPrimaryAudioTrack']>>,
+  audioTrack: Awaited<ReturnType<MediaBunnyInput['getPrimaryAudioTrack']>>,
   useWebM: boolean,
 ): Promise<{codec: AudioCodec} | null> {
+  const {canEncodeAudio} = await loadMediaBunny()
   if (!audioTrack) {
     return null
   }
@@ -227,6 +226,17 @@ async function doCompression(
   },
 ): Promise<CompressedVideo> {
   const {onProgress, signal} = opts
+
+  const {
+    ALL_FORMATS,
+    BlobSource,
+    BufferTarget,
+    Conversion,
+    Input,
+    Mp4OutputFormat,
+    Output,
+    WebMOutputFormat,
+  } = await loadMediaBunny()
 
   const input = new Input({
     source: new BlobSource(blob),

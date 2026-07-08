@@ -671,9 +671,6 @@
     }
   },
   "src/components/forms/TextField.tsx": {
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
-    },
     "react-hooks/refs": {
       "count": 1
     }
@@ -983,11 +980,6 @@
     }
   },
   "src/lib/media/save-image.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/lib/merge-refs.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }

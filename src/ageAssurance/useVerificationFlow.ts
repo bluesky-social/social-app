@@ -59,7 +59,7 @@ export function useAgeAssuranceVerificationFlow({
 
   const verifyCta =
     allowsDeviceVerification && !deviceSignalsFailed
-      ? l`Share age data`
+      ? l`Share age range`
       : hasInitiated
         ? l`Verify again`
         : l`Verify now`
