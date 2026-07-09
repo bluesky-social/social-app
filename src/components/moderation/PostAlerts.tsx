@@ -33,15 +33,13 @@ export function PostAlerts({
 }) {
   const {currentAccount} = useSession()
 
-  if (!modui.alert && !modui.inform && !additionalCauses?.length) {
-    return null
-  }
-
   const alerts = modui.alerts.filter(unique)
   const informs = modui.informs.filter(unique)
   /*
    * The "+n" pill surfaces labels for the author to review and appeal, so it
-   * only applies when the viewer is the author.
+   * only applies when the viewer is the author. It renders even when no other
+   * moderation is visible, since it may be the author's only entry point to
+   * appeal labels on their content.
    */
   const isOwnPost = !!post && post.author.did === currentAccount?.did
   const allLabels: ComAtprotoLabelDefs.Label[] = isOwnPost
@@ -66,6 +64,15 @@ export function PostAlerts({
           cause.label.uri !== label.uri,
       ),
   )
+
+  if (
+    !modui.alert &&
+    !modui.inform &&
+    !additionalCauses?.length &&
+    !additionalLabels.length
+  ) {
+    return null
+  }
 
   return (
     <Pills.Row size={size} style={[size === 'sm' && {marginLeft: -3}, style]}>
@@ -94,7 +101,15 @@ export function PostAlerts({
         />
       ))}
       {additionalLabels.length ? (
-        <AdditionalLabels labels={additionalLabels} size={size} />
+        <AdditionalLabels
+          labels={additionalLabels}
+          size={size}
+          hasPrecedingPills={
+            alerts.length > 0 ||
+            informs.length > 0 ||
+            (additionalCauses?.length ?? 0) > 0
+          }
+        />
       ) : null}
     </Pills.Row>
   )
@@ -103,9 +118,15 @@ export function PostAlerts({
 function AdditionalLabels({
   labels,
   size,
+  hasPrecedingPills,
 }: {
   labels: ComAtprotoLabelDefs.Label[]
   size?: Pills.CommonProps['size']
+  /**
+   * The compact "+n" syntax only makes sense as a continuation of other
+   * pills. When this pill stands alone, spell it out.
+   */
+  hasPrecedingPills: boolean
 }) {
   const {t: l} = useLingui()
   const control = useLabelsOnMeDialogControl()
@@ -115,7 +136,14 @@ function AdditionalLabels({
       <LabelsOnMeDialog control={control} labels={labels} type="content" />
 
       <Pills.LabelBase
-        label={l`+${plural(labels.length, {one: '#', other: '#'})}`}
+        label={
+          hasPrecedingPills
+            ? l`+${labels.length}`
+            : l`${plural(labels.length, {
+                one: '# label applied',
+                other: '# labels applied',
+              })}`
+        }
         size={size}
         noBg={size === 'sm'}
         onPress={() => {
