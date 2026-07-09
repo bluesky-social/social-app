@@ -92,6 +92,18 @@ export const METRICS_API_HOST: string =
   process.env.EXPO_PUBLIC_METRICS_API_HOST || 'https://events.bsky.app'
 
 /**
+ * PostHog project API key. If empty, PostHog reporting is disabled.
+ */
+export const POSTHOG_API_KEY: string =
+  process.env.EXPO_PUBLIC_POSTHOG_API_KEY || ''
+
+/**
+ * PostHog ingestion host.
+ */
+export const POSTHOG_HOST: string =
+  process.env.EXPO_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'
+
+/**
  * Growthbook API host
  */
 export const GROWTHBOOK_API_HOST: string =

@@ -344,7 +344,7 @@ export class Agent extends BaseAgent {
 // app.bsky.actor.getPreferences / putPreferences are PDS-local methods. The
 // agent's global appview proxy header must not reach them: a PDS whose home
 // appview differs from ours (e.g. bsky.network) honors the header and forwards
-// the call to the Blacksky appview, which 501s — breaking app load for any
+// the call to the Blacksky appview, which 501s - breaking app load for any
 // account not hosted on the Blacksky PDS. Strip the header for these methods so
 // the user's own PDS serves them locally. Shared by the session agent and the
 // OAuth agent (both attach the proxy header via configureProxy).

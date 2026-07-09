@@ -1,0 +1,26 @@
+diff --git a/node_modules/react-native/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.cpp b/node_modules/react-native/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.cpp
+index 66a91c9..021084b 100644
+--- a/node_modules/react-native/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.cpp
++++ b/node_modules/react-native/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.cpp
+@@ -111,6 +111,8 @@ HermesRuntimeAgentDelegate::HermesRuntimeAgentDelegate(
+           runtimeTargetDelegate,
+           std::move(runtimeExecutor))) {}
+ 
++HermesRuntimeAgentDelegate::~HermesRuntimeAgentDelegate() = default;
++
+ bool HermesRuntimeAgentDelegate::handleRequest(
+     const cdp::PreparsedRequest& req) {
+   return impl_->handleRequest(req);
+diff --git a/node_modules/react-native/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.h b/node_modules/react-native/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.h
+index d38e863..7358029 100644
+--- a/node_modules/react-native/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.h
++++ b/node_modules/react-native/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.h
+@@ -56,6 +56,8 @@ class HermesRuntimeAgentDelegate : public RuntimeAgentDelegate {
+       HermesRuntimeTargetDelegate& runtimeTargetDelegate,
+       RuntimeExecutor runtimeExecutor);
+ 
++  ~HermesRuntimeAgentDelegate() override;
++
+   /**
+    * Handle a CDP request. The response will be sent over the provided
+    * \c FrontendChannel synchronously or asynchronously.

@@ -1,5 +1,6 @@
 import {useEffect} from 'react'
 import {Linking, View} from 'react-native'
+import * as Application from 'expo-application'
 import * as Notification from 'expo-notifications'
 import {type AppBskyNotificationDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -82,7 +83,7 @@ export function NotificationSettingsScreen({}: Props) {
             [
               {
                 key: 'android.provider.extra.APP_PACKAGE',
-                value: 'xyz.blueskyweb.app',
+                value: Application.applicationId ?? 'community.blacksky.app',
               },
             ],
           )

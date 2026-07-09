@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blacksky CI/CD &amp; Observability Report</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface-2: #1c2129;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --accent-dim: #1f3a5f;
+    --green: #3fb950;
+    --green-dim: #1a3a2a;
+    --yellow: #d29922;
+    --yellow-dim: #3d2e00;
+    --red: #f85149;
+    --red-dim: #3d1418;
+    --purple: #bc8cff;
+    --purple-dim: #2a1a4e;
+    --orange: #f0883e;
+    --orange-dim: #3d2200;
+    --cyan: #39d2c0;
+    --cyan-dim: #0d3330;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.75rem;
+    color: var(--accent);
+  }
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.25rem 0 0.5rem;
+    color: var(--text);
+  }
+
+  p, li { color: var(--text); font-size: 0.9rem; }
+  p { margin-bottom: 0.75rem; }
+  ul, ol { padding-left: 1.25rem; margin-bottom: 0.75rem; }
+  li { margin-bottom: 0.35rem; }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  code {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    background: var(--surface-2);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-size: 0.85em;
+    border: 1px solid var(--border);
+  }
+
+  pre {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+
+  .grid { display: grid; gap: 1rem; }
+  .grid-2 { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .grid-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.15em 0.6em;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .badge-p0 { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
+  .badge-p1 { background: var(--orange-dim); color: var(--orange); border: 1px solid var(--orange); }
+  .badge-p2 { background: var(--yellow-dim); color: var(--yellow); border: 1px solid var(--yellow); }
+  .badge-p3 { background: var(--purple-dim); color: var(--purple); border: 1px solid var(--purple); }
+  .badge-ok { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
+  .badge-warn { background: var(--yellow-dim); color: var(--yellow); border: 1px solid var(--yellow); }
+  .badge-danger { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
+  .badge-info { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent); }
+  .badge-neutral { background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); }
+  .badge-decision { background: var(--cyan-dim); color: var(--cyan); border: 1px solid var(--cyan); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    background: var(--surface-2);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  tr:hover { background: var(--surface-2); }
+
+  .phase-container {
+    border-left: 3px solid var(--border);
+    padding-left: 1.5rem;
+    margin-left: 0.5rem;
+    position: relative;
+  }
+
+  .phase-container::before {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 0;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: var(--bg);
+  }
+
+  .phase-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+  }
+
+  .phase-desc {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .file-ref {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+  }
+
+  .stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .decision-box {
+    background: var(--cyan-dim);
+    border: 1px solid var(--cyan);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .decision-box h4 {
+    color: var(--cyan);
+    margin-bottom: 0.5rem;
+  }
+
+  .bug-box {
+    background: var(--red-dim);
+    border: 1px solid var(--red);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .bug-box h4 { color: var(--red); margin-bottom: 0.5rem; }
+
+  .warning-box {
+    background: var(--yellow-dim);
+    border: 1px solid var(--yellow);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .warning-box h4 { color: var(--yellow); margin-bottom: 0.5rem; }
+
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .toc-title { font-weight: 600; margin-bottom: 0.75rem; }
+
+  .toc ol { padding-left: 1.25rem; }
+
+  .toc li {
+    margin-bottom: 0.3rem;
+    font-size: 0.85rem;
+  }
+
+  .toc a { color: var(--text-muted); }
+  .toc a:hover { color: var(--accent); }
+
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+    font-size: 0.82rem;
+  }
+
+  .flow-step {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    white-space: nowrap;
+  }
+
+  .flow-arrow {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+  }
+
+  .flow-decision {
+    background: var(--cyan-dim);
+    border: 1px solid var(--cyan);
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    color: var(--cyan);
+  }
+
+  .checklist { list-style: none; padding-left: 0; }
+
+  .checklist li {
+    padding: 0.4rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .checklist li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55rem;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--border);
+    border-radius: 3px;
+  }
+
+  .section-icon {
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 0.8rem;
+  }
+
+  .separator {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+  }
+
+  @media (max-width: 768px) {
+    body { padding: 1rem; }
+    h1 { font-size: 1.5rem; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Blacksky CI/CD &amp; Observability Report</h1>
+<p class="subtitle">Comprehensive plan for adapting the inherited Bluesky CI/CD pipeline and telemetry stack into a Blacksky-owned system. Generated 2026-06-29.</p>
+
+<!-- Table of Contents -->
+<div class="toc">
+  <div class="toc-title">Contents</div>
+  <ol>
+    <li><a href="#current-state">Current State Overview</a></li>
+    <li><a href="#critical-issues">Critical Issues &amp; Blockers</a></li>
+    <li><a href="#observability">Observability Improvements</a></li>
+    <li><a href="#repo-guards">Repository Guards</a></li>
+    <li><a href="#app-identity">App Identity &amp; EAS Configuration</a></li>
+    <li><a href="#secrets">Secrets &amp; Variables</a></li>
+    <li><a href="#mobile-builds">Mobile Build Workflows</a></li>
+    <li><a href="#ota">OTA &amp; Update Deployment</a></li>
+    <li><a href="#pr-workflows">PR Workflows &amp; Automation</a></li>
+    <li><a href="#sentry">Sentry &amp; Error Tracking</a></li>
+    <li><a href="#firebase">Firebase &amp; Push Notifications</a></li>
+    <li><a href="#containers">Web &amp; Container Workflows</a></li>
+    <li><a href="#upstream-cleanup">Upstream Workflow Cleanup</a></li>
+    <li><a href="#domains">Domains &amp; Deep Links</a></li>
+    <li><a href="#extensions">Native App Extensions</a></li>
+    <li><a href="#hardening">Pipeline Hardening</a></li>
+    <li><a href="#decisions">Key Decisions Needed</a></li>
+    <li><a href="#phases">Phase Plan</a></li>
+    <li><a href="#validation">Validation Checklist</a></li>
+  </ol>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: Current State -->
+<!-- ============================================ -->
+<h2 id="current-state">1. Current State Overview</h2>
+
+<div class="grid grid-4" style="margin-bottom: 1.5rem;">
+  <div class="card" style="text-align: center;">
+    <div class="stat-value" style="color: var(--accent);">21</div>
+    <div class="stat-label">GitHub Actions Workflows</div>
+  </div>
+  <div class="card" style="text-align: center;">
+    <div class="stat-value" style="color: var(--yellow);">14</div>
+    <div class="stat-label">Secrets Referenced</div>
+  </div>
+  <div class="card" style="text-align: center;">
+    <div class="stat-value" style="color: var(--red);">8+</div>
+    <div class="stat-label">Files With Repo Guards</div>
+  </div>
+  <div class="card" style="text-align: center;">
+    <div class="stat-value" style="color: var(--purple);">1,200+</div>
+    <div class="stat-label">Tracked Metric Events</div>
+  </div>
+</div>
+
+<h3>Migration Status by File (Verified Against Repo)</h3>
+<table>
+  <thead>
+    <tr><th>File</th><th>Status</th><th>Key Issues</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>app.config.js</code></td><td><span class="badge badge-ok">Done</span></td><td>All identity fields are Blacksky. Only <code>updates.url</code> still Bluesky (intentionally disabled).</td></tr>
+    <tr><td><code>eas.json</code></td><td><span class="badge badge-ok">Done</span></td><td>ASC app ID is <code>6776276281</code> (Blacksky).</td></tr>
+    <tr><td><code>build-submit-ios.yml</code></td><td><span class="badge badge-danger">Needs Update</span></td><td>Repo guard, <code>Bluesky.ipa</code> artifact paths, <code>xyz.blueskyweb.app</code> bundle ID ref.</td></tr>
+    <tr><td><code>build-submit-android.yml</code></td><td><span class="badge badge-danger">Needs Update</span></td><td>Repo guards (lines 33, 205).</td></tr>
+    <tr><td><code>bundle-deploy-eas-update.yml</code></td><td><span class="badge badge-danger">Needs Update</span></td><td>Repo guards, <code>blueskyweb</code> Sentry org, <code>Bluesky.ipa</code> paths, <code>DENIS_API_KEY</code>.</td></tr>
+    <tr><td><code>pull-request-commit.yml</code></td><td><span class="badge badge-ok">OK</span></td><td>No hardcoded repo guard. Uses <code>bluesky-social/github-actions</code> (upstream dep).</td></tr>
+    <tr><td><code>pull-request-comment.yml</code></td><td><span class="badge badge-danger">Needs Update</span></td><td><code>bsky-qr.vercel.app</code> QR URL, <code>bluesky://</code> deep links.</td></tr>
+    <tr><td><code>lint.yml</code></td><td><span class="badge badge-ok">OK</span></td><td>No app-specific config.</td></tr>
+    <tr><td><code>sync-internal.yaml</code></td><td><span class="badge badge-danger">Delete</span></td><td>Force-pushes to <code>bluesky-social/social-app-internal</code>.</td></tr>
+    <tr><td><code>scripts/bundleUpdate.sh</code></td><td><span class="badge badge-danger">Needs Update</span></td><td>Endpoint <code>updates.bsky.app</code>, hardcoded <code>bsky</code> auth user.</td></tr>
+    <tr><td><code>scripts/bundleUpdate.js</code></td><td><span class="badge badge-ok">OK</span></td><td>Pure bundle processing, no app-specific config.</td></tr>
+    <tr><td><code>scripts/useBuildNumberEnv*.sh</code></td><td><span class="badge badge-ok">OK</span></td><td>Pure build utilities.</td></tr>
+    <tr><td><code>src/env/common.ts</code></td><td><span class="badge badge-danger">Needs Update</span></td><td>5+ hardcoded <code>bsky.app</code> service URLs (events, ip, live-events, app-config, alt proxy DID).</td></tr>
+  </tbody>
+</table>
+
+<h3>Workflow Categories</h3>
+<div class="grid grid-2">
+  <div class="card">
+    <div class="card-header"><span class="badge badge-ok">Active</span> Mobile App Build &amp; Submit</div>
+    <ul>
+      <li><code>build-submit-ios.yml</code></li>
+      <li><code>build-submit-android.yml</code></li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="badge badge-warn">Blocked</span> OTA &amp; Update Deployment</div>
+    <ul>
+      <li><code>bundle-deploy-eas-update.yml</code></li>
+      <li><code>scripts/bundleUpdate.sh</code></li>
+      <li><code>scripts/bundleUpdate.js</code></li>
+      <li><code>scripts/useBuildNumberEnv.sh</code></li>
+      <li><code>scripts/useBuildNumberEnvWithBump.sh</code></li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="badge badge-ok">Active</span> PR Checks &amp; Quality Gates</div>
+    <ul>
+      <li><code>pull-request-commit.yml</code></li>
+      <li><code>pull-request-comment.yml</code></li>
+      <li><code>lint.yml</code></li>
+      <li><code>verify-yarn-lock.yml</code></li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="badge badge-info">Review</span> Web &amp; Container Deployment</div>
+    <ul>
+      <li><code>build-and-push-bskyweb-docr.yaml</code> <span class="badge badge-ok">Blacksky</span></li>
+      <li><code>build-and-push-bskyweb-aws.yaml</code> <span class="badge badge-danger">Upstream</span></li>
+      <li><code>build-and-push-bskyweb-ghcr.yaml</code> <span class="badge badge-danger">Upstream</span></li>
+      <li><code>build-and-push-link-aws.yaml</code> <span class="badge badge-danger">Upstream</span></li>
+      <li><code>build-and-push-ogcard-aws.yaml</code> <span class="badge badge-danger">Upstream</span></li>
+      <li><code>build-and-push-embedr-aws.yaml</code> <span class="badge badge-danger">Upstream</span></li>
+    </ul>
+  </div>
+</div>
+
+<h3>Observability Stack</h3>
+<div class="grid grid-3">
+  <div class="card">
+    <div class="card-header"><span class="badge badge-ok">Updated</span> Sentry</div>
+    <p>Errors, perf tracing, session replay. App config points to <code>blacksky-algorithms/social-app</code>. Verify CI workflow env vars match.</p>
+    <p style="font-size: 0.8rem; color: var(--text-muted);">Prod sample: 10% errors, 10% traces. Internal: 100%.</p>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="badge badge-danger">Re-point</span> Metrics Client</div>
+    <p>1,200+ product events batched to <code>events.bsky.app/t</code>. Currently sending data to Bluesky.</p>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="badge badge-danger">Re-point</span> GrowthBook</div>
+    <p>Feature flags &amp; experiments. Default host <code>events.bsky.app/gb</code> with Bluesky SDK key.</p>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="badge badge-ok">Working</span> Logger Abstraction</div>
+    <p>Custom logger with Sentry transport (prod), console (dev). 500-entry ring buffer for in-app bug capture.</p>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="badge badge-neutral">Dead Code</span> Bitdrift</div>
+    <p>Env var defined but zero usage in codebase. Session logging stubs are NOOPs.</p>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="badge badge-ok">Working</span> Error Boundaries</div>
+    <p>Two error boundaries (main + GIF picker) with proper Sentry reporting.</p>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: Critical Issues -->
+<!-- ============================================ -->
+<h2 id="critical-issues">2. Critical Issues &amp; Blockers</h2>
+
+<div class="warning-box">
+  <h4>Telemetry &amp; Service Endpoints Still Pointing at Bluesky</h4>
+  <p><code>src/env/common.ts</code> contains multiple hardcoded Bluesky service URLs. Sentry org in <code>app.config.js</code> is already updated, but these runtime defaults are not.</p>
+  <table>
+    <tr><th>Service</th><th>Current Default</th><th>File &amp; Line</th></tr>
+    <tr><td>Metrics API</td><td><code>https://events.bsky.app</code></td><td><code>src/env/common.ts:92</code></td></tr>
+    <tr><td>GrowthBook</td><td>Derived from Metrics host (<code>/gb</code>)</td><td><code>src/env/common.ts</code></td></tr>
+    <tr><td>Geolocation</td><td><code>https://ip.bsky.app</code></td><td><code>src/env/common.ts:131</code></td></tr>
+    <tr><td>Live Events</td><td><code>https://live-events.workers.bsky.app</code></td><td><code>src/env/common.ts:141</code></td></tr>
+    <tr><td>App Config</td><td><code>https://app-config.workers.bsky.app</code></td><td><code>src/env/common.ts:163</code></td></tr>
+    <tr><td>Alt Proxy DID</td><td><code>did:web:api.bsky.app</code></td><td><code>src/env/common.ts:80</code></td></tr>
+    <tr><td>Sentry</td><td><code>blacksky-algorithms / social-app</code></td><td><code>app.config.js:258-259</code> <span class="badge badge-ok">Done</span></td></tr>
+  </table>
+  <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">Note: Primary proxy DID already defaults to <code>did:web:api.blacksky.community</code> (line 79).</p>
+</div>
+
+<div class="bug-box">
+  <h4>Bug: Runtime Version Validation Inverted</h4>
+  <p>In <code>bundle-deploy-eas-update.yml</code>, the runtime version validation only runs when the variable is <em>empty</em>, which is backwards.</p>
+  <pre><code># Current (broken) - validates when EMPTY
+if [ -z "$RUNTIME_VERSION" ]; then
+  [[ "$RUNTIME_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "Version is valid" || exit 1
+fi
+
+# Fixed - validates when NON-EMPTY
+if [ -n "$RUNTIME_VERSION" ]; then
+  [[ "$RUNTIME_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "Version is valid" || exit 1
+fi</code></pre>
+</div>
+
+<div class="warning-box">
+  <h4>OTA Updates Disabled</h4>
+  <p>OTA is explicitly disabled in <code>app.config.js</code> (line 39) with a comment noting Blacksky has no update server. The deploy script targets <code>updates.bsky.app</code> via <code>DENIS_API_KEY</code>. Without OTA, every JS-only change requires a full store build.</p>
+</div>
+
+<div class="warning-box">
+  <h4>External Dependency: Fingerprint Action</h4>
+  <p><code>bluesky-social/github-actions/fingerprint-native@main</code> is referenced in two workflows. This is Bluesky's GitHub org - it needs to be forked or replaced with <code>expo/fingerprint</code> directly.</p>
+</div>
+
+<div class="warning-box">
+  <h4>Silent Error Swallowing</h4>
+  <p>8+ instances of <code>.catch(() =&gt; {})</code> that suppress errors without logging.</p>
+  <table>
+    <tr><th>File</th><th>What's Swallowed</th></tr>
+    <tr><td><code>src/state/queries/threadgate/index.ts:278</code></td><td>Threadgate update failures</td></tr>
+    <tr><td><code>src/state/session/moderation.ts</code></td><td>Labeler DID resolution</td></tr>
+    <tr><td><code>src/screens/StarterPack/StarterPackScreen.tsx:224</code></td><td>Starter pack operations</td></tr>
+    <tr><td><code>src/view/com/composer/videos/VideoTranscodeBackdrop.tsx:11</code></td><td>Video cache clearing</td></tr>
+    <tr><td><code>src/Splash.tsx:201</code></td><td>SplashScreen.hideAsync()</td></tr>
+    <tr><td><code>src/analytics/features/index.ts:48-51</code></td><td>GrowthBook init failure</td></tr>
+    <tr><td><code>src/state/feed-feedback.tsx:164</code></td><td>Feed feedback upstream errors</td></tr>
+    <tr><td><code>src/screens/Search/modules/ExploreInterestsCard.tsx:37</code></td><td>Interest card errors</td></tr>
+  </table>
+</div>
+
+<div class="warning-box">
+  <h4>sync-internal.yaml Still Active</h4>
+  <p>This workflow force-pushes to <code>bluesky-social/social-app-internal</code> on every main push. Should be removed immediately.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: Observability -->
+<!-- ============================================ -->
+<h2 id="observability">3. Observability Improvements</h2>
+
+<h3>A. Re-point or Gate External Telemetry</h3>
+<div class="card">
+  <span class="badge badge-p0">P0</span>
+  <p style="margin-top: 0.5rem;">All three telemetry services default to Bluesky endpoints. Either re-point to Blacksky infrastructure or guard with graceful no-ops.</p>
+
+  <h4>Metrics Client Guard</h4>
+  <p>File: <code>src/analytics/metrics/client.ts</code></p>
+  <pre><code>// Gate start() on METRICS_API_HOST being defined and non-default
+if (!METRICS_API_HOST || METRICS_API_HOST === 'https://events.bsky.app') return</code></pre>
+
+  <h4>GrowthBook Guard</h4>
+  <p>File: <code>src/analytics/features/index.ts</code></p>
+  <p>Remove hardcoded default SDK key <code>sdk-7gkUkGy9wguUjyFe</code>. Gate init on both <code>GROWTHBOOK_API_HOST</code> and <code>GROWTHBOOK_CLIENT_KEY</code> being explicitly set.</p>
+
+  <h4>Sentry Re-pointing <span class="badge badge-ok">Done in app.config.js</span></h4>
+  <p>App config already points to <code>blacksky-algorithms/social-app</code>. However, <code>bundle-deploy-eas-update.yml</code> line 291 still has <code>SENTRY_ORG=blueskyweb</code> - update this to match.</p>
+
+  <h4>Additional Service URLs in <code>src/env/common.ts</code></h4>
+  <p>Beyond metrics/GrowthBook, several other Bluesky service URLs need decisions:</p>
+  <ul>
+    <li><code>https://ip.bsky.app</code> (geolocation, line 131)</li>
+    <li><code>https://live-events.workers.bsky.app</code> (live events, line 141)</li>
+    <li><code>https://app-config.workers.bsky.app</code> (app config, line 163)</li>
+    <li><code>did:web:api.bsky.app</code> (alt proxy DID, line 80)</li>
+  </ul>
+</div>
+
+<h3>B. Add Logging to Silent Catches</h3>
+<div class="card">
+  <span class="badge badge-p1">P1</span>
+  <p style="margin-top: 0.5rem;">Replace <code>.catch(() =&gt; {})</code> with <code>.catch(e =&gt; logger.warn('context', {safeMessage: e}))</code> in the files listed above. This surfaces hidden bugs via Sentry breadcrumbs and the logDump ring buffer without changing error handling behavior.</p>
+</div>
+
+<h3>C. Sentry Spans for TanStack Query</h3>
+<div class="card">
+  <span class="badge badge-p2">P2</span>
+  <p style="margin-top: 0.5rem;">No API call tracing exists. A global wrapper around TanStack Query's <code>queryFn</code> can emit Sentry breadcrumbs/spans for every API call, providing per-endpoint latency percentiles without touching individual queries.</p>
+  <p>This can be implemented via <code>QueryClient</code> defaults or a custom <code>queryFn</code> wrapper that starts/finishes a Sentry span around the actual fetch.</p>
+</div>
+
+<h3>D. Network Error Rate Tracking</h3>
+<div class="card">
+  <span class="badge badge-p2">P2</span>
+  <p style="margin-top: 0.5rem;">Sentry currently ignores <code>AbortError</code> and <code>Network request failed</code> entirely. Network reliability is unmeasured. Options:</p>
+  <ul>
+    <li>Capture network errors as breadcrumbs (filter from <em>issues</em> but still count them)</li>
+    <li>Send lightweight metrics events from the logger transport on network errors</li>
+  </ul>
+</div>
+
+<h3>E. Feed Scroll Performance</h3>
+<div class="card">
+  <span class="badge badge-p3">P3</span>
+  <p style="margin-top: 0.5rem;">The most latency-sensitive UX path has zero instrumentation. Sentry auto-perf captures app start and frozen frames, but not per-feed-item render timing or scroll jank correlation. Use Sentry manual spans or lightweight custom metrics.</p>
+</div>
+
+<h3>F. Test Coverage Reporting</h3>
+<div class="card">
+  <span class="badge badge-p2">P2</span>
+  <p style="margin-top: 0.5rem;">Jest runs in CI but coverage is not tracked. The <code>test-coverage</code> script exists (<code>jest --coverage</code>) but is not wired into any workflow. Add to <code>lint.yml</code> and post coverage diff comments on PRs.</p>
+</div>
+
+<h3>G. Dependency Vulnerability Scanning</h3>
+<div class="card">
+  <span class="badge badge-p1">P1</span>
+  <p style="margin-top: 0.5rem;">No scanning exists. Add <code>pnpm audit --audit-level=high</code> as a step in <code>lint.yml</code> or enable GitHub Dependabot.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: Repository Guards -->
+<!-- ============================================ -->
+<h2 id="repo-guards">4. Repository Guards</h2>
+
+<p>Many deploy/build jobs are disabled unless the GitHub repository is <code>bluesky-social/social-app</code>. These must be changed before they run in Blacksky's repository.</p>
+
+<div class="card">
+  <h4>Find &amp; Replace</h4>
+  <pre><code># From:
+github.repository == 'bluesky-social/social-app'
+
+# To:
+github.repository == 'blacksky-algorithms/blacksky.community'</code></pre>
+</div>
+
+<table>
+  <thead>
+    <tr><th>File</th><th>Action</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>build-submit-ios.yml</code></td><td><span class="badge badge-p0">Update guard</span></td></tr>
+    <tr><td><code>build-submit-android.yml</code></td><td><span class="badge badge-p0">Update guard</span></td></tr>
+    <tr><td><code>bundle-deploy-eas-update.yml</code></td><td><span class="badge badge-p0">Update guard</span></td></tr>
+    <tr><td><code>pull-request-commit.yml</code></td><td><span class="badge badge-ok">No hardcoded guard</span> (uses dynamic same-repo check)</td></tr>
+    <tr><td><code>build-and-push-bskyweb-aws.yaml</code></td><td><span class="badge badge-danger">Delete or disable</span></td></tr>
+    <tr><td><code>build-and-push-bskyweb-ghcr.yaml</code></td><td><span class="badge badge-danger">Delete or disable</span></td></tr>
+    <tr><td><code>build-and-push-link-aws.yaml</code></td><td><span class="badge badge-danger">Delete or disable</span></td></tr>
+    <tr><td><code>build-and-push-ogcard-aws.yaml</code></td><td><span class="badge badge-danger">Delete or disable</span></td></tr>
+    <tr><td><code>build-and-push-embedr-aws.yaml</code></td><td><span class="badge badge-danger">Delete or disable</span></td></tr>
+    <tr><td><code>sync-internal.yaml</code></td><td><span class="badge badge-danger">Delete</span></td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<!-- SECTION: App Identity -->
+<!-- ============================================ -->
+<h2 id="app-identity">5. App Identity &amp; EAS Configuration</h2>
+
+<div class="card" style="border-color: var(--green); margin-bottom: 1.5rem;">
+  <div class="card-header"><span class="badge badge-ok">Mostly Complete</span> app.config.js already updated to Blacksky values</div>
+  <p>The app config has already been migrated. All major identity fields point to Blacksky.</p>
+</div>
+
+<h3>app.config.js - Current State (Verified)</h3>
+<table>
+  <thead>
+    <tr><th>Field</th><th>Current Value</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>name</td><td><code>'Blacksky'</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>slug</td><td><code>'blacksky'</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>scheme</td><td><code>['blacksky', 'community.blacksky']</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>owner</td><td><code>'blacksky-algorithms'</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>ios.bundleIdentifier</td><td><code>'community.blacksky.app'</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>android.package</td><td><code>'community.blacksky.app'</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>CFBundleSpokenName</td><td><code>'Blacksky'</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>app group</td><td><code>'group.community.blacksky.app'</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>Sentry org</td><td><code>'blacksky-algorithms'</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>Sentry project</td><td><code>'social-app'</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>EAS projectId</td><td><code>'680dd4a3-7b77-4a43-8f10-f14617b73b9b'</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>Contacts permission text</td><td>References Blacksky</td><td><span class="badge badge-ok">Done</span></td></tr>
+  </tbody>
+</table>
+
+<h3>Associated Domains (Already Blacksky)</h3>
+<table>
+  <thead>
+    <tr><th>Domain</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>applinks:blacksky.community</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td><code>applinks:staging.blacksky.community</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td><code>appclips:blacksky.community</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td><code>appclips:go.blacksky.community</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+  </tbody>
+</table>
+
+<h3>Extension Bundle IDs (Already Blacksky)</h3>
+<table>
+  <thead>
+    <tr><th>Extension</th><th>Current Value</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Share Extension</td><td><code>community.blacksky.app.Share-with-Blacksky</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>Notification Service</td><td><code>community.blacksky.app.BlackskyNSE</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>App Clip</td><td><code>community.blacksky.app.AppClip</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+  </tbody>
+</table>
+
+<h3>Remaining Items in app.config.js</h3>
+<table>
+  <thead>
+    <tr><th>Field</th><th>Current Value</th><th>Action</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>updates.url</td>
+      <td><code>'https://updates.bsky.app/manifest'</code></td>
+      <td><span class="badge badge-warn">Disabled intentionally</span> OTA is off (<code>UPDATES_ENABLED = false</code>). Update when OTA strategy is decided.</td>
+    </tr>
+    <tr>
+      <td>MCEmojiPicker git ref</td>
+      <td><code>'https://github.com/bluesky-social/MCEmojiPicker.git'</code></td>
+      <td><span class="badge badge-neutral">Upstream dep</span> This is a dependency, not branding. Fork only if needed.</td>
+    </tr>
+    <tr>
+      <td><code>BSKY_IOS_BUILD_NUMBER</code> env var</td>
+      <td>Used at line 67</td>
+      <td><span class="badge badge-neutral">Low priority</span> Internal variable name. Rename only if doing broader cleanup.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>eas.json Changes</h3>
+<table>
+  <thead>
+    <tr><th>Field</th><th>Current</th><th>Action</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Node version</td><td><code>24.15.0</code></td><td>Confirm matches <code>.nvmrc</code></td></tr>
+    <tr><td><code>submit.production.ios.ascAppId</code></td><td><code>6776276281</code></td><td><span class="badge badge-ok">Already Blacksky</span></td></tr>
+    <tr><td>Android submit</td><td>Not configured</td><td><span class="badge badge-decision">Decision: Google Play or artifacts only?</span></td></tr>
+    <tr><td>Channel mapping</td><td><code>production</code>, <code>testflight</code></td><td>Validate for Blacksky EAS project</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<!-- SECTION: Secrets -->
+<!-- ============================================ -->
+<h2 id="secrets">6. Secrets &amp; Variables</h2>
+
+<div class="grid grid-2">
+  <div class="card">
+    <div class="card-header"><span class="badge badge-p0">P0</span> Core Mobile Build</div>
+    <table>
+      <tr><th>Secret</th><th>Action</th></tr>
+      <tr><td><code>EXPO_TOKEN</code></td><td>Create for Blacksky Expo account</td></tr>
+      <tr><td><code>ENV_TOKEN</code></td><td>Regenerate with Blacksky values</td></tr>
+      <tr><td><code>GOOGLE_SERVICES_TOKEN</code></td><td>Blacksky Firebase config</td></tr>
+      <tr><td><code>EXPO_PUBLIC_GCP_PROJECT_ID</code></td><td>Confirm or remove</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="badge badge-p1">P1</span> Sentry</div>
+    <table>
+      <tr><th>Secret</th><th>Action</th></tr>
+      <tr><td><code>SENTRY_DSN</code></td><td>Blacksky Sentry DSN</td></tr>
+      <tr><td><code>SENTRY_AUTH_TOKEN</code></td><td>With release/debug-file perms</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="badge badge-p1">P1</span> Notifications &amp; OTA</div>
+    <table>
+      <tr><th>Secret</th><th>Action</th></tr>
+      <tr><td><code>SLACK_CLIENT_ALERT_WEBHOOK</code></td><td>Blacksky Slack webhook</td></tr>
+      <tr><td><code>DENIS_API_KEY</code></td><td>Replace or remove (OTA)</td></tr>
+      <tr><td><code>BITDRIFT_API_KEY</code></td><td>Remove (unused)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="badge badge-info">Optional</span> Other Services</div>
+    <table>
+      <tr><th>Secret</th><th>Action</th></tr>
+      <tr><td><code>CROWDIN_PERSONAL_TOKEN</code></td><td><span class="badge badge-decision">Decision</span></td></tr>
+      <tr><td><code>DIGITALOCEAN_ACCESS_TOKEN</code></td><td>Keep (DOCR workflow)</td></tr>
+      <tr><td>AWS ECR secrets</td><td><span class="badge badge-danger">Remove with workflows</span></td></tr>
+      <tr><td><code>SYNC_INTERNAL_*</code></td><td><span class="badge badge-danger">Remove</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<h3>Public Environment Variables</h3>
+<table>
+  <thead>
+    <tr><th>Variable</th><th>Current Default</th><th>Action</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>EXPO_PUBLIC_METRICS_API_HOST</code></td><td><code>https://events.bsky.app</code></td><td>Blacksky endpoint or empty</td></tr>
+    <tr><td><code>EXPO_PUBLIC_GROWTHBOOK_API_HOST</code></td><td><code>${METRICS_API_HOST}/gb</code></td><td>Blacksky endpoint or empty</td></tr>
+    <tr><td><code>EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY</code></td><td><code>sdk-7gkUkGy9wguUjyFe</code></td><td>Blacksky key or empty</td></tr>
+    <tr><td><code>EXPO_PUBLIC_STRIPE_API_URL</code></td><td>Bluesky Stripe</td><td>Blacksky or remove</td></tr>
+    <tr><td><code>EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY</code></td><td>Bluesky Stripe</td><td>Blacksky or remove</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<!-- SECTION: Mobile Builds -->
+<!-- ============================================ -->
+<h2 id="mobile-builds">7. Mobile Build Workflows</h2>
+
+<h3>Shared Changes (Both Platforms)</h3>
+<ol>
+  <li>Replace repository guard with <code>blacksky-algorithms/blacksky.community</code></li>
+  <li>Confirm runner availability:
+    <ul>
+      <li>iOS: <code>macos-26-xlarge</code></li>
+      <li>Android: <code>Linux-x64-32core</code></li>
+    </ul>
+    If unavailable, switch to GitHub-hosted equivalents or self-hosted runners.
+  </li>
+  <li>Pin Expo/EAS CLI versions instead of <code>latest</code></li>
+  <li>Verify <code>.env</code> contents and <code>google-services.json</code> are Blacksky-specific</li>
+  <li>Confirm Sentry release/dist mapping</li>
+  <li>Confirm build number flow with Blacksky EAS project</li>
+  <li>Update Slack messages to say Blacksky</li>
+</ol>
+
+<div class="grid grid-2">
+  <div class="card">
+    <div class="card-header">iOS-Specific</div>
+    <ol>
+      <li><span class="badge badge-ok">Done</span> ASC app ID in <code>eas.json</code> is <code>6776276281</code></li>
+      <li>Ensure Apple signing creds exist in Blacksky EAS</li>
+      <li><span class="badge badge-ok">Done</span> Extension bundle IDs in <code>app.config.js</code> are Blacksky</li>
+      <li><span class="badge badge-danger">Needs fix</span> Artifact paths still reference <code>Bluesky.ipa</code> and <code>Bluesky.app.dSYM.zip</code> (lines 178, 185)</li>
+      <li><span class="badge badge-danger">Needs fix</span> Bundle ID reference <code>xyz.blueskyweb.app</code> at line 241</li>
+      <li><span class="badge badge-ok">Partial</span> Sentry org is <code>blacksky-algorithms</code> (line 182), project is <code>social-app</code></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Android-Specific</div>
+    <ol>
+      <li>Ensure Firebase <code>google-services.json</code> matches package name</li>
+      <li>Ensure Android signing creds exist in Blacksky EAS</li>
+      <li><span class="badge badge-decision">Decision</span> Production AAB: upload only or submit to Play?</li>
+      <li><span class="badge badge-decision">Decision</span> Keep production APK for Obtanium/GitHub distribution?</li>
+      <li>Update artifact and Slack messages</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: OTA -->
+<!-- ============================================ -->
+<h2 id="ota">8. OTA &amp; Update Deployment</h2>
+
+<h3>Current OTA Flow</h3>
+<div class="flow-diagram">
+  <div class="flow-step">Push to main</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-decision">Fingerprint changed?</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-step">No: Export JS bundle</div>
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-step">Upload to updates.bsky.app</div>
+</div>
+<div class="flow-diagram" style="margin-left: 14.5rem;">
+  <div class="flow-arrow">&rarr;</div>
+  <div class="flow-step">Yes: Full store build</div>
+</div>
+
+<div class="decision-box">
+  <h4>Strategic Decision: OTA Strategy</h4>
+  <div class="grid grid-2">
+    <div>
+      <h4>Option A: Custom Update Service (Rehosted)</h4>
+      <ul>
+        <li>Replace <code>updates.bsky.app</code> with Blacksky URL</li>
+        <li>Replace <code>bundleUpdate.sh</code> upload endpoint</li>
+        <li>Build or deploy equivalent update server</li>
+        <li>Rename <code>DENIS_API_KEY</code> to <code>BLACKSKY_UPDATES_API_KEY</code></li>
+        <li>Replace PR QR generator URL (<code>bsky-qr.vercel.app</code>)</li>
+        <li>Replace <code>bluesky://</code> deep link in PR comments</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Option B: Expo EAS Update (Recommended)</h4>
+      <ul>
+        <li>Replace custom <code>bundleUpdate.sh</code> with <code>eas update</code></li>
+        <li>Configure EAS project/channel/branch mapping</li>
+        <li>Remove custom upload secret and endpoint</li>
+        <li>Adjust <code>app.config.js</code> updates config</li>
+        <li>Rework PR OTA comments</li>
+        <li>Simpler setup if no update server exists</li>
+      </ul>
+    </div>
+  </div>
+  <p style="margin-top: 0.75rem; color: var(--cyan); font-size: 0.85rem;"><strong>Recommendation:</strong> If Blacksky does not already operate a compatible update service, use Expo EAS Update. The current custom service is tightly coupled to Bluesky infrastructure.</p>
+</div>
+
+<h3>Code Signing</h3>
+<div class="card">
+  <p>File: <code>app.config.js</code></p>
+  <p>Current config references <code>./code-signing/certificate.pem</code> with algorithm <code>rsa-v1_5-sha256</code>. If using custom update service, confirm existing certificate is appropriate or regenerate. If using EAS Update, follow Expo's code signing setup.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: PR Workflows -->
+<!-- ============================================ -->
+<h2 id="pr-workflows">9. PR Workflows &amp; Automation</h2>
+
+<div class="grid grid-2">
+  <div class="card">
+    <div class="card-header"><code>pull-request-commit.yml</code></div>
+    <p><strong>Webpack Analyzer:</strong> Posts sticky bundle-size diff comment. Keep as-is.</p>
+    <p><strong>Native Fingerprint:</strong> Uses <code>bluesky-social/github-actions/fingerprint-native@main</code>.</p>
+    <ul>
+      <li>Fork/pin under Blacksky org, OR</li>
+      <li>Pin to commit SHA for reproducibility, OR</li>
+      <li>Replace with <code>expo/fingerprint</code> directly</li>
+    </ul>
+    <p>Update repository guard.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><code>pull-request-comment.yml</code></div>
+    <p><strong>Trigger:</strong> Comment containing <code>ota</code> by collaborator.</p>
+    <p><strong>Changes needed:</strong></p>
+    <ul>
+      <li>Replace Expo/Sentry/update secrets and URLs</li>
+      <li>Replace QR generator URL</li>
+      <li>Replace <code>bluesky://</code> deep link</li>
+    </ul>
+    <p><strong>Recommendation:</strong> Disable PR OTA until main OTA strategy is finalized.</p>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: Sentry -->
+<!-- ============================================ -->
+<h2 id="sentry">10. Sentry &amp; Error Tracking</h2>
+
+<h3>Current Configuration</h3>
+<div class="card">
+  <table>
+    <tr><th>Setting</th><th>Value</th></tr>
+    <tr><td>Organization</td><td><code>blacksky-algorithms</code> <span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>Project</td><td><code>social-app</code> <span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>DSN</td><td>From <code>SENTRY_DSN</code> env</td></tr>
+    <tr><td>Release</td><td>Package version (e.g. <code>1.122.0</code>)</td></tr>
+    <tr><td>Dist</td><td>Commit SHA (enables exact bundle mapping)</td></tr>
+    <tr><td>Prod error sample rate</td><td>10%</td></tr>
+    <tr><td>Prod trace sample rate</td><td>10%</td></tr>
+    <tr><td>Internal sample rate</td><td>100%</td></tr>
+    <tr><td>Session replay</td><td>Enabled (masked in prod)</td></tr>
+    <tr><td>attachStacktrace</td><td>Disabled (for issue grouping)</td></tr>
+  </table>
+</div>
+
+<h3>Sentry Configuration Status</h3>
+<table>
+  <thead><tr><th>File</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td><code>app.config.js:256-262</code></td><td><span class="badge badge-ok">Done</span> Plugin org/project already <code>blacksky-algorithms/social-app</code></td></tr>
+    <tr><td><code>build-submit-ios.yml</code></td><td><span class="badge badge-warn">Verify</span> dSYM upload <code>SENTRY_ORG</code> / <code>SENTRY_PROJECT</code> env vars</td></tr>
+    <tr><td><code>build-submit-android.yml</code></td><td><span class="badge badge-warn">Verify</span> Sourcemap upload org/project env vars</td></tr>
+    <tr><td><code>bundle-deploy-eas-update.yml</code></td><td><span class="badge badge-warn">Verify</span> OTA sourcemap upload</td></tr>
+    <tr><td><code>pull-request-comment.yml</code></td><td><span class="badge badge-warn">Verify</span> PR OTA sourcemaps</td></tr>
+  </tbody>
+</table>
+<p style="font-size: 0.85rem; color: var(--text-muted);"><strong>Note:</strong> The app config is already pointing at <code>blacksky-algorithms/social-app</code>. CI workflow env vars for Sentry org/project should be verified to match, as they may be set independently via secrets or hardcoded values.</p>
+
+<p>If <strong>not</strong> keeping Sentry: remove <code>SENTRY_DSN</code>/<code>SENTRY_AUTH_TOKEN</code> from CI env blocks, remove plugin config (gated by absent auth token), remove dSYM upload steps.</p>
+
+<!-- ============================================ -->
+<!-- SECTION: Firebase -->
+<!-- ============================================ -->
+<h2 id="firebase">11. Firebase &amp; Push Notifications</h2>
+
+<div class="card">
+  <h4>Required Setup</h4>
+  <ol>
+    <li>Create/use Blacksky Firebase project</li>
+    <li>Register Android app with Blacksky package name (<code>community.blacksky.app</code>)</li>
+    <li>Register iOS app with Blacksky bundle ID if Firebase iOS config needed</li>
+    <li>Store Android <code>google-services.json</code> contents in <code>GOOGLE_SERVICES_TOKEN</code></li>
+    <li>Confirm <code>app.config.js</code> keeps <code>android.googleServicesFile</code> as <code>./google-services.json</code></li>
+    <li>Configure FCM/APNs credentials in Expo/EAS</li>
+  </ol>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: Containers -->
+<!-- ============================================ -->
+<h2 id="containers">12. Web &amp; Container Workflows</h2>
+
+<div class="grid grid-2">
+  <div class="card" style="border-color: var(--green);">
+    <div class="card-header"><span class="badge badge-ok">Keep</span> Blacksky DOCR Workflow</div>
+    <p><code>build-and-push-bskyweb-docr.yaml</code></p>
+    <ul>
+      <li>Already guarded for <code>blacksky-algorithms/blacksky.community</code></li>
+      <li>Pushes to <code>registry.digitalocean.com/blacksky/blacksky-community</code></li>
+      <li>Review: confirm build args, tag strategy, deployment trigger</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-color: var(--red);">
+    <div class="card-header"><span class="badge badge-danger">Remove</span> Upstream Workflows</div>
+    <p>Delete or disable unless Blacksky has concrete consumers:</p>
+    <ul>
+      <li><code>build-and-push-bskyweb-aws.yaml</code></li>
+      <li><code>build-and-push-bskyweb-ghcr.yaml</code></li>
+      <li><code>build-and-push-link-aws.yaml</code></li>
+      <li><code>build-and-push-ogcard-aws.yaml</code></li>
+      <li><code>build-and-push-embedr-aws.yaml</code></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: Upstream Cleanup -->
+<!-- ============================================ -->
+<h2 id="upstream-cleanup">13. Upstream Workflow Cleanup</h2>
+
+<table>
+  <thead>
+    <tr><th>Workflow</th><th>Purpose</th><th>Action</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>sync-internal.yaml</code></td>
+      <td>Force-push to <code>bluesky-social/social-app-internal</code></td>
+      <td><span class="badge badge-danger">Delete immediately</span></td>
+    </tr>
+    <tr>
+      <td><code>nightly-update-source-languages.yaml</code></td>
+      <td>Extract i18n strings, push to Crowdin</td>
+      <td><span class="badge badge-decision">Decision: Keep if using Crowdin</span></td>
+    </tr>
+    <tr>
+      <td><code>golang-test-lint.yml</code></td>
+      <td>Go tests/lint for <code>bskyweb/</code></td>
+      <td><span class="badge badge-info">Keep if bskyweb is used</span></td>
+    </tr>
+    <tr>
+      <td><code>claude.yml</code></td>
+      <td>Claude Code AI review integration</td>
+      <td><span class="badge badge-ok">Keep</span></td>
+    </tr>
+    <tr>
+      <td><code>tangle.yml</code></td>
+      <td>Mirror to <code>forge.blacksky.community</code></td>
+      <td><span class="badge badge-ok">Keep (Blacksky-owned)</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<!-- SECTION: Domains -->
+<!-- ============================================ -->
+<h2 id="domains">14. Domains &amp; Deep Links</h2>
+
+<div class="card" style="border-color: var(--yellow); margin-bottom: 1rem;">
+  <div class="card-header"><span class="badge badge-warn">Partially Done</span></div>
+  <p><code>app.config.js</code> is fully updated (schemes, associated domains, intent filters). But source code still has hardcoded <code>bsky.app</code> references.</p>
+</div>
+
+<h3>app.config.js Values (Verified - All Blacksky)</h3>
+<table>
+  <thead>
+    <tr><th>Type</th><th>Current Value</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>URL Schemes</td><td><code>['blacksky', 'community.blacksky']</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>Production domain</td><td><code>blacksky.community</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>Staging domain</td><td><code>staging.blacksky.community</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>App Clip domain</td><td><code>go.blacksky.community</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>Android intent filter</td><td><code>https://blacksky.community</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+  </tbody>
+</table>
+
+<h3>Hardcoded <code>bsky.app</code> References Still in Source Code</h3>
+<table>
+  <thead>
+    <tr><th>File</th><th>Line</th><th>Reference</th><th>Action</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>src/Navigation.tsx</code></td>
+      <td>804</td>
+      <td><code>bsky://</code> in LINKING prefixes</td>
+      <td><span class="badge badge-decision">Decision: keep for compat or remove?</span></td>
+    </tr>
+    <tr>
+      <td><code>src/Navigation.tsx</code></td>
+      <td>806</td>
+      <td><code>https://bsky.app</code> in LINKING prefixes</td>
+      <td><span class="badge badge-decision">Decision: keep for cross-app links or remove?</span></td>
+    </tr>
+    <tr>
+      <td><code>src/Navigation.tsx</code></td>
+      <td>1028</td>
+      <td><code>referrerInfo.hostname !== 'bsky.app'</code></td>
+      <td><span class="badge badge-danger">Update</span> to <code>'blacksky.community'</code></td>
+    </tr>
+    <tr>
+      <td><code>src/screens/Moderation/index.tsx</code></td>
+      <td>383-386</td>
+      <td><code>Linking.openURL('https://bsky.app/')</code> + visible text "bsky.app"</td>
+      <td><span class="badge badge-danger">Update</span> to Blacksky moderation URL or remove</td>
+    </tr>
+    <tr>
+      <td><code>src/env/common.ts</code></td>
+      <td>80</td>
+      <td><code>did:web:api.bsky.app</code> (ALT_PROXY_DID)</td>
+      <td><span class="badge badge-decision">Decision: keep as federation fallback?</span></td>
+    </tr>
+    <tr>
+      <td><code>src/env/common.ts</code></td>
+      <td>92, 131, 141, 163</td>
+      <td>Service URLs (<code>events</code>, <code>ip</code>, <code>live-events</code>, <code>app-config</code>)</td>
+      <td><span class="badge badge-danger">Update</span> to Blacksky endpoints or disable</td>
+    </tr>
+  </tbody>
+</table>
+
+<p style="font-size: 0.85rem; color: var(--text-muted);"><strong>Note:</strong> <code>@bsky.app/*</code> imports (e.g., <code>@bsky.app/alf</code>, <code>@bsky.app/react-native-mmkv</code>) are npm package names, not URLs. These do not need changing.</p>
+
+<h3>Remaining Infrastructure Tasks</h3>
+<ul>
+  <li>Host Apple App Site Association (<code>apple-app-site-association</code>) on <code>blacksky.community</code></li>
+  <li>Host Android <code>assetlinks.json</code> on <code>blacksky.community</code></li>
+  <li>Update PR OTA comment deep links from <code>bluesky://</code> to <code>blacksky://</code> (<code>pull-request-comment.yml:207</code>)</li>
+  <li>Remove <code>bsky-qr.vercel.app</code> QR generator reference (<code>pull-request-comment.yml:205</code>)</li>
+</ul>
+
+<!-- ============================================ -->
+<!-- SECTION: Extensions -->
+<!-- ============================================ -->
+<h2 id="extensions">15. Native App Extensions</h2>
+
+<div class="card" style="border-color: var(--green); margin-bottom: 1rem;">
+  <div class="card-header"><span class="badge badge-ok">Done in app.config.js</span></div>
+  <p>Extension names and bundle IDs are already updated to Blacksky values.</p>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Extension</th><th>Current Value</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Share Extension</td><td><code>Share-with-Blacksky</code> / <code>community.blacksky.app.Share-with-Blacksky</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>Notification Service</td><td><code>BlackskyNSE</code> / <code>community.blacksky.app.BlackskyNSE</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+    <tr><td>App Clip</td><td><code>BlackskyClip</code> / <code>community.blacksky.app.AppClip</code></td><td><span class="badge badge-ok">Done</span></td></tr>
+  </tbody>
+</table>
+
+<p><strong>Remaining:</strong> CI workflow artifact paths still reference <code>Bluesky.ipa</code> and <code>Bluesky.app.dSYM.zip</code> (see Section 7). These may change to <code>Blacksky.*</code> after the first native build with updated config. Verify and update workflow paths after first build.</p>
+
+<!-- ============================================ -->
+<!-- SECTION: Hardening -->
+<!-- ============================================ -->
+<h2 id="hardening">16. Pipeline Hardening</h2>
+
+<div class="grid grid-2">
+  <div class="card">
+    <div class="card-header"><span class="badge badge-p1">P1</span> Pin Action Versions</div>
+    <p>Pin <code>expo/expo-github-action</code> and EAS CLI to specific versions instead of <code>latest</code>. Prevents surprise breakage on release-critical paths.</p>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="badge badge-p1">P1</span> Fix Runtime Version Bug</div>
+    <p>Change <code>-z</code> to <code>-n</code> in <code>bundle-deploy-eas-update.yml</code>. See bug box above.</p>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="badge badge-p2">P2</span> Fail on Fingerprint Change</div>
+    <p>Make production OTA fail loudly when native fingerprint changes instead of silently skipping deployment.</p>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="badge badge-p2">P2</span> Post-Deploy Verification</div>
+    <p>After <code>eas update</code>, verify the update was published to the channel. Even a simple check is better than nothing.</p>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="badge badge-p2">P2</span> Consistent Slack Notifications</div>
+    <p>Currently only Android builds + deploy notify Slack. Extend to iOS builds and all failure cases.</p>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="badge badge-p3">P3</span> Wire Maestro E2E</div>
+    <p>E2E tests exist in <code>__e2e__/</code> but are never run in CI. Add a manual-trigger or label-gated workflow.</p>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: Decisions -->
+<!-- ============================================ -->
+<h2 id="decisions">17. Key Decisions Needed</h2>
+
+<div class="grid grid-2">
+  <div class="decision-box">
+    <h4>1. App Identity</h4>
+    <ul class="checklist">
+      <li>Final iOS bundle ID and Android package name?</li>
+      <li>Expo owner and slug?</li>
+      <li>App scheme: <code>bluesky://</code>, <code>blacksky://</code>, or both?</li>
+      <li>Universal link and App Clip domains?</li>
+    </ul>
+  </div>
+  <div class="decision-box">
+    <h4>2. Infrastructure</h4>
+    <ul class="checklist">
+      <li>Custom OTA service or Expo EAS Update?</li>
+      <li>Using Sentry? If yes, what org/project?</li>
+      <li>Using Bitdrift? (Currently dead code)</li>
+      <li>Using Crowdin for localization?</li>
+    </ul>
+  </div>
+  <div class="decision-box">
+    <h4>3. Distribution</h4>
+    <ul class="checklist">
+      <li>Android: submit to Google Play or artifacts only?</li>
+      <li>Keep production APK distribution (Obtanium)?</li>
+      <li>Slack notifications to which channel?</li>
+    </ul>
+  </div>
+  <div class="decision-box">
+    <h4>4. Cleanup</h4>
+    <ul class="checklist">
+      <li>Which container workflows are part of Blacksky deployment?</li>
+      <li>Rename <code>BSKY_*</code> variables to <code>BLACKSKY_*</code>?</li>
+      <li>Keep App Clips functionality?</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: Phases -->
+<!-- ============================================ -->
+<h2 id="phases">18. Phase Plan</h2>
+
+<div style="margin-left: 1rem;">
+
+  <div class="phase-container" style="margin-bottom: 1.5rem;">
+    <div class="phase-title">Phase 1: Audit &amp; Disable Unsafe Upstream Deploys</div>
+    <div class="phase-desc">Prevent data leakage and broken workflows</div>
+    <ul>
+      <li>Delete <code>sync-internal.yaml</code></li>
+      <li>Delete/disable unused AWS/GHCR container workflows</li>
+      <li>Guard or disable metrics/GrowthBook defaults pointing at Bluesky</li>
+      <li>Keep lint, test, yarn lock verification</li>
+      <li>Keep DOCR workflow</li>
+    </ul>
+  </div>
+
+  <div class="phase-container" style="margin-bottom: 1.5rem;">
+    <div class="phase-title">Phase 2: App Identity &amp; Credentials</div>
+    <div class="phase-desc">Establish Blacksky ownership of all identifiers</div>
+    <ul>
+      <li>Update <code>app.config.js</code> and <code>eas.json</code></li>
+      <li>Create Apple/Google/Firebase/EAS credentials</li>
+      <li>Add GitHub secrets</li>
+      <li>Verify local config generation with Expo config</li>
+    </ul>
+  </div>
+
+  <div class="phase-container" style="margin-bottom: 1.5rem;">
+    <div class="phase-title">Phase 3: Test Mobile Builds</div>
+    <div class="phase-desc">First Blacksky TestFlight + Android test build</div>
+    <ul>
+      <li>Enable Blacksky repo guards for iOS/Android manual workflows</li>
+      <li>Run testflight builds</li>
+      <li>Fix artifact paths, signing, Firebase, or extension issues</li>
+      <li>Add Slack only after builds are stable</li>
+    </ul>
+  </div>
+
+  <div class="phase-container" style="margin-bottom: 1.5rem;">
+    <div class="phase-title">Phase 4: Sentry &amp; Observability</div>
+    <div class="phase-desc">Restore error tracking and monitoring</div>
+    <ul>
+      <li>Configure Blacksky Sentry org/project</li>
+      <li>Re-enable sourcemap and dSYM uploads</li>
+      <li>Add logging to silent catch blocks</li>
+      <li>Remove Bitdrift dead code or configure it</li>
+      <li>Add dependency vulnerability scanning</li>
+    </ul>
+  </div>
+
+  <div class="phase-container" style="margin-bottom: 1.5rem;">
+    <div class="phase-title">Phase 5: OTA/Update Strategy</div>
+    <div class="phase-desc">Enable JS-only hot updates</div>
+    <ul>
+      <li>Choose custom update service or EAS Update</li>
+      <li>Update <code>app.config.js</code> update URL/project settings</li>
+      <li>Update bundle deployment workflow</li>
+      <li>Fix runtime version validation bug</li>
+      <li>Test testflight OTA, then production OTA</li>
+    </ul>
+  </div>
+
+  <div class="phase-container" style="margin-bottom: 1.5rem;">
+    <div class="phase-title">Phase 6: PR Automation</div>
+    <div class="phase-desc">Developer experience improvements</div>
+    <ul>
+      <li>Enable native fingerprint comments</li>
+      <li>Fork or pin fingerprint action</li>
+      <li>Enable PR OTA only after OTA strategy is proven</li>
+      <li>Update QR/deep-link comments</li>
+      <li>Add test coverage reporting</li>
+    </ul>
+  </div>
+
+  <div class="phase-container" style="margin-bottom: 1.5rem;">
+    <div class="phase-title">Phase 7: Production Release</div>
+    <div class="phase-desc">Go live</div>
+    <ul>
+      <li>Enable production iOS submit</li>
+      <li>Decide and enable Android Play submit or artifact-only</li>
+      <li>Confirm Slack notifications</li>
+      <li>Add post-deploy verification</li>
+      <li>Document release runbook</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: Minimum Viable -->
+<!-- ============================================ -->
+<h3>Minimum Viable Customization (First Build)</h3>
+<div class="card" style="border-color: var(--green);">
+  <p>To get a first Blacksky TestFlight/Android test build working:</p>
+  <ol>
+    <li>Set Blacksky Expo owner/slug in <code>app.config.js</code></li>
+    <li>Set Blacksky iOS bundle ID and Android package</li>
+    <li>Set extension bundle IDs and app group</li>
+    <li>Set <code>eas.json</code> <code>ascAppId</code> for Blacksky iOS app</li>
+    <li>Create <code>EXPO_TOKEN</code> for Blacksky Expo account</li>
+    <li>Create <code>GOOGLE_SERVICES_TOKEN</code> for Blacksky Firebase</li>
+    <li>Create or stub <code>ENV_TOKEN</code> with required env values</li>
+    <li>Configure EAS credentials for iOS and Android</li>
+    <li>Replace repo guards in build-submit workflows</li>
+    <li>Temporarily disable Sentry upload if not ready</li>
+    <li>Run manual iOS testflight workflow</li>
+    <li>Run manual Android testflight-android workflow</li>
+  </ol>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION: Validation -->
+<!-- ============================================ -->
+<h2 id="validation">19. Validation Checklist</h2>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h4>General</h4>
+    <ul class="checklist">
+      <li><code>git grep</code> finds no <code>bluesky-social/social-app</code> guards</li>
+      <li><code>git grep</code> finds no <code>blueskysocial</code> Expo owner refs</li>
+      <li><code>git grep</code> finds no <code>updates.bsky.app</code> refs (unless intentional)</li>
+      <li><code>git grep</code> finds no <code>xyz.blueskyweb.app</code> bundle/package refs</li>
+      <li>Required GitHub secrets are present</li>
+      <li>Unused upstream workflows are removed or disabled</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>Mobile</h4>
+    <ul class="checklist">
+      <li>EAS project belongs to Blacksky</li>
+      <li>iOS bundle ID exists in Apple Developer</li>
+      <li>Android package exists in Firebase/Play</li>
+      <li>EAS credentials configured for both platforms</li>
+      <li>TestFlight build succeeds</li>
+      <li>Android test APK build succeeds</li>
+      <li>Production iOS build/submit succeeds</li>
+      <li>Production Android artifact or submit succeeds</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>OTA</h4>
+    <ul class="checklist">
+      <li>Runtime version behavior is understood</li>
+      <li>Fingerprint gate tested with JS-only and native changes</li>
+      <li>Testflight OTA applies correctly</li>
+      <li>Production OTA path tested or disabled</li>
+      <li>PR OTA works with Blacksky links or is disabled</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>Observability</h4>
+    <ul class="checklist">
+      <li>Sentry events arrive in Blacksky project</li>
+      <li>Native dSYM upload succeeds</li>
+      <li>JS sourcemap upload succeeds</li>
+      <li>Metrics endpoint configured or disabled</li>
+      <li>GrowthBook configured or disabled</li>
+      <li>Bitdrift removed or configured</li>
+      <li>Silent catch blocks have logging</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>Web &amp; Container</h4>
+    <ul class="checklist">
+      <li>DOCR image builds and pushes</li>
+      <li>Runtime deployment consumes the pushed image</li>
+      <li>Production web env vars are correct</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>Apple &amp; Google</h4>
+    <ul class="checklist">
+      <li>Apple Developer team access</li>
+      <li>Main app bundle ID registered</li>
+      <li>Share extension bundle ID registered</li>
+      <li>Notification service extension bundle ID registered</li>
+      <li>App group ID created</li>
+      <li>Associated domains entitlement configured</li>
+      <li>Push notification capability enabled</li>
+      <li>App Store Connect app created</li>
+      <li>Google Play Console app created (if submitting)</li>
+      <li>Android signing key in EAS</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="separator">
+<p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 2rem;">
+  Generated 2026-06-29 for blacksky-algorithms/blacksky.community
+</p>
+
+</body>
+</html>

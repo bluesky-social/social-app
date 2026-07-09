@@ -51,6 +51,7 @@ import {
   useSession,
   useSessionApi,
 } from '#/state/session'
+import {getOAuthClient} from '#/state/session/oauth-client'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
@@ -89,10 +90,17 @@ import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottom
 void prefetchLiveEvents()
 void prefetchAppConfig()
 
+function hasOAuthCallbackParams(): boolean {
+  const hash = new URLSearchParams(window.location.hash.slice(1))
+  const query = new URLSearchParams(window.location.search)
+  const params = hash.has('state') ? hash : query
+  return params.has('state') && (params.has('code') || params.has('error'))
+}
+
 function InnerApp() {
   const [isReady, setIsReady] = useState(false)
   const {currentAccount} = useSession()
-  const {resumeSession} = useSessionApi()
+  const {resumeSession, login} = useSessionApi()
   const theme = useColorModeTheme()
   const brand = useBrand()
   const {t: l} = useLingui()
@@ -102,6 +110,26 @@ function InnerApp() {
   useEffect(() => {
     async function onLaunch(account?: SessionAccount) {
       try {
+        // Check for OAuth callback params first (loopback redirects to /)
+        if (hasOAuthCallbackParams()) {
+          const client = getOAuthClient()
+          const result = await client.init()
+          if (result?.session) {
+            await login(
+              {
+                service: '',
+                identifier: '',
+                password: '',
+                oauthSession: result.session,
+              },
+              'LoginForm',
+            )
+            // Clear hash fragment after processing
+            window.history.replaceState(null, '', window.location.pathname)
+            return
+          }
+        }
+
         if (account) {
           await resumeSession(account)
         } else {
@@ -115,7 +143,7 @@ function InnerApp() {
     }
     const account = readLastActiveAccount()
     void onLaunch(account)
-  }, [resumeSession])
+  }, [resumeSession, login])
 
   useEffect(() => {
     return listenSessionDropped(() => {

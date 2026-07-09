@@ -1,5 +1,6 @@
 import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
+import * as Application from 'expo-application'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
 import {type AppBskyNotificationRegisterPush, type AtpAgent} from '@atproto/api'
@@ -41,7 +42,7 @@ async function _registerPushToken({
         : PUBLIC_APPVIEW_DID,
       platform: Platform.OS,
       token: token.data,
-      appId: 'xyz.blueskyweb.app',
+      appId: Application.applicationId ?? 'community.blacksky.app',
       ageRestricted: extra.ageRestricted ?? false,
     }
 
@@ -304,7 +305,7 @@ export async function unregisterPushToken(agents: AtpAgent[]) {
               : PUBLIC_APPVIEW_DID,
             platform: Platform.OS,
             token: token.data,
-            appId: 'xyz.blueskyweb.app',
+            appId: Application.applicationId ?? 'community.blacksky.app',
           },
           {
             headers: BLUESKY_NOTIF_SERVICE_HEADERS,

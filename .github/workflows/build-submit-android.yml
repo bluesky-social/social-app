@@ -30,7 +30,7 @@ permissions:
 
 jobs:
   build:
-    if: github.repository == 'bluesky-social/social-app'
+    if: github.repository == 'blacksky-algorithms/blacksky.community'
     name: Build and Submit Android
     runs-on: Linux-x64-32core
     concurrency:
@@ -123,16 +123,6 @@ jobs:
           PROFILE: ${{ inputs.profile || 'testflight-android' }}
         run: pnpm eas submit -p android --profile $PROFILE --non-interactive --path build.aab
 
-      - name: 🔔 Notify Slack of Play Store Submission
-        if: ${{ inputs.profile == 'production' }}
-        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
-        with:
-          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          webhook-type: incoming-webhook
-          payload-templated: true
-          payload: |
-            {"text": "Android ${{ inputs.profile || 'testflight-android' }} build submitted to Google Play!\n```Version Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"}
-
       - name: 🔧 Setup bundletool
         uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
         with:
@@ -172,15 +162,6 @@ jobs:
           name: build-${{ steps.timestamp.outputs.time }}.apk
           path: build.apk
 
-      - name: 🔔 Notify Slack of APK Artifact
-        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
-        with:
-          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          webhook-type: incoming-webhook
-          payload-templated: true
-          payload: |
-            {"text": "Android ${{ inputs.profile || 'testflight-android' }} APK is ready for testing!\n```Artifact: ${{ steps.upload-artifact.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"}
-
       - name: ⬇️ Restore Cache
         id: get-base-commit
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
@@ -202,7 +183,7 @@ jobs:
     name: Attach APK to GitHub Release
     runs-on: ubuntu-latest
     needs: [build]
-    if: ${{ inputs.profile == 'production' && github.ref_type == 'tag' && github.repository == 'bluesky-social/social-app' }}
+    if: ${{ inputs.profile == 'production' && github.ref_type == 'tag' && github.repository == 'blacksky-algorithms/blacksky.community' }}
     permissions:
       contents: write
     steps:
@@ -243,13 +224,3 @@ jobs:
           tag_name: ${{ github.ref_name }}
           files: Bluesky-${{ needs.build.outputs.package-version }}.apk
           fail_on_unmatched_files: true
-
-      - name: 🔔 Notify Slack of Release Attachment
-        if: ${{ steps.release-check.outputs.exists == 'true' }}
-        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
-        with:
-          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          webhook-type: incoming-webhook
-          payload-templated: true
-          payload: |
-            {"text": "Android APK attached to GitHub Release ${{ github.ref_name }}!\n```Asset: Bluesky-${{ needs.build.outputs.package-version }}.apk\nRelease: ${{ steps.attach.outputs.url }}```"}

@@ -1,4 +1,5 @@
 const {withXcodeProject} = require('expo/config-plugins')
+const {getIosBuildNumber} = require('../iosBuildNumber')
 
 const withXcodeTarget = (
   config,
@@ -47,7 +48,7 @@ const withXcodeTarget = (
           buildSettingsObj.INFOPLIST_FILE = `"${extensionName}/Info.plist"`
           buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `"${extensionName}/${extensionName}.entitlements"`
           buildSettingsObj.CODE_SIGN_STYLE = 'Automatic'
-          buildSettingsObj.CURRENT_PROJECT_VERSION = `"${config.ios?.buildNumber}"`
+          buildSettingsObj.CURRENT_PROJECT_VERSION = `"${getIosBuildNumber(config)}"`
           buildSettingsObj.GENERATE_INFOPLIST_FILE = 'YES'
           buildSettingsObj.MARKETING_VERSION = `"${config.version}"`
           buildSettingsObj.PRODUCT_BUNDLE_IDENTIFIER = `"${config.ios?.bundleIdentifier}.${extensionName}"`

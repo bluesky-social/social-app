@@ -1,0 +1,12 @@
+diff --git a/node_modules/react-native-screens/ios/RNSModule.mm b/node_modules/react-native-screens/ios/RNSModule.mm
+index f3f14d3..34676ad 100644
+--- a/node_modules/react-native-screens/ios/RNSModule.mm
++++ b/node_modules/react-native-screens/ios/RNSModule.mm
+@@ -4,6 +4,7 @@
+ #import <React/RCTUIManager.h>
+ #import <React/RCTUIManagerUtils.h>
+ #import <React/RCTUtils.h>
++#include <atomic>
+ #include <jsi/jsi.h>
+ #import "RNSScreenStack.h"
+ #import "RNScreensTurboModule.h"

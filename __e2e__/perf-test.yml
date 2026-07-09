@@ -1,6 +1,6 @@
 # flow.yaml
 
-appId: xyz.blueskyweb.app
+appId: community.blacksky.app
 ---
 - launchApp
 # Login

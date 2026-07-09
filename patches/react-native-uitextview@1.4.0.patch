@@ -1,17 +1,28 @@
 diff --git a/ios/RNUITextViewShadow.swift b/ios/RNUITextViewShadow.swift
-index c34ba712ca628ed8cf2db0f9fc332810ec86d34d..3602856dc8cd926b5321b4ecb109be9c00a23fe6 100644
+index c34ba712ca628ed8cf2db0f9fc332810ec86d34d..e86e9899b0bd8d6e2c9e7e1f5b676bca4f3afad9 100644
 --- a/ios/RNUITextViewShadow.swift
 +++ b/ios/RNUITextViewShadow.swift
-@@ -159,13 +159,25 @@ class RNUITextViewShadow: RCTShadowView {
+@@ -48,7 +48,10 @@ class RNUITextViewShadow: RCTShadowView {
+   // We should only insert children that are UITextView shadows
+   override func insertReactSubview(_ subview: RCTShadowView!, at atIndex: Int) {
+     if subview.isKind(of: RNUITextViewChildShadow.self) {
+-      super.insertReactSubview(subview, at: atIndex)
++      // Clamp the index to the actual subview count. React sends sequential
++      // indices assuming every child is inserted, but we filter out non-child
++      // shadow views, so the real array can be shorter than the requested index.
++      super.insertReactSubview(subview, at: min(atIndex, self.reactSubviews()?.count ?? 0))
+     }
+   }
+ 
+@@ -159,13 +162,25 @@ class RNUITextViewShadow: RCTShadowView {
      let maxSize = CGSize(width: CGFloat(maxWidth), height: CGFloat(MAXFLOAT))
      let textSize = self.attributedText.boundingRect(with: maxSize, options: .usesLineFragmentOrigin, context: nil)
  
 -    var totalLines = self.lineHeight == 0.0 ? 0 : Int(ceil(textSize.height / self.lineHeight))
--
++    var finalHeight: CGFloat
+ 
 -    if self.numberOfLines != 0, totalLines > self.numberOfLines {
 -      totalLines = self.numberOfLines
-+    var finalHeight: CGFloat
-+
 +    if self.numberOfLines != 0 && self.lineHeight != 0.0 {
 +      // numberOfLines is set with custom line height - need to calculate lines and snap to lineHeight multiples
 +      // NOTE: this calculation can be inaccurate with fractional font sizes

@@ -166,3 +166,56 @@ index 2f38990e226c13f483aaf1b986302d4094243814..9b02e481e290299be20a6f09c42056ff
 +    perl -i -pe 's/^#  define FMT_USE_CONSTEVAL 1$/#  define FMT_USE_CONSTEVAL 0/' include/fmt/base.h
 +  SCRIPT
  end
+diff --git a/React/Base/Surface/RCTSurface.mm b/React/Base/Surface/RCTSurface.mm
+index 14f88de035f7657cb267cb834b28c8f108595775..cee524bca80cf86517fb21af413f937b815275f6 100644
+--- a/React/Base/Surface/RCTSurface.mm
++++ b/React/Base/Surface/RCTSurface.mm
+@@ -465,7 +465,7 @@ - (BOOL)synchronouslyWaitForStage:(RCTSurfaceStage)stage timeout:(NSTimeInterval
+     // right after the semaphore signals.
+ 
+     // Atomic variant of `_waitingForMountingStageOnMainQueue = YES;`
+-    atomic_fetch_or(&_waitingForMountingStageOnMainQueue, 1);
++    atomic_exchange(&_waitingForMountingStageOnMainQueue, 1);
+   }
+ 
+   dispatch_semaphore_t semaphore;
+@@ -488,7 +488,7 @@ - (BOOL)synchronouslyWaitForStage:(RCTSurfaceStage)stage timeout:(NSTimeInterval
+   auto timeoutOccurred = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, timeout * NSEC_PER_SEC));
+ 
+   // Atomic equivalent of `_waitingForMountingStageOnMainQueue = NO;`.
+-  atomic_fetch_and(&_waitingForMountingStageOnMainQueue, 0);
++  atomic_exchange(&_waitingForMountingStageOnMainQueue, 0);
+ 
+   if (!timeoutOccurred) {
+     // Balancing the semaphore.
+@@ -546,7 +546,7 @@ - (void)_mountRootViewIfNeeded
+ {
+   if (atomic_load(&_waitingForMountingStageOnMainQueue) && (self.stage & RCTSurfaceStageSurfaceDidInitialLayout)) {
+     // Atomic equivalent of `_waitingForMountingStageOnMainQueue = NO;`.
+-    atomic_fetch_and(&_waitingForMountingStageOnMainQueue, 0);
++    atomic_exchange(&_waitingForMountingStageOnMainQueue, 0);
+ 
+     {
+       std::lock_guard<std::mutex> lock(_mutex);
+diff --git a/React/Profiler/RCTProfile.m b/React/Profiler/RCTProfile.m
+index 994e8ad65b6299f5b2898ce67b64cb4a8d03a7f4..287b9344c48279f00684f5ca552cc6b1ed6b7fac 100644
+--- a/React/Profiler/RCTProfile.m
++++ b/React/Profiler/RCTProfile.m
+@@ -445,7 +445,7 @@ BOOL RCTProfileIsProfiling(void)
+ void RCTProfileInit(RCTBridge *bridge)
+ {
+   // TODO: enable assert JS thread from any file (and assert here)
+-  BOOL wasProfiling = atomic_fetch_or(&RCTProfileProfiling, 1);
++  BOOL wasProfiling = atomic_exchange(&RCTProfileProfiling, 1);
+   if (wasProfiling) {
+     return;
+   }
+@@ -492,7 +492,7 @@ void RCTProfileInit(RCTBridge *bridge)
+ void RCTProfileEnd(RCTBridge *bridge, void (^callback)(NSString *))
+ {
+   // assert JavaScript thread here again
+-  BOOL wasProfiling = atomic_fetch_and(&RCTProfileProfiling, 0);
++  BOOL wasProfiling = atomic_exchange(&RCTProfileProfiling, 0);
+   if (!wasProfiling) {
+     return;
+   }

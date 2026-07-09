@@ -612,16 +612,15 @@ func (srv *Server) resolveAssetURL(brandValue, staticPath string) string {
 }
 
 // Handler for redirecting to the download page.
-// TODO(multi-brand): Store URLs should come from brand config once the
-// app is published under the Blacksky brand in app stores.
+// TODO(multi-brand): Store URLs should come from brand config.
 func (srv *Server) Download(c echo.Context) error {
 	ua := c.Request().UserAgent()
 	if strings.Contains(ua, "Android") {
-		return c.Redirect(http.StatusFound, "https://play.google.com/store/apps/details?id=xyz.blueskyweb.app")
+		return c.Redirect(http.StatusFound, "https://play.google.com/store/apps/details?id=community.blacksky.app")
 	}
 
 	if strings.Contains(ua, "iPhone") || strings.Contains(ua, "iPad") || strings.Contains(ua, "iPod") {
-		return c.Redirect(http.StatusFound, "https://apps.apple.com/tr/app/bluesky-social/id6444370199")
+		return c.Redirect(http.StatusFound, "https://apps.apple.com/app/id6776276281")
 	}
 
 	return c.Redirect(http.StatusFound, "/")

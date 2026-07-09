@@ -2,11 +2,9 @@
 import {
   Agent,
   type AtpSessionData,
-  type ComAtprotoServerGetSession,
+  ComAtprotoServerGetSession,
 } from '@atproto/api'
-import {type OAuthSession} from '@atproto/oauth-client-browser'
-
-type OutputSchema = ComAtprotoServerGetSession.OutputSchema
+import {type OAuthSession} from '@atproto/oauth-client'
 
 import {BLUESKY_PROXY_HEADER, BSKY_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'
@@ -15,7 +13,7 @@ import {
   stripAppviewProxyForPdsLocalMethods,
 } from './agent'
 import {configureModerationForAccount} from './moderation'
-import {getWebOAuthClient} from './oauth-web-client'
+import {getOAuthClient} from './oauth-client'
 import {type SessionAccount} from './types'
 
 export async function oauthCreateAgent(session: OAuthSession) {
@@ -32,7 +30,7 @@ export async function oauthCreateAgent(session: OAuthSession) {
 const OAUTH_RESTORE_TIMEOUT_MS = 10_000
 
 export async function oauthResumeSession(account: SessionAccount) {
-  const client = getWebOAuthClient()
+  const client = getOAuthClient()
   let session: OAuthSession
   try {
     session = await Promise.race([
@@ -69,7 +67,7 @@ export async function oauthAgentAndSessionToSessionAccount(
   agent: Agent,
   session: OAuthSession,
 ): Promise<SessionAccount | undefined> {
-  let data: OutputSchema
+  let data: ComAtprotoServerGetSession.OutputSchema
   try {
     const res = await Promise.race([
       agent.com.atproto.server.getSession(),

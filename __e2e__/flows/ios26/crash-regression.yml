@@ -1,0 +1,59 @@
+appId: community.blacksky.app
+---
+- runScript:
+    file: ../../setupServer.js
+    env:
+      SERVER_PATH: ?users&follows&posts&feeds
+- runFlow:
+    file: ../../setupApp.yml
+- tapOn:
+    id: e2eSignInAlice
+
+- extendedWaitUntil:
+    visible:
+      id: viewHeaderHomeFeedPrefsBtn
+- tapOn:
+    id: e2eGotoIos26CrashRegression
+- assertVisible:
+    id: ios26CrashRegressionScreen
+
+- repeat:
+    times: 5
+    commands:
+      - tapOn:
+          id: ios26MutateYogaLayout
+      - tapOn:
+          id: ios26AddCrashRows
+      - tapOn:
+          id: ios26ToggleSelectableText
+      - tapOn:
+          id: ios26ToggleSelectableText
+
+- scrollUntilVisible:
+    element:
+      id: ios26CrashRegressionInput
+    direction: DOWN
+- tapOn:
+    id: ios26CrashRegressionInput
+- inputText: "ios 26 crash regression"
+- tapOn:
+    point: 20%,20%
+
+- scrollUntilVisible:
+    element:
+      id: ios26SelectableCrashRow-20
+    direction: DOWN
+- longPressOn:
+    id: ios26SelectableCrashRow-20
+- scrollUntilVisible:
+    element:
+      id: ios26MutateYogaLayout
+    direction: UP
+- tapOn:
+    id: ios26MutateYogaLayout
+- tapOn:
+    id: ios26ToggleSelectableText
+- tapOn:
+    id: ios26ToggleSelectableText
+- assertVisible:
+    id: ios26CrashRegressionScreen

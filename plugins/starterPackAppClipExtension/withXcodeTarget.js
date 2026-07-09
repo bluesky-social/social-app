@@ -1,4 +1,5 @@
 const {withXcodeProject} = require('expo/config-plugins')
+const {getIosBuildNumber} = require('../iosBuildNumber')
 
 const BUILD_PHASE_FILES = ['AppDelegate.swift', 'ViewController.swift']
 
@@ -46,9 +47,7 @@ const withXcodeTarget = (config, {targetName}) => {
           buildSettingsObj.INFOPLIST_FILE = `"${targetName}/Info.plist"`
           buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `"${targetName}/${targetName}.entitlements"`
           buildSettingsObj.CODE_SIGN_STYLE = 'Automatic'
-          buildSettingsObj.CURRENT_PROJECT_VERSION = `"${
-            process.env.BSKY_IOS_BUILD_NUMBER ?? '1'
-          }"`
+          buildSettingsObj.CURRENT_PROJECT_VERSION = `"${getIosBuildNumber(config)}"`
           buildSettingsObj.GENERATE_INFOPLIST_FILE = 'YES'
           buildSettingsObj.MARKETING_VERSION = `"${config.version}"`
           buildSettingsObj.PRODUCT_BUNDLE_IDENTIFIER = `"${config.ios?.bundleIdentifier}.AppClip"`

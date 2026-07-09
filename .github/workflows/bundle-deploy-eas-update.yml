@@ -24,7 +24,7 @@ permissions:
 
 jobs:
   bundleDeploy:
-    if: github.repository == 'bluesky-social/social-app'
+    if: github.repository == 'blacksky-algorithms/blacksky.community'
     name: Bundle and Deploy EAS Update
     runs-on: ubuntu-latest
     concurrency:
@@ -124,21 +124,20 @@ jobs:
           echo "EXPO_PUBLIC_GCP_PROJECT_ID=${{ secrets.EXPO_PUBLIC_GCP_PROJECT_ID }}" >> .env
           echo "$json" > google-services.json
 
-      - name: 🏗️ Create Bundle
+      - name: 🚀 Publish OTA Update (eoas)
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         run: >
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
-          SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          pnpm export
-
-      - name: 📦 Package Bundle and 🚀 Deploy
-        if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: pnpm use-build-number bash scripts/bundleUpdate.sh
+          pnpm use-build-number pnpm exec eoas publish
+          --branch=${{ inputs.channel || 'testflight' }}
+          --platform=all
+          --nonInteractive
+          --dumpSourcemap
+          --message="${{ github.event.head_commit.message || github.sha }}"
         env:
-          DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}
-          RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
-          CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_RELEASE: ${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
+          SENTRY_DIST: ${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
@@ -164,7 +163,7 @@ jobs:
     # available here
     if: ${{ inputs.channel != 'production' &&
       needs.bundleDeploy.outputs.changes-detected && github.repository ==
-      'bluesky-social/social-app' }}
+      'blacksky-algorithms/blacksky.community' }}
     steps:
       - name: Check for EXPO_TOKEN
         run: >
@@ -288,8 +287,8 @@ jobs:
 
       - name: 🪲 Upload dSYM to Sentry
         run: >
-          SENTRY_ORG=blueskyweb
-          SENTRY_PROJECT=app
+          SENTRY_ORG=blacksky-algorithms
+          SENTRY_PROJECT=social-app
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           pnpm sentry-cli debug-files upload "$BUILD_DIR/Bluesky.app.dSYM.zip" --include-sources
 
@@ -318,7 +317,7 @@ jobs:
     # available here
     if: ${{ inputs.channel != 'production' &&
       needs.bundleDeploy.outputs.changes-detected && github.repository ==
-      'bluesky-social/social-app'}}
+      'blacksky-algorithms/blacksky.community'}}
 
     steps:
       - name: Check for EXPO_TOKEN
@@ -431,15 +430,6 @@ jobs:
           compression-level: 0
           name: build-${{ steps.timestamp.outputs.time }}.apk
           path: build.apk
-
-      - name: 🔔 Notify Slack
-        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
-        with:
-          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          webhook-type: incoming-webhook
-          payload-templated: true
-          payload: |
-            {"text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact.outputs.artifact-url }}"}
 
       - name: ⬇️ Restore Cache
         id: get-base-commit

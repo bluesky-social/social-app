@@ -1,12 +1,13 @@
 import {useRef, useState} from 'react'
-import {Keyboard, LayoutAnimation, View} from 'react-native'
+import {Keyboard, LayoutAnimation, Platform, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {getWebOAuthClient} from '#/state/session/oauth-web-client'
+import {useSessionApi} from '#/state/session'
+import {getOAuthClient} from '#/state/session/oauth-client'
 import {
   isHandleResolutionError,
   resolveDeactivatedHandle,
@@ -33,6 +34,7 @@ export const LoginForm = ({
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const identifierValueRef = useRef<string>(initialHandle || '')
   const {_} = useLingui()
+  const {login} = useSessionApi()
 
   const onPressNext = async () => {
     if (isProcessing) return
@@ -50,15 +52,30 @@ export const LoginForm = ({
     setIsProcessing(true)
 
     try {
-      const client = getWebOAuthClient()
+      const client = getOAuthClient()
+      let session
       try {
-        await client.signIn(identifier)
+        session = await client.signIn(identifier)
       } catch (e) {
         if (!isHandleResolutionError(e)) throw e
         const did = await resolveDeactivatedHandle(identifier)
-        await client.signIn(did)
+        session = await client.signIn(did)
       }
-      // Browser will redirect to authorization server
+
+      if (Platform.OS !== 'web' && session) {
+        // On native, signIn() returns the session directly after the
+        // in-app browser completes the OAuth flow.
+        await login(
+          {
+            service: '',
+            identifier: '',
+            password: '',
+            oauthSession: session,
+          },
+          'LoginForm',
+        )
+      }
+      // On web, the browser redirects away and App.web.tsx handles the callback.
     } catch (e: any) {
       const errMsg = e.toString()
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)

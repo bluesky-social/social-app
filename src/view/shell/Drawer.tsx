@@ -9,7 +9,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Trans} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {useBrand} from '#/lib/community/BrandContext'
@@ -154,27 +154,25 @@ let DrawerProfileCard = ({
         </Text>
       </View>
       <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-        <Trans>
-          <Text style={[a.text_md, a.font_semi_bold]}>
-            {formatCount(i18n, profile?.followersCount ?? 0)}
-          </Text>{' '}
-          <Plural
-            value={profile?.followersCount || 0}
-            one="follower"
-            other="followers"
-          />
-        </Trans>{' '}
+        <Text style={[a.text_md, a.font_semi_bold]}>
+          {formatCount(i18n, profile?.followersCount ?? 0)}
+        </Text>{' '}
+        {i18n._(
+          plural(profile?.followersCount || 0, {
+            one: 'follower',
+            other: 'followers',
+          }),
+        )}{' '}
         &middot;{' '}
-        <Trans>
-          <Text style={[a.text_md, a.font_semi_bold]}>
-            {formatCount(i18n, profile?.followsCount ?? 0)}
-          </Text>{' '}
-          <Plural
-            value={profile?.followsCount || 0}
-            one="following"
-            other="following"
-          />
-        </Trans>
+        <Text style={[a.text_md, a.font_semi_bold]}>
+          {formatCount(i18n, profile?.followsCount ?? 0)}
+        </Text>{' '}
+        {i18n._(
+          plural(profile?.followsCount || 0, {
+            one: 'following',
+            other: 'following',
+          }),
+        )}
       </Text>
     </TouchableOpacity>
   )

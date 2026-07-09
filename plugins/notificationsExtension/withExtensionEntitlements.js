@@ -12,7 +12,7 @@ const withExtensionEntitlements = (config, {extensionName}) => {
     )
 
     const notificationsExtensionEntitlements = {
-      'com.apple.security.application-groups': [`group.app.bsky`],
+      'com.apple.security.application-groups': [`group.community.blacksky.app`],
     }
 
     fs.mkdirSync(path.dirname(extensionEntitlementsPath), {

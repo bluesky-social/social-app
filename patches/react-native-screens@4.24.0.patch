@@ -1,0 +1,12 @@
+diff --git a/ios/RNSModule.mm b/ios/RNSModule.mm
+index f3f14d3d3c1df63c2435e4b99f3f34ed6a3b6cab..34676adc497b78d4e3d0b3bbfc0a17d7eb91f4ee 100644
+--- a/ios/RNSModule.mm
++++ b/ios/RNSModule.mm
+@@ -4,6 +4,7 @@
+ #import <React/RCTUIManager.h>
+ #import <React/RCTUIManagerUtils.h>
+ #import <React/RCTUtils.h>
++#include <atomic>
+ #include <jsi/jsi.h>
+ #import "RNSScreenStack.h"
+ #import "RNScreensTurboModule.h"

@@ -121,6 +121,12 @@ export function TestCtrls() {
         style={BTN}
       />
       <Pressable
+        testID="e2eGotoIos26CrashRegression"
+        onPress={() => navigate('Ios26CrashRegression')}
+        accessibilityRole="button"
+        style={BTN}
+      />
+      <Pressable
         testID="e2eRefreshHome"
         onPress={() => queryClient.invalidateQueries({queryKey: ['post-feed']})}
         accessibilityRole="button"

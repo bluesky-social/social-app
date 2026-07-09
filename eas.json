@@ -6,7 +6,11 @@
   },
   "build": {
     "base": {
-      "node": "24.15.0"
+      "node": "24.15.0",
+      "env": {
+        "EXPO_PUBLIC_POSTHOG_API_KEY": "phc_zKqA8hPzEyjPJsGEyNfBPrGbRSsH9SrhebuHh5cY9EAv",
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
+      }
     },
     "development": {
       "extends": "base",
@@ -14,8 +18,7 @@
       "distribution": "internal",
       "channel": "development",
       "ios": {
-        "simulator": true,
-        "resourceClass": "large"
+        "simulator": true
       },
       "env": {
         "EXPO_PUBLIC_ENV": "production"
@@ -25,9 +28,6 @@
       "extends": "base",
       "distribution": "internal",
       "channel": "production",
-      "ios": {
-        "resourceClass": "large"
-      },
       "env": {
         "EXPO_PUBLIC_ENV": "production"
       }
@@ -35,7 +35,6 @@
     "production": {
       "extends": "base",
       "ios": {
-        "resourceClass": "large",
         "autoIncrement": true,
         "buildArtifactPaths": ["ios/build/*"]
       },
@@ -49,6 +48,7 @@
     },
     "testflight": {
       "extends": "base",
+      "environment": "production",
       "ios": {
         "autoIncrement": true,
         "buildArtifactPaths": ["ios/build/*"]
@@ -85,7 +85,7 @@
   "submit": {
     "production": {
       "ios": {
-        "ascAppId": "6444370199"
+        "ascAppId": "6776276281"
       },
       "android": {
         "track": "production"

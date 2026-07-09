@@ -9,13 +9,13 @@ export default function (ctx: AppContext, app: Express) {
         apps: [],
         details: [
           {
-            appID: 'B3LX46C5HS.xyz.blueskyweb.app',
+            appID: 'FJ2L3R7JS4.community.blacksky.app',
             paths: ['*'],
           },
         ],
       },
       appclips: {
-        apps: ['B3LX46C5HS.xyz.blueskyweb.app.AppClip'],
+        apps: ['FJ2L3R7JS4.community.blacksky.app.AppClip'],
       },
     })
   })

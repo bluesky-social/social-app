@@ -21,7 +21,8 @@ jest.mock('#/logger', () => ({
 }))
 
 jest.mock('#/env', () => ({
-  METRICS_API_HOST: 'https://test.metrics.api',
+  POSTHOG_API_KEY: 'phc_test_key',
+  POSTHOG_HOST: 'https://test.posthog.api',
   IS_WEB: false,
 }))
 
@@ -61,9 +62,12 @@ describe('MetricsClient', () => {
     await jest.advanceTimersByTimeAsync(10_000)
 
     expect(fetchRequests).toHaveLength(1)
-    expect(fetchRequests[0].body.events).toHaveLength(2)
-    expect(fetchRequests[0].body.events[0].event).toBe('click')
-    expect(fetchRequests[0].body.events[1].event).toBe('view')
+    expect(fetchRequests[0].body.api_key).toBe('phc_test_key')
+    expect(fetchRequests[0].body.batch).toHaveLength(2)
+    expect(fetchRequests[0].body.batch[0].event).toBe('click')
+    expect(fetchRequests[0].body.batch[0].properties.button).toBe('submit')
+    expect(fetchRequests[0].body.batch[0].distinct_id).toBeDefined()
+    expect(fetchRequests[0].body.batch[1].event).toBe('view')
   })
 
   it('flushes when maxBatchSize is exceeded', async () => {
@@ -84,7 +88,7 @@ describe('MetricsClient', () => {
     await jest.advanceTimersByTimeAsync(0)
 
     expect(fetchRequests).toHaveLength(1)
-    expect(fetchRequests[0].body.events).toHaveLength(6)
+    expect(fetchRequests[0].body.batch).toHaveLength(6)
   })
 
   it('retries failed events once on 500 response', async () => {
@@ -123,8 +127,8 @@ describe('MetricsClient', () => {
 
     expect(requestCount).toBe(2)
     expect(fetchRequests).toHaveLength(1)
-    expect(fetchRequests[0].body.events).toHaveLength(1)
-    expect(fetchRequests[0].body.events[0].event).toBe('click')
+    expect(fetchRequests[0].body.batch).toHaveLength(1)
+    expect(fetchRequests[0].body.batch[0].event).toBe('click')
   })
 
   it('does not retry more than once', async () => {

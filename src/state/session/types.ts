@@ -1,4 +1,4 @@
-import {type OAuthSession} from '@atproto/oauth-client-browser'
+import {type OAuthSession} from '@atproto/oauth-client'
 
 import {type PersistedAccount} from '#/state/persisted'
 import {type Metrics} from '#/analytics/metrics'

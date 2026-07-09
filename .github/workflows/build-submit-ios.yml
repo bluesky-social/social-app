@@ -38,7 +38,7 @@ permissions:
 
 jobs:
   build:
-    if: github.repository == 'bluesky-social/social-app'
+    if: github.repository == 'blacksky-algorithms/blacksky.community'
     name: Build and Submit iOS
     runs-on: macos-26-xlarge
     concurrency:
@@ -179,8 +179,8 @@ jobs:
 
       - name: 🪲 Upload dSYM to Sentry
         run: >
-          SENTRY_ORG=blueskyweb
-          SENTRY_PROJECT=app
+          SENTRY_ORG=blacksky-algorithms
+          SENTRY_PROJECT=social-app
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           pnpm sentry-cli debug-files upload "$BUILD_DIR/Bluesky.app.dSYM.zip" --include-sources
 
@@ -238,21 +238,11 @@ jobs:
             api_key_path:"$PWD/asc_api_key.json" \
             distribute_only:true \
             app_platform:"ios" \
-            app_identifier:"xyz.blueskyweb.app" \
+            app_identifier:"community.blacksky.app" \
             app_version:"$APP_VERSION" \
             build_number:"$BUILD_NUMBER" \
             groups:"QA Team" \
             notify_external_testers:true
-
-      - name: 🔔 Notify Slack of Production Build
-        if: ${{ inputs.profile == 'production' }}
-        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
-        with:
-          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          webhook-type: incoming-webhook
-          payload-templated: true
-          payload: |
-            {"text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.ipa-build-number.outputs.build-number }}```"}
 
       - name: ⬇️ Restore Cache
         id: get-base-commit

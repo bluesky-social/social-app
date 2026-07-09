@@ -35,6 +35,7 @@ export type CommonNavigatorParams = {
   ProfileLabelerLikedBy: {name: string}
   Debug: undefined
   DebugMod: undefined
+  Ios26CrashRegression: undefined
   SharedPreferencesTester: undefined
   Log: undefined
   Support: undefined

@@ -75,6 +75,7 @@ import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {BookmarksScreen} from '#/screens/Bookmarks'
+import {Ios26CrashRegressionScreen} from '#/screens/E2E/Ios26CrashRegressionScreen'
 import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
 import {FindContactsFlowScreen} from '#/screens/FindContactsFlowScreen'
 import HashtagScreen from '#/screens/Hashtag'
@@ -322,6 +323,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="InviteScanner"
         getComponent={() => InviteScannerScreen}
         options={{title: title(msg`Scan QR code`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="Ios26CrashRegression"
+        getComponent={() => Ios26CrashRegressionScreen}
+        options={{title: title(msg`iOS 26 Crash Regression`)}}
       />
       <Stack.Screen
         name="SharedPreferencesTester"
@@ -799,7 +805,7 @@ const FlatNavigator = ({
 
 const LINKING = {
   // TODO figure out what we are going to use
-  // note: `bluesky://` is what is used in app.config.js
+  // note: `blacksky://` is what is used in app.config.js
   prefixes: [
     'bsky://',
     'blacksky://',

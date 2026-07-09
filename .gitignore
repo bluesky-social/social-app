@@ -32,6 +32,7 @@ local.properties
 # node.js
 #
 node_modules/
+.pnpm-store/
 npm-debug.log
 yarn-error.log
 

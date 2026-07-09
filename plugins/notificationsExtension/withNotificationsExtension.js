@@ -6,7 +6,7 @@ const {withExtensionInfoPlist} = require('./withExtensionInfoPlist')
 const {withExtensionViewController} = require('./withExtensionViewController')
 const {withSounds} = require('./withSounds')
 
-const EXTENSION_NAME = 'BlueskyNSE'
+const EXTENSION_NAME = 'BlackskyNSE'
 const EXTENSION_CONTROLLER_NAME = 'NotificationService'
 
 const withNotificationsExtension = config => {

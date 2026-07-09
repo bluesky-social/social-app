@@ -23,15 +23,13 @@ module.exports = function (_config) {
   const IS_DEV = !IS_TESTFLIGHT && !IS_PRODUCTION
 
   const ASSOCIATED_DOMAINS = [
-    'applinks:bsky.app',
-    'applinks:staging.bsky.app',
-    'appclips:bsky.app',
-    'appclips:go.bsky.app', // Allows App Clip to work when scanning QR codes
+    'applinks:blacksky.community',
+    'applinks:staging.blacksky.community',
+    'appclips:blacksky.community',
+    'appclips:go.blacksky.community', // Allows App Clip to work when scanning QR codes
     // When testing local services, enter an ngrok (et al) domain here. It must use a standard HTTP/HTTPS port.
     ...(IS_DEV || IS_TESTFLIGHT ? [] : []),
   ]
-
-  const UPDATES_ENABLED = IS_TESTFLIGHT || IS_PRODUCTION
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
 
@@ -46,9 +44,9 @@ module.exports = function (_config) {
     expo: {
       version: VERSION,
       name: 'Blacksky',
-      slug: 'bluesky',
-      scheme: 'bluesky',
-      owner: 'blueskysocial',
+      slug: 'blacksky',
+      scheme: ['blacksky', 'community.blacksky'],
+      owner: 'blacksky-algorithms',
       runtimeVersion: {
         policy: 'appVersion',
       },
@@ -58,7 +56,8 @@ module.exports = function (_config) {
       newArchEnabled: false,
       ios: {
         supportsTablet: false,
-        bundleIdentifier: 'xyz.blueskyweb.app',
+        bundleIdentifier: 'community.blacksky.app',
+        buildNumber: process.env.BSKY_IOS_BUILD_NUMBER ?? '1',
         config: {
           usesNonExemptEncryption: false,
         },
@@ -75,7 +74,7 @@ module.exports = function (_config) {
             'Used to save images to your library.',
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
-          CFBundleSpokenName: 'Blue Sky',
+          CFBundleSpokenName: 'Blacksky',
           CFBundleLocalizations: [
             'en',
             'an',
@@ -123,7 +122,8 @@ module.exports = function (_config) {
         entitlements: {
           'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.developer.kernel.extended-virtual-addressing': true,
-          'com.apple.security.application-groups': 'group.app.bsky',
+          'com.apple.security.application-groups':
+            'group.community.blacksky.app',
           'com.apple.developer.usernotifications.communication': true,
           // 'com.apple.developer.device-information.user-assigned-device-name': true,
         },
@@ -191,10 +191,10 @@ module.exports = function (_config) {
         adaptiveIcon: {
           foregroundImage: './assets/icon-android-foreground.png',
           monochromeImage: './assets/icon-android-monochrome.png',
-          backgroundColor: '#006AFF',
+          backgroundColor: '#00007F',
         },
         googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        package: 'community.blacksky.app',
         intentFilters: [
           {
             action: 'VIEW',
@@ -202,7 +202,7 @@ module.exports = function (_config) {
             data: [
               {
                 scheme: 'https',
-                host: 'bsky.app',
+                host: 'blacksky.community',
               },
               ...(IS_DEV
                 ? [
@@ -221,19 +221,23 @@ module.exports = function (_config) {
         favicon: './assets/favicon.png',
       },
       updates: {
-        url: 'https://updates.bsky.app/manifest',
-        enabled: UPDATES_ENABLED,
+        url: 'https://updates.blacksky.community/manifest',
+        enabled: true,
         fallbackToCacheTimeout: 30000,
-        codeSigningCertificate: UPDATES_ENABLED
-          ? './code-signing/certificate.pem'
-          : undefined,
-        codeSigningMetadata: UPDATES_ENABLED
-          ? {
-              keyid: 'main',
-              alg: 'rsa-v1_5-sha256',
-            }
-          : undefined,
+        codeSigningCertificate: './code-signing/certificate.pem',
+        codeSigningMetadata: {
+          keyid: 'main',
+          alg: 'rsa-v1_5-sha256',
+        },
         checkAutomatically: 'NEVER',
+        // Enables Updates.setUpdateURLAndRequestHeadersOverride at runtime, which
+        // is how non-production builds retarget to a pull-request-<n> channel for
+        // OTA previews (see useOTAUpdates.ts). It weakens the embedded-update
+        // brick-recovery safety net, so it is kept off in production builds only.
+        disableAntiBrickingMeasures: !IS_PRODUCTION,
+        requestHeaders: {
+          'expo-channel-name': IS_TESTFLIGHT ? 'testflight' : 'production',
+        },
       },
       plugins: [
         'expo-video',
@@ -248,8 +252,8 @@ module.exports = function (_config) {
               /** @type {[string, any]} */ ([
                 '@sentry/react-native/expo',
                 {
-                  organization: 'blueskyweb',
-                  project: 'app',
+                  organization: 'blacksky-algorithms',
+                  project: 'social-app',
                   url: 'https://sentry.io',
                 },
               ]),
@@ -294,6 +298,7 @@ module.exports = function (_config) {
             networkInstrumentation: true,
           },
         ],
+        './plugins/withIosEmbeddedBuildVersions.js',
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
         './plugins/withGradleJVMHeapSizeIncrease.js',
         './plugins/withAndroidManifestLargeHeapPlugin.js',
@@ -301,6 +306,7 @@ module.exports = function (_config) {
         './plugins/withAndroidManifestIntentQueriesPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidNoJitpackPlugin.js',
+        './plugins/withIosCppLanguageStandard.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
         [
@@ -337,11 +343,11 @@ module.exports = function (_config) {
               },
             },
             android: {
-              backgroundColor: '#006AFF', // primary_500
+              backgroundColor: '#00007F', // Blacksky navy (matches adaptive icon background)
               image: './assets/splash/android-splash-logo-white.png',
               imageWidth: 102, // even division of 306px
               dark: {
-                backgroundColor: '#002861', // primary_900
+                backgroundColor: '#000040', // darker Blacksky navy
                 image: './assets/splash/android-splash-logo-white.png',
                 imageWidth: 102,
               },
@@ -421,7 +427,7 @@ module.exports = function (_config) {
           'expo-contacts',
           {
             contactsPermission:
-              'I agree to allow Bluesky to use my contacts for friend discovery until I opt out.',
+              'I agree to allow Blacksky to use my contacts for friend discovery until I opt out.',
           },
         ],
       ],
@@ -432,32 +438,33 @@ module.exports = function (_config) {
               ios: {
                 appExtensions: [
                   {
-                    targetName: 'Share-with-Bluesky',
-                    bundleIdentifier: 'xyz.blueskyweb.app.Share-with-Bluesky',
+                    targetName: 'Share-with-Blacksky',
+                    bundleIdentifier:
+                      'community.blacksky.app.Share-with-Blacksky',
                     entitlements: {
                       'com.apple.security.application-groups': [
-                        'group.app.bsky',
+                        'group.community.blacksky.app',
                       ],
                     },
                   },
                   {
-                    targetName: 'BlueskyNSE',
-                    bundleIdentifier: 'xyz.blueskyweb.app.BlueskyNSE',
+                    targetName: 'BlackskyNSE',
+                    bundleIdentifier: 'community.blacksky.app.BlackskyNSE',
                     entitlements: {
                       'com.apple.security.application-groups': [
-                        'group.app.bsky',
+                        'group.community.blacksky.app',
                       ],
                     },
                   },
                   {
-                    targetName: 'BlueskyClip',
-                    bundleIdentifier: 'xyz.blueskyweb.app.AppClip',
+                    targetName: 'BlackskyClip',
+                    bundleIdentifier: 'community.blacksky.app.AppClip',
                   },
                 ],
               },
             },
           },
-          projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
+          projectId: '680dd4a3-7b77-4a43-8f10-f14617b73b9b',
         },
       },
     },

@@ -11,8 +11,34 @@ type Event<M extends Record<string, any>> = {
   metadata: Record<string, any>
 }
 
-const TRACKING_ENDPOINT = env.METRICS_API_HOST + '/t'
+const TRACKING_ENDPOINT = env.POSTHOG_HOST + '/batch/'
 const logger = Logger.create(Logger.Context.Metric, {})
+
+/**
+ * Transform an internal metrics event into a PostHog capture event.
+ *
+ * PostHog requires a `distinct_id` (we key on the device id) and a flat-ish
+ * `properties` bag. We spread the event payload and metadata into properties,
+ * hoisting the `base` metadata (deviceId, sessionId, platform, appVersion, ...)
+ * to the top level so it is queryable in PostHog.
+ */
+function toPostHogEvent<M extends Record<string, any>>(e: Event<M>) {
+  const metadata = e.metadata ?? {}
+  const base = (metadata.base ?? {}) as Record<string, any>
+  const distinctId = base.deviceId || base.sessionId || 'unknown'
+  return {
+    event: e.event as string,
+    distinct_id: distinctId,
+    timestamp: new Date(e.time).toISOString(),
+    properties: {
+      ...e.payload,
+      ...metadata,
+      ...base,
+      distinct_id: distinctId,
+      source: e.source,
+    },
+  }
+}
 
 export class MetricsClient<M extends Record<string, any>> {
   maxBatchSize = 100
@@ -67,8 +93,16 @@ export class MetricsClient<M extends Record<string, any>> {
   }
 
   private async sendBatch(events: Event<M>[], isRetry: boolean = false) {
+    // No API key configured - PostHog reporting is disabled. Drop the batch
+    // rather than queueing it forever.
+    if (!env.POSTHOG_API_KEY) return
+
     try {
-      const body = JSON.stringify({events})
+      const body = JSON.stringify({
+        api_key: env.POSTHOG_API_KEY,
+        historical_migration: false,
+        batch: events.map(toPostHogEvent),
+      })
       if (env.IS_WEB && 'navigator' in globalThis && navigator.sendBeacon) {
         const success = navigator.sendBeacon(
           TRACKING_ENDPOINT,
@@ -84,7 +118,7 @@ export class MetricsClient<M extends Record<string, any>> {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({events}),
+          body,
           keepalive: true,
         })
 

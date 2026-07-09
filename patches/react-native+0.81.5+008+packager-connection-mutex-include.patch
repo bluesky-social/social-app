@@ -1,0 +1,12 @@
+diff --git a/node_modules/react-native/React/DevSupport/RCTPackagerConnection.mm b/node_modules/react-native/React/DevSupport/RCTPackagerConnection.mm
+index 39419d6..b252a49 100644
+--- a/node_modules/react-native/React/DevSupport/RCTPackagerConnection.mm
++++ b/node_modules/react-native/React/DevSupport/RCTPackagerConnection.mm
+@@ -9,6 +9,7 @@
+ 
+ #import <objc/runtime.h>
+ #import <algorithm>
++#import <mutex>
+ #import <vector>
+ 
+ #import <React/RCTAssert.h>

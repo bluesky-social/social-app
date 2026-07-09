@@ -82,8 +82,12 @@ export function renderChildrenWithEmoji(
   children: React.ReactNode,
   props: Omit<TextProps, 'children'> = {},
   emoji: boolean,
+  options: {allowNestedUITextView?: boolean} = {},
 ) {
   if (!IS_IOS || !emoji) {
+    return children
+  }
+  if (options.allowNestedUITextView === false) {
     return children
   }
   return Children.map(children, child => {

@@ -32,7 +32,7 @@ class SharedPrefs(
     ): SharedPreferences {
       if (instance == null) {
         Log.d(NAME, "No preferences instance found, creating one.")
-        instance = context.getSharedPreferences("xyz.blueskyweb.app", Context.MODE_PRIVATE)
+        instance = context.getSharedPreferences("community.blacksky.app", Context.MODE_PRIVATE)
       }
 
       val safeInstance = instance ?: throw Error("Preferences is null: $info")
