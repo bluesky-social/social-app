@@ -136,7 +136,11 @@ function AdditionalLabels({
       <LabelsOnMeDialog control={control} labels={labels} type="content" />
 
       <Pills.LabelBase
-        label={
+        label={l`${plural(labels.length, {
+          one: '# label applied to your post',
+          other: '# labels applied to your post',
+        })}`}
+        cta={
           hasPrecedingPills
             ? l`+${labels.length}`
             : l`${plural(labels.length, {

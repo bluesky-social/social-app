@@ -93,7 +93,15 @@ export function Label({
 }
 
 export type LabelBaseProps = {
+  /**
+   * The accessibility label for the pill.
+   */
   label: string
+  /**
+   * The visible pill text. Defaults to `label`. Use this when the visible
+   * text is too terse to serve as the accessibility label, e.g. "+2".
+   */
+  cta?: string
   onPress: () => void
   disabled?: boolean
   noBg?: boolean
@@ -102,6 +110,7 @@ export type LabelBaseProps = {
 
 export function LabelBase({
   label,
+  cta = label,
   onPress,
   disabled,
   size = 'sm',
@@ -171,7 +180,7 @@ export function LabelBase({
               t.atoms.text_contrast_medium,
               {paddingRight: 3},
             ]}>
-            {label}
+            {cta}
           </Text>
         </View>
       )}
