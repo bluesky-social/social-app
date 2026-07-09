@@ -580,14 +580,6 @@ let MessageItem = ({
                                 android: {marginTop: a.mt_2xs.marginTop},
                                 default: {marginBottom: -a.mb_sm.marginBottom},
                               }),
-                            /*
-                             * On Android, give the enlarged glyph run a
-                             * self-contained draw box so a re-measure can't clip
-                             * the trailing emoji. `includeFontPadding` restores
-                             * the ascent/descent slack that `leading_tight`
-                             * removes.
-                             */
-                            platform({android: {includeFontPadding: true}}),
                           ],
                         ]}
                         interactiveStyle={a.underline}
