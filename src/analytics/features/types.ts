@@ -12,8 +12,6 @@ export enum Features {
   GroupChatsDisable = 'group_chats:disable',
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
-  SearchV2Enable = 'search_v2:enable',
-  AdvancedSearchV2Enable = 'advanced_search_v2:enable',
 
   AATest = 'aa-test',
 }

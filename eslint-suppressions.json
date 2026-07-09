@@ -1087,14 +1087,6 @@
       "count": 1
     }
   },
-  "src/screens/Hashtag.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/screens/Home/NoFeedsPinned.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
@@ -1486,14 +1478,6 @@
       "count": 2
     },
     "@typescript-eslint/require-await": {
-      "count": 1
-    }
-  },
-  "src/screens/Topic.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
-    "@typescript-eslint/no-misused-promises": {
       "count": 1
     }
   },
