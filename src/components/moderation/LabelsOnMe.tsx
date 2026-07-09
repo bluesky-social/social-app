@@ -4,6 +4,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural} from '@lingui/react/macro'
 
+import {filterUserFacingLabels} from '#/lib/moderation'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
 import {
@@ -34,11 +35,7 @@ export function LabelsOnMe({
   if (!labels || !currentAccount) {
     return null
   }
-  labels = labels.filter(
-    l =>
-      !l.val.startsWith('!') &&
-      !(l.val === 'bot' && l.src === currentAccount.did),
-  )
+  labels = filterUserFacingLabels(labels, currentAccount.did)
   if (!labels.length) {
     return null
   }

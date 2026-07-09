@@ -8,7 +8,11 @@ import {
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
-import {getModerationCauseKey, unique} from '#/lib/moderation'
+import {
+  filterUserFacingLabels,
+  getModerationCauseKey,
+  unique,
+} from '#/lib/moderation'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
 import {
@@ -48,21 +52,20 @@ export function PostAlerts({
   /*
    * Labels that the moderation system already surfaces in this context -
    * whether as an alert, an inform, or a blur handled by ContentHider - should
-   * not be repeated in the "+n" pill. System labels and the author's own
-   * "bot" self-label are excluded the same way LabelsOnMe excludes them.
+   * not be repeated in the "+n" pill.
    */
   const shownCauses = [...alerts, ...informs, ...modui.blurs]
-  const additionalLabels = allLabels.filter(
-    label =>
-      !label.val.startsWith('!') &&
-      !(label.val === 'bot' && label.src === currentAccount?.did) &&
-      shownCauses.every(
-        cause =>
-          cause.type !== 'label' ||
-          cause.label.val !== label.val ||
-          cause.label.src !== label.src ||
-          cause.label.uri !== label.uri,
-      ),
+  const additionalLabels = filterUserFacingLabels(
+    allLabels,
+    currentAccount?.did,
+  ).filter(label =>
+    shownCauses.every(
+      cause =>
+        cause.type !== 'label' ||
+        cause.label.val !== label.val ||
+        cause.label.src !== label.src ||
+        cause.label.uri !== label.uri,
+    ),
   )
 
   if (
