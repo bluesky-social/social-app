@@ -14,9 +14,10 @@ import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
+import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
 import * as Layout from '#/components/Layout'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -144,10 +145,11 @@ export function BetaFeaturesSettingsScreen({}: Props) {
             <Button
               disabled={!isBetaUser || betaFeatures.length < 1 || isPending}
               label={l`Share feedback`}
-              size="medium"
+              size="small"
               color="primary_subtle"
               onPress={onPressShareFeedback}
               style={[a.self_start, a.mt_xs, a.mb_xl]}>
+              <ButtonIcon icon={BubbleInfoIcon} />
               <ButtonText>
                 <Trans>Share feedback</Trans>
               </ButtonText>
