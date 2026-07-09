@@ -31,13 +31,41 @@ export function PostAlerts({
   style?: StyleProp<ViewStyle>
   additionalCauses?: ModerationCause[] | Pills.AppModerationCause[]
 }) {
+  const {currentAccount} = useSession()
+
   if (!modui.alert && !modui.inform && !additionalCauses?.length) {
     return null
   }
 
+  const alerts = modui.alerts.filter(unique)
+  const informs = modui.informs.filter(unique)
+  /*
+   * The "+n" pill surfaces labels for the author to review and appeal, so it
+   * only applies when the viewer is the author.
+   */
+  const isOwnPost = !!post && post.author.did === currentAccount?.did
+  const allLabels: ComAtprotoLabelDefs.Label[] = isOwnPost
+    ? [...(post.labels ?? []), ...(post.author.labels ?? [])]
+    : []
+  /*
+   * Labels that the moderation system already surfaces in this context -
+   * whether as an alert, an inform, or a blur handled by ContentHider - should
+   * not be repeated in the "+n" pill.
+   */
+  const shownCauses = [...alerts, ...informs, ...modui.blurs]
+  const additionalLabels = allLabels.filter(label =>
+    shownCauses.every(
+      cause =>
+        cause.type !== 'label' ||
+        cause.label.val !== label.val ||
+        cause.label.src !== label.src ||
+        cause.label.uri !== label.uri,
+    ),
+  )
+
   return (
     <Pills.Row size={size} style={[size === 'sm' && {marginLeft: -3}, style]}>
-      {modui.alerts.filter(unique).map(cause => (
+      {alerts.map(cause => (
         <Pills.Label
           key={getModerationCauseKey(cause)}
           cause={cause}
@@ -45,7 +73,7 @@ export function PostAlerts({
           noBg={size === 'sm'}
         />
       ))}
-      {modui.informs.filter(unique).map(cause => (
+      {informs.map(cause => (
         <Pills.Label
           key={getModerationCauseKey(cause)}
           cause={cause}
@@ -61,8 +89,8 @@ export function PostAlerts({
           noBg={size === 'sm'}
         />
       ))}
-      {post?.labels?.length ? (
-        <AdditionalLabels labels={post.labels} size={size} />
+      {additionalLabels.length ? (
+        <AdditionalLabels labels={additionalLabels} size={size} />
       ) : null}
     </Pills.Row>
   )
@@ -96,7 +124,7 @@ function AdditionalLabels({
       <LabelsOnMeDialog control={control} labels={labels} type="content" />
 
       <Pills.LabelBase
-        label={l`+${plural(labels.length, {one: '# label', other: '# labels'})}`}
+        label={l`+${plural(labels.length, {one: '#', other: '#'})}`}
         size={size}
         noBg={size === 'sm'}
         onPress={() => {
