@@ -240,6 +240,7 @@ let ProfileMenu = ({
 
   const verificationCreatePromptControl = Prompt.usePromptControl()
   const verificationRemovePromptControl = Prompt.usePromptControl()
+  const unfollowPromptControl = Prompt.usePromptControl()
   const currentAccountVerifications =
     profile.verification?.verifications?.filter(v => {
       return v.issuer === currentAccount?.did
@@ -321,7 +322,7 @@ let ProfileMenu = ({
                         }
                         onPress={
                           isFollowing
-                            ? () => void onPressUnfollowAccount()
+                            ? () => unfollowPromptControl.open()
                             : () => void onPressFollowAccount()
                         }>
                         <Menu.ItemText>
@@ -547,6 +548,16 @@ let ProfileMenu = ({
         description={l`This profile is only visible to logged-in users. It won't be visible to people who aren't signed in.`}
         onConfirm={onPressShare}
         confirmButtonCta={l`Share anyway`}
+      />
+      <Prompt.Basic
+        control={unfollowPromptControl}
+        title={l`Unfollow?`}
+        description={l`Are you sure you want to unfollow ${
+          profile.displayName || profile.handle
+        }?`}
+        onConfirm={() => void onPressUnfollowAccount()}
+        confirmButtonCta={l`Unfollow`}
+        confirmButtonColor="negative"
       />
       <VerificationCreatePrompt
         control={verificationCreatePromptControl}

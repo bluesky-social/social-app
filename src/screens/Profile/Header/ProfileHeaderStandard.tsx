@@ -233,6 +233,7 @@ export function HeaderStandardButtons({
   const editProfileControl = useDialogControl()
   const inviteFriendsControl = useDialogControl()
   const unblockPromptControl = Prompt.usePromptControl()
+  const unfollowPromptControl = Prompt.usePromptControl()
 
   const isMe = currentAccount?.did === profile.did
 
@@ -397,7 +398,9 @@ export function HeaderStandardButtons({
                   : _(msg`Follow ${profile.handle}`)
               }
               onPress={
-                profile.viewer?.following ? onPressUnfollow : onPressFollow
+                profile.viewer?.following
+                  ? () => unfollowPromptControl.open()
+                  : onPressFollow
               }>
               {!profile.viewer?.following && <ButtonIcon icon={Plus} />}
               <ButtonText>
@@ -425,6 +428,20 @@ export function HeaderStandardButtons({
           void unblockAccount()
         }}
         confirmButtonCta={_(msg`Unblock`)}
+        confirmButtonColor="negative"
+      />
+
+      <Prompt.Basic
+        control={unfollowPromptControl}
+        title={_(msg`Unfollow?`)}
+        description={_(
+          msg`Are you sure you want to unfollow ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+            moderation.ui('displayName'),
+          )}?`,
+        )}
+        onConfirm={onPressUnfollow}
+        confirmButtonCta={_(msg`Unfollow`)}
         confirmButtonColor="negative"
       />
     </>
