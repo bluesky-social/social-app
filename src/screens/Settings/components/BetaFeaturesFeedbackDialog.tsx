@@ -6,7 +6,6 @@ import {useMutation} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {Sentry} from '#/logger/sentry/lib'
-import {useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -43,7 +42,6 @@ function BetaFeaturesFeedbackDialogInner({
   const t = useTheme()
   const {t: l} = useLingui()
   const control = Dialog.useDialogContext()
-  const {currentAccount} = useSession()
 
   const [feedback, setFeedback] = useState('')
 
@@ -62,7 +60,6 @@ function BetaFeaturesFeedbackDialogInner({
       Sentry.captureFeedback(
         {
           message: feedback.trim(),
-          email: currentAccount?.email,
         },
         {
           captureContext: {
@@ -108,7 +105,7 @@ function BetaFeaturesFeedbackDialogInner({
           <Text
             accessibilityLabel={plural(remaining, {
               one: '# character remaining',
-              other: '# cahracters remaining',
+              other: '# characters remaining',
             })}
             accessibilityHint=""
             style={[
