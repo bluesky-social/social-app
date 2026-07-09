@@ -1,3 +1,118 @@
+diff --git a/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.cpp b/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.cpp
+index 531f0dc7b4eeb9b29cb2255d8444da02a74c35b7..64a903157d8831fcf882c0d5198e777414808a27 100644
+--- a/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.cpp
++++ b/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.cpp
+@@ -2,6 +2,7 @@
+ #include <reanimated/Tools/FeatureFlags.h>
+ 
+ #include <memory>
++#include <tuple>
+ #include <utility>
+ 
+ namespace reanimated {
+@@ -25,7 +26,13 @@ void AnimatedPropsRegistry::update(jsi::Runtime &rt, const jsi::Value &operation
+     addUpdatesToBatch(shadowNode, jsi::dynamicFromValue(rt, updates));
+ 
+     if constexpr (StaticFeatureFlags::getFlag("FORCE_REACT_RENDER_FOR_SETTLED_ANIMATIONS")) {
+-      timestampMap_[shadowNode->getTag()] = timestamp;
++      const auto tag = shadowNode->getTag();
++      timestampMap_[tag] = timestamp;
++      // If JS already has a `settledProps` snapshot for this tag, it is now
++      // stale — schedule a refresh on the next `getUpdatesOlderThanTimestamp`.
++      if (syncedTags_.erase(tag) > 0) {
++        invalidatedTags_.insert(tag);
++      }
+     }
+   }
+ }
+@@ -37,22 +44,40 @@ jsi::Value AnimatedPropsRegistry::getUpdatesOlderThanTimestamp(
+   std::lock_guard<std::mutex> lock{mutex_};
+   removeUpdatesOlderThanTimestamp(cleanupTimestamp);
+ 
+-  std::vector<std::pair<Tag, std::reference_wrapper<const folly::dynamic>>> updates;
++  // Each returned tag is paired with whether it came from the settled path —
++  // only settled-path tags are tracked as "synced" so that an ongoing animation
++  // doesn't re-trigger an invalidation/sync on every GC tick.
++  std::vector<std::tuple<Tag, std::reference_wrapper<const folly::dynamic>, bool>> updates;
+ 
+   for (const auto &[viewTag, pair] : updatesRegistry_) {
+     auto it = timestampMap_.find(viewTag);
+-    if (it != timestampMap_.end() && it->second < timestamp) {
+-      updates.emplace_back(viewTag, std::cref(pair.second));
++    if (it == timestampMap_.end()) {
++      continue;
++    }
++    const bool isSettled = it->second < timestamp;
++    const auto invalidatedIt = invalidatedTags_.find(viewTag);
++    const bool isStaleSynced = invalidatedIt != invalidatedTags_.end();
++    if (isSettled || isStaleSynced) {
++      updates.emplace_back(viewTag, std::cref(pair.second), isSettled);
++      if (isStaleSynced) {
++        // Only erase serviced invalidations; if a tag was invalidated but the
++        // matching update batch hasn't been flushed into updatesRegistry_ yet,
++        // we leave the entry so the next sync picks it up.
++        invalidatedTags_.erase(invalidatedIt);
++      }
+     }
+   }
+ 
+   const jsi::Array array(rt, updates.size());
+   size_t i = 0;
+-  for (const auto &[viewTag, styleProps] : updates) {
++  for (const auto &[viewTag, styleProps, isSettled] : updates) {
+     const jsi::Object item(rt);
+     item.setProperty(rt, "viewTag", viewTag);
+     item.setProperty(rt, "styleProps", jsi::valueFromDynamic(rt, styleProps.get()));
+     array.setValueAtIndex(rt, i++, item);
++    if (isSettled) {
++      syncedTags_.insert(viewTag);
++    }
+   }
+ 
+   return jsi::Value(rt, array);
+@@ -62,7 +87,8 @@ void AnimatedPropsRegistry::removeUpdatesOlderThanTimestamp(const double timesta
+   for (auto it = timestampMap_.begin(); it != timestampMap_.end();) {
+     const auto viewTag = it->first;
+     const auto viewTimestamp = it->second;
+-    if (viewTimestamp < timestamp) {
++
++    if (viewTimestamp < timestamp && syncedTags_.count(viewTag) > 0) {
+       it = timestampMap_.erase(it);
+       updatesRegistry_.erase(viewTag);
+     } else {
+@@ -74,6 +100,8 @@ void AnimatedPropsRegistry::removeUpdatesOlderThanTimestamp(const double timesta
+ void AnimatedPropsRegistry::removeTag(const Tag tag) {
+   updatesRegistry_.erase(tag);
+   timestampMap_.erase(tag);
++  syncedTags_.erase(tag);
++  invalidatedTags_.erase(tag);
+ }
+ 
+ } // namespace reanimated
+diff --git a/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.h b/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.h
+index 2c6c0e13604c9421e147d7eea7f4a4752288011c..da69e9119f200bb11878455232cf975f6f2c0042 100644
+--- a/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.h
++++ b/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.h
+@@ -7,6 +7,7 @@
+ #include <memory>
+ #include <string>
+ #include <unordered_map>
++#include <unordered_set>
+ #include <vector>
+ 
+ namespace reanimated {
+@@ -20,6 +21,11 @@ class AnimatedPropsRegistry : public UpdatesRegistry {
+ 
+  private:
+   std::unordered_map<Tag, double> timestampMap_; // viewTag -> timestamp, protected by `mutex_`
++  // Tags whose latest values have already been pushed to React `settledProps`.
++  std::unordered_set<Tag> syncedTags_;
++  // Tags that were synced to React but received a fresh worklet update since;
++  // their `settledProps` are stale and need to be refreshed on the next sync.
++  std::unordered_set<Tag> invalidatedTags_;
+ 
+   void removeUpdatesOlderThanTimestamp(double timestamp);
+   void removeTag(Tag tag) override;
 diff --git a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxyCommon.h b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxyCommon.h
 index 096218ab9659955cd6272c97181bce3c893ed591..1a8e25fc8295b3ac943130709bf063ea41a50585 100644
 --- a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxyCommon.h
