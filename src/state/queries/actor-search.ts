@@ -1,4 +1,7 @@
-import {type AppBskyActorSearchActors} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  type AppBskyActorSearchActors,
+} from '@atproto/api'
 import {
   type InfiniteData,
   keepPreviousData,
@@ -7,6 +10,8 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
+import {hasMutedWordInAuthorName} from '#/lib/moderation'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
 
@@ -29,6 +34,9 @@ export function useActorSearch({
   limit?: number
 }) {
   const agent = useAgent()
+  const moderationOpts = useModerationOpts()
+  const mutedWords = moderationOpts?.prefs.mutedWords ?? []
+
   return useInfiniteQuery<
     AppBskyActorSearchActors.OutputSchema,
     Error,
@@ -50,12 +58,15 @@ export function useActorSearch({
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     placeholderData: maintainData ? keepPreviousData : undefined,
-    select,
+    select: data => selectActors(data, mutedWords),
   })
 }
 
-function select(data: InfiniteData<AppBskyActorSearchActors.OutputSchema>) {
-  // enforce uniqueness
+function selectActors(
+  data: InfiniteData<AppBskyActorSearchActors.OutputSchema>,
+  mutedWords: AppBskyActorDefs.MutedWord[],
+) {
+  // enforce uniqueness and filter muted display names
   const dids = new Set()
 
   return {
@@ -66,6 +77,9 @@ function select(data: InfiniteData<AppBskyActorSearchActors.OutputSchema>) {
           return false
         }
         dids.add(actor.did)
+        if (hasMutedWordInAuthorName({mutedWords, author: actor})) {
+          return false
+        }
         return true
       }),
     })),
