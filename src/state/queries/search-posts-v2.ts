@@ -51,10 +51,11 @@ export function useSearchPostsV2Query({
   const moderationOpts = useModerationOpts()
   const selectArgs = useMemo(
     () => ({
-      isSearchingSpecificUser: /from:(\w+)/.test(query) || !!filters?.author,
+      isSearchingSpecificUser:
+        /from:(\w+)/.test(query) || !!filters?.author || filters?.from === 'me',
       moderationOpts,
     }),
-    [query, filters?.author, moderationOpts],
+    [query, filters?.author, filters?.from, moderationOpts],
   )
   const lastRun = useRef<{
     data: InfiniteData<AppBskyFeedSearchPostsV2.OutputSchema>
@@ -78,9 +79,17 @@ export function useSearchPostsV2Query({
        */
       const {q, ...embedded} = extractSearchPostsParams(query)
       const builtFilters = buildSearchPostsV2Filters(embedded, filters)
+      /*
+       * The "You" author filter is carried as `from=me` (rather than a
+       * `from:me` token in the query text, which would leak into the search
+       * input). Reconstruct it into the query operator here, since the backend
+       * resolves `me` to the viewer.
+       */
+      const finalQuery =
+        filters?.from === 'me' ? `${q ? `${q} ` : ''}from:me` : q
       const res = await agent.app.bsky.feed.searchPostsV2({
         ...builtFilters,
-        query: q,
+        query: finalQuery,
         limit: 25,
         cursor: pageParam,
         /*

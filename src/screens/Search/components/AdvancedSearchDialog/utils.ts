@@ -14,10 +14,12 @@ export type RepliesFilter = 'all' | 'none' | 'only'
 export type MediaFilter = 'all' | 'media' | 'video'
 
 /**
- * Whether to limit results to authors the user follows. Serializes into the
- * `following` sibling param ('following' -> following:true, anyone -> unset).
+ * Which authors to limit results to. Serializes into the `from` sibling param:
+ * 'following' -> from:true (people you follow), 'you' -> from:me (your own
+ * posts, reconstructed into `from:me` at the v2 API boundary), 'anyone' ->
+ * unset.
  */
-export type FollowingFilter = 'anyone' | 'following'
+export type FollowingFilter = 'anyone' | 'following' | 'you'
 
 export type FilterField = 'authors' | 'mentions' | 'domains' | 'urls' | 'tags'
 
@@ -141,18 +143,27 @@ function isSimpleWord(word: string): boolean {
  * populate "none of these words" - but only when their contents are simple
  * words. Anything that wouldn't round-trip (embedded quotes, a negated phrase
  * like -"a b", etc.) is left verbatim in the main "all of these words" query
- * text instead of parsed.
+ * text instead of parsed. A bare `from:me` is pulled out into the `fromMe`
+ * flag, which drives the "You" author filter (the backend resolves `me` to the
+ * viewer, so it never becomes a structured `author` value).
  */
 function parseFreeText(raw: string): {
   query: string
   exactPhrase: string
   negatedWords: string
+  fromMe: boolean
 } {
   const queryParts: string[] = []
   const negatedWords: string[] = []
   let exactPhrase = ''
+  let fromMe = false
 
   for (const token of tokenizeQuery(raw)) {
+    // from:me -> "You" author filter rather than free text.
+    if (token === 'from:me') {
+      fromMe = true
+      continue
+    }
     // "phrase" -> "exact phrase", only if it has no inner quote.
     if (token.startsWith('"') && token.endsWith('"') && token.length > 1) {
       const inner = token.slice(1, -1)
@@ -176,6 +187,7 @@ function parseFreeText(raw: string): {
     query: queryParts.join(' '),
     exactPhrase,
     negatedWords: negatedWords.join(' '),
+    fromMe,
   }
 }
 
@@ -208,7 +220,7 @@ export function parseAdvancedSearch(
    * can be expressed as operators; exclude rows come solely from filter params.
    */
   const lifted = extractSearchPostsParams(q)
-  const freeText = parseFreeText(lifted.q)
+  const {fromMe, ...freeText} = parseFreeText(lifted.q)
 
   const includeValues: Record<FilterField, string> = {
     authors: mergeValues(filters.author, lifted.author),
@@ -255,12 +267,24 @@ export function parseAdvancedSearch(
   const since = filters.since ?? lifted.since
   const until = filters.until ?? lifted.until
 
+  /*
+   * A `from:me` typed into the query box maps to the "You" author filter, same
+   * as the `from=me` param. Either source selects 'you'; the plain `from=true`
+   * param remains "People you follow".
+   */
+  let following: FollowingFilter = 'anyone'
+  if (fromMe || filters.from === 'me') {
+    following = 'you'
+  } else if (filters.from === 'true') {
+    following = 'following'
+  }
+
   return {
     ...freeText,
     language: lang,
     replies,
     media,
-    following: filters.following === 'true' ? 'following' : 'anyone',
+    following,
     since: since && isValidDate(since) ? since : '',
     until: until && isValidDate(until) ? until : '',
     filters: filterRows,
@@ -352,7 +376,15 @@ export function serializeAdvancedSearch(state: {
   if (state.replies === 'only') filters.replies = 'only'
   if (state.media === 'media') filters.media = 'true'
   else if (state.media === 'video') filters.video = 'true'
-  if (state.following === 'following') filters.following = 'true'
+  /*
+   * The "You" filter is stored as `from=me` rather than a `from:me` token in
+   * `q`: this keeps the query text clean (so `from:me` never shows in the
+   * search input) and lets it count as an active filter. It's reconstructed
+   * back into a `from:me` query operator at the v2 API boundary, since the
+   * backend resolves `me` to the viewer.
+   */
+  if (state.following === 'following') filters.from = 'true'
+  else if (state.following === 'you') filters.from = 'me'
 
   return {q: parts.join(' '), filters}
 }

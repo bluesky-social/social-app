@@ -33,6 +33,18 @@ describe(`searchParams`, () => {
     it(`ignores empty and non-string values`, () => {
       expect(readSearchFilters({author: '', tag: undefined})).toEqual({})
     })
+
+    it(`maps a legacy following=true param onto from`, () => {
+      expect(readSearchFilters({q: 'cats', following: 'true'})).toEqual({
+        from: 'true',
+      })
+    })
+
+    it(`prefers an explicit from over a legacy following param`, () => {
+      expect(readSearchFilters({from: 'me', following: 'true'})).toEqual({
+        from: 'me',
+      })
+    })
   })
 
   describe(`hasPostOnlyFilters`, () => {
@@ -100,7 +112,7 @@ describe(`searchParams`, () => {
       expect(
         filtersToApiParams({
           video: 'true',
-          following: 'true',
+          from: 'true',
           replies: 'only',
         }),
       ).toEqual({

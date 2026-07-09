@@ -29,8 +29,12 @@ export type SearchFilters = {
   media?: string
   /** 'true' */
   video?: string
-  /** 'true' */
-  following?: string
+  /**
+   * 'true' limits results to people you follow; 'me' limits them to your own
+   * posts (reconstructed into a `from:me` query operator at the v2 API
+   * boundary). v2-only. Serializes to the `from` URL param.
+   */
+  from?: string
 }
 
 export const FILTER_PARAM_KEYS = [
@@ -50,7 +54,7 @@ export const FILTER_PARAM_KEYS = [
   'replies',
   'media',
   'video',
-  'following',
+  'from',
 ] as const
 
 /**
@@ -71,6 +75,15 @@ export function readSearchFilters(
     if (typeof value === 'string' && value && value !== 'undefined') {
       filters[key] = value
     }
+  }
+  /*
+   * Back-compat: the author filter was previously stored under `following`
+   * (following=true). Honor old links/history by mapping it onto `from`, unless
+   * a `from` value is already present.
+   */
+  if (!filters.from) {
+    const legacy = routeParams.following
+    if (legacy === 'true') filters.from = 'true'
   }
   return filters
 }
@@ -249,7 +262,7 @@ export function filtersToApiParams(filters: SearchFilters): {
   if (filters.until) params.until = filters.until
   if (filters.media === 'true') params.hasMedia = true
   if (filters.video === 'true') params.hasVideo = true
-  if (filters.following === 'true') params.following = true
+  if (filters.from === 'true') params.following = true
   if (filters.replies === 'none') params.excludeReplies = true
   else if (filters.replies === 'only') params.repliesOnly = true
   return params

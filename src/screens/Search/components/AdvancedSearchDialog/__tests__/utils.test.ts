@@ -73,10 +73,37 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
     expect(state.until).toBe('2024-02-01')
   })
 
-  it(`keeps from:me in the query box rather than lifting it into a row`, () => {
-    const state = parseAdvancedSearch('from:me', {})
-    expect(state.query).toBe('from:me')
+  it(`lifts from:me typed into the query box into the "you" following filter`, () => {
+    const state = parseAdvancedSearch('cats from:me', {})
+    expect(state.query).toBe('cats')
+    expect(state.following).toBe('you')
     expect(state.filters.find(f => f.field === 'authors')).toBeUndefined()
+  })
+
+  it(`serializes the "you" following filter into the from param, not the query`, () => {
+    const out = serializeAdvancedSearch({
+      ...emptySerializeState,
+      query: 'cats',
+      following: 'you',
+    })
+    // from:me must not leak into the query text (it'd show in the search input).
+    expect(out.q).toBe('cats')
+    expect(out.filters.from).toBe('me')
+  })
+
+  it(`round-trips cats from:me through the "you" following filter`, () => {
+    const state = parseAdvancedSearch('cats from:me', {})
+    const out = serializeAdvancedSearch({
+      ...emptySerializeState,
+      query: state.query,
+      following: state.following,
+    })
+    expect(out.q).toBe('cats')
+    expect(out.filters.from).toBe('me')
+  })
+
+  it(`parses the from=me param into the "you" following filter`, () => {
+    expect(parseAdvancedSearch('', {from: 'me'}).following).toBe('you')
   })
 
   it(`merges a query-box operator with the matching filter param`, () => {
@@ -99,7 +126,7 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
       since: '2024-01-01',
       until: '2024-02-01',
       media: 'true',
-      following: 'true',
+      from: 'true',
       replies: 'only',
     }
 
@@ -137,26 +164,24 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
     expect(state.media).toBe('video')
   })
 
-  it(`maps the following filter to the following param on serialize`, () => {
+  it(`maps the following filter to the from param on serialize`, () => {
     const out = serializeAdvancedSearch({
       ...emptySerializeState,
       following: 'following',
     })
-    expect(out.filters.following).toBe('true')
+    expect(out.filters.from).toBe('true')
   })
 
-  it(`leaves the following param unset for anyone`, () => {
+  it(`leaves the from param unset for anyone`, () => {
     const out = serializeAdvancedSearch({
       ...emptySerializeState,
       following: 'anyone',
     })
-    expect(out.filters.following).toBeUndefined()
+    expect(out.filters.from).toBeUndefined()
   })
 
-  it(`parses the following param into the following filter`, () => {
-    expect(parseAdvancedSearch('', {following: 'true'}).following).toBe(
-      'following',
-    )
+  it(`parses the from param into the following filter`, () => {
+    expect(parseAdvancedSearch('', {from: 'true'}).following).toBe('following')
     expect(parseAdvancedSearch('', {}).following).toBe('anyone')
   })
 

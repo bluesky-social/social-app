@@ -21,6 +21,7 @@ export function FollowingDropdown({
   const options: {value: FollowingFilter; label: string}[] = [
     {value: 'anyone', label: l`Anyone`},
     {value: 'following', label: l`People you follow`},
+    {value: 'you', label: l`You`},
   ]
   const currentLabel = options.find(o => o.value === value)?.label ?? l`Anyone`
 
