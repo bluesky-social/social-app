@@ -36,7 +36,6 @@ import {useSession} from '#/state/session'
 import {
   countActiveFilters,
   definedFilterParams,
-  filtersToLegacyParams,
   filtersToRouteParams,
   hasActiveFilters,
   parseHistoryEntry,
@@ -45,7 +44,6 @@ import {
   serializeHistoryEntry,
   withoutFilterParams,
 } from '#/screens/Search/searchParams'
-import {makeSearchQuery} from '#/screens/Search/utils'
 import {
   atoms as a,
   native,
@@ -816,7 +814,6 @@ function useQueryManager({
   return useMemo(
     () => ({
       query,
-      queryWithParams: makeSearchQuery(query, filtersToLegacyParams(filters)),
       filters,
       setFilters,
       hasFilters: hasActiveFilters(filters),
