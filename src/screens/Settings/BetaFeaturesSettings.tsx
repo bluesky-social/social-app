@@ -23,7 +23,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {features} from '#/analytics'
 import {getTargetedFeatures} from '#/analytics/features'
-import {IS_WEB} from '#/env'
+import {IS_INTERNAL, IS_WEB} from '#/env'
 import {device} from '#/storage'
 
 type Props = NativeStackScreenProps<
@@ -95,6 +95,8 @@ export function BetaFeaturesSettingsScreen({}: Props) {
       }),
     )
   }
+  const canSubmitFeedback =
+    !isPending && isBetaUser && (betaFeatures.length > 0 || IS_INTERNAL)
 
   return (
     <Layout.Screen>
@@ -138,12 +140,20 @@ export function BetaFeaturesSettingsScreen({}: Props) {
           <View style={[a.px_xl, a.gap_md]}>
             <Admonition type="info">
               {IS_WEB
-                ? l`Beta features may be unstable. Some changes may require reloading the app.`
-                : l`Beta features may be unstable. Some changes may require restarting the app.`}
+                ? l({
+                    message:
+                      'Beta features may be unstable. Some changes may require reloading the app.',
+                    context: 'web',
+                  })
+                : l({
+                    message:
+                      'Beta features may be unstable. Some changes may require restarting the app.',
+                    context: 'native',
+                  })}
             </Admonition>
 
             <Button
-              disabled={!isBetaUser || betaFeatures.length < 1 || isPending}
+              disabled={!canSubmitFeedback}
               label={l`Share feedback`}
               size="small"
               color="primary_subtle"
