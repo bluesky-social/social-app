@@ -341,6 +341,39 @@ export class Agent extends BaseAgent {
 // WARN: In the factories above, we _manually set a proxy header_ for the agent after we do whatever it is we are supposed to do.
 // Ideally, we wouldn't be doing this. However, since there is so much logic that requires making calls to the PDS right now, it
 // feels safer to just let those run as-is and set the header afterward.
+// app.bsky.actor.getPreferences / putPreferences are PDS-local methods. The
+// agent's global appview proxy header must not reach them: a PDS whose home
+// appview differs from ours (e.g. bsky.network) honors the header and forwards
+// the call to the Blacksky appview, which 501s — breaking app load for any
+// account not hosted on the Blacksky PDS. Strip the header for these methods so
+// the user's own PDS serves them locally. Shared by the session agent and the
+// OAuth agent (both attach the proxy header via configureProxy).
+const PDS_LOCAL_PROXY_EXEMPT_METHODS = [
+  'app.bsky.actor.getPreferences',
+  'app.bsky.actor.putPreferences',
+]
+
+export function stripAppviewProxyForPdsLocalMethods(
+  input: string | URL | Request,
+  init: RequestInit | undefined,
+): RequestInit | undefined {
+  const url =
+    typeof input === 'string'
+      ? input
+      : input instanceof URL
+        ? input.href
+        : input.url
+  if (
+    !url ||
+    !PDS_LOCAL_PROXY_EXEMPT_METHODS.some(method => url.includes(method))
+  ) {
+    return init
+  }
+  const headers = new Headers(init?.headers)
+  headers.delete('atproto-proxy')
+  return {...init, headers}
+}
+
 let realFetch = globalThis.fetch
 class BskyAppAgent extends BskyAgent {
   persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
@@ -349,30 +382,11 @@ class BskyAppAgent extends BskyAgent {
   constructor({service}: {service: string}) {
     super({
       service,
-      async fetch(...args) {
-        // PDS-local prefs methods must not carry the appview proxy header.
-        const input = args[0] as string | URL | Request
-        const url =
-          typeof input === 'string'
-            ? input
-            : input instanceof URL
-              ? input.href
-              : input.url
-        if (
-          url &&
-          (url.includes('app.bsky.actor.getPreferences') ||
-            url.includes('app.bsky.actor.putPreferences'))
-        ) {
-          const init = args[1] as RequestInit | undefined
-          if (init?.headers) {
-            const headers = new Headers(init.headers)
-            headers.delete('atproto-proxy')
-            init.headers = headers
-          }
-        }
+      async fetch(input: RequestInfo | URL, init?: RequestInit) {
+        const cleanedInit = stripAppviewProxyForPdsLocalMethods(input, init)
         let success = false
         try {
-          const result = await realFetch(...args)
+          const result = await realFetch(input, cleanedInit)
           success = true
           return result
         } catch (e) {
