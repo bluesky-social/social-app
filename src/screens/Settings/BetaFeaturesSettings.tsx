@@ -24,7 +24,7 @@ import {Text} from '#/components/Typography'
 import {features} from '#/analytics'
 import {getTargetedFeatures} from '#/analytics/features'
 import {IS_INTERNAL, IS_WEB} from '#/env'
-import {device} from '#/storage'
+import {account} from '#/storage'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -66,9 +66,12 @@ export function BetaFeaturesSettingsScreen({}: Props) {
       /*
        * Cache the new value so analytics can set the `isBetaUser` GrowthBook
        * attribute synchronously on the next boot, before beta-gated features
-       * are evaluated.
+       * are evaluated. Scoped per account, since `isBetaUser` is
+       * account-specific.
        */
-      device.set(['isBetaUser'], next)
+      if (currentAccount) {
+        account.set([currentAccount.did, 'isBetaUser'], next)
+      }
     } catch (e) {
       logger.error('Failed to toggle beta features', {safeMessage: e})
       Toast.show(l`Something went wrong, please try again.`, {type: 'error'})

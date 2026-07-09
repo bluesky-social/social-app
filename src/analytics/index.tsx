@@ -26,7 +26,7 @@ import {type Metrics, metrics} from '#/analytics/metrics'
 import * as refParams from '#/analytics/misc/refParams'
 import * as env from '#/env'
 import {useGeolocationServiceResponse} from '#/geolocation/service'
-import {device, useStorage} from '#/storage'
+import {account, device, useStorage} from '#/storage'
 
 export * as utils from '#/analytics/utils'
 export const features = {init, refresh}
@@ -141,7 +141,17 @@ export function AnalyticsContext({
   const sessionId = useSessionId()
   const geolocation = useGeolocationServiceResponse()
   const parentContext = useContext(Context)
-  const [isBetaUser] = useStorage(device, ['isBetaUser'])
+  /*
+   * `isBetaUser` is account-specific, so it's cached per account. Read it
+   * scoped to the did for this render's session (from the `metadata` prop when
+   * set, otherwise inherited from the parent context). Without a did (e.g.
+   * logged out, or the top-level context above the session provider) there's
+   * no value, so beta-gated features are never evaluated for an ineligible or
+   * absent account. The empty-string fallback keeps the hook call
+   * unconditional and never resolves to a real account's cache entry.
+   */
+  const did = metadata?.session?.did ?? parentContext.metadata.session?.did
+  const [isBetaUser] = useStorage(account, [did ?? '', 'isBetaUser'])
   const childContext = useMemo(() => {
     const combinedMetadata = {
       ...parentContext.metadata,
