@@ -36,6 +36,7 @@ patchedDependencies:
   'react-native-drawer-layout@4.2.3': patches/react-native-drawer-layout@4.2.3.patch
   'react-native-keyboard-controller@1.21.8': patches/react-native-keyboard-controller@1.21.8.patch
   'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
+  'react-native-reanimated@4.3.2': patches/react-native-reanimated@4.3.2.patch
   'react-native-svg@15.12.1': patches/react-native-svg@15.12.1.patch
   'react-native-view-shot@4.0.3': patches/react-native-view-shot@4.0.3.patch
   'react-native@0.81.5': patches/react-native@0.81.5.patch
