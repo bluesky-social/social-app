@@ -50,17 +50,21 @@ export function PostAlerts({
   /*
    * Labels that the moderation system already surfaces in this context -
    * whether as an alert, an inform, or a blur handled by ContentHider - should
-   * not be repeated in the "+n" pill.
+   * not be repeated in the "+n" pill. System labels and the author's own
+   * "bot" self-label are excluded the same way LabelsOnMe excludes them.
    */
   const shownCauses = [...alerts, ...informs, ...modui.blurs]
-  const additionalLabels = allLabels.filter(label =>
-    shownCauses.every(
-      cause =>
-        cause.type !== 'label' ||
-        cause.label.val !== label.val ||
-        cause.label.src !== label.src ||
-        cause.label.uri !== label.uri,
-    ),
+  const additionalLabels = allLabels.filter(
+    label =>
+      !label.val.startsWith('!') &&
+      !(label.val === 'bot' && label.src === currentAccount?.did) &&
+      shownCauses.every(
+        cause =>
+          cause.type !== 'label' ||
+          cause.label.val !== label.val ||
+          cause.label.src !== label.src ||
+          cause.label.uri !== label.uri,
+      ),
   )
 
   return (
@@ -100,24 +104,11 @@ function AdditionalLabels({
   labels,
   size,
 }: {
-  labels: ComAtprotoLabelDefs.Label[] | undefined
+  labels: ComAtprotoLabelDefs.Label[]
   size?: Pills.CommonProps['size']
 }) {
   const {t: l} = useLingui()
-  const {currentAccount} = useSession()
   const control = useLabelsOnMeDialogControl()
-
-  if (!labels || !currentAccount) {
-    return null
-  }
-  labels = labels.filter(
-    l =>
-      !l.val.startsWith('!') &&
-      !(l.val === 'bot' && l.src === currentAccount.did),
-  )
-  if (!labels.length) {
-    return null
-  }
 
   return (
     <View style={[a.flex_row]}>
