@@ -343,11 +343,12 @@ function convertToKWSSupportedLanguage(
     // pt-PT is pt (pt-BR is supported independently)
     case 'pt-PT':
       return 'pt'
-    // only chinese (simplified) is supported, map all chinese variants
+    // map Chinese variants to simplified or traditional
     case 'zh-Hans-CN':
+      return 'zh-Hans'
     case 'zh-Hant-HK':
     case 'zh-Hant-TW':
-      return 'zh-Hans'
+      return 'zh-Hant'
     default:
       // try and map directly - if undefined, they will have to pick from the dropdown
       return KWS_SUPPORTED_LANGS.find(v => v.value === appLanguage)?.value
