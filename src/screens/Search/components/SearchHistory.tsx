@@ -1,8 +1,8 @@
-import {Pressable, ScrollView, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
-import {createHitslop, HITSLOP_10} from '#/lib/constants'
+import {createHitslop} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -89,7 +89,7 @@ export function SearchHistory({
         )}
 
         {searchHistory.length > 0 && (
-          <View style={[a.px_lg, a.pt_sm]}>
+          <View style={[a.pt_sm]}>
             {searchHistory.slice(0, 5).map((historyItem, index) => {
               const {q, filters} = parseHistoryEntry(historyItem)
               const filterCount = countActiveFilters(filters)
@@ -132,38 +132,60 @@ function SearchHistoryItem({
   const {t: l} = useLingui()
 
   return (
-    <View style={[a.flex_row, a.gap_sm, a.align_center]}>
-      <Pressable
-        accessibilityRole="button"
-        onPress={onPress}
-        hitSlop={HITSLOP_10}
-        style={[a.flex_1, a.py_sm, a.flex_row, a.align_center, a.gap_sm]}>
-        <Text style={[a.text_md, a.flex_shrink]} numberOfLines={1}>
-          {q}
-        </Text>
-        {filterCount > 0 ? (
+    <View style={[a.flex_row, a.align_center]}>
+      <Button label={l`Search for ${q}`} onPress={onPress} style={[a.flex_1]}>
+        {({hovered, focused, pressed}) => (
           <View
             style={[
-              a.flex_shrink_0,
-              a.rounded_sm,
-              a.px_sm,
-              a.py_2xs,
-              t.atoms.bg_contrast_25,
+              a.flex_1,
+              a.flex_row,
+              a.align_center,
+              a.gap_sm,
+              a.px_lg,
+              a.py_md,
+              a.pr_5xl,
+              (hovered || focused || pressed) && t.atoms.bg_contrast_25,
             ]}>
             <Text
-              style={[a.text_xs, a.font_medium, t.atoms.text_contrast_medium]}>
-              <Plural value={filterCount} one="+# filter" other="+# filters" />
+              emoji
+              style={[a.text_md, a.leading_snug, a.flex_shrink]}
+              numberOfLines={1}>
+              {q}
             </Text>
+            {filterCount > 0 ? (
+              <View
+                style={[
+                  a.flex_shrink_0,
+                  a.rounded_sm,
+                  a.px_sm,
+                  a.py_2xs,
+                  t.atoms.bg_contrast_25,
+                ]}>
+                <Text
+                  style={[
+                    a.text_xs,
+                    a.font_medium,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  <Plural
+                    value={filterCount}
+                    one="+# filter"
+                    other="+# filters"
+                  />
+                </Text>
+              </View>
+            ) : null}
           </View>
-        ) : null}
-      </Pressable>
+        )}
+      </Button>
       <Button
         label={l`Remove ${q}`}
         onPress={onRemove}
         size="small"
         variant="ghost"
         color="secondary"
-        shape="round">
+        shape="round"
+        style={[a.absolute, {right: 16}, a.bg_transparent]}>
         <ButtonIcon icon={XIcon} />
       </Button>
     </View>

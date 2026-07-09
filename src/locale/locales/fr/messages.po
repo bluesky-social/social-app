@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-07 17:16\n"
+"PO-Revision-Date: 2026-07-09 10:58\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -478,7 +478,7 @@ msgstr "{estimatedTimeHrs, plural, one {heure} other {heures}}"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 
-#: src/screens/Search/components/SearchHistory.tsx:155
+#: src/screens/Search/components/SearchHistory.tsx:170
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
 msgstr "{filterCount, plural, one {+ # filtre} other {+ # filtres}}"
 
@@ -873,7 +873,7 @@ msgstr "<0>{displayName}</0><1/><2> vous a ajouté·e</2>"
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr "<0>Se connecter</0><1> ou </1><2>créer un compte</2><3></3><4> pour rechercher des actualités, du sport, de la politique, et tout ce qui se passe d’autre en ce moment sur Bluesky.</4>"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:265
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:250
 msgid "<0>Tap here to update your location with GPS.</0>"
 msgstr "<0>Tapez ici pour mettre à jour votre position via GPS.</0>"
 
@@ -1169,7 +1169,7 @@ msgstr "Ajouter un autre post"
 msgid "Add another post to thread"
 msgstr "Ajouter un autre post au fil de discussion"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:459
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:435
 msgid "Add another search filter"
 msgstr ""
 
@@ -1191,7 +1191,7 @@ msgstr "Ajouter une étiquette d’automatisation au compte"
 msgid "Add emoji reaction"
 msgstr "Ajouter une réaction émoji"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:467
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:443
 msgid "Add filter"
 msgstr "Ajouter un filtre"
 
@@ -1290,7 +1290,7 @@ msgstr "Ajouter aux kits de démarrage"
 msgid "Add user to list"
 msgstr "Ajouter le compte à la liste"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:296
+#: src/ageAssurance/components/NoAccessScreen.tsx:297
 msgid "Add your birthdate"
 msgstr "Ajouter votre date de naissance"
 
@@ -1366,11 +1366,6 @@ msgstr "Abus sexuels sur adultes"
 msgid "Advanced"
 msgstr "Avancé"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:76
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:270
-msgid "Advanced search"
-msgstr "Recherche avancée"
-
 #: src/components/ageAssurance/AgeAssuranceBadge.tsx:42
 msgid "Age Assurance"
 msgstr "Vérification d’âge"
@@ -1384,11 +1379,11 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr "La demande de vérification d’âge a été envoyée"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:200
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
 msgid "Age assurance only takes a few minutes"
 msgstr "La vérification d’âge ne prend que quelques minutes"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:464
+#: src/ageAssurance/components/NoAccessScreen.tsx:449
 msgid "Age assurance only takes a few minutes."
 msgstr "La vérification d’âge ne prend que quelques minutes."
 
@@ -1430,7 +1425,7 @@ msgstr "Toutes les langues"
 msgid "All languages will be shown in your feeds."
 msgstr "Toutes les langues seront affichées dans vos fils d’actu."
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:277
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:245
 msgid "All of these words"
 msgstr "Tous ces mots"
 
@@ -1708,10 +1703,12 @@ msgstr "La vérification arrive sur Bluesky"
 
 #. Placeholder text for a date picker
 #: src/screens/Search/components/AdvancedSearchDialog/ClearableDateField.tsx:43
-msgid "Any time"
-msgstr "N’importe quand"
+msgid "Any date"
+msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:457
+#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:25
 msgid "Anyone"
 msgstr "N’importe qui"
 
@@ -2025,19 +2022,19 @@ msgstr "Activités bannies ou problèmes de sécurité"
 msgid "Banned user returning"
 msgstr "Retour d’un compte banni"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:183
+#: src/ageAssurance/components/NoAccessScreen.tsx:184
 msgid "Based on your device's location, we think you're in <0>{geolocationString}</0>."
 msgstr "D’après la localisation de votre appareil, nous pensons que vous êtes en <0>{geolocationString}</0>."
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:251
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:236
 msgid "Based on your device's location, we think you're in <0>{region}</0>."
 msgstr "D’après la localisation de votre appareil, nous pensons que vous êtes en <0>{region}</0>."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:193
+#: src/ageAssurance/components/NoAccessScreen.tsx:194
 msgid "Based on your network, we think you're in <0>{geolocationString}</0>. This estimate may be inaccurate if you're using a VPN."
 msgstr "D’après votre connexion réseau, nous pensons que vous êtes en <0>{geolocationString}</0>. Cette estimation peut être incorrecte si vous utilisez un VPN."
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:256
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:241
 msgid "Based on your network, we think you're in <0>{region}</0>. This estimate may be inaccurate if you're using a VPN."
 msgstr "En nous basant sur votre réseau, nous pensons que vous êtes en <0>{region}</0>. Cette estimation peut être incorrecte si vous utilisez un VPN."
 
@@ -2467,8 +2464,8 @@ msgstr "Accès à l’appareil photo nécessaire"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:180
 #: src/screens/Profile/Header/EditProfileDialog.tsx:215
 #: src/screens/Profile/Header/EditProfileDialog.tsx:223
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:234
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:241
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:209
 #: src/screens/Settings/AppIconSettings/index.tsx:42
 #: src/screens/Settings/AppIconSettings/index.tsx:228
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:80
@@ -2498,7 +2495,7 @@ msgstr "Annuler la réactivation et se déconnecter"
 msgid "Cancel reply"
 msgstr "Annuler la réponse"
 
-#: src/screens/Search/Shell.tsx:565
+#: src/screens/Search/Shell.tsx:608
 msgid "Cancel search"
 msgstr "Annuler la recherche"
 
@@ -2530,8 +2527,8 @@ msgstr "carrousel"
 msgid "Cashtag {tag}"
 msgstr "Mot-blé {tag}"
 
-#. Advanced search: Example of an “all of these words” search
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:159
+#. Advanced search: Example of an “all of these words” search. Paired with “cows pigs”.
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:250
 msgid "cats dogs"
 msgstr "chiens chats"
 
@@ -2840,11 +2837,11 @@ msgstr "Cliquez ici pour ajouter des personnes à cette discussion de groupe"
 msgid "Click here to create or manage an invite link for this group chat"
 msgstr "Cliquez ici pour créer ou gérer un lien d’invitation pour cette discussion de groupe"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:326
+#: src/ageAssurance/components/NoAccessScreen.tsx:327
 msgid "Click here to delete your account"
 msgstr "Cliquez ici pour supprimer votre compte"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:317
+#: src/ageAssurance/components/NoAccessScreen.tsx:318
 msgid "Click here to log out"
 msgstr "Cliquez ici pour vous déconnecter"
 
@@ -2857,8 +2854,8 @@ msgstr "Cliquez ici pour renvoyer l’e-mail"
 msgid "Click here to restart the verification process."
 msgstr "Cliquez ici pour redémarrer le processus de vérification."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:118
-#: src/ageAssurance/components/NoAccessScreen.tsx:293
+#: src/ageAssurance/components/NoAccessScreen.tsx:119
+#: src/ageAssurance/components/NoAccessScreen.tsx:294
 msgid "Click here to update your birthdate"
 msgstr "Cliquez ici pour mettre à jour votre date de naissance"
 
@@ -3120,13 +3117,13 @@ msgstr ""
 msgid "Connection issue"
 msgstr "Problème de connexion"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:403
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:127
+#: src/ageAssurance/components/NoAccessScreen.tsx:404
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:128
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:31
 msgid "Contact our moderation team"
 msgstr "Contacter notre équipe de modération"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:108
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:109
 msgid "Contact our support team"
 msgstr "Contacter notre équipe support"
 
@@ -3277,7 +3274,7 @@ msgstr "Discussion introuvable."
 msgid "Copied build version to clipboard"
 msgstr "Version de build copiée dans le presse-papier"
 
-#: src/screens/Search/Shell.tsx:498
+#: src/screens/Search/Shell.tsx:523
 msgid "Copied link to clipboard"
 msgstr "Lien copié dans le presse-papier"
 
@@ -3506,8 +3503,8 @@ msgstr "Impossible de charger les GIFs"
 msgid "Country code"
 msgstr "Code du pays"
 
-#. Advanced search: Example of a “none of these words” search
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:163
+#. Advanced search: Example of a “none of these words” search. Paired with “cats dogs”.
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:268
 msgid "cows pigs"
 msgstr "vaches cochons"
 
@@ -3889,9 +3886,9 @@ msgstr "L’appareil n’arrive pas à traduire :("
 msgid "Dialog: adjust who can interact with this post"
 msgstr "Une boîte de dialogue : réglez qui peut interagir avec ce post"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:265
-msgid "Dialog: Set advanced search options"
-msgstr "Boîte de dialogue : Définir des options de recherches avancées"
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:233
+msgid "Dialog: Set search filters"
+msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:110
 msgid "Dim"
@@ -4596,8 +4593,6 @@ msgstr "Tout le monde peut répondre"
 msgid "Everybody can reply to this post."
 msgstr "Tout le monde peut répondre à ce post."
 
-#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:26
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:168
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:171
 msgid "Everyone"
@@ -4705,7 +4700,7 @@ msgid "Explicit sexual images."
 msgstr "Images sexuelles explicites."
 
 #: src/Navigation.tsx:751
-#: src/screens/Search/Shell.tsx:535
+#: src/screens/Search/Shell.tsx:560
 #: src/view/shell/desktop/LeftNav.tsx:677
 #: src/view/shell/Drawer.tsx:473
 msgid "Explore"
@@ -4788,7 +4783,7 @@ msgstr "Le changement de pseudo a échoué. Veuillez réessayer."
 
 #: src/components/Lightbox/Lightbox.web.tsx:302
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:130
-#: src/screens/Search/Shell.tsx:499
+#: src/screens/Search/Shell.tsx:524
 msgid "Failed to copy link"
 msgstr "Échec de la copie du lien"
 
@@ -5174,11 +5169,11 @@ msgstr "Rechercher des mises à jour"
 msgid "File saved successfully!"
 msgstr "Fichier enregistré avec succès !"
 
-#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:49
+#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:48
 msgid "Filter by author"
 msgstr "Filtrer par auteur·ice"
 
-#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:30
+#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:29
 msgid "Filter by author (currently: {currentLabel})"
 msgstr "Filtrer par auteur·ice (actuellement : {currentLabel})"
 
@@ -5214,6 +5209,12 @@ msgstr "Filtrer qui peut décider de recevoir des notifications pour votre activ
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:163
 msgid "Filter who you receive notifications from"
 msgstr "Filtrer de qui vous recevrez des notifications"
+
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:78
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:238
+msgctxt "search"
+msgid "Filters"
+msgstr ""
 
 #: src/screens/Onboarding/StepFinished/index.tsx:335
 msgid "Finalizing"
@@ -5269,7 +5270,7 @@ msgstr "Trouver des comptes à suivre"
 msgid "Find people you know"
 msgstr "Trouver des personnes que vous connaissez"
 
-#: src/screens/Search/Shell.tsx:742
+#: src/screens/Search/Shell.tsx:791
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Trouver des posts, des comptes et des fils d’actu sur Bluesky"
 
@@ -5495,7 +5496,7 @@ msgstr "Taille de police"
 msgid "Food"
 msgstr "Nourriture"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:105
+#: src/ageAssurance/components/NoAccessScreen.tsx:106
 msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
 msgstr "Pour les comptes d’organisations, utilisez la date de naissance de la personne responsable du compte."
 
@@ -5546,7 +5547,7 @@ msgstr "Quatre bulles de message représentant une discussion de groupe. Premier
 msgid "Free your feed"
 msgstr "Libérez votre fil d’actu"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:430
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:406
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:159
 msgid "From"
 msgstr "Provenant de"
@@ -6012,11 +6013,11 @@ msgstr "Voici votre mot de passe d’application !"
 msgid "Hey there 👋"
 msgstr "Bonjour 👋"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:170
+#: src/ageAssurance/components/NoAccessScreen.tsx:171
 msgid "Hey there!"
 msgstr "Bonjour !"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:275
+#: src/ageAssurance/components/NoAccessScreen.tsx:276
 msgid "Hi there!"
 msgstr "Bonjour !"
 
@@ -6258,7 +6259,7 @@ msgstr "Si le texte alt est trop long, change son mode d’affichage"
 msgid "If none are selected, all languages will be shown in your feeds."
 msgstr "Si aucune n’est sélectionnée, toutes les langues seront affichées dans vos fils d’actu."
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:102
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:103
 msgid "If you are 18 years of age or older and want to try again, click the button below and use a different verification method if one is available in your region. If you have questions or concerns, <0>our support team can help.</0>"
 msgstr "Si vous avez 18 ans ou plus et que vous souhaitez réessayer, cliquez sur le bouton ci-dessous et utilisez une autre méthode de vérification s’il en existe une dans votre région. Si vous avez des questions ou des inquiétudes, <0>notre équipe support peut vous aider.</0>"
 
@@ -6266,7 +6267,7 @@ msgstr "Si vous avez 18 ans ou plus et que vous souhaitez réessayer, cliquez su
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Si vous n’êtes pas encore un adulte selon les lois de votre pays, vos parents ou votre tuteur légal doivent lire ces conditions en votre nom."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:115
+#: src/ageAssurance/components/NoAccessScreen.tsx:116
 msgid "If you believe your birthdate is incorrect, you can update it by <0>clicking here</0>."
 msgstr "Si vous pensez que votre date de naissance est incorrecte, vous pouvez la mettre à jour en <0>cliquant ici</0>."
 
@@ -6401,7 +6402,7 @@ msgstr "Importer des contacts pour retrouver vos amis"
 msgid "Imported on {0}"
 msgstr "Importé le {0}"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:278
+#: src/ageAssurance/components/NoAccessScreen.tsx:279
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr "Pour vous offrir une expérience adaptée à votre âge, nous devons connaître votre date de naissance. On ne vous le demandera qu’une fois, et cette donnée restera privée."
 
@@ -6449,7 +6450,7 @@ msgstr "C’est vide !"
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:58
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:75
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:81
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:416
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
 msgid "Include"
 msgstr "Inclure"
 
@@ -6463,12 +6464,12 @@ msgid "Include posts and/or replies (currently: {currentLabel})"
 msgstr "Inclure les posts et/ou les réponses (actuellement : {currentLabel})"
 
 #. Advanced search filter
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:329
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:305
 msgid "Include posts made since this date"
 msgstr "Inclure les posts publiés depuis cette date"
 
 #. Advanced search filter
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:353
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:329
 msgid "Include posts made until this date"
 msgstr "Inclure les posts publiés avant cette date"
 
@@ -6745,7 +6746,7 @@ msgstr "Étiquettes sur votre compte"
 msgid "Labels on your content"
 msgstr "Étiquettes sur votre contenu"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:381
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:357
 msgid "Language"
 msgstr "Langue"
 
@@ -6763,13 +6764,13 @@ msgstr "Langues"
 msgid "Larger"
 msgstr "Plus grande"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:458
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:194
+#: src/ageAssurance/components/NoAccessScreen.tsx:443
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:179
 msgid "Last initiated {timeAgo} ago"
 msgstr "Démarré la dernière fois il y a {timeAgo}"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:456
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:192
+#: src/ageAssurance/components/NoAccessScreen.tsx:441
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:177
 msgid "Last initiated just now"
 msgstr "Démarré la dernière fois à l’instant"
 
@@ -7343,7 +7344,7 @@ msgstr "Toutes les demandes marquées comme lues"
 msgid "Maybe later"
 msgstr "Peut-être plus tard"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:399
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:375
 #: src/view/screens/Profile.tsx:236
 msgid "Media"
 msgstr "Média"
@@ -8181,8 +8182,8 @@ msgstr "Imagerie intime sans consentement"
 msgid "Non-sexual Nudity"
 msgstr "Nudité non sexuelle"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:307
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:310
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:263
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:266
 msgid "None of these words"
 msgstr "Aucun de ces mots"
 
@@ -8423,7 +8424,7 @@ msgstr "Oups, ce profil n’existe pas. Essayez d’en scanner un autre."
 msgid "Oops!"
 msgstr "Oups !"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:64
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:66
 msgid "Open advanced search options"
 msgstr "Ouvrir les options de recherches avancées"
 
@@ -9675,7 +9676,7 @@ msgstr "Supprimer {displayName} de cette discussion de groupe"
 msgid "Remove {displayName}?"
 msgstr "Retirer {displayName} ?"
 
-#: src/screens/Search/components/SearchHistory.tsx:161
+#: src/screens/Search/components/SearchHistory.tsx:182
 msgid "Remove {q}"
 msgstr "Supprimer {q}"
 
@@ -9776,7 +9777,7 @@ msgstr "Retirer le membre"
 msgid "Remove mute word from your list"
 msgstr "Supprimer le mot masqué de votre liste"
 
-#: src/screens/Search/components/SearchHistory.tsx:221
+#: src/screens/Search/components/SearchHistory.tsx:243
 msgid "Remove profile"
 msgstr "Supprimer le profil"
 
@@ -10449,11 +10450,11 @@ msgstr "Remonter en haut"
 #: src/components/dialogs/SearchablePeopleList.tsx:667
 #: src/components/forms/SearchInput.tsx:51
 #: src/components/forms/SearchInput.tsx:53
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:250
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:256
-#: src/screens/Search/Shell.tsx:535
-#: src/screens/Search/Shell.tsx:585
-#: src/screens/Search/Shell.tsx:730
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
+#: src/screens/Search/Shell.tsx:560
+#: src/screens/Search/Shell.tsx:629
+#: src/screens/Search/Shell.tsx:779
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr "Recherche"
@@ -10490,6 +10491,10 @@ msgstr "Recherche de « {interestsDisplayName} » (actif)"
 #: src/screens/Search/components/AutocompleteResults.tsx:49
 msgid "Search for “{searchText}”"
 msgstr "Recherche de « {searchText} »"
+
+#: src/screens/Search/components/SearchHistory.tsx:136
+msgid "Search for {q}"
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:541
 msgid "Search for feeds that you want to suggest to others."
@@ -10542,7 +10547,7 @@ msgstr "Rechercher dans ses posts"
 msgid "Search profiles"
 msgstr "Rechercher dans les profils"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:280
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:248
 msgid "Search query"
 msgstr "Requête de recherche"
 
@@ -10888,7 +10893,7 @@ msgstr "Créez votre compte"
 msgid "Set who can reply to your post"
 msgstr "Définir qui peut répondre à votre post"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:285
+#: src/ageAssurance/components/NoAccessScreen.tsx:286
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr "Indiquez votre date de naissance ci-dessous et vous serez de retour à pouvoir poster et explorer le réseau en un rien de temps !"
 
@@ -10991,8 +10996,8 @@ msgid "Share"
 msgstr "Partager"
 
 #: src/ageAssurance/useVerificationFlow.ts:62
-msgid "Share age data"
-msgstr "Partager les données d’âge"
+msgid "Share age range"
+msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:549
 msgid "Share anyway"
@@ -11049,7 +11054,8 @@ msgstr "Partager le code QR"
 msgid "Share this feed"
 msgstr "Partager ce fil d’actu"
 
-#: src/screens/Search/Shell.tsx:617
+#: src/screens/Search/Shell.tsx:581
+#: src/screens/Search/Shell.tsx:651
 msgid "Share this search"
 msgstr "Partager cette recherche"
 
@@ -11080,10 +11086,15 @@ msgstr "Partager vos contacts pour retrouver des amis"
 msgid "Shared Preferences Tester"
 msgstr "Testeur de préférences partagées"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:433
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:169
-msgid "Sharing your age data uses information stored on your device, and will therefore only work on this device. Alternatively, <0>you can use our trusted partner, KWS</0>, to complete your verification and enable access on all platforms."
-msgstr "Partager vos données relatives à l’âge utilise des informations stockées sur votre appareil, et ne fonctionnera donc qu’avec cet appareil. Vous pouvez sinon <0>passer par notre partenaire de confiance KWS</0> pour compléter votre vérification d’âge et activer votre accès quelle que soit la plateforme."
+#. Shown next to the 'Share age range' button when on-device age verification is available. KWS is the name of a third-party verification partner.
+#: src/ageAssurance/components/DeviceSignalsNotice.tsx:25
+msgid "Sharing your age range reveals only the range associated with your Apple Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
+msgstr ""
+
+#. Shown next to the 'Share age range' button when on-device age verification is available. KWS is the name of a third-party verification partner.
+#: src/ageAssurance/components/DeviceSignalsNotice.tsx:43
+msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
+msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:220
 #: src/components/moderation/LabelPreference.tsx:143
@@ -11313,8 +11324,8 @@ msgstr "Connexion requise"
 msgid "Signed in as @{0}"
 msgstr "Connecté en tant que @{0}"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:323
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:326
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:299
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:302
 msgid "Since"
 msgstr "À partir du"
 
@@ -11806,7 +11817,7 @@ msgstr "Tapez pour plus d’infos"
 msgid "Tap for more information"
 msgstr "Tapez pour plus d’infos"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:212
+#: src/ageAssurance/components/NoAccessScreen.tsx:213
 #: src/screens/Signup/StepInfo/index.tsx:326
 msgid "Tap here to update your location with GPS."
 msgstr "Tapez ici pour mettre à jour votre position via GPS."
@@ -11936,8 +11947,8 @@ msgstr "Merci pour vos commentaires ! Ils seront envoyés au fournisseur du fil
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Merci, vous avez vérifié avec succès votre adresse e-mail. Vous pouvez fermer cette fenêtre."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:232
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:239
+#: src/ageAssurance/components/NoAccessScreen.tsx:233
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:224
 msgid "Thanks! You're all set."
 msgstr "Merci ! C’est tout bon."
 
@@ -12352,8 +12363,8 @@ msgstr "Ce brouillon sera supprimé définitivement."
 msgid "This email is already associated with your account."
 msgstr "Cette adresse e-mail est déjà associée à votre compte."
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:291
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:294
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:280
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:283
 msgid "This exact phrase"
 msgstr "Cette phrase exacte"
 
@@ -12661,7 +12672,7 @@ msgstr "Pour désactiver le 2FA par e-mail, vérifiez votre accès à votre adre
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr "Pour désactiver le 2FA par e-mail, veuillez prouver que vous avez accès à <0>{0}</0>"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:314
+#: src/ageAssurance/components/NoAccessScreen.tsx:315
 msgid "To log out, <0>click here</0>. Or if you’d prefer, you can <1>delete your account</1>."
 msgstr "Pour vous déconnecter, <0>cliquez ici</0>. Ou si vous préférez, vous pouvez <1>supprimer votre compte</1>."
 
@@ -12956,11 +12967,11 @@ msgstr "Se désabonne du compte"
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr "Malheureusement, aucun des étiqueteurs auxquels vous êtes abonnés ne supporte ce type de signalement."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:262
+#: src/ageAssurance/components/NoAccessScreen.tsx:263
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
 msgstr "Hélas, la date de naissance que vous avez enregistrée dans votre profil vous rend trop jeune pour accéder à Bluesky."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:246
+#: src/ageAssurance/components/NoAccessScreen.tsx:247
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
 msgstr "Hélas, l’âge que vous avez déclaré signifie que vous n’êtes pas assez grand pour accéder à Bluesky dans votre région."
 
@@ -13110,8 +13121,8 @@ msgstr "Contenu à coller non supporté"
 msgid "Unsupported video type: {mimeType}"
 msgstr "Type de vidéo non pris en charge : {mimeType}"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:347
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:350
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:323
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:326
 msgid "Until"
 msgstr "Jusqu’au"
 
@@ -13155,8 +13166,8 @@ msgstr "Mettre à jour pour {domain}"
 msgid "Update your email"
 msgstr "Mettre à jour votre e-mail"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:207
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:267
+#: src/ageAssurance/components/NoAccessScreen.tsx:208
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:252
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:41
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:106
 msgid "Update your location"
@@ -13404,8 +13415,8 @@ msgstr "Boîte de dialogue de vérification de l’adresse e-mail"
 msgid "Verify now"
 msgstr "Vérifier maintenant"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:438
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:174
+#: src/ageAssurance/components/DeviceSignalsNotice.tsx:34
+#: src/ageAssurance/components/DeviceSignalsNotice.tsx:52
 msgid "Verify now using KWS"
 msgstr "Vérifier maintenant avec KWS"
 
@@ -13891,8 +13902,8 @@ msgstr "Nous sommes ravis de vous accueillir !"
 msgid "We're sorry, but based on the data shared by your device, you are not old enough to access Bluesky."
 msgstr "Nous sommes désolés mais selon les informations provenant de votre appareil, vous n’avez pas l’âge d’accéder à Bluesky."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:226
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:233
+#: src/ageAssurance/components/NoAccessScreen.tsx:227
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:218
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr "Nous sommes désolés, mais d’après la géolocalisation de votre appareil, vous êtes actuellement dans une région qui impose la vérification d’âge."
 
@@ -13964,7 +13975,7 @@ msgid "What do you want to call your starter pack?"
 msgstr "Quel est le nom de votre kit de démarrage ?"
 
 #. Advanced search: Example of an “exact phrase” search
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:296
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:285
 msgid "what’s up"
 msgstr "quoi de neuf"
 
@@ -14130,7 +14141,7 @@ msgstr "Hier"
 msgid "You are a trusted verifier"
 msgstr "Vous êtes un vérificateur de confiance"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:173
+#: src/ageAssurance/components/NoAccessScreen.tsx:174
 msgid "You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app."
 msgstr "Vous vous connectez à Bluesky depuis une région qui nous oblige légalement à vérifier votre âge avant de vous laisser accéder à l’application."
 
@@ -14155,8 +14166,8 @@ msgstr "Vous créez un compte sur"
 msgid "You are currently blocked from using the Go Live feature. To appeal this moderation decision, please submit the form below."
 msgstr "Vous n’avez plus le droit d’accéder à la fonctionnalité de passage en direct. Pour faire appel de cette décision de modération, veuillez remplir le formulaire ci-dessous."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:399
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:123
+#: src/ageAssurance/components/NoAccessScreen.tsx:400
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:124
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr "Vous ne pouvez pas accéder actuellement au processus de vérification d’âge de Bluesky. Veuillez <0>contacter notre équipe de modération</0> si vous pensez que c’est une erreur."
 
@@ -14633,7 +14644,7 @@ msgstr "Vous avez atteint le nombre maximum de brouillons"
 msgid "You've reached the maximum number of requests allowed. Please try again later."
 msgstr "Vous avez atteint le nombre maximum de requêtes autorisées. Veuillez réessayer plus tard."
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:450
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:426
 msgid "You’ve reached the maximum of {MAX_FILTERS, plural, one {# filter} other {# filters}}. Add more values to an existing filter instead of creating new ones."
 msgstr "Vous avez atteint le maximum de {MAX_FILTERS, plural, one {# filtre} other {# filtres}}. Ajoutez d’autres paramètres à un filtre existant au lieu d’en créer de nouveaux."
 
