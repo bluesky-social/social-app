@@ -18,6 +18,7 @@ import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
 import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List, type ListMethods} from '#/view/com/util/List'
+import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {atoms as a, useTheme} from '#/alf'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
@@ -113,6 +114,7 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
   }, [slices])
 
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [isScrolledDown, setIsScrolledDown] = useState(false)
   const onRefresh = useCallback(async () => {
     setIsRefreshing(true)
     try {
@@ -132,7 +134,7 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
     return () => clearInterval(id)
   }, [isPageFocused, refetch])
 
-  const _onScrollToTop = useCallback(() => {
+  const onPressLoadLatest = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
       animated: IS_NATIVE,
       offset: -headerOffset,
@@ -251,8 +253,16 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
           contentContainerStyle={{paddingBottom: 100}}
           refreshing={isRefreshing}
           onRefresh={onRefresh}
+          onScrolledDownChange={setIsScrolledDown}
         />
       </MainScrollProvider>
+      {isScrolledDown && (
+        <LoadLatestBtn
+          onPress={onPressLoadLatest}
+          label={_(msg`Load new posts`)}
+          showIndicator={false}
+        />
+      )}
       {hasSession && (
         <FAB
           testID="composeFAB"
