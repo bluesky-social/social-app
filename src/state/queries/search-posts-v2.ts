@@ -25,12 +25,6 @@ import {
   getEmbeddedPost,
 } from './util'
 
-/**
- * V2 search shares the `'search-posts'` query-key root with the original hook
- * (src/state/queries/search-posts.ts) so the shadow-cache generators there -
- * findAllPostsInQueryData / findAllProfilesInQueryData - discover V2 results
- * too.
- */
 const searchPostsQueryKeyRoot = 'search-posts'
 const searchPostsV2QueryKey = ({
   query,
