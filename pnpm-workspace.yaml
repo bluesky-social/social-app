@@ -9,7 +9,7 @@ overrides:
   '@expo/image-utils': '0.8.12'
   '@types/estree': '1.0.6'
   'react-native-compressor': '1.13.0'
-  'react-native-reanimated': '4.3.1'
+  'react-native-reanimated': '4.3.2'
   'react-native-worklets': '0.8.3'
   'psl': '1.9.0'
   '@types/psl': '1.1.1'
