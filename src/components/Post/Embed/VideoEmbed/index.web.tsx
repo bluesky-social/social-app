@@ -28,6 +28,13 @@ import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 const noop = () => {}
 
+/**
+ * Minimum card width for the overlay controls (play, time, CC, volume,
+ * fullscreen) to fit without crowding. Narrower cards fall back to the
+ * full-width pillarbox.
+ */
+const MIN_CARD_WIDTH = 280
+
 export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
@@ -89,6 +96,21 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     constrained = Math.max(aspectRatio, ratio)
   }
 
+  const [containerWidth, setContainerWidth] = useState(0)
+
+  /*
+   * Portrait videos render at their own ratio instead of pillarboxed, but
+   * only when the resulting card fits the overlay controls. Videos taller
+   * than 1:2 would still show bars inside a ratio-fit card, and an unknown
+   * ratio can't be fit, so both keep the full-width pillarbox - a narrow
+   * card with black slices down the sides looks broken (see #9371).
+   */
+  const cardWidth = containerWidth * Math.min(aspectRatio ?? 1, 1)
+  const fullBleed =
+    aspectRatio === undefined ||
+    aspectRatio < 1 / 2 ||
+    cardWidth < MIN_CARD_WIDTH
+
   const contents = (
     <div
       ref={ref}
@@ -96,13 +118,36 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
         display: 'flex',
         flex: 1,
         cursor: 'default',
+        position: 'relative',
         backgroundColor: t.palette.black,
-        backgroundImage: `url(${embed.thumbnail})`,
-        backgroundSize: 'contain',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
       }}
       onClick={evt => evt.stopPropagation()}>
+      {/* blurred backdrop fills the bars when the video is boxed */}
+      {fullBleed && embed.thumbnail && (
+        <div
+          aria-hidden
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: `url(${embed.thumbnail})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'blur(32px)',
+            // hide the transparent fade the blur creates at the edges
+            transform: 'scale(1.2)',
+          }}
+        />
+      )}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `url(${embed.thumbnail})`,
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
       <ErrorBoundary renderError={renderError} key={key}>
         <OnlyNearScreen>
           <VideoEmbedInnerWeb
@@ -118,12 +163,14 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   )
 
   return (
-    <View style={[a.pt_xs]}>
+    <View
+      style={[a.pt_xs]}
+      onLayout={e => setContainerWidth(e.nativeEvent.layout.width)}>
       <ViewportObserver
         sendPosition={isGif ? noop : sendPosition}
         isAnyViewActive={currentActiveView !== null}>
         <ConstrainedImage
-          fullBleed
+          fullBleed={fullBleed}
           aspectRatio={constrained || 1}
           // slightly smaller max height than images
           // images use 16 / 9, for reference
