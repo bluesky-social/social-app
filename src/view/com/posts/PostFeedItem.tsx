@@ -493,6 +493,7 @@ let PostContent = ({
       ignoreMute
       childContainerStyle={styles.contentHiderChild}>
       <PostAlerts
+        post={post}
         modui={moderation.ui('contentList')}
         style={[a.pb_xs]}
         additionalCauses={additionalPostAlerts}

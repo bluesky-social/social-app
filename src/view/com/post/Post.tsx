@@ -219,6 +219,7 @@ function PostInner({
               style={styles.contentHider}
               childContainerStyle={styles.contentHiderChild}>
               <PostAlerts
+                post={post}
                 modui={moderation.ui('contentView')}
                 style={[a.pb_xs]}
               />

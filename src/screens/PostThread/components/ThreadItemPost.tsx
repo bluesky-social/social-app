@@ -310,6 +310,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 ]}
               />
               <PostAlerts
+                post={post}
                 modui={moderation.ui('contentList')}
                 style={[a.pb_2xs]}
                 additionalCauses={additionalPostAlerts}
