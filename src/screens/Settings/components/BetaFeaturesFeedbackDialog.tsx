@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
@@ -12,7 +13,7 @@ import * as Dialog from '#/components/Dialog'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
-const MAX_FEEDBACK_LENGTH = 200
+const MAX_FEEDBACK_LENGTH = 300
 
 export function BetaFeaturesFeedbackDialog({
   control,
@@ -105,6 +106,11 @@ function BetaFeaturesFeedbackDialogInner({
         </View>
         <View style={[a.gap_xs]}>
           <Text
+            accessibilityLabel={plural(remaining, {
+              one: '# character remaining',
+              other: '# cahracters remaining',
+            })}
+            accessibilityHint=""
             style={[
               a.text_sm,
               a.text_right,
