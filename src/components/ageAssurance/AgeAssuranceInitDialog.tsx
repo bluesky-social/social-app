@@ -296,6 +296,7 @@ function Inner() {
                     setLanguageError(false)
                   }}
                   items={KWS_SUPPORTED_LANGS}
+                  disabledBlueskySupportedLanguageSanitization
                 />
 
                 {languageError && (
