@@ -121,7 +121,6 @@ class ShareViewController: UIViewController {
     let firstItem = items.first
 
     if let dataUrl = try? await firstItem?.loadItem(forTypeIdentifier: "public.movie") as? URL {
-      let ext = String(dataUrl.lastPathComponent.split(separator: ".").last ?? "mp4")
       if let videoUriInfo = saveVideoWithInfo(dataUrl),
          let url = URL(string: "\(self.appScheme)://intent/compose?videoUri=\(videoUriInfo)") {
         _ = self.openURL(url)
