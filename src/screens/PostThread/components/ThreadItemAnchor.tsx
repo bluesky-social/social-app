@@ -388,6 +388,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               ignoreMute
               childContainerStyle={[a.pt_sm]}>
               <PostAlerts
+                post={post}
                 modui={moderation.ui('contentView')}
                 size="lg"
                 includeMute

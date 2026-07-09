@@ -151,6 +151,83 @@ export function Label({
   )
 }
 
+export type LabelBaseProps = {
+  label: string
+  onPress: () => void
+  noBg?: boolean
+} & CommonProps
+
+export function LabelBase({label, onPress, size = 'sm', noBg}: LabelBaseProps) {
+  const t = useTheme()
+
+  const {outer, text} = useMemo(() => {
+    switch (size) {
+      case 'lg': {
+        return {
+          outer: [
+            t.atoms.bg_contrast_25,
+            {
+              gap: 5,
+              paddingHorizontal: 5,
+              paddingVertical: 5,
+            },
+          ],
+          text: [a.text_sm],
+        }
+      }
+      case 'sm':
+      default: {
+        return {
+          outer: [
+            !noBg && t.atoms.bg_contrast_25,
+            {
+              gap: 3,
+              paddingHorizontal: 3,
+              paddingVertical: 3,
+            },
+          ],
+          text: [a.text_xs],
+        }
+      }
+    }
+  }, [t, size, noBg])
+
+  return (
+    <>
+      <Button
+        label={label}
+        onPress={e => {
+          e.preventDefault()
+          e.stopPropagation()
+          onPress()
+        }}>
+        {({hovered, pressed}) => (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.rounded_full,
+              outer,
+              (hovered || pressed) && t.atoms.bg_contrast_50,
+            ]}>
+            <Text
+              emoji
+              style={[
+                text,
+                a.font_semi_bold,
+                a.leading_tight,
+                t.atoms.text_contrast_medium,
+                {paddingRight: 3},
+              ]}>
+              {label}
+            </Text>
+          </View>
+        )}
+      </Button>
+    </>
+  )
+}
+
 export function FollowsYou({size = 'sm'}: CommonProps) {
   const t = useTheme()
 
