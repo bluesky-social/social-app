@@ -13,6 +13,11 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import Animated, {
+  Easing,
+  FadeInDown,
+  FadeOutDown,
+} from 'react-native-reanimated'
 import {setStringAsync} from 'expo-clipboard'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
@@ -41,7 +46,15 @@ import {
   withoutFilterParams,
 } from '#/screens/Search/searchParams'
 import {makeSearchQuery} from '#/screens/Search/utils'
-import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
+import {
+  atoms as a,
+  native,
+  platform,
+  tokens,
+  useBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
 import {useAutocomplete} from '#/components/Autocomplete'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -387,13 +400,14 @@ export function SearchScreenShell({
 
   const handleProfileClick = useCallback(
     (profile: bsky.profile.AnyProfileView) => {
+      updateSearchText('')
       unstableCacheProfileView(queryClient, profile)
       // Slight delay to avoid updating during push nav animation.
       setTimeout(() => {
         updateProfileHistory(profile)
       }, 400)
     },
-    [updateProfileHistory, queryClient],
+    [updateProfileHistory, queryClient, updateSearchText],
   )
 
   /**
@@ -468,6 +482,17 @@ export function SearchScreenShell({
     }
   }, [setShowAutocomplete])
 
+  const onSearchInputBlur = useCallback(() => {
+    /*
+     * Bind autocomplete visibility to focus state on native. On web this
+     * doesn't work because of focus management, which would render the
+     * autocomplete results uninteractable.
+     */
+    if (IS_NATIVE) {
+      setShowAutocomplete(false)
+    }
+  }, [])
+
   const focusSearchInput = useCallback(
     (tab?: TabParam) => {
       textInput.current?.focus()
@@ -540,6 +565,24 @@ export function SearchScreenShell({
                     value={filters.lang ?? ''}
                     onChange={onChangeLang}
                   />
+                ) : showFilters && advancedSearchV2Enabled ? (
+                  <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                    <AdvancedSearchDialog
+                      disabled={activeTab > 1}
+                      q={searchText}
+                      filters={filters}
+                      onSubmit={onSubmitAdvanced}
+                    />
+                    <Button
+                      accessibilityRole="button"
+                      size="small"
+                      color="secondary"
+                      shape="round"
+                      label={l`Share this search`}
+                      onPress={onShareSearch}>
+                      <ButtonIcon icon={ShareIcon} />
+                    </Button>
+                  </View>
                 ) : (
                   <Layout.Header.Slot />
                 )}
@@ -558,19 +601,19 @@ export function SearchScreenShell({
                 />
               )}
 
-              <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs]}>
+              <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_sm]}>
                 <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
                   {showAutocomplete && (
                     <Button
                       label={l`Cancel search`}
-                      size="large"
+                      size="small"
                       variant="ghost"
                       color="secondary"
                       shape="round"
                       style={[a.px_sm]}
                       onPress={onPressCancelSearch}
                       hitSlop={HITSLOP_10}>
-                      <ButtonIcon icon={ArrowLeftIcon} />
+                      <ButtonIcon icon={ArrowLeftIcon} size="lg" />
                     </Button>
                   )}
                   <View style={[a.flex_1]}>
@@ -579,6 +622,7 @@ export function SearchScreenShell({
                       ref={textInput}
                       value={searchText}
                       onFocus={onSearchInputFocus}
+                      onBlur={onSearchInputBlur}
                       onChangeText={onChangeText}
                       onClearText={onPressClearQuery}
                       onSubmitEditing={onSubmit('typed')}
@@ -591,6 +635,25 @@ export function SearchScreenShell({
                     />
                   </View>
                 </View>
+                {showFilters && !showHeader && advancedSearchV2Enabled ? (
+                  <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                    <AdvancedSearchDialog
+                      disabled={activeTab > 1}
+                      q={searchText}
+                      filters={filters}
+                      onSubmit={onSubmitAdvanced}
+                    />
+                    <Button
+                      accessibilityRole="button"
+                      size="small"
+                      color="secondary"
+                      shape="round"
+                      label={l`Share this search`}
+                      onPress={onShareSearch}>
+                      <ButtonIcon icon={ShareIcon} />
+                    </Button>
+                  </View>
+                ) : null}
               </View>
 
               {showFilters && !showHeader && !advancedSearchV2Enabled && (
@@ -601,75 +664,61 @@ export function SearchScreenShell({
                   />
                 </View>
               )}
-
-              {showFilters && advancedSearchV2Enabled ? (
-                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                  <AdvancedSearchDialog
-                    q={searchText}
-                    filters={filters}
-                    onSubmit={onSubmitAdvanced}
-                  />
-                  <Button
-                    accessibilityRole="button"
-                    size="small"
-                    color="secondary"
-                    shape="round"
-                    label={l`Share this search`}
-                    onPress={onShareSearch}>
-                    <ButtonIcon icon={ShareIcon} />
-                  </Button>
-                </View>
-              ) : null}
             </View>
           </View>
         </Layout.Center>
       </View>
 
-      <View
-        style={{
-          display: showAutocomplete && !fixedParams ? 'flex' : 'none',
-          flex: 1,
-        }}>
-        {searchText.length > 0 && IS_NATIVE ? (
-          <AutocompleteResults
-            items={autocompleteItems}
-            isFetching={isAutocompleteFetching}
-            searchText={searchText}
-            onSubmit={onSubmit('autocomplete')}
-            onResultPress={onAutocompleteResultPress}
-            onProfileClick={handleProfileClick}
+      <View style={[a.flex_1, a.relative]}>
+        <View style={[a.flex_1, web(showAutocomplete && a.hidden)]}>
+          <SearchScreenInner
+            key={filters.lang ?? ''}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            query={query}
+            queryWithParams={queryWithParams}
+            filters={filters}
+            hasFilters={hasFilters}
+            headerHeight={headerHeight}
+            focusSearchInput={focusSearchInput}
           />
-        ) : (
-          <SearchHistory
-            searchHistory={termHistory}
-            selectedProfiles={
-              accountHistoryProfiles?.profiles.filter(p =>
-                accountHistory.includes(p.did),
-              ) ?? []
-            }
-            onItemClick={handleHistoryItemClick}
-            onProfileClick={handleProfileClick}
-            onRemoveItemClick={deleteSearchHistoryItem}
-            onRemoveProfileClick={deleteProfileHistoryItem}
-          />
+        </View>
+
+        {showAutocomplete && !fixedParams && (
+          <Animated.View
+            entering={native(FadeInDown.easing(Easing.out(Easing.cubic)))}
+            exiting={native(FadeOutDown.easing(Easing.out(Easing.cubic)))}
+            style={platform({
+              web: [a.flex_1],
+              native: [t.atoms.bg, a.absolute, a.inset_0],
+            })}
+            accessibilityViewIsModal
+            accessibilityRole="list">
+            {searchText.length > 0 && IS_NATIVE ? (
+              <AutocompleteResults
+                items={autocompleteItems}
+                isFetching={isAutocompleteFetching}
+                searchText={searchText}
+                onSubmit={onSubmit('autocomplete')}
+                onResultPress={onAutocompleteResultPress}
+                onProfileClick={handleProfileClick}
+              />
+            ) : (
+              <SearchHistory
+                searchHistory={termHistory}
+                selectedProfiles={
+                  accountHistoryProfiles?.profiles.filter(p =>
+                    accountHistory.includes(p.did),
+                  ) ?? []
+                }
+                onItemClick={handleHistoryItemClick}
+                onProfileClick={handleProfileClick}
+                onRemoveItemClick={deleteSearchHistoryItem}
+                onRemoveProfileClick={deleteProfileHistoryItem}
+              />
+            )}
+          </Animated.View>
         )}
-      </View>
-      <View
-        style={{
-          display: showAutocomplete ? 'none' : 'flex',
-          flex: 1,
-        }}>
-        <SearchScreenInner
-          key={filters.lang ?? ''}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          query={query}
-          queryWithParams={queryWithParams}
-          filters={filters}
-          hasFilters={hasFilters}
-          headerHeight={headerHeight}
-          focusSearchInput={focusSearchInput}
-        />
       </View>
     </Layout.Screen>
   )

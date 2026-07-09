@@ -22,6 +22,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
+import {DeviceSignalsNotice} from '#/ageAssurance/components/DeviceSignalsNotice'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
 import {useAgeAssuranceVerificationFlow} from '#/ageAssurance/useVerificationFlow'
 import {createGeolocationString} from '#/ageAssurance/util'
@@ -164,23 +165,7 @@ function Inner({style}: ViewStyleProp & {}) {
                 </Button>
 
                 {useDeviceSignals ? (
-                  <Text
-                    style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
-                    <Trans>
-                      Sharing your age data uses information stored on your
-                      device, and will therefore only work on this device.
-                      Alternatively,{' '}
-                      <InlineLinkText
-                        label={l`Verify now using KWS`}
-                        {...createStaticClick(() => {
-                          openInitDialog()
-                        })}>
-                        you can use our trusted partner, KWS
-                      </InlineLinkText>
-                      , to complete your verification and enable access on all
-                      platforms.
-                    </Trans>
-                  </Text>
+                  <DeviceSignalsNotice onPressKws={openInitDialog} />
                 ) : lastInitiatedAt && timeAgo && diff ? (
                   <Text
                     style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}

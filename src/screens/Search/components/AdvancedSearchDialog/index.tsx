@@ -38,17 +38,18 @@ import {
 const MAX_FILTERS = 20
 
 export function AdvancedSearchDialog({
+  disabled,
   q,
   filters,
   onSubmit,
 }: {
+  disabled: boolean
   q: string
   filters: SearchFilters
   onSubmit: (q: string, filters: SearchFilters) => void
 }) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
-  const t = useTheme()
   const control = Dialog.useDialogControl()
   const filtersActive = hasActiveFilters(filters)
   const stateKey = useMemo(
@@ -61,9 +62,10 @@ export function AdvancedSearchDialog({
     <>
       <View style={[a.relative]}>
         <Button
+          disabled={disabled}
           label={l`Open advanced search options`}
           size="small"
-          color="secondary"
+          color={filtersActive ? 'primary_subtle' : 'secondary'}
           style={native([a.py_sm, a.px_sm])}
           onPress={() => {
             ax.metric('search:advanced:press', {
@@ -73,25 +75,9 @@ export function AdvancedSearchDialog({
           }}>
           <ButtonIcon icon={SettingsSliderIcon} />
           <ButtonText>
-            <Trans>Advanced search</Trans>
+            <Trans context="search">Filters</Trans>
           </ButtonText>
         </Button>
-        {filtersActive && (
-          <View
-            accessible={false}
-            style={[
-              a.absolute,
-              a.rounded_full,
-              {
-                top: -2,
-                right: -2,
-                width: 10,
-                height: 10,
-                backgroundColor: t.palette.primary_500,
-              },
-            ]}
-          />
-        )}
       </View>
 
       <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -153,24 +139,6 @@ function DialogInner({
   const [filters, setFilters] = useState<AdvancedFilter[]>(parsed.filters)
   const scrollRef = useRef<ScrollView>(null)
   const filtersSectionRef = useRef<View>(null)
-
-  const suggestions = [
-    {
-      all: l({
-        message: 'cats dogs',
-        comment: 'Advanced search: Example of an “all of these words” search',
-      }),
-      none: l({
-        message: 'cows pigs',
-        comment: 'Advanced search: Example of a “none of these words” search',
-      }),
-    },
-  ]
-
-  // eslint-disable-next-line react/hook-use-state
-  const [suggestion] = useState(() =>
-    Math.floor(Math.random() * suggestions.length),
-  )
 
   function addFilter() {
     if (filters.length >= MAX_FILTERS) return
@@ -262,12 +230,12 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       ref={scrollRef}
-      label={l`Dialog: Set advanced search options`}
+      label={l`Dialog: Set search filters`}
       contentContainerStyle={[a.px_0, a.pt_0]}
       header={
         <Dialog.Header renderLeft={cancelButton} renderRight={searchButton}>
           <Dialog.HeaderText>
-            <Trans>Advanced search</Trans>
+            <Trans context="search">Filters</Trans>
           </Dialog.HeaderText>
         </Dialog.Header>
       }>
@@ -279,13 +247,34 @@ function DialogInner({
           <ClearableInput
             label={l`Search query`}
             defaultValue={query}
-            placeholder={suggestions[suggestion].all}
+            placeholder={l({
+              message: 'cats dogs',
+              comment:
+                'Advanced search: Example of an “all of these words” search. Paired with “cows pigs”.',
+            })}
             onChangeText={setQuery}
             onSubmitEditing={handlePressSearch}
           />
         </View>
 
         <View style={[twoColumn ? a.flex_row : a.flex_col, a.gap_xl]}>
+          <View style={[a.flex_1]}>
+            <TextField.LabelText>
+              <Trans>None of these words</Trans>
+            </TextField.LabelText>
+            <ClearableInput
+              label={l`None of these words`}
+              defaultValue={negatedWords}
+              placeholder={l({
+                message: 'cows pigs',
+                comment:
+                  'Advanced search: Example of a “none of these words” search. Paired with “cats dogs”.',
+              })}
+              onChangeText={setNegatedWords}
+              onSubmitEditing={handlePressSearch}
+            />
+          </View>
+
           <View style={[a.flex_1]}>
             <TextField.LabelText>
               <Trans>This exact phrase</Trans>
@@ -298,19 +287,6 @@ function DialogInner({
                 comment: 'Advanced search: Example of an “exact phrase” search',
               })}
               onChangeText={setExactPhrase}
-              onSubmitEditing={handlePressSearch}
-            />
-          </View>
-
-          <View style={[a.flex_1]}>
-            <TextField.LabelText>
-              <Trans>None of these words</Trans>
-            </TextField.LabelText>
-            <ClearableInput
-              label={l`None of these words`}
-              defaultValue={negatedWords}
-              placeholder={suggestions[suggestion].none}
-              onChangeText={setNegatedWords}
               onSubmitEditing={handlePressSearch}
             />
           </View>
