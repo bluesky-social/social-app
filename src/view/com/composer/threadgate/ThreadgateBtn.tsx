@@ -24,7 +24,6 @@ import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon} from '#/co
 import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group'
 import * as Tooltip from '#/components/Tooltip'
-import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {useThreadgateNudged} from '#/storage/hooks/threadgate-nudged'
@@ -160,11 +159,9 @@ export function ThreadgateBtn({
             <ButtonIcon icon={TinyChevronIcon} size="2xs" />
           </Button>
         </Tooltip.Target>
-        <Tooltip.TextBubble>
-          <Text>
-            <Trans>Psst! You can edit who can interact with this post.</Trans>
-          </Text>
-        </Tooltip.TextBubble>
+        <Tooltip.BubbleText>
+          <Trans>Psst! You can edit who can interact with this post.</Trans>
+        </Tooltip.BubbleText>
       </Tooltip.Outer>
 
       <PostInteractionSettingsControlledDialog

@@ -11,7 +11,6 @@ import {useDialogControl} from '#/components/Dialog'
 import {BellPlus_Stroke2_Corner0_Rounded as BellPlusIcon} from '#/components/icons/BellPlus'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import * as Tooltip from '#/components/Tooltip'
-import {Text} from '#/components/Typography'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 import type * as bsky from '#/types/bsky'
 import {SubscribeProfileDialog} from './SubscribeProfileDialog'
@@ -89,11 +88,9 @@ export function SubscribeProfileButton({
             <ButtonIcon icon={Icon} size="md" />
           </Button>
         </Tooltip.Target>
-        <Tooltip.TextBubble>
-          <Text>
-            <Trans>Get notified about new posts</Trans>
-          </Text>
-        </Tooltip.TextBubble>
+        <Tooltip.BubbleText>
+          <Trans>Get notified about new posts</Trans>
+        </Tooltip.BubbleText>
       </Tooltip.Outer>
 
       <SubscribeProfileDialog
