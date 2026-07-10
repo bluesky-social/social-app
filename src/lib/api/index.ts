@@ -369,10 +369,21 @@ async function postCommunity(
         logger.warn(`CID mismatch: local=${cid}, server=${submitData?.cid}`)
       }
     } catch (e) {
+      const serverMessage = e instanceof Error ? e.message : String(e)
       logger.error(`Failed to submit community post content`, {
-        safeMessage: e instanceof Error ? e.message : String(e),
+        safeMessage: serverMessage,
       })
-      throw new Error(t`Failed to submit community post. Please try again.`)
+      // Surface the server's reason (e.g. threadgate/quote restrictions)
+      // instead of a generic failure.
+      const isUserFacing =
+        serverMessage &&
+        !serverMessage.startsWith('HTTP') &&
+        !/InternalServerError|fetch|network/i.test(serverMessage)
+      throw new Error(
+        isUserFacing
+          ? serverMessage
+          : t`Failed to submit community post. Please try again.`,
+      )
     }
 
     // Step 4: Build stub record for PDS with CLIENT-COMPUTED CID
