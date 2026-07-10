@@ -60,17 +60,19 @@ export async function getImage(url: string) {
   const response = await fetch(ensureJpeg(url))
   const arrayBuf = await response.arrayBuffer()
   if (response.status !== 200) return null
-  return sharp(arrayBuf)
-    .resize({
-      width: MAX_AVATAR_RENDER_PX,
-      height: MAX_AVATAR_RENDER_PX,
-      fit: 'inside',
-      withoutEnlargement: true,
-    })
-    // quality 95: this is a second lossy encode over an already-lossy CDN
-    // jpeg, and the default (80) visibly softens avatars at card sizes
-    .jpeg({quality: 95})
-    .toBuffer()
+  return (
+    sharp(arrayBuf)
+      .resize({
+        width: MAX_AVATAR_RENDER_PX,
+        height: MAX_AVATAR_RENDER_PX,
+        fit: 'inside',
+        withoutEnlargement: true,
+      })
+      // quality 95: this is a second lossy encode over an already-lossy CDN
+      // jpeg, and the default (80) visibly softens avatars at card sizes
+      .jpeg({quality: 95})
+      .toBuffer()
+  )
 }
 
 // CDN URLs end with @jpeg, @webp, or no extension (which may default to webp).
