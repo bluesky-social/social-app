@@ -223,7 +223,7 @@ export function Content({
         position={position}
         color={color}
         /*
-         * Gotta pass these in here. Inside the Bubble, we're Potal-ed outside
+         * Gotta pass these in here. Inside the Bubble, we're Portal-ed outside
          * the context providers.
          */
         targetMeasurements={targetMeasurements}
