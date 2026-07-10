@@ -11,6 +11,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
@@ -23,6 +24,11 @@ export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialo
 export interface LabelsOnMeDialogProps {
   control: Dialog.DialogOuterProps['control']
   labels: ComAtprotoLabelDefs.Label[]
+  /**
+   * Whether the labels are being shown on the user's account or on a post.
+   * With `content`, the list may include account-level labels, which get a
+   * per-label callout.
+   */
   type: 'account' | 'content'
 }
 
@@ -55,7 +61,7 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
       label={
         isAccount
           ? _(msg`The following labels were applied to your account.`)
-          : _(msg`The following labels were applied to your content.`)
+          : _(msg`The following labels were applied to this post.`)
       }>
       {appealingLabel ? (
         <AppealForm
@@ -69,7 +75,7 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
             {isAccount ? (
               <Trans>Labels on your account</Trans>
             ) : (
-              <Trans>Labels on your content</Trans>
+              <Trans>Labels applied to this post</Trans>
             )}
           </Text>
           <Text style={[a.text_md, a.leading_snug]}>
@@ -89,9 +95,10 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
           <View style={[a.py_lg, a.gap_md]}>
             {labels.map(label => (
               <Label
-                key={`${label.val}-${label.src}`}
+                key={`${label.val}-${label.src}-${label.uri}`}
                 label={label}
                 isSelfLabel={label.src === currentAccount?.did}
+                showAccountCallout={!isAccount && label.uri.startsWith('did:')}
                 control={props.control}
                 onPressAppeal={setAppealingLabel}
               />
@@ -107,11 +114,17 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
 function Label({
   label,
   isSelfLabel,
+  showAccountCallout,
   control,
   onPressAppeal,
 }: {
   label: ComAtprotoLabelDefs.Label
   isSelfLabel: boolean
+  /**
+   * Call out that the label applies to the whole account, for contexts that
+   * mix account and content labels.
+   */
+  showAccountCallout?: boolean
   control: Dialog.DialogOuterProps['control']
   onPressAppeal: (label: ComAtprotoLabelDefs.Label) => void
 }) {
@@ -138,6 +151,14 @@ function Label({
           <Text emoji style={[t.atoms.text_contrast_medium, a.leading_snug]}>
             {strings.description}
           </Text>
+          {showAccountCallout && (
+            <Admonition type="info" style={[a.mt_xs]}>
+              <Trans>
+                This label was applied to the entire user account and will
+                appear on all posts.
+              </Trans>
+            </Admonition>
+          )}
         </View>
         {!isSelfLabel && (
           <View>

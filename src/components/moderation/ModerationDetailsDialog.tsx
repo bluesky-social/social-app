@@ -191,8 +191,8 @@ function ModerationDetailsDialogInner({
         {desc.isSubjectAccount && (
           <Admonition type="info" style={[a.mt_md]}>
             <Trans>
-              This moderation was applied to the entire user account and will
-              appear on all posts.
+              This label was applied to the entire user account and will appear
+              on all posts.
             </Trans>
           </Admonition>
         )}
