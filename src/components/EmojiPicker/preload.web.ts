@@ -1,5 +1,4 @@
 import {useCallback} from 'react'
-import {init} from 'emoji-mart'
 
 /**
  * Only load the emoji picker data once per page load.
@@ -21,10 +20,13 @@ export function useWebPreloadEmoji({immediate}: {immediate?: boolean} = {}) {
     if (loadRequested) return
     loadRequested = true
     try {
-      const data = (await import('@emoji-mart/data')).default
-      init({data})
+      const [{init}, {default: data}] = await Promise.all([
+        import(/* webpackChunkName: "emoji-mart" */ 'emoji-mart'),
+        import(/* webpackChunkName: "emoji-mart-data" */ '@emoji-mart/data'),
+      ])
+      await init({data})
     } catch (e) {}
   }, [])
-  if (immediate) preload()
+  if (immediate) void preload()
   return preload
 }

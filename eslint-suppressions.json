@@ -227,11 +227,6 @@
       "count": 2
     }
   },
-  "src/components/EmojiPicker/preload.web.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    }
-  },
   "src/components/FeedCard.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
