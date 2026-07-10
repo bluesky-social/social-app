@@ -2,10 +2,10 @@ import {MMKV} from '@bsky.app/react-native-mmkv'
 import {setPolyfills} from '@growthbook/growthbook'
 import {GrowthBook} from '@growthbook/growthbook-react'
 import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/core/macro'
 
+// import {msg} from '@lingui/core/macro'
 import {Logger} from '#/logger'
-import {Features} from '#/analytics/features/types'
+import {type Features} from '#/analytics/features/types'
 import {getNavigationMetadata, type Metadata} from '#/analytics/metadata'
 import * as env from '#/env'
 
@@ -75,24 +75,25 @@ export function getFeatures() {
   return features.getFeatures()
 }
 
-export function getFeatureDescription(feature: Features, i18n: I18n) {
+export function getFeatureDescription(feature: Features, _i18n: I18n) {
   switch (feature) {
-    case Features.AdvancedSearchV2Enable:
-      return {
-        key: feature,
-        name: i18n._(
-          msg({
-            message: 'Advanced search',
-            comment: 'Name for a feature flag',
-          }),
-        ),
-        description: i18n._(
-          msg({
-            message: 'Search with new filters for more precise results.',
-            comment: 'Description of a feature flag (Advanced search)',
-          }),
-        ),
-      }
+    // Example of feature flag localization.
+    // case Features.AdvancedSearchV2Enable:
+    //   return {
+    //     key: feature,
+    //     name: i18n._(
+    //       msg({
+    //         message: 'Advanced search',
+    //         comment: 'Name for a feature flag',
+    //       }),
+    //     ),
+    //     description: i18n._(
+    //       msg({
+    //         message: 'Search with new filters for more precise results.',
+    //         comment: 'Description of a feature flag (Advanced search)',
+    //       }),
+    //     ),
+    //   }
     default:
       return null
   }
