@@ -14,7 +14,10 @@ import {wait} from '#/lib/async/wait'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {useCallOnce} from '#/lib/once'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useMyLabelersQuery} from '#/state/queries/preferences'
+import {useProfileBlockMutationQueue} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useGutters, useTheme} from '#/alf'
@@ -29,13 +32,16 @@ import {
   CheckThick_Stroke2_Corner0_Rounded as Check,
 } from '#/components/icons/Check'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Person'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from '#/components/icons/SquareArrowTopRight'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import type * as bsky from '#/types/bsky'
 import {useSubmitReportMutation} from './action'
 import {
   BSKY_LABELER_ONLY_REPORT_REASONS,
@@ -133,6 +139,27 @@ function Inner(props: ReportDialogProps) {
   const {mutateAsync: submitReport} = useSubmitReportMutation()
   const [isPending, setIsPending] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  /**
+   * Whether the in-flight (or completed) submission was triggered via the
+   * "submit and block" button, used to show pending/success state on the
+   * correct button.
+   */
+  const [withBlock, setWithBlock] = useState(false)
+
+  const {currentAccount} = useSession()
+  /**
+   * The user to offer a block action against: the reported account itself,
+   * or the author of a reported post. Other subject types (lists, feeds,
+   * chats, etc.) don't get the block shortcut.
+   */
+  const blockTargetProfile =
+    props.subject.type === 'account'
+      ? props.subject.profile
+      : props.subject.type === 'post'
+        ? props.subject.authorProfile
+        : undefined
+  const canBlockSubject =
+    !!blockTargetProfile && blockTargetProfile.did !== currentAccount?.did
 
   // some reasons ONLY go to Bluesky
   const isBskyOnlyReason = state?.selectedOption?.reason
@@ -209,47 +236,75 @@ function Inner(props: ReportDialogProps) {
   const isAlwaysBskyLabeler =
     hasSingleSupportedLabeler && (isBskyOnlyReason || isBskyOnlySubject)
 
-  const onSubmit = useCallback(async () => {
-    dispatch({type: 'clearError'})
+  const onSubmit = useCallback(
+    async (block?: () => Promise<unknown>) => {
+      dispatch({type: 'clearError'})
 
-    logger.info('submitting')
+      logger.info('submitting')
 
-    try {
-      setIsPending(true)
-      // wait at least 1s, make it feel substantial
-      await wait(
-        1e3,
-        submitReport({
-          subject: props.subject,
-          state,
-        }),
-      )
-      setIsSuccess(true)
-      ax.metric('reportDialog:success', {
-        reason: state.selectedOption?.reason ?? '',
-        labeler: state.selectedLabeler?.creator.handle ?? '',
-        details: !!state.details,
-      })
-      // give time for user feedback
-      setTimeout(() => {
-        props.control.close(() => {
-          props.onAfterSubmit?.()
+      try {
+        setWithBlock(!!block)
+        setIsPending(true)
+        // wait at least 1s, make it feel substantial
+        await wait(
+          1e3,
+          submitReport({
+            subject: props.subject,
+            state,
+          }),
+        )
+        if (block) {
+          /*
+           * The report has already been sent at this point, so a block
+           * failure shouldn't put the dialog into an error state - surface
+           * it via toast instead.
+           */
+          try {
+            await block()
+            Toast.show(l({message: 'Account blocked', context: 'toast'}))
+          } catch (err) {
+            const e = err as Error
+            if (e?.name !== 'AbortError') {
+              logger.error('Failed to block account after report', {
+                safeMessage: e.message,
+              })
+              Toast.show(
+                l`Your report was sent, but we couldn't block this account. Please try again from their profile.`,
+                {
+                  type: 'error',
+                },
+              )
+            }
+          }
+        }
+        setIsSuccess(true)
+        ax.metric('reportDialog:success', {
+          reason: state.selectedOption?.reason ?? '',
+          labeler: state.selectedLabeler?.creator.handle ?? '',
+          details: !!state.details,
         })
-      }, 1e3)
-    } catch (err) {
-      const e = err as Error
-      ax.metric('reportDialog:failure', {})
-      logger.error(e, {
-        source: 'ReportDialog',
-      })
-      dispatch({
-        type: 'setError',
-        error: l`Something went wrong. Please try again.`,
-      })
-    } finally {
-      setIsPending(false)
-    }
-  }, [logger, submitReport, props, state, ax, l])
+        // give time for user feedback
+        setTimeout(() => {
+          props.control.close(() => {
+            props.onAfterSubmit?.()
+          })
+        }, 1e3)
+      } catch (err) {
+        const e = err as Error
+        ax.metric('reportDialog:failure', {})
+        logger.error(e, {
+          source: 'ReportDialog',
+        })
+        dispatch({
+          type: 'setError',
+          error: l`Something went wrong. Please try again.`,
+        })
+      } finally {
+        setIsPending(false)
+      }
+    },
+    [logger, submitReport, props, state, ax, l],
+  )
 
   useCallOnce(() => {
     ax.metric('reportDialog:open', {
@@ -564,21 +619,39 @@ function Inner(props: ReportDialogProps) {
                   </View>
                 )}
               </View>
-              <Button
-                testID="report:submit"
-                label={l`Submit report`}
-                size="large"
-                variant="solid"
-                color="primary"
-                disabled={isPending || isSuccess}
-                onPress={() => void onSubmit()}>
-                <ButtonText>
-                  <Trans>Submit report</Trans>
-                </ButtonText>
-                <ButtonIcon
-                  icon={isSuccess ? CheckThin : isPending ? Loader : PaperPlane}
-                />
-              </Button>
+              <View style={[a.gap_sm]}>
+                <Button
+                  testID="report:submit"
+                  label={l`Submit report`}
+                  size="large"
+                  variant="solid"
+                  color="primary"
+                  disabled={isPending || isSuccess}
+                  onPress={() => void onSubmit()}>
+                  <ButtonText>
+                    <Trans>Submit report</Trans>
+                  </ButtonText>
+                  <ButtonIcon
+                    icon={
+                      isSuccess && !withBlock
+                        ? CheckThin
+                        : isPending && !withBlock
+                          ? Loader
+                          : PaperPlane
+                    }
+                  />
+                </Button>
+
+                {canBlockSubject && blockTargetProfile && (
+                  <SubmitAndBlockButton
+                    profile={blockTargetProfile}
+                    isPending={isPending}
+                    isSuccess={isSuccess}
+                    withBlock={withBlock}
+                    onSubmit={onSubmit}
+                  />
+                )}
+              </View>
 
               {state.error && (
                 <Admonition.Admonition type="error">
@@ -591,6 +664,56 @@ function Inner(props: ReportDialogProps) {
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
+  )
+}
+
+/**
+ * Secondary submit button that sends the report and then blocks the reported
+ * user. Rendered as a separate component so the profile shadow and block
+ * mutation hooks only run when there's a blockable subject.
+ */
+function SubmitAndBlockButton({
+  profile,
+  isPending,
+  isSuccess,
+  withBlock,
+  onSubmit,
+}: {
+  profile: bsky.profile.AnyProfileView
+  isPending: boolean
+  isSuccess: boolean
+  withBlock: boolean
+  onSubmit: (block: () => Promise<unknown>) => Promise<void>
+}) {
+  const {t: l} = useLingui()
+  const shadow = useProfileShadow(profile)
+  const [queueBlock] = useProfileBlockMutationQueue(shadow)
+
+  // already blocked, nothing to offer
+  if (shadow.viewer?.blocking) return null
+
+  return (
+    <Button
+      testID="report:submitAndBlock"
+      label={l`Submit report and block account`}
+      size="large"
+      variant="solid"
+      color="negative"
+      disabled={isPending || isSuccess}
+      onPress={() => void onSubmit(queueBlock)}>
+      <ButtonText>
+        <Trans>Submit report and block account</Trans>
+      </ButtonText>
+      <ButtonIcon
+        icon={
+          isSuccess && withBlock
+            ? CheckThin
+            : isPending && withBlock
+              ? Loader
+              : PersonX
+        }
+      />
+    </Button>
   )
 }
 

@@ -7,6 +7,7 @@ import {
 } from '@atproto/api'
 
 import type * as Dialog from '#/components/Dialog'
+import type * as bsky from '#/types/bsky'
 
 export type ReportSubjectConvoMessage = {
   view: 'convo' | 'message'
@@ -37,6 +38,11 @@ export type ParsedReportSubject =
       uri: string
       cid: string
       nsid: string
+      /**
+       * The post author's profile, used to offer a block action alongside
+       * report submission.
+       */
+      authorProfile: bsky.profile.AnyProfileView
       attributes: {
         reply: boolean
         image: boolean
@@ -73,6 +79,11 @@ export type ParsedReportSubject =
       type: 'account'
       did: string
       nsid: string
+      /**
+       * The reported account's profile, used to offer a block action
+       * alongside report submission.
+       */
+      profile: bsky.profile.AnyProfileView
     }
   | ({
       type: 'convoMessage'
