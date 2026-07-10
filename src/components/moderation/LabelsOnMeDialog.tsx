@@ -164,7 +164,7 @@ function Label({
           <View>
             <Button
               variant="solid"
-              color="secondary"
+              color="primary_subtle"
               size="small"
               label={_(msg`Appeal`)}
               onPress={() => onPressAppeal(label)}>
