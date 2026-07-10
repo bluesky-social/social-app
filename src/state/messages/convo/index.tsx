@@ -132,6 +132,12 @@ export function ConvoProvider({
   useEffect(() => {
     const [root, id] = getConvoKey(convoId)
     return queryClient.getQueryCache().subscribe(event => {
+      // Only react to data updates. Other event types (e.g. `added`) can be
+      // emitted synchronously while another component reads this same query
+      // during its render (React Query builds the query in `getOptimisticResult`),
+      // and committing to the convo store then would set state on this provider
+      // mid-render of that component.
+      if (event.type !== 'updated') return
       const queryKey = event.query.queryKey as string[]
       if (queryKey[0] === root && queryKey[1] === id) {
         const data = event.query.state.data as
@@ -151,8 +157,15 @@ export function ConvoProvider({
           if (data.kind.joinLink !== convo.convo.details.joinLink) {
             convo.updateJoinLink(data.kind.joinLink)
           }
-          if (data.kind.lockStatus !== convo.convo.details.lockStatus) {
-            convo.updateLockStatus(data.kind.lockStatus)
+          if (
+            data.kind.lockStatus !== convo.convo.details.lockStatus ||
+            data.kind.lockStatusModerationOverride !==
+              convo.convo.details.lockStatusModerationOverride
+          ) {
+            convo.updateLockStatus(
+              data.kind.lockStatus,
+              data.kind.lockStatusModerationOverride,
+            )
           }
         }
         if (

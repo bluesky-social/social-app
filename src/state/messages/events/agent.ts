@@ -1,4 +1,4 @@
-import {type BskyAgent, type ChatBskyConvoGetLog} from '@atproto/api'
+import {type AtpAgent, type ChatBskyConvoGetLog} from '@atproto/api'
 import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -27,7 +27,7 @@ const logger = Logger.create(Logger.Context.DMsAgent)
 export class MessagesEventBus {
   private id: string
 
-  private agent: BskyAgent
+  private agent: AtpAgent
   private emitter = new EventEmitter<{event: [MessagesEventBusEvent]}>()
 
   private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing
@@ -211,17 +211,9 @@ export class MessagesEventBus {
       }
       case MessagesEventBusStatus.Error: {
         switch (action.event) {
-          case MessagesEventBusDispatchEvent.UpdatePoll: {
-            // basically reset
-            this.status = MessagesEventBusStatus.Initializing
-            this.latestRev = undefined
-            this.init()
-            break
-          }
+          case MessagesEventBusDispatchEvent.UpdatePoll:
           case MessagesEventBusDispatchEvent.Resume: {
-            this.status = MessagesEventBusStatus.Ready
-            this.resetPoll()
-            this.emitter.emit('event', {type: 'connect'})
+            this.recoverFromError()
             break
           }
         }
@@ -236,6 +228,31 @@ export class MessagesEventBus {
       prev: prevStatus,
       next: this.status,
     })
+  }
+
+  private recoverFromError() {
+    logger.debug(`recoverFromError`, {hasRev: !!this.latestRev})
+
+    if (this.latestRev === undefined) {
+      /*
+       * init() never succeeded, so we have no cursor to resume from. Re-run
+       * init() to seed latestRev. Its success path dispatches Ready, which from
+       * Initializing transitions us to Ready + resetPoll + emit connect.
+       */
+      this.status = MessagesEventBusStatus.Initializing
+      this.init()
+    } else {
+      /*
+       * A poll failed mid-session but we still have a valid cursor. Resume
+       * polling from it directly. We must NOT route through init() here: its
+       * seeding logic takes the max of the existing rev and the server's
+       * current cursor, which would skip any events that arrived while we were
+       * offline.
+       */
+      this.status = MessagesEventBusStatus.Ready
+      this.resetPoll()
+      this.emitter.emit('event', {type: 'connect'})
+    }
   }
 
   private async init() {
@@ -337,6 +354,9 @@ export class MessagesEventBus {
     //   },
     // )
 
+    let needsEmit = false
+    let batch: ChatBskyConvoGetLog.OutputSchema['logs'] = []
+
     try {
       const response = await networkRetry(2, () => {
         return this.agent.chat.bsky.convo.getLog(
@@ -350,9 +370,6 @@ export class MessagesEventBus {
       // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
 
       const {logs: events} = response.data
-
-      let needsEmit = false
-      let batch: ChatBskyConvoGetLog.OutputSchema['logs'] = []
 
       for (const ev of events) {
         /*
@@ -373,13 +390,9 @@ export class MessagesEventBus {
           }
         }
       }
-
-      if (needsEmit) {
-        this.emitter.emit('event', {type: 'logs', logs: batch})
-      }
     } catch (e: any) {
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
-        logger.error(`poll events failed`, {
+        logger.warn(`poll events failed`, {
           safeMessage: e.message,
         })
       }
@@ -396,6 +409,23 @@ export class MessagesEventBus {
       })
     } finally {
       this.isPolling = false
+    }
+
+    /*
+     * Emit outside the try/catch above so a throwing subscriber is not
+     * misreported as a poll failure (which would show a network-error banner
+     * and drop the batch, since the revs have already been consumed). poll()
+     * runs from setInterval, so we must not let the exception escape - log it
+     * and move on without dispatching Error.
+     */
+    if (needsEmit) {
+      try {
+        this.emitter.emit('event', {type: 'logs', logs: batch})
+      } catch (e) {
+        logger.error(`subscriber error handling chat events`, {
+          safeMessage: e instanceof Error ? e.message : String(e),
+        })
+      }
     }
   }
 }

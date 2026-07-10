@@ -37,6 +37,14 @@ export function BirthDateSettingsDialog({
   const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const {currentAccount} = useSession()
   const isUsingAppPassword = isAppPassword(currentAccount?.accessJwt || '')
+  const cleanError = useCleanError()
+  const defaultErrorMessage = l`We were unable to load your birthdate preferences. Please try again.`
+  const fetchErrorMessage = useMemo(() => {
+    if (error) {
+      const {raw, clean} = cleanError(error)
+      return clean || raw
+    }
+  }, [error, cleanError])
 
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -58,12 +66,9 @@ export function BirthDateSettingsDialog({
 
             {isLoading ? (
               <Loader size="xl" />
-            ) : error || !preferences ? (
+            ) : fetchErrorMessage || !preferences ? (
               <ErrorMessage
-                message={
-                  error?.toString() ||
-                  l`We were unable to load your birthdate preferences. Please try again.`
-                }
+                message={fetchErrorMessage || defaultErrorMessage}
                 style={[a.rounded_sm]}
               />
             ) : isUsingAppPassword ? (
@@ -123,12 +128,11 @@ function BirthdayInner({
   const cleanError = useCleanError()
   const [date, setDate] = useState(preferences.birthDate || getDateAgo(18))
   const {isPending, error, mutateAsync: setBirthDate} = useBirthdateMutation()
-  const hasChanged = date !== preferences.birthDate
+  const hasChanged = date?.getTime() !== preferences.birthDate?.getTime()
   const errorMessage = useMemo(() => {
     if (error) {
-      const e = error as Error
-      const {raw, clean} = cleanError(e)
-      return clean || raw || e.toString()
+      const {raw, clean} = cleanError(error)
+      return clean || raw
     }
   }, [error, cleanError])
 

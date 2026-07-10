@@ -3,8 +3,8 @@ import {
   type AppBskyGraphDefs,
   type AppBskyGraphGetList,
   type AppBskyGraphList,
+  type AtpAgent,
   AtUri,
-  type BskyAgent,
   type ComAtprotoRepoApplyWrites,
   type Facet,
   type Un$Typed,
@@ -17,6 +17,7 @@ import {until} from '#/lib/async/until'
 import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
 import {useAgent, useSession} from '#/state/session'
+import {FEED_INFO_RQKEY_ROOT} from './feed'
 import {invalidate as invalidateMyLists} from './my-lists'
 import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
 
@@ -181,6 +182,9 @@ export function useListMetadataMutation() {
       queryClient.invalidateQueries({
         queryKey: RQKEY(variables.uri),
       })
+      queryClient.invalidateQueries({
+        queryKey: [FEED_INFO_RQKEY_ROOT],
+      })
     },
   })
 }
@@ -301,7 +305,7 @@ export function useListBlockMutation() {
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  agent: AtpAgent,
   uri: string,
   fn: (res: AppBskyGraphGetList.Response) => boolean,
 ) {

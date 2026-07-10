@@ -59,6 +59,7 @@ module.exports = function (_config) {
       ios: {
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
+        appleTeamId: process.env.EXPO_APPLE_TEAM_ID,
         config: {
           usesNonExemptEncryption: false,
         },
@@ -81,6 +82,7 @@ module.exports = function (_config) {
             'an',
             'ast',
             'ca',
+            'cs',
             'cy',
             'da',
             'de',
@@ -126,6 +128,7 @@ module.exports = function (_config) {
           'com.apple.security.application-groups': 'group.app.bsky',
           'com.apple.developer.usernotifications.communication': true,
           // 'com.apple.developer.device-information.user-assigned-device-name': true,
+          'com.apple.developer.declared-age-range': true,
         },
         privacyManifests: {
           NSPrivacyCollectedDataTypes: [
@@ -262,6 +265,7 @@ module.exports = function (_config) {
               deploymentTarget: '15.1',
               buildReactNativeFromSource: true,
               ccacheEnabled: IS_DEV,
+              cxxLanguageStandard: 'c++23',
               extraPods: [
                 {
                   name: 'MCEmojiPicker',
@@ -348,7 +352,7 @@ module.exports = function (_config) {
           },
         ],
         [
-          '@mozzius/expo-dynamic-app-icon',
+          '@bsky.app/expo-dynamic-app-icon',
           {
             /**
              * Default set

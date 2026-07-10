@@ -5,16 +5,15 @@ on:
   issue_comment:
     types: [created]
 
-# Permissiosn to make comments in the pull request
-permissions:
-  pull-requests: write
-  actions: write
-  contents: read
+# Permissions are granted per-job below; anything unlisted defaults to none
+permissions: {}
 
 jobs:
   handle-comment:
     if: github.event.issue.pull_request
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       should-deploy: ${{ steps.check-org.outputs.result }}
 
@@ -45,10 +44,10 @@ jobs:
             echo "mentioned=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Check organization membership
+      - name: Check commenter has write access
         if: steps.check-mention.outputs.mentioned == 'true'
         id: check-org
-        uses: actions/github-script@v7
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             try {
@@ -72,13 +71,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: [handle-comment]
     if: needs.handle-comment.outputs.should-deploy == 'true'
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
       - name: Get PR HEAD SHA
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         id: pr-info
-        uses: actions/github-script@v7
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const pr = await github.rest.pulls.get({
@@ -87,6 +89,16 @@ jobs:
               pull_number: process.env.ISSUE_NUMBER,
             });
 
+            // This workflow runs with repo secrets in scope, so never build
+            // code from a fork: the commenter authorizes the deploy, but a
+            // fork controls what code would run during it
+            const expected = `${context.repo.owner}/${context.repo.repo}`;
+            const head = pr.data.head.repo?.full_name;
+            if (head !== expected) {
+              core.setFailed(`OTA deploys are only allowed for branches in ${expected}, not forks (got ${head})`);
+              return;
+            }
+
             console.log(`PR HEAD SHA: ${pr.data.head.sha}`);
             console.log(`PR HEAD REF: ${pr.data.head.ref}`);
 
@@ -94,7 +106,7 @@ jobs:
             core.setOutput('head-ref', pr.data.head.ref);
 
       - name: 💬 Drop a comment
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
         with:
           header: pull-request-eas-build-${{ steps.pr-info.outputs.head-sha }}
           number: ${{ github.event.issue.number }}
@@ -113,46 +125,42 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           ref: ${{ steps.pr-info.outputs.head-sha }}
 
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
       - name: 🔧 Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version-file: .nvmrc
-          cache: yarn
+          node-version-file: package.json
+          cache: pnpm
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Lint check
-        run: yarn lint
-
-      - name: Lint lockfile
-        run: yarn lockfile-lint
+        run: pnpm install --frozen-lockfile
 
       - name: 🔤 Compile translations
-        run: yarn intl:build 2>&1 | tee i18n.log
+        run: pnpm intl:build 2>&1 | tee i18n.log
 
       - name: Check for i18n compilation errors
         run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
+      - name: Lint check
+        run: pnpm lint
+
       - name: Type check
-        run: yarn typecheck
+        run: pnpm typecheck
 
       - name: 🔨 Setup EAS
-        uses: expo/expo-github-action@main
+        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
         with:
-          expo-version: latest
-          eas-version: latest
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: ⛏️ Setup Expo
-        run: yarn global add eas-cli-local-build-plugin
-
       - name: 🪛 Setup jq
-        uses: dcarbone/install-jq-action@v2
+        uses: dcarbone/install-jq-action@4fcb5062d7ce9bc4382d1a352d19ba3ba2c317c1 # v4.0.1
 
       - name: Env
         id: env
@@ -175,17 +183,17 @@ jobs:
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
           SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          yarn export
+          pnpm export
 
       - name: 📦 Package Bundle and 🚀 Deploy
-        run: yarn use-build-number bash scripts/bundleUpdate.sh
+        run: pnpm use-build-number bash scripts/bundleUpdate.sh
         env:
           DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}
           CHANNEL_NAME: pull-request-${{ github.event.issue.number }}
           RUNTIME_VERSION:
 
       - name: 💬 Drop a comment
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         with:
@@ -202,7 +210,7 @@ jobs:
             *Generated by [PR labeler](https://github.com/expo/expo/actions/workflows/pr-labeler.yml) 🤖*
 
       - name: 💬 Drop a comment
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
         if: failure()
         with:
           header: pull-request-eas-build-${{ steps.pr-info.outputs.head-sha }}

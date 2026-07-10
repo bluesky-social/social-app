@@ -76,6 +76,15 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   soop: 'SOOP',
 }
 
+/**
+ * These sources are proxied through our CDN and do not leak any user data,
+ * thus are safe to embed without a warning.
+ */
+export const exemptExternalEmbedSources = new Set<EmbedPlayerSource>([
+  'tenor',
+  'klipy',
+])
+
 export interface EmbedPlayerParams {
   type: EmbedPlayerType
   playerUri: string

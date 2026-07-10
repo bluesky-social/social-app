@@ -7,6 +7,8 @@ import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
+import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
+import {useFullscreen} from '#/components/hooks/useFullscreen'
 import * as BandwidthEstimate from './bandwidth-estimate'
 import {Controls} from './web-controls/VideoControls'
 
@@ -30,6 +32,8 @@ export function VideoEmbedInnerWeb({
   const [hlsLoading, setHlsLoading] = useState(false)
   const figId = useId()
   const {_} = useLingui()
+  const [isFullscreen] = useFullscreen(containerRef)
+  const isGif = embed.presentation === 'gif'
 
   // send error up to error boundary
   const [error, setError] = useState<Error | null>(null)
@@ -77,6 +81,9 @@ export function VideoEmbedInnerWeb({
             </figcaption>
           )}
         </figure>
+        {!isFullscreen && !isGif && embed.alt && (
+          <AltBadgeWithDialog text={embed.alt} position="top-right" />
+        )}
         <Controls
           videoRef={videoRef}
           hlsRef={hlsRef}
@@ -88,7 +95,7 @@ export function VideoEmbedInnerWeb({
           onScreen={onScreen}
           fullscreenRef={containerRef}
           hasSubtitleTrack={hasSubtitleTrack}
-          isGif={embed.presentation === 'gif'}
+          isGif={isGif}
           altText={embed.alt}
           updateCuePositions={updateCuePositions}
         />
@@ -101,6 +108,34 @@ export class HLSUnsupportedError extends Error {
   constructor() {
     super('HLS is not supported')
   }
+}
+
+// Bluesky serves HLS as MPEG-TS with H.264 + AAC. `Hls.isSupported()` is loose
+// (true if MSE supports *any* of {H.264, AV1, VP9} OR *any* of {AAC, FLAC}),
+// so on Linux boxes missing H.264 (e.g. no ubuntu-restricted-extras, sandboxed
+// Firefox snap) it returns true and playback fails later on segment append.
+// Use Baseline 3.0 to match hls.js's own probe - it's the most universal H.264
+// profile, so if it isn't supported, no H.264 is.
+// Mirror hls.js's `getMediaSource` lookup (ManagedMediaSource on modern iOS,
+// then MediaSource, then WebKitMediaSource) so we probe the same constructor
+// it will actually use for playback.
+function canPlayBskyVideoCodecs(): boolean {
+  if (typeof self === 'undefined') return false
+  const globalSelf = self as typeof self & {
+    ManagedMediaSource?: typeof MediaSource
+    WebKitMediaSource?: typeof MediaSource
+  }
+  const mediaSource =
+    globalSelf.ManagedMediaSource ||
+    globalSelf.MediaSource ||
+    globalSelf.WebKitMediaSource
+  if (!mediaSource || typeof mediaSource.isTypeSupported !== 'function') {
+    return false
+  }
+  return (
+    mediaSource.isTypeSupported('video/mp4; codecs="avc1.42E01E"') &&
+    mediaSource.isTypeSupported('audio/mp4; codecs="mp4a.40.2"')
+  )
 }
 
 export class VideoNotFoundError extends Error {
@@ -228,7 +263,7 @@ function useHLS({
   useEffect(() => {
     if (!videoRef.current) return
     if (!Hls) return
-    if (!Hls.isSupported()) {
+    if (!Hls.isSupported() || !canPlayBskyVideoCodecs()) {
       throw new HLSUnsupportedError()
     }
 

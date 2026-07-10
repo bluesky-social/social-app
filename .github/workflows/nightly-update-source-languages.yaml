@@ -16,29 +16,26 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           ssh-key: ${{secrets.GH_ACTION_DEPLOY_KEY}}
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
       - name: Install node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version-file: .nvmrc
-          cache: yarn
-      - name: Yarn install
-        uses: Wandalen/wretry.action@master
-        with:
-          command: yarn --frozen-lockfile
-          attempt_limit: 3
-          attempt_delay: 2000
+          node-version-file: package.json
+          cache: pnpm
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
       - name: Extract language strings
-        run: yarn intl:extract
+        run: pnpm intl:extract
       - name: Create commit
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7.2.0
         with:
           commit_message: Nightly source-language update
           file_pattern: ./src/locale/locales/en/messages.po
       - name: Push source lang to Crowdin
-        uses: crowdin/github-action@v2
+        uses: crowdin/github-action@52aa776766211d83d975df51f3b9c53c2f8ba35f # v2.16.3
         with:
           upload_sources: true
           upload_sources_args: "-b main"

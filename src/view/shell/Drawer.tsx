@@ -1,5 +1,11 @@
 import {type ComponentProps, type JSX, memo, useCallback} from 'react'
-import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
+import {
+  Linking,
+  Pressable,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -10,6 +16,7 @@ import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {getTabState, TabState} from '#/lib/routes/helpers'
+import {type SharedNavTab, TAB_TO_NAV_ITEM} from '#/lib/routes/tab-to-nav-item'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
@@ -24,7 +31,9 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
+import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRight} from '#/components/icons/ArrowShareRight'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -55,7 +64,9 @@ import {
 import {InlineLinkText} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE, IS_WEB} from '#/env'
+import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
 
 const iconWidth = 26
@@ -63,9 +74,11 @@ const iconWidth = 26
 let DrawerProfileCard = ({
   account,
   onPressProfile,
+  onPressShare,
 }: {
   account: SessionAccount
   onPressProfile: () => void
+  onPressShare?: () => void
 }): React.ReactNode => {
   const {_, i18n} = useLingui()
   const t = useTheme()
@@ -91,11 +104,45 @@ let DrawerProfileCard = ({
         <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
           <Text
             emoji
-            style={[a.font_bold, a.text_xl, a.mt_2xs, a.leading_tight]}
+            style={[
+              a.font_bold,
+              a.text_xl,
+              a.mt_2xs,
+              a.leading_tight,
+              a.flex_shrink,
+            ]}
             numberOfLines={1}>
             {profile?.displayName || account.handle}
           </Text>
           {profile && <ProfileBadges profile={profile} size="lg" />}
+          {onPressShare && (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Invite friends`)}
+              accessibilityHint={_(
+                msg`Opens the invite friends sheet to share your profile`,
+              )}
+              onPress={onPressShare}
+              hitSlop={8}
+              style={({pressed}) => [
+                a.ml_auto,
+                {
+                  width: 32,
+                  height: 32,
+                  borderRadius: 16,
+                  backgroundColor: t.palette.contrast_50,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: pressed ? 0.7 : 1,
+                },
+              ]}>
+              <ArrowShareRight
+                width={16}
+                height={16}
+                fill={t.palette.primary_500}
+              />
+            </Pressable>
+          )}
         </View>
         <Text
           emoji
@@ -138,6 +185,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   const insets = useSafeAreaInsets()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
+  const ax = useAnalytics()
   const {
     isAtHome,
     isAtSearch,
@@ -148,12 +196,17 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     isAtMessages,
   } = useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
+  const inviteFriendsControl = useDialogControl()
 
   // events
   // =
 
   const onPressTab = useCallback(
-    (tab: 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile') => {
+    (tab: SharedNavTab, surface: 'drawer' | 'drawerHeader' = 'drawer') => {
+      ax.metric('nav:click', {
+        item: TAB_TO_NAV_ITEM[tab],
+        surface,
+      })
       const state = navigation.getState()
       setDrawerOpen(false)
       if (IS_WEB) {
@@ -190,7 +243,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
         }
       }
     },
-    [navigation, setDrawerOpen, currentAccount],
+    [navigation, setDrawerOpen, currentAccount, ax],
   )
 
   const onPressHome = useCallback(() => onPressTab('Home'), [onPressTab])
@@ -211,25 +264,33 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     onPressTab('MyProfile')
   }, [onPressTab])
 
+  const onPressDrawerHeaderProfile = useCallback(() => {
+    onPressTab('MyProfile', 'drawerHeader')
+  }, [onPressTab])
+
   const onPressMyFeeds = useCallback(() => {
+    ax.metric('nav:click', {item: 'feeds', surface: 'drawer'})
     navigation.navigate('Feeds')
     setDrawerOpen(false)
-  }, [navigation, setDrawerOpen])
+  }, [navigation, setDrawerOpen, ax])
 
   const onPressLists = useCallback(() => {
+    ax.metric('nav:click', {item: 'lists', surface: 'drawer'})
     navigation.navigate('Lists')
     setDrawerOpen(false)
-  }, [navigation, setDrawerOpen])
+  }, [navigation, setDrawerOpen, ax])
 
   const onPressBookmarks = useCallback(() => {
+    ax.metric('nav:click', {item: 'saved', surface: 'drawer'})
     navigation.navigate('Bookmarks')
     setDrawerOpen(false)
-  }, [navigation, setDrawerOpen])
+  }, [navigation, setDrawerOpen, ax])
 
   const onPressSettings = useCallback(() => {
+    ax.metric('nav:click', {item: 'settings', surface: 'drawer'})
     navigation.navigate('Settings')
     setDrawerOpen(false)
-  }, [navigation, setDrawerOpen])
+  }, [navigation, setDrawerOpen, ax])
 
   const onPressFeedback = useCallback(() => {
     Linking.openURL(
@@ -265,7 +326,16 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
           {hasSession && currentAccount ? (
             <DrawerProfileCard
               account={currentAccount}
-              onPressProfile={onPressProfile}
+              onPressProfile={onPressDrawerHeaderProfile}
+              onPressShare={
+                IS_NATIVE
+                  ? () => {
+                      ax.metric('invite:dialog:open', {logContext: 'Drawer'})
+                      setDrawerOpen(false)
+                      inviteFriendsControl.open()
+                    }
+                  : undefined
+              }
             />
           ) : (
             <View style={[a.pr_xl]}>
@@ -315,6 +385,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
         onPressFeedback={onPressFeedback}
         onPressHelp={onPressHelp}
       />
+      <InviteFriendsDialog control={inviteFriendsControl} />
     </View>
   )
 }

@@ -1,14 +1,15 @@
+import {useState} from 'react'
 import {View} from 'react-native'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {type CompressedVideo} from '#/lib/media/video/types'
+import {logger} from '#/logger'
 import {useAutoplayDisabled} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a} from '#/alf'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
-import * as Toast from '#/components/Toast'
+import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
 export function VideoPreview({
@@ -21,10 +22,10 @@ export function VideoPreview({
   isActivePost: boolean
   clear: () => void
 }) {
-  const {_} = useLingui()
   // TODO: figure out how to pause a GIF for reduced motion
   // it's not possible using an img tag -sfn
   const autoplayDisabled = useAutoplayDisabled()
+  const [previewFailed, setPreviewFailed] = useState(false)
 
   let aspectRatio: number | undefined
   if (asset.width && asset.height) {
@@ -52,6 +53,21 @@ export function VideoPreview({
               style={{width: '100%', height: '100%', objectFit: 'contain'}}
               alt="GIF"
             />
+          ) : previewFailed ? (
+            <View style={[a.flex_1, a.justify_center, a.align_center, a.px_lg]}>
+              <Text
+                style={[
+                  a.text_sm,
+                  a.leading_snug,
+                  a.text_center,
+                  {color: 'white'},
+                ]}>
+                <Trans>
+                  This video can’t be previewed in your browser. It will still
+                  be uploaded.
+                </Trans>
+              </Text>
+            </View>
           ) : (
             <>
               <video
@@ -61,12 +77,19 @@ export function VideoPreview({
                 loop
                 muted
                 playsInline
-                onError={err => {
-                  console.error('Error loading video', err)
-                  Toast.show(_(msg`Could not process your video`), {
-                    type: 'error',
+                onError={e => {
+                  /*
+                   * A preview render failure must not remove the video. The
+                   * upload is already in flight, and clearing here aborts it
+                   * even though the compressed file may be perfectly valid.
+                   */
+                  const mediaError = e.currentTarget.error
+                  logger.error('Video preview failed to render', {
+                    safeMessage: mediaError
+                      ? `code ${mediaError.code}: ${mediaError.message}`
+                      : 'unknown media error',
                   })
-                  clear()
+                  setPreviewFailed(true)
                 }}
               />
               {autoplayDisabled && (

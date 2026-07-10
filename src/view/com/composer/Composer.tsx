@@ -13,7 +13,6 @@ import {
   ActivityIndicator,
   BackHandler,
   Keyboard,
-  KeyboardAvoidingView,
   type LayoutChangeEvent,
   ScrollView,
   type StyleProp,
@@ -21,6 +20,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
@@ -50,14 +50,15 @@ import {
   AppBskyDraftCreateDraft,
   AppBskyUnspeccedDefs,
   type AppBskyUnspeccedGetPostThreadV2,
+  type AtpAgent,
   AtUri,
-  type BskyAgent,
+  ChatBskyGroupDefs,
   type RichText,
 } from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import {useQueries, useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
@@ -69,9 +70,10 @@ import {
   MAX_GRAPHEME_LENGTH,
   SUPPORTED_MIME_TYPES,
   type SupportedMimeTypes,
+  VIDEO_MAX_DURATION_MS,
 } from '#/lib/constants'
-import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {mimeToExt} from '#/lib/media/video/util'
 import {useCallOnce} from '#/lib/once'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -85,7 +87,6 @@ import {
   createComposerImage,
   pasteImage,
 } from '#/state/gallery'
-import {useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   fromPostLanguages,
@@ -95,6 +96,7 @@ import {
 } from '#/state/preferences/languages'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
+import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
@@ -133,7 +135,14 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {
+  IS_ANDROID,
+  IS_IOS,
+  IS_LIQUID_GLASS,
+  IS_NATIVE,
+  IS_WEB,
+  IS_WEB_SAFARI,
+} from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
@@ -159,7 +168,7 @@ import {
   composerReducer,
   createComposerState,
   type EmbedDraft,
-  MAX_IMAGES,
+  MAX_GALLERY_IMAGES,
   type PostAction,
   type PostDraft,
   type ThreadDraft,
@@ -171,11 +180,72 @@ import {
   type VideoState,
 } from './state/video'
 import {type TextInputRef} from './text-input/TextInput.types'
-import {getVideoMetadata} from './videos/pickVideo'
+import {getVideoMetadata} from './videos/metadata'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
 type CancelRef = {
   onPressCancel: () => void
+}
+
+function applyGalleryCap(
+  currentCount: number,
+  incoming: ComposerImage[],
+):
+  | {status: 'full'}
+  | {status: 'partial'; accepted: ComposerImage[]; dropped: number}
+  | {status: 'ok'; accepted: ComposerImage[]} {
+  const remaining = MAX_GALLERY_IMAGES - currentCount
+  if (remaining <= 0) {
+    return {status: 'full'}
+  }
+  if (incoming.length > remaining) {
+    return {
+      status: 'partial',
+      accepted: incoming.slice(0, remaining),
+      dropped: incoming.length - remaining,
+    }
+  }
+  return {status: 'ok', accepted: incoming}
+}
+
+function useAddImagesWithCap(
+  currentCount: number,
+  dispatchPostAction: (action: PostAction) => void,
+) {
+  const {t: l} = useLingui()
+  return useCallback(
+    (next: ComposerImage[]) => {
+      const result = applyGalleryCap(currentCount, next)
+      if (result.status === 'full') {
+        Toast.show(
+          l({
+            message: `You can only add up to ${plural(MAX_GALLERY_IMAGES, {
+              other: '# images',
+            })} per post`,
+            comment:
+              'Toast shown when the user tries to add more images but the post gallery is already at the cap',
+          }),
+          {type: 'warning'},
+        )
+        return
+      }
+      if (result.status === 'partial') {
+        Toast.show(
+          l({
+            message: `Only ${result.accepted.length} of ${next.length} ${plural(next.length, {one: 'image', other: 'images'})} added; limit is ${MAX_GALLERY_IMAGES}`,
+            comment:
+              'Toast shown when adding images would exceed the post gallery cap; only the first N are kept',
+          }),
+          {type: 'warning'},
+        )
+      }
+      dispatchPostAction({
+        type: 'embed_add_images',
+        images: result.accepted,
+      })
+    },
+    [currentCount, dispatchPostAction, l],
+  )
 }
 
 type Props = ComposerOpts
@@ -213,11 +283,9 @@ export const ComposePost = ({
     useSaveDraftMutation()
   const {mutate: cleanupPublishedDraft} = useCleanupPublishedDraftMutation()
   const {closeAllDialogs} = useDialogStateControlContext()
-  const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
   const navigation = useNavigation<NavigationProp>()
 
-  const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
@@ -317,8 +385,40 @@ export const ComposePost = ({
   )
 
   const selectVideo = useCallback(
-    (postId: string, asset: ImagePickerAsset) => {
+    async (postId: string, asset: ImagePickerAsset) => {
+      /*
+       * Share-extension deeplinks deliver a video URI without duration, so
+       * probe before we decide whether to compress. The picker and web paste
+       * paths already populate duration upstream. GIFs must skip the probe:
+       * they have no video track, so the iOS prober never resolves or rejects
+       * and the await below would hang forever.
+       */
+      if (
+        asset.duration == null &&
+        IS_NATIVE &&
+        asset.mimeType !== 'image/gif'
+      ) {
+        try {
+          const probed = await getVideoMetadata(asset.uri)
+          asset = {
+            ...asset,
+            mimeType: probed.mimeType ?? asset.mimeType,
+            width: probed.width ?? asset.width,
+            height: probed.height ?? asset.height,
+            duration: probed.duration,
+          }
+        } catch (e) {
+          logger.warn('selectVideo: duration probe failed', {safeMessage: e})
+        }
+      }
+
       const abortController = new AbortController()
+      const telemetry = createVideoTelemetry({
+        asset,
+        signal: abortController.signal,
+        metric: ax.metric,
+      })
+      telemetry.picked()
       composerDispatch({
         type: 'update_post',
         postId: postId,
@@ -326,8 +426,30 @@ export const ComposePost = ({
           type: 'embed_add_video',
           asset,
           abortController,
+          telemetry,
         },
       })
+
+      /*
+       * Fail early on duration so we don't spend time compressing a video the
+       * server would reject anyway.
+       */
+      if (asset.duration != null && asset.duration > VIDEO_MAX_DURATION_MS) {
+        composerDispatch({
+          type: 'update_post',
+          postId: postId,
+          postAction: {
+            type: 'embed_update_video',
+            videoAction: {
+              type: 'to_error',
+              error: l`Videos must be less than 3 minutes long.`,
+              signal: abortController.signal,
+            },
+          },
+        })
+        return
+      }
+
       void processVideo(
         asset,
         videoAction => {
@@ -344,14 +466,15 @@ export const ComposePost = ({
         currentDid,
         abortController.signal,
         i18n,
+        telemetry,
       )
     },
-    [i18n, agent, currentDid, composerDispatch],
+    [l, i18n, agent, currentDid, composerDispatch, ax.metric],
   )
 
   const onInitVideo = useNonReactiveCallback(() => {
     if (initVideoUri) {
-      selectVideo(activePost.id, initVideoUri)
+      void selectVideo(activePost.id, initVideoUri)
     }
   })
 
@@ -426,6 +549,12 @@ export const ComposePost = ({
 
         // Start video processing using existing flow
         const abortController = new AbortController()
+        const telemetry = createVideoTelemetry({
+          asset,
+          signal: abortController.signal,
+          metric: ax.metric,
+        })
+        telemetry.picked()
         composerDispatch({
           type: 'update_post',
           postId,
@@ -433,8 +562,25 @@ export const ComposePost = ({
             type: 'embed_add_video',
             asset,
             abortController,
+            telemetry,
           },
         })
+
+        if (asset.duration != null && asset.duration > VIDEO_MAX_DURATION_MS) {
+          composerDispatch({
+            type: 'update_post',
+            postId,
+            postAction: {
+              type: 'embed_update_video',
+              videoAction: {
+                type: 'to_error',
+                error: l`Videos must be less than 3 minutes long.`,
+                signal: abortController.signal,
+              },
+            },
+          })
+          return
+        }
 
         // Restore alt text immediately
         if (videoInfo.altText) {
@@ -491,6 +637,7 @@ export const ComposePost = ({
           currentDid,
           abortController.signal,
           i18n,
+          telemetry,
         )
       } catch (e) {
         logger.error('Failed to restore video from draft', {
@@ -499,7 +646,7 @@ export const ComposePost = ({
         })
       }
     },
-    [i18n, agent, currentDid, composerDispatch],
+    [l, i18n, agent, currentDid, composerDispatch, ax.metric],
   )
 
   const handleSelectDraft = useCallback(
@@ -556,7 +703,7 @@ export const ComposePost = ({
       // This is async but we don't await - videos process in the background
       for (const [postIndex, videoInfo] of restoredVideos) {
         const postId = posts[postIndex].id
-        restoreVideo(postId, videoInfo)
+        void restoreVideo(postId, videoInfo)
       }
     },
     [composerDispatch, restoreVideo, ax],
@@ -611,7 +758,11 @@ export const ComposePost = ({
       ax.metric('draft:save', {
         isNewDraft,
         hasText: posts.some(p => p.richtext.text.trim().length > 0),
-        hasImages: posts.some(p => p.embed.media?.type === 'images'),
+        hasImages: posts.some(
+          p =>
+            p.embed.media?.type === 'images' ||
+            p.embed.media?.type === 'gallery',
+        ),
         hasVideo: posts.some(p => p.embed.media?.type === 'video'),
         hasGif: posts.some(p => p.embed.media?.type === 'gif'),
         hasQuote: posts.some(p => !!p.embed.quote),
@@ -709,17 +860,9 @@ export const ComposePost = ({
   const viewStyles = useMemo(
     () => ({
       paddingTop: IS_ANDROID ? insets.top : 0,
-      paddingBottom:
-        // iOS - when keyboard is closed, keep the bottom bar in the safe area
-        (IS_IOS && !isKeyboardVisible) ||
-        // Android - Android >=35 KeyboardAvoidingView adds double padding when
-        // keyboard is closed, so we subtract that in the offset and add it back
-        // here when the keyboard is open
-        (IS_ANDROID && isKeyboardVisible)
-          ? insets.bottom
-          : 0,
+      paddingBottom: insets.bottom,
     }),
-    [insets, isKeyboardVisible],
+    [insets.top, insets.bottom],
   )
 
   const onPressCancel = useCallback(() => {
@@ -761,7 +904,7 @@ export const ComposePost = ({
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
-        if (closeAllDialogs() || closeAllModals()) {
+        if (closeAllDialogs()) {
           return true
         }
         onPressCancel()
@@ -771,7 +914,7 @@ export const ComposePost = ({
     return () => {
       backHandler.remove()
     }
-  }, [onPressCancel, closeAllDialogs, closeAllModals])
+  }, [onPressCancel, closeAllDialogs])
 
   const missingAltError = useMemo(() => {
     if (!requireAltTextEnabled) {
@@ -780,7 +923,10 @@ export const ComposePost = ({
     for (let i = 0; i < thread.posts.length; i++) {
       const media = thread.posts[i].embed.media
       if (media) {
-        if (media.type === 'images' && media.images.some(img => !img.alt)) {
+        if (
+          (media.type === 'images' || media.type === 'gallery') &&
+          media.images.some(img => !img.alt)
+        ) {
           return l`One or more images is missing alt text.`
         }
         if (media.type === 'gif' && !media.alt) {
@@ -797,8 +943,27 @@ export const ComposePost = ({
     }
   }, [thread, requireAltTextEnabled, l])
 
+  // Subscribe to the resolve-link cache for any link URIs in the thread so we
+  // can detect chat invites that resolved to no preview (revoked/expired) and
+  // block publishing - otherwise the post would go out without the embed.
+  const linkUris = thread.posts
+    .filter(post => post.embed.link)
+    .map(post => post.embed.link!.uri)
+  const linkQueries = useQueries({
+    queries: linkUris.map(uri => ({
+      ...resolveLinkQueryOptions(agent, uri),
+      enabled: false,
+    })),
+  })
+  const hasUnavailableChatInvite = linkQueries.some(
+    q =>
+      q.data?.type === 'chat-invite' &&
+      !ChatBskyGroupDefs.isJoinLinkPreviewView(q.data.view),
+  )
+
   const canPost =
     !missingAltError &&
+    !hasUnavailableChatInvite &&
     thread.posts.some(post => !isEmptyPost(post)) &&
     thread.posts.every(
       post =>
@@ -810,7 +975,7 @@ export const ComposePost = ({
           )),
     )
 
-  const getFilteredThread = (): {
+  const getFilteredThread = useCallback((): {
     type: 'none' | 'trailing-only' | 'non-trailing'
     filteredThread: ThreadDraft
   } => {
@@ -838,7 +1003,7 @@ export const ComposePost = ({
       type: hasNonTrailingEmpty ? 'non-trailing' : 'trailing-only',
       filteredThread,
     }
-  }
+  }, [thread])
 
   const onPressPublish = useCallback(async () => {
     if (isPublishing) {
@@ -877,25 +1042,22 @@ export const ComposePost = ({
     try {
       logger.info(`composer: posting...`)
       postUri = (
-        await apilib.post(
-          agent,
-          queryClient,
-          {
-            thread: filteredThread,
-            replyTo: replyTo?.uri,
-            onStateChange: setPublishingStage,
-            langs: currentLanguages,
-          },
-          {
-            highResolutionImages: ax.features.enabled(
-              ax.features.ImageUploadsHighResolution,
-            ),
-            increasedBlobSizeLimit: ax.features.enabled(
-              ax.features.ImageUploadsBlobSize2mbEnabled,
-            ),
-          },
-        )
+        await apilib.post(agent, queryClient, {
+          thread: filteredThread,
+          replyTo: replyTo?.uri,
+          onStateChange: setPublishingStage,
+          langs: currentLanguages,
+        })
       ).uris[0]
+
+      // Fire published event for every video that made it into the post.
+      // The status guard upstream ensures each video.telemetry is present and
+      // processing has completed by this point.
+      for (const post of filteredThread.posts) {
+        if (post.embed.media?.type === 'video') {
+          post.embed.media.video.telemetry?.published()
+        }
+      }
 
       /*
        * Wait for app view to have received the post(s). If this fails, it's
@@ -934,21 +1096,26 @@ export const ComposePost = ({
             posts,
           }
         }
-      } catch (waitErr: any) {
+      } catch (waitErr) {
         logger.info(`composer: waiting for app view failed`, {
           safeMessage: waitErr,
         })
       }
-    } catch (e: any) {
-      logger.error(e, {
+    } catch (e) {
+      logger.error(e instanceof Error ? e : String(e), {
         message: `Composer: create post failed`,
         hasImages: filteredThread.posts.some(
-          p => p.embed.media?.type === 'images',
+          p =>
+            p.embed.media?.type === 'images' ||
+            p.embed.media?.type === 'gallery',
         ),
       })
 
-      let err = cleanError(e.message)
-      if (err.includes('not locate record')) {
+      let err = e instanceof Error ? cleanError(e.message) : String(e)
+      if (
+        e instanceof apilib.ReplyDeletedError ||
+        err.includes('not locate record')
+      ) {
         err = l`We're sorry! The post you are replying to has been deleted.`
       } else if (e instanceof EmbeddingDisabledError) {
         err = l`This post's author has disabled quote posts.`
@@ -962,7 +1129,8 @@ export const ComposePost = ({
         for (let post of filteredThread.posts) {
           ax.metric('post:create', {
             imageCount:
-              post.embed.media?.type === 'images'
+              post.embed.media?.type === 'images' ||
+              post.embed.media?.type === 'gallery'
                 ? post.embed.media.images.length
                 : 0,
             isReply: index > 0 || !!replyTo,
@@ -980,6 +1148,20 @@ export const ComposePost = ({
           postCount: filteredThread.posts.length,
           isReply: !!replyTo,
         })
+      }
+      if (postUri) {
+        for (const q of linkQueries) {
+          const resolved = q.data
+          if (
+            resolved?.type === 'chat-invite' &&
+            ChatBskyGroupDefs.isJoinLinkPreviewView(resolved.view)
+          ) {
+            ax.metric('groupchat:inviteLink:shared', {
+              convoId: resolved.view.convoId,
+              method: 'post',
+            })
+          }
+        }
       }
     }
     if (postUri && !replyTo) {
@@ -1008,7 +1190,7 @@ export const ComposePost = ({
     setLangPrefs.savePostLanguageToHistory()
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-      whenAppViewReady(agent, initQuote.uri, res => {
+      void whenAppViewReady(agent, initQuote.uri, res => {
         const anchor = res.data.thread.at(0)
         if (
           AppBskyUnspeccedDefs.isThreadItemPost(anchor?.value) &&
@@ -1056,7 +1238,6 @@ export const ComposePost = ({
     l,
     ax,
     agent,
-    thread,
     canPost,
     isPublishing,
     currentLanguages,
@@ -1074,6 +1255,8 @@ export const ComposePost = ({
     cleanupPublishedDraft,
     loadedDraftCreatedAt,
     emptyPostsPromptControl,
+    getFilteredThread,
+    linkQueries,
   ])
 
   const handleConfirmSkipEmpty = () => {
@@ -1138,6 +1321,24 @@ export const ComposePost = ({
       }
     }
   }, [composerState])
+
+  useEffect(() => {
+    // Safari ignores `overscroll-behavior`, so horizontal trackpad swipes over
+    // the composer (e.g. on a quote post) can still trigger the browser's
+    // back/forward navigation gesture. Suppress predominantly-horizontal wheel
+    // events so the history-nav gesture never fires. Chrome and Firefox are
+    // covered by the `overscrollBehaviorX: 'contain'` style on the ScrollView.
+    if (!IS_WEB_SAFARI) return
+    const el =
+      scrollViewRef.current?.getScrollableNode() as unknown as HTMLElement | null
+    if (!el) return
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
+      e.preventDefault()
+    }
+    el.addEventListener('wheel', onWheel, {passive: false})
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [scrollViewRef])
 
   const isLastThreadedPost = thread.posts.length > 1 && nextPost === undefined
   const {
@@ -1212,8 +1413,8 @@ export const ComposePost = ({
             publishingStage={publishingStage}
             topBarAnimatedStyle={topBarAnimatedStyle}
             onCancel={onPressCancel}
-            onPublish={onPressPublish}
-            onSelectDraft={handleSelectDraft}
+            onPublish={() => void onPressPublish()}
+            onSelectDraft={draft => void handleSelectDraft(draft)}
             onSaveDraft={saveCurrentDraft}
             onDiscard={handleClearComposer}
             isEmpty={isComposerEmpty}
@@ -1244,6 +1445,11 @@ export const ComposePost = ({
               web({
                 scrollbarGutter: 'stable',
                 scrollbarColor: `${t.palette.contrast_200} transparent`,
+                // Prevent horizontal trackpad swipes from triggering the
+                // browser's back/forward overscroll-navigation gesture.
+                // Handles Chrome and Firefox; Safari is handled separately
+                // via a wheel listener since it ignores overscroll-behavior.
+                overscrollBehaviorX: 'contain',
               }),
             ]}
             keyboardShouldPersistTaps="always"
@@ -1321,7 +1527,7 @@ export const ComposePost = ({
               {allPostsWithinLimit && (
                 <Prompt.Action
                   cta={composerState.draftId ? l`Save changes` : l`Save draft`}
-                  onPress={handleSaveDraft}
+                  onPress={() => void handleSaveDraft()}
                   color="primary"
                 />
               )}
@@ -1375,7 +1581,10 @@ let ComposerPost = memo(function ComposerPost({
   canRemovePost: boolean
   canRemoveQuote: boolean
   onClearVideo: (postId: string) => void
-  onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
+  onSelectVideo: (
+    postId: string,
+    asset: ImagePickerAsset,
+  ) => void | Promise<void>
   onError: (error: string) => void
   onPublish: (richtext: RichText) => void
 }) {
@@ -1404,15 +1613,11 @@ let ComposerPost = memo(function ComposerPost({
     [dispatch, post.id],
   )
 
-  const onImageAdd = useCallback(
-    (next: ComposerImage[]) => {
-      dispatchPost({
-        type: 'embed_add_images',
-        images: next,
-      })
-    },
-    [dispatchPost],
-  )
+  const postImagesCount =
+    post.embed.media?.type === 'images' || post.embed.media?.type === 'gallery'
+      ? post.embed.media.images.length
+      : 0
+  const onImageAdd = useAddImagesWithCap(postImagesCount, dispatchPost)
 
   const onNewLink = useCallback(
     (uri: string) => {
@@ -1439,7 +1644,7 @@ let ComposerPost = memo(function ComposerPost({
         const file = await fetch(uri)
           .then(res => res.blob())
           .then(blob => new File([blob], name, {type: mimeType}))
-        onSelectVideo(post.id, await getVideoMetadata(file))
+        void onSelectVideo(post.id, await getVideoMetadata(file))
       } else {
         const res = await pasteImage(uri)
         onImageAdd([res])
@@ -1485,7 +1690,7 @@ let ComposerPost = memo(function ComposerPost({
               postId: post.id,
             })
           }}
-          onPhotoPasted={onPhotoPasted}
+          onPhotoPasted={uri => void onPhotoPasted(uri)}
           onNewLink={onNewLink}
           onError={onError}
           onPressPublish={onPublish}
@@ -1717,7 +1922,7 @@ function ComposerEmbeds({
   const video = embed.media?.type === 'video' ? embed.media.video : null
   return (
     <>
-      {embed.media?.type === 'images' && (
+      {(embed.media?.type === 'images' || embed.media?.type === 'gallery') && (
         <Gallery images={embed.media.images} dispatch={dispatch} />
       )}
 
@@ -1828,7 +2033,11 @@ function ComposerPills({
 }) {
   const t = useTheme()
   const media = post.embed.media
-  const hasMedia = media?.type === 'images' || media?.type === 'video'
+  const hasMedia =
+    media?.type === 'images' ||
+    media?.type === 'gallery' ||
+    media?.type === 'gif' ||
+    media?.type === 'video'
   const hasLink = !!post.embed.link
 
   // Don't render anything if no pills are going to be displayed
@@ -1897,7 +2106,10 @@ function ComposerFooter({
   dispatch: (action: PostAction) => void
   showAddButton: boolean
   onError: (error: string) => void
-  onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
+  onSelectVideo: (
+    postId: string,
+    asset: ImagePickerAsset,
+  ) => void | Promise<void>
   onAddPost: () => void
   currentLanguages: string[]
   onSelectLanguage?: (language: string) => void
@@ -1917,15 +2129,16 @@ function ComposerFooter({
   >(undefined)
 
   const media = post.embed.media
-  const images = media?.type === 'images' ? media.images : []
+  const images =
+    media?.type === 'images' || media?.type === 'gallery' ? media.images : []
   const video = media?.type === 'video' ? media.video : null
-  const isMaxImages = images.length >= MAX_IMAGES
+  const isMaxImages = images.length >= MAX_GALLERY_IMAGES
   const isMaxVideos = !!video
 
   let selectedAssetsCount = 0
   let isMediaSelectionDisabled = false
 
-  if (media?.type === 'images') {
+  if (media?.type === 'images' || media?.type === 'gallery') {
     isMediaSelectionDisabled = isMaxImages
     selectedAssetsCount = images.length
   } else if (media?.type === 'video') {
@@ -1935,15 +2148,7 @@ function ComposerFooter({
     isMediaSelectionDisabled = !!media
   }
 
-  const onImageAdd = useCallback(
-    (next: ComposerImage[]) => {
-      dispatch({
-        type: 'embed_add_images',
-        images: next,
-      })
-    },
-    [dispatch],
-  )
+  const onImageAdd = useAddImagesWithCap(images.length, dispatch)
 
   const onSelectGif = useCallback(
     (gif: Gif) => {
@@ -1979,15 +2184,15 @@ function ComposerFooter({
             }),
           ).catch(e => {
             logger.error(`createComposerImage failed`, {
-              safeMessage: e.message,
+              safeMessage: e instanceof Error ? e.message : String(e),
             })
           })
 
           onImageAdd(selectedImages)
         } else if (type === 'video') {
-          onSelectVideo(post.id, assets[0])
+          void onSelectVideo(post.id, assets[0])
         } else if (type === 'gif') {
-          onSelectVideo(post.id, assets[0])
+          void onSelectVideo(post.id, assets[0])
         }
       }
 
@@ -2026,7 +2231,11 @@ function ComposerFooter({
                 autoOpen={openGallery}
               />
               <OpenCameraBtn
-                disabled={media?.type === 'images' ? isMaxImages : !!media}
+                disabled={
+                  media?.type === 'images' || media?.type === 'gallery'
+                    ? isMaxImages
+                    : !!media
+                }
                 onAdd={onImageAdd}
               />
               <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
@@ -2212,28 +2421,35 @@ function useScrollTracker({
 }
 
 function useKeyboardVerticalOffset() {
-  const {top, bottom} = useSafeAreaInsets()
+  const insets = useSafeAreaInsets()
 
-  // Android etc
-  if (!IS_IOS) {
-    // need to account for the edge-to-edge nav bar
-    return bottom * -1
+  // the keyboardavoidingview has bottom padding to avoid being obscured by the safe area when keyboard is closed.
+  // however, this leads to a gap when the keyboard is open. we account for that by subtracting the bottom inset when open.
+  let keyboardVerticalOffset = insets.bottom * -1
+
+  // iOS requires a bit of extra offset to account for the native sheet not being at the top of the screen
+  if (IS_IOS) {
+    // they ditched the gap behaviour on 26
+    if (IS_LIQUID_GLASS) {
+      keyboardVerticalOffset += insets.top
+    }
+
+    // iPhone SE
+    else if (insets.top === 20) {
+      keyboardVerticalOffset += 40
+    }
+
+    // all other iPhones on <26
+    else {
+      keyboardVerticalOffset += insets.top + 10
+    }
   }
 
-  // they ditched the gap behaviour on 26
-  if (IS_LIQUID_GLASS) {
-    return top
-  }
-
-  // iPhone SE
-  if (top === 20) return 40
-
-  // all other iPhones on <26
-  return top + 10
+  return keyboardVerticalOffset
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  agent: AtpAgent,
   uri: string,
   fn: (res: AppBskyUnspeccedGetPostThreadV2.Response) => boolean,
 ) {

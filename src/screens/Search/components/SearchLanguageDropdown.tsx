@@ -1,12 +1,10 @@
 import {useMemo} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {languageName} from '#/locale/helpers'
 import {APP_LANGUAGES, LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, native, platform, tokens} from '#/alf'
+import {atoms as a, native, platform} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
@@ -16,13 +14,15 @@ import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Glo
 import * as Menu from '#/components/Menu'
 
 export function SearchLanguageDropdown({
+  showIcon = true,
   value,
   onChange,
 }: {
+  showIcon?: boolean
   value: string
   onChange(value: string): void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {appLanguage, contentLanguages, primaryLanguage} = useLanguagePrefs()
 
   const languages = useMemo(() => {
@@ -62,27 +62,21 @@ export function SearchLanguageDropdown({
   }, [appLanguage, contentLanguages, primaryLanguage])
 
   const currentLanguageLabel =
-    languages.find(lang => lang.value === value)?.label ?? _(msg`All languages`)
+    languages.find(lang => lang.value === value)?.label ?? l`All languages`
 
   return (
     <Menu.Root>
       <Menu.Trigger
-        label={_(
-          msg`Filter search by language (currently: ${currentLanguageLabel})`,
-        )}>
+        label={l`Filter search by language (currently: ${currentLanguageLabel})`}>
         {({props}) => (
           <Button
             {...props}
             label={props.accessibilityLabel}
             size="small"
-            color={platform({native: 'primary', default: 'secondary'})}
-            variant={platform({native: 'ghost', default: 'solid'})}
-            style={native([
-              a.py_sm,
-              a.px_sm,
-              {marginRight: tokens.space.sm * -1},
-            ])}>
-            <ButtonIcon icon={EarthIcon} />
+            color="secondary"
+            variant="solid"
+            style={showIcon ? native([a.py_sm, a.px_sm]) : null}>
+            {showIcon ? <ButtonIcon icon={EarthIcon} /> : null}
             <ButtonText>{currentLanguageLabel}</ButtonText>
             <ButtonIcon
               icon={platform({
@@ -97,7 +91,7 @@ export function SearchLanguageDropdown({
         <Menu.LabelText>
           <Trans>Filter search by language</Trans>
         </Menu.LabelText>
-        <Menu.Item label={_(msg`All languages`)} onPress={() => onChange('')}>
+        <Menu.Item label={l`All languages`} onPress={() => onChange('')}>
           <Menu.ItemText>
             <Trans>All languages</Trans>
           </Menu.ItemText>

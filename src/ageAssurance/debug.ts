@@ -1,3 +1,4 @@
+import type * as AgeRange from 'expo-age-range'
 import {
   ageAssuranceRuleIDs as ids,
   type AppBskyAgeassuranceDefs,
@@ -17,12 +18,30 @@ export const geolocation: Geolocation | undefined = enabled
     }
   : undefined
 
-const deviceGeolocationEnabled = false || IS_E2E
-export const deviceGeolocation: Geolocation | undefined =
-  enabled && deviceGeolocationEnabled
+export const deviceGeolocation: Geolocation | undefined = enabled
+  ? {
+      countryCode: 'AA',
+      regionCode: undefined,
+      ...geolocation,
+    }
+  : undefined
+
+export const otherRequiredData: OtherRequiredData = {
+  birthdate: new Date(2000, 12, 1).toISOString(),
+}
+
+const serverStateEnabled = false || IS_E2E
+export const serverState: AppBskyAgeassuranceGetState.OutputSchema | undefined =
+  serverStateEnabled
     ? {
-        countryCode: 'AA',
-        regionCode: undefined,
+        state: {
+          lastInitiatedAt: undefined, // new Date(2025, 1, 1).toISOString(),
+          status: 'unknown',
+          access: 'unknown',
+        },
+        metadata: {
+          accountCreatedAt: new Date(2023, 1, 1).toISOString(),
+        },
       }
     : undefined
 
@@ -40,35 +59,238 @@ export const config: AppBskyAgeassuranceDefs.Config = {
       ],
     },
     {
-      countryCode: 'BB',
-      regionCode: undefined,
+      // On-device verification region. KWS is included as a fallback for
+      // platforms without the native age API (e.g. web) or when the device
+      // result is insufficient.
+      countryCode: 'US',
+      regionCode: 'TX',
+      minAccessAge: 18,
+      additionalVerificationMethods: ['device'],
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'GB',
+      minAccessAge: 13,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 13,
+          access: 'safe',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'AU',
       minAccessAge: 16,
       rules: [
         {
-          $type: ids.Default,
+          date: '2025-12-10T00:00:00Z',
+          access: 'none',
+          $type: ids.IfAccountNewerThan,
+        },
+        {
+          age: 18,
           access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 16,
+          access: 'safe',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 16,
+          access: 'safe',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'US',
+      regionCode: 'SD',
+      minAccessAge: 13,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 13,
+          access: 'safe',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'US',
+      regionCode: 'WY',
+      minAccessAge: 13,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 13,
+          access: 'safe',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'US',
+      regionCode: 'OH',
+      minAccessAge: 13,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 13,
+          access: 'safe',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'US',
+      regionCode: 'MS',
+      minAccessAge: 18,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'US',
+      regionCode: 'VA',
+      minAccessAge: 16,
+      rules: [
+        {
+          age: 16,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 16,
+          access: 'full',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'US',
+      regionCode: 'TN',
+      minAccessAge: 18,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
+        },
+      ],
+    },
+    {
+      countryCode: 'BR',
+      minAccessAge: 13,
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          age: 13,
+          access: 'safe',
+          $type: ids.IfDeclaredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
         },
       ],
     },
   ],
 }
 
-export const otherRequiredData: OtherRequiredData = {
-  birthdate: new Date(2000, 1, 1).toISOString(),
-}
-
-const serverStateEnabled = false || IS_E2E
-export const serverState: AppBskyAgeassuranceGetState.OutputSchema | undefined =
-  serverStateEnabled
+/**
+ * When debug is enabled we mock the `deviceSignals` response by default. Set
+ * this to `false` to hit the real native age API (`expo-age-range`) so the OS
+ * age prompt actually shows — useful for testing the device flow on a physical
+ * device.
+ */
+export const useMockDeviceSignalsAPIResponse = true
+export const deviceSignals: AgeRange.AgeRangeResponse | undefined =
+  useMockDeviceSignalsAPIResponse
     ? {
-        state: {
-          lastInitiatedAt: new Date(2025, 1, 1).toISOString(),
-          status: 'assured',
-          access: 'full',
-        },
-        metadata: {
-          accountCreatedAt: new Date(2023, 1, 1).toISOString(),
-        },
+        // Simulates the OS reporting the user is at least 18. Lower this below
+        // a region's IfAssuredOverAge threshold to exercise the KWS fallback.
+        lowerBound: 16,
+        upperBound: null,
       }
     : undefined
 

@@ -132,7 +132,7 @@ export function Root({children}: {children: React.ReactNode}) {
   const onHoverableTouchUp = useCallback((id: string) => {
     const hoverable = hoverables.current.get(id)
     if (!hoverable) {
-      logger.warn(`No such hoverable with id ${id}`)
+      logger.warn(`No such hoverable`, {id})
       return
     }
     hoverable.onTouchUp()
@@ -241,6 +241,7 @@ export function Trigger({
   contentLabel,
   style,
   onTap,
+  swipeGesture,
 }: TriggerProps) {
   const context = useContextMenuContext()
   const playHaptic = useHaptics()
@@ -364,11 +365,19 @@ export function Trigger({
   }, [open, hoverablesSV, onTouchUpMenuItem, hoveredItemSV, translationSV])
 
   // Order matters here: doubleTapGesture must come before tapGesture.
-  const composedGestures = Gesture.Exclusive(
+  const tapAndHoldGestures = Gesture.Exclusive(
     doubleTapGesture,
     tapGesture,
     pressAndHoldGesture,
   )
+
+  // An optional swipe gesture (e.g. swipe-to-reply) races against the tap/hold
+  // group: whichever activates first wins and cancels the rest, so they're
+  // mutually exclusive. Race (not Exclusive) avoids a held-but-not-yet-moved
+  // swipe Pan blocking the long-press from firing.
+  const composedGestures = swipeGesture
+    ? Gesture.Race(swipeGesture, tapAndHoldGestures)
+    : tapAndHoldGestures
 
   const measurement = context.measurement || pendingMeasurement?.measurement
 
@@ -499,6 +508,7 @@ function TriggerClone({
         accessibilityLabel={label}
         accessibilityHint={_(msg`The subject of the context menu`)}
         accessibilityIgnoresInvertColors={false}
+        cachePolicy="none"
       />
     </Animated.View>
   )
@@ -605,6 +615,8 @@ export function Outer({
   label?: string
   style?: StyleProp<ViewStyle>
   align?: 'left' | 'right'
+  /** Web only. Native restores focus differently. */
+  onCloseAutoFocus?: (event: Event) => void
 }) {
   const t = useTheme()
   const context = useContextMenuContext()
@@ -761,6 +773,7 @@ export function Item({
   style,
   onPress,
   position,
+  destructive = false,
   ...rest
 }: ItemProps) {
   const t = useTheme()
@@ -819,8 +832,8 @@ export function Item({
   )
 
   const itemContext = useMemo(
-    () => ({disabled: Boolean(rest.disabled)}),
-    [rest.disabled],
+    () => ({disabled: Boolean(rest.disabled), destructive}),
+    [rest.disabled, destructive],
   )
 
   return (
@@ -848,10 +861,11 @@ export function Item({
         !unstyled && [
           a.flex_row,
           a.align_center,
-          a.px_2xl,
+          a.px_lg,
+          a.gap_sm,
           a.rounded_md,
           t.atoms.bg_contrast_25,
-          {gap: 6, minHeight: 44, paddingVertical: 10},
+          {minHeight: 44, paddingVertical: 10},
           (focused || pressed || context.hoveredMenuItem === id) &&
             !rest.disabled &&
             t.atoms.bg_contrast_50,
@@ -872,7 +886,7 @@ export function Item({
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
-  const {disabled} = useContextMenuItemContext()
+  const {disabled, destructive} = useContextMenuItemContext()
   return (
     <Text
       numberOfLines={2}
@@ -880,9 +894,9 @@ export function ItemText({children, style}: ItemTextProps) {
       style={[
         a.flex_1,
         a.text_md,
-        a.font_semi_bold,
-        t.atoms.text_contrast_high,
+        a.font_medium,
         style,
+        destructive && {color: t.palette.negative_500},
         disabled && t.atoms.text_contrast_low,
       ]}>
       {children}
@@ -892,14 +906,16 @@ export function ItemText({children, style}: ItemTextProps) {
 
 export function ItemIcon({icon: Comp}: ItemIconProps) {
   const t = useTheme()
-  const {disabled} = useContextMenuItemContext()
+  const {disabled, destructive} = useContextMenuItemContext()
   return (
     <Comp
-      size="lg"
+      size="md"
       fill={
         disabled
           ? t.atoms.text_contrast_low.color
-          : t.atoms.text_contrast_medium.color
+          : destructive
+            ? t.palette.negative_500
+            : t.atoms.text.color
       }
     />
   )

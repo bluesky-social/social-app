@@ -1,9 +1,23 @@
 import {type NavigationState, type PartialState} from '@react-navigation/native'
 import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 
+import {type SearchFilters} from '#/screens/Search/searchParams'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
+
+/**
+ * The advanced-search filter params are owned by searchParams.ts (the param
+ * model, serialization, and helpers all live there). Re-export the type so the
+ * route params stay in sync with it automatically rather than being a second
+ * hand-maintained copy.
+ */
+export type SearchFilterParams = SearchFilters
+
+export type SearchParams = {
+  q?: string
+  tab?: 'user' | 'profile' | 'feed' | 'latest'
+} & SearchFilterParams
 
 export type CommonNavigatorParams = {
   NotFound: undefined
@@ -19,7 +33,7 @@ export type CommonNavigatorParams = {
   ProfileFollowers: {name: string}
   ProfileFollows: {name: string}
   ProfileKnownFollowers: {name: string}
-  ProfileSearch: {name: string; q?: string}
+  ProfileSearch: {name: string} & SearchParams
   ProfileList: {name: string; rkey: string}
   PostThread: {name: string; rkey: string}
   PostLikedBy: {name: string; rkey: string}
@@ -55,25 +69,17 @@ export type CommonNavigatorParams = {
   ActivityPrivacySettings: undefined
   ContentAndMediaSettings: undefined
   NotificationSettings: undefined
-  ReplyNotificationSettings: undefined
-  MentionNotificationSettings: undefined
-  QuoteNotificationSettings: undefined
-  LikeNotificationSettings: undefined
-  RepostNotificationSettings: undefined
-  NewFollowerNotificationSettings: undefined
-  LikesOnRepostsNotificationSettings: undefined
-  RepostsOnRepostsNotificationSettings: undefined
-  ActivityNotificationSettings: undefined
-  MiscellaneousNotificationSettings: undefined
   InterestsSettings: undefined
   AboutSettings: undefined
   AppIconSettings: undefined
   FindContactsSettings: undefined
-  Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
+  InviteScanner: undefined
+  Search: SearchParams
   Hashtag: {tag: string; author?: string}
   Topic: {topic: string}
   MessagesConversation: {conversation: string; embed?: string; accept?: true}
   MessagesConversationSettings: {conversation: string}
+  MessagesJoinRequests: {conversation: string}
   MessagesSettings: undefined
   MessagesInbox: undefined
   NotificationsActivityList: {posts: string}
@@ -106,7 +112,7 @@ export type HomeTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type SearchTabNavigatorParams = CommonNavigatorParams & {
-  Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
+  Search: SearchParams
 }
 
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
@@ -118,28 +124,40 @@ export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type MessagesTabNavigatorParams = CommonNavigatorParams & {
-  Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
+  Messages: {
+    pushToConversation?: string
+    pushToNewGroupChat?: boolean
+    animation?: 'push' | 'pop'
+  }
 }
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
   Home: undefined
-  Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
+  Search: SearchParams
   Feeds: undefined
   Notifications: undefined
-  Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
+  Messages: {
+    pushToConversation?: string
+    pushToNewGroupChat?: boolean
+    animation?: 'push' | 'pop'
+  }
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {
   HomeTab: undefined
   Home: undefined
   SearchTab: undefined
-  Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
+  Search: SearchParams
   Feeds: undefined
   NotificationsTab: undefined
   Notifications: undefined
   MyProfileTab: undefined
   MessagesTab: undefined
-  Messages: {animation?: 'push' | 'pop'}
+  Messages: {
+    pushToConversation?: string
+    pushToNewGroupChat?: boolean
+    animation?: 'push' | 'pop'
+  }
 }
 
 // NOTE

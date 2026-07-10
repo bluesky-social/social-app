@@ -10,13 +10,13 @@ like:
 # install nodejs
 nvm install
 nvm use
-npm install --global yarn
+npm install --global pnpm
 
 # setup tools and deps (in top level of this repo)
-yarn install --frozen-lockfile
+pnpm install --frozen-lockfile
 
-# run yarn web dev server, if you wanted
-yarn web
+# run pnpm web dev server, if you wanted
+pnpm web
 ```
 
 Then build and copy over the big 'ol `bundle.web.js` file:
@@ -24,7 +24,7 @@ Then build and copy over the big 'ol `bundle.web.js` file:
 
 ```bash
 # in the top level of this repo
-yarn build-web
+pnpm build-web
 ```
 
 ### Golang Daemon

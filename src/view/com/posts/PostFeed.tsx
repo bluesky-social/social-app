@@ -12,6 +12,9 @@ import {
 } from 'react-native'
 import {
   type AppBskyActorDefs,
+  AppBskyEmbedExternal,
+  AppBskyEmbedGallery,
+  AppBskyEmbedImages,
   AppBskyEmbedVideo,
   type AppBskyFeedDefs,
 } from '@atproto/api'
@@ -58,6 +61,7 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
+import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
@@ -304,7 +308,7 @@ let PostFeed = ({
       }
     } catch (e) {
       if (!isNetworkError(e)) {
-        logger.error('Poll latest failed', {feed, message: String(e)})
+        logger.warn('Poll latest failed', {feed, message: String(e)})
       }
     }
   })
@@ -905,6 +909,9 @@ let PostFeed = ({
 
   const seenActorWithStatusRef = useRef<Set<string>>(new Set())
   const seenPostUrisRef = useRef<Set<string>>(new Set())
+  // Tracks every post we've seen so we can fire per-post events exactly once,
+  // regardless of the post's position within its slice.
+  const seenPerPostUrisRef = useRef<Set<string>>(new Set())
 
   // Helper to calculate position in feed (count only root posts, not interstitials or thread replies)
   const getPostPosition = useNonReactiveCallback(
@@ -937,12 +944,56 @@ let PostFeed = ({
     (item: FeedRow) => {
       feedFeedback.onItemSeen(item)
 
+      // Events that should fire exactly once for every new post, regardless of
+      // its position within a slice or video grid row.
+      const onPostSeen = (post: AppBskyFeedDefs.PostView) => {
+        if (seenPerPostUrisRef.current.has(post.uri)) return
+        seenPerPostUrisRef.current.add(post.uri)
+
+        // Standard site embed view tracking
+        if (
+          AppBskyEmbedExternal.isView(post.embed) &&
+          isStandardSiteEmbed(post.embed.external)
+        ) {
+          ax.metric('embed:standardSite:view', {url: post.embed.external.uri})
+        }
+
+        // Photo embed impression tracking
+        if (
+          AppBskyEmbedImages.isView(post.embed) ||
+          AppBskyEmbedGallery.isView(post.embed)
+        ) {
+          const totalImages = AppBskyEmbedGallery.isView(post.embed)
+            ? post.embed.items.filter(AppBskyEmbedGallery.isViewImage).length
+            : post.embed.images.length
+          const useExpandedLayout = AppBskyEmbedGallery.isView(post.embed)
+            ? totalImages > 4
+            : ax.features.enabled(ax.features.PostGalleryEmbedEnable)
+          const layout =
+            totalImages === 1
+              ? 'single'
+              : useExpandedLayout
+                ? 'carousel'
+                : 'grid'
+
+          ax.metric('post:photoEmbed:impression', {
+            layout,
+            totalImages,
+            postUri: post.uri,
+            postAuthorDid: post.author.did,
+            feedDescriptor: feedFeedback.feedDescriptor || feed,
+          })
+        }
+      }
+
       // Track post:view events
       if (item.type === 'sliceItem') {
         const slice = item.slice
         const indexInSlice = item.indexInSlice
         const postItem = slice.items[indexInSlice]
         const post = postItem.post
+
+        onPostSeen(post)
 
         // Only track the root post of each slice (index 0) to avoid double-counting thread items
         if (indexInSlice === 0 && !seenPostUrisRef.current.has(post.uri)) {

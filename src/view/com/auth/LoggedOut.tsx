@@ -1,14 +1,14 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {STALE} from '#/state/queries'
 import {profilesQueryKey} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
+import {useSetActiveLanding} from '#/state/shell/landing'
 import {
   useLoggedOutView,
   useLoggedOutViewControls,
@@ -16,6 +16,7 @@ import {
 import {useEnableMinimalShellMode} from '#/state/shell/minimal-mode'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Login} from '#/screens/Login'
+import {JoinRequest} from '#/screens/Messages/JoinRequest'
 import {Signup} from '#/screens/Signup'
 import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
 import {atoms as a, native, tokens, useTheme} from '#/alf'
@@ -29,28 +30,38 @@ enum ScreenState {
   S_Login,
   S_CreateAccount,
   S_StarterPack,
+  S_GroupChatJoinRequest,
 }
 export {ScreenState as LoggedOutScreenState}
 
+function getInitialScreenState(requestedAccountSwitchTo?: string): ScreenState {
+  switch (requestedAccountSwitchTo) {
+    case 'new':
+      return ScreenState.S_CreateAccount
+    case 'starterpack':
+      return ScreenState.S_StarterPack
+    case 'groupchat':
+      return ScreenState.S_GroupChatJoinRequest
+    case undefined:
+      return ScreenState.S_LoginOrCreateAccount
+    default:
+      // DID or other string = login with that account
+      return ScreenState.S_Login
+  }
+}
+
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   useEnableMinimalShellMode()
   const {requestedAccountSwitchTo} = useLoggedOutView()
-  const [screenState, setScreenState] = useState<ScreenState>(() => {
-    if (requestedAccountSwitchTo === 'new') {
-      return ScreenState.S_CreateAccount
-    } else if (requestedAccountSwitchTo === 'starterpack') {
-      return ScreenState.S_StarterPack
-    } else if (requestedAccountSwitchTo != null) {
-      return ScreenState.S_Login
-    } else {
-      return ScreenState.S_LoginOrCreateAccount
-    }
-  })
+  const initialScreenState = getInitialScreenState(requestedAccountSwitchTo)
+  const [screenState, setScreenState] =
+    useState<ScreenState>(initialScreenState)
   const {clearRequestedAccount} = useLoggedOutViewControls()
+  const setActiveLanding = useSetActiveLanding()
 
   const queryClient = useQueryClient()
   const {accounts} = useSession()
@@ -73,7 +84,34 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
       onDismiss()
     }
     clearRequestedAccount()
-  }, [clearRequestedAccount, onDismiss])
+    // Clear landing context when user dismisses the modal
+    setActiveLanding(undefined)
+  }, [clearRequestedAccount, onDismiss, setActiveLanding])
+
+  /*
+   * Back from the login or create-account step. Where it returns depends on how
+   * the view was entered:
+   * - Entered on the splash or a landing screen (starter pack, group chat
+   *   invite): return there, i.e. the screen the user actually saw first.
+   * - Dropped directly onto login/create-account (e.g. tapping "Create
+   *   account" elsewhere in the app): there is no preceding screen in this
+   *   view, so dismiss it. Fall back to the splash when the view cannot be
+   *   dismissed (native with no session), since that is its natural root.
+   */
+  const onPressBack = useCallback(() => {
+    if (
+      initialScreenState === ScreenState.S_Login ||
+      initialScreenState === ScreenState.S_CreateAccount
+    ) {
+      if (onDismiss) {
+        onPressDismiss()
+      } else {
+        setScreenState(ScreenState.S_LoginOrCreateAccount)
+      }
+    } else {
+      setScreenState(initialScreenState)
+    }
+  }, [initialScreenState, onDismiss, onPressDismiss])
 
   return (
     <View
@@ -86,7 +124,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
       <ErrorBoundary>
         {onDismiss && screenState === ScreenState.S_LoginOrCreateAccount ? (
           <Button
-            label={_(msg`Go back`)}
+            label={l`Go back`}
             variant="solid"
             color="secondary_inverted"
             size="small"
@@ -107,6 +145,8 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
 
         {screenState === ScreenState.S_StarterPack ? (
           <LandingScreen setScreenState={setScreenState} />
+        ) : screenState === ScreenState.S_GroupChatJoinRequest ? (
+          <JoinRequest setScreenState={setScreenState} />
         ) : screenState === ScreenState.S_LoginOrCreateAccount ? (
           <SplashScreen
             onPressSignin={() => {
@@ -121,18 +161,14 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
         ) : undefined}
         {screenState === ScreenState.S_Login ? (
           <Login
-            onPressBack={() => {
-              setScreenState(ScreenState.S_LoginOrCreateAccount)
-              clearRequestedAccount()
+            onPressBack={onPressBack}
+            onPressCreateAccount={() => {
+              setScreenState(ScreenState.S_CreateAccount)
             }}
           />
         ) : undefined}
         {screenState === ScreenState.S_CreateAccount ? (
-          <Signup
-            onPressBack={() =>
-              setScreenState(ScreenState.S_LoginOrCreateAccount)
-            }
-          />
+          <Signup onPressBack={onPressBack} />
         ) : undefined}
       </ErrorBoundary>
     </View>
