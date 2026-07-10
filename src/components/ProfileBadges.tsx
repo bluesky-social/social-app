@@ -8,6 +8,7 @@ import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import type * as bsky from '#/types/bsky'
+import {BetaBadge, BetaBadgeButton, useIsBetaBadgeVisible} from './BetaBadge'
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
@@ -27,6 +28,22 @@ const botIconSizes: Record<Size, number> = {
   xl: 23,
 } as const
 
+const betaIconSizes: Record<Size, number> = {
+  xs: 10,
+  sm: 11,
+  md: 12,
+  lg: 16,
+  xl: 20,
+} as const
+
+const betaBadgePadding: Record<Size, number> = {
+  xs: 2,
+  sm: 3,
+  md: 4,
+  lg: 6,
+  xl: 8,
+} as const
+
 export function ProfileBadges({
   profile,
   interactive = false,
@@ -41,13 +58,14 @@ export function ProfileBadges({
 }) {
   const shadowed = useProfileShadow(profile)
   const verification = useSimpleVerificationState({profile})
+  const hasBadges = useHasProfileBadges(profile)
   const nativeScaleMultiplier = useNativeFontScale()
   const {
     fonts: {scaleMultiplier: alfScaleMultiplier},
   } = useAlf()
 
   // if nothing to show, don't render the container at all
-  if (!verification.showBadge && !isBotAccount(shadowed)) return null
+  if (!hasBadges) return null
 
   const isOnTheSmallSide = size === 'xs' || size === 'sm'
 
@@ -57,6 +75,8 @@ export function ProfileBadges({
 
   const verificationIconWidth = verificationIconSizes[size] * scaleMultiplier
   const botIconWidth = botIconSizes[size] * scaleMultiplier
+  const betaIconWidth = betaIconSizes[size] * scaleMultiplier
+  const betaBadgeScaledPadding = betaBadgePadding[size] * scaleMultiplier
 
   return (
     <View
@@ -68,6 +88,11 @@ export function ProfileBadges({
       ]}>
       {interactive ? (
         <>
+          <BetaBadgeButton
+            profile={shadowed}
+            width={betaIconWidth}
+            padding={betaBadgeScaledPadding}
+          />
           <VerificationCheckButton
             profile={shadowed}
             width={verificationIconWidth}
@@ -76,6 +101,11 @@ export function ProfileBadges({
         </>
       ) : (
         <>
+          <BetaBadge
+            profile={shadowed}
+            width={betaIconWidth}
+            padding={betaBadgeScaledPadding}
+          />
           {verification.showBadge && (
             <VerificationCheck
               verifier={verification.role === 'verifier'}
@@ -87,4 +117,12 @@ export function ProfileBadges({
       )}
     </View>
   )
+}
+
+function useHasProfileBadges(profile: bsky.profile.AnyProfileView) {
+  const shadowed = useProfileShadow(profile)
+  const verification = useSimpleVerificationState({profile})
+  const isBetaBadgeVisible = useIsBetaBadgeVisible(profile)
+
+  return verification.showBadge || isBotAccount(shadowed) || isBetaBadgeVisible
 }
