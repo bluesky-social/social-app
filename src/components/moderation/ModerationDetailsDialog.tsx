@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import {View} from 'react-native'
 import {type ModerationCause} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -9,10 +10,12 @@ import {useModerationCauseDescription} from '#/lib/moderation/useModerationCause
 import {makeProfileLink} from '#/lib/routes/links'
 import {listUriToHref} from '#/lib/strings/url-helpers'
 import {useSession} from '#/state/session'
-import {atoms as a, useGutters, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useGutters, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
+import {AppealForm} from '#/components/moderation/AppealForm'
 import {type AppModerationCause} from '#/components/Pills'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
@@ -47,6 +50,19 @@ function ModerationDetailsDialogInner({
   const desc = useModerationCauseDescription(modcause)
   const {currentAccount} = useSession()
   const timeDiff = useGetTimeAgo({future: true})
+  const [isAppealing, setIsAppealing] = useState(false)
+  const {gtPhone} = useBreakpoints()
+
+  /*
+   * Appeal eligibility: only for label causes on content belonging to the
+   * current user, where the label was not self-applied.
+   */
+  const canAppeal =
+    modcause?.type === 'label' &&
+    !!currentAccount &&
+    modcause.label.src !== currentAccount.did &&
+    (modcause.label.uri === currentAccount.did ||
+      modcause.label.uri.startsWith(`at://${currentAccount.did}/`))
 
   let name
   let description
@@ -137,6 +153,23 @@ function ModerationDetailsDialogInner({
   const sourceName =
     desc.source || desc.sourceDisplayName || _(msg`an unknown labeler`)
 
+  if (isAppealing && modcause?.type === 'label') {
+    return (
+      <Dialog.ScrollableInner
+        label={_(msg`Appeal label`)}
+        style={web({
+          maxWidth: 460,
+        })}>
+        <AppealForm
+          label={modcause.label}
+          control={control}
+          onPressBack={() => setIsAppealing(false)}
+        />
+        <Dialog.Close />
+      </Dialog.ScrollableInner>
+    )
+  }
+
   return (
     <Dialog.ScrollableInner
       label={_(msg`Moderation details`)}
@@ -156,11 +189,48 @@ function ModerationDetailsDialogInner({
           {description}
         </Text>
 
+        {canAppeal && (
+          <View
+            style={[
+              a.flex_row,
+              a.flex_wrap,
+              a.gap_sm,
+              a.pt_md,
+              a.pb_xs,
+              a.mt_md,
+              a.border_t,
+              t.atoms.border_contrast_low,
+            ]}>
+            <Text
+              style={[
+                a.text_sm,
+                t.atoms.text_contrast_medium,
+                gtPhone ? a.flex_1 : a.w_full,
+              ]}>
+              <Trans>
+                You may appeal these labels if you feel they were placed in
+                error.
+              </Trans>
+            </Text>
+            <Button
+              variant="solid"
+              color="primary_subtle"
+              size="small"
+              label={_(msg`Appeal this label`)}
+              style={[gtPhone ? undefined : a.w_full]}
+              onPress={() => setIsAppealing(true)}>
+              <ButtonText>
+                <Trans>Appeal</Trans>
+              </ButtonText>
+            </Button>
+          </View>
+        )}
+
         {desc.isSubjectAccount && (
           <Admonition type="info" style={[a.mt_md]}>
             <Trans>
-              This moderation was applied to the entire user account and will
-              appear on all posts.
+              This label was applied to the entire user account and will appear
+              on all posts.
             </Trans>
           </Admonition>
         )}
