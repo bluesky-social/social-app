@@ -1,5 +1,4 @@
 import {
-  Children,
   createContext,
   useCallback,
   useContext,
@@ -449,23 +448,23 @@ function opposite(position: 'top' | 'bottom') {
   }
 }
 
-export function BubbleText({children}: {children: React.ReactNode}) {
+export function BubbleText({
+  children,
+  label,
+}: {
+  children: React.ReactNode
+  label: string
+}) {
   const t = useTheme()
   const {color} = useContext(TooltipContext)
   const style = getTooltipStyle(t, color)
-  const c = Children.toArray(children)
   // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
   return (
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string
-    <Content label={c.join(' ')}>
+    <Content label={label}>
       <View style={[a.gap_xs]}>
-        {c.map((child, i) => (
-          <Text
-            key={i}
-            style={[a.text_sm, a.leading_snug, {color: style.text}]}>
-            {child}
-          </Text>
-        ))}
+        <Text style={[a.text_sm, a.leading_snug, {color: style.text}]}>
+          {children}
+        </Text>
       </View>
     </Content>
   )

@@ -27,7 +27,9 @@ export function Tooltips() {
               <ButtonText>Default</ButtonText>
             </Button>
           </Tooltip.Target>
-          <Tooltip.BubbleText>This is a default tooltip.</Tooltip.BubbleText>
+          <Tooltip.BubbleText label="This is a default tooltip.">
+            This is a default tooltip.
+          </Tooltip.BubbleText>
         </Tooltip.Outer>
 
         <Tooltip.Outer
@@ -43,7 +45,9 @@ export function Tooltips() {
               <ButtonText>Primary</ButtonText>
             </Button>
           </Tooltip.Target>
-          <Tooltip.BubbleText>This is primary tooltip.</Tooltip.BubbleText>
+          <Tooltip.BubbleText label="This is a primary tooltip.">
+            This is a primary tooltip.
+          </Tooltip.BubbleText>
         </Tooltip.Outer>
       </View>
     </View>
