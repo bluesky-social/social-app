@@ -4,6 +4,7 @@ import android.content.Context
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.internal.featureflags.ReactNativeFeatureFlags
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewManager
 import com.facebook.react.views.text.ReactTextView
@@ -53,5 +54,15 @@ class WrapWidthTextPackage : ReactPackage {
 
   override fun createViewManagers(
       reactContext: ReactApplicationContext
-  ): List<ViewManager<*, *>> = listOf(WrapWidthTextViewManager())
+  ): List<ViewManager<*, *>> =
+      if (ReactNativeFeatureFlags.enablePreparedTextLayout()) {
+        /*
+         * Prepared text layouts (new architecture) draw the measured layout
+         * directly, which fixes the bug for real. Registering our manager
+         * would replace PreparedLayoutTextViewManager, so step aside.
+         */
+        emptyList()
+      } else {
+        listOf(WrapWidthTextViewManager())
+      }
 }
