@@ -39,16 +39,8 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   const ax = useAnalytics()
 
   const likeCount = post.likeCount ?? 0
-  /*
-   * Check the gate last: GrowthBook logs an exposure per evaluation, so only
-   * evaluate for viewers who could actually see the treatment.
-   */
-  const knownLikersEnabled =
-    hasSession &&
-    likeCount > 0 &&
-    ax.features.enabled(ax.features.PostThreadKnownLikersEnable)
   const {data} = useLikedBySampleQuery({
-    uri: knownLikersEnabled ? post.uri : undefined,
+    uri: hasSession && likeCount > 0 ? post.uri : undefined,
   })
 
   if (likeCount === 0) return null
@@ -56,21 +48,24 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   const urip = new AtUri(post.uri)
   const likesHref = makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
 
-  const knownLikers =
-    knownLikersEnabled && moderationOpts
-      ? (data?.likes ?? [])
-          .map(like => like.actor)
-          .filter(
-            actor =>
-              actor.did !== currentAccount?.did &&
-              actor.viewer?.following &&
-              !actor.viewer.muted &&
-              !actor.viewer.blocking &&
-              !actor.viewer.blockedBy,
-          )
-      : []
+  const knownLikers = moderationOpts
+    ? (data?.likes ?? [])
+        .map(like => like.actor)
+        .filter(
+          actor =>
+            actor.did !== currentAccount?.did &&
+            actor.viewer?.following &&
+            !actor.viewer.muted &&
+            !actor.viewer.blocking &&
+            !actor.viewer.blockedBy,
+        )
+    : []
 
-  if (knownLikers.length === 0) {
+  const showKnownLikers =
+    knownLikers.length > 0 &&
+    ax.features.enabled(ax.features.PostThreadKnownLikersEnable)
+
+  if (!showKnownLikers) {
     return (
       <Link to={likesHref} label={l`Likes on this post`}>
         <Text
