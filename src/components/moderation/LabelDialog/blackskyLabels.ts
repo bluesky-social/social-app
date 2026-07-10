@@ -172,6 +172,68 @@ export function resolveLabelStrings(
   }
 }
 
+// Global atproto system labels offered alongside the labeler's custom defs.
+// Clients handle these vals natively, so they never appear in a labeler's
+// labelValueDefinitions.
+export const GLOBAL_LABEL_DEFS: ComAtprotoLabelDefs.LabelValueDefinition[] = [
+  {
+    identifier: 'porn',
+    severity: 'none',
+    blurs: 'media',
+    defaultSetting: 'hide',
+    adultOnly: true,
+    locales: [
+      {
+        lang: 'en',
+        name: 'Adult Content',
+        description: 'Explicit sexual images.',
+      },
+    ],
+  },
+  {
+    identifier: 'sexual',
+    severity: 'none',
+    blurs: 'media',
+    defaultSetting: 'warn',
+    adultOnly: true,
+    locales: [
+      {
+        lang: 'en',
+        name: 'Sexually Suggestive',
+        description: 'Does not include nudity.',
+      },
+    ],
+  },
+  {
+    identifier: 'nudity',
+    severity: 'none',
+    blurs: 'media',
+    defaultSetting: 'ignore',
+    adultOnly: false,
+    locales: [
+      {
+        lang: 'en',
+        name: 'Non-sexual Nudity',
+        description: 'E.g. artistic nudes.',
+      },
+    ],
+  },
+  {
+    identifier: 'graphic-media',
+    severity: 'none',
+    blurs: 'media',
+    defaultSetting: 'warn',
+    adultOnly: true,
+    locales: [
+      {
+        lang: 'en',
+        name: 'Graphic Media',
+        description: 'Explicit or potentially disturbing media.',
+      },
+    ],
+  },
+]
+
 /**
  * Returns the Blacksky labeler's label-value definitions, preferring the live
  * set fetched from the labeler service and falling back to the hardcoded set.
@@ -184,8 +246,9 @@ export function useBlackskyLabelDefs(): {
     dids: [BLACKSKY_LABELER],
   })
   const live = data?.[0]?.policies?.labelValueDefinitions
+  const custom = live && live.length ? live : BLACKSKY_LABEL_DEFS_FALLBACK
   return {
-    defs: live && live.length ? live : BLACKSKY_LABEL_DEFS_FALLBACK,
+    defs: [...custom, ...GLOBAL_LABEL_DEFS],
     isLoading,
   }
 }
