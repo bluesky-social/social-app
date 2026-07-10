@@ -253,30 +253,6 @@ function Inner(props: ReportDialogProps) {
             state,
           }),
         )
-        if (block) {
-          /*
-           * The report has already been sent at this point, so a block
-           * failure shouldn't put the dialog into an error state - surface
-           * it via toast instead.
-           */
-          try {
-            await block()
-            Toast.show(l({message: 'Account blocked', context: 'toast'}))
-          } catch (err) {
-            const e = err as Error
-            if (e?.name !== 'AbortError') {
-              logger.error('Failed to block account after report', {
-                safeMessage: e.message,
-              })
-              Toast.show(
-                l`Your report was sent, but we couldn't block this account. Please try again from their profile.`,
-                {
-                  type: 'error',
-                },
-              )
-            }
-          }
-        }
         setIsSuccess(true)
         ax.metric('reportDialog:success', {
           reason: state.selectedOption?.reason ?? '',
@@ -287,6 +263,28 @@ function Inner(props: ReportDialogProps) {
         setTimeout(() => {
           props.control.close(() => {
             props.onAfterSubmit?.()
+            /*
+             * Run the block only after the dialog has fully closed: blocking
+             * optimistically removes the subject's posts from feeds, which
+             * would unmount this dialog mid-flight if it ran while open. The
+             * report has already been sent, so a block failure is surfaced
+             * via toast rather than a dialog error state.
+             */
+            if (block) {
+              block().catch((err: Error) => {
+                if (err?.name !== 'AbortError') {
+                  logger.error('Failed to block account after report', {
+                    safeMessage: err.message,
+                  })
+                  Toast.show(
+                    l({message: 'Failed to block account', context: 'toast'}),
+                    {
+                      type: 'error',
+                    },
+                  )
+                }
+              })
+            }
           })
         }, 1e3)
       } catch (err) {
