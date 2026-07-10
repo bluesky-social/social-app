@@ -4,6 +4,7 @@ import {
   countActiveFilters,
   definedFilterParams,
   filtersToApiParams,
+  filtersToRouteParams,
   hasPostOnlyFilters,
   parseHistoryEntry,
   readSearchFilters,
@@ -36,7 +37,7 @@ describe(`searchParams`, () => {
 
     it(`maps a legacy following=true param onto from`, () => {
       expect(readSearchFilters({q: 'cats', following: 'true'})).toEqual({
-        from: 'true',
+        from: 'following',
       })
     })
 
@@ -85,6 +86,36 @@ describe(`searchParams`, () => {
         }),
       ).toEqual({q: 'cats', tab: 'latest', name: 'alice'})
     })
+
+    it(`strips the legacy following key so clearing to Anyone sticks (web)`, () => {
+      /*
+       * A legacy link carries following=true. Clearing the author filter to
+       * Anyone writes no from param, so the stale following key must be
+       * dropped or the next read would revive it as from:true.
+       */
+      const next = {
+        ...withoutFilterParams({q: 'cats', following: 'true'}),
+        ...definedFilterParams({}),
+      }
+      expect(next).toEqual({q: 'cats'})
+      expect(readSearchFilters(next)).toEqual({})
+    })
+  })
+
+  describe(`filtersToRouteParams`, () => {
+    it(`clears the legacy following key so clearing to Anyone sticks (native)`, () => {
+      /*
+       * setParams merges, so the rebuilt params must set the legacy following
+       * key to undefined to clear it from a legacy-linked session.
+       */
+      const merged: Record<string, string | undefined> = {
+        q: 'cats',
+        following: 'true',
+        ...filtersToRouteParams({}),
+      }
+      expect(merged.following).toBeUndefined()
+      expect(merged.from).toBeUndefined()
+    })
   })
 
   describe(`filtersToApiParams`, () => {
@@ -112,7 +143,7 @@ describe(`searchParams`, () => {
       expect(
         filtersToApiParams({
           video: 'true',
-          from: 'true',
+          from: 'following',
           replies: 'only',
         }),
       ).toEqual({

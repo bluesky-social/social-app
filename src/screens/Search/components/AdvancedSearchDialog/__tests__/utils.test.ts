@@ -126,7 +126,7 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
       since: '2024-01-01',
       until: '2024-02-01',
       media: 'true',
-      from: 'true',
+      from: 'following',
       replies: 'only',
     }
 
@@ -169,7 +169,7 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
       ...emptySerializeState,
       following: 'following',
     })
-    expect(out.filters.from).toBe('true')
+    expect(out.filters.from).toBe('following')
   })
 
   it(`leaves the from param unset for anyone`, () => {
@@ -181,7 +181,9 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
   })
 
   it(`parses the from param into the following filter`, () => {
-    expect(parseAdvancedSearch('', {from: 'true'}).following).toBe('following')
+    expect(parseAdvancedSearch('', {from: 'following'}).following).toBe(
+      'following',
+    )
     expect(parseAdvancedSearch('', {}).following).toBe('anyone')
   })
 

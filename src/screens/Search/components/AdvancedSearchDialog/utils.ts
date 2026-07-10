@@ -15,7 +15,7 @@ export type MediaFilter = 'all' | 'media' | 'video'
 
 /**
  * Which authors to limit results to. Serializes into the `from` sibling param:
- * 'following' -> from:true (people you follow), 'you' -> from:me (your own
+ * 'following' -> from=following (people you follow), 'you' -> from=me (your own
  * posts, reconstructed into `from:me` at the v2 API boundary), 'anyone' ->
  * unset.
  */
@@ -269,13 +269,13 @@ export function parseAdvancedSearch(
 
   /*
    * A `from:me` typed into the query box maps to the "You" author filter, same
-   * as the `from=me` param. Either source selects 'you'; the plain `from=true`
+   * as the `from=me` param. Either source selects 'you'; the `from=following`
    * param remains "People you follow".
    */
   let following: FollowingFilter = 'anyone'
   if (fromMe || filters.from === 'me') {
     following = 'you'
-  } else if (filters.from === 'true') {
+  } else if (filters.from === 'following') {
     following = 'following'
   }
 
@@ -383,7 +383,7 @@ export function serializeAdvancedSearch(state: {
    * back into a `from:me` query operator at the v2 API boundary, since the
    * backend resolves `me` to the viewer.
    */
-  if (state.following === 'following') filters.from = 'true'
+  if (state.following === 'following') filters.from = 'following'
   else if (state.following === 'you') filters.from = 'me'
 
   return {q: parts.join(' '), filters}

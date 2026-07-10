@@ -30,8 +30,8 @@ export type SearchFilters = {
   /** 'true' */
   video?: string
   /**
-   * 'true' limits results to people you follow; 'me' limits them to your own
-   * posts (reconstructed into a `from:me` query operator at the v2 API
+   * 'following' limits results to people you follow; 'me' limits them to your
+   * own posts (reconstructed into a `from:me` query operator at the v2 API
    * boundary). v2-only. Serializes to the `from` URL param.
    */
   from?: string
@@ -56,6 +56,14 @@ export const FILTER_PARAM_KEYS = [
   'video',
   'from',
 ] as const
+
+/**
+ * Filter param keys that are no longer written but may still be present in old
+ * URLs/history. `readSearchFilters` maps these onto their current equivalents;
+ * the param-rebuild helpers strip them so a cleared filter can't be resurrected
+ * from a stale legacy key. `following=true` was the old form of `from=following`.
+ */
+export const LEGACY_FILTER_PARAM_KEYS = ['following'] as const
 
 /**
  * Reads filter params out of a route's params object, keeping only non-empty
@@ -83,7 +91,7 @@ export function readSearchFilters(
    */
   if (!filters.from) {
     const legacy = routeParams.following
-    if (legacy === 'true') filters.from = 'true'
+    if (legacy === 'true') filters.from = 'following'
   }
   return filters
 }
@@ -169,6 +177,13 @@ export function filtersToRouteParams(
   for (const key of FILTER_PARAM_KEYS) {
     params[key] = filters[key] || undefined
   }
+  /*
+   * Clear any legacy keys too, so a value the user removed can't be revived
+   * from a stale param on the next read (setParams merges).
+   */
+  for (const key of LEGACY_FILTER_PARAM_KEYS) {
+    params[key] = undefined
+  }
   return params
 }
 
@@ -197,6 +212,9 @@ export function withoutFilterParams(
 ): Record<string, unknown> {
   const base: Record<string, unknown> = {...routeParams}
   for (const key of FILTER_PARAM_KEYS) {
+    delete base[key]
+  }
+  for (const key of LEGACY_FILTER_PARAM_KEYS) {
     delete base[key]
   }
   return base
@@ -262,7 +280,7 @@ export function filtersToApiParams(filters: SearchFilters): {
   if (filters.until) params.until = filters.until
   if (filters.media === 'true') params.hasMedia = true
   if (filters.video === 'true') params.hasVideo = true
-  if (filters.from === 'true') params.following = true
+  if (filters.from === 'following') params.following = true
   if (filters.replies === 'none') params.excludeReplies = true
   else if (filters.replies === 'only') params.repliesOnly = true
   return params
