@@ -45,7 +45,7 @@ module.exports = function (_config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
+      name: IS_DEV ? 'Bluesky (New Arch)' : 'Bluesky', // TODO: revert before merging
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
@@ -196,7 +196,7 @@ module.exports = function (_config) {
           backgroundColor: '#006AFF',
         },
         googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        package: IS_DEV ? 'xyz.blueskyweb.app.newarch' : 'xyz.blueskyweb.app', // TODO: revert before merging
         intentFilters: [
           {
             action: 'VIEW',
