@@ -945,14 +945,6 @@
       "count": 1
     }
   },
-  "src/screens/Hashtag.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 2
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/screens/Home/NoFeedsPinned.tsx": {
     "typescript/no-misused-promises": {
       "count": 1
@@ -1302,14 +1294,6 @@
       "count": 2
     },
     "typescript/require-await": {
-      "count": 1
-    }
-  },
-  "src/screens/Topic.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 2
-    },
-    "typescript/no-misused-promises": {
       "count": 1
     }
   },
