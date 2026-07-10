@@ -403,7 +403,7 @@ function DialogInner({
                 t.atoms.text_contrast_medium,
                 a.mb_sm,
               ]}>
-              <Trans comment="Filter search results by a specific post author">
+              <Trans context="Filter search results by a specific post author">
                 From
               </Trans>
             </Text>
