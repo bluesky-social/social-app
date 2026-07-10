@@ -10,7 +10,7 @@ import {useModerationCauseDescription} from '#/lib/moderation/useModerationCause
 import {makeProfileLink} from '#/lib/routes/links'
 import {listUriToHref} from '#/lib/strings/url-helpers'
 import {useSession} from '#/state/session'
-import {atoms as a, useGutters, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useGutters, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -51,6 +51,7 @@ function ModerationDetailsDialogInner({
   const {currentAccount} = useSession()
   const timeDiff = useGetTimeAgo({future: true})
   const [isAppealing, setIsAppealing] = useState(false)
+  const {gtPhone} = useBreakpoints()
 
   /*
    * Appeal eligibility: only for label causes on content belonging to the
@@ -192,14 +193,20 @@ function ModerationDetailsDialogInner({
           <View
             style={[
               a.flex_row,
-              a.justify_start,
+              a.flex_wrap,
+              a.gap_sm,
               a.pt_md,
               a.pb_xs,
               a.mt_md,
               a.border_t,
               t.atoms.border_contrast_low,
             ]}>
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            <Text
+              style={[
+                a.text_sm,
+                t.atoms.text_contrast_medium,
+                gtPhone ? a.flex_1 : a.w_full,
+              ]}>
               <Trans>
                 You may appeal these labels if you feel they were placed in
                 error.
@@ -210,6 +217,7 @@ function ModerationDetailsDialogInner({
               color="primary_subtle"
               size="small"
               label={_(msg`Appeal this label`)}
+              style={[gtPhone ? undefined : a.w_full]}
               onPress={() => setIsAppealing(true)}>
               <ButtonText>
                 <Trans>Appeal</Trans>
