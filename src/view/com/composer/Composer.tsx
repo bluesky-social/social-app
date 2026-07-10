@@ -22,7 +22,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 // @ts-expect-error no type definition
-import ProgressCircle from 'react-native-progress/Circle'
+import CircularProgress from 'react-native-progress/Circle'
 import Animated, {
   type AnimatedRef,
   Easing,
@@ -98,10 +98,10 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
+import {useCommunityMembership} from '#/state/queries/community-membership'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
-import {useCommunityMembership} from '#/state/queries/community-membership'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
@@ -114,7 +114,6 @@ import {
 } from '#/view/com/composer/ExternalEmbed'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {GifAltTextDialog} from '#/view/com/composer/GifAltText'
-import {CommunityOnlyBadge} from '#/components/CommunityOnlyBadge'
 import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
@@ -131,6 +130,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {CommunityOnlyBadge} from '#/components/CommunityOnlyBadge'
 import * as EmojiPicker from '#/components/EmojiPicker'
 import * as Toggle from '#/components/forms/Toggle'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
@@ -2680,7 +2680,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
   return (
     <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
       <Animated.View style={[animatedStyle]}>
-        <ProgressCircle
+        <CircularProgress
           size={30}
           borderWidth={1}
           borderColor={t.atoms.border_contrast_low.borderColor}

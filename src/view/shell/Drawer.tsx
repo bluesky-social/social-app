@@ -299,7 +299,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   }, [navigation, setDrawerOpen])
 
   const onPressFeedback = useCallback(() => {
-    Linking.openURL(
+    void Linking.openURL(
       FEEDBACK_FORM_URL({
         email: currentAccount?.email,
         handle: currentAccount?.handle,
@@ -308,18 +308,18 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   }, [currentAccount])
 
   const onPressHelp = useCallback(() => {
-    Linking.openURL(HELP_DESK_URL)
+    void Linking.openURL(HELP_DESK_URL)
   }, [])
 
   const onPressDiscuss = useCallback(() => {
     if (brand.web.links.community) {
-      Linking.openURL(brand.web.links.community)
+      void Linking.openURL(brand.web.links.community)
     }
   }, [brand.web.links.community])
 
   const onPressContribute = useCallback(() => {
     if (brand.web.links.contribute) {
-      Linking.openURL(brand.web.links.contribute)
+      void Linking.openURL(brand.web.links.contribute)
     }
   }, [brand.web.links.contribute])
 

@@ -58,6 +58,7 @@ const sessionHooks = {
   },
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call -- package constructor type does not resolve in Linux CI
 const BSKY_OAUTH_CLIENT = new ExpoOAuthClient({
   clientMetadata: {
     client_id: `${OAUTH_BASE_URL}/oauth-client-metadata-native.json`,

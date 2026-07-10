@@ -113,6 +113,7 @@ function InnerApp() {
         // Check for OAuth callback params first (loopback redirects to /)
         if (hasOAuthCallbackParams()) {
           const client = getOAuthClient()
+          /* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- Expo OAuth types do not resolve under the web TS project in Linux CI */
           const result = await client.init()
           if (result?.session) {
             await login(
@@ -128,6 +129,7 @@ function InnerApp() {
             window.history.replaceState(null, '', window.location.pathname)
             return
           }
+          /* eslint-enable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
         }
 
         if (account) {

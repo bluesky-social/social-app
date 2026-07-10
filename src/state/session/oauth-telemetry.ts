@@ -43,7 +43,7 @@ export function truncateOauthMessage(err: unknown): string | undefined {
   } else if (typeof err === 'string') {
     str = err
   } else if (err && typeof err === 'object' && 'message' in err) {
-    str = String((err as {message: unknown}).message)
+    str = String(err.message)
   } else {
     return undefined
   }
@@ -59,7 +59,7 @@ export function categorizeOauthError(
   } else if (typeof err === 'string') {
     str = err
   } else if (err && typeof err === 'object' && 'message' in err) {
-    str = String((err as {message: unknown}).message)
+    str = String(err.message)
   } else {
     str = ''
   }

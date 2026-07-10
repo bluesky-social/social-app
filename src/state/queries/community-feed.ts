@@ -245,7 +245,7 @@ export function useCommunityFeedSlices(
             post: item.post,
             record,
             moderation: moderatePost(item.post, moderationOpts),
-            parentAuthor: item.parentAuthor as any,
+            parentAuthor: item.parentAuthor,
           }
         })
         return {
@@ -269,7 +269,13 @@ export function useCommunityFeedSlices(
         )
         return slice.items.length > 0
       })
-  }, [feedItems, moderationOpts])
+  }, [
+    feedItems,
+    moderationOpts,
+    preferences?.feedViewPrefs.hideQuotePosts,
+    preferences?.feedViewPrefs.hideReplies,
+    preferences?.feedViewPrefs.hideReposts,
+  ])
 }
 
 /**

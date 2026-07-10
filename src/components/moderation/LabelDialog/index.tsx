@@ -97,7 +97,9 @@ function Inner({
       }, 1e3)
     } catch (e) {
       setError(
-        e instanceof Error ? e.message : _(msg`Something went wrong. Try again.`),
+        e instanceof Error
+          ? e.message
+          : _(msg`Something went wrong. Try again.`),
       )
     }
   }, [
@@ -170,7 +172,10 @@ function Inner({
                     }
                     onSelect={() => setSelectedVal(def.identifier)}
                     onRemove={() =>
-                      remove.mutate({subjectUri: subject.uri, val: def.identifier})
+                      remove.mutate({
+                        subjectUri: subject.uri,
+                        val: def.identifier,
+                      })
                     }
                   />
                 )
@@ -234,12 +239,14 @@ function Inner({
                 variant="solid"
                 color="primary"
                 disabled={apply.isPending || isSuccess}
-                onPress={onSubmit}>
+                onPress={() => void onSubmit()}>
                 <ButtonText>
                   <Trans>Label post</Trans>
                 </ButtonText>
                 <ButtonIcon
-                  icon={isSuccess ? Check : apply.isPending ? Loader : PaperPlane}
+                  icon={
+                    isSuccess ? Check : apply.isPending ? Loader : PaperPlane
+                  }
                 />
               </Button>
 
@@ -379,12 +386,17 @@ function LabelCard({
               state === 'appliedByOther' && {opacity: 0.6},
             ]}>
             <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-              <Text style={[a.flex_1, a.text_md, a.font_semi_bold, a.leading_snug]}>
+              <Text
+                style={[a.flex_1, a.text_md, a.font_semi_bold, a.leading_snug]}>
                 {strings.name}
               </Text>
               {(state === 'appliedByMe' || state === 'appliedByOther') && (
                 <Text
-                  style={[a.text_xs, a.font_bold, t.atoms.text_contrast_medium]}>
+                  style={[
+                    a.text_xs,
+                    a.font_bold,
+                    t.atoms.text_contrast_medium,
+                  ]}>
                   {state === 'appliedByMe' ? (
                     <Trans>Applied by you</Trans>
                   ) : (
@@ -395,7 +407,11 @@ function LabelCard({
             </View>
             {!!strings.description && (
               <Text
-                style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+                style={[
+                  a.text_sm,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
                 {strings.description}
               </Text>
             )}

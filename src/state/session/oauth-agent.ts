@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- Expo OAuth types do not resolve in Linux CI */
 import {
   Agent,
   type AtpSessionData,
-  ComAtprotoServerGetSession,
+  type ComAtprotoServerGetSession,
 } from '@atproto/api'
 import {type OAuthSession} from '@atproto/oauth-client'
 

@@ -3,7 +3,8 @@ import {useQuery} from '@tanstack/react-query'
 import {communityXrpc} from '#/lib/api/community'
 import {useAgent, useSession} from '#/state/session'
 
-const GET_MY_PERMISSIONS_METHOD = 'community.blacksky.moderation.getMyPermissions'
+const GET_MY_PERMISSIONS_METHOD =
+  'community.blacksky.moderation.getMyPermissions'
 
 const RQKEY_ROOT = 'peer-mod-permissions'
 export const peerModPermissionsRQKey = (did: string | undefined) => [

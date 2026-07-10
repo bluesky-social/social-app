@@ -24,15 +24,15 @@ import {
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {
+  CommunityOnlyBadge,
+  isCommunityPostUri,
+} from '#/components/CommunityOnlyBadge'
 import {Reply as Bubble} from '#/components/icons/Reply'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import * as Skele from '#/components/Skeleton'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
-import {
-  CommunityOnlyBadge,
-  isCommunityPostUri,
-} from '#/components/CommunityOnlyBadge'
 import {BookmarkButton} from './BookmarkButton'
 import {HideButton} from './HideButton'
 import {
@@ -316,7 +316,13 @@ let PostControls = ({
         {/* Spacer! */}
         <View />
       </View>
-      <View style={[a.flex_row, a.justify_end, a.align_center, secondaryControlSpacingStyles]}>
+      <View
+        style={[
+          a.flex_row,
+          a.justify_end,
+          a.align_center,
+          secondaryControlSpacingStyles,
+        ]}>
         {isCommunityPostUri(post.uri) && <CommunityOnlyBadge />}
         <HideButton
           post={post}

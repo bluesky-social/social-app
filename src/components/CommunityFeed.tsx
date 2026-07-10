@@ -71,7 +71,7 @@ export function CommunityFeed({actor}: {actor: string}) {
           ) : (
             <Text
               style={[a.text_sm, t.atoms.text_contrast_medium]}
-              onPress={() => fetchNextPage()}>
+              onPress={() => void fetchNextPage()}>
               <Trans>Load more</Trans>
             </Text>
           )}

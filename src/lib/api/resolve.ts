@@ -6,6 +6,7 @@ import {
 } from '@atproto/api'
 import {AtUri, jsonToLex} from '@atproto/api'
 
+import {communityXrpc} from '#/lib/api/community'
 import {DM_SERVICE_HEADERS, IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
 import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
@@ -25,7 +26,6 @@ import {
   isShortLink,
   makeRecordUri,
 } from '#/lib/strings/url-helpers'
-import {communityXrpc} from '#/lib/api/community'
 import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
 import {type ChatInvitePreview} from '#/state/queries/join-links'
@@ -104,8 +104,7 @@ function splitPostUrl(url: string): {path: string; collection: string} {
   const stripped = convertBskyAppUrlIfNeeded(url)
   try {
     const u = new URL(stripped, 'http://_')
-    const collection =
-      u.searchParams.get('collection') || 'app.bsky.feed.post'
+    const collection = u.searchParams.get('collection') || 'app.bsky.feed.post'
     return {path: u.pathname, collection}
   } catch {
     const [path] = stripped.split('?')
@@ -113,7 +112,10 @@ function splitPostUrl(url: string): {path: string; collection: string} {
   }
 }
 
-async function getCommunityPost(agent: AtpAgent, uri: string) {
+async function getCommunityPost(
+  agent: AtpAgent,
+  uri: string,
+): Promise<AppBskyFeedDefs.PostView> {
   const urip = new AtUri(uri)
   if (!urip.host.startsWith('did:')) {
     const res = await agent.resolveHandle({handle: urip.host})
@@ -128,7 +130,9 @@ async function getCommunityPost(agent: AtpAgent, uri: string) {
   if (!res.ok) {
     throw new Error(`getCommunityPost ${res.status}`)
   }
-  const data = jsonToLex(await res.json()) as {post?: any}
+  const data = jsonToLex(await res.json()) as {
+    post?: AppBskyFeedDefs.PostView
+  }
   if (!data.post) throw new Error('getCommunityPost: post not found')
   return data.post
 }

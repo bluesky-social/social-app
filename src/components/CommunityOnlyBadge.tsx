@@ -4,11 +4,11 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {Logo as BlackskyLogo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import * as Tooltip from '#/components/Tooltip'
 import {Text} from '#/components/Typography'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
-import {Logo as BlackskyLogo} from '#/view/icons/Logo'
 
 const COMMUNITY_POST_COLLECTION = 'community.blacksky.feed.post'
 

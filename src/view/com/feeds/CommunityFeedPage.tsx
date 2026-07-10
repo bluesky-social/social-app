@@ -6,15 +6,14 @@ import {Trans} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {s} from '#/lib/styles'
-import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {
   type CommunityFeedSlice,
   useCommunityFeedSlices,
   useCommunityTimelineQuery,
 } from '#/state/queries/community-feed'
 import {useSession} from '#/state/session'
-import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
 import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
+import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
 import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List, type ListMethods} from '#/view/com/util/List'
@@ -22,6 +21,7 @@ import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {atoms as a, useTheme} from '#/alf'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 
@@ -180,7 +180,7 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
 
   const onEndReached = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage()
+      void fetchNextPage()
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
@@ -252,7 +252,7 @@ export function CommunityFeedPage({isPageFocused}: {isPageFocused: boolean}) {
           headerOffset={headerOffset}
           contentContainerStyle={{paddingBottom: 100}}
           refreshing={isRefreshing}
-          onRefresh={onRefresh}
+          onRefresh={() => void onRefresh()}
           onScrolledDownChange={setIsScrolledDown}
         />
       </MainScrollProvider>

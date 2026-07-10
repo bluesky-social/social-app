@@ -8,7 +8,7 @@ import {t} from '@lingui/core/macro'
 
 import {type ImageMeta} from '#/state/gallery'
 import * as Toast from '#/components/Toast'
-import {IS_IOS, IS_WEB} from '#/env'
+import {IS_IOS} from '#/env'
 import {VIDEO_MAX_DURATION_MS} from '../constants'
 import {getDataUriSize} from './util'
 

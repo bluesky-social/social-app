@@ -1,11 +1,11 @@
 import {View} from 'react-native'
 
+import {hasKnownBadge} from '#/lib/badges'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {atoms as a, useAlf, type ViewStyleProp} from '#/alf'
 import {useNativeFontScale} from '#/alf/util/dimensions'
-import {BotBadge, BotBadgeButton, isBotAccount} from '#/components/BotBadge'
 import {ActorBadgeButtons, ActorBadges} from '#/components/badges'
-import {hasKnownBadge} from '#/lib/badges'
+import {BotBadge, BotBadgeButton, isBotAccount} from '#/components/BotBadge'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'

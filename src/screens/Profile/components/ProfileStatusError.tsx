@@ -3,13 +3,13 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {
   type ProfileErrorKind,
   type ProfileStatusSource,
   useProfileStatusSource,
 } from '#/state/queries/profile-status'
 import {atoms as a, useTheme} from '#/alf'
+import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'

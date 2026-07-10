@@ -34,6 +34,7 @@ import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useHiddenPosts, useLanguagePrefs} from '#/state/preferences'
+import {useMyPeerModPermissions} from '#/state/queries/peer-mod-permissions'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -45,7 +46,6 @@ import {
   useProfileBlockMutationQueue,
   useProfileMuteMutationQueue,
 } from '#/state/queries/profile'
-import {useMyPeerModPermissions} from '#/state/queries/peer-mod-permissions'
 import {
   InvalidInteractionSettingsError,
   MAX_HIDDEN_REPLIES,

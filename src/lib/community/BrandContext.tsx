@@ -1,6 +1,5 @@
-import React from 'react'
+import {createContext, type PropsWithChildren, useContext} from 'react'
 
-import {DEFAULT_BLUE_HUE} from '#/alf/util/colorGeneration'
 import {generateComputedConfig} from '#/lib/community/configGenerator'
 import {
   type BrandColors,
@@ -8,6 +7,7 @@ import {
   type RawCommunityConfig,
 } from '#/lib/community/types'
 import {DISCOVER_FEED_URI, VIDEO_FEED_URI} from '#/lib/constants'
+import {DEFAULT_BLUE_HUE} from '#/alf/util/colorGeneration'
 
 // Blacksky defaults used as the dev-mode fallback when no brand config is
 // injected by bskyweb (i.e. when running `yarn web` locally).
@@ -180,13 +180,12 @@ if (typeof document !== 'undefined') {
   })
 }
 
-const BrandContext =
-  React.createContext<ComputedBrandConfig>(DEFAULT_BRAND_CONFIG)
+const BrandContext = createContext<ComputedBrandConfig>(DEFAULT_BRAND_CONFIG)
 
 export function BrandProvider({
   children,
   config,
-}: React.PropsWithChildren<{config?: ComputedBrandConfig}>) {
+}: PropsWithChildren<{config?: ComputedBrandConfig}>) {
   return (
     <BrandContext.Provider value={config || DEFAULT_BRAND_CONFIG}>
       {children}
@@ -195,5 +194,5 @@ export function BrandProvider({
 }
 
 export function useBrand(): ComputedBrandConfig {
-  return React.useContext(BrandContext)
+  return useContext(BrandContext)
 }

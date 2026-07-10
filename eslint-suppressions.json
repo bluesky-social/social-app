@@ -168,28 +168,13 @@
     }
   },
   "src/analytics/metrics/client.test.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 8
-    },
     "@typescript-eslint/require-await": {
       "count": 5
     }
   },
   "src/analytics/metrics/client.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 5
-    },
     "@typescript-eslint/no-floating-promises": {
       "count": 2
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
     }
   },
   "src/analytics/utils.ts": {
@@ -891,9 +876,6 @@
     }
   },
   "src/lib/hooks/useOTAUpdates.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    },
     "@typescript-eslint/no-floating-promises": {
       "count": 1
     },
@@ -1139,9 +1121,6 @@
   "src/screens/Login/AuthCallback.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
     }
   },
   "src/screens/Login/ChooseAccountForm.tsx": {
@@ -1173,17 +1152,8 @@
     }
   },
   "src/screens/Login/LoginForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
     "@typescript-eslint/no-misused-promises": {
       "count": 2
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
     }
   },
   "src/screens/Login/SetNewPasswordForm.tsx": {
@@ -1356,11 +1326,6 @@
   "src/screens/Profile/components/ProfileFeedHeader.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 5
-    }
-  },
-  "src/screens/Profile/components/ProfileStatusError.tsx": {
-    "simple-import-sort/imports": {
-      "count": 1
     }
   },
   "src/screens/ProfileList/FeedSection.tsx": {
@@ -1997,11 +1962,6 @@
       "count": 1
     }
   },
-  "src/state/session/oauth-telemetry.ts": {
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 2
-    }
-  },
   "src/state/session/resolveForLogin.ts": {
     "@typescript-eslint/no-unsafe-enum-comparison": {
       "count": 1
@@ -2345,9 +2305,6 @@
   "src/view/com/testing/TestCtrls.e2e.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 9
     }
   },
   "src/view/com/util/EmptyState.tsx": {
@@ -2488,11 +2445,6 @@
       "count": 1
     },
     "@typescript-eslint/no-unsafe-member-access": {
-      "count": 2
-    }
-  },
-  "src/view/shell/Drawer.tsx": {
-    "@typescript-eslint/no-floating-promises": {
       "count": 2
     }
   },

@@ -127,7 +127,9 @@ function useInvalidateLabelState() {
   return useCallback(
     (subjectUri: string) => {
       void queryClient.invalidateQueries({queryKey: myLabelsRQKey(subjectUri)})
-      void queryClient.invalidateQueries({queryKey: postLabelsRQKey(subjectUri)})
+      void queryClient.invalidateQueries({
+        queryKey: postLabelsRQKey(subjectUri),
+      })
       void queryClient.invalidateQueries({
         queryKey: COMMUNITY_POST_RQKEY(subjectUri),
       })

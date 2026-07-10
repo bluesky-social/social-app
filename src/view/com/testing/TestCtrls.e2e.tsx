@@ -68,67 +68,69 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eSignInAlice"
-        onPress={onPressSignInAlice}
+        onPress={() => void onPressSignInAlice()}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eSignInBob"
-        onPress={onPressSignInBob}
+        onPress={() => void onPressSignInBob()}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eSignOut"
-        onPress={() => logoutEveryAccount('Settings')}
+        onPress={() => void logoutEveryAccount('Settings')}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoHome"
-        onPress={() => navigate('Home')}
+        onPress={() => void navigate('Home')}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoSettings"
-        onPress={() => navigate('Settings')}
+        onPress={() => void navigate('Settings')}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoModeration"
-        onPress={() => navigate('Moderation')}
+        onPress={() => void navigate('Moderation')}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoLists"
-        onPress={() => navigate('Lists')}
+        onPress={() => void navigate('Lists')}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoFeeds"
-        onPress={() => navigate('Feeds')}
+        onPress={() => void navigate('Feeds')}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="storybookBtn"
-        onPress={() => navigate('Debug')}
+        onPress={() => void navigate('Debug')}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eGotoIos26CrashRegression"
-        onPress={() => navigate('Ios26CrashRegression')}
+        onPress={() => void navigate('Ios26CrashRegression')}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eRefreshHome"
-        onPress={() => queryClient.invalidateQueries({queryKey: ['post-feed']})}
+        onPress={() =>
+          void queryClient.invalidateQueries({queryKey: ['post-feed']})
+        }
         accessibilityRole="button"
         style={BTN}
       />

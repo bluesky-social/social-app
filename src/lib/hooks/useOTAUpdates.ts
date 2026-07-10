@@ -131,10 +131,10 @@ export function useApplyPullRequestOTAUpdate() {
           `No new deployments of ${channel} are currently available for your current native build.`,
         )
       }
-    } catch (e: any) {
+    } catch (e) {
       setUpdateURLAndRequestHeadersOverride(null)
-      logger.error('PR OTA Update Error', {error: `${e}`})
-      Alert.alert('Error', `Could not apply ${channel}: ${e}`)
+      logger.error('PR OTA Update Error', {error: String(e)})
+      Alert.alert('Error', `Could not apply ${channel}: ${String(e)}`)
     } finally {
       setPending(false)
     }
@@ -145,8 +145,8 @@ export function useApplyPullRequestOTAUpdate() {
       // Clear any PR channel override so we fall back to the baked-in channel.
       setUpdateURLAndRequestHeadersOverride(null)
       await updateTestflight()
-    } catch (e: any) {
-      logger.error('Internal OTA Update Error', {error: `${e}`})
+    } catch (e) {
+      logger.error('Internal OTA Update Error', {error: String(e)})
     }
   }
 
@@ -194,7 +194,7 @@ export function useOTAUpdates() {
   const onIsTestFlight = useCallback(async () => {
     try {
       await updateTestflight()
-    } catch (err: any) {
+    } catch (err) {
       if (!isNetworkError(err)) {
         logger.error('Internal OTA Update Error', {safeMessage: err})
       }

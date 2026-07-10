@@ -63,7 +63,7 @@ export function CommunityFeedSection({
       animated: IS_NATIVE,
       offset: -headerHeight,
     })
-    refetch()
+    void refetch()
   }, [scrollElRef, headerHeight, refetch])
 
   useImperativeHandle(ref, () => ({
@@ -104,7 +104,7 @@ export function CommunityFeedSection({
 
   const onEndReached = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage()
+      void fetchNextPage()
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 

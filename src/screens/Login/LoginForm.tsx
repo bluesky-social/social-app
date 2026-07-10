@@ -54,6 +54,7 @@ export const LoginForm = ({
     try {
       const client = getOAuthClient()
       let session
+      /* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- Expo OAuth types do not resolve in Linux CI */
       try {
         session = await client.signIn(identifier)
       } catch (e) {
@@ -61,6 +62,7 @@ export const LoginForm = ({
         const did = await resolveDeactivatedHandle(identifier)
         session = await client.signIn(did)
       }
+      /* eslint-enable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 
       if (Platform.OS !== 'web' && session) {
         // On native, signIn() returns the session directly after the
@@ -76,8 +78,8 @@ export const LoginForm = ({
         )
       }
       // On web, the browser redirects away and App.web.tsx handles the callback.
-    } catch (e: any) {
-      const errMsg = e.toString()
+    } catch (e) {
+      const errMsg = String(e)
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setIsProcessing(false)
       if (isNetworkError(e)) {

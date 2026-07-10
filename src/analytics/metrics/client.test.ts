@@ -33,16 +33,28 @@ type TestEvents = {
 
 describe('MetricsClient', () => {
   let fetchMock: jest.Mock
-  let fetchRequests: {body: any}[]
+  type PostHogBody = {
+    api_key: string
+    batch: Array<{
+      event: string
+      distinct_id: string
+      properties: Record<string, unknown>
+    }>
+  }
+  let fetchRequests: {body: PostHogBody}[]
 
   beforeEach(() => {
     jest.useFakeTimers({advanceTimers: true})
     fetchRequests = []
-    fetchMock = jest.fn().mockImplementation(async (_url, options) => {
-      const body = JSON.parse(options.body)
-      fetchRequests.push({body})
-      return {ok: true, status: 200}
-    })
+    fetchMock = jest
+      .fn()
+      .mockImplementation(async (_url, options: RequestInit) => {
+        const body = JSON.parse(
+          typeof options.body === 'string' ? options.body : '',
+        ) as PostHogBody
+        fetchRequests.push({body})
+        return {ok: true, status: 200}
+      })
     global.fetch = fetchMock
   })
 
@@ -94,9 +106,11 @@ describe('MetricsClient', () => {
   it('retries failed events once on 500 response', async () => {
     let requestCount = 0
 
-    fetchMock.mockImplementation(async (_url, options) => {
+    fetchMock.mockImplementation(async (_url, options: RequestInit) => {
       requestCount++
-      const body = JSON.parse(options.body)
+      const body = JSON.parse(
+        typeof options.body === 'string' ? options.body : '',
+      ) as PostHogBody
 
       if (requestCount === 1) {
         // First request fails with 500 - "Failed to fetch" triggers isNetworkError

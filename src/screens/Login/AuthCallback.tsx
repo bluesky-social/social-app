@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- Expo OAuth types do not resolve in Linux CI */
 import {useEffect} from 'react'
-import {useNavigation} from '@react-navigation/native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
@@ -32,8 +32,10 @@ export function AuthCallback() {
           )
         }
         navigation.replace('Home')
-      } catch (e: any) {
-        logger.error('OAuth callback failed', {error: e.message})
+      } catch (e) {
+        logger.error('OAuth callback failed', {
+          error: e instanceof Error ? e.message : String(e),
+        })
         Toast.show(_(msg`Sign-in failed. Please try again.`), {type: 'error'})
         navigation.replace('Home')
       }

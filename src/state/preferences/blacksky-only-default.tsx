@@ -25,7 +25,7 @@ export function Provider({children}: {children: React.ReactNode}) {
 
   const setStateWrapped = useCallback((v: boolean) => {
     setState(v)
-    persisted.write('blackskyOnlyDefault', v)
+    void persisted.write('blackskyOnlyDefault', v)
   }, [])
 
   useEffect(() => {

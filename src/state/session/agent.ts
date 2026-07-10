@@ -164,62 +164,59 @@ export async function createAgentAndCreateAccount(
   // Not awaited so that we can still get into onboarding.
   // This is OK because we won't let you toggle adult stuff until you set the date.
   if (IS_PROD_SERVICE(service)) {
-    void Promise.allSettled(
-      [
-        networkRetry(3, () => {
-          return agent.setPersonalDetails({
-            birthDate: birthdate,
-          })
-        }).catch(e => {
-          logger.info(`createAgentAndCreateAccount: failed to set birthDate`)
-          throw e
-        }),
-        networkRetry(3, () => {
-          return agent.upsertProfile(prev => {
-            const next: Un$Typed<AppBskyActorProfile.Record> = prev || {}
-            next.displayName = handle
-            next.createdAt = createdAt
-            return next
-          })
-        }).catch(e => {
-          logger.info(
-            `createAgentAndCreateAccount: failed to set initial profile`,
-          )
-          throw e
-        }),
-        networkRetry(1, () => {
-          const pinnedFeeds = DEFAULT_BRAND_CONFIG.feeds.defaultPinned.map(
-            f => ({
-              ...f,
-              id: TID.nextStr(),
+    void Promise.allSettled([
+      networkRetry(3, () => {
+        return agent.setPersonalDetails({
+          birthDate: birthdate,
+        })
+      }).catch(e => {
+        logger.info(`createAgentAndCreateAccount: failed to set birthDate`)
+        throw e
+      }),
+      networkRetry(3, () => {
+        return agent.upsertProfile(prev => {
+          const next: Un$Typed<AppBskyActorProfile.Record> = prev || {}
+          next.displayName = handle
+          next.createdAt = createdAt
+          return next
+        })
+      }).catch(e => {
+        logger.info(
+          `createAgentAndCreateAccount: failed to set initial profile`,
+        )
+        throw e
+      }),
+      networkRetry(1, () => {
+        const pinnedFeeds = DEFAULT_BRAND_CONFIG.feeds.defaultPinned.map(f => ({
+          ...f,
+          id: TID.nextStr(),
+        }))
+        return agent.overwriteSavedFeeds(pinnedFeeds)
+      }).catch(e => {
+        logger.info(`createAgentAndCreateAccount: failed to set initial feeds`)
+        throw e
+      }),
+      ...(getAge(birthDate) < 18
+        ? [
+            networkRetry(3, () => {
+              return agent.com.atproto.repo.putRecord({
+                repo: account.did,
+                collection: 'chat.bsky.actor.declaration',
+                rkey: 'self',
+                record: {
+                  $type: 'chat.bsky.actor.declaration',
+                  allowIncoming: 'none',
+                },
+              })
+            }).catch(e => {
+              logger.info(
+                `createAgentAndCreateAccount: failed to set chat declaration`,
+              )
+              throw e
             }),
-          )
-          return agent.overwriteSavedFeeds(pinnedFeeds)
-        }).catch(e => {
-          logger.info(
-            `createAgentAndCreateAccount: failed to set initial feeds`,
-          )
-          throw e
-        }),
-        getAge(birthDate) < 18 &&
-          networkRetry(3, () => {
-            return agent.com.atproto.repo.putRecord({
-              repo: account.did,
-              collection: 'chat.bsky.actor.declaration',
-              rkey: 'self',
-              record: {
-                $type: 'chat.bsky.actor.declaration',
-                allowIncoming: 'none',
-              },
-            })
-          }).catch(e => {
-            logger.info(
-              `createAgentAndCreateAccount: failed to set chat declaration`,
-            )
-            throw e
-          }),
-      ].filter(Boolean),
-    ).then(promises => {
+          ]
+        : []),
+    ]).then(promises => {
       const rejected = promises.filter(p => p.status === 'rejected')
       if (rejected.length > 0) {
         logger.error(

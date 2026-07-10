@@ -3,12 +3,12 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
 import * as env from '#/env'
 
-type Event<M extends Record<string, any>> = {
+type Event<M extends Record<string, Record<string, unknown>>> = {
   source: 'app'
   time: number
   event: keyof M
   payload: M[keyof M]
-  metadata: Record<string, any>
+  metadata: Record<string, unknown>
 }
 
 const TRACKING_ENDPOINT = env.POSTHOG_HOST + '/batch/'
@@ -22,10 +22,20 @@ const logger = Logger.create(Logger.Context.Metric, {})
  * hoisting the `base` metadata (deviceId, sessionId, platform, appVersion, ...)
  * to the top level so it is queryable in PostHog.
  */
-function toPostHogEvent<M extends Record<string, any>>(e: Event<M>) {
+function toPostHogEvent<M extends Record<string, Record<string, unknown>>>(
+  e: Event<M>,
+) {
   const metadata = e.metadata ?? {}
-  const base = (metadata.base ?? {}) as Record<string, any>
-  const distinctId = base.deviceId || base.sessionId || 'unknown'
+  const base =
+    typeof metadata.base === 'object' && metadata.base !== null
+      ? (metadata.base as Record<string, unknown>)
+      : {}
+  const distinctId =
+    typeof base.deviceId === 'string'
+      ? base.deviceId
+      : typeof base.sessionId === 'string'
+        ? base.sessionId
+        : 'unknown'
   return {
     event: e.event as string,
     distinct_id: distinctId,
@@ -40,7 +50,7 @@ function toPostHogEvent<M extends Record<string, any>>(e: Event<M>) {
   }
 }
 
-export class MetricsClient<M extends Record<string, any>> {
+export class MetricsClient<M extends Record<string, Record<string, unknown>>> {
   maxBatchSize = 100
 
   private started: boolean = false
@@ -66,7 +76,7 @@ export class MetricsClient<M extends Record<string, any>> {
   track<E extends keyof M>(
     event: E,
     payload: M[E],
-    metadata: Record<string, any> = {},
+    metadata: Record<string, unknown> = {},
   ) {
     this.start()
 
@@ -128,14 +138,14 @@ export class MetricsClient<M extends Record<string, any>> {
           throw new Error(`${res.status} Failed to fetch — ${error}`)
         }
       }
-    } catch (e: any) {
+    } catch (e) {
       if (isNetworkError(e)) {
         if (isRetry) return // retry once
         this.failedQueue.push(...events)
         return
       }
       logger.error(`Failed to send metrics`, {
-        safeMessage: e.toString(),
+        safeMessage: String(e),
       })
     }
   }

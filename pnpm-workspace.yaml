@@ -20,6 +20,10 @@ overrides:
   # at runtime. 3.23.8 is the last pre-dual build. Once we move off webpack
   # this can come back to ^3.25.
   'zod': '3.23.8'
+  # eslint-plugin-react-hooks 7 imports the zod/v4 compatibility entrypoint,
+  # which was added in zod 3.25. Keep app dependencies on the webpack-safe
+  # version above while giving the build-time lint plugin a compatible copy.
+  'eslint-plugin-react-hooks>zod': '^3.25.76'
 allowBuilds:
   '@sentry/cli': true
   'core-js': true

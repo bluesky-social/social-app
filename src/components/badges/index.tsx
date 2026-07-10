@@ -104,13 +104,13 @@ export function ActorBadgeButtons({
 }
 
 function BadgeButton({slug, width}: {slug: string; width: number}) {
-  const {_} = useLingui()
+  const {i18n} = useLingui()
   const control = Dialog.useDialogControl()
   const {label, Card} = BADGE_REGISTRY[slug]
   return (
     <>
       <Button
-        label={_(label)}
+        label={i18n._(label)}
         hitSlop={20}
         onPress={evt => {
           evt.preventDefault()
@@ -145,19 +145,19 @@ function BadgeDialog({
   slug: string
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {i18n} = useLingui()
   const {label, description, Card} = BADGE_REGISTRY[slug]
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner label={_(label)}>
+      <Dialog.ScrollableInner label={i18n._(label)}>
         <View style={[a.gap_md]}>
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
             <Card width={36} />
-            <Text style={[a.text_xl, a.font_bold]}>{_(label)}</Text>
+            <Text style={[a.text_xl, a.font_bold]}>{i18n._(label)}</Text>
           </View>
           <Text style={[t.atoms.text_contrast_high, a.text_md, a.leading_snug]}>
-            {_(description)}
+            {i18n._(description)}
           </Text>
         </View>
       </Dialog.ScrollableInner>

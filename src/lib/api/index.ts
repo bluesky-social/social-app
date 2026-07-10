@@ -344,7 +344,7 @@ async function postCommunity(
     if (thread.postgate.embeddingRules?.length) {
       submitBody.embeddingRules = thread.postgate.embeddingRules.map(rule => ({
         ...rule,
-        $type: (rule.$type as string).replace(
+        $type: rule.$type.replace(
           'app.bsky.feed.postgate',
           'community.blacksky.feed.postgate',
         ),
