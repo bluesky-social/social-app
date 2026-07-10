@@ -233,8 +233,14 @@ export function HeaderStandardButtons({
   const editProfileControl = useDialogControl()
   const inviteFriendsControl = useDialogControl()
   const unblockPromptControl = Prompt.usePromptControl()
+  const unUnfollowPromptControl = Prompt.usePromptControl()
 
   const isMe = currentAccount?.did === profile.did
+
+  const displayName = sanitizeDisplayName(
+    profile.displayName || profile.handle,
+    moderation.ui('displayName'),
+  )
 
   const onPressFollow = () => {
     playHaptic()
@@ -263,6 +269,10 @@ export function HeaderStandardButtons({
   }
 
   const onPressUnfollow = () => {
+    unUnfollowPromptControl.open()
+  }
+
+  const onConfirmUnfollow = () => {
     playHaptic()
     requireAuth(async () => {
       try {
@@ -426,6 +436,14 @@ export function HeaderStandardButtons({
         }}
         confirmButtonCta={_(msg`Unblock`)}
         confirmButtonColor="negative"
+      />
+      <Prompt.Basic
+        control={unUnfollowPromptControl}
+        title={_(msg`Unfollow?`)}
+        description={_(msg`Are you sure you want to unfollow ${displayName}?`)}
+        onConfirm={onConfirmUnfollow}
+        confirmButtonCta={_(msg`Unfollow?`)}
+        cancelButtonCta={_(msg`Cancel`)}
       />
     </>
   )

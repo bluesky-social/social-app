@@ -41,6 +41,7 @@ import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Pills from '#/components/Pills'
 import {ProfileBadges} from '#/components/ProfileBadges'
+import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -481,6 +482,7 @@ export function FollowButtonInner({
   const {t: l} = useLingui()
   const profile = useProfileShadow(profileUnshadowed)
   const moderation = moderateProfile(profile, moderationOpts)
+  const unUnfollowPromptControl = Prompt.usePromptControl()
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
     logContext,
@@ -488,18 +490,17 @@ export function FollowButtonInner({
     contextProfileDid,
   )
   const isRound = Boolean(rest.shape && rest.shape === 'round')
+  const displayName = sanitizeDisplayName(
+    profile.displayName || profile.handle,
+    moderation.ui('displayName'),
+  )
 
   const onPressFollow = async (e: GestureResponderEvent) => {
     e.preventDefault()
     e.stopPropagation()
     try {
       await queueFollow()
-      Toast.show(
-        l`Following ${sanitizeDisplayName(
-          profile.displayName || profile.handle,
-          moderation.ui('displayName'),
-        )}`,
-      )
+      Toast.show(l`Following ${displayName}`)
       onPressProp?.(e)
       onFollow?.()
     } catch (e) {
@@ -512,17 +513,18 @@ export function FollowButtonInner({
     }
   }
 
-  const onPressUnfollow = async (e: GestureResponderEvent) => {
+  const onPressUnfollow = (e: GestureResponderEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    unUnfollowPromptControl.open()
+  }
+
+  const onConfirmUnfollow = async (e: GestureResponderEvent) => {
     e.preventDefault()
     e.stopPropagation()
     try {
       await queueUnfollow()
-      Toast.show(
-        l`No longer following ${sanitizeDisplayName(
-          profile.displayName || profile.handle,
-          moderation.ui('displayName'),
-        )}`,
-      )
+      Toast.show(l`No longer following ${displayName}`)
       onPressProp?.(e)
     } catch (e) {
       const err = e as Error
@@ -557,39 +559,50 @@ export function FollowButtonInner({
     return null
 
   return (
-    <View>
-      {profile.viewer.following ? (
-        <Button
-          label={unfollowLabel}
-          size="small"
-          variant="solid"
-          color="secondary"
-          {...rest}
-          onPress={(e: GestureResponderEvent) => {
-            void onPressUnfollow(e)
-          }}>
-          {withIcon && (
-            <ButtonIcon icon={Check} position={isRound ? undefined : 'left'} />
-          )}
-          {isRound ? null : <ButtonText>{unfollowLabel}</ButtonText>}
-        </Button>
-      ) : (
-        <Button
-          label={followLabel}
-          size="small"
-          variant="solid"
-          color={colorInverted ? 'secondary_inverted' : 'primary'}
-          {...rest}
-          onPress={(e: GestureResponderEvent) => {
-            void onPressFollow(e)
-          }}>
-          {withIcon && (
-            <ButtonIcon icon={Plus} position={isRound ? undefined : 'left'} />
-          )}
-          {isRound ? null : <ButtonText>{followLabel}</ButtonText>}
-        </Button>
-      )}
-    </View>
+    <>
+      <View>
+        {profile.viewer.following ? (
+          <Button
+            label={unfollowLabel}
+            size="small"
+            variant="solid"
+            color="secondary"
+            {...rest}
+            onPress={onPressUnfollow}>
+            {withIcon && (
+              <ButtonIcon
+                icon={Check}
+                position={isRound ? undefined : 'left'}
+              />
+            )}
+            {isRound ? null : <ButtonText>{unfollowLabel}</ButtonText>}
+          </Button>
+        ) : (
+          <Button
+            label={followLabel}
+            size="small"
+            variant="solid"
+            color={colorInverted ? 'secondary_inverted' : 'primary'}
+            {...rest}
+            onPress={(e: GestureResponderEvent) => {
+              void onPressFollow(e)
+            }}>
+            {withIcon && (
+              <ButtonIcon icon={Plus} position={isRound ? undefined : 'left'} />
+            )}
+            {isRound ? null : <ButtonText>{followLabel}</ButtonText>}
+          </Button>
+        )}
+      </View>
+      <Prompt.Basic
+        control={unUnfollowPromptControl}
+        title={l`Unfollow?`}
+        description={l`Are you sure you want to unfollow ${displayName}?`}
+        onConfirm={e => void onConfirmUnfollow(e)}
+        confirmButtonCta={l`Unfollow`}
+        cancelButtonCta={l`Cancel`}
+      />
+    </>
   )
 }
 
