@@ -390,7 +390,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               <PostAlerts
                 post={post}
                 modui={moderation.ui('contentView')}
-                size="lg"
+                view="expanded"
                 includeMute
                 style={[a.pb_sm]}
                 additionalCauses={additionalPostAlerts}

@@ -24,31 +24,38 @@ import * as Pills from '#/components/Pills'
 export function PostAlerts({
   post,
   modui,
-  size = 'sm',
+  view = 'compact',
   style,
   additionalCauses,
 }: {
   post?: AppBskyFeedDefs.PostView
   modui: ModerationUI
-  size?: Pills.CommonProps['size']
+  /**
+   * Expanded views (e.g. the thread anchor post) render larger pills and
+   * surface the "+n" additional labels pill. Compact views (feeds, replies)
+   * keep the alerts minimal.
+   */
+  view?: 'expanded' | 'compact'
   includeMute?: boolean
   style?: StyleProp<ViewStyle>
   additionalCauses?: ModerationCause[] | Pills.AppModerationCause[]
 }) {
   const {currentAccount} = useSession()
+  const size: Pills.CommonProps['size'] = view === 'expanded' ? 'lg' : 'sm'
 
   const alerts = modui.alerts.filter(unique)
   const informs = modui.informs.filter(unique)
   /*
    * The "+n" pill surfaces labels for the author to review and appeal, so it
-   * only applies when the viewer is the author. It renders even when no other
-   * moderation is visible, since it may be the author's only entry point to
-   * appeal labels on their content.
+   * only applies when the viewer is the author, and only in expanded views.
+   * It renders even when no other moderation is visible, since it may be the
+   * author's only entry point to appeal labels on their content.
    */
   const isOwnPost = !!post && post.author.did === currentAccount?.did
-  const allLabels: ComAtprotoLabelDefs.Label[] = isOwnPost
-    ? [...(post.labels ?? []), ...(post.author.labels ?? [])]
-    : []
+  const allLabels: ComAtprotoLabelDefs.Label[] =
+    isOwnPost && view === 'expanded'
+      ? [...(post.labels ?? []), ...(post.author.labels ?? [])]
+      : []
   /*
    * Labels that the moderation system already surfaces in this context -
    * whether as an alert, an inform, or a blur handled by ContentHider - should

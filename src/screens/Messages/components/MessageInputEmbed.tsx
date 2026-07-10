@@ -243,7 +243,6 @@ function MessageInputPostEmbed({
               post={post}
               modui={moderation.ui('contentView')}
               style={a.py_xs}
-              size="sm"
             />
             {rt.text && (
               <RichText
