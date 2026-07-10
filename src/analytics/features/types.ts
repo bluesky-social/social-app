@@ -12,10 +12,7 @@ export enum Features {
   GroupChatsDisable = 'group_chats:disable',
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
-  NotificationsExpandedProfileCardEnable = 'notifications:expanded_profile_card:enable',
   PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
-  SearchV2Enable = 'search_v2:enable',
-  AdvancedSearchV2Enable = 'advanced_search_v2:enable',
 
   AATest = 'aa-test',
 }

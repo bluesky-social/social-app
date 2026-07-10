@@ -671,9 +671,6 @@
     }
   },
   "src/components/forms/TextField.tsx": {
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
-    },
     "react-hooks/refs": {
       "count": 1
     }
@@ -987,11 +984,6 @@
       "count": 1
     }
   },
-  "src/lib/merge-refs.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/lib/notifications/notifications.ts": {
     "@typescript-eslint/no-floating-promises": {
       "count": 5
@@ -1095,14 +1087,6 @@
       "count": 1
     }
   },
-  "src/screens/Hashtag.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/screens/Home/NoFeedsPinned.tsx": {
     "@typescript-eslint/no-misused-promises": {
       "count": 1
@@ -1121,69 +1105,7 @@
       "count": 2
     }
   },
-  "src/screens/Login/ChooseAccountForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/screens/Login/ForgotPasswordForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
-  "src/screens/Login/LoginForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 3
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 4
-    },
-    "react-hooks/refs": {
-      "count": 1
-    }
-  },
-  "src/screens/Login/SetNewPasswordForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-misused-promises": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
   "src/screens/Login/index.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    },
-    "react-hooks/purity": {
-      "count": 1
-    },
     "react-hooks/refs": {
       "count": 1
     },
@@ -1492,11 +1414,6 @@
       "count": 1
     }
   },
-  "src/screens/Signup/StepHandle/index.tsx": {
-    "@typescript-eslint/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/screens/Signup/StepInfo/Policies.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -1561,14 +1478,6 @@
       "count": 2
     },
     "@typescript-eslint/require-await": {
-      "count": 1
-    }
-  },
-  "src/screens/Topic.tsx": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 2
-    },
-    "@typescript-eslint/no-misused-promises": {
       "count": 1
     }
   },

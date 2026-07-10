@@ -14,7 +14,7 @@ const emptySerializeState = {
   language: '',
   replies: 'all' as const,
   media: 'all' as const,
-  following: 'everyone' as const,
+  following: 'anyone' as const,
   dateSince: '',
   dateSinceActive: false,
   dateUntil: '',
@@ -71,6 +71,12 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
     expect(findRow('tags')).toBe('atproto')
     expect(state.since).toBe('2024-01-01')
     expect(state.until).toBe('2024-02-01')
+  })
+
+  it(`keeps from:me in the query box rather than lifting it into a row`, () => {
+    const state = parseAdvancedSearch('from:me', {})
+    expect(state.query).toBe('from:me')
+    expect(state.filters.find(f => f.field === 'authors')).toBeUndefined()
   })
 
   it(`merges a query-box operator with the matching filter param`, () => {
@@ -139,10 +145,10 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
     expect(out.filters.following).toBe('true')
   })
 
-  it(`leaves the following param unset for everyone`, () => {
+  it(`leaves the following param unset for anyone`, () => {
     const out = serializeAdvancedSearch({
       ...emptySerializeState,
-      following: 'everyone',
+      following: 'anyone',
     })
     expect(out.filters.following).toBeUndefined()
   })
@@ -151,7 +157,7 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
     expect(parseAdvancedSearch('', {following: 'true'}).following).toBe(
       'following',
     )
-    expect(parseAdvancedSearch('', {}).following).toBe('everyone')
+    expect(parseAdvancedSearch('', {}).following).toBe('anyone')
   })
 
   it(`strips redundant markers from filter values on serialize`, () => {
@@ -171,7 +177,7 @@ describe(`AdvancedSearchDialog serialize/parse`, () => {
       language: '',
       replies: 'all',
       media: 'all',
-      following: 'everyone',
+      following: 'anyone',
       dateSince: '',
       dateSinceActive: false,
       dateUntil: '',

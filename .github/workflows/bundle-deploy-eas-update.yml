@@ -31,7 +31,9 @@ jobs:
       group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-deploy
       cancel-in-progress: true
     outputs:
-      changes-detected: ${{ steps.fingerprint.outputs.includes-changes }}
+      # A version bump forces a native build even if the fingerprint is unchanged
+      changes-detected: ${{ steps.fingerprint.outputs.includes-changes ||
+        steps.version.outputs.version-changed }}
 
     steps:
       - name: Check for EXPO_TOKEN
@@ -60,6 +62,27 @@ jobs:
         if: ${{ github.ref != 'refs/heads/main' }}
         run: git fetch origin main:main --depth 100
 
+      # A change to the version in package.json means a new native release, so
+      # an OTA update must not be deployed and full native builds are required
+      # regardless of what the fingerprint says
+      - name: 🔢 Check for version change
+        id: version
+        if: ${{ github.event_name == 'push' }}
+        env:
+          EVENT_BEFORE: ${{ github.event.before }}
+        run: |
+          CURRENT_VERSION=$(jq -r '.version' package.json)
+          if [ -n "$EVENT_BEFORE" ] && [[ ! "$EVENT_BEFORE" =~ ^0+$ ]] && git cat-file -e "$EVENT_BEFORE:package.json" 2>/dev/null; then
+            PREVIOUS_VERSION=$(git show "$EVENT_BEFORE:package.json" | jq -r '.version')
+          else
+            PREVIOUS_VERSION=$(git show HEAD~1:package.json | jq -r '.version')
+          fi
+          echo "Previous version: $PREVIOUS_VERSION, current version: $CURRENT_VERSION"
+          if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
+            echo "Version changed, full native builds are required"
+            echo "version-changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
 
       - name: 🔧 Setup Node
@@ -70,7 +93,7 @@ jobs:
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@b5556913e4aef3964cfd5936d0add3fc0d809bdb # v0.1.0
+        uses: bluesky-social/github-actions/fingerprint-native@b5556913e4aef3964cfd5936d0add3fc0d809bdb # v0.2.0
         with:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}
@@ -93,15 +116,17 @@ jobs:
 
       - name: 🔨 Setup EAS
         uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
-        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed }}
         with:
           eas-version: '19.0.5'
           packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 🪛 Setup jq
-        if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed }}
+        uses: dcarbone/install-jq-action@4fcb5062d7ce9bc4382d1a352d19ba3ba2c317c1 # v4.0.1
 
       # eas.json not used here, set EXPO_PUBLIC_ENV
       - name: Env
@@ -109,7 +134,8 @@ jobs:
           CHANNEL: ${{ inputs.channel || 'testflight' }}
           GITHUB_SHA: ${{ github.sha }}
         id: env
-        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed }}
         run: |
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
@@ -125,7 +151,8 @@ jobs:
           echo "$json" > google-services.json
 
       - name: 🏗️ Create Bundle
-        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed }}
         run: >
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
@@ -133,7 +160,8 @@ jobs:
           pnpm export
 
       - name: 📦 Package Bundle and 🚀 Deploy
-        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed }}
         run: pnpm use-build-number bash scripts/bundleUpdate.sh
         env:
           DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}
@@ -142,14 +170,16 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed }}
         with:
           path: most-recent-testflight-commit.txt
           key: most-recent-testflight-commit
 
       - name: ✏️ Write commit hash to cache
-        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed }}
         run: echo $GITHUB_SHA > most-recent-testflight-commit.txt
 
   # GitHub actions are horrible so let's just copy paste this in
@@ -212,7 +242,7 @@ jobs:
           fi
 
       - name: 💾 Cache Pods
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         id: pods-cache
         with:
           path: ./ios/Pods
@@ -295,7 +325,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         if: ${{ inputs.channel == 'testflight' }}
         with:
           path: most-recent-testflight-commit.txt
@@ -348,7 +378,7 @@ jobs:
           packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - uses: actions/setup-java@ad2b38190b15e4d6bdf0c97fb4fca8412226d287 # v5.3.0
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
         with:
           distribution: "temurin"
           java-version: "17"
@@ -443,7 +473,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         if: ${{ inputs.channel != 'testflight' && inputs.channel != 'production' }}
         with:
           path: most-recent-testflight-commit.txt
