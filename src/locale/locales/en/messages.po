@@ -119,7 +119,7 @@ msgstr ""
 #. placeholder {0}: numUnreadNotifications ?? 0
 #: src/view/shell/bottom-bar/BottomBar.tsx:240
 #: src/view/shell/bottom-bar/BottomBar.tsx:272
-#: src/view/shell/Drawer.tsx:618
+#: src/view/shell/Drawer.tsx:616
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -143,14 +143,14 @@ msgstr ""
 #. placeholder {0}: profile.followersCount || 0
 #. placeholder {0}: profile?.followersCount || 0
 #: src/components/ProfileHoverCard/index.web.tsx:444
-#: src/view/shell/Drawer.tsx:162
+#: src/view/shell/Drawer.tsx:161
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr ""
 
 #. placeholder {0}: profile.followsCount || 0
 #. placeholder {0}: profile?.followsCount || 0
 #: src/components/ProfileHoverCard/index.web.tsx:448
-#: src/view/shell/Drawer.tsx:173
+#: src/view/shell/Drawer.tsx:171
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
 
@@ -1996,7 +1996,7 @@ msgstr ""
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:465
+#: src/view/shell/Drawer.tsx:463
 msgid "Begin Discussion"
 msgstr "Begin Discussion"
 
@@ -2463,7 +2463,7 @@ msgstr ""
 #: src/Navigation.tsx:518
 #: src/view/shell/bottom-bar/BottomBar.tsx:237
 #: src/view/shell/desktop/LeftNav.tsx:706
-#: src/view/shell/Drawer.tsx:586
+#: src/view/shell/Drawer.tsx:584
 msgid "Chat"
 msgstr ""
 
@@ -3791,7 +3791,7 @@ msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:119
 #: src/view/shell/desktop/RightNav.tsx:120
-#: src/view/shell/Drawer.tsx:472
+#: src/view/shell/Drawer.tsx:470
 msgid "Discussion"
 msgstr "Discussion"
 
@@ -4273,7 +4273,7 @@ msgstr ""
 
 #: src/screens/Profile/Sections/CommunityFeed.tsx:156
 #: src/screens/Profile/Sections/Feed.tsx:131
-#: src/view/com/feeds/CommunityFeedPage.tsx:229
+#: src/view/com/feeds/CommunityFeedPage.tsx:231
 msgid "End of feed"
 msgstr ""
 
@@ -4497,7 +4497,7 @@ msgstr ""
 #: src/Navigation.tsx:778
 #: src/screens/Search/Shell.tsx:362
 #: src/view/shell/desktop/LeftNav.tsx:685
-#: src/view/shell/Drawer.tsx:534
+#: src/view/shell/Drawer.tsx:532
 msgid "Explore"
 msgstr ""
 
@@ -4671,7 +4671,7 @@ msgstr "Failed to leave group chat"
 
 #: src/components/CommunityFeed.tsx:39
 #: src/screens/Profile/Sections/CommunityFeed.tsx:123
-#: src/view/com/feeds/CommunityFeedPage.tsx:197
+#: src/view/com/feeds/CommunityFeedPage.tsx:199
 msgid "Failed to load community posts"
 msgstr "Failed to load community posts"
 
@@ -4892,7 +4892,7 @@ msgstr ""
 msgid "Feed unavailable"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:460
+#: src/view/shell/Drawer.tsx:458
 msgid "Feedback"
 msgstr ""
 
@@ -4910,7 +4910,7 @@ msgstr ""
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:269
 #: src/view/shell/desktop/LeftNav.tsx:718
-#: src/view/shell/Drawer.tsx:650
+#: src/view/shell/Drawer.tsx:648
 msgid "Feeds"
 msgstr ""
 
@@ -5311,7 +5311,7 @@ msgstr ""
 msgid "Germ DM reconnected"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:477
+#: src/view/shell/Drawer.tsx:475
 msgid "Get help"
 msgstr ""
 
@@ -5680,7 +5680,7 @@ msgstr "Held by Blacksky for 7 days to prevent abuse, then deleted"
 #: src/screens/Settings/Settings.tsx:253
 #: src/view/shell/desktop/RightNav.tsx:140
 #: src/view/shell/desktop/RightNav.tsx:143
-#: src/view/shell/Drawer.tsx:486
+#: src/view/shell/Drawer.tsx:484
 msgid "Help"
 msgstr ""
 
@@ -5841,7 +5841,7 @@ msgstr ""
 #: src/Navigation.tsx:794
 #: src/view/shell/bottom-bar/BottomBar.tsx:193
 #: src/view/shell/desktop/LeftNav.tsx:675
-#: src/view/shell/Drawer.tsx:560
+#: src/view/shell/Drawer.tsx:558
 msgid "Home"
 msgstr ""
 
@@ -6676,7 +6676,7 @@ msgstr ""
 #: src/view/screens/Profile.tsx:262
 #: src/view/screens/Profile.tsx:271
 #: src/view/shell/desktop/LeftNav.tsx:728
-#: src/view/shell/Drawer.tsx:665
+#: src/view/shell/Drawer.tsx:663
 msgid "Lists"
 msgstr ""
 
@@ -6739,6 +6739,7 @@ msgstr ""
 #: src/screens/Profile/ProfileFeed/index.tsx:206
 #: src/screens/Profile/Sections/Feed.tsx:117
 #: src/screens/ProfileList/FeedSection.tsx:113
+#: src/view/com/feeds/CommunityFeedPage.tsx:262
 #: src/view/com/feeds/FeedPage.tsx:168
 msgid "Load new posts"
 msgstr ""
@@ -6806,7 +6807,7 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:149
-#: src/view/shell/Drawer.tsx:843
+#: src/view/shell/Drawer.tsx:841
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr ""
 
@@ -7406,7 +7407,7 @@ msgstr ""
 #: src/screens/Profile/ProfileFeed/index.tsx:217
 #: src/screens/ProfileList/index.tsx:237
 #: src/screens/ProfileList/index.tsx:280
-#: src/view/com/feeds/CommunityFeedPage.tsx:262
+#: src/view/com/feeds/CommunityFeedPage.tsx:272
 #: src/view/screens/Feeds.tsx:545
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:642
@@ -7485,7 +7486,7 @@ msgstr ""
 
 #: src/components/CommunityFeed.tsx:51
 #: src/screens/Profile/Sections/CommunityFeed.tsx:133
-#: src/view/com/feeds/CommunityFeedPage.tsx:205
+#: src/view/com/feeds/CommunityFeedPage.tsx:207
 msgid "No community posts yet"
 msgstr "No community posts yet"
 
@@ -7772,7 +7773,7 @@ msgstr ""
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:268
 #: src/view/shell/desktop/LeftNav.tsx:695
-#: src/view/shell/Drawer.tsx:613
+#: src/view/shell/Drawer.tsx:611
 msgid "Notifications"
 msgstr ""
 
@@ -8852,8 +8853,8 @@ msgstr ""
 #: src/screens/Settings/AboutSettings.tsx:93
 #: src/screens/Settings/AboutSettings.tsx:96
 #: src/view/screens/PrivacyPolicy.tsx:25
-#: src/view/shell/Drawer.tsx:838
-#: src/view/shell/Drawer.tsx:839
+#: src/view/shell/Drawer.tsx:836
+#: src/view/shell/Drawer.tsx:837
 msgid "Privacy Policy"
 msgstr ""
 
@@ -8883,7 +8884,7 @@ msgstr ""
 #: src/view/shell/bottom-bar/BottomBar.tsx:311
 #: src/view/shell/desktop/LeftNav.tsx:751
 #: src/view/shell/Drawer.tsx:93
-#: src/view/shell/Drawer.tsx:716
+#: src/view/shell/Drawer.tsx:714
 msgid "Profile"
 msgstr ""
 
@@ -9861,7 +9862,7 @@ msgid "Save to my feeds"
 msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:738
-#: src/view/shell/Drawer.tsx:691
+#: src/view/shell/Drawer.tsx:689
 msgctxt "link to bookmarks screen"
 msgid "Saved"
 msgstr ""
@@ -10281,7 +10282,7 @@ msgstr ""
 msgid "Send error report"
 msgstr "Send error report"
 
-#: src/view/shell/Drawer.tsx:453
+#: src/view/shell/Drawer.tsx:451
 msgid "Send feedback"
 msgstr ""
 
@@ -10368,7 +10369,7 @@ msgstr ""
 #: src/Navigation.tsx:222
 #: src/screens/Settings/Settings.tsx:94
 #: src/view/shell/desktop/LeftNav.tsx:761
-#: src/view/shell/Drawer.tsx:729
+#: src/view/shell/Drawer.tsx:727
 msgid "Settings"
 msgstr ""
 
@@ -11176,9 +11177,9 @@ msgstr "Support the Blacksky community through OpenCollective. Your contribution
 
 #: src/view/shell/desktop/RightNav.tsx:108
 #: src/view/shell/desktop/RightNav.tsx:109
-#: src/view/shell/Drawer.tsx:491
-#: src/view/shell/Drawer.tsx:500
-#: src/view/shell/Drawer.tsx:742
+#: src/view/shell/Drawer.tsx:489
+#: src/view/shell/Drawer.tsx:498
+#: src/view/shell/Drawer.tsx:740
 msgid "Support Us"
 msgstr "Support Us"
 
@@ -11346,8 +11347,8 @@ msgstr ""
 #: src/screens/Settings/AboutSettings.tsx:85
 #: src/screens/Settings/AboutSettings.tsx:88
 #: src/view/screens/TermsOfService.tsx:25
+#: src/view/shell/Drawer.tsx:829
 #: src/view/shell/Drawer.tsx:831
-#: src/view/shell/Drawer.tsx:833
 msgid "Terms of Service"
 msgstr ""
 
