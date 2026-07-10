@@ -339,12 +339,16 @@ export class Agent extends BaseAgent {
 // Ideally, we wouldn't be doing this. However, since there is so much logic that requires making calls to the PDS right now, it
 // feels safer to just let those run as-is and set the header afterward.
 // app.bsky.actor.getPreferences / putPreferences are PDS-local methods. The
-// agent's global appview proxy header must not reach them: a PDS whose home
-// appview differs from ours (e.g. bsky.network) honors the header and forwards
-// the call to the Blacksky appview, which 501s - breaking app load for any
-// account not hosted on the Blacksky PDS. Strip the header for these methods so
-// the user's own PDS serves them locally. Shared by the session agent and the
-// OAuth agent (both attach the proxy header via configureProxy).
+// agent's global appview proxy header must not reach them for a PDS whose home
+// appview differs from ours: that PDS honors the header and forwards the call to
+// our appview, which 501s - breaking app load for accounts hosted elsewhere
+// (e.g. bsky.network).
+//
+// This is only used by the OAuth agent, which is the only path a foreign PDS is
+// ever reached on. Accounts on our own PDS never need this: that PDS serves the
+// methods locally and its gatekeeper strips the header server-side anyway.
+// (The Bearer agent - account creation + legacy resume, always on our PDS -
+// deliberately does NOT strip; doing so produced a bare 401 on fresh signups.)
 const PDS_LOCAL_PROXY_EXEMPT_METHODS = [
   'app.bsky.actor.getPreferences',
   'app.bsky.actor.putPreferences',
@@ -380,10 +384,17 @@ class BskyAppAgent extends BskyAgent {
     super({
       service,
       async fetch(input: RequestInfo | URL, init?: RequestInit) {
-        const cleanedInit = stripAppviewProxyForPdsLocalMethods(input, init)
+        // NOTE: the appview proxy header is deliberately NOT stripped here.
+        // This (Bearer) agent is only ever used for account creation and legacy
+        // session resume - both always on this deployment's own PDS, whose home
+        // appview is ours, so it serves getPreferences/putPreferences locally
+        // (the PDS gatekeeper also strips the header server-side). Stripping it
+        // client-side here instead produced a bare 401 on fresh signups. The
+        // strip is only needed for foreign PDSes, which are only ever reached
+        // via the OAuth agent - see stripAppviewProxyForPdsLocalMethods.
         let success = false
         try {
-          const result = await realFetch(input, cleanedInit)
+          const result = await realFetch(input, init)
           success = true
           return result
         } catch (e) {
