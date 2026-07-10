@@ -188,6 +188,36 @@ function ModerationDetailsDialogInner({
           {description}
         </Text>
 
+        {canAppeal && (
+          <View
+            style={[
+              a.flex_row,
+              a.justify_start,
+              a.pt_md,
+              a.pb_xs,
+              a.mt_md,
+              a.border_t,
+              t.atoms.border_contrast_low,
+            ]}>
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              <Trans>
+                You may appeal these labels if you feel they were placed in
+                error.
+              </Trans>
+            </Text>
+            <Button
+              variant="solid"
+              color="primary_subtle"
+              size="small"
+              label={_(msg`Appeal this label`)}
+              onPress={() => setIsAppealing(true)}>
+              <ButtonText>
+                <Trans>Appeal</Trans>
+              </ButtonText>
+            </Button>
+          </View>
+        )}
+
         {desc.isSubjectAccount && (
           <Admonition type="info" style={[a.mt_md]}>
             <Trans>
@@ -260,20 +290,6 @@ function ModerationDetailsDialogInner({
                   </View>
                 )}
               </View>
-              {canAppeal && (
-                <View style={[a.flex_row, a.justify_end, a.mt_sm]}>
-                  <Button
-                    variant="solid"
-                    color="secondary"
-                    size="small"
-                    label={_(msg`Appeal this label`)}
-                    onPress={() => setIsAppealing(true)}>
-                    <ButtonText>
-                      <Trans>Appeal</Trans>
-                    </ButtonText>
-                  </Button>
-                </View>
-              )}
             </>
           )}
         </View>

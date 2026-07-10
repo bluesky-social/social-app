@@ -152,7 +152,7 @@ function Label({
             {strings.description}
           </Text>
           {showAccountCallout && (
-            <Admonition type="info" style={[a.mt_xs]}>
+            <Admonition type="info" style={[a.mt_sm]}>
               <Trans>
                 This label was applied to the entire user account and will
                 appear on all posts.
