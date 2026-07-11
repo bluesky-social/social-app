@@ -39,8 +39,15 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   const ax = useAnalytics()
 
   const likeCount = post.likeCount ?? 0
+  /*
+   * Kill switch for the getLikes sample request itself, separate from the
+   * display gate below.
+   */
+  const fetchEnabled = ax.features.enabled(
+    ax.features.PostThreadKnownLikersFetchEnable,
+  )
   const {data} = useLikedBySampleQuery({
-    uri: hasSession && likeCount > 0 ? post.uri : undefined,
+    uri: fetchEnabled && hasSession && likeCount > 0 ? post.uri : undefined,
   })
 
   if (likeCount === 0) return null
