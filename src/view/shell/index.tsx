@@ -18,6 +18,7 @@ import {
   useIsDrawerSwipeDisabled,
   useSetDrawerOpen,
 } from '#/state/shell'
+import {runHardwareBackPressFallback} from '#/state/shell/hardware-back-press'
 import {useCloseAnyActiveElement} from '#/state/util'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
@@ -54,6 +55,7 @@ function ShellInner() {
   const {state: policyUpdateState} = usePolicyUpdateContext()
 
   const closeAnyActiveElement = useCloseAnyActiveElement()
+  const isDrawerOpen = useIsDrawerOpen()
 
   useNotificationsRegistration()
   useNotificationsHandler()
@@ -61,14 +63,25 @@ function ShellInner() {
   useEffect(() => {
     if (IS_ANDROID) {
       const listener = BackHandler.addEventListener('hardwareBackPress', () => {
-        return closeAnyActiveElement()
+        if (closeAnyActiveElement()) {
+          return true
+        }
+        /*
+         * closeAnyActiveElement doesn't report closing the drawer, so check
+         * it here: when the drawer was open, keep the previous default
+         * behavior rather than running the fallback underneath it.
+         */
+        if (isDrawerOpen) {
+          return false
+        }
+        return runHardwareBackPressFallback()
       })
 
       return () => {
         listener.remove()
       }
     }
-  }, [closeAnyActiveElement])
+  }, [closeAnyActiveElement, isDrawerOpen])
 
   // HACK
   // expo-video doesn't like it when you try and move a `player` to another `VideoView`. Instead, we need to actually

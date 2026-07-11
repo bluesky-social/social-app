@@ -28,6 +28,7 @@ import {
 } from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
+import {setHardwareBackPressFallback} from '#/state/shell/hardware-back-press'
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListMethods} from '#/view/com/util/List'
@@ -37,7 +38,7 @@ import {useTheme} from '#/alf'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {useAnalytics} from '#/analytics'
-import {IS_NATIVE} from '#/env'
+import {IS_ANDROID, IS_NATIVE} from '#/env'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -119,6 +120,26 @@ export function FeedPage({
     }
     return listenSoftReset(onSoftReset)
   }, [onSoftReset, isPageFocused])
+
+  /*
+   * On Android, a hardware back press on the Home screen scrolls back to top
+   * when the feed is scrolled down, instead of leaving the app.
+   */
+  useEffect(() => {
+    if (!IS_ANDROID || !isPageFocused) {
+      return
+    }
+    return setHardwareBackPressFallback(() => {
+      const isScreenFocused =
+        getTabState(getRootNavigation(navigation).getState(), 'Home') ===
+        TabState.InsideAtRoot
+      if (isScreenFocused && isScrolledDown) {
+        scrollToTop()
+        return true
+      }
+      return false
+    })
+  }, [navigation, isPageFocused, isScrolledDown, scrollToTop])
 
   const onPressCompose = useCallback(() => {
     openComposer({logContext: 'Fab'})
