@@ -980,7 +980,7 @@ msgid "Accessibility Settings"
 msgstr ""
 
 #: src/Navigation.tsx:431
-#: src/screens/Login/LoginForm.tsx:103
+#: src/screens/Login/LoginForm.tsx:105
 #: src/screens/Settings/AccountSettings.tsx:67
 #: src/screens/Settings/Settings.tsx:167
 #: src/screens/Settings/Settings.tsx:170
@@ -1125,7 +1125,7 @@ msgstr ""
 msgid "Add a content warning"
 msgstr ""
 
-#: src/components/moderation/LabelDialog/index.tsx:199
+#: src/components/moderation/LabelDialog/index.tsx:204
 msgid "Add a note (optional)"
 msgstr "Add a note (optional)"
 
@@ -1194,7 +1194,7 @@ msgstr ""
 msgid "Add group chat members"
 msgstr "Add group chat members"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:226
+#: src/view/com/feeds/ComposerPrompt.tsx:225
 msgid "Add image"
 msgstr ""
 
@@ -1453,7 +1453,7 @@ msgstr ""
 msgid "Allows access to direct messages"
 msgstr ""
 
-#: src/components/moderation/LabelDialog/index.tsx:391
+#: src/components/moderation/LabelDialog/index.tsx:403
 msgid "Already applied"
 msgstr "Already applied"
 
@@ -1774,7 +1774,7 @@ msgstr ""
 msgid "Appearance"
 msgstr ""
 
-#: src/components/moderation/LabelDialog/index.tsx:389
+#: src/components/moderation/LabelDialog/index.tsx:401
 msgid "Applied by you"
 msgstr "Applied by you"
 
@@ -1783,12 +1783,12 @@ msgstr "Applied by you"
 msgid "Apply default recommended feeds"
 msgstr ""
 
-#: src/components/moderation/LabelDialog/index.tsx:185
+#: src/components/moderation/LabelDialog/index.tsx:190
 msgid "Apply label"
 msgstr "Apply label"
 
 #. placeholder {0}: strings.name
-#: src/components/moderation/LabelDialog/index.tsx:363
+#: src/components/moderation/LabelDialog/index.tsx:370
 msgid "Apply label {0}"
 msgstr "Apply label {0}"
 
@@ -1925,8 +1925,8 @@ msgstr ""
 #: src/screens/Login/ChooseAccountForm.tsx:113
 #: src/screens/Login/ForgotPasswordForm.tsx:124
 #: src/screens/Login/ForgotPasswordForm.tsx:130
-#: src/screens/Login/LoginForm.tsx:133
-#: src/screens/Login/LoginForm.tsx:139
+#: src/screens/Login/LoginForm.tsx:135
+#: src/screens/Login/LoginForm.tsx:141
 #: src/screens/Login/SetNewPasswordForm.tsx:170
 #: src/screens/Login/SetNewPasswordForm.tsx:176
 #: src/screens/Messages/components/ChatDisabled.tsx:164
@@ -2409,7 +2409,7 @@ msgstr ""
 msgid "Change Handle"
 msgstr ""
 
-#: src/components/moderation/LabelDialog/index.tsx:408
+#: src/components/moderation/LabelDialog/index.tsx:424
 msgid "Change label"
 msgstr "Change label"
 
@@ -2854,7 +2854,7 @@ msgid "Complete the challenge"
 msgstr ""
 
 #: src/lib/hotkeys/index.tsx:66
-#: src/view/com/feeds/ComposerPrompt.tsx:149
+#: src/view/com/feeds/ComposerPrompt.tsx:148
 #: src/view/shell/desktop/LeftNav.tsx:593
 msgid "Compose new post"
 msgstr ""
@@ -4325,7 +4325,7 @@ msgstr ""
 msgid "Enter your email address"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:124
+#: src/screens/Login/LoginForm.tsx:126
 msgid "Enter your handle (e.g. alice.bsky.social)"
 msgstr "Enter your handle (e.g. alice.bsky.social)"
 
@@ -4454,7 +4454,7 @@ msgstr ""
 msgid "Expands or collapses post text"
 msgstr ""
 
-#: src/lib/api/index.ts:764
+#: src/lib/api/index.ts:775
 msgid "Expected uri to resolve to a record"
 msgstr ""
 
@@ -4798,7 +4798,7 @@ msgstr "Failed to send report"
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/lib/api/index.ts:375
+#: src/lib/api/index.ts:385
 msgid "Failed to submit community post. Please try again."
 msgstr "Failed to submit community post. Please try again."
 
@@ -6294,9 +6294,9 @@ msgstr ""
 msgid "Kick member"
 msgstr "Kick member"
 
-#: src/components/moderation/LabelDialog/index.tsx:117
-#: src/components/moderation/LabelDialog/index.tsx:232
-#: src/components/moderation/LabelDialog/index.tsx:239
+#: src/components/moderation/LabelDialog/index.tsx:119
+#: src/components/moderation/LabelDialog/index.tsx:237
+#: src/components/moderation/LabelDialog/index.tsx:244
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:750
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:752
 msgid "Label post"
@@ -6324,7 +6324,7 @@ msgstr ""
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr ""
 
-#: src/components/moderation/LabelDialog/index.tsx:128
+#: src/components/moderation/LabelDialog/index.tsx:130
 msgid "Labels are applied by Blacksky Moderation. You can remove labels you applied yourself."
 msgstr "Labels are applied by Blacksky Moderation. You can remove labels you applied yourself."
 
@@ -6797,8 +6797,8 @@ msgstr ""
 msgid "Logged-out visibility"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:145
-#: src/screens/Login/LoginForm.tsx:152
+#: src/screens/Login/LoginForm.tsx:147
+#: src/screens/Login/LoginForm.tsx:154
 msgid "Login"
 msgstr "Login"
 
@@ -7729,7 +7729,7 @@ msgstr "Not found"
 msgid "Not Found"
 msgstr ""
 
-#: src/components/moderation/LabelDialog/index.tsx:211
+#: src/components/moderation/LabelDialog/index.tsx:216
 msgid "Note (limit 300 characters)"
 msgstr "Note (limit 300 characters)"
 
@@ -7951,7 +7951,7 @@ msgstr ""
 msgid "Open avatar creator"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:204
+#: src/view/com/feeds/ComposerPrompt.tsx:203
 msgid "Open camera"
 msgstr ""
 
@@ -8114,7 +8114,7 @@ msgstr ""
 msgid "Opens composer"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:205
+#: src/view/com/feeds/ComposerPrompt.tsx:204
 msgid "Opens device camera"
 msgstr ""
 
@@ -8151,7 +8151,7 @@ msgstr "Opens full image"
 msgid "Opens helpdesk in browser"
 msgstr ""
 
-#: src/view/com/feeds/ComposerPrompt.tsx:227
+#: src/view/com/feeds/ComposerPrompt.tsx:226
 msgid "Opens image picker"
 msgstr ""
 
@@ -8185,7 +8185,7 @@ msgstr "Opens the GIF picker dialog"
 msgid "Opens the invite friends sheet to share your profile"
 msgstr "Opens the invite friends sheet to share your profile"
 
-#: src/view/com/feeds/ComposerPrompt.tsx:150
+#: src/view/com/feeds/ComposerPrompt.tsx:149
 msgid "Opens the post composer"
 msgstr ""
 
@@ -8707,7 +8707,7 @@ msgid "Post deleted"
 msgstr ""
 
 #: src/lib/api/index.ts:218
-#: src/lib/api/index.ts:423
+#: src/lib/api/index.ts:434
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr ""
 
@@ -9260,7 +9260,7 @@ msgid "Remove image"
 msgstr ""
 
 #. placeholder {0}: strings.name
-#: src/components/moderation/LabelDialog/index.tsx:421
+#: src/components/moderation/LabelDialog/index.tsx:437
 msgid "Remove label {0}"
 msgstr "Remove label {0}"
 
@@ -10095,7 +10095,7 @@ msgstr ""
 msgid "Select a color"
 msgstr ""
 
-#: src/components/moderation/LabelDialog/index.tsx:124
+#: src/components/moderation/LabelDialog/index.tsx:126
 msgid "Select a label"
 msgstr "Select a label"
 
@@ -10654,7 +10654,7 @@ msgstr ""
 #: src/screens/Hashtag.tsx:228
 #: src/screens/Login/index.tsx:121
 #: src/screens/Login/index.tsx:135
-#: src/screens/Login/LoginForm.tsx:100
+#: src/screens/Login/LoginForm.tsx:102
 #: src/screens/Messages/JoinRequest.tsx:290
 #: src/screens/Messages/JoinRequest.tsx:296
 #: src/screens/Search/SearchResults.tsx:317
@@ -10736,7 +10736,7 @@ msgstr ""
 msgid "Sign out?"
 msgstr ""
 
-#: src/screens/Login/AuthCallback.tsx:37
+#: src/screens/Login/AuthCallback.tsx:39
 msgid "Sign-in failed. Please try again."
 msgstr "Sign-in failed. Please try again."
 
@@ -10907,7 +10907,7 @@ msgstr ""
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: src/components/moderation/LabelDialog/index.tsx:100
+#: src/components/moderation/LabelDialog/index.tsx:102
 msgid "Something went wrong. Try again."
 msgstr "Something went wrong. Try again."
 
@@ -10920,7 +10920,7 @@ msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr ""
 
 #: src/App.native.tsx:129
-#: src/App.web.tsx:150
+#: src/App.web.tsx:152
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
@@ -11021,7 +11021,7 @@ msgstr ""
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:146
+#: src/screens/Login/LoginForm.tsx:148
 msgid "Starts the sign-in process"
 msgstr "Starts the sign-in process"
 
@@ -11863,7 +11863,7 @@ msgstr ""
 msgid "This label was applied by you."
 msgstr ""
 
-#: src/components/moderation/LabelDialog/index.tsx:192
+#: src/components/moderation/LabelDialog/index.tsx:197
 msgid "This label will be applied by Blacksky Moderation."
 msgstr "This label will be applied by Blacksky Moderation."
 
@@ -12240,7 +12240,7 @@ msgstr ""
 #: src/screens/Deactivated.tsx:130
 #: src/screens/Login/ForgotPasswordForm.tsx:69
 #: src/screens/Login/index.tsx:94
-#: src/screens/Login/LoginForm.tsx:89
+#: src/screens/Login/LoginForm.tsx:91
 #: src/screens/Login/SetNewPasswordForm.tsx:83
 #: src/screens/Signup/index.tsx:102
 msgid "Unable to contact your service. Please check your Internet connection."
@@ -12595,13 +12595,13 @@ msgstr ""
 msgid "Uploading GIF..."
 msgstr ""
 
-#: src/lib/api/index.ts:601
-#: src/lib/api/index.ts:628
+#: src/lib/api/index.ts:612
+#: src/lib/api/index.ts:639
 msgid "Uploading images..."
 msgstr ""
 
-#: src/lib/api/index.ts:700
-#: src/lib/api/index.ts:724
+#: src/lib/api/index.ts:711
+#: src/lib/api/index.ts:735
 msgid "Uploading link thumbnail..."
 msgstr ""
 
@@ -12725,7 +12725,7 @@ msgstr "Username must be at least 3 characters"
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:110
+#: src/screens/Login/LoginForm.tsx:112
 msgid "Username or handle"
 msgstr "Username or handle"
 
