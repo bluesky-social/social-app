@@ -11,5 +11,10 @@ currentAndroidVersion=${outputAndroid#*versionCode - }
 BSKY_IOS_BUILD_NUMBER=$((currentIosVersion+1))
 BSKY_ANDROID_VERSION_CODE=$((currentAndroidVersion+1))
 
-bash -c "BSKY_IOS_BUILD_NUMBER=$BSKY_IOS_BUILD_NUMBER BSKY_ANDROID_VERSION_CODE=$BSKY_ANDROID_VERSION_CODE $*"
+# Export the build-number vars and exec the wrapped command directly. Using
+# `exec "$@"` preserves argument boundaries; the old `bash -c "... $*"` flattened
+# every argument into one string that a nested shell re-parsed, which mangled
+# arguments containing spaces, `#`, or newlines.
+export BSKY_IOS_BUILD_NUMBER BSKY_ANDROID_VERSION_CODE
+exec "$@"
 
