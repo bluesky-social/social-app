@@ -1,3 +1,46 @@
+diff --git a/React/Base/Surface/RCTSurface.mm b/React/Base/Surface/RCTSurface.mm
+index 14f88de1f3ddadc39ca53c9e8944d7d2eeb60268..cee524b67823be6e4d10adb882a88e3bcb38efd4 100644
+--- a/React/Base/Surface/RCTSurface.mm
++++ b/React/Base/Surface/RCTSurface.mm
+@@ -465,7 +465,7 @@
+     // right after the semaphore signals.
+ 
+     // Atomic variant of `_waitingForMountingStageOnMainQueue = YES;`
+-    atomic_fetch_or(&_waitingForMountingStageOnMainQueue, 1);
++    atomic_exchange(&_waitingForMountingStageOnMainQueue, 1);
+   }
+ 
+   dispatch_semaphore_t semaphore;
+@@ -488,7 +488,7 @@
+   auto timeoutOccurred = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, timeout * NSEC_PER_SEC));
+ 
+   // Atomic equivalent of `_waitingForMountingStageOnMainQueue = NO;`.
+-  atomic_fetch_and(&_waitingForMountingStageOnMainQueue, 0);
++  atomic_exchange(&_waitingForMountingStageOnMainQueue, 0);
+ 
+   if (!timeoutOccurred) {
+     // Balancing the semaphore.
+@@ -546,7 +546,7 @@
+ {
+   if (atomic_load(&_waitingForMountingStageOnMainQueue) && (self.stage & RCTSurfaceStageSurfaceDidInitialLayout)) {
+     // Atomic equivalent of `_waitingForMountingStageOnMainQueue = NO;`.
+-    atomic_fetch_and(&_waitingForMountingStageOnMainQueue, 0);
++    atomic_exchange(&_waitingForMountingStageOnMainQueue, 0);
+ 
+     {
+       std::lock_guard<std::mutex> lock(_mutex);
+diff --git a/React/DevSupport/RCTPackagerConnection.mm b/React/DevSupport/RCTPackagerConnection.mm
+index 39419d60e1203673e9cafb71c6932a6b9200bf18..b252a4976f7ad3b430d97c2bc94b781dd93dbd0a 100644
+--- a/React/DevSupport/RCTPackagerConnection.mm
++++ b/React/DevSupport/RCTPackagerConnection.mm
+@@ -9,6 +9,7 @@
+ 
+ #import <objc/runtime.h>
+ #import <algorithm>
++#import <mutex>
+ #import <vector>
+ 
+ #import <React/RCTAssert.h>
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
 index 914a2494a57923fbf185644b7e2bb8aca8848e56..0deac55f22350f5e8377d8963fb1c2434bf6abfd 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
@@ -15,7 +58,7 @@ diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewCompon
 index 1494fd225aff1fa0429e917404d6b4ca5fc961c5..df643f5c844ad2e684de5161528eba17f4a188d0 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-@@ -1038,6 +1038,11 @@ - (void)_adjustForMaintainVisibleContentPosition
+@@ -1038,6 +1038,11 @@ static inline UIViewAnimationOptions animationOptionsWithCurve(UIViewAnimationCu
    }
  }
  
@@ -27,6 +70,28 @@ index 1494fd225aff1fa0429e917404d6b4ca5fc961c5..df643f5c844ad2e684de5161528eba17
  @end
  
  Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
+diff --git a/React/Profiler/RCTProfile.m b/React/Profiler/RCTProfile.m
+index 994e8ad6c107cb87274200849c204dee48e1f565..287b93403adb8554b2952f21bc56f1d02999636e 100644
+--- a/React/Profiler/RCTProfile.m
++++ b/React/Profiler/RCTProfile.m
+@@ -445,7 +445,7 @@ BOOL RCTProfileIsProfiling(void)
+ void RCTProfileInit(RCTBridge *bridge)
+ {
+   // TODO: enable assert JS thread from any file (and assert here)
+-  BOOL wasProfiling = atomic_fetch_or(&RCTProfileProfiling, 1);
++  BOOL wasProfiling = atomic_exchange(&RCTProfileProfiling, 1);
+   if (wasProfiling) {
+     return;
+   }
+@@ -492,7 +492,7 @@ void RCTProfileInit(RCTBridge *bridge)
+ void RCTProfileEnd(RCTBridge *bridge, void (^callback)(NSString *))
+ {
+   // assert JavaScript thread here again
+-  BOOL wasProfiling = atomic_fetch_and(&RCTProfileProfiling, 0);
++  BOOL wasProfiling = atomic_exchange(&RCTProfileProfiling, 0);
+   if (!wasProfiling) {
+     return;
+   }
 diff --git a/React/Views/RefreshControl/RCTRefreshControl.h b/React/Views/RefreshControl/RCTRefreshControl.h
 index e9b330fa7c29c42653a3b0191d0f8a1b13b2d3de..ec5f58c887bfd949f1279ef1c31352e0b465e9ec 100644
 --- a/React/Views/RefreshControl/RCTRefreshControl.h
@@ -44,7 +109,7 @@ diff --git a/React/Views/RefreshControl/RCTRefreshControl.m b/React/Views/Refres
 index 53bfd04703502d5b8e932c47a528bb03cd79d330..ff1b1ed5e060bcf0d91528c6d3c2c5c8acf24967 100644
 --- a/React/Views/RefreshControl/RCTRefreshControl.m
 +++ b/React/Views/RefreshControl/RCTRefreshControl.m
-@@ -23,6 +23,7 @@ @implementation RCTRefreshControl {
+@@ -23,6 +23,7 @@
    UIColor *_titleColor;
    CGFloat _progressViewOffset;
    BOOL _hasMovedToWindow;
@@ -52,7 +117,7 @@ index 53bfd04703502d5b8e932c47a528bb03cd79d330..ff1b1ed5e060bcf0d91528c6d3c2c5c8
  }
  
  - (instancetype)init
-@@ -58,6 +59,12 @@ - (void)layoutSubviews
+@@ -58,6 +59,12 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : (NSCoder *)aDecoder)
    _isInitialRender = false;
  }
  
@@ -65,7 +130,7 @@ index 53bfd04703502d5b8e932c47a528bb03cd79d330..ff1b1ed5e060bcf0d91528c6d3c2c5c8
  - (void)didMoveToWindow
  {
    [super didMoveToWindow];
-@@ -221,4 +228,50 @@ - (void)refreshControlValueChanged
+@@ -221,4 +228,50 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : (NSCoder *)aDecoder)
    }
  }
  
@@ -120,7 +185,7 @@ diff --git a/React/Views/RefreshControl/RCTRefreshControlManager.m b/React/Views
 index 40aaf9c51ebda9fedb1d1db2e9aacec84b4c39c8..1c60164b69762997b3369b46609a07768a06bad3 100644
 --- a/React/Views/RefreshControl/RCTRefreshControlManager.m
 +++ b/React/Views/RefreshControl/RCTRefreshControlManager.m
-@@ -22,11 +22,12 @@ - (UIView *)view
+@@ -22,11 +22,12 @@ RCT_EXPORT_MODULE()
  
  RCT_EXPORT_VIEW_PROPERTY(onRefresh, RCTDirectEventBlock)
  RCT_EXPORT_VIEW_PROPERTY(refreshing, BOOL)
@@ -150,6 +215,32 @@ index 8b6571698fc5dd091a0d8980a33bb40295faf305..27c97bfeb6f13907c89f1d85f2bb8b8a
        reactChoreographer.postFrameCallback(ReactChoreographer.CallbackType.IDLE_EVENT, this)
      }
    }
+diff --git a/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.cpp b/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.cpp
+index 66a91c91c6463e133342d33aa054e750bb32c047..021084bffe1b2e9f0ca4e7932dca2ea25904ffd7 100644
+--- a/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.cpp
++++ b/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.cpp
+@@ -111,6 +111,8 @@ HermesRuntimeAgentDelegate::HermesRuntimeAgentDelegate(
+           runtimeTargetDelegate,
+           std::move(runtimeExecutor))) {}
+ 
++HermesRuntimeAgentDelegate::~HermesRuntimeAgentDelegate() = default;
++
+ bool HermesRuntimeAgentDelegate::handleRequest(
+     const cdp::PreparsedRequest& req) {
+   return impl_->handleRequest(req);
+diff --git a/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.h b/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.h
+index d38e86358ca2266de08bedcb4629a7ca9ada8ac6..735802995e4bf51a3bc45b3a38a99098a60b915a 100644
+--- a/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.h
++++ b/ReactCommon/hermes/inspector-modern/chrome/HermesRuntimeAgentDelegate.h
+@@ -56,6 +56,8 @@ class HermesRuntimeAgentDelegate : public RuntimeAgentDelegate {
+       HermesRuntimeTargetDelegate& runtimeTargetDelegate,
+       RuntimeExecutor runtimeExecutor);
+ 
++  ~HermesRuntimeAgentDelegate() override;
++
+   /**
+    * Handle a CDP request. The response will be sent over the provided
+    * \c FrontendChannel synchronously or asynchronously.
 diff --git a/third-party-podspecs/fmt.podspec b/third-party-podspecs/fmt.podspec
 index 2f38990e226c13f483aaf1b986302d4094243814..9b02e481e290299be20a6f09c42056ff51695e9b 100644
 --- a/third-party-podspecs/fmt.podspec
@@ -166,56 +257,3 @@ index 2f38990e226c13f483aaf1b986302d4094243814..9b02e481e290299be20a6f09c42056ff
 +    perl -i -pe 's/^#  define FMT_USE_CONSTEVAL 1$/#  define FMT_USE_CONSTEVAL 0/' include/fmt/base.h
 +  SCRIPT
  end
-diff --git a/React/Base/Surface/RCTSurface.mm b/React/Base/Surface/RCTSurface.mm
-index 14f88de035f7657cb267cb834b28c8f108595775..cee524bca80cf86517fb21af413f937b815275f6 100644
---- a/React/Base/Surface/RCTSurface.mm
-+++ b/React/Base/Surface/RCTSurface.mm
-@@ -465,7 +465,7 @@ - (BOOL)synchronouslyWaitForStage:(RCTSurfaceStage)stage timeout:(NSTimeInterval
-     // right after the semaphore signals.
- 
-     // Atomic variant of `_waitingForMountingStageOnMainQueue = YES;`
--    atomic_fetch_or(&_waitingForMountingStageOnMainQueue, 1);
-+    atomic_exchange(&_waitingForMountingStageOnMainQueue, 1);
-   }
- 
-   dispatch_semaphore_t semaphore;
-@@ -488,7 +488,7 @@ - (BOOL)synchronouslyWaitForStage:(RCTSurfaceStage)stage timeout:(NSTimeInterval
-   auto timeoutOccurred = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, timeout * NSEC_PER_SEC));
- 
-   // Atomic equivalent of `_waitingForMountingStageOnMainQueue = NO;`.
--  atomic_fetch_and(&_waitingForMountingStageOnMainQueue, 0);
-+  atomic_exchange(&_waitingForMountingStageOnMainQueue, 0);
- 
-   if (!timeoutOccurred) {
-     // Balancing the semaphore.
-@@ -546,7 +546,7 @@ - (void)_mountRootViewIfNeeded
- {
-   if (atomic_load(&_waitingForMountingStageOnMainQueue) && (self.stage & RCTSurfaceStageSurfaceDidInitialLayout)) {
-     // Atomic equivalent of `_waitingForMountingStageOnMainQueue = NO;`.
--    atomic_fetch_and(&_waitingForMountingStageOnMainQueue, 0);
-+    atomic_exchange(&_waitingForMountingStageOnMainQueue, 0);
- 
-     {
-       std::lock_guard<std::mutex> lock(_mutex);
-diff --git a/React/Profiler/RCTProfile.m b/React/Profiler/RCTProfile.m
-index 994e8ad65b6299f5b2898ce67b64cb4a8d03a7f4..287b9344c48279f00684f5ca552cc6b1ed6b7fac 100644
---- a/React/Profiler/RCTProfile.m
-+++ b/React/Profiler/RCTProfile.m
-@@ -445,7 +445,7 @@ BOOL RCTProfileIsProfiling(void)
- void RCTProfileInit(RCTBridge *bridge)
- {
-   // TODO: enable assert JS thread from any file (and assert here)
--  BOOL wasProfiling = atomic_fetch_or(&RCTProfileProfiling, 1);
-+  BOOL wasProfiling = atomic_exchange(&RCTProfileProfiling, 1);
-   if (wasProfiling) {
-     return;
-   }
-@@ -492,7 +492,7 @@ void RCTProfileInit(RCTBridge *bridge)
- void RCTProfileEnd(RCTBridge *bridge, void (^callback)(NSString *))
- {
-   // assert JavaScript thread here again
--  BOOL wasProfiling = atomic_fetch_and(&RCTProfileProfiling, 0);
-+  BOOL wasProfiling = atomic_exchange(&RCTProfileProfiling, 0);
-   if (!wasProfiling) {
-     return;
-   }
