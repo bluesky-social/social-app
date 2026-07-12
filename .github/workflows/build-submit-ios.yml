@@ -168,21 +168,28 @@ jobs:
             echo ""
             echo "Build dir contents:"
             ls -la "$BUILD_DIR"
+            # Export the discovered paths rather than hardcoding a product name.
+            # The Xcode scheme is "Blacksky" in this fork, so the artifacts are
+            # Blacksky.ipa / Blacksky.app.dSYM.zip — downstream steps must use the
+            # paths we actually found, not a fixed "Bluesky.ipa".
+            DSYM_PATH="$(find ios-build -type f -name '*.app.dSYM.zip' -print -quit)"
             echo "BUILD_DIR=$BUILD_DIR" >> $GITHUB_ENV
+            echo "IPA_PATH=$IPA_PATH" >> $GITHUB_ENV
+            echo "DSYM_PATH=$DSYM_PATH" >> $GITHUB_ENV
           else
             echo "Archive file not found!"
             exit 1
           fi
 
       - name: 🚀 Deploy
-        run: pnpm eas submit -p ios --non-interactive --path "$BUILD_DIR/Bluesky.ipa"
+        run: pnpm eas submit -p ios --non-interactive --path "$IPA_PATH"
 
       - name: 🪲 Upload dSYM to Sentry
         run: >
           SENTRY_ORG=blacksky-algorithms
           SENTRY_PROJECT=social-app
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          pnpm sentry-cli debug-files upload "$BUILD_DIR/Bluesky.app.dSYM.zip" --include-sources
+          pnpm sentry-cli debug-files upload "$DSYM_PATH" --include-sources
 
       - name: 📚 Get version from package.json
         id: get-build-info
@@ -197,7 +204,7 @@ jobs:
         id: ipa-build-number
         run: |
           plist_dir="$(mktemp -d)"
-          unzip -o -q "$BUILD_DIR/Bluesky.ipa" 'Payload/*.app/Info.plist' -d "$plist_dir"
+          unzip -o -q "$IPA_PATH" 'Payload/*.app/Info.plist' -d "$plist_dir"
           plist="$(find "$plist_dir" -name Info.plist -print -quit)"
           build_number="$(/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' "$plist")"
           rm -rf "$plist_dir"

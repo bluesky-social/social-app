@@ -27,6 +27,10 @@ jobs:
           cache: pnpm
       - name: pnpm install
         run: pnpm install --frozen-lockfile
+      # We run extraction purely to catch strings that fail to compile/render, not
+      # to sync translations. Blacksky has no Crowdin subscription, so the previous
+      # "Push source lang to Crowdin" step always failed on an empty api_token. It
+      # has been removed; the extract + auto-commit of messages.po is the useful part.
       - name: Extract language strings
         run: pnpm intl:extract
       - name: Create commit
@@ -34,14 +38,3 @@ jobs:
         with:
           commit_message: Nightly source-language update
           file_pattern: ./src/locale/locales/en/messages.po
-      - name: Push source lang to Crowdin
-        uses: crowdin/github-action@52aa776766211d83d975df51f3b9c53c2f8ba35f # v2.16.3
-        with:
-          upload_sources: true
-          upload_sources_args: "-b main"
-          upload_translations: false
-          push_translations: false
-          push_sources: false
-          create_pull_request: false
-        env:
-          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
