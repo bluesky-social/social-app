@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {
-  findNodeHandle,
   type ListRenderItemInfo,
   type StyleProp,
   useWindowDimensions,
@@ -26,6 +25,7 @@ import {
   type EmptyStateButtonProps,
 } from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
+import {findListNativeTag} from '#/view/com/util/listNativeTag'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -57,7 +57,7 @@ interface ProfileFeedgensProps {
   emptyStateIcon?: React.ComponentType<any> | React.ReactElement
 }
 
-function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
+function keyExtractor(item: AppBskyGraphDefs.StarterPackViewBasic) {
   return item.uri
 }
 
@@ -138,13 +138,16 @@ export function ProfileStarterPacks({
 
   useEffect(() => {
     if (IS_IOS && enabled && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
+      const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
   }, [enabled, scrollElRef, setScrollViewTag])
 
   const renderItem = useCallback(
-    ({item, index}: ListRenderItemInfo<AppBskyGraphDefs.StarterPackView>) => {
+    ({
+      item,
+      index,
+    }: ListRenderItemInfo<AppBskyGraphDefs.StarterPackViewBasic>) => {
       return (
         <View
           style={[

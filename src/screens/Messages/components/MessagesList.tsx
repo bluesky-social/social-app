@@ -17,7 +17,6 @@ import Animated, {
   runOnJS,
   type ScrollEvent,
   type SharedValue,
-  useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -154,7 +153,7 @@ export function MessagesList({
   const t = useTheme()
 
   const textInputId = 'chat-input-' + useId()
-  const flatListRef = useAnimatedRef<ListMethods>()
+  const flatListRef = useRef<ListMethods | null>(null)
 
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
     () => new Set(),

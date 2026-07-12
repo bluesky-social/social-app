@@ -1,7 +1,7 @@
 export function useOTAUpdates() {}
 export function useApplyPullRequestOTAUpdate() {
   return {
-    tryApplyUpdate: () => {},
+    tryApplyUpdate: async (_channel: string) => {},
     revertToEmbedded: () => {},
     isCurrentlyRunningPullRequestDeployment: false,
     currentChannel: 'web-build',

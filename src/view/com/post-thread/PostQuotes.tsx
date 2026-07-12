@@ -17,6 +17,7 @@ import {usePostQuotesQuery} from '#/state/queries/post-quotes'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {Post} from '#/view/com/post/Post'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import * as bsky from '#/types/bsky'
 import {List} from '../util/List'
 
 function renderItem({
@@ -70,7 +71,13 @@ export function PostQuotes({uri}: {uri: string}) {
     data?.pages
       .flatMap(page =>
         page.posts.map(post => {
-          if (!AppBskyFeedPost.isRecord(post.record) || !moderationOpts) {
+          if (
+            !bsky.dangerousIsType<AppBskyFeedPost.Record>(
+              post.record,
+              AppBskyFeedPost.isRecord,
+            ) ||
+            !moderationOpts
+          ) {
             return null
           }
           const moderation = moderatePost(post, moderationOpts)
