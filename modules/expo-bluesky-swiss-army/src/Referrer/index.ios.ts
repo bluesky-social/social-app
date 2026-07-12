@@ -6,7 +6,15 @@ export function getGooglePlayReferrerInfoAsync(): Promise<GooglePlayReferrerInfo
   throw new NotImplementedError()
 }
 
-export function getReferrerInfo(): ReferrerInfo | null {
+/*
+ * Promise-returning for parity with Android, whose native referrer API only
+ * exposes a promise.
+ */
+export function getReferrerInfo(): Promise<ReferrerInfo | null> {
+  return Promise.resolve(getReferrerInfoSync())
+}
+
+function getReferrerInfoSync(): ReferrerInfo | null {
   const referrer = SharedPrefs.getString('referrer')
   if (referrer) {
     SharedPrefs.removeValue('referrer')

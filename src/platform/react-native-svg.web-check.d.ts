@@ -1,13 +1,13 @@
 /*
- * Used ONLY by the web typecheck pass (tsconfig.check.web.json) - it is not
- * included by the main tsconfig, and it has no runtime effect.
+ * Used ONLY by the web typecheck pass (tsconfig.check.web.json) - it is
+ * excluded from the other passes and has no runtime effect.
  *
  * Under `moduleSuffixes: [".web", ""]`, react-native-svg's type entry
  * resolves to its DOM-flavored `ReactNativeSVG.web.d.ts`, a different API
  * surface (no SvgProps/PathProps, react-native-web style types) than the
  * native one the app is written against. At runtime the web build accepts
  * the same props, so this ambient declaration pins the package to its
- * native declarations for one coherent type surface across both passes.
+ * native declarations for one coherent type surface across all passes.
  *
  * moduleSuffixes remaps even explicit `.d.ts` specifiers, so this mirrors
  * the package's ReactNativeSVG.d.ts + elements.d.ts via deep module paths

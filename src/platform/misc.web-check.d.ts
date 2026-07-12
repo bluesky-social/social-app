@@ -1,6 +1,6 @@
 /*
- * Used ONLY by the web typecheck pass (tsconfig.check.web.json) - it is not
- * included by the main tsconfig, and it has no runtime effect. See
+ * Used ONLY by the web typecheck pass (tsconfig.check.web.json) - it is
+ * excluded from the other passes and has no runtime effect. See
  * react-native-svg.web-check.d.ts for the full background on why some
  * packages need to be pinned to their native declarations under
  * `moduleSuffixes: [".web", ""]`.
