@@ -21,6 +21,11 @@ module.exports = function (_config) {
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
   const IS_DEV = !IS_TESTFLIGHT && !IS_PRODUCTION
+  // True only when building on EAS (EAS sets EAS_BUILD=true / EAS_BUILD_PLATFORM).
+  // Used to scope OTA update code signing to EAS builds so local dev doesn't
+  // require the production update-signing private key.
+  const IS_EAS_BUILD =
+    process.env.EAS_BUILD === 'true' || !!process.env.EAS_BUILD_PLATFORM
 
   const ASSOCIATED_DOMAINS = [
     'applinks:blacksky.community',
@@ -224,11 +229,20 @@ module.exports = function (_config) {
         url: 'https://updates.blacksky.community/manifest',
         enabled: true,
         fallbackToCacheTimeout: 30000,
-        codeSigningCertificate: './code-signing/certificate.pem',
-        codeSigningMetadata: {
-          keyid: 'main',
-          alg: 'rsa-v1_5-sha256',
-        },
+        // OTA manifest code signing is only applied on EAS builds (which have the
+        // private key as a managed secret). Local dev builds omit it so developers
+        // don't need the production update-signing key just to serve a dev
+        // manifest from Metro (`expo start` otherwise errors: "Must specify
+        // --private-key-path ...").
+        ...(IS_EAS_BUILD
+          ? {
+              codeSigningCertificate: './code-signing/certificate.pem',
+              codeSigningMetadata: {
+                keyid: 'main',
+                alg: 'rsa-v1_5-sha256',
+              },
+            }
+          : {}),
         checkAutomatically: 'NEVER',
         // Enables Updates.setUpdateURLAndRequestHeadersOverride at runtime, which
         // is how non-production builds retarget to a pull-request-<n> channel for
