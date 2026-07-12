@@ -1,9 +1,13 @@
 /*
  * Used ONLY by the web typecheck pass (tsconfig.check.web.json) - it is
- * excluded from the other passes and has no runtime effect. See
- * react-native-svg.web-check.d.ts for the full background on why some
- * packages need to be pinned to their native declarations under
- * `moduleSuffixes: [".web", ""]`.
+ * excluded from the other passes and has no runtime effect.
+ *
+ * Some packages publish .web.d.ts declarations that diverge from the API
+ * the app is written against (or, worse, raw TypeScript sources that break
+ * under `moduleSuffixes: [".web", ""]`), so this pins them to their native
+ * declarations. react-native-svg has the same problem, handled by deleting
+ * its divergent web declarations in patches/react-native-svg@15.12.1.patch
+ * so resolution falls through to the native ones.
  */
 
 /*
