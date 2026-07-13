@@ -18,6 +18,7 @@ import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import * as Toggle from '#/components/forms/Toggle'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon} from '#/components/icons/EyeSlash'
 import {Hashtag_Stroke2_Corner0_Rounded as HashtagIcon} from '#/components/icons/Hashtag'
 import {Home_Stroke2_Corner2_Rounded as HomeIcon} from '#/components/icons/Home'
 import {Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon} from '#/components/icons/Macintosh'
@@ -95,6 +96,14 @@ export function ContentAndMediaSettingsScreen({}: Props) {
             <SettingsList.ItemIcon icon={CircleInfo} />
             <SettingsList.ItemText>
               <Trans>Your interests</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            to="/settings/impression-visibility"
+            label={_(msg`Impression Visibility`)}>
+            <SettingsList.ItemIcon icon={EyeSlashIcon} />
+            <SettingsList.ItemText>
+              <Trans>Impression Visibility</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.Divider />
