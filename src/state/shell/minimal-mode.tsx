@@ -7,6 +7,7 @@ import {
   useRef,
 } from 'react'
 import {
+  Reanimated3DefaultSpringConfig,
   type SharedValue,
   useSharedValue,
   withSpring,
@@ -34,6 +35,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       'worklet'
       footerMode.set(() =>
         withSpring(v ? 1 : 0, {
+          ...Reanimated3DefaultSpringConfig,
           overshootClamping: true,
         }),
       )

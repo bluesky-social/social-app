@@ -1,6 +1,9 @@
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
-import {withSpring} from 'react-native-reanimated'
+import {
+  Reanimated3DefaultSpringConfig,
+  withSpring,
+} from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
@@ -147,7 +150,12 @@ function HomeScreenReady({
   const headerMode = useHomeHeaderMode()
   const showHeader = useCallback(() => {
     'worklet'
-    headerMode.set(() => withSpring(0, {overshootClamping: true}))
+    headerMode.set(() =>
+      withSpring(0, {
+        ...Reanimated3DefaultSpringConfig,
+        overshootClamping: true,
+      }),
+    )
   }, [headerMode])
 
   useFocusEffect(
