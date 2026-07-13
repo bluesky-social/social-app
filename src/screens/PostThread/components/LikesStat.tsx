@@ -54,27 +54,33 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
 
   const urip = new AtUri(post.uri)
   const likesHref = makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
+  const onPressLikedBy = () => ax.metric('post:likedBy:click', {})
 
-  const knownLikers = moderationOpts
+  const knownLikersAndModeration = moderationOpts
     ? (data?.likes ?? [])
         .map(like => like.actor)
-        .filter(
-          actor =>
-            actor.did !== currentAccount?.did &&
-            actor.viewer?.following &&
-            !actor.viewer.muted &&
-            !actor.viewer.blocking &&
-            !actor.viewer.blockedBy,
-        )
+        .map(actor => ({
+          actor,
+          moderation: moderateProfile(actor, moderationOpts),
+        }))
+        .filter(({actor, moderation}) => {
+          const modui = moderation.ui('profileList')
+          const isMe = actor.did === currentAccount?.did
+          const following = actor.viewer?.following
+          return !isMe && following && !modui.filter
+        })
     : []
 
   const showKnownLikers =
-    knownLikers.length > 0 &&
+    knownLikersAndModeration.length > 0 &&
     ax.features.enabled(ax.features.PostThreadKnownLikersEnable)
 
   if (!showKnownLikers) {
     return (
-      <Link to={likesHref} label={l`Likes on this post`}>
+      <Link
+        to={likesHref}
+        label={l`Likes on this post`}
+        onPress={onPressLikedBy}>
         <Text
           testID="likeCount-expanded"
           style={[a.text_md, t.atoms.text_contrast_medium]}>
@@ -89,17 +95,21 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
     )
   }
 
-  const names = knownLikers.slice(0, 2).map(actor => {
-    const moderation = moderateProfile(actor, moderationOpts!)
-    return {
-      did: actor.did,
-      href: makeProfileLink(actor),
-      displayName: sanitizeDisplayName(
-        actor.displayName || actor.handle,
-        moderation.ui('displayName'),
-      ),
-    }
-  })
+  const aviStackProfiles = knownLikersAndModeration
+    .slice(0, 3)
+    .map(({actor}) => actor)
+  const names = knownLikersAndModeration
+    .slice(0, 2)
+    .map(({actor, moderation}) => {
+      return {
+        did: actor.did,
+        href: makeProfileLink(actor),
+        displayName: sanitizeDisplayName(
+          actor.displayName || actor.handle,
+          moderation.ui('displayName'),
+        ),
+      }
+    })
   const others = likeCount - names.length
 
   /*
@@ -151,8 +161,9 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
       <Link
         to={likesHref}
         label={rowLabel}
-        style={[a.flex_row, a.align_center, a.gap_sm, a.flex_shrink]}>
-        <AvatarStack profiles={knownLikers.slice(0, 3)} size={AVI_SIZE} />
+        style={[a.flex_row, a.align_center, a.gap_sm, a.flex_shrink]}
+        onPress={onPressLikedBy}>
+        <AvatarStack profiles={aviStackProfiles} size={AVI_SIZE} />
         <Text
           testID="knownLikersStat"
           numberOfLines={1}
