@@ -6,7 +6,9 @@ import {getSentryExpoConfig} from '@sentry/react-native/metro.js'
 const config = getSentryExpoConfig(import.meta.dirname, {
   // TODO: confirm this doesn't break anything when we switch to metro web
   includeWebReplay: true,
-
+  annotateReactComponents: {
+    textComponentNames: ['Text', 'ButtonText'],
+  },
   getDefaultConfig: (projectRoot, options) => {
     const config = getDefaultConfig(projectRoot, options)
 
