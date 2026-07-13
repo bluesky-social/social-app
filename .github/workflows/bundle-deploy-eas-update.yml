@@ -76,10 +76,10 @@ jobs:
           previous-commit-tag: ${{ inputs.runtimeVersion }}
 
       - name: 🔤 Compile translations
-        run: pnpm intl:build 2>&1 | tee i18n.log
+        run: pnpm intl:build 2>&1 | tee /tmp/i18n.log
 
       - name: Check for i18n compilation errors
-        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation
+        run: if grep -q "invalid syntax" "/tmp/i18n.log"; then echo "\n\nFound compilation
           errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
       - name: Lint check
@@ -134,6 +134,7 @@ jobs:
           --dumpSourcemap
           --message="${{ github.event.head_commit.message || github.sha }}"
         env:
+          EAS_NO_VCS: '1'
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_RELEASE: ${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
