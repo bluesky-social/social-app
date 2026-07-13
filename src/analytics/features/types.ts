@@ -12,6 +12,8 @@ export enum Features {
   GroupChatsDisable = 'group_chats:disable',
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
+  PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
+  PostThreadKnownLikersFetchEnable = 'post_thread:known_likers:fetch:enable',
 
   AATest = 'aa-test',
 }
