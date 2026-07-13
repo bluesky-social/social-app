@@ -32,7 +32,7 @@ jobs:
   build:
     if: github.repository == 'blacksky-algorithms/blacksky.community'
     name: Build and Submit Android
-    runs-on: Linux-x64-32core
+    runs-on: ubuntu-latest
     concurrency:
       group: android-build
       cancel-in-progress: false
