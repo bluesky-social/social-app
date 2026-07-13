@@ -11,6 +11,29 @@ index 914a2494a57923fbf185644b7e2bb8aca8848e56..0deac55f22350f5e8377d8963fb1c243
  @end
  
  NS_ASSUME_NONNULL_END
+diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
+index 0d231bc8aa938da296eb3b981e8ac9595a43b87f..be0a10d9c4de1892fa00bcbf8d63d739b66d8ffe 100644
+--- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
+@@ -76,7 +76,17 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+     return;
+   }
+ 
+-  const auto &oldConcreteProps = static_cast<const PullToRefreshViewProps &>(*_props);
++  /*
++   * TODO: Remove after upgrading React Native to 0.82+ (fixed upstream by
++   * facebook/react-native#52615, #52584 and #53231).
++   * Diff against oldProps instead of _props. During the initial-layout replay
++   * from layoutSubviews, _props already holds the new props, so diffing
++   * against it is a no-op and tintColor/progressViewOffset are never applied
++   * on mount (facebook/react-native#56343). oldProps is null-guarded because
++   * the create-mutation path passes nullptr.
++   */
++  const auto &oldConcreteProps = static_cast<const PullToRefreshViewProps &>(
++      oldProps ? *oldProps : *PullToRefreshViewShadowNode::defaultSharedProps());
+   const auto &newConcreteProps = static_cast<const PullToRefreshViewProps &>(*props);
+ 
+   if (newConcreteProps.tintColor != oldConcreteProps.tintColor) {
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 index 1494fd225aff1fa0429e917404d6b4ca5fc961c5..df643f5c844ad2e684de5161528eba17f4a188d0 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
