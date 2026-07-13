@@ -2601,6 +2601,10 @@ msgstr ""
 msgid "Choose post languages"
 msgstr ""
 
+#: src/screens/Signup/StepCommunity/index.tsx:85
+msgid "Choose the community your account will live in. You can always use it across the network."
+msgstr "Choose the community your account will live in. You can always use it across the network."
+
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:108
 msgid "Choose this color as your avatar"
 msgstr ""
@@ -2617,6 +2621,10 @@ msgstr ""
 msgid "Choose your account provider"
 msgstr ""
 
+#: src/screens/Signup/index.tsx:209
+msgid "Choose your community"
+msgstr "Choose your community"
+
 #: src/view/screens/Feeds.tsx:726
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
@@ -2625,7 +2633,7 @@ msgstr ""
 msgid "Choose your password"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:210
+#: src/screens/Signup/index.tsx:213
 msgid "Choose your username"
 msgstr ""
 
@@ -2832,6 +2840,7 @@ msgid "Comics"
 msgstr ""
 
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:232
+#: src/screens/Signup/StepCommunity/index.tsx:92
 #: src/view/screens/Profile.tsx:264
 msgid "Community"
 msgstr "Community"
@@ -2845,11 +2854,11 @@ msgstr "Community Builder"
 msgid "Community Guidelines"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/index.tsx:331
+#: src/screens/Onboarding/StepFinished/index.tsx:333
 msgid "Complete onboarding and start using your account"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:212
+#: src/screens/Signup/index.tsx:215
 msgid "Complete the challenge"
 msgstr ""
 
@@ -2917,8 +2926,8 @@ msgstr "Confirm with your account password"
 msgid "Confirmation code"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:251
-#: src/screens/Signup/index.tsx:254
+#: src/screens/Signup/index.tsx:256
+#: src/screens/Signup/index.tsx:259
 msgid "Contact support"
 msgstr ""
 
@@ -3331,7 +3340,7 @@ msgstr ""
 msgid "Create account"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:153
+#: src/screens/Signup/index.tsx:154
 msgid "Create Account"
 msgstr "Create Account"
 
@@ -3402,6 +3411,11 @@ msgstr ""
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:366
 msgid "Create user list"
 msgstr ""
+
+#. placeholder {0}: option.displayName
+#: src/screens/Signup/StepCommunity/index.tsx:116
+msgid "Create your account in {0}"
+msgstr "Create your account in {0}"
 
 #. placeholder {0}: i18n.date(appPassword.createdAt, { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', })
 #. placeholder {0}: i18n.date(createdAt, { dateStyle: 'long', timeStyle: 'short', })
@@ -4959,7 +4973,7 @@ msgstr ""
 msgid "Filter who you receive notifications from"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/index.tsx:337
+#: src/screens/Onboarding/StepFinished/index.tsx:339
 msgid "Finalizing"
 msgstr ""
 
@@ -5668,7 +5682,7 @@ msgstr ""
 msgid "Have a code? <0>Click here.</0>"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:249
+#: src/screens/Signup/index.tsx:254
 msgid "Having trouble?"
 msgstr ""
 
@@ -6155,7 +6169,7 @@ msgstr ""
 msgid "Invite code"
 msgstr ""
 
-#: src/screens/Signup/state.ts:367
+#: src/screens/Signup/state.ts:380
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr ""
 
@@ -6492,7 +6506,7 @@ msgstr ""
 msgid "Let's get your password reset!"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/index.tsx:339
+#: src/screens/Onboarding/StepFinished/index.tsx:341
 msgid "Let's go!"
 msgstr ""
 
@@ -7456,8 +7470,8 @@ msgstr ""
 #: src/screens/Login/ForgotPasswordForm.tsx:144
 #: src/screens/Login/SetNewPasswordForm.tsx:184
 #: src/screens/Login/SetNewPasswordForm.tsx:190
-#: src/screens/Onboarding/StepFinished/index.tsx:332
-#: src/screens/Onboarding/StepFinished/index.tsx:341
+#: src/screens/Onboarding/StepFinished/index.tsx:334
+#: src/screens/Onboarding/StepFinished/index.tsx:343
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:168
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:176
 #: src/screens/Signup/BackNextButtons.tsx:68
@@ -8511,11 +8525,11 @@ msgstr ""
 msgid "Please add any content warning labels that are applicable for the media you are posting."
 msgstr ""
 
-#: src/screens/Signup/state.ts:314
+#: src/screens/Signup/state.ts:326
 msgid "Please choose your handle."
 msgstr ""
 
-#: src/screens/Signup/state.ts:306
+#: src/screens/Signup/state.ts:318
 #: src/screens/Signup/StepInfo/index.tsx:126
 msgid "Please choose your password."
 msgstr ""
@@ -8524,7 +8538,7 @@ msgstr ""
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr ""
 
-#: src/screens/Signup/state.ts:329
+#: src/screens/Signup/state.ts:341
 msgid "Please complete the verification captcha."
 msgstr ""
 
@@ -8583,7 +8597,7 @@ msgstr ""
 msgid "Please enter your account password to manage app passwords."
 msgstr "Please enter your account password to manage app passwords."
 
-#: src/screens/Signup/state.ts:290
+#: src/screens/Signup/state.ts:302
 #: src/screens/Signup/StepInfo/index.tsx:99
 msgid "Please enter your email."
 msgstr ""
@@ -10759,8 +10773,8 @@ msgstr "Signing in..."
 #: src/components/contacts/screens/VerifyNumber.tsx:205
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:86
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:90
-#: src/screens/Onboarding/StepFinished/index.tsx:297
-#: src/screens/Onboarding/StepFinished/index.tsx:319
+#: src/screens/Onboarding/StepFinished/index.tsx:299
+#: src/screens/Onboarding/StepFinished/index.tsx:321
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:281
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:117
 #: src/screens/StarterPack/Wizard/index.tsx:206
@@ -10776,8 +10790,8 @@ msgstr ""
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
-#: src/screens/Onboarding/StepFinished/index.tsx:290
-#: src/screens/Onboarding/StepFinished/index.tsx:316
+#: src/screens/Onboarding/StepFinished/index.tsx:292
+#: src/screens/Onboarding/StepFinished/index.tsx:318
 msgid "Skip introduction and start using your account"
 msgstr ""
 
@@ -10919,7 +10933,7 @@ msgstr ""
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr ""
 
-#: src/App.native.tsx:129
+#: src/App.native.tsx:130
 #: src/App.web.tsx:152
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
@@ -11027,10 +11041,10 @@ msgstr "Starts the sign-in process"
 
 #. placeholder {0}: state.activeStep + 1
 #. placeholder {0}: state.activeStepIndex + 1
-#. placeholder {1}: state.serviceDescription && !state.serviceDescription.phoneVerificationRequired ? '2' : '3'
+#. placeholder {1}: state.serviceDescription && !state.serviceDescription.phoneVerificationRequired ? '3' : '4'
 #. placeholder {1}: state.totalSteps
 #: src/screens/Onboarding/Layout.tsx:226
-#: src/screens/Signup/index.tsx:198
+#: src/screens/Signup/index.tsx:199
 msgid "Step {0} of {1}"
 msgstr ""
 
@@ -12242,7 +12256,7 @@ msgstr ""
 #: src/screens/Login/index.tsx:94
 #: src/screens/Login/LoginForm.tsx:91
 #: src/screens/Login/SetNewPasswordForm.tsx:83
-#: src/screens/Signup/index.tsx:102
+#: src/screens/Signup/index.tsx:103
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr ""
 
@@ -13779,11 +13793,11 @@ msgstr "You won’t be able to rejoin unless you’re invited."
 msgid "You: {message}"
 msgstr "You: {message}"
 
-#: src/screens/Signup/index.tsx:170
+#: src/screens/Signup/index.tsx:171
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:175
+#: src/screens/Signup/index.tsx:176
 msgid "You'll follow the suggested users once you finish creating your account!"
 msgstr ""
 
@@ -13866,7 +13880,7 @@ msgstr ""
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:208
+#: src/screens/Signup/index.tsx:211
 msgid "Your account"
 msgstr ""
 
@@ -13942,7 +13956,7 @@ msgstr "Your device clock appears to be incorrect. Please check your system time
 
 #: src/screens/Login/ForgotPasswordForm.tsx:52
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:84
-#: src/screens/Signup/state.ts:298
+#: src/screens/Signup/state.ts:310
 #: src/screens/Signup/StepInfo/index.tsx:106
 msgid "Your email appears to be invalid."
 msgstr ""
