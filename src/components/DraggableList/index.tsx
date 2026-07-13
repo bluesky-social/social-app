@@ -3,6 +3,7 @@ import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   type AnimatedRef,
   measure,
+  Reanimated3DefaultSpringConfig,
   runOnJS,
   scrollTo,
   type SharedValue,
@@ -370,18 +371,18 @@ function SortableItem<T>({
       return {
         transform: [
           {translateY: s.dragStartSlot * itemHeight + dragY.get()},
-          {scale: withSpring(1.03)},
+          {scale: withSpring(1.03, Reanimated3DefaultSpringConfig)},
         ],
         zIndex: 999,
         ...(IS_IOS
           ? {
               shadowColor: '#000',
               shadowOffset: {width: 0, height: 1},
-              shadowOpacity: withSpring(0.08),
-              shadowRadius: withSpring(4),
+              shadowOpacity: withSpring(0.08, Reanimated3DefaultSpringConfig),
+              shadowRadius: withSpring(4, Reanimated3DefaultSpringConfig),
             }
           : {
-              elevation: withSpring(3),
+              elevation: withSpring(3, Reanimated3DefaultSpringConfig),
             }),
       }
     }
@@ -391,11 +392,11 @@ function SortableItem<T>({
     const inactive = {
       ...(IS_IOS
         ? {
-            shadowOpacity: withSpring(0),
-            shadowRadius: withSpring(0),
+            shadowOpacity: withSpring(0, Reanimated3DefaultSpringConfig),
+            shadowRadius: withSpring(0, Reanimated3DefaultSpringConfig),
           }
         : {
-            elevation: withSpring(0),
+            elevation: withSpring(0, Reanimated3DefaultSpringConfig),
           }),
     }
 
@@ -425,7 +426,7 @@ function SortableItem<T>({
       return {
         transform: [
           {translateY: withTiming(baseY + offset, {duration: 200})},
-          {scale: withSpring(1)},
+          {scale: withSpring(1, Reanimated3DefaultSpringConfig)},
         ],
         zIndex: 0,
         ...inactive,

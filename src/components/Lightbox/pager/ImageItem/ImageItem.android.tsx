@@ -7,6 +7,7 @@ import {
 } from 'react-native-gesture-handler'
 import Animated, {
   type AnimatableValue,
+  Reanimated3DefaultSpringConfig,
   runOnJS,
   type SharedValue,
   useAnimatedReaction,
@@ -463,7 +464,10 @@ function clampTranslation(
 
 function withClampedSpring<T extends AnimatableValue>(value: T): T {
   'worklet'
-  return withSpring(value, {overshootClamping: true})
+  return withSpring(value, {
+    ...Reanimated3DefaultSpringConfig,
+    overshootClamping: true,
+  })
 }
 
 export default memo(ImageItem)
