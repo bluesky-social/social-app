@@ -11,6 +11,14 @@ export const BSKY_SERVICE = 'https://blacksky.app'
 export const BSKY_SERVICE_DID = 'did:web:bsky.social'
 export const PUBLIC_BSKY_SERVICE = 'https://api.blacksky.community'
 export const DEFAULT_SERVICE = BSKY_SERVICE
+
+// Handle suffixes that identify a Latinsky-community account living on the shared
+// Blacksky PDS. Explicit carveout — not a general resolution mechanism. (The
+// Blacksky PDS host itself is derived from the default brand config; see
+// resolveBrand.ts.)
+export const LATINSKY_HANDLE_SUFFIXES = ['.latinsky.app', '.afrolatinsky.app']
+export const LATINSKY_BRAND_SLUG = 'latinsky'
+
 export const HELP_DESK_URL = `https://docs.blacksky.community/using-blacksky`
 export const CHAT_SERVICE = 'https://api.bsky.chat'
 export const EMBED_SERVICE = 'https://embed.bsky.app'

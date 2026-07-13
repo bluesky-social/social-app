@@ -22,6 +22,7 @@ import {
   useSubmitSignup,
 } from '#/screens/Signup/state'
 import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
+import {StepCommunity} from '#/screens/Signup/StepCommunity'
 import {StepHandle} from '#/screens/Signup/StepHandle'
 import {StepInfo} from '#/screens/Signup/StepInfo'
 import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
@@ -199,12 +200,14 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                         Step {state.activeStep + 1} of{' '}
                         {state.serviceDescription &&
                         !state.serviceDescription.phoneVerificationRequired
-                          ? '2'
-                          : '3'}
+                          ? '3'
+                          : '4'}
                       </Trans>
                     </Text>
                     <Text style={[a.text_3xl, a.font_semi_bold]}>
-                      {state.activeStep === SignupStep.INFO ? (
+                      {state.activeStep === SignupStep.COMMUNITY ? (
+                        <Trans>Choose your community</Trans>
+                      ) : state.activeStep === SignupStep.INFO ? (
                         <Trans>Your account</Trans>
                       ) : state.activeStep === SignupStep.HANDLE ? (
                         <Trans>Choose your username</Trans>
@@ -214,9 +217,11 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                     </Text>
                   </View>
 
-                  {state.activeStep === SignupStep.INFO ? (
+                  {state.activeStep === SignupStep.COMMUNITY ? (
+                    <StepCommunity onPressBack={onPressBack} />
+                  ) : state.activeStep === SignupStep.INFO ? (
                     <StepInfo
-                      onPressBack={onPressBack}
+                      onPressBack={() => dispatch({type: 'prev'})}
                       isLoadingStarterPack={
                         isFetchingStarterPack && !isErrorStarterPack
                       }

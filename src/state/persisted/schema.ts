@@ -30,6 +30,14 @@ const accountSchema = z.object({
   pdsUrl: z.string().optional(),
   isSelfHosted: z.boolean().optional(),
   isOauthSession: z.boolean().optional(),
+  /**
+   * Slug of the community this account was created in (chosen at signup).
+   * Used on native to deterministically resolve the account's brand — and to
+   * disambiguate communities that share a PDS. Absent for accounts created
+   * before the community picker existed; those fall back to PDS-based
+   * resolution. See src/lib/community/resolveBrand.ts.
+   */
+  communitySlug: z.string().optional(),
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
 

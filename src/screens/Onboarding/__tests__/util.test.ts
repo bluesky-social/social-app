@@ -1,19 +1,32 @@
-import {describe, expect, it} from '@jest/globals'
+import {describe, expect, it, jest} from '@jest/globals'
 
 import {generateComputedConfig} from '#/lib/community/configGenerator'
 import {type RawCommunityConfig} from '#/lib/community/types'
-import {resolveFollowDids, resolveStarterPackUri} from '../util'
+import {saveLabelers} from '#/state/session/agent-config'
+import {
+  resolveFollowDids,
+  resolveModerationServiceDids,
+  resolveStarterPackUri,
+  subscribeToBrandModerationServices,
+} from '../util'
+
+jest.mock('#/state/session/agent-config', () => ({
+  saveLabelers: jest.fn(),
+}))
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-function makeConfig(overrides: Partial<RawCommunityConfig['onboarding']> = {}) {
+function makeConfig(
+  overrides: Partial<RawCommunityConfig['onboarding']> = {},
+  moderation: string[] = [],
+) {
   const raw: RawCommunityConfig = {
     metadata: {name: 'Test', displayName: 'Test', slug: 'test'},
     branding: {assets: {}, messages: {}},
     theme: {colors: {primary: '#F2973B'}},
-    services: {pds: {url: 'https://test.example.com'}},
+    services: {pds: {url: 'https://test.example.com'}, moderation},
     onboarding: overrides,
   }
   return generateComputedConfig(raw)
@@ -142,5 +155,79 @@ describe('resolveFollowDids', () => {
       'did:plc:config',
       'did:plc:starter',
     ])
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Brand moderation services
+// ---------------------------------------------------------------------------
+
+describe('resolveModerationServiceDids', () => {
+  it('returns empty array when no moderation services are configured', () => {
+    const brand = makeConfig({})
+    expect(resolveModerationServiceDids(brand)).toEqual([])
+  })
+
+  it('deduplicates and removes empty moderation service DIDs', () => {
+    const brand = makeConfig({}, [
+      'did:plc:mod1',
+      '',
+      'did:plc:mod1',
+      'did:plc:mod2',
+    ])
+    expect(resolveModerationServiceDids(brand)).toEqual([
+      'did:plc:mod1',
+      'did:plc:mod2',
+    ])
+  })
+})
+
+describe('subscribeToBrandModerationServices', () => {
+  it('subscribes to each resolved moderation service and caches labelers', async () => {
+    const brand = makeConfig({}, ['did:plc:mod1', 'did:plc:mod1'])
+    const agent = {
+      labelers: [] as string[],
+      addLabeler: jest.fn((did: string) => {
+        agent.labelers.push(did)
+      }),
+    }
+
+    await subscribeToBrandModerationServices(
+      agent as unknown as Parameters<
+        typeof subscribeToBrandModerationServices
+      >[0],
+      'did:plc:user',
+      brand,
+    )
+
+    expect(agent.addLabeler).toHaveBeenCalledTimes(1)
+    expect(agent.addLabeler).toHaveBeenCalledWith('did:plc:mod1')
+    expect(saveLabelers).toHaveBeenCalledWith('did:plc:user', ['did:plc:mod1'])
+  })
+
+  it('keeps onboarding best-effort when a moderation service fails', async () => {
+    const brand = makeConfig({}, ['did:plc:good', 'did:plc:bad'])
+    const agent = {
+      labelers: [] as string[],
+      addLabeler: jest.fn((did: string) => {
+        if (did === 'did:plc:bad') {
+          throw new Error('failed')
+        }
+        agent.labelers.push(did)
+      }),
+    }
+
+    await expect(
+      subscribeToBrandModerationServices(
+        agent as unknown as Parameters<
+          typeof subscribeToBrandModerationServices
+        >[0],
+        'did:plc:user',
+        brand,
+      ),
+    ).resolves.toBeUndefined()
+
+    expect(agent.addLabeler).toHaveBeenCalledTimes(2)
+    expect(saveLabelers).toHaveBeenCalledWith('did:plc:user', ['did:plc:good'])
   })
 })

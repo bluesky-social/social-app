@@ -1,7 +1,11 @@
 import {describe, expect, it} from '@jest/globals'
 
 import {DISCOVER_FEED_URI, VIDEO_FEED_URI} from '#/lib/constants'
-import {BRAND_DOMAIN, DEFAULT_BRAND_CONFIG} from '../BrandContext'
+import {
+  BRAND_DOMAIN,
+  DEFAULT_BRAND_CONFIG,
+  ensureFollowingPinned,
+} from '../BrandContext'
 
 describe('BrandContext defaults', () => {
   it('preserves Blacksky defaults when no brand config is injected', () => {
@@ -22,6 +26,9 @@ describe('BrandContext defaults', () => {
     expect(DEFAULT_BRAND_CONFIG.messages.postButtonLabel).toBe('Post')
 
     expect(DEFAULT_BRAND_CONFIG.services.pds.url).toBe('https://blacksky.app')
+    expect(DEFAULT_BRAND_CONFIG.services.moderation).toEqual([
+      'did:plc:d2mkddsbmnrgr3domzg5qexf',
+    ])
     expect(DEFAULT_BRAND_CONFIG.web.domains.main).toBe(
       'https://blacksky.community',
     )
@@ -68,5 +75,41 @@ describe('BrandContext defaults', () => {
     })
     expect(DEFAULT_BRAND_CONFIG.theme.css.selectionLight).toBe('#D2FC51')
     expect(DEFAULT_BRAND_CONFIG.theme.css.selectionDark).toBe('#464985')
+  })
+})
+
+describe('ensureFollowingPinned', () => {
+  it('appends Following when missing, preserving order', () => {
+    const out = ensureFollowingPinned([
+      {type: 'feed', value: 'at://x/medsky', pinned: true},
+    ])
+    expect(out[0]).toEqual({type: 'feed', value: 'at://x/medsky', pinned: true})
+    expect(out[out.length - 1]).toEqual({
+      type: 'timeline',
+      value: 'following',
+      pinned: true,
+    })
+  })
+
+  it('does not duplicate an existing Following entry', () => {
+    const out = ensureFollowingPinned([
+      {type: 'timeline', value: 'following', pinned: true},
+      {type: 'feed', value: 'at://x/medsky', pinned: true},
+    ])
+    expect(
+      out.filter(f => f.type === 'timeline' && f.value === 'following'),
+    ).toHaveLength(1)
+  })
+
+  it('strips a malformed feed-typed following entry', () => {
+    const out = ensureFollowingPinned([
+      {type: 'feed', value: 'following', pinned: true},
+    ])
+    expect(out.some(f => f.type === 'feed' && f.value === 'following')).toBe(
+      false,
+    )
+    expect(
+      out.filter(f => f.type === 'timeline' && f.value === 'following'),
+    ).toHaveLength(1)
   })
 })

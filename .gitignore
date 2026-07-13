@@ -19,6 +19,8 @@ xcuserdata
 DerivedData
 *.hmap
 *.xcuserstate
+.worktrees
+.worktree
 
 # Android/IntelliJ
 #

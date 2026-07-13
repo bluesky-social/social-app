@@ -387,6 +387,7 @@ export function generateComputedConfig(
         url: raw.services.pds.url,
         availableHandles: raw.services.pds.availableHandles || [],
       },
+      moderation: raw.services.moderation || [],
     },
     web: {
       themeColor: raw.web?.themeColor || primary,

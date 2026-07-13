@@ -14,6 +14,7 @@ import {useLingui} from '@lingui/react/macro'
 import * as Sentry from '@sentry/react-native'
 
 import {BrandProvider, useBrand} from '#/lib/community/BrandContext'
+import {CommunityBrandSync} from '#/lib/community/useCommunityBrandSync'
 import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottomBarBorder'
 import {QueryProvider} from '#/lib/react-query'
 import {ThemeProvider} from '#/lib/ThemeContext'
@@ -155,6 +156,7 @@ function InnerApp() {
                           <LabelDefsProvider>
                             <ModerationOptsProvider>
                               <LoggedOutViewProvider>
+                                <CommunityBrandSync />
                                 <SelectedFeedProvider>
                                   <HiddenRepliesProvider>
                                     <HomeBadgeProvider>

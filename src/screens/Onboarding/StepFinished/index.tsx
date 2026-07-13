@@ -41,6 +41,7 @@ import {
   bulkWriteFollows,
   resolveFollowDids,
   resolveStarterPackUri,
+  subscribeToBrandModerationServices,
 } from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -112,6 +113,7 @@ export function StepFinished() {
             ? {uri: starterPack.uri, cid: starterPack.cid}
             : undefined,
         ),
+        subscribeToBrandModerationServices(agent, agent.session?.did, brand),
         (async () => {
           // Interests need to get saved first, then we can write the feeds to prefs
           await agent.setInterestsPref({tags: selectedInterests})

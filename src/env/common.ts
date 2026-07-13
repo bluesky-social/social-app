@@ -156,6 +156,16 @@ export const LIVE_EVENTS_URL = IS_DEV
   : LIVE_EVENTS_PROD_URL
 
 /**
+ * Base URL of the Acorn brand service. Used on native to resolve a community's
+ * brand config from the active account's PDS (`/brands/resolve?pds=` / `?slug=`).
+ * On web the config is injected by bskyweb (`window.__BRAND_CONFIG__`), so this
+ * is only consulted on native.
+ */
+export const BRAND_SERVICE_URL: string =
+  process.env.EXPO_PUBLIC_BRAND_SERVICE_URL ||
+  'https://brand.acorn.blacksky.community'
+
+/**
  * Stripe publishable key for embedded checkout
  */
 export const STRIPE_PUBLISHABLE_KEY: string =

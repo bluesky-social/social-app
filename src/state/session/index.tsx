@@ -139,6 +139,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         onAgentSessionChange,
       )
 
+      // Remember which community this account was created in so the client can
+      // resolve its brand deterministically (incl. communities sharing a PDS).
+      if (params.communitySlug) {
+        account.communitySlug = params.communitySlug
+      }
+
       if (signal.aborted) {
         return
       }

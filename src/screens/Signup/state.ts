@@ -22,6 +22,7 @@ date.setFullYear(date.getFullYear() - 20) // default to 20 years ago
 const DEFAULT_DATE = date
 
 export enum SignupStep {
+  COMMUNITY,
   INFO,
   HANDLE,
   CAPTCHA,
@@ -49,6 +50,8 @@ export type SignupState = {
   serviceUrl: string
   serviceDescription?: ServiceDescription
   userDomain: string
+  /** Slug of the community selected at signup; stamped on the created account. */
+  selectedBrandSlug?: string
   dateOfBirth: Date
   email: string
   password: string
@@ -74,6 +77,7 @@ export type SignupAction =
   | {type: 'finish'}
   | {type: 'setStep'; value: SignupStep}
   | {type: 'setServiceUrl'; value: string}
+  | {type: 'setCommunity'; slug: string; serviceUrl: string}
   | {
       type: 'setServiceDescription'
       value: ServiceDescription | undefined
@@ -95,7 +99,7 @@ export const initialState: SignupState = {
   analytics: undefined,
 
   hasPrev: false,
-  activeStep: SignupStep.INFO,
+  activeStep: SignupStep.COMMUNITY,
   screenTransitionDirection: 'Forward',
 
   serviceUrl: DEFAULT_SERVICE,
@@ -142,7 +146,7 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
       break
     }
     case 'prev': {
-      if (s.activeStep !== SignupStep.INFO) {
+      if (s.activeStep !== SignupStep.COMMUNITY) {
         next.screenTransitionDirection = 'Backward'
         next.activeStep--
         next.error = ''
@@ -165,6 +169,14 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
     }
     case 'setServiceUrl': {
       next.serviceUrl = a.value
+      next.userDomain = ''
+      break
+    }
+    case 'setCommunity': {
+      // Selecting a community points signup at that community's PDS; the existing
+      // describeServer pipeline then drives the available handle domains.
+      next.selectedBrandSlug = a.slug
+      next.serviceUrl = a.serviceUrl
       next.userDomain = ''
       break
     }
@@ -254,7 +266,7 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
     }
   }
 
-  next.hasPrev = next.activeStep !== SignupStep.INFO
+  next.hasPrev = next.activeStep !== SignupStep.COMMUNITY
 
   s.analytics?.logger.debug('signup', next)
 
@@ -342,6 +354,7 @@ export function useSubmitSignup() {
             birthDate: state.dateOfBirth,
             inviteCode: state.inviteCode.trim(),
             verificationCode: state.pendingSubmit?.verificationCode,
+            communitySlug: state.selectedBrandSlug,
           },
           {
             signupDuration: Date.now() - state.signupStartTime,

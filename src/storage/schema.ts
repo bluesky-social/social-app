@@ -1,3 +1,4 @@
+import {type ComputedBrandConfig} from '#/lib/community/types'
 import {type Gif} from '#/features/gifPicker/types'
 import {type InviteThemeKey} from '#/features/inviteFriends/themes'
 
@@ -47,4 +48,12 @@ export type Account = {
    * Recently selected GIFs in the GIF picker. Most recent first, capped at 20.
    */
   recentGifs?: Gif[]
+
+  /**
+   * Last resolved community brand config for this account (native only).
+   * Seeded synchronously at boot/account-switch to avoid a Blacksky→community
+   * theme flash, then refreshed from the brand service. See
+   * src/lib/community/useCommunityBrandSync.ts.
+   */
+  brandConfig?: ComputedBrandConfig
 }

@@ -22,6 +22,8 @@ export type SessionApiContext = {
       inviteCode?: string
       verificationPhone?: string
       verificationCode?: string
+      /** Slug of the community the account is being created in (from signup). */
+      communitySlug?: string
     },
     metrics: Metrics['account:create:success'],
   ) => Promise<void>

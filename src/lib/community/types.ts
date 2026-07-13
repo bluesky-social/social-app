@@ -66,6 +66,8 @@ export interface RawCommunityConfig {
       /** Handle domains available for this community (e.g. [".theinvite.us"]) */
       availableHandles?: string[]
     }
+    /** DIDs of moderation services new users should subscribe to */
+    moderation?: string[]
   }
   web?: {
     themeColor?: string
@@ -189,6 +191,8 @@ export interface ComputedBrandConfig {
       /** Handle domains available for this community (e.g. [".theinvite.us"]) */
       availableHandles: string[]
     }
+    /** DIDs of moderation services new users should subscribe to */
+    moderation: string[]
   }
   web: {
     themeColor: string

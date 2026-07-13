@@ -423,6 +423,24 @@ describe('generateComputedConfig', () => {
     expect(config.services.pds.availableHandles).toEqual([])
   })
 
+  it('passes through moderation service DIDs from raw config', () => {
+    const moderation = ['did:plc:mod1', 'did:plc:mod2']
+    const withModeration: RawCommunityConfig = {
+      ...theinviteConfig,
+      services: {
+        ...theinviteConfig.services,
+        moderation,
+      },
+    }
+    const config = generateComputedConfig(withModeration)
+    expect(config.services.moderation).toEqual(moderation)
+  })
+
+  it('defaults moderation service DIDs to empty array when omitted', () => {
+    const config = generateComputedConfig(theinviteConfig)
+    expect(config.services.moderation).toEqual([])
+  })
+
   it('produces default onboarding config when omitted', () => {
     const config = generateComputedConfig(theinviteConfig)
     expect(config.onboarding.starterPack).toBe('')
