@@ -14,7 +14,7 @@ const config = getSentryExpoConfig(import.meta.dirname, {
 
     if (typeof process.env.RN_SRC_EXT === 'string') {
       // inject `.e2e.ts` and `.e2e.tsx` into the sourceExts when running tests)
-      config.resolver.sourceExts.push(...process.env.RN_SRC_EXT.split(','))
+      config.resolver.sourceExts.unshift(...process.env.RN_SRC_EXT.split(','))
     }
 
     config.resolver.assetExts = [...config.resolver.assetExts, 'woff2']
