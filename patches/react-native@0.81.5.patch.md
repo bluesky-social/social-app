@@ -12,6 +12,19 @@ Patching `RCTRefreshControl.m` and `RCTRefreshControl.h` to add a new `forwarder
 This method is used by `ExpoScrollForwarder` to initiate a refresh of the underlying `UIScrollView` from inside that
 module.
 
+## RCTPullToRefreshViewComponentView.mm Patch - RefreshControl initial props dropped on New Arch
+
+**TODO: Remove after bumping React Native to 0.82+** (fixed upstream by facebook/react-native#52615, #52584
+and #53231).
+
+On Fabric, `updateProps` diffs against `_props`, but the initial-layout replay in `layoutSubviews` passes
+`_props` as the new props too, so the diff is a no-op and `tintColor`/`progressViewOffset`/`title` are never
+applied on mount. This hides the pull-to-refresh spinner behind the floating home header (it stays at offset
+0 instead of `headerOffset`). We diff against the `oldProps` argument instead, null-guarded with default
+props for the create-mutation path.
+
+Issue: https://github.com/facebook/react-native/issues/56343
+
 ## RCTTextLayoutManager.mm Patch - Text overflows instead of wrapping on the last line
 
 Issue: https://github.com/react/react-native/issues/53450#issuecomment-3298157830 
