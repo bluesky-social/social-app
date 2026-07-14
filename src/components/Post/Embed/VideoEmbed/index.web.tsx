@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import {View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -16,6 +16,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
+import {CENTER_COLUMN_WIDTH} from '#/components/Layout'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {
   HLSUnsupportedError,
@@ -96,7 +97,16 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     constrained = Math.max(aspectRatio, ratio)
   }
 
-  const [containerWidth, setContainerWidth] = useState(0)
+  const {width: windowWidth} = useWindowDimensions()
+
+  /*
+   * Estimated rather than measured with onLayout - a measurement lands after
+   * first paint, which flashed a full-width card for a frame before snapping
+   * narrow. The post column is capped at CENTER_COLUMN_WIDTH, and feed
+   * padding plus the avatar gutter inset the embed by roughly 100px.
+   */
+  const estimatedContainerWidth =
+    Math.min(windowWidth, CENTER_COLUMN_WIDTH) - 100
 
   /*
    * Portrait videos render at their own ratio instead of pillarboxed, but
@@ -105,7 +115,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
    * ratio can't be fit, so both keep the full-width pillarbox - a narrow
    * card with black slices down the sides looks broken (see #9371).
    */
-  const cardWidth = containerWidth * Math.min(aspectRatio ?? 1, 1)
+  const cardWidth = estimatedContainerWidth * Math.min(aspectRatio ?? 1, 1)
   const fullBleed =
     aspectRatio === undefined ||
     aspectRatio < 1 / 2 ||
@@ -163,9 +173,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   )
 
   return (
-    <View
-      style={[a.pt_xs]}
-      onLayout={e => setContainerWidth(e.nativeEvent.layout.width)}>
+    <View style={[a.pt_xs]}>
       <ViewportObserver
         sendPosition={isGif ? noop : sendPosition}
         isAnyViewActive={currentActiveView !== null}>
