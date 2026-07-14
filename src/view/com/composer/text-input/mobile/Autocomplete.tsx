@@ -1,16 +1,17 @@
 import {View} from 'react-native'
 import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
+import {useAutocomplete} from '#/components/Autocomplete'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
+import {useFollowsSource} from '#/features/autocomplete/useFollowsSource'
+import type * as bsky from '#/types/bsky'
 
 export function Autocomplete({
   prefix,
@@ -22,10 +23,15 @@ export function Autocomplete({
   const t = useTheme()
 
   const isActive = !!prefix
-  const {data: suggestions, isFetching} = useActorAutocompleteQuery(
-    prefix,
-    true,
-  )
+  const follows = useFollowsSource()
+  const {items, isFetching} = useAutocomplete({
+    type: 'profile',
+    query: prefix,
+    sources: isActive ? [follows] : undefined,
+  })
+  const suggestions = items
+    .filter(item => item.type === 'profile')
+    .map(item => item.profile)
 
   if (!isActive) return null
 
@@ -41,7 +47,7 @@ export function Autocomplete({
         t.atoms.border_contrast_high,
         {marginLeft: -62},
       ]}>
-      {suggestions?.length ? (
+      {suggestions.length ? (
         suggestions.slice(0, 5).map((item, index, arr) => {
           return (
             <AutocompleteProfileCard
@@ -70,7 +76,7 @@ function AutocompleteProfileCard({
   totalItems,
   onPress,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: bsky.profile.AnyProfileView
   itemIndex: number
   totalItems: number
   onPress: () => void
