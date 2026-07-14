@@ -1,10 +1,18 @@
-import {type AppBskyLabelerDefs} from '@atproto/api'
+import {
+  type AppBskyLabelerDefs,
+  ToolsOzoneReportDefs as OzoneReportDefs,
+} from '@atproto/api'
 
 import {OTHER_REPORT_REASONS} from '#/components/moderation/ReportDialog/const'
 import {
   type ReportCategoryConfig,
   type ReportOption,
 } from '#/components/moderation/ReportDialog/utils/useReportOptions'
+
+export type NciiQualification = {
+  residesInUS?: boolean
+  isDepicted?: boolean
+}
 
 export type ReportState = {
   selectedCategory?: ReportCategoryConfig
@@ -14,6 +22,30 @@ export type ReportState = {
   detailsOpen: boolean
   activeStepIndex1: number
   error?: string
+  /**
+   * Present while the selected reason is NCII. Tracks answers to the
+   * qualifying questions that determine whether the report should go through
+   * the external NCII report form instead of in-app submission.
+   */
+  ncii?: NciiQualification
+}
+
+/**
+ * Resolves the NCII qualifying questions into an outcome. US residents who
+ * are the depicted person (or their authorized representative) are directed
+ * to the external NCII report form; everyone else proceeds with the
+ * normal in-app submission.
+ */
+export function getNciiQualificationOutcome(
+  ncii?: NciiQualification,
+): 'pending' | 'externalForm' | 'inApp' | undefined {
+  if (!ncii) return undefined
+  if (ncii.residesInUS === false) return 'inApp'
+  if (ncii.residesInUS === true) {
+    if (ncii.isDepicted === true) return 'externalForm'
+    if (ncii.isDepicted === false) return 'inApp'
+  }
+  return 'pending'
 }
 
 export type ReportAction =
@@ -31,6 +63,11 @@ export type ReportAction =
     }
   | {
       type: 'clearOption'
+    }
+  | {
+      type: 'answerNciiQuestion'
+      question: keyof NciiQualification
+      answer: boolean
     }
   | {
       type: 'selectLabeler'
@@ -81,14 +118,19 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         selectedLabeler: undefined,
         activeStepIndex1: 1,
         detailsOpen: false,
+        ncii: undefined,
       }
-    case 'selectOption':
+    case 'selectOption': {
+      const isNcii = action.option.reason === OzoneReportDefs.REASONSEXUALNCII
       return {
         ...state,
         selectedOption: action.option,
-        activeStepIndex1: 3,
+        // NCII reports require answering qualifying questions before moving on
+        activeStepIndex1: isNcii ? 2 : 3,
         detailsOpen: OTHER_REPORT_REASONS.has(action.option.reason),
+        ncii: isNcii ? {} : undefined,
       }
+    }
     case 'clearOption':
       return {
         ...state,
@@ -96,12 +138,37 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         selectedLabeler: undefined,
         activeStepIndex1: 2,
         detailsOpen: false,
+        ncii: undefined,
       }
+    case 'answerNciiQuestion': {
+      const ncii = {...state.ncii, [action.question]: action.answer}
+      // the second question only applies to US residents
+      if (action.question === 'residesInUS') {
+        ncii.isDepicted = undefined
+      }
+      return {
+        ...state,
+        ncii,
+        activeStepIndex1:
+          getNciiQualificationOutcome(ncii) === 'inApp'
+            ? state.selectedLabeler
+              ? 4
+              : 3
+            : 2,
+      }
+    }
     case 'selectLabeler':
       return {
         ...state,
         selectedLabeler: action.labeler,
-        activeStepIndex1: 4,
+        /*
+         * Labelers may be auto-selected (e.g. chat reports only go to
+         * Bluesky), so don't advance past pending NCII qualifying questions.
+         */
+        activeStepIndex1:
+          getNciiQualificationOutcome(state.ncii) === 'inApp' || !state.ncii
+            ? 4
+            : 2,
         detailsOpen: state.selectedOption
           ? OTHER_REPORT_REASONS.has(state.selectedOption?.reason)
           : false,

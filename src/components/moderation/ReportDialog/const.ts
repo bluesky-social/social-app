@@ -7,7 +7,7 @@ import {type ParsedReportSubject} from '#/components/moderation/ReportDialog/typ
 
 export const DMCA_LINK = 'https://bsky.social/about/support/copyright'
 export const SUPPORT_PAGE = 'https://bsky.social/about/support'
-export const TAKE_IT_DOWN_ACT_FORM = 'https://forms.bsky.app/f/ncii'
+export const NCII_FORM = 'https://forms.bsky.app/f/ncii'
 
 export const NEW_TO_OLD_REASON_MAPPING: Record<string, string> = {}
 
