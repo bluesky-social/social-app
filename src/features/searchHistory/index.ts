@@ -16,7 +16,8 @@ const MAX_PROFILES = 10
  * Per-account recent search history (device storage). Terms are stored as
  * serialized history entries (plain string, or JSON when filters are
  * attached); profiles are stored as DIDs and hydrated via useProfilesQuery,
- * which keeps avatars/names fresh (stale-while-revalidate).
+ * which keeps avatars/names fresh (stale-while-revalidate). Both lists are
+ * ordered most-recent-first.
  */
 export function useSearchHistory() {
   const {currentAccount} = useSession()
@@ -34,10 +35,13 @@ export function useSearchHistory() {
     maintainData: true,
   })
 
-  const profiles =
-    accountHistoryProfiles?.profiles.filter(p =>
-      accountHistory.includes(p.did),
-    ) ?? []
+  /*
+   * getProfiles response order is not guaranteed, so map over accountHistory
+   * to preserve most-recent-first order (and drop entries not yet hydrated).
+   */
+  const profiles = accountHistory
+    .map(did => accountHistoryProfiles?.profiles.find(p => p.did === did))
+    .filter(p => p !== undefined)
 
   const updateSearchHistory = useCallback(
     (q: string, searchFilters: SearchFilters = {}) => {
