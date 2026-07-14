@@ -605,8 +605,9 @@ function LightboxImage({
         dismissSwipeTranslateY.set(() => {
           'worklet'
           return withSpring(0, {
-            stiffness: 2800,
-            damping: 200,
+            stiffness: 700,
+            damping: 50,
+            mass: 1,
             reduceMotion: ReduceMotion.Never,
           })
         })
