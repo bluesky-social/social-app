@@ -59,6 +59,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {useSearchHistory} from '#/features/searchHistory'
+import {useRecentSearchesSource} from '#/features/searchHistory/useRecentSearchesSource'
 import type * as bsky from '#/types/bsky'
 import {AdvancedSearchDialog} from './components/AdvancedSearchDialog'
 import {AutocompleteResults} from './components/AutocompleteResults'
@@ -126,6 +127,8 @@ export function SearchScreenShell({
     setSearchText(text)
   }, [])
 
+  const recents = useRecentSearchesSource()
+
   const {items: autocompleteItems, isFetching: isAutocompleteFetching} =
     useAutocomplete({
       type: 'profile',
@@ -135,6 +138,7 @@ export function SearchScreenShell({
        * query on web to keep the hook a no-op instead of doing wasted work.
        */
       query: IS_NATIVE ? searchText : '',
+      sources: [recents],
     })
 
   const [showAutocomplete, setShowAutocomplete] = useState(false)

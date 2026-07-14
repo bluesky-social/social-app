@@ -11,12 +11,13 @@ import {
   useAutocomplete,
 } from '#/components/Autocomplete'
 import {SearchInput} from '#/components/forms/SearchInput'
+import {useRecentSearchesSource} from '#/features/searchHistory/useRecentSearchesSource'
 
 export function DesktopSearch() {
   const navigation = useNavigation<NavigationProp>()
   const [active, setActive] = useState(false)
   const [query, setQuery] = useState<string>('')
-  const showResults = active && !!query.length
+  const showResults = active
 
   const sift = useSift({
     offset: a.p_sm.padding,
@@ -24,7 +25,7 @@ export function DesktopSearch() {
   })
 
   const onFocus = () => {
-    if (query.length) setActive(true)
+    setActive(true)
   }
 
   const onBlur = () => {
@@ -97,10 +98,12 @@ function Inner({
   onSelect: (item: AutocompleteItem) => void
   onDismiss: () => void
 }) {
+  const recents = useRecentSearchesSource()
   const {items} = useAutocomplete({
     type: 'profile',
     query,
     showSearchFallback: true,
+    sources: [recents],
   })
 
   return items && items.length ? (
