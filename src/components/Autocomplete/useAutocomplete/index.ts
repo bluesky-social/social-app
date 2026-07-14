@@ -129,3 +129,5 @@ export function useAutocomplete({
     isError: query.isError,
   }
 }
+
+export * from './useAutocompleteFn'
