@@ -8,7 +8,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useLikedBySampleQuery} from '#/state/queries/post-liked-by'
 import {useSession} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {InlineLinkText, Link} from '#/components/Link'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
@@ -32,6 +32,7 @@ const AVI_SIZE = 20
  */
 export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {t: l} = useLingui()
   const {hasSession, currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
@@ -98,8 +99,9 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   const aviStackProfiles = knownLikersAndModeration
     .slice(0, 3)
     .map(({actor}) => actor)
+  const maxNames = gtMobile ? 2 : 1
   const names = knownLikersAndModeration
-    .slice(0, 2)
+    .slice(0, maxNames)
     .map(({actor, moderation}) => {
       return {
         did: actor.did,
