@@ -5,6 +5,7 @@ import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {enforceLen} from '#/lib/strings/helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useLikedBySampleQuery} from '#/state/queries/post-liked-by'
 import {useSession} from '#/state/session'
@@ -17,6 +18,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
 const AVI_SIZE = 20
+const MAX_NAME_LENGTH = 16
 
 /**
  * The likes stat for the expanded anchor post. When the viewer follows some
@@ -106,9 +108,13 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
       return {
         did: actor.did,
         href: makeProfileLink(actor),
-        displayName: sanitizeDisplayName(
-          actor.displayName || actor.handle,
-          moderation.ui('displayName'),
+        displayName: enforceLen(
+          sanitizeDisplayName(
+            actor.displayName || actor.handle,
+            moderation.ui('displayName'),
+          ),
+          MAX_NAME_LENGTH,
+          true,
         ),
       }
     })
