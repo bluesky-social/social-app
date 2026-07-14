@@ -46,6 +46,7 @@ export type AutocompleteApi = {
   query: string
   items: AutocompleteItem[]
   isFetching: boolean
+  isError: boolean
 }
 
 /**

@@ -1,35 +1,31 @@
 import {useCallback, useMemo} from 'react'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {keepPreviousData, useQuery} from '@tanstack/react-query'
 
-import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
-import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 import {
   type AutocompleteApi,
   type AutocompleteItem,
   type AutocompleteItemType,
-  type AutocompleteProfile,
+  type LocalSource,
 } from '#/components/Autocomplete/types'
+import {mergeAutocompleteResults} from './mergeAutocompleteResults'
+import {DEFAULT_MOD_OPTS, moderateProfileItem} from './moderation'
 import {useEmojiSearch} from './useEmojiSearch'
-
-const DEFAULT_MOD_OPTS = {
-  userDid: undefined,
-  prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
-}
 
 export function useAutocomplete({
   type,
   query: q,
   limit,
   showSearchFallback = false,
+  sources,
 }: {
   type: AutocompleteItemType
   query: string
   limit?: number
   showSearchFallback?: boolean
+  sources?: LocalSource[]
 }): AutocompleteApi {
   const agent = useAgent()
   const moderationOpts = useModerationOpts()
@@ -46,7 +42,6 @@ export function useAutocomplete({
     ],
     async queryFn() {
       if (type === 'profile') {
-        // TODO return recents
         if (!q) return []
 
         // Going from "foo" to "foo." should not clear matches.
@@ -98,11 +93,23 @@ export function useAutocomplete({
   })
 
   const items = useMemo(() => {
-    if (!query.data) {
-      return []
-    }
+    const moderatedSources = sources?.map(source => ({
+      ...source,
+      items: source.items.filter(item => {
+        if (item.type !== 'profile') return true
+        return !!moderateProfileItem({
+          query: q,
+          item,
+          moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
+        })
+      }),
+    }))
 
-    const results = [...query.data]
+    const results = mergeAutocompleteResults({
+      query: q,
+      sources: moderatedSources,
+      remoteItems: query.data ?? [],
+    })
 
     if (showSearchFallback && q) {
       results.unshift({
@@ -112,35 +119,13 @@ export function useAutocomplete({
       })
     }
 
-    return results
-  }, [query.data, showSearchFallback, q])
+    return limit ? results.slice(0, limit) : results
+  }, [query.data, showSearchFallback, q, sources, moderationOpts, limit])
 
   return {
     query: q,
     items,
     isFetching: query.isFetching,
+    isError: query.isError,
   }
-}
-
-function moderateProfileItem({
-  query,
-  item,
-  moderationOpts,
-}: {
-  query: string
-  item: AutocompleteProfile
-  moderationOpts: ModerationOpts
-}) {
-  const modui = moderateProfile(item.profile, moderationOpts).ui('profileList')
-  const isExactMatch = query && item.profile.handle.toLowerCase() === query
-
-  if (
-    (isExactMatch && !moduiContainsHideableOffense(modui)) ||
-    !modui.filter ||
-    isJustAMute(modui)
-  ) {
-    return item
-  }
-
-  return null
 }
