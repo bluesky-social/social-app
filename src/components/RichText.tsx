@@ -13,7 +13,7 @@ import {Text, type TextProps} from '#/components/Typography'
 const WORD_WRAP = {wordWrap: 1}
 // lifted from facet detection in `RichText` impl, _without_ `gm` flags
 const URL_REGEX =
-  /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/i
+  /(^|\s|\()((https?:\/\/[\S]+)|(steam:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/i
 
 export type RichTextProps = TextStyleProp &
   Pick<TextProps, 'selectable' | 'onLayout' | 'onTextLayout'> & {
