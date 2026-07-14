@@ -169,13 +169,27 @@ See [testing.md](./testing.md).
 
 ### Sentry sourcemaps
 
-Sourcemaps upload automatically as part of each build path; there are no manual steps.
+Sourcemaps should automatically be updated when a signed build is created using `eas build` and published using `eas submit` due to the postPublish hook setup in `app.json`. However, if an update is created and published OTA using `eas update`, we need to take the following steps to upload sourcemaps to Sentry:
 
-- Native builds (`eas build` for iOS/Android): the `@sentry/react-native` Xcode build phase and Gradle plugin upload sourcemaps during the build. `SENTRY_AUTH_TOKEN`, `SENTRY_RELEASE`, and `SENTRY_DIST` are provided by the build workflows and read natively.
-- OTA updates: `pnpm export` runs `expo export --dump-sourcemap` and then `pnpm upload-native-sourcemaps`, which invokes `@sentry/expo-upload-sourcemaps` on the `dist/` folder. The org and project are read from the Sentry plugin config in `app.config.js`; `SENTRY_AUTH_TOKEN` is required and `SENTRY_RELEASE` is optional (it only lets you browse the artifacts under a release in the Sentry UI).
-- Web (`pnpm build-web`): `@sentry/webpack-plugin` uploads sourcemaps during the Docker web build.
-
-Matching is by debug ID end-to-end: the Metro serializer stamps a debugId into the bundle and its map, the upload passes `--debug-id-reference`, and at runtime the event's `debug_meta` carries the same id. Release/dist is only a legacy fallback, which is why OTA uploads no longer pass a dist.
+- Run eas update. This will generate a dist folder in your project root, which contains your JavaScript bundles and source maps. This command will also output the 'Android update ID' and 'iOS update ID' that we'll need in the next step.
+- Copy or rename the bundle names in the `dist/bundles` folder to match `index.android.bundle` (Android) or `main.jsbundle` (iOS).
+- Next, you can use the Sentry CLI to upload your bundles and source maps:
+  - release name should be set to `${bundleIdentifier}@${version}+${buildNumber}` (iOS) or `${androidPackage}@${version}+${versionCode}` (Android), so for example `com.domain.myapp@1.0.0+1`.
+  - `dist` should be set to the Update ID that `eas update` generated.
+- Command for Android:
+  `node_modules/@sentry/cli/bin/sentry-cli releases \
+files <release name> \
+upload-sourcemaps \
+--dist <Android Update ID> \
+--rewrite \
+dist/bundles/index.android.bundle dist/bundles/android-<hash>.map`
+- Command for iOS:
+  `node_modules/@sentry/cli/bin/sentry-cli releases \
+files <release name> \
+upload-sourcemaps \
+--dist <iOS Update ID> \
+--rewrite \
+dist/bundles/main.jsbundle dist/bundles/ios-<hash>.map`
 
 ### OTA updates
 

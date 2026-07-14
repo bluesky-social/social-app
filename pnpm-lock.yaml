@@ -739,9 +739,6 @@ importers:
       '@react-native/typescript-config':
         specifier: ^0.81.5
         version: 0.81.6
-      '@sentry/expo-upload-sourcemaps':
-        specifier: ~8.18.0
-        version: 8.18.0(@expo/env@2.0.11)(dotenv@16.6.1)
       '@sentry/webpack-plugin':
         specifier: ^3.2.2
         version: 3.6.1(webpack@5.106.2(postcss@8.5.14))
