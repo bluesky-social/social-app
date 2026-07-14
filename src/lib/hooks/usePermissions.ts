@@ -1,5 +1,8 @@
 import {Linking} from 'react-native'
-import {useCameraPermissions as useExpoCameraPermissions} from 'expo-camera'
+import {
+  PermissionStatus,
+  useCameraPermissions as useExpoCameraPermissions,
+} from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library'
 
 import {Alert} from '#/view/com/util/Alert'
@@ -78,18 +81,29 @@ export function useVideoLibraryPermission() {
 }
 
 export function useCameraPermission() {
-  const [res, requestPermission] = useExpoCameraPermissions()
+  const [permission, requestPermission] = useExpoCameraPermissions()
 
-  const requestCameraAccessIfNeeded = async () => {
-    if (res?.granted) {
-      return true
-    } else if (!res || res?.status === 'undetermined' || res?.canAskAgain) {
-      const updatedRes = await requestPermission()
-      return updatedRes?.granted
-    } else {
-      openPermissionAlert('camera')
-      return false
+  const requestCameraAccessIfNeeded = async (): Promise<boolean> => {
+    if (permission?.granted) return true
+
+    if (
+      !permission ||
+      permission.status === PermissionStatus.UNDETERMINED ||
+      permission.canAskAgain
+    ) {
+      const updated = await requestPermission()
+      return updated?.granted ?? false
     }
+
+    if (permission.status === PermissionStatus.DENIED) {
+      const updated = await requestPermission()
+      if (updated.status === PermissionStatus.DENIED) {
+        openPermissionAlert('camera')
+      }
+      return updated?.granted ?? false
+    }
+
+    return false
   }
 
   return {requestCameraAccessIfNeeded}
