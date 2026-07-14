@@ -57,6 +57,7 @@ Please be sure to:
 - Change all branding in the repository and UI to clearly differentiate from Bluesky.
 - Change any support links (feedback, email, terms of service, etc) to your own systems.
 - Replace any analytics or error-collection systems with your own so we don't get super confused.
+- See [`meta/Branding.md`](./meta/Branding.md) for a repository-wide migration map and checklist.
 
 ## Security disclosures
 
