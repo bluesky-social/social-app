@@ -215,6 +215,7 @@ overrides:
   react-native-screens: 4.24.0
 
 patchedDependencies:
+  '@sentry/expo-upload-sourcemaps@8.18.0': 2368e1e1986165e7ead3c60017b78b2f9ade1b6a6b2f5ad27cd428608c6f12ae
   expo-age-range@0.2.18: c325225749993424461eeece1d97a99b19c00da2ebc958a73c12e4eca0c39306
   expo-glass-effect@55.0.8: 6c9fa5b104e53b87df4e17b320acb3b94d12ac90c0101190045dd620681efff0
   expo-haptics@15.0.8: b33910ba2753c4eccdc885b449e6e33aa90b9cefa75ca8639762a26013141410
@@ -12157,7 +12158,7 @@ snapshots:
     dependencies:
       '@sentry/conventions': 0.15.1
 
-  '@sentry/expo-upload-sourcemaps@8.18.0(@expo/env@2.0.11)(dotenv@16.6.1)':
+  '@sentry/expo-upload-sourcemaps@8.18.0(patch_hash=2368e1e1986165e7ead3c60017b78b2f9ade1b6a6b2f5ad27cd428608c6f12ae)(@expo/env@2.0.11)(dotenv@16.6.1)':
     dependencies:
       '@sentry/cli': 3.6.0
     optionalDependencies:
@@ -12174,7 +12175,7 @@ snapshots:
       '@sentry/browser': 10.64.0
       '@sentry/cli': 3.6.0
       '@sentry/core': 10.64.0
-      '@sentry/expo-upload-sourcemaps': 8.18.0(@expo/env@2.0.11)(dotenv@16.6.1)
+      '@sentry/expo-upload-sourcemaps': 8.18.0(patch_hash=2368e1e1986165e7ead3c60017b78b2f9ade1b6a6b2f5ad27cd428608c6f12ae)(@expo/env@2.0.11)(dotenv@16.6.1)
       '@sentry/react': 10.64.0(react@19.1.0)
       react: 19.1.0
       react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
