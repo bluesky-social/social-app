@@ -42,6 +42,7 @@ import {
   BSKY_LABELER_ONLY_SUBJECT_TYPES,
   NEW_TO_OLD_REASONS_MAP,
   SUPPORT_PAGE,
+  TAKE_IT_DOWN_ACT_FORM,
 } from './const'
 import {useCopyForSubject} from './copy'
 import {initialState, reducer} from './state'
@@ -409,6 +410,39 @@ function Inner(props: ReportDialogProps) {
                   }}
                 />
               ))}
+
+              {state.selectedCategory.key === 'sexualAdultContent' && (
+                <Link
+                  to={TAKE_IT_DOWN_ACT_FORM}
+                  label={l`Need this report to be reviewed under the "Take it down act"?`}>
+                  {({hovered, pressed}) => (
+                    <View
+                      style={[
+                        a.flex_row,
+                        a.align_center,
+                        a.w_full,
+                        a.px_md,
+                        a.py_sm,
+                        a.rounded_sm,
+                        a.border,
+                        hovered || pressed
+                          ? [t.atoms.border_contrast_high]
+                          : [t.atoms.border_contrast_low],
+                      ]}>
+                      <Text style={[a.flex_1, a.italic, a.leading_snug]}>
+                        <Trans>
+                          Need this report to be reviewed under the “Take it
+                          down act”?
+                        </Trans>
+                      </Text>
+                      <SquareArrowTopRight
+                        size="sm"
+                        fill={t.atoms.text.color}
+                      />
+                    </View>
+                  )}
+                </Link>
+              )}
             </View>
           ) : null}
         </StepOuter>
