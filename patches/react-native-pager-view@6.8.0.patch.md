@@ -6,6 +6,8 @@ The pager already handles `RNSPanGestureRecognizer` (react-native-screens' custo
 
 This patch adds the same logic for iOS 26's native `interactiveContentPopGestureRecognizer`, so the back gesture works on the leftmost page while the pager still handles swipes on other pages.
 
+The fix is applied to both implementations: `ios/RNCPagerView.m` (Paper) and `ios/Fabric/RNCPagerViewComponentView.mm` (New Architecture). The Fabric variant finds the navigation controller via the responder chain (there is no `reactViewController` helper imported there) and reads `scrollEnabled` from the Fabric props.
+
 Related issues:
 - https://github.com/software-mansion/react-native-screens/issues/3512
 - https://github.com/software-mansion/react-native-screens/pull/3420
