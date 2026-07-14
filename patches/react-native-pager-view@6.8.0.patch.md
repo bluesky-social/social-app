@@ -9,3 +9,15 @@ This patch adds the same logic for iOS 26's native `interactiveContentPopGesture
 Related issues:
 - https://github.com/software-mansion/react-native-screens/issues/3512
 - https://github.com/software-mansion/react-native-screens/pull/3420
+
+---
+
+Also embeds the Fabric `UIPageViewController` into the view controller hierarchy (`ios/Fabric/RNCPagerViewComponentView.mm`).
+
+The Paper implementation calls `reactAddControllerToClosestParent:` when embedding its `UIPageViewController`, so the controller becomes a child of the nearest ancestor view controller (e.g. `RNSScreen`). The Fabric implementation never does this - the page view controller is orphaned (`parentViewController == nil`).
+
+UIKit resolves the status-bar-tap scroll-to-top gesture by walking `parentViewController`/`presentingViewController` from each candidate scroll view's nearest view controller up to the window's root (see `-[UIWindow _scrollToTopViewsUnderScreenPointIfNecessary:resultHandler:]`). With the orphaned controller that walk dead-ends, so every scroll view rendered inside a pager (all Home feeds, Profile tabs, etc.) is dropped from candidate selection and tapping the status bar no longer scrolls feeds to top. It only kept "working" when the window happened to contain exactly one other eligible scroll view, via UIKit's single-candidate fallback.
+
+The patch attaches the page view controller to the nearest view controller found via the responder chain on `didMoveToWindow` (with a `layoutSubviews` retry because the ancestor controller may not be wired up on the first pass - same timing issue as callstack/react-native-pager-view#1089), and detaches it in `prepareForRecycle` to avoid leaking the controller after unmount.
+
+Fixed upstream in v8 by the SwiftUI rewrite, which embeds via `reactViewController()` + `addChild` (see `PagerViewProvider.swift`).
