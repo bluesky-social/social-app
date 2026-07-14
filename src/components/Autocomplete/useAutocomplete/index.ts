@@ -105,13 +105,23 @@ export function useAutocomplete({
       }),
     }))
 
-    const results = mergeAutocompleteResults({
+    let results = mergeAutocompleteResults({
       query: q,
       sources: moderatedSources,
       remoteItems: query.data ?? [],
     })
 
     if (showSearchFallback && q) {
+      /*
+       * A recent search term matching the query would duplicate the fallback
+       * row (their keys differ, so key dedupe can't catch it). Drop the
+       * matching term and let the fallback row stand in for it.
+       */
+      const nq = q.trim().toLowerCase()
+      results = results.filter(
+        item =>
+          !(item.type === 'search' && item.value.trim().toLowerCase() === nq),
+      )
       results.unshift({
         key: `search-${q}`,
         type: 'search' as const,
