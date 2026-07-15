@@ -5,10 +5,11 @@ import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {enforceLen} from '#/lib/strings/helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useLikedBySampleQuery} from '#/state/queries/post-liked-by'
 import {useSession} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {InlineLinkText, Link} from '#/components/Link'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
@@ -17,6 +18,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
 const AVI_SIZE = 20
+const MAX_NAME_LENGTH = 16
 
 /**
  * The likes stat for the expanded anchor post. When the viewer follows some
@@ -32,6 +34,7 @@ const AVI_SIZE = 20
  */
 export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {t: l} = useLingui()
   const {hasSession, currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
@@ -98,15 +101,20 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   const aviStackProfiles = knownLikersAndModeration
     .slice(0, 3)
     .map(({actor}) => actor)
+  const maxNames = gtMobile ? 2 : 1
   const names = knownLikersAndModeration
-    .slice(0, 2)
+    .slice(0, maxNames)
     .map(({actor, moderation}) => {
       return {
         did: actor.did,
         href: makeProfileLink(actor),
-        displayName: sanitizeDisplayName(
-          actor.displayName || actor.handle,
-          moderation.ui('displayName'),
+        displayName: enforceLen(
+          sanitizeDisplayName(
+            actor.displayName || actor.handle,
+            moderation.ui('displayName'),
+          ),
+          MAX_NAME_LENGTH,
+          true,
         ),
       }
     })
