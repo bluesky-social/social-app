@@ -438,6 +438,21 @@ export function useSetActiveProgressGuideMutation() {
   })
 }
 
+export function useSetIsBetaUserMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation({
+    mutationFn: async (isBetaUser: boolean) => {
+      await agent.setIsBetaUser(isBetaUser)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
 export function useSetVerificationPrefsMutation() {
   const ax = useAnalytics()
   const queryClient = useQueryClient()
