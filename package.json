@@ -62,7 +62,7 @@
     "lint": "oxlint --quiet src modules",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
-    "lexicons:generate": "lex build --clear --index-file",
+    "lexicons:generate": "lex build --clear --index-file --import-ext ''",
     "lexicons:update": "lex install --update",
     "typecheck": "pnpm run typecheck:ios && pnpm run typecheck:android && pnpm run typecheck:web",
     "typecheck:ios": "tsgo --project ./tsconfig.check.ios.json",

@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {type AppBskyUnspeccedGetTrends, hasMutedWord} from '@atproto/api'
+import {hasMutedWord} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
 import {
@@ -9,14 +9,15 @@ import {
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import {useLexClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 export const DEFAULT_LIMIT = 5
 
 export const createGetTrendsQueryKey = () => ['trends']
 
 export function useGetTrendsQuery() {
-  const agent = useAgent()
+  const client = useLexClient()
   const {data: preferences} = usePreferencesQuery()
   const mutedWords = useMemo(() => {
     return preferences?.moderationPrefs?.mutedWords || []
@@ -28,7 +29,8 @@ export function useGetTrendsQuery() {
     queryKey: createGetTrendsQueryKey(),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
-      const {data} = await agent.app.bsky.unspecced.getTrends(
+      return await client.call(
+        app.bsky.unspecced.getTrends,
         {
           limit: DEFAULT_LIMIT,
         },
@@ -39,10 +41,9 @@ export function useGetTrendsQuery() {
           },
         },
       )
-      return data
     },
     select: useCallback(
-      (data: AppBskyUnspeccedGetTrends.OutputSchema) => {
+      (data: app.bsky.unspecced.getTrends.$OutputBody) => {
         return {
           trends: (data.trends ?? []).filter(t => {
             return !hasMutedWord({

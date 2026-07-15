@@ -9,6 +9,7 @@ import {
   useSyncExternalStore,
 } from 'react'
 import {type AtpAgent, type AtpSessionEvent} from '@atproto/api'
+import {type Client} from '@atproto/lex-client'
 
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -26,6 +27,7 @@ import {
 } from './agent'
 import {type Action, getInitialState, reducer, type State} from './reducer'
 export {isSignupQueued} from './util'
+import {agentToLexClient} from './clients'
 import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
 
@@ -459,4 +461,15 @@ export function useAgent(): AtpAgent {
     throw Error('useAgent() must be below <SessionProvider>.')
   }
   return agent
+}
+
+/**
+ * Authenticated lex {@link Client} wrapping the current session agent. Stable
+ * per-agent, so it only changes identity when the active account changes.
+ *
+ * @see agentToLexClient for how the AtpAgent is bridged to the lex Client.
+ */
+export function useLexClient(): Client {
+  const agent = useAgent()
+  return agentToLexClient(agent)
 }
