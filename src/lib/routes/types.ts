@@ -50,6 +50,8 @@ export type CommonNavigatorParams = {
   DebugMod: undefined
   SharedPreferencesTester: undefined
   Log: undefined
+  // skeetch: temporary dev-only entry point, removed once the composer button lands
+  Draw: undefined
   Support: undefined
   PrivacyPolicy: undefined
   TermsOfService: undefined
