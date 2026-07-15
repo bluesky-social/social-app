@@ -1,12 +1,16 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import {type AppBskyFeedDefs, XRPCError} from '@atproto/api'
+import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useCallOnce} from '#/lib/once'
-import {cleanError} from '#/lib/strings/errors'
+import {
+  cleanError,
+  isNetworkError,
+  shouldRetryError,
+} from '#/lib/strings/errors'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
@@ -32,12 +36,6 @@ import {SearchError} from '#/components/SearchError'
 import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
-
-// TODO Replace this with error.shouldRetry() when available. -dsb
-const RETRYABLE_ERRORS = [408, 425, 429, 500, 502, 503, 504, 522, 524]
-function shouldRetry(error: unknown) {
-  return error instanceof XRPCError && RETRYABLE_ERRORS.includes(error.status)
-}
 
 let SearchResults = ({
   query,
@@ -409,7 +407,7 @@ let SearchScreenPostResults = ({
   return error ? (
     <EmptyState
       messageText={
-        shouldRetry(error)
+        shouldRetryError(error) || isNetworkError(error)
           ? l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`
           : l`We’re sorry, but your search could not be completed.`
       }
@@ -550,7 +548,7 @@ let SearchScreenUserResults = ({
     return (
       <EmptyState
         messageText={
-          shouldRetry(error)
+          shouldRetryError(error) || isNetworkError(error)
             ? l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`
             : l`We’re sorry, but your search could not be completed.`
         }

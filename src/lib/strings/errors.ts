@@ -86,3 +86,9 @@ export function isCancelledError(e: unknown) {
   const str = String(e).toLowerCase()
   return str.includes('cancel')
 }
+
+// TODO Replace this with error.shouldRetry() when available. -dsb
+const RETRYABLE_ERRORS = [408, 425, 429, 500, 502, 503, 504, 522, 524]
+export function shouldRetryError(e: unknown) {
+  return e instanceof XRPCError && RETRYABLE_ERRORS.includes(e.status)
+}
