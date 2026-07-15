@@ -1,0 +1,25 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.authManageProfile",
+  "defs": {
+    "main": {
+      "type": "permission-set",
+      "title": "Manage Bluesky Profile",
+      "title:lang": {},
+      "detail": "Update profile data, as well as status and public chat visibility.",
+      "detail:lang": {},
+      "permissions": [
+        {
+          "type": "permission",
+          "resource": "repo",
+          "action": ["create", "update", "delete"],
+          "collection": [
+            "app.bsky.actor.profile",
+            "app.bsky.actor.status",
+            "app.bsky.notification.declaration"
+          ]
+        }
+      ]
+    }
+  }
+}

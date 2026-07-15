@@ -1,0 +1,53 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.group.editJoinLink",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Edits the existing join link settings for the group convo.",
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        },
+        {
+          "name": "InsufficientRole"
+        },
+        {
+          "name": "NoJoinLink"
+        }
+      ],
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convoId"],
+          "properties": {
+            "convoId": {
+              "type": "string"
+            },
+            "requireApproval": {
+              "type": "boolean"
+            },
+            "joinRule": {
+              "type": "ref",
+              "ref": "chat.bsky.group.defs#joinRule"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["joinLink"],
+          "properties": {
+            "joinLink": {
+              "type": "ref",
+              "ref": "chat.bsky.group.defs#joinLinkView"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,262 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.draft.defs",
+  "defs": {
+    "draftWithId": {
+      "description": "A draft with an identifier, used to store drafts in private storage (stash).",
+      "type": "object",
+      "required": ["id", "draft"],
+      "properties": {
+        "id": {
+          "description": "A TID to be used as a draft identifier.",
+          "type": "string",
+          "format": "tid"
+        },
+        "draft": {
+          "type": "ref",
+          "ref": "#draft"
+        }
+      }
+    },
+    "draft": {
+      "description": "A draft containing an array of draft posts.",
+      "type": "object",
+      "required": ["posts"],
+      "properties": {
+        "deviceId": {
+          "type": "string",
+          "description": "UUIDv4 identifier of the device that created this draft.",
+          "maxLength": 100
+        },
+        "deviceName": {
+          "type": "string",
+          "description": "The device and/or platform on which the draft was created.",
+          "maxLength": 100
+        },
+        "posts": {
+          "description": "Array of draft posts that compose this draft.",
+          "type": "array",
+          "minLength": 1,
+          "maxLength": 100,
+          "items": {
+            "type": "ref",
+            "ref": "#draftPost"
+          }
+        },
+        "langs": {
+          "type": "array",
+          "description": "Indicates human language of posts primary text content.",
+          "maxLength": 3,
+          "items": {
+            "type": "string",
+            "format": "language"
+          }
+        },
+        "postgateEmbeddingRules": {
+          "description": "Embedding rules for the postgates to be created when this draft is published.",
+          "type": "array",
+          "maxLength": 5,
+          "items": {
+            "type": "union",
+            "refs": ["app.bsky.feed.postgate#disableRule"]
+          }
+        },
+        "threadgateAllow": {
+          "description": "Allow-rules for the threadgate to be created when this draft is published.",
+          "type": "array",
+          "maxLength": 5,
+          "items": {
+            "type": "union",
+            "refs": [
+              "app.bsky.feed.threadgate#mentionRule",
+              "app.bsky.feed.threadgate#followerRule",
+              "app.bsky.feed.threadgate#followingRule",
+              "app.bsky.feed.threadgate#listRule"
+            ]
+          }
+        }
+      }
+    },
+    "draftPost": {
+      "description": "One of the posts that compose a draft.",
+      "type": "object",
+      "required": ["text"],
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 10000,
+          "maxGraphemes": 1000,
+          "description": "The primary post content. It has a higher limit than post contents to allow storing a larger text that can later be refined into smaller posts."
+        },
+        "labels": {
+          "type": "union",
+          "description": "Self-label values for this post. Effectively content warnings.",
+          "refs": ["com.atproto.label.defs#selfLabels"]
+        },
+        "embedImages": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "#draftEmbedImage"
+          },
+          "maxLength": 4
+        },
+        "embedGallery": {
+          "type": "ref",
+          "ref": "#draftEmbedGallery"
+        },
+        "embedVideos": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "#draftEmbedVideo"
+          },
+          "maxLength": 1
+        },
+        "embedExternals": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "#draftEmbedExternal"
+          },
+          "maxLength": 1
+        },
+        "embedRecords": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "#draftEmbedRecord"
+          },
+          "maxLength": 1
+        }
+      }
+    },
+    "draftView": {
+      "description": "View to present drafts data to users.",
+      "type": "object",
+      "required": ["id", "draft", "createdAt", "updatedAt"],
+      "properties": {
+        "id": {
+          "description": "A TID to be used as a draft identifier.",
+          "type": "string",
+          "format": "tid"
+        },
+        "draft": {
+          "type": "ref",
+          "ref": "#draft"
+        },
+        "createdAt": {
+          "description": "The time the draft was created.",
+          "type": "string",
+          "format": "datetime"
+        },
+        "updatedAt": {
+          "description": "The time the draft was last updated.",
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    },
+    "draftEmbedLocalRef": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Local, on-device ref to file to be embedded. Embeds are currently device-bound for drafts.",
+          "minLength": 1,
+          "maxLength": 1024
+        }
+      }
+    },
+    "draftEmbedCaption": {
+      "type": "object",
+      "required": ["lang", "content"],
+      "properties": {
+        "lang": {
+          "type": "string",
+          "format": "language"
+        },
+        "content": {
+          "type": "string",
+          "maxLength": 10000
+        }
+      }
+    },
+    "draftEmbedGallery": {
+      "type": "object",
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "ref",
+          "ref": "#draftEmbedGalleryItems"
+        }
+      }
+    },
+    "draftEmbedGalleryItems": {
+      "type": "array",
+      "items": {
+        "type": "union",
+        "refs": ["#draftEmbedImage"]
+      },
+      "maxLength": 20,
+      "description": "The schema-level maxLength of 20 is a future-proof ceiling. Clients should currently enforce a soft limit of 10 items in authoring UIs."
+    },
+    "draftEmbedImage": {
+      "type": "object",
+      "required": ["localRef"],
+      "properties": {
+        "localRef": {
+          "type": "ref",
+          "ref": "#draftEmbedLocalRef"
+        },
+        "alt": {
+          "type": "string",
+          "maxGraphemes": 2000
+        }
+      }
+    },
+    "draftEmbedVideo": {
+      "type": "object",
+      "required": ["localRef"],
+      "properties": {
+        "localRef": {
+          "type": "ref",
+          "ref": "#draftEmbedLocalRef"
+        },
+        "alt": {
+          "type": "string",
+          "maxGraphemes": 2000
+        },
+        "captions": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "#draftEmbedCaption"
+          },
+          "maxLength": 20
+        }
+      }
+    },
+    "draftEmbedExternal": {
+      "type": "object",
+      "required": ["uri"],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "draftEmbedRecord": {
+      "type": "object",
+      "required": ["record"],
+      "properties": {
+        "record": {
+          "type": "ref",
+          "ref": "com.atproto.repo.strongRef"
+        }
+      }
+    }
+  }
+}

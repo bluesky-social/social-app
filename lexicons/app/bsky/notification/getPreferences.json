@@ -1,0 +1,27 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.notification.getPreferences",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get notification-related preferences for an account. Requires auth.",
+      "parameters": {
+        "type": "params",
+        "properties": {}
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["preferences"],
+          "properties": {
+            "preferences": {
+              "type": "ref",
+              "ref": "app.bsky.notification.defs#preferences"
+            }
+          }
+        }
+      }
+    }
+  }
+}

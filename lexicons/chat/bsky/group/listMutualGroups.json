@@ -1,0 +1,48 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.group.listMutualGroups",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Returns a page of group conversations that both the requester and the specified actor are members of.",
+      "parameters": {
+        "type": "params",
+        "required": ["subject"],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "format": "did"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convos"],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "convos": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "chat.bsky.convo.defs#convoView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.bookmark.createBookmark",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Creates a private bookmark for the specified record. Currently, only `app.bsky.feed.post` records are supported. Requires authentication.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["uri", "cid"],
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "at-uri"
+            },
+            "cid": {
+              "type": "string",
+              "format": "cid"
+            }
+          }
+        }
+      },
+      "errors": [
+        {
+          "name": "UnsupportedCollection",
+          "description": "The URI to be bookmarked is for an unsupported collection."
+        }
+      ]
+    }
+  }
+}

@@ -62,6 +62,7 @@
     "bskyogcard/**",
     "src/locale/locales/_build/**",
     "src/locale/locales/**/*.js",
+    "src/lexicons/**",
     "*.e2e.ts",
     "*.e2e.tsx",
     "eslint.config.mjs",

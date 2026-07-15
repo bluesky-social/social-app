@@ -1,0 +1,57 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.contact.verifyPhone",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Verifies control over a phone number with a code received via SMS and starts a contact import session. Requires authentication.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["phone", "code"],
+          "properties": {
+            "phone": {
+              "description": "The phone number to verify. Should be the same as the one passed to `app.bsky.contact.startPhoneVerification`.",
+              "type": "string"
+            },
+            "code": {
+              "description": "The code received via SMS as a result of the call to `app.bsky.contact.startPhoneVerification`.",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["token"],
+          "properties": {
+            "token": {
+              "description": "JWT to be used in a call to `app.bsky.contact.importContacts`. It is only valid for a single call.",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "errors": [
+        {
+          "name": "RateLimitExceeded"
+        },
+        {
+          "name": "InvalidDid"
+        },
+        {
+          "name": "InvalidPhone"
+        },
+        {
+          "name": "InvalidCode"
+        },
+        {
+          "name": "InternalError"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.embed.getEmbedExternalView",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Resolve one or more AT-URIs into the data needed to render an enhanced external embed. Returns `associatedRefs` (strongRefs to embed into a post's external.associatedRefs), the raw `associatedRecords`, and a hydrated `view`. The response is empty (`{}`) when no records were resolvable, or when validation determined the resolved records don't actually back the requested URL; clients should fall back to their own link-card rendering in that case and skip writing strongRefs to the post.",
+      "parameters": {
+        "type": "params",
+        "required": ["url", "uris"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The canonical web URL the embed represents (typically the URL the user pasted into the composer). Used as the returned view's `uri`. May be used for validation in the future."
+          },
+          "uris": {
+            "type": "array",
+            "description": "AT-URIs of any Atmosphere records that can be resolved and used to construct #externalView views. Example: a site.standard.document and optionally its associated site.standard.publication.",
+            "items": {
+              "type": "string",
+              "format": "at-uri"
+            },
+            "maxLength": 4
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "view": {
+              "type": "ref",
+              "ref": "app.bsky.embed.external#view",
+              "description": "Hydrated view of the embed. Present only when the resolved records back the requested URL and supply enough information to populate the required `viewExternal` fields. Omitted alongside the rest of the response when no records resolved or validation failed."
+            },
+            "associatedRefs": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "com.atproto.repo.strongRef"
+              },
+              "description": "StrongRefs (URI+CID) of the Atmosphere records that backed this view, suitable for embedding into a post's external.associatedRefs."
+            },
+            "associatedRecords": {
+              "type": "array",
+              "items": {
+                "type": "unknown",
+                "description": "The raw record data of the Atmosphere records that backed this view. This is returned for convenience, to avoid the need for the client to separately fetch the record data for the associatedRefs. Example: the site.standard.document and site.standard.publication records that backed this view."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
