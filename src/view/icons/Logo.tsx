@@ -10,7 +10,7 @@ import Svg, {
 } from 'react-native-svg'
 import {Image} from 'expo-image'
 
-import {useKawaiiMode} from '#/state/preferences/kawaii'
+import {useLogoVariant} from '#/view/icons/useLogoVariant'
 import {flatten, useTheme} from '#/alf'
 
 const ratio = 57 / 64
@@ -31,20 +31,23 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
   // @ts-ignore it's fiiiiine
   const size = parseInt(rest.width || 32, 10)
 
-  const isKawaii = useKawaiiMode()
+  const logoVariant = useLogoVariant()
 
-  if (isKawaii) {
+  if (logoVariant !== 'default') {
+    const isJapanLogo = logoVariant === 'japan'
     return (
       <Image
         source={
-          size > 100
-            ? require('../../../assets/kawaii.png')
-            : require('../../../assets/kawaii_smol.png')
+          isJapanLogo
+            ? require('../../../assets/custom_logo_japan.png')
+            : size > 100
+              ? require('../../../assets/kawaii.png')
+              : require('../../../assets/kawaii_smol.png')
         }
         accessibilityLabel="Bluesky"
         accessibilityHint=""
         accessibilityIgnoresInvertColors
-        style={[{height: size, aspectRatio: 1.4}]}
+        style={[{height: size, aspectRatio: isJapanLogo ? 1940 / 1080 : 1.4}]}
       />
     )
   }
