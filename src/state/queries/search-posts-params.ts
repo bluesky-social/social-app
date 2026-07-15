@@ -13,6 +13,17 @@ import {
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}/
 
+/**
+ * Strips a leading `@` from a handle so `from:@alice.bsky.social` and
+ * `from:alice.bsky.social` both resolve to the same author. Mirrors the marker
+ * stripping the advanced-search dialog applies to handles entered in its
+ * filter fields (see `serializeAdvancedSearch`), which otherwise 400s the
+ * appview.
+ */
+function stripHandleMarker(value: string): string {
+  return value.startsWith('@') ? value.slice(1) : value
+}
+
 export type ExtractedSearchParams = {
   q: string
   author?: string
@@ -111,12 +122,12 @@ export function extractSearchPostsParams(query: string): ExtractedSearchParams {
          * query text verbatim rather than lifting it into a structured param.
          */
         if (value === 'me') remaining.push(token)
-        else result.author ??= value
+        else result.author ??= stripHandleMarker(value)
         break
       case 'mentions':
       case 'to':
         if (value === 'me') remaining.push(token)
-        else result.mentions ??= value
+        else result.mentions ??= stripHandleMarker(value)
         break
       case 'domain':
         result.domain ??= value
