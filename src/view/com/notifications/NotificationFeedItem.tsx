@@ -44,7 +44,7 @@ import {Post} from '#/view/com/post/Post'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
@@ -243,7 +243,13 @@ let NotificationFeedItem = ({
     <ProfileHoverCard did={firstAuthor.profile.did} inline>
       <InlineLinkText
         key={firstAuthor.href}
-        style={[t.atoms.text, a.font_semi_bold, a.text_md, a.leading_tight]}
+        style={[
+          t.atoms.text,
+          a.font_semi_bold,
+          a.text_md,
+          a.leading_tight,
+          web({direction: 'ltr', unicodeBidi: 'isolate'}),
+        ]}
         to={firstAuthor.href}
         disableMismatchWarning
         emoji
