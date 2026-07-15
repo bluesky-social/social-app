@@ -24,7 +24,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {features} from '#/analytics'
 import {getTargetedFeatures} from '#/analytics/features'
-import {IS_INTERNAL, IS_WEB} from '#/env'
+import {IS_WEB} from '#/env'
 import {account} from '#/storage'
 
 type Props = NativeStackScreenProps<
@@ -97,8 +97,7 @@ export function BetaFeaturesSettingsScreen({}: Props) {
     feedbackControl.open()
   }
 
-  const canSubmitFeedback =
-    !isPending && isBetaUser && (betaFeatures.length > 0 || IS_INTERNAL)
+  const canSubmitFeedback = !isPending && isBetaUser && betaFeatures.length > 0
 
   return (
     <Layout.Screen>
