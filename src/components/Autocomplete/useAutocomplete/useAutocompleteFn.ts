@@ -33,6 +33,8 @@ export function useAutocompleteFn({
 
   return useCallback(
     async (query: string, limit: number = 8): Promise<AutocompleteItem[]> => {
+      // Going from "foo" to "foo." should not clear matches.
+      const nq = query.toLowerCase().trim().replace(/\.$/, '')
       let remoteItems: AutocompleteItem[] = []
 
       if (type === 'profile' && query) {
@@ -41,9 +43,7 @@ export function useAutocompleteFn({
             staleTime: STALE.MINUTES.ONE,
             queryKey: ['autocomplete', {type, query}],
             async queryFn() {
-              // Going from "foo" to "foo." should not clear matches.
-              const q = query.toLowerCase().trim().replace(/\.$/, '')
-              const res = await agent.searchActorsTypeahead({q, limit})
+              const res = await agent.searchActorsTypeahead({q: nq, limit})
               return (res?.data.actors || []).map(profile => ({
                 key: profile.did,
                 type: 'profile' as const,
@@ -73,7 +73,7 @@ export function useAutocompleteFn({
       const moderate = (items: AutocompleteItem[]) =>
         items.filter(item => {
           if (item.type !== 'profile') return true
-          return !!moderateProfileItem({query, item, moderationOpts: opts})
+          return !!moderateProfileItem({query: nq, item, moderationOpts: opts})
         })
 
       const moderatedSources = sources?.map(source => ({
