@@ -110,6 +110,21 @@ export default function Storybook() {
             </Button>
             <InviteFriendsDialog control={inviteFriendsControl} />
 
+            <Button
+              color="negative"
+              size="large"
+              onPress={() => {
+                /*
+                 * Intentionally uncaught so it reaches Sentry's global error
+                 * handler. In production builds this is a fatal crash.
+                 */
+                throw new Error('Test crash from Storybook')
+              }}
+              label="Crash the app"
+              testID="storybookCrashBtn">
+              <ButtonText>Crash the app (test Sentry)</ButtonText>
+            </Button>
+
             <ThemeProvider theme="light">
               <Theming />
             </ThemeProvider>
