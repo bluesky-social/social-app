@@ -485,9 +485,17 @@ function GalleryImage({
             loading={index === 0 ? 'eager' : 'lazy'}
             style={[dims]}
             onLoad={e => {
-              const ar = getAspectRatio(e.source)
-              if (ar && ar !== aspectRatio) {
-                setAspectRatio(ar)
+              /*
+               * Only sync from the loaded thumb if we don't already have a
+               * ratio from the record. The CDN scales thumbs to integer pixel
+               * dims, so its reported ratio drifts a fraction from the
+               * record's - re-syncing would jiggle the FlatList item widths.
+               */
+              if (aspectRatio === undefined) {
+                const ar = getAspectRatio(e.source)
+                if (ar !== undefined) {
+                  setAspectRatio(ar)
+                }
               }
               onThumbDims(index, {
                 width: e.source.width,
