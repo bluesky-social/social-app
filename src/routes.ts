@@ -40,6 +40,8 @@ export const router = new Router<AllNavigatableRoutes>({
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',
   Log: '/sys/log',
+  // skeetch: temporary dev-only entry point, removed once the composer button lands
+  Draw: '/sys/draw',
   // invite friends
   InviteScanner: '/invite/scan',
   // settings

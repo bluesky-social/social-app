@@ -133,6 +133,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
+import {DrawScreen} from '#/draw/screens/DrawScreen'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {InviteScannerScreen} from '#/features/inviteFriends'
 import {router} from '#/routes'
@@ -310,6 +311,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => DebugModScreen}
         options={{title: title(msg`Moderation states`), requireAuth: true}}
       />
+      {/* skeetch: temporary dev-only entry point, removed once the composer button lands */}
+      {__DEV__ && (
+        <Stack.Screen
+          name="Draw"
+          getComponent={() => DrawScreen}
+          options={{title: title(msg`Draw`)}}
+        />
+      )}
       <Stack.Screen
         name="InviteScanner"
         getComponent={() => InviteScannerScreen}
