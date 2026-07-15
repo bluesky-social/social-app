@@ -127,7 +127,7 @@ export function SearchScreenShell({
     setSearchText(text)
   }, [])
 
-  const recents = useRecentSearchesSource()
+  const recents = useRecentSearchesSource({profilesOnly: true})
 
   const {items: autocompleteItems, isFetching: isAutocompleteFetching} =
     useAutocomplete({
@@ -138,7 +138,7 @@ export function SearchScreenShell({
        * query on web to keep the hook a no-op instead of doing wasted work.
        */
       query: IS_NATIVE ? searchText : '',
-      sources: [recents],
+      sources: IS_NATIVE ? [recents] : undefined,
     })
 
   const [showAutocomplete, setShowAutocomplete] = useState(false)
