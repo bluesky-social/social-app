@@ -31,6 +31,9 @@ export function useAutocomplete({
   const moderationOpts = useModerationOpts()
   const emojiSearch = useEmojiSearch()
 
+  // Going from "foo" to "foo." should not clear matches.
+  const nq = q.toLowerCase().trim().replace(/\.$/, '')
+
   const query = useQuery({
     staleTime: STALE.MINUTES.ONE,
     queryKey: [
@@ -44,11 +47,8 @@ export function useAutocomplete({
       if (type === 'profile') {
         if (!q) return []
 
-        // Going from "foo" to "foo." should not clear matches.
-        q = q.toLowerCase().trim().replace(/\.$/, '')
-
         const res = await agent.searchActorsTypeahead({
-          q,
+          q: nq,
           limit: limit || 8,
         })
 
@@ -75,7 +75,7 @@ export function useAutocomplete({
 
           if (item.type === 'profile') {
             const moderated = moderateProfileItem({
-              query: q,
+              query: nq,
               item,
               moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
             })
@@ -87,7 +87,7 @@ export function useAutocomplete({
 
         return results
       },
-      [q, moderationOpts],
+      [nq, moderationOpts],
     ),
     placeholderData: keepPreviousData,
   })
@@ -98,7 +98,7 @@ export function useAutocomplete({
       items: source.items.filter(item => {
         if (item.type !== 'profile') return true
         return !!moderateProfileItem({
-          query: q,
+          query: nq,
           item,
           moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
         })
@@ -117,7 +117,6 @@ export function useAutocomplete({
        * row (their keys differ, so key dedupe can't catch it). Drop the
        * matching term and let the fallback row stand in for it.
        */
-      const nq = q.trim().toLowerCase()
       results = results.filter(
         item =>
           !(item.type === 'search' && item.value.trim().toLowerCase() === nq),
@@ -130,7 +129,7 @@ export function useAutocomplete({
     }
 
     return limit ? results.slice(0, limit) : results
-  }, [query.data, showSearchFallback, q, sources, moderationOpts, limit])
+  }, [query.data, showSearchFallback, q, nq, sources, moderationOpts, limit])
 
   return {
     query: q,
