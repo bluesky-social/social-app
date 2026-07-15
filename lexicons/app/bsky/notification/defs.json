@@ -1,0 +1,152 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.notification.defs",
+  "defs": {
+    "recordDeleted": {
+      "type": "object",
+      "properties": {}
+    },
+    "chatPreference": {
+      "type": "object",
+      "description": "Deprecated: use chat.bsky.notification preferences instead. This will only return a default value.",
+      "required": ["include", "push"],
+      "properties": {
+        "include": {
+          "type": "string",
+          "knownValues": ["all", "accepted"]
+        },
+        "push": {
+          "type": "boolean"
+        }
+      }
+    },
+    "filterablePreference": {
+      "type": "object",
+      "required": ["include", "list", "push"],
+      "properties": {
+        "include": {
+          "type": "string",
+          "knownValues": ["all", "follows"]
+        },
+        "list": {
+          "type": "boolean"
+        },
+        "push": {
+          "type": "boolean"
+        }
+      }
+    },
+    "preference": {
+      "type": "object",
+      "required": ["list", "push"],
+      "properties": {
+        "list": {
+          "type": "boolean"
+        },
+        "push": {
+          "type": "boolean"
+        }
+      }
+    },
+    "preferences": {
+      "type": "object",
+      "required": [
+        "chat",
+        "follow",
+        "like",
+        "likeViaRepost",
+        "mention",
+        "quote",
+        "reply",
+        "repost",
+        "repostViaRepost",
+        "starterpackJoined",
+        "subscribedPost",
+        "unverified",
+        "verified"
+      ],
+      "properties": {
+        "chat": {
+          "type": "ref",
+          "ref": "#chatPreference",
+          "description": "Deprecated: use chat.bsky.notification preferences instead. This will only return a default value."
+        },
+        "follow": {
+          "type": "ref",
+          "ref": "#filterablePreference"
+        },
+        "like": {
+          "type": "ref",
+          "ref": "#filterablePreference"
+        },
+        "likeViaRepost": {
+          "type": "ref",
+          "ref": "#filterablePreference"
+        },
+        "mention": {
+          "type": "ref",
+          "ref": "#filterablePreference"
+        },
+        "quote": {
+          "type": "ref",
+          "ref": "#filterablePreference"
+        },
+        "reply": {
+          "type": "ref",
+          "ref": "#filterablePreference"
+        },
+        "repost": {
+          "type": "ref",
+          "ref": "#filterablePreference"
+        },
+        "repostViaRepost": {
+          "type": "ref",
+          "ref": "#filterablePreference"
+        },
+        "starterpackJoined": {
+          "type": "ref",
+          "ref": "#preference"
+        },
+        "subscribedPost": {
+          "type": "ref",
+          "ref": "#preference"
+        },
+        "unverified": {
+          "type": "ref",
+          "ref": "#preference"
+        },
+        "verified": {
+          "type": "ref",
+          "ref": "#preference"
+        }
+      }
+    },
+    "activitySubscription": {
+      "type": "object",
+      "required": ["post", "reply"],
+      "properties": {
+        "post": {
+          "type": "boolean"
+        },
+        "reply": {
+          "type": "boolean"
+        }
+      }
+    },
+    "subjectActivitySubscription": {
+      "description": "Object used to store activity subscription data in stash.",
+      "type": "object",
+      "required": ["subject", "activitySubscription"],
+      "properties": {
+        "subject": {
+          "type": "string",
+          "format": "did"
+        },
+        "activitySubscription": {
+          "type": "ref",
+          "ref": "#activitySubscription"
+        }
+      }
+    }
+  }
+}

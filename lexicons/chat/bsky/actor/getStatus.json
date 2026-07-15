@@ -1,0 +1,31 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.actor.getStatus",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get the authenticated viewer's chat status: whether their account is chat-disabled and whether their group-membership additions are restricted to accounts they follow.",
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["chatDisabled", "canCreateGroups", "groupMemberLimit"],
+          "properties": {
+            "chatDisabled": {
+              "type": "boolean",
+              "description": "True when the viewer's account is disabled and cannot actively participate in chat."
+            },
+            "canCreateGroups": {
+              "type": "boolean",
+              "description": "Whether the viewer's account is allowed to create group chats. New accounts are restricted from creating groups."
+            },
+            "groupMemberLimit": {
+              "type": "integer",
+              "description": "The maximum number of members allowed in a group conversation."
+            }
+          }
+        }
+      }
+    }
+  }
+}

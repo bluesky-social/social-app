@@ -1,0 +1,33 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.notification.unregisterPush",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "The inverse of registerPush - inform a specified service that push notifications should no longer be sent to the given token for the requesting account. Requires auth.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["serviceDid", "token", "platform", "appId"],
+          "properties": {
+            "serviceDid": {
+              "type": "string",
+              "format": "did"
+            },
+            "token": {
+              "type": "string"
+            },
+            "platform": {
+              "type": "string",
+              "knownValues": ["ios", "android", "web"]
+            },
+            "appId": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

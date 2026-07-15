@@ -1,0 +1,37 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.moderation.getConvo",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Gets an existing conversation by its ID, for moderation purposes. Does not require the requester to be a member of the conversation.",
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        }
+      ],
+      "parameters": {
+        "type": "params",
+        "required": ["convoId"],
+        "properties": {
+          "convoId": {
+            "type": "string"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convo"],
+          "properties": {
+            "convo": {
+              "type": "ref",
+              "ref": "chat.bsky.moderation.defs#convoView"
+            }
+          }
+        }
+      }
+    }
+  }
+}

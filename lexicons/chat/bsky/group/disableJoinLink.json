@@ -1,0 +1,46 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.group.disableJoinLink",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Disables the active join link for the group convo.",
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        },
+        {
+          "name": "InsufficientRole"
+        },
+        {
+          "name": "NoJoinLink"
+        }
+      ],
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convoId"],
+          "properties": {
+            "convoId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["joinLink"],
+          "properties": {
+            "joinLink": {
+              "type": "ref",
+              "ref": "chat.bsky.group.defs#joinLinkView"
+            }
+          }
+        }
+      }
+    }
+  }
+}

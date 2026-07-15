@@ -1,0 +1,66 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.contact.importContacts",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Import contacts for securely matching with other users. This follows the protocol explained in https://docs.bsky.app/blog/contact-import-rfc. Requires authentication.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["token", "contacts"],
+          "properties": {
+            "token": {
+              "description": "JWT to authenticate the call. Use the JWT received as a response to the call to `app.bsky.contact.verifyPhone`.",
+              "type": "string"
+            },
+            "contacts": {
+              "description": "List of phone numbers in global E.164 format (e.g., '+12125550123'). Phone numbers that cannot be normalized into a valid phone number will be discarded. Should not repeat the 'phone' input used in `app.bsky.contact.verifyPhone`.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minLength": 1,
+              "maxLength": 1000
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["matchesAndContactIndexes"],
+          "properties": {
+            "matchesAndContactIndexes": {
+              "description": "The users that matched during import and their indexes on the input contacts, so the client can correlate with its local list.",
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.contact.defs#matchAndContactIndex"
+              }
+            }
+          }
+        }
+      },
+      "errors": [
+        {
+          "name": "InvalidDid"
+        },
+        {
+          "name": "InvalidContacts"
+        },
+        {
+          "name": "TooManyContacts"
+        },
+        {
+          "name": "InvalidToken"
+        },
+        {
+          "name": "InternalError"
+        }
+      ]
+    }
+  }
+}

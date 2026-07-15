@@ -1,0 +1,39 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.acceptConvo",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Marks a conversation as accepted, so it is shown in the list of accepted convos instead on the request convos.",
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        }
+      ],
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convoId"],
+          "properties": {
+            "convoId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "rev": {
+              "description": "Rev when the convo was accepted. If not present, the convo was already accepted.",
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

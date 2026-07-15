@@ -1,0 +1,44 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.group.getJoinLinkPreviews",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get public information about groups from join links. The output array matches the input codes one-to-one by position (and each view also carries its 'code'). Disabled codes return a disabledJoinLinkPreviewView, and codes that do not map to a previewable link return an invalidJoinLinkPreviewView.",
+      "parameters": {
+        "type": "params",
+        "required": ["codes"],
+        "properties": {
+          "codes": {
+            "type": "array",
+            "minLength": 1,
+            "maxLength": 50,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["joinLinkPreviews"],
+          "properties": {
+            "joinLinkPreviews": {
+              "type": "array",
+              "items": {
+                "type": "union",
+                "refs": [
+                  "chat.bsky.group.defs#joinLinkPreviewView",
+                  "chat.bsky.group.defs#disabledJoinLinkPreviewView",
+                  "chat.bsky.group.defs#invalidJoinLinkPreviewView"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

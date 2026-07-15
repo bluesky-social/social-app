@@ -1,0 +1,46 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.leaveConvo",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Leaves a conversation (direct or group). For group, this effectively removes membership. For direct, membership is never removed, only changed to remove from enumerations by the user who left.",
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        },
+        {
+          "name": "OwnerCannotLeave",
+          "description": "The owner of a group conversation cannot leave before locking the group."
+        }
+      ],
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convoId"],
+          "properties": {
+            "convoId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convoId", "rev"],
+          "properties": {
+            "convoId": {
+              "type": "string"
+            },
+            "rev": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

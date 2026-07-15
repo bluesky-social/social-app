@@ -4,6 +4,9 @@ strictPeerDependencies: false # default: false
 trustPolicy: 'no-downgrade' # default: off
 trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
 overrides:
+  '@atproto/lex-schema': '0.2.2'
+  '@atproto/lex-data': '0.1.5'
+  '@atproto/lex-client': '0.2.4'
   '@react-native/babel-preset': '0.81.5'
   '@react-native/normalize-colors': '0.81.5'
   '@expo/image-utils': '0.8.12'
@@ -15,6 +18,7 @@ overrides:
   'react-native-screens': '4.24.0'
 allowBuilds:
   '@sentry/cli': true
+  core-js: false
   'core-js-pure': true
   'esbuild': true
   'unrs-resolver': true

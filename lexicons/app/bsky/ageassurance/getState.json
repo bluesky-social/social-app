@@ -1,0 +1,39 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.ageassurance.getState",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Returns server-computed Age Assurance state, if available, and any additional metadata needed to compute Age Assurance state client-side.",
+      "parameters": {
+        "type": "params",
+        "required": ["countryCode"],
+        "properties": {
+          "countryCode": {
+            "type": "string"
+          },
+          "regionCode": {
+            "type": "string"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["state", "metadata"],
+          "properties": {
+            "state": {
+              "type": "ref",
+              "ref": "app.bsky.ageassurance.defs#state"
+            },
+            "metadata": {
+              "type": "ref",
+              "ref": "app.bsky.ageassurance.defs#stateMetadata"
+            }
+          }
+        }
+      }
+    }
+  }
+}

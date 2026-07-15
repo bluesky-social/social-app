@@ -1,0 +1,35 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.authCreatePosts",
+  "defs": {
+    "main": {
+      "type": "permission-set",
+      "title": "Create Bluesky Posts",
+      "title:lang": {},
+      "detail": "Can not update or delete posts.",
+      "detail:lang": {},
+      "permissions": [
+        {
+          "type": "permission",
+          "resource": "rpc",
+          "inheritAud": true,
+          "lxm": [
+            "app.bsky.video.uploadVideo",
+            "app.bsky.video.getJobStatus",
+            "app.bsky.video.getUploadLimits"
+          ]
+        },
+        {
+          "type": "permission",
+          "resource": "repo",
+          "action": ["create"],
+          "collection": [
+            "app.bsky.feed.post",
+            "app.bsky.feed.postgate",
+            "app.bsky.feed.threadgate"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.server.deleteSession",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Delete the current session. Requires auth using the 'refreshJwt' (not the 'accessJwt').",
+      "errors": [
+        {
+          "name": "InvalidToken"
+        },
+        {
+          "name": "ExpiredToken"
+        }
+      ]
+    }
+  }
+}
