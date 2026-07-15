@@ -6,7 +6,11 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {urls} from '#/lib/constants'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useCallOnce} from '#/lib/once'
-import {cleanError} from '#/lib/strings/errors'
+import {
+  cleanError,
+  isNetworkError,
+  shouldRetryError,
+} from '#/lib/strings/errors'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
@@ -402,7 +406,11 @@ let SearchScreenPostResults = ({
 
   return error ? (
     <EmptyState
-      messageText={l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`}
+      messageText={
+        shouldRetryError(error) || isNetworkError(error)
+          ? l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`
+          : l`We’re sorry, but your search could not be completed.`
+      }
       error={cleanError(error)}
     />
   ) : (
@@ -539,7 +547,11 @@ let SearchScreenUserResults = ({
   if (error) {
     return (
       <EmptyState
-        messageText={l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`}
+        messageText={
+          shouldRetryError(error) || isNetworkError(error)
+            ? l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`
+            : l`We’re sorry, but your search could not be completed.`
+        }
         error={error.toString()}
       />
     )

@@ -866,17 +866,6 @@
       "count": 1
     }
   },
-  "src/lib/strings/errors.ts": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    },
-    "typescript/no-unsafe-call": {
-      "count": 14
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 14
-    }
-  },
   "src/lib/useGetEmojis/getEmojis.ts": {
     "typescript/require-await": {
       "count": 1
