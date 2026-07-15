@@ -15,12 +15,12 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
 import {android, atoms as a, native, useTheme, web} from '#/alf'
+import {useAutocomplete} from '#/components/Autocomplete'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {canBeAddedToGroup, canBeMessaged} from '#/components/dms/util'
@@ -38,6 +38,7 @@ import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {useFollowsSource} from '#/features/autocomplete/useFollowsSource'
 import type * as bsky from '#/types/bsky'
 import {ChatProfileTabs} from './ChatProfileTabs'
 import {EmptyMemberList} from './components/EmptyMemberList'
@@ -253,11 +254,20 @@ export function InitiateChatFlow({
     searchText: '',
   })
 
+  const followsSource = useFollowsSource()
   const {
-    data: results,
+    items: autocompleteItems,
     isError,
     isFetching,
-  } = useActorAutocompleteQuery(searchText, true, 12)
+  } = useAutocomplete({
+    type: 'profile',
+    query: searchText,
+    limit: 12,
+    sources: [followsSource],
+  })
+  const results = autocompleteItems
+    .filter(item => item.type === 'profile')
+    .map(item => item.profile)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
 
   const newGroupChatTitle = l`New group chat`

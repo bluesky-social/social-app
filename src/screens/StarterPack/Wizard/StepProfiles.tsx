@@ -5,11 +5,11 @@ import {type ModerationOpts} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
 import {useA11y} from '#/state/a11y'
-import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {List} from '#/view/com/util/List'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
+import {useAutocomplete} from '#/components/Autocomplete'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/ScreenTransition'
@@ -43,9 +43,16 @@ export function StepProfiles({
     .flatMap(p => p.actors)
     .filter(p => !p.associated?.labeler)
 
-  const {data: resultsUnfiltered, isFetching: isFetchingResults} =
-    useActorAutocompleteQuery(query, true, 12)
-  const results = resultsUnfiltered?.filter(p => !p.associated?.labeler)
+  const {items: autocompleteItems, isFetching: isFetchingResults} =
+    useAutocomplete({
+      type: 'profile',
+      query,
+      limit: 12,
+    })
+  const results = autocompleteItems
+    .filter(item => item.type === 'profile')
+    .map(item => item.profile)
+    .filter(profile => !profile.associated?.labeler)
 
   const isLoading = isLoadingTopPages || isFetchingResults
 
