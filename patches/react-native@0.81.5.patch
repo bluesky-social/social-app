@@ -1,3 +1,28 @@
+diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
+index c593d9ee2155a826352ebca34845aa5792b2eec3..3c26cd737f21116ff0aa48190e97e6c0649b5fac 100644
+--- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
++++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
+@@ -101,6 +101,20 @@ - (void)setContentOffset:(CGPoint)contentOffset
+       RCTSanitizeNaNValue(contentOffset.y, @"scrollView.contentOffset.y"));
+ }
+ 
++- (void)setCenterContent:(BOOL)centerContent
++{
++  if (_centerContent != centerContent) {
++    _centerContent = centerContent;
++    [self centerContentIfNeeded];
++  }
++}
++
++- (void)setContentSize:(CGSize)contentSize
++{
++  [super setContentSize:contentSize];
++  [self centerContentIfNeeded];
++}
++
+ - (void)setFrame:(CGRect)frame
+ {
+   [super setFrame:frame];
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
 index 914a2494a57923fbf185644b7e2bb8aca8848e56..0deac55f22350f5e8377d8963fb1c2434bf6abfd 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
@@ -35,10 +60,27 @@ index 0d231bc8aa938da296eb3b981e8ac9595a43b87f..be0a10d9c4de1892fa00bcbf8d63d739
  
    if (newConcreteProps.tintColor != oldConcreteProps.tintColor) {
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-index 1494fd225aff1fa0429e917404d6b4ca5fc961c5..df643f5c844ad2e684de5161528eba17f4a188d0 100644
+index 1494fd225aff1fa0429e917404d6b4ca5fc961c5..682e41b141c38c830bbcd9f2ce0de07b18f13977 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-@@ -1038,6 +1038,11 @@ - (void)_adjustForMaintainVisibleContentPosition
+@@ -380,7 +380,15 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+ 
+   MAP_SCROLL_VIEW_PROP(zoomScale);
+ 
+-  if (oldScrollViewProps.contentInset != newScrollViewProps.contentInset) {
++  // When disabling centerContent, reset inset to prop value
++  // (enabling is handled automatically by the setCenterContent: setter)
++  if (oldScrollViewProps.centerContent && !newScrollViewProps.centerContent) {
++    _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
++  }
++
++  // Only apply contentInset from props if centerContent is disabled
++  // When centerContent is enabled, the inset is calculated by centerContentIfNeeded
++  if (oldScrollViewProps.contentInset != newScrollViewProps.contentInset && !newScrollViewProps.centerContent) {
+     _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
+   }
+ 
+@@ -1038,6 +1046,11 @@ - (void)_adjustForMaintainVisibleContentPosition
    }
  }
  
