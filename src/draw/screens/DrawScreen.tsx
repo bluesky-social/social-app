@@ -1,103 +1,74 @@
 import {useState} from 'react'
-import {View} from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
-import {Canvas, Path, Skia, type SkPath} from '@shopify/react-native-skia'
+import {type LayoutChangeEvent, StyleSheet, View} from 'react-native'
+import {GestureDetector} from 'react-native-gesture-handler'
 
-import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
-
-type Point = {x: number; y: number}
-
-const STROKE_COLOR = '#000000'
-const STROKE_WIDTH = 4
+import {Toolbar} from '#/draw/components/Toolbar'
+import {DrawingCanvas} from '#/draw/engine/render'
+import {DEFAULT_CANVAS_SIZE} from '#/draw/engine/types'
+import {useDrawingEngine} from '#/draw/engine/useDrawingEngine'
 
 /**
- * Renders a smooth curve through raw sample points without transforming them:
- * each segment is a quadratic with the sample as its control point and the
- * midpoint to the next sample as its end. Stored points stay untouched so they
- * remain replayable (see DESIGN.md §6.2).
+ * Dev-only harness for the drawing engine (DESIGN.md milestone 3). Not the
+ * shipping UI — it exists to exercise capture, smoothing, width dynamics,
+ * eraser, and undo/redo on-device. Reachable via the __DEV__ `/sys/draw` route.
  */
-function buildSmoothPath(points: Point[]): SkPath {
-  const path = Skia.Path.Make()
-  if (points.length === 0) return path
-
-  if (points.length < 3) {
-    // Too few samples to form a midpoint curve; a dot or a straight segment.
-    path.moveTo(points[0].x, points[0].y)
-    if (points.length === 1) {
-      path.lineTo(points[0].x, points[0].y)
-    } else {
-      path.lineTo(points[1].x, points[1].y)
-    }
-    return path
-  }
-
-  const mid = (a: Point, b: Point) => ({x: (a.x + b.x) / 2, y: (a.y + b.y) / 2})
-
-  const first = mid(points[0], points[1])
-  path.moveTo(first.x, first.y)
-  for (let i = 1; i < points.length - 1; i++) {
-    const end = mid(points[i], points[i + 1])
-    path.quadTo(points[i].x, points[i].y, end.x, end.y)
-  }
-  const last = points[points.length - 1]
-  path.lineTo(last.x, last.y)
-
-  return path
-}
-
 export function DrawScreen() {
-  const [strokes, setStrokes] = useState<Point[][]>([])
-  const [current, setCurrent] = useState<Point[]>([])
+  const engine = useDrawingEngine(DEFAULT_CANVAS_SIZE)
+  const [viewSize, setViewSize] = useState(0)
 
-  const pan = Gesture.Pan()
-    .runOnJS(true)
-    .minDistance(0)
-    .averageTouches(true)
-    .onBegin(e => {
-      setCurrent([{x: e.x, y: e.y}])
-    })
-    .onUpdate(e => {
-      setCurrent(prev => [...prev, {x: e.x, y: e.y}])
-    })
-    .onEnd(() => {
-      setCurrent(prev => {
-        if (prev.length > 0) {
-          setStrokes(s => [...s, prev])
-        }
-        return []
-      })
-    })
+  const onLayout = (e: LayoutChangeEvent) => {
+    const {width, height} = e.nativeEvent.layout
+    const size = Math.floor(Math.min(width, height))
+    setViewSize(size)
+    engine.scale.value = size / engine.canvasSize
+  }
 
   return (
     <Layout.Screen>
-      <GestureDetector gesture={pan}>
-        <View style={[a.flex_1]} collapsable={false}>
-          <Canvas style={[a.flex_1]}>
-            {strokes.map((points, i) => (
-              <Path
-                key={i}
-                path={buildSmoothPath(points)}
-                color={STROKE_COLOR}
-                style="stroke"
-                strokeWidth={STROKE_WIDTH}
-                strokeCap="round"
-                strokeJoin="round"
+      <View style={styles.canvasArea} onLayout={onLayout}>
+        {viewSize > 0 && (
+          <GestureDetector gesture={engine.gesture}>
+            <View
+              collapsable={false}
+              style={{width: viewSize, height: viewSize}}>
+              <DrawingCanvas
+                strokes={engine.strokes}
+                livePath={engine.livePath}
+                liveBrush={engine.brush}
+                canvasSize={engine.canvasSize}
+                viewSize={viewSize}
               />
-            ))}
-            {current.length > 0 && (
-              <Path
-                path={buildSmoothPath(current)}
-                color={STROKE_COLOR}
-                style="stroke"
-                strokeWidth={STROKE_WIDTH}
-                strokeCap="round"
-                strokeJoin="round"
-              />
-            )}
-          </Canvas>
-        </View>
-      </GestureDetector>
+            </View>
+          </GestureDetector>
+        )}
+      </View>
+      {/* Bottom padding keeps the controls clear of the shell tab bar (harness only). */}
+      <View style={styles.toolbarWrap}>
+        <Toolbar
+          brush={engine.brush}
+          canUndo={engine.canUndo}
+          canRedo={engine.canRedo}
+          onColor={engine.setColor}
+          onSize={engine.setSize}
+          onToggleErase={engine.toggleErase}
+          onUndo={engine.undo}
+          onRedo={engine.redo}
+          onClear={engine.clear}
+        />
+      </View>
     </Layout.Screen>
   )
 }
+
+const styles = StyleSheet.create({
+  canvasArea: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ffffff',
+  },
+  toolbarWrap: {
+    paddingBottom: 160,
+  },
+})
