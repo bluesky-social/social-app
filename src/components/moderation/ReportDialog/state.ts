@@ -10,7 +10,6 @@ import {
 } from '#/components/moderation/ReportDialog/utils/useReportOptions'
 
 export type NciiQualification = {
-  residesInUS?: boolean
   isDepicted?: boolean
 }
 
@@ -23,28 +22,24 @@ export type ReportState = {
   activeStepIndex1: number
   error?: string
   /**
-   * Present while the selected reason is NCII. Tracks answers to the
-   * qualifying questions that determine whether the report should go through
+   * Present while the selected reason is NCII. Tracks the answer to the
+   * qualifying question that determines whether the report should go through
    * the external NCII report form instead of in-app submission.
    */
   ncii?: NciiQualification
 }
 
 /**
- * Resolves the NCII qualifying questions into an outcome. US residents who
- * are the depicted person (or their authorized representative) are directed
- * to the external NCII report form; everyone else proceeds with the
- * normal in-app submission.
+ * Resolves the NCII qualifying question into an outcome. The depicted person
+ * (or their authorized representative) is directed to the external NCII
+ * report form; everyone else proceeds with the normal in-app submission.
  */
 export function getNciiQualificationOutcome(
   ncii?: NciiQualification,
 ): 'pending' | 'externalForm' | 'inApp' | undefined {
   if (!ncii) return undefined
-  if (ncii.residesInUS === false) return 'inApp'
-  if (ncii.residesInUS === true) {
-    if (ncii.isDepicted === true) return 'externalForm'
-    if (ncii.isDepicted === false) return 'inApp'
-  }
+  if (ncii.isDepicted === true) return 'externalForm'
+  if (ncii.isDepicted === false) return 'inApp'
   return 'pending'
 }
 
@@ -142,10 +137,6 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
       }
     case 'answerNciiQuestion': {
       const ncii = {...state.ncii, [action.question]: action.answer}
-      // the second question only applies to US residents
-      if (action.question === 'residesInUS') {
-        ncii.isDepicted = undefined
-      }
       return {
         ...state,
         ncii,

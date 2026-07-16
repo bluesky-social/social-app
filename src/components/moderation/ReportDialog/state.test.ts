@@ -29,22 +29,16 @@ describe('getNciiQualificationOutcome', () => {
     expect(getNciiQualificationOutcome(undefined)).toBeUndefined()
   })
 
-  it('is pending until questions are answered', () => {
+  it('is pending until the question is answered', () => {
     expect(getNciiQualificationOutcome({})).toBe('pending')
-    expect(getNciiQualificationOutcome({residesInUS: true})).toBe('pending')
   })
 
-  it('directs US residents depicted in the imagery to the external form', () => {
-    expect(
-      getNciiQualificationOutcome({residesInUS: true, isDepicted: true}),
-    ).toBe('externalForm')
+  it('directs the depicted person to the external form', () => {
+    expect(getNciiQualificationOutcome({isDepicted: true})).toBe('externalForm')
   })
 
   it('directs everyone else to in-app submission', () => {
-    expect(getNciiQualificationOutcome({residesInUS: false})).toBe('inApp')
-    expect(
-      getNciiQualificationOutcome({residesInUS: true, isDepicted: false}),
-    ).toBe('inApp')
+    expect(getNciiQualificationOutcome({isDepicted: false})).toBe('inApp')
   })
 })
 
@@ -64,33 +58,8 @@ describe('reducer NCII qualification', () => {
     expect(state.ncii).toBeUndefined()
   })
 
-  it('advances to step 3 for non-US residents', () => {
+  it('holds at step 2 for the depicted person (external form)', () => {
     let state = selectNciiOption()
-    state = reducer(state, {
-      type: 'answerNciiQuestion',
-      question: 'residesInUS',
-      answer: false,
-    })
-    expect(state.activeStepIndex1).toBe(3)
-  })
-
-  it('holds at step 2 for US residents until the second answer', () => {
-    let state = selectNciiOption()
-    state = reducer(state, {
-      type: 'answerNciiQuestion',
-      question: 'residesInUS',
-      answer: true,
-    })
-    expect(state.activeStepIndex1).toBe(2)
-  })
-
-  it('holds at step 2 for depicted US residents (external form)', () => {
-    let state = selectNciiOption()
-    state = reducer(state, {
-      type: 'answerNciiQuestion',
-      question: 'residesInUS',
-      answer: true,
-    })
     state = reducer(state, {
       type: 'answerNciiQuestion',
       question: 'isDepicted',
@@ -100,13 +69,8 @@ describe('reducer NCII qualification', () => {
     expect(state.activeStepIndex1).toBe(2)
   })
 
-  it('advances to step 3 for non-depicted US residents', () => {
+  it('advances to step 3 when not the depicted person', () => {
     let state = selectNciiOption()
-    state = reducer(state, {
-      type: 'answerNciiQuestion',
-      question: 'residesInUS',
-      answer: true,
-    })
     state = reducer(state, {
       type: 'answerNciiQuestion',
       question: 'isDepicted',
@@ -115,52 +79,31 @@ describe('reducer NCII qualification', () => {
     expect(state.activeStepIndex1).toBe(3)
   })
 
-  it('resets the second answer when the first changes', () => {
+  it('does not advance past a pending question when a labeler is auto-selected', () => {
     let state = selectNciiOption()
     state = reducer(state, {
-      type: 'answerNciiQuestion',
-      question: 'residesInUS',
-      answer: true,
+      type: 'selectLabeler',
+      labeler: {} as AppBskyLabelerDefs.LabelerViewDetailed,
+    })
+    expect(state.activeStepIndex1).toBe(2)
+  })
+
+  it('skips to step 4 when the answer resolves after labeler auto-selection', () => {
+    let state = selectNciiOption()
+    state = reducer(state, {
+      type: 'selectLabeler',
+      labeler: {} as AppBskyLabelerDefs.LabelerViewDetailed,
     })
     state = reducer(state, {
       type: 'answerNciiQuestion',
       question: 'isDepicted',
-      answer: true,
-    })
-    state = reducer(state, {
-      type: 'answerNciiQuestion',
-      question: 'residesInUS',
-      answer: true,
-    })
-    expect(state.ncii?.isDepicted).toBeUndefined()
-    expect(state.activeStepIndex1).toBe(2)
-  })
-
-  it('does not advance past pending questions when a labeler is auto-selected', () => {
-    let state = selectNciiOption()
-    state = reducer(state, {
-      type: 'selectLabeler',
-      labeler: {} as AppBskyLabelerDefs.LabelerViewDetailed,
-    })
-    expect(state.activeStepIndex1).toBe(2)
-  })
-
-  it('skips to step 4 when answers resolve after labeler auto-selection', () => {
-    let state = selectNciiOption()
-    state = reducer(state, {
-      type: 'selectLabeler',
-      labeler: {} as AppBskyLabelerDefs.LabelerViewDetailed,
-    })
-    state = reducer(state, {
-      type: 'answerNciiQuestion',
-      question: 'residesInUS',
       answer: false,
     })
     expect(state.activeStepIndex1).toBe(4)
   })
 
   it('clears NCII state when the reason or category is cleared', () => {
-    let state = selectNciiOption()
+    const state = selectNciiOption()
     expect(reducer(state, {type: 'clearOption'}).ncii).toBeUndefined()
     expect(reducer(state, {type: 'clearCategory'}).ncii).toBeUndefined()
   })

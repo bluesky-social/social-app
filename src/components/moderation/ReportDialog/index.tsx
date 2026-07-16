@@ -793,10 +793,10 @@ function OptionCard({
 }
 
 /**
- * Qualifying questions shown when the NCII reason is selected. US residents
- * reporting imagery of themselves (or on behalf of the person depicted) are
- * directed to the external NCII report form; everyone else continues
- * with the normal in-app submission.
+ * Qualifying question shown when the NCII reason is selected. The depicted
+ * person (or their authorized representative) is directed to the external
+ * NCII report form; everyone else continues with the normal in-app
+ * submission.
  */
 function NciiQualification({
   ncii,
@@ -811,31 +811,17 @@ function NciiQualification({
   return (
     <View style={[a.gap_md]}>
       <YesNoQuestion
-        testID="report:ncii:residesInUS"
-        question={l`Do you reside in the United States?`}
-        value={ncii.residesInUS}
+        testID="report:ncii:isDepicted"
+        question={l`Are you the person depicted, or an authorized representative acting on behalf of the person depicted?`}
+        value={ncii.isDepicted}
         onAnswer={answer => {
           dispatch({
             type: 'answerNciiQuestion',
-            question: 'residesInUS',
+            question: 'isDepicted',
             answer,
           })
         }}
       />
-      {ncii.residesInUS === true && (
-        <YesNoQuestion
-          testID="report:ncii:isDepicted"
-          question={l`Are you the person depicted, or an authorized representative acting on behalf of the person depicted?`}
-          value={ncii.isDepicted}
-          onAnswer={answer => {
-            dispatch({
-              type: 'answerNciiQuestion',
-              question: 'isDepicted',
-              answer,
-            })
-          }}
-        />
-      )}
       {outcome === 'externalForm' && (
         <Link
           to={NCII_FORM}
