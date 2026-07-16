@@ -246,6 +246,8 @@ let MessageItem = ({
 
   const rt = new RichTextAPI({text: message.text, facets: message.facets})
 
+  const isEmojiOnly = isOnlyEmoji(message.text)
+
   const hasEmbed =
     AppBskyEmbedRecord.isView(message.embed) ||
     ChatBskyEmbedJoinLink.isView(message.embed)
@@ -261,16 +263,33 @@ let MessageItem = ({
   const topRadiusSV = useSharedValue(targetTopRadius)
 
   const showDisplayName =
-    isGroupChat && !isFromSelf && isFirstInCluster && !isOnlyEmoji(message.text)
+    isGroupChat && !isFromSelf && isFirstInCluster && !isEmojiOnly
   const showAvatar = isGroupChat && !isFromSelf && isLastInCluster
 
+  /*
+   * Emoji-only messages have no bubble background (see the `!isOnlyEmoji` gate
+   * on the bubble styling below), so the corner-radius animation is invisible
+   * overhead for them. Worse, on Android the resulting re-layout of the parent
+   * Animated.View re-measures the enlarged emoji `<Text>` and some Android
+   * device's text stack drops the trailing glyph on that second pass (while
+   * keeping its reserved width). Set the radii directly for emoji-only messages
+   * so nothing re-lays-out the glyph after its initial paint.
+   */
   useEffect(() => {
-    bottomRadiusSV.set(withTiming(targetBottomRadius, {duration: 300}))
-  }, [targetBottomRadius, bottomRadiusSV])
+    bottomRadiusSV.set(
+      isEmojiOnly
+        ? targetBottomRadius
+        : withTiming(targetBottomRadius, {duration: 300}),
+    )
+  }, [targetBottomRadius, bottomRadiusSV, isEmojiOnly])
 
   useEffect(() => {
-    topRadiusSV.set(withTiming(targetTopRadius, {duration: 300}))
-  }, [targetTopRadius, topRadiusSV])
+    topRadiusSV.set(
+      isEmojiOnly
+        ? targetTopRadius
+        : withTiming(targetTopRadius, {duration: 300}),
+    )
+  }, [targetTopRadius, topRadiusSV, isEmojiOnly])
 
   // Flash the message background when it's been scrolled to (e.g. by tapping a
   // reply that quotes it), so it's easy to spot. Keyed on the highlight `key`
@@ -521,7 +540,7 @@ let MessageItem = ({
                       accessibilityHint={l`Double tap or long press the message to add a reaction`}
                       style={[
                         !isFromSelf && isGroupChat && a.ml_sm,
-                        !isOnlyEmoji(message.text) && [
+                        !isEmojiOnly && [
                           a.rounded_xl,
                           a.py_sm,
                           a.px_md,
@@ -536,7 +555,7 @@ let MessageItem = ({
                           highlightStyle,
                         ],
                       ]}>
-                      {replyTo && !isOnlyEmoji(message.text) ? (
+                      {replyTo && !isEmojiOnly ? (
                         <ReplyQuote
                           replyTo={replyTo}
                           isFromSelf={isFromSelf}
@@ -553,7 +572,7 @@ let MessageItem = ({
                           // glyph, then pull the bottom up by the same amount so
                           // the glyph bottom-aligns with the avatar instead of
                           // sitting above its line-box baseline.
-                          isOnlyEmoji(message.text) && [
+                          isEmojiOnly && [
                             a.leading_tight,
                             // Visually align bottom of the emoji with the avatar
                             !isFromSelf &&

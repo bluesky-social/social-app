@@ -1,0 +1,1921 @@
+{
+  "modules/bottom-sheet/src/BottomSheetNativeComponent.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-unsafe-call": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "modules/expo-background-notification-handler/src/ExpoBackgroundNotificationHandlerModule.web.ts": {
+    "typescript/require-await": {
+      "count": 4
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/PlatformInfo/index.native.ts": {
+    "typescript/no-unsafe-call": {
+      "count": 3
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 3
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/Referrer/index.android.ts": {
+    "typescript/no-unsafe-call": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/SharedPrefs/index.native.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 9
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 9
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/VisibilityView/index.native.tsx": {
+    "typescript/no-unsafe-call": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "modules/expo-bluesky-swiss-army/src/VisibilityView/index.tsx": {
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/Navigation.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/Splash.android.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/Splash.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/ageAssurance/components/RedirectOverlay.tsx": {
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/alf/util/flatten.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 9
+    }
+  },
+  "src/alf/util/systemUI.ts": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/analytics/identifiers/session.test.ts": {
+    "typescript/no-unsafe-call": {
+      "count": 9
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 9
+    }
+  },
+  "src/analytics/metrics/client.test.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 8
+    },
+    "typescript/require-await": {
+      "count": 5
+    }
+  },
+  "src/analytics/metrics/client.ts": {
+    "typescript/no-explicit-any": {
+      "count": 5
+    },
+    "typescript/no-floating-promises": {
+      "count": 2
+    },
+    "typescript/no-unsafe-call": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/components/AppLanguageDropdown.tsx": {
+    "typescript/no-unsafe-enum-comparison": {
+      "count": 1
+    }
+  },
+  "src/components/BotAccountAlert.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/Composer/index.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-redundant-type-constituents": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 7
+    }
+  },
+  "src/components/DebugFieldDisplay.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/Dialog/index.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/components/Dialog/index.web.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 4
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 3
+    },
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/components/DraggableList/index.web.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/components/EmojiPicker/preload.web.ts": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/components/FeedCard.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/FocusScope/index.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/components/InternationalPhoneCodeSelect.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/components/Lightbox/Lightbox.web.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/LikedByList.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/components/Lists.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/Menu/types.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/Portal.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/Post/Embed/ExternalEmbed/ExternalGif.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 3
+    }
+  },
+  "src/components/Post/Embed/ImageEmbed.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    },
+    "typescript/no-unsafe-enum-comparison": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 3
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 3
+    }
+  },
+  "src/components/PostControls/BookmarkButton.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/components/PostControls/DiscoverDebug.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/PostControls/ShareMenu/ShareMenuItems.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 3
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 3
+    }
+  },
+  "src/components/PostControls/ShareMenu/index.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/ProfileHoverCard/index.web.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-floating-promises": {
+      "count": 3
+    },
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/components/RichTextTag.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/components/Select/index.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 4
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/components/Select/index.web.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/components/Select/types.ts": {
+    "typescript/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/components/SendErrorReportDialog.tsx": {
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/components/StarterPack/Main/ProfilesList.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/StarterPack/ProfileStarterPacks.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/components/StarterPack/QrCodeDialog.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 5
+    },
+    "typescript/no-misused-promises": {
+      "count": 2
+    },
+    "typescript/require-await": {
+      "count": 4
+    }
+  },
+  "src/components/StarterPack/ShareDialog.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 2
+    },
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/components/StarterPack/Wizard/WizardEditListDialog.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/WhoCanReply.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/ageAssurance/AgeAssuranceErrors.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/ageAssurance/AgeAssuranceInitDialog.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx": {
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/components/contacts/screens/GetContacts.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/contacts/screens/VerifyNumber.tsx": {
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/components/contacts/screens/ViewMatches.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/DeviceLocationRequestDialog.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/components/dialogs/EmailDialog/components/ResendEmailText.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 3
+    }
+  },
+  "src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/EmailDialog/screens/Update.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 3
+    }
+  },
+  "src/components/dialogs/EmailDialog/screens/Verify.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 3
+    }
+  },
+  "src/components/dialogs/LanguageSelectDialog.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/LinkWarning.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/MutedWords.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-floating-promises": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 3
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    },
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/PostInteractionSettingsDialog.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/components/dialogs/ServerInput.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/StarterPackDialog.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/SwitchAccount.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/components/dialogs/lists/CreateOrEditListDialog.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/nuxs/FindContactsAnnouncement.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/nuxs/index.tsx": {
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/components/forms/DateField/index.web.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/components/forms/SegmentedControl.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/forms/ToggleButton.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/hooks/useFollowMethods.ts": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/components/hooks/useRefreshOnFocus.ts": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/hooks/useRichText.ts": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/images/AutoSizedImage.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/components/images/Gallery/index.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 5
+    },
+    "typescript/no-unsafe-call": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 4
+    }
+  },
+  "src/components/images/Gallery/useKeyboardHandlers.ts": {
+    "typescript/no-explicit-any": {
+      "count": 6
+    }
+  },
+  "src/components/images/Gallery/usePointerHandlers.ts": {
+    "typescript/no-explicit-any": {
+      "count": 6
+    }
+  },
+  "src/components/images/ImageLayoutGrid.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/components/images/ImageLayoutGridItem.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/components/intents/VerifyEmailIntentDialog.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/interstitials/TrendingVideos.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/components/verification/VerificationCreatePrompt.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/components/verification/VerificationRemovePrompt.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/features/liveEvents/preferences.ts": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/features/liveNow/index.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/geolocation/service.ts": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/lib/ScrollContext.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/lib/api/feed/demo.ts": {
+    "typescript/require-await": {
+      "count": 2
+    }
+  },
+  "src/lib/api/feed/posts.ts": {
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/lib/async/retry.ts": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/lib/async/until.ts": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/lib/broadcast/stub.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/lib/functions.ts": {
+    "typescript/no-explicit-any": {
+      "count": 6
+    },
+    "typescript/no-unsafe-call": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 25
+    }
+  },
+  "src/lib/getUserDisplayName.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/lib/haptics.ts": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/lib/hooks/useAccountSwitcher.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/lib/hooks/useIntentHandler.ts": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/lib/hooks/useNonReactiveCallback.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 1
+    }
+  },
+  "src/lib/hooks/useOTAUpdates.ts": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 4
+    }
+  },
+  "src/lib/hooks/usePermissions.ts": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-enum-comparison": {
+      "count": 5
+    }
+  },
+  "src/lib/hooks/usePermissions.web.ts": {
+    "typescript/require-await": {
+      "count": 3
+    }
+  },
+  "src/lib/hooks/useRequireEmailVerification.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/lib/hooks/useTLDs.ts": {
+    "import/default": {
+      "count": 1
+    },
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/lib/hooks/useToggleMutationQueue.ts": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 2
+    }
+  },
+  "src/lib/hooks/useWebScrollRestoration.ts": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/lib/international-telephone-codes.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/lib/link-meta/link-meta.ts": {
+    "typescript/no-unsafe-member-access": {
+      "count": 9
+    }
+  },
+  "src/lib/media/manip.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-floating-promises": {
+      "count": 5
+    }
+  },
+  "src/lib/media/manip.web.ts": {
+    "typescript/prefer-promise-reject-errors": {
+      "count": 1
+    },
+    "typescript/require-await": {
+      "count": 3
+    }
+  },
+  "src/lib/media/picker.web.tsx": {
+    "typescript/require-await": {
+      "count": 2
+    }
+  },
+  "src/lib/media/save-image.ios.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/lib/media/save-image.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/lib/notifications/notifications.ts": {
+    "typescript/no-floating-promises": {
+      "count": 5
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-enum-comparison": {
+      "count": 2
+    },
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/lib/react-query.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/lib/routes/links.ts": {
+    "typescript/no-redundant-type-constituents": {
+      "count": 1
+    }
+  },
+  "src/lib/routes/router.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/lib/routes/types.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/lib/sharing.ts": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/lib/strings/email.ts": {
+    "import/default": {
+      "count": 1
+    }
+  },
+  "src/lib/useGetEmojis/getEmojis.ts": {
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/logger/types.ts": {
+    "typescript/no-redundant-type-constituents": {
+      "count": 1
+    }
+  },
+  "src/screens/Deactivated.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/screens/E2E/SharedPreferencesTesterScreen.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 6
+    },
+    "typescript/require-await": {
+      "count": 6
+    }
+  },
+  "src/screens/Feeds/NoFollowingFeed.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Feeds/NoSavedFeedsOfAnyType.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Home/NoFeedsPinned.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/List/ListHiddenScreen.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 3
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Log.tsx": {
+    "typescript/no-unsafe-enum-comparison": {
+      "count": 2
+    }
+  },
+  "src/screens/Moderation/index.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/screens/ModerationInteractionSettings/index.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/screens/Onboarding/StepFinished/index.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Onboarding/StepInterests/index.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/screens/Onboarding/StepProfile/index.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-unsafe-call": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 4
+    }
+  },
+  "src/screens/PostThread/index.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 3
+    }
+  },
+  "src/screens/Profile/Header/EditProfileDialog.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 3
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Profile/Header/ProfileHeaderLabeler.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 3
+    }
+  },
+  "src/screens/Profile/Header/Shell.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/screens/Profile/KnownFollowers.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/screens/Profile/Sections/Feed.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Profile/components/GermButton.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/screens/Profile/components/ProfileFeedHeader.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 5
+    }
+  },
+  "src/screens/ProfileList/FeedSection.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/ProfileList/components/Header.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 3
+    }
+  },
+  "src/screens/ProfileList/components/MoreOptionsMenu.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 5
+    }
+  },
+  "src/screens/ProfileList/components/SubscribeMenu.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/screens/ProfileList/index.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/SavedFeeds.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/screens/Search/modules/ExploreSuggestedAccounts.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Search/modules/ExploreTrendingVideos.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/AboutSettings.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/AppPasswords.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/AutomationLabelSettings.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/screens/Settings/FindContactsSettings.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-floating-promises": {
+      "count": 3
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/InterestsSettings.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/components/ChangeHandleDialog.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 4
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/components/ChangePasswordDialog.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 2
+    },
+    "typescript/no-unsafe-call": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/screens/Settings/components/CopyButton.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/components/DeactivateAccountDialog.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/components/DeleteAccountDialog.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/screens/Settings/components/DisableEmail2FADialog.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 4
+    }
+  },
+  "src/screens/Settings/components/OTAInfo.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/Signup/StepInfo/Policies.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/screens/Signup/StepInfo/index.tsx": {
+    "import/default": {
+      "count": 1
+    }
+  },
+  "src/screens/SignupQueued.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 2
+    },
+    "typescript/no-unsafe-call": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/screens/StarterPack/StarterPackLandingScreen.tsx": {
+    "typescript/no-unsafe-call": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/screens/StarterPack/StarterPackScreen.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 2
+    },
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/screens/StarterPack/Wizard/StepFeeds.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/StarterPack/Wizard/StepProfiles.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/screens/StarterPack/Wizard/index.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    },
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/state/a11y.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/cache/thread-mutes.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/state/cache/types.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/state/feed-feedback.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/state/gallery.ts": {
+    "typescript/prefer-promise-reject-errors": {
+      "count": 1
+    }
+  },
+  "src/state/messages/events/agent.ts": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-floating-promises": {
+      "count": 4
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/state/persisted/index.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/state/persisted/index.web.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 4
+    }
+  },
+  "src/state/persisted/util.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/alt-text-required.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/autoplay.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/disable-haptics.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/external-embeds-prefs.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/hidden-posts.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/in-app-browser.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/kawaii.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/languages.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/large-alt-badge.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/subtitles.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/trending.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/preferences/used-starter-packs.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/queries/activity-subscriptions.ts": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/queries/app-passwords.ts": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/state/queries/bookmarks/useBookmarkMutation.ts": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/state/queries/bookmarks/useBookmarksQuery.ts": {
+    "typescript/require-await": {
+      "count": 2
+    }
+  },
+  "src/state/queries/feed.ts": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/queries/handle.ts": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/queries/list.ts": {
+    "typescript/no-floating-promises": {
+      "count": 7
+    }
+  },
+  "src/state/queries/my-lists.ts": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/state/queries/notifications/feed.ts": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-floating-promises": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/state/queries/notifications/unread.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 4
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 4
+    }
+  },
+  "src/state/queries/nuxs/definitions.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/state/queries/pinned-post.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/state/queries/post-feed.ts": {
+    "typescript/no-explicit-any": {
+      "count": 3
+    },
+    "typescript/no-floating-promises": {
+      "count": 3
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 3
+    }
+  },
+  "src/state/queries/postgate/index.ts": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 3
+    },
+    "typescript/require-await": {
+      "count": 2
+    }
+  },
+  "src/state/queries/starter-packs.ts": {
+    "typescript/require-await": {
+      "count": 1
+    }
+  },
+  "src/state/queries/suggested-follows.ts": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/state/queries/threadgate/index.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-floating-promises": {
+      "count": 3
+    },
+    "typescript/no-unsafe-call": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    },
+    "typescript/require-await": {
+      "count": 3
+    }
+  },
+  "src/state/queries/util.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/state/session/agent.ts": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/state/shell/color-mode.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/state/shell/composer/index.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/state/shell/onboarding.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 5
+    }
+  },
+  "src/state/shell/progress-guide.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-floating-promises": {
+      "count": 4
+    }
+  },
+  "src/state/shell/reminders.ts": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/storage/archive/index.ts": {
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/storage/index.ts": {
+    "typescript/no-explicit-any": {
+      "count": 8
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/SelectMediaButton.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/drafts/DraftsButton.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/drafts/state/queries.ts": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-floating-promises": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/view/com/composer/drafts/state/storage.ts": {
+    "typescript/require-await": {
+      "count": 3
+    }
+  },
+  "src/view/com/composer/photos/EditImageDialog.web.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/photos/Gallery.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/photos/OpenCameraBtn.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/text-input/TextInput.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/text-input/TextInput.web.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/text-input/web/Autocomplete.tsx": {
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/view/com/feeds/ComposerPrompt.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/view/com/feeds/FeedPage.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/view/com/feeds/ProfileFeedgens.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 3
+    },
+    "typescript/no-floating-promises": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 3
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/view/com/lists/MyLists.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 3
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 6
+    }
+  },
+  "src/view/com/lists/ProfileLists.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 3
+    },
+    "typescript/no-floating-promises": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 3
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/view/com/notifications/NotificationFeed.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-floating-promises": {
+      "count": 1
+    },
+    "typescript/no-misused-promises": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 6
+    }
+  },
+  "src/view/com/notifications/NotificationFeedItem.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 3
+    },
+    "typescript/no-misused-promises": {
+      "count": 3
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/view/com/pager/Pager.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 4
+    }
+  },
+  "src/view/com/pager/PagerWithHeader.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/view/com/pager/PagerWithHeader.web.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/view/com/pager/TabBar.web.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 4
+    }
+  },
+  "src/view/com/post-thread/PostLikedBy.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/view/com/post-thread/PostQuotes.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 2
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/view/com/post-thread/PostRepostedBy.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/view/com/posts/FeedShutdownMsg.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/view/com/posts/PostFeed.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/view/com/posts/PostFeedErrorMessage.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 8
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 9
+    }
+  },
+  "src/view/com/profile/ProfileFollowers.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/view/com/profile/ProfileFollows.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 2
+    }
+  },
+  "src/view/com/util/EmptyState.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/view/com/util/ErrorBoundary.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    },
+    "typescript/no-unsafe-call": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/view/com/util/EventStopper.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/view/com/util/Link.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/view/com/util/MainScrollProvider.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/view/com/util/UserAvatar.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 3
+    }
+  },
+  "src/view/com/util/UserBanner.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 3
+    }
+  },
+  "src/view/com/util/Views.tsx": {
+    "react/display-name": {
+      "count": 1
+    },
+    "typescript/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/view/com/util/Views.web.tsx": {
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/view/com/util/forms/Button.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 1
+    }
+  },
+  "src/view/screens/Feeds.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 3
+    },
+    "typescript/no-misused-promises": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/view/screens/Home.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "src/view/screens/ModerationBlockedAccounts.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 3
+    }
+  },
+  "src/view/screens/ModerationMutedAccounts.tsx": {
+    "typescript/no-misused-promises": {
+      "count": 3
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 1
+    }
+  },
+  "src/view/screens/Notifications.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 3
+    }
+  },
+  "src/view/screens/Storybook/ListContained.tsx": {
+    "typescript/no-unsafe-call": {
+      "count": 1
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 2
+    }
+  },
+  "src/view/shell/Drawer.tsx": {
+    "typescript/no-floating-promises": {
+      "count": 2
+    }
+  },
+  "src/view/shell/createNativeStackNavigatorWithAuth.tsx": {
+    "typescript/no-explicit-any": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 1
+    }
+  },
+  "src/view/shell/desktop/Search.tsx": {
+    "typescript/no-unsafe-call": {
+      "count": 3
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 3
+    }
+  }
+}

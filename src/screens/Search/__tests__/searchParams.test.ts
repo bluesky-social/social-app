@@ -4,7 +4,6 @@ import {
   countActiveFilters,
   definedFilterParams,
   filtersToApiParams,
-  filtersToLegacyParams,
   hasPostOnlyFilters,
   parseHistoryEntry,
   readSearchFilters,
@@ -73,34 +72,6 @@ describe(`searchParams`, () => {
           domain: 'undefined',
         }),
       ).toEqual({q: 'cats', tab: 'latest', name: 'alice'})
-    })
-  })
-
-  describe(`filtersToLegacyParams`, () => {
-    it(`maps structured filters back to legacy query operators`, () => {
-      expect(
-        filtersToLegacyParams({
-          author: 'alice',
-          mentions: 'bob',
-          domain: 'bsky.app',
-          url: 'bsky.app/x',
-          tag: 'atproto',
-          lang: 'en',
-          since: '2024-01-01',
-          until: '2024-02-01',
-          media: 'true',
-          replies: 'none',
-        }),
-      ).toEqual({
-        from: 'alice',
-        mentions: 'bob',
-        domain: 'bsky.app',
-        url: 'bsky.app/x',
-        tag: 'atproto',
-        lang: 'en',
-        since: '2024-01-01',
-        until: '2024-02-01',
-      })
     })
   })
 

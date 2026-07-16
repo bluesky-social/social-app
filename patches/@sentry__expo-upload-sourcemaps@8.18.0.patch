@@ -1,0 +1,14 @@
+diff --git a/cli.js b/cli.js
+index 2a2e6afbd46a6a5182918373d71853193945ff31..44e5888e869003438fc7ef4931b9992f2896a23f 100755
+--- a/cli.js
++++ b/cli.js
+@@ -304,6 +304,9 @@ for (const [assetGroupName, assets] of Object.entries(groupedAssets)) {
+   if (isHermes) {
+     args.push('--debug-id-reference');
+   }
++  if (process.env.SENTRY_DIST) {
++    args.push('--dist', process.env.SENTRY_DIST);
++  }
+   args.push(...assets);
+ 
+   const result = spawnSync(sentryCliBin, args, {

@@ -66,8 +66,60 @@ export function Label({
   const isLabeler = Boolean(desc.sourceType && desc.sourceDid)
   const isBlueskyLabel =
     desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID
+  const avi = size === 'lg' ? 16 : 12
 
-  const {outer, avi, text} = useMemo(() => {
+  return (
+    <>
+      <LabelBase
+        label={desc.name}
+        size={size}
+        noBg={noBg}
+        disabled={disableDetailsDialog}
+        onPress={() => control.open()}
+        icon={
+          isBlueskyLabel || !isLabeler ? (
+            <desc.icon width={avi} fill={t.atoms.text_contrast_medium.color} />
+          ) : (
+            <UserAvatar avatar={desc.sourceAvi} type="user" size={avi} />
+          )
+        }
+      />
+
+      {!disableDetailsDialog && (
+        <ModerationDetailsDialog control={control} modcause={cause} />
+      )}
+    </>
+  )
+}
+
+export type LabelBaseProps = {
+  /**
+   * The accessibility label for the pill.
+   */
+  label: string
+  /**
+   * The visible pill text. Defaults to `label`. Use this when the visible
+   * text is too terse to serve as the accessibility label, e.g. "+2".
+   */
+  cta?: string
+  onPress: () => void
+  disabled?: boolean
+  noBg?: boolean
+  icon?: React.ReactNode
+} & CommonProps
+
+export function LabelBase({
+  label,
+  cta = label,
+  onPress,
+  disabled,
+  size = 'sm',
+  noBg,
+  icon,
+}: LabelBaseProps) {
+  const t = useTheme()
+
+  const {outer, text} = useMemo(() => {
     switch (size) {
       case 'lg': {
         return {
@@ -79,7 +131,6 @@ export function Label({
               paddingVertical: 5,
             },
           ],
-          avi: 16,
           text: [a.text_sm],
         }
       }
@@ -94,7 +145,6 @@ export function Label({
               paddingVertical: 3,
             },
           ],
-          avi: 12,
           text: [a.text_xs],
         }
       }
@@ -102,52 +152,39 @@ export function Label({
   }, [t, size, noBg])
 
   return (
-    <>
-      <Button
-        disabled={disableDetailsDialog}
-        label={desc.name}
-        onPress={e => {
-          e.preventDefault()
-          e.stopPropagation()
-          control.open()
-        }}>
-        {({hovered, pressed}) => (
-          <View
+    <Button
+      disabled={disabled}
+      label={label}
+      onPress={e => {
+        e.preventDefault()
+        e.stopPropagation()
+        onPress()
+      }}>
+      {({hovered, pressed}) => (
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            a.rounded_full,
+            outer,
+            (hovered || pressed) && t.atoms.bg_contrast_50,
+          ]}>
+          {icon}
+
+          <Text
+            emoji
             style={[
-              a.flex_row,
-              a.align_center,
-              a.rounded_full,
-              outer,
-              (hovered || pressed) && t.atoms.bg_contrast_50,
+              text,
+              a.font_semi_bold,
+              a.leading_tight,
+              t.atoms.text_contrast_medium,
+              {paddingRight: 3},
             ]}>
-            {isBlueskyLabel || !isLabeler ? (
-              <desc.icon
-                width={avi}
-                fill={t.atoms.text_contrast_medium.color}
-              />
-            ) : (
-              <UserAvatar avatar={desc.sourceAvi} type="user" size={avi} />
-            )}
-
-            <Text
-              emoji
-              style={[
-                text,
-                a.font_semi_bold,
-                a.leading_tight,
-                t.atoms.text_contrast_medium,
-                {paddingRight: 3},
-              ]}>
-              {desc.name}
-            </Text>
-          </View>
-        )}
-      </Button>
-
-      {!disableDetailsDialog && (
-        <ModerationDetailsDialog control={control} modcause={cause} />
+            {cta}
+          </Text>
+        </View>
       )}
-    </>
+    </Button>
   )
 }
 

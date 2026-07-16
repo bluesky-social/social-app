@@ -47,6 +47,10 @@ const Context = createContext<{
 })
 Context.displayName = 'TextFieldContext'
 
+export function useTextFieldContext() {
+  return useContext(Context)
+}
+
 export type RootProps = React.PropsWithChildren<
   {isInvalid?: boolean} & TextStyleProp
 >
@@ -203,7 +207,7 @@ export function createInput(Component: typeof TextInput) {
 
     const refs = mergeRefs([ctx.inputRef, inputRef!].filter(Boolean))
 
-    const flattened = StyleSheet.flatten([
+    const flattened = StyleSheet.flatten<TextStyle>([
       a.relative,
       a.z_20,
       a.flex_1,

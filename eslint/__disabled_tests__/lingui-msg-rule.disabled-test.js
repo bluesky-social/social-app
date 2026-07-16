@@ -1,16 +1,11 @@
-const {RuleTester} = require('eslint')
-const tseslint = require('typescript-eslint')
+const {RuleTester} = require('oxlint/plugins-dev')
 const linguiMsgRule = require('../lingui-msg-rule')
 
 const ruleTester = new RuleTester({
+  eslintCompat: true,
   languageOptions: {
-    parser: tseslint.parser,
     parserOptions: {
-      ecmaFeatures: {
-        jsx: true,
-      },
-      ecmaVersion: 'latest',
-      sourceType: 'module',
+      lang: 'tsx',
     },
   },
 })

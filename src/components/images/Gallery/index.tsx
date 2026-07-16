@@ -274,9 +274,12 @@ export function Gallery({
           aria-label={l`Image gallery, ${images.length} images`}
           horizontal
           pagingEnabled={false}
-          // Disable Android's stretch overscroll, which can leave the carousel
-          // settled just off the left edge instead of aligned to x = 0
-          overScrollMode={IS_ANDROID ? 'never' : 'auto'}
+          // We use snapToOffsets on Android to ensure that if the stretch overscroll
+          // leaves the carousel slightly off the left edge, it snaps back to 0.
+          // This fixes the offset bug without disabling the native stretch behavior.
+          overScrollMode="auto"
+          snapToOffsets={IS_ANDROID ? [0] : undefined}
+          snapToEnd={false}
           showsHorizontalScrollIndicator={false}
           directionalLockEnabled
           nestedScrollEnabled
@@ -482,9 +485,17 @@ function GalleryImage({
             loading={index === 0 ? 'eager' : 'lazy'}
             style={[dims]}
             onLoad={e => {
-              const ar = getAspectRatio(e.source)
-              if (ar && ar !== aspectRatio) {
-                setAspectRatio(ar)
+              /*
+               * Only sync from the loaded thumb if we don't already have a
+               * ratio from the record. The CDN scales thumbs to integer pixel
+               * dims, so its reported ratio drifts a fraction from the
+               * record's - re-syncing would jiggle the FlatList item widths.
+               */
+              if (aspectRatio === undefined) {
+                const ar = getAspectRatio(e.source)
+                if (ar !== undefined) {
+                  setAspectRatio(ar)
+                }
               }
               onThumbDims(index, {
                 width: e.source.width,

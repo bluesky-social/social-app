@@ -26,6 +26,7 @@ import {Shadows} from './Shadows'
 import {Spacing} from './Spacing'
 import {Theming} from './Theming'
 import {Toasts} from './Toasts'
+import {Tooltips} from './Tooltips'
 import {Typography} from './Typography'
 
 export default function Storybook() {
@@ -127,6 +128,7 @@ export default function Storybook() {
             <Shadows />
             <Icons />
             <Links />
+            <Tooltips />
             <Dialogs />
             <Menus />
             <Breakpoints />
