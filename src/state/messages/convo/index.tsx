@@ -6,7 +6,6 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import {ChatBskyConvoDefs} from '@atproto/api'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -28,15 +27,20 @@ import {
 } from '#/state/queries/messages/conversation'
 import {RQKEY_ROOT as ListConvosQueryKeyRoot} from '#/state/queries/messages/list-conversations'
 import {RQKEY as createProfileQueryKey} from '#/state/queries/profile'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
 import {type GroupConvoMember} from '#/components/dms/util'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export * from '#/state/messages/convo/util'
 
-function membersChanged(
-  a: ChatBskyConvoDefs.ConvoView['members'],
-  b: ChatBskyConvoDefs.ConvoView['members'],
-) {
+/*
+ * Only the member dids are compared, so accept any member-shaped arrays. This
+ * also lets the old-typed `convo.convo.members` (from `#/components/dms/util`,
+ * migrates in a later task) flow in alongside the new lexicon ConvoView
+ * members.
+ */
+function membersChanged(a: Array<{did: string}>, b: Array<{did: string}>) {
   if (a.length !== b.length) return true
   const aDids = new Set(a.map(m => m.did))
   return b.some(m => !aDids.has(m.did))
@@ -80,15 +84,16 @@ export function ConvoProvider({
   convoId,
 }: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const chatClient = useChatClient()
   const events = useMessagesEventBus()
   const [convo] = useState(() => {
-    const placeholder = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
-      getConvoKey(convoId),
-    )
+    const placeholder =
+      queryClient.getQueryData<chat.bsky.convo.defs.ConvoView>(
+        getConvoKey(convoId),
+      )
     return new Convo({
       convoId,
-      agent,
+      chatClient,
       events,
       placeholderData: placeholder ? {convo: placeholder} : undefined,
     })
@@ -141,14 +146,14 @@ export function ConvoProvider({
       const queryKey = event.query.queryKey as string[]
       if (queryKey[0] === root && queryKey[1] === id) {
         const data = event.query.state.data as
-          | ChatBskyConvoDefs.ConvoView
+          | chat.bsky.convo.defs.ConvoView
           | undefined
         if (data && convo.convo && data.muted !== convo.convo.view.muted) {
           convo.updateMuted(data.muted)
         }
         if (
           data &&
-          ChatBskyConvoDefs.isGroupConvo(data.kind) &&
+          bsky.isType(chat.bsky.convo.defs.groupConvo, data.kind) &&
           convo.convo?.kind === 'group'
         ) {
           if (data.kind.name !== convo.convo.details.name) {
@@ -170,7 +175,7 @@ export function ConvoProvider({
         }
         if (
           data &&
-          ChatBskyConvoDefs.isGroupConvo(data.kind) &&
+          bsky.isType(chat.bsky.convo.defs.groupConvo, data.kind) &&
           convo.convo?.kind === 'group' &&
           (membersChanged(data.members, convo.convo.members) ||
             data.kind.memberCount !== convo.convo.details.memberCount)

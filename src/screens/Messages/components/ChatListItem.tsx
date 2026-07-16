@@ -1,11 +1,11 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
+import {type ChatBskyConvoDefs} from '@atproto/api'
 import {
-  ChatBskyConvoDefs,
   moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
-} from '@atproto/api'
+} from '@bsky.app/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -53,7 +53,8 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-import type * as bsky from '#/types/bsky'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {useIsWithinSplitView} from './splitView/context'
 
 export const ChatListItemPortal = createPortalGroup()
@@ -125,7 +126,8 @@ function DirectChatItem({
   const {isWithinLeftPanel} = useIsWithinSplitView()
 
   const moderation = useMemo(
-    () => moderateProfile(profile, moderationOpts),
+    // TODO(phase4): drop toLex once useProfileShadow emits #/lexicons views
+    () => moderateProfile(bsky.toLex(profile), moderationOpts),
     [profile, moderationOpts],
   )
 
@@ -192,7 +194,10 @@ function GroupChatItem({
 
   const moderation = useMemo(
     () =>
-      groupOwner ? moderateProfile(groupOwner, moderationOpts) : undefined,
+      groupOwner
+        ? // TODO(phase4): drop toLex once useMaybeProfileShadow emits #/lexicons views
+          moderateProfile(bsky.toLex(groupOwner), moderationOpts)
+        : undefined,
     [groupOwner, moderationOpts],
   )
 
@@ -314,7 +319,12 @@ function BaseChatItem({
     let lastMessageSentAt: string | null = null
 
     // Deleted message
-    if (ChatBskyConvoDefs.isDeletedMessageView(convo.view.lastMessage)) {
+    if (
+      bsky.isType(
+        chat.bsky.convo.defs.deletedMessageView,
+        convo.view.lastMessage,
+      )
+    ) {
       lastMessageSentAt = convo.view.lastMessage.sentAt
 
       lastMessage = isDeletedAccount
@@ -323,7 +333,7 @@ function BaseChatItem({
     }
 
     // Message
-    if (ChatBskyConvoDefs.isMessageView(convo.view.lastMessage)) {
+    if (bsky.isType(chat.bsky.convo.defs.messageView, convo.view.lastMessage)) {
       const info = getMessageInfo({
         convo: convo.view,
         currentAccountDid: currentAccount?.did,
@@ -339,7 +349,12 @@ function BaseChatItem({
     }
 
     // Reaction
-    if (ChatBskyConvoDefs.isMessageAndReactionView(convo.view.lastReaction)) {
+    if (
+      bsky.isType(
+        chat.bsky.convo.defs.messageAndReactionView,
+        convo.view.lastReaction,
+      )
+    ) {
       const info = getReactionInfo({
         convo: convo.view,
         currentAccountDid: currentAccount?.did,
@@ -358,7 +373,12 @@ function BaseChatItem({
     }
 
     // System message
-    if (ChatBskyConvoDefs.isSystemMessageView(convo.view.lastMessage)) {
+    if (
+      bsky.isType(
+        chat.bsky.convo.defs.systemMessageView,
+        convo.view.lastMessage,
+      )
+    ) {
       const info = getSystemMessageInfo(
         convo.view.lastMessage.data,
         new Map(convo.view.members.map(m => [m.did, m])),
@@ -404,7 +424,15 @@ function BaseChatItem({
       for (const member of convo.view.members) {
         unstableCacheProfileView(queryClient, member)
       }
-      precacheConvoQuery(queryClient, convo.view)
+      /*
+       * `convo.view` comes from the still-old-typed `#/components/dms/util`
+       * (migrates in a later task) while the convo cache is now keyed on the
+       * lexicon ConvoView. TODO(phase4): drop toLex once dms/util migrates.
+       */
+      precacheConvoQuery(
+        queryClient,
+        bsky.toLex<chat.bsky.convo.defs.ConvoView>(convo.view),
+      )
       void decrementBadgeCount(convo.view.unreadCount)
       if (isDeletedAccount) {
         e.preventDefault()
@@ -496,7 +524,13 @@ function BaseChatItem({
                   ]
                 : undefined
             }
-            onPressIn={() => precacheConvoQuery(queryClient, convo.view)}
+            onPressIn={() =>
+              // see onPress: old-typed dms/util view into the new-typed cache
+              precacheConvoQuery(
+                queryClient,
+                bsky.toLex<chat.bsky.convo.defs.ConvoView>(convo.view),
+              )
+            }
             onPress={onPress}
             onLongPress={showMenu && IS_NATIVE ? onLongPress : undefined}
             onAccessibilityAction={showMenu ? onLongPress : undefined}>

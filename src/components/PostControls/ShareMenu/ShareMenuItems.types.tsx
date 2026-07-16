@@ -3,8 +3,8 @@ import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   type AppBskyFeedThreadgate,
-  type RichText as RichTextAPI,
 } from '@atproto/api'
+import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 
 import {type Shadow} from '#/state/cache/post-shadow'
 

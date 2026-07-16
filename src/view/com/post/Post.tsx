@@ -1,13 +1,9 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AtUri,
-  moderatePost,
-  type ModerationDecision,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {moderatePost, type ModerationDecision} from '@bsky.app/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
@@ -38,6 +34,7 @@ import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function Post({
@@ -56,9 +53,7 @@ export function Post({
   const moderationOpts = useModerationOpts()
   const record = useMemo<AppBskyFeedPost.Record | undefined>(
     () =>
-      bsky.validate(post.record, AppBskyFeedPost.validateRecord)
-        ? post.record
-        : undefined,
+      bsky.matches(app.bsky.feed.post, post.record) ? post.record : undefined,
     [post],
   )
   const postShadowed = usePostShadow(post)
@@ -67,13 +62,17 @@ export function Post({
       record
         ? new RichTextAPI({
             text: record.text,
-            facets: record.facets,
+            // TODO(phase4): drop toLex once the post record producer emits #/lexicons facets
+            facets: bsky.toLex(record.facets),
           })
         : undefined,
     [record],
   )
   const moderation = useMemo(
-    () => (moderationOpts ? moderatePost(post, moderationOpts) : undefined),
+    () =>
+      moderationOpts
+        ? moderatePost(bsky.toLex(post), moderationOpts)
+        : undefined,
     [moderationOpts, post],
   )
   if (postShadowed === POST_TOMBSTONE) {
@@ -137,7 +136,8 @@ function PostInner({
         text: record.text,
         author: post.author,
         embed: post.embed,
-        moderation,
+        // TODO(phase4): drop toLex once the composer state accepts SDK ModerationDecision
+        moderation: bsky.toLex(moderation),
         langs: record.langs,
       },
       logContext: 'PostReply',

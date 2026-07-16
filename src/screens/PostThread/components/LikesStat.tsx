@@ -1,5 +1,7 @@
 import {View} from 'react-native'
-import {type AppBskyFeedDefs, AtUri, moderateProfile} from '@atproto/api'
+import {type AppBskyFeedDefs} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
@@ -16,6 +18,7 @@ import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {toLex} from '#/types/bsky'
 
 const AVI_SIZE = 20
 const MAX_NAME_LENGTH = 16
@@ -64,7 +67,8 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
         .map(like => like.actor)
         .map(actor => ({
           actor,
-          moderation: moderateProfile(actor, moderationOpts),
+          // TODO(phase4): drop toLex once useLikedBySampleQuery emits #/lexicons views
+          moderation: moderateProfile(toLex(actor), moderationOpts),
         }))
         .filter(({actor, moderation}) => {
           const modui = moderation.ui('profileList')

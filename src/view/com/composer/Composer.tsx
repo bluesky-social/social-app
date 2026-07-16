@@ -50,10 +50,10 @@ import {
   AppBskyDraftCreateDraft,
   AppBskyUnspeccedDefs,
   type AppBskyUnspeccedGetPostThreadV2,
-  AtUri,
   ChatBskyGroupDefs,
   type RichText,
 } from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -95,8 +95,17 @@ import {
 } from '#/state/preferences/languages'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
-import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
-import {type SessionAgent, useAgent, useSession} from '#/state/session'
+import {
+  resolveLinkQueryOptions,
+  useResolveClients,
+} from '#/state/queries/resolve-link'
+import {
+  type SessionAgent,
+  useAgent,
+  useLexClient,
+  usePdsClient,
+  useSession,
+} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
@@ -267,6 +276,9 @@ export const ComposePost = ({
   const t = useTheme()
   const ax = useAnalytics()
   const agent = useAgent()
+  const pdsClient = usePdsClient()
+  const appviewClient = useLexClient()
+  const resolveClients = useResolveClients()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
   const {closeComposer} = useComposerControls()
@@ -950,7 +962,7 @@ export const ComposePost = ({
     .map(post => post.embed.link!.uri)
   const linkQueries = useQueries({
     queries: linkUris.map(uri => ({
-      ...resolveLinkQueryOptions(agent, uri),
+      ...resolveLinkQueryOptions(resolveClients, uri),
       enabled: false,
     })),
   })
@@ -1041,12 +1053,16 @@ export const ComposePost = ({
     try {
       logger.info(`composer: posting...`)
       postUri = (
-        await apilib.post(agent, queryClient, {
-          thread: filteredThread,
-          replyTo: replyTo?.uri,
-          onStateChange: setPublishingStage,
-          langs: currentLanguages,
-        })
+        await apilib.post(
+          {pdsClient, appviewClient, resolveClients},
+          queryClient,
+          {
+            thread: filteredThread,
+            replyTo: replyTo?.uri,
+            onStateChange: setPublishingStage,
+            langs: currentLanguages,
+          },
+        )
       ).uris[0]
 
       // Fire published event for every video that made it into the post.

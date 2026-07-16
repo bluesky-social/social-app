@@ -658,11 +658,6 @@
       "count": 3
     }
   },
-  "src/lib/api/feed/demo.ts": {
-    "typescript/require-await": {
-      "count": 2
-    }
-  },
   "src/lib/api/feed/posts.ts": {
     "typescript/require-await": {
       "count": 1
@@ -1491,11 +1486,6 @@
   },
   "src/state/queries/starter-packs.ts": {
     "typescript/require-await": {
-      "count": 1
-    }
-  },
-  "src/state/queries/suggested-follows.ts": {
-    "no-unused-vars": {
       "count": 1
     }
   },

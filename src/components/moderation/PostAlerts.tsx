@@ -1,10 +1,6 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type ComAtprotoLabelDefs,
-  type ModerationCause,
-  type ModerationUI,
-} from '@atproto/api'
+import {type AppBskyFeedDefs, type ComAtprotoLabelDefs} from '@atproto/api'
+import {type ModerationCause, type ModerationUI} from '@bsky.app/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
@@ -20,6 +16,7 @@ import {
   useLabelsOnMeDialogControl,
 } from '#/components/moderation/LabelsOnMeDialog'
 import * as Pills from '#/components/Pills'
+import {toLex} from '#/types/bsky'
 
 export function PostAlerts({
   post,
@@ -63,7 +60,8 @@ export function PostAlerts({
    */
   const shownCauses = [...alerts, ...informs, ...modui.blurs]
   const additionalLabels = filterUserFacingLabels(
-    allLabels,
+    // TODO(phase4): drop toLex once PostView labels are #/lexicons-typed
+    toLex(allLabels),
     currentAccount?.did,
   ).filter(label =>
     shownCauses.every(

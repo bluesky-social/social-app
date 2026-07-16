@@ -26,9 +26,9 @@ import {
   type ChatBskyActorDefs,
   ChatBskyConvoDefs,
   ChatBskyEmbedJoinLink,
-  moderateProfile,
-  RichText as RichTextAPI,
 } from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -57,6 +57,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {toLex} from '#/types/bsky'
 import {DateDivider} from './DateDivider'
 import {MessageItemEmbed} from './MessageItemEmbed'
 import {MessageItemInviteEmbed} from './MessageItemInviteEmbed'
@@ -334,7 +335,9 @@ let MessageItem = ({
         size={AVATAR_SIZE}
         type={profile.associated?.labeler ? 'labeler' : 'user'}
         onBeforePress={() => unstableCacheProfileView(queryClient, profile)}
-        moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
+        moderation={moderateProfile(toLex(profile), moderationOpts).ui(
+          'avatar',
+        )}
       />
     ) : (
       <ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />

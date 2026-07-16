@@ -1,13 +1,10 @@
-import {
-  ChatBskyConvoDefs,
-  type ChatBskyGroupCreateJoinLink,
-  type ChatBskyGroupDefs,
-} from '@atproto/api'
+import {type DatetimeString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   rollbackConvoOptimistic,
   updateConvoOptimistic,
@@ -19,32 +16,34 @@ export function useCreateJoinLink(
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: ChatBskyGroupCreateJoinLink.OutputSchema) => void
+    onSuccess?: (data: chat.bsky.group.createJoinLink.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const chatClient = useChatClient()
 
   return useMutation({
     mutationFn: async ({
       joinRule,
       requireApproval,
     }: {
-      joinRule: ChatBskyGroupDefs.JoinRule
+      joinRule: chat.bsky.group.defs.JoinRule
       requireApproval: boolean
     }) => {
       if (!convoId) throw new Error('No convoId provided')
-      const {data} = await agent.chat.bsky.group.createJoinLink(
-        {convoId, joinRule, requireApproval},
-        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-      )
+      const data = await chatClient.call(chat.bsky.group.createJoinLink, {
+        convoId,
+        joinRule,
+        requireApproval,
+      })
       return data
     },
     onMutate: ({joinRule, requireApproval}) => {
       if (!convoId) return
       return updateConvoOptimistic(queryClient, convoId, prev => {
-        if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined
+        if (!bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind))
+          return undefined
         return {
           ...prev,
           kind: {
@@ -55,7 +54,9 @@ export function useCreateJoinLink(
               enabledStatus: 'enabled',
               joinRule,
               requireApproval,
-              createdAt: new Date().toISOString(),
+              // ISO string is a valid datetime; assert the branded type the
+              // generated JoinLinkView expects for this optimistic-only value.
+              createdAt: new Date().toISOString() as DatetimeString,
             },
           },
         }
@@ -64,7 +65,8 @@ export function useCreateJoinLink(
     onSuccess: data => {
       if (convoId) {
         updateConvoOptimistic(queryClient, convoId, prev => {
-          if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined
+          if (!bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind))
+            return undefined
           return {
             ...prev,
             kind: {...prev.kind, joinLink: data.joinLink},

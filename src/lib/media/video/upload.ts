@@ -1,5 +1,5 @@
 import {createUploadTask, FileSystemUploadType} from 'expo-file-system/legacy'
-import {type AppBskyVideoDefs} from '@atproto/api'
+import {type Client} from '@atproto/lex-client'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 import {nanoid} from 'nanoid/non-secure'
@@ -7,20 +7,23 @@ import {nanoid} from 'nanoid/non-secure'
 import {AbortError} from '#/lib/async/cancelable'
 import {ServerError} from '#/lib/media/video/errors'
 import {type CompressedVideo} from '#/lib/media/video/types'
-import {type SessionAgent} from '#/state/session'
+import {app} from '#/lexicons'
 import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
 import {createVideoEndpointUrl, mimeToExt} from './util'
 
 export async function uploadVideo({
   video,
-  agent,
+  client,
+  dispatchUrl,
   did,
   setProgress,
   signal,
   i18n,
 }: {
   video: CompressedVideo
-  agent: SessionAgent
+  client: Client
+  /** The account's PDS/dispatch URL, for the uploadBlob service-auth token. */
+  dispatchUrl: string | URL
   did: string
   setProgress: (progress: number) => void
   signal: AbortSignal
@@ -29,7 +32,7 @@ export async function uploadVideo({
   if (signal.aborted) {
     throw new AbortError()
   }
-  await getVideoUploadLimits(agent, i18n)
+  await getVideoUploadLimits(client, i18n)
 
   const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
     did,
@@ -40,7 +43,8 @@ export async function uploadVideo({
     throw new AbortError()
   }
   const token = await getServiceAuthToken({
-    agent,
+    client,
+    dispatchUrl,
     lxm: 'com.atproto.repo.uploadBlob',
     exp: Date.now() / 1000 + 60 * 30, // 30 minutes
   })
@@ -67,7 +71,7 @@ export async function uploadVideo({
     throw new Error('No response')
   }
 
-  const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus
+  const responseBody = JSON.parse(res.body) as app.bsky.video.defs.JobStatus
 
   if (!responseBody.jobId) {
     throw new ServerError(

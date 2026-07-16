@@ -1,7 +1,8 @@
 import {useState} from 'react'
 import {Alert, LayoutAnimation, Linking, Pressable, View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
-import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -68,6 +69,7 @@ import {IS_INTERNAL, IS_IOS, IS_NATIVE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {device, useStorage} from '#/storage'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
+import {toLex} from '#/types/bsky'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
@@ -328,7 +330,8 @@ function ProfilePreview({
 
   if (!moderationOpts) return null
 
-  const moderation = moderateProfile(profile, moderationOpts)
+  // TODO(phase4): drop toLex once ProfileViewDetailed prop emits #/lexicons views
+  const moderation = moderateProfile(toLex(profile), moderationOpts)
   const displayName = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
@@ -626,7 +629,10 @@ function AccountRow({
           <UserAvatar
             size={28}
             avatar={profile.avatar}
-            moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
+            // TODO(phase4): drop toLex once ProfileViewDetailed prop emits #/lexicons views
+            moderation={moderateProfile(toLex(profile), moderationOpts).ui(
+              'avatar',
+            )}
             type={profile.associated?.labeler ? 'labeler' : 'user'}
             live={live}
             hideLiveBadge

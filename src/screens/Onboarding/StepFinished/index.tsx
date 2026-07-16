@@ -4,7 +4,6 @@ import {
   type AppBskyActorDefs,
   type AppBskyActorProfile,
   type AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
   type Un$Typed,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
@@ -48,6 +47,7 @@ import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/ico
 import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {ValuePropositionPager} from './ValuePropositionPager'
 
@@ -209,10 +209,7 @@ export function StepFinished() {
       usedStarterPack: Boolean(starterPack),
       starterPackName:
         starterPack &&
-        bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-          starterPack.record,
-          AppBskyGraphStarterpack.isRecord,
-        )
+        bsky.isType(app.bsky.graph.starterpack, starterPack.record)
           ? starterPack.record.name
           : undefined,
       starterPackCreator: starterPack?.creator.did,

@@ -1,5 +1,5 @@
 import {createContext, useContext, useState} from 'react'
-import {type ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@bsky.app/sdk/moderation'
 
 import {
   type ModerationCauseDescription,

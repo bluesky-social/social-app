@@ -1,9 +1,6 @@
 import {ScrollView, View} from 'react-native'
-import {
-  type ChatBskyActorDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type ChatBskyActorDefs} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -25,6 +22,7 @@ import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {toLex} from '#/types/bsky'
 
 export function RecentChats({
   postUri,
@@ -123,7 +121,8 @@ function RecentChatItem({
 
   const primaryProfile = useProfileShadow(primaryMember)
 
-  const moderation = moderateProfile(primaryProfile, moderationOpts)
+  // TODO(phase4): drop toLex once useProfileShadow emits #/lexicons views
+  const moderation = moderateProfile(toLex(primaryProfile), moderationOpts)
   const name =
     convo.kind === 'group'
       ? convo.details.name

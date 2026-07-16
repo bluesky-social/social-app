@@ -1,7 +1,7 @@
 import {useCallback, useEffect} from 'react'
 import {type ScrollView, View} from 'react-native'
 import Animated, {useAnimatedRef, useSharedValue} from 'react-native-reanimated'
-import {moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -15,6 +15,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {toLex} from '#/types/bsky'
 
 type Props = {
   testID?: string
@@ -89,7 +90,8 @@ function Tab({
   const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
 
-  const moderation = moderateProfile(profile, moderationOpts!)
+  // TODO(phase4): drop toLex once profile prop emits #/lexicons views
+  const moderation = moderateProfile(toLex(profile), moderationOpts!)
   const displayName = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),

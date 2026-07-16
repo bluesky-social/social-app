@@ -1,11 +1,11 @@
 import {useEffect} from 'react'
-import {ChatBskyConvoDefs} from '@atproto/api'
 import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {createQueryKey} from '#/state/queries/util'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {STALE} from '..'
 
 export const JOIN_REQUESTS_THRESHOLD = 20
@@ -22,7 +22,7 @@ export function useListJoinRequestsQuery({
   convoId: string | undefined
   enabled?: boolean
 }) {
-  const agent = useAgent()
+  const chatClient = useChatClient()
   const queryClient = useQueryClient()
   const messagesBus = useMessagesEventBus()
   const isEnabled = enabled !== false && !!convoId
@@ -35,9 +35,9 @@ export function useListJoinRequestsQuery({
         if (event.type !== 'logs') return
         for (const log of event.logs) {
           if (
-            ChatBskyConvoDefs.isLogIncomingJoinRequest(log) ||
-            ChatBskyConvoDefs.isLogApproveJoinRequest(log) ||
-            ChatBskyConvoDefs.isLogRejectJoinRequest(log)
+            bsky.isType(chat.bsky.convo.defs.logIncomingJoinRequest, log) ||
+            bsky.isType(chat.bsky.convo.defs.logApproveJoinRequest, log) ||
+            bsky.isType(chat.bsky.convo.defs.logRejectJoinRequest, log)
           ) {
             void queryClient.invalidateQueries({
               queryKey: createListJoinRequestsQueryKey({convoId}),
@@ -54,11 +54,11 @@ export function useListJoinRequestsQuery({
     enabled: isEnabled,
     queryKey: createListJoinRequestsQueryKey({convoId: convoId ?? ''}),
     queryFn: async ({pageParam}) => {
-      const {data} = await agent.chat.bsky.group.listJoinRequests(
-        {convoId: convoId!, cursor: pageParam, limit: JOIN_REQUESTS_THRESHOLD},
-        {headers: DM_SERVICE_HEADERS},
-      )
-      return data
+      return await chatClient.call(chat.bsky.group.listJoinRequests, {
+        convoId: convoId!,
+        cursor: pageParam,
+        limit: JOIN_REQUESTS_THRESHOLD,
+      })
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: page => page.cursor,

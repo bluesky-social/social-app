@@ -1,8 +1,8 @@
-import {ChatBskyConvoDefs, type ChatBskyConvoLockConvo} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   rollbackConvoOptimistic,
   updateConvoOptimistic,
@@ -15,7 +15,7 @@ export function useLockConvo(
     onError,
   }: {
     onSuccess?: (
-      data: ChatBskyConvoLockConvo.OutputSchema,
+      data: chat.bsky.convo.lockConvo.$OutputBody,
       variables: {lock: boolean; silent?: boolean},
     ) => void
     onError?: (
@@ -25,29 +25,26 @@ export function useLockConvo(
   },
 ) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const chatClient = useChatClient()
 
   return useMutation({
     mutationFn: async ({lock}: {lock: boolean; silent?: boolean}) => {
       if (!convoId) throw new Error('No convoId provided')
       if (lock) {
-        const {data} = await agent.chat.bsky.convo.lockConvo(
-          {convoId},
-          {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-        )
+        const data = await chatClient.call(chat.bsky.convo.lockConvo, {convoId})
         return data
       } else {
-        const {data} = await agent.chat.bsky.convo.unlockConvo(
-          {convoId},
-          {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-        )
+        const data = await chatClient.call(chat.bsky.convo.unlockConvo, {
+          convoId,
+        })
         return data
       }
     },
     onMutate: ({lock}) => {
       if (!convoId) return
       return updateConvoOptimistic(queryClient, convoId, prev => {
-        if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined
+        if (!bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind))
+          return undefined
         return {
           ...prev,
           kind: {

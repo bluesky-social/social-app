@@ -1,15 +1,14 @@
-import {type AppBskyLabelerDefs} from '@atproto/api'
-
 import {OTHER_REPORT_REASONS} from '#/components/moderation/ReportDialog/const'
 import {
   type ReportCategoryConfig,
   type ReportOption,
 } from '#/components/moderation/ReportDialog/utils/useReportOptions'
+import {type app} from '#/lexicons'
 
 export type ReportState = {
   selectedCategory?: ReportCategoryConfig
   selectedOption?: ReportOption
-  selectedLabeler?: AppBskyLabelerDefs.LabelerViewDetailed
+  selectedLabeler?: app.bsky.labeler.defs.LabelerViewDetailed
   details?: string
   detailsOpen: boolean
   activeStepIndex1: number
@@ -34,7 +33,7 @@ export type ReportAction =
     }
   | {
       type: 'selectLabeler'
-      labeler: AppBskyLabelerDefs.LabelerViewDetailed
+      labeler: app.bsky.labeler.defs.LabelerViewDetailed
     }
   | {
       type: 'clearLabeler'

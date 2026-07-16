@@ -4,10 +4,10 @@ import {
   type AppBskyGraphDefs,
   type AppBskyGraphListitem,
   type AppBskyGraphStarterpack,
-  AtUri,
   type ComAtprotoRepoApplyWrites,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
+import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

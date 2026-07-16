@@ -1,10 +1,11 @@
 import {useMemo} from 'react'
-import {moderateUserList} from '@atproto/api'
+import {moderateUserList} from '@bsky.app/sdk/moderation'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, useTheme} from '#/alf'
 import * as ListCard from '#/components/ListCard'
 import {ContentHider} from '#/components/moderation/ContentHider'
+import {toLex} from '#/types/bsky'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
 
@@ -30,7 +31,8 @@ export function ModeratedListEmbed({
   const moderationOpts = useModerationOpts()
   const moderation = useMemo(() => {
     return moderationOpts
-      ? moderateUserList(embed.view, moderationOpts)
+      ? // TODO(phase4): drop toLex once list embed view emits #/lexicons views
+        moderateUserList(toLex(embed.view), moderationOpts)
       : undefined
   }, [embed.view, moderationOpts])
   return (

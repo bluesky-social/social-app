@@ -23,16 +23,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {
-  type $Typed,
-  type AppBskyEmbedRecord,
-  AppBskyRichtextFacet,
-  ChatBskyConvoDefs,
-  type ChatBskyEmbedJoinLink,
-  ChatBskyGroupDefs,
-  RichText,
-} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
 import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
+import {RichText} from '@bsky.app/sdk/richtext'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {mergeRefs} from '#/lib/merge-refs'
@@ -53,7 +46,7 @@ import {type ConvoState, ConvoStatus} from '#/state/messages/convo/types'
 import {useGetJoinLinkPreview} from '#/state/queries/join-links'
 import {useGetPost} from '#/state/queries/post'
 import {createEmbedViewRecordFromPost} from '#/state/queries/postgate/util'
-import {useAgent, useSession} from '#/state/session'
+import {usePdsClient, useSession} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
@@ -72,6 +65,8 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
+import {app, chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {groupSystemMessages, type RenderItem} from './groupSystemMessages'
 import {InviteLinkDialogProvider} from './InviteLinkDialogProvider'
@@ -117,8 +112,8 @@ function getNeighborMessage(
     neighbor.type === 'deleted-message'
   ) {
     if (
-      ChatBskyConvoDefs.isMessageView(neighbor.message) ||
-      ChatBskyConvoDefs.isDeletedMessageView(neighbor.message)
+      bsky.isType(chat.bsky.convo.defs.messageView, neighbor.message) ||
+      bsky.isType(chat.bsky.convo.defs.deletedMessageView, neighbor.message)
     ) {
       return neighbor.message
     }
@@ -145,7 +140,12 @@ export function MessagesList({
 }) {
   const ax = useAnalytics()
   const convoState = useConvoActive()
-  const agent = useAgent()
+  /*
+   * Facet detection resolves handles via `com.atproto.identity.resolveHandle`,
+   * which the account (PDS) client serves - chat requires a session, so the
+   * client is always live here.
+   */
+  const pdsClient = usePdsClient()
   const {hasSession, currentAccount} = useSession()
   const getPost = useGetPost()
   const getJoinLinkPreview = useGetJoinLinkPreview()
@@ -513,7 +513,7 @@ export function MessagesList({
     async (
       text: string,
       embedState?: MessageEmbedState,
-      reply?: $Typed<ChatBskyConvoDefs.MessageView>,
+      reply?: $Typed<chat.bsky.convo.defs.MessageView>,
     ) => {
       let rt = new RichText({text: text.trimEnd()}, {cleanNewlines: true})
 
@@ -526,14 +526,14 @@ export function MessagesList({
       rt.detectFacetsWithoutResolution()
 
       let embed:
-        | $Typed<AppBskyEmbedRecord.Main>
-        | $Typed<ChatBskyEmbedJoinLink.Main>
+        | $Typed<app.bsky.embed.record.Main>
+        | $Typed<chat.bsky.embed.joinLink.Main>
         | undefined
       let embedView:
-        | $Typed<AppBskyEmbedRecord.View>
-        | $Typed<ChatBskyEmbedJoinLink.View>
+        | $Typed<app.bsky.embed.record.View>
+        | $Typed<chat.bsky.embed.joinLink.View>
         | undefined
-      let replyTo: ChatBskyConvoDefs.ReplyRef | undefined
+      let replyTo: chat.bsky.convo.defs.ReplyRef | undefined
 
       /**
        * Find the embedded link facet and, if it's at the start or end of the
@@ -543,7 +543,8 @@ export function MessagesList({
         const linkFacet = rt.facets?.find(facet =>
           facet.features.find(
             feature =>
-              AppBskyRichtextFacet.isLink(feature) && predicate(feature.uri),
+              bsky.isType(app.bsky.richtext.facet.link, feature) &&
+              predicate(feature.uri),
           ),
         )
         if (linkFacet) {
@@ -561,18 +562,24 @@ export function MessagesList({
         try {
           const post = await getPost({uri: embedState.uri})
           if (post) {
-            embed = {
+            /*
+             * `post` comes from the still-old-typed `useGetPost` producer
+             * (migrates in a later task), so its uri/view shapes carry plain
+             * strings where the lexicon types are branded. TODO(phase4): drop
+             * toLex once that producer migrates.
+             */
+            embed = bsky.toLex<$Typed<app.bsky.embed.record.Main>>({
               $type: 'app.bsky.embed.record',
               record: {
                 uri: post.uri,
                 cid: post.cid,
               },
-            }
+            })
 
-            embedView = {
+            embedView = bsky.toLex<$Typed<app.bsky.embed.record.View>>({
               $type: 'app.bsky.embed.record#view',
               record: createEmbedViewRecordFromPost(post),
-            }
+            })
 
             stripLinkFacet(uri => {
               if (!isBskyPostUrl(uri)) return false
@@ -597,10 +604,14 @@ export function MessagesList({
 
         const joinLinkPreview = await getJoinLinkPreview({code, hasSession})
         if (joinLinkPreview) {
-          embedView = {
+          /*
+           * The preview comes from the still-old-typed `join-links.ts` query
+           * (migrates in a later task). TODO(phase4): drop toLex once it does.
+           */
+          embedView = bsky.toLex<$Typed<chat.bsky.embed.joinLink.View>>({
             $type: 'chat.bsky.embed.joinLink#view',
             joinLinkPreview,
-          }
+          })
         }
 
         stripLinkFacet(uri => getChatInviteCodeFromUrl(uri) === code)
@@ -610,7 +621,7 @@ export function MessagesList({
         replyTo = {messageId: reply.id}
       }
 
-      await rt.detectFacets(agent)
+      await rt.detectFacets(pdsClient)
 
       rt = shortenLinks(rt)
       rt = stripInvalidMentions(rt)
@@ -651,7 +662,10 @@ export function MessagesList({
       }
       if (
         embedView?.$type === 'chat.bsky.embed.joinLink#view' &&
-        ChatBskyGroupDefs.isJoinLinkPreviewView(embedView.joinLinkPreview)
+        bsky.isType(
+          chat.bsky.group.defs.joinLinkPreviewView,
+          embedView.joinLinkPreview,
+        )
       ) {
         ax.metric('groupchat:inviteLink:shared', {
           convoId: embedView.joinLinkPreview.convoId,
@@ -660,7 +674,7 @@ export function MessagesList({
       }
     },
     [
-      agent,
+      pdsClient,
       convoState,
       getPost,
       getJoinLinkPreview,
@@ -885,7 +899,7 @@ function Composer({
   onSendMessage: (
     message: string,
     embed?: MessageEmbedState,
-    replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
+    replyTo?: $Typed<chat.bsky.convo.defs.MessageView>,
   ) => Promise<void>
   messageEmbed: MessageEmbedState | undefined
   setEmbed: (embedUrl: string | undefined) => void
@@ -895,7 +909,7 @@ function Composer({
     (
       message: string,
       embed?: MessageEmbedState,
-      replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
+      replyTo?: $Typed<chat.bsky.convo.defs.MessageView>,
     ) => {
       void onSendMessage(message, embed, replyTo)
     },

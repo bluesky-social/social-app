@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {keepPreviousData, useQuery} from '@tanstack/react-query'
 
 import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
@@ -13,6 +13,7 @@ import {
   type AutocompleteItemType,
   type AutocompleteProfile,
 } from '#/components/Autocomplete/types'
+import {toLex} from '#/types/bsky'
 import {useEmojiSearch} from './useEmojiSearch'
 
 const DEFAULT_MOD_OPTS = {
@@ -131,7 +132,10 @@ function moderateProfileItem({
   item: AutocompleteProfile
   moderationOpts: ModerationOpts
 }) {
-  const modui = moderateProfile(item.profile, moderationOpts).ui('profileList')
+  // TODO(phase4): drop toLex once searchActorsTypeahead emits #/lexicons views
+  const modui = moderateProfile(toLex(item.profile), moderationOpts).ui(
+    'profileList',
+  )
   const isExactMatch = query && item.profile.handle.toLowerCase() === query
 
   if (

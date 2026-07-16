@@ -1,10 +1,6 @@
 import {useMemo, useRef} from 'react'
-import {
-  type AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AtUri,
-  moderatePost,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {moderatePost} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -28,7 +24,9 @@ import {
   embedViewRecordToPostView,
   getEmbeddedPost,
 } from '#/state/queries/util'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const RQKEY_ROOT = 'feed-previews'
 const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds]
@@ -85,7 +83,7 @@ export type FeedPreviewItem =
   | {
       type: 'preview:header'
       key: string
-      feed: AppBskyFeedDefs.GeneratorView
+      feed: app.bsky.feed.defs.GeneratorView
     }
   | {
       type: 'preview:footer'
@@ -97,7 +95,7 @@ export type FeedPreviewItem =
       key: string
       slice: FeedPostSlice
       indexInSlice: number
-      feed: AppBskyFeedDefs.GeneratorView
+      feed: app.bsky.feed.defs.GeneratorView
       showReplyTo: boolean
       hideTopBorder: boolean
     }
@@ -108,7 +106,7 @@ export type FeedPreviewItem =
     }
 
 export function useFeedPreviews(
-  feedsMaybeWithDuplicates: AppBskyFeedDefs.GeneratorView[],
+  feedsMaybeWithDuplicates: app.bsky.feed.defs.GeneratorView[],
   isEnabled: boolean = true,
 ) {
   const feeds = useMemo(
@@ -121,7 +119,7 @@ export function useFeedPreviews(
 
   const uris = feeds.map(feed => feed.uri)
   const {_} = useLingui()
-  const agent = useAgent()
+  const client = useAppviewClient()
   const {data: preferences} = usePreferencesQuery()
   const userInterests = aggregateUserInterests(preferences)
   const moderationOpts = useModerationOpts()
@@ -130,8 +128,8 @@ export function useFeedPreviews(
   const processedPageCache = useRef(
     new Map<
       {
-        feed: AppBskyFeedDefs.GeneratorView
-        posts: AppBskyFeedDefs.FeedViewPost[]
+        feed: app.bsky.feed.defs.GeneratorView
+        posts: app.bsky.feed.defs.FeedViewPost[]
       },
       FeedPreviewItem[]
     >(),
@@ -143,7 +141,7 @@ export function useFeedPreviews(
     queryFn: async ({pageParam}) => {
       const feed = feeds[pageParam]
       const api = new CustomFeedAPI({
-        agent,
+        client,
         feedParams: {feed: feed.uri},
         userInterests,
       })
@@ -207,7 +205,12 @@ export function useFeedPreviews(
               if (item.isFallbackMarker) continue
 
               const moderations = item.items.map(item =>
-                moderatePost(item.post, moderationOpts!),
+                // TODO(phase4): drop toLex once feed-manip is migrated off
+                // @atproto/api and yields lex-typed slice items.
+                moderatePost(
+                  bsky.toLex<app.bsky.feed.defs.PostView>(item.post),
+                  moderationOpts!,
+                ),
               )
 
               // apply moderation filters
@@ -233,10 +236,20 @@ export function useFeedPreviews(
                     const feedPostSliceItem: FeedPostSliceItem = {
                       _reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
                       uri: subItem.post.uri,
-                      post: subItem.post,
-                      record: subItem.record,
+                      // TODO(phase4): drop toLex once feed-manip is migrated
+                      // off @atproto/api and yields lex-typed slice items.
+                      post: bsky.toLex<app.bsky.feed.defs.PostView>(
+                        subItem.post,
+                      ),
+                      record: bsky.toLex<app.bsky.feed.post.Main>(
+                        subItem.record,
+                      ),
                       moderation: moderations[i],
-                      parentAuthor: subItem.parentAuthor,
+                      parentAuthor: subItem.parentAuthor
+                        ? bsky.toLex<app.bsky.actor.defs.ProfileViewBasic>(
+                            subItem.parentAuthor,
+                          )
+                        : undefined,
                       isParentBlocked: subItem.isParentBlocked,
                       isParentNotFound: subItem.isParentNotFound,
                     }
@@ -349,13 +362,13 @@ export function useFeedPreviews(
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.PostView, undefined> {
+): Generator<app.bsky.feed.defs.PostView, undefined> {
   const atUri = new AtUri(uri)
 
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<{
-      feed: AppBskyFeedDefs.GeneratorView
-      posts: AppBskyFeedDefs.FeedViewPost[]
+      feed: app.bsky.feed.defs.GeneratorView
+      posts: app.bsky.feed.defs.FeedViewPost[]
     }>
   >({
     queryKey: [RQKEY_ROOT],
@@ -375,7 +388,7 @@ export function* findAllPostsInQueryData(
           yield embedViewRecordToPostView(quotedPost)
         }
 
-        if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
+        if (bsky.isType(app.bsky.feed.defs.postView, item.reply?.parent)) {
           if (didOrHandleUriMatches(atUri, item.reply.parent)) {
             yield item.reply.parent
           }
@@ -389,7 +402,7 @@ export function* findAllPostsInQueryData(
           }
         }
 
-        if (AppBskyFeedDefs.isPostView(item.reply?.root)) {
+        if (bsky.isType(app.bsky.feed.defs.postView, item.reply?.root)) {
           if (didOrHandleUriMatches(atUri, item.reply.root)) {
             yield item.reply.root
           }
@@ -407,11 +420,11 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
+): Generator<app.bsky.actor.defs.ProfileViewBasic, undefined> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<{
-      feed: AppBskyFeedDefs.GeneratorView
-      posts: AppBskyFeedDefs.FeedViewPost[]
+      feed: app.bsky.feed.defs.GeneratorView
+      posts: app.bsky.feed.defs.FeedViewPost[]
     }>
   >({
     queryKey: [RQKEY_ROOT],
@@ -430,13 +443,13 @@ export function* findAllProfilesInQueryData(
           yield quotedPost.author
         }
         if (
-          AppBskyFeedDefs.isPostView(item.reply?.parent) &&
+          bsky.isType(app.bsky.feed.defs.postView, item.reply?.parent) &&
           item.reply?.parent?.author.did === did
         ) {
           yield item.reply.parent.author
         }
         if (
-          AppBskyFeedDefs.isPostView(item.reply?.root) &&
+          bsky.isType(app.bsky.feed.defs.postView, item.reply?.root) &&
           item.reply?.root?.author.did === did
         ) {
           yield item.reply.root.author

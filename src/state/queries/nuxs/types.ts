@@ -1,7 +1,7 @@
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type app} from '#/lexicons'
 
 export type Data = Record<string, unknown> | undefined
 
 export type BaseNux<
-  T extends Pick<AppBskyActorDefs.Nux, 'id' | 'expiresAt'> & {data: Data},
-> = Pick<AppBskyActorDefs.Nux, 'id' | 'completed' | 'expiresAt'> & T
+  T extends Pick<app.bsky.actor.defs.Nux, 'id' | 'expiresAt'> & {data: Data},
+> = Pick<app.bsky.actor.defs.Nux, 'id' | 'completed' | 'expiresAt'> & T

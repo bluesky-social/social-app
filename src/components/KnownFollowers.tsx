@@ -1,10 +1,7 @@
 import {useRef} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -14,6 +11,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Link, type LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {toLex} from '#/types/bsky'
 
 const AVI_SIZE = 30
 const AVI_SIZE_SMALL = 20
@@ -96,7 +94,8 @@ function KnownFollowersInner({
   const textStyle = [a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]
 
   const slice = cachedKnownFollowers.followers.slice(0, 3).map(f => {
-    const moderation = moderateProfile(f, moderationOpts)
+    // TODO(phase4): drop toLex once KnownFollowers emits #/lexicons views
+    const moderation = moderateProfile(toLex(f), moderationOpts)
     return {
       profile: {
         ...f,

@@ -6,9 +6,8 @@ import {
   type AppBskyActorDefs,
   AppBskyEmbedVideo,
   type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  type ModerationDecision,
 } from '@atproto/api'
+import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -27,6 +26,7 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 function getBlackColor(t: ReturnType<typeof useTheme>) {
@@ -79,10 +79,7 @@ export function VideoPostCard({
   if (!AppBskyEmbedVideo.isView(embed)) return null
 
   const author = post.author
-  const text = bsky.dangerousIsType<AppBskyFeedPost.Record>(
-    post.record,
-    AppBskyFeedPost.isRecord,
-  )
+  const text = bsky.isType(app.bsky.feed.post, post.record)
     ? post.record?.text
     : ''
   const likeCount = post?.likeCount ?? 0

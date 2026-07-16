@@ -1,6 +1,7 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
-import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
+import {type AppBskyUnspeccedDefs} from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -19,6 +20,7 @@ import {Link} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {toLex} from '#/types/bsky'
 
 const TOPIC_COUNT = 5
 
@@ -279,7 +281,8 @@ function useModerateTrendingActors(
 
     return actors
       .filter(actor => {
-        const decision = moderateProfile(actor, moderationOpts)
+        // TODO(phase4): drop toLex once TrendView actors emit #/lexicons views
+        const decision = moderateProfile(toLex(actor), moderationOpts)
         return !decision.ui('avatar').filter && !decision.ui('avatar').blur
       })
       .slice(0, 3)

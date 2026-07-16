@@ -1,10 +1,6 @@
 import {useCallback, useState} from 'react'
-import {
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  moderatePost,
-  type ModerationDecision,
-} from '@atproto/api'
+import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {moderatePost, type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -80,7 +76,8 @@ export function PostQuotes({uri}: {uri: string}) {
           ) {
             return null
           }
-          const moderation = moderatePost(post, moderationOpts)
+          // TODO(phase4): drop toLex once usePostQuotesQuery emits #/lexicons views
+          const moderation = moderatePost(toLex(post), moderationOpts)
           return {post, record: post.record, moderation}
         }),
       )

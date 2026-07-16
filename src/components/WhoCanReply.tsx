@@ -6,12 +6,8 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  type AppBskyGraphDefs,
-  AtUri,
-} from '@atproto/api'
+import {type AppBskyFeedDefs, type AppBskyGraphDefs} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -38,6 +34,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 interface WhoCanReplyProps {
@@ -58,10 +55,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
    * unexpectedly, we should check to make sure it's for sure the root URI.
    */
   const rootUri =
-    bsky.dangerousIsType<AppBskyFeedPost.Record>(
-      post.record,
-      AppBskyFeedPost.isRecord,
-    ) && post.record.reply?.root
+    bsky.isType(app.bsky.feed.post, post.record) && post.record.reply?.root
       ? post.record.reply.root.uri
       : post.uri
   const settings = useMemo(() => {

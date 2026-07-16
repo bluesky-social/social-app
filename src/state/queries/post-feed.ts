@@ -1,14 +1,12 @@
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {AppState} from 'react-native'
+import {type AtIdentifierString, type Client} from '@atproto/lex-client'
+import {AtUri, type AtUriString} from '@atproto/syntax'
 import {
-  type AppBskyActorDefs,
-  AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  AtUri,
   moderatePost,
   type ModerationDecision,
   type ModerationPrefs,
-} from '@atproto/api'
+} from '@bsky.app/sdk/moderation'
 import {
   type InfiniteData,
   type QueryClient,
@@ -32,9 +30,11 @@ import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {type SessionAgent, useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {usePreferencesQuery} from './preferences'
@@ -79,10 +79,10 @@ export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
 export interface FeedPostSliceItem {
   _reactKey: string
   uri: string
-  post: AppBskyFeedDefs.PostView
-  record: AppBskyFeedPost.Record
+  post: app.bsky.feed.defs.PostView
+  record: app.bsky.feed.post.Main
   moderation: ModerationDecision
-  parentAuthor?: AppBskyActorDefs.ProfileViewBasic
+  parentAuthor?: app.bsky.actor.defs.ProfileViewBasic
   isParentBlocked?: boolean
   isParentNotFound?: boolean
 }
@@ -97,8 +97,8 @@ export interface FeedPostSlice {
   reqId: string | undefined
   feedPostUri: string
   reason?:
-    | AppBskyFeedDefs.ReasonRepost
-    | AppBskyFeedDefs.ReasonPin
+    | app.bsky.feed.defs.ReasonRepost
+    | app.bsky.feed.defs.ReasonPin
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
 }
@@ -106,7 +106,7 @@ export interface FeedPostSlice {
 export interface FeedPageUnselected {
   api: FeedAPI
   cursor: string | undefined
-  feed: AppBskyFeedDefs.FeedViewPost[]
+  feed: app.bsky.feed.defs.FeedViewPost[]
   fetchedAt: number
 }
 
@@ -147,7 +147,7 @@ export function usePostFeedQuery(
       f => f.pinned && f.value === 'following',
     ) ?? -1
   const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
-  const agent = useAgent()
+  const client = useAppviewClient()
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
@@ -192,7 +192,7 @@ export function usePostFeedQuery(
               feedDesc,
               feedParams: params || {},
               feedTuners,
-              agent,
+              client,
               // Not in the query key because they don't change:
               userInterests,
               // Not in the query key. Reacting to it switching isn't important:
@@ -209,7 +209,7 @@ export function usePostFeedQuery(
        * moderations happen later, which results in some posts being shown and
        * some not.
        */
-      if (!agent.session) {
+      if (!client.did) {
         assertSomePostsPassModeration(
           res.feed,
           preferences?.moderationPrefs ||
@@ -287,7 +287,12 @@ export function usePostFeedQuery(
                 .tune(page.feed)
                 .map(slice => {
                   const moderations = slice.items.map(item =>
-                    moderatePost(item.post, moderationOpts!),
+                    moderatePost(
+                      // TODO(phase4): drop toLex once feed-manip is migrated
+                      // off @atproto/api and yields lex-typed slice items.
+                      bsky.toLex<app.bsky.feed.defs.PostView>(item.post),
+                      moderationOpts!,
+                    ),
                   )
 
                   // apply moderation filter
@@ -337,10 +342,20 @@ export function usePostFeedQuery(
                       const feedPostSliceItem: FeedPostSliceItem = {
                         _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                         uri: item.post.uri,
-                        post: item.post,
-                        record: item.record,
+                        // TODO(phase4): drop toLex once feed-manip is migrated
+                        // off @atproto/api and yields lex-typed slice items.
+                        post: bsky.toLex<app.bsky.feed.defs.PostView>(
+                          item.post,
+                        ),
+                        record: bsky.toLex<app.bsky.feed.post.Main>(
+                          item.record,
+                        ),
                         moderation: moderations[i],
-                        parentAuthor: item.parentAuthor,
+                        parentAuthor: item.parentAuthor
+                          ? bsky.toLex<app.bsky.actor.defs.ProfileViewBasic>(
+                              item.parentAuthor,
+                            )
+                          : undefined,
                         isParentBlocked: item.isParentBlocked,
                         isParentNotFound: item.isParentNotFound,
                       }
@@ -442,62 +457,86 @@ function createApi({
   feedParams,
   feedTuners,
   userInterests,
-  agent,
+  client,
   enableFollowingToDiscoverFallback,
 }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
   userInterests?: string
-  agent: SessionAgent
+  client: Client
   enableFollowingToDiscoverFallback: boolean
 }) {
   if (feedDesc === 'following') {
     if (feedParams.mergeFeedEnabled) {
       return new MergeFeedAPI({
-        agent,
+        client,
         feedParams,
         feedTuners,
         userInterests,
       })
     } else {
       if (enableFollowingToDiscoverFallback) {
-        return new HomeFeedAPI({agent, userInterests})
+        return new HomeFeedAPI({client, userInterests})
       } else {
-        return new FollowingFeedAPI({agent})
+        return new FollowingFeedAPI({client})
       }
     }
   } else if (feedDesc.startsWith('author')) {
     const [__, actor, filter] = feedDesc.split('|')
-    return new AuthorFeedAPI({agent, feedParams: {actor, filter}})
+    /*
+     * The FeedAPI $Params types treat limit/includePins as required (post-parse
+     * shape), but they are supplied at fetch() time, so the constructor receives
+     * a partial. Cast to satisfy the constructor param.
+     */
+    return new AuthorFeedAPI({
+      client,
+      feedParams: {
+        actor: actor as AtIdentifierString,
+        filter,
+      } as app.bsky.feed.getAuthorFeed.$Params,
+    })
   } else if (feedDesc.startsWith('likes')) {
     const [__, actor] = feedDesc.split('|')
-    return new LikesFeedAPI({agent, feedParams: {actor}})
+    return new LikesFeedAPI({
+      client,
+      feedParams: {
+        actor: actor as AtIdentifierString,
+      } as app.bsky.feed.getActorLikes.$Params,
+    })
   } else if (feedDesc.startsWith('feedgen')) {
     const [__, feed] = feedDesc.split('|')
     return new CustomFeedAPI({
-      agent,
-      feedParams: {feed},
+      client,
+      feedParams: {feed: feed as AtUriString},
       userInterests,
     })
   } else if (feedDesc.startsWith('list')) {
     const [__, list] = feedDesc.split('|')
-    return new ListFeedAPI({agent, feedParams: {list}})
+    return new ListFeedAPI({
+      client,
+      feedParams: {
+        list: list as AtUriString,
+      } as app.bsky.feed.getListFeed.$Params,
+    })
   } else if (feedDesc.startsWith('posts')) {
     const [__, uriList] = feedDesc.split('|')
-    return new PostListFeedAPI({agent, feedParams: {uris: uriList.split(',')}})
+    return new PostListFeedAPI({
+      client,
+      feedParams: {uris: uriList.split(',') as AtUriString[]},
+    })
   } else if (feedDesc === 'demo') {
-    return new DemoFeedAPI({agent})
+    return new DemoFeedAPI({client})
   } else {
     // shouldnt happen
-    return new FollowingFeedAPI({agent})
+    return new FollowingFeedAPI({client})
   }
 }
 
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.PostView, undefined> {
+): Generator<app.bsky.feed.defs.PostView, undefined> {
   const atUri = new AtUri(uri)
 
   const queryDatas = queryClient.getQueriesData<
@@ -520,7 +559,7 @@ export function* findAllPostsInQueryData(
           yield embedViewRecordToPostView(quotedPost)
         }
 
-        if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
+        if (bsky.isType(app.bsky.feed.defs.postView, item.reply?.parent)) {
           if (didOrHandleUriMatches(atUri, item.reply.parent)) {
             yield item.reply.parent
           }
@@ -534,7 +573,7 @@ export function* findAllPostsInQueryData(
           }
         }
 
-        if (AppBskyFeedDefs.isPostView(item.reply?.root)) {
+        if (bsky.isType(app.bsky.feed.defs.postView, item.reply?.root)) {
           if (didOrHandleUriMatches(atUri, item.reply.root)) {
             yield item.reply.root
           }
@@ -552,7 +591,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
+): Generator<app.bsky.actor.defs.ProfileViewBasic, undefined> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<FeedPageUnselected>
   >({
@@ -572,13 +611,13 @@ export function* findAllProfilesInQueryData(
           yield quotedPost.author
         }
         if (
-          AppBskyFeedDefs.isPostView(item.reply?.parent) &&
+          bsky.isType(app.bsky.feed.defs.postView, item.reply?.parent) &&
           item.reply?.parent?.author.did === did
         ) {
           yield item.reply.parent.author
         }
         if (
-          AppBskyFeedDefs.isPostView(item.reply?.root) &&
+          bsky.isType(app.bsky.feed.defs.postView, item.reply?.root) &&
           item.reply?.root?.author.did === did
         ) {
           yield item.reply.root.author
@@ -589,7 +628,7 @@ export function* findAllProfilesInQueryData(
 }
 
 function assertSomePostsPassModeration(
-  feed: AppBskyFeedDefs.FeedViewPost[],
+  feed: app.bsky.feed.defs.FeedViewPost[],
   moderationPrefs: ModerationPrefs,
 ) {
   // no posts in this feed

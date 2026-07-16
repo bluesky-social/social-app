@@ -2,11 +2,9 @@ import {memo, useCallback} from 'react'
 import {Platform} from 'react-native'
 import {type GestureType} from 'react-native-gesture-handler'
 import * as Clipboard from 'expo-clipboard'
-import {
-  type ChatBskyConvoDefs,
-  type ModerationOpts,
-  RichText,
-} from '@atproto/api'
+import {type ChatBskyConvoDefs} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {RichText} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
@@ -31,6 +29,7 @@ import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
+import {toLex} from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
 import {canReact, hasReachedReactionLimit} from './util'
 
@@ -88,7 +87,8 @@ export let MessageContextMenu = ({
     const str = richTextToString(
       new RichText({
         text: message.text,
-        facets: message.facets,
+        // TODO(phase4): drop toLex once the message producer emits #/lexicons facets
+        facets: toLex(message.facets),
       }),
       true,
     )

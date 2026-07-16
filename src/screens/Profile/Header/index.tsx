@@ -7,13 +7,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {
-  type AppBskyActorDefs,
-  type AppBskyLabelerDefs,
-  moderateProfile,
-  type ModerationOpts,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyLabelerDefs} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {useIsFocused} from '@react-navigation/native'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -26,6 +22,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Header} from '#/components/Layout'
 import * as ProfileCard from '#/components/ProfileCard'
 import {IS_NATIVE} from '#/env'
+import {toLex} from '#/types/bsky'
 import {
   HeaderLabelerButtons,
   ProfileHeaderLabeler,
@@ -115,7 +112,8 @@ const MinimalHeader = memo(function MinimalHeader({
   const profile = useProfileShadow(profileUnshadowed)
   const moderationOpts = useModerationOpts()
   const moderation = useMemo(
-    () => (moderationOpts ? moderateProfile(profile, moderationOpts) : null),
+    () =>
+      moderationOpts ? moderateProfile(toLex(profile), moderationOpts) : null,
     [moderationOpts, profile],
   )
   const [visible, setVisible] = useState(false)

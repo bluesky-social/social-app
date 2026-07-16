@@ -1,4 +1,4 @@
-import {type ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@bsky.app/sdk/moderation'
 
 // \u2705 = ✅
 // \u2713 = ✓

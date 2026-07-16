@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
+import {type AppBskyGraphDefs} from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -15,7 +16,7 @@ import {
   useListCreateMutation,
   useListMetadataMutation,
 } from '#/state/queries/list'
-import {useAgent} from '#/state/session'
+import {usePdsClient} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -27,6 +28,7 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {toLex} from '#/types/bsky'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
 const DESCRIPTION_MAX_GRAPHEMES = 300
@@ -133,7 +135,7 @@ function DialogInner({
 
   const {_} = useLingui()
   const t = useTheme()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const control = Dialog.useDialogContext()
   const {
     mutateAsync: createListMutation,
@@ -163,7 +165,11 @@ function DialogInner({
 
     // We want to be working with a blank state here, so let's get the
     // serialized version and turn it back into a RichText
-    const serialized = richTextToString(new RichTextAPI({text, facets}), false)
+    // TODO(phase4): drop toLex once the list view producer emits #/lexicons facets
+    const serialized = richTextToString(
+      new RichTextAPI({text, facets: toLex(facets)}),
+      false,
+    )
 
     const richText = new RichTextAPI({text: serialized})
     richText.detectFacetsWithoutResolution()
@@ -224,7 +230,7 @@ function DialogInner({
         {cleanNewlines: true},
       )
 
-      await richText.detectFacets(agent)
+      await richText.detectFacets(pdsClient)
       richText = shortenLinks(richText)
       richText = stripInvalidMentions(richText)
 
@@ -272,7 +278,7 @@ function DialogInner({
     setImageError,
     activePurpose,
     isCurateList,
-    agent,
+    pdsClient,
     _,
   ])
 

@@ -4,11 +4,10 @@ import {
   type AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyFeedThreadgate,
-  AtUri,
-  type ModerationDecision,
-  RichText as RichTextAPI,
 } from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {type ModerationDecision} from '@bsky.app/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {type ReasonFeedSource} from '#/lib/api/feed/types'
@@ -52,6 +51,7 @@ import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {PostFeedReason} from './PostFeedReason'
 
@@ -103,7 +103,8 @@ export function PostFeedItem({
     () =>
       new RichTextAPI({
         text: record.text,
-        facets: record.facets,
+        // TODO(phase4): drop toLex once the post record producer emits #/lexicons facets
+        facets: bsky.toLex(record.facets),
       }),
     [record],
   )
@@ -280,9 +281,9 @@ let FeedItemInner = ({
    * If `post[0]` in this slice is the actual root post (not an orphan thread),
    * then we may have a threadgate record to reference
    */
-  const threadgateRecord = bsky.dangerousIsType<AppBskyFeedThreadgate.Record>(
+  const threadgateRecord = bsky.isType(
+    app.bsky.feed.threadgate,
     rootPost.threadgate?.record,
-    AppBskyFeedThreadgate.isRecord,
   )
     ? rootPost.threadgate.record
     : undefined
@@ -303,10 +304,7 @@ let FeedItemInner = ({
   })
   const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
     const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
-    const rootPostUri = bsky.dangerousIsType<AppBskyFeedPost.Record>(
-      post.record,
-      AppBskyFeedPost.isRecord,
-    )
+    const rootPostUri = bsky.isType(app.bsky.feed.post, post.record)
       ? post.record?.reply?.root?.uri || post.uri
       : undefined
     const isControlledByViewer =
@@ -476,9 +474,7 @@ let PostContent = ({
 
   const record = useMemo<AppBskyFeedPost.Record | undefined>(
     () =>
-      bsky.validate(post.record, AppBskyFeedPost.validateRecord)
-        ? post.record
-        : undefined,
+      bsky.matches(app.bsky.feed.post, post.record) ? post.record : undefined,
     [post],
   )
 

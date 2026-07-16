@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
@@ -21,6 +21,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {toLex} from '#/types/bsky'
 import {MemberMenu} from './MemberMenu'
 import {RemoveMemberPrompt} from './prompts'
 import {StatusBadge} from './StatusBadge'
@@ -80,7 +81,8 @@ export function Member({
     return <MemberPlaceholder />
   }
 
-  const moderation = moderateProfile(profile, moderationOpts)
+  // TODO(phase4): drop toLex once useProfileShadow emits #/lexicons views
+  const moderation = moderateProfile(toLex(profile), moderationOpts)
 
   const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
@@ -106,10 +108,13 @@ export function Member({
   }
 
   const joinedReason = profile.kind?.addedBy
-    ? l`Added by ${createSanitizedDisplayName(
+    ? // TODO(phase4): drop toLex once addedBy emits #/lexicons views
+      l`Added by ${createSanitizedDisplayName(
         profile.kind.addedBy,
         true,
-        moderateProfile(profile.kind.addedBy, moderationOpts).ui('displayName'),
+        moderateProfile(toLex(profile.kind.addedBy), moderationOpts).ui(
+          'displayName',
+        ),
       )}`
     : l`Added by invite link`
 

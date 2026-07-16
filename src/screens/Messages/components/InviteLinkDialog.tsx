@@ -1,11 +1,8 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {
-  type ChatBskyGroupDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type ChatBskyGroupDefs} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -37,6 +34,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {toLex} from '#/types/bsky'
 import {CopyTextButton} from './CopyTextButton'
 import {EditTextButton} from './EditTextButton'
 
@@ -71,7 +69,8 @@ export function InviteLinkDialog({
   const ownerName = createSanitizedDisplayName(
     owner,
     false,
-    moderateProfile(owner, moderationOpts).ui('displayName'),
+    // TODO(phase4): drop toLex once GroupConvoMember emits #/lexicons views
+    moderateProfile(toLex(owner), moderationOpts).ui('displayName'),
   )
 
   const {joinLink} = convo.details

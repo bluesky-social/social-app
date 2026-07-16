@@ -1,9 +1,8 @@
-import {type ChatBskyConvoGetLog} from '@atproto/api'
+import {type Client} from '@atproto/lex-client'
 import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {
   isErrorMaybeAppPasswordPermissions,
   isNetworkError,
@@ -21,14 +20,14 @@ import {
   type MessagesEventBusParams,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
-import {type SessionAgent} from '#/state/session'
+import {chat} from '#/lexicons'
 
 const logger = Logger.create(Logger.Context.DMsAgent)
 
 export class MessagesEventBus {
   private id: string
 
-  private agent: SessionAgent
+  private chatClient: Client
   private emitter = new EventEmitter<{event: [MessagesEventBusEvent]}>()
 
   private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing
@@ -38,7 +37,7 @@ export class MessagesEventBus {
 
   constructor(params: MessagesEventBusParams) {
     this.id = nanoid(3)
-    this.agent = params.agent
+    this.chatClient = params.chatClient
 
     this.init()
   }
@@ -261,14 +260,11 @@ export class MessagesEventBus {
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getLog(
-          {},
-          {headers: DM_SERVICE_HEADERS},
-        )
+        return this.chatClient.call(chat.bsky.convo.getLog, {})
       })
       // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
 
-      const {cursor} = response.data
+      const {cursor} = response
 
       // should always be defined
       if (cursor) {
@@ -356,21 +352,18 @@ export class MessagesEventBus {
     // )
 
     let needsEmit = false
-    let batch: ChatBskyConvoGetLog.OutputSchema['logs'] = []
+    let batch: chat.bsky.convo.getLog.$OutputBody['logs'] = []
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getLog(
-          {
-            cursor: this.latestRev,
-          },
-          {headers: DM_SERVICE_HEADERS},
-        )
+        return this.chatClient.call(chat.bsky.convo.getLog, {
+          cursor: this.latestRev,
+        })
       })
 
       // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
 
-      const {logs: events} = response.data
+      const {logs: events} = response
 
       for (const ev of events) {
         /*

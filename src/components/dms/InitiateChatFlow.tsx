@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react'
 import {LayoutAnimation, type TextInput, View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_GROUP_NAME_GRAPHEME_LENGTH} from '#/lib/constants'
@@ -39,6 +39,7 @@ import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
+import {toLex} from '#/types/bsky'
 import {ChatProfileTabs} from './ChatProfileTabs'
 import {EmptyMemberList} from './components/EmptyMemberList'
 import {GroupChatProfileCard} from './components/GroupChatProfileCard'
@@ -857,7 +858,8 @@ function DefaultProfileCard({
   const t = useTheme()
   const {t: l} = useLingui()
   const enabled = canBeMessaged(profile)
-  const moderation = moderateProfile(profile, moderationOpts)
+  // TODO(phase4): drop toLex once profile prop emits #/lexicons views
+  const moderation = moderateProfile(toLex(profile), moderationOpts)
   const handle = sanitizeHandle(profile.handle, '@')
   const displayName = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),

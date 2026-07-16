@@ -1,6 +1,7 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
+import {AppBskyGraphDefs} from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -23,6 +24,7 @@ import {Loader} from '#/components/Loader'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {toLex} from '#/types/bsky'
 import {MoreOptionsMenu} from './MoreOptionsMenu'
 import {SubscribeMenu} from './SubscribeMenu'
 
@@ -128,7 +130,8 @@ export function Header({
       list.description
         ? new RichTextAPI({
             text: list.description,
-            facets: list.descriptionFacets,
+            // TODO(phase4): drop toLex once the list view producer emits #/lexicons facets
+            facets: toLex(list.descriptionFacets),
           })
         : undefined,
     [list],

@@ -1,8 +1,13 @@
 import {type QueryClient, queryOptions, useQuery} from '@tanstack/react-query'
 
-import {type ResolvedLink, resolveGif, resolveLink} from '#/lib/api/resolve'
+import {
+  type ResolveClients,
+  type ResolvedLink,
+  resolveGif,
+  resolveLink,
+} from '#/lib/api/resolve'
 import {STALE} from '#/state/queries/index'
-import {type SessionAgent, useAgent} from '#/state/session'
+import {useAgent, useChatClient, useLexClient} from '#/state/session'
 import {type Gif} from '#/features/gifPicker/types'
 
 export const RQKEY_LINK_ROOT = 'resolve-link'
@@ -11,24 +16,37 @@ export const RQKEY_LINK = (url: string) => [RQKEY_LINK_ROOT, url]
 export const RQKEY_GIF_ROOT = 'resolve-gif'
 export const RQKEY_GIF = (url: string) => [RQKEY_GIF_ROOT, url]
 
-export function resolveLinkQueryOptions(agent: SessionAgent, url: string) {
+export function resolveLinkQueryOptions(clients: ResolveClients, url: string) {
   return queryOptions({
     staleTime: STALE.HOURS.ONE,
     queryKey: RQKEY_LINK(url),
-    queryFn: () => resolveLink(agent, url),
+    queryFn: () => resolveLink(clients, url),
   })
 }
 
-export function useResolveLinkQuery(url: string) {
+/**
+ * Bundle the clients the link resolver needs from the session hooks. The
+ * appview client serves the `app.bsky.*` reads and handle resolution, the chat
+ * client serves group join-link previews, and the bridge agent is still passed
+ * through to the not-yet-migrated `getLinkMeta`.
+ */
+export function useResolveClients(): ResolveClients {
+  const appview = useLexClient()
+  const chat = useChatClient()
   const agent = useAgent()
-  return useQuery(resolveLinkQueryOptions(agent, url))
+  return {appview, chat, agent}
+}
+
+export function useResolveLinkQuery(url: string) {
+  const clients = useResolveClients()
+  return useQuery(resolveLinkQueryOptions(clients, url))
 }
 export function fetchResolveLinkQuery(
   queryClient: QueryClient,
-  agent: SessionAgent,
+  clients: ResolveClients,
   url: string,
 ) {
-  return queryClient.fetchQuery(resolveLinkQueryOptions(agent, url))
+  return queryClient.fetchQuery(resolveLinkQueryOptions(clients, url))
 }
 export function precacheResolveLinkQuery(
   queryClient: QueryClient,
@@ -39,25 +57,20 @@ export function precacheResolveLinkQuery(
 }
 
 export function useResolveGifQuery(gif: Gif) {
-  const agent = useAgent()
   return useQuery({
     staleTime: STALE.HOURS.ONE,
     queryKey: RQKEY_GIF(gif.url),
     queryFn: async () => {
-      return await resolveGif(agent, gif)
+      return await resolveGif(gif)
     },
   })
 }
-export function fetchResolveGifQuery(
-  queryClient: QueryClient,
-  agent: SessionAgent,
-  gif: Gif,
-) {
+export function fetchResolveGifQuery(queryClient: QueryClient, gif: Gif) {
   return queryClient.fetchQuery({
     staleTime: STALE.HOURS.ONE,
     queryKey: RQKEY_GIF(gif.url),
     queryFn: async () => {
-      return await resolveGif(agent, gif)
+      return await resolveGif(gif)
     },
   })
 }
