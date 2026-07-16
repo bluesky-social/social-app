@@ -181,14 +181,20 @@ export function useFeedKeyboardNav({
   const itemRef = useCallback((index: number) => {
     let callback = itemRefCallbacksRef.current.get(index)
     if (!callback) {
-      callback = (el: View | null) => {
+      const newCallback = (el: View | null) => {
         if (el) {
           itemElsRef.current.set(index, el as unknown as Element)
         } else {
           itemElsRef.current.delete(index)
+          if (itemRefCallbacksRef.current.get(index) === newCallback) {
+            itemRefCallbacksRef.current.delete(index)
+          }
+          itemActivationCallbacksRef.current.delete(index)
+          itemActivationRegistrarsRef.current.delete(index)
         }
       }
-      itemRefCallbacksRef.current.set(index, callback)
+      itemRefCallbacksRef.current.set(index, newCallback)
+      callback = newCallback
     }
     return callback
   }, [])
