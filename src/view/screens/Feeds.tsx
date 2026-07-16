@@ -1,13 +1,14 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useIsFocused} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {useFeedKeyboardNav, useHotkeysContext} from '#/lib/hotkeys'
+import {useFeedKeyboardNav} from '#/lib/hotkeys'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -134,15 +135,7 @@ export function FeedsScreen(_props: Props) {
   } = useSearchPopularFeedsMutation()
   const {hasSession} = useSession()
   const listRef = useRef<ListMethods>(null)
-
-  const {disableScope, enableScope} = useHotkeysContext()
-
-  useEffect(() => {
-    enableScope('feed')
-    return () => {
-      disableScope('feed')
-    }
-  }, [disableScope, enableScope])
+  const isScreenFocused = useIsFocused()
 
   /**
    * A search query is present. We may not have search results yet.
@@ -392,7 +385,7 @@ export function FeedsScreen(_props: Props) {
   }, [items])
 
   const {focusedIndex: focusedFeedItemIndex, itemRef: feedItemRef} =
-    useFeedKeyboardNav({focusableIndices})
+    useFeedKeyboardNav({focusableIndices, active: isScreenFocused})
 
   const searchBarIndex = items.findIndex(
     item => item.type === 'popularFeedsHeader',

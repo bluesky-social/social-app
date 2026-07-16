@@ -19,13 +19,14 @@ import {
   type AppBskyFeedDefs,
 } from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
+import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {useFeedKeyboardNav, useHotkeysContext} from '#/lib/hotkeys'
+import {useFeedKeyboardNav} from '#/lib/hotkeys'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
@@ -247,15 +248,7 @@ let PostFeed = ({
   const {gtMobile} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
   const areVideoFeedsEnabled = IS_NATIVE
-
-  const {disableScope, enableScope} = useHotkeysContext()
-
-  useEffect(() => {
-    enableScope('feed')
-    return () => {
-      disableScope('feed')
-    }
-  }, [disableScope, enableScope])
+  const isScreenFocused = useIsFocused()
 
   const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(
     () => new Set<string>(),
@@ -720,7 +713,10 @@ let PostFeed = ({
     focusedIndex: focusedFeedItemIndex,
     setFocusedIndex: setFocusedFeedItemIndex,
     itemRef: feedItemRef,
-  } = useFeedKeyboardNav({focusableIndices})
+  } = useFeedKeyboardNav({
+    focusableIndices,
+    active: isScreenFocused && enabled !== false,
+  })
 
   // Keyboard nav: Reset keyboard focus when feed data changes.
   useEffect(() => {

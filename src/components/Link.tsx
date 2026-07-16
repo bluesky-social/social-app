@@ -4,6 +4,7 @@ import {
   Linking,
   type NativeSyntheticEvent,
   type TargetedEvent,
+  type View,
 } from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {useLingui} from '@lingui/react/macro'
@@ -300,7 +301,7 @@ export function useLink({
 export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
   Omit<ButtonProps, 'onPress' | 'disabled'> & {
     overridePresentation?: boolean
-    ref?: React.Ref<typeof Link>
+    ref?: React.Ref<View>
   }
 
 /**

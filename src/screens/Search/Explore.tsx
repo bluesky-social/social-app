@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {View, type ViewabilityConfig} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -7,10 +7,11 @@ import {
   type AppBskyUnspeccedDefs,
 } from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
-import {useFeedKeyboardNav, useHotkeysContext} from '#/lib/hotkeys'
+import {useFeedKeyboardNav} from '#/lib/hotkeys'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -243,15 +244,7 @@ export function Explore({
   const {enabled: trendingEnabled} = useTrendingConfig()
   const {trendingDisabled} = useTrendingSettings()
   const {data: trending} = useGetTrendsQuery()
-
-  const {disableScope, enableScope} = useHotkeysContext()
-
-  useEffect(() => {
-    enableScope('feed')
-    return () => {
-      disableScope('feed')
-    }
-  }, [disableScope, enableScope])
+  const isScreenFocused = useIsFocused()
 
   /*
    * Begin special language handling
@@ -804,7 +797,7 @@ export function Explore({
   }, [items])
 
   const {focusedIndex: focusedFeedItemIndex, itemRef: feedItemRef} =
-    useFeedKeyboardNav({focusableIndices})
+    useFeedKeyboardNav({focusableIndices, active: isScreenFocused})
 
   const renderItem = useCallback(
     ({item, index}: {item: ExploreScreenItems; index: number}) => {

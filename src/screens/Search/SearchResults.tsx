@@ -1,11 +1,12 @@
-import {memo, useCallback, useEffect, useMemo, useState} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useIsFocused} from '@react-navigation/native'
 
 import {urls} from '#/lib/constants'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
-import {useFeedKeyboardNav, useHotkeysContext} from '#/lib/hotkeys'
+import {useFeedKeyboardNav} from '#/lib/hotkeys'
 import {useCallOnce} from '#/lib/once'
 import {
   cleanError,
@@ -63,15 +64,7 @@ let SearchResults = ({
   const hasPostFilters = hasPostOnlyFilters(filters)
   const activePage = hasPostFilters && activeTab > 1 ? 0 : activeTab
   const tabShape = hasPostFilters ? 'filtered' : 'plain'
-
-  // Enable 'feed' hotkey scope for keyboard navigation
-  const {disableScope, enableScope} = useHotkeysContext()
-  useEffect(() => {
-    enableScope('feed')
-    return () => {
-      disableScope('feed')
-    }
-  }, [disableScope, enableScope])
+  const isScreenFocused = useIsFocused()
 
   const sections = useMemo(() => {
     if (!query && !hasFilters) return []
@@ -89,7 +82,7 @@ let SearchResults = ({
             query={query}
             filters={filters}
             sort="top"
-            active={activePage === 0}
+            active={isScreenFocused && activePage === 0}
           />
         ),
       },
@@ -101,27 +94,41 @@ let SearchResults = ({
             query={query}
             filters={filters}
             sort="latest"
-            active={activePage === 1}
+            active={isScreenFocused && activePage === 1}
           />
         ),
       },
       noFilters && {
         title: l`People`,
         component: (
-          <SearchScreenUserResults query={query} active={activePage === 2} />
+          <SearchScreenUserResults
+            query={query}
+            active={isScreenFocused && activePage === 2}
+          />
         ),
       },
       noFilters && {
         title: l`Feeds`,
         component: (
-          <SearchScreenFeedsResults query={query} active={activePage === 3} />
+          <SearchScreenFeedsResults
+            query={query}
+            active={isScreenFocused && activePage === 3}
+          />
         ),
       },
     ].filter(Boolean) as {
       title: string
       component: React.ReactNode
     }[]
-  }, [l, query, filters, hasFilters, hasPostFilters, activePage])
+  }, [
+    l,
+    query,
+    filters,
+    hasFilters,
+    hasPostFilters,
+    activePage,
+    isScreenFocused,
+  ])
 
   // There may be fewer tabs after changing the search options.
   const selectedPage = activePage > sections.length - 1 ? 0 : activePage

@@ -20,6 +20,7 @@ import {
 import {useSession} from '#/state/session'
 
 const FEED_SCROLL_DEBOUNCE_MS = 250
+const activeScopeCounts = new Map<string, number>()
 
 enum Hotkeys {
   OPEN_COMPOSER = 'n',
@@ -50,6 +51,30 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
 }
 
 export {useHotkeysContext}
+
+function useHotkeyScope(scope: string, active: boolean) {
+  const {disableScope, enableScope} = useHotkeysContext()
+
+  useEffect(() => {
+    if (!active) return
+
+    const count = activeScopeCounts.get(scope) ?? 0
+    activeScopeCounts.set(scope, count + 1)
+    if (count === 0) {
+      enableScope(scope)
+    }
+
+    return () => {
+      const nextCount = (activeScopeCounts.get(scope) ?? 1) - 1
+      if (nextCount === 0) {
+        activeScopeCounts.delete(scope)
+        disableScope(scope)
+      } else {
+        activeScopeCounts.set(scope, nextCount)
+      }
+    }
+  }, [active, disableScope, enableScope, scope])
+}
 
 function KeyboardShortcuts({children}: React.PropsWithChildren<unknown>) {
   useKeyboardShortcuts()
@@ -133,18 +158,39 @@ export function useFeedKeyboardNav({
    */
   active?: boolean
 }) {
+  useHotkeyScope('feed', active)
+
   const [focusedIndex, setFocusedIndex] = useState(-1)
   const itemElsRef = useRef<Map<number, Element>>(new Map())
+  const itemRefCallbacksRef = useRef<Map<number, (el: View | null) => void>>(
+    new Map(),
+  )
   const scrollingRef = useRef(false)
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
-  const itemRef = (index: number) => (el: View | null) => {
-    if (el) {
-      itemElsRef.current.set(index, el as unknown as Element)
-    } else {
-      itemElsRef.current.delete(index)
+  const itemRef = useCallback((index: number) => {
+    let callback = itemRefCallbacksRef.current.get(index)
+    if (!callback) {
+      callback = (el: View | null) => {
+        if (el) {
+          itemElsRef.current.set(index, el as unknown as Element)
+        } else {
+          itemElsRef.current.delete(index)
+        }
+      }
+      itemRefCallbacksRef.current.set(index, callback)
     }
-  }
+    return callback
+  }, [])
+
+  useEffect(() => {
+    setFocusedIndex(prev => {
+      if (!active || (prev !== -1 && !focusableIndices.includes(prev))) {
+        return -1
+      }
+      return prev
+    })
+  }, [active, focusableIndices])
 
   const findTopVisibleIndex = useCallback(() => {
     if (!active) return -1
@@ -187,6 +233,9 @@ export function useFeedKeyboardNav({
           return findTopVisibleIndex()
         }
         const currentPos = focusableIndices.indexOf(prev)
+        if (currentPos === -1) {
+          return findTopVisibleIndex()
+        }
         if (currentPos < focusableIndices.length - 1) {
           return focusableIndices[currentPos + 1]
         }
@@ -201,6 +250,9 @@ export function useFeedKeyboardNav({
           return findTopVisibleIndex()
         }
         const currentPos = focusableIndices.indexOf(prev)
+        if (currentPos === -1) {
+          return findTopVisibleIndex()
+        }
         if (currentPos > 0) {
           return focusableIndices[currentPos - 1]
         }
