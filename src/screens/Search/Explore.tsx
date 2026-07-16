@@ -4,7 +4,6 @@ import {
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
-  type AppBskyUnspeccedDefs,
 } from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
@@ -18,7 +17,6 @@ import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useTrendingSettings} from '#/state/preferences/trending'
 import {RQKEY_ROOT as useActorSearchQueryKeyRoot} from '#/state/queries/actor-search'
 import {
   type FeedPreviewItem,
@@ -35,15 +33,11 @@ import {
   getSuggestedUsersForExploreQueryKeyRoot,
   useGetSuggestedUsersForExploreQuery,
 } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery'
-import {
-  createGetTrendsQueryKey,
-  useGetTrendsQuery,
-} from '#/state/queries/trending/useGetTrendsQuery'
+import {createGetTrendsQueryKey} from '#/state/queries/trending/useGetTrendsQuery'
 import {
   createSuggestedStarterPacksQueryKey,
   useSuggestedStarterPacksQuery,
 } from '#/state/queries/useSuggestedStarterPacksQuery'
-import {useTrendingConfig} from '#/state/service-config'
 import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
 import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
 import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
@@ -56,10 +50,7 @@ import {
 } from '#/screens/Search/components/StarterPackCard'
 import {ExploreInterestsCard} from '#/screens/Search/modules/ExploreInterestsCard'
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
-import {
-  ExploreTrendingTopics,
-  TrendRow,
-} from '#/screens/Search/modules/ExploreTrendingTopics'
+import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -161,12 +152,6 @@ type ExploreScreenItems =
       key: string
     }
   | {
-      type: 'trendingTopic'
-      key: string
-      trend: AppBskyUnspeccedDefs.TrendView
-      rank: number
-    }
-  | {
       type: 'trendingVideos'
       key: string
     }
@@ -242,9 +227,6 @@ export function Explore({
   const moderationOpts = useModerationOpts()
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
 
-  const {enabled: trendingEnabled} = useTrendingConfig()
-  const {trendingDisabled} = useTrendingSettings()
-  const {data: trending} = useGetTrendsQuery()
   const isScreenFocused = useIsFocused()
 
   /*
@@ -380,22 +362,14 @@ export function Explore({
       }) as const,
     [],
   )
-  const trendingTopicsModule = useMemo<ExploreScreenItems[]>(() => {
-    const showTrending = trendingEnabled && !trendingDisabled
-    if (!showTrending) return []
-
-    if (trending?.trends?.length) {
-      return trending.trends.map((trend, i) => ({
-        type: 'trendingTopic' as const,
-        key: `trendingTopic-${trend.link}`,
-        trend,
-        rank: i + 1,
-      }))
-    }
-
-    // Loading/empty state — fall back to the block component
-    return [{type: 'trendingTopics' as const, key: 'trending-topics'}]
-  }, [trendingEnabled, trendingDisabled, trending])
+  const trendingTopicsModule = useMemo(
+    () =>
+      ({
+        type: 'trendingTopics',
+        key: 'trending-topics',
+      }) as const,
+    [],
+  )
   const suggestedFollowsModule = useMemo(() => {
     const i: ExploreScreenItems[] = []
     i.push({
@@ -757,7 +731,7 @@ export function Explore({
     i.push({type: 'liveEventFeedsBanner', key: 'liveEventFeedsBanner'})
 
     if (useFullExperience) {
-      i.push(...trendingTopicsModule)
+      i.push(trendingTopicsModule)
       i.push(...suggestedFeedsModule)
       i.push(...suggestedFollowsModule)
       i.push(...suggestedStarterPacksModule)
@@ -784,7 +758,6 @@ export function Explore({
     for (let i = 0; i < items.length; i++) {
       const row = items[i]
       if (
-        row.type === 'trendingTopic' ||
         row.type === 'profile' ||
         row.type === 'feed' ||
         row.type === 'starterPack' ||
@@ -856,22 +829,6 @@ export function Explore({
           return (
             <View style={[a.pb_md]}>
               <ExploreTrendingTopics />
-            </View>
-          )
-        }
-        case 'trendingTopic': {
-          return (
-            <View style={[a.relative]} ref={feedItemRef(index)}>
-              <SubtleHover hover={index === focusedFeedItemIndex} />
-              <KeyboardActivation.Boundary register={feedItemActivation(index)}>
-                <TrendRow
-                  trend={item.trend}
-                  rank={item.rank}
-                  onPress={() => {
-                    ax.metric('trendingTopic:click', {context: 'explore'})
-                  }}
-                />
-              </KeyboardActivation.Boundary>
             </View>
           )
         }

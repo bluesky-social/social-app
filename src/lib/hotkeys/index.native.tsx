@@ -6,13 +6,14 @@ export function Provider({children}: {children: React.ReactNode}) {
   return children
 }
 
-const noop = (_scope: string) => {}
+const noop = () => {}
+const noopScope = (_scope: string) => {}
 
 export function useHotkeysContext() {
   return useMemo(
     () => ({
-      enableScope: noop,
-      disableScope: noop,
+      enableScope: noopScope,
+      disableScope: noopScope,
     }),
     [],
   )
@@ -23,8 +24,8 @@ export function useFeedKeyboardNav(
 ): FeedKeyboardNavResult {
   return {
     focusedIndex: -1,
-    setFocusedIndex: () => -1,
-    itemRef: () => () => {},
-    itemActivation: () => () => noop,
+    setFocusedIndex: noop,
+    itemRef: _index => _el => {},
+    itemActivation: _index => _activate => noop,
   }
 }
