@@ -41,7 +41,7 @@ jobs:
         id: get-base-stats
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: stats-base.json
+          path: stats.json
           key: stats-base-main-${{ github.sha }}
 
       - name: 🔦 Generate stats file for base commit
@@ -50,13 +50,12 @@ jobs:
           pnpm install
           pnpm intl:build
           pnpm generate-webpack-stats-file
-          mv stats.json stats-base.json
 
       - name: ⬆️ Save base stats to cache
         if: ${{ !steps.get-base-stats.outputs.cache-hit }}
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: stats-base.json
+          path: stats.json
           key: stats-base-main-${{ github.sha }}
 
   webpack-analyzer:
@@ -114,7 +113,7 @@ jobs:
         # Restore-only prevents PR-scoped fallback builds from creating caches.
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: stats-base.json
+          path: stats.json
           key: stats-base-main-${{ steps.base-commit.outputs.base-commit }}
 
       - name: Restore to base commit
@@ -129,13 +128,12 @@ jobs:
           pnpm install
           pnpm intl:build
           pnpm generate-webpack-stats-file
-          mv stats.json stats-base.json
 
       - name: ％ Get diff
         id: get-diff
         uses: NejcZdovc/bundle-size-diff@5321de41d2d62a7b0f4d6e60f59d1280a0034160 # v1.1.0
         with:
-          base_path: "stats-base.json"
+          base_path: "stats.json"
           pr_path: "../stats-new.json"
           excluded_assets: "(.+).chunk.js|(.+).js.map|(.+).json|(.+).png|(.+).svg|(.+).webp|(.+).jpg|(.+).ico"
 
