@@ -1,5 +1,7 @@
 import {useMemo} from 'react'
 
+import {type FeedKeyboardNavOptions, type FeedKeyboardNavResult} from './types'
+
 export function Provider({children}: {children: React.ReactNode}) {
   return children
 }
@@ -16,7 +18,9 @@ export function useHotkeysContext() {
   )
 }
 
-export function useFeedKeyboardNav() {
+export function useFeedKeyboardNav(
+  _options: FeedKeyboardNavOptions,
+): FeedKeyboardNavResult {
   return {
     focusedIndex: -1,
     setFocusedIndex: () => -1,

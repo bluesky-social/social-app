@@ -18,6 +18,7 @@ import {
   listenOpenFocusedPost,
 } from '#/state/events'
 import {useSession} from '#/state/session'
+import {type FeedKeyboardNavOptions, type FeedKeyboardNavResult} from './types'
 
 const FEED_SCROLL_DEBOUNCE_MS = 250
 const activeScopeCounts = new Map<string, number>()
@@ -154,16 +155,7 @@ function useKeyboardShortcuts() {
 export function useFeedKeyboardNav({
   focusableIndices,
   active = true,
-}: {
-  /**
-   * Compute this based on item types (e.g. only root posts).
-   */
-  focusableIndices: number[]
-  /**
-   * Pass false when the list is in an inactive tab.
-   */
-  active?: boolean
-}) {
+}: FeedKeyboardNavOptions): FeedKeyboardNavResult {
   useHotkeyScope('feed', active)
 
   const [focusedIndex, setFocusedIndex] = useState(-1)
