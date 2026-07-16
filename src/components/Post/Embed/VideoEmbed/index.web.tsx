@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -16,7 +16,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
-import {CENTER_COLUMN_WIDTH} from '#/components/Layout'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {
   HLSUnsupportedError,
@@ -97,16 +96,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     constrained = Math.max(aspectRatio, ratio)
   }
 
-  const {width: windowWidth} = useWindowDimensions()
-
-  /*
-   * Estimated rather than measured with onLayout - a measurement lands after
-   * first paint, which flashed a full-width card for a frame before snapping
-   * narrow. The post column is capped at CENTER_COLUMN_WIDTH, and feed
-   * padding plus the avatar gutter inset the embed by roughly 100px.
-   */
-  const estimatedContainerWidth =
-    Math.min(windowWidth, CENTER_COLUMN_WIDTH) - 100
+  const [containerWidth, setContainerWidth] = useState(0)
 
   /*
    * Portrait videos render at their own ratio instead of pillarboxed, but
@@ -115,7 +105,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
    * ratio can't be fit, so both keep the full-width pillarbox - a narrow
    * card with black slices down the sides looks broken (see #9371).
    */
-  const cardWidth = estimatedContainerWidth * Math.min(aspectRatio ?? 1, 1)
+  const cardWidth = containerWidth * Math.min(aspectRatio ?? 1, 1)
   const fullBleed =
     aspectRatio === undefined ||
     aspectRatio < 1 / 2 ||
@@ -130,34 +120,42 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
         cursor: 'default',
         position: 'relative',
         backgroundColor: t.palette.black,
+        backgroundImage: `url(${embed.thumbnail})`,
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
       }}
       onClick={evt => evt.stopPropagation()}>
-      {/* blurred backdrop fills the bars when the video is boxed */}
       {fullBleed && embed.thumbnail && (
-        <div
-          aria-hidden
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: `url(${embed.thumbnail})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'blur(32px)',
-            // hide the transparent fade the blur creates at the edges
-            transform: 'scale(1.2)',
-          }}
-        />
+        <>
+          {/* blurred backdrop fills the bars when the video is boxed */}
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: `url(${embed.thumbnail})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'blur(32px)',
+              // hide the transparent fade the blur creates at the edges
+              transform: 'scale(1.2)',
+            }}
+          />
+          {/* redraw the sharp thumbnail above the blur */}
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: `url(${embed.thumbnail})`,
+              backgroundSize: 'contain',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          />
+        </>
       )}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `url(${embed.thumbnail})`,
-          backgroundSize: 'contain',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      />
       <ErrorBoundary renderError={renderError} key={key}>
         <OnlyNearScreen>
           <VideoEmbedInnerWeb
@@ -173,7 +171,9 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   )
 
   return (
-    <View style={[a.pt_xs]}>
+    <View
+      style={[a.pt_xs]}
+      onLayout={e => setContainerWidth(e.nativeEvent.layout.width)}>
       <ViewportObserver
         sendPosition={isGif ? noop : sendPosition}
         isAnyViewActive={currentActiveView !== null}>
