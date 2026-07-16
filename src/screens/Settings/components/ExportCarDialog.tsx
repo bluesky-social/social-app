@@ -10,7 +10,6 @@ import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
-import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -163,17 +162,7 @@ export function ExportCarDialog({
               a.leading_snug,
               t.atoms.text_contrast_medium,
             ]}>
-            <Trans>
-              This feature is in beta. You can read more about repository
-              exports in{' '}
-              <InlineLinkText
-                label={l`View blogpost for more details`}
-                to="https://docs.bsky.app/blog/repo-export"
-                style={[a.text_sm]}>
-                this blogpost
-              </InlineLinkText>
-              .
-            </Trans>
+            <Trans>This feature is in beta.</Trans>
           </Text>
         </View>
         <Dialog.Close />

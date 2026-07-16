@@ -288,7 +288,7 @@ function ActionButtons({
           setScreenState(LoggedOutScreenState.S_Login)
         }}
         label={l`Sign in`}
-        accessibilityHint={l`Opens flow to sign in to your existing Bluesky account`}
+        accessibilityHint={l`Opens flow to sign in to your existing Blacksky account`}
         size="large"
         color="primary"
         style={[a.w_full]}>
@@ -302,7 +302,7 @@ function ActionButtons({
           setScreenState(LoggedOutScreenState.S_CreateAccount)
         }}
         label={l`Create new account`}
-        accessibilityHint={l`Opens flow to create a new Bluesky account`}
+        accessibilityHint={l`Opens flow to create a new Blacksky account`}
         size="large"
         color={isDarkMode ? 'secondary_inverted' : 'secondary'}
         style={[a.w_full]}>

@@ -119,7 +119,7 @@ msgstr ""
 #. placeholder {0}: numUnreadNotifications ?? 0
 #: src/view/shell/bottom-bar/BottomBar.tsx:240
 #: src/view/shell/bottom-bar/BottomBar.tsx:272
-#: src/view/shell/Drawer.tsx:616
+#: src/view/shell/Drawer.tsx:615
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -143,14 +143,14 @@ msgstr ""
 #. placeholder {0}: profile.followersCount || 0
 #. placeholder {0}: profile?.followersCount || 0
 #: src/components/ProfileHoverCard/index.web.tsx:444
-#: src/view/shell/Drawer.tsx:161
+#: src/view/shell/Drawer.tsx:160
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr ""
 
 #. placeholder {0}: profile.followsCount || 0
 #. placeholder {0}: profile?.followsCount || 0
 #: src/components/ProfileHoverCard/index.web.tsx:448
-#: src/view/shell/Drawer.tsx:171
+#: src/view/shell/Drawer.tsx:170
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
 
@@ -429,11 +429,11 @@ msgstr "{count, plural, other {#+ requests to join}}"
 msgid "{date} at {time}"
 msgstr "{date} at {time}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:396
+#: src/screens/Profile/Header/EditProfileDialog.tsx:384
 msgid "{DESCRIPTION_MAX_GRAPHEMES, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr "{DESCRIPTION_MAX_GRAPHEMES, plural, other {Description is too long. The maximum number of characters is #.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:345
+#: src/screens/Profile/Header/EditProfileDialog.tsx:343
 msgid "{DISPLAY_NAME_MAX_GRAPHEMES, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{DISPLAY_NAME_MAX_GRAPHEMES, plural, other {Display name is too long. The maximum number of characters is #.}}"
 
@@ -693,7 +693,7 @@ msgstr "{name}'s starter pack"
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
-#: src/screens/Settings/FindContactsSettings.tsx:457
+#: src/screens/Settings/FindContactsSettings.tsx:470
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr ""
 
@@ -709,7 +709,7 @@ msgstr "{profileName} joined Blacksky {timeAgoString} ago"
 msgid "{profileName} joined Blacksky using a starter pack {timeAgoString} ago"
 msgstr "{profileName} joined Blacksky using a starter pack {timeAgoString} ago"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:425
+#: src/screens/Profile/Header/EditProfileDialog.tsx:413
 msgid "{PRONOUNS_MAX_GRAPHEMES, plural, other {Pronouns is too long. The maximum number of characters is #.}}"
 msgstr "{PRONOUNS_MAX_GRAPHEMES, plural, other {Pronouns is too long. The maximum number of characters is #.}}"
 
@@ -745,16 +745,16 @@ msgstr "{requestCount}+ requests"
 msgid "{type}h ago"
 msgstr ""
 
-#: src/components/verification/VerifierDialog.tsx:62
+#: src/components/verification/VerifierDialog.tsx:58
 msgid "{userName} is a trusted verifier"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:69
+#: src/components/verification/VerificationsDialog.tsx:65
 msgid "{userName} is verified"
 msgstr ""
 
 #. Possessive, meaning "the verifications of {userName}"
-#: src/components/verification/VerificationsDialog.tsx:71
+#: src/components/verification/VerificationsDialog.tsx:67
 msgid "{userName}'s verifications"
 msgstr ""
 
@@ -842,6 +842,9 @@ msgid "<0>{displayName}</0><1/><2> added you</2>"
 msgstr "<0>{displayName}</0><1/><2> added you</2>"
 
 #: src/screens/Hashtag.tsx:226
+msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Blacksky.</4>"
+msgstr "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Blacksky.</4>"
+
 #: src/screens/Search/SearchResults.tsx:316
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr ""
@@ -1091,7 +1094,7 @@ msgctxt "toast"
 msgid "Account unmuted"
 msgstr ""
 
-#: src/components/verification/VerifierDialog.tsx:100
+#: src/components/verification/VerifierDialog.tsx:96
 msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Blacksky."
 msgstr "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Blacksky."
 
@@ -1254,7 +1257,7 @@ msgstr ""
 msgid "Add the default feed of only people you follow"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:502
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:479
 msgid "Add the following DNS record to your domain:"
 msgstr ""
 
@@ -1328,9 +1331,10 @@ msgstr ""
 msgid "Adult Content"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:376
-msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr ""
+#. placeholder {0}: BSKY_APP_HOST.replace(/^https?:\/\//, '').replace( /\/$/, '', )
+#: src/screens/Moderation/index.tsx:377
+msgid "Adult content can only be enabled via the Web at <0>{0}</0>."
+msgstr "Adult content can only be enabled via the Web at <0>{0}</0>."
 
 #: src/components/moderation/LabelPreference.tsx:252
 msgid "Adult content is disabled."
@@ -1345,7 +1349,7 @@ msgstr ""
 msgid "Adult sexual abuse content"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:419
+#: src/screens/Moderation/index.tsx:423
 msgid "Advanced"
 msgstr ""
 
@@ -1590,11 +1594,11 @@ msgstr ""
 msgid "An illustration of several Blacksky posts alongside repost, like, and comment icons"
 msgstr "An illustration of several Blacksky posts alongside repost, like, and comment icons"
 
-#: src/components/verification/VerifierDialog.tsx:88
+#: src/components/verification/VerifierDialog.tsx:84
 msgid "An illustration showing that Blacksky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
 msgstr "An illustration showing that Blacksky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:198
+#: src/screens/Messages/components/InviteLinkDialog.tsx:199
 msgid "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time."
 msgstr "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time."
 
@@ -1664,13 +1668,13 @@ msgstr ""
 msgid "Anyone can join"
 msgstr "Anyone can join"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:153
 #: src/screens/Messages/components/InviteLinkDialog.tsx:154
+#: src/screens/Messages/components/InviteLinkDialog.tsx:155
 msgid "Anyone can join instantly"
 msgstr "Anyone can join instantly"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:158
 #: src/screens/Messages/components/InviteLinkDialog.tsx:159
+#: src/screens/Messages/components/InviteLinkDialog.tsx:160
 msgid "Anyone can request to join"
 msgstr "Anyone can request to join"
 
@@ -1680,7 +1684,7 @@ msgstr "Anyone can request to join"
 msgid "Anyone who follows me"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:478
+#: src/screens/Messages/components/InviteLinkDialog.tsx:480
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 msgstr "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 
@@ -1825,7 +1829,7 @@ msgid "Are you sure you want to delete this starter pack?"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:99
-#: src/screens/Profile/Header/EditProfileDialog.tsx:82
+#: src/screens/Profile/Header/EditProfileDialog.tsx:80
 msgid "Are you sure you want to discard your changes?"
 msgstr ""
 
@@ -1931,8 +1935,8 @@ msgstr ""
 #: src/screens/Login/SetNewPasswordForm.tsx:176
 #: src/screens/Messages/components/ChatDisabled.tsx:164
 #: src/screens/Messages/components/ChatDisabled.tsx:166
-#: src/screens/Messages/components/InviteLinkDialog.tsx:276
-#: src/screens/Messages/components/InviteLinkDialog.tsx:304
+#: src/screens/Messages/components/InviteLinkDialog.tsx:277
+#: src/screens/Messages/components/InviteLinkDialog.tsx:305
 #: src/screens/Messages/Inbox.tsx:230
 #: src/screens/Profile/Header/Shell.tsx:175
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:275
@@ -1996,7 +2000,7 @@ msgstr ""
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:463
+#: src/view/shell/Drawer.tsx:462
 msgid "Begin Discussion"
 msgstr "Begin Discussion"
 
@@ -2012,11 +2016,19 @@ msgstr "Blacksky Community Posts"
 msgid "Blacksky is more fun with friends"
 msgstr "Blacksky is more fun with friends"
 
+#: src/features/inviteFriends/InviteScannerScreen.tsx:106
+msgid "Blacksky needs camera access to scan QR codes from other profiles."
+msgstr "Blacksky needs camera access to scan QR codes from other profiles."
+
 #: src/components/CommunityOnlyBadge.tsx:57
 #: src/view/com/composer/Composer.tsx:2040
 #: src/view/com/composer/Composer.tsx:2050
 msgid "Blacksky Only"
 msgstr "Blacksky Only"
+
+#: src/components/StarterPack/ProfileStarterPacks.tsx:340
+msgid "Blacksky will choose a set of recommended accounts from people in your network."
+msgstr "Blacksky will choose a set of recommended accounts from people in your network."
 
 #: src/screens/Settings/AIPreferencesSettings.tsx:95
 msgid "Blacksky will follow the preferences you set here. We will share your preferences with other AT Protocol services who can choose to respect them. Bad actors may ignore these signals and work around them, which is outside the control of Blacksky, your PDS operator, and other intermediary services on the network."
@@ -2030,6 +2042,10 @@ msgstr "Blacksky will not show your profile and posts to logged-out users. Other
 #: src/components/CommunityOnlyBadge.tsx:54
 msgid "Blacksky-only post"
 msgstr "Blacksky-only post"
+
+#: src/screens/Messages/components/ChatDisabled.tsx:54
+msgid "Blacksky's moderators have reviewed reports and decided to disable your access to chats."
+msgstr "Blacksky's moderators have reviewed reports and decided to disable your access to chats."
 
 #: src/components/moderation/BlockDialog.tsx:186
 #: src/components/moderation/BlockDialog.tsx:192
@@ -2111,7 +2127,7 @@ msgstr "Block user and/or leave this conversation"
 msgid "Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:299
+#: src/screens/Moderation/index.tsx:300
 msgid "Blocked accounts"
 msgstr ""
 
@@ -2152,21 +2168,9 @@ msgstr ""
 msgid "Bluesky is more fun with friends. Do you want to invite some of yours? <0/>"
 msgstr ""
 
-#: src/features/inviteFriends/InviteScannerScreen.tsx:105
-msgid "Bluesky needs camera access to scan QR codes from other profiles."
-msgstr "Bluesky needs camera access to scan QR codes from other profiles."
-
-#: src/screens/Settings/FindContactsSettings.tsx:570
+#: src/screens/Settings/FindContactsSettings.tsx:583
 msgid "Bluesky stores your contacts as encoded data. Removing your contacts will immediately delete this data."
 msgstr ""
-
-#: src/components/StarterPack/ProfileStarterPacks.tsx:340
-msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr ""
-
-#: src/screens/Messages/components/ChatDisabled.tsx:54
-msgid "Bluesky's moderators have reviewed reports and decided to disable your access to chats."
-msgstr "Bluesky's moderators have reviewed reports and decided to disable your access to chats."
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:56
 msgid "Blur images"
@@ -2290,7 +2294,7 @@ msgstr ""
 msgid "Camera"
 msgstr ""
 
-#: src/features/inviteFriends/InviteScannerScreen.tsx:96
+#: src/features/inviteFriends/InviteScannerScreen.tsx:97
 msgid "Camera access needed"
 msgstr "Camera access needed"
 
@@ -2318,19 +2322,19 @@ msgstr "Camera access needed"
 #: src/features/liveNow/components/GoLiveDialog.tsx:254
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:288
-#: src/screens/Messages/components/InviteLinkDialog.tsx:500
-#: src/screens/Messages/components/InviteLinkDialog.tsx:504
+#: src/screens/Messages/components/InviteLinkDialog.tsx:502
+#: src/screens/Messages/components/InviteLinkDialog.tsx:506
 #: src/screens/Messages/ConversationSettings/prompts.tsx:108
 #: src/screens/Messages/ConversationSettings/prompts.tsx:132
 #: src/screens/Messages/ConversationSettings/prompts.tsx:156
 #: src/screens/Messages/ConversationSettings/prompts.tsx:180
-#: src/screens/Profile/Header/EditProfileDialog.tsx:229
-#: src/screens/Profile/Header/EditProfileDialog.tsx:237
+#: src/screens/Profile/Header/EditProfileDialog.tsx:227
+#: src/screens/Profile/Header/EditProfileDialog.tsx:235
 #: src/screens/Search/Shell.tsx:405
 #: src/screens/Settings/AppIconSettings/index.tsx:39
 #: src/screens/Settings/AppIconSettings/index.tsx:198
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:81
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:88
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:80
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:87
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:250
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:256
 #: src/screens/Settings/Settings.tsx:302
@@ -2404,8 +2408,8 @@ msgstr ""
 msgid "Change app language"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:97
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:101
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:96
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:100
 msgid "Change Handle"
 msgstr ""
 
@@ -2463,7 +2467,7 @@ msgstr ""
 #: src/Navigation.tsx:518
 #: src/view/shell/bottom-bar/BottomBar.tsx:237
 #: src/view/shell/desktop/LeftNav.tsx:706
-#: src/view/shell/Drawer.tsx:584
+#: src/view/shell/Drawer.tsx:583
 msgid "Chat"
 msgstr ""
 
@@ -2576,7 +2580,7 @@ msgstr ""
 msgid "Child Sexual Abuse Material (CSAM)"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:484
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:461
 msgid "Choose domain verification method"
 msgstr ""
 
@@ -2609,7 +2613,7 @@ msgstr "Choose the community your account will live in. You can always use it ac
 msgid "Choose this color as your avatar"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:243
+#: src/screens/Messages/components/InviteLinkDialog.tsx:244
 msgid "Choose who can join this group chat and how."
 msgstr "Choose who can join this group chat and how."
 
@@ -2721,15 +2725,15 @@ msgstr ""
 #: src/components/ProgressGuide/FollowDialog.tsx:462
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:122
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:128
-#: src/components/verification/VerificationsDialog.tsx:146
-#: src/components/verification/VerifierDialog.tsx:147
+#: src/components/verification/VerificationsDialog.tsx:142
+#: src/components/verification/VerifierDialog.tsx:122
 #: src/components/WhoCanReply.tsx:241
 #: src/components/WhoCanReply.tsx:248
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:45
 #: src/features/liveNow/components/EditLiveDialog.tsx:217
 #: src/features/liveNow/components/EditLiveDialog.tsx:223
-#: src/screens/Messages/components/InviteLinkDialog.tsx:524
-#: src/screens/Messages/components/InviteLinkDialog.tsx:529
+#: src/screens/Messages/components/InviteLinkDialog.tsx:526
+#: src/screens/Messages/components/InviteLinkDialog.tsx:531
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:290
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:295
 #: src/view/com/feeds/MissingFeed.tsx:211
@@ -2756,8 +2760,8 @@ msgstr "Close banner"
 #: src/components/dialogs/LanguageSelectDialog.tsx:354
 #: src/components/dialogs/NotificationSettingsDialog.tsx:94
 #: src/components/moderation/BlockDialog.tsx:199
-#: src/components/verification/VerificationsDialog.tsx:138
-#: src/components/verification/VerifierDialog.tsx:140
+#: src/components/verification/VerificationsDialog.tsx:134
+#: src/components/verification/VerifierDialog.tsx:115
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:36
 msgid "Close dialog"
 msgstr ""
@@ -2782,7 +2786,7 @@ msgstr ""
 msgid "Close menu"
 msgstr ""
 
-#: src/features/inviteFriends/InviteScannerScreen.tsx:167
+#: src/features/inviteFriends/InviteScannerScreen.tsx:168
 msgid "Close scanner"
 msgstr "Close scanner"
 
@@ -2932,15 +2936,15 @@ msgid "Contact support"
 msgstr ""
 
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:65
-#: src/screens/Settings/FindContactsSettings.tsx:164
+#: src/screens/Settings/FindContactsSettings.tsx:177
 msgid "Contact sync is not available on this device, as the app is unable to access your contacts."
 msgstr ""
 
-#: src/screens/Settings/FindContactsSettings.tsx:526
+#: src/screens/Settings/FindContactsSettings.tsx:539
 msgid "Contacts imported"
 msgstr ""
 
-#: src/screens/Settings/FindContactsSettings.tsx:499
+#: src/screens/Settings/FindContactsSettings.tsx:512
 msgid "Contacts removed"
 msgstr ""
 
@@ -2961,7 +2965,7 @@ msgstr ""
 msgid "Content Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:332
+#: src/screens/Moderation/index.tsx:333
 msgid "Content filters"
 msgstr ""
 
@@ -3058,7 +3062,7 @@ msgstr "Conversation not found."
 msgid "Copied build version to clipboard"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:99
+#: src/components/dms/ChatInvite/Root.tsx:102
 #: src/components/dms/MessageContextMenu.tsx:83
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:282
@@ -3106,13 +3110,13 @@ msgstr ""
 msgid "Copy code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:587
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:564
 #: src/view/com/profile/ProfileMenu.tsx:510
 #: src/view/com/profile/ProfileMenu.tsx:513
 msgid "Copy DID"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:519
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:496
 msgid "Copy host"
 msgstr ""
 
@@ -3120,7 +3124,7 @@ msgstr ""
 msgid "Copy invite link"
 msgstr "Copy invite link"
 
-#: src/components/dms/ChatInvite/Root.tsx:91
+#: src/components/dms/ChatInvite/Root.tsx:92
 #: src/components/StarterPack/ShareDialog.tsx:115
 #: src/screens/StarterPack/StarterPackScreen.tsx:644
 msgid "Copy link"
@@ -3170,7 +3174,7 @@ msgstr ""
 msgid "Copy QR code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:540
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:517
 msgid "Copy TXT record value"
 msgstr ""
 
@@ -3207,14 +3211,14 @@ msgstr "Could not fetch post"
 msgid "Could not find profile"
 msgstr ""
 
-#: src/screens/Settings/FindContactsSettings.tsx:233
-#: src/screens/Settings/FindContactsSettings.tsx:424
+#: src/screens/Settings/FindContactsSettings.tsx:246
+#: src/screens/Settings/FindContactsSettings.tsx:437
 msgid "Could not follow all matches - please check your network connection."
 msgstr ""
 
 #. placeholder {0}: cleanError(err)
-#: src/screens/Settings/FindContactsSettings.tsx:239
-#: src/screens/Settings/FindContactsSettings.tsx:430
+#: src/screens/Settings/FindContactsSettings.tsx:252
+#: src/screens/Settings/FindContactsSettings.tsx:443
 msgid "Could not follow all matches. {0}"
 msgstr ""
 
@@ -3420,7 +3424,7 @@ msgstr "Create your account in {0}"
 #. placeholder {0}: i18n.date(appPassword.createdAt, { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', })
 #. placeholder {0}: i18n.date(createdAt, { dateStyle: 'long', timeStyle: 'short', })
 #. placeholder {0}: i18n.date(createdAt, { month: 'long', day: 'numeric', year: 'numeric', })
-#: src/screens/Messages/components/InviteLinkDialog.tsx:355
+#: src/screens/Messages/components/InviteLinkDialog.tsx:357
 #: src/screens/Messages/ConversationSettings/index.tsx:509
 #: src/screens/Settings/AppPasswords.tsx:273
 msgid "Created {0}"
@@ -3516,8 +3520,8 @@ msgid "Deepfake adult content"
 msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:156
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:284
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:309
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:273
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:298
 #: src/screens/Signup/StepHandle/index.tsx:229
 #: src/screens/Signup/StepHandle/index.tsx:254
 msgid "Default"
@@ -3564,7 +3568,7 @@ msgstr ""
 msgid "Delete chat declaration record"
 msgstr ""
 
-#: src/screens/Settings/FindContactsSettings.tsx:567
+#: src/screens/Settings/FindContactsSettings.tsx:580
 msgid "Delete contacts"
 msgstr ""
 
@@ -3651,8 +3655,8 @@ msgstr "Deny"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:453
 #: src/components/SendErrorReportDialog.tsx:78
-#: src/screens/Profile/Header/EditProfileDialog.tsx:376
-#: src/screens/Profile/Header/EditProfileDialog.tsx:383
+#: src/screens/Profile/Header/EditProfileDialog.tsx:364
+#: src/screens/Profile/Header/EditProfileDialog.tsx:371
 msgid "Description"
 msgstr ""
 
@@ -3705,8 +3709,8 @@ msgstr ""
 msgid "Dim"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:385
-#: src/screens/Messages/components/InviteLinkDialog.tsx:390
+#: src/screens/Messages/components/InviteLinkDialog.tsx:387
+#: src/screens/Messages/components/InviteLinkDialog.tsx:392
 msgid "Disable"
 msgstr "Disable"
 
@@ -3732,8 +3736,8 @@ msgstr ""
 msgid "Disable haptic feedback"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:488
-#: src/screens/Messages/components/InviteLinkDialog.tsx:494
+#: src/screens/Messages/components/InviteLinkDialog.tsx:490
+#: src/screens/Messages/components/InviteLinkDialog.tsx:496
 msgid "Disable link"
 msgstr "Disable link"
 
@@ -3745,19 +3749,19 @@ msgstr ""
 msgid "Disable replies entirely"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:475
+#: src/screens/Messages/components/InviteLinkDialog.tsx:477
 msgid "Disable this invite link?"
 msgstr "Disable this invite link?"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:35
 #: src/lib/moderation/useLabelBehaviorDescription.ts:45
 #: src/lib/moderation/useLabelBehaviorDescription.ts:71
-#: src/screens/Moderation/index.tsx:366
+#: src/screens/Moderation/index.tsx:367
 msgid "Disabled"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
-#: src/screens/Profile/Header/EditProfileDialog.tsx:84
+#: src/screens/Profile/Header/EditProfileDialog.tsx:82
 #: src/view/com/composer/Composer.tsx:1448
 #: src/view/com/composer/Composer.tsx:1492
 #: src/view/com/composer/Composer.tsx:1699
@@ -3767,7 +3771,7 @@ msgid "Discard"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:98
-#: src/screens/Profile/Header/EditProfileDialog.tsx:81
+#: src/screens/Profile/Header/EditProfileDialog.tsx:79
 msgid "Discard changes?"
 msgstr ""
 
@@ -3803,9 +3807,9 @@ msgstr ""
 msgid "Discover New Feeds"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:119
-#: src/view/shell/desktop/RightNav.tsx:120
-#: src/view/shell/Drawer.tsx:470
+#: src/view/shell/desktop/RightNav.tsx:116
+#: src/view/shell/desktop/RightNav.tsx:117
+#: src/view/shell/Drawer.tsx:469
 msgid "Discussion"
 msgstr "Discussion"
 
@@ -3843,7 +3847,7 @@ msgstr ""
 msgid "Dismiss this suggestion"
 msgstr ""
 
-#: src/features/inviteFriends/InviteScannerScreen.tsx:168
+#: src/features/inviteFriends/InviteScannerScreen.tsx:169
 msgid "Dismisses the QR scanner"
 msgstr "Dismisses the QR scanner"
 
@@ -3852,8 +3856,8 @@ msgstr "Dismisses the QR scanner"
 msgid "Display larger alt text badges"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:326
-#: src/screens/Profile/Header/EditProfileDialog.tsx:332
+#: src/screens/Profile/Header/EditProfileDialog.tsx:324
+#: src/screens/Profile/Header/EditProfileDialog.tsx:330
 msgid "Display name"
 msgstr ""
 
@@ -3861,8 +3865,8 @@ msgstr ""
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:488
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:490
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:465
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:467
 msgid "DNS Panel"
 msgstr ""
 
@@ -3874,12 +3878,12 @@ msgstr ""
 msgid "Does not include nudity."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:260
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:249
 #: src/screens/Signup/StepHandle/index.tsx:205
 msgid "Domain"
 msgstr "Domain"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:608
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:585
 msgid "Domain verified!"
 msgstr ""
 
@@ -3943,11 +3947,11 @@ msgstr "Download"
 msgid "Download Blacksky"
 msgstr "Download Blacksky"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:149
+#: src/screens/Settings/components/ExportCarDialog.tsx:148
 msgid "Download chat data"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:154
+#: src/screens/Settings/components/ExportCarDialog.tsx:153
 msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
@@ -3961,11 +3965,11 @@ msgstr "Download image"
 msgid "Download invite QR code"
 msgstr "Download invite QR code"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:118
+#: src/screens/Settings/components/ExportCarDialog.tsx:117
 msgid "Download profile data"
 msgstr "Download profile data"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:123
+#: src/screens/Settings/components/ExportCarDialog.tsx:122
 msgctxt "button"
 msgid "Download profile data"
 msgstr "Download profile data"
@@ -3992,15 +3996,15 @@ msgstr ""
 msgid "Dusk"
 msgstr "Dusk"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:248
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:237
 msgid "e.g. alice"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:333
+#: src/screens/Profile/Header/EditProfileDialog.tsx:331
 msgid "e.g. Alice Lastname"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:471
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:448
 msgid "e.g. alice.com"
 msgstr ""
 
@@ -4012,7 +4016,7 @@ msgstr ""
 msgid "e.g. Great Posters"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:413
+#: src/screens/Profile/Header/EditProfileDialog.tsx:401
 msgid "e.g. she/her"
 msgstr "e.g. she/her"
 
@@ -4084,7 +4088,7 @@ msgctxt "button"
 msgid "Edit invite link"
 msgstr "Edit invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:369
+#: src/screens/Messages/components/InviteLinkDialog.tsx:371
 msgid "Edit link settings"
 msgstr "Edit link settings"
 
@@ -4120,8 +4124,8 @@ msgstr ""
 msgid "Edit post interaction settings"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:281
-#: src/screens/Profile/Header/EditProfileDialog.tsx:287
+#: src/screens/Profile/Header/EditProfileDialog.tsx:279
+#: src/screens/Profile/Header/EditProfileDialog.tsx:285
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:296
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:360
 msgid "Edit profile"
@@ -4233,7 +4237,7 @@ msgstr ""
 msgid "Enable {0} only"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:353
+#: src/screens/Moderation/index.tsx:354
 msgid "Enable adult content"
 msgstr ""
 
@@ -4281,7 +4285,7 @@ msgstr ""
 msgid "Enable trending videos in your Discover feed"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:364
+#: src/screens/Moderation/index.tsx:365
 msgid "Enabled"
 msgstr ""
 
@@ -4326,7 +4330,7 @@ msgstr ""
 msgid "Enter the 6-digit code sent to {prettyNumber}"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:465
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:442
 msgid "Enter the domain you want to use"
 msgstr ""
 
@@ -4365,7 +4369,7 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: src/screens/Settings/FindContactsSettings.tsx:95
+#: src/screens/Settings/FindContactsSettings.tsx:108
 msgid "Error getting the latest data."
 msgstr ""
 
@@ -4381,8 +4385,8 @@ msgstr ""
 msgid "Error message"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:47
-#: src/screens/Settings/components/ExportCarDialog.tsx:80
+#: src/screens/Settings/components/ExportCarDialog.tsx:46
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
 msgid "Error occurred while saving file"
 msgstr ""
 
@@ -4511,7 +4515,7 @@ msgstr ""
 #: src/Navigation.tsx:778
 #: src/screens/Search/Shell.tsx:362
 #: src/view/shell/desktop/LeftNav.tsx:685
-#: src/view/shell/Drawer.tsx:532
+#: src/view/shell/Drawer.tsx:531
 msgid "Explore"
 msgstr ""
 
@@ -4522,7 +4526,7 @@ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:254
 #: src/screens/Messages/Settings.tsx:264
-#: src/screens/Settings/components/ExportCarDialog.tsx:130
+#: src/screens/Settings/components/ExportCarDialog.tsx:129
 msgid "Export my chat data"
 msgstr "Export my chat data"
 
@@ -4531,7 +4535,7 @@ msgstr "Export my chat data"
 msgid "Export my data"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:97
+#: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "Export my profile data"
 msgstr "Export my profile data"
 
@@ -4586,7 +4590,7 @@ msgstr "Failed to add to list"
 msgid "Failed to add to starter pack"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:688
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:665
 msgid "Failed to change handle. Please try again."
 msgstr ""
 
@@ -4604,7 +4608,7 @@ msgstr ""
 msgid "Failed to create conversation"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:106
+#: src/screens/Messages/components/InviteLinkDialog.tsx:107
 msgid "Failed to create invite link"
 msgstr "Failed to create invite link"
 
@@ -4631,7 +4635,7 @@ msgstr ""
 msgid "Failed to delete starter pack"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:132
+#: src/screens/Messages/components/InviteLinkDialog.tsx:133
 msgid "Failed to disable invite link"
 msgstr "Failed to disable invite link"
 
@@ -4644,11 +4648,11 @@ msgstr ""
 msgid "Failed to edit group chat name"
 msgstr "Failed to edit group chat name"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:119
+#: src/screens/Messages/components/InviteLinkDialog.tsx:120
 msgid "Failed to edit invite link"
 msgstr "Failed to edit invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:142
+#: src/screens/Messages/components/InviteLinkDialog.tsx:143
 msgid "Failed to enable invite link"
 msgstr "Failed to enable invite link"
 
@@ -4737,12 +4741,12 @@ msgstr ""
 msgid "Failed to reconnect Germ DM. Error: {0}"
 msgstr ""
 
-#: src/screens/Settings/FindContactsSettings.tsx:509
+#: src/screens/Settings/FindContactsSettings.tsx:522
 msgid "Failed to remove data due to a network error, please check your internet connection."
 msgstr ""
 
 #. placeholder {0}: cleanError(err)
-#: src/screens/Settings/FindContactsSettings.tsx:515
+#: src/screens/Settings/FindContactsSettings.tsx:528
 msgid "Failed to remove data. {0}"
 msgstr ""
 
@@ -4861,7 +4865,7 @@ msgstr ""
 msgid "Failed to verify email, please try again."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:455
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:432
 msgid "Failed to verify handle. Please try again."
 msgstr ""
 
@@ -4906,7 +4910,7 @@ msgstr ""
 msgid "Feed unavailable"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:458
+#: src/view/shell/Drawer.tsx:457
 msgid "Feedback"
 msgstr ""
 
@@ -4924,7 +4928,7 @@ msgstr ""
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:269
 #: src/view/shell/desktop/LeftNav.tsx:718
-#: src/view/shell/Drawer.tsx:648
+#: src/view/shell/Drawer.tsx:647
 msgid "Feeds"
 msgstr ""
 
@@ -4948,8 +4952,8 @@ msgstr ""
 msgid "Fetch update"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:43
-#: src/screens/Settings/components/ExportCarDialog.tsx:76
+#: src/screens/Settings/components/ExportCarDialog.tsx:42
+#: src/screens/Settings/components/ExportCarDialog.tsx:75
 msgid "File saved successfully!"
 msgstr ""
 
@@ -4997,7 +5001,7 @@ msgid "Find accounts to follow"
 msgstr ""
 
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:49
-#: src/screens/Settings/FindContactsSettings.tsx:81
+#: src/screens/Settings/FindContactsSettings.tsx:94
 #: src/screens/Settings/Settings.tsx:218
 #: src/screens/Settings/Settings.tsx:221
 msgid "Find and invite friends"
@@ -5021,7 +5025,7 @@ msgstr ""
 msgid "Find people to follow"
 msgstr ""
 
-#: src/screens/Settings/FindContactsSettings.tsx:130
+#: src/screens/Settings/FindContactsSettings.tsx:143
 msgid "Find people you know"
 msgstr "Find people you know"
 
@@ -5033,7 +5037,7 @@ msgstr "Find posts, users, and feeds on Blacksky"
 msgid "Find your friends on Blacksky by verifying your phone number and matching with your contacts. We protect your information and you control what happens next. <0>Learn more</0>"
 msgstr "Find your friends on Blacksky by verifying your phone number and matching with your contacts. We protect your information and you control what happens next. <0>Learn more</0>"
 
-#: src/screens/Settings/FindContactsSettings.tsx:133
+#: src/screens/Settings/FindContactsSettings.tsx:146
 msgid "Find your friends on Bluesky by verifying your phone number and matching with your contacts. We protect your information and you control what happens next. <0>Learn more</0>"
 msgstr ""
 
@@ -5106,8 +5110,8 @@ msgstr ""
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:294
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:162
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:169
-#: src/screens/Settings/FindContactsSettings.tsx:465
-#: src/screens/Settings/FindContactsSettings.tsx:475
+#: src/screens/Settings/FindContactsSettings.tsx:478
+#: src/screens/Settings/FindContactsSettings.tsx:488
 #: src/screens/StarterPack/StarterPackScreen.tsx:452
 #: src/screens/StarterPack/StarterPackScreen.tsx:460
 msgid "Follow all"
@@ -5130,7 +5134,7 @@ msgstr ""
 msgid "Followed all accounts!"
 msgstr ""
 
-#: src/screens/Settings/FindContactsSettings.tsx:418
+#: src/screens/Settings/FindContactsSettings.tsx:431
 msgid "Followed all matches"
 msgstr ""
 
@@ -5289,9 +5293,9 @@ msgstr ""
 msgid "Generate a starter pack"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:239
-#: src/screens/Messages/components/InviteLinkDialog.tsx:277
-#: src/screens/Messages/components/InviteLinkDialog.tsx:305
+#: src/screens/Messages/components/InviteLinkDialog.tsx:240
+#: src/screens/Messages/components/InviteLinkDialog.tsx:278
+#: src/screens/Messages/components/InviteLinkDialog.tsx:306
 msgid "Generate invite link"
 msgstr "Generate invite link"
 
@@ -5299,11 +5303,11 @@ msgstr "Generate invite link"
 msgid "Generate new content or interactions modeled on your data. This includes AI imitations of your writing, AI-generated versions of your photos or audio, or bots designed to sound like you."
 msgstr "Generate new content or interactions modeled on your data. This includes AI imitations of your writing, AI-generated versions of your photos or audio, or bots designed to sound like you."
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:446
+#: src/screens/Messages/components/InviteLinkDialog.tsx:448
 msgid "Generate new invite link"
 msgstr "Generate new invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:451
+#: src/screens/Messages/components/InviteLinkDialog.tsx:453
 msgid "Generate new link"
 msgstr "Generate new link"
 
@@ -5325,7 +5329,7 @@ msgstr ""
 msgid "Germ DM reconnected"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:475
+#: src/view/shell/Drawer.tsx:474
 msgid "Get help"
 msgstr ""
 
@@ -5387,8 +5391,8 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:73
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:83
-#: src/screens/Messages/components/InviteLinkDialog.tsx:219
-#: src/screens/Messages/components/InviteLinkDialog.tsx:226
+#: src/screens/Messages/components/InviteLinkDialog.tsx:220
+#: src/screens/Messages/components/InviteLinkDialog.tsx:227
 msgid "Get started"
 msgstr ""
 
@@ -5527,8 +5531,8 @@ msgstr ""
 msgid "Got it"
 msgstr ""
 
-#: src/features/inviteFriends/InviteScannerScreen.tsx:108
-#: src/features/inviteFriends/InviteScannerScreen.tsx:113
+#: src/features/inviteFriends/InviteScannerScreen.tsx:109
+#: src/features/inviteFriends/InviteScannerScreen.tsx:114
 msgid "Grant access"
 msgstr "Grant access"
 
@@ -5553,7 +5557,7 @@ msgstr ""
 msgid "Group chat"
 msgstr "Group chat"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:556
+#: src/screens/Messages/components/InviteLinkDialog.tsx:558
 msgid "Group chat invite link dialog"
 msgstr "Group chat invite link dialog"
 
@@ -5593,7 +5597,7 @@ msgid "Group chats are only available to users 18 and over."
 msgstr "Group chats are only available to users 18 and over."
 
 #. placeholder {0}: convo.details.memberLimit
-#: src/screens/Messages/components/InviteLinkDialog.tsx:205
+#: src/screens/Messages/components/InviteLinkDialog.tsx:206
 msgid "Group chats can only have a maximum of {0, plural, other {# people}}."
 msgstr "Group chats can only have a maximum of {0, plural, other {# people}}."
 
@@ -5626,16 +5630,16 @@ msgstr ""
 msgid "Handle"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:692
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:669
 msgid "Handle already taken. Please try a different one."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:208
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:439
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:207
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:416
 msgid "Handle changed!"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:696
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:673
 msgid "Handle too long. Please try a shorter one."
 msgstr ""
 
@@ -5692,9 +5696,9 @@ msgstr "Held by Blacksky for 7 days to prevent abuse, then deleted"
 
 #: src/screens/Settings/Settings.tsx:249
 #: src/screens/Settings/Settings.tsx:253
+#: src/view/shell/desktop/RightNav.tsx:137
 #: src/view/shell/desktop/RightNav.tsx:140
-#: src/view/shell/desktop/RightNav.tsx:143
-#: src/view/shell/Drawer.tsx:484
+#: src/view/shell/Drawer.tsx:483
 msgid "Help"
 msgstr ""
 
@@ -5805,8 +5809,8 @@ msgstr ""
 msgid "Hide user list"
 msgstr ""
 
-#: src/screens/Moderation/VerificationSettings.tsx:88
-#: src/screens/Moderation/VerificationSettings.tsx:97
+#: src/screens/Moderation/VerificationSettings.tsx:68
+#: src/screens/Moderation/VerificationSettings.tsx:77
 msgid "Hide verification badges"
 msgstr ""
 
@@ -5839,7 +5843,7 @@ msgstr ""
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:57
+#: src/screens/Moderation/index.tsx:58
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
 msgstr ""
 
@@ -5855,11 +5859,11 @@ msgstr ""
 #: src/Navigation.tsx:794
 #: src/view/shell/bottom-bar/BottomBar.tsx:193
 #: src/view/shell/desktop/LeftNav.tsx:675
-#: src/view/shell/Drawer.tsx:558
+#: src/view/shell/Drawer.tsx:557
 msgid "Home"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:513
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:490
 msgid "Host:"
 msgstr ""
 
@@ -5897,8 +5901,8 @@ msgstr ""
 msgid "I have a code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:371
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:377
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:348
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:354
 msgid "I have my own domain"
 msgstr ""
 
@@ -5931,9 +5935,9 @@ msgstr ""
 msgid "If you delete this list, you won't be able to recover it."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:353
-msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
-msgstr ""
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:342
+msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity."
+msgstr "If you have your own domain, you can use that as your handle. This lets you self-verify your identity."
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:282
 msgid "If you need to update your email, <0>click here</0>."
@@ -6034,8 +6038,8 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:76
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:81
-#: src/screens/Settings/FindContactsSettings.tsx:153
-#: src/screens/Settings/FindContactsSettings.tsx:158
+#: src/screens/Settings/FindContactsSettings.tsx:166
+#: src/screens/Settings/FindContactsSettings.tsx:171
 msgid "Import contacts"
 msgstr ""
 
@@ -6049,7 +6053,7 @@ msgid "Import contacts to find your friends"
 msgstr ""
 
 #. placeholder {0}: i18n.date(new Date(syncedAt), { dateStyle: 'long', })
-#: src/screens/Settings/FindContactsSettings.tsx:535
+#: src/screens/Settings/FindContactsSettings.tsx:548
 msgid "Imported on {0}"
 msgstr ""
 
@@ -6110,7 +6114,7 @@ msgstr ""
 msgid "Interaction limited"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:239
+#: src/screens/Moderation/index.tsx:240
 msgid "Interaction settings"
 msgstr ""
 
@@ -6126,7 +6130,7 @@ msgstr ""
 msgid "Invalid group chat code."
 msgstr "Invalid group chat code."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:698
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:675
 msgid "Invalid handle. Please try a different one."
 msgstr ""
 
@@ -6175,7 +6179,7 @@ msgstr ""
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:141
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:382
-#: src/view/shell/Drawer.tsx:123
+#: src/view/shell/Drawer.tsx:122
 msgid "Invite friends"
 msgstr "Invite friends"
 
@@ -6189,10 +6193,10 @@ msgstr ""
 msgid "Invite friends <0/>"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:193
-#: src/screens/Messages/components/InviteLinkDialog.tsx:329
-#: src/screens/Messages/components/InviteLinkDialog.tsx:335
-#: src/screens/Messages/components/InviteLinkDialog.tsx:514
+#: src/screens/Messages/components/InviteLinkDialog.tsx:194
+#: src/screens/Messages/components/InviteLinkDialog.tsx:331
+#: src/screens/Messages/components/InviteLinkDialog.tsx:337
+#: src/screens/Messages/components/InviteLinkDialog.tsx:516
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:149
 #: src/screens/Messages/ConversationSettings/index.tsx:557
 msgid "Invite link"
@@ -6213,7 +6217,7 @@ msgid "Invite link created"
 msgstr "Invite link created"
 
 #: src/components/dms/getSystemMessageInfo.ts:138
-#: src/screens/Messages/components/InviteLinkDialog.tsx:329
+#: src/screens/Messages/components/InviteLinkDialog.tsx:331
 msgid "Invite link disabled"
 msgstr "Invite link disabled"
 
@@ -6267,7 +6271,7 @@ msgstr ""
 msgid "Job ID: {0}"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:117
+#: src/components/dms/ChatInvite/Root.tsx:120
 #: src/components/intents/GroupChatJoinDialog.tsx:296
 msgid "Join"
 msgstr "Join"
@@ -6370,16 +6374,6 @@ msgstr ""
 msgid "Latest"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:168
-#: src/components/verification/VerifierDialog.tsx:136
-#: src/screens/Moderation/VerificationSettings.tsx:50
-#: src/screens/Profile/Header/EditProfileDialog.tsx:362
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:226
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:358
-msgctxt "english-only-resource"
-msgid "Learn more"
-msgstr ""
-
 #: src/components/moderation/ScreenHider.tsx:147
 msgid "Learn More"
 msgstr ""
@@ -6395,7 +6389,7 @@ msgstr ""
 
 #: src/components/contacts/screens/PhoneInput.tsx:303
 #: src/screens/Onboarding/StepFindContactsIntro/index.tsx:53
-#: src/screens/Settings/FindContactsSettings.tsx:140
+#: src/screens/Settings/FindContactsSettings.tsx:153
 msgctxt "english-only-resource"
 msgid "Learn more about importing contacts"
 msgstr ""
@@ -6413,12 +6407,6 @@ msgstr ""
 #: src/components/moderation/ScreenHider.tsx:134
 msgid "Learn more about this warning"
 msgstr ""
-
-#: src/components/verification/VerificationsDialog.tsx:153
-#: src/components/verification/VerifierDialog.tsx:122
-msgctxt "english-only-resource"
-msgid "Learn more about verification on Blacksky"
-msgstr "Learn more about verification on Blacksky"
 
 #. placeholder {0}: brand.metadata.displayName
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:154
@@ -6690,7 +6678,7 @@ msgstr ""
 #: src/view/screens/Profile.tsx:262
 #: src/view/screens/Profile.tsx:271
 #: src/view/shell/desktop/LeftNav.tsx:728
-#: src/view/shell/Drawer.tsx:663
+#: src/view/shell/Drawer.tsx:662
 msgid "Lists"
 msgstr ""
 
@@ -6816,15 +6804,6 @@ msgstr ""
 msgid "Login"
 msgstr "Login"
 
-#: src/view/shell/desktop/RightNav.tsx:152
-msgid "Logo by @sawaratsuki.bsky.social"
-msgstr ""
-
-#: src/view/shell/desktop/RightNav.tsx:149
-#: src/view/shell/Drawer.tsx:841
-msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr ""
-
 #. placeholder {0}: isCashtag ? tag : `#${tag}`
 #: src/components/RichTextTag.tsx:55
 msgid "Long press to open tag menu for {0}"
@@ -6872,7 +6851,7 @@ msgstr ""
 msgid "Manage saved feeds"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:309
+#: src/screens/Moderation/index.tsx:310
 msgid "Manage verification settings"
 msgstr ""
 
@@ -7059,7 +7038,7 @@ msgid "Missing media"
 msgstr ""
 
 #: src/Navigation.tsx:186
-#: src/screens/Moderation/index.tsx:96
+#: src/screens/Moderation/index.tsx:97
 msgid "Moderation"
 msgstr ""
 
@@ -7098,7 +7077,7 @@ msgctxt "toast"
 msgid "Moderation list updated"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:269
+#: src/screens/Moderation/index.tsx:270
 msgid "Moderation lists"
 msgstr ""
 
@@ -7115,7 +7094,7 @@ msgstr ""
 msgid "Moderation states"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:223
+#: src/screens/Moderation/index.tsx:224
 msgid "Moderation tools"
 msgstr ""
 
@@ -7250,7 +7229,7 @@ msgstr ""
 msgid "Muted"
 msgstr "Muted"
 
-#: src/screens/Moderation/index.tsx:284
+#: src/screens/Moderation/index.tsx:285
 msgid "Muted accounts"
 msgstr ""
 
@@ -7268,7 +7247,7 @@ msgstr ""
 msgid "Muted by \"{0}\""
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:254
+#: src/screens/Moderation/index.tsx:255
 msgid "Muted words & tags"
 msgstr ""
 
@@ -7315,7 +7294,7 @@ msgstr ""
 msgid "Navigates to the next screen"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:94
+#: src/view/shell/Drawer.tsx:93
 msgid "Navigates to your profile"
 msgstr ""
 
@@ -7324,7 +7303,7 @@ msgstr ""
 msgid "Need to report a copyright violation, legal request, or regulatory compliance issue?"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:668
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:645
 msgid "Nevermind, create a handle for me"
 msgstr ""
 
@@ -7401,9 +7380,9 @@ msgstr "New group chat"
 msgid "New group chat with:"
 msgstr "New group chat with:"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:239
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:247
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:470
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:228
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:236
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:447
 msgid "New handle"
 msgstr ""
 
@@ -7516,8 +7495,8 @@ msgstr ""
 msgid "No custom feeds yet"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:493
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:495
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:470
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:472
 msgid "No DNS Panel"
 msgstr ""
 
@@ -7725,8 +7704,8 @@ msgstr ""
 msgid "Not available on this platform"
 msgstr "Not available on this platform"
 
-#: src/screens/FindContactsFlowScreen.tsx:62
-#: src/screens/Settings/FindContactsSettings.tsx:106
+#: src/screens/FindContactsFlowScreen.tsx:74
+#: src/screens/Settings/FindContactsSettings.tsx:119
 msgid "Not available on this platform."
 msgstr ""
 
@@ -7787,7 +7766,7 @@ msgstr ""
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:268
 #: src/view/shell/desktop/LeftNav.tsx:695
-#: src/view/shell/Drawer.tsx:611
+#: src/view/shell/Drawer.tsx:610
 msgid "Notifications"
 msgstr ""
 
@@ -7931,7 +7910,7 @@ msgstr ""
 msgid "Only people {0} follows can join."
 msgstr "Only people {0} follows can join."
 
-#: src/components/dms/ChatInvite/Root.tsx:127
+#: src/components/dms/ChatInvite/Root.tsx:130
 #: src/components/intents/GroupChatJoinDialog.tsx:306
 msgid "Only people the chat owner follows can join"
 msgstr "Only people the chat owner follows can join"
@@ -7948,7 +7927,7 @@ msgstr ""
 msgid "Oops, something went wrong!"
 msgstr ""
 
-#: src/features/inviteFriends/InviteScannerScreen.tsx:218
+#: src/features/inviteFriends/InviteScannerScreen.tsx:219
 msgid "Oops, this profile doesn't exist. Try scanning another one."
 msgstr "Oops, this profile doesn't exist. Try scanning another one."
 
@@ -7956,7 +7935,7 @@ msgstr "Oops, this profile doesn't exist. Try scanning another one."
 #: src/components/StarterPack/ProfileStarterPacks.tsx:363
 #: src/components/StarterPack/ProfileStarterPacks.tsx:372
 #: src/screens/Settings/AppPasswords.tsx:151
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:109
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:108
 #: src/view/screens/Profile.tsx:147
 msgid "Oops!"
 msgstr ""
@@ -7969,7 +7948,7 @@ msgstr ""
 msgid "Open camera"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:104
+#: src/components/dms/ChatInvite/Root.tsx:107
 #: src/components/intents/GroupChatJoinDialog.tsx:453
 msgid "Open chat"
 msgstr "Open chat"
@@ -8036,7 +8015,7 @@ msgstr ""
 msgid "Open moderation debug page"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:250
+#: src/screens/Moderation/index.tsx:251
 msgid "Open muted words and tags settings"
 msgstr ""
 
@@ -8144,8 +8123,8 @@ msgstr "Opens flow to create a new {0} account"
 
 #: src/screens/Messages/JoinRequest.tsx:305
 #: src/view/com/auth/SplashScreen.tsx:102
-msgid "Opens flow to create a new Bluesky account"
-msgstr ""
+msgid "Opens flow to create a new Blacksky account"
+msgstr "Opens flow to create a new Blacksky account"
 
 #. placeholder {0}: brand.web.title
 #: src/view/com/auth/SplashScreen.web.tsx:126
@@ -8154,8 +8133,8 @@ msgstr "Opens flow to sign in to your existing {0} account"
 
 #: src/screens/Messages/JoinRequest.tsx:291
 #: src/view/com/auth/SplashScreen.tsx:120
-msgid "Opens flow to sign in to your existing Bluesky account"
-msgstr ""
+msgid "Opens flow to sign in to your existing Blacksky account"
+msgstr "Opens flow to sign in to your existing Blacksky account"
 
 #: src/components/images/Gallery/index.tsx:460
 msgid "Opens full image"
@@ -8195,7 +8174,7 @@ msgstr "Opens the find and invite friends settings"
 msgid "Opens the GIF picker dialog"
 msgstr "Opens the GIF picker dialog"
 
-#: src/view/shell/Drawer.tsx:125
+#: src/view/shell/Drawer.tsx:124
 msgid "Opens the invite friends sheet to share your profile"
 msgstr "Opens the invite friends sheet to share your profile"
 
@@ -8356,11 +8335,11 @@ msgstr "Peer Moderator"
 msgid "People"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:164
+#: src/screens/Messages/components/InviteLinkDialog.tsx:165
 msgid "People {ownerName} follows can join instantly"
 msgstr "People {ownerName} follows can join instantly"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:169
+#: src/screens/Messages/components/InviteLinkDialog.tsx:170
 msgid "People {ownerName} follows can request to join"
 msgstr "People {ownerName} follows can request to join"
 
@@ -8389,11 +8368,11 @@ msgctxt "allow messages from"
 msgid "People I follow"
 msgstr "People I follow"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:163
+#: src/screens/Messages/components/InviteLinkDialog.tsx:164
 msgid "People I follow can join instantly"
 msgstr "People I follow can join instantly"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:168
+#: src/screens/Messages/components/InviteLinkDialog.tsx:169
 msgid "People I follow can request to join"
 msgstr "People I follow can request to join"
 
@@ -8535,8 +8514,8 @@ msgid "Please choose your password."
 msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:286
-msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
-msgstr ""
+msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Blacksky."
+msgstr "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Blacksky."
 
 #: src/screens/Signup/state.ts:341
 msgid "Please complete the verification captcha."
@@ -8656,14 +8635,14 @@ msgid "Please sign in as @{0}"
 msgstr ""
 
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:40
-msgid "Please use the Bluesky mobile app to scan a QR code."
-msgstr "Please use the Bluesky mobile app to scan a QR code."
+msgid "Please use the Blacksky mobile app to scan a QR code."
+msgstr "Please use the Blacksky mobile app to scan a QR code."
 
-#: src/screens/Settings/FindContactsSettings.tsx:107
+#: src/screens/Settings/FindContactsSettings.tsx:120
 msgid "Please use the native app to import your contacts."
 msgstr ""
 
-#: src/screens/FindContactsFlowScreen.tsx:63
+#: src/screens/FindContactsFlowScreen.tsx:75
 msgid "Please use the native app to sync your contacts."
 msgstr ""
 
@@ -8760,8 +8739,8 @@ msgstr ""
 msgid "Post language selection"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:395
-#: src/screens/Messages/components/InviteLinkDialog.tsx:411
+#: src/screens/Messages/components/InviteLinkDialog.tsx:397
+#: src/screens/Messages/components/InviteLinkDialog.tsx:413
 msgid "Post link"
 msgstr "Post link"
 
@@ -8842,8 +8821,8 @@ msgid "Primary language"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:193
-#: src/view/shell/desktop/RightNav.tsx:128
-#: src/view/shell/desktop/RightNav.tsx:129
+#: src/view/shell/desktop/RightNav.tsx:125
+#: src/view/shell/desktop/RightNav.tsx:126
 msgid "Privacy"
 msgstr ""
 
@@ -8867,8 +8846,8 @@ msgstr ""
 #: src/screens/Settings/AboutSettings.tsx:93
 #: src/screens/Settings/AboutSettings.tsx:96
 #: src/view/screens/PrivacyPolicy.tsx:25
-#: src/view/shell/Drawer.tsx:836
-#: src/view/shell/Drawer.tsx:837
+#: src/view/shell/Drawer.tsx:833
+#: src/view/shell/Drawer.tsx:834
 msgid "Privacy Policy"
 msgstr ""
 
@@ -8897,8 +8876,8 @@ msgstr ""
 #: src/screens/Profile/components/ProfileStatusError.tsx:144
 #: src/view/shell/bottom-bar/BottomBar.tsx:311
 #: src/view/shell/desktop/LeftNav.tsx:751
-#: src/view/shell/Drawer.tsx:93
-#: src/view/shell/Drawer.tsx:714
+#: src/view/shell/Drawer.tsx:92
+#: src/view/shell/Drawer.tsx:713
 msgid "Profile"
 msgstr ""
 
@@ -8906,12 +8885,12 @@ msgstr ""
 msgid "Profile banner placeholder"
 msgstr "Profile banner placeholder"
 
-#: src/features/inviteFriends/InviteScannerScreen.tsx:210
+#: src/features/inviteFriends/InviteScannerScreen.tsx:211
 #: src/lib/strings/errors.ts:83
 msgid "Profile not found"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:195
+#: src/screens/Profile/Header/EditProfileDialog.tsx:193
 msgctxt "toast"
 msgid "Profile updated"
 msgstr ""
@@ -8920,8 +8899,8 @@ msgstr ""
 msgid "Promoting or selling prohibited items or services"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:406
-#: src/screens/Profile/Header/EditProfileDialog.tsx:412
+#: src/screens/Profile/Header/EditProfileDialog.tsx:394
+#: src/screens/Profile/Header/EditProfileDialog.tsx:400
 msgid "Pronouns"
 msgstr "Pronouns"
 
@@ -9016,7 +8995,7 @@ msgstr ""
 msgid "Quotes of this post"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:701
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:678
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr ""
 
@@ -9029,11 +9008,11 @@ msgstr ""
 msgid "Re-attach quote"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:433
+#: src/screens/Messages/components/InviteLinkDialog.tsx:435
 msgid "Re-enable invite link"
 msgstr "Re-enable invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:440
+#: src/screens/Messages/components/InviteLinkDialog.tsx:442
 msgid "Re-enable link"
 msgstr "Re-enable link"
 
@@ -9168,7 +9147,7 @@ msgstr ""
 #: src/screens/Bookmarks/index.tsx:265
 #: src/screens/Messages/ConversationSettings/Member.tsx:162
 #: src/screens/Messages/ConversationSettings/prompts.tsx:178
-#: src/screens/Moderation/index.tsx:439
+#: src/screens/Moderation/index.tsx:443
 #: src/screens/Settings/Settings.tsx:635
 #: src/view/com/posts/PostFeedErrorMessage.tsx:221
 msgid "Remove"
@@ -9200,8 +9179,8 @@ msgstr ""
 msgid "Remove account"
 msgstr ""
 
-#: src/screens/Settings/FindContactsSettings.tsx:576
-#: src/screens/Settings/FindContactsSettings.tsx:584
+#: src/screens/Settings/FindContactsSettings.tsx:589
+#: src/screens/Settings/FindContactsSettings.tsx:597
 msgid "Remove all contacts"
 msgstr ""
 
@@ -9297,7 +9276,7 @@ msgid "Remove repost"
 msgstr ""
 
 #: src/components/contacts/screens/ViewMatches.tsx:500
-#: src/screens/Settings/FindContactsSettings.tsx:349
+#: src/screens/Settings/FindContactsSettings.tsx:362
 msgid "Remove suggestion"
 msgstr ""
 
@@ -9305,7 +9284,7 @@ msgstr ""
 msgid "Remove this feed from your saved feeds"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:435
+#: src/screens/Moderation/index.tsx:439
 msgid "Remove unavailable moderation services"
 msgstr ""
 
@@ -9314,7 +9293,7 @@ msgid "Remove user from list"
 msgstr ""
 
 #: src/components/verification/VerificationRemovePrompt.tsx:48
-#: src/components/verification/VerificationsDialog.tsx:250
+#: src/components/verification/VerificationsDialog.tsx:224
 #: src/view/com/profile/ProfileMenu.tsx:416
 #: src/view/com/profile/ProfileMenu.tsx:419
 msgid "Remove verification"
@@ -9356,7 +9335,7 @@ msgstr ""
 msgid "Removed from your feeds"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:180
+#: src/screens/Moderation/index.tsx:181
 msgid "Removed unavailable services"
 msgstr ""
 
@@ -9640,12 +9619,12 @@ msgstr ""
 msgid "Request ignored."
 msgstr "Request ignored."
 
-#: src/components/dms/ChatInvite/Root.tsx:117
+#: src/components/dms/ChatInvite/Root.tsx:120
 #: src/components/intents/GroupChatJoinDialog.tsx:295
 msgid "Request to join"
 msgstr "Request to join"
 
-#: src/components/dms/ChatInvite/Root.tsx:131
+#: src/components/dms/ChatInvite/Root.tsx:134
 msgid "Requested"
 msgstr "Requested"
 
@@ -9731,8 +9710,8 @@ msgstr ""
 msgid "Reset password"
 msgstr ""
 
-#: src/screens/Settings/FindContactsSettings.tsx:544
-#: src/screens/Settings/FindContactsSettings.tsx:560
+#: src/screens/Settings/FindContactsSettings.tsx:557
+#: src/screens/Settings/FindContactsSettings.tsx:573
 msgid "Resync contacts"
 msgstr ""
 
@@ -9782,7 +9761,7 @@ msgid "Returns to home page"
 msgstr ""
 
 #: src/screens/ProfileList/components/ErrorScreen.tsx:36
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:660
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:637
 #: src/screens/VideoFeed/index.tsx:1169
 #: src/view/screens/NotFound.tsx:54
 msgid "Returns to previous page"
@@ -9809,11 +9788,11 @@ msgstr "Safety tools like spam and bot detection aren't affected. They stay on f
 #: src/features/liveNow/components/EditLiveDialog.tsx:204
 #: src/features/liveNow/components/EditLiveDialog.tsx:211
 #: src/screens/Messages/ConversationSettings/prompts.tsx:82
-#: src/screens/Profile/Header/EditProfileDialog.tsx:247
-#: src/screens/Profile/Header/EditProfileDialog.tsx:262
+#: src/screens/Profile/Header/EditProfileDialog.tsx:245
+#: src/screens/Profile/Header/EditProfileDialog.tsx:260
 #: src/screens/SavedFeeds.tsx:126
 #: src/screens/SavedFeeds.tsx:318
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:348
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:337
 #: src/view/com/composer/GifAltText.tsx:199
 #: src/view/com/composer/GifAltText.tsx:208
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:63
@@ -9857,7 +9836,7 @@ msgstr ""
 msgid "Save image"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:334
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:323
 msgid "Save new handle"
 msgstr ""
 
@@ -9876,7 +9855,7 @@ msgid "Save to my feeds"
 msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:738
-#: src/view/shell/Drawer.tsx:689
+#: src/view/shell/Drawer.tsx:688
 msgctxt "link to bookmarks screen"
 msgid "Saved"
 msgstr ""
@@ -9915,7 +9894,7 @@ msgstr ""
 msgid "Scan"
 msgstr "Scan"
 
-#: src/features/inviteFriends/InviteScannerScreen.tsx:82
+#: src/features/inviteFriends/InviteScannerScreen.tsx:83
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:23
 #: src/Navigation.tsx:325
 msgid "Scan QR code"
@@ -10155,8 +10134,8 @@ msgstr "Select chat \"{name}\""
 msgid "Select content languages"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:263
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:267
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:252
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:256
 #: src/screens/Signup/StepHandle/index.tsx:208
 #: src/screens/Signup/StepHandle/index.tsx:212
 msgid "Select domain"
@@ -10296,7 +10275,7 @@ msgstr ""
 msgid "Send error report"
 msgstr "Send error report"
 
-#: src/view/shell/Drawer.tsx:451
+#: src/view/shell/Drawer.tsx:450
 msgid "Send feedback"
 msgstr ""
 
@@ -10383,7 +10362,7 @@ msgstr ""
 #: src/Navigation.tsx:222
 #: src/screens/Settings/Settings.tsx:94
 #: src/view/shell/desktop/LeftNav.tsx:761
-#: src/view/shell/Drawer.tsx:727
+#: src/view/shell/Drawer.tsx:726
 msgid "Settings"
 msgstr ""
 
@@ -10449,8 +10428,8 @@ msgstr ""
 #: src/components/Post/Embed/ImageContextMenu.tsx:74
 #: src/components/StarterPack/QrCodeDialog.tsx:198
 #: src/screens/Hashtag.tsx:130
-#: src/screens/Messages/components/InviteLinkDialog.tsx:415
-#: src/screens/Messages/components/InviteLinkDialog.tsx:426
+#: src/screens/Messages/components/InviteLinkDialog.tsx:417
+#: src/screens/Messages/components/InviteLinkDialog.tsx:428
 #: src/screens/StarterPack/StarterPackScreen.tsx:447
 #: src/screens/Topic.tsx:73
 #: src/screens/Topic.tsx:266
@@ -10488,8 +10467,8 @@ msgstr ""
 msgid "Share link dialog"
 msgstr ""
 
-#: src/screens/Settings/FindContactsSettings.tsx:172
-#: src/screens/Settings/FindContactsSettings.tsx:181
+#: src/screens/Settings/FindContactsSettings.tsx:185
+#: src/screens/Settings/FindContactsSettings.tsx:194
 msgid "Share my profile"
 msgstr "Share my profile"
 
@@ -10828,11 +10807,11 @@ msgstr ""
 msgid "Some community members can reply"
 msgstr "Some community members can reply"
 
-#: src/screens/Moderation/index.tsx:428
+#: src/screens/Moderation/index.tsx:432
 msgid "Some moderation services in your list are no longer available."
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:122
+#: src/components/verification/VerificationsDialog.tsx:118
 msgid "Some of your verifications are invalid."
 msgstr ""
 
@@ -10902,7 +10881,7 @@ msgstr ""
 msgid "Something went wrong, please try again"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:108
+#: src/screens/Moderation/index.tsx:109
 #: src/screens/Profile/Sections/Labels.tsx:184
 msgid "Something went wrong, please try again."
 msgstr ""
@@ -11189,11 +11168,11 @@ msgstr "Support on OpenCollective"
 msgid "Support the Blacksky community through OpenCollective. Your contributions help us maintain and improve the platform."
 msgstr "Support the Blacksky community through OpenCollective. Your contributions help us maintain and improve the platform."
 
-#: src/view/shell/desktop/RightNav.tsx:108
-#: src/view/shell/desktop/RightNav.tsx:109
-#: src/view/shell/Drawer.tsx:489
-#: src/view/shell/Drawer.tsx:498
-#: src/view/shell/Drawer.tsx:740
+#: src/view/shell/desktop/RightNav.tsx:105
+#: src/view/shell/desktop/RightNav.tsx:106
+#: src/view/shell/Drawer.tsx:488
+#: src/view/shell/Drawer.tsx:497
+#: src/view/shell/Drawer.tsx:739
 msgid "Support Us"
 msgstr "Support Us"
 
@@ -11267,7 +11246,7 @@ msgstr ""
 msgid "Tap to close context menu"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:92
+#: src/components/dms/ChatInvite/Root.tsx:93
 msgid "Tap to copy this invite link"
 msgstr "Tap to copy this invite link"
 
@@ -11275,12 +11254,12 @@ msgstr "Tap to copy this invite link"
 msgid "Tap to dismiss"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:140
+#: src/components/dms/ChatInvite/Root.tsx:143
 #: src/components/intents/GroupChatJoinDialog.tsx:469
 msgid "Tap to join this group chat immediately"
 msgstr "Tap to join this group chat immediately"
 
-#: src/components/dms/ChatInvite/Root.tsx:105
+#: src/components/dms/ChatInvite/Root.tsx:108
 msgid "Tap to open this group chat"
 msgstr "Tap to open this group chat"
 
@@ -11293,7 +11272,7 @@ msgstr "Tap to remove"
 msgid "Tap to remove your {0} reaction"
 msgstr "Tap to remove your {0} reaction"
 
-#: src/components/dms/ChatInvite/Root.tsx:139
+#: src/components/dms/ChatInvite/Root.tsx:142
 #: src/components/intents/GroupChatJoinDialog.tsx:468
 msgid "Tap to request access to join this group chat"
 msgstr "Tap to request access to join this group chat"
@@ -11339,7 +11318,7 @@ msgstr ""
 msgid "Tech Support"
 msgstr "Tech Support"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:384
+#: src/screens/Profile/Header/EditProfileDialog.tsx:372
 msgid "Tell us a bit about yourself"
 msgstr ""
 
@@ -11352,8 +11331,8 @@ msgid "Temporarily deactivate your account"
 msgstr "Temporarily deactivate your account"
 
 #: src/view/com/auth/SplashScreen.web.tsx:188
-#: src/view/shell/desktop/RightNav.tsx:135
-#: src/view/shell/desktop/RightNav.tsx:136
+#: src/view/shell/desktop/RightNav.tsx:132
+#: src/view/shell/desktop/RightNav.tsx:133
 msgid "Terms"
 msgstr ""
 
@@ -11361,8 +11340,8 @@ msgstr ""
 #: src/screens/Settings/AboutSettings.tsx:85
 #: src/screens/Settings/AboutSettings.tsx:88
 #: src/view/screens/TermsOfService.tsx:25
-#: src/view/shell/Drawer.tsx:829
-#: src/view/shell/Drawer.tsx:831
+#: src/view/shell/Drawer.tsx:826
+#: src/view/shell/Drawer.tsx:828
 msgid "Terms of Service"
 msgstr ""
 
@@ -11388,7 +11367,7 @@ msgstr "Thank you for your support!"
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:583
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:560
 msgid "That contains the following:"
 msgstr ""
 
@@ -11433,9 +11412,9 @@ msgstr ""
 msgid "The Blacksky Trending"
 msgstr "The Blacksky Trending"
 
-#: src/screens/Moderation/index.tsx:379
-msgid "The Bluesky web application"
-msgstr ""
+#: src/screens/Moderation/index.tsx:380
+msgid "The Blacksky web application"
+msgstr "The Blacksky web application"
 
 #: src/view/screens/CommunityGuidelines.tsx:32
 msgid "The Community Guidelines have been moved to <0/>"
@@ -11522,7 +11501,7 @@ msgstr ""
 msgid "Theme"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:519
+#: src/screens/Messages/components/InviteLinkDialog.tsx:521
 msgid "There is no invite link for this group chat."
 msgstr "There is no invite link for this group chat."
 
@@ -11576,7 +11555,7 @@ msgstr ""
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:110
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:109
 msgid "There was an issue fetching your service info"
 msgstr ""
 
@@ -11666,7 +11645,7 @@ msgstr ""
 msgid "This account financially supports Blacksky, helping keep the community independent and thriving."
 msgstr "This account financially supports Blacksky, helping keep the community independent and thriving."
 
-#: src/components/verification/VerificationsDialog.tsx:89
+#: src/components/verification/VerificationsDialog.tsx:85
 msgid "This account has a checkmark because it's been verified by trusted sources."
 msgstr ""
 
@@ -11682,7 +11661,7 @@ msgstr "This account has been marked as automated by its owner."
 msgid "This account has made outstanding contributions to building the Blacksky community."
 msgstr "This account has made outstanding contributions to building the Blacksky community."
 
-#: src/components/verification/VerificationsDialog.tsx:94
+#: src/components/verification/VerificationsDialog.tsx:90
 msgid "This account has one or more attempted verifications, but it is not currently verified."
 msgstr ""
 
@@ -11712,8 +11691,8 @@ msgstr ""
 
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:114
 #: src/screens/Messages/components/ChatDisabled.tsx:138
-msgid "This appeal will be sent to Bluesky's moderation service."
-msgstr ""
+msgid "This appeal will be sent to Blacksky's moderation service."
+msgstr "This appeal will be sent to Blacksky's moderation service."
 
 #: src/screens/PostThread/components/ThreadItemAnchorNoUnauthenticated.tsx:27
 #: src/screens/PostThread/components/ThreadItemPostNoUnauthenticated.tsx:47
@@ -11728,7 +11707,7 @@ msgstr "This button lets others open the Germ DM app to send you a message. You 
 msgid "This chat has ended"
 msgstr "This chat has ended"
 
-#: src/components/dms/ChatInvite/Root.tsx:122
+#: src/components/dms/ChatInvite/Root.tsx:125
 #: src/components/intents/GroupChatJoinDialog.tsx:301
 msgid "This chat is full"
 msgstr "This chat is full"
@@ -11797,9 +11776,9 @@ msgstr ""
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:166
-msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
-msgstr ""
+#: src/screens/Settings/components/ExportCarDialog.tsx:165
+msgid "This feature is in beta."
+msgstr "This feature is in beta."
 
 #: src/lib/hooks/useCleanError.ts:68
 #: src/lib/strings/errors.ts:34
@@ -11840,7 +11819,7 @@ msgstr ""
 msgid "This group is locked by a moderation action on the owner"
 msgstr "This group is locked by a moderation action on the owner"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:694
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:671
 msgid "This handle is reserved. Please try a different one."
 msgstr ""
 
@@ -11979,7 +11958,7 @@ msgstr ""
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:552
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:529
 msgid "This should create a domain record at:"
 msgstr ""
 
@@ -12106,7 +12085,7 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:356
+#: src/screens/Moderation/index.tsx:357
 msgid "Toggle to enable or disable adult content"
 msgstr ""
 
@@ -12206,8 +12185,8 @@ msgctxt "english-only-resource"
 msgid "Try a different search term, or <0>read about how to use search filters</0>."
 msgstr "Try a different search term, or <0>read about how to use search filters</0>."
 
-#: src/features/inviteFriends/InviteScannerScreen.tsx:221
-#: src/features/inviteFriends/InviteScannerScreen.tsx:226
+#: src/features/inviteFriends/InviteScannerScreen.tsx:222
+#: src/features/inviteFriends/InviteScannerScreen.tsx:227
 msgid "Try again"
 msgstr "Try again"
 
@@ -12237,7 +12216,7 @@ msgstr ""
 msgid "Type your message here"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:528
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:505
 msgid "Type:"
 msgstr ""
 
@@ -12382,7 +12361,7 @@ msgstr ""
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:209
+#: src/components/verification/VerificationsDialog.tsx:183
 msgid "Unknown verifier"
 msgstr ""
 
@@ -12549,14 +12528,14 @@ msgstr ""
 msgid "Update in Lists"
 msgstr "Update in Lists"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:239
-#: src/screens/Messages/components/InviteLinkDialog.tsx:275
-#: src/screens/Messages/components/InviteLinkDialog.tsx:303
+#: src/screens/Messages/components/InviteLinkDialog.tsx:240
+#: src/screens/Messages/components/InviteLinkDialog.tsx:276
+#: src/screens/Messages/components/InviteLinkDialog.tsx:304
 msgid "Update invite link"
 msgstr "Update invite link"
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:627
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:648
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:604
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:625
 msgid "Update to {domain}"
 msgstr ""
 
@@ -12582,7 +12561,7 @@ msgstr "Updating..."
 msgid "Upload a photo instead"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:568
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:545
 msgid "Upload a text file to:"
 msgstr ""
 
@@ -12628,7 +12607,7 @@ msgstr ""
 msgid "Use app passwords to sign in to other {0} clients without giving full access to your account or password."
 msgstr "Use app passwords to sign in to other {0} clients without giving full access to your account or password."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:659
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:636
 msgid "Use default provider"
 msgstr ""
 
@@ -12753,7 +12732,7 @@ msgstr ""
 msgid "users following <0>@{0}</0>"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:534
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:511
 msgid "Value:"
 msgstr ""
 
@@ -12761,20 +12740,20 @@ msgstr ""
 msgid "Verification failed, please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:314
+#: src/screens/Moderation/index.tsx:315
 msgid "Verification settings"
 msgstr ""
 
 #: src/Navigation.tsx:215
-#: src/screens/Moderation/VerificationSettings.tsx:34
+#: src/screens/Moderation/VerificationSettings.tsx:30
 msgid "Verification Settings"
 msgstr ""
 
-#: src/screens/Moderation/VerificationSettings.tsx:43
-msgid "Verifications on Blacksky work differently than on other platforms. <0>Learn more here.</0>"
-msgstr "Verifications on Blacksky work differently than on other platforms. <0>Learn more here.</0>"
+#: src/screens/Moderation/VerificationSettings.tsx:39
+msgid "Verifications on Blacksky work differently than on other platforms."
+msgstr "Verifications on Blacksky work differently than on other platforms."
 
-#: src/components/verification/VerificationsDialog.tsx:105
+#: src/components/verification/VerificationsDialog.tsx:101
 msgid "Verified by:"
 msgstr ""
 
@@ -12793,8 +12772,8 @@ msgctxt "action"
 msgid "Verify code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:629
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:650
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:606
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:627
 msgid "Verify DNS Record"
 msgstr ""
 
@@ -12812,8 +12791,8 @@ msgstr ""
 msgid "Verify phone number"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:630
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:652
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:607
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:629
 msgid "Verify Text File"
 msgstr ""
 
@@ -12942,10 +12921,6 @@ msgstr "View {publicationTitle}"
 msgid "View blocked user's profile"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:170
-msgid "View blogpost for more details"
-msgstr ""
-
 #: src/screens/Log.tsx:72
 msgid "View debug entry"
 msgstr ""
@@ -13036,11 +13011,11 @@ msgstr ""
 msgid "View video"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:294
+#: src/screens/Moderation/index.tsx:295
 msgid "View your blocked accounts"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:234
+#: src/screens/Moderation/index.tsx:235
 msgid "View your default post interaction settings"
 msgstr ""
 
@@ -13049,11 +13024,11 @@ msgstr ""
 msgid "View your feeds and explore more"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:264
+#: src/screens/Moderation/index.tsx:265
 msgid "View your moderation lists"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:279
+#: src/screens/Moderation/index.tsx:280
 msgid "View your muted accounts"
 msgstr ""
 
@@ -13193,7 +13168,7 @@ msgstr ""
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:454
+#: src/screens/Moderation/index.tsx:458
 msgid "We were unable to load your configured labelers at this time."
 msgstr ""
 
@@ -13201,7 +13176,7 @@ msgstr ""
 msgid "We will let you know when your account is ready."
 msgstr ""
 
-#: src/screens/Settings/FindContactsSettings.tsx:531
+#: src/screens/Settings/FindContactsSettings.tsx:544
 msgid "We will notify you when we find your friends."
 msgstr ""
 
@@ -13270,7 +13245,7 @@ msgstr ""
 msgid "Who can interact with this post?"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:247
+#: src/screens/Messages/components/InviteLinkDialog.tsx:248
 msgid "Who can join this group chat and how"
 msgstr "Who can join this group chat and how"
 
@@ -13362,7 +13337,7 @@ msgid "Writers"
 msgstr ""
 
 #. placeholder {0}: verifyError.did
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:451
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:428
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr ""
 
@@ -13406,7 +13381,7 @@ msgstr ""
 msgid "Yesterday"
 msgstr ""
 
-#: src/components/verification/VerifierDialog.tsx:61
+#: src/components/verification/VerifierDialog.tsx:57
 msgid "You are a trusted verifier"
 msgstr ""
 
@@ -13456,17 +13431,17 @@ msgstr ""
 msgid "You are now live!"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:66
+#: src/components/verification/VerificationsDialog.tsx:62
 msgid "You are verified"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:357
-msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
-msgstr ""
+#: src/screens/Profile/Header/EditProfileDialog.tsx:355
+msgid "You are verified. You will lose your verification status if you change your display name."
+msgstr "You are verified. You will lose your verification status if you change your display name."
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:221
-msgid "You are verified. You will lose your verification status if you change your handle. <0>Learn more.</0>"
-msgstr ""
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:220
+msgid "You are verified. You will lose your verification status if you change your handle."
+msgstr "You are verified. You will lose your verification status if you change your handle."
 
 #: src/screens/Settings/AIPreferencesSettings.tsx:87
 msgid "You can adjust these settings to configure how AI systems may use your data across the AT Protocol network. In an open source system, your data stays public, but you can say how AI should handle it."
@@ -13477,15 +13452,15 @@ msgid "You can adjust your interests at any time from \"Content and media\" sett
 msgstr ""
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:211
-msgid "You can also <0>temporarily deactivate</0> your account instead. Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr ""
+msgid "You can also <0>temporarily deactivate</0> your account instead. Your profile, posts, feeds, and lists will no longer be visible to other Blacksky users. You can reactivate your account at any time by logging in."
+msgstr "You can also <0>temporarily deactivate</0> your account instead. Your profile, posts, feeds, and lists will no longer be visible to other Blacksky users. You can reactivate your account at any time by logging in."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:60
 #: src/view/com/posts/FollowingEndOfFeed.tsx:61
 msgid "You can also discover new Custom Feeds to follow."
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:139
+#: src/screens/Settings/components/ExportCarDialog.tsx:138
 msgid "You can also download your chat data as a \"JSONL\" file. This file only includes chat messages that you have sent and does not include chat messages that you have received."
 msgstr ""
 
@@ -13908,7 +13883,7 @@ msgstr "Your account is too new"
 msgid "Your account must be at least 7 days old to create a new group chat."
 msgstr "Your account must be at least 7 days old to create a new group chat."
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:107
+#: src/screens/Settings/components/ExportCarDialog.tsx:106
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr ""
 
@@ -13946,7 +13921,7 @@ msgid "Your contact {name}"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(currentAccount?.handle || '', '@')
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:614
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:591
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr ""
 
@@ -13979,7 +13954,7 @@ msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr ""
 
 #. placeholder {0}: createFullHandle(subdomain, host)
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:326
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:315
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr ""
 
@@ -14008,7 +13983,7 @@ msgstr ""
 msgid "Your muted words"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:211
+#: src/screens/Messages/components/InviteLinkDialog.tsx:212
 msgid "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 msgstr "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 
@@ -14072,6 +14047,6 @@ msgstr "Your support helps us maintain and improve the Blacksky community."
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 
-#: src/components/verification/VerificationsDialog.tsx:67
+#: src/components/verification/VerificationsDialog.tsx:63
 msgid "Your verifications"
 msgstr ""

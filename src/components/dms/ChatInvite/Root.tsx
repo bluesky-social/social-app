@@ -4,6 +4,7 @@ import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
+import {BSKY_APP_HOST} from '#/lib/strings/url-helpers'
 import {
   type ChatInvitePreview,
   useJoinLinkPreviewsQuery,
@@ -95,7 +96,9 @@ export function Root({
         color: 'primary',
         disabled: false,
         onPress: () => {
-          void setStringAsync(`https://bsky.app/chat/${preview.code}`)
+          void setStringAsync(
+            `${BSKY_APP_HOST.replace(/\/$/, '')}/chat/${preview.code}`,
+          )
           Toast.show(l`Copied to clipboard`, {type: 'success'})
         },
       }

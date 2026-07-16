@@ -10,6 +10,7 @@ import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
+import {BSKY_APP_HOST} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {useRemoveLabelersMutation} from '#/state/queries/labeler'
 import {
@@ -376,14 +377,17 @@ export function ModerationScreenInner({
                 <Trans>
                   Adult content can only be enabled via the Web at{' '}
                   <InlineLinkText
-                    label={_(msg`The Bluesky web application`)}
+                    label={_(msg`The Blacksky web application`)}
                     to=""
                     onPress={evt => {
                       evt.preventDefault()
-                      Linking.openURL('https://bsky.app/')
+                      Linking.openURL(`${BSKY_APP_HOST.replace(/\/$/, '')}/`)
                       return false
                     }}>
-                    bsky.app
+                    {BSKY_APP_HOST.replace(/^https?:\/\//, '').replace(
+                      /\/$/,
+                      '',
+                    )}
                   </InlineLinkText>
                   .
                 </Trans>

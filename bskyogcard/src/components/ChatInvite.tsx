@@ -1,12 +1,14 @@
 /* eslint-disable bsky-internal/avoid-unwrapped-text */
 import {ChatBskyGroupDefs} from '@atproto/api'
 
+import {Cluster} from './Cluster.js'
 import {Img} from './Img.js'
 
 export const CHAT_INVITE_HEIGHT = 630
 export const CHAT_INVITE_WIDTH = 1200
 
 const PADDING = 64
+const BRAND_BG = process.env.BRAND_CTA_BG || '#6060E9'
 
 export function ChatInvite({
   preview,
@@ -22,13 +24,26 @@ export function ChatInvite({
         height: CHAT_INVITE_HEIGHT,
         display: 'flex',
         position: 'relative',
-        backgroundColor: '#006AFF',
+        backgroundColor: BRAND_BG,
       }}>
       <Background
         style={{
           position: 'absolute',
           inset: 0,
         }}
+      />
+      {/* Brand logos overlaid on the decorative circles */}
+      <Cluster
+        color="white"
+        style={{position: 'absolute', left: 545, top: 155, width: 100}}
+      />
+      <Cluster
+        color="white"
+        style={{position: 'absolute', left: 968, top: 70, width: 120}}
+      />
+      <Cluster
+        color="white"
+        style={{position: 'absolute', left: 782, top: 268, width: 72}}
       />
       <div
         style={{
@@ -190,10 +205,6 @@ function Background(props: React.SVGProps<SVGSVGElement>) {
             fill="#4291FF"
             shape-rendering="crispEdges"
           />
-          <path
-            d="M308.006 202.8C321.082 202.8 331.09 210.636 335.154 221.624C336.316 224.765 335.52 227.861 333.674 230.062C331.874 232.207 329.095 233.512 326.102 233.512H289.909C286.916 233.512 284.138 232.206 282.339 230.062C280.492 227.861 279.696 224.765 280.858 221.624C284.922 210.636 294.929 202.8 308.006 202.8ZM308.001 168.675C316.482 168.675 323.357 175.551 323.357 184.032C323.357 192.513 316.482 199.387 308.001 199.387C299.52 199.387 292.644 192.513 292.644 184.032C292.644 175.551 299.52 168.675 308.001 168.675Z"
-            fill="#006AFF"
-          />
         </g>
         <g filter="url(#filter1_d_3134_11977)">
           <rect
@@ -204,10 +215,6 @@ function Background(props: React.SVGProps<SVGSVGElement>) {
             rx="95.55"
             fill="#4291FF"
             shape-rendering="crispEdges"
-          />
-          <path
-            d="M412.006 35.5498C429.441 35.55 442.784 45.9985 448.202 60.6484C449.751 64.8366 448.691 68.9642 446.229 71.8984C443.829 74.7581 440.125 76.4999 436.135 76.5H387.876C383.886 76.5 380.182 74.7581 377.783 71.8984C375.32 68.9642 374.26 64.8366 375.809 60.6484C381.227 45.9983 394.571 35.5498 412.006 35.5498ZM411.999 -9.9502C423.307 -9.95 432.474 -0.782514 432.474 10.5254C432.474 21.8332 423.307 30.9998 411.999 31C400.691 31 391.524 21.8333 391.524 10.5254C391.524 -0.782633 400.691 -9.9502 411.999 -9.9502Z"
-            fill="#006AFF"
           />
         </g>
         <g filter="url(#filter2_d_3134_11977)">
@@ -220,10 +227,6 @@ function Background(props: React.SVGProps<SVGSVGElement>) {
             fill="#4291FF"
             shape-rendering="crispEdges"
           />
-          <path
-            d="M596.01 207C618.454 207.001 635.631 220.449 642.606 239.308C644.6 244.7 643.235 250.014 640.065 253.792C636.976 257.472 632.207 259.714 627.071 259.714H564.949C559.812 259.714 555.044 257.473 551.955 253.792C548.785 250.014 547.42 244.7 549.414 239.308C556.388 220.449 573.566 207 596.01 207ZM596.002 148.428C610.558 148.428 622.359 160.229 622.359 174.786C622.359 189.342 610.558 201.143 596.002 201.143C581.445 201.143 569.644 189.342 569.644 174.786C569.644 160.229 581.445 148.428 596.002 148.428Z"
-            fill="#006AFF"
-          />
         </g>
         <g filter="url(#filter3_d_3134_11977)">
           <rect
@@ -234,10 +237,6 @@ function Background(props: React.SVGProps<SVGSVGElement>) {
             rx="154.098"
             fill="#4291FF"
             shape-rendering="crispEdges"
-          />
-          <path
-            d="M1024.01 132.098C1052.13 132.098 1073.65 148.948 1082.39 172.574C1084.89 179.329 1083.18 185.987 1079.21 190.719C1075.34 195.331 1069.36 198.14 1062.93 198.14H985.098C978.663 198.14 972.689 195.331 968.819 190.719C964.848 185.987 963.138 179.329 965.636 172.574C974.374 148.947 995.894 132.098 1024.01 132.098ZM1024 58.7178C1042.24 58.7178 1057.02 73.5023 1057.02 91.7393C1057.02 109.976 1042.24 124.76 1024 124.76C1005.76 124.76 990.981 109.976 990.981 91.7393C990.981 73.5024 1005.76 58.7179 1024 58.7178Z"
-            fill="#006AFF"
           />
         </g>
         <g filter="url(#filter4_d_3134_11977)">
@@ -260,10 +259,6 @@ function Background(props: React.SVGProps<SVGSVGElement>) {
             rx="90"
             fill="#4291FF"
             shape-rendering="crispEdges"
-          />
-          <path
-            d="M818.006 312C834.429 312 846.998 321.841 852.101 335.64C853.56 339.585 852.561 343.473 850.242 346.237C847.981 348.931 844.492 350.571 840.734 350.571H795.278C791.519 350.571 788.03 348.931 785.77 346.237C783.451 343.473 782.453 339.585 783.912 335.64C789.015 321.841 801.584 312 818.006 312ZM817.999 269.143C828.651 269.143 837.286 277.778 837.286 288.429C837.285 299.08 828.651 307.714 817.999 307.714C807.348 307.714 798.714 299.08 798.714 288.429C798.714 277.778 807.348 269.143 817.999 269.143Z"
-            fill="#006AFF"
           />
         </g>
         <g filter="url(#filter6_d_3134_11977)">

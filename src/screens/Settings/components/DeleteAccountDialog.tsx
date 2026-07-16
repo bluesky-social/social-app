@@ -216,7 +216,7 @@ function DeleteAccountDialogInner({
                 temporarily deactivate
               </SimpleInlineLinkText>{' '}
               your account instead. Your profile, posts, feeds, and lists will
-              no longer be visible to other Bluesky users. You can reactivate
+              no longer be visible to other Blacksky users. You can reactivate
               your account at any time by logging in.
             </Trans>
           </Admonition>

@@ -11,6 +11,7 @@ import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {shareUrl} from '#/lib/sharing'
+import {BSKY_APP_HOST} from '#/lib/strings/url-helpers'
 import {useCreateJoinLink} from '#/state/queries/messages/create-join-link'
 import {useDisableJoinLink} from '#/state/queries/messages/disable-join-link'
 import {useEditJoinLink} from '#/state/queries/messages/edit-join-link'
@@ -316,9 +317,10 @@ export function InviteLinkDialog({
     case Step.MANAGE: {
       const linkEnabled = joinLink?.enabledStatus === 'enabled'
       const linkDisabled = joinLink?.enabledStatus === 'disabled'
+      const brandHost = BSKY_APP_HOST.replace(/\/$/, '')
       const joinLinkURI = joinLink?.code
-        ? `https://bsky.app/chat/${joinLink.code}`
-        : 'https://bsky.app/'
+        ? `${brandHost}/chat/${joinLink.code}`
+        : `${brandHost}/`
       const createdAt = joinLink ? new Date(joinLink.createdAt) : null
       const currentOption =
         whoCanJoinOptions.find(

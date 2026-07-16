@@ -4,17 +4,14 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
 import {useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {VerifierCheck} from '#/components/icons/VerifierCheck'
-import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
-import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
@@ -50,7 +47,6 @@ function Inner({
   verificationState: FullVerificationState
 }) {
   const t = useTheme()
-  const ax = useAnalytics()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
@@ -115,27 +111,6 @@ function Inner({
             a.justify_end,
             gtMobile ? [a.flex_row, a.justify_end] : [a.flex_col],
           ]}>
-          <Link
-            overridePresentation
-            to={urls.website.blog.initialVerificationAnnouncement}
-            label={_(
-              msg({
-                message: `Learn more about verification on Blacksky`,
-                context: `english-only-resource`,
-              }),
-            )}
-            size="small"
-            color="primary"
-            style={[a.justify_center]}
-            onPress={() => {
-              ax.metric('verification:learn-more', {
-                location: 'verifierDialog',
-              })
-            }}>
-            <ButtonText>
-              <Trans context="english-only-resource">Learn more</Trans>
-            </ButtonText>
-          </Link>
           <Button
             label={_(msg`Close dialog`)}
             size="small"

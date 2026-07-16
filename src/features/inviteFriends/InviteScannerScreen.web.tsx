@@ -37,7 +37,7 @@ export function InviteScannerScreen() {
             t.atoms.text_contrast_medium,
             {maxWidth: 320},
           ]}>
-          {l`Please use the Bluesky mobile app to scan a QR code.`}
+          {l`Please use the Blacksky mobile app to scan a QR code.`}
         </Text>
       </View>
     </Layout.Screen>

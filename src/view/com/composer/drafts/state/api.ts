@@ -9,6 +9,7 @@ import {getDeviceName} from '#/lib/deviceName'
 import {getImageDim} from '#/lib/media/manip'
 import {mimeToExt} from '#/lib/media/video/util'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
+import {BSKY_APP_HOST} from '#/lib/strings/url-helpers'
 import {type ComposerImage} from '#/state/gallery'
 import {threadgateAllowUISettingToAllowRecordValue} from '#/state/queries/threadgate/util'
 import {createPublicAgent} from '#/state/session/agent'
@@ -603,7 +604,12 @@ export async function draftToComposerPosts(
       if (post.embedRecords && post.embedRecords.length > 0) {
         const record = post.embedRecords[0]
         const urip = new AtUri(record.record.uri)
-        const url = `https://bsky.app/profile/${urip.host}/post/${urip.rkey}`
+        // Internal round-trip only: this URL is immediately re-parsed by
+        // resolveLink()/isBskyPostUrl() back into an at:// record ref and is
+        // never surfaced to the user. isBskyAppUrl() accepts the brand host,
+        // so we build against BSKY_APP_HOST (the Blacksky main domain) for
+        // brand consistency.
+        const url = `${BSKY_APP_HOST.replace(/\/$/, '')}/profile/${urip.host}/post/${urip.rkey}`
         embed.quote = {type: 'link', uri: url}
       }
 

@@ -22,7 +22,6 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
 import {emitSoftReset} from '#/state/events'
-import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
@@ -818,8 +817,6 @@ function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
 
 function ExtraLinks() {
   const {_} = useLingui()
-  const t = useTheme()
-  const kawaii = useKawaiiMode()
   const brand = useBrand()
 
   return (
@@ -836,19 +833,6 @@ function ExtraLinks() {
         label={_(msg`Privacy Policy`)}>
         <Trans>Privacy Policy</Trans>
       </InlineLinkText>
-      {kawaii && (
-        <Text style={t.atoms.text_contrast_medium}>
-          <Trans>
-            Logo by{' '}
-            <InlineLinkText
-              style={[a.text_md]}
-              to="/profile/sawaratsuki.bsky.social"
-              label="@sawaratsuki.bsky.social">
-              @sawaratsuki.bsky.social
-            </InlineLinkText>
-          </Trans>
-        </Text>
-      )}
     </View>
   )
 }

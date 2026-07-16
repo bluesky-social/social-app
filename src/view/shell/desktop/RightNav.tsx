@@ -2,12 +2,10 @@ import {useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useBrand} from '#/lib/community/BrandContext'
 import {HELP_DESK_URL} from '#/lib/constants'
-import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
@@ -48,7 +46,6 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const {_} = useLingui()
   const brand = useBrand()
   const {hasSession} = useSession()
-  const kawaii = useKawaiiMode()
   const gutters = useGutters(['base', 0, 'base', 'wide'])
   const isSearchScreen = routeName === 'Search'
   const isMessagesRelatedScreen = routeName.startsWith('Messages')
@@ -143,19 +140,6 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           {_(msg`Help`)}
         </InlineLinkText>
       </Text>
-
-      {kawaii && (
-        <Text style={[t.atoms.text_contrast_medium, {marginTop: 12}]}>
-          <Trans>
-            Logo by{' '}
-            <InlineLinkText
-              label={_(msg`Logo by @sawaratsuki.bsky.social`)}
-              to="/profile/sawaratsuki.bsky.social">
-              @sawaratsuki.bsky.social
-            </InlineLinkText>
-          </Trans>
-        </Text>
-      )}
 
       {!hasSession && leftNavMinimal && (
         <View style={[a.w_full, {height: 32}]}>

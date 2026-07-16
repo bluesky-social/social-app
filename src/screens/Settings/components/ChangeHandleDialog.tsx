@@ -16,7 +16,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {HITSLOP_10, urls} from '#/lib/constants'
+import {HITSLOP_10} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {
   createFullHandle,
@@ -42,7 +42,6 @@ import {
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
-import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
@@ -220,17 +219,7 @@ function ProvidedHandlePage({
             <Admonition type="error">
               <Trans>
                 You are verified. You will lose your verification status if you
-                change your handle.{' '}
-                <InlineLinkText
-                  label={_(
-                    msg({
-                      message: `Learn more`,
-                      context: `english-only-resource`,
-                    }),
-                  )}
-                  to={urls.website.blog.initialVerificationAnnouncement}>
-                  <Trans context="english-only-resource">Learn more.</Trans>
-                </InlineLinkText>
+                change your handle.
               </Trans>
             </Admonition>
           )}
@@ -352,19 +341,7 @@ function ProvidedHandlePage({
           <Text style={[a.leading_snug]}>
             <Trans>
               If you have your own domain, you can use that as your handle. This
-              lets you self-verify your identity.{' '}
-              <InlineLinkText
-                label={_(
-                  msg({
-                    message: `Learn more`,
-                    context: `english-only-resource`,
-                  }),
-                )}
-                to="https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial"
-                style={[a.font_semi_bold]}
-                disableMismatchWarning>
-                Learn more here.
-              </InlineLinkText>
+              lets you self-verify your identity.
             </Trans>
           </Text>
           <Button

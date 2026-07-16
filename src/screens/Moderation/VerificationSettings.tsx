@@ -3,7 +3,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {urls} from '#/lib/constants'
 import {
   usePreferencesQuery,
   type UsePreferencesQueryResponse,
@@ -15,13 +14,9 @@ import {Admonition} from '#/components/Admonition'
 import * as Toggle from '#/components/forms/Toggle'
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/icons/CircleCheck'
 import * as Layout from '#/components/Layout'
-import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {useAnalytics} from '#/analytics'
 
 export function Screen() {
-  const {_} = useLingui()
-  const ax = useAnalytics()
   const gutters = useGutters(['base'])
   const {data: preferences} = usePreferencesQuery()
 
@@ -42,23 +37,7 @@ export function Screen() {
             <Admonition type="tip" style={[a.flex_1]}>
               <Trans>
                 Verifications on Blacksky work differently than on other
-                platforms.{' '}
-                <InlineLinkText
-                  overridePresentation
-                  to={urls.website.blog.initialVerificationAnnouncement}
-                  label={_(
-                    msg({
-                      message: `Learn more`,
-                      context: `english-only-resource`,
-                    }),
-                  )}
-                  onPress={() => {
-                    ax.metric('verification:learn-more', {
-                      location: 'verificationSettings',
-                    })
-                  }}>
-                  Learn more here.
-                </InlineLinkText>
+                platforms.
               </Trans>
             </Admonition>
           </SettingsList.Item>

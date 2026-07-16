@@ -4,7 +4,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -15,12 +14,10 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {Link} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
-import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
@@ -56,7 +53,6 @@ function Inner({
   verificationState: FullVerificationState
 }) {
   const t = useTheme()
-  const ax = useAnalytics()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
 
@@ -146,28 +142,6 @@ function Inner({
             <Trans>Close</Trans>
           </ButtonText>
         </Button>
-        <Link
-          overridePresentation
-          to={urls.website.blog.initialVerificationAnnouncement}
-          label={_(
-            msg({
-              message: `Learn more about verification on Blacksky`,
-              context: `english-only-resource`,
-            }),
-          )}
-          size="small"
-          variant="solid"
-          color="secondary"
-          style={[a.justify_center]}
-          onPress={() => {
-            ax.metric('verification:learn-more', {
-              location: 'verificationsDialog',
-            })
-          }}>
-          <ButtonText>
-            <Trans context="english-only-resource">Learn more</Trans>
-          </ButtonText>
-        </Link>
       </View>
 
       <Dialog.Close />

@@ -42,9 +42,10 @@ export function InviteScannerScreen() {
       const url = result.data?.trim()
       if (!url) return
 
-      // Match bsky.app/profile/{handle} URLs (with or without https://).
+      // Match blacksky.community/profile/{handle} (or legacy bsky.app) URLs
+      // (with or without https://).
       const profileMatch = url.match(
-        /^(?:https?:\/\/)?bsky\.app\/profile\/([^/?#]+)/i,
+        /^(?:https?:\/\/)?(?:blacksky\.community|bsky\.app)\/profile\/([^/?#]+)/i,
       )
       if (!profileMatch) {
         ax.metric('invite:scanner:scanned', {result: 'invalidQr'})
@@ -102,7 +103,7 @@ export function InviteScannerScreen() {
               t.atoms.text_contrast_medium,
               {maxWidth: 320},
             ]}>
-            {l`Bluesky needs camera access to scan QR codes from other profiles.`}
+            {l`Blacksky needs camera access to scan QR codes from other profiles.`}
           </Text>
           <Button
             label={l`Grant access`}
