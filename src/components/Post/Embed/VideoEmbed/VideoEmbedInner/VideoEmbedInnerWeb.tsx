@@ -144,6 +144,19 @@ export class VideoNotFoundError extends Error {
   }
 }
 
+/**
+ * Fatal hls.js playback error. `detail` is the hls.js error details code
+ * (e.g. bufferAppendError), which buckets failures more usefully than the
+ * error message.
+ */
+export class HLSFatalError extends Error {
+  detail: string
+  constructor(detail: string, cause: Error) {
+    super(cause.message, {cause})
+    this.detail = detail
+  }
+}
+
 type CachedPromise<T> = Promise<T> & {value: undefined | T}
 const promiseForHls = import(
   // @ts-ignore
@@ -315,7 +328,7 @@ function useHLS({
         ) {
           setError(new VideoNotFoundError())
         } else {
-          setError(data.error)
+          setError(new HLSFatalError(data.details, data.error))
         }
       } else {
         console.error(data.error)
