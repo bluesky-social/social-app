@@ -2,7 +2,6 @@ import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
-import {type AppBskyNotificationRegisterPush} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
 import {
@@ -18,6 +17,7 @@ import BackgroundNotificationHandler from '#/../modules/expo-background-notifica
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {IS_DEV, IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 
 /**
  * @private
@@ -37,7 +37,7 @@ async function _registerPushToken({
   }
 }) {
   try {
-    const payload: AppBskyNotificationRegisterPush.InputSchema = {
+    const payload: app.bsky.notification.registerPush.$InputBody = {
       serviceDid: currentAccount.service?.includes('staging')
         ? PUBLIC_STAGING_APPVIEW_DID
         : PUBLIC_APPVIEW_DID,

@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -28,6 +27,7 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
 import {toLex} from '#/types/bsky'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
@@ -47,8 +47,8 @@ export function CreateOrEditListDialog({
   initialValues,
 }: {
   control: Dialog.DialogControlProps
-  list?: AppBskyGraphDefs.ListView
-  purpose?: AppBskyGraphDefs.ListPurpose
+  list?: app.bsky.graph.defs.ListView
+  purpose?: app.bsky.graph.defs.ListPurpose
   onSave?: (uri: string) => void
   initialValues?: InitialListValues
 }) {
@@ -115,8 +115,8 @@ function DialogInner({
   onPressCancel,
   initialValues,
 }: {
-  list?: AppBskyGraphDefs.ListView
-  purpose?: AppBskyGraphDefs.ListPurpose
+  list?: app.bsky.graph.defs.ListView
+  purpose?: app.bsky.graph.defs.ListPurpose
   onSave?: (uri: string) => void
   setDirty: (dirty: boolean) => void
   onPressCancel: () => void

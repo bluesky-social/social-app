@@ -1,9 +1,7 @@
-import {type AtpSessionEvent} from '@atproto/api'
-
 import {unregisterPushToken} from '#/lib/notifications/notifications'
 import {logger} from '#/lib/notifications/util'
 import {wrapSessionReducerForLogging} from './logging'
-import {createPublicSessionBundle} from './session-core'
+import {type AtpSessionEvent, createPublicSessionBundle} from './session-core'
 import {type SessionAccount} from './types'
 import {createTemporaryAgentsAndResume} from './util'
 

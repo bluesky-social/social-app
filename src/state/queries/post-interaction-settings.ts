@@ -3,7 +3,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {preferencesQueryKey} from '#/state/queries/preferences'
 import {usePdsClient} from '#/state/session'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export function usePostInteractionSettingsMutation({
   onError,

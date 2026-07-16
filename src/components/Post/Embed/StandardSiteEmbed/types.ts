@@ -1,7 +1,7 @@
-import {type AppBskyEmbedExternal} from '@atproto/api'
+import {type app} from '#/lexicons'
 
 export type CommonProps = {
-  view: AppBskyEmbedExternal.ViewExternal
+  view: app.bsky.embed.external.ViewExternal
 }
 
 export type PreviewProps = {

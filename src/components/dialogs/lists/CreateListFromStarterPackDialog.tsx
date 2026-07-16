@@ -1,13 +1,12 @@
 import {View} from 'react-native'
-import {
-  type $Typed,
-  type AppBskyGraphDefs,
-  type AppBskyGraphListitem,
-  type AppBskyGraphStarterpack,
-  type ComAtprotoRepoApplyWrites,
-} from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {AtUri} from '@atproto/syntax'
+import {type $Typed} from '@atproto/lex'
+import {
+  type AtIdentifierString,
+  AtUri,
+  type AtUriString,
+  toDatetimeString,
+} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -20,7 +19,7 @@ import {wait} from '#/lib/async/wait'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {getAllListMembers} from '#/state/queries/list-members'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {atoms as a, platform, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
@@ -29,6 +28,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {app, com} from '#/lexicons'
 import {CreateOrEditListDialog} from './CreateOrEditListDialog'
 
 export function CreateListFromStarterPackDialog({
@@ -36,11 +36,12 @@ export function CreateListFromStarterPackDialog({
   starterPack,
 }: {
   control: Dialog.DialogControlProps
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: app.bsky.graph.defs.StarterPackView
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
+  const appviewClient = useAppviewClient()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
@@ -48,7 +49,7 @@ export function CreateListFromStarterPackDialog({
   const createDialogControl = Dialog.useDialogControl()
   const loadingDialogControl = Dialog.useDialogControl()
 
-  const record = starterPack.record as AppBskyGraphStarterpack.Record
+  const record = starterPack.record as app.bsky.graph.starterpack.Main
 
   const onPressCreate = () => {
     control.close(() => createDialogControl.open())
@@ -73,16 +74,19 @@ export function CreateListFromStarterPackDialog({
       const listItems = await wait(
         3000,
         (async () => {
-          const items = await getAllListMembers(agent, starterPack.list!.uri)
+          const items = await getAllListMembers(
+            appviewClient,
+            starterPack.list!.uri,
+          )
 
           if (items.length > 0) {
-            const listitemWrites: $Typed<ComAtprotoRepoApplyWrites.Create>[] =
+            const listitemWrites: $Typed<com.atproto.repo.applyWrites.Create>[] =
               items.map(item => {
-                const listitemRecord: $Typed<AppBskyGraphListitem.Record> = {
+                const listitemRecord: $Typed<app.bsky.graph.listitem.Main> = {
                   $type: 'app.bsky.graph.listitem',
                   subject: item.subject.did,
-                  list: listUri,
-                  createdAt: new Date().toISOString(),
+                  list: listUri as AtUriString,
+                  createdAt: toDatetimeString(new Date()),
                 }
                 return {
                   $type: 'com.atproto.repo.applyWrites#create',
@@ -94,8 +98,8 @@ export function CreateListFromStarterPackDialog({
 
             const chunks = chunk(listitemWrites, 50)
             for (const c of chunks) {
-              await agent.com.atproto.repo.applyWrites({
-                repo: currentAccount.did,
+              await pdsClient.call(com.atproto.repo.applyWrites, {
+                repo: currentAccount.did as AtIdentifierString,
                 writes: c,
               })
             }
@@ -103,10 +107,10 @@ export function CreateListFromStarterPackDialog({
             await until(
               5,
               1e3,
-              (res: {data: {items: unknown[]}}) => res.data.items.length > 0,
+              (res: {items: unknown[]}) => res.items.length > 0,
               () =>
-                agent.app.bsky.graph.getList({
-                  list: listUri,
+                appviewClient.call(app.bsky.graph.getList, {
+                  list: listUri as AtUriString,
                   limit: 1,
                 }),
             )

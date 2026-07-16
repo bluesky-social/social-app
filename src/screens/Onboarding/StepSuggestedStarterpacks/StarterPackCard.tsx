@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -11,7 +10,7 @@ import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {getAllListMembers} from '#/state/queries/list-members'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {AvatarStack} from '#/screens/Search/components/StarterPackCard'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -29,14 +28,15 @@ const IGNORED_ACCOUNT = 'did:plc:pifkcjimdcfwaxkanzhwxufp'
 export function StarterPackCard({
   view,
 }: {
-  view: AppBskyGraphDefs.StarterPackView
+  view: app.bsky.graph.defs.StarterPackView
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
+  const appviewClient = useAppviewClient()
   const queryClient = useQueryClient()
   const record = view.record
   const [isProcessing, setIsProcessing] = useState(false)
@@ -47,9 +47,9 @@ export function StarterPackCard({
 
     setIsProcessing(true)
 
-    let listItems: AppBskyGraphDefs.ListItemView[] = []
+    let listItems: app.bsky.graph.defs.ListItemView[] = []
     try {
-      listItems = await getAllListMembers(agent, view.list.uri)
+      listItems = await getAllListMembers(appviewClient, view.list.uri)
     } catch (e) {
       setIsProcessing(false)
       Toast.show(_(msg`An error occurred while trying to follow all`), {
@@ -74,7 +74,7 @@ export function StarterPackCard({
 
     let followUris: Map<string, string>
     try {
-      followUris = await bulkWriteFollows(agent, dids, {
+      followUris = await bulkWriteFollows(pdsClient, appviewClient, dids, {
         uri: view.uri,
         cid: view.cid,
       })

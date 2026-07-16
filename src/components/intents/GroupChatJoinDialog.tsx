@@ -1,10 +1,5 @@
 import {useEffect} from 'react'
 import {View} from 'react-native'
-import {
-  ChatBskyGroupDefs,
-  ChatBskyGroupRequestJoin,
-  ChatBskyGroupWithdrawJoinRequest,
-} from '@atproto/api'
 import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -16,6 +11,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {isNetworkError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {getErrorName} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
@@ -49,7 +45,8 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {toLex} from '#/types/bsky'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {ProfileBadges} from '../ProfileBadges'
 
 export function GroupChatJoinDialog() {
@@ -148,32 +145,26 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
         let errorMessage = l`Failed to join the group chat. Please try again.`
         if (isNetworkError(error)) {
           errorMessage = l`There was a problem with your internet connection, please try again`
-        } else if (error instanceof ChatBskyGroupRequestJoin.ConvoLockedError) {
+        } else if (getErrorName(error) === 'ConvoLocked') {
           errorMessage = l`This conversation is locked.`
-        } else if (
-          error instanceof ChatBskyGroupRequestJoin.FollowRequiredError
-        ) {
+        } else if (getErrorName(error) === 'FollowRequired') {
           errorMessage = l`Only followers can join this group chat.`
-        } else if (error instanceof ChatBskyGroupRequestJoin.InvalidCodeError) {
+        } else if (getErrorName(error) === 'InvalidCode') {
           errorMessage = l`Invalid group chat code.`
-        } else if (
-          error instanceof ChatBskyGroupRequestJoin.LinkDisabledError
-        ) {
+        } else if (getErrorName(error) === 'LinkDisabled') {
           errorMessage = l`This invite link has been disabled.`
-        } else if (
-          error instanceof ChatBskyGroupRequestJoin.MemberLimitReachedError
-        ) {
+        } else if (getErrorName(error) === 'MemberLimitReached') {
           errorMessage = l`The member limit has been reached.`
           const preview = data?.joinLinkPreviews[0]
           if (
-            ChatBskyGroupDefs.isJoinLinkPreviewView(preview) &&
+            bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, preview) &&
             preview.convo?.id
           ) {
             ax.metric('groupchat:join:memberLimitReached', {
               convoId: preview.convo.id,
             })
           }
-        } else if (error instanceof ChatBskyGroupRequestJoin.UserKickedError) {
+        } else if (getErrorName(error) === 'UserKicked') {
           errorMessage = l`You have been previously removed from this group and can’t join it using this link.`
         }
         Toast.show(errorMessage)
@@ -194,10 +185,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
         let errorMessage = l`Failed to rescind your request. Please try again.`
         if (isNetworkError(error)) {
           errorMessage = l`There was a problem with your internet connection, please try again`
-        } else if (
-          error instanceof
-          ChatBskyGroupWithdrawJoinRequest.InvalidJoinRequestError
-        ) {
+        } else if (getErrorName(error) === 'InvalidJoinRequest') {
           errorMessage = l`Invalid rescind request.`
         }
         Toast.show(errorMessage)
@@ -253,7 +241,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
 
   const joinLinkPreview = data.joinLinkPreviews[0]
 
-  if (!ChatBskyGroupDefs.isJoinLinkPreviewView(joinLinkPreview)) {
+  if (!bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, joinLinkPreview)) {
     return (
       <>
         <View style={[a.py_lg, a.align_center]}>
@@ -409,7 +397,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
                     true,
                     // TODO(phase4): drop toLex once join link preview emits #/lexicons views
                     moderateProfile(
-                      toLex(joinLinkPreview.owner),
+                      bsky.toLex(joinLinkPreview.owner),
                       moderationOpts,
                     ).ui('displayName'),
                   )}

@@ -16,6 +16,7 @@ import {ScreenTransition} from '#/components/ScreenTransition'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 function keyExtractor(item: bsky.profile.AnyProfileView) {

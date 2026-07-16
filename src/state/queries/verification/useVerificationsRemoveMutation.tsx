@@ -1,4 +1,3 @@
-import {type AtIdentifierString} from '@atproto/lex-client'
 import {AtUri} from '@atproto/syntax'
 import {useMutation} from '@tanstack/react-query'
 
@@ -51,7 +50,7 @@ export function useVerificationsRemoveMutation() {
         },
         () => {
           return appviewClient.call(app.bsky.actor.getProfile, {
-            actor: (profile.did ?? '') as AtIdentifierString,
+            actor: profile.did ?? '',
           })
         },
       )

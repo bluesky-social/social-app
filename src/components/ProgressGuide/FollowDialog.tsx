@@ -207,7 +207,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
           type: 'profile',
           // Don't share identity across tabs or typing attempts
           key: resultsKey + ':' + profile.did,
-          profile,
+          profile: profile as bsky.profile.AnyProfileView,
         })
       }
     }

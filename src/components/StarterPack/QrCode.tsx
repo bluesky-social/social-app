@@ -3,7 +3,6 @@ import {View} from 'react-native'
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
 import type ViewShot from 'react-native-view-shot'
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
 import {Logo} from '#/view/icons/Logo'
@@ -25,7 +24,7 @@ export function QrCode({
   link,
   ref,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: app.bsky.graph.defs.StarterPackView
   link: string
   ref: React.Ref<ViewShot>
 }) {

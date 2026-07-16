@@ -31,6 +31,17 @@ export function createVideoServiceClient(token: string) {
   })
 }
 
+/**
+ * An unauthenticated lex {@link Client} scoped to the video service, used for
+ * public reads like `getJobStatus` polling. Mirrors the old unauthenticated
+ * `AtpAgent` at `VIDEO_SERVICE`.
+ */
+export function createTokenlessVideoServiceClient() {
+  return new Client({
+    service: VIDEO_SERVICE,
+  })
+}
+
 export function mimeToExt(mimeType: SupportedMimeTypes | (string & {})) {
   switch (mimeType) {
     case 'video/mp4':

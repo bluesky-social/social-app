@@ -1,5 +1,4 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyFeedDefs, type AppBskyGraphDefs} from '@atproto/api'
 import {type $Typed} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
@@ -26,8 +25,8 @@ import {MissingFeed} from './MissingFeed'
 type FeedSourceCardProps = {
   feedUri: string
   feedData?:
-    | $Typed<AppBskyFeedDefs.GeneratorView>
-    | $Typed<AppBskyGraphDefs.ListView>
+    | $Typed<app.bsky.feed.defs.GeneratorView>
+    | $Typed<app.bsky.graph.defs.ListView>
   style?: StyleProp<ViewStyle>
   showSaveBtn?: boolean
   showDescription?: boolean

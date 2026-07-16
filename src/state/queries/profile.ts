@@ -275,7 +275,7 @@ export function useProfileFollowMutationQueue(
           did,
         })
         userActionHistory.follow([did])
-        return uri
+        return uri as AtUriString
       } else {
         if (prevFollowingUri) {
           await unfollowMutation.mutateAsync({
@@ -337,7 +337,7 @@ export function useProfileFollowMutationQueue(
       if (finalFollowingUri) {
         void client
           .call(app.bsky.graph.getSuggestedFollowsByActor, {
-            actor: did as AtIdentifierString,
+            actor: did,
           })
           .then(res => {
             const dids = res.suggestions
@@ -516,7 +516,7 @@ export function useProfileBlockMutationQueue(
           did,
         })
         ax.metric('profile:block', {})
-        return uri
+        return uri as AtUriString
       } else {
         if (prevBlockUri) {
           await unblockMutation.mutateAsync({

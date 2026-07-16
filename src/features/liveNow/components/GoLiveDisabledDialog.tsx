@@ -1,6 +1,5 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {api} from '@bsky.app/sdk'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -15,7 +14,7 @@ import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {com, tools} from '#/lexicons'
+import {type app, com, tools} from '#/lexicons'
 import {toLex} from '#/types/bsky'
 
 export function GoLiveDisabledDialog({
@@ -23,7 +22,7 @@ export function GoLiveDisabledDialog({
   status,
 }: {
   control: Dialog.DialogControlProps
-  status: AppBskyActorDefs.StatusView
+  status: app.bsky.actor.defs.StatusView
 }) {
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -38,7 +37,7 @@ export function DialogInner({
   status,
 }: {
   control: Dialog.DialogControlProps
-  status: AppBskyActorDefs.StatusView
+  status: app.bsky.actor.defs.StatusView
 }) {
   const {_} = useLingui()
   const {currentAccount} = useSession()

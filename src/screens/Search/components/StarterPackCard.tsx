@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -26,7 +25,7 @@ export function StarterPackCard({
   view,
   onPress,
 }: {
-  view: AppBskyGraphDefs.StarterPackView
+  view: app.bsky.graph.defs.StarterPackView
   onPress?: () => void
 }) {
   const t = useTheme()

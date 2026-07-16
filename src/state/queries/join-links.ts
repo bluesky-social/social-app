@@ -1,17 +1,28 @@
 import {useCallback} from 'react'
-import {
-  type $Typed,
-  AtpAgent,
-  ChatBskyGroupDefs,
-  type ChatBskyGroupGetJoinLinkPreviews,
-} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
+import {Client} from '@atproto/lex-client'
+import {toDatetimeString} from '@atproto/syntax'
 import {type QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {CHAT_SERVICE, DM_SERVICE_HEADERS} from '#/lib/constants'
+import {CHAT_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries/index'
 import {createQueryKey, type StructuredQueryKey} from '#/state/queries/util'
-import {type SessionAgent, useAgent} from '#/state/session'
+import {useMaybeChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
+
+/**
+ * Unauthenticated client pointed directly at the chat service, for the
+ * logged-out join-link preview path (mirrors the old public `AtpAgent` at
+ * `CHAT_SERVICE`). Chat requires no `atproto-proxy` here since we hit the
+ * service directly.
+ */
+let publicChatClient: Client | undefined
+function getPublicChatClient(): Client {
+  publicChatClient ??= new Client({service: CHAT_SERVICE})
+  return publicChatClient
+}
 
 /**
  * The three preview shapes we currently support. Excludes the `{$type: string}`
@@ -19,15 +30,17 @@ import {type SessionAgent, useAgent} from '#/state/session'
  * `ChatInvitePreview` for that.
  */
 export type KnownChatInvitePreview =
-  | $Typed<ChatBskyGroupDefs.JoinLinkPreviewView>
-  | $Typed<ChatBskyGroupDefs.DisabledJoinLinkPreviewView>
-  | $Typed<ChatBskyGroupDefs.InvalidJoinLinkPreviewView>
+  | $Typed<chat.bsky.group.defs.JoinLinkPreviewView>
+  | $Typed<chat.bsky.group.defs.DisabledJoinLinkPreviewView>
+  | $Typed<chat.bsky.group.defs.InvalidJoinLinkPreviewView>
 
 /**
- * The full open-union shape, including the `{$type: string}` fallback for
- * future variants.
+ * The full open-union shape, including the open-union fallback for future
+ * variants. Sourced from the endpoint's output element type so it matches the
+ * lex `Unknown$TypedObject` fallback exactly.
  */
-export type ChatInvitePreview = KnownChatInvitePreview | {$type: string}
+export type ChatInvitePreview =
+  chat.bsky.group.getJoinLinkPreviews.$OutputBody['joinLinkPreviews'][number]
 
 /**
  * Narrows a preview to one of the three known variants, filtering out the
@@ -37,9 +50,9 @@ export function isKnownJoinLinkPreview(
   preview: unknown,
 ): preview is KnownChatInvitePreview {
   return (
-    ChatBskyGroupDefs.isJoinLinkPreviewView(preview) ||
-    ChatBskyGroupDefs.isDisabledJoinLinkPreviewView(preview) ||
-    ChatBskyGroupDefs.isInvalidJoinLinkPreviewView(preview)
+    bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, preview) ||
+    bsky.isType(chat.bsky.group.defs.disabledJoinLinkPreviewView, preview) ||
+    bsky.isType(chat.bsky.group.defs.invalidJoinLinkPreviewView, preview)
   )
 }
 
@@ -88,7 +101,7 @@ export function setJoinLinkPreviewRequestedForCode(
   code: string,
   requested: boolean,
 ) {
-  queryClient.setQueriesData<ChatBskyGroupGetJoinLinkPreviews.OutputSchema>(
+  queryClient.setQueriesData<chat.bsky.group.getJoinLinkPreviews.$OutputBody>(
     {
       predicate: query => {
         const [root, args] = query.queryKey as Partial<
@@ -107,14 +120,16 @@ export function setJoinLinkPreviewRequestedForCode(
         ...old,
         joinLinkPreviews: old.joinLinkPreviews.map(preview => {
           if (
-            ChatBskyGroupDefs.isJoinLinkPreviewView(preview) &&
+            bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, preview) &&
             preview.code === code
           ) {
             return {
               ...preview,
               viewer: {
                 ...preview.viewer,
-                requestedAt: requested ? new Date().toISOString() : undefined,
+                requestedAt: requested
+                  ? toDatetimeString(new Date())
+                  : undefined,
               },
             }
           }
@@ -141,12 +156,12 @@ export function invalidateJoinLinkPreviewsForConvo(
       const [root] = query.queryKey
       if (root !== joinLinkPreviewQueryKeyRoot) return false
       const data = query.state.data as
-        | ChatBskyGroupGetJoinLinkPreviews.OutputSchema
+        | chat.bsky.group.getJoinLinkPreviews.$OutputBody
         | undefined
       return (
         data?.joinLinkPreviews.some(
           preview =>
-            ChatBskyGroupDefs.isJoinLinkPreviewView(preview) &&
+            bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, preview) &&
             preview.convoId === convoId,
         ) ?? false
       )
@@ -155,22 +170,20 @@ export function invalidateJoinLinkPreviewsForConvo(
 }
 
 async function fetchJoinLinkPreviews({
-  agent,
+  chatClient,
   codes,
   hasSession,
 }: {
-  agent: SessionAgent
+  /**
+   * Authed chat client (proxied to the chat service via `atproto-proxy`), or
+   * null when logged out - the logged-out path uses the public chat client.
+   */
+  chatClient: Client | null
   codes: string[]
   hasSession: boolean
 }) {
-  const previewAgent = new AtpAgent({service: CHAT_SERVICE})
-  const res = hasSession
-    ? await agent.chat.bsky.group.getJoinLinkPreviews(
-        {codes},
-        {headers: DM_SERVICE_HEADERS},
-      )
-    : await previewAgent.chat.bsky.group.getJoinLinkPreviews({codes})
-  return res.data
+  const client = hasSession && chatClient ? chatClient : getPublicChatClient()
+  return await client.call(chat.bsky.group.getJoinLinkPreviews, {codes})
 }
 
 export function useJoinLinkPreviewsQuery({
@@ -186,16 +199,16 @@ export function useJoinLinkPreviewsQuery({
    * Seed the query with an already-known preview (e.g. a DM message embed
    * already carries the resolved view), avoiding a duplicate fetch.
    */
-  initialData?: ChatBskyGroupGetJoinLinkPreviews.OutputSchema
+  initialData?: chat.bsky.group.getJoinLinkPreviews.$OutputBody
 }) {
-  const agent = useAgent()
+  const chatClient = useMaybeChatClient()
 
   return useQuery({
     queryKey: createJoinLinkPreviewQueryKey({codes: codes ?? [], hasSession}),
     queryFn: async () => {
       if (!codes) throw new Error('No invite code')
       try {
-        return await fetchJoinLinkPreviews({agent, codes, hasSession})
+        return await fetchJoinLinkPreviews({chatClient, codes, hasSession})
       } catch (error) {
         logger.error('Failed to fetch join link preview', {safeMessage: error})
         throw error
@@ -208,13 +221,13 @@ export function useJoinLinkPreviewsQuery({
 }
 
 export function usePrefetchJoinLinkPreviews() {
-  const agent = useAgent()
+  const chatClient = useMaybeChatClient()
   const queryClient = useQueryClient()
 
   return ({codes, hasSession}: {codes: string[]; hasSession: boolean}) => {
     return queryClient.prefetchQuery({
       queryKey: createJoinLinkPreviewQueryKey({codes, hasSession}),
-      queryFn: () => fetchJoinLinkPreviews({agent, codes, hasSession}),
+      queryFn: () => fetchJoinLinkPreviews({chatClient, codes, hasSession}),
       staleTime: STALE.SECONDS.FIFTEEN,
     })
   }
@@ -226,7 +239,7 @@ export function usePrefetchJoinLinkPreviews() {
  * Returns undefined if the preview can't be resolved.
  */
 export function useGetJoinLinkPreview() {
-  const agent = useAgent()
+  const chatClient = useMaybeChatClient()
   const queryClient = useQueryClient()
 
   return useCallback(
@@ -241,7 +254,7 @@ export function useGetJoinLinkPreview() {
         const data = await queryClient.fetchQuery({
           queryKey: createJoinLinkPreviewQueryKey({codes: [code], hasSession}),
           queryFn: () =>
-            fetchJoinLinkPreviews({agent, codes: [code], hasSession}),
+            fetchJoinLinkPreviews({chatClient, codes: [code], hasSession}),
           staleTime: STALE.SECONDS.FIFTEEN,
         })
         const found = data.joinLinkPreviews[0]
@@ -251,6 +264,6 @@ export function useGetJoinLinkPreview() {
         return undefined
       }
     },
-    [agent, queryClient],
+    [chatClient, queryClient],
   )
 }

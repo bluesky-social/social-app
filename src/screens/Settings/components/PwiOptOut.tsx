@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {type $Typed, type ComAtprotoLabelDefs} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -36,7 +36,7 @@ export function PwiOptOut() {
       profile,
       updates: existing => {
         // create labels attr if needed
-        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.matches(
+        const labels: $Typed<com.atproto.label.defs.SelfLabels> = bsky.matches(
           com.atproto.label.defs.selfLabels,
           existing.labels,
         )
@@ -70,9 +70,7 @@ export function PwiOptOut() {
         return existing
       },
       checkCommitted: res => {
-        const exists = !!res.data.labels?.some(
-          l => l.val === '!no-unauthenticated',
-        )
+        const exists = !!res.labels?.some(l => l.val === '!no-unauthenticated')
         return exists === wasAdded
       },
     })

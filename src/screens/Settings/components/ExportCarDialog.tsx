@@ -2,7 +2,6 @@ import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {saveBytesToDisk} from '#/lib/media/manip'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
@@ -14,6 +13,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {CHAT_PROXY_DID} from '#/env'
 
 export function ExportCarDialog({
   control,
@@ -58,9 +58,11 @@ export function ExportCarDialog({
       setLoading('chat')
       // Using raw fetch because the XRPC client incorrectly tries to JSON-parse
       // application/jsonl responses (substring match on application/json).
+      // The chat-service proxy header is inlined here (the endpoint is proxied
+      // to `did:web:api.bsky.chat`); this raw path bypasses the lex client.
       const res = await agent.sessionManager.fetchHandler(
         '/xrpc/chat.bsky.actor.exportAccountData',
-        {headers: DM_SERVICE_HEADERS},
+        {headers: {'atproto-proxy': `${CHAT_PROXY_DID}#bsky_chat`}},
       )
       if (!res.ok) {
         throw new Error(`HTTP ${res.status}`)

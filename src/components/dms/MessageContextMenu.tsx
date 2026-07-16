@@ -2,7 +2,6 @@ import {memo, useCallback} from 'react'
 import {Platform} from 'react-native'
 import {type GestureType} from 'react-native-gesture-handler'
 import * as Clipboard from 'expo-clipboard'
-import {type ChatBskyConvoDefs} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
@@ -28,6 +27,7 @@ import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Tra
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {type chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {toLex} from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
@@ -40,7 +40,7 @@ export let MessageContextMenu = ({
   children,
   swipeGesture,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  message: chat.bsky.convo.defs.MessageView
   senderProfile?: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts | undefined
   children: TriggerProps['children']

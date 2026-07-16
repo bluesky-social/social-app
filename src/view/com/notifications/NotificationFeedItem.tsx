@@ -8,9 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {type AppBskyActorDefs, type AppBskyFeedDefs} from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {AtUri, type DidString} from '@atproto/syntax'
+import {AtUri} from '@atproto/syntax'
 import {
   moderateProfile,
   type ModerationDecision,
@@ -74,7 +73,7 @@ import * as bsky from '#/types/bsky'
 const MAX_AUTHORS = 5
 
 interface Author {
-  profile: AppBskyActorDefs.ProfileView
+  profile: app.bsky.actor.defs.ProfileView
   href: string
   moderation: ModerationDecision
 }
@@ -738,7 +737,7 @@ export {NotificationFeedItem}
 function FollowedViaStarterPack({
   starterPack,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackViewBasic
+  starterPack: app.bsky.graph.defs.StarterPackViewBasic
 }) {
   const t = useTheme()
   const link = useStarterPackLink({view: starterPack})
@@ -772,12 +771,9 @@ function FollowedViaStarterPack({
 }
 
 function getStarterPackName(
-  starterPack: AppBskyGraphDefs.StarterPackViewBasic,
+  starterPack: app.bsky.graph.defs.StarterPackViewBasic,
 ) {
-  return bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-    starterPack.record,
-    AppBskyGraphStarterpack.isRecord,
-  )
+  return bsky.isType(app.bsky.graph.starterpack, starterPack.record)
     ? starterPack.record.name
     : undefined
 }
@@ -811,7 +807,11 @@ function ExpandListPressable({
   }
 }
 
-function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
+function FollowBackButton({
+  profile,
+}: {
+  profile: app.bsky.actor.defs.ProfileView
+}) {
   const {t: l} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const profileShadow = useProfileShadow(profile)
@@ -917,7 +917,7 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   )
 }
 
-function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
+function SayHelloBtn({profile}: {profile: app.bsky.actor.defs.ProfileView}) {
   const {t: l} = useLingui()
   const chatClient = useChatClient()
   const navigation = useNavigation<NavigationProp>()
@@ -1151,7 +1151,7 @@ function ExpandedAuthorProfileCard({
   )
 }
 
-function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
+function AdditionalPostText({post}: {post?: app.bsky.feed.defs.PostView}) {
   const t = useTheme()
   if (post && bsky.isType(app.bsky.feed.post, post?.record)) {
     const text = post.record.text

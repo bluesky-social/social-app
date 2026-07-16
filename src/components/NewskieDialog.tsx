@@ -1,6 +1,5 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -20,13 +19,14 @@ import {Newskie} from '#/components/icons/Newskie'
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 import {toLex} from '#/types/bsky'
 
 export function NewskieDialog({
   profile,
   disabled,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   disabled?: boolean
 }) {
   const t = useTheme()
@@ -76,7 +76,7 @@ function DialogInner({
   createdAt,
   now,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   createdAt: string
   now: number
 }) {

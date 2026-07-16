@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Trans} from '@lingui/react/macro'
 
@@ -21,8 +20,9 @@ import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
-function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
+function keyExtractor(item: app.bsky.feed.defs.GeneratorView) {
   return item.uri
 }
 
@@ -37,7 +37,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
     useSavedFeeds()
   const savedFeeds = savedFeedsAndLists?.feeds
     .filter(f => f.type === 'feed' && f.view.uri !== DISCOVER_FEED_URI)
-    .map(f => f.view) as AppBskyFeedDefs.GeneratorView[]
+    .map(f => f.view) as app.bsky.feed.defs.GeneratorView[]
 
   const {
     data: popularFeedsPages,
@@ -67,7 +67,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
 
   const renderItem = ({
     item,
-  }: ListRenderItemInfo<AppBskyFeedDefs.GeneratorView>) => {
+  }: ListRenderItemInfo<app.bsky.feed.defs.GeneratorView>) => {
     return (
       <WizardFeedCard
         generator={item}

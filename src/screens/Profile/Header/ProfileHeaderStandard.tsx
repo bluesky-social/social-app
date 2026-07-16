@@ -1,6 +1,5 @@
 import {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {
   moderateProfile,
   type ModerationDecision,
@@ -40,6 +39,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
+import {type app} from '#/lexicons'
 import {toLex} from '#/types/bsky'
 import {GermButton} from '../components/GermButton'
 import {ProfileHeaderDisplayName} from './DisplayName'
@@ -50,7 +50,7 @@ import {ProfileHeaderShell} from './Shell'
 import {ProfileHeaderSuggestedFollows} from './SuggestedFollows'
 
 interface Props {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -65,7 +65,7 @@ let ProfileHeaderStandard = ({
   isPlaceholderProfile,
 }: Props): React.ReactNode => {
   const profile =
-    useProfileShadow<AppBskyActorDefs.ProfileViewDetailed>(profileUnshadowed)
+    useProfileShadow<app.bsky.actor.defs.ProfileViewDetailed>(profileUnshadowed)
   const {currentAccount} = useSession()
   const {_} = useLingui()
   const moderation = useMemo(
@@ -214,7 +214,7 @@ export function HeaderStandardButtons({
   onUnfollow,
   minimal,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<app.bsky.actor.defs.ProfileViewDetailed>
   moderation: ModerationDecision
   moderationOpts: ModerationOpts
   onFollow?: () => void

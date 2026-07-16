@@ -1,6 +1,5 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, AppBskyFeedGetAuthorFeed} from '@atproto/api'
 import {AtUri} from '@atproto/syntax'
 import {msg as msgLingui} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -10,11 +9,13 @@ import {useNavigation} from '@react-navigation/native'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
+import {getErrorName} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useRemoveFeedMutation} from '#/state/queries/preferences'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Prompt from '#/components/Prompt'
+import {type app} from '#/lexicons'
 import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Button} from '../util/forms/Button'
@@ -42,7 +43,7 @@ export function PostFeedErrorMessage({
   feedDesc: FeedDescriptor
   error?: Error
   onPressTryAgain: () => void
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: app.bsky.actor.defs.SavedFeed
 }) {
   const {_: _l} = useLingui()
   const knownError = useMemo(
@@ -93,7 +94,7 @@ function FeedgenErrorMessage({
   feedDesc: FeedDescriptor
   knownError: KnownError
   rawError?: Error
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: app.bsky.actor.defs.SavedFeed
 }) {
   const pal = usePalette('default')
   const {_: _l} = useLingui()
@@ -239,8 +240,8 @@ function detectKnownError(
     return undefined
   }
   if (
-    error instanceof AppBskyFeedGetAuthorFeed.BlockedActorError ||
-    error instanceof AppBskyFeedGetAuthorFeed.BlockedByActorError
+    getErrorName(error) === 'BlockedActor' ||
+    getErrorName(error) === 'BlockedByActor'
   ) {
     return KnownError.Block
   }

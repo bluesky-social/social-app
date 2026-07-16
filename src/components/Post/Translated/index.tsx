@@ -1,6 +1,5 @@
 import {useCallback, useMemo} from 'react'
 import {Platform, type StyleProp, type TextStyle, View} from 'react-native'
-import {type AppBskyFeedDefs, type AppBskyFeedPost} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
@@ -39,7 +38,7 @@ export function TranslatedPost({
   postTextStyle = a.text_md,
 }: {
   hideTranslateLink?: boolean
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   postTextStyle?: StyleProp<TextStyle>
 }) {
   const langPrefs = useLanguagePrefs()
@@ -47,7 +46,7 @@ export function TranslatedPost({
     key: post.uri,
   })
 
-  const record = useMemo<AppBskyFeedPost.Record | undefined>(() => {
+  const record = useMemo<app.bsky.feed.post.Main | undefined>(() => {
     return bsky.isType(app.bsky.feed.post, post.record)
       ? post.record
       : undefined

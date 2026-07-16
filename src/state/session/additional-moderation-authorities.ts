@@ -1,7 +1,7 @@
-import {Agent} from '@atproto/api'
 import {Client} from '@atproto/lex-client'
 
 import {device} from '#/storage'
+import {BridgeAgent} from './session-core'
 
 export const BR_LABELER = 'did:plc:ekitcvx7uwnauoqy5oest3hm' // Brazil
 export const DE_LABELER = 'did:plc:r55ow3tocux5kafs5dq445fy' // Germany
@@ -90,9 +90,9 @@ export function configureAdditionalModerationAuthorities() {
    * static - so both emit identical global `atproto-accept-labelers` headers.
    */
   const appLabelers = Array.from(
-    new Set([...Agent.appLabelers, ...additionalLabelers]),
+    new Set([...BridgeAgent.appLabelers, ...additionalLabelers]),
   )
 
   Client.configure({appLabelers: appLabelers as `did:${string}:${string}`[]})
-  Agent.configure({appLabelers})
+  BridgeAgent.configure({appLabelers})
 }

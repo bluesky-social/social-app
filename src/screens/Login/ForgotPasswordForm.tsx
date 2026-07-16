@@ -1,6 +1,5 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, View} from 'react-native'
-import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
@@ -16,9 +15,10 @@ import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {type com} from '#/lexicons'
 import {FormContainer} from './FormContainer'
 
-type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
+type ServiceDescription = com.atproto.server.describeServer.$OutputBody
 
 export const ForgotPasswordForm = ({
   error,

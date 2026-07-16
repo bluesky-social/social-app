@@ -43,7 +43,7 @@ import {
   parseConvoView,
 } from '#/components/dms/util'
 import {IS_NATIVE} from '#/env'
-import {app, chat} from '#/lexicons'
+import {type app, chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)

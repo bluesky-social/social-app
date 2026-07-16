@@ -11,7 +11,7 @@ import {
   type VideoUploadTransport,
 } from '#/lib/media/video/types'
 import {Features, features} from '#/analytics/features'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {MultipartFallbackError, uploadVideoMultipart} from './multipart/upload'
 import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
 import {createVideoEndpointUrl, mimeToExt} from './util'

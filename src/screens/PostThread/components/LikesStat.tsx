@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {AtUri} from '@atproto/syntax'
 import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
@@ -16,6 +15,7 @@ import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import {toLex} from '#/types/bsky'
 
 const AVI_SIZE = 20
@@ -24,7 +24,7 @@ const AVI_SIZE = 20
  * The plain "N likes" stat for the expanded anchor post, linking to the likes
  * list. Renders nothing when the post has no likes.
  */
-export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
+export function LikesStat({post}: {post: app.bsky.feed.defs.PostView}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const formatPostStatCount = useFormatPostStatCount()

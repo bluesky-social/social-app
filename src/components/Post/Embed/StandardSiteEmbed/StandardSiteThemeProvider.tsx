@@ -1,6 +1,5 @@
-import {type AppBskyEmbedExternal} from '@atproto/api'
-
 import {Context, useAlf, utils} from '#/alf'
+import {type app} from '#/lexicons'
 
 /**
  * Overrides only the values needed for `secondary_inverted` buttons atm.
@@ -12,7 +11,7 @@ export function StandardSiteThemeProvider({
   view,
   children,
 }: {
-  view: AppBskyEmbedExternal.ViewExternal
+  view: app.bsky.embed.external.ViewExternal
   children: React.ReactNode
 }) {
   const alf = useAlf()

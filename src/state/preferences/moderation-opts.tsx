@@ -55,14 +55,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         hiddenPosts: (hiddenPosts ||
           []) as ModerationOpts['prefs']['hiddenPosts'],
       },
-      /*
-       * TODO(phase4): drop this cast once `#/state/preferences/label-defs`
-       * flips its `InterpretedLabelValueDefinition` source from `@atproto/api`
-       * to `@bsky.app/sdk/moderation`. The value is already produced by the
-       * SDK's `interpretLabelValueDefinitions` (see `../queries/preferences`);
-       * only the intermediate context type is still old-world.
-       */
-      labelDefs: labelDefs,
+      labelDefs,
     }
   }, [override, userDid, labelDefs, moderationPrefs, hiddenPosts])
 

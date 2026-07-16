@@ -8,6 +8,8 @@ import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
+import {type app} from '#/lexicons'
+import {toLex} from '#/types/bsky'
 
 export const createSuggestedStarterPacksQueryKey = (interests?: string[]) => [
   'suggested-starter-packs',
@@ -43,7 +45,13 @@ export function useSuggestedStarterPacksQuery({
           },
         },
       )
-      return data
+      /*
+       * TODO(phase4): drop toLex once getSuggestedStarterPacks migrates off the
+       * bridge agent (intentionally left on the bridge in Phase 3).
+       */
+      return toLex<app.bsky.unspecced.getSuggestedStarterPacks.$OutputBody>(
+        data,
+      )
     },
   })
 }

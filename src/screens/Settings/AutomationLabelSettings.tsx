@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type $Typed, type ComAtprotoLabelDefs} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
@@ -54,15 +54,13 @@ export function AutomationLabelSettingsScreen({}: Props) {
       {
         profile,
         updates: existing => {
-          const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.matches(
-            com.atproto.label.defs.selfLabels,
-            existing.labels,
-          )
-            ? existing.labels
-            : {
-                $type: 'com.atproto.label.defs#selfLabels',
-                values: [],
-              }
+          const labels: $Typed<com.atproto.label.defs.SelfLabels> =
+            bsky.matches(com.atproto.label.defs.selfLabels, existing.labels)
+              ? existing.labels
+              : {
+                  $type: 'com.atproto.label.defs#selfLabels',
+                  values: [],
+                }
 
           const hasLabel = labels.values.some(l => l.val === 'bot')
           if (hasLabel) {
@@ -82,7 +80,7 @@ export function AutomationLabelSettingsScreen({}: Props) {
           return existing
         },
         checkCommitted: res => {
-          const exists = !!res.data.labels?.some(l => l.val === 'bot')
+          const exists = !!res.labels?.some(l => l.val === 'bot')
           return exists === wasAdded
         },
       },

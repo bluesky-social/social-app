@@ -1,10 +1,5 @@
 import {memo, useMemo, useState} from 'react'
 import {type Insets} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
-} from '@atproto/api'
 import {AtUri} from '@atproto/syntax'
 import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
@@ -21,6 +16,7 @@ import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/
 import * as Menu from '#/components/Menu'
 import {useMenuControl} from '#/components/Menu'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
 import {ShareMenuItems} from './ShareMenuItems'
 
@@ -37,12 +33,12 @@ let ShareMenuButton = ({
   logContext,
 }: {
   testID: string
-  post: Shadow<AppBskyFeedDefs.PostView>
+  post: Shadow<app.bsky.feed.defs.PostView>
   big?: boolean
-  record: AppBskyFeedPost.Record
+  record: app.bsky.feed.post.Main
   richText: RichTextAPI
   timestamp: string
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
   onShare: () => void
   hitSlop?: Insets
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'

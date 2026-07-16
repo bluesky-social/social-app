@@ -2,11 +2,6 @@ import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {
-  type AppBskyActorDefs,
-  AppBskyEmbedVideo,
-  type AppBskyFeedDefs,
-} from '@atproto/api'
 import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
@@ -42,7 +37,7 @@ export function VideoPostCard({
   moderation,
   onInteract,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   sourceContext: VideoFeedSourceContext
   moderation: ModerationDecision
   /**
@@ -75,7 +70,7 @@ export function VideoPostCard({
    * Filtering should be done at a higher level, such as `PostFeed` or
    * `PostFeedVideoGridRow`, but we need to protect here as well.
    */
-  if (!AppBskyEmbedVideo.isView(embed)) return null
+  if (!bsky.isType(app.bsky.embed.video.view, embed)) return null
 
   const author = post.author
   const text = bsky.isType(app.bsky.feed.post, post.record)
@@ -272,7 +267,7 @@ export function VideoPostCardPlaceholder() {
 export function VideoPostCardTextPlaceholder({
   author,
 }: {
-  author?: AppBskyActorDefs.ProfileViewBasic
+  author?: app.bsky.actor.defs.ProfileViewBasic
 }) {
   const t = useTheme()
 
@@ -352,7 +347,7 @@ export function CompactVideoPostCard({
   moderation,
   onInteract,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   sourceContext: VideoFeedSourceContext
   moderation: ModerationDecision
   /**
@@ -383,7 +378,7 @@ export function CompactVideoPostCard({
    * Filtering should be done at a higher level, such as `PostFeed` or
    * `PostFeedVideoGridRow`, but we need to protect here as well.
    */
-  if (!AppBskyEmbedVideo.isView(embed)) return null
+  if (!bsky.isType(app.bsky.embed.video.view, embed)) return null
 
   const likeCount = post?.likeCount ?? 0
   const showLikeCount = false

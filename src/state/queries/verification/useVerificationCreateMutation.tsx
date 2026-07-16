@@ -1,6 +1,4 @@
-import {type AtIdentifierString, type DidString} from '@atproto/lex-client'
 import {type DatetimeString} from '@atproto/lex-schema'
-import {type HandleString} from '@atproto/syntax'
 import {useMutation} from '@tanstack/react-query'
 
 import {until} from '#/lib/async/until'
@@ -24,9 +22,9 @@ export function useVerificationCreateMutation() {
       }
 
       const {uri} = await pdsClient.create(app.bsky.graph.verification, {
-        subject: profile.did as DidString,
+        subject: profile.did,
         createdAt: new Date().toISOString() as DatetimeString,
-        handle: profile.handle as HandleString,
+        handle: profile.handle,
         displayName: profile.displayName || '',
       })
 
@@ -44,7 +42,7 @@ export function useVerificationCreateMutation() {
         },
         () => {
           return appviewClient.call(app.bsky.actor.getProfile, {
-            actor: (profile.did ?? '') as AtIdentifierString,
+            actor: profile.did ?? '',
           })
         },
       )

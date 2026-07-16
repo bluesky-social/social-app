@@ -1,4 +1,3 @@
-import {type ChatBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
 import {type $Typed} from '@atproto/lex'
 import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 
@@ -78,7 +77,7 @@ export function localDateString(date: Date) {
 }
 
 export function hasAlreadyReacted(
-  message: ChatBskyConvoDefs.MessageView,
+  message: chat.bsky.convo.defs.MessageView,
   myDid: string | undefined,
   emoji: string,
 ): boolean {
@@ -99,9 +98,9 @@ export function hasAlreadyReacted(
  * already render anonymously ("Someone reacted").
  */
 export function filterBlockedReactions(
-  reactions: ChatBskyConvoDefs.ReactionView[] | undefined,
-  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>,
-): ChatBskyConvoDefs.ReactionView[] {
+  reactions: chat.bsky.convo.defs.ReactionView[] | undefined,
+  relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic>,
+): chat.bsky.convo.defs.ReactionView[] {
   if (!reactions) return []
   return reactions.filter(reaction => {
     const profile = relatedProfiles.get(reaction.sender.did)
@@ -110,7 +109,7 @@ export function filterBlockedReactions(
 }
 
 export function hasReachedReactionLimit(
-  message: ChatBskyConvoDefs.MessageView,
+  message: chat.bsky.convo.defs.MessageView,
   myDid: string | undefined,
 ): boolean {
   if (!message.reactions) {
@@ -174,25 +173,25 @@ export function canReact({
   return true
 }
 
-export type GroupConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
+export type GroupConvoMember = chat.bsky.actor.defs.ProfileViewBasic & {
   // can be missing if account deleted
-  kind?: $Typed<ChatBskyActorDefs.GroupConvoMember>
+  kind?: $Typed<chat.bsky.actor.defs.GroupConvoMember>
 }
 
-export type DirectConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
-  kind: $Typed<ChatBskyActorDefs.DirectConvoMember>
+export type DirectConvoMember = chat.bsky.actor.defs.ProfileViewBasic & {
+  kind: $Typed<chat.bsky.actor.defs.DirectConvoMember>
 }
 
-export type ConvoWithDetails = {view: ChatBskyConvoDefs.ConvoView} & (
+export type ConvoWithDetails = {view: chat.bsky.convo.defs.ConvoView} & (
   | {
       kind: 'group'
-      details: $Typed<ChatBskyConvoDefs.GroupConvo>
+      details: $Typed<chat.bsky.convo.defs.GroupConvo>
       primaryMember?: GroupConvoMember // the owner - may have left, thus optional
       members: Array<GroupConvoMember>
     }
   | {
       kind: 'direct'
-      details: $Typed<ChatBskyConvoDefs.DirectConvo>
+      details: $Typed<chat.bsky.convo.defs.DirectConvo>
       primaryMember: DirectConvoMember // the other user
       members: Array<DirectConvoMember>
     }
@@ -203,7 +202,7 @@ export type ConvoWithDetails = {view: ChatBskyConvoDefs.ConvoView} & (
  * and enforces the correct type for convo members.
  */
 export function parseConvoView(
-  convoView: ChatBskyConvoDefs.ConvoView,
+  convoView: chat.bsky.convo.defs.ConvoView,
   ownDid: string | undefined,
 ): ConvoWithDetails | null {
   if (bsky.isType(chat.bsky.convo.defs.groupConvo, convoView.kind)) {

@@ -1,5 +1,4 @@
 import {Keyboard, View} from 'react-native'
-import {type AppBskyActorDefs, type AppBskyFeedDefs} from '@atproto/api'
 import {
   moderateFeedGenerator,
   moderateProfile,
@@ -25,6 +24,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Checkbox} from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {toLex} from '#/types/bsky'
 
@@ -41,8 +41,8 @@ function WizardListCard({
 }: {
   type: 'user' | 'algo'
   btnType: 'checkbox' | 'remove'
-  profile?: AppBskyActorDefs.ProfileViewBasic
-  feed?: AppBskyFeedDefs.GeneratorView
+  profile?: app.bsky.actor.defs.ProfileViewBasic
+  feed?: app.bsky.feed.defs.GeneratorView
   displayName: string
   subtitle: string
   onPress: () => void
@@ -186,7 +186,7 @@ export function WizardFeedCard({
   moderationOpts,
 }: {
   btnType: 'checkbox' | 'remove'
-  generator: AppBskyFeedDefs.GeneratorView
+  generator: app.bsky.feed.defs.GeneratorView
   state: WizardState
   dispatch: (action: WizardAction) => void
   moderationOpts: ModerationOpts
