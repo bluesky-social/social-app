@@ -17,6 +17,7 @@ import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
 import {useGroupChatJoinIntent} from '#/lib/hooks/useIntentHandler'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import * as KeyboardActivation from '#/lib/hotkeys/KeyboardActivation'
 import {type AllNavigatorParams, type RouteParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
@@ -145,8 +146,8 @@ export function useLink({
   const groupChatJoinIntent = useGroupChatJoinIntent()
 
   const onPress = useCallback(
-    (e: GestureResponderEvent) => {
-      const exitEarlyIfFalse = outerOnPress?.(e)
+    (e?: GestureResponderEvent) => {
+      const exitEarlyIfFalse = outerOnPress?.(e as GestureResponderEvent)
 
       if (exitEarlyIfFalse === false) return
 
@@ -158,7 +159,7 @@ export function useLink({
       )
 
       if (IS_WEB) {
-        e.preventDefault()
+        e?.preventDefault()
       }
 
       const chatInviteCode = getChatInviteCodeFromUrl(href)
@@ -176,7 +177,7 @@ export function useLink({
         if (isExternal) {
           void openLink(href, overridePresentation, shouldProxy)
         } else {
-          const shouldOpenInNewTab = shouldClickOpenNewTab(e)
+          const shouldOpenInNewTab = e ? shouldClickOpenNewTab(e) : false
 
           if (isBskyDownloadUrl(href)) {
             void shareUrl(BSKY_DOWNLOAD_URL)
@@ -334,6 +335,8 @@ export function Link({
     shouldProxy: shouldProxy,
     overridePresentation,
   })
+  const activate = useCallback(() => onPress(), [onPress])
+  KeyboardActivation.useRegistration(activate)
 
   // Peek is iOS-only and only makes sense for external web links.
   const peekEnabled = Boolean(peek && IS_IOS && isExternal)
@@ -372,17 +375,19 @@ export function Link({
     // the peek animation clips to the same corners as the rendered card.
     const borderRadius = flatten(rest.style)?.borderRadius
     return (
-      <LinkPeek
-        href={href}
-        onPreviewPress={openExternally}
-        shouldProxy={shouldProxy}
-        borderRadius={typeof borderRadius === 'number' ? borderRadius : 0}>
-        {button}
-      </LinkPeek>
+      <KeyboardActivation.Isolation>
+        <LinkPeek
+          href={href}
+          onPreviewPress={openExternally}
+          shouldProxy={shouldProxy}
+          borderRadius={typeof borderRadius === 'number' ? borderRadius : 0}>
+          {button}
+        </LinkPeek>
+      </KeyboardActivation.Isolation>
     )
   }
 
-  return button
+  return <KeyboardActivation.Isolation>{button}</KeyboardActivation.Isolation>
 }
 
 /**

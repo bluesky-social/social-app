@@ -9,6 +9,7 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useFeedKeyboardNav} from '#/lib/hotkeys'
+import * as KeyboardActivation from '#/lib/hotkeys/KeyboardActivation'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -376,16 +377,22 @@ export function FeedsScreen(_props: Props) {
   const focusableIndices = useMemo(() => {
     const indices: number[] = []
     for (let i = 0; i < items.length; i++) {
-      const type = items[i].type
-      if (type === 'savedFeed' || type === 'popularFeed') {
+      const item = items[i]
+      if (
+        (item.type === 'savedFeed' && item.savedFeed.type !== 'timeline') ||
+        item.type === 'popularFeed'
+      ) {
         indices.push(i)
       }
     }
     return indices
   }, [items])
 
-  const {focusedIndex: focusedFeedItemIndex, itemRef: feedItemRef} =
-    useFeedKeyboardNav({focusableIndices, active: isScreenFocused})
+  const {
+    focusedIndex: focusedFeedItemIndex,
+    itemRef: feedItemRef,
+    itemActivation: feedItemActivation,
+  } = useFeedKeyboardNav({focusableIndices, active: isScreenFocused})
 
   const searchBarIndex = items.findIndex(
     item => item.type === 'popularFeedsHeader',
@@ -446,7 +453,9 @@ export function FeedsScreen(_props: Props) {
         return (
           <View ref={feedItemRef(index)} style={[a.relative]}>
             <SubtleHover hover={index === focusedFeedItemIndex} />
-            <FeedOrFollowing savedFeed={item.savedFeed} />
+            <KeyboardActivation.Boundary register={feedItemActivation(index)}>
+              <FeedOrFollowing savedFeed={item.savedFeed} />
+            </KeyboardActivation.Boundary>
           </View>
         )
       } else if (item.type === 'popularFeedsHeader') {
@@ -474,7 +483,9 @@ export function FeedsScreen(_props: Props) {
             style={[a.px_lg, a.pt_lg, a.gap_lg, a.relative]}
             ref={feedItemRef(index)}>
             <SubtleHover hover={index === focusedFeedItemIndex} />
-            <FeedCard.Default view={item.feed} />
+            <KeyboardActivation.Boundary register={feedItemActivation(index)}>
+              <FeedCard.Default view={item.feed} />
+            </KeyboardActivation.Boundary>
             <Divider />
           </View>
         )
@@ -516,6 +527,7 @@ export function FeedsScreen(_props: Props) {
       onSubmitQuery,
       onChangeSearchFocus,
       feedItemRef,
+      feedItemActivation,
       focusedFeedItemIndex,
     ],
   )

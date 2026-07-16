@@ -131,14 +131,20 @@ function useKeyboardShortcuts() {
   useHotkeys(Hotkeys.PAGE_FORWARD, () => handleKey(emitFocusNextPost), {
     scopes: ['feed'],
     description: l`Focus the next post`,
+    enableOnFormTags: false,
+    enableOnContentEditable: false,
   })
   useHotkeys(Hotkeys.PAGE_BACKWARD, () => handleKey(emitFocusPrevPost), {
     scopes: ['feed'],
     description: l`Focus the previous post`,
+    enableOnFormTags: false,
+    enableOnContentEditable: false,
   })
   useHotkeys(Hotkeys.OPEN_POST, () => handleKey(emitOpenFocusedPost), {
     scopes: ['feed'],
     description: l`Open this post`,
+    enableOnFormTags: false,
+    enableOnContentEditable: false,
   })
 }
 
@@ -165,6 +171,10 @@ export function useFeedKeyboardNav({
   const itemRefCallbacksRef = useRef<Map<number, (el: View | null) => void>>(
     new Map(),
   )
+  const itemActivationCallbacksRef = useRef<Map<number, () => void>>(new Map())
+  const itemActivationRegistrarsRef = useRef<
+    Map<number, (activate: () => void) => () => void>
+  >(new Map())
   const scrollingRef = useRef(false)
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
@@ -181,6 +191,22 @@ export function useFeedKeyboardNav({
       itemRefCallbacksRef.current.set(index, callback)
     }
     return callback
+  }, [])
+
+  const itemActivation = useCallback((index: number) => {
+    let register = itemActivationRegistrarsRef.current.get(index)
+    if (!register) {
+      register = (activate: () => void) => {
+        itemActivationCallbacksRef.current.set(index, activate)
+        return () => {
+          if (itemActivationCallbacksRef.current.get(index) === activate) {
+            itemActivationCallbacksRef.current.delete(index)
+          }
+        }
+      }
+      itemActivationRegistrarsRef.current.set(index, register)
+    }
+    return register
   }, [])
 
   useEffect(() => {
@@ -262,8 +288,7 @@ export function useFeedKeyboardNav({
     const unlistenOpen = listenOpenFocusedPost(() => {
       if (!active) return
       if (focusedIndex < 0) return
-      const el = itemElsRef.current.get(focusedIndex) as HTMLElement
-      el?.click()
+      itemActivationCallbacksRef.current.get(focusedIndex)?.()
     })
     return () => {
       unlistenNext()
@@ -278,5 +303,5 @@ export function useFeedKeyboardNav({
     isFocusedItemVisible,
   ])
 
-  return {focusedIndex, setFocusedIndex, itemRef}
+  return {focusedIndex, setFocusedIndex, itemRef, itemActivation}
 }

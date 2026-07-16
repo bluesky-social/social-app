@@ -7,6 +7,7 @@ import {useIsFocused} from '@react-navigation/native'
 import {urls} from '#/lib/constants'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useFeedKeyboardNav} from '#/lib/hotkeys'
+import * as KeyboardActivation from '#/lib/hotkeys/KeyboardActivation'
 import {useCallOnce} from '#/lib/once'
 import {
   cleanError,
@@ -405,7 +406,7 @@ let SearchScreenPostResults = ({
     }
     return indices
   }, [items])
-  const {focusedIndex, itemRef} = useFeedKeyboardNav({
+  const {focusedIndex, itemRef, itemActivation} = useFeedKeyboardNav({
     focusableIndices,
     active,
   })
@@ -463,12 +464,15 @@ let SearchScreenPostResults = ({
                   return (
                     <View>
                       <SubtleHover hover={index === focusedIndex} />
-                      <SearchPost
-                        from={sort}
-                        ref={itemRef(index)}
-                        position={index}
-                        post={item.post}
-                      />
+                      <KeyboardActivation.Boundary
+                        register={itemActivation(index)}>
+                        <SearchPost
+                          from={sort}
+                          ref={itemRef(index)}
+                          position={index}
+                          post={item.post}
+                        />
+                      </KeyboardActivation.Boundary>
                     </View>
                   )
                 } else {
@@ -589,7 +593,7 @@ let SearchScreenUserResults = ({
   const focusableIndices = useMemo(() => {
     return profiles.map((_: bsky.profile.AnyProfileView, i: number) => i)
   }, [profiles])
-  const {focusedIndex, itemRef} = useFeedKeyboardNav({
+  const {focusedIndex, itemRef, itemActivation} = useFeedKeyboardNav({
     focusableIndices,
     active,
   })
@@ -621,7 +625,9 @@ let SearchScreenUserResults = ({
           }) => (
             <View ref={itemRef(index)}>
               <SubtleHover hover={index === focusedIndex} />
-              <SearchScreenProfileButton position={index} profile={item} />
+              <KeyboardActivation.Boundary register={itemActivation(index)}>
+                <SearchScreenProfileButton position={index} profile={item} />
+              </KeyboardActivation.Boundary>
             </View>
           )}
           keyExtractor={(item: bsky.profile.AnyProfileView) => item.did}
@@ -696,7 +702,7 @@ let SearchScreenFeedsResults = ({
       (_: AppBskyFeedDefs.GeneratorView, i: number) => i,
     )
   }, [results])
-  const {focusedIndex, itemRef} = useFeedKeyboardNav({
+  const {focusedIndex, itemRef, itemActivation} = useFeedKeyboardNav({
     focusableIndices,
     active,
   })
@@ -723,7 +729,9 @@ let SearchScreenFeedsResults = ({
                 a.relative,
               ]}>
               <SubtleHover hover={index === focusedIndex} />
-              <SearchFeedCard position={index} view={item} />
+              <KeyboardActivation.Boundary register={itemActivation(index)}>
+                <SearchFeedCard position={index} view={item} />
+              </KeyboardActivation.Boundary>
             </View>
           )}
           keyExtractor={(item: AppBskyFeedDefs.GeneratorView) => item.uri}

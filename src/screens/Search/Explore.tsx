@@ -12,6 +12,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
 import {useFeedKeyboardNav} from '#/lib/hotkeys'
+import * as KeyboardActivation from '#/lib/hotkeys/KeyboardActivation'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -796,8 +797,11 @@ export function Explore({
     return indices
   }, [items])
 
-  const {focusedIndex: focusedFeedItemIndex, itemRef: feedItemRef} =
-    useFeedKeyboardNav({focusableIndices, active: isScreenFocused})
+  const {
+    focusedIndex: focusedFeedItemIndex,
+    itemRef: feedItemRef,
+    itemActivation: feedItemActivation,
+  } = useFeedKeyboardNav({focusableIndices, active: isScreenFocused})
 
   const renderItem = useCallback(
     ({item, index}: {item: ExploreScreenItems; index: number}) => {
@@ -859,13 +863,15 @@ export function Explore({
           return (
             <View style={[a.relative]} ref={feedItemRef(index)}>
               <SubtleHover hover={index === focusedFeedItemIndex} />
-              <TrendRow
-                trend={item.trend}
-                rank={item.rank}
-                onPress={() => {
-                  ax.metric('trendingTopic:click', {context: 'explore'})
-                }}
-              />
+              <KeyboardActivation.Boundary register={feedItemActivation(index)}>
+                <TrendRow
+                  trend={item.trend}
+                  rank={item.rank}
+                  onPress={() => {
+                    ax.metric('trendingTopic:click', {context: 'explore'})
+                  }}
+                />
+              </KeyboardActivation.Boundary>
             </View>
           )
         }
@@ -879,12 +885,14 @@ export function Explore({
           return (
             <View ref={feedItemRef(index)}>
               <SubtleHover hover={index === focusedFeedItemIndex} />
-              <SuggestedProfileCard
-                profile={item.profile}
-                moderationOpts={moderationOpts!}
-                recId={item.recId}
-                position={index}
-              />
+              <KeyboardActivation.Boundary register={feedItemActivation(index)}>
+                <SuggestedProfileCard
+                  profile={item.profile}
+                  moderationOpts={moderationOpts!}
+                  recId={item.recId}
+                  position={index}
+                />
+              </KeyboardActivation.Boundary>
             </View>
           )
         }
@@ -915,17 +923,19 @@ export function Explore({
               ]}
               ref={feedItemRef(index)}>
               <SubtleHover hover={index === focusedFeedItemIndex} />
-              <FeedCard.Default
-                view={item.feed}
-                onPress={() => {
-                  if (!useFullExperience) {
-                    return
-                  }
-                  ax.metric('feed:suggestion:press', {
-                    feedUrl: item.feed.uri,
-                  })
-                }}
-              />
+              <KeyboardActivation.Boundary register={feedItemActivation(index)}>
+                <FeedCard.Default
+                  view={item.feed}
+                  onPress={() => {
+                    if (!useFullExperience) {
+                      return
+                    }
+                    ax.metric('feed:suggestion:press', {
+                      feedUrl: item.feed.uri,
+                    })
+                  }}
+                />
+              </KeyboardActivation.Boundary>
             </View>
           )
         }
@@ -934,7 +944,10 @@ export function Explore({
             <View style={[a.px_lg, a.pb_lg]}>
               <View style={[a.relative]} ref={feedItemRef(index)}>
                 <SubtleHover hover={index === focusedFeedItemIndex} />
-                <StarterPackCard view={item.view} />
+                <KeyboardActivation.Boundary
+                  register={feedItemActivation(index)}>
+                  <StarterPackCard view={item.view} />
+                </KeyboardActivation.Boundary>
               </View>
             </View>
           )
@@ -1044,19 +1057,22 @@ export function Explore({
                     a.overflow_hidden,
                   ]}>
                   <SubtleHover hover={index === focusedFeedItemIndex} />
-                  <ModuleHeader.FeedLink feed={item.feed}>
-                    <ModuleHeader.FeedAvatar feed={item.feed} />
-                    <View style={[a.flex_1, a.gap_2xs]}>
-                      <ModuleHeader.TitleText style={[a.text_lg]}>
-                        {item.feed.displayName}
-                      </ModuleHeader.TitleText>
-                      <ModuleHeader.SubtitleText>
-                        <Trans>
-                          By {sanitizeHandle(item.feed.creator.handle, '@')}
-                        </Trans>
-                      </ModuleHeader.SubtitleText>
-                    </View>
-                  </ModuleHeader.FeedLink>
+                  <KeyboardActivation.Boundary
+                    register={feedItemActivation(index)}>
+                    <ModuleHeader.FeedLink feed={item.feed}>
+                      <ModuleHeader.FeedAvatar feed={item.feed} />
+                      <View style={[a.flex_1, a.gap_2xs]}>
+                        <ModuleHeader.TitleText style={[a.text_lg]}>
+                          {item.feed.displayName}
+                        </ModuleHeader.TitleText>
+                        <ModuleHeader.SubtitleText>
+                          <Trans>
+                            By {sanitizeHandle(item.feed.creator.handle, '@')}
+                          </Trans>
+                        </ModuleHeader.SubtitleText>
+                      </View>
+                    </ModuleHeader.FeedLink>
+                  </KeyboardActivation.Boundary>
                 </View>
                 <ModuleHeader.PinButton feed={item.feed} />
               </ModuleHeader.Container>
@@ -1080,29 +1096,33 @@ export function Explore({
           const indexInSlice = item.indexInSlice
           const subItem = slice.items[indexInSlice]
           return (
-            <PostFeedItem
-              post={subItem.post}
-              record={subItem.record}
-              reason={indexInSlice === 0 ? slice.reason : undefined}
-              feedContext={slice.feedContext}
-              reqId={slice.reqId}
-              moderation={subItem.moderation}
-              parentAuthor={subItem.parentAuthor}
-              showReplyTo={item.showReplyTo}
-              isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
-              isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
-              isThreadLastChild={
-                isThreadChildAt(slice.items, indexInSlice) &&
-                slice.items.length === indexInSlice + 1
-              }
-              isParentBlocked={subItem.isParentBlocked}
-              isParentNotFound={subItem.isParentNotFound}
-              hideTopBorder={item.hideTopBorder}
-              rootPost={slice.items[0].post}
-              feedItemIndex={indexInSlice === 0 ? index : undefined}
-              feedItemRef={indexInSlice === 0 ? feedItemRef(index) : undefined}
-              isFocused={indexInSlice === 0 && index === focusedFeedItemIndex}
-            />
+            <KeyboardActivation.Boundary register={feedItemActivation(index)}>
+              <PostFeedItem
+                post={subItem.post}
+                record={subItem.record}
+                reason={indexInSlice === 0 ? slice.reason : undefined}
+                feedContext={slice.feedContext}
+                reqId={slice.reqId}
+                moderation={subItem.moderation}
+                parentAuthor={subItem.parentAuthor}
+                showReplyTo={item.showReplyTo}
+                isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
+                isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
+                isThreadLastChild={
+                  isThreadChildAt(slice.items, indexInSlice) &&
+                  slice.items.length === indexInSlice + 1
+                }
+                isParentBlocked={subItem.isParentBlocked}
+                isParentNotFound={subItem.isParentNotFound}
+                hideTopBorder={item.hideTopBorder}
+                rootPost={slice.items[0].post}
+                feedItemIndex={indexInSlice === 0 ? index : undefined}
+                feedItemRef={
+                  indexInSlice === 0 ? feedItemRef(index) : undefined
+                }
+                isFocused={indexInSlice === 0 && index === focusedFeedItemIndex}
+              />
+            </KeyboardActivation.Boundary>
           )
         }
         case 'preview:sliceViewFullThread': {
@@ -1139,6 +1159,7 @@ export function Explore({
       l,
       fetchNextPageFeedPreviews,
       feedItemRef,
+      feedItemActivation,
       focusedFeedItemIndex,
     ],
   )

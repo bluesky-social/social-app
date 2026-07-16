@@ -21,5 +21,6 @@ export function useFeedKeyboardNav() {
     focusedIndex: -1,
     setFocusedIndex: () => -1,
     itemRef: () => () => {},
+    itemActivation: () => () => noop,
   }
 }

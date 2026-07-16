@@ -27,6 +27,7 @@ import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useFeedKeyboardNav} from '#/lib/hotkeys'
+import * as KeyboardActivation from '#/lib/hotkeys/KeyboardActivation'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
@@ -211,6 +212,7 @@ let PostFeed = ({
   savedFeedConfig,
   initialNumToRender: initialNumToRenderOverride,
   isVideoFeed = false,
+  keyboardNavActive = true,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -233,6 +235,7 @@ let PostFeed = ({
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
   initialNumToRender?: number
   isVideoFeed?: boolean
+  keyboardNavActive?: boolean
   lastFetchDate?: () => number
 }): React.ReactNode => {
   const ax = useAnalytics()
@@ -713,9 +716,10 @@ let PostFeed = ({
     focusedIndex: focusedFeedItemIndex,
     setFocusedIndex: setFocusedFeedItemIndex,
     itemRef: feedItemRef,
+    itemActivation: feedItemActivation,
   } = useFeedKeyboardNav({
     focusableIndices,
-    active: isScreenFocused && enabled !== false,
+    active: isScreenFocused && enabled !== false && keyboardNavActive,
   })
 
   // Keyboard nav: Reset keyboard focus when feed data changes.
@@ -838,30 +842,36 @@ let PostFeed = ({
         const indexInSlice = row.indexInSlice
         const item = slice.items[indexInSlice]
         return (
-          <PostFeedItem
-            post={item.post}
-            record={item.record}
-            reason={indexInSlice === 0 ? slice.reason : undefined}
-            feedContext={slice.feedContext}
-            reqId={slice.reqId}
-            moderation={item.moderation}
-            parentAuthor={item.parentAuthor}
-            showReplyTo={row.showReplyTo}
-            isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
-            isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
-            isThreadLastChild={
-              isThreadChildAt(slice.items, indexInSlice) &&
-              slice.items.length === indexInSlice + 1
-            }
-            isParentBlocked={item.isParentBlocked}
-            isParentNotFound={item.isParentNotFound}
-            hideTopBorder={rowIndex === 0 && indexInSlice === 0}
-            rootPost={slice.items[0].post}
-            onShowLess={onPressShowLess}
-            feedItemIndex={indexInSlice === 0 ? rowIndex : undefined}
-            feedItemRef={indexInSlice === 0 ? feedItemRef(rowIndex) : undefined}
-            isFocused={indexInSlice === 0 && rowIndex === focusedFeedItemIndex}
-          />
+          <KeyboardActivation.Boundary register={feedItemActivation(rowIndex)}>
+            <PostFeedItem
+              post={item.post}
+              record={item.record}
+              reason={indexInSlice === 0 ? slice.reason : undefined}
+              feedContext={slice.feedContext}
+              reqId={slice.reqId}
+              moderation={item.moderation}
+              parentAuthor={item.parentAuthor}
+              showReplyTo={row.showReplyTo}
+              isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
+              isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
+              isThreadLastChild={
+                isThreadChildAt(slice.items, indexInSlice) &&
+                slice.items.length === indexInSlice + 1
+              }
+              isParentBlocked={item.isParentBlocked}
+              isParentNotFound={item.isParentNotFound}
+              hideTopBorder={rowIndex === 0 && indexInSlice === 0}
+              rootPost={slice.items[0].post}
+              onShowLess={onPressShowLess}
+              feedItemIndex={indexInSlice === 0 ? rowIndex : undefined}
+              feedItemRef={
+                indexInSlice === 0 ? feedItemRef(rowIndex) : undefined
+              }
+              isFocused={
+                indexInSlice === 0 && rowIndex === focusedFeedItemIndex
+              }
+            />
+          </KeyboardActivation.Boundary>
         )
       } else if (row.type === 'sliceViewFullThread') {
         return <ViewFullThread uri={row.uri} />
@@ -915,6 +925,7 @@ let PostFeed = ({
       feedCacheKey,
       onPressShowLess,
       feedItemRef,
+      feedItemActivation,
       focusedFeedItemIndex,
     ],
   )
