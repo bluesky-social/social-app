@@ -228,7 +228,7 @@ export function BottomBarWeb() {
                 },
               ]}>
               <View style={[a.flex_row, a.align_center, a.gap_md]}>
-                <Logo width={32} />
+                <Logo allowVariants={false} width={32} />
                 <View style={{paddingTop: 4}}>
                   <Logotype width={80} fill={t.atoms.text.color} />
                 </View>

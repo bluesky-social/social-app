@@ -18,6 +18,7 @@ export enum Features {
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
   PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
   PostThreadKnownLikersFetchEnable = 'post_thread:known_likers:fetch:enable',
+  CustomLogoJapanEnable = 'custom_logo:japan:enable',
 
   AATest = 'aa-test',
 }
