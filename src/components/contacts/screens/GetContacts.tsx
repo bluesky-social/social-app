@@ -2,7 +2,6 @@ import {useContext} from 'react'
 import {Alert, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as Contacts from 'expo-contacts'
-import type AtpAgent from '@atproto/api'
 import {
   type AppBskyActorProfile,
   AppBskyContactImportContacts,
@@ -17,7 +16,7 @@ import {uploadBlob} from '#/lib/api'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {findContactsStatusQueryKey} from '#/state/queries/find-contacts'
-import {useAgent} from '#/state/session'
+import {type SessionAgent, useAgent} from '#/state/session'
 import {
   Context as OnboardingContext,
   type OnboardingAction,
@@ -325,7 +324,7 @@ function showPermissionDeniedAlert() {
  * Copied from `#/screens/Onboarding/StepFinished/index.tsx`
  */
 async function createProfileRecord(
-  agent: AtpAgent,
+  agent: SessionAgent,
   onboardingContext: {
     state: OnboardingState
     dispatch: React.Dispatch<OnboardingAction>

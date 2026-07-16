@@ -4,7 +4,6 @@ import {
   type AppBskyGraphGetStarterPack,
   AppBskyGraphStarterpack,
   type AppBskyRichtextFacet,
-  type AtpAgent,
   AtUri,
   RichText,
 } from '@atproto/api'
@@ -26,7 +25,7 @@ import {
 import {invalidateActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
 import {STALE} from '#/state/queries/index'
 import {invalidateListMembersQuery} from '#/state/queries/list-members'
-import {useAgent} from '#/state/session'
+import {type SessionAgent, useAgent} from '#/state/session'
 import * as bsky from '#/types/bsky'
 
 const RQKEY_ROOT = 'starter-pack'
@@ -340,7 +339,7 @@ export function useDeleteStarterPackMutation({
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  agent: SessionAgent,
   uri: string,
   fn: (res?: AppBskyGraphGetStarterPack.Response) => boolean,
 ) {

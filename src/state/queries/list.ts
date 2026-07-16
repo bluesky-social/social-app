@@ -3,7 +3,6 @@ import {
   type AppBskyGraphDefs,
   type AppBskyGraphGetList,
   type AppBskyGraphList,
-  type AtpAgent,
   AtUri,
   type ComAtprotoRepoApplyWrites,
   type Facet,
@@ -16,7 +15,7 @@ import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
-import {useAgent, useSession} from '#/state/session'
+import {type SessionAgent, useAgent, useSession} from '#/state/session'
 import {FEED_INFO_RQKEY_ROOT} from './feed'
 import {invalidate as invalidateMyLists} from './my-lists'
 import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
@@ -305,7 +304,7 @@ export function useListBlockMutation() {
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  agent: SessionAgent,
   uri: string,
   fn: (res: AppBskyGraphGetList.Response) => boolean,
 ) {

@@ -9,11 +9,12 @@ import {
   getAppLanguageAsContentLanguage,
   getContentLanguages,
 } from '#/state/preferences/languages'
+import {type SessionAgent} from '#/state/session'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
 export class CustomFeedAPI implements FeedAPI {
-  agent: AtpAgent
+  agent: SessionAgent
   params: GetCustomFeed.QueryParams
   userInterests?: string
 
@@ -22,7 +23,7 @@ export class CustomFeedAPI implements FeedAPI {
     feedParams,
     userInterests,
   }: {
-    agent: AtpAgent
+    agent: SessionAgent
     feedParams: GetCustomFeed.QueryParams
     userInterests?: string
   }) {

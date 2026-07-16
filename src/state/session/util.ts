@@ -1,26 +1,24 @@
-import AtpAgent from '@atproto/api'
-import {jwtDecode} from 'jwt-decode'
+import {PasswordSession} from '@atproto/lex-password-session'
 
 import {isJwtExpired} from '#/lib/jwt'
-import {hasProp} from '#/lib/type-guards'
 import * as persisted from '#/state/persisted'
-import {sessionAccountToSession} from './agent'
+import {
+  networkAwareFetch,
+  sessionAccountToSessionData,
+  SessionAgent,
+} from './session-core'
 import {type SessionAccount} from './types'
+
+/*
+ * Canonical implementation moved to session-core.ts so that module stays
+ * dependency-light (this file pulls in agent.ts and, transitively, a large
+ * chunk of the app). Re-exported here for existing consumers.
+ */
+export {isSignupQueued} from './session-core'
 
 export function readLastActiveAccount() {
   const {currentAccount, accounts} = persisted.get('session')
   return accounts.find(a => a.did === currentAccount?.did)
-}
-
-export function isSignupQueued(accessJwt: string | undefined) {
-  if (accessJwt) {
-    const sessData = jwtDecode(accessJwt)
-    return (
-      hasProp(sessData, 'scope') &&
-      sessData.scope === 'com.atproto.signupQueued'
-    )
-  }
-  return false
 }
 
 export function isSessionExpired(account: SessionAccount) {
@@ -32,30 +30,29 @@ export function isSessionExpired(account: SessionAccount) {
 }
 
 /**
- * Creates and attempted to resumeSession for every stored session.
- * Intended to be used to send push token revokations just before logout.
+ * Creates and resumes a throwaway session for every stored account.
+ * Intended to send push token revocations just before logout.
+ *
+ * Each returned {@link SessionAgent} wraps a temporary `PasswordSession`
+ * resumed over the network to obtain a valid access token. These sessions are
+ * deliberately hook-free (no `onUpdated`/`onDeleted`): they must NEVER persist
+ * or race the active session. They are used once for the unregister call and
+ * discarded (reclaimed by GC), so we never call `logout()` on them.
  */
 export async function createTemporaryAgentsAndResume(
   accounts: SessionAccount[],
-) {
-  const agents = await Promise.allSettled(
+): Promise<SessionAgent[]> {
+  const settled = await Promise.allSettled(
     accounts.map(async account => {
-      const agent: AtpAgent = new AtpAgent({service: account.service})
-      if (account.pdsUrl) {
-        agent.sessionManager.pdsUrl = new URL(account.pdsUrl)
-      }
-
-      const session = sessionAccountToSession(account)
-      const res = await agent.resumeSession(session)
-      if (!res.success) throw new Error('Failed to resume session')
-
-      agent.assertAuthenticated() // confirm auth success
-
-      return agent
+      const session = await PasswordSession.resume(
+        sessionAccountToSessionData(account),
+        {fetch: networkAwareFetch},
+      )
+      return new SessionAgent(session)
     }),
   )
 
-  return agents
+  return settled
     .filter(x => x.status === 'fulfilled')
     .map(promise => promise.value)
 }

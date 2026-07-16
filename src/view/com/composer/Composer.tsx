@@ -50,7 +50,6 @@ import {
   AppBskyDraftCreateDraft,
   AppBskyUnspeccedDefs,
   type AppBskyUnspeccedGetPostThreadV2,
-  type AtpAgent,
   AtUri,
   ChatBskyGroupDefs,
   type RichText,
@@ -97,7 +96,7 @@ import {
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
-import {useAgent, useSession} from '#/state/session'
+import {type SessionAgent, useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
@@ -2449,7 +2448,7 @@ function useKeyboardVerticalOffset() {
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  agent: SessionAgent,
   uri: string,
   fn: (res: AppBskyUnspeccedGetPostThreadV2.Response) => boolean,
 ) {

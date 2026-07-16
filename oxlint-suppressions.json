@@ -1524,11 +1524,6 @@
       "count": 1
     }
   },
-  "src/state/session/agent.ts": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/state/shell/color-mode.tsx": {
     "typescript/no-floating-promises": {
       "count": 2

@@ -2,7 +2,7 @@ import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
-import {type AppBskyNotificationRegisterPush, type AtpAgent} from '@atproto/api'
+import {type AppBskyNotificationRegisterPush} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
 import {
@@ -13,6 +13,7 @@ import {
 import {logger as notyLogger} from '#/lib/notifications/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
+import {type SessionAgent} from '#/state/session/session-core'
 import BackgroundNotificationHandler from '#/../modules/expo-background-notification-handler'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
@@ -28,7 +29,7 @@ async function _registerPushToken({
   token,
   extra = {},
 }: {
-  agent: AtpAgent
+  agent: SessionAgent
   currentAccount: SessionAccount
   token: Notifications.DevicePushToken
   extra?: {
@@ -326,7 +327,7 @@ export async function resetBadgeCount() {
   await setBadgeCountAsync(0)
 }
 
-export async function unregisterPushToken(agents: AtpAgent[]) {
+export async function unregisterPushToken(agents: SessionAgent[]) {
   if (!IS_NATIVE) return
 
   try {

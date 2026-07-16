@@ -1,7 +1,10 @@
 import {type AtpAgent} from '@atproto/api'
 import {Client} from '@atproto/lex-client'
+import {type PasswordSession} from '@atproto/lex-password-session'
+import {api} from '@bsky.app/sdk'
 
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {networkAwareFetch} from './session-core'
 
 /**
  * Stable per-agent cache of lex `Client` instances. We never reuse an
@@ -58,9 +61,53 @@ export function agentToLexClient(agent: AtpAgent): Client {
  */
 let publicClient: Client | undefined
 
-function getPublicLexClient(): Client {
-  publicClient ??= new Client(PUBLIC_BSKY_SERVICE)
+export function getPublicLexClient(): Client {
+  /*
+   * Pass networkAwareFetch so the unauthenticated public path feeds the same
+   * reachability signal as the session-backed clients (see session-core).
+   */
+  publicClient ??= new Client({
+    service: PUBLIC_BSKY_SERVICE,
+    fetch: networkAwareFetch,
+  })
   return publicClient
+}
+
+/**
+ * Build the account (PDS) client over a {@link PasswordSession}. Writes and
+ * record mutations go here - no `atproto-proxy` header, so requests hit the
+ * user's PDS directly (the session's `fetchHandler` resolves the PDS origin
+ * per request from the didDoc, falling back to `service`).
+ *
+ * The session already owns its own `fetch` (networkAwareFetch, set at
+ * construction), so we intentionally do NOT pass `fetch` here: a `Client`
+ * built over an existing `Agent`/session uses that agent's fetch.
+ */
+export function buildAccountClient(session: PasswordSession): Client {
+  return new Client(session)
+}
+
+/**
+ * Build the authed appview client over a {@link PasswordSession}.
+ *
+ * Requests are proxied to the Bluesky appview (`atproto-proxy:
+ * did:web:api.bsky.app#bsky_appview`) and carry the per-instance labelers.
+ * The Bluesky moderation labeler (`api.moderation.did`) is always included as
+ * a base labeler because sending ANY `atproto-accept-labelers` header replaces
+ * the server-side default - so we must re-assert it to keep it active.
+ */
+export function buildAppviewClient(
+  session: PasswordSession,
+  labelerDids: string[],
+): Client {
+  return new Client(session, {
+    service: api.app.service,
+    /* labelerDids are validated DID strings; cast to the DidString template type */
+    labelers: [
+      api.moderation.did,
+      ...labelerDids,
+    ] as `did:${string}:${string}`[],
+  })
 }
 
 /**

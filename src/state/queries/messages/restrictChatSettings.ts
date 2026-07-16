@@ -1,8 +1,8 @@
-import type AtpAgent from '@atproto/api'
 import {type ChatBskyActorDeclaration} from '@atproto/api'
 
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
+import {type SessionAgent} from '#/state/session'
 import {
   getDidFromAgentSession,
   getOtherRequiredDataFromCache,
@@ -28,7 +28,7 @@ export async function restrictChatSettings({
   restrictIncoming = false,
   restrictGroupInvites = false,
 }: {
-  agent: AtpAgent
+  agent: SessionAgent
   restrictIncoming?: boolean
   restrictGroupInvites?: boolean
 }): Promise<void> {

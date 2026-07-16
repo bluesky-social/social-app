@@ -1,5 +1,5 @@
 import {createUploadTask, FileSystemUploadType} from 'expo-file-system/legacy'
-import {type AppBskyVideoDefs, type AtpAgent} from '@atproto/api'
+import {type AppBskyVideoDefs} from '@atproto/api'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 import {nanoid} from 'nanoid/non-secure'
@@ -7,6 +7,7 @@ import {nanoid} from 'nanoid/non-secure'
 import {AbortError} from '#/lib/async/cancelable'
 import {ServerError} from '#/lib/media/video/errors'
 import {type CompressedVideo} from '#/lib/media/video/types'
+import {type SessionAgent} from '#/state/session'
 import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
 import {createVideoEndpointUrl, mimeToExt} from './util'
 
@@ -19,7 +20,7 @@ export async function uploadVideo({
   i18n,
 }: {
   video: CompressedVideo
-  agent: AtpAgent
+  agent: SessionAgent
   did: string
   setProgress: (progress: number) => void
   signal: AbortSignal
