@@ -39,7 +39,7 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
       <Image
         source={
           isJapanLogo
-            ? require('../../../assets/custom_logo_japan.png')
+            ? require('../../../assets/icons/custom_logo_japan.svg')
             : size > 100
               ? require('../../../assets/kawaii.png')
               : require('../../../assets/kawaii_smol.png')
@@ -47,7 +47,7 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
         accessibilityLabel="Bluesky"
         accessibilityHint=""
         accessibilityIgnoresInvertColors
-        style={[{height: size, aspectRatio: isJapanLogo ? 1940 / 1080 : 1.4}]}
+        style={[{height: size, aspectRatio: isJapanLogo ? 2 : 1.4}]}
       />
     )
   }
