@@ -118,8 +118,10 @@ jobs:
 
       - name: Restore to base commit
         if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+        env:
+          BASE_COMMIT: ${{ steps.base-commit.outputs.base-commit }}
         run: |
-          git reset HEAD~
+          git reset "$BASE_COMMIT"
           git restore .
 
       - name: 🔦 Generate stats file from base commit
