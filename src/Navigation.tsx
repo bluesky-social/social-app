@@ -1003,14 +1003,15 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
     })
 
     if (IS_WEB) {
-      const referrerInfo = Referrer.getReferrerInfo()
-      if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-        ax.metric('deepLink:referrerReceived', {
-          to: window.location.href,
-          referrer: referrerInfo?.referrer,
-          hostname: referrerInfo?.hostname,
-        })
-      }
+      void Referrer.getReferrerInfo().then(referrerInfo => {
+        if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+          ax.metric('deepLink:referrerReceived', {
+            to: window.location.href,
+            referrer: referrerInfo?.referrer,
+            hostname: referrerInfo?.hostname,
+          })
+        }
+      })
     }
 
     // temp, just testing

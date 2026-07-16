@@ -1,6 +1,8 @@
+import {type QueryClient} from '@tanstack/react-query'
+
 import {atoms as a, flatten} from '#/alf'
 
-export function clearThumbnailCache() {
+export function clearThumbnailCache(_queryClient: QueryClient) {
   // no-op on web
 }
 

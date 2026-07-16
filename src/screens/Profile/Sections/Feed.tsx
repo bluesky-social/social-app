@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
-import {findNodeHandle, View} from 'react-native'
+import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -17,6 +17,7 @@ import {
   type EmptyStateButtonProps,
 } from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
+import {findListNativeTag} from '#/view/com/util/listNativeTag'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
@@ -87,7 +88,7 @@ export function ProfileFeedSection({
 
   useEffect(() => {
     if (IS_IOS && isFocused && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
+      const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
   }, [isFocused, scrollElRef, setScrollViewTag])

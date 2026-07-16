@@ -3,6 +3,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "module": "esnext",
+    "moduleSuffixes": [".ios", ".android", ".native", ""],
     "lib": ["dom", "esnext"],
     "types": ["node", "jest"],
     "paths": {

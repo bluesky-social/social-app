@@ -16,20 +16,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import {useHaptics} from '#/lib/haptics'
-
-interface GestureAction {
-  color: ColorValue
-  action: () => void
-  threshold: number
-  icon: React.ElementType
-}
-
-interface GestureActions {
-  leftFirst?: GestureAction
-  leftSecond?: GestureAction
-  rightFirst?: GestureAction
-  rightSecond?: GestureAction
-}
+import {type GestureActions} from './GestureActionView.shared'
 
 const MAX_WIDTH = Dimensions.get('screen').width
 const ICON_SIZE = 32

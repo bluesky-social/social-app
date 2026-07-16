@@ -9,14 +9,12 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CC_Stroke2_Corner0_Rounded as CCIcon} from '#/components/icons/CC'
 import * as Toast from '#/components/Toast'
+import {type SubtitleFilePickerProps} from './SubtitleFilePicker.shared'
 
 export function SubtitleFilePicker({
   onSelectFile,
   disabled,
-}: {
-  onSelectFile: (file: File) => void
-  disabled?: boolean
-}) {
+}: SubtitleFilePickerProps) {
   const {_} = useLingui()
   const ref = useRef<HTMLInputElement>(null)
 

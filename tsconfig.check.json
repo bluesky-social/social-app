@@ -1,4 +1,12 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["src", "modules", "app.config.js"]
+  "include": ["src", "modules", "app.config.js"],
+  /*
+   * Ambient check shims apply only to the platform pass that includes them
+   * back (tsconfig.check.android.json, tsconfig.check.web.json).
+   */
+  "exclude": [
+    "src/platform/*.android-check.d.ts",
+    "src/platform/*.web-check.d.ts"
+  ]
 }
