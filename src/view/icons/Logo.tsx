@@ -16,13 +16,14 @@ import {flatten, useTheme} from '#/alf'
 const ratio = 57 / 64
 
 type Props = {
+  allowVariants?: boolean
   fill?: PathProps['fill']
   style?: TextProps['style']
 } & Omit<SvgProps, 'style'>
 
 export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
   const t = useTheme()
-  const {fill, ...rest} = props
+  const {allowVariants = true, fill, ...rest} = props
   const gradient = fill === 'sky'
   const styles = flatten(props.style)
   const _fill = gradient
@@ -31,7 +32,7 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
   // @ts-ignore it's fiiiiine
   const size = parseInt(rest.width || 32, 10)
 
-  const logoVariant = useLogoVariant()
+  const logoVariant = useLogoVariant(allowVariants)
 
   if (logoVariant !== 'default') {
     const isJapanLogo = logoVariant === 'japan'

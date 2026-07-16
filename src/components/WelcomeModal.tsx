@@ -107,7 +107,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                   a.p_0,
                 ]}>
                 <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                  <Logo width={26} />
+                  <Logo allowVariants={false} width={26} />
                   <Text
                     style={[
                       a.text_2xl,
