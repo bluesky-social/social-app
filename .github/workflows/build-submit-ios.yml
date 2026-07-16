@@ -114,7 +114,7 @@ jobs:
 
       - name: ☕️ Assert Cocoapods version
         run: |
-          EXPECTED=1.16.2
+          EXPECTED=1.17.0
           ACTUAL=$(pod --version)
           if [ "$ACTUAL" != "$EXPECTED" ]; then
             echo "Expected Cocoapods $EXPECTED but runner has $ACTUAL."
