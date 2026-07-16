@@ -210,21 +210,6 @@ export type SupportedMimeTypes = (typeof SUPPORTED_MIME_TYPES)[number]
 
 export const EMOJI_REACTION_LIMIT = 5
 
-export const urls = {
-  website: {
-    blog: {
-      findFriendsAnnouncement:
-        'https://www.blackskyweb.xyz/about/blog/12-16-2025-find-friends',
-      searchTipsAndTricks:
-        'https://www.blackskyweb.xyz/about/blog/05-31-2024-search',
-    },
-    support: {
-      findFriendsPrivacyPolicy:
-        'https://www.blackskyweb.xyz/about/support/find-friends-privacy-policy',
-    },
-  },
-}
-
 export const PUBLIC_BSKY_API = 'https://public.api.bsky.app'
 export const PUBLIC_APPVIEW = 'https://api.blacksky.community'
 export const PUBLIC_APPVIEW_DID = 'did:web:api.blacksky.community'

@@ -8,7 +8,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
-import {urls} from '#/lib/constants'
 import {
   type CountryCode,
   getDefaultCountry,
@@ -29,7 +28,6 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {InternationalPhoneCodeSelect} from '#/components/InternationalPhoneCodeSelect'
 import * as Layout from '#/components/Layout'
-import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -267,7 +265,6 @@ export function PhoneInput({
 
 function LegalDisclaimer() {
   const t = useTheme()
-  const {_} = useLingui()
 
   const style = [a.text_xs, t.atoms.text_contrast_medium, a.leading_snug]
 
@@ -296,18 +293,7 @@ function LegalDisclaimer() {
       <Text style={[style, a.mt_xs]}>
         <Trans>
           By continuing, you consent to this use. You may change your mind any
-          time by visiting settings.{' '}
-          <InlineLinkText
-            to={urls.website.support.findFriendsPrivacyPolicy}
-            label={_(
-              msg({
-                message: `Learn more about importing contacts`,
-                context: `english-only-resource`,
-              }),
-            )}
-            style={[a.text_xs, a.leading_snug]}>
-            <Trans context="english-only-resource">Learn more</Trans>
-          </InlineLinkText>
+          time by visiting settings.
         </Trans>
       </Text>
     </View>

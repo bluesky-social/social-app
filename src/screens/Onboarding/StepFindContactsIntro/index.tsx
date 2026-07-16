@@ -5,13 +5,11 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useQuery} from '@tanstack/react-query'
 
-import {urls} from '#/lib/constants'
 import {useCallOnce} from '#/lib/once'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import {ContactsHeroImage} from '#/components/contacts/components/HeroImage'
-import {InlineLinkText} from '#/components/Link'
 import {useAnalytics} from '#/analytics'
 import {
   OnboardingControls,
@@ -46,18 +44,7 @@ export function StepFindContactsIntro() {
         <Trans>
           Find your friends on Blacksky by verifying your phone number and
           matching with your contacts. We protect your information and you
-          control what happens next.{' '}
-          <InlineLinkText
-            to={urls.website.blog.findFriendsAnnouncement}
-            label={_(
-              msg({
-                message: `Learn more about importing contacts`,
-                context: `english-only-resource`,
-              }),
-            )}
-            style={[a.text_md, a.leading_snug]}>
-            <Trans context="english-only-resource">Learn more</Trans>
-          </InlineLinkText>
+          control what happens next.
         </Trans>
       </OnboardingDescriptionText>
       {!isAvailable && isSuccess && (
