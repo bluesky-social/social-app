@@ -18,6 +18,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -26,8 +27,9 @@ import {useSession} from '#/state/session'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListRef} from '#/view/com/util/List'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
+import {useProfileScrollbarAdjustment} from '#/screens/Profile/useProfileScrollbarAdjustment'
 import {atoms as a, ios, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
@@ -48,6 +50,7 @@ interface ProfileFeedgensProps {
   did: string
   scrollElRef: ListRef
   headerOffset: number
+  collapsedHeaderHeight?: number
   enabled?: boolean
   style?: StyleProp<ViewStyle>
   testID?: string
@@ -59,6 +62,7 @@ export function ProfileFeedgens({
   did,
   scrollElRef,
   headerOffset,
+  collapsedHeaderHeight = 0,
   enabled,
   style,
   testID,
@@ -67,6 +71,7 @@ export function ProfileFeedgens({
   const {_} = useLingui()
   const t = useTheme()
   const [isPTRing, setIsPTRing] = useState(false)
+
   const {height} = useWindowDimensions()
   const opts = useMemo(() => ({enabled}), [enabled])
   const {
@@ -188,7 +193,7 @@ export function ProfileFeedgens({
           />
         )
       } else if (item === LOADING) {
-        return <FeedLoadingPlaceholder />
+        return <FeedFeedLoadingPlaceholder />
       }
       if (preferences) {
         return (
@@ -244,24 +249,32 @@ export function ProfileFeedgens({
     isEmpty,
   ])
 
+  const {scrollHandlers, animatedProps} = useProfileScrollbarAdjustment({
+    headerOffset,
+    collapsedHeaderHeight,
+  })
+
   return (
     <View testID={testID} style={style}>
-      <List
-        testID={testID ? `${testID}-flatlist` : undefined}
-        ref={scrollElRef}
-        data={items}
-        keyExtractor={keyExtractor}
-        renderItem={renderItem}
-        ListFooterComponent={ProfileFeedgensFooter}
-        refreshing={isPTRing}
-        onRefresh={onRefresh}
-        headerOffset={headerOffset}
-        progressViewOffset={ios(0)}
-        removeClippedSubviews={true}
-        desktopFixedHeight
-        onEndReached={onEndReached}
-        contentContainerStyle={{minHeight: height + headerOffset}}
-      />
+      <ScrollProvider {...scrollHandlers}>
+        <List
+          testID={testID ? `${testID}-flatlist` : undefined}
+          ref={scrollElRef}
+          data={items}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+          ListFooterComponent={ProfileFeedgensFooter}
+          refreshing={isPTRing}
+          onRefresh={onRefresh}
+          headerOffset={headerOffset}
+          progressViewOffset={ios(0)}
+          removeClippedSubviews={true}
+          desktopFixedHeight
+          onEndReached={onEndReached}
+          contentContainerStyle={{minHeight: height + headerOffset}}
+          animatedProps={animatedProps}
+        />
+      </ScrollProvider>
     </View>
   )
 }
