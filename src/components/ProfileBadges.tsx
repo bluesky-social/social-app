@@ -29,19 +29,19 @@ const botIconSizes: Record<Size, number> = {
 } as const
 
 const betaIconSizes: Record<Size, number> = {
-  xs: 10,
-  sm: 11,
-  md: 12,
-  lg: 16,
-  xl: 20,
+  xs: 8,
+  sm: 8,
+  md: 8,
+  lg: 10,
+  xl: 12,
 } as const
 
 const betaBadgePadding: Record<Size, number> = {
-  xs: 2,
-  sm: 3,
-  md: 4,
-  lg: 6,
-  xl: 8,
+  xs: 1,
+  sm: 2,
+  md: 3,
+  lg: 4,
+  xl: 5,
 } as const
 
 export function ProfileBadges({
