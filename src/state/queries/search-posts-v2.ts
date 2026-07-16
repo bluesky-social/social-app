@@ -16,6 +16,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent} from '#/state/session'
 import {type SearchFilters} from '#/screens/Search/searchParams'
 import {
+  appendFromMe,
   buildSearchPostsV2Filters,
   extractSearchPostsParams,
 } from './search-posts-params'
@@ -79,14 +80,7 @@ export function useSearchPostsV2Query({
        */
       const {q, ...embedded} = extractSearchPostsParams(query)
       const builtFilters = buildSearchPostsV2Filters(embedded, filters)
-      /*
-       * The "You" author filter is carried as `from=me` (rather than a
-       * `from:me` token in the query text, which would leak into the search
-       * input). Reconstruct it into the query operator here, since the backend
-       * resolves `me` to the viewer.
-       */
-      const finalQuery =
-        filters?.from === 'me' ? `${q ? `${q} ` : ''}from:me` : q
+      const finalQuery = appendFromMe(q, filters?.from === 'me')
       const res = await agent.app.bsky.feed.searchPostsV2({
         ...builtFilters,
         query: finalQuery,

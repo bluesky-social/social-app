@@ -29,11 +29,9 @@ export type SearchFilters = {
   media?: string
   /** 'true' */
   video?: string
-  /**
-   * 'following' limits results to people you follow; 'me' limits them to your
-   * own posts (reconstructed into a `from:me` query operator at the v2 API
-   * boundary). v2-only. Serializes to the `from` URL param.
-   */
+  /** 'true' */
+  following?: string
+  /** 'me' */
   from?: string
 }
 
@@ -54,16 +52,9 @@ export const FILTER_PARAM_KEYS = [
   'replies',
   'media',
   'video',
+  'following',
   'from',
 ] as const
-
-/**
- * Filter param keys that are no longer written but may still be present in old
- * URLs/history. `readSearchFilters` maps these onto their current equivalents;
- * the param-rebuild helpers strip them so a cleared filter can't be resurrected
- * from a stale legacy key. `following=true` was the old form of `from=following`.
- */
-export const LEGACY_FILTER_PARAM_KEYS = ['following'] as const
 
 /**
  * Reads filter params out of a route's params object, keeping only non-empty
@@ -84,26 +75,18 @@ export function readSearchFilters(
       filters[key] = value
     }
   }
-  /*
-   * Back-compat: the author filter was previously stored under `following`
-   * (following=true). Honor old links/history by mapping it onto `from`, unless
-   * a `from` value is already present.
-   */
-  if (!filters.from) {
-    const legacy = routeParams.following
-    if (legacy === 'true') filters.from = 'following'
-  }
   return filters
 }
 
 export function hasActiveFilters(filters: SearchFilters): boolean {
-  return FILTER_PARAM_KEYS.some(key => filters[key])
+  return countActiveFilters(filters) > 0
 }
 
 /**
  * Number of active filter params, used for the "[+N filters]" pill in search
  * history. Each set key counts once (a multi-value field like author counts as
- * one filter regardless of how many handles it holds).
+ * one filter regardless of how many handles it holds). Raw query operators do
+ * not count until the advanced dialog promotes them to structured params.
  */
 export function countActiveFilters(filters: SearchFilters): number {
   return FILTER_PARAM_KEYS.filter(key => filters[key]).length
@@ -177,13 +160,6 @@ export function filtersToRouteParams(
   for (const key of FILTER_PARAM_KEYS) {
     params[key] = filters[key] || undefined
   }
-  /*
-   * Clear any legacy keys too, so a value the user removed can't be revived
-   * from a stale param on the next read (setParams merges).
-   */
-  for (const key of LEGACY_FILTER_PARAM_KEYS) {
-    params[key] = undefined
-  }
   return params
 }
 
@@ -212,9 +188,6 @@ export function withoutFilterParams(
 ): Record<string, unknown> {
   const base: Record<string, unknown> = {...routeParams}
   for (const key of FILTER_PARAM_KEYS) {
-    delete base[key]
-  }
-  for (const key of LEGACY_FILTER_PARAM_KEYS) {
     delete base[key]
   }
   return base
@@ -280,7 +253,7 @@ export function filtersToApiParams(filters: SearchFilters): {
   if (filters.until) params.until = filters.until
   if (filters.media === 'true') params.hasMedia = true
   if (filters.video === 'true') params.hasVideo = true
-  if (filters.from === 'following') params.following = true
+  if (filters.following === 'true') params.following = true
   if (filters.replies === 'none') params.excludeReplies = true
   else if (filters.replies === 'only') params.repliesOnly = true
   return params

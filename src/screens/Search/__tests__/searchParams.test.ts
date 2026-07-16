@@ -4,7 +4,7 @@ import {
   countActiveFilters,
   definedFilterParams,
   filtersToApiParams,
-  filtersToRouteParams,
+  hasActiveFilters,
   hasPostOnlyFilters,
   parseHistoryEntry,
   readSearchFilters,
@@ -34,18 +34,6 @@ describe(`searchParams`, () => {
     it(`ignores empty and non-string values`, () => {
       expect(readSearchFilters({author: '', tag: undefined})).toEqual({})
     })
-
-    it(`maps a legacy following=true param onto from`, () => {
-      expect(readSearchFilters({q: 'cats', following: 'true'})).toEqual({
-        from: 'following',
-      })
-    })
-
-    it(`prefers an explicit from over a legacy following param`, () => {
-      expect(readSearchFilters({from: 'me', following: 'true'})).toEqual({
-        from: 'me',
-      })
-    })
   })
 
   describe(`hasPostOnlyFilters`, () => {
@@ -68,6 +56,14 @@ describe(`searchParams`, () => {
     })
   })
 
+  describe(`hasActiveFilters`, () => {
+    it(`includes the structured Me author filter`, () => {
+      expect(hasActiveFilters({})).toBe(false)
+      expect(hasActiveFilters({from: 'me'})).toBe(true)
+      expect(hasActiveFilters({author: 'alice'})).toBe(true)
+    })
+  })
+
   describe(`definedFilterParams`, () => {
     it(`omits absent keys entirely`, () => {
       expect(definedFilterParams({author: 'alice'})).toEqual({author: 'alice'})
@@ -85,36 +81,6 @@ describe(`searchParams`, () => {
           domain: 'undefined',
         }),
       ).toEqual({q: 'cats', tab: 'latest', name: 'alice'})
-    })
-
-    it(`strips the legacy following key so clearing to Anyone sticks (web)`, () => {
-      /*
-       * A legacy link carries following=true. Clearing the author filter to
-       * Anyone writes no from param, so the stale following key must be
-       * dropped or the next read would revive it as from:true.
-       */
-      const next = {
-        ...withoutFilterParams({q: 'cats', following: 'true'}),
-        ...definedFilterParams({}),
-      }
-      expect(next).toEqual({q: 'cats'})
-      expect(readSearchFilters(next)).toEqual({})
-    })
-  })
-
-  describe(`filtersToRouteParams`, () => {
-    it(`clears the legacy following key so clearing to Anyone sticks (native)`, () => {
-      /*
-       * setParams merges, so the rebuilt params must set the legacy following
-       * key to undefined to clear it from a legacy-linked session.
-       */
-      const merged: Record<string, string | undefined> = {
-        q: 'cats',
-        following: 'true',
-        ...filtersToRouteParams({}),
-      }
-      expect(merged.following).toBeUndefined()
-      expect(merged.from).toBeUndefined()
     })
   })
 
@@ -143,7 +109,7 @@ describe(`searchParams`, () => {
       expect(
         filtersToApiParams({
           video: 'true',
-          from: 'following',
+          following: 'true',
           replies: 'only',
         }),
       ).toEqual({
@@ -173,8 +139,9 @@ describe(`searchParams`, () => {
   })
 
   describe(`countActiveFilters`, () => {
-    it(`counts each set filter key once`, () => {
+    it(`counts each structured filter key once`, () => {
       expect(countActiveFilters({})).toBe(0)
+      expect(countActiveFilters({from: 'me'})).toBe(1)
       expect(
         countActiveFilters({author: 'alice bob', domain: 'bsky.app'}),
       ).toBe(2)
@@ -192,6 +159,14 @@ describe(`searchParams`, () => {
       expect(parseHistoryEntry(stored)).toEqual({
         q: 'cats',
         filters: {author: 'alice'},
+      })
+    })
+
+    it(`round-trips a promoted Me-only search`, () => {
+      const stored = serializeHistoryEntry('', {from: 'me'})
+      expect(parseHistoryEntry(stored)).toEqual({
+        q: '',
+        filters: {from: 'me'},
       })
     })
 

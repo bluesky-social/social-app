@@ -1,4 +1,5 @@
 import {
+  extractFromMe,
   extractSearchPostsParams,
   tokenizeQuery,
 } from '#/state/queries/search-posts-params'
@@ -14,12 +15,11 @@ export type RepliesFilter = 'all' | 'none' | 'only'
 export type MediaFilter = 'all' | 'media' | 'video'
 
 /**
- * Which authors to limit results to. Serializes into the `from` sibling param:
- * 'following' -> from=following (people you follow), 'you' -> from=me (your own
- * posts, reconstructed into `from:me` at the v2 API boundary), 'anyone' ->
- * unset.
+ * Which authors to limit results to. 'following' serializes into the
+ * `following` sibling param (following=true); 'me' serializes into the `from`
+ * sibling param (from=me); 'anyone' leaves both unset.
  */
-export type FollowingFilter = 'anyone' | 'following' | 'you'
+export type FromFilter = 'anyone' | 'following' | 'me'
 
 export type FilterField = 'authors' | 'mentions' | 'domains' | 'urls' | 'tags'
 
@@ -95,7 +95,7 @@ export type DialogState = {
   language: string
   replies: RepliesFilter
   media: MediaFilter
-  following: FollowingFilter
+  following: FromFilter
   since: string
   until: string
   filters: AdvancedFilter[]
@@ -144,7 +144,7 @@ function isSimpleWord(word: string): boolean {
  * words. Anything that wouldn't round-trip (embedded quotes, a negated phrase
  * like -"a b", etc.) is left verbatim in the main "all of these words" query
  * text instead of parsed. A bare `from:me` is pulled out into the `fromMe`
- * flag, which drives the "You" author filter (the backend resolves `me` to the
+ * flag, which drives the "Me" author filter (the backend resolves `me` to the
  * viewer, so it never becomes a structured `author` value).
  */
 function parseFreeText(raw: string): {
@@ -159,7 +159,7 @@ function parseFreeText(raw: string): {
   let fromMe = false
 
   for (const token of tokenizeQuery(raw)) {
-    // from:me -> "You" author filter rather than free text.
+    // from:me -> "Me" author filter rather than free text.
     if (token === 'from:me') {
       fromMe = true
       continue
@@ -268,14 +268,14 @@ export function parseAdvancedSearch(
   const until = filters.until ?? lifted.until
 
   /*
-   * A `from:me` typed into the query box maps to the "You" author filter, same
-   * as the `from=me` param. Either source selects 'you'; the `from=following`
-   * param remains "People you follow".
+   * A raw `from:me` operator and the structured `from=me` filter both map to
+   * the "Me" author filter. The raw operator is promoted to the structured
+   * filter when the dialog is submitted.
    */
-  let following: FollowingFilter = 'anyone'
+  let following: FromFilter = 'anyone'
   if (fromMe || filters.from === 'me') {
-    following = 'you'
-  } else if (filters.from === 'following') {
+    following = 'me'
+  } else if (filters.following === 'true') {
     following = 'following'
   }
 
@@ -303,7 +303,7 @@ export function serializeAdvancedSearch(state: {
   language: string
   replies: RepliesFilter
   media: MediaFilter
-  following: FollowingFilter
+  following: FromFilter
   dateSince: string
   dateSinceActive: boolean
   dateUntil: string
@@ -376,15 +376,21 @@ export function serializeAdvancedSearch(state: {
   if (state.replies === 'only') filters.replies = 'only'
   if (state.media === 'media') filters.media = 'true'
   else if (state.media === 'video') filters.video = 'true'
-  /*
-   * The "You" filter is stored as `from=me` rather than a `from:me` token in
-   * `q`: this keeps the query text clean (so `from:me` never shows in the
-   * search input) and lets it count as an active filter. It's reconstructed
-   * back into a `from:me` query operator at the v2 API boundary, since the
-   * backend resolves `me` to the viewer.
-   */
-  if (state.following === 'following') filters.from = 'following'
-  else if (state.following === 'you') filters.from = 'me'
 
-  return {q: parts.join(' '), filters}
+  /*
+   * Re-parse the final text because a user can type `from:me` after the dialog
+   * has opened. Advanced submission removes every bare token from the search
+   * input and promotes it to the structured From filter. Quoted `"from:me"`
+   * remains ordinary query text.
+   */
+  const {q, fromMe} = extractFromMe(parts.join(' '))
+  if (state.following === 'following') filters.following = 'true'
+  else if (state.following === 'me' || fromMe) filters.from = 'me'
+
+  /*
+   * Submitting the dialog promotes a raw `from:me` operator to `from=me`, so it
+   * leaves the search text and is represented by the From dropdown. The query
+   * hook reconstructs the backend operator at the API boundary.
+   */
+  return {q, filters}
 }
