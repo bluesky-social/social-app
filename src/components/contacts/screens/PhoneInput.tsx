@@ -2,7 +2,6 @@ import {useState} from 'react'
 import {Keyboard, View} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyContactStartPhoneVerification} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -14,6 +13,7 @@ import {
   getDefaultCountry,
 } from '#/lib/international-telephone-codes'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
+import {getErrorName} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {OnboardingPosition} from '#/screens/Onboarding/Layout'
@@ -102,14 +102,9 @@ export function PhoneInput({
             msg`A network error occurred. Please check your internet connection`,
           ),
         )
-      } else if (
-        err instanceof
-        AppBskyContactStartPhoneVerification.RateLimitExceededError
-      ) {
+      } else if (getErrorName(err) === 'RateLimitExceeded') {
         setError(_(msg`Rate limit exceeded. Please try again later.`))
-      } else if (
-        err instanceof AppBskyContactStartPhoneVerification.InvalidPhoneError
-      ) {
+      } else if (getErrorName(err) === 'InvalidPhone') {
         setError(
           _(
             msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,

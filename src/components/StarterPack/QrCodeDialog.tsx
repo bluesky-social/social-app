@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import type ViewShot from 'react-native-view-shot'
 import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -29,7 +28,7 @@ export function QrCodeDialog({
   link,
   control,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: app.bsky.graph.defs.StarterPackView
   link?: string
   control: DialogControlProps
 }) {

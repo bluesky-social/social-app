@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {type AppBskyGraphGetStarterPacksWithMembership} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -34,7 +33,7 @@ import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 type StarterPackWithMembership =
-  AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership
+  app.bsky.graph.getStarterPacksWithMembership.StarterPackWithMembership
 
 export type StarterPackDialogProps = {
   control: Dialog.DialogControlProps

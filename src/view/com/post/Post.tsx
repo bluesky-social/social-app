@@ -1,6 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
-import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {AtUri} from '@atproto/syntax'
 import {moderatePost, type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
@@ -44,14 +43,14 @@ export function Post({
   style,
   onBeforePress,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   showReplyLine?: boolean
   hideTopBorder?: boolean
   style?: StyleProp<ViewStyle>
   onBeforePress?: () => void
 }) {
   const moderationOpts = useModerationOpts()
-  const record = useMemo<AppBskyFeedPost.Record | undefined>(
+  const record = useMemo<app.bsky.feed.post.Main | undefined>(
     () =>
       bsky.matches(app.bsky.feed.post, post.record) ? post.record : undefined,
     [post],
@@ -105,8 +104,8 @@ function PostInner({
   style,
   onBeforePress: outerOnBeforePress,
 }: {
-  post: Shadow<AppBskyFeedDefs.PostView>
-  record: AppBskyFeedPost.Record
+  post: Shadow<app.bsky.feed.defs.PostView>
+  record: app.bsky.feed.post.Main
   richText: RichTextAPI
   moderation: ModerationDecision
   showReplyLine?: boolean

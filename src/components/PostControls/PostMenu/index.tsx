@@ -1,10 +1,5 @@
 import {memo, useMemo, useState} from 'react'
 import {type Insets} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
-} from '@atproto/api'
 import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 
@@ -13,6 +8,7 @@ import {EventStopper} from '#/view/com/util/EventStopper'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import * as Menu from '#/components/Menu'
 import {useMenuControl} from '#/components/Menu'
+import {type app} from '#/lexicons'
 import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
 import {PostMenuItems} from './PostMenuItems'
 
@@ -32,15 +28,15 @@ let PostMenuButton = ({
   forceGoogleTranslate,
 }: {
   testID: string
-  post: Shadow<AppBskyFeedDefs.PostView>
+  post: Shadow<app.bsky.feed.defs.PostView>
   postFeedContext: string | undefined
   postReqId: string | undefined
   big?: boolean
-  record: AppBskyFeedPost.Record
+  record: app.bsky.feed.post.Main
   richText: RichTextAPI
   timestamp: string
-  threadgateRecord?: AppBskyFeedThreadgate.Record
-  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  threadgateRecord?: app.bsky.feed.threadgate.Main
+  onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
   hitSlop?: Insets
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   forceGoogleTranslate: boolean

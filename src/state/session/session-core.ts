@@ -50,6 +50,16 @@ import {
 import {type SessionAccount} from './types'
 import {isSessionExpired} from './util'
 
+/*
+ * Re-exported so session-layer siblings (index.tsx, reducer.ts, logging.ts,
+ * moderation.ts, additional-moderation-authorities.ts) import the bridge
+ * vocabulary through this whitelisted bridge module rather than from
+ * '@atproto/api' directly. `Agent` is re-exported as `BridgeAgent` for the
+ * labeler-config statics (`Agent.configure`/`Agent.appLabelers`). Dies with
+ * the bridge in Phase 4.
+ */
+export {type AtpSessionEvent, Agent as BridgeAgent} from '@atproto/api'
+
 /**
  * Whether an access token was issued for a queued (waitlisted) signup rather
  * than a full session.

@@ -14,7 +14,7 @@ import {
   type LiveEventFeed,
   type LiveEventFeedMetricContext,
 } from '#/features/liveEvents/types'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export type LiveEventPreferencesAction = Parameters<
   typeof updateLiveEventPreferences

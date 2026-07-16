@@ -1,7 +1,6 @@
 import {useMemo} from 'react'
 import {type StyleProp, type TextStyle} from 'react-native'
-import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
-import {RichText as SdkRichText} from '@bsky.app/sdk/richtext'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 
 import {toShortUrl} from '#/lib/strings/url-helpers'
 import {atoms as a, flatten, type TextStyleProp} from '#/alf'
@@ -10,6 +9,8 @@ import {InlineLinkText, type LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichTextTag} from '#/components/RichTextTag'
 import {Text, type TextProps} from '#/components/Typography'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const WORD_WRAP = {wordWrap: 1}
 // lifted from facet detection in `RichText` impl, _without_ `gm` flags
@@ -18,16 +19,7 @@ const URL_REGEX =
 
 export type RichTextProps = TextStyleProp &
   Pick<TextProps, 'selectable' | 'onLayout' | 'onTextLayout'> & {
-    /*
-     * TODO(phase4): drop the `SdkRichText` arm and normalization below, keeping
-     * only the SDK RichText. Interim dual-world acceptance: the migrated
-     * `useRichText` hook now produces an `@bsky.app/sdk/richtext` RichText,
-     * while ~100 call sites still pass the old `@atproto/api` RichText produced
-     * elsewhere. We accept both and normalize an SDK instance into the old
-     * RichText below (its `.facets` flow new->old without a cast) so the render
-     * body stays single-typed until the RichText UI callers migrate (Task 7).
-     */
-    value: RichTextAPI | SdkRichText | string
+    value: RichTextAPI | string
     testID?: string
     numberOfLines?: number
     disableLinks?: boolean
@@ -69,13 +61,6 @@ export function RichText({
   const richText = useMemo(() => {
     if (value instanceof RichTextAPI) {
       return value
-    } else if (value instanceof SdkRichText) {
-      /*
-       * Normalize the SDK RichText into the old one this component renders
-       * against. `.facets` are structurally identical modulo branded strings
-       * (new->old assigns), so they carry over without a cast.
-       */
-      return new RichTextAPI({text: value.text, facets: value.facets})
     } else {
       const rt = new RichTextAPI({text: value})
       rt.detectFacetsWithoutResolution()
@@ -134,7 +119,7 @@ export function RichText({
     if (
       mention &&
       (disableMentionFacetValidation ||
-        AppBskyRichtextFacet.validateMention(mention).success) &&
+        bsky.matches(app.bsky.richtext.facet.mention, mention)) &&
       !disableLinks
     ) {
       els.push(
@@ -151,7 +136,7 @@ export function RichText({
           </InlineLinkText>
         </ProfileHoverCard>,
       )
-    } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
+    } else if (link && bsky.matches(app.bsky.richtext.facet.link, link)) {
       const isValidLink = URL_REGEX.test(link.uri)
       if (!isValidLink || disableLinks) {
         els.push(toShortUrl(segment.text))
@@ -176,7 +161,7 @@ export function RichText({
       !disableLinks &&
       enableTags &&
       tag &&
-      AppBskyRichtextFacet.validateTag(tag).success
+      bsky.matches(app.bsky.richtext.facet.tag, tag)
     ) {
       els.push(
         <RichTextTag

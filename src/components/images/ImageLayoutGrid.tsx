@@ -1,15 +1,15 @@
 import {useRef} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
-import {type AppBskyEmbedImages} from '@atproto/api'
 
 import {atoms as a, useBreakpoints} from '#/alf'
 import {type Dimensions} from '#/components/Lightbox/types'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
+import {type app} from '#/lexicons'
 import {GalleryItem} from './ImageLayoutGridItem'
 
 interface ImageLayoutGridProps {
-  images: AppBskyEmbedImages.ViewImage[]
+  images: app.bsky.embed.images.ViewImage[]
   onPress?: (
     index: number,
     containerRefs: AnimatedRef<any>[],
@@ -47,7 +47,7 @@ export function ImageLayoutGrid({
 }
 
 interface ImageLayoutGridInnerProps {
-  images: AppBskyEmbedImages.ViewImage[]
+  images: app.bsky.embed.images.ViewImage[]
   onPress?: (
     index: number,
     containerRefs: AnimatedRef<any>[],

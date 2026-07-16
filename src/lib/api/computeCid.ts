@@ -2,7 +2,7 @@ import {sha256} from 'js-sha256'
 import {CID} from 'multiformats/cid'
 import * as Hasher from 'multiformats/hashes/hasher'
 
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 /*
  * Client-side CID computation for post records, extracted from the post

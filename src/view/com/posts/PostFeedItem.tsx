@@ -1,10 +1,6 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
 import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
@@ -56,15 +52,15 @@ import * as bsky from '#/types/bsky'
 import {PostFeedReason} from './PostFeedReason'
 
 interface FeedItemProps {
-  record: AppBskyFeedPost.Record
+  record: app.bsky.feed.post.Main
   reason:
-    | AppBskyFeedDefs.ReasonRepost
-    | AppBskyFeedDefs.ReasonPin
+    | app.bsky.feed.defs.ReasonRepost
+    | app.bsky.feed.defs.ReasonPin
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
     | undefined
   moderation: ModerationDecision
-  parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  parentAuthor: app.bsky.actor.defs.ProfileViewBasic | undefined
   showReplyTo: boolean
   isThreadChild?: boolean
   isThreadLastChild?: boolean
@@ -94,9 +90,9 @@ export function PostFeedItem({
   rootPost,
   onShowLess,
 }: FeedItemProps & {
-  post: AppBskyFeedDefs.PostView
-  rootPost: AppBskyFeedDefs.PostView
-  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  post: app.bsky.feed.defs.PostView
+  rootPost: app.bsky.feed.defs.PostView
+  onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
 }): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -159,9 +155,9 @@ let FeedItemInner = ({
   onShowLess,
 }: FeedItemProps & {
   richText: RichTextAPI
-  post: Shadow<AppBskyFeedDefs.PostView>
-  rootPost: AppBskyFeedDefs.PostView
-  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  post: Shadow<app.bsky.feed.defs.PostView>
+  rootPost: app.bsky.feed.defs.PostView
+  onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
 }): React.ReactNode => {
   const ax = useAnalytics()
   const queryClient = useQueryClient()
@@ -257,7 +253,9 @@ let FeedItemInner = ({
       feedSourceInfo,
       post: {
         post,
-        reason: AppBskyFeedDefs.isReasonRepost(reason) ? reason : undefined,
+        reason: bsky.isType(app.bsky.feed.defs.reasonRepost, reason)
+          ? (reason as $Typed<app.bsky.feed.defs.ReasonRepost>)
+          : undefined,
         feedContext,
         reqId,
       },
@@ -291,7 +289,11 @@ let FeedItemInner = ({
   const {isActive: live} = useActorStatus(post.author)
 
   const viaRepost = useMemo(() => {
-    if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
+    if (
+      bsky.isType(app.bsky.feed.defs.reasonRepost, reason) &&
+      reason.uri &&
+      reason.cid
+    ) {
       return {
         uri: reason.uri,
         cid: reason.cid,
@@ -461,10 +463,10 @@ let PostContent = ({
 }: {
   moderation: ModerationDecision
   richText: RichTextAPI
-  postEmbed: AppBskyFeedDefs.PostView['embed']
-  postAuthor: AppBskyFeedDefs.PostView['author']
+  postEmbed: app.bsky.feed.defs.PostView['embed']
+  postAuthor: app.bsky.feed.defs.PostView['author']
   onOpenEmbed: () => void
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   additionalPostAlerts?: AppModerationCause[]
   feedDescriptor?: string
 }): React.ReactNode => {
@@ -472,7 +474,7 @@ let PostContent = ({
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
 
-  const record = useMemo<AppBskyFeedPost.Record | undefined>(
+  const record = useMemo<app.bsky.feed.post.Main | undefined>(
     () =>
       bsky.matches(app.bsky.feed.post, post.record) ? post.record : undefined,
     [post],

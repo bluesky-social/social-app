@@ -1,5 +1,3 @@
-import {type AppBskyGraphDefs} from '@atproto/api'
-
 import {app} from '#/lexicons'
 
 /*
@@ -30,14 +28,7 @@ export function isView(v: unknown): v is app.bsky.graph.defs.StarterPackView {
 
 /**
  * Matches any starter pack view exported by our SDK.
- *
- * TODO(phase4): drop the `@atproto/api` arms. Dual-world widening alias for the
- * migration interim - starter-pack producers still return old views via the
- * bridge agent. Remove the old arms once every producer emits `#/lexicons`
- * views.
  */
 export type AnyStarterPackView =
   | app.bsky.graph.defs.StarterPackViewBasic
   | app.bsky.graph.defs.StarterPackView
-  | AppBskyGraphDefs.StarterPackViewBasic
-  | AppBskyGraphDefs.StarterPackView

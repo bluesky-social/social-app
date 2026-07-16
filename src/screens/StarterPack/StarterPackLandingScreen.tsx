@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {AtUri} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
@@ -70,8 +69,8 @@ export function LandingScreen({
   const isValid =
     starterPack &&
     starterPack.list &&
-    AppBskyGraphDefs.validateStarterPackView(starterPack) &&
-    AppBskyGraphStarterpack.validateRecord(starterPack.record)
+    bsky.matches(app.bsky.graph.defs.starterPackView, starterPack) &&
+    bsky.matches(app.bsky.graph.starterpack, starterPack.record)
 
   useEffect(() => {
     if (isErrorStarterPack || (starterPack && !isValid)) {
@@ -106,8 +105,8 @@ function LandingScreenLoaded({
 
   moderationOpts,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
-  starterPackRecord: AppBskyGraphStarterpack.Record
+  starterPack: app.bsky.graph.defs.StarterPackView
+  starterPackRecord: app.bsky.graph.starterpack.Main
   setScreenState: (state: LoggedOutScreenState) => void
   moderationOpts: ModerationOpts
 }) {

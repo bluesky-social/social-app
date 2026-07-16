@@ -1,7 +1,7 @@
 import {useEffect, useMemo, useState} from 'react'
 import {Keyboard, type StyleProp, type ViewStyle} from 'react-native'
 import {type AnimatedStyle} from 'react-native-reanimated'
-import {type AppBskyFeedPostgate} from '@atproto/api'
+import {type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
 import deepEqual from 'fast-deep-equal'
 
@@ -24,6 +24,7 @@ import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Gr
 import * as Tooltip from '#/components/Tooltip'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 import {useThreadgateNudged} from '#/storage/hooks/threadgate-nudged'
 
 export function ThreadgateBtn({
@@ -32,8 +33,8 @@ export function ThreadgateBtn({
   threadgateAllowUISettings,
   onChangeThreadgateAllowUISettings,
 }: {
-  postgate: AppBskyFeedPostgate.Record
-  onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
+  postgate: app.bsky.feed.postgate.Main
+  onChangePostgate: (v: app.bsky.feed.postgate.Main) => void
 
   threadgateAllowUISettings: ThreadgateAllowUISetting[]
   onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void
@@ -83,8 +84,8 @@ export function ThreadgateBtn({
 
   const prefThreadgateAllowUISettings = threadgateRecordToAllowUISetting({
     $type: 'app.bsky.feed.threadgate',
-    post: '',
-    createdAt: new Date().toISOString(),
+    post: '' as AtUriString,
+    createdAt: toDatetimeString(new Date()),
     allow: preferences?.postInteractionSettings.threadgateAllowRules,
   })
   const prefPostgate = createPostgateRecord({

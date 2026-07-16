@@ -10,6 +10,7 @@ import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 import {type app} from '#/lexicons'
+import {toLex} from '#/types/bsky'
 
 export type QueryProps = {
   category?: string | null
@@ -55,7 +56,14 @@ export function useGetSuggestedUsersForSeeMoreQuery(props: QueryProps = {}) {
       if (!data.recIdStr) {
         logger.debug('getSuggestedUsersForSeeMore response missing recIdStr')
       }
-      return {...data, recId: data.recIdStr}
+      /*
+       * TODO(phase4): drop toLex once this unspecced endpoint migrates off the
+       * bridge agent (intentionally left on the bridge in Phase 3).
+       */
+      return toLex<{
+        actors: app.bsky.actor.defs.ProfileView[]
+        recId: string | undefined
+      }>({...data, recId: data.recIdStr})
     },
   })
 }

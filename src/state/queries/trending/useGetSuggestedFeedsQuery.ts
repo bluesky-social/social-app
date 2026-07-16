@@ -8,6 +8,8 @@ import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
+import {type app} from '#/lexicons'
+import {toLex} from '#/types/bsky'
 
 export const DEFAULT_LIMIT = 15
 
@@ -36,11 +38,17 @@ export function useGetSuggestedFeedsQuery({enabled}: {enabled?: boolean}) {
         },
       )
 
+      /*
+       * TODO(phase4): drop toLex once getSuggestedFeeds migrates off the bridge
+       * agent (intentionally left on the bridge in Phase 3).
+       */
       return {
-        feeds: data.feeds.filter(feed => {
-          const isSaved = !!savedFeeds?.find(s => s.value === feed.uri)
-          return !isSaved
-        }),
+        feeds: toLex<app.bsky.feed.defs.GeneratorView[]>(
+          data.feeds.filter(feed => {
+            const isSaved = !!savedFeeds?.find(s => s.value === feed.uri)
+            return !isSaved
+          }),
+        ),
       }
     },
   })

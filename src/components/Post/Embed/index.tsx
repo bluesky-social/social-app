@@ -1,6 +1,5 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {type $Typed} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
 import {moderatePost} from '@bsky.app/sdk/moderation'
@@ -259,7 +258,7 @@ export function QuoteEmbed({
   linkDisabled?: boolean
 }) {
   const moderationOpts = useModerationOpts()
-  const quote = useMemo<$Typed<AppBskyFeedDefs.PostView>>(
+  const quote = useMemo<$Typed<app.bsky.feed.defs.PostView>>(
     () => ({
       ...embed.view,
       $type: 'app.bsky.feed.defs#postView',

@@ -1,3 +1,4 @@
+import {type AtIdentifierString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
@@ -5,14 +6,15 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import * as Toast from '#/components/Toast'
+import {app, type com} from '#/lexicons'
 import {updatePostShadow} from '../cache/post-shadow'
-import {useAgent, useSession} from '../session'
+import {useAppviewClient, useSession} from '../session'
 import {useProfileUpdateMutation} from './profile'
 
 export function usePinnedPostMutation() {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const queryClient = useQueryClient()
   const {mutateAsync: profileUpdateMutate} = useProfileUpdateMutation()
 
@@ -33,8 +35,8 @@ export function usePinnedPostMutation() {
 
         // get the currently pinned post so we can optimistically remove the pin from it
         if (!currentAccount) throw new Error('Not signed in')
-        const {data: profile} = await agent.getProfile({
-          actor: currentAccount.did,
+        const profile = await appviewClient.call(app.bsky.actor.getProfile, {
+          actor: currentAccount.did as AtIdentifierString,
         })
         prevPinnedPost = profile.pinnedPost?.uri
         if (prevPinnedPost && prevPinnedPost !== postUri) {
@@ -45,14 +47,15 @@ export function usePinnedPostMutation() {
           profile,
           updates: existing => {
             existing.pinnedPost = pinCurrentPost
-              ? {uri: postUri, cid: postCid}
+              ? ({
+                  uri: postUri,
+                  cid: postCid,
+                } as com.atproto.repo.strongRef.Main)
               : undefined
             return existing
           },
           checkCommitted: res =>
-            pinCurrentPost
-              ? res.data.pinnedPost?.uri === postUri
-              : !res.data.pinnedPost,
+            pinCurrentPost ? res.pinnedPost?.uri === postUri : !res.pinnedPost,
         })
 
         if (pinCurrentPost) {

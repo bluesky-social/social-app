@@ -20,7 +20,12 @@ import {
   optimisticRemoveMatch,
   useMatchesPassthroughQuery,
 } from '#/state/queries/find-contacts'
-import {useAgent, useSession} from '#/state/session'
+import {
+  useAgent,
+  useAppviewClient,
+  usePdsClient,
+  useSession,
+} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {OnboardingPosition} from '#/screens/Onboarding/Layout'
@@ -90,6 +95,8 @@ export function ViewMatches({
   const moderationOpts = useModerationOpts()
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const pdsClient = usePdsClient()
+  const appviewClient = useAppviewClient()
   const insets = useSafeAreaInsets()
   const listRef = useRef<ListMethods>(null)
 
@@ -124,7 +131,10 @@ export function ViewMatches({
         })
       }
 
-      const uris = await wait(500, bulkWriteFollows(agent, followableDids))
+      const uris = await wait(
+        500,
+        bulkWriteFollows(pdsClient, appviewClient, followableDids),
+      )
 
       for (const did of followableDids) {
         const uri = uris.get(did)

@@ -3,11 +3,6 @@ import {Keyboard, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
-import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-} from '@atproto/api'
 import {AtUri} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
@@ -58,6 +53,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {Provider} from './State'
 
@@ -159,9 +155,9 @@ function WizardInner({
   fromDialog,
   onSuccess,
 }: {
-  currentStarterPack?: AppBskyGraphDefs.StarterPackView
-  currentListItems?: AppBskyGraphDefs.ListItemView[]
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  currentStarterPack?: app.bsky.graph.defs.StarterPackView
+  currentListItems?: app.bsky.graph.defs.ListItemView[]
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   fromDialog?: boolean
   onSuccess?: () => void
@@ -625,7 +621,7 @@ function Footer({
 }
 
 function getName(
-  item: bsky.profile.AnyProfileView | AppBskyFeedDefs.GeneratorView,
+  item: bsky.profile.AnyProfileView | app.bsky.feed.defs.GeneratorView,
 ) {
   if (typeof item.displayName === 'string') {
     return enforceLen(sanitizeDisplayName(item.displayName), 28, true)

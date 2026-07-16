@@ -6,7 +6,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type AppBskyFeedDefs, type AppBskyGraphDefs} from '@atproto/api'
 import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -38,7 +37,7 @@ import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 interface WhoCanReplyProps {
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   isThreadAuthor: boolean
   style?: StyleProp<ViewStyle>
 }
@@ -203,7 +202,7 @@ function WhoCanReplyDialog({
   embeddingDisabled,
 }: {
   control: Dialog.DialogControlProps
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   settings: ThreadgateAllowUISetting[]
   embeddingDisabled: boolean
 }) {
@@ -249,7 +248,7 @@ function Rules({
   settings,
   embeddingDisabled,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   settings: ThreadgateAllowUISetting[]
   embeddingDisabled: boolean
 }) {
@@ -307,8 +306,8 @@ function Rule({
   lists,
 }: {
   rule: ThreadgateAllowUISetting
-  post: AppBskyFeedDefs.PostView
-  lists: AppBskyGraphDefs.ListViewBasic[] | undefined
+  post: app.bsky.feed.defs.PostView
+  lists: app.bsky.graph.defs.ListViewBasic[] | undefined
 }) {
   if (rule.type === 'mention') {
     return <Trans>mentioned users</Trans>

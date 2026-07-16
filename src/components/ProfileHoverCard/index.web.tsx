@@ -1,6 +1,5 @@
 import {memo, useCallback, useEffect, useMemo, useReducer, useRef} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {msg, plural} from '@lingui/core/macro'
@@ -39,6 +38,7 @@ import {Text} from '#/components/Typography'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
+import {type app} from '#/lexicons'
 import {toLex} from '#/types/bsky'
 import {type ProfileHoverCardProps} from './types'
 
@@ -416,7 +416,7 @@ function Inner({
   moderationOpts,
   hide,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hide: () => void
 }) {

@@ -1,7 +1,6 @@
 import {useEffect} from 'react'
 import {View} from 'react-native'
 import {ImageBackground} from 'expo-image'
-import {ChatBskyGroupDefs} from '@atproto/api'
 import {type ThemeName} from '@bsky.app/alf'
 import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -21,7 +20,8 @@ import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/componen
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {toLex} from '#/types/bsky'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const desktopDarkBg = require('../../../assets/images/chat-desktop-bg-dark.webp')
 const desktopDimBg = require('../../../assets/images/chat-desktop-bg-dim.webp')
@@ -85,7 +85,10 @@ export function JoinRequest({setScreenState}: Props) {
           ]}>
           {error ||
           (data &&
-            !ChatBskyGroupDefs.isJoinLinkPreviewView(joinLinkPreview)) ? (
+            !bsky.isType(
+              chat.bsky.group.defs.joinLinkPreviewView,
+              joinLinkPreview,
+            )) ? (
             <Wrapper>
               <ChainLinkBrokenIcon fill={t.palette.primary_500} size="3xl" />
               <Text
@@ -102,7 +105,10 @@ export function JoinRequest({setScreenState}: Props) {
             </Wrapper>
           ) : data &&
             moderationOpts &&
-            ChatBskyGroupDefs.isJoinLinkPreviewView(joinLinkPreview) ? (
+            bsky.isType(
+              chat.bsky.group.defs.joinLinkPreviewView,
+              joinLinkPreview,
+            ) ? (
             <Wrapper>
               <AvatarBubbles
                 profiles={[joinLinkPreview.owner]}
@@ -183,7 +189,7 @@ export function JoinRequest({setScreenState}: Props) {
                         true,
                         // TODO(phase4): drop toLex once join link preview emits #/lexicons views
                         moderateProfile(
-                          toLex(joinLinkPreview.owner),
+                          bsky.toLex(joinLinkPreview.owner),
                           moderationOpts,
                         ).ui('displayName'),
                       )}
@@ -223,7 +229,7 @@ export function JoinRequest({setScreenState}: Props) {
                     joinLinkPreview.owner,
                     true,
                     moderateProfile(
-                      toLex(joinLinkPreview.owner),
+                      bsky.toLex(joinLinkPreview.owner),
                       moderationOpts,
                     ).ui('displayName'),
                   )} follows can join.`}

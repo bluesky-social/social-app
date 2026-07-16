@@ -62,7 +62,9 @@ export function useAutocomplete({
           key: profile.did,
           type: 'profile' as const,
           value: '@' + profile.handle,
-          profile,
+          // TODO(phase4): drop toLex once searchActorsTypeahead (bridge agent)
+          // emits #/lexicons views
+          profile: toLex<AutocompleteProfile['profile']>(profile),
         }))
       } else if (type === 'emoji') {
         return emojiSearch(q, limit || 8)

@@ -8,7 +8,6 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import {type AtpSessionEvent} from '@atproto/api'
 import {type Client} from '@atproto/lex-client'
 import {PasswordSession} from '@atproto/lex-password-session'
 
@@ -22,6 +21,7 @@ import {emitSessionDropped} from '../events'
 import {getPublicLexClient, getUnauthenticatedClient} from './clients'
 import {type Action, getInitialState, reducer, type State} from './reducer'
 import {
+  type AtpSessionEvent,
   buildBundle,
   createSessionBundleAndCreateAccount,
   createSessionBundleAndLogin,

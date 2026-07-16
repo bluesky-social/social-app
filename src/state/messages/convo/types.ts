@@ -3,7 +3,7 @@ import {type Client} from '@atproto/lex-client'
 
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type ConvoWithDetails} from '#/components/dms/util'
-import {app, type chat} from '#/lexicons'
+import {type app, type chat} from '#/lexicons'
 
 export type ConvoParams = {
   convoId: string

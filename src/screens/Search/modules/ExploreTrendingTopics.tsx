@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
-import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -20,6 +19,7 @@ import {Link} from '#/components/Link'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import {toLex} from '#/types/bsky'
 
 const TOPIC_COUNT = 5
@@ -61,7 +61,7 @@ export function TrendRow({
   children,
   onPress,
 }: ViewStyleProp & {
-  trend: AppBskyUnspeccedDefs.TrendView
+  trend: app.bsky.unspecced.defs.TrendView
   rank: number
   children?: React.ReactNode
   onPress?: () => void
@@ -211,7 +211,7 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
 }
 
 function useCategoryDisplayName(
-  category: AppBskyUnspeccedDefs.TrendView['category'],
+  category: app.bsky.unspecced.defs.TrendView['category'],
 ) {
   const {_} = useLingui()
 
@@ -272,7 +272,7 @@ export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
 }
 
 function useModerateTrendingActors(
-  actors: AppBskyUnspeccedDefs.TrendView['actors'],
+  actors: app.bsky.unspecced.defs.TrendView['actors'],
 ) {
   const moderationOpts = useModerationOpts()
 

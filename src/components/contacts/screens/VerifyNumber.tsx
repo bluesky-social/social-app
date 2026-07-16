@@ -1,9 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
 import {Text as NestedText, View} from 'react-native'
-import {
-  AppBskyContactStartPhoneVerification,
-  AppBskyContactVerifyPhone,
-} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -11,6 +7,7 @@ import {useMutation} from '@tanstack/react-query'
 
 import {clamp} from '#/lib/numbers'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
+import {getErrorName} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {OnboardingPosition} from '#/screens/Onboarding/Layout'
@@ -99,13 +96,13 @@ export function VerifyNumber({
             msg`A network error occurred. Please check your internet connection.`,
           ),
         })
-      } else if (err instanceof AppBskyContactVerifyPhone.InvalidCodeError) {
+      } else if (getErrorName(err) === 'InvalidCode') {
         setError({
           retryable: true,
           isResendError: true,
           message: _(msg`This code is invalid. Resend to get a new code.`),
         })
-      } else if (err instanceof AppBskyContactVerifyPhone.InvalidPhoneError) {
+      } else if (getErrorName(err) === 'InvalidPhone') {
         setError({
           retryable: false,
           isResendError: false,
@@ -113,9 +110,7 @@ export function VerifyNumber({
             msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
           ),
         })
-      } else if (
-        err instanceof AppBskyContactVerifyPhone.RateLimitExceededError
-      ) {
+      } else if (getErrorName(err) === 'RateLimitExceeded') {
         setError({
           retryable: true,
           isResendError: false,
@@ -155,9 +150,7 @@ export function VerifyNumber({
             msg`A network error occurred. Please check your internet connection.`,
           ),
         })
-      } else if (
-        err instanceof AppBskyContactStartPhoneVerification.InvalidPhoneError
-      ) {
+      } else if (getErrorName(err) === 'InvalidPhone') {
         setError({
           retryable: false,
           isResendError: true,
@@ -165,10 +158,7 @@ export function VerifyNumber({
             msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
           ),
         })
-      } else if (
-        err instanceof
-        AppBskyContactStartPhoneVerification.RateLimitExceededError
-      ) {
+      } else if (getErrorName(err) === 'RateLimitExceeded') {
         setError({
           retryable: true,
           isResendError: true,

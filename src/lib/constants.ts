@@ -1,8 +1,9 @@
 import {type Insets, Platform} from 'react-native'
-import {type AppBskyActorDefs, BSKY_LABELER_DID} from '@atproto/api'
+import {api} from '@bsky.app/sdk'
 
 import {type ProxyHeaderValue} from '#/state/session/agent'
-import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
+import {BLUESKY_PROXY_DID, IS_DEV} from '#/env'
+import {type app} from '#/lexicons'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
@@ -170,7 +171,7 @@ export const VIDEO_SAVED_FEED = {
 }
 
 export const RECOMMENDED_SAVED_FEEDS: Pick<
-  AppBskyActorDefs.SavedFeed,
+  app.bsky.actor.defs.SavedFeed,
   'type' | 'value' | 'pinned'
 >[] = [DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED]
 
@@ -243,12 +244,8 @@ export const BLUESKY_PROXY_HEADER = {
   },
 }
 
-export const DM_SERVICE_HEADERS = {
-  'atproto-proxy': `${CHAT_PROXY_DID}#bsky_chat`,
-}
-
 export const BLUESKY_MOD_SERVICE_HEADERS = {
-  'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
+  'atproto-proxy': `${api.moderation.did}#atproto_labeler`,
 }
 
 export const BLUESKY_NOTIF_SERVICE_HEADERS = {

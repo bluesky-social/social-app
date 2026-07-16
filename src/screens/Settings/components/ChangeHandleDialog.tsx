@@ -10,7 +10,6 @@ import Animated, {
   SlideOutLeft,
   SlideOutRight,
 } from 'react-native-reanimated'
-import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -46,6 +45,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
+import {type com} from '#/lexicons'
 import {CopyButton} from './CopyButton'
 
 export function ChangeHandleDialog({
@@ -147,7 +147,7 @@ function ProvidedHandlePage({
   serviceInfo,
   goToOwnHandle,
 }: {
-  serviceInfo: ComAtprotoServerDescribeServer.OutputSchema
+  serviceInfo: com.atproto.server.describeServer.$OutputBody
   goToOwnHandle: () => void
 }) {
   const {_} = useLingui()

@@ -6,7 +6,7 @@ import {nanoid} from 'nanoid/non-secure'
 import {AbortError} from '#/lib/async/cancelable'
 import {ServerError} from '#/lib/media/video/errors'
 import {type CompressedVideo} from '#/lib/media/video/types'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
 import {createVideoEndpointUrl, mimeToExt} from './util'
 

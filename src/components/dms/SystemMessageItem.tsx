@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {type ChatBskyActorDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -10,13 +9,14 @@ import {Button} from '#/components/Button'
 import {getSystemMessageInfo} from '#/components/dms/getSystemMessageInfo'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {type chat} from '#/lexicons'
 
 export function SystemMessageItem({
   item,
   relatedProfiles,
 }: {
   item: ConvoItem & {type: 'system-message'}
-  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
+  relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic>
 }) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()

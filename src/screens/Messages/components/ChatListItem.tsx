@@ -1,6 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
 import {
   moderateProfile,
   type ModerationDecision,
@@ -65,7 +64,7 @@ export function ChatListItem({
   selected = false,
   children,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: chat.bsky.convo.defs.ConvoView
   showMenu?: boolean
   selected?: boolean
   children?: React.ReactNode

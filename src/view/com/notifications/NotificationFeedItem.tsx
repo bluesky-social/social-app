@@ -8,9 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {type AppBskyActorDefs, type AppBskyFeedDefs} from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {AtUri, type DidString} from '@atproto/syntax'
+import {AtUri} from '@atproto/syntax'
 import {
   moderateProfile,
   type ModerationDecision,
@@ -73,7 +72,7 @@ import * as bsky from '#/types/bsky'
 const MAX_AUTHORS = 5
 
 interface Author {
-  profile: AppBskyActorDefs.ProfileView
+  profile: app.bsky.actor.defs.ProfileView
   href: string
   moderation: ModerationDecision
 }
@@ -764,7 +763,11 @@ function ExpandListPressable({
   }
 }
 
-function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
+function FollowBackButton({
+  profile,
+}: {
+  profile: app.bsky.actor.defs.ProfileView
+}) {
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const profileShadow = useProfileShadow(profile)
@@ -874,7 +877,7 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   )
 }
 
-function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
+function SayHelloBtn({profile}: {profile: app.bsky.actor.defs.ProfileView}) {
   const {_} = useLingui()
   const chatClient = useChatClient()
   const navigation = useNavigation<NavigationProp>()
@@ -902,7 +905,7 @@ function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
           const res = await chatClient.call(
             chat.bsky.convo.getConvoForMembers,
             {
-              members: [profile.did as DidString, chatClient.assertDid],
+              members: [profile.did, chatClient.assertDid],
             },
           )
           navigation.navigate('MessagesConversation', {
@@ -1108,7 +1111,7 @@ function ExpandedAuthorProfileCard({
   )
 }
 
-function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
+function AdditionalPostText({post}: {post?: app.bsky.feed.defs.PostView}) {
   const t = useTheme()
   if (post && bsky.isType(app.bsky.feed.post, post?.record)) {
     const text = post.record.text

@@ -1,5 +1,4 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyFeedDefs, type ComAtprotoLabelDefs} from '@atproto/api'
 import {type ModerationCause, type ModerationUI} from '@bsky.app/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
@@ -16,6 +15,7 @@ import {
   useLabelsOnMeDialogControl,
 } from '#/components/moderation/LabelsOnMeDialog'
 import * as Pills from '#/components/Pills'
+import {type app, type com} from '#/lexicons'
 import {toLex} from '#/types/bsky'
 
 export function PostAlerts({
@@ -25,7 +25,7 @@ export function PostAlerts({
   style,
   additionalCauses,
 }: {
-  post?: AppBskyFeedDefs.PostView
+  post?: app.bsky.feed.defs.PostView
   modui: ModerationUI
   /**
    * Expanded views (e.g. the thread anchor post) render larger pills and
@@ -49,7 +49,7 @@ export function PostAlerts({
    * author's only entry point to appeal labels on their content.
    */
   const isOwnPost = !!post && post.author.did === currentAccount?.did
-  const allLabels: ComAtprotoLabelDefs.Label[] =
+  const allLabels: com.atproto.label.defs.Label[] =
     isOwnPost && view === 'expanded'
       ? [...(post.labels ?? []), ...(post.author.labels ?? [])]
       : []
@@ -128,7 +128,7 @@ function AdditionalLabels({
   size,
   hasPrecedingPills,
 }: {
-  labels: ComAtprotoLabelDefs.Label[]
+  labels: com.atproto.label.defs.Label[]
   size?: Pills.CommonProps['size']
   /**
    * The compact "+n" syntax only makes sense as a continuation of other

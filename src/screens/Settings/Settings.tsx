@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {Alert, LayoutAnimation, Linking, Pressable, View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -67,6 +66,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL, IS_IOS, IS_NATIVE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
+import {type app} from '#/lexicons'
 import {device, useStorage} from '#/storage'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 import {toLex} from '#/types/bsky'
@@ -320,7 +320,7 @@ export function SettingsScreen({}: Props) {
 function ProfilePreview({
   profile,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -599,7 +599,7 @@ function AccountRow({
   pendingDid,
   onPressSwitchAccount,
 }: {
-  profile?: AppBskyActorDefs.ProfileViewDetailed
+  profile?: app.bsky.actor.defs.ProfileViewDetailed
   account: SessionAccount
   pendingDid: string | null
   onPressSwitchAccount: (

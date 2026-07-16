@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -27,12 +26,13 @@ import {Loader} from '#/components/Loader'
 import {useHider} from '#/components/moderation/Hider'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
 export function ListHiddenScreen({
   list,
   preferences,
 }: {
-  list: AppBskyGraphDefs.ListView
+  list: app.bsky.graph.defs.ListView
   preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()
@@ -43,7 +43,7 @@ export function ListHiddenScreen({
   const goBack = useGoBack()
   const queryClient = useQueryClient()
 
-  const isModList = list.purpose === AppBskyGraphDefs.MODLIST
+  const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
 
   const [isProcessing, setIsProcessing] = useState(false)
   const listBlockMutation = useListBlockMutation()

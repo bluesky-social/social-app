@@ -1,7 +1,6 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {AppBskyGraphDefs} from '@atproto/api'
 import {AtUri} from '@atproto/syntax'
 import {moderateUserList, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
@@ -39,6 +38,7 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Hider from '#/components/moderation/Hider'
 import {IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
 import {toLex} from '#/types/bsky'
 import {AboutSection} from './AboutSection'
 import {ErrorScreen} from './components/ErrorScreen'
@@ -144,7 +144,7 @@ function ProfileListScreenLoaded({
   preferences,
 }: Props & {
   uri: string
-  list: AppBskyGraphDefs.ListView
+  list: app.bsky.graph.defs.ListView
   moderationOpts: ModerationOpts
   preferences: UsePreferencesQueryResponse
 }) {
@@ -156,7 +156,7 @@ function ProfileListScreenLoaded({
   const {rkey} = route.params
   const feedSectionRef = useRef<SectionRef>(null)
   const aboutSectionRef = useRef<SectionRef>(null)
-  const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST
+  const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
   const isScreenFocused = useIsFocused()
   const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
   const isOwner = currentAccount?.did === list.creator.did

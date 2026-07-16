@@ -7,7 +7,6 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {type ChatBskyActorDefs} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
@@ -17,6 +16,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {SystemMessageItem} from '#/components/dms/SystemMessageItem'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Text} from '#/components/Typography'
+import {type chat} from '#/lexicons'
 
 const ANIMATION_DURATION_MS = 200
 
@@ -29,7 +29,7 @@ export function SystemMessageGroup({
   item: SystemMessageGroupItem
   expanded: boolean
   onToggle: (key: string) => void
-  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
+  relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic>
 }) {
   const t = useTheme()
   const {t: l} = useLingui()

@@ -1,13 +1,10 @@
 import type * as AgeRange from 'expo-age-range'
-import {
-  ageAssuranceRuleIDs as ids,
-  type AppBskyAgeassuranceDefs,
-  type AppBskyAgeassuranceGetState,
-} from '@atproto/api'
+import {toDatetimeString} from '@atproto/syntax'
 
 import {type OtherRequiredData} from '#/ageAssurance/data'
 import {IS_DEV, IS_E2E} from '#/env'
 import {type Geolocation} from '#/geolocation'
+import {type app} from '#/lexicons'
 
 export const enabled = (IS_DEV && false) || IS_E2E
 
@@ -31,21 +28,22 @@ export const otherRequiredData: OtherRequiredData = {
 }
 
 const serverStateEnabled = false || IS_E2E
-export const serverState: AppBskyAgeassuranceGetState.OutputSchema | undefined =
-  serverStateEnabled
-    ? {
-        state: {
-          lastInitiatedAt: undefined, // new Date(2025, 1, 1).toISOString(),
-          status: 'unknown',
-          access: 'unknown',
-        },
-        metadata: {
-          accountCreatedAt: new Date(2023, 1, 1).toISOString(),
-        },
-      }
-    : undefined
+export const serverState:
+  | app.bsky.ageassurance.getState.$OutputBody
+  | undefined = serverStateEnabled
+  ? {
+      state: {
+        lastInitiatedAt: undefined, // new Date(2025, 1, 1).toISOString(),
+        status: 'unknown',
+        access: 'unknown',
+      },
+      metadata: {
+        accountCreatedAt: toDatetimeString(new Date(2023, 1, 1)),
+      },
+    }
+  : undefined
 
-export const config: AppBskyAgeassuranceDefs.Config = {
+export const config: app.bsky.ageassurance.defs.Config = {
   regions: [
     {
       countryCode: 'AA',
@@ -53,7 +51,7 @@ export const config: AppBskyAgeassuranceDefs.Config = {
       minAccessAge: 13,
       rules: [
         {
-          $type: ids.Default,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleDefault',
           access: 'full',
         },
       ],
@@ -70,11 +68,11 @@ export const config: AppBskyAgeassuranceDefs.Config = {
         {
           age: 18,
           access: 'full',
-          $type: ids.IfAssuredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfAssuredOverAge',
         },
         {
           access: 'none',
-          $type: ids.Default,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleDefault',
         },
       ],
     },
@@ -85,16 +83,16 @@ export const config: AppBskyAgeassuranceDefs.Config = {
         {
           age: 18,
           access: 'full',
-          $type: ids.IfAssuredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfAssuredOverAge',
         },
         {
           age: 13,
           access: 'safe',
-          $type: ids.IfDeclaredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfDeclaredOverAge',
         },
         {
           access: 'none',
-          $type: ids.Default,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleDefault',
         },
       ],
     },
@@ -105,26 +103,27 @@ export const config: AppBskyAgeassuranceDefs.Config = {
         {
           date: '2025-12-10T00:00:00Z',
           access: 'none',
-          $type: ids.IfAccountNewerThan,
+          $type:
+            'app.bsky.ageassurance.defs#configRegionRuleIfAccountNewerThan',
         },
         {
           age: 18,
           access: 'full',
-          $type: ids.IfAssuredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfAssuredOverAge',
         },
         {
           age: 16,
           access: 'safe',
-          $type: ids.IfAssuredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfAssuredOverAge',
         },
         {
           age: 16,
           access: 'safe',
-          $type: ids.IfDeclaredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfDeclaredOverAge',
         },
         {
           access: 'none',
-          $type: ids.Default,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleDefault',
         },
       ],
     },
@@ -136,16 +135,16 @@ export const config: AppBskyAgeassuranceDefs.Config = {
         {
           age: 18,
           access: 'full',
-          $type: ids.IfAssuredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfAssuredOverAge',
         },
         {
           age: 13,
           access: 'safe',
-          $type: ids.IfDeclaredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfDeclaredOverAge',
         },
         {
           access: 'none',
-          $type: ids.Default,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleDefault',
         },
       ],
     },
@@ -157,16 +156,16 @@ export const config: AppBskyAgeassuranceDefs.Config = {
         {
           age: 18,
           access: 'full',
-          $type: ids.IfAssuredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfAssuredOverAge',
         },
         {
           age: 13,
           access: 'safe',
-          $type: ids.IfDeclaredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfDeclaredOverAge',
         },
         {
           access: 'none',
-          $type: ids.Default,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleDefault',
         },
       ],
     },
@@ -178,16 +177,16 @@ export const config: AppBskyAgeassuranceDefs.Config = {
         {
           age: 18,
           access: 'full',
-          $type: ids.IfAssuredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfAssuredOverAge',
         },
         {
           age: 13,
           access: 'safe',
-          $type: ids.IfDeclaredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfDeclaredOverAge',
         },
         {
           access: 'none',
-          $type: ids.Default,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleDefault',
         },
       ],
     },
@@ -199,11 +198,11 @@ export const config: AppBskyAgeassuranceDefs.Config = {
         {
           age: 18,
           access: 'full',
-          $type: ids.IfAssuredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfAssuredOverAge',
         },
         {
           access: 'none',
-          $type: ids.Default,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleDefault',
         },
       ],
     },
@@ -215,16 +214,16 @@ export const config: AppBskyAgeassuranceDefs.Config = {
         {
           age: 16,
           access: 'full',
-          $type: ids.IfAssuredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfAssuredOverAge',
         },
         {
           age: 16,
           access: 'full',
-          $type: ids.IfDeclaredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfDeclaredOverAge',
         },
         {
           access: 'none',
-          $type: ids.Default,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleDefault',
         },
       ],
     },
@@ -236,16 +235,16 @@ export const config: AppBskyAgeassuranceDefs.Config = {
         {
           age: 18,
           access: 'full',
-          $type: ids.IfAssuredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfAssuredOverAge',
         },
         {
           age: 18,
           access: 'full',
-          $type: ids.IfDeclaredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfDeclaredOverAge',
         },
         {
           access: 'none',
-          $type: ids.Default,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleDefault',
         },
       ],
     },
@@ -256,21 +255,21 @@ export const config: AppBskyAgeassuranceDefs.Config = {
         {
           age: 18,
           access: 'full',
-          $type: ids.IfAssuredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfAssuredOverAge',
         },
         {
           age: 18,
           access: 'full',
-          $type: ids.IfDeclaredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfDeclaredOverAge',
         },
         {
           age: 13,
           access: 'safe',
-          $type: ids.IfDeclaredOverAge,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleIfDeclaredOverAge',
         },
         {
           access: 'none',
-          $type: ids.Default,
+          $type: 'app.bsky.ageassurance.defs#configRegionRuleDefault',
         },
       ],
     },

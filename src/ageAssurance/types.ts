@@ -1,5 +1,5 @@
 import type * as AgeRange from 'expo-age-range'
-import {type computeAgeAssuranceRegionAccess} from '@atproto/api'
+import {type computeAgeAssuranceRegionAccess} from '@bsky.app/sdk/utils'
 
 import {logger} from '#/ageAssurance/logger'
 

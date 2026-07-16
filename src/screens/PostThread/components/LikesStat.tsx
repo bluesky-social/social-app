@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {AtUri} from '@atproto/syntax'
 import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {plural} from '@lingui/core/macro'
@@ -18,6 +17,7 @@ import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import {toLex} from '#/types/bsky'
 
 const AVI_SIZE = 20
@@ -35,7 +35,7 @@ const MAX_NAME_LENGTH = 16
  * sampling - the "N others" count is derived from the post's total like
  * count.
  */
-export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
+export function LikesStat({post}: {post: app.bsky.feed.defs.PostView}) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {t: l} = useLingui()

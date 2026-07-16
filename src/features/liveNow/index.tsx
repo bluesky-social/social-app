@@ -332,7 +332,7 @@ export function useUpsertLiveStatusMutation(
             $type: 'app.bsky.actor.defs#statusView',
             status: 'app.bsky.actor.status#live',
             isActive: true,
-            expiresAt: expiresAt.toISOString(),
+            expiresAt: expiresAt.toISOString() as DatetimeString,
             embed:
               record.embed && image
                 ? {
@@ -340,7 +340,7 @@ export function useUpsertLiveStatusMutation(
                     external: {
                       ...record.embed.external,
                       $type: 'app.bsky.embed.external#viewExternal',
-                      thumb: image,
+                      thumb: image as UriString,
                     },
                   }
                 : undefined,

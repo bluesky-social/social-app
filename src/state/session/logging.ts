@@ -1,8 +1,8 @@
-import {type AtpSessionEvent} from '@atproto/api'
 import {type SessionData} from '@atproto/lex-password-session'
 
 import {type Schema} from '../persisted'
 import {type Action, type State} from './reducer'
+import {type AtpSessionEvent} from './session-core'
 import {type SessionAccount} from './types'
 
 type Reducer = (state: State, action: Action) => State

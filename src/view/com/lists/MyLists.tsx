@@ -7,7 +7,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -21,6 +20,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
 
@@ -38,7 +38,10 @@ export function MyLists({
   filter: MyListsFilter
   inline?: boolean
   style?: StyleProp<ViewStyle>
-  renderItem?: (list: GraphDefs.ListView, index: number) => JSX.Element
+  renderItem?: (
+    list: app.bsky.graph.defs.ListView,
+    index: number,
+  ) => JSX.Element
   testID?: string
 }) {
   const pal = usePalette('default')

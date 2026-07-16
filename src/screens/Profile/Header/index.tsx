@@ -7,7 +7,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {type AppBskyActorDefs, type AppBskyLabelerDefs} from '@atproto/api'
 import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {useIsFocused} from '@react-navigation/native'
@@ -22,6 +21,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Header} from '#/components/Layout'
 import * as ProfileCard from '#/components/ProfileCard'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 import {toLex} from '#/types/bsky'
 import {
   HeaderLabelerButtons,
@@ -57,8 +57,8 @@ ProfileHeaderLoading = memo(ProfileHeaderLoading)
 export {ProfileHeaderLoading}
 
 interface Props {
-  profile: AppBskyActorDefs.ProfileViewDetailed
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  profile: app.bsky.actor.defs.ProfileViewDetailed
+  labeler: app.bsky.labeler.defs.LabelerViewDetailed | undefined
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -102,8 +102,8 @@ const MinimalHeader = memo(function MinimalHeader({
   hideBackButton = false,
 }: {
   onLayout: (e: LayoutChangeEvent) => void
-  profile: AppBskyActorDefs.ProfileViewDetailed
-  labeler?: AppBskyLabelerDefs.LabelerViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
+  labeler?: app.bsky.labeler.defs.LabelerViewDetailed
   hideBackButton?: boolean
 }) {
   const t = useTheme()

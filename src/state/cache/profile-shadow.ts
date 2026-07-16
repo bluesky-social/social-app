@@ -1,5 +1,4 @@
 import {useEffect, useMemo, useState} from 'react'
-import {type AppBskyActorDefs, type AppBskyNotificationDefs} from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 import {EventEmitter} from 'eventemitter3'
 
@@ -33,6 +32,7 @@ import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForDiscover
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForExploreQueryData} from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForSeeMoreQueryData} from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery'
 import {findAllProfilesInQueryData as findAllProfilesInPostThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {castAsShadow, type Shadow} from './types'
 
@@ -42,9 +42,11 @@ export interface ProfileShadow {
   followingUri: string | undefined
   muted: boolean | undefined
   blockingUri: string | undefined
-  verification: AppBskyActorDefs.VerificationState
-  status: AppBskyActorDefs.StatusView | undefined
-  activitySubscription: AppBskyNotificationDefs.ActivitySubscription | undefined
+  verification: app.bsky.actor.defs.VerificationState
+  status: app.bsky.actor.defs.StatusView | undefined
+  activitySubscription:
+    | app.bsky.notification.defs.ActivitySubscription
+    | undefined
 }
 
 const shadows: WeakMap<

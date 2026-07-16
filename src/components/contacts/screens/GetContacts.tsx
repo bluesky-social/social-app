@@ -2,11 +2,10 @@ import {useContext} from 'react'
 import {Alert, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as Contacts from 'expo-contacts'
-import {
-  type AppBskyActorProfile,
-  AppBskyContactImportContacts,
-  type Un$Typed,
-} from '@atproto/api'
+import {type Un$Typed} from '@atproto/lex'
+import {type Client} from '@atproto/lex-client'
+import {toDatetimeString} from '@atproto/syntax'
+import {upsertProfile} from '@bsky.app/sdk'
 import {msg, t} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -14,9 +13,10 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
+import {getErrorName} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {findContactsStatusQueryKey} from '#/state/queries/find-contacts'
-import {type SessionAgent, useAgent} from '#/state/session'
+import {useAppviewClient, usePdsClient} from '#/state/session'
 import {
   Context as OnboardingContext,
   type OnboardingAction,
@@ -29,6 +29,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import {
   contactsWithPhoneNumbersOnly,
   filterMatchedNumbers,
@@ -53,7 +54,8 @@ export function GetContacts({
 }) {
   const {_} = useLingui()
   const ax = useAnalytics()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
+  const appviewClient = useAppviewClient()
   const insets = useSafeAreaInsets()
   const gutters = useGutters([0, 'wide'])
   const queryClient = useQueryClient()
@@ -71,7 +73,7 @@ export function GetContacts({
        */
       if (context === 'Onboarding' && maybeOnboardingContext) {
         try {
-          await createProfileRecord(agent, maybeOnboardingContext)
+          await createProfileRecord(pdsClient, maybeOnboardingContext)
         } catch (error) {
           logger.debug('Error creating profile record:', {safeMessage: error})
         }
@@ -84,13 +86,13 @@ export function GetContacts({
       )
 
       if (phoneNumbers.length > 0) {
-        const res = await agent.app.bsky.contact.importContacts({
+        const res = await appviewClient.call(app.bsky.contact.importContacts, {
           token: state.token,
           contacts: phoneNumbers.slice(0, MAX_UPLOAD_COUNT),
         })
 
         return {
-          matches: res.data.matchesAndContactIndexes,
+          matches: res.matchesAndContactIndexes,
           indexToContactId,
         }
       } else {
@@ -147,18 +149,14 @@ export function GetContacts({
           ),
           {type: 'error'},
         )
-      } else if (
-        err instanceof AppBskyContactImportContacts.TooManyContactsError
-      ) {
+      } else if (getErrorName(err) === 'TooManyContacts') {
         Toast.show(
           _(
             msg`Too many contacts - you've exceeded the number of contacts you can import to find your friends`,
           ),
           {type: 'error'},
         )
-      } else if (
-        err instanceof AppBskyContactImportContacts.InvalidTokenError
-      ) {
+      } else if (getErrorName(err) === 'InvalidToken') {
         Toast.show(
           _(
             msg`Could not upload contacts. You need to re-verify your phone number to proceed`,
@@ -324,7 +322,7 @@ function showPermissionDeniedAlert() {
  * Copied from `#/screens/Onboarding/StepFinished/index.tsx`
  */
 async function createProfileRecord(
-  agent: SessionAgent,
+  pdsClient: Client,
   onboardingContext: {
     state: OnboardingState
     dispatch: React.Dispatch<OnboardingAction>
@@ -333,21 +331,23 @@ async function createProfileRecord(
   const profileStepResults = onboardingContext.state.profileStepResults
   const {imageUri, imageMime} = profileStepResults
   const blobPromise =
-    imageUri && imageMime ? uploadBlob(agent, imageUri, imageMime) : undefined
+    imageUri && imageMime
+      ? uploadBlob(pdsClient, imageUri, imageMime)
+      : undefined
 
-  await agent.upsertProfile(async existing => {
-    let next: Un$Typed<AppBskyActorProfile.Record> = existing ?? {}
+  await pdsClient.call(upsertProfile, async existing => {
+    let next: Un$Typed<app.bsky.actor.profile.Main> = existing ?? {}
 
     if (blobPromise) {
       const res = await blobPromise
-      if (res.data.blob) {
-        next.avatar = res.data.blob
+      if (res.blob) {
+        next.avatar = res.blob
       }
     }
 
     next.displayName = ''
 
-    next.createdAt = new Date().toISOString()
+    next.createdAt = toDatetimeString(new Date())
     return next
   })
 }

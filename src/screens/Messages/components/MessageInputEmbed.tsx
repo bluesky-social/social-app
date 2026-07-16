@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, View} from 'react-native'
-import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 import {AtUri} from '@atproto/syntax'
 import {moderatePost} from '@bsky.app/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 
@@ -103,7 +103,7 @@ export function useExtractEmbedFromFacets(
   for (const facet of rt.facets ?? []) {
     for (const feature of facet.features) {
       if (
-        AppBskyRichtextFacet.isLink(feature) &&
+        bsky.isType(app.bsky.richtext.facet.link, feature) &&
         (isBskyPostUrl(feature.uri) || isBskyChatInviteUrl(feature.uri))
       ) {
         uriFromFacet = feature.uri

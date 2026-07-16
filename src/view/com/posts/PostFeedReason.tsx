@@ -1,5 +1,4 @@
 import {StyleSheet, View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -26,8 +25,8 @@ export function PostFeedReason({
 }: {
   reason:
     | ReasonFeedSource
-    | AppBskyFeedDefs.ReasonRepost
-    | AppBskyFeedDefs.ReasonPin
+    | app.bsky.feed.defs.ReasonRepost
+    | app.bsky.feed.defs.ReasonPin
     | {[k: string]: unknown; $type: string}
   moderation?: ModerationDecision
   onOpenReposter?: () => void

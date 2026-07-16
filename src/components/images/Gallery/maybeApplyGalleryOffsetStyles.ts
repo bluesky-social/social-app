@@ -1,4 +1,3 @@
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {type ModerationCause, type ModerationUI} from '@bsky.app/sdk/moderation'
 
 import {unique} from '#/lib/moderation'
@@ -17,7 +16,7 @@ export function maybeApplyGalleryOffsetStyles(
     modui,
     additionalCauses,
   }: {
-    post: AppBskyFeedDefs.PostView
+    post: app.bsky.feed.defs.PostView
     modui: ModerationUI
     additionalCauses?: ModerationCause[] | AppModerationCause[]
   },

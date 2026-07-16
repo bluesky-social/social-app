@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {AtUri} from '@atproto/syntax'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -14,6 +13,7 @@ import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/component
 import {Link} from '#/components/Link'
 import {Text, type TextProps} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 
 export function Container({
   style,
@@ -46,7 +46,7 @@ export function FeedLink({
   feed,
   children,
 }: {
-  feed: AppBskyFeedDefs.GeneratorView
+  feed: app.bsky.feed.defs.GeneratorView
   children?: React.ReactNode
 }) {
   const t = useTheme()
@@ -75,7 +75,7 @@ export function FeedLink({
   )
 }
 
-export function FeedAvatar({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
+export function FeedAvatar({feed}: {feed: app.bsky.feed.defs.GeneratorView}) {
   return <UserAvatar type="algo" size={38} avatar={feed.avatar} />
 }
 
@@ -150,7 +150,7 @@ export function SearchButton({
   )
 }
 
-export function PinButton({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
+export function PinButton({feed}: {feed: app.bsky.feed.defs.GeneratorView}) {
   return (
     <View style={[a.z_20, {marginRight: -6}]}>
       <FeedCard.SaveButton

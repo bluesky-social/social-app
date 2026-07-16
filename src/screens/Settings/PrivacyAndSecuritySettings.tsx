@@ -1,4 +1,3 @@
-import {type AppBskyNotificationDeclaration} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -17,6 +16,7 @@ import {Key_Stroke2_Corner2_Rounded as KeyIcon} from '#/components/icons/Key'
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
+import {type app} from '#/lexicons'
 import {Email2FAToggle} from './components/Email2FAToggle'
 import {PwiOptOut} from './components/PwiOptOut'
 import {ItemTextWithSubtitle} from './NotificationSettings/components/ItemTextWithSubtitle'
@@ -146,7 +146,7 @@ function NotificationDeclaration({
   isError,
 }: {
   data?: {
-    value: AppBskyNotificationDeclaration.Record
+    value: app.bsky.notification.declaration.Main
   }
   isError?: boolean
 }) {

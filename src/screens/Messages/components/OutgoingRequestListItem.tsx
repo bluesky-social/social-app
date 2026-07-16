@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {type ChatBskyGroupDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {isNetworkError} from '#/lib/strings/errors'
@@ -12,11 +11,12 @@ import {createStaticClick, Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {type chat} from '#/lexicons'
 
 export function OutgoingRequestListItem({
   convo: convoView,
 }: {
-  convo: ChatBskyGroupDefs.JoinRequestConvoView
+  convo: chat.bsky.group.defs.JoinRequestConvoView
 }) {
   const t = useTheme()
   const {t: l} = useLingui()

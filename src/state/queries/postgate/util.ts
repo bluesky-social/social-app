@@ -203,5 +203,5 @@ export function getMaybeDetachedQuoteEmbed({
 }
 
 export const embeddingRules = {
-  disableRule: {$type: 'app.bsky.feed.postgate#disableRule'},
+  disableRule: {$type: 'app.bsky.feed.postgate#disableRule'} as const,
 }

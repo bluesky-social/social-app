@@ -1,4 +1,3 @@
-import {Agent, BSKY_LABELER_DID} from '@atproto/api'
 import {Client} from '@atproto/lex-client'
 import {api} from '@bsky.app/sdk'
 
@@ -6,17 +5,17 @@ import {IS_TEST_USER} from '#/lib/constants'
 import {com} from '#/lexicons'
 import {configureAdditionalModerationAuthorities} from './additional-moderation-authorities'
 import {readLabelers} from './agent-config'
-import {type SessionBundle} from './session-core'
+import {BridgeAgent, type SessionBundle} from './session-core'
 import {type SessionAccount} from './types'
 
 /*
- * The Bluesky moderation labeler DID. `BSKY_LABELER_DID` (from '@atproto/api')
- * and `api.moderation.did` (from '@bsky.app/sdk') are the SAME value -
- * `did:plc:ar7c4by46qjdydhdevvrndac` - verified at implementation. We keep
- * using `BSKY_LABELER_DID` for the global appLabelers config and the
- * per-account filter (matching the old code) and `api.moderation.did` as the
- * appview client's base labeler (matching `buildAppviewClient`); both resolve
- * to identical `atproto-accept-labelers` headers.
+ * The Bluesky moderation labeler DID. The old `BSKY_LABELER_DID` (from
+ * '@atproto/api') and `api.moderation.did` (from '@bsky.app/sdk') are the SAME
+ * value - `did:plc:ar7c4by46qjdydhdevvrndac` - verified at implementation. We
+ * use `api.moderation.did` everywhere: the global appLabelers config, the
+ * per-account filter, and the appview client's base labeler (matching
+ * `buildAppviewClient`); all resolve to identical `atproto-accept-labelers`
+ * headers.
  */
 
 /**
@@ -32,7 +31,7 @@ import {type SessionAccount} from './types'
  */
 function configureGlobalAppLabelers(dids: string[]) {
   Client.configure({appLabelers: dids as `did:${string}:${string}`[]})
-  Agent.configure({appLabelers: dids})
+  BridgeAgent.configure({appLabelers: dids})
 }
 
 export function configureModerationForGuest() {
@@ -64,7 +63,7 @@ export async function configureModerationForAccount(
   // The code below is actually relevant to production (and isn't global).
   const labelerDids = await readLabelers(account.did).catch(_ => {})
   if (labelerDids) {
-    const perAccount = labelerDids.filter(did => did !== BSKY_LABELER_DID)
+    const perAccount = labelerDids.filter(did => did !== api.moderation.did)
     /*
      * Apply the per-account labelers to both live request paths. The appview
      * client re-asserts the Bluesky moderation labeler as its base because
@@ -86,7 +85,7 @@ export async function configureModerationForAccount(
 }
 
 function switchToBskyAppLabeler() {
-  configureGlobalAppLabelers([BSKY_LABELER_DID])
+  configureGlobalAppLabelers([api.moderation.did])
 }
 
 /**

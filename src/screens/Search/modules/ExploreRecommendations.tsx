@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
 import {
@@ -17,6 +16,7 @@ import {
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
 
 // Note: This module is not currently used and may be removed in the future.
 
@@ -112,7 +112,7 @@ function Inner() {
   )
 }
 
-function isAllFeeds(topics: AppBskyUnspeccedDefs.TrendingTopic[]) {
+function isAllFeeds(topics: app.bsky.unspecced.defs.TrendingTopic[]) {
   return topics.every(topic => {
     const segments = topic.link.split('/').slice(1)
     return segments[0] === 'profile' && segments[2] === 'feed'
