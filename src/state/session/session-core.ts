@@ -38,7 +38,9 @@ import {features} from '#/analytics'
 import {
   buildAccountClient,
   buildAppviewClient,
+  buildChatClient,
   getPublicLexClient,
+  getUnauthenticatedClient,
 } from './clients'
 import {addSessionErrorLog} from './logging'
 import {
@@ -401,6 +403,8 @@ export type SessionBundle = {
   accountClient: Client
   /** Authed appview client (proxied, with labelers). */
   appviewClient: Client
+  /** Chat client (proxied to `did:web:api.bsky.chat#bsky_chat`). */
+  chatClient: Client
   /**
    * The service (entryway) URL, mirroring `agent.serviceUrl`. Exposed so the
    * reducer can read `.service` for its opaque snapshot/logging view
@@ -431,6 +435,7 @@ export function buildBundle(session: PasswordSession): SessionBundle {
      * appviewClient too.
      */
     appviewClient: buildAppviewClient(session, []),
+    chatClient: buildChatClient(session),
     /*
      * Mirror the bridge agent's serviceUrl so the reducer's opaque view can
      * read `.service`. A getter keeps it live with the agent's derivation.
@@ -519,6 +524,13 @@ export type PublicSessionBundle = {
   agent: SessionAgent
   accountClient: Client
   appviewClient: Client
+  /**
+   * The throwing unauthenticated client (NOT the public client): chat is
+   * meaningless logged out, and `useChatClient()` must fail loudly rather than
+   * silently target the public appview. See {@link getUnauthenticatedClient}
+   * and design section J.
+   */
+  chatClient: Client
   /** Mirrors `agent.serviceUrl` (the public appview URL). See {@link SessionBundle.service}. */
   readonly service: URL
 }
@@ -536,8 +548,16 @@ export function createPublicSessionBundle(): PublicSessionBundle {
   return {
     session: null,
     agent,
-    accountClient: publicClient,
+    /*
+     * Write/auth clients throw on use when logged out (design section J): the
+     * public bundle exposes the throwing unauthenticated client for the account
+     * (PDS) and chat clients so an unauthenticated write or chat call fails
+     * loudly instead of silently targeting the public appview. Reads keep the
+     * public client (appviewClient), which reads public data without auth.
+     */
+    accountClient: getUnauthenticatedClient(),
     appviewClient: publicClient,
+    chatClient: getUnauthenticatedClient(),
     get service() {
       return agent.serviceUrl
     },

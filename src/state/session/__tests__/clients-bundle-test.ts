@@ -28,11 +28,14 @@ jest.mock('jwt-decode', () => ({
 }))
 
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
-import {app} from '#/lexicons'
+import {app, chat} from '#/lexicons'
 import {
   buildAccountClient,
   buildAppviewClient,
+  buildChatClient,
   getPublicLexClient,
+  getUnauthenticatedClient,
+  NotAuthenticatedError,
 } from '../clients'
 import {sessionAccountToSessionData} from '../session-core'
 import {type SessionAccount} from '../types'
@@ -41,6 +44,7 @@ const DID = 'did:plc:example123'
 const HANDLE = 'alice.test'
 const SERVICE = 'https://bsky.social'
 const APPVIEW_PROXY = 'did:web:api.bsky.app#bsky_appview'
+const CHAT_PROXY = 'did:web:api.bsky.chat#bsky_chat'
 const CUSTOM_LABELER = 'did:plc:custom-labeler'
 
 function makeAccount(overrides: Partial<SessionAccount> = {}): SessionAccount {
@@ -172,6 +176,72 @@ describe('buildAccountClient', () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
     expect(seen[0].headers.get('authorization')).toBe('Bearer access-jwt')
+  })
+})
+
+describe('buildChatClient', () => {
+  it('sets the chat atproto-proxy header on a request', async () => {
+    const {seen, fetchMock} = makeCapturingFetch()
+    const session = makeSession(fetchMock)
+    const client = buildChatClient(session)
+
+    await client.call(chat.bsky.convo.listConvos.main).catch(() => {})
+
+    expect(seen.length).toBe(1)
+    expect(seen[0].headers.get('atproto-proxy')).toBe(CHAT_PROXY)
+  })
+
+  it('routes through the session fetchHandler with the bearer token', async () => {
+    const {seen, fetchMock} = makeCapturingFetch()
+    const session = makeSession(fetchMock)
+    const client = buildChatClient(session)
+
+    await client.call(chat.bsky.convo.listConvos.main).catch(() => {})
+
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(seen[0].headers.get('authorization')).toBe('Bearer access-jwt')
+  })
+})
+
+describe('getUnauthenticatedClient', () => {
+  it('is a stable singleton with no did', () => {
+    const client = getUnauthenticatedClient()
+    expect(client.did).toBeUndefined()
+    /* identity is stable so it is safe in React Query keys */
+    expect(getUnauthenticatedClient()).toBe(client)
+  })
+
+  it('rejects on a call, with NotAuthenticatedError as the root cause', async () => {
+    /*
+     * The throwing fetchHandler fires before any network I/O. lex-client wraps
+     * a fetchHandler throw in an XrpcInternalError whose `.cause` is the
+     * original error, so the NotAuthenticatedError surfaces as the cause.
+     */
+    const client = getUnauthenticatedClient()
+
+    const err = await client
+      .call(chat.bsky.convo.listConvos.main)
+      .then(() => undefined)
+      .catch((e: unknown) => e)
+
+    expect(err).toBeInstanceOf(Error)
+    expect((err as Error).cause).toBeInstanceOf(NotAuthenticatedError)
+  })
+
+  it('surfaces a NotAuthenticatedError with a stable name and message', async () => {
+    const client = getUnauthenticatedClient()
+
+    const err = await client
+      .call(chat.bsky.convo.listConvos.main)
+      .then(() => undefined)
+      .catch((e: unknown) => e)
+
+    const cause = (err as Error).cause
+    expect(cause).toBeInstanceOf(NotAuthenticatedError)
+    expect((cause as NotAuthenticatedError).name).toBe('NotAuthenticatedError')
+    expect((cause as NotAuthenticatedError).message).toBe(
+      'Not authenticated: this operation requires an active session',
+    )
   })
 })
 
