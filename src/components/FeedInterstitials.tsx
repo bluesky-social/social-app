@@ -481,11 +481,11 @@ export function ProfileGrid({
             <Text
               style={[
                 a.text_sm,
-                {color: t.palette.primary_500},
+                t.atoms.text_link,
                 hovered &&
                   web({
                     textDecorationLine: 'underline',
-                    textDecorationColor: t.palette.primary_500,
+                    textDecorationColor: t.atoms.text_link.color,
                   }),
               ]}>
               <Trans>See more</Trans>
