@@ -19,7 +19,7 @@ import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {com} from '#/lexicons'
 import {emitSessionDropped} from '../events'
-import {getPublicLexClient} from './clients'
+import {getPublicLexClient, getUnauthenticatedClient} from './clients'
 import {type Action, getInitialState, reducer, type State} from './reducer'
 import {
   buildBundle,
@@ -571,9 +571,59 @@ export function useAppviewClient(): Client {
 /**
  * The account (PDS) lex {@link Client} for the active account. Writes and record
  * mutations go here - requests hit the user's PDS directly (no appview proxy).
- * Falls back to the public client when there is no bundle.
+ *
+ * Logged-out contract: returns a stable throwing client
+ * ({@link getUnauthenticatedClient}) that throws `NotAuthenticatedError` on any
+ * request, BEFORE any network I/O. This is the write path - it must NOT fall
+ * back to the public appview, so an unauthenticated write fails immediately and
+ * legibly rather than silently hitting `public.api.bsky.app`. Components may
+ * safely hold this client while logged out; only calling it throws. A component
+ * that genuinely branches on auth state should use {@link useMaybePdsClient}.
  */
 export function usePdsClient(): Client {
   const bundle = useContext(BundleContext)
-  return bundle?.accountClient ?? getPublicLexClient()
+  return bundle?.accountClient ?? getUnauthenticatedClient()
+}
+
+/**
+ * The chat lex {@link Client} for the active account. `chat.bsky.*` calls go
+ * here - proxied to `did:web:api.bsky.chat#bsky_chat`.
+ *
+ * Logged-out contract: returns a stable throwing client
+ * ({@link getUnauthenticatedClient}) that throws `NotAuthenticatedError` on any
+ * request, BEFORE any network I/O. Chat is meaningless logged out, so this must
+ * NOT fall back to the public appview. A component that genuinely branches on
+ * auth state should use {@link useMaybeChatClient}.
+ */
+export function useChatClient(): Client {
+  const bundle = useContext(BundleContext)
+  return bundle?.chatClient ?? getUnauthenticatedClient()
+}
+
+/**
+ * The account (PDS) lex {@link Client} for the active account, or `null` when
+ * there is no active session (logged out, or used outside the provider).
+ *
+ * The escape hatch for the rare component that genuinely renders a logged-out
+ * branch and must decide whether a write path is available. Prefer
+ * {@link usePdsClient} for the common case (a write only reachable while
+ * authenticated); do NOT reach for this hook merely to dodge the throwing
+ * client's `NotAuthenticatedError`.
+ */
+export function useMaybePdsClient(): Client | null {
+  const bundle = useContext(BundleContext)
+  return bundle?.session ? bundle.accountClient : null
+}
+
+/**
+ * The chat lex {@link Client} for the active account, or `null` when there is
+ * no active session (logged out, or used outside the provider).
+ *
+ * The escape hatch for the rare component that genuinely renders a logged-out
+ * branch. Prefer {@link useChatClient} for the common case; do NOT reach for
+ * this hook merely to dodge the throwing client's `NotAuthenticatedError`.
+ */
+export function useMaybeChatClient(): Client | null {
+  const bundle = useContext(BundleContext)
+  return bundle?.session ? bundle.chatClient : null
 }

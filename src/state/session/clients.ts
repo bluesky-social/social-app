@@ -88,6 +88,51 @@ export function buildAccountClient(session: PasswordSession): Client {
 }
 
 /**
+ * Build the chat client over a {@link PasswordSession}.
+ *
+ * `api.chat.service` (`did:web:api.bsky.chat#bsky_chat`) is passed as the
+ * client's `service`, so lex-client sets `atproto-proxy: did:web:api.bsky.chat#bsky_chat`
+ * on every request. This is exactly what the old per-call `DM_SERVICE_HEADERS`
+ * did, once and centrally, so `chat.bsky.*` calls are proxied to the chat
+ * service.
+ */
+export function buildChatClient(session: PasswordSession): Client {
+  return new Client(session, {service: api.chat.service})
+}
+
+/** Thrown when a write/auth-only client is used with no active session. */
+export class NotAuthenticatedError extends Error {
+  constructor(op = 'this operation') {
+    super(`Not authenticated: ${op} requires an active session`)
+    this.name = 'NotAuthenticatedError'
+  }
+}
+
+/**
+ * A stable {@link Client} that throws {@link NotAuthenticatedError} on any
+ * request, before any network I/O. Used as the logged-out value of write/auth
+ * -only hooks (`usePdsClient`/`useChatClient`) so an unauthenticated write or
+ * chat call fails immediately and legibly instead of silently hitting the
+ * public appview (which would 404/405 with an opaque error).
+ *
+ * A lazily-constructed process-wide singleton, so its identity is stable across
+ * renders - safe to use in React Query keys and as a hook return value. The
+ * `did` is `undefined` (logged out) and the `fetchHandler` throws before
+ * touching the network.
+ */
+let unauthedClient: Client | undefined
+
+export function getUnauthenticatedClient(): Client {
+  unauthedClient ??= new Client({
+    did: undefined,
+    fetchHandler: () => {
+      throw new NotAuthenticatedError()
+    },
+  })
+  return unauthedClient
+}
+
+/**
  * Build the authed appview client over a {@link PasswordSession}.
  *
  * Requests are proxied to the Bluesky appview (`atproto-proxy:
