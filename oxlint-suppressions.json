@@ -282,7 +282,7 @@
       "count": 2
     },
     "typescript/no-misused-promises": {
-      "count": 2
+      "count": 1
     }
   },
   "src/components/PostControls/DiscoverDebug.tsx": {
