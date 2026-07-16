@@ -263,7 +263,15 @@ function VideoError({
   const errorMessage = error instanceof Error ? error.message : String(error)
   const presentation = embed.presentation === 'gif' ? 'gif' : 'video'
   const playlist = embed.playlist
+  /*
+   * Fire exactly once per failure - the analytics context identity can change
+   * (session/geolocation updates) while this fallback stays mounted, which
+   * would otherwise re-run the effect and double-count.
+   */
+  const fired = useRef(false)
   useEffect(() => {
+    if (fired.current) return
+    fired.current = true
     ax.metric('video:playback:failed', {
       surface: 'feed',
       presentation,
