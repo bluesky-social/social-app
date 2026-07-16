@@ -1,7 +1,14 @@
-import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
-import {ActivityIndicator, StyleSheet} from 'react-native'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {withSpring} from 'react-native-reanimated'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -11,6 +18,7 @@ import {useRequestNotificationsPermission} from '#/lib/notifications/notificatio
 import {
   type HomeTabNavigatorParams,
   type NativeStackScreenProps,
+  type NavigationProp,
 } from '#/lib/routes/types'
 import {emitSoftReset} from '#/state/events'
 import {
@@ -38,6 +46,9 @@ import {
   useHomeHeaderMode,
 } from '#/view/com/util/MainScrollProvider'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
+import {Explore} from '#/screens/Search/Explore'
+import {useTheme} from '#/alf'
+import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import * as Layout from '#/components/Layout'
 import {useAnalytics} from '#/analytics'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
@@ -50,6 +61,32 @@ export function HomeScreen(props: Props) {
   const {currentAccount} = useSession()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
+  const setSelectedFeed = useSetSelectedFeed()
+
+  // Inline "Discover new feeds" (Explore) state lives here rather than in
+  // HomeScreenReady because pinning a feed changes the usePinnedFeedsInfos query
+  // key, which briefly unmounts HomeScreenReady -- losing any state held there.
+  const [showExplore, setShowExplore] = useState(false)
+  const prevPinnedCountRef = useRef(0)
+  useEffect(() => {
+    if (!pinnedFeedInfos) return
+    const prevCount = prevPinnedCountRef.current
+    prevPinnedCountRef.current = pinnedFeedInfos.length
+    // When a custom feed is pinned while Explore is open, select the last pinned
+    // custom feed (the rightmost non-Following tab) and close Explore.
+    if (showExplore && prevCount > 0 && pinnedFeedInfos.length > prevCount) {
+      let lastCustomIndex = -1
+      for (let i = 0; i < pinnedFeedInfos.length; i++) {
+        if (pinnedFeedInfos[i].feedDescriptor !== 'following') {
+          lastCustomIndex = i
+        }
+      }
+      if (lastCustomIndex !== -1) {
+        setSelectedFeed(pinnedFeedInfos[lastCustomIndex].feedDescriptor)
+      }
+      setShowExplore(false)
+    }
+  }, [pinnedFeedInfos, showExplore, setSelectedFeed])
 
   useEffect(() => {
     if (IS_WEB && !currentAccount) {
@@ -89,6 +126,8 @@ export function HomeScreen(props: Props) {
             {...props}
             preferences={preferences}
             pinnedFeedInfos={pinnedFeedInfos}
+            showExplore={showExplore}
+            setShowExplore={setShowExplore}
           />
         </HomeHeaderModeProvider>
       </Layout.Screen>
@@ -107,11 +146,18 @@ export function HomeScreen(props: Props) {
 function HomeScreenReady({
   preferences,
   pinnedFeedInfos,
+  showExplore,
+  setShowExplore,
 }: Props & {
   preferences: UsePreferencesQueryResponse
   pinnedFeedInfos: SavedFeedSourceInfo[]
+  showExplore: boolean
+  setShowExplore: React.Dispatch<React.SetStateAction<boolean>>
 }) {
   const ax = useAnalytics()
+  const t = useTheme()
+  const navigation = useNavigation<NavigationProp>()
+  const headerOffset = useHeaderOffset()
   const allFeeds = useMemo(
     () => pinnedFeedInfos.map(f => f.feedDescriptor),
     [pinnedFeedInfos],
@@ -172,6 +218,8 @@ function HomeScreenReady({
   const onPageSelected = useCallback(
     (index: number) => {
       showHeader()
+      // Selecting a feed dismisses the inline Explore view.
+      setShowExplore(false)
       const maybeFeed = allFeeds[index]
 
       // Mutate the ref before setting state to avoid the imperative syncing effect
@@ -193,6 +241,19 @@ function HomeScreenReady({
   const onPressSelected = useCallback(() => {
     emitSoftReset()
   }, [])
+
+  const onPressAdd = useCallback(() => {
+    setShowExplore(show => !show)
+  }, [])
+
+  const focusSearchInput = useCallback(() => {
+    setShowExplore(false)
+    if (IS_WEB) {
+      navigation.navigate('Search', {})
+    } else {
+      navigation.navigate('SearchTab')
+    }
+  }, [navigation])
 
   const onPageScrollStateChanged = useCallback(
     (state: 'idle' | 'dragging' | 'settling') => {
@@ -226,12 +287,29 @@ function HomeScreenReady({
           {...props}
           testID="homeScreenFeedTabs"
           onPressSelected={onPressSelected}
+          onPressAdd={onPressAdd}
+          addActive={showExplore}
           feeds={pinnedFeedInfos}
         />
       )
     },
-    [onPressSelected, pinnedFeedInfos, demoMode],
+    [onPressSelected, onPressAdd, showExplore, pinnedFeedInfos, demoMode],
   )
+
+  const renderContentOverlay = useCallback(() => {
+    if (!showExplore) {
+      return null
+    }
+    return (
+      <View style={[{flex: 1, paddingTop: headerOffset}, t.atoms.bg]}>
+        <Explore
+          focusSearchInput={focusSearchInput}
+          headerHeight={0}
+          feedsOnly
+        />
+      </View>
+    )
+  }, [showExplore, headerOffset, focusSearchInput, t.atoms.bg])
 
   const renderFollowingEmptyState = useCallback(() => {
     return <FollowingEmptyState />
@@ -288,7 +366,8 @@ function HomeScreenReady({
       initialPage={selectedIndex}
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
-      renderTabBar={renderTabBar}>
+      renderTabBar={renderTabBar}
+      renderContentOverlay={renderContentOverlay}>
       {pinnedFeedInfos.length ? (
         pinnedFeedInfos.map((feedInfo, index) => {
           const feed = feedInfo.feedDescriptor

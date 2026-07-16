@@ -12,6 +12,8 @@ export function HomeHeader(
   props: RenderTabBarFnProps & {
     testID?: string
     onPressSelected: () => void
+    onPressAdd?: () => void
+    addActive?: boolean
     feeds: FeedSourceInfo[]
   },
 ) {
@@ -61,6 +63,8 @@ export function HomeHeader(
         items={items}
         dragProgress={props.dragProgress}
         dragState={props.dragState}
+        onPressAdd={hasSession ? props.onPressAdd : undefined}
+        addActive={props.addActive}
         transparent
       />
     </HomeHeaderLayout>
