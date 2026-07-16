@@ -47,7 +47,8 @@ export const SplashScreen = ({
   }, [])
 
   const logoVariant = useLogoVariant()
-  const customLogo = logoVariant !== 'default'
+  const kawaii = logoVariant === 'kawaii'
+  const japanLogo = logoVariant === 'japan'
 
   return (
     <>
@@ -82,9 +83,9 @@ export const SplashScreen = ({
           ]}>
           <ErrorBoundary>
             <View style={[a.justify_center, a.align_center]}>
-              <Logo width={customLogo ? 300 : 92} fill="sky" />
+              <Logo width={kawaii ? 300 : japanLogo ? 120 : 92} fill="sky" />
 
-              {!customLogo && (
+              {!kawaii && (
                 <View style={[a.pb_sm, a.pt_5xl]}>
                   <Logotype width={161} fill={t.atoms.text.color} />
                 </View>
