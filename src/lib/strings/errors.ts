@@ -1,5 +1,6 @@
-import {XRPCError} from '@atproto/api'
 import {t} from '@lingui/core/macro'
+
+import {getErrorName, getErrorStatus, isXrpcError} from '#/lib/xrpc-error'
 
 export function cleanError(e: unknown): string {
   if (!e) {
@@ -67,7 +68,7 @@ export function isNetworkError(e: unknown) {
 }
 
 export function isErrorMaybeAppPasswordPermissions(e: unknown) {
-  if (e instanceof XRPCError && e.error === 'TokenInvalid') {
+  if (isXrpcError(e) && getErrorName(e) === 'TokenInvalid') {
     return true
   }
   const str = String(e)
@@ -93,5 +94,6 @@ export function isRetryableHttpStatus(status: number) {
 }
 
 export function shouldRetryError(e: unknown) {
-  return e instanceof XRPCError && isRetryableHttpStatus(e.status)
+  const status = getErrorStatus(e)
+  return status !== undefined && isRetryableHttpStatus(status)
 }

@@ -17,6 +17,17 @@ export * as profile from '#/types/bsky/profile'
 export * as starterPack from '#/types/bsky/starterPack'
 
 /**
+ * Unsafe cast from an old `@atproto/api` view/record type to its `#/lexicons`
+ * equivalent. Only for mixed-world boundaries during the migration where a
+ * producer has not yet flipped. Structurally the shapes are identical modulo
+ * branded string types; this asserts the brand the compiler cannot prove.
+ * Every use is a migration debt marker - grep `toLex` at Phase 4 cleanup.
+ */
+export function toLex<T>(v: unknown): T {
+  return v as T
+}
+
+/**
  * Fast type checking without full schema validation, for use with data we
  * trust, or for non-critical path use cases. Why? Our SDK's `is*` identity
  * utils do not assert the type of the entire object, only the `$type` string.
