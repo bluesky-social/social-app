@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type $Typed, ComAtprotoLabelDefs} from '@atproto/api'
+import {type $Typed, type ComAtprotoLabelDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
@@ -22,6 +22,7 @@ import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {useAnalytics} from '#/analytics'
+import {com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 type Props = NativeStackScreenProps<
@@ -53,9 +54,9 @@ export function AutomationLabelSettingsScreen({}: Props) {
       {
         profile,
         updates: existing => {
-          const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.validate(
+          const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.matches(
+            com.atproto.label.defs.selfLabels,
             existing.labels,
-            ComAtprotoLabelDefs.validateSelfLabels,
           )
             ? existing.labels
             : {

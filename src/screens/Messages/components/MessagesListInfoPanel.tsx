@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -16,6 +16,7 @@ import {Person_Stroke2_Corner2_Rounded as PersonIcon} from '#/components/icons/P
 import {ProfileBadges} from '#/components/ProfileBadges'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {toLex} from '#/types/bsky'
 
 export function MessagesListInfoPanel({
   convo,
@@ -34,10 +35,11 @@ export function MessagesListInfoPanel({
   )[0]
   const handle = sanitizeHandle(profile.handle, '@')
   const displayName = moderationOpts
-    ? createSanitizedDisplayName(
+    ? // TODO(phase4): drop toLex once convo members emit #/lexicons views
+      createSanitizedDisplayName(
         profile,
         true,
-        moderateProfile(profile, moderationOpts).ui('displayName'),
+        moderateProfile(toLex(profile), moderationOpts).ui('displayName'),
       )
     : handle
   const profileLink =

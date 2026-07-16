@@ -8,25 +8,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import {type AppBskyActorDefs, type AppBskyFeedDefs} from '@atproto/api'
+import {TID} from '@atproto/common-web'
+import {AtUri, type DidString} from '@atproto/syntax'
 import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  type AppBskyGraphDefs,
-  AppBskyGraphFollow,
-  AppBskyGraphStarterpack,
-  AtUri,
   moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
-} from '@atproto/api'
-import {TID} from '@atproto/common-web'
+} from '@bsky.app/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS, MAX_POST_LINES} from '#/lib/constants'
+import {MAX_POST_LINES} from '#/lib/constants'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -38,7 +33,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type FeedNotification} from '#/state/queries/notifications/feed'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
-import {useAgent, useSession} from '#/state/session'
+import {useChatClient, useSession} from '#/state/session'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {Post} from '#/view/com/post/Post'
 import {formatCount} from '#/view/com/util/numeric/format'
@@ -73,6 +68,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {app, chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const MAX_AUTHORS = 5
@@ -153,12 +149,15 @@ let NotificationFeedItem = ({
       {
         profile: item.notification.author,
         href: makeProfileLink(item.notification.author),
-        moderation: moderateProfile(item.notification.author, moderationOpts),
+        moderation: moderateProfile(
+          bsky.toLex(item.notification.author),
+          moderationOpts,
+        ),
       },
       ...(item.additional?.map(({author}) => ({
         profile: author,
         href: makeProfileLink(author),
-        moderation: moderateProfile(author, moderationOpts),
+        moderation: moderateProfile(bsky.toLex(author), moderationOpts),
       })) || []),
     ].filter(
       (author, index, arr) =>
@@ -191,10 +190,7 @@ let NotificationFeedItem = ({
     if (item.type !== 'follow') return false
     if (
       item.notification.author.viewer?.following &&
-      bsky.dangerousIsType<AppBskyGraphFollow.Record>(
-        item.notification.record,
-        AppBskyGraphFollow.isRecord,
-      )
+      bsky.isType(app.bsky.graph.follow, item.notification.record)
     ) {
       let followingTimestamp
       try {
@@ -923,21 +919,21 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
 
 function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   const {t: l} = useLingui()
-  const agent = useAgent()
+  const chatClient = useChatClient()
   const navigation = useNavigation<NavigationProp>()
   const [isLoading, setIsLoading] = useState(false)
 
   const onPress = async () => {
     try {
       setIsLoading(true)
-      const res = await agent.api.chat.bsky.convo.getConvoForMembers(
+      const res = await chatClient.call(
+        chat.bsky.convo.getConvoForMembers,
         {
-          members: [profile.did, agent.session!.did],
+          members: [profile.did as DidString, chatClient.assertDid],
         },
-        {headers: DM_SERVICE_HEADERS},
       )
       navigation.navigate('MessagesConversation', {
-        conversation: res.data.convo.id,
+        conversation: res.convo.id,
       })
     } catch (e) {
       logger.error('Failed to get conversation', {safeMessage: e})
@@ -1157,13 +1153,7 @@ function ExpandedAuthorProfileCard({
 
 function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
-  if (
-    post &&
-    bsky.dangerousIsType<AppBskyFeedPost.Record>(
-      post?.record,
-      AppBskyFeedPost.isRecord,
-    )
-  ) {
+  if (post && bsky.isType(app.bsky.feed.post, post?.record)) {
     const text = post.record.text
 
     return (

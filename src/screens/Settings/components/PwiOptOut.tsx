@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {type $Typed, ComAtprotoLabelDefs} from '@atproto/api'
+import {type $Typed, type ComAtprotoLabelDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -13,6 +13,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
+import {com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function PwiOptOut() {
@@ -35,9 +36,9 @@ export function PwiOptOut() {
       profile,
       updates: existing => {
         // create labels attr if needed
-        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.validate(
+        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.matches(
+          com.atproto.label.defs.selfLabels,
           existing.labels,
-          ComAtprotoLabelDefs.validateSelfLabels,
         )
           ? existing.labels
           : {

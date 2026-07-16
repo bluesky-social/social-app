@@ -8,7 +8,7 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
-import {moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -17,6 +17,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Person_Filled_Corner2_Rounded as PersonIcon} from '#/components/icons/Person'
 import type * as bsky from '#/types/bsky'
+import {toLex} from '#/types/bsky'
 
 type Layout = {
   size: number
@@ -162,7 +163,10 @@ function AvatarBubble({
           type="user"
           hideLiveBadge
           noBorder
-          moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
+          // TODO(phase4): drop toLex once profile props emit #/lexicons views
+          moderation={moderateProfile(toLex(profile), moderationOpts).ui(
+            'avatar',
+          )}
         />
       ) : (
         <AvatarPlaceholder size={size} />

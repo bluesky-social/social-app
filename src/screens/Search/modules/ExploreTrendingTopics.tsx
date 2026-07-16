@@ -1,11 +1,9 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
-import {
-  type AppBskyUnspeccedDefs,
-  moderateProfile,
-  RichText as RichTextApi,
-} from '@atproto/api'
+import {type AppBskyUnspeccedDefs} from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
+import {RichText as RichTextApi} from '@bsky.app/sdk/richtext'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -31,6 +29,7 @@ import {useTrendingTopicSeen} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import * as ModuleHeader from '../components/ModuleHeader'
+import {toLex} from '#/types/bsky'
 
 const IMAGE_SIZE = 56
 
@@ -308,7 +307,8 @@ function useModerateTrendingActors(
 
     return actors
       .filter(actor => {
-        const decision = moderateProfile(actor, moderationOpts)
+        // TODO(phase4): drop toLex once TrendView actors emit #/lexicons views
+        const decision = moderateProfile(toLex(actor), moderationOpts)
         return !decision.ui('avatar').filter && !decision.ui('avatar').blur
       })
       .slice(0, 3)

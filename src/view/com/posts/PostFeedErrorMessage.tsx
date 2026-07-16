@@ -1,10 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  AppBskyFeedGetAuthorFeed,
-  AtUri,
-} from '@atproto/api'
+import {type AppBskyActorDefs, AppBskyFeedGetAuthorFeed} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {msg as msgLingui} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

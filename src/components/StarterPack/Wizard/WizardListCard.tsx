@@ -1,12 +1,11 @@
 import {Keyboard, View} from 'react-native'
+import {type AppBskyActorDefs, type AppBskyFeedDefs} from '@atproto/api'
 import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
   moderateFeedGenerator,
   moderateProfile,
   type ModerationOpts,
   type ModerationUI,
-} from '@atproto/api'
+} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -27,6 +26,7 @@ import {Checkbox} from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
+import {toLex} from '#/types/bsky'
 
 function WizardListCard({
   type,
@@ -140,7 +140,10 @@ export function WizardProfileCard({
   const included = isTarget || state.profiles.some(p => p.did === profile.did)
   const disabled =
     isTarget || (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE)
-  const moderationUi = moderateProfile(profile, moderationOpts).ui('avatar')
+  // TODO(phase4): drop toLex once profile prop emits #/lexicons views
+  const moderationUi = moderateProfile(toLex(profile), moderationOpts).ui(
+    'avatar',
+  )
   const displayName = profile.displayName
     ? sanitizeDisplayName(profile.displayName)
     : `@${sanitizeHandle(profile.handle)}`
@@ -191,9 +194,11 @@ export function WizardFeedCard({
   const isDiscover = generator.uri === DISCOVER_FEED_URI
   const included = isDiscover || state.feeds.some(f => f.uri === generator.uri)
   const disabled = isDiscover || (!included && state.feeds.length >= 3)
-  const moderationUi = moderateFeedGenerator(generator, moderationOpts).ui(
-    'avatar',
-  )
+  // TODO(phase4): drop toLex once GeneratorView prop emits #/lexicons views
+  const moderationUi = moderateFeedGenerator(
+    toLex(generator),
+    moderationOpts,
+  ).ui('avatar')
 
   const onPress = () => {
     if (disabled) return

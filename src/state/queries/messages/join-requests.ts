@@ -1,26 +1,21 @@
-import {
-  type ChatBskyActorDefs,
-  type ChatBskyGroupApproveJoinRequest,
-  type ChatBskyGroupListJoinRequests,
-  type ChatBskyGroupRejectJoinRequest,
-} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {
   type InfiniteData,
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
 import {listConvoMembersQueryKey} from './list-convo-members'
 import {createListJoinRequestsQueryKey} from './list-join-requests'
 
 type JoinRequestAction = 'approve' | 'reject'
 
 type JoinRequestOutput<A extends JoinRequestAction> = A extends 'approve'
-  ? ChatBskyGroupApproveJoinRequest.OutputSchema
-  : ChatBskyGroupRejectJoinRequest.OutputSchema
+  ? chat.bsky.group.approveJoinRequest.$OutputBody
+  : chat.bsky.group.rejectJoinRequest.$OutputBody
 
 export function useJoinRequestMutation<A extends JoinRequestAction>(
   action: A,
@@ -34,21 +29,21 @@ export function useJoinRequestMutation<A extends JoinRequestAction>(
   },
 ) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const chatClient = useChatClient()
 
   return useMutation({
     mutationFn: async ({member}: {member: string}) => {
       if (!convoId) throw new Error('No convoId provided')
-      const {data} =
+      const data =
         action === 'approve'
-          ? await agent.chat.bsky.group.approveJoinRequest(
-              {convoId, member},
-              {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-            )
-          : await agent.chat.bsky.group.rejectJoinRequest(
-              {convoId, member},
-              {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-            )
+          ? await chatClient.call(chat.bsky.group.approveJoinRequest, {
+              convoId,
+              member: member as DidString,
+            })
+          : await chatClient.call(chat.bsky.group.rejectJoinRequest, {
+              convoId,
+              member: member as DidString,
+            })
       return data as JoinRequestOutput<A>
     },
     onMutate: ({member}) => {
@@ -57,7 +52,7 @@ export function useJoinRequestMutation<A extends JoinRequestAction>(
       const requestsKey = createListJoinRequestsQueryKey({convoId})
       const prevRequests =
         queryClient.getQueryData<
-          InfiniteData<ChatBskyGroupListJoinRequests.OutputSchema>
+          InfiniteData<chat.bsky.group.listJoinRequests.$OutputBody>
         >(requestsKey)
 
       const requestedByProfile = prevRequests?.pages
@@ -65,7 +60,7 @@ export function useJoinRequestMutation<A extends JoinRequestAction>(
         .find(request => request.requestedBy.did === member)?.requestedBy
 
       queryClient.setQueryData<
-        InfiniteData<ChatBskyGroupListJoinRequests.OutputSchema>
+        InfiniteData<chat.bsky.group.listJoinRequests.$OutputBody>
       >(requestsKey, prev => {
         if (!prev?.pages) return prev
         return {
@@ -79,14 +74,14 @@ export function useJoinRequestMutation<A extends JoinRequestAction>(
         }
       })
 
-      let prevMembers: ChatBskyActorDefs.ProfileViewBasic[] | undefined
+      let prevMembers: chat.bsky.actor.defs.ProfileViewBasic[] | undefined
       if (action === 'approve' && requestedByProfile) {
         const membersKey = listConvoMembersQueryKey(convoId)
         prevMembers =
-          queryClient.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
+          queryClient.getQueryData<chat.bsky.actor.defs.ProfileViewBasic[]>(
             membersKey,
           )
-        queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
+        queryClient.setQueryData<chat.bsky.actor.defs.ProfileViewBasic[]>(
           membersKey,
           prev => {
             if (!prev) return prev

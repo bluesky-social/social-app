@@ -1,11 +1,6 @@
 import {useRef} from 'react'
-import {
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  type AppBskyFeedDefs,
-  AppBskyFeedPostgate,
-  AtUri,
-} from '@atproto/api'
+import {type Client} from '@atproto/lex-client'
+import {AtUri} from '@atproto/syntax'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry, retry} from '#/lib/async/retry'
@@ -19,28 +14,28 @@ import {
   mergePostgateRecords,
   POSTGATE_COLLECTION,
 } from '#/state/queries/postgate/util'
-import {type SessionAgent, useAgent} from '#/state/session'
+import {usePdsClient} from '#/state/session'
+import {app, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export async function getPostgateRecord({
-  agent,
+  pdsClient,
   postUri,
 }: {
-  agent: SessionAgent
+  pdsClient: Client
   postUri: string
-}): Promise<AppBskyFeedPostgate.Record | undefined> {
+}): Promise<app.bsky.feed.postgate.Main | undefined> {
   const urip = new AtUri(postUri)
 
   if (!urip.host.startsWith('did:')) {
-    const res = await agent.resolveHandle({
-      handle: urip.host,
+    const {did} = await pdsClient.call(com.atproto.identity.resolveHandle, {
+      handle: urip.host as `${string}.${string}`,
     })
-    // @ts-expect-error TODO new-sdk-migration
-    urip.host = res.data.did
+    urip.host = did
   }
 
   try {
-    const {data} = await retry(
+    const data = await retry(
       2,
       e => {
         /*
@@ -54,17 +49,14 @@ export async function getPostgateRecord({
         return true
       },
       () =>
-        agent.api.com.atproto.repo.getRecord({
+        pdsClient.call(com.atproto.repo.getRecord, {
           repo: urip.host,
           collection: POSTGATE_COLLECTION,
           rkey: urip.rkey,
         }),
     )
 
-    if (
-      data.value &&
-      bsky.validate(data.value, AppBskyFeedPostgate.validateRecord)
-    ) {
+    if (data.value && bsky.matches(app.bsky.feed.postgate, data.value)) {
       return data.value
     } else {
       return undefined
@@ -84,19 +76,19 @@ export async function getPostgateRecord({
 }
 
 export async function writePostgateRecord({
-  agent,
+  pdsClient,
   postUri,
   postgate,
 }: {
-  agent: SessionAgent
+  pdsClient: Client
   postUri: string
-  postgate: AppBskyFeedPostgate.Record
+  postgate: app.bsky.feed.postgate.Main
 }) {
   const postUrip = new AtUri(postUri)
 
   await networkRetry(2, () =>
-    agent.api.com.atproto.repo.putRecord({
-      repo: agent.session!.did,
+    pdsClient.call(com.atproto.repo.putRecord, {
+      repo: pdsClient.assertDid,
       collection: POSTGATE_COLLECTION,
       rkey: postUrip.rkey,
       record: postgate,
@@ -106,24 +98,24 @@ export async function writePostgateRecord({
 
 export async function upsertPostgate(
   {
-    agent,
+    pdsClient,
     postUri,
   }: {
-    agent: SessionAgent
+    pdsClient: Client
     postUri: string
   },
   callback: (
-    postgate: AppBskyFeedPostgate.Record | undefined,
-  ) => Promise<AppBskyFeedPostgate.Record | undefined>,
+    postgate: app.bsky.feed.postgate.Main | undefined,
+  ) => Promise<app.bsky.feed.postgate.Main | undefined>,
 ) {
   const prev = await getPostgateRecord({
-    agent,
+    pdsClient,
     postUri,
   })
   const next = await callback(prev)
   if (!next) return
   await writePostgateRecord({
-    agent,
+    pdsClient,
     postUri,
     postgate: next,
   })
@@ -134,18 +126,20 @@ export const createPostgateQueryKey = (postUri: string) => [
   postUri,
 ]
 export function usePostgateQuery({postUri}: {postUri: string}) {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   return useQuery({
     staleTime: STALE.SECONDS.THIRTY,
     queryKey: createPostgateQueryKey(postUri),
     async queryFn() {
-      return await getPostgateRecord({agent, postUri}).then(res => res ?? null)
+      return await getPostgateRecord({pdsClient, postUri}).then(
+        res => res ?? null,
+      )
     },
   })
 }
 
 export function useWritePostgateMutation() {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async ({
@@ -153,10 +147,10 @@ export function useWritePostgateMutation() {
       postgate,
     }: {
       postUri: string
-      postgate: AppBskyFeedPostgate.Record
+      postgate: app.bsky.feed.postgate.Main
     }) => {
       return writePostgateRecord({
-        agent,
+        pdsClient,
         postUri,
         postgate,
       })
@@ -170,10 +164,10 @@ export function useWritePostgateMutation() {
 }
 
 export function useToggleQuoteDetachmentMutation() {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const getPosts = useGetPosts()
-  const prevEmbed = useRef<AppBskyFeedDefs.PostView['embed']>(undefined)
+  const prevEmbed = useRef<app.bsky.feed.defs.PostView['embed']>(undefined)
 
   return useMutation({
     mutationFn: async ({
@@ -181,7 +175,7 @@ export function useToggleQuoteDetachmentMutation() {
       quoteUri,
       action,
     }: {
-      post: AppBskyFeedDefs.PostView
+      post: app.bsky.feed.defs.PostView
       quoteUri: string
       action: 'detach' | 'reattach'
     }) => {
@@ -199,7 +193,7 @@ export function useToggleQuoteDetachmentMutation() {
         })
       }
 
-      await upsertPostgate({agent, postUri: quoteUri}, async prev => {
+      await upsertPostgate({pdsClient, postUri: quoteUri}, async prev => {
         if (prev) {
           if (action === 'detach') {
             return mergePostgateRecords(prev, {
@@ -247,8 +241,8 @@ export function useToggleQuoteDetachmentMutation() {
       if (action === 'detach' && prevEmbed.current) {
         // detach failed, add the embed back
         if (
-          AppBskyEmbedRecord.isView(prevEmbed.current) ||
-          AppBskyEmbedRecordWithMedia.isView(prevEmbed.current)
+          bsky.isType(app.bsky.embed.record.view, prevEmbed.current) ||
+          bsky.isType(app.bsky.embed.recordWithMedia.view, prevEmbed.current)
         ) {
           updatePostShadow(queryClient, post.uri, {
             embed: prevEmbed.current,
@@ -263,7 +257,7 @@ export function useToggleQuoteDetachmentMutation() {
 }
 
 export function useToggleQuotepostEnabledMutation() {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
 
   return useMutation({
     mutationFn: async ({
@@ -273,7 +267,7 @@ export function useToggleQuotepostEnabledMutation() {
       postUri: string
       action: 'enable' | 'disable'
     }) => {
-      await upsertPostgate({agent, postUri: postUri}, async prev => {
+      await upsertPostgate({pdsClient, postUri: postUri}, async prev => {
         if (prev) {
           if (action === 'disable') {
             return mergePostgateRecords(prev, {

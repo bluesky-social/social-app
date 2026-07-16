@@ -41,6 +41,8 @@ import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Toast from '#/components/Toast'
+import {type chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export function RejectMenu({
   convo,
@@ -228,7 +230,18 @@ export function AcceptChatButton({
     onMutate: () => {
       onAcceptConvo?.()
       if (currentScreen === 'list') {
-        precacheConvoQuery(queryClient, {...convo, status: 'accepted'})
+        /*
+         * `convo` is the old-typed view threaded from `#/components/dms/util`
+         * consumers while the convo cache is now keyed on the lexicon
+         * ConvoView. TODO(phase4): drop toLex once this file's props flip.
+         */
+        precacheConvoQuery(
+          queryClient,
+          bsky.toLex<chat.bsky.convo.defs.ConvoView>({
+            ...convo,
+            status: 'accepted',
+          }),
+        )
         navigation.navigate('MessagesConversation', {
           conversation: convo.id,
           accept: true,

@@ -1,8 +1,8 @@
 import {
   type AppBskyEmbedExternal,
-  AtUri,
   type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 
 export function isStandardSiteDocumentUri(ref: ComAtprotoRepoStrongRef.Main) {
   return new AtUri(ref.uri).collection.startsWith('site.standard.document')

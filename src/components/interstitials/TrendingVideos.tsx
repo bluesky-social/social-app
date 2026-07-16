@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useMemo} from 'react'
 import {ScrollView, View} from 'react-native'
-import {AppBskyEmbedVideo, AtUri} from '@atproto/api'
+import {AppBskyEmbedVideo} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 

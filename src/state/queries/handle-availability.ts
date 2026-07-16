@@ -1,4 +1,3 @@
-import {ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
 import {
@@ -9,8 +8,20 @@ import {
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {createFullHandle} from '#/lib/strings/handles'
 import {useAnalytics} from '#/analytics'
-import * as bsky from '#/types/bsky'
 import {Agent} from '../session/agent'
+
+/*
+ * `com.atproto.temp.checkHandleAvailability` is an entryway-only endpoint that
+ * isn't generated into `#/lexicons`, so we describe its result union locally.
+ * The response is discriminated by `$type`; we narrow against these shapes
+ * rather than a branded lexicon guard.
+ */
+type CheckHandleAvailabilityResult =
+  | {$type: 'com.atproto.temp.checkHandleAvailability#resultAvailable'}
+  | {
+      $type: 'com.atproto.temp.checkHandleAvailability#resultUnavailable'
+      suggestions: {handle: string; method: string}[]
+    }
 
 export const RQKEY_handleAvailability = (
   handle: string,
@@ -87,22 +98,20 @@ export async function checkHandleAvailability(
       email,
     })
 
+    const result = data.result as CheckHandleAvailabilityResult
+
     if (
-      bsky.dangerousIsType<ComAtprotoTempCheckHandleAvailability.ResultAvailable>(
-        data.result,
-        ComAtprotoTempCheckHandleAvailability.isResultAvailable,
-      )
+      result.$type ===
+      'com.atproto.temp.checkHandleAvailability#resultAvailable'
     ) {
       return {available: true} as const
     } else if (
-      bsky.dangerousIsType<ComAtprotoTempCheckHandleAvailability.ResultUnavailable>(
-        data.result,
-        ComAtprotoTempCheckHandleAvailability.isResultUnavailable,
-      )
+      result.$type ===
+      'com.atproto.temp.checkHandleAvailability#resultUnavailable'
     ) {
       return {
         available: false,
-        suggestions: data.result.suggestions,
+        suggestions: result.suggestions,
       } as const
     } else {
       throw new Error(

@@ -1,10 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {
-  ChatBskyGroupApproveJoinRequest,
-  type ChatBskyGroupListJoinRequests,
-  ChatBskyGroupRejectJoinRequest,
-} from '@atproto/api'
+import {type ChatBskyGroupListJoinRequests} from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type InfiniteData, useQueryClient} from '@tanstack/react-query'
@@ -16,6 +12,7 @@ import {
   type NativeStackScreenProps,
   type NavigationProp,
 } from '#/lib/routes/types'
+import {getErrorName} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {ConvoProvider, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
@@ -190,18 +187,11 @@ function JoinRequestsList({
         let errorMessage = l`Failed to accept join request`
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (
-          error instanceof ChatBskyGroupApproveJoinRequest.InvalidConvoError
-        ) {
+        } else if (getErrorName(error) === 'InvalidConvo') {
           errorMessage = l`Conversation not found.`
-        } else if (
-          error instanceof ChatBskyGroupApproveJoinRequest.InsufficientRoleError
-        ) {
+        } else if (getErrorName(error) === 'InsufficientRole') {
           errorMessage = l`Only admins can accept join requests.`
-        } else if (
-          error instanceof
-          ChatBskyGroupApproveJoinRequest.MemberLimitReachedError
-        ) {
+        } else if (getErrorName(error) === 'MemberLimitReached') {
           errorMessage = l`The member limit has been reached.`
         }
         Toast.show(errorMessage, {type: 'error'})
@@ -223,13 +213,9 @@ function JoinRequestsList({
         let errorMessage = l`Failed to reject join request`
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (
-          error instanceof ChatBskyGroupRejectJoinRequest.InvalidConvoError
-        ) {
+        } else if (getErrorName(error) === 'InvalidConvo') {
           errorMessage = l`Conversation not found.`
-        } else if (
-          error instanceof ChatBskyGroupRejectJoinRequest.InsufficientRoleError
-        ) {
+        } else if (getErrorName(error) === 'InsufficientRole') {
           errorMessage = l`Only admins can reject join requests.`
         }
         Toast.show(errorMessage, {type: 'error'})

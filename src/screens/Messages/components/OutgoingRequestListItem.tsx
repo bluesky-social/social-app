@@ -1,11 +1,9 @@
 import {View} from 'react-native'
-import {
-  type ChatBskyGroupDefs,
-  ChatBskyGroupWithdrawJoinRequest,
-} from '@atproto/api'
+import {type ChatBskyGroupDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {isNetworkError} from '#/lib/strings/errors'
+import {getErrorName} from '#/lib/xrpc-error'
 import {useWithdrawJoinGroupChatRequest} from '#/state/queries/messages/withdraw-join-group-chat'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -34,10 +32,7 @@ export function OutgoingRequestListItem({
         let errorMessage = l`Failed to rescind your request. Please try again.`
         if (isNetworkError(error)) {
           errorMessage = l`There was a problem with your internet connection, please try again`
-        } else if (
-          error instanceof
-          ChatBskyGroupWithdrawJoinRequest.InvalidJoinRequestError
-        ) {
+        } else if (getErrorName(error) === 'InvalidJoinRequest') {
           errorMessage = l`Invalid rescind request.`
         }
         Toast.show(errorMessage)

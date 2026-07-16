@@ -6,11 +6,8 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {
-  moderateProfile,
-  type ModerationOpts,
-  RichText as RichTextApi,
-} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {RichText as RichTextApi} from '@bsky.app/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 
 import {getModerationCauseKey} from '#/lib/moderation'
@@ -47,7 +44,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {type Metrics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
-import type * as bsky from '#/types/bsky'
+import * as bsky from '#/types/bsky'
 
 export function Default({
   profile,
@@ -173,7 +170,7 @@ export function Avatar({
   liveOverride?: boolean
   size?: number
 }) {
-  const moderation = moderateProfile(profile, moderationOpts)
+  const moderation = moderateProfile(bsky.toLex(profile), moderationOpts)
 
   const {isActive: live} = useActorStatus(profile)
 
@@ -243,7 +240,7 @@ function InlineNameAndHandle({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
-  const moderation = moderateProfile(profile, moderationOpts)
+  const moderation = moderateProfile(bsky.toLex(profile), moderationOpts)
   const name = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
@@ -297,7 +294,7 @@ export function Name({
   style?: StyleProp<ViewStyle>
   textStyle?: StyleProp<TextStyle>
 }) {
-  const moderation = moderateProfile(profile, moderationOpts)
+  const moderation = moderateProfile(bsky.toLex(profile), moderationOpts)
   const name = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
@@ -482,7 +479,7 @@ export function FollowButtonInner({
 }: FollowButtonProps) {
   const {t: l} = useLingui()
   const profile = useProfileShadow(profileUnshadowed)
-  const moderation = moderateProfile(profile, moderationOpts)
+  const moderation = moderateProfile(bsky.toLex(profile), moderationOpts)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
     logContext,
@@ -620,7 +617,7 @@ export function Labels({
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
-  const moderation = moderateProfile(profile, moderationOpts)
+  const moderation = moderateProfile(bsky.toLex(profile), moderationOpts)
   const modui = moderation.ui('profileList')
   const followedBy = profile.viewer?.followedBy
 

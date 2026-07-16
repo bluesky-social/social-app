@@ -1,10 +1,10 @@
 import {Pressable} from 'react-native'
-import {ChatBskyConvoUnlockConvo} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {type NavigationProp} from '#/lib/routes/types'
+import {getErrorName} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useLockConvo} from '#/state/queries/messages/lock-conversation'
@@ -41,7 +41,7 @@ export function ChatLocked({
       Toast.show(l({message: 'Group chat unlocked', context: 'toast'}))
     },
     onError: e => {
-      if (e instanceof ChatBskyConvoUnlockConvo.ConvoLockedByModerationError) {
+      if (getErrorName(e) === 'ConvoLockedByModeration') {
         Toast.show(l`This chat is locked by a moderation action`, {
           type: 'error',
         })

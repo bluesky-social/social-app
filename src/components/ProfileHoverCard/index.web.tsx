@@ -1,10 +1,7 @@
 import {memo, useCallback, useEffect, useMemo, useReducer, useRef} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -42,6 +39,7 @@ import {Text} from '#/components/Typography'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
+import {toLex} from '#/types/bsky'
 import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -426,7 +424,8 @@ function Inner({
   const {_, i18n} = useLingui()
   const {currentAccount} = useSession()
   const moderation = useMemo(
-    () => moderateProfile(profile, moderationOpts),
+    // TODO(phase4): drop toLex once ProfileViewDetailed prop emits #/lexicons views
+    () => moderateProfile(toLex(profile), moderationOpts),
     [profile, moderationOpts],
   )
   const [descriptionRT] = useRichText(profile.description ?? '')

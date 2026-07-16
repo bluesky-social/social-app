@@ -1,11 +1,6 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {
-  ChatBskyActorDefs,
-  ChatBskyConvoDefs,
-  ChatBskyConvoUnlockConvo,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -19,6 +14,7 @@ import {
   type NativeStackScreenProps,
   type NavigationProp,
 } from '#/lib/routes/types'
+import {getErrorName} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
@@ -59,6 +55,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from '../components/InviteLinkDialog'
 import {AddMembersLink} from './AddMembersLink'
@@ -172,16 +169,20 @@ function keyExtractor(item: Item) {
   return item.key
 }
 
+/*
+ * The member list now comes from the migrated lexicon-typed query, but the
+ * narrowed `GroupConvoMember` target is still the old-typed shape from
+ * `#/components/dms/util` (migrates in a later task) - the guard doubles as
+ * the mixed-world bridge. TODO(phase4): retype to the lexicon member types
+ * once dms/util migrates.
+ */
 function isGroupMember(
-  member: ChatBskyActorDefs.ProfileViewBasic,
-): member is GroupConvoMember {
+  member: chat.bsky.actor.defs.ProfileViewBasic,
+): member is chat.bsky.actor.defs.ProfileViewBasic & GroupConvoMember {
   // Kind is missing when the account has been deleted.
   return (
     member.kind === undefined ||
-    bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
-      member.kind,
-      ChatBskyActorDefs.isGroupConvoMember,
-    )
+    bsky.isType(chat.bsky.actor.defs.groupConvoMember, member.kind)
   )
 }
 
@@ -204,7 +205,15 @@ function GroupSettings({
 
   const {data: memberListData = [], refetch} = useListConvoMembersQuery({
     convoId: convo.view.id,
-    placeholderData: convo.members,
+    /*
+     * `convo.members` comes from the still-old-typed `#/components/dms/util`
+     * (migrates in a later task) while the member-list query is now typed on
+     * the lexicon ProfileViewBasic. TODO(phase4): drop toLex once dms/util
+     * migrates.
+     */
+    placeholderData: bsky.toLex<chat.bsky.actor.defs.ProfileViewBasic[]>(
+      convo.members,
+    ),
   })
 
   const {data: joinRequestsData, hasNextPage: hasMoreRequests} =
@@ -417,7 +426,7 @@ function SettingsHeader({
     isPending: isLocking,
   } = useLockConvo(convoId, {
     onSuccess: (data, {silent}) => {
-      if (!ChatBskyConvoDefs.isGroupConvo(data.convo.kind)) return
+      if (!bsky.isType(chat.bsky.convo.defs.groupConvo, data.convo.kind)) return
       if (silent) return
       if (data.convo.kind.lockStatus === 'locked') {
         ax.metric('groupchat:owner:lock', {convoId})
@@ -431,9 +440,7 @@ function SettingsHeader({
       if (lock) {
         logger.error('Failed to lock group chat', {message: e})
         Toast.show(l`Failed to lock group chat`, {type: 'error'})
-      } else if (
-        e instanceof ChatBskyConvoUnlockConvo.ConvoLockedByModerationError
-      ) {
+      } else if (getErrorName(e) === 'ConvoLockedByModeration') {
         Toast.show(l`This chat is locked by a moderation action`, {
           type: 'error',
         })

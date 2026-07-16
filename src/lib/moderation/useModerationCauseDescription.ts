@@ -1,9 +1,6 @@
 import {useMemo} from 'react'
-import {
-  BSKY_LABELER_DID,
-  type ModerationCause,
-  type ModerationCauseSource,
-} from '@atproto/api'
+import {api} from '@bsky.app/sdk'
+import {type ModerationCause} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,6 +13,8 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {type AppModerationCause} from '#/components/Pills'
+import {type com} from '#/lexicons'
+import {toLex} from '#/types/bsky'
 import {useGlobalLabelStrings} from './useGlobalLabelStrings'
 import {getDefinition, getLabelStrings} from './useLabelInfo'
 
@@ -25,7 +24,7 @@ export interface ModerationCauseDescription {
   description: string
   source?: string
   sourceDisplayName?: string
-  sourceType?: ModerationCauseSource['type']
+  sourceType?: ModerationCause['source']['type']
   sourceAvi?: string
   sourceDid?: string
   isSubjectAccount?: boolean
@@ -130,7 +129,18 @@ export function useModerationCauseDescription(
       }
     }
     if (cause.type === 'label') {
-      const def = cause.labelDef || getDefinition(labelDefs, cause.label)
+      /*
+       * TODO(phase4): drop `toLex` once `useLabelDefinitions` and the label
+       * cause type share the `#/lexicons` label shape. `labelDefs` still comes
+       * from the old `@atproto/api`-typed producer and `cause.label` is the SDK
+       * label; both are structurally identical to the `#/lexicons` label.
+       */
+      const def =
+        cause.labelDef ||
+        getDefinition(
+          toLex<Parameters<typeof getDefinition>[0]>(labelDefs),
+          toLex<com.atproto.label.defs.Label>(cause.label),
+        )
       const strings = getLabelStrings(i18n.locale, globalLabelStrings, def)
       const labeler = labelers.find(l => l.creator.did === cause.label.src)
       let source = labeler
@@ -138,7 +148,7 @@ export function useModerationCauseDescription(
         : undefined
       let sourceDisplayName = labeler?.creator.displayName
       if (!source) {
-        if (cause.label.src === BSKY_LABELER_DID) {
+        if (cause.label.src === api.moderation.did) {
           source = 'moderation.bsky.app'
           sourceDisplayName = 'Bluesky Moderation Service'
         } else {

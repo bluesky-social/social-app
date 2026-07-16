@@ -1,9 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyGraphGetStarterPacksWithMembership,
-  AppBskyGraphStarterpack,
-} from '@atproto/api'
+import {type AppBskyGraphGetStarterPacksWithMembership} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -33,6 +30,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 type StarterPackWithMembership =
@@ -324,12 +322,7 @@ function StarterPackItem({
 
   const {record} = starterPack
 
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
   }
 

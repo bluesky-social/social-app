@@ -1,13 +1,10 @@
 import {createContext, useContext, useReducer} from 'react'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
-} from '@atproto/api'
+import {type AppBskyFeedDefs, type AppBskyGraphDefs} from '@atproto/api'
 import {msg, plural} from '@lingui/core/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import * as Toast from '#/components/Toast'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const
@@ -135,7 +132,7 @@ export function Provider({
 
     if (
       starterPack &&
-      bsky.validate(starterPack.record, AppBskyGraphStarterpack.validateRecord)
+      bsky.matches(app.bsky.graph.starterpack, starterPack.record)
     ) {
       return {
         canNext: true,

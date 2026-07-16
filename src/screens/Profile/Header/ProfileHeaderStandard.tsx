@@ -1,12 +1,12 @@
 import {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {
-  type AppBskyActorDefs,
   moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
+} from '@bsky.app/sdk/moderation'
+import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -40,6 +40,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
+import {toLex} from '#/types/bsky'
 import {GermButton} from '../components/GermButton'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
@@ -68,7 +69,7 @@ let ProfileHeaderStandard = ({
   const {currentAccount} = useSession()
   const {_} = useLingui()
   const moderation = useMemo(
-    () => moderateProfile(profile, moderationOpts),
+    () => moderateProfile(toLex(profile), moderationOpts),
     [profile, moderationOpts],
   )
   const [, queueUnblock] = useProfileBlockMutationQueue(profile)

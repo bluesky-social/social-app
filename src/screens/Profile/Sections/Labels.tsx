@@ -1,11 +1,11 @@
 import {useCallback, useEffect, useImperativeHandle, useMemo} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
+import {type AppBskyLabelerDefs} from '@atproto/api'
 import {
-  type AppBskyLabelerDefs,
   type InterpretedLabelValueDefinition,
   interpretLabelValueDefinitions,
   type ModerationOpts,
-} from '@atproto/api'
+} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

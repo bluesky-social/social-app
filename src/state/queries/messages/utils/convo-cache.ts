@@ -1,24 +1,21 @@
 import {
-  type ChatBskyConvoDefs,
-  type ChatBskyConvoListConvos,
-} from '@atproto/api'
-import {
   type InfiniteData,
   type QueryClient,
   type QueryKey,
 } from '@tanstack/react-query'
 
+import {type chat} from '#/lexicons'
 import {RQKEY as CONVO_KEY} from '../conversation'
 import {RQKEY_ROOT as CONVO_LIST_KEY} from '../list-conversations'
 
 type ConvoUpdater = (
-  prev: ChatBskyConvoDefs.ConvoView,
-) => ChatBskyConvoDefs.ConvoView | undefined
+  prev: chat.bsky.convo.defs.ConvoView,
+) => chat.bsky.convo.defs.ConvoView | undefined
 
 export type ConvoCacheSnapshot = {
-  prevConvo: ChatBskyConvoDefs.ConvoView | undefined
+  prevConvo: chat.bsky.convo.defs.ConvoView | undefined
   prevListEntries: Array<
-    [QueryKey, InfiniteData<ChatBskyConvoListConvos.OutputSchema> | undefined]
+    [QueryKey, InfiniteData<chat.bsky.convo.listConvos.$OutputBody> | undefined]
   >
 }
 
@@ -34,14 +31,14 @@ export function updateConvoOptimistic(
   convoId: string,
   updater: ConvoUpdater,
 ): ConvoCacheSnapshot {
-  const prevConvo = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
+  const prevConvo = queryClient.getQueryData<chat.bsky.convo.defs.ConvoView>(
     CONVO_KEY(convoId),
   )
   const prevListEntries = queryClient.getQueriesData<
-    InfiniteData<ChatBskyConvoListConvos.OutputSchema>
+    InfiniteData<chat.bsky.convo.listConvos.$OutputBody>
   >({queryKey: [CONVO_LIST_KEY]})
 
-  queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
+  queryClient.setQueryData<chat.bsky.convo.defs.ConvoView>(
     CONVO_KEY(convoId),
     prev => {
       if (!prev) return
@@ -51,7 +48,7 @@ export function updateConvoOptimistic(
   )
 
   queryClient.setQueriesData<
-    InfiniteData<ChatBskyConvoListConvos.OutputSchema>
+    InfiniteData<chat.bsky.convo.listConvos.$OutputBody>
   >({queryKey: [CONVO_LIST_KEY]}, prev => {
     if (!prev?.pages) return
     return {

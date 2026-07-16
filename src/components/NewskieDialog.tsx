@@ -1,6 +1,7 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -19,6 +20,7 @@ import {Newskie} from '#/components/icons/Newskie'
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {toLex} from '#/types/bsky'
 
 export function NewskieDialog({
   profile,
@@ -88,7 +90,8 @@ function DialogInner({
 
   const profileName = useMemo(() => {
     if (!moderationOpts) return profile.displayName || profile.handle
-    const moderation = moderateProfile(profile, moderationOpts)
+    // TODO(phase4): drop toLex once ProfileViewDetailed prop emits #/lexicons views
+    const moderation = moderateProfile(toLex(profile), moderationOpts)
     return sanitizeDisplayName(
       profile.displayName || profile.handle,
       moderation.ui('displayName'),

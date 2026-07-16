@@ -1,5 +1,6 @@
 import {createContext, useContext, useMemo} from 'react'
-import {AtpAgent, type ModerationOpts} from '@atproto/api'
+import {Client} from '@atproto/lex-client'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 
 import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/const'
@@ -38,18 +39,30 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       return undefined
     }
     return {
-      userDid,
+      /*
+       * `did`/`hiddenPosts` come from persisted storage typed as plain
+       * `string`, so brand them to the SDK's `DidString`/`AtUriString` slots.
+       */
+      userDid: userDid as ModerationOpts['userDid'],
       prefs: {
         ...moderationPrefs,
         labelers: moderationPrefs.labelers.length
           ? moderationPrefs.labelers
-          : AtpAgent.appLabelers.map(did => ({
+          : Client.appLabelers.map(did => ({
               did,
               labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
             })),
-        hiddenPosts: hiddenPosts || [],
+        hiddenPosts: (hiddenPosts ||
+          []) as ModerationOpts['prefs']['hiddenPosts'],
       },
-      labelDefs,
+      /*
+       * TODO(phase4): drop this cast once `#/state/preferences/label-defs`
+       * flips its `InterpretedLabelValueDefinition` source from `@atproto/api`
+       * to `@bsky.app/sdk/moderation`. The value is already produced by the
+       * SDK's `interpretLabelValueDefinitions` (see `../queries/preferences`);
+       * only the intermediate context type is still old-world.
+       */
+      labelDefs: labelDefs,
     }
   }, [override, userDid, labelDefs, moderationPrefs, hiddenPosts])
 

@@ -1,11 +1,8 @@
 import {useEffect, useMemo} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyGraphDefs,
-  AtUri,
-  moderateUserList,
-  type ModerationUI,
-} from '@atproto/api'
+import {type AppBskyGraphDefs} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {moderateUserList, type ModerationUI} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -27,6 +24,7 @@ import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {toLex} from '#/types/bsky'
 
 /*
  * This component is based on `FeedCard` and is tightly coupled with that
@@ -57,7 +55,8 @@ export function Default(
   const {view, showPinButton} = props
   const moderationOpts = useModerationOpts()
   const moderation = moderationOpts
-    ? moderateUserList(view, moderationOpts)
+    ? // TODO(phase4): drop toLex once ListView props emit #/lexicons views
+      moderateUserList(toLex(view), moderationOpts)
     : undefined
 
   return (

@@ -1,12 +1,8 @@
-import {
-  type ChatBskyConvoAcceptConvo,
-  type ChatBskyConvoDefs,
-} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
 import {
   type ConvoRequestListQueryData,
   optimisticDelete as optimisticDeleteRequest,
@@ -29,19 +25,16 @@ export function useAcceptConversation(
     onError,
   }: {
     onMutate?: () => void
-    onSuccess?: (data: ChatBskyConvoAcceptConvo.OutputSchema) => void
+    onSuccess?: (data: chat.bsky.convo.acceptConvo.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const chatClient = useChatClient()
 
   return useMutation({
     mutationFn: async () => {
-      const {data} = await agent.chat.bsky.convo.acceptConvo(
-        {convoId},
-        {headers: DM_SERVICE_HEADERS},
-      )
+      const data = await chatClient.call(chat.bsky.convo.acceptConvo, {convoId})
 
       return data
     },
@@ -52,7 +45,7 @@ export function useAcceptConversation(
         queryClient.getQueriesData<ConvoListQueryData>({
           queryKey: [CONVO_LIST_ROOT_KEY],
         })
-      let convoBeingAccepted: ChatBskyConvoDefs.ConvoView | null = null
+      let convoBeingAccepted: chat.bsky.convo.defs.ConvoView | null = null
       for (const [_key, data] of queryClient.getQueriesData<ConvoListQueryData>(
         {queryKey: CONVO_LIST_PARTIAL_KEY('request')},
       )) {
@@ -65,7 +58,7 @@ export function useAcceptConversation(
         (old?: ConvoListQueryData) => optimisticDelete(convoId, old),
       )
       if (convoBeingAccepted) {
-        const acceptedConvo: ChatBskyConvoDefs.ConvoView = {
+        const acceptedConvo: chat.bsky.convo.defs.ConvoView = {
           ...convoBeingAccepted,
           status: 'accepted',
         }

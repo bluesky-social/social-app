@@ -1,10 +1,9 @@
-import {type ChatBskyActorDefs} from '@atproto/api'
 import {type QueryClient, useQuery} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
 
 const RQKEY_ROOT = 'listConvoMembers'
 export const listConvoMembersQueryKey = (convoId: string) =>
@@ -18,21 +17,22 @@ export function useListConvoMembersQuery({
   placeholderData,
 }: {
   convoId: string
-  placeholderData?: ChatBskyActorDefs.ProfileViewBasic[]
+  placeholderData?: chat.bsky.actor.defs.ProfileViewBasic[]
 }) {
-  const agent = useAgent()
+  const chatClient = useChatClient()
 
   return useQuery({
     queryKey: listConvoMembersQueryKey(convoId),
     queryFn: async () => {
       const members = []
-      let cursor
+      let cursor: string | undefined
 
       do {
-        const {data} = await agent.chat.bsky.convo.getConvoMembers(
-          {convoId, cursor, limit: LIMIT},
-          {headers: DM_SERVICE_HEADERS},
-        )
+        const data = await chatClient.call(chat.bsky.convo.getConvoMembers, {
+          convoId,
+          cursor,
+          limit: LIMIT,
+        })
         members.push(...data.members)
         cursor = data.cursor
       } while (cursor)
@@ -47,9 +47,9 @@ export function useListConvoMembersQuery({
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<ChatBskyActorDefs.ProfileViewBasic, void> {
+): Generator<chat.bsky.actor.defs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<
-    ChatBskyActorDefs.ProfileViewBasic[]
+    chat.bsky.actor.defs.ProfileViewBasic[]
   >({
     queryKey: [RQKEY_ROOT],
   })

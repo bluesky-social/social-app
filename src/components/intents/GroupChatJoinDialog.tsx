@@ -4,8 +4,8 @@ import {
   ChatBskyGroupDefs,
   ChatBskyGroupRequestJoin,
   ChatBskyGroupWithdrawJoinRequest,
-  moderateProfile,
 } from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -49,6 +49,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {toLex} from '#/types/bsky'
 import {ProfileBadges} from '../ProfileBadges'
 
 export function GroupChatJoinDialog() {
@@ -406,9 +407,11 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
                   {createSanitizedDisplayName(
                     joinLinkPreview.owner,
                     true,
-                    moderateProfile(joinLinkPreview.owner, moderationOpts).ui(
-                      'displayName',
-                    ),
+                    // TODO(phase4): drop toLex once join link preview emits #/lexicons views
+                    moderateProfile(
+                      toLex(joinLinkPreview.owner),
+                      moderationOpts,
+                    ).ui('displayName'),
                   )}
                 </InlineLinkText>
               </Trans>

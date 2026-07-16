@@ -1,7 +1,4 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyGraphGetFollowers,
-} from '@atproto/api'
+import {type AtIdentifierString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -9,8 +6,9 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
 import {useAnalytics} from '#/analytics'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 const DEFAULT_SORT = 'latest'
 const PAGE_SIZE = 30
@@ -33,26 +31,25 @@ export function useProfileFollowersQuery(
 ) {
   const ax = useAnalytics()
   const isSortEnabled = ax.features.enabled(ax.features.FollowSortEnable)
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   const sortParam = isSortEnabled ? sort || DEFAULT_SORT : undefined
 
   return useInfiniteQuery<
-    AppBskyGraphGetFollowers.OutputSchema,
+    app.bsky.graph.getFollowers.$OutputBody,
     Error,
-    InfiniteData<AppBskyGraphGetFollowers.OutputSchema>,
+    InfiniteData<app.bsky.graph.getFollowers.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(did || '', sortParam),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getFollowers({
-        actor: did || '',
+      return await client.call(app.bsky.graph.getFollowers, {
+        actor: (did || '') as AtIdentifierString,
         limit: PAGE_SIZE,
         cursor: pageParam,
         sort: sortParam,
       })
-      return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -63,9 +60,9 @@ export function useProfileFollowersQuery(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyGraphGetFollowers.OutputSchema>
+    InfiniteData<app.bsky.graph.getFollowers.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })

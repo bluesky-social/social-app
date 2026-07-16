@@ -1,7 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
-import {moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
@@ -17,6 +17,7 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {usePromptControl} from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {toLex} from '#/types/bsky'
 import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 
 export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
@@ -114,7 +115,8 @@ function InviterHeader({
   const t = useTheme()
   const profile = useProfileShadow(profileUnshadowed)
   const moderation = useMemo(
-    () => moderateProfile(profile, moderationOpts),
+    // TODO(phase4): drop toLex once useProfileShadow emits #/lexicons views
+    () => moderateProfile(toLex(profile), moderationOpts),
     [profile, moderationOpts],
   )
   const displayName = createSanitizedDisplayName(

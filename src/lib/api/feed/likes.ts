@@ -1,32 +1,29 @@
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedGetActorLikes as GetActorLikes,
-} from '@atproto/api'
+import {type Client} from '@atproto/lex-client'
 
-import {type SessionAgent} from '#/state/session'
+import {app} from '#/lexicons'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class LikesFeedAPI implements FeedAPI {
-  agent: SessionAgent
-  params: GetActorLikes.QueryParams
+  client: Client
+  params: app.bsky.feed.getActorLikes.$Params
 
   constructor({
-    agent,
+    client,
     feedParams,
   }: {
-    agent: SessionAgent
-    feedParams: GetActorLikes.QueryParams
+    client: Client
+    feedParams: app.bsky.feed.getActorLikes.$Params
   }) {
-    this.agent = agent
+    this.client = client
     this.params = feedParams
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await this.agent.getActorLikes({
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
+    const res = await this.client.call(app.bsky.feed.getActorLikes, {
       ...this.params,
       limit: 1,
     })
-    return res.data.feed[0]
+    return res.feed[0]
   }
 
   async fetch({
@@ -36,21 +33,16 @@ export class LikesFeedAPI implements FeedAPI {
     cursor: string | undefined
     limit: number
   }): Promise<FeedAPIResponse> {
-    const res = await this.agent.getActorLikes({
+    const res = await this.client.call(app.bsky.feed.getActorLikes, {
       ...this.params,
       cursor,
       limit,
     })
-    if (res.success) {
-      // HACKFIX: the API incorrectly returns a cursor when there are no items -sfn
-      const isEmptyPage = res.data.feed.length === 0
-      return {
-        cursor: isEmptyPage ? undefined : res.data.cursor,
-        feed: res.data.feed,
-      }
-    }
+    // HACKFIX: the API incorrectly returns a cursor when there are no items -sfn
+    const isEmptyPage = res.feed.length === 0
     return {
-      feed: [],
+      cursor: isEmptyPage ? undefined : res.cursor,
+      feed: res.feed,
     }
   }
 }

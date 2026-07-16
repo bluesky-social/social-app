@@ -1,11 +1,8 @@
 import {forwardRef, useCallback, useImperativeHandle, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  type AppBskyGraphGetList,
-  AtUri,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyGraphGetList} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {
   type InfiniteData,
   type UseInfiniteQueryResult,

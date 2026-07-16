@@ -4,8 +4,8 @@ import * as Contacts from 'expo-contacts'
 import {
   type AppBskyContactDefs,
   type AppBskyContactGetSyncStatus,
-  type ModerationOpts,
 } from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'

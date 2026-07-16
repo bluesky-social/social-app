@@ -3,9 +3,9 @@ import {View} from 'react-native'
 import {
   type AppBskyNotificationDefs,
   type AppBskyNotificationListActivitySubscriptions,
-  type ModerationOpts,
   type Un$Typed,
 } from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

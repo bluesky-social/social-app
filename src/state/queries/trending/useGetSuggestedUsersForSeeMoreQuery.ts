@@ -1,7 +1,3 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyUnspeccedGetSuggestedUsersForSeeMore,
-} from '@atproto/api'
 import {type QueryClient, useQuery} from '@tanstack/react-query'
 
 import {
@@ -13,6 +9,7 @@ import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
+import {type app} from '#/lexicons'
 
 export type QueryProps = {
   category?: string | null
@@ -66,13 +63,12 @@ export function useGetSuggestedUsersForSeeMoreQuery(props: QueryProps = {}) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
-  const responses =
-    queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedUsersForSeeMore.OutputSchema>(
-      {
-        queryKey: [getSuggestedUsersForSeeMoreQueryKeyRoot],
-      },
-    )
+): Generator<app.bsky.actor.defs.ProfileView, void> {
+  const responses = queryClient.getQueriesData<{
+    actors: app.bsky.actor.defs.ProfileView[]
+  }>({
+    queryKey: [getSuggestedUsersForSeeMoreQueryKeyRoot],
+  })
   for (const [_key, response] of responses) {
     if (!response) {
       continue
