@@ -9,7 +9,7 @@ import {
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
-import {useIsFocused} from '@react-navigation/native'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
@@ -39,6 +39,7 @@ import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ContactsHeroImage} from '#/components/contacts/components/HeroImage'
+import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowRotateClockwise_Stroke2_Corner0_Rounded as ResyncIcon} from '#/components/icons/ArrowRotate'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
@@ -56,9 +57,22 @@ import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../Onboarding/util'
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsSettings'>
-export function FindContactsSettingsScreen({}: Props) {
+export function FindContactsSettingsScreen({navigation}: Props) {
   const {_} = useLingui()
   const ax = useAnalytics()
+
+  // Blacksky: feature disabled/unreachable. Guard the deep-linkable route
+  // (`/settings/find-contacts`) so it can't be reached directly even though the
+  // UI entry points are gated. See country-allowlist.ts.
+  const findContactsEnabled =
+    useIsFindContactsFeatureEnabledBasedOnGeolocation()
+  useFocusEffect(
+    useCallback(() => {
+      if (!findContactsEnabled) {
+        navigation.navigate('Home')
+      }
+    }, [findContactsEnabled, navigation]),
+  )
 
   const {data, error, refetch} = useContactsSyncStatusQuery()
 

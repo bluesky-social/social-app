@@ -1,8 +1,8 @@
-import {useState} from 'react'
+import {useCallback, useState} from 'react'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {usePreventRemove} from '@react-navigation/native'
+import {useFocusEffect, usePreventRemove} from '@react-navigation/native'
 
 import {
   type AllNavigatorParams,
@@ -10,6 +10,7 @@ import {
 } from '#/lib/routes/types'
 import {useEnableMinimalShellMode} from '#/state/shell'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
+import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import {FindContactsFlow} from '#/components/contacts/FindContactsFlow'
 import {useFindContactsFlowState} from '#/components/contacts/state'
 import * as Layout from '#/components/Layout'
@@ -19,6 +20,18 @@ import {IS_NATIVE} from '#/env'
 type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsFlow'>
 export function FindContactsFlowScreen({navigation}: Props) {
   const {_} = useLingui()
+
+  // Blacksky: feature disabled/unreachable. Guard the deep-linkable route so it
+  // can't be reached directly. See country-allowlist.ts.
+  const findContactsEnabled =
+    useIsFindContactsFeatureEnabledBasedOnGeolocation()
+  useFocusEffect(
+    useCallback(() => {
+      if (!findContactsEnabled) {
+        navigation.navigate('Home')
+      }
+    }, [findContactsEnabled, navigation]),
+  )
 
   const [state, dispatch] = useFindContactsFlowState()
 

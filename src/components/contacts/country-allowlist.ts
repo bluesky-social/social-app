@@ -33,5 +33,11 @@ export function isFindContactsFeatureEnabled(countryCode?: string): boolean {
 }
 
 export function useIsFindContactsFeatureEnabledBasedOnGeolocation() {
-  return isFindContactsFeatureEnabled(undefined)
+  // Blacksky: the Find Contacts feature is disabled (made unreachable). This
+  // hook gates every entry point (Settings row, onboarding step, followers
+  // promo) and the two deep-linkable screens redirect Home when it is false.
+  // The underlying flow/screen/service code is intentionally left in place;
+  // to re-enable, restore `return isFindContactsFeatureEnabled(undefined)`.
+  // See Design/social-app-bluesky-debranding-audit.md.
+  return false
 }
