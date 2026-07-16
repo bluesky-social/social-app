@@ -2,7 +2,6 @@ import {
   type AppBskyActorDefs,
   type AppBskyGraphDefs,
   type AppBskyGraphGetList,
-  type AtpAgent,
 } from '@atproto/api'
 import {
   type InfiniteData,
@@ -13,7 +12,7 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import {type SessionAgent, useAgent} from '#/state/session'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -60,7 +59,7 @@ export function useAllListMembersQuery(uri?: string) {
   })
 }
 
-export async function getAllListMembers(agent: AtpAgent, uri: string) {
+export async function getAllListMembers(agent: SessionAgent, uri: string) {
   let hasMore = true
   let cursor: string | undefined
   const listItems: AppBskyGraphDefs.ListItemView[] = []

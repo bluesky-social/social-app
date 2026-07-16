@@ -1,8 +1,10 @@
-import {AtpAgent} from '@atproto/api'
+import {type AtpAgent} from '@atproto/api'
+import {type SessionData} from '@atproto/lex-password-session'
 import {describe, expect, it, jest} from '@jest/globals'
 
-import {agentToSessionAccountOrThrow} from '../agent'
+import {sessionDataToSessionAccount} from '../agent'
 import {type Action, getInitialState, reducer, type State} from '../reducer'
+import {type SessionAccount} from '../types'
 
 jest.mock('jwt-decode', () => ({
   jwtDecode(_token: string) {
@@ -21,6 +23,47 @@ jest.mock('#/lib/notifications/notifications', () => ({
   },
 }))
 
+/*
+ * The reducer no longer sees real agents - the provider stores a SessionBundle
+ * and the reducer's opaque view only reads `.service`. These helpers replace
+ * the old `new AtpAgent(...)` + `agentToSessionAccountOrThrow(agent)` dance:
+ *
+ * - `makeBundle(service)` builds the opaque bundle view the reducer receives as
+ *   `newAgent`/`agent` - just `{service: new URL(service)}`. Object identity is
+ *   load-bearing (the reducer compares `agent === currentAgentState.agent`), so
+ *   reuse the same bundle instance across a test's actions for one account.
+ * - `makeAccount(service, session)` builds the persisted `SessionAccount` via
+ *   the real `sessionDataToSessionAccount` converter, so field order and
+ *   derivation stay byte-identical to the old `agentToSessionAccount` output
+ *   (the JSON.stringify fast path and the inline snapshots depend on this).
+ */
+function makeBundle(service: string) {
+  return {service: new URL(service)}
+}
+
+function makeAccount(
+  service: string,
+  session: {
+    active: boolean
+    did: string
+    handle: string
+    accessJwt: string
+    refreshJwt: string
+    email?: string
+    emailAuthFactor?: boolean
+    emailConfirmed?: boolean
+  },
+): SessionAccount {
+  const account = sessionDataToSessionAccount(
+    session as unknown as SessionData,
+    service,
+  )
+  if (!account) {
+    throw new Error('Expected an account')
+  }
+  return account
+}
+
 describe('session', () => {
   it('can log in and out', () => {
     let state = getInitialState([])
@@ -37,19 +80,19 @@ describe('session', () => {
       }
     `)
 
-    const agent = new AtpAgent({service: 'https://alice.com'})
-    agent.sessionManager.session = {
+    const aliceBundle = makeBundle('https://alice.com')
+    const aliceAccount = makeAccount('https://alice.com', {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
       refreshJwt: 'alice-refresh-jwt-1',
-    }
+    })
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent,
-        newAccount: agentToSessionAccountOrThrow(agent),
+        newAgent: aliceBundle,
+        newAccount: aliceAccount,
       },
     ])
     expect(state.currentAgentState.did).toBe('alice-did')
@@ -130,26 +173,26 @@ describe('session', () => {
   it('switches to the latest account, stores all of them', () => {
     let state = getInitialState([])
 
-    const agent1 = new AtpAgent({service: 'https://alice.com'})
-    agent1.sessionManager.session = {
+    const aliceBundle = makeBundle('https://alice.com')
+    const aliceAccount = makeAccount('https://alice.com', {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
       refreshJwt: 'alice-refresh-jwt-1',
-    }
+    })
     state = run(state, [
       {
         // Switch to Alice.
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: aliceBundle,
+        newAccount: aliceAccount,
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].did).toBe('alice-did')
     expect(state.currentAgentState.did).toBe('alice-did')
-    expect(state.currentAgentState.agent).toBe(agent1)
+    expect(state.currentAgentState.agent).toBe(aliceBundle)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -179,20 +222,20 @@ describe('session', () => {
       }
     `)
 
-    const agent2 = new AtpAgent({service: 'https://bob.com'})
-    agent2.sessionManager.session = {
+    const bobBundle = makeBundle('https://bob.com')
+    const bobAccount = makeAccount('https://bob.com', {
       active: true,
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-1',
       refreshJwt: 'bob-refresh-jwt-1',
-    }
+    })
     state = run(state, [
       {
         // Switch to Bob.
         type: 'switched-to-account',
-        newAgent: agent2,
-        newAccount: agentToSessionAccountOrThrow(agent2),
+        newAgent: bobBundle,
+        newAccount: bobAccount,
       },
     ])
     expect(state.accounts.length).toBe(2)
@@ -200,7 +243,7 @@ describe('session', () => {
     expect(state.accounts[0].did).toBe('bob-did')
     expect(state.accounts[1].did).toBe('alice-did')
     expect(state.currentAgentState.did).toBe('bob-did')
-    expect(state.currentAgentState.agent).toBe(agent2)
+    expect(state.currentAgentState.agent).toBe(bobBundle)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -245,20 +288,20 @@ describe('session', () => {
       }
     `)
 
-    const agent3 = new AtpAgent({service: 'https://alice.com'})
-    agent3.sessionManager.session = {
+    const aliceBundle2 = makeBundle('https://alice.com')
+    const aliceAccount2 = makeAccount('https://alice.com', {
       active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-2',
       refreshJwt: 'alice-refresh-jwt-2',
-    }
+    })
     state = run(state, [
       {
         // Switch back to Alice.
         type: 'switched-to-account',
-        newAgent: agent3,
-        newAccount: agentToSessionAccountOrThrow(agent3),
+        newAgent: aliceBundle2,
+        newAccount: aliceAccount2,
       },
     ])
     expect(state.accounts.length).toBe(2)
@@ -266,7 +309,7 @@ describe('session', () => {
     expect(state.accounts[0].did).toBe('alice-did')
     expect(state.accounts[0].handle).toBe('alice-updated.test')
     expect(state.currentAgentState.did).toBe('alice-did')
-    expect(state.currentAgentState.agent).toBe(agent3)
+    expect(state.currentAgentState.agent).toBe(aliceBundle2)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -311,26 +354,26 @@ describe('session', () => {
       }
     `)
 
-    const agent4 = new AtpAgent({service: 'https://jay.com'})
-    agent4.sessionManager.session = {
+    const jayBundle = makeBundle('https://jay.com')
+    const jayAccount = makeAccount('https://jay.com', {
       active: true,
       did: 'jay-did',
       handle: 'jay.test',
       accessJwt: 'jay-access-jwt-1',
       refreshJwt: 'jay-refresh-jwt-1',
-    }
+    })
     state = run(state, [
       {
         // Switch to Jay.
         type: 'switched-to-account',
-        newAgent: agent4,
-        newAccount: agentToSessionAccountOrThrow(agent4),
+        newAgent: jayBundle,
+        newAccount: jayAccount,
       },
     ])
     expect(state.accounts.length).toBe(3)
     expect(state.accounts[0].did).toBe('jay-did')
     expect(state.currentAgentState.did).toBe('jay-did')
-    expect(state.currentAgentState.agent).toBe(agent4)
+    expect(state.currentAgentState.agent).toBe(jayBundle)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -468,19 +511,19 @@ describe('session', () => {
   it('can log back in after logging out', () => {
     let state = getInitialState([])
 
-    const agent1 = new AtpAgent({service: 'https://alice.com'})
-    agent1.sessionManager.session = {
+    const aliceBundle = makeBundle('https://alice.com')
+    const aliceAccount = makeAccount('https://alice.com', {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
       refreshJwt: 'alice-refresh-jwt-1',
-    }
+    })
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: aliceBundle,
+        newAccount: aliceAccount,
       },
     ])
     expect(state.accounts.length).toBe(1)
@@ -526,19 +569,19 @@ describe('session', () => {
       }
     `)
 
-    const agent2 = new AtpAgent({service: 'https://alice.com'})
-    agent2.sessionManager.session = {
+    const aliceBundle2 = makeBundle('https://alice.com')
+    const aliceAccount2 = makeAccount('https://alice.com', {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-2',
       refreshJwt: 'alice-refresh-jwt-2',
-    }
+    })
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent2,
-        newAccount: agentToSessionAccountOrThrow(agent2),
+        newAgent: aliceBundle2,
+        newAccount: aliceAccount2,
       },
     ])
     expect(state.accounts.length).toBe(1)
@@ -578,19 +621,19 @@ describe('session', () => {
   it('can remove active account', () => {
     let state = getInitialState([])
 
-    const agent1 = new AtpAgent({service: 'https://alice.com'})
-    agent1.sessionManager.session = {
+    const aliceBundle = makeBundle('https://alice.com')
+    const aliceAccount = makeAccount('https://alice.com', {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
       refreshJwt: 'alice-refresh-jwt-1',
-    }
+    })
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: aliceBundle,
+        newAccount: aliceAccount,
       },
     ])
     expect(state.accounts.length).toBe(1)
@@ -623,32 +666,32 @@ describe('session', () => {
   it('can remove inactive account', () => {
     let state = getInitialState([])
 
-    const agent1 = new AtpAgent({service: 'https://alice.com'})
-    agent1.sessionManager.session = {
+    const aliceBundle = makeBundle('https://alice.com')
+    const aliceAccount = makeAccount('https://alice.com', {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
       refreshJwt: 'alice-refresh-jwt-1',
-    }
-    const agent2 = new AtpAgent({service: 'https://bob.com'})
-    agent2.sessionManager.session = {
+    })
+    const bobBundle = makeBundle('https://bob.com')
+    const bobAccount = makeAccount('https://bob.com', {
       active: true,
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-1',
       refreshJwt: 'bob-refresh-jwt-1',
-    }
+    })
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: aliceBundle,
+        newAccount: aliceAccount,
       },
       {
         type: 'switched-to-account',
-        newAgent: agent2,
-        newAccount: agentToSessionAccountOrThrow(agent2),
+        newAgent: bobBundle,
+        newAccount: bobAccount,
       },
     ])
     expect(state.accounts.length).toBe(2)
@@ -704,19 +747,19 @@ describe('session', () => {
   it('can log out of the current account', () => {
     let state = getInitialState([])
 
-    const agent1 = new AtpAgent({service: 'https://alice.com'})
-    agent1.sessionManager.session = {
+    const aliceBundle = makeBundle('https://alice.com')
+    const aliceAccount = makeAccount('https://alice.com', {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
       refreshJwt: 'alice-refresh-jwt-1',
-    }
+    })
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: aliceBundle,
+        newAccount: aliceAccount,
       },
     ])
     expect(state.accounts.length).toBe(1)
@@ -724,19 +767,19 @@ describe('session', () => {
     expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-1')
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    const agent2 = new AtpAgent({service: 'https://bob.com'})
-    agent2.sessionManager.session = {
+    const bobBundle = makeBundle('https://bob.com')
+    const bobAccount = makeAccount('https://bob.com', {
       active: true,
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-1',
       refreshJwt: 'bob-refresh-jwt-1',
-    }
+    })
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent2,
-        newAccount: agentToSessionAccountOrThrow(agent2),
+        newAgent: bobBundle,
+        newAccount: bobAccount,
       },
     ])
     expect(state.accounts.length).toBe(2)
@@ -803,40 +846,38 @@ describe('session', () => {
   it('updates stored account with refreshed tokens', () => {
     let state = getInitialState([])
 
-    const agent1 = new AtpAgent({service: 'https://alice.com'})
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice.test',
-      accessJwt: 'alice-access-jwt-1',
-      refreshJwt: 'alice-refresh-jwt-1',
-    }
+    const aliceBundle = makeBundle('https://alice.com')
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: aliceBundle,
+        newAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-1',
+          refreshJwt: 'alice-refresh-jwt-1',
+        }),
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice-updated.test',
-      accessJwt: 'alice-access-jwt-2',
-      refreshJwt: 'alice-refresh-jwt-2',
-      email: 'alice@foo.bar',
-      emailAuthFactor: false,
-      emailConfirmed: false,
-    }
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: aliceBundle,
+        refreshedAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice-updated.test',
+          accessJwt: 'alice-access-jwt-2',
+          refreshJwt: 'alice-refresh-jwt-2',
+          email: 'alice@foo.bar',
+          emailAuthFactor: false,
+          emailConfirmed: false,
+        }),
         sessionEvent: 'update',
       },
     ])
@@ -875,22 +916,21 @@ describe('session', () => {
       }
     `)
 
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice-updated.test',
-      accessJwt: 'alice-access-jwt-3',
-      refreshJwt: 'alice-refresh-jwt-3',
-      email: 'alice@foo.baz',
-      emailAuthFactor: true,
-      emailConfirmed: true,
-    }
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: aliceBundle,
+        refreshedAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice-updated.test',
+          accessJwt: 'alice-access-jwt-3',
+          refreshJwt: 'alice-refresh-jwt-3',
+          email: 'alice@foo.baz',
+          emailAuthFactor: true,
+          emailConfirmed: true,
+        }),
         sessionEvent: 'update',
       },
     ])
@@ -929,22 +969,21 @@ describe('session', () => {
       }
     `)
 
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice-updated.test',
-      accessJwt: 'alice-access-jwt-4',
-      refreshJwt: 'alice-refresh-jwt-4',
-      email: 'alice@foo.baz',
-      emailAuthFactor: false,
-      emailConfirmed: false,
-    }
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: aliceBundle,
+        refreshedAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice-updated.test',
+          accessJwt: 'alice-access-jwt-4',
+          refreshJwt: 'alice-refresh-jwt-4',
+          email: 'alice@foo.baz',
+          emailAuthFactor: false,
+          emailConfirmed: false,
+        }),
         sessionEvent: 'update',
       },
     ])
@@ -987,37 +1026,35 @@ describe('session', () => {
   it('bails out of update on identical objects', () => {
     let state = getInitialState([])
 
-    const agent1 = new AtpAgent({service: 'https://alice.com'})
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice.test',
-      accessJwt: 'alice-access-jwt-1',
-      refreshJwt: 'alice-refresh-jwt-1',
-    }
+    const aliceBundle = makeBundle('https://alice.com')
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: aliceBundle,
+        newAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-1',
+          refreshJwt: 'alice-refresh-jwt-1',
+        }),
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice-updated.test',
-      accessJwt: 'alice-access-jwt-2',
-      refreshJwt: 'alice-refresh-jwt-2',
-    }
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: aliceBundle,
+        refreshedAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice-updated.test',
+          accessJwt: 'alice-access-jwt-2',
+          refreshJwt: 'alice-refresh-jwt-2',
+        }),
         sessionEvent: 'update',
       },
     ])
@@ -1029,26 +1066,31 @@ describe('session', () => {
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: aliceBundle,
+        refreshedAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice-updated.test',
+          accessJwt: 'alice-access-jwt-2',
+          refreshJwt: 'alice-refresh-jwt-2',
+        }),
         sessionEvent: 'update',
       },
     ])
     expect(lastState === state).toBe(true)
 
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice-updated.test',
-      accessJwt: 'alice-access-jwt-3',
-      refreshJwt: 'alice-refresh-jwt-3',
-    }
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: aliceBundle,
+        refreshedAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice-updated.test',
+          accessJwt: 'alice-access-jwt-3',
+          refreshJwt: 'alice-refresh-jwt-3',
+        }),
         sessionEvent: 'update',
       },
     ])
@@ -1059,57 +1101,53 @@ describe('session', () => {
   it('accepts updates from a stale agent', () => {
     let state = getInitialState([])
 
-    const agent1 = new AtpAgent({service: 'https://alice.com'})
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice.test',
-      accessJwt: 'alice-access-jwt-1',
-      refreshJwt: 'alice-refresh-jwt-1',
-    }
-
-    const agent2 = new AtpAgent({service: 'https://bob.com'})
-    agent2.sessionManager.session = {
-      active: true,
-      did: 'bob-did',
-      handle: 'bob.test',
-      accessJwt: 'bob-access-jwt-1',
-      refreshJwt: 'bob-refresh-jwt-1',
-    }
+    const aliceBundle = makeBundle('https://alice.com')
+    const bobBundle = makeBundle('https://bob.com')
 
     state = run(state, [
       {
         // Switch to Alice.
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: aliceBundle,
+        newAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-1',
+          refreshJwt: 'alice-refresh-jwt-1',
+        }),
       },
       {
         // Switch to Bob.
         type: 'switched-to-account',
-        newAgent: agent2,
-        newAccount: agentToSessionAccountOrThrow(agent2),
+        newAgent: bobBundle,
+        newAccount: makeAccount('https://bob.com', {
+          active: true,
+          did: 'bob-did',
+          handle: 'bob.test',
+          accessJwt: 'bob-access-jwt-1',
+          refreshJwt: 'bob-refresh-jwt-1',
+        }),
       },
     ])
     expect(state.accounts.length).toBe(2)
     expect(state.currentAgentState.did).toBe('bob-did')
 
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice-updated.test',
-      accessJwt: 'alice-access-jwt-2',
-      refreshJwt: 'alice-refresh-jwt-2',
-      email: 'alice@foo.bar',
-      emailAuthFactor: false,
-      emailConfirmed: false,
-    }
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: aliceBundle,
+        refreshedAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice-updated.test',
+          accessJwt: 'alice-access-jwt-2',
+          refreshJwt: 'alice-refresh-jwt-2',
+          email: 'alice@foo.bar',
+          emailAuthFactor: false,
+          emailConfirmed: false,
+        }),
         sessionEvent: 'update',
       },
     ])
@@ -1163,20 +1201,19 @@ describe('session', () => {
       }
     `)
 
-    agent2.sessionManager.session = {
-      active: true,
-      did: 'bob-did',
-      handle: 'bob-updated.test',
-      accessJwt: 'bob-access-jwt-2',
-      refreshJwt: 'bob-refresh-jwt-2',
-    }
     state = run(state, [
       {
         // Update Bob.
         type: 'received-agent-event',
         accountDid: 'bob-did',
-        agent: agent2,
-        refreshedAccount: agentToSessionAccountOrThrow(agent2),
+        agent: bobBundle,
+        refreshedAccount: makeAccount('https://bob.com', {
+          active: true,
+          did: 'bob-did',
+          handle: 'bob-updated.test',
+          accessJwt: 'bob-access-jwt-2',
+          refreshJwt: 'bob-refresh-jwt-2',
+        }),
         sessionEvent: 'update',
       },
     ])
@@ -1232,12 +1269,11 @@ describe('session', () => {
 
     // Ignore other events for inactive agent.
     const lastState = state
-    agent1.sessionManager.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
+        agent: aliceBundle,
         refreshedAccount: undefined,
         sessionEvent: 'network-error',
       },
@@ -1247,7 +1283,7 @@ describe('session', () => {
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
+        agent: aliceBundle,
         refreshedAccount: undefined,
         sessionEvent: 'expired',
       },
@@ -1258,34 +1294,31 @@ describe('session', () => {
   it('ignores updates from a removed agent', () => {
     let state = getInitialState([])
 
-    const agent1 = new AtpAgent({service: 'https://alice.com'})
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice.test',
-      accessJwt: 'alice-access-jwt-1',
-      refreshJwt: 'alice-refresh-jwt-1',
-    }
-
-    const agent2 = new AtpAgent({service: 'https://bob.com'})
-    agent2.sessionManager.session = {
-      active: true,
-      did: 'bob-did',
-      handle: 'bob.test',
-      accessJwt: 'bob-access-jwt-1',
-      refreshJwt: 'bob-refresh-jwt-1',
-    }
+    const aliceBundle = makeBundle('https://alice.com')
+    const bobBundle = makeBundle('https://bob.com')
 
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: aliceBundle,
+        newAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-1',
+          refreshJwt: 'alice-refresh-jwt-1',
+        }),
       },
       {
         type: 'switched-to-account',
-        newAgent: agent2,
-        newAccount: agentToSessionAccountOrThrow(agent2),
+        newAgent: bobBundle,
+        newAccount: makeAccount('https://bob.com', {
+          active: true,
+          did: 'bob-did',
+          handle: 'bob.test',
+          accessJwt: 'bob-access-jwt-1',
+          refreshJwt: 'bob-refresh-jwt-1',
+        }),
       },
       {
         type: 'removed-account',
@@ -1295,19 +1328,18 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('bob-did')
 
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice.test',
-      accessJwt: 'alice-access-jwt-2',
-      refreshJwt: 'alice-refresh-jwt-2',
-    }
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: aliceBundle,
+        refreshedAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-2',
+          refreshJwt: 'alice-refresh-jwt-2',
+        }),
         sessionEvent: 'update',
       },
     ])
@@ -1320,31 +1352,29 @@ describe('session', () => {
   it('ignores network errors', () => {
     let state = getInitialState([])
 
-    const agent1 = new AtpAgent({service: 'https://alice.com'})
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice.test',
-      accessJwt: 'alice-access-jwt-1',
-      refreshJwt: 'alice-refresh-jwt-1',
-    }
+    const aliceBundle = makeBundle('https://alice.com')
     state = run(state, [
       {
         // Switch to Alice.
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: aliceBundle,
+        newAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-1',
+          refreshJwt: 'alice-refresh-jwt-1',
+        }),
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.sessionManager.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
+        agent: aliceBundle,
         refreshedAccount: undefined,
         sessionEvent: 'network-error',
       },
@@ -1386,31 +1416,29 @@ describe('session', () => {
   it('resets tokens on expired event', () => {
     let state = getInitialState([])
 
-    const agent1 = new AtpAgent({service: 'https://alice.com'})
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice.test',
-      accessJwt: 'alice-access-jwt-1',
-      refreshJwt: 'alice-refresh-jwt-1',
-    }
+    const aliceBundle = makeBundle('https://alice.com')
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: aliceBundle,
+        newAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-1',
+          refreshJwt: 'alice-refresh-jwt-1',
+        }),
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.sessionManager.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
+        agent: aliceBundle,
         refreshedAccount: undefined,
         sessionEvent: 'expired',
       },
@@ -1452,31 +1480,29 @@ describe('session', () => {
   it('resets tokens on created-failed event', () => {
     let state = getInitialState([])
 
-    const agent1 = new AtpAgent({service: 'https://alice.com'})
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice.test',
-      accessJwt: 'alice-access-jwt-1',
-      refreshJwt: 'alice-refresh-jwt-1',
-    }
+    const aliceBundle = makeBundle('https://alice.com')
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: aliceBundle,
+        newAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-1',
+          refreshJwt: 'alice-refresh-jwt-1',
+        }),
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.sessionManager.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
+        agent: aliceBundle,
         refreshedAccount: undefined,
         sessionEvent: 'create-failed',
       },
@@ -1518,59 +1544,53 @@ describe('session', () => {
   it('replaces local accounts with synced accounts', () => {
     let state = getInitialState([])
 
-    const agent1 = new AtpAgent({service: 'https://alice.com'})
-    agent1.sessionManager.session = {
-      active: true,
-      did: 'alice-did',
-      handle: 'alice.test',
-      accessJwt: 'alice-access-jwt-1',
-      refreshJwt: 'alice-refresh-jwt-1',
-    }
-    const agent2 = new AtpAgent({service: 'https://bob.com'})
-    agent2.sessionManager.session = {
-      active: true,
-      did: 'bob-did',
-      handle: 'bob.test',
-      accessJwt: 'bob-access-jwt-1',
-      refreshJwt: 'bob-refresh-jwt-1',
-    }
+    const aliceBundle = makeBundle('https://alice.com')
+    const bobBundle = makeBundle('https://bob.com')
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: aliceBundle,
+        newAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-1',
+          refreshJwt: 'alice-refresh-jwt-1',
+        }),
       },
       {
         type: 'switched-to-account',
-        newAgent: agent2,
-        newAccount: agentToSessionAccountOrThrow(agent2),
+        newAgent: bobBundle,
+        newAccount: makeAccount('https://bob.com', {
+          active: true,
+          did: 'bob-did',
+          handle: 'bob.test',
+          accessJwt: 'bob-access-jwt-1',
+          refreshJwt: 'bob-refresh-jwt-1',
+        }),
       },
     ])
     expect(state.accounts.length).toBe(2)
     expect(state.currentAgentState.did).toBe('bob-did')
 
-    const anotherTabAgent1 = new AtpAgent({service: 'https://jay.com'})
-    anotherTabAgent1.sessionManager.session = {
-      active: true,
-      did: 'jay-did',
-      handle: 'jay.test',
-      accessJwt: 'jay-access-jwt-1',
-      refreshJwt: 'jay-refresh-jwt-1',
-    }
-    const anotherTabAgent2 = new AtpAgent({service: 'https://alice.com'})
-    anotherTabAgent2.sessionManager.session = {
-      active: true,
-      did: 'bob-did',
-      handle: 'bob.test',
-      accessJwt: 'bob-access-jwt-2',
-      refreshJwt: 'bob-refresh-jwt-2',
-    }
     state = run(state, [
       {
         type: 'synced-accounts',
         syncedAccounts: [
-          agentToSessionAccountOrThrow(anotherTabAgent1),
-          agentToSessionAccountOrThrow(anotherTabAgent2),
+          makeAccount('https://jay.com', {
+            active: true,
+            did: 'jay-did',
+            handle: 'jay.test',
+            accessJwt: 'jay-access-jwt-1',
+            refreshJwt: 'jay-refresh-jwt-1',
+          }),
+          makeAccount('https://alice.com', {
+            active: true,
+            did: 'bob-did',
+            handle: 'bob.test',
+            accessJwt: 'bob-access-jwt-2',
+            refreshJwt: 'bob-refresh-jwt-2',
+          }),
         ],
         syncedCurrentDid: 'bob-did',
       },
@@ -1627,18 +1647,18 @@ describe('session', () => {
       }
     `)
 
-    const anotherTabAgent3 = new AtpAgent({service: 'https://clarence.com'})
-    anotherTabAgent3.sessionManager.session = {
-      active: true,
-      did: 'clarence-did',
-      handle: 'clarence.test',
-      accessJwt: 'clarence-access-jwt-2',
-      refreshJwt: 'clarence-refresh-jwt-2',
-    }
     state = run(state, [
       {
         type: 'synced-accounts',
-        syncedAccounts: [agentToSessionAccountOrThrow(anotherTabAgent3)],
+        syncedAccounts: [
+          makeAccount('https://clarence.com', {
+            active: true,
+            did: 'clarence-did',
+            handle: 'clarence.test',
+            accessJwt: 'clarence-access-jwt-2',
+            refreshJwt: 'clarence-refresh-jwt-2',
+          }),
+        ],
         syncedCurrentDid: 'clarence-did',
       },
     ])
@@ -1676,6 +1696,94 @@ describe('session', () => {
         "needsPersist": false,
       }
     `)
+  })
+
+  it('replaces the current bundle on same-did cross-tab sync', () => {
+    let state = getInitialState([])
+
+    const aliceBundle = makeBundle('https://alice.com')
+    state = run(state, [
+      {
+        type: 'switched-to-account',
+        newAgent: aliceBundle,
+        newAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-1',
+          refreshJwt: 'alice-refresh-jwt-1',
+        }),
+      },
+    ])
+    expect(state.currentAgentState.agent).toBe(aliceBundle)
+    expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
+
+    // A fresh bundle rebuilt from synced tokens (no network).
+    const aliceBundle2 = makeBundle('https://alice.com')
+    const aliceAccount2 = makeAccount('https://alice.com', {
+      active: true,
+      did: 'alice-did',
+      handle: 'alice.test',
+      accessJwt: 'alice-access-jwt-2',
+      refreshJwt: 'alice-refresh-jwt-2',
+    })
+    state = run(state, [
+      {
+        type: 'replaced-current-bundle',
+        newAgent: aliceBundle2,
+        newAccount: aliceAccount2,
+      },
+    ])
+    // The bundle is swapped in place, the did is preserved.
+    expect(state.currentAgentState.agent).toBe(aliceBundle2)
+    expect(state.currentAgentState.did).toBe('alice-did')
+    // The matching account entry is replaced with the synced one.
+    expect(state.accounts.length).toBe(1)
+    expect(state.accounts[0].did).toBe('alice-did')
+    expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-2')
+    expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-2')
+    // Synced from another tab - don't persist.
+    expect(state.needsPersist).toBe(false)
+  })
+
+  it('does not touch the bundle on partial-refresh-session', () => {
+    let state = getInitialState([])
+
+    const aliceBundle = makeBundle('https://alice.com')
+    state = run(state, [
+      {
+        type: 'switched-to-account',
+        newAgent: aliceBundle,
+        newAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-1',
+          refreshJwt: 'alice-refresh-jwt-1',
+          email: 'alice@foo.bar',
+          emailAuthFactor: false,
+          emailConfirmed: false,
+        }),
+      },
+    ])
+    expect(state.currentAgentState.agent).toBe(aliceBundle)
+    expect(state.accounts[0].emailConfirmed).toBe(false)
+    expect(state.accounts[0].emailAuthFactor).toBe(false)
+
+    state = run(state, [
+      {
+        type: 'partial-refresh-session',
+        accountDid: 'alice-did',
+        patch: {emailConfirmed: true, emailAuthFactor: true},
+      },
+    ])
+    // The account email fields are patched.
+    expect(state.accounts[0].emailConfirmed).toBe(true)
+    expect(state.accounts[0].emailAuthFactor).toBe(true)
+    // The bundle is untouched - no session mutation, same reference.
+    expect(state.currentAgentState.agent).toBe(aliceBundle)
+    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.needsPersist).toBe(true)
   })
 })
 

@@ -1,7 +1,7 @@
 import {useEffect, useMemo, useState} from 'react'
 import {useQuery} from '@tanstack/react-query'
 
-import {useAgent, useSessionApi} from '#/state/session'
+import {useSession, useSessionApi} from '#/state/session'
 import {emitEmailVerified} from '#/components/dialogs/EmailDialog/events'
 
 export type AccountEmailState = {
@@ -12,24 +12,24 @@ export type AccountEmailState = {
 export const accountEmailStateQueryKey = ['accountEmailState'] as const
 
 export function useAccountEmailState() {
-  const agent = useAgent()
+  const {currentAccount} = useSession()
   const {partialRefreshSession} = useSessionApi()
   const [prevIsEmailVerified, setPrevEmailIsVerified] = useState(
-    !!agent.session?.emailConfirmed,
+    !!currentAccount?.emailConfirmed,
   )
   const state: AccountEmailState = useMemo(
     () => ({
-      isEmailVerified: !!agent.session?.emailConfirmed,
-      email2FAEnabled: !!agent.session?.emailAuthFactor,
+      isEmailVerified: !!currentAccount?.emailConfirmed,
+      email2FAEnabled: !!currentAccount?.emailAuthFactor,
     }),
-    [agent.session],
+    [currentAccount],
   )
 
   /**
    * Only here to refetch on focus, when necessary
    */
   useQuery({
-    enabled: !!agent.session,
+    enabled: !!currentAccount,
     /**
      * Only refetch if the email verification s incomplete.
      */

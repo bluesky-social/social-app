@@ -1,11 +1,12 @@
-import {type AppBskyFeedDefs, type AtpAgent} from '@atproto/api'
+import {type AppBskyFeedDefs} from '@atproto/api'
 
+import {type SessionAgent} from '#/state/session'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class FollowingFeedAPI implements FeedAPI {
-  agent: AtpAgent
+  agent: SessionAgent
 
-  constructor({agent}: {agent: AtpAgent}) {
+  constructor({agent}: {agent: SessionAgent}) {
     this.agent = agent
   }
 

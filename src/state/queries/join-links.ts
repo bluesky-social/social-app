@@ -11,7 +11,7 @@ import {CHAT_SERVICE, DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries/index'
 import {createQueryKey, type StructuredQueryKey} from '#/state/queries/util'
-import {useAgent} from '#/state/session'
+import {type SessionAgent, useAgent} from '#/state/session'
 
 /**
  * The three preview shapes we currently support. Excludes the `{$type: string}`
@@ -159,7 +159,7 @@ async function fetchJoinLinkPreviews({
   codes,
   hasSession,
 }: {
-  agent: AtpAgent
+  agent: SessionAgent
   codes: string[]
   hasSession: boolean
 }) {

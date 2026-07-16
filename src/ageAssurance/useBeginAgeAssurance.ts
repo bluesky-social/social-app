@@ -1,5 +1,5 @@
 import {Platform} from 'react-native'
-import {type AppBskyAgeassuranceBegin, AtpAgent} from '@atproto/api'
+import {Client} from '@atproto/lex-client'
 import {useMutation} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
@@ -15,6 +15,7 @@ import {logger} from '#/ageAssurance/logger'
 import {useAnalytics} from '#/analytics'
 import {BLUESKY_PROXY_DID} from '#/env'
 import {useGeolocation} from '#/geolocation'
+import {app} from '#/lexicons'
 
 const IS_DEV_ENV = BLUESKY_PROXY_DID !== PUBLIC_APPVIEW_DID
 const APPVIEW = IS_DEV_ENV ? DEV_ENV_APPVIEW : PUBLIC_APPVIEW
@@ -28,7 +29,7 @@ export function useBeginAgeAssurance() {
   return useMutation({
     async mutationFn(
       props: Omit<
-        AppBskyAgeassuranceBegin.InputSchema,
+        app.bsky.ageassurance.begin.$InputBody,
         'countryCode' | 'regionCode'
       >,
     ) {
@@ -45,10 +46,16 @@ export function useBeginAgeAssurance() {
         lxm: `app.bsky.ageassurance.begin`,
       })
 
-      const appView = new AtpAgent({service: APPVIEW})
-      appView.sessionManager.session = {...agent.session!}
-      appView.sessionManager.session.accessJwt = token
-      appView.sessionManager.session.refreshJwt = ''
+      /*
+       * A non-refreshing throwaway client scoped to the service-auth token: it
+       * has no session, so nothing can refresh it. Requests go straight to the
+       * appview with the token as a static Authorization header (a raw client,
+       * unlike a session, is allowed to preset that header).
+       */
+      const scopedClient = new Client({
+        service: APPVIEW,
+        headers: {authorization: `Bearer ${token}`},
+      })
 
       ax.metric('ageAssurance:api:begin', {
         platform: Platform.OS,
@@ -60,9 +67,9 @@ export function useBeginAgeAssurance() {
        * 2s wait is good actually. Email sending takes a hot sec and this helps
        * ensure the email is ready for the user once they open their inbox.
        */
-      const {data} = await wait(
+      const data = await wait(
         2e3,
-        appView.app.bsky.ageassurance.begin({
+        scopedClient.call(app.bsky.ageassurance.begin, {
           ...props,
           countryCode,
           regionCode,

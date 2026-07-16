@@ -8,26 +8,34 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import {type AtpAgent, type AtpSessionEvent} from '@atproto/api'
+import {type AtpSessionEvent} from '@atproto/api'
 import {type Client} from '@atproto/lex-client'
+import {PasswordSession} from '@atproto/lex-password-session'
 
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {com} from '#/lexicons'
 import {emitSessionDropped} from '../events'
-import {
-  agentToSessionAccount,
-  type BskyAppAgent,
-  createAgentAndCreateAccount,
-  createAgentAndLogin,
-  createAgentAndResume,
-  sessionAccountToSession,
-} from './agent'
+import {getPublicLexClient} from './clients'
 import {type Action, getInitialState, reducer, type State} from './reducer'
+import {
+  buildBundle,
+  createSessionBundleAndCreateAccount,
+  createSessionBundleAndLogin,
+  createSessionBundleAndResume,
+  disposeBundle,
+  makeSessionHooks,
+  type PublicSessionBundle,
+  sessionAccountToSessionData,
+  type SessionAgent,
+  type SessionBundle,
+  sessionDataToSessionAccount,
+} from './session-core'
+export {type SessionAgent} from './session-core'
 export {isSignupQueued} from './util'
-import {agentToLexClient} from './clients'
 import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
 
@@ -49,8 +57,20 @@ const StateContext = createContext<SessionStateContext>({
 })
 StateContext.displayName = 'SessionStateContext'
 
-const AgentContext = createContext<AtpAgent | null>(null)
+const AgentContext = createContext<SessionAgent | null>(null)
 AgentContext.displayName = 'SessionAgentContext'
+
+/**
+ * Holds the full {@link SessionBundle} (or the logged-out
+ * {@link PublicSessionBundle}) for the active account. The three-client hooks
+ * (`useLexClient`/`useAppviewClient`/`usePdsClient`) read from here, while
+ * `useAgent()` continues to read the bridge agent from {@link AgentContext}
+ * (which is just `bundle.agent`).
+ */
+const BundleContext = createContext<SessionBundle | PublicSessionBundle | null>(
+  null,
+)
+BundleContext.displayName = 'SessionBundleContext'
 
 const ApiContext = createContext<SessionApiContext>({
   createAccount: async () => {},
@@ -113,14 +133,36 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const onboardingDispatch = useOnboardingDispatch()
 
   const onAgentSessionChange = useCallback(
-    (agent: AtpAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
-      const refreshedAccount = agentToSessionAccount(agent) // Mutable, so snapshot it right away.
+    (
+      agent: SessionAgent,
+      accountDid: string,
+      sessionEvent: AtpSessionEvent,
+    ) => {
+      // Snapshot the (mutable) live session data right away.
+      const refreshedAccount = agent.session
+        ? sessionDataToSessionAccount(agent.session, agent.session.service)
+        : undefined
       if (sessionEvent === 'expired' || sessionEvent === 'create-failed') {
         emitSessionDropped()
       }
+      /*
+       * The reducer stores the whole bundle as `currentAgentState.agent` and
+       * compares `action.agent` by identity to decide whether an expiry/error
+       * belongs to the active account (background accounts must not be able to
+       * log the current user out). The hook hands us the SessionAgent that
+       * fired; map it back to the current bundle when it is the active one, and
+       * otherwise pass the SessionAgent itself as a distinct, non-matching token
+       * so the reducer's guard ignores clears for background accounts - matching
+       * the pre-migration semantics exactly.
+       */
+      const stored = store.getState().currentAgentState
+        .agent as unknown as SessionBundle
+      const eventAgent = (stored.agent === agent
+        ? stored
+        : agent) as unknown as SessionBundle
       store.dispatch({
         type: 'received-agent-event',
-        agent,
+        agent: eventAgent,
         refreshedAccount,
         accountDid,
         sessionEvent,
@@ -134,7 +176,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'method:start', method: 'createAccount'})
       const signal = cancelPendingTask()
       ax.metric('account:create:begin', {})
-      const {agent, account} = await createAgentAndCreateAccount(
+      const {bundle, account} = await createSessionBundleAndCreateAccount(
         params,
         onAgentSessionChange,
       )
@@ -144,7 +186,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
       store.dispatch({
         type: 'switched-to-account',
-        newAgent: agent,
+        newAgent: bundle,
         newAccount: account,
       })
       ax.metric('account:create:success', metrics, {
@@ -159,7 +201,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     async (params, logContext) => {
       addSessionDebugLog({type: 'method:start', method: 'login'})
       const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndLogin(
+      const {bundle, account} = await createSessionBundleAndLogin(
         params,
         onAgentSessionChange,
       )
@@ -169,7 +211,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
       store.dispatch({
         type: 'switched-to-account',
-        newAgent: agent,
+        newAgent: bundle,
         newAccount: account,
       })
       ax.metric(
@@ -256,7 +298,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         account: storedAccount,
       })
       const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndResume(
+      const {bundle, account} = await createSessionBundleAndResume(
         storedAccount,
         onAgentSessionChange,
       )
@@ -266,7 +308,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
       store.dispatch({
         type: 'switched-to-account',
-        newAgent: agent,
+        newAgent: bundle,
         newAccount: account,
       })
       addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
@@ -281,13 +323,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const partialRefreshSession = useCallback<
     SessionApiContext['partialRefreshSession']
   >(async () => {
-    const agent = state.currentAgentState.agent as BskyAppAgent
+    const bundle = state.currentAgentState.agent as unknown as SessionBundle
     const signal = cancelPendingTask()
-    const {data} = await agent.com.atproto.server.getSession()
+    /*
+     * Fetch through the account (PDS) client and dispatch the patch. We do NOT
+     * mutate the session object anymore (PasswordSession's data is immutable to
+     * us); the reducer patches only the `accounts` entry, and the email-state
+     * hook reads from the account rather than `agent.session` (Task 7).
+     * `client.call` returns the response body directly (no `{data}` wrapper).
+     */
+    const data = await bundle.accountClient.call(com.atproto.server.getSession)
     if (signal.aborted) return
     store.dispatch({
       type: 'partial-refresh-session',
-      accountDid: agent.session!.did,
+      accountDid: bundle.agent.session!.did,
       patch: {
         emailConfirmed: data.emailConfirmed,
         emailAuthFactor: data.emailAuthFactor,
@@ -334,20 +383,45 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
            */
           void resumeSession(syncedAccount)
         } else {
-          const agent = state.currentAgentState.agent as AtpAgent
-          const prevSession = agent.session
-          // eslint-disable-next-line react-compiler/react-compiler
-          agent.sessionManager.session = sessionAccountToSession(syncedAccount)
+          /*
+           * Same account, new tokens synced from the leader tab. PasswordSession
+           * is immutable (no in-place session patch like the old
+           * `agent.sessionManager.session = ...`), so rebuild a fresh bundle
+           * from the synced tokens WITHOUT a network call (the leader already
+           * refreshed) and swap it in via `replaced-current-bundle`. The
+           * bundle-identity effect disposes the previous session once it swaps,
+           * which strengthens the single-refresher guarantee (the stale-token
+           * session can no longer refresh).
+           */
+          const prevBundle = state.currentAgentState
+            .agent as unknown as SessionBundle
+          let newBundle!: SessionBundle
+          const hooks = makeSessionHooks(
+            onAgentSessionChange,
+            () => newBundle.agent,
+            () => syncedAccount.did,
+          )
+          const newSession = new PasswordSession(
+            sessionAccountToSessionData(syncedAccount),
+            hooks,
+          )
+          newBundle = buildBundle(newSession)
+          hooks.arm()
           addSessionDebugLog({
             type: 'agent:patch',
-            agent,
-            prevSession,
-            nextSession: agent.session,
+            agent: newBundle.agent,
+            prevSession: prevBundle.agent.session,
+            nextSession: newBundle.agent.session,
+          })
+          store.dispatch({
+            type: 'replaced-current-bundle',
+            newAgent: newBundle,
+            newAccount: syncedAccount,
           })
         }
       }
     })
-  }, [store, state, resumeSession])
+  }, [store, state, resumeSession, onAgentSessionChange])
 
   const stateContext = useMemo(
     () => ({
@@ -381,38 +455,48 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     ],
   )
 
+  const bundle = state.currentAgentState.agent as unknown as
+    | SessionBundle
+    | PublicSessionBundle
+  const agent = bundle.agent
+
   // @ts-expect-error window type is not declared, debug only
   // eslint-disable-next-line react-hooks/immutability
-  if (__DEV__ && IS_WEB) window.agent = state.currentAgentState.agent
+  if (__DEV__ && IS_WEB) window.agent = agent
 
-  const agent = state.currentAgentState.agent as BskyAppAgent
-  const currentAgentRef = useRef(agent)
+  const currentBundleRef = useRef(bundle)
   useEffect(() => {
-    if (currentAgentRef.current !== agent) {
+    if (currentBundleRef.current !== bundle) {
       // Read the previous value and immediately advance the pointer.
-      const prevAgent = currentAgentRef.current
-      currentAgentRef.current = agent
-      addSessionDebugLog({type: 'agent:switch', prevAgent, nextAgent: agent})
-      // We never reuse agents so let's fully neutralize the previous one.
-      // This ensures it won't try to consume any refresh tokens.
-      prevAgent.dispose()
+      const prevBundle = currentBundleRef.current
+      currentBundleRef.current = bundle
+      addSessionDebugLog({
+        type: 'agent:switch',
+        prevAgent: prevBundle.agent,
+        nextAgent: bundle.agent,
+      })
+      // We never reuse bundles so let's fully neutralize the previous one.
+      // This ensures its session won't try to consume any refresh tokens.
+      disposeBundle(prevBundle)
     }
-  }, [agent])
+  }, [bundle])
 
   return (
     <AgentContext.Provider value={agent}>
-      <StateContext.Provider value={stateContext}>
-        <ApiContext.Provider value={api}>
-          <AnalyticsContext
-            metadata={utils.useMeta({
-              session: utils.accountToSessionMetadata(
-                stateContext.currentAccount,
-              ),
-            })}>
-            {children}
-          </AnalyticsContext>
-        </ApiContext.Provider>
-      </StateContext.Provider>
+      <BundleContext.Provider value={bundle}>
+        <StateContext.Provider value={stateContext}>
+          <ApiContext.Provider value={api}>
+            <AnalyticsContext
+              metadata={utils.useMeta({
+                session: utils.accountToSessionMetadata(
+                  stateContext.currentAccount,
+                ),
+              })}>
+              {children}
+            </AnalyticsContext>
+          </ApiContext.Provider>
+        </StateContext.Provider>
+      </BundleContext.Provider>
     </AgentContext.Provider>
   )
 }
@@ -455,7 +539,7 @@ export function useRequireAuth() {
   )
 }
 
-export function useAgent(): AtpAgent {
+export function useAgent(): SessionAgent {
   const agent = useContext(AgentContext)
   if (!agent) {
     throw Error('useAgent() must be below <SessionProvider>.')
@@ -464,12 +548,32 @@ export function useAgent(): AtpAgent {
 }
 
 /**
- * Authenticated lex {@link Client} wrapping the current session agent. Stable
- * per-agent, so it only changes identity when the active account changes.
- *
- * @see agentToLexClient for how the AtpAgent is bridged to the lex Client.
+ * Authenticated lex {@link Client} for appview reads. Backed by the active
+ * bundle's appview client (proxied to the Bluesky appview, with labelers). Its
+ * identity is stable per-bundle, so it only changes when the active account
+ * changes. Falls back to the public client when there is no bundle (logged out,
+ * or used outside the provider) so callers can treat it as always-present.
  */
 export function useLexClient(): Client {
-  const agent = useAgent()
-  return agentToLexClient(agent)
+  const bundle = useContext(BundleContext)
+  return bundle?.appviewClient ?? getPublicLexClient()
+}
+
+/**
+ * Alias of {@link useLexClient}: the authenticated appview client for the
+ * active account.
+ */
+export function useAppviewClient(): Client {
+  const bundle = useContext(BundleContext)
+  return bundle?.appviewClient ?? getPublicLexClient()
+}
+
+/**
+ * The account (PDS) lex {@link Client} for the active account. Writes and record
+ * mutations go here - requests hit the user's PDS directly (no appview proxy).
+ * Falls back to the public client when there is no bundle.
+ */
+export function usePdsClient(): Client {
+  const bundle = useContext(BundleContext)
+  return bundle?.accountClient ?? getPublicLexClient()
 }

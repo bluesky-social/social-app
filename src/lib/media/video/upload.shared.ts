@@ -1,10 +1,10 @@
-import {type AtpAgent} from '@atproto/api'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
 import {VIDEO_SERVICE_DID} from '#/lib/constants'
 import {UploadLimitError} from '#/lib/media/video/errors'
 import {getServiceAuthAudFromUrl} from '#/lib/strings/url-helpers'
+import {type SessionAgent} from '#/state/session'
 import {createVideoAgent} from './util'
 
 export async function getServiceAuthToken({
@@ -13,7 +13,7 @@ export async function getServiceAuthToken({
   lxm,
   exp,
 }: {
-  agent: AtpAgent
+  agent: SessionAgent
   aud?: string
   lxm: string
   exp?: number
@@ -30,7 +30,7 @@ export async function getServiceAuthToken({
   return serviceAuth.token
 }
 
-export async function getVideoUploadLimits(agent: AtpAgent, i18n: I18n) {
+export async function getVideoUploadLimits(agent: SessionAgent, i18n: I18n) {
   const token = await getServiceAuthToken({
     agent,
     lxm: 'app.bsky.video.getUploadLimits',

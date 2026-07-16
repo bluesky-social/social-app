@@ -21,7 +21,7 @@ import {
   snoozeBirthdateUpdateAllowedForDid,
 } from '#/state/birthdate'
 import {fetchActorDeclarationRecord} from '#/state/queries/messages/actor-declaration'
-import {useAgent, useSession} from '#/state/session'
+import {type SessionAgent, useAgent, useSession} from '#/state/session'
 import {DEVICE_SIGNALS_SUPPORTED} from '#/ageAssurance/const'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
@@ -63,7 +63,7 @@ const [, cacheHydrationPromise] = persistQueryClient({
   persister,
 })
 
-export function getDidFromAgentSession(agent: AtpAgent) {
+export function getDidFromAgentSession(agent: SessionAgent) {
   const sessionManager = agent.sessionManager
   if (!sessionManager || !sessionManager.did) return
   return sessionManager.did
@@ -187,7 +187,7 @@ export function useConfigQuery() {
 export function createServerStateQueryKey({did}: {did: string}) {
   return ['serverState', did]
 }
-export async function getServerState({agent}: {agent: AtpAgent}) {
+export async function getServerState({agent}: {agent: SessionAgent}) {
   if (debug.enabled && debug.serverState)
     return debug.resolve(debug.serverState)
   const geolocation = device.get(['mergedGeolocation'])
@@ -218,7 +218,7 @@ export function getServerStateFromCache({
     createServerStateQueryKey({did}),
   )
 }
-export async function prefetchServerState({agent}: {agent: AtpAgent}) {
+export async function prefetchServerState({agent}: {agent: SessionAgent}) {
   const did = getDidFromAgentSession(agent)
 
   if (!did) return
@@ -245,7 +245,7 @@ export async function prefetchServerState({agent}: {agent: AtpAgent}) {
     })
   }
 }
-export async function refetchServerState({agent}: {agent: AtpAgent}) {
+export async function refetchServerState({agent}: {agent: SessionAgent}) {
   const did = getDidFromAgentSession(agent)
   if (!did) return
   logger.debug(`refetchServerState: fetching...`)
@@ -344,7 +344,7 @@ export function createOtherRequiredDataQueryKey({did}: {did: string}) {
 async function getOtherRequiredData({
   agent,
 }: {
-  agent: AtpAgent
+  agent: SessionAgent
 }): Promise<OtherRequiredData> {
   if (debug.enabled) return debug.resolve(debug.otherRequiredData)
   const did = getDidFromAgentSession(agent)
@@ -426,7 +426,11 @@ export function setOtherRequiredDataActorDeclarationCache({
     next,
   )
 }
-export async function prefetchOtherRequiredData({agent}: {agent: AtpAgent}) {
+export async function prefetchOtherRequiredData({
+  agent,
+}: {
+  agent: SessionAgent
+}) {
   const did = getDidFromAgentSession(agent)
 
   if (!did) return
@@ -577,7 +581,7 @@ export function setDeviceSignalsForRegion({
     prev => ({...prev, [regionKey]: signals}),
   )
 }
-export async function prefetchDeviceSignals({agent}: {agent: AtpAgent}) {
+export async function prefetchDeviceSignals({agent}: {agent: SessionAgent}) {
   const did = getDidFromAgentSession(agent)
   if (!did) return
 
@@ -659,7 +663,7 @@ export function useDeviceSignalsQuery() {
 /**
  * Helper to prefetch all age assurance data from the server.
  */
-export function prefetchAgeAssuranceServerData({agent}: {agent: AtpAgent}) {
+export function prefetchAgeAssuranceServerData({agent}: {agent: SessionAgent}) {
   return Promise.allSettled([
     // config fetch initiated at the top of the App.platform.tsx files, awaited here
     configPrefetchPromise,

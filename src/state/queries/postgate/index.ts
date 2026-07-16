@@ -4,7 +4,6 @@ import {
   AppBskyEmbedRecordWithMedia,
   type AppBskyFeedDefs,
   AppBskyFeedPostgate,
-  type AtpAgent,
   AtUri,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
@@ -20,14 +19,14 @@ import {
   mergePostgateRecords,
   POSTGATE_COLLECTION,
 } from '#/state/queries/postgate/util'
-import {useAgent} from '#/state/session'
+import {type SessionAgent, useAgent} from '#/state/session'
 import * as bsky from '#/types/bsky'
 
 export async function getPostgateRecord({
   agent,
   postUri,
 }: {
-  agent: AtpAgent
+  agent: SessionAgent
   postUri: string
 }): Promise<AppBskyFeedPostgate.Record | undefined> {
   const urip = new AtUri(postUri)
@@ -89,7 +88,7 @@ export async function writePostgateRecord({
   postUri,
   postgate,
 }: {
-  agent: AtpAgent
+  agent: SessionAgent
   postUri: string
   postgate: AppBskyFeedPostgate.Record
 }) {
@@ -110,7 +109,7 @@ export async function upsertPostgate(
     agent,
     postUri,
   }: {
-    agent: AtpAgent
+    agent: SessionAgent
     postUri: string
   },
   callback: (

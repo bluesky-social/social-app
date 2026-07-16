@@ -1,8 +1,4 @@
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedGetTimeline,
-  type AtpAgent,
-} from '@atproto/api'
+import {type AppBskyFeedDefs, type AppBskyFeedGetTimeline} from '@atproto/api'
 import shuffle from 'lodash.shuffle'
 
 import {bundleAsync} from '#/lib/async/bundle'
@@ -10,6 +6,7 @@ import {timeout} from '#/lib/async/timeout'
 import {feedUriToHref} from '#/lib/strings/url-helpers'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {type FeedParams} from '#/state/queries/post-feed'
+import {type SessionAgent} from '#/state/session'
 import {FeedTuner} from '../feed-manip'
 import {type FeedTunerFn} from '../feed-manip'
 import {
@@ -24,7 +21,7 @@ const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
 
 export class MergeFeedAPI implements FeedAPI {
   userInterests?: string
-  agent: AtpAgent
+  agent: SessionAgent
   params: FeedParams
   feedTuners: FeedTunerFn[]
   following: MergeFeedSource_Following
@@ -39,7 +36,7 @@ export class MergeFeedAPI implements FeedAPI {
     feedTuners,
     userInterests,
   }: {
-    agent: AtpAgent
+    agent: SessionAgent
     feedParams: FeedParams
     feedTuners: FeedTunerFn[]
     userInterests?: string
@@ -175,7 +172,7 @@ export class MergeFeedAPI implements FeedAPI {
 }
 
 class MergeFeedSource {
-  agent: AtpAgent
+  agent: SessionAgent
   feedTuners: FeedTunerFn[]
   sourceInfo: ReasonFeedSource | undefined
   cursor: string | undefined = undefined
@@ -186,7 +183,7 @@ class MergeFeedSource {
     agent,
     feedTuners,
   }: {
-    agent: AtpAgent
+    agent: SessionAgent
     feedTuners: FeedTunerFn[]
   }) {
     this.agent = agent
@@ -253,7 +250,7 @@ class MergeFeedSource_Following extends MergeFeedSource {
 }
 
 class MergeFeedSource_Custom extends MergeFeedSource {
-  agent: AtpAgent
+  agent: SessionAgent
   minDate: Date
   feedUri: string
   userInterests?: string
@@ -264,7 +261,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     feedTuners,
     userInterests,
   }: {
-    agent: AtpAgent
+    agent: SessionAgent
     feedUri: string
     feedTuners: FeedTunerFn[]
     userInterests?: string

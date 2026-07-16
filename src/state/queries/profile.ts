@@ -5,7 +5,6 @@ import {
   type AppBskyActorGetProfiles,
   type AppBskyActorProfile,
   type AppBskyGraphGetFollows,
-  type AtpAgent,
   AtUri,
   type ComAtprotoRepoUploadBlob,
   type Un$Typed,
@@ -33,7 +32,7 @@ import {
   useUnstableProfileViewCache,
 } from '#/state/queries/unstable-profile-cache'
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
-import {useAgent, useSession} from '#/state/session'
+import {type SessionAgent, useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {useAnalytics} from '#/analytics'
 import {type Metrics, toClout} from '#/analytics/metrics'
@@ -598,7 +597,7 @@ function useProfileUnblockMutation() {
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  agent: SessionAgent,
   actor: string,
   fn: (res: AppBskyActorGetProfile.Response) => boolean,
 ) {

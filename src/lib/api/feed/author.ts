@@ -1,20 +1,20 @@
 import {
   AppBskyFeedDefs,
   type AppBskyFeedGetAuthorFeed as GetAuthorFeed,
-  type AtpAgent,
 } from '@atproto/api'
 
+import {type SessionAgent} from '#/state/session'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class AuthorFeedAPI implements FeedAPI {
-  agent: AtpAgent
+  agent: SessionAgent
   _params: GetAuthorFeed.QueryParams
 
   constructor({
     agent,
     feedParams,
   }: {
-    agent: AtpAgent
+    agent: SessionAgent
     feedParams: GetAuthorFeed.QueryParams
   }) {
     this.agent = agent

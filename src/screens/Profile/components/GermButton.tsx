@@ -1,10 +1,6 @@
 import {Platform, View} from 'react-native'
 import {Image} from 'expo-image'
-import {
-  type AppBskyActorDefs,
-  type AppBskyActorGetProfile,
-  type AtpAgent,
-} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyActorGetProfile} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -13,7 +9,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {until} from '#/lib/async/until'
 import {isNetworkError} from '#/lib/strings/errors'
 import {RQKEY} from '#/state/queries/profile'
-import {useAgent, useSession} from '#/state/session'
+import {type SessionAgent, useAgent, useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -323,7 +319,7 @@ function platform() {
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  agent: SessionAgent,
   actor: string,
   fn: (res: AppBskyActorGetProfile.Response) => boolean,
 ) {

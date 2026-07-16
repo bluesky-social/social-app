@@ -1,4 +1,3 @@
-import type AtpAgent from '@atproto/api'
 import {
   type AppBskyActorDefs,
   type ChatBskyActorDeclaration,
@@ -6,6 +5,7 @@ import {
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
+import {type SessionAgent} from '#/state/session'
 import {useAgent, useSession} from '#/state/session'
 import {resolveAllowGroupInvites} from '#/components/dms/util'
 import {RQKEY as PROFILE_RKEY} from '../profile'
@@ -120,7 +120,7 @@ export async function fetchActorDeclarationRecord({
   agent,
   did,
 }: {
-  agent: AtpAgent
+  agent: SessionAgent
   did?: string
 }) {
   if (!did) return

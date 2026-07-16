@@ -1,7 +1,6 @@
 import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
-  type AtpAgent,
   type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
@@ -28,6 +27,7 @@ import {
 import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
 import {type ChatInvitePreview} from '#/state/queries/join-links'
+import {type SessionAgent} from '#/state/session'
 import {type Gif} from '#/features/gifPicker/types'
 import {createGIFDescription} from '../gif-alt-text'
 
@@ -95,7 +95,7 @@ export class EmbeddingDisabledError extends Error {
 }
 
 export async function resolveLink(
-  agent: AtpAgent,
+  agent: SessionAgent,
   uri: string,
 ): Promise<ResolvedLink> {
   if (isShortLink(uri)) {
@@ -217,7 +217,7 @@ export async function resolveLink(
 }
 
 export async function resolveGif(
-  agent: AtpAgent,
+  agent: SessionAgent,
   gif: Gif,
 ): Promise<ResolvedExternalLink> {
   const gifUrl = gif.media_formats.gif.url
@@ -259,7 +259,7 @@ function getFileSlug(url: string | undefined): string | undefined {
 }
 
 async function resolveExternal(
-  agent: AtpAgent,
+  agent: SessionAgent,
   uri: string,
 ): Promise<ResolvedExternalLink> {
   const result = await getLinkMeta(agent, uri)

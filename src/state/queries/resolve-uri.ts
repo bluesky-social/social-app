@@ -1,15 +1,15 @@
-import {type AtpAgent, AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/api'
 import {type QueryClient, queryOptions, useQuery} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import {type SessionAgent, useAgent} from '#/state/session'
 import {useUnstableProfileViewCache} from './profile'
 
 const RQKEY_ROOT = 'resolved-did'
 export const RQKEY = (didOrHandle: string) => [RQKEY_ROOT, didOrHandle]
 
 const resolvedDidQueryOptions = (
-  agent: AtpAgent,
+  agent: SessionAgent,
   getUnstableProfile: (did: string) => {did: string} | undefined,
   didOrHandle: string | undefined,
 ) =>

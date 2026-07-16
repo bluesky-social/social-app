@@ -1,7 +1,6 @@
 import {
   type $Typed,
   type AppBskyEmbedRecord,
-  type AtpAgent,
   type ChatBskyActorDefs,
   ChatBskyConvoDefs,
   type ChatBskyConvoGetLog,
@@ -46,6 +45,7 @@ import {
 } from '#/state/messages/convo/types'
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type MessagesEventBusError} from '#/state/messages/events/types'
+import {type SessionAgent} from '#/state/session'
 import {
   type ConvoWithDetails,
   type GroupConvoMember,
@@ -105,7 +105,7 @@ function toDeletedMessageView(
 export class Convo {
   private id: string
 
-  private agent: AtpAgent
+  private agent: SessionAgent
   private events: MessagesEventBus
   private senderUserDid: string
 

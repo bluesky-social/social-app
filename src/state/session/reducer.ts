@@ -1,23 +1,25 @@
-import {type AtpAgent, type AtpSessionEvent} from '@atproto/api'
+import {type AtpSessionEvent} from '@atproto/api'
 
 import {unregisterPushToken} from '#/lib/notifications/notifications'
 import {logger} from '#/lib/notifications/util'
-import {createPublicAgent} from './agent'
 import {wrapSessionReducerForLogging} from './logging'
+import {createPublicSessionBundle} from './session-core'
 import {type SessionAccount} from './types'
 import {createTemporaryAgentsAndResume} from './util'
 
-// A hack so that the reducer can't read anything from the agent.
-// From the reducer's point of view, it should be a completely opaque object.
-type OpaqueBskyAgent = {
+/*
+ * A hack so that the reducer can't read anything from the session bundle. From
+ * the reducer's point of view it is a completely opaque object; the only field
+ * it ever reads is `service` (a URL), used for logging/snapshots. The provider
+ * stores the full `SessionBundle` here, but the reducer's static type only sees
+ * `service` (structural: the bundle has more, the reducer sees less).
+ */
+type OpaqueSessionBundle = {
   readonly service: URL
-  readonly api: unknown
-  readonly app: unknown
-  readonly com: unknown
 }
 
 type AgentState = {
-  readonly agent: OpaqueBskyAgent
+  readonly agent: OpaqueSessionBundle
   readonly did: string | undefined
 }
 
@@ -30,14 +32,26 @@ export type State = {
 export type Action =
   | {
       type: 'received-agent-event'
-      agent: OpaqueBskyAgent
+      agent: OpaqueSessionBundle
       accountDid: string
       refreshedAccount: SessionAccount | undefined
       sessionEvent: AtpSessionEvent
     }
   | {
       type: 'switched-to-account'
-      newAgent: OpaqueBskyAgent
+      newAgent: OpaqueSessionBundle
+      newAccount: SessionAccount
+    }
+  | {
+      /*
+       * Same-did cross-tab sync. `PasswordSession` cannot be patched in place,
+       * so the provider builds a fresh bundle from the synced tokens (no
+       * network - the leader tab already refreshed) and swaps it in, keeping
+       * the current did and replacing the matching account entry. Does not
+       * persist (synced from another tab, avoid write cycles).
+       */
+      type: 'replaced-current-bundle'
+      newAgent: OpaqueSessionBundle
       newAccount: SessionAccount
     }
   | {
@@ -63,7 +77,7 @@ export type Action =
 
 function createPublicAgentState(): AgentState {
   return {
-    agent: createPublicAgent(),
+    agent: createPublicSessionBundle(),
     did: undefined,
   }
 }
@@ -136,6 +150,20 @@ let reducer = (state: State, action: Action): State => {
           agent: newAgent,
         },
         needsPersist: true,
+      }
+    }
+    case 'replaced-current-bundle': {
+      const {newAgent, newAccount} = action
+      return {
+        ...state,
+        currentAgentState: {
+          did: state.currentAgentState.did,
+          agent: newAgent,
+        },
+        accounts: state.accounts.map(a =>
+          a.did === newAccount.did ? newAccount : a,
+        ),
+        needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
       }
     }
     case 'removed-account': {
@@ -233,24 +261,17 @@ let reducer = (state: State, action: Action): State => {
     }
     case 'partial-refresh-session': {
       const {accountDid, patch} = action
-      const agent = state.currentAgentState.agent as AtpAgent
 
       /*
-       * Only mutating values that are safe. Be very careful with this.
+       * Previously this also mutated `agent.session.emailConfirmed/
+       * emailAuthFactor` in place. `PasswordSession` has no public session
+       * setter and mutating its returned object is fragile, so we now patch
+       * only the account entry. Consumers that read these fields
+       * (useAccountEmailState) read from `currentAccount` instead of
+       * `agent.session` (see phase-2 design doc section 5).
        */
-      if (agent.session) {
-        agent.session.emailConfirmed =
-          patch.emailConfirmed ?? agent.session.emailConfirmed
-        agent.session.emailAuthFactor =
-          patch.emailAuthFactor ?? agent.session.emailAuthFactor
-      }
-
       return {
         ...state,
-        currentAgentState: {
-          ...state.currentAgentState,
-          agent,
-        },
         accounts: state.accounts.map(a => {
           if (a.did === accountDid) {
             return {

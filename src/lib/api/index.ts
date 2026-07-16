@@ -7,7 +7,6 @@ import {
   type AppBskyEmbedRecordWithMedia,
   type AppBskyEmbedVideo,
   AppBskyFeedPost,
-  type AtpAgent,
   BlobRef,
   ChatBskyGroupDefs,
   type ComAtprotoLabelDefs,
@@ -35,6 +34,7 @@ import {
   createThreadgateRecord,
   threadgateAllowUISettingToAllowRecordValue,
 } from '#/state/queries/threadgate'
+import {type SessionAgent} from '#/state/session'
 import {
   type EmbedDraft,
   type PostDraft,
@@ -54,7 +54,7 @@ interface PostOpts {
 }
 
 export async function post(
-  agent: AtpAgent,
+  agent: SessionAgent,
   queryClient: QueryClient,
   opts: PostOpts,
 ) {
@@ -196,7 +196,7 @@ export async function post(
   return {uris}
 }
 
-async function resolveRT(agent: AtpAgent, richtext: RichText) {
+async function resolveRT(agent: SessionAgent, richtext: RichText) {
   const trimmedText = richtext.text
     // Trim leading whitespace-only lines (but don't break ASCII art).
     .replace(/^(\s*\n)+/, '')
@@ -216,7 +216,7 @@ export class ReplyDeletedError extends Error {
   }
 }
 
-async function resolveReply(agent: AtpAgent, replyTo: string) {
+async function resolveReply(agent: SessionAgent, replyTo: string) {
   const {data} = await agent.app.bsky.feed.getPosts({
     uris: [replyTo],
   })
@@ -249,7 +249,7 @@ async function resolveReply(agent: AtpAgent, replyTo: string) {
 }
 
 async function resolveEmbed(
-  agent: AtpAgent,
+  agent: SessionAgent,
   queryClient: QueryClient,
   draft: PostDraft,
   onStateChange: ((state: string) => void) | undefined,
@@ -308,7 +308,7 @@ async function resolveEmbed(
 }
 
 async function resolveMedia(
-  agent: AtpAgent,
+  agent: SessionAgent,
   queryClient: QueryClient,
   embedDraft: EmbedDraft,
   onStateChange: ((state: string) => void) | undefined,
@@ -481,7 +481,7 @@ async function resolveMedia(
 }
 
 async function resolveRecord(
-  agent: AtpAgent,
+  agent: SessionAgent,
   queryClient: QueryClient,
   uri: string,
 ): Promise<ComAtprotoRepoStrongRef.Main> {

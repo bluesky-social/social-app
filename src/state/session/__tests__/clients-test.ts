@@ -3,6 +3,30 @@ import {Client} from '@atproto/lex-client'
 import {describe, expect, it, jest} from '@jest/globals'
 
 import {app} from '#/lexicons'
+
+/*
+ * clients.ts now imports session-core (for networkAwareFetch), which pulls the
+ * factory dependency graph. Mock the heavy leaves so this test does not load
+ * the native module chain (same approach as session-test.ts).
+ */
+jest.mock('#/state/events', () => ({
+  emitNetworkConfirmed: jest.fn(),
+  emitNetworkLost: jest.fn(),
+}))
+jest.mock('#/state/birthdate')
+jest.mock('#/ageAssurance/data')
+jest.mock('#/ageAssurance/state', () => ({
+  unsafeGetAndComputeAgeAssurance: () => ({state: {}, flags: {}}),
+}))
+jest.mock('#/state/queries/messages/restrictChatSettings', () => ({
+  restrictChatSettings: () => Promise.resolve(),
+}))
+jest.mock('jwt-decode', () => ({
+  jwtDecode() {
+    return {scope: 'com.atproto.access'}
+  },
+}))
+
 import {agentToLexClient} from '../clients'
 
 /**

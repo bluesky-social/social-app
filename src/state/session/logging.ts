@@ -1,4 +1,5 @@
-import {type AtpSessionData, type AtpSessionEvent} from '@atproto/api'
+import {type AtpSessionEvent} from '@atproto/api'
+import {type SessionData} from '@atproto/lex-password-session'
 
 import {type Schema} from '../persisted'
 import {type Action, type State} from './reducer'
@@ -53,8 +54,8 @@ type Log =
   | {
       type: 'agent:patch'
       agent: object
-      prevSession: AtpSessionData | undefined
-      nextSession: AtpSessionData | undefined
+      prevSession: SessionData | undefined
+      nextSession: SessionData | undefined
     }
 
 export function wrapSessionReducerForLogging(reducer: Reducer): Reducer {
