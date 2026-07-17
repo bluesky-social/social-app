@@ -19,6 +19,10 @@ export class AuthorFeedAPI implements FeedAPI {
     this._params = feedParams
   }
 
+  setClient(client: Client) {
+    this.client = client
+  }
+
   get params() {
     const params = {...this._params}
     params.includePins = params.filter === 'posts_and_author_threads'

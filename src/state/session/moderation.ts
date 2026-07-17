@@ -24,6 +24,27 @@ function configureGlobalAppLabelers(dids: string[]) {
   Client.configure({appLabelers: dids as `did:${string}:${string}`[]})
 }
 
+/**
+ * Apply an account's subscribed labeler DIDs to a live appview client. The lex
+ * `Client` rebuilds the `atproto-accept-labelers` header per request, so this
+ * takes effect on the very next request without a client rebuild.
+ *
+ * The Bluesky moderation labeler is always re-asserted as the base: sending ANY
+ * `atproto-accept-labelers` header replaces the server-side default, and
+ * `setLabelers` clears then re-adds, so the moderation DID must be included
+ * explicitly to stay active.
+ */
+export function applyLabelersToClient(
+  client: Client,
+  subscribedDids: string[],
+) {
+  const perAccount = subscribedDids.filter(did => did !== api.moderation.did)
+  client.setLabelers([
+    api.moderation.did,
+    ...perAccount,
+  ] as `did:${string}:${string}`[])
+}
+
 export function configureModerationForGuest() {
   // This global mutation is *only* OK because this code is only relevant for testing.
   // Don't add any other global behavior here!
@@ -51,18 +72,8 @@ export async function configureModerationForAccount(
   // The code below is actually relevant to production (and isn't global).
   const labelerDids = await readLabelers(account.did).catch(_ => {})
   if (labelerDids) {
-    const perAccount = labelerDids.filter(did => did !== api.moderation.did)
-    /*
-     * Apply the per-account labelers to the appview client. It re-asserts the
-     * Bluesky moderation labeler as its base because sending ANY
-     * `atproto-accept-labelers` header replaces the server-side default -
-     * `setLabelers` clears then re-adds, so the moderation DID must be included
-     * explicitly to stay active.
-     */
-    bundle.appviewClient.setLabelers([
-      api.moderation.did,
-      ...perAccount,
-    ] as `did:${string}:${string}`[])
+    // Apply the per-account labelers to the appview client.
+    applyLabelersToClient(bundle.appviewClient, labelerDids)
   } else {
     // If there are no headers in the storage, we'll not send them on the initial requests.
     // If we wanted to fix this, we could block on the preferences query here.

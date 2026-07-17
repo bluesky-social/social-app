@@ -178,18 +178,28 @@ function Inner() {
   const {_} = useLingui()
   const {hasSession} = useSession()
   const appviewClient = useAppviewClient()
-  const polling = useRef(false)
-  const unmounted = useRef(false)
+  /*
+   * The poll effect is mount-only so a session-bundle rebuild (web cross-tab
+   * token sync, which swaps the appview client identity) does not restart the
+   * flow or permanently latch it. Read the volatile values through refs kept
+   * fresh each render so the next retry attempt picks up the current client.
+   */
+  const clientRef = useRef(appviewClient)
+  clientRef.current = appviewClient
+  const hasSessionRef = useRef(hasSession)
+  hasSessionRef.current = hasSession
+  const openMetricFired = useRef(false)
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(false)
   const {close} = useRedirectOverlayContext()
 
   useEffect(() => {
-    if (polling.current) return
+    let cancelled = false
 
-    polling.current = true
-
-    ax.metric('ageAssurance:redirectDialogOpen', {})
+    if (!openMetricFired.current) {
+      openMetricFired.current = true
+      ax.metric('ageAssurance:redirectDialogOpen', {})
+    }
 
     wait(
       3e3,
@@ -197,10 +207,12 @@ function Inner() {
         5,
         () => true,
         async () => {
-          if (!hasSession) return
-          if (unmounted.current) return
+          if (!hasSessionRef.current) return
+          if (cancelled) return
 
-          const data = await refetchAgeAssuranceServerState({appviewClient})
+          const data = await refetchAgeAssuranceServerState({
+            appviewClient: clientRef.current,
+          })
 
           if (data?.state.status !== 'assured') {
             throw new Error(
@@ -215,23 +227,24 @@ function Inner() {
     )
       .then(async data => {
         if (!data) return
-        if (!hasSession) return
-        if (unmounted.current) return
+        if (!hasSessionRef.current) return
+        if (cancelled) return
 
         setSuccess(true)
 
         ax.metric('ageAssurance:redirectDialogSuccess', {})
       })
       .catch(() => {
-        if (unmounted.current) return
+        if (cancelled) return
         setError(true)
         ax.metric('ageAssurance:redirectDialogFail', {})
       })
 
     return () => {
-      unmounted.current = true
+      cancelled = true
     }
-  }, [ax, hasSession, appviewClient])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   if (success) {
     return (

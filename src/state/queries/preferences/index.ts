@@ -38,8 +38,9 @@ import {
   type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types'
 import {createQueryKey} from '#/state/queries/util'
-import {usePdsClient} from '#/state/session'
+import {useAppviewClient, usePdsClient} from '#/state/session'
 import {saveLabelers} from '#/state/session/agent-config'
+import {applyLabelersToClient} from '#/state/session/moderation'
 import {useAgeAssurance} from '#/ageAssurance'
 import {makeAgeRestrictedModerationPrefs} from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
@@ -57,6 +58,7 @@ export const preferencesQueryKey = createQueryKey(
 
 export function usePreferencesQuery() {
   const client = usePdsClient()
+  const appviewClient = useAppviewClient()
   const aa = useAgeAssurance()
 
   const query = useQuery({
@@ -71,11 +73,19 @@ export function usePreferencesQuery() {
       } else {
         const res = await client.call(getPreferences)
 
+        const labelerDids = res.moderationPrefs.labelers.map(l => l.did)
+
         // save to local storage to ensure there are labels on initial requests
-        void saveLabelers(
-          client.did,
-          res.moderationPrefs.labelers.map(l => l.did),
-        )
+        void saveLabelers(client.did, labelerDids)
+
+        /*
+         * Sync the subscribed labelers to the live appview client, mirroring the
+         * old `BskyAgent.getPreferences` side effect (which called
+         * `configureLabelersHeader`). Without this, subscribing/unsubscribing to
+         * a labeler would not affect server-attached labels until the session
+         * bundle is rebuilt.
+         */
+        applyLabelersToClient(appviewClient, labelerDids)
 
         const preferences: UsePreferencesQueryResponse = {
           ...res,

@@ -42,6 +42,17 @@ export class MessagesEventBus {
     this.init()
   }
 
+  /**
+   * Swap in a fresh chat client. On web, a cross-tab token sync rebuilds the
+   * session bundle (new client identities, same DID) and disposes the old one,
+   * whose fetch then throws. Every request reads `this.chatClient` per call, so
+   * reassigning the field is enough to keep polling alive without tearing down
+   * the bus and its in-memory poll cursor.
+   */
+  updateClient(client: Client) {
+    this.chatClient = client
+  }
+
   requestPollInterval(interval: number) {
     const id = nanoid()
     this.requestedPollIntervals.set(id, interval)
