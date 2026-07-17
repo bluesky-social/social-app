@@ -1,13 +1,14 @@
 import {useMutation} from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import {usePdsClient} from '#/state/session'
+import {com} from '#/lexicons'
 
 export function useRequestEmailUpdate() {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
 
   return useMutation({
     mutationFn: async () => {
-      return (await agent.com.atproto.server.requestEmailUpdate()).data
+      return await pdsClient.call(com.atproto.server.requestEmailUpdate)
     },
   })
 }

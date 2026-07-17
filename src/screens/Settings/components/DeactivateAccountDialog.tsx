@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
-import {useAgent, useSessionApi} from '#/state/session'
+import {usePdsClient, useSessionApi} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogOuterProps} from '#/components/Dialog'
@@ -14,6 +14,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {com} from '#/lexicons'
 
 export function DeactivateAccountDialog({
   control,
@@ -34,7 +35,7 @@ function DeactivateAccountDialogInner({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const {logoutCurrentAccount} = useSessionApi()
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | undefined>()
@@ -42,7 +43,7 @@ function DeactivateAccountDialogInner({
   const handleDeactivate = useCallback(async () => {
     try {
       setPending(true)
-      await agent.com.atproto.server.deactivateAccount({})
+      await pdsClient.call(com.atproto.server.deactivateAccount, {})
       control.close(() => {
         logoutCurrentAccount('Deactivated')
       })
@@ -66,7 +67,7 @@ function DeactivateAccountDialogInner({
     } finally {
       setPending(false)
     }
-  }, [agent, control, logoutCurrentAccount, _, setPending])
+  }, [pdsClient, control, logoutCurrentAccount, _, setPending])
 
   return (
     <>

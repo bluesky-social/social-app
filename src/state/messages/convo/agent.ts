@@ -595,42 +595,25 @@ export class Convo {
     this.convo = parseConvoView(convo, this.senderUserDid) ?? this.convo
     if (this.convo) {
       for (const member of this.convo.members) {
-        // `this.convo` comes from `parseConvoView` in the still-old-typed
-        // `#/components/dms/util` (migrates in a later task); bridge its member
-        // shape to the lexicon `ProfileViewBasic` we store. TODO(phase4): drop
-        // toLex once dms/util migrates.
-        this.relatedProfiles.set(
-          member.did,
-          bsky.toLex<chat.bsky.actor.defs.ProfileViewBasic>(member),
-        )
+        this.relatedProfiles.set(member.did, member)
       }
     }
     this.applyProfileShadows()
   }
 
   /*
-   * The partial merges into `this.convo.view` and is re-parsed by the
-   * still-old-typed `parseConvoView` (`#/components/dms/util`, migrates in a
-   * later task), and its callers build it from old-typed `this.convo.details` /
-   * members. So this boundary stays in the old view world - typing the param
-   * off `ConvoWithDetails['view']` keeps it internally consistent without a
-   * per-call `toLex`. TODO(phase4): flip to `chat.bsky.convo.defs.ConvoView`
-   * once dms/util migrates.
+   * The partial merges into `this.convo.view` and is re-parsed by
+   * `parseConvoView`, and its callers build it from `this.convo.details` /
+   * members. The stored view is the lexicon `ConvoView`, so the partial is
+   * typed off it directly.
    */
-  private updateConvo(convo: Partial<ConvoWithDetails['view']>) {
+  private updateConvo(convo: Partial<chat.bsky.convo.defs.ConvoView>) {
     if (this.convo) {
       this.convo =
         parseConvoView({...this.convo.view, ...convo}, this.senderUserDid) ??
         this.convo
       for (const member of this.convo.members) {
-        // `this.convo` comes from `parseConvoView` in the still-old-typed
-        // `#/components/dms/util` (migrates in a later task); bridge its member
-        // shape to the lexicon `ProfileViewBasic` we store. TODO(phase4): drop
-        // toLex once dms/util migrates.
-        this.relatedProfiles.set(
-          member.did,
-          bsky.toLex<chat.bsky.actor.defs.ProfileViewBasic>(member),
-        )
+        this.relatedProfiles.set(member.did, member)
       }
       this.applyProfileShadows()
     }

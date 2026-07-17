@@ -9,7 +9,7 @@ import {clamp} from '#/lib/numbers'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {getErrorName} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {OnboardingPosition} from '#/screens/Onboarding/Layout'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -22,6 +22,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import {OTPInput} from '../components/OTPInput'
 import {constructFullPhoneNumber, prettyPhoneNumber} from '../phone-number'
 import {type Action, type State, useOnPressBackButton} from '../state'
@@ -40,7 +41,7 @@ export function VerifyNumber({
   const t = useTheme()
   const {_} = useLingui()
   const ax = useAnalytics()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const gutters = useGutters([0, 'wide'])
 
   const [otpCode, setOtpCode] = useState('')
@@ -69,8 +70,11 @@ export function VerifyNumber({
     isSuccess,
   } = useMutation({
     mutationFn: async (code: string) => {
-      const res = await agent.app.bsky.contact.verifyPhone({code, phone})
-      return res.data.token
+      const res = await appviewClient.call(app.bsky.contact.verifyPhone, {
+        code,
+        phone,
+      })
+      return res.token
     },
     onSuccess: async token => {
       // let the success state show for a moment
@@ -131,7 +135,9 @@ export function VerifyNumber({
 
   const {mutate: resendCode, isPending: isResendingCode} = useMutation({
     mutationFn: async () => {
-      await agent.app.bsky.contact.startPhoneVerification({phone: phone})
+      await appviewClient.call(app.bsky.contact.startPhoneVerification, {
+        phone: phone,
+      })
     },
     onSuccess: () => {
       dispatch({type: 'RESEND_VERIFICATION_CODE'})

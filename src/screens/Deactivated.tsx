@@ -10,7 +10,7 @@ import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {logger} from '#/logger'
 import {
   type SessionAccount,
-  useAgent,
+  usePdsClient,
   useSession,
   useSessionApi,
 } from '#/state/session'
@@ -25,6 +25,7 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {com} from '#/lexicons'
 
 const COL_WIDTH = 400
 
@@ -36,8 +37,8 @@ export function Deactivated() {
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const hasOtherAccounts = accounts.length > 1
-  const {logoutCurrentAccount} = useSessionApi()
-  const agent = useAgent()
+  const {logoutCurrentAccount, refreshSession} = useSessionApi()
+  const pdsClient = usePdsClient()
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | undefined>()
   const queryClient = useQueryClient()
@@ -70,9 +71,9 @@ export function Deactivated() {
   const handleActivate = useCallback(async () => {
     try {
       setPending(true)
-      await agent.com.atproto.server.activateAccount()
+      await pdsClient.call(com.atproto.server.activateAccount)
       await queryClient.resetQueries()
-      await agent.resumeSession(agent.session!)
+      await refreshSession()
     } catch (e: any) {
       switch (e.message) {
         case 'Bad token scope':
@@ -93,7 +94,7 @@ export function Deactivated() {
     } finally {
       setPending(false)
     }
-  }, [_, agent, setPending, setError, queryClient])
+  }, [_, pdsClient, refreshSession, setPending, setError, queryClient])
 
   return (
     <View style={[a.util_screen_outer, a.flex_1]}>

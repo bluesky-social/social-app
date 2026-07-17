@@ -4,7 +4,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {useAgent, useSession} from '#/state/session'
+import {usePdsClient, useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -16,6 +16,7 @@ import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {com} from '#/lexicons'
 
 export function VerifyEmailIntentDialog() {
   const {verifyEmailDialogControl: control} = useIntentDialogs()
@@ -37,7 +38,7 @@ function Inner({}: {control: DialogControlProps}) {
     'loading' | 'success' | 'failure' | 'resent'
   >('loading')
   const [sending, setSending] = useState(false)
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const {currentAccount} = useSession()
   const {mutate: confirmEmail} = useConfirmEmail({
     onSuccess: () => setStatus('success'),
@@ -52,7 +53,7 @@ function Inner({}: {control: DialogControlProps}) {
 
   const onPressResendEmail = async () => {
     setSending(true)
-    await agent.com.atproto.server.requestEmailConfirmation()
+    await pdsClient.call(com.atproto.server.requestEmailConfirmation)
     setSending(false)
     setStatus('resent')
   }

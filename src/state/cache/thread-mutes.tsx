@@ -5,9 +5,11 @@ import {
   useEffect,
   useState,
 } from 'react'
+import {type AtUriString} from '@atproto/syntax'
 
 import * as persisted from '#/state/persisted'
-import {useAgent, useSession} from '../session'
+import {app} from '#/lexicons'
+import {usePdsClient, useSession} from '../session'
 
 type StateContext = Map<string, boolean>
 type SetStateContext = (uri: string, value: boolean) => void
@@ -56,7 +58,7 @@ export function useSetThreadMute() {
 }
 
 function useMigrateMutes(setThreadMute: SetStateContext) {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const {currentAccount} = useSession()
 
   useEffect(() => {
@@ -87,8 +89,8 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
 
           setThreadMute(root, true)
 
-          await agent.api.app.bsky.graph
-            .muteThread({root})
+          await pdsClient
+            .call(app.bsky.graph.muteThread, {root: root as AtUriString})
             // not a big deal if this fails, since the post might have been deleted
             .catch(console.error)
         }
@@ -100,5 +102,5 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
         cancelled = true
       }
     }
-  }, [agent, currentAccount, setThreadMute])
+  }, [pdsClient, currentAccount, setThreadMute])
 }

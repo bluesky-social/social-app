@@ -1,5 +1,6 @@
 import {useCallback, useRef, useState} from 'react'
 import {type TextInput, View} from 'react-native'
+import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -8,8 +9,8 @@ import {useCleanError} from '#/lib/hooks/useCleanError'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {
-  useAgent,
   useChatClient,
+  usePdsClient,
   useSession,
   useSessionApi,
 } from '#/state/session'
@@ -28,7 +29,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as toast from '#/components/Toast'
 import {Span, Text} from '#/components/Typography'
-import {chat} from '#/lexicons'
+import {chat, com} from '#/lexicons'
 import {resetToTab} from '#/Navigation'
 
 const WHITESPACE_RE = /\s/gu
@@ -77,7 +78,7 @@ function DeleteAccountDialogInner({
   const t = useTheme()
   const {_} = useLingui()
   const cleanError = useCleanError()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const chatClient = useChatClient()
   const {currentAccount} = useSession()
   const {removeAccount} = useSessionApi()
@@ -95,7 +96,7 @@ function DeleteAccountDialogInner({
     }
     try {
       setEmailState(EmailState.PENDING)
-      await agent.com.atproto.server.requestAccountDelete()
+      await pdsClient.call(com.atproto.server.requestAccountDelete)
       setError('')
       setEmailSentCount(prevCount => prevCount + 1)
       setStep(Step.VERIFY_CODE)
@@ -109,7 +110,7 @@ function DeleteAccountDialogInner({
     } finally {
       setEmailState(EmailState.DEFAULT)
     }
-  }, [agent, cleanError, emailState, setEmailState])
+  }, [pdsClient, cleanError, emailState, setEmailState])
 
   const confirmDeletion = useCallback(async () => {
     try {
@@ -121,8 +122,8 @@ function DeleteAccountDialogInner({
       // Inform chat service of intent to delete account. The chat client is
       // proxied to the chat service; a failure throws.
       await chatClient.call(chat.bsky.actor.deleteAccount)
-      await agent.com.atproto.server.deleteAccount({
-        did: currentAccount.did,
+      await pdsClient.call(com.atproto.server.deleteAccount, {
+        did: currentAccount.did as DidString,
         password,
         token,
       })
@@ -144,7 +145,8 @@ function DeleteAccountDialogInner({
     }
   }, [
     _,
-    agent,
+    pdsClient,
+    chatClient,
     cleanError,
     confirmCode,
     control,

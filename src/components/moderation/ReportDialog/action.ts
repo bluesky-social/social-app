@@ -6,10 +6,14 @@ import {useMutation} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {usePdsClient} from '#/state/session'
 import {com} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 import {NEW_TO_OLD_REASONS_MAP} from './const'
 import {type ReportState} from './state'
 import {type ParsedReportSubject} from './types'
+import {
+  accountReportSubject,
+  chatReportSubject,
+  recordReportSubject,
+} from './utils/reportSubject'
 
 type CreateReportBody = com.atproto.moderation.createReport.$InputBody
 
@@ -54,25 +58,20 @@ export function useSubmitReportMutation() {
 
       /*
        * The generated `createReport` subject union only declares repoRef and
-       * strongRef with branded did/uri strings; chat subjects (message/convo
-       * refs) are accepted on the wire but not in the lexicon, and the subject
-       * ids we hold here are plain strings. We build the body against a loose
-       * subject shape and `toLex` it to the schema body at the call boundary
-       * (matching the old widened-InputSchema shape).
+       * strongRef; chat subjects (message/convo refs) are accepted on the wire
+       * but not in the lexicon. The builders in `./utils/reportSubject` brand
+       * the plain-string ids into the schema `subject` slot, keeping the
+       * runtime values exact and confining the chat-subject assertion to one
+       * place.
        */
-      let report: Omit<CreateReportBody, 'subject'> & {
-        subject: {$type: string} & Record<string, unknown>
-      }
+      let report: CreateReportBody
 
       switch (subject.type) {
         case 'account': {
           report = {
             reasonType,
             reason: state.details,
-            subject: {
-              $type: 'com.atproto.admin.defs#repoRef',
-              did: subject.did,
-            },
+            subject: accountReportSubject(subject.did),
           }
           break
         }
@@ -84,11 +83,7 @@ export function useSubmitReportMutation() {
           report = {
             reasonType,
             reason: state.details,
-            subject: {
-              $type: 'com.atproto.repo.strongRef',
-              uri: subject.uri,
-              cid: subject.cid,
-            },
+            subject: recordReportSubject(subject.uri, subject.cid),
           }
           break
         }
@@ -96,12 +91,12 @@ export function useSubmitReportMutation() {
           report = {
             reasonType,
             reason: state.details,
-            subject: {
+            subject: chatReportSubject({
               $type: 'chat.bsky.convo.defs#messageRef',
               messageId: subject.message.id,
               convoId: subject.convoId,
               did: subject.message.sender.did,
-            },
+            }),
           }
           break
         }
@@ -109,11 +104,11 @@ export function useSubmitReportMutation() {
           report = {
             reasonType,
             reason: state.details,
-            subject: {
+            subject: chatReportSubject({
               $type: 'chat.bsky.convo.defs#convoRef',
               convoId: subject.convoId,
               did: subject.did,
-            },
+            }),
           }
           break
         }
@@ -133,13 +128,9 @@ export function useSubmitReportMutation() {
          * per-call `service` option (previously an explicit header on the
          * bridge agent).
          */
-        await pdsClient.call(
-          com.atproto.moderation.createReport,
-          toLex<CreateReportBody>(report),
-          {
-            service: `${labeler.creator.did}#atproto_labeler` as Service,
-          },
-        )
+        await pdsClient.call(com.atproto.moderation.createReport, report, {
+          service: `${labeler.creator.did}#atproto_labeler` as Service,
+        })
       }
     },
   })
