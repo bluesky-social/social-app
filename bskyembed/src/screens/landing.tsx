@@ -2,6 +2,7 @@ import '../index.css'
 
 import {AtUriString, Client, type HandleString} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
+import {api} from '@bsky.app/sdk'
 import {app, com} from '@bsky.app/sdk/lexicons'
 import {h, render} from 'preact'
 import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
@@ -32,7 +33,7 @@ if (!root) throw new Error('No root element')
 
 initSystemColorMode({additionalBodyClasses: 'dark:bg-dimmedBgDarken'})
 
-const client = new Client('https://public.api.bsky.app')
+const client = new Client(api.app.urlPublic)
 
 render(<LandingPage />, root)
 

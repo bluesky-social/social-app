@@ -1,6 +1,7 @@
 import '../index.css'
 
 import {Client, isAtUriString} from '@atproto/lex'
+import {api} from '@bsky.app/sdk'
 import {app} from '@bsky.app/sdk/lexicons'
 import {h, render} from 'preact'
 
@@ -15,7 +16,7 @@ import logo from '../../assets/logo.svg'
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
 
-const client = new Client('https://public.api.bsky.app')
+const client = new Client(api.app.urlPublic)
 
 const uri = `at://${window.location.pathname.slice('/embed/'.length)}`
 if (!isAtUriString(uri)) {
