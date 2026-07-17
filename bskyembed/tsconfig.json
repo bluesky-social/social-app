@@ -20,5 +20,5 @@
       "#/*": ["./src/*"],
     }
   },
-  "include": ["src", "snippet", "vite.config.ts", "*.config.cjs", "eslint.config.mjs"]
+  "include": ["src", "snippet", "vite.config.ts", "*.config.cjs", "eslint.config.mjs", "tailwind.config.mjs", "postcss.config.mjs"]
 }
