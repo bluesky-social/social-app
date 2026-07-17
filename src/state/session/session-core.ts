@@ -534,16 +534,32 @@ export async function createSessionBundleAndResume(
 
   bundle = buildBundle(session)
   registerBundleKillSwitch(bundle, hooks.kill)
-  const account =
+  /*
+   * Early snapshot: only used to configure moderation below (its handle/did are
+   * refresh-stable). The RETURNED account is re-snapshotted after the prep
+   * awaits (see below).
+   */
+  const earlyAccount =
     sessionDataToSessionAccount(session.session, session.session.service) ??
     storedAccount
 
-  const moderation = configureModerationForAccount(bundle, account)
+  const moderation = configureModerationForAccount(bundle, earlyAccount)
   const aa = prefetchAgeAssuranceServerData({
     appviewClient: bundle.appviewClient,
     accountClient: bundle.accountClient,
   })
   await Promise.all([gates, moderation, aa])
+  /*
+   * Re-snapshot AFTER prep, right before arm(). A 401 during a prep request
+   * (e.g. the AA prefetch) triggers PasswordSession's internal auto-refresh,
+   * which rotates both tokens; its onUpdated is dropped by the still-disarmed
+   * latch. Snapshotting the returned account here (not before prep) ensures we
+   * persist the fresh refreshJwt rather than a stale one that is dead on the
+   * next cold start.
+   */
+  const account =
+    sessionDataToSessionAccount(session.session, session.session.service) ??
+    storedAccount
   hooks.arm()
   return {account, bundle}
 }
@@ -587,16 +603,28 @@ export async function createSessionBundleAndLogin(
 
   bundle = buildBundle(session)
   registerBundleKillSwitch(bundle, hooks.kill)
-  const account = sessionDataToSessionAccountOrThrow(session)
-  accountDid = account.did
+  /*
+   * Early snapshot: needed now to seed `accountDid` (the getDid closure the
+   * hooks read). The RETURNED account is re-snapshotted after the prep awaits.
+   */
+  const earlyAccount = sessionDataToSessionAccountOrThrow(session)
+  accountDid = earlyAccount.did
 
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
-  const moderation = configureModerationForAccount(bundle, account)
+  const moderation = configureModerationForAccount(bundle, earlyAccount)
   const aa = prefetchAgeAssuranceServerData({
     appviewClient: bundle.appviewClient,
     accountClient: bundle.accountClient,
   })
   await Promise.all([gates, moderation, aa])
+  /*
+   * Re-snapshot AFTER prep, right before arm(). A 401 during a prep request
+   * triggers PasswordSession's internal auto-refresh, which rotates both tokens
+   * and fires an onUpdated the disarmed latch drops; snapshotting here persists
+   * the fresh refreshJwt. If the session was destroyed mid-prep, OrThrow throws
+   * (login effectively failed).
+   */
+  const account = sessionDataToSessionAccountOrThrow(session)
   hooks.arm()
   return {account, bundle}
 }
@@ -655,11 +683,17 @@ export async function createSessionBundleAndCreateAccount(
 
   bundle = buildBundle(session)
   registerBundleKillSwitch(bundle, hooks.kill)
-  const account = sessionDataToSessionAccountOrThrow(session)
-  accountDid = account.did
+  /*
+   * Early snapshot: needed now to seed `accountDid` and for the DID/handle used
+   * across the local writes and deferred server writes below (all
+   * refresh-stable). The RETURNED account is re-snapshotted after the prep
+   * awaits.
+   */
+  const earlyAccount = sessionDataToSessionAccountOrThrow(session)
+  accountDid = earlyAccount.did
 
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
-  const moderation = configureModerationForAccount(bundle, account)
+  const moderation = configureModerationForAccount(bundle, earlyAccount)
 
   const createdAt = toDatetimeString(new Date())
   const birthdate = birthDate.toISOString()
@@ -670,9 +704,9 @@ export async function createSessionBundleAndCreateAccount(
    * to the server in the next step, so on subsequent reloads, the server will
    * be the source of truth.
    */
-  setCreatedAtForDid({did: account.did, createdAt})
-  setBirthdateForDid({did: account.did, birthdate})
-  snoozeBirthdateUpdateAllowedForDid(account.did)
+  setCreatedAtForDid({did: earlyAccount.did, createdAt})
+  setBirthdateForDid({did: earlyAccount.did, birthdate})
+  snoozeBirthdateUpdateAllowedForDid(earlyAccount.did)
   // do this last
   const aa = prefetchAgeAssuranceServerData({
     appviewClient: bundle.appviewClient,
@@ -725,7 +759,7 @@ export async function createSessionBundleAndCreateAccount(
       }),
       // wait for AA data to load first, then check state
       aa.then(() => {
-        const {flags} = unsafeGetAndComputeAgeAssurance({did: account.did})
+        const {flags} = unsafeGetAndComputeAgeAssurance({did: earlyAccount.did})
         if (flags?.chatDisabled || flags?.groupChatDisabled) {
           void restrictChatSettings({
             client: bundle.accountClient,
@@ -786,6 +820,14 @@ export async function createSessionBundleAndCreateAccount(
   }
 
   await Promise.all([gates, moderation, aa])
+  /*
+   * Re-snapshot AFTER prep, right before arm(). A 401 during a prep request
+   * triggers PasswordSession's internal auto-refresh, which rotates both tokens
+   * and fires an onUpdated the disarmed latch drops; snapshotting here persists
+   * the fresh refreshJwt rather than a stale one. If the session was destroyed
+   * mid-prep, OrThrow throws.
+   */
+  const account = sessionDataToSessionAccountOrThrow(session)
   hooks.arm()
   return {account, bundle}
 }
