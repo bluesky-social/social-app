@@ -239,6 +239,11 @@ function detectKnownError(
   if (!error) {
     return undefined
   }
+  /*
+   * Generic helper over an arbitrary feed error (any feed descriptor). Both
+   * names are declared by app.bsky.feed.getAuthorFeed and .getActorLikes, so
+   * the source method is ambiguous - kept as an untyped getErrorName check.
+   */
   if (
     getErrorName(error) === 'BlockedActor' ||
     getErrorName(error) === 'BlockedByActor'

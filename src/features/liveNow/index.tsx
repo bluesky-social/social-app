@@ -16,7 +16,7 @@ import {isAfter, parseISO} from 'date-fns'
 import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
-import {getErrorName} from '#/lib/xrpc-error'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {useAppConfig} from '#/state/appConfig'
 import {
   updateProfileShadow,
@@ -291,7 +291,8 @@ export function useUpsertLiveStatusMutation(
 
       await retry(upsert, {
         maxRetries: 5,
-        retryable: e => getErrorName(e) === 'InvalidSwap',
+        retryable: e =>
+          isXrpcErrorOf(com.atproto.repo.putRecord, e, 'InvalidSwap'),
       })
 
       return {

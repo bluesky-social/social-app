@@ -7,7 +7,7 @@ import {useMutation} from '@tanstack/react-query'
 
 import {clamp} from '#/lib/numbers'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
-import {getErrorName} from '#/lib/xrpc-error'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useAppviewClient} from '#/state/session'
 import {OnboardingPosition} from '#/screens/Onboarding/Layout'
@@ -100,13 +100,17 @@ export function VerifyNumber({
             msg`A network error occurred. Please check your internet connection.`,
           ),
         })
-      } else if (getErrorName(err) === 'InvalidCode') {
+      } else if (
+        isXrpcErrorOf(app.bsky.contact.verifyPhone, err, 'InvalidCode')
+      ) {
         setError({
           retryable: true,
           isResendError: true,
           message: _(msg`This code is invalid. Resend to get a new code.`),
         })
-      } else if (getErrorName(err) === 'InvalidPhone') {
+      } else if (
+        isXrpcErrorOf(app.bsky.contact.verifyPhone, err, 'InvalidPhone')
+      ) {
         setError({
           retryable: false,
           isResendError: false,
@@ -114,7 +118,9 @@ export function VerifyNumber({
             msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
           ),
         })
-      } else if (getErrorName(err) === 'RateLimitExceeded') {
+      } else if (
+        isXrpcErrorOf(app.bsky.contact.verifyPhone, err, 'RateLimitExceeded')
+      ) {
         setError({
           retryable: true,
           isResendError: false,
@@ -156,7 +162,13 @@ export function VerifyNumber({
             msg`A network error occurred. Please check your internet connection.`,
           ),
         })
-      } else if (getErrorName(err) === 'InvalidPhone') {
+      } else if (
+        isXrpcErrorOf(
+          app.bsky.contact.startPhoneVerification,
+          err,
+          'InvalidPhone',
+        )
+      ) {
         setError({
           retryable: false,
           isResendError: true,
@@ -164,7 +176,13 @@ export function VerifyNumber({
             msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
           ),
         })
-      } else if (getErrorName(err) === 'RateLimitExceeded') {
+      } else if (
+        isXrpcErrorOf(
+          app.bsky.contact.startPhoneVerification,
+          err,
+          'RateLimitExceeded',
+        )
+      ) {
         setError({
           retryable: true,
           isResendError: true,

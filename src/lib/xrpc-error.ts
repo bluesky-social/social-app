@@ -1,4 +1,12 @@
-import {LexError, XrpcError, XrpcResponseError} from '@atproto/lex'
+import {
+  type InferMethodError,
+  LexError,
+  type Main,
+  type Procedure,
+  type Query,
+  XrpcError,
+  XrpcResponseError,
+} from '@atproto/lex'
 
 /**
  * True for an XRPC error from a lex `Client` (`@atproto/lex-client` `XrpcError`,
@@ -28,6 +36,25 @@ export function getErrorStatus(e: unknown): number | undefined {
  */
 export function getErrorName(e: unknown): string | undefined {
   return e instanceof LexError ? e.error : undefined
+}
+
+/**
+ * True when `e` is an XRPC error whose lexicon error code is `name`, with
+ * `name` compile-time constrained to the errors DECLARED by `method`'s
+ * lexicon. The typed replacement for the old generated error classes
+ * (`e instanceof SomeNsid.SomeError`): a typo'd or undeclared name is a type
+ * error instead of a silent never-match.
+ *
+ * `method` accepts the same value passed to `client.call` - either the
+ * generated method namespace (`chat.bsky.convo.acceptConvo`) or its `.main`
+ * schema - via lex's `Main<M>`.
+ */
+export function isXrpcErrorOf<M extends Procedure | Query>(
+  method: Main<M>,
+  e: unknown,
+  name: NoInfer<InferMethodError<M>>,
+): boolean {
+  return isXrpcError(e) && e.error === name
 }
 
 /**

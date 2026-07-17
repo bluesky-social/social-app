@@ -14,7 +14,7 @@ import {
   type NativeStackScreenProps,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {getErrorName} from '#/lib/xrpc-error'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
@@ -430,7 +430,9 @@ function SettingsHeader({
       if (lock) {
         logger.error('Failed to lock group chat', {message: e})
         Toast.show(l`Failed to lock group chat`, {type: 'error'})
-      } else if (getErrorName(e) === 'ConvoLockedByModeration') {
+      } else if (
+        isXrpcErrorOf(chat.bsky.convo.unlockConvo, e, 'ConvoLockedByModeration')
+      ) {
         Toast.show(l`This chat is locked by a moderation action`, {
           type: 'error',
         })

@@ -13,7 +13,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
-import {getErrorName} from '#/lib/xrpc-error'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {findContactsStatusQueryKey} from '#/state/queries/find-contacts'
 import {useAppviewClient, usePdsClient} from '#/state/session'
@@ -149,14 +149,18 @@ export function GetContacts({
           ),
           {type: 'error'},
         )
-      } else if (getErrorName(err) === 'TooManyContacts') {
+      } else if (
+        isXrpcErrorOf(app.bsky.contact.importContacts, err, 'TooManyContacts')
+      ) {
         Toast.show(
           _(
             msg`Too many contacts - you've exceeded the number of contacts you can import to find your friends`,
           ),
           {type: 'error'},
         )
-      } else if (getErrorName(err) === 'InvalidToken') {
+      } else if (
+        isXrpcErrorOf(app.bsky.contact.importContacts, err, 'InvalidToken')
+      ) {
         Toast.show(
           _(
             msg`Could not upload contacts. You need to re-verify your phone number to proceed`,

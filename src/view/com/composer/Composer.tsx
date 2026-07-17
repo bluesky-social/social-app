@@ -73,7 +73,7 @@ import {useCallOnce} from '#/lib/once'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
-import {getErrorName} from '#/lib/xrpc-error'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
@@ -740,7 +740,7 @@ export const ComposePost = ({
 
   const getDraftSaveError = useCallback(
     (e: unknown): string => {
-      if (getErrorName(e) === 'DraftLimitReached') {
+      if (isXrpcErrorOf(app.bsky.draft.createDraft, e, 'DraftLimitReached')) {
         return l`You've reached the maximum number of drafts`
       }
       return l`Failed to save draft`

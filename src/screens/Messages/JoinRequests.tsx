@@ -11,7 +11,7 @@ import {
   type NativeStackScreenProps,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {getErrorName} from '#/lib/xrpc-error'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {ConvoProvider, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
@@ -39,7 +39,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {type chat} from '#/lexicons'
+import {chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from './components/InviteLinkDialog'
 
@@ -187,11 +187,29 @@ function JoinRequestsList({
         let errorMessage = l`Failed to accept join request`
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (getErrorName(error) === 'InvalidConvo') {
+        } else if (
+          isXrpcErrorOf(
+            chat.bsky.group.approveJoinRequest,
+            error,
+            'InvalidConvo',
+          )
+        ) {
           errorMessage = l`Conversation not found.`
-        } else if (getErrorName(error) === 'InsufficientRole') {
+        } else if (
+          isXrpcErrorOf(
+            chat.bsky.group.approveJoinRequest,
+            error,
+            'InsufficientRole',
+          )
+        ) {
           errorMessage = l`Only admins can accept join requests.`
-        } else if (getErrorName(error) === 'MemberLimitReached') {
+        } else if (
+          isXrpcErrorOf(
+            chat.bsky.group.approveJoinRequest,
+            error,
+            'MemberLimitReached',
+          )
+        ) {
           errorMessage = l`The member limit has been reached.`
         }
         Toast.show(errorMessage, {type: 'error'})
@@ -213,9 +231,21 @@ function JoinRequestsList({
         let errorMessage = l`Failed to reject join request`
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (getErrorName(error) === 'InvalidConvo') {
+        } else if (
+          isXrpcErrorOf(
+            chat.bsky.group.rejectJoinRequest,
+            error,
+            'InvalidConvo',
+          )
+        ) {
           errorMessage = l`Conversation not found.`
-        } else if (getErrorName(error) === 'InsufficientRole') {
+        } else if (
+          isXrpcErrorOf(
+            chat.bsky.group.rejectJoinRequest,
+            error,
+            'InsufficientRole',
+          )
+        ) {
           errorMessage = l`Only admins can reject join requests.`
         }
         Toast.show(errorMessage, {type: 'error'})

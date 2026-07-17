@@ -6,7 +6,9 @@ import {
   getErrorName,
   getErrorStatus,
   isXrpcError,
+  isXrpcErrorOf,
 } from '#/lib/xrpc-error'
+import {chat} from '#/lexicons'
 import {isErrorMaybeAppPasswordPermissions, isNetworkError} from '../errors'
 
 /**
@@ -57,6 +59,44 @@ describe('getErrorName', () => {
 
   it('returns undefined for non-XRPC values', () => {
     expect(getErrorName(new Error('boom'))).toBeUndefined()
+  })
+})
+
+describe('isXrpcErrorOf', () => {
+  it('matches a declared error code for the method', () => {
+    expect(
+      isXrpcErrorOf(
+        chat.bsky.convo.acceptConvo,
+        lexError(400, 'InvalidConvo'),
+        'InvalidConvo',
+      ),
+    ).toBe(true)
+  })
+
+  it('does not match a different error code or a non-XRPC value', () => {
+    expect(
+      isXrpcErrorOf(
+        chat.bsky.convo.getMessages,
+        lexError(400, 'InvalidConvo'),
+        'InvalidConvo',
+      ),
+    ).toBe(true)
+    expect(
+      isXrpcErrorOf(
+        chat.bsky.convo.acceptConvo,
+        new Error('boom'),
+        'InvalidConvo',
+      ),
+    ).toBe(false)
+  })
+
+  it('constrains the error name to the method declared errors at compile time', () => {
+    isXrpcErrorOf(
+      chat.bsky.convo.acceptConvo,
+      lexError(400, 'InvalidConvo'),
+      // @ts-expect-error 'Bogus' is not a declared error of acceptConvo
+      'Bogus',
+    )
   })
 })
 

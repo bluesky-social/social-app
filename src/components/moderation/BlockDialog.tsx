@@ -4,7 +4,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {isNetworkError} from '#/lib/strings/errors'
-import {getErrorName} from '#/lib/xrpc-error'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/types'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
@@ -23,7 +23,7 @@ import {parseConvoView} from '#/components/dms/util'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {type chat} from '#/lexicons'
+import {chat} from '#/lexicons'
 import {type AnyProfileView} from '#/types/bsky/profile'
 
 type Item = chat.bsky.convo.defs.ConvoView
@@ -282,9 +282,13 @@ function MutualGroupChat({
         let errorMessage = l`Could not leave chat.`
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (getErrorName(error) === 'InvalidConvo') {
+        } else if (
+          isXrpcErrorOf(chat.bsky.convo.leaveConvo, error, 'InvalidConvo')
+        ) {
           errorMessage = l`Chat not found.`
-        } else if (getErrorName(error) === 'OwnerCannotLeave') {
+        } else if (
+          isXrpcErrorOf(chat.bsky.convo.leaveConvo, error, 'OwnerCannotLeave')
+        ) {
           errorMessage = l`Chat owners cannot leave a group chat.`
         }
         Toast.show(errorMessage, {type: 'error'})
@@ -306,9 +310,17 @@ function MutualGroupChat({
         let errorMessage = l`Could not remove member.`
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (getErrorName(error) === 'InvalidConvo') {
+        } else if (
+          isXrpcErrorOf(chat.bsky.group.removeMembers, error, 'InvalidConvo')
+        ) {
           errorMessage = l`Chat not found.`
-        } else if (getErrorName(error) === 'InsufficientRole') {
+        } else if (
+          isXrpcErrorOf(
+            chat.bsky.group.removeMembers,
+            error,
+            'InsufficientRole',
+          )
+        ) {
           errorMessage = l`You must be a chat owner to remove a member.`
         }
         Toast.show(errorMessage, {type: 'error'})

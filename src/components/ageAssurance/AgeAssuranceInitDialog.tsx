@@ -13,7 +13,7 @@ import {
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useTLDs} from '#/lib/hooks/useTLDs'
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
-import {getErrorName, isXrpcError} from '#/lib/xrpc-error'
+import {isXrpcError, isXrpcErrorOf} from '#/lib/xrpc-error'
 import {type AppLanguage} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
@@ -33,6 +33,7 @@ import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useBeginAgeAssurance} from '#/ageAssurance/useBeginAgeAssurance'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 
 export {useDialogControl} from '#/components/Dialog/context'
 
@@ -140,13 +141,14 @@ function Inner() {
       )
 
       if (isXrpcError(e)) {
-        const errorName = getErrorName(e)
-        if (errorName === 'InvalidEmail') {
+        if (isXrpcErrorOf(app.bsky.ageassurance.begin, e, 'InvalidEmail')) {
           error = _(
             msg`Please enter a valid, non-temporary email address. You may need to access this email in the future.`,
           )
           ax.metric('ageAssurance:initDialogError', {code: 'InvalidEmail'})
-        } else if (errorName === 'DidTooLong') {
+        } else if (
+          isXrpcErrorOf(app.bsky.ageassurance.begin, e, 'DidTooLong')
+        ) {
           error = (
             <>
               <Trans>

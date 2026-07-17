@@ -7,11 +7,11 @@ import {DEFAULT_SERVICE} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
-import {getErrorName} from '#/lib/xrpc-error'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {type AnalyticsContextType, useAnalytics} from '#/analytics'
-import {type com} from '#/lexicons'
+import {com} from '#/lexicons'
 
 export type ServiceDescription = com.atproto.server.describeServer.$OutputBody
 
@@ -339,7 +339,13 @@ export function useSubmitSignup() {
       } catch (err) {
         const e = err as Error
         let errMsg = e.toString()
-        if (getErrorName(e) === 'InvalidInviteCode') {
+        if (
+          isXrpcErrorOf(
+            com.atproto.server.createAccount,
+            e,
+            'InvalidInviteCode',
+          )
+        ) {
           dispatch({
             type: 'setError',
             value: l`Invite code not accepted. Check that you input it correctly and try again.`,
