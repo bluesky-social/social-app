@@ -309,6 +309,10 @@ export function InitiateChatFlow({
     let _items: Item[] = []
     const checker =
       chatState === ChatState.NEW_GROUP_CHAT ? canBeAddedToGroup : canBeMessaged
+    const messageDeclarationRank = (item: Item) =>
+      item.type === 'profile' && checker(item.profile) ? 0 : 1
+    const compareByMessageDeclaration = (a: Item, b: Item) =>
+      messageDeclarationRank(a) - messageDeclarationRank(b)
 
     if (isError) {
       _items.push({
@@ -339,9 +343,7 @@ export function InitiateChatFlow({
         }
 
         if (sortByMessageDeclaration) {
-          _items = _items.sort(item => {
-            return item.type === 'profile' && checker(item.profile) ? -1 : 1
-          })
+          _items = _items.sort(compareByMessageDeclaration)
         }
       }
     } else {
@@ -401,12 +403,6 @@ export function InitiateChatFlow({
           }
         }
 
-        if (sortByMessageDeclaration) {
-          followsItems = followsItems.sort(item => {
-            return checker(item.profile) ? -1 : 1
-          })
-        }
-
         _items.push(...followsItems)
       } else if (follows) {
         for (const page of follows.pages) {
@@ -418,12 +414,6 @@ export function InitiateChatFlow({
               profile,
             })
           }
-        }
-
-        if (sortByMessageDeclaration) {
-          _items = _items.sort(item => {
-            return item.type === 'profile' && checker(item.profile) ? -1 : 1
-          })
         }
       } else {
         _items.push(...placeholders)
