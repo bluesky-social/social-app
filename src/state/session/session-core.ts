@@ -619,7 +619,8 @@ export async function createSessionBundleAndResume(
 
   const moderation = configureModerationForAccount(bundle, account)
   const aa = prefetchAgeAssuranceServerData({
-    agent: bundle.agent,
+    appviewClient: bundle.appviewClient,
+    accountClient: bundle.accountClient,
   })
   await Promise.all([gates, moderation, aa])
   hooks.arm()
@@ -670,7 +671,8 @@ export async function createSessionBundleAndLogin(
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
   const moderation = configureModerationForAccount(bundle, account)
   const aa = prefetchAgeAssuranceServerData({
-    agent: bundle.agent,
+    appviewClient: bundle.appviewClient,
+    accountClient: bundle.accountClient,
   })
   await Promise.all([gates, moderation, aa])
   hooks.arm()
@@ -750,7 +752,10 @@ export async function createSessionBundleAndCreateAccount(
   setBirthdateForDid({did: account.did, birthdate})
   snoozeBirthdateUpdateAllowedForDid(account.did)
   // do this last
-  const aa = prefetchAgeAssuranceServerData({agent})
+  const aa = prefetchAgeAssuranceServerData({
+    appviewClient: bundle.appviewClient,
+    accountClient: bundle.accountClient,
+  })
 
   // Not awaited so that we can still get into onboarding.
   // This is OK because we won't let you toggle adult stuff until you set the date.
@@ -801,7 +806,7 @@ export async function createSessionBundleAndCreateAccount(
         const {flags} = unsafeGetAndComputeAgeAssurance({did: account.did})
         if (flags?.chatDisabled || flags?.groupChatDisabled) {
           void restrictChatSettings({
-            agent,
+            client: bundle.accountClient,
             restrictIncoming: flags.chatDisabled,
             restrictGroupInvites: flags.groupChatDisabled,
           })

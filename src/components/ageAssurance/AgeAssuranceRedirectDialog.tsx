@@ -6,7 +6,7 @@ import {Trans} from '@lingui/react/macro'
 
 import {retry} from '#/lib/async/retry'
 import {wait} from '#/lib/async/wait'
-import {useAgent} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {Button, ButtonText} from '#/components/Button'
@@ -84,7 +84,8 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
   const t = useTheme()
   const ax = useAnalytics()
   const {_} = useLingui()
-  const agent = useAgent()
+  const {hasSession} = useSession()
+  const appviewClient = useAppviewClient()
   const polling = useRef(false)
   const unmounted = useRef(false)
   const control = useAgeAssuranceRedirectDialogControl()
@@ -104,10 +105,10 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
         5,
         () => true,
         async () => {
-          if (!agent.session) return
+          if (!hasSession) return
           if (unmounted.current) return
 
-          const data = await refetchAgeAssuranceServerState({agent})
+          const data = await refetchAgeAssuranceServerState({appviewClient})
 
           if (data?.state.status !== 'assured') {
             throw new Error(
@@ -122,7 +123,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
     )
       .then(async data => {
         if (!data) return
-        if (!agent.session) return
+        if (!hasSession) return
         if (unmounted.current) return
 
         setSuccess(true)
@@ -138,7 +139,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
     return () => {
       unmounted.current = true
     }
-  }, [ax, agent, control])
+  }, [ax, hasSession, appviewClient, control])
 
   if (success) {
     return (
