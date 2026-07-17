@@ -253,13 +253,12 @@ export function useListDeleteMutation() {
 export function useListMuteMutation() {
   const queryClient = useQueryClient()
   const appviewClient = useAppviewClient()
-  const pdsClient = usePdsClient()
   return useMutation<void, Error, {uri: string; mute: boolean}>({
     mutationFn: async ({uri, mute}) => {
       if (mute) {
-        await pdsClient.call(muteActorList, {list: uri as AtUriString})
+        await appviewClient.call(muteActorList, {list: uri as AtUriString})
       } else {
-        await pdsClient.call(unmuteActorList, {list: uri as AtUriString})
+        await appviewClient.call(unmuteActorList, {list: uri as AtUriString})
       }
 
       await whenAppViewReady(appviewClient, uri, v => {

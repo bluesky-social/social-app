@@ -45,7 +45,7 @@ import {type ConvoState, ConvoStatus} from '#/state/messages/convo/types'
 import {useGetJoinLinkPreview} from '#/state/queries/join-links'
 import {useGetPost} from '#/state/queries/post'
 import {createEmbedViewRecordFromPost} from '#/state/queries/postgate/util'
-import {usePdsClient, useSession} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
@@ -141,10 +141,9 @@ export function MessagesList({
   const convoState = useConvoActive()
   /*
    * Facet detection resolves handles via `com.atproto.identity.resolveHandle`,
-   * which the account (PDS) client serves - chat requires a session, so the
-   * client is always live here.
+   * which the appview client serves (design section B).
    */
-  const pdsClient = usePdsClient()
+  const appviewClient = useAppviewClient()
   const {hasSession, currentAccount} = useSession()
   const getPost = useGetPost()
   const getJoinLinkPreview = useGetJoinLinkPreview()
@@ -618,7 +617,7 @@ export function MessagesList({
         replyTo = {messageId: reply.id}
       }
 
-      await rt.detectFacets(pdsClient)
+      await rt.detectFacets(appviewClient)
 
       rt = shortenLinks(rt)
       rt = stripInvalidMentions(rt)
@@ -671,7 +670,7 @@ export function MessagesList({
       }
     },
     [
-      pdsClient,
+      appviewClient,
       convoState,
       getPost,
       getJoinLinkPreview,

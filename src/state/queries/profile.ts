@@ -474,10 +474,10 @@ export function useProfileMuteMutationQueue(
 
 function useProfileMuteMutation() {
   const queryClient = useQueryClient()
-  const pdsClient = usePdsClient()
+  const appviewClient = useAppviewClient()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
-      await pdsClient.call(muteActor, {actor: did as AtIdentifierString})
+      await appviewClient.call(muteActor, {actor: did as AtIdentifierString})
     },
     onSuccess() {
       void queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
@@ -487,10 +487,10 @@ function useProfileMuteMutation() {
 
 function useProfileUnmuteMutation() {
   const queryClient = useQueryClient()
-  const pdsClient = usePdsClient()
+  const appviewClient = useAppviewClient()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
-      await pdsClient.call(unmuteActor, {actor: did as AtIdentifierString})
+      await appviewClient.call(unmuteActor, {actor: did as AtIdentifierString})
     },
     onSuccess() {
       void queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})

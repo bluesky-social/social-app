@@ -414,14 +414,14 @@ export function useThreadMuteMutationQueue(
 }
 
 function useThreadMuteMutation() {
-  const pdsClient = usePdsClient()
+  const appviewClient = useAppviewClient()
   return useMutation<
     {},
     Error,
     {uri: string} // the root post's uri
   >({
     mutationFn: async ({uri}) => {
-      await pdsClient.call(app.bsky.graph.muteThread, {
+      await appviewClient.call(app.bsky.graph.muteThread, {
         root: uri as AtUriString,
       })
       return {}
@@ -430,10 +430,10 @@ function useThreadMuteMutation() {
 }
 
 function useThreadUnmuteMutation() {
-  const pdsClient = usePdsClient()
+  const appviewClient = useAppviewClient()
   return useMutation<{}, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await pdsClient.call(app.bsky.graph.unmuteThread, {
+      await appviewClient.call(app.bsky.graph.unmuteThread, {
         root: uri as AtUriString,
       })
       return {}

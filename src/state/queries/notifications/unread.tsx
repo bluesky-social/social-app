@@ -20,7 +20,7 @@ import BroadcastChannel from '#/lib/broadcast'
 import {resetBadgeCount} from '#/lib/notifications/notifications'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
 import {type CachedFeedPage, type FeedPage} from './types'
 import {fetchPage} from './util'
@@ -55,7 +55,6 @@ apiContext.displayName = 'NotificationsUnreadApiContext'
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {hasSession} = useSession()
   const appviewClient = useAppviewClient()
-  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
 
@@ -123,7 +122,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return {
       async markAllRead() {
         // update server
-        await pdsClient.call(
+        await appviewClient.call(
           updateSeenNotifications,
           // toISOString() always yields a valid datetime string
           cacheRef.current.syncedAt.toISOString() as DatetimeString,
@@ -212,14 +211,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       },
     }
-  }, [
-    setNumUnread,
-    queryClient,
-    moderationOpts,
-    appviewClient,
-    pdsClient,
-    hasSession,
-  ])
+  }, [setNumUnread, queryClient, moderationOpts, appviewClient, hasSession])
   checkUnreadRef.current = api.checkUnread
 
   return (
