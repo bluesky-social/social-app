@@ -1,5 +1,3 @@
-import {type SessionData} from '@atproto/lex-password-session'
-
 import {type Schema} from '../persisted'
 import {type Action, type State} from './reducer'
 import {type AtpSessionEvent} from './session-core'
@@ -52,10 +50,15 @@ type Log =
       nextAgent: object
     }
   | {
+      /*
+       * Dev-only bundle-swap log. The bundle is treated as an opaque object
+       * (the reducer never reads its internals); the session snapshots are
+       * plain objects captured for debugging.
+       */
       type: 'agent:patch'
       agent: object
-      prevSession: SessionData | undefined
-      nextSession: SessionData | undefined
+      prevSession: object | undefined
+      nextSession: object | undefined
     }
 
 export function wrapSessionReducerForLogging(reducer: Reducer): Reducer {

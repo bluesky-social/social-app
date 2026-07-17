@@ -1,9 +1,9 @@
-import {type AtpAgent} from '@atproto/api'
 import {type SessionData} from '@atproto/lex-password-session'
 import {describe, expect, it, jest} from '@jest/globals'
 
-import {sessionDataToSessionAccount} from '../agent'
+import {type TemporaryPushClient} from '#/lib/notifications/notifications'
 import {type Action, getInitialState, reducer, type State} from '../reducer'
+import {sessionDataToSessionAccount} from '../session-core'
 import {type SessionAccount} from '../types'
 
 jest.mock('jwt-decode', () => ({
@@ -18,7 +18,7 @@ jest.mock('../../../ageAssurance/state', () => ({
   unsafeGetAndComputeAgeAssurance: () => ({state: {}}),
 }))
 jest.mock('#/lib/notifications/notifications', () => ({
-  unregisterPushToken(_agents: AtpAgent[]) {
+  unregisterPushToken(_clients: TemporaryPushClient[]) {
     return Promise.resolve()
   },
 }))
@@ -1600,7 +1600,7 @@ describe('session', () => {
     expect(state.accounts[1].did).toBe('bob-did')
     expect(state.accounts[1].accessJwt).toBe('bob-access-jwt-2')
     // Keep Bob logged in.
-    // (We patch up agent.session outside the reducer for this to work.)
+    // (The bundle is rebuilt from the synced tokens outside the reducer.)
     expect(state.currentAgentState.did).toBe('bob-did')
     expect(state.needsPersist).toBe(false)
     expect(printState(state)).toMatchInlineSnapshot(`

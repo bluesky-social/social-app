@@ -5,33 +5,23 @@ import {IS_TEST_USER} from '#/lib/constants'
 import {com} from '#/lexicons'
 import {configureAdditionalModerationAuthorities} from './additional-moderation-authorities'
 import {readLabelers} from './agent-config'
-import {BridgeAgent, type SessionBundle} from './session-core'
+import {type SessionBundle} from './session-core'
 import {type SessionAccount} from './types'
 
 /*
- * The Bluesky moderation labeler DID. The old `BSKY_LABELER_DID` (from
- * '@atproto/api') and `api.moderation.did` (from '@bsky.app/sdk') are the SAME
- * value - `did:plc:ar7c4by46qjdydhdevvrndac` - verified at implementation. We
- * use `api.moderation.did` everywhere: the global appLabelers config, the
- * per-account filter, and the appview client's base labeler (matching
- * `buildAppviewClient`); all resolve to identical `atproto-accept-labelers`
- * headers.
+ * The Bluesky moderation labeler DID is `api.moderation.did` (from
+ * '@bsky.app/sdk'), value `did:plc:ar7c4by46qjdydhdevvrndac`. We use it
+ * everywhere: the global appLabelers config, the per-account filter, and the
+ * appview client's base labeler (matching `buildAppviewClient`); all resolve to
+ * identical `atproto-accept-labelers` headers.
  */
 
 /**
- * Set the global app labelers on BOTH request paths so they emit identical
- * `atproto-accept-labelers` headers.
- *
- * The migration runs two live request stacks this phase: lex `Client`s (whose
- * global labelers live on the static `Client.appLabelers`) and the bridge
- * `SessionAgent`, a base `Agent` from '@atproto/api' (whose global labelers
- * live on the static `Agent.appLabelers`, NOT `AtpAgent`'s). We must configure
- * both so a request routed through either path carries the same global
- * (`;redact`-suffixed) labelers.
+ * Set the global app labelers on the lex `Client` static so every client emits
+ * the same global (`;redact`-suffixed) `atproto-accept-labelers` header.
  */
 function configureGlobalAppLabelers(dids: string[]) {
   Client.configure({appLabelers: dids as `did:${string}:${string}`[]})
-  BridgeAgent.configure({appLabelers: dids})
 }
 
 export function configureModerationForGuest() {
@@ -44,10 +34,8 @@ export function configureModerationForGuest() {
 /**
  * Configure moderation labelers for a signed-in account.
  *
- * Takes the whole {@link SessionBundle} because per-account labelers must be
- * applied to BOTH live request paths: the bridge agent (`bundle.agent`, still
- * used by `useAgent()` consumers) and the authed appview client
- * (`bundle.appviewClient`, backing `useLexClient()`).
+ * Takes the whole {@link SessionBundle} so it can apply per-account labelers to
+ * the authed appview client (`bundle.appviewClient`, backing `useLexClient()`).
  */
 export async function configureModerationForAccount(
   bundle: SessionBundle,
@@ -65,13 +53,12 @@ export async function configureModerationForAccount(
   if (labelerDids) {
     const perAccount = labelerDids.filter(did => did !== api.moderation.did)
     /*
-     * Apply the per-account labelers to both live request paths. The appview
-     * client re-asserts the Bluesky moderation labeler as its base because
-     * sending ANY `atproto-accept-labelers` header replaces the server-side
-     * default - `setLabelers` clears then re-adds, so the moderation DID must
-     * be included explicitly to stay active.
+     * Apply the per-account labelers to the appview client. It re-asserts the
+     * Bluesky moderation labeler as its base because sending ANY
+     * `atproto-accept-labelers` header replaces the server-side default -
+     * `setLabelers` clears then re-adds, so the moderation DID must be included
+     * explicitly to stay active.
      */
-    bundle.agent.configureLabelers(perAccount)
     bundle.appviewClient.setLabelers([
       api.moderation.did,
       ...perAccount,

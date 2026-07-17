@@ -1,4 +1,3 @@
-import {AtpAgent, BSKY_LABELER_DID} from '@atproto/api'
 import {Client} from '@atproto/lex-client'
 import {PasswordSession} from '@atproto/lex-password-session'
 import {api} from '@bsky.app/sdk'
@@ -7,7 +6,7 @@ import {describe, expect, it, jest} from '@jest/globals'
 /*
  * clients.ts imports session-core (for networkAwareFetch), which pulls the
  * factory dependency graph. Mock the heavy leaves so this test does not load
- * the native module chain (same approach as bridge-agent-test.ts).
+ * the native module chain (same approach as session-core-test.ts).
  */
 jest.mock('#/state/events', () => ({
   emitNetworkConfirmed: jest.fn(),
@@ -280,54 +279,34 @@ describe('getPublicLexClient', () => {
 
 /*
  * Regression guard: the emitted `atproto-accept-labelers` header from a
- * fully-configured appview client must match the header the old AtpAgent
- * produced for the same labeler set - global appLabelers carry the `;redact`
- * suffix, per-instance labelers are plain. Byte-identical composition is the
- * acceptance bar for the moderation migration (design section 6).
+ * fully-configured appview client must carry the exact byte-shape the old
+ * AtpAgent produced - global appLabelers carry the `;redact` suffix, per
+ * -instance labelers are plain. The old AtpAgent reference implementation is
+ * gone with the bridge, so we assert the composition invariant directly (design
+ * section 6).
  */
 describe('labeler-header regression guard', () => {
-  it('appview client emits the same atproto-accept-labelers header as the old AtpAgent', async () => {
+  it('appview client emits the global Bluesky labeler redacted and the per-instance labeler plain', async () => {
     /*
-     * Old behavior: AtpAgent.appLabelers default to [BSKY_LABELER_DID], emitted
-     * with `;redact`; per-instance configureLabelers are plain. Capture what a
-     * real AtpAgent emits for the same [custom] instance labeler set.
+     * buildAppviewClient re-asserts api.moderation.did as a base labeler; the
+     * global Client.appLabelers carry the `;redact` suffix. Configure the global
+     * appLabelers to the Bluesky moderation DID (matching switchToBskyAppLabeler
+     * in moderation.ts) so the composition matches production.
      */
-    const {seen: agentSeen, fetchMock: agentFetch} = makeCapturingFetch()
-    const oldAgent = new AtpAgent({
-      service: SERVICE,
-      fetch: asFetch(agentFetch),
-    })
-    oldAgent.configureProxy(APPVIEW_PROXY)
-    oldAgent.configureLabelers([CUSTOM_LABELER])
-    await oldAgent.app.bsky.actor.getProfile({actor: HANDLE}).catch(() => {})
-    const oldHeader = agentSeen[0].headers.get('atproto-accept-labelers')
+    Client.configure({appLabelers: [api.moderation.did]})
 
-    /*
-     * New behavior: buildAppviewClient re-asserts api.moderation.did (===
-     * BSKY_LABELER_DID) as a base labeler; the global Client.appLabelers carry
-     * the `;redact` suffix. Configure Client global appLabelers to match the old
-     * AtpAgent global set so the composition is directly comparable.
-     */
-    Client.configure({appLabelers: [BSKY_LABELER_DID]})
-
-    const {seen: clientSeen, fetchMock: clientFetch} = makeCapturingFetch()
-    const session = makeSession(clientFetch)
+    const {seen, fetchMock} = makeCapturingFetch()
+    const session = makeSession(fetchMock)
     const client = buildAppviewClient(session, [CUSTOM_LABELER])
     await client
       .call(app.bsky.actor.getProfile.main, {actor: HANDLE})
       .catch(() => {})
-    const newHeader = clientSeen[0].headers.get('atproto-accept-labelers')
+    const header = seen[0].headers.get('atproto-accept-labelers')
 
-    /*
-     * Both must contain the redacted global Bluesky labeler and the plain
-     * per-instance custom labeler.
-     */
-    expect(oldHeader).toContain(`${BSKY_LABELER_DID};redact`)
-    expect(newHeader).toContain(`${BSKY_LABELER_DID};redact`)
-    expect(oldHeader).toContain(CUSTOM_LABELER)
-    expect(newHeader).toContain(CUSTOM_LABELER)
-    /* the custom labeler is plain (no redact) in both */
-    expect(oldHeader).not.toContain(`${CUSTOM_LABELER};redact`)
-    expect(newHeader).not.toContain(`${CUSTOM_LABELER};redact`)
+    /* the global Bluesky moderation labeler is redacted */
+    expect(header).toContain(`${api.moderation.did};redact`)
+    /* the per-instance custom labeler is present and plain (no redact) */
+    expect(header).toContain(CUSTOM_LABELER)
+    expect(header).not.toContain(`${CUSTOM_LABELER};redact`)
   })
 })

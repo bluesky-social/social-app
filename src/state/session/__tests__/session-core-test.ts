@@ -1,4 +1,9 @@
-import {type SessionData} from '@atproto/lex-password-session'
+import {
+  PasswordSession,
+  type PasswordSessionOptions,
+  type SessionData,
+} from '@atproto/lex-password-session'
+import {describe, expect, it, jest} from '@jest/globals'
 
 import {type SessionAccount} from '../types'
 
@@ -32,14 +37,18 @@ jest.mock('jwt-decode', () => ({
 }))
 
 import {
+  type AtpSessionEvent,
   extractPdsUrl,
+  makeSessionHooks,
   sessionAccountToSessionData,
+  type SessionBundle,
   sessionDataToSessionAccount,
   synthDidDoc,
 } from '../session-core'
 
 const DID = 'did:plc:example123'
 const HANDLE = 'alice.test'
+const SERVICE = 'https://bsky.social'
 const PDS_URL = 'https://shimeji.us-east.host.bsky.network'
 
 function makeSessionData(overrides: Partial<SessionData> = {}): SessionData {
@@ -322,5 +331,285 @@ describe('sessionAccountToSessionData', () => {
       selfHosted.service,
     )!
     expect(roundTripped).toEqual(selfHosted)
+  })
+})
+
+function makeAccount(overrides: Partial<SessionAccount> = {}): SessionAccount {
+  return {
+    service: SERVICE,
+    did: DID,
+    handle: HANDLE,
+    email: 'alice@example.com',
+    emailConfirmed: true,
+    emailAuthFactor: false,
+    refreshJwt: 'refresh-jwt',
+    accessJwt: 'access-jwt',
+    signupQueued: false,
+    active: true,
+    status: undefined,
+    pdsUrl: undefined,
+    isSelfHosted: false,
+    ...overrides,
+  }
+}
+
+/**
+ * Build a mock `fetch` that returns canned XRPC responses keyed by the last
+ * path segment (nsid). `refreshSession` returns fresh tokens; `getSession`
+ * echoes the account; anything else returns an empty 200.
+ */
+function makeMockFetch(
+  overrides: Record<
+    string,
+    (url: string, init: RequestInit) => Response | Promise<Response>
+  > = {},
+) {
+  const json = (body: unknown, status = 200) =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: {'content-type': 'application/json'},
+    })
+  const fetchMock = jest.fn(
+    async (input: URL | string, init: RequestInit = {}): Promise<Response> => {
+      const url = input instanceof URL ? input.href : input
+      const nsid = url.split('/xrpc/')[1]?.split('?')[0]
+      const handler = nsid ? overrides[nsid] : undefined
+      if (handler) {
+        return handler(url, init)
+      }
+      if (nsid === 'com.atproto.server.refreshSession') {
+        return json({
+          accessJwt: 'access-jwt-2',
+          refreshJwt: 'refresh-jwt-2',
+          handle: HANDLE,
+          did: DID,
+          active: true,
+        })
+      }
+      if (nsid === 'com.atproto.server.getSession') {
+        return json({
+          did: DID,
+          handle: HANDLE,
+          email: 'alice@example.com',
+          emailConfirmed: true,
+          active: true,
+        })
+      }
+      return json({})
+    },
+  )
+  return fetchMock
+}
+
+/** Cast a jest fetch mock to the `fetch` type PasswordSession options expect. */
+function asFetch(mock: ReturnType<typeof makeMockFetch>): typeof fetch {
+  return mock as unknown as typeof fetch
+}
+
+/*
+ * Ported from the now-deleted bridge-agent-test: the arm-latch + event mapping
+ * is the durable session-hook semantics that survives the bridge removal. The
+ * hook now hands the whole bundle to onSessionChange (not a bridge agent), so
+ * getBundle returns a stand-in bundle whose identity is what matters.
+ */
+describe('makeSessionHooks arm-latch + event mapping', () => {
+  /*
+   * The hooks read neither `this` (the PasswordSession) nor their data
+   * argument, so we invoke them with empty stand-ins cast to the declared
+   * parameter types. This keeps the test focused on the arm-latch + event
+   * mapping.
+   */
+  const fakeSession = {} as PasswordSession
+  const fakeData = {} as SessionData
+
+  function setup() {
+    const onSessionChange =
+      jest.fn<
+        (bundle: SessionBundle, did: string, event: AtpSessionEvent) => void
+      >()
+    /* the hook only passes this through by identity; a stub bundle suffices */
+    const bundle = {} as SessionBundle
+    const hooks = makeSessionHooks(
+      onSessionChange,
+      () => bundle,
+      () => DID,
+    )
+    return {onSessionChange, bundle, hooks}
+  }
+
+  it('swallows events before arm()', () => {
+    const {onSessionChange, hooks} = setup()
+    void hooks.onUpdated?.call(fakeSession, fakeData)
+    expect(onSessionChange).not.toHaveBeenCalled()
+  })
+
+  it("maps onUpdated -> 'update' after arm(), passing the bundle through", () => {
+    const {onSessionChange, bundle, hooks} = setup()
+    hooks.arm()
+    void hooks.onUpdated?.call(fakeSession, fakeData)
+    expect(onSessionChange).toHaveBeenCalledTimes(1)
+    expect(onSessionChange.mock.calls[0][0]).toBe(bundle)
+    expect(onSessionChange.mock.calls[0][1]).toBe(DID)
+    expect(onSessionChange.mock.calls[0][2]).toBe('update')
+  })
+
+  it("maps onDeleted -> 'expired' after arm()", () => {
+    const {onSessionChange, hooks} = setup()
+    hooks.arm()
+    void hooks.onDeleted?.call(fakeSession, fakeData)
+    expect(onSessionChange.mock.calls[0][2]).toBe('expired')
+  })
+
+  it("maps onUpdateFailure -> 'network-error' after arm()", () => {
+    const {onSessionChange, hooks} = setup()
+    hooks.arm()
+    void hooks.onUpdateFailure?.call(
+      fakeSession,
+      fakeData,
+      {} as Parameters<NonNullable<typeof hooks.onUpdateFailure>>[1],
+    )
+    expect(onSessionChange.mock.calls[0][2]).toBe('network-error')
+  })
+})
+
+/*
+ * Ported from bridge-agent-test: PasswordSession lifecycle over a mocked fetch.
+ * This exercises the auth core directly (the bridge that used to wrap it is
+ * gone), covering the resume fast path plus the onUpdated/onDeleted/
+ * onUpdateFailure hook firing that makeSessionHooks maps into reducer events.
+ */
+describe('PasswordSession lifecycle over mocked fetch', () => {
+  it('resume fast path: constructing does not hit the network', () => {
+    const fetchMock = makeMockFetch()
+    /* not expired -> new PasswordSession(...) with no refresh */
+    void new PasswordSession(sessionAccountToSessionData(makeAccount()), {
+      fetch: asFetch(fetchMock),
+    })
+    expect(fetchMock.mock.calls.length).toBe(0)
+  })
+
+  it('resume network path fires onUpdated with fresh tokens', async () => {
+    const fetchMock = makeMockFetch()
+    const onUpdated =
+      jest.fn<NonNullable<PasswordSessionOptions['onUpdated']>>()
+    const session = await PasswordSession.resume(
+      sessionAccountToSessionData(makeAccount()),
+      {fetch: asFetch(fetchMock), onUpdated},
+    )
+    expect(onUpdated).toHaveBeenCalledTimes(1)
+    expect(session.session.accessJwt).toBe('access-jwt-2')
+  })
+
+  it('onDeleted fires when refresh returns a declared invalid-token error', async () => {
+    const onDeleted =
+      jest.fn<NonNullable<PasswordSessionOptions['onDeleted']>>()
+    const onUpdated =
+      jest.fn<NonNullable<PasswordSessionOptions['onUpdated']>>()
+    const fetchMock = makeMockFetch({
+      'com.atproto.server.refreshSession': () =>
+        new Response(
+          JSON.stringify({error: 'ExpiredToken', message: 'Token expired'}),
+          {status: 400, headers: {'content-type': 'application/json'}},
+        ),
+    })
+    const session = new PasswordSession(
+      sessionAccountToSessionData(makeAccount()),
+      {fetch: asFetch(fetchMock), onDeleted, onUpdated},
+    )
+    await expect(session.refresh()).rejects.toBeDefined()
+    expect(onDeleted).toHaveBeenCalledTimes(1)
+    expect(onUpdated).not.toHaveBeenCalled()
+  })
+
+  it('onUpdateFailure fires on a transient (500) refresh error, session preserved', async () => {
+    const onDeleted =
+      jest.fn<NonNullable<PasswordSessionOptions['onDeleted']>>()
+    const onUpdateFailure =
+      jest.fn<NonNullable<PasswordSessionOptions['onUpdateFailure']>>()
+    const fetchMock = makeMockFetch({
+      'com.atproto.server.refreshSession': () =>
+        new Response(JSON.stringify({error: 'InternalServerError'}), {
+          status: 500,
+          headers: {'content-type': 'application/json'},
+        }),
+    })
+    const session = new PasswordSession(
+      sessionAccountToSessionData(makeAccount()),
+      {
+        fetch: asFetch(fetchMock),
+        onDeleted,
+        onUpdateFailure,
+      },
+    )
+    await session.refresh()
+    expect(onUpdateFailure).toHaveBeenCalledTimes(1)
+    expect(onDeleted).not.toHaveBeenCalled()
+    /* session data is preserved (still the original tokens) */
+    expect(session.session.accessJwt).toBe('access-jwt')
+  })
+})
+
+/*
+ * refreshSession coverage (design decision (b) / Test plan). The
+ * `useSessionApi().refreshSession()` callback is a thin wrapper over
+ * `PasswordSession.refresh()`: on success the armed hooks dispatch exactly one
+ * 'update' event and the returned snapshot reflects the refreshed data;
+ * rejections propagate. We exercise the auth-core mechanics that the callback
+ * relies on (a full provider render is out of scope for a unit test).
+ */
+describe('refreshSession semantics', () => {
+  it('refresh() resolves updated data and the armed hooks dispatch exactly one update', async () => {
+    const fetchMock = makeMockFetch()
+    const onSessionChange =
+      jest.fn<
+        (bundle: SessionBundle, did: string, event: AtpSessionEvent) => void
+      >()
+    const bundle = {} as SessionBundle
+    const hooks = makeSessionHooks(
+      onSessionChange,
+      () => bundle,
+      () => DID,
+    )
+    /*
+     * makeSessionHooks bakes in networkAwareFetch (the real global fetch);
+     * override it with the mock while keeping the arm-latched callbacks (they
+     * close over the same `armed` flag, so hooks.arm() below still applies).
+     */
+    const session = new PasswordSession(
+      sessionAccountToSessionData(makeAccount()),
+      {...hooks, fetch: asFetch(fetchMock)},
+    )
+    hooks.arm()
+
+    await session.refresh()
+
+    /* the refreshed tokens are live on the session */
+    expect(session.session.accessJwt).toBe('access-jwt-2')
+    /* exactly one 'update' event reached the reducer via the armed hooks */
+    expect(onSessionChange).toHaveBeenCalledTimes(1)
+    expect(onSessionChange.mock.calls[0][2]).toBe('update')
+
+    /* the callback's return value is the post-refresh SessionAccount snapshot */
+    const snapshot = sessionDataToSessionAccount(
+      session.session,
+      session.session.service,
+    )!
+    expect(snapshot.accessJwt).toBe('access-jwt-2')
+    expect(snapshot.refreshJwt).toBe('refresh-jwt-2')
+  })
+
+  it('propagates a rejection from refresh() (invalid session)', async () => {
+    const fetchMock = makeMockFetch({
+      'com.atproto.server.refreshSession': () =>
+        new Response(
+          JSON.stringify({error: 'ExpiredToken', message: 'Token expired'}),
+          {status: 400, headers: {'content-type': 'application/json'}},
+        ),
+    })
+    const session = new PasswordSession(
+      sessionAccountToSessionData(makeAccount()),
+      {fetch: asFetch(fetchMock)},
+    )
+    await expect(session.refresh()).rejects.toBeDefined()
   })
 })

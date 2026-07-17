@@ -9,8 +9,8 @@ import {type SessionAccount} from './types'
 
 /*
  * Canonical implementation moved to session-core.ts so that module stays
- * dependency-light (this file pulls in agent.ts and, transitively, a large
- * chunk of the app). Re-exported here for existing consumers.
+ * dependency-light (this file transitively pulls in a large chunk of the app).
+ * Re-exported here for existing consumers.
  */
 export {isSignupQueued} from './session-core'
 
@@ -41,7 +41,7 @@ export function isSessionExpired(account: SessionAccount) {
  * paired with the account's service origin and handle, matching the contract
  * {@link unregisterPushToken} consumes.
  */
-export async function createTemporaryAgentsAndResume(
+export async function createTemporaryClientsAndResume(
   accounts: SessionAccount[],
 ): Promise<TemporaryPushClient[]> {
   const settled = await Promise.allSettled(
