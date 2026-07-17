@@ -108,6 +108,22 @@ module.exports = async function (env, argv) {
         statsFilename: '../stats.json',
         analyzerMode: OPEN_ANALYZER ? 'server' : 'json',
         defaultSizes: 'parsed',
+        /*
+         * The CI bundle-size-diff action only reads `assets[]`, and it loads
+         * the whole stats file as a single string. Without trimming, the
+         * module graph (`reasons` et al) makes stats.json ~611MB, which blows
+         * V8's 512MB string cap in that action. The interactive analyzer
+         * (`OPEN_ANALYZER`) doesn't read this file, so it's unaffected.
+         */
+        statsOptions: {
+          assets: true,
+          modules: false,
+          reasons: false,
+          usedExports: false,
+          providedExports: false,
+          chunkModules: false,
+          source: false,
+        },
       }),
     )
   }
