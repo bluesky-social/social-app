@@ -226,6 +226,8 @@ jobs:
 
       - name: Create AVD with reduced resolution
         run: |
+          SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
+          export PATH="$SDK_ROOT/cmdline-tools/latest/bin:$PATH"
           echo no | avdmanager create avd --force -n nightly-e2e \
             --abi 'google_apis/x86_64' \
             --package 'system-images;android-35;google_apis;x86_64' \
