@@ -1762,7 +1762,7 @@
       "count": 8
     },
     "typescript/no-unsafe-member-access": {
-      "count": 9
+      "count": 8
     }
   },
   "src/view/com/profile/ProfileFollowers.tsx": {
