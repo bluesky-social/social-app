@@ -154,10 +154,7 @@ export function canReact({
   }
 
   if (primaryMember && moderationOpts) {
-    const moderation = moderateProfile(
-      bsky.toLex(primaryMember),
-      moderationOpts,
-    )
+    const moderation = moderateProfile(primaryMember, moderationOpts)
     if (convoState.convo.kind === 'direct') {
       // Either direction (blocking or blocked-by) hides reactions in 1-1s
       if (moderation.blocked) return false

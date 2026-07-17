@@ -22,7 +22,6 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type chat} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 
 export function RecentChats({
   postUri,
@@ -121,8 +120,7 @@ function RecentChatItem({
 
   const primaryProfile = useProfileShadow(primaryMember)
 
-  // TODO(phase4): drop toLex once useProfileShadow emits #/lexicons views
-  const moderation = moderateProfile(toLex(primaryProfile), moderationOpts)
+  const moderation = moderateProfile(primaryProfile, moderationOpts)
   const name =
     convo.kind === 'group'
       ? convo.details.name

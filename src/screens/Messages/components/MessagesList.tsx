@@ -562,24 +562,18 @@ export function MessagesList({
         try {
           const post = await getPost({uri: embedState.uri})
           if (post) {
-            /*
-             * `post` comes from the still-old-typed `useGetPost` producer
-             * (migrates in a later task), so its uri/view shapes carry plain
-             * strings where the lexicon types are branded. TODO(phase4): drop
-             * toLex once that producer migrates.
-             */
-            embed = bsky.toLex<$Typed<app.bsky.embed.record.Main>>({
+            embed = {
               $type: 'app.bsky.embed.record',
               record: {
                 uri: post.uri,
                 cid: post.cid,
               },
-            })
+            }
 
-            embedView = bsky.toLex<$Typed<app.bsky.embed.record.View>>({
+            embedView = {
               $type: 'app.bsky.embed.record#view',
               record: createEmbedViewRecordFromPost(post),
-            })
+            }
 
             stripLinkFacet(uri => {
               if (!isBskyPostUrl(uri)) return false
@@ -604,14 +598,10 @@ export function MessagesList({
 
         const joinLinkPreview = await getJoinLinkPreview({code, hasSession})
         if (joinLinkPreview) {
-          /*
-           * The preview comes from the still-old-typed `join-links.ts` query
-           * (migrates in a later task). TODO(phase4): drop toLex once it does.
-           */
-          embedView = bsky.toLex<$Typed<chat.bsky.embed.joinLink.View>>({
+          embedView = {
             $type: 'chat.bsky.embed.joinLink#view',
             joinLinkPreview,
-          })
+          }
         }
 
         stripLinkFacet(uri => getChatInviteCodeFromUrl(uri) === code)

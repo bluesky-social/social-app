@@ -61,17 +61,13 @@ export function Post({
       record
         ? new RichTextAPI({
             text: record.text,
-            // TODO(phase4): drop toLex once the post record producer emits #/lexicons facets
-            facets: bsky.toLex(record.facets),
+            facets: record.facets,
           })
         : undefined,
     [record],
   )
   const moderation = useMemo(
-    () =>
-      moderationOpts
-        ? moderatePost(bsky.toLex(post), moderationOpts)
-        : undefined,
+    () => (moderationOpts ? moderatePost(post, moderationOpts) : undefined),
     [moderationOpts, post],
   )
   if (postShadowed === POST_TOMBSTONE) {
@@ -135,8 +131,7 @@ function PostInner({
         text: record.text,
         author: post.author,
         embed: post.embed,
-        // TODO(phase4): drop toLex once the composer state accepts SDK ModerationDecision
-        moderation: bsky.toLex(moderation),
+        moderation: moderation,
         langs: record.langs,
       },
       logContext: 'PostReply',

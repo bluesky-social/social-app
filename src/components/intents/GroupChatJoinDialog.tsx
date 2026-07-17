@@ -395,11 +395,9 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
                   {createSanitizedDisplayName(
                     joinLinkPreview.owner,
                     true,
-                    // TODO(phase4): drop toLex once join link preview emits #/lexicons views
-                    moderateProfile(
-                      bsky.toLex(joinLinkPreview.owner),
-                      moderationOpts,
-                    ).ui('displayName'),
+                    moderateProfile(joinLinkPreview.owner, moderationOpts).ui(
+                      'displayName',
+                    ),
                   )}
                 </InlineLinkText>
               </Trans>

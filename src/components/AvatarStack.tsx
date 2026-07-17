@@ -7,7 +7,6 @@ import {useProfilesQuery} from '#/state/queries/profile'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import type * as bsky from '#/types/bsky'
-import {toLex} from '#/types/bsky'
 
 export function AvatarStack({
   profiles,
@@ -35,8 +34,7 @@ export function AvatarStack({
     : profiles.map(item => ({
         key: item.did,
         profile: item,
-        // TODO(phase4): drop toLex once useProfilesQuery emits #/lexicons views
-        moderation: moderateProfile(toLex(item), moderationOpts),
+        moderation: moderateProfile(item, moderationOpts),
       }))
 
   return (

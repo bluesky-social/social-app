@@ -40,7 +40,6 @@ import {IS_IOS, IS_NATIVE} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
 import {type app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 import {GermButton} from '../components/GermButton'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
@@ -69,7 +68,7 @@ let ProfileHeaderStandard = ({
   const {currentAccount} = useSession()
   const {_} = useLingui()
   const moderation = useMemo(
-    () => moderateProfile(toLex(profile), moderationOpts),
+    () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
   const [, queueUnblock] = useProfileBlockMutationQueue(profile)

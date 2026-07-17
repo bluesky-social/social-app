@@ -297,11 +297,8 @@ export function* findAllPostsInQueryData(
         if (bsky.isType(app.bsky.feed.defs.postView, item.subject)) {
           const quotedPost = getEmbeddedPost(item.subject?.embed)
           if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
-            // TODO(phase4): drop toLex once ../util is migrated and
             // embedViewRecordToPostView returns the lexicon PostView.
-            yield bsky.toLex<app.bsky.feed.defs.PostView>(
-              embedViewRecordToPostView(quotedPost),
-            )
+            yield embedViewRecordToPostView(quotedPost)
           }
         }
       }

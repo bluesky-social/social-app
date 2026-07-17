@@ -39,7 +39,6 @@ import {Loader} from '#/components/Loader'
 import * as Hider from '#/components/moderation/Hider'
 import {IS_WEB} from '#/env'
 import {type app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 import {AboutSection} from './AboutSection'
 import {ErrorScreen} from './components/ErrorScreen'
 import {Header} from './components/Header'
@@ -167,8 +166,7 @@ function ProfileListScreenLoaded({
   const [headerHeight, setHeaderHeight] = useState<number | null>(null)
 
   const moderation = useMemo(() => {
-    // TODO(phase4): drop toLex once ListView prop emits #/lexicons views
-    return moderateUserList(toLex(list), moderationOpts)
+    return moderateUserList(list, moderationOpts)
   }, [list, moderationOpts])
 
   useSetTitle(isHidden ? _(msg`List Hidden`) : list.name)

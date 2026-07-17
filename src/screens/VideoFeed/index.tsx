@@ -791,8 +791,7 @@ function Overlay({
     : undefined
   const richText = new RichTextAPI({
     text: record?.text || '',
-    // TODO(phase4): drop toLex once the post record producer emits #/lexicons facets
-    facets: bsky.toLex(record?.facets),
+    facets: record?.facets,
   })
   const handle = sanitizeHandle(post.author.handle, '@')
 

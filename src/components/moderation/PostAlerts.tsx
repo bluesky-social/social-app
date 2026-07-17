@@ -16,7 +16,6 @@ import {
 } from '#/components/moderation/LabelsOnMeDialog'
 import * as Pills from '#/components/Pills'
 import {type app, type com} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 
 export function PostAlerts({
   post,
@@ -60,8 +59,7 @@ export function PostAlerts({
    */
   const shownCauses = [...alerts, ...informs, ...modui.blurs]
   const additionalLabels = filterUserFacingLabels(
-    // TODO(phase4): drop toLex once PostView labels are #/lexicons-typed
-    toLex(allLabels),
+    allLabels,
     currentAccount?.did,
   ).filter(label =>
     shownCauses.every(

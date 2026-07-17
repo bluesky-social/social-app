@@ -147,15 +147,12 @@ let NotificationFeedItem = ({
       {
         profile: item.notification.author,
         href: makeProfileLink(item.notification.author),
-        moderation: moderateProfile(
-          bsky.toLex(item.notification.author),
-          moderationOpts,
-        ),
+        moderation: moderateProfile(item.notification.author, moderationOpts),
       },
       ...(item.additional?.map(({author}) => ({
         profile: author,
         href: makeProfileLink(author),
-        moderation: moderateProfile(bsky.toLex(author), moderationOpts),
+        moderation: moderateProfile(author, moderationOpts),
       })) || []),
     ].filter(
       (author, index, arr) =>

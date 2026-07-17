@@ -18,7 +18,6 @@ import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 
 const AVI_SIZE = 20
 const MAX_NAME_LENGTH = 16
@@ -67,8 +66,7 @@ export function LikesStat({post}: {post: app.bsky.feed.defs.PostView}) {
         .map(like => like.actor)
         .map(actor => ({
           actor,
-          // TODO(phase4): drop toLex once useLikedBySampleQuery emits #/lexicons views
-          moderation: moderateProfile(toLex(actor), moderationOpts),
+          moderation: moderateProfile(actor, moderationOpts),
         }))
         .filter(({actor, moderation}) => {
           const modui = moderation.ui('profileList')

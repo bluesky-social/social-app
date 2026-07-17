@@ -27,7 +27,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
 import {type app} from '#/lexicons'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 export function LiveStatusDialog({
   control,
@@ -115,8 +115,7 @@ export function LiveStatus({
   const dialogContext = Dialog.useDialogContext()
   const moderation = useMemo(() => {
     if (!moderationOpts) return undefined
-    // TODO(phase4): drop toLex once profile producers emit #/lexicons views
-    return moderateStatus(bsky.toLex(profile), moderationOpts)
+    return moderateStatus(profile, moderationOpts)
   }, [profile, moderationOpts])
 
   return (

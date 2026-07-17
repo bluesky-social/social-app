@@ -21,7 +21,6 @@ import * as ProfileCard from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {toLex} from '#/types/bsky'
 import {MemberMenu} from './MemberMenu'
 import {RemoveMemberPrompt} from './prompts'
 import {StatusBadge} from './StatusBadge'
@@ -81,8 +80,7 @@ export function Member({
     return <MemberPlaceholder />
   }
 
-  // TODO(phase4): drop toLex once useProfileShadow emits #/lexicons views
-  const moderation = moderateProfile(toLex(profile), moderationOpts)
+  const moderation = moderateProfile(profile, moderationOpts)
 
   const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
@@ -108,13 +106,10 @@ export function Member({
   }
 
   const joinedReason = profile.kind?.addedBy
-    ? // TODO(phase4): drop toLex once addedBy emits #/lexicons views
-      l`Added by ${createSanitizedDisplayName(
+    ? l`Added by ${createSanitizedDisplayName(
         profile.kind.addedBy,
         true,
-        moderateProfile(toLex(profile.kind.addedBy), moderationOpts).ui(
-          'displayName',
-        ),
+        moderateProfile(profile.kind.addedBy, moderationOpts).ui('displayName'),
       )}`
     : l`Added by invite link`
 

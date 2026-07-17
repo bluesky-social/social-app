@@ -343,9 +343,7 @@ let MessageItem = ({
         size={AVATAR_SIZE}
         type={profile.associated?.labeler ? 'labeler' : 'user'}
         onBeforePress={() => unstableCacheProfileView(queryClient, profile)}
-        moderation={moderateProfile(bsky.toLex(profile), moderationOpts).ui(
-          'avatar',
-        )}
+        moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
       />
     ) : (
       <ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />

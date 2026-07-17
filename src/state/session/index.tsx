@@ -80,6 +80,7 @@ const ApiContext = createContext<SessionApiContext>({
   resumeSession: async () => {},
   removeAccount: () => {},
   partialRefreshSession: async () => {},
+  refreshSession: () => Promise.resolve(undefined),
 })
 ApiContext.displayName = 'SessionApiContext'
 
@@ -344,6 +345,28 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     })
   }, [store, state, cancelPendingTask])
 
+  const refreshSession = useCallback<
+    SessionApiContext['refreshSession']
+  >(async () => {
+    const bundle = store.getState().currentAgentState.agent as unknown as
+      | SessionBundle
+      | PublicSessionBundle
+    if (!bundle.session) return undefined // logged out: nothing to refresh
+    /*
+     * PasswordSession.refresh() re-runs com.atproto.server.refreshSession +
+     * getSession. On success the session's onUpdated hook fires, which the
+     * armed makeSessionHooks wiring maps to an 'update' event; the reducer
+     * snapshots the refreshed account. No explicit dispatch is needed here.
+     * The returned snapshot lets callers read post-refresh fields without
+     * waiting on the (async) reducer update.
+     */
+    await bundle.session.refresh()
+    return sessionDataToSessionAccount(
+      bundle.session.session,
+      bundle.session.session.service,
+    )
+  }, [store])
+
   const removeAccount = useCallback<SessionApiContext['removeAccount']>(
     account => {
       addSessionDebugLog({
@@ -443,6 +466,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       resumeSession,
       removeAccount,
       partialRefreshSession,
+      refreshSession,
     }),
     [
       createAccount,
@@ -452,6 +476,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       resumeSession,
       removeAccount,
       partialRefreshSession,
+      refreshSession,
     ],
   )
 

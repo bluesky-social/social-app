@@ -24,7 +24,6 @@ import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
-import {toLex} from '#/types/bsky'
 
 /*
  * This component is based on `FeedCard` and is tightly coupled with that
@@ -55,8 +54,7 @@ export function Default(
   const {view, showPinButton} = props
   const moderationOpts = useModerationOpts()
   const moderation = moderationOpts
-    ? // TODO(phase4): drop toLex once ListView props emit #/lexicons views
-      moderateUserList(toLex(view), moderationOpts)
+    ? moderateUserList(view, moderationOpts)
     : undefined
 
   return (

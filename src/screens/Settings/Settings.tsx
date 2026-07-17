@@ -69,7 +69,6 @@ import {useActorStatus} from '#/features/liveNow'
 import {type app} from '#/lexicons'
 import {device, useStorage} from '#/storage'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
-import {toLex} from '#/types/bsky'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
@@ -330,8 +329,7 @@ function ProfilePreview({
 
   if (!moderationOpts) return null
 
-  // TODO(phase4): drop toLex once ProfileViewDetailed prop emits #/lexicons views
-  const moderation = moderateProfile(toLex(profile), moderationOpts)
+  const moderation = moderateProfile(profile, moderationOpts)
   const displayName = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
@@ -629,10 +627,7 @@ function AccountRow({
           <UserAvatar
             size={28}
             avatar={profile.avatar}
-            // TODO(phase4): drop toLex once ProfileViewDetailed prop emits #/lexicons views
-            moderation={moderateProfile(toLex(profile), moderationOpts).ui(
-              'avatar',
-            )}
+            moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
             type={profile.associated?.labeler ? 'labeler' : 'user'}
             live={live}
             hideLiveBadge

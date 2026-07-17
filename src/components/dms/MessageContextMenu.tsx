@@ -29,7 +29,6 @@ import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {type chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
-import {toLex} from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
 import {canReact, hasReachedReactionLimit} from './util'
 
@@ -87,8 +86,7 @@ export let MessageContextMenu = ({
     const str = richTextToString(
       new RichText({
         text: message.text,
-        // TODO(phase4): drop toLex once the message producer emits #/lexicons facets
-        facets: toLex(message.facets),
+        facets: message.facets,
       }),
       true,
     )

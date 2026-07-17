@@ -11,7 +11,6 @@ import {Link, type LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
-import {toLex} from '#/types/bsky'
 
 const AVI_SIZE = 30
 const AVI_SIZE_SMALL = 20
@@ -96,8 +95,7 @@ function KnownFollowersInner({
   const textStyle = [a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]
 
   const slice = cachedKnownFollowers.followers.slice(0, 3).map(f => {
-    // TODO(phase4): drop toLex once KnownFollowers emits #/lexicons views
-    const moderation = moderateProfile(toLex(f), moderationOpts)
+    const moderation = moderateProfile(f, moderationOpts)
     return {
       profile: {
         ...f,

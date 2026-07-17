@@ -51,4 +51,15 @@ export type SessionApiContext = {
    * `persistSessionHandler`.
    */
   partialRefreshSession: () => Promise<void>
+  /**
+   * Force a full session refresh (re-runs `com.atproto.server.refreshSession`
+   * plus `getSession`) and return the refreshed account snapshot, or
+   * `undefined` when logged out.
+   *
+   * The refresh routes through the session's own `refresh()`, whose success
+   * hook propagates the updated account into state; the returned snapshot lets
+   * callers read post-refresh fields synchronously without waiting on the
+   * (async) reducer update. Rejections propagate to the caller.
+   */
+  refreshSession: () => Promise<SessionAccount | undefined>
 }

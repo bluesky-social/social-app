@@ -20,7 +20,6 @@ import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 
 const TOPIC_COUNT = 5
 
@@ -281,8 +280,7 @@ function useModerateTrendingActors(
 
     return actors
       .filter(actor => {
-        // TODO(phase4): drop toLex once TrendView actors emit #/lexicons views
-        const decision = moderateProfile(toLex(actor), moderationOpts)
+        const decision = moderateProfile(actor, moderationOpts)
         return !decision.ui('avatar').filter && !decision.ui('avatar').blur
       })
       .slice(0, 3)

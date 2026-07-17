@@ -17,7 +17,6 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {usePromptControl} from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import {toLex} from '#/types/bsky'
 import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 
 export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
@@ -115,8 +114,7 @@ function InviterHeader({
   const t = useTheme()
   const profile = useProfileShadow(profileUnshadowed)
   const moderation = useMemo(
-    // TODO(phase4): drop toLex once useProfileShadow emits #/lexicons views
-    () => moderateProfile(toLex(profile), moderationOpts),
+    () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
   const displayName = createSanitizedDisplayName(

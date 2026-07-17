@@ -20,7 +20,6 @@ import * as StarterPackCard from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 
 export function NewskieDialog({
   profile,
@@ -90,8 +89,7 @@ function DialogInner({
 
   const profileName = useMemo(() => {
     if (!moderationOpts) return profile.displayName || profile.handle
-    // TODO(phase4): drop toLex once ProfileViewDetailed prop emits #/lexicons views
-    const moderation = moderateProfile(toLex(profile), moderationOpts)
+    const moderation = moderateProfile(profile, moderationOpts)
     return sanitizeDisplayName(
       profile.displayName || profile.handle,
       moderation.ui('displayName'),

@@ -12,7 +12,6 @@ import {mimeToExt} from '#/lib/media/video/util'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {type ComposerImage} from '#/state/gallery'
 import {threadgateAllowUISettingToAllowRecordValue} from '#/state/queries/threadgate/util'
-import {createPublicAgent} from '#/state/session/agent'
 import {getPublicLexClient} from '#/state/session/clients'
 import {
   type ComposerState,
@@ -141,10 +140,9 @@ async function postDraftToServerPost(
 
   // Add quote record embed
   if (post.embed.quote) {
-    const agent = createPublicAgent()
     const publicClient = getPublicLexClient()
     const resolved = await resolveLink(
-      {appview: publicClient, chat: publicClient, agent},
+      {appview: publicClient, chat: publicClient},
       post.embed.quote.uri,
     )
     if (resolved && resolved.type === 'record') {

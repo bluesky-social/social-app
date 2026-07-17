@@ -17,7 +17,6 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Person_Filled_Corner2_Rounded as PersonIcon} from '#/components/icons/Person'
 import type * as bsky from '#/types/bsky'
-import {toLex} from '#/types/bsky'
 
 type Layout = {
   size: number
@@ -163,10 +162,7 @@ function AvatarBubble({
           type="user"
           hideLiveBadge
           noBorder
-          // TODO(phase4): drop toLex once profile props emit #/lexicons views
-          moderation={moderateProfile(toLex(profile), moderationOpts).ui(
-            'avatar',
-          )}
+          moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
         />
       ) : (
         <AvatarPlaceholder size={size} />

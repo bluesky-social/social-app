@@ -10,7 +10,6 @@ import * as Toggle from '#/components/forms/Toggle'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import {toLex} from '#/types/bsky'
 
 export function GroupChatProfileCard({
   profile,
@@ -21,8 +20,7 @@ export function GroupChatProfileCard({
 }) {
   const t = useTheme()
   const enabled = canBeAddedToGroup(profile)
-  // TODO(phase4): drop toLex once profile prop emits #/lexicons views
-  const moderation = moderateProfile(toLex(profile), moderationOpts)
+  const moderation = moderateProfile(profile, moderationOpts)
   const handle = sanitizeHandle(profile.handle, '@')
   const displayName = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),

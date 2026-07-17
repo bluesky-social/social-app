@@ -28,7 +28,6 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
 import {type app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
 const DESCRIPTION_MAX_GRAPHEMES = 300
@@ -165,9 +164,8 @@ function DialogInner({
 
     // We want to be working with a blank state here, so let's get the
     // serialized version and turn it back into a RichText
-    // TODO(phase4): drop toLex once the list view producer emits #/lexicons facets
     const serialized = richTextToString(
-      new RichTextAPI({text, facets: toLex(facets)}),
+      new RichTextAPI({text, facets: facets}),
       false,
     )
 

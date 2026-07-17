@@ -268,9 +268,7 @@ export function QuoteEmbed({
     [embed],
   )
   const moderation = useMemo(() => {
-    return moderationOpts
-      ? moderatePost(bsky.toLex(quote), moderationOpts)
-      : undefined
+    return moderationOpts ? moderatePost(quote, moderationOpts) : undefined
   }, [quote, moderationOpts])
 
   const t = useTheme()
