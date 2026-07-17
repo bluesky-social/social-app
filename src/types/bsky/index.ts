@@ -10,86 +10,21 @@ import {
   type ValidateOptions,
   type ValidationResult,
 } from '@atproto/lex'
-import {type ValidationResult as LegacyValidationResult} from '@atproto/lexicon'
 
 export * as post from '#/types/bsky/post'
 export * as profile from '#/types/bsky/profile'
 export * as starterPack from '#/types/bsky/starterPack'
 
-/**
- * Unsafe cast from an old `@atproto/api` view/record type to its `#/lexicons`
- * equivalent. Only for mixed-world boundaries during the migration where a
- * producer has not yet flipped. Structurally the shapes are identical modulo
- * branded string types; this asserts the brand the compiler cannot prove.
- * Every use is a migration debt marker - grep `toLex` at Phase 4 cleanup.
- */
-export function toLex<T>(v: unknown): T {
-  return v as T
-}
-
-/**
- * Fast type checking without full schema validation, for use with data we
- * trust, or for non-critical path use cases. Why? Our SDK's `is*` identity
- * utils do not assert the type of the entire object, only the `$type` string.
- *
- * For full validation of the object schema, use the `validate` export from
- * this file.
- *
- * Usage:
- * ```ts
- * import * as bsky from '#/types/bsky'
- *
- * if (bsky.dangerousIsType<AppBskyFeedPost.Record>(item, AppBskyFeedPost.isRecord)) {
- *   // `item` has type `$Typed<AppBskyFeedPost.Record>` here
- * }
- * ```
- */
-export function dangerousIsType<R extends {$type?: string}>(
-  record: unknown,
-  identity: <V>(v: V) => v is V & {$type: NonNullable<R['$type']>},
-): record is R {
-  return identity(record)
-}
-
-/**
- * Fully validates the object schema, which has a performance cost.
- *
- * For faster checks with data we trust, like that from our app view, use the
- * `dangerousIsType` export from this same file.
- *
- * Usage:
- * ```ts
- * import * as bsky from '#/types/bsky'
- *
- * if (bsky.validate(item, AppBskyFeedPost.validateRecord)) {
- *   // `item` has type `$Typed<AppBskyFeedPost.Record>` here
- * }
- * ```
- */
-export function validate<R extends {$type?: string}>(
-  record: unknown,
-  validator: (v: unknown) => LegacyValidationResult<R>,
-): record is R {
-  return validator(record).success
-}
-
 /*
- * New-world helpers (below) operate on the generated lexicon schema objects
- * from '#/lexicons', replacing the `@atproto/api`-based helpers above.
- *
- * The old helpers take a record plus a standalone `is*`/`validate*` function
- * (e.g. `AppBskyFeedPost.isRecord`). The new codegen instead attaches the
- * validation surface directly to each schema, so these helpers take the schema
- * object itself:
+ * These helpers operate on the generated lexicon schema objects from
+ * '#/lexicons'. The codegen attaches the validation surface directly to each
+ * schema, so these helpers take the schema object itself:
  *
  * ```ts
  * import {app} from '#/lexicons'
  * import * as bsky from '#/types/bsky'
  *
- * // old: bsky.dangerousIsType(v, AppBskyFeedPost.isRecord)
  * bsky.isType(app.bsky.feed.post, v)
- *
- * // old: bsky.validate(v, AppBskyFeedPost.validateRecord)
  * bsky.matches(app.bsky.feed.post, v)
  * ```
  *
@@ -113,9 +48,8 @@ type TypedSchema = RecordSchema | TypedObjectSchema
  * string; it does NOT assert the rest of the object matches the schema. An
  * invalid record with the right `$type` will pass.
  *
- * This is the '#/lexicons' equivalent of {@link dangerousIsType}. For full
- * validation of the object schema, use {@link matches}, {@link parse}, or
- * {@link safeParse} from this same file.
+ * For full validation of the object schema, use {@link matches}, {@link parse},
+ * or {@link safeParse} from this same file.
  *
  * Usage:
  * ```ts
@@ -135,10 +69,9 @@ export function isType<S extends TypedSchema>(
    * Deliberately NOT delegating to the schema's `isTypeOf`: the generated
    * `TypedObjectSchema.isTypeOf` treats a MISSING `$type` as a match
    * (maybe-typed semantics), which would let any plain object satisfy any
-   * def-schema check and break `$type`-discriminated unions. The old
-   * `dangerousIsType` required a present, matching `$type`, and so do we.
-   * The nullish/object guard also mirrors the old `is$typed` behavior of
-   * returning false (not throwing) for null/undefined input.
+   * def-schema check and break `$type`-discriminated unions. We require a
+   * present, matching `$type`. The nullish/object guard also returns false
+   * (not throws) for null/undefined input.
    */
   return (
     value != null &&
@@ -151,9 +84,8 @@ export function isType<S extends TypedSchema>(
  * Fully validates the object against the schema (strict, no coercion), which
  * has a performance cost, and narrows the value on success.
  *
- * This is the '#/lexicons' equivalent of {@link validate}. For faster checks
- * with data we trust, like that from our app view, use {@link isType} from this
- * same file.
+ * For faster checks with data we trust, like that from our app view, use
+ * {@link isType} from this same file.
  *
  * Usage:
  * ```ts

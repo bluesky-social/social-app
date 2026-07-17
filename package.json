@@ -98,7 +98,6 @@
     "prettier": "prettier --check ."
   },
   "dependencies": {
-    "@atproto/api": "0.20.28",
     "@atproto/common-web": "0.5.6",
     "@atproto/lex": "0.2.2",
     "@atproto/lex-client": "0.2.4",

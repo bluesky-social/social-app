@@ -7,22 +7,20 @@
 jest.unmock('multiformats/cid')
 jest.unmock('multiformats/hashes/hasher')
 
-import {BlobRef} from '@atproto/api'
 import {CID} from 'multiformats/cid'
 
 import {computeCid} from '#/lib/api/computeCid'
 import {type app, type com} from '#/lexicons'
 
 /*
- * Golden-CID regression test for the composer post pipeline (design section F).
+ * Golden-CID regression test for the composer post pipeline.
  *
  * `computeCid` hashes a post record in the client so a thread's later posts can
  * reference earlier posts by CID before the server assigns them. The hash is
  * byte-sensitive: any drift in how records (especially blobs) are serialized to
  * DAG-CBOR silently produces the wrong CID and breaks reply chains with NO type
- * error. These golden values were captured from the PRE-migration `computeCid`
- * (the `instanceof BlobRef` path) and MUST remain byte-identical after the guard
- * is changed to the structural `isBlobRef` shape check.
+ * error. These golden values MUST remain byte-identical - they gate the
+ * structural `isBlobRef` shape check.
  *
  * The blob CID below is a fixed, deterministic CIDv1/raw/sha256 used purely as a
  * stable fixture - it is not derived from any real upload.
@@ -30,10 +28,7 @@ import {type app, type com} from '#/lexicons'
 const BLOB_CID = 'bafkreieq5jui4j25lacwomsqgjeswwl3y5zcdrresptwgmfylxo2depppq'
 
 /**
- * Build a post record with an image embed whose blob is the given value. Used to
- * prove that a `@atproto/api` `BlobRef` class instance (the shape the not-yet
- * -migrated video path still yields) and a plain-JSON lex blob (the shape lex
- * `uploadBlob` returns) hash to the SAME CID.
+ * Build a post record with an image embed whose blob is the given value.
  */
 function postWithImageBlob(blob: unknown): app.bsky.feed.post.Main {
   return {
@@ -65,22 +60,14 @@ describe('computeCid', () => {
     )
   })
 
-  it('case 2: record whose embed carries a BlobRef class instance', async () => {
-    const blob = new BlobRef(CID.parse(BLOB_CID), 'image/jpeg', 12345)
-    expect(await computeCid(postWithImageBlob(blob))).toBe(
-      'bafyreiem7g6vja66nebr7he4fshfnlyndyldbvle2n265oixscmepjcbii',
-    )
-  })
-
-  it('case 2b: a plain-JSON blob object hashes identically to the class instance', async () => {
+  it('case 2: record whose embed carries a plain-JSON lex blob', async () => {
     /*
-     * This is the post-migration shape: lex `uploadBlob` returns a plain object
-     * `{$type: 'blob', ref, mimeType, size}` (with `ref` a parsed CID), not a
-     * `BlobRef` class instance. The structural `isBlobRef` guard must treat it
-     * exactly like the class instance so the CID is unchanged. Under the
-     * pre-change `instanceof` code this case already matches because the plain
-     * object walks through `prepareForHashing` unchanged and DAG-CBOR encodes
-     * its CID `ref` the same way `.ipld()` does.
+     * The blob shape lex `uploadBlob` returns: a plain object
+     * `{$type: 'blob', ref, mimeType, size}` with `ref` a parsed CID. The
+     * structural `isBlobRef` guard passes it through `prepareForHashing`
+     * untouched and DAG-CBOR encodes its CID `ref` as a CID link. The golden
+     * CID below is the byte-identical value the pre-migration `BlobRef` class
+     * instance produced via `.ipld()`.
      */
     const blob = {
       $type: 'blob' as const,

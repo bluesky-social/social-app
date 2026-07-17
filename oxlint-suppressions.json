@@ -1902,5 +1902,16 @@
     "typescript/no-unsafe-member-access": {
       "count": 3
     }
+  },
+  "webpack.config.js": {
+    "import/no-nodejs-modules": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 11
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 30
+    }
   }
 }
