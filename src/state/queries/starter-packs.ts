@@ -110,7 +110,7 @@ export function useCreateStarterPackMutation({
       let descriptionFacets: app.bsky.richtext.facet.Main[] | undefined
       if (description) {
         const rt = new RichText({text: description})
-        await rt.detectFacets(pdsClient)
+        await rt.detectFacets(appviewClient)
         descriptionFacets = rt.facets
       }
 
@@ -178,7 +178,7 @@ export function useEditStarterPackMutation({
       let descriptionFacets: app.bsky.richtext.facet.Main[] | undefined
       if (description) {
         const rt = new RichText({text: description})
-        await rt.detectFacets(pdsClient)
+        await rt.detectFacets(appviewClient)
         descriptionFacets = rt.facets
       }
 

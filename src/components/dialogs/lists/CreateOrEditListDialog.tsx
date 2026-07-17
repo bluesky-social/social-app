@@ -15,7 +15,7 @@ import {
   useListCreateMutation,
   useListMetadataMutation,
 } from '#/state/queries/list'
-import {usePdsClient} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -134,7 +134,7 @@ function DialogInner({
 
   const {_} = useLingui()
   const t = useTheme()
-  const pdsClient = usePdsClient()
+  const appviewClient = useAppviewClient()
   const control = Dialog.useDialogContext()
   const {
     mutateAsync: createListMutation,
@@ -228,7 +228,7 @@ function DialogInner({
         {cleanNewlines: true},
       )
 
-      await richText.detectFacets(pdsClient)
+      await richText.detectFacets(appviewClient)
       richText = shortenLinks(richText)
       richText = stripInvalidMentions(richText)
 
@@ -276,7 +276,7 @@ function DialogInner({
     setImageError,
     activePurpose,
     isCurateList,
-    pdsClient,
+    appviewClient,
     _,
   ])
 

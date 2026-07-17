@@ -28,7 +28,7 @@ import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {usePdsClient, useSession} from '#/state/session'
+import {useLexClient, useSession} from '#/state/session'
 import {ProfileFeedgens} from '#/view/com/feeds/ProfileFeedgens'
 import {ProfileLists} from '#/view/com/lists/ProfileLists'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
@@ -596,7 +596,7 @@ function ProfileScreenLoaded({
 }
 
 function useRichText(text: string): [RichTextAPI, boolean] {
-  const client = usePdsClient()
+  const client = useLexClient()
   const [prevText, setPrevText] = useState(text)
   const [rawRT, setRawRT] = useState(() => new RichTextAPI({text}))
   const [resolvedRT, setResolvedRT] = useState<RichTextAPI | null>(null)

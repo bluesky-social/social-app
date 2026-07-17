@@ -9,7 +9,7 @@ import {type AtUriString} from '@atproto/syntax'
 
 import * as persisted from '#/state/persisted'
 import {app} from '#/lexicons'
-import {usePdsClient, useSession} from '../session'
+import {useAppviewClient, useSession} from '../session'
 
 type StateContext = Map<string, boolean>
 type SetStateContext = (uri: string, value: boolean) => void
@@ -58,7 +58,7 @@ export function useSetThreadMute() {
 }
 
 function useMigrateMutes(setThreadMute: SetStateContext) {
-  const pdsClient = usePdsClient()
+  const appviewClient = useAppviewClient()
   const {currentAccount} = useSession()
 
   useEffect(() => {
@@ -89,7 +89,7 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
 
           setThreadMute(root, true)
 
-          await pdsClient
+          await appviewClient
             .call(app.bsky.graph.muteThread, {root: root as AtUriString})
             // not a big deal if this fails, since the post might have been deleted
             .catch(console.error)
@@ -102,5 +102,5 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
         cancelled = true
       }
     }
-  }, [pdsClient, currentAccount, setThreadMute])
+  }, [appviewClient, currentAccount, setThreadMute])
 }
