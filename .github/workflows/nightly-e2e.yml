@@ -82,17 +82,40 @@ jobs:
       - name: Boot one iOS simulator
         run: |
           echo "Booting iOS simulator" > artifacts/ios/phase.txt
-          udid=$(xcrun simctl list devices available --json | jq -r \
-            '[.devices[][] | select(.name | startswith("iPhone"))] | first | .udid')
-          if [ -z "$udid" ] || [ "$udid" = "null" ]; then
-            echo "No available iPhone simulator was found" >&2
+          device_name="iPhone 17"
+          runtime_name="iOS 26.5"
+
+          runtime_id=$(xcrun simctl list runtimes available --json | jq -r \
+            --arg name "$runtime_name" \
+            '[.runtimes[] | select(.name == $name and .isAvailable != false)] | first | .identifier // empty')
+          if [ -z "$runtime_id" ]; then
+            echo "The $runtime_name simulator runtime is not installed. Available iOS runtimes:" >&2
+            xcrun simctl list runtimes available --json | jq -r \
+              '.runtimes[] | select(.name | startswith("iOS")) | "- \(.name)"' >&2
             exit 1
           fi
+
+          device_type_id=$(xcrun simctl list devicetypes --json | jq -r \
+            --arg name "$device_name" \
+            '[.devicetypes[] | select(.name == $name)] | first | .identifier // empty')
+          if [ -z "$device_type_id" ]; then
+            echo "The $device_name simulator device type is not installed" >&2
+            exit 1
+          fi
+
+          udid=$(xcrun simctl list devices available --json | jq -r \
+            --arg runtime "$runtime_id" \
+            --arg name "$device_name" \
+            '[.devices[$runtime][]? | select(.name == $name)] | first | .udid // empty')
+          if [ -z "$udid" ]; then
+            udid=$(xcrun simctl create "$device_name" "$device_type_id" "$runtime_id")
+          fi
+
           echo "IOS_UDID=$udid" >> "$GITHUB_ENV"
           xcrun simctl shutdown all || true
           xcrun simctl boot "$udid"
           xcrun simctl bootstatus "$udid" -b
-          echo "Using iOS simulator $udid"
+          echo "Using $device_name on $runtime_name ($udid)"
 
       - name: Run iOS Maestro suite
         run: .github/scripts/run-nightly-e2e.sh ios "$IOS_UDID"

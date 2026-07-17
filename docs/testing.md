@@ -40,7 +40,8 @@ stateful mock-server manager, so the suite must not be sharded.
 The jobs run Maestro CLI 2.6.1 locally on GitHub Actions; Maestro Cloud is not
 used. iOS runs on `macos-26-xlarge` with Xcode 26.4. Android runs on
 `Linux-x64-32core`. Both use Java 17 and the Node and pnpm versions declared in
-`package.json`.
+`package.json`. The iOS job selects an iPhone 17 simulator running iOS 26.5;
+Android uses a Pixel 6 AVD with the API 35 Google APIs x86_64 image.
 
 The mock-server manager listens on host port 1986 and creates test services on
 port 3000. Metro listens on 8081. Android reverses ports 3000 and 8081 into the
