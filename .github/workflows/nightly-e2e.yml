@@ -224,6 +224,15 @@ jobs:
             sudo chmod 666 /dev/kvm
           fi
 
+      - name: Create AVD with reduced resolution
+        run: |
+          echo no | avdmanager create avd --force -n nightly-e2e \
+            --abi 'google_apis/x86_64' \
+            --package 'system-images;android-35;google_apis;x86_64' \
+            --device 'pixel_6'
+          printf 'hw.lcd.width=720\nhw.lcd.height=1600\nhw.lcd.density=280\n' \
+            >> "$HOME/.android/avd/nightly-e2e.avd/config.ini"
+
       - name: Boot Android emulator and run Maestro suite
         uses: reactivecircus/android-emulator-runner@1dcd0090116d15e7c562f8db72807de5e036a4ed # v2.34.0
         with:
@@ -234,14 +243,27 @@ jobs:
           avd-name: nightly-e2e
           emulator-port: 5554
           disable-animations: true
+          force-avd-creation: false
           cores: 4
           ram-size: 6144
           heap-size: 512
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-window -gpu swiftshader -no-snapshot -noaudio -no-boot-anim -camera-back none
           script: |
             echo "Installing the Android development client" > artifacts/android/phase.txt
             adb -s emulator-5554 install -r "$RUNNER_TEMP/nightly-e2e-android.apk" 2>&1 | tee -a artifacts/android/build.log
             .github/scripts/run-nightly-e2e.sh android emulator-5554
+
+      - name: Capture emulator crash diagnostics
+        if: always()
+        run: |
+          {
+            echo "=== Emulator process status ==="
+            pgrep -fa "emulator.*nightly-e2e" || echo "Emulator process not found"
+            echo "=== OOM killer check ==="
+            sudo dmesg 2>/dev/null | grep -i "oom\|killed\|out of memory" | tail -20 || echo "dmesg not available"
+            echo "=== Emulator crash database ==="
+            ls -la /tmp/android-runner/emu-crash-*.db 2>/dev/null || echo "No crash database found"
+          } > artifacts/android/emulator-diagnostics.log 2>&1
 
       - name: Clean up Android services and emulator
         if: always()
