@@ -1,9 +1,3 @@
-import {
-  Agent,
-  type AppBskyActorProfile,
-  type AtpSessionEvent,
-  type Un$Typed,
-} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import {type Client} from '@atproto/lex-client'
 import {
@@ -11,11 +5,16 @@ import {
   type PasswordSessionOptions,
   type SessionData,
 } from '@atproto/lex-password-session'
+import {toDatetimeString} from '@atproto/syntax'
+import {
+  overwriteSavedFeeds,
+  setPersonalDetails,
+  upsertProfile,
+} from '@bsky.app/sdk'
 import {jwtDecode} from 'jwt-decode'
 
 import {networkRetry} from '#/lib/async/retry'
 import {
-  BLUESKY_PROXY_HEADER,
   BSKY_SERVICE,
   DISCOVER_SAVED_FEED,
   IS_PROD_SERVICE,
@@ -35,6 +34,7 @@ import {
 } from '#/ageAssurance/data'
 import {unsafeGetAndComputeAgeAssurance} from '#/ageAssurance/state'
 import {features} from '#/analytics'
+import {type app} from '#/lexicons'
 import {
   buildAccountClient,
   buildAppviewClient,
@@ -50,15 +50,22 @@ import {
 import {type SessionAccount} from './types'
 import {isSessionExpired} from './util'
 
-/*
- * Re-exported so session-layer siblings (index.tsx, reducer.ts, logging.ts,
- * moderation.ts, additional-moderation-authorities.ts) import the bridge
- * vocabulary through this whitelisted bridge module rather than from
- * '@atproto/api' directly. `Agent` is re-exported as `BridgeAgent` for the
- * labeler-config statics (`Agent.configure`/`Agent.appLabelers`). Dies with
- * the bridge in Phase 4.
+/**
+ * The session-change events the reducer/logging/tests speak.
+ *
+ * Formerly re-exported from the legacy API package; defined locally now that
+ * the bridge is gone. These are the exact union members the reducer switches
+ * on. In
+ * production only `'update'`/`'expired'`/`'network-error'` are ever emitted from
+ * {@link makeSessionHooks}; `'create'`/`'create-failed'` remain in the type for
+ * the reducer and the session tests.
  */
-export {type AtpSessionEvent, Agent as BridgeAgent} from '@atproto/api'
+export type AtpSessionEvent =
+  | 'create'
+  | 'create-failed'
+  | 'update'
+  | 'expired'
+  | 'network-error'
 
 /**
  * Whether an access token was issued for a queued (waitlisted) signup rather
@@ -251,164 +258,29 @@ export function sessionAccountToSessionData(
 }
 
 /**
- * Read `session.did` without throwing.
+ * The service (entryway) URL for a session, or the public appview URL when
+ * logged out / destroyed.
  *
- * `PasswordSession.did` throws `Error('Logged out')` once the session is
- * destroyed, but base `Agent`'s `did` getter must never throw (it is read all
- * over the app, including by late readers after logout). This returns
- * `undefined` for a destroyed/absent session.
+ * Byte-identical to the derivation the old service getter used: a
+ * `new URL(...)` over `session.session.service` when the session is live, else
+ * `PUBLIC_BSKY_SERVICE`. Used for the {@link SessionBundle.service} getter.
  */
-function safeDid(
-  session: PasswordSession | null,
-): SessionData['did'] | undefined {
-  if (!session || session.destroyed) {
-    return undefined
-  }
-  return session.did
-}
-
-/**
- * The legacy bridge agent returned by `useAgent()`.
- *
- * It is a real base `Agent` (from `@atproto/api`) whose fetch layer is a
- * `PasswordSession` - reproducing today's exact two-layer model: base-Agent
- * proxy/labeler layer on top, `PasswordSession` auth+refresh layer underneath.
- * On top of that it adds a small CredentialSession-compat shim (`session`,
- * `serviceUrl`, `pdsUrl`, `dispatchUrl`, `resumeSession`, `sessionManager`) so
- * the ~28 `.session` reads and 6 `resumeSession` callers across the app compile
- * and behave unchanged without a call-site migration.
- *
- * `#session` is null for the logged-out/public agent.
- */
-/**
- * The CredentialSession-compat facade exposed as `SessionAgent.sessionManager`.
- * A handful of sites read `agent.sessionManager.{did,fetchHandler,
- * refreshSession,session}` directly (birthdate.ts, ExportCarDialog,
- * ageAssurance/data); this is a live view over the underlying
- * `PasswordSession`.
- */
-type SessionManagerFacade = {
-  readonly did: string | undefined
-  fetchHandler: (path: string, init: RequestInit) => Promise<Response>
-  refreshSession: () => Promise<SessionData>
-  readonly session: SessionData | undefined
-}
-
-/**
- * Build the sessionManager facade for a session (or the logged-out fallback).
- * This object is passed straight to base `Agent`'s constructor as its
- * `SessionManager`, so base's request path (`this.sessionManager.fetchHandler`)
- * and `did` getter route through it - and the richer members
- * (`refreshSession`/`session`) are available to the hard-tail consumers.
- */
-function makeSessionManagerFacade(
-  session: PasswordSession | null,
-): SessionManagerFacade {
-  const s = session
-  return {
-    get did() {
-      return safeDid(s)
-    },
-    fetchHandler: (path: string, init: RequestInit) =>
-      (s ?? getPublicLexClient()).fetchHandler(path as `/${string}`, init),
-    refreshSession: () => s!.refresh(),
-    get session() {
-      return s && !s.destroyed ? s.session : undefined
-    },
-  }
-}
-
-/*
- * Declaration merging: widen the inherited `sessionManager` (base types it as
- * the minimal `SessionManager`) to the richer facade the shim actually stores.
- * This exposes `refreshSession`/`session` to the hard-tail consumers
- * (birthdate.ts, ExportCarDialog, ageAssurance/data) without a property vs
- * accessor override (which TS/babel reject - risk #3 in the design doc). The
- * facade is genuinely assigned via super(makeSessionManagerFacade(...)), so the
- * merge is sound despite the generic lint warning.
- */
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export interface SessionAgent {
-  readonly sessionManager: SessionManagerFacade
-}
-
-export class SessionAgent extends Agent {
-  #session: PasswordSession | null
-
-  constructor(session: PasswordSession | null) {
-    /*
-     * The facade IS base Agent's SessionManager: base routes every request
-     * through `this.sessionManager.fetchHandler` and reads `did` from it. For a
-     * logged-out agent the facade routes to the public client (same public
-     * appview service), so base's proxy/labeler layer still applies on top,
-     * matching the old createPublicAgent behavior.
-     */
-    super(makeSessionManagerFacade(session))
-    this.#session = session
-  }
-
-  /**
-   * The live `SessionData` for the current session, or `undefined` when logged
-   * out. Reads through to the `PasswordSession`, so `.did`/`.handle`/`.email`
-   * etc. are always current.
-   */
-  get session(): SessionData | undefined {
-    return this.#session && !this.#session.destroyed
-      ? this.#session.session
-      : undefined
-  }
-
-  /** The account's service (entryway) URL. */
-  get serviceUrl(): URL {
-    return new URL(
-      this.#session && !this.#session.destroyed
-        ? this.#session.session.service
-        : PUBLIC_BSKY_SERVICE,
-    )
-  }
-
-  /**
-   * The PDS URL derived from the session's didDoc, or `undefined` when there is
-   * no didDoc PDS entry (hosted accounts) - matching the old
-   * `agent.pdsUrl?.toString()` semantics.
-   */
-  get pdsUrl(): URL | undefined {
-    if (!this.#session || this.#session.destroyed) {
-      return undefined
-    }
-    const pds = extractPdsUrl(this.#session.session.didDoc)
-    return pds ? new URL(pds) : undefined
-  }
-
-  /**
-   * The URL requests are dispatched to: the PDS if known, else the service.
-   * Matches AtpAgent's `dispatchUrl` semantics.
-   */
-  get dispatchUrl(): URL {
-    return this.pdsUrl ?? this.serviceUrl
-  }
-
-  /**
-   * CredentialSession-compat: force a refresh and return an AtpAgent-shaped
-   * result. The argument (the old `agent.session`) is ignored - the session
-   * already knows its own tokens.
-   */
-  async resumeSession(_?: unknown) {
-    await this.#session!.refresh()
-    return {success: true as const, data: this.#session!.session}
-  }
+function deriveServiceUrl(session: PasswordSession | null): URL {
+  return new URL(
+    session && !session.destroyed
+      ? session.session.service
+      : PUBLIC_BSKY_SERVICE,
+  )
 }
 
 /**
  * The full set of read-through views over ONE `PasswordSession`. The
- * `session` is the sole auth core (single refresher); the `agent` and both
- * clients never refresh independently.
+ * `session` is the sole auth core (single refresher); the clients never refresh
+ * independently.
  */
 export type SessionBundle = {
   /** The single auth core. Never exposed to the reducer. */
   session: PasswordSession
-  /** Legacy bridge agent for `useAgent()` consumers. */
-  agent: SessionAgent
   /** Account (writes/records) client - talks to the user's PDS. */
   accountClient: Client
   /** Authed appview client (proxied, with labelers). */
@@ -416,56 +288,52 @@ export type SessionBundle = {
   /** Chat client (proxied to `did:web:api.bsky.chat#bsky_chat`). */
   chatClient: Client
   /**
-   * The service (entryway) URL, mirroring `agent.serviceUrl`. Exposed so the
-   * reducer can read `.service` for its opaque snapshot/logging view
-   * (`OpaqueSessionBundle = {readonly service: URL}`) without reaching into the
-   * agent or the (never-exposed) session.
+   * The service (entryway) URL. Exposed so the reducer can read `.service` for
+   * its opaque snapshot/logging view (`OpaqueSessionBundle = {readonly service:
+   * URL}`) without reaching into the (never-exposed) session.
    */
   readonly service: URL
 }
 
 /**
- * Assemble a {@link SessionBundle} from a live session: the bridge agent plus
- * the account and appview clients, all read-through views over the one session.
- * The Bluesky appview proxy header is applied to the bridge (matching the old
- * `agent.configureProxy(BLUESKY_PROXY_HEADER.get())`).
+ * Assemble a {@link SessionBundle} from a live session: the account, appview,
+ * and chat clients, all read-through views over the one session. The appview
+ * proxy header is baked into `buildAppviewClient` (`service: api.app.service`),
+ * so no separate proxy configuration is needed here.
  */
 export function buildBundle(session: PasswordSession): SessionBundle {
-  const agent = new SessionAgent(session)
-  agent.configureProxy(BLUESKY_PROXY_HEADER.get())
   return {
     session,
-    agent,
     accountClient: buildAccountClient(session),
     /*
-     * Per-account labelers are applied to the bridge agent by
-     * configureModerationForAccount for now; the appview client carries only
-     * the base Bluesky moderation labeler. TODO(phase-2 moderation task):
-     * rework moderation.ts to take the bundle and set per-account labelers on
-     * appviewClient too.
+     * Per-account labelers are applied to the appview client by
+     * configureModerationForAccount; buildAppviewClient carries only the base
+     * Bluesky moderation labeler until then.
      */
     appviewClient: buildAppviewClient(session, []),
     chatClient: buildChatClient(session),
     /*
-     * Mirror the bridge agent's serviceUrl so the reducer's opaque view can
-     * read `.service`. A getter keeps it live with the agent's derivation.
+     * Derived from the session so the reducer's opaque view can read `.service`.
+     * A getter keeps it live with the session's state (destroyed -> public).
      */
     get service() {
-      return agent.serviceUrl
+      return deriveServiceUrl(session)
     },
   }
 }
 
 /**
- * The session-change events the reducer speaks. `PasswordSession` surfaces
- * three hooks (`onUpdated`/`onDeleted`/`onUpdateFailure`) which we map into
- * this `AtpSessionEvent` vocabulary (see the table in the phase-2 design doc):
- * refresh -> `'update'`, dead session/logout -> `'expired'`, transient failure
- * -> `'network-error'`. `'create'`/`'create-failed'` remain in the type for the
- * reducer/tests but are never emitted from here in production.
+ * The session-change callback the provider passes into the hooks.
+ *
+ * `PasswordSession` surfaces three hooks (`onUpdated`/`onDeleted`/
+ * `onUpdateFailure`) which {@link makeSessionHooks} maps into the
+ * {@link AtpSessionEvent} vocabulary: refresh -> `'update'`, dead session/logout
+ * -> `'expired'`, transient failure -> `'network-error'`. The whole
+ * {@link SessionBundle} is handed through so the provider can snapshot the live
+ * session and use the bundle itself as the reducer's identity token.
  */
 type OnSessionChange = (
-  agent: SessionAgent,
+  bundle: SessionBundle,
   did: string,
   event: AtpSessionEvent,
 ) => void
@@ -480,14 +348,15 @@ type OnSessionChange = (
  * during `prepare()`. So hooks are inert until `arm()` is called, after the
  * prepare tail resolves.
  *
- * `getAgent` is deferred because the bridge agent does not exist yet when the
- * hooks are constructed (the session is created first).
+ * `getBundle` is deferred because the bundle does not exist yet when the hooks
+ * are constructed (the session is created first, then the bundle is built over
+ * it).
  *
  * Exported for testing (the arm-latch + event mapping is the core semantics).
  */
 export function makeSessionHooks(
   onSessionChange: OnSessionChange,
-  getAgent: () => SessionAgent,
+  getBundle: () => SessionBundle,
   getDid: () => string,
 ) {
   let armed = false
@@ -496,7 +365,7 @@ export function makeSessionHooks(
       return
     }
     const did = getDid()
-    onSessionChange(getAgent(), did, event)
+    onSessionChange(getBundle(), did, event)
     /*
      * Mirror the old BskyAppAgent.prepare wiring: log any non-create/update
      * session event. In practice we only emit 'update'/'expired'/'network-error'
@@ -526,12 +395,11 @@ export function makeSessionHooks(
 }
 
 /**
- * The public (logged-out) bundle. Its bridge agent points at the public
- * appview and all clients are unauthenticated.
+ * The public (logged-out) bundle. Its appview client points at the public
+ * appview; the write/chat clients are the throwing unauthenticated client.
  */
 export type PublicSessionBundle = {
   session: null
-  agent: SessionAgent
   accountClient: Client
   appviewClient: Client
   /**
@@ -541,23 +409,19 @@ export type PublicSessionBundle = {
    * and design section J.
    */
   chatClient: Client
-  /** Mirrors `agent.serviceUrl` (the public appview URL). See {@link SessionBundle.service}. */
+  /** The public appview URL. See {@link SessionBundle.service}. */
   readonly service: URL
 }
 
 /**
- * Build the logged-out bundle used before/without a session. Mirrors the old
- * `createPublicAgent`: configures guest moderation as a side effect and applies
- * the Bluesky appview proxy header to the bridge agent.
+ * Build the logged-out bundle used before/without a session. Configures guest
+ * moderation as a side effect.
  */
 export function createPublicSessionBundle(): PublicSessionBundle {
   configureModerationForGuest() // Side effect but only relevant for tests
-  const agent = new SessionAgent(null)
-  agent.configureProxy(BLUESKY_PROXY_HEADER.get())
   const publicClient = getPublicLexClient()
   return {
     session: null,
-    agent,
     /*
      * Write/auth clients throw on use when logged out (design section J): the
      * public bundle exposes the throwing unauthenticated client for the account
@@ -568,9 +432,7 @@ export function createPublicSessionBundle(): PublicSessionBundle {
     accountClient: getUnauthenticatedClient(),
     appviewClient: publicClient,
     chatClient: getUnauthenticatedClient(),
-    get service() {
-      return agent.serviceUrl
-    },
+    service: new URL(PUBLIC_BSKY_SERVICE),
   }
 }
 
@@ -590,7 +452,7 @@ export async function createSessionBundleAndResume(
   let bundle!: SessionBundle
   const hooks = makeSessionHooks(
     onSessionChange,
-    () => bundle.agent,
+    () => bundle,
     () => storedAccount.did,
   )
 
@@ -651,7 +513,7 @@ export async function createSessionBundleAndLogin(
   let accountDid = ''
   const hooks = makeSessionHooks(
     onSessionChange,
-    () => bundle.agent,
+    () => bundle,
     () => accountDid,
   )
 
@@ -686,7 +548,7 @@ export async function createSessionBundleAndLogin(
  * created-at/birthdate, the prod vs non-prod deferred server-write block
  * (setPersonalDetails/upsertProfile/overwriteSavedFeeds with TID feed ids,
  * restrictChatSettings gated on AA flags), and snoozeEmailConfirmationPrompt.
- * The deferred writes run against the bridge agent's sugar methods.
+ * The deferred writes run as SDK actions against the account (PDS) client.
  */
 export async function createSessionBundleAndCreateAccount(
   {
@@ -714,7 +576,7 @@ export async function createSessionBundleAndCreateAccount(
   let accountDid = ''
   const hooks = makeSessionHooks(
     onSessionChange,
-    () => bundle.agent,
+    () => bundle,
     () => accountDid,
   )
 
@@ -734,12 +596,11 @@ export async function createSessionBundleAndCreateAccount(
   bundle = buildBundle(session)
   const account = sessionDataToSessionAccountOrThrow(session)
   accountDid = account.did
-  const agent = bundle.agent
 
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
   const moderation = configureModerationForAccount(bundle, account)
 
-  const createdAt = new Date().toISOString()
+  const createdAt = toDatetimeString(new Date())
   const birthdate = birthDate.toISOString()
 
   /*
@@ -762,8 +623,8 @@ export async function createSessionBundleAndCreateAccount(
   if (IS_PROD_SERVICE(service)) {
     void Promise.allSettled([
       networkRetry(3, () => {
-        return agent.setPersonalDetails({
-          birthDate: birthdate,
+        return bundle.accountClient.call(setPersonalDetails, {
+          birthDate,
         })
       }).catch(e => {
         logger.info(
@@ -772,8 +633,8 @@ export async function createSessionBundleAndCreateAccount(
         throw e
       }),
       networkRetry(3, () => {
-        return agent.upsertProfile(prev => {
-          const next: Un$Typed<AppBskyActorProfile.Record> = prev || {}
+        return bundle.accountClient.call(upsertProfile, prev => {
+          const next: Partial<app.bsky.actor.profile.Main> = prev || {}
           next.displayName = handle
           next.createdAt = createdAt
           return next
@@ -785,7 +646,7 @@ export async function createSessionBundleAndCreateAccount(
         throw e
       }),
       networkRetry(1, () => {
-        return agent.overwriteSavedFeeds([
+        return bundle.accountClient.call(overwriteSavedFeeds, [
           {
             ...DISCOVER_SAVED_FEED,
             id: TID.nextStr(),
@@ -823,8 +684,8 @@ export async function createSessionBundleAndCreateAccount(
   } else {
     void Promise.allSettled([
       networkRetry(3, () => {
-        return agent.setPersonalDetails({
-          birthDate: birthDate.toISOString(),
+        return bundle.accountClient.call(setPersonalDetails, {
+          birthDate,
         })
       }).catch(e => {
         logger.info(
@@ -833,9 +694,9 @@ export async function createSessionBundleAndCreateAccount(
         throw e
       }),
       networkRetry(3, () => {
-        return agent.upsertProfile(prev => {
-          const next: Un$Typed<AppBskyActorProfile.Record> = prev || {}
-          next.createdAt = prev?.createdAt || new Date().toISOString()
+        return bundle.accountClient.call(upsertProfile, prev => {
+          const next: Partial<app.bsky.actor.profile.Main> = prev || {}
+          next.createdAt = prev?.createdAt || toDatetimeString(new Date())
           return next
         })
       }).catch(e => {
@@ -894,8 +755,8 @@ function sessionDataToSessionAccountOrThrow(
  * is that this session's tokens are no longer reachable by any live client. We
  * do NOT call `logout()` here: disposal is a local switch, not a server-side
  * revocation (revocation is handled separately via the push-token unregister
- * temporary sessions). The bridge agent stays usable enough (its `did`/session
- * getters return undefined) not to crash late readers.
+ * temporary sessions). The bundle's clients stay usable enough not to crash
+ * late readers.
  */
 export function disposeBundle(bundle: SessionBundle | PublicSessionBundle) {
   const session = bundle.session

@@ -1,7 +1,6 @@
 import {Client} from '@atproto/lex-client'
 
 import {device} from '#/storage'
-import {BridgeAgent} from './session-core'
 
 export const BR_LABELER = 'did:plc:ekitcvx7uwnauoqy5oest3hm' // Brazil
 export const DE_LABELER = 'did:plc:r55ow3tocux5kafs5dq445fy' // Germany
@@ -84,15 +83,13 @@ export function configureAdditionalModerationAuthorities() {
   }
 
   /*
-   * Merge with the currently-configured global labelers on the base `Agent`
-   * static (the bridge agent is a base `Agent`, not `AtpAgent`). Set the merged
-   * result on BOTH request paths - the lex `Client` static and the base `Agent`
-   * static - so both emit identical global `atproto-accept-labelers` headers.
+   * Merge with the currently-configured global labelers on the lex `Client`
+   * static and set the merged result back, so every client emits the same
+   * global `atproto-accept-labelers` header.
    */
   const appLabelers = Array.from(
-    new Set([...BridgeAgent.appLabelers, ...additionalLabelers]),
+    new Set([...Client.appLabelers, ...additionalLabelers]),
   )
 
   Client.configure({appLabelers: appLabelers as `did:${string}:${string}`[]})
-  BridgeAgent.configure({appLabelers})
 }

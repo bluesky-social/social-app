@@ -3,7 +3,7 @@ import {logger} from '#/lib/notifications/util'
 import {wrapSessionReducerForLogging} from './logging'
 import {type AtpSessionEvent, createPublicSessionBundle} from './session-core'
 import {type SessionAccount} from './types'
-import {createTemporaryAgentsAndResume} from './util'
+import {createTemporaryClientsAndResume} from './util'
 
 /*
  * A hack so that the reducer can't read anything from the session bundle. From
@@ -170,7 +170,7 @@ let reducer = (state: State, action: Action): State => {
       // side effect
       const account = state.accounts.find(a => a.did === accountDid)
       if (account) {
-        createTemporaryAgentsAndResume([account])
+        createTemporaryClientsAndResume([account])
           .then(agents => unregisterPushToken(agents))
           .then(() =>
             logger.debug('Push token unregistered', {did: accountDid}),
@@ -198,7 +198,7 @@ let reducer = (state: State, action: Action): State => {
       // side effect
       const account = state.accounts.find(a => a.did === accountDid)
       if (account && accountDid) {
-        createTemporaryAgentsAndResume([account])
+        createTemporaryClientsAndResume([account])
           .then(agents => unregisterPushToken(agents))
           .then(() =>
             logger.debug('Push token unregistered', {did: accountDid}),
@@ -226,7 +226,7 @@ let reducer = (state: State, action: Action): State => {
       }
     }
     case 'logged-out-every-account': {
-      createTemporaryAgentsAndResume(state.accounts)
+      createTemporaryClientsAndResume(state.accounts)
         .then(agents => unregisterPushToken(agents))
         .then(() => logger.debug('Push token unregistered'))
         .catch(err => {
