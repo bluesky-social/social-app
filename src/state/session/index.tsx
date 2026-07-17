@@ -452,7 +452,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           )
           newBundle = buildBundle(newSession)
           registerBundleKillSwitch(newBundle, hooks.kill)
-          hooks.arm()
           /*
            * Reapply this account's subscribed labelers to the freshly built
            * appview client - buildBundle starts with an empty per-instance
@@ -465,6 +464,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
            * preserving this branch's no-network intent), and the OLD bundle's
            * access token stays valid throughout the deferral, so nothing
            * regresses by waiting.
+           *
+           * arm() happens inside the same callback as the dispatch (not
+           * before the deferral) so there is no async window where the new
+           * session is armed but the reducer still holds the old bundle -
+           * an 'expired' event fired in such a window would be dropped by
+           * the reducer's bundle-identity check. Mirroring the factories'
+           * snapshot-after-prep, the dispatched account is re-read from the
+           * live session, so a token refresh during the (unarmed) deferral
+           * still persists fresh tokens.
            */
           void configureModerationForAccount(newBundle, syncedAccount)
             .catch(() => {})
@@ -478,10 +486,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
                     : undefined,
                 nextSession: newBundle.session.session,
               })
+              const newAccount = newBundle.session.destroyed
+                ? syncedAccount
+                : (sessionDataToSessionAccount(
+                    newBundle.session.session,
+                    newBundle.session.session.service,
+                  ) ?? syncedAccount)
+              hooks.arm()
               store.dispatch({
                 type: 'replaced-current-bundle',
                 newAgent: newBundle,
-                newAccount: syncedAccount,
+                newAccount,
               })
             })
         }

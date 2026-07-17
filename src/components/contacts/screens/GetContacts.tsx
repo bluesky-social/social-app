@@ -347,7 +347,9 @@ async function createProfileRecord(
 
     next.displayName = ''
 
-    next.createdAt = toDatetimeString(new Date())
+    if (!next.createdAt) {
+      next.createdAt = toDatetimeString(new Date())
+    }
     return next
   })
 }
