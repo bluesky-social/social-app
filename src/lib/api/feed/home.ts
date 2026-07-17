@@ -1,4 +1,4 @@
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import {type AtUriString} from '@atproto/syntax'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'

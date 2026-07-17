@@ -250,9 +250,6 @@ importers:
       '@atproto/lex':
         specifier: 0.2.2
         version: 0.2.2
-      '@atproto/lex-client':
-        specifier: 0.2.4
-        version: 0.2.4
       '@atproto/lex-password-session':
         specifier: 0.1.7
         version: 0.1.7

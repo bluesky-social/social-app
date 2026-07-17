@@ -1,6 +1,6 @@
 import {Platform, View} from 'react-native'
 import {Image} from 'expo-image'
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'

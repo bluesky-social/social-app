@@ -1,4 +1,4 @@
-import {Client} from '@atproto/lex-client'
+import {Client} from '@atproto/lex'
 import {describe, expect, it} from '@jest/globals'
 
 import {NOTIF_SERVICE} from '#/lib/constants'

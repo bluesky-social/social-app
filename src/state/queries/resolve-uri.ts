@@ -1,4 +1,4 @@
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import {AtUri, type HandleString} from '@atproto/syntax'
 import {type QueryClient, queryOptions, useQuery} from '@tanstack/react-query'
 

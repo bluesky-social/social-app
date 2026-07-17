@@ -1,5 +1,4 @@
-import {type $Typed} from '@atproto/lex'
-import {type Client} from '@atproto/lex-client'
+import {type $Typed, type Client} from '@atproto/lex'
 import {type DatetimeString, type DidString} from '@atproto/syntax'
 import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'

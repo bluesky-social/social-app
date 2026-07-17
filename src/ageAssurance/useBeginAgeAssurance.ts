@@ -1,5 +1,5 @@
 import {Platform} from 'react-native'
-import {Client} from '@atproto/lex-client'
+import {Client} from '@atproto/lex'
 import {useMutation} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'

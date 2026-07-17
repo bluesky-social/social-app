@@ -1,4 +1,4 @@
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 
 import {app} from '#/lexicons'
 import {type FeedAPI, type FeedAPIResponse} from './types'

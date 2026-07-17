@@ -2,7 +2,7 @@ import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import debounce from 'lodash.debounce'
 
 import {

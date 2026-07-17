@@ -1,5 +1,5 @@
 import {useRef} from 'react'
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 

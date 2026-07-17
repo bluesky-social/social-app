@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
-import {type $Typed} from '@atproto/lex'
-import {Client} from '@atproto/lex-client'
+import {type $Typed, Client} from '@atproto/lex'
 import {toDatetimeString} from '@atproto/syntax'
 import {type QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 

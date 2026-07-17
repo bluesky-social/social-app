@@ -1,6 +1,5 @@
 import {copyAsync} from 'expo-file-system/legacy'
-import {type BlobRef} from '@atproto/lex'
-import {type Client, type EncodingString} from '@atproto/lex-client'
+import {type BlobRef, type Client, type EncodingString} from '@atproto/lex'
 
 import {safeDeleteAsync} from '#/lib/media/manip'
 

@@ -1,6 +1,6 @@
 import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 import * as AgeRange from 'expo-age-range'
-import {Client} from '@atproto/lex-client'
+import {Client} from '@atproto/lex'
 import {getPreferences} from '@bsky.app/sdk'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {focusManager, QueryClient, useQuery} from '@tanstack/react-query'

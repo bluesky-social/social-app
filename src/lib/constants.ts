@@ -1,5 +1,5 @@
 import {type Insets, Platform} from 'react-native'
-import {type Service} from '@atproto/lex-client'
+import {type Service} from '@atproto/lex'
 import {api} from '@bsky.app/sdk'
 
 import {BLUESKY_PROXY_DID, IS_DEV} from '#/env'

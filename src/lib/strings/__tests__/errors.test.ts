@@ -1,8 +1,4 @@
-import {
-  type Procedure,
-  type Query,
-  XrpcResponseError,
-} from '@atproto/lex-client'
+import {type Procedure, type Query, XrpcResponseError} from '@atproto/lex'
 import {describe, expect, it} from '@jest/globals'
 
 import {

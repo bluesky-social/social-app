@@ -1,4 +1,4 @@
-import {LexError, XrpcError, XrpcResponseError} from '@atproto/lex-client'
+import {LexError, XrpcError, XrpcResponseError} from '@atproto/lex'
 
 /**
  * True for an XRPC error from a lex `Client` (`@atproto/lex-client` `XrpcError`,

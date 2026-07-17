@@ -1,6 +1,5 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {type BlobRef} from '@atproto/lex'
-import {type Client} from '@atproto/lex-client'
+import {type BlobRef, type Client} from '@atproto/lex'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 

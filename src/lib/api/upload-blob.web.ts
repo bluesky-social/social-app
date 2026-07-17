@@ -1,5 +1,4 @@
-import {type BlobRef} from '@atproto/lex'
-import {type Client, type EncodingString} from '@atproto/lex-client'
+import {type BlobRef, type Client, type EncodingString} from '@atproto/lex'
 
 /**
  * The blob-upload response body: `{blob}`. lex `Client.uploadBlob` returns the

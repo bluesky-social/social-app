@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {Client} from '@atproto/lex-client'
+import {Client} from '@atproto/lex'
 import {
   type InterpretedLabelValueDefinition,
   LABELS,

@@ -46,7 +46,7 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as FileSystem from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import {AtUri, type AtUriString} from '@atproto/syntax'
 import {type RichText} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
