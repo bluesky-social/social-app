@@ -9,20 +9,20 @@ import {
   PUBLIC_APPVIEW_DID,
 } from '#/lib/constants'
 import {isNetworkError} from '#/lib/hooks/useCleanError'
-import {useAgent} from '#/state/session'
+import {usePdsClient} from '#/state/session'
 import {usePatchAgeAssuranceServerState} from '#/ageAssurance'
 import {logger} from '#/ageAssurance/logger'
 import {useAnalytics} from '#/analytics'
 import {BLUESKY_PROXY_DID} from '#/env'
 import {useGeolocation} from '#/geolocation'
-import {app} from '#/lexicons'
+import {app, com} from '#/lexicons'
 
 const IS_DEV_ENV = BLUESKY_PROXY_DID !== PUBLIC_APPVIEW_DID
 const APPVIEW = IS_DEV_ENV ? DEV_ENV_APPVIEW : PUBLIC_APPVIEW
 
 export function useBeginAgeAssurance() {
   const ax = useAnalytics()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const geolocation = useGeolocation()
   const patchAgeAssuranceStateResponse = usePatchAgeAssuranceServerState()
 
@@ -39,9 +39,7 @@ export function useBeginAgeAssurance() {
         throw new Error(`Geolocation not available, cannot init age assurance.`)
       }
 
-      const {
-        data: {token},
-      } = await agent.com.atproto.server.getServiceAuth({
+      const {token} = await pdsClient.call(com.atproto.server.getServiceAuth, {
         aud: BLUESKY_PROXY_DID,
         lxm: `app.bsky.ageassurance.begin`,
       })

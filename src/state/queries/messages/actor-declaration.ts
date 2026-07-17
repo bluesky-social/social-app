@@ -1,10 +1,9 @@
+import {type Client} from '@atproto/lex-client'
 import {type DidString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {usePdsClient, useSession} from '#/state/session'
-import {agentToLexClient} from '#/state/session/clients'
-import {type SessionAgent} from '#/state/session/session-core'
 import {resolveAllowGroupInvites} from '#/components/dms/util'
 import {type app, chat, com} from '#/lexicons'
 import {RQKEY as PROFILE_RKEY} from '../profile'
@@ -116,25 +115,13 @@ export function useDeleteActorDeclaration() {
 }
 
 export async function fetchActorDeclarationRecord({
-  agent,
+  client,
   did,
 }: {
-  agent: SessionAgent
+  client: Client
   did?: string
 }) {
   if (!did) return
-  /*
-   * This helper is called with a bridge `SessionAgent` threaded from
-   * `#/ageAssurance/data`. Wrap it as an account lex `Client` so the record
-   * read goes through the same path as the migrated hooks; the caller keeps
-   * passing the agent until the bridge is removed (Phase 4). The cast is safe:
-   * `agentToLexClient` only reads `did` and `fetchHandler`, both of which the
-   * base `Agent` (and thus `SessionAgent`) provides - its `AtpAgent` parameter
-   * type is just narrower than it needs. TODO(phase4): drop with the bridge.
-   */
-  const client = agentToLexClient(
-    agent as unknown as Parameters<typeof agentToLexClient>[0],
-  )
   const res = await client
     .get(chat.bsky.actor.declaration, {repo: did as DidString, rkey: 'self'})
     .catch(_e => undefined)

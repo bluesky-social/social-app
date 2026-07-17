@@ -1,11 +1,9 @@
-import {type DidString} from '@atproto/syntax'
+import {type Client} from '@atproto/lex-client'
 
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
-import {type SessionAgent} from '#/state/session'
-import {agentToLexClient} from '#/state/session/clients'
 import {
-  getDidFromAgentSession,
+  getDidFromClient,
   getOtherRequiredDataFromCache,
   setOtherRequiredDataActorDeclarationCache,
 } from '#/ageAssurance/data'
@@ -26,15 +24,15 @@ import {chat} from '#/lexicons'
  * back to the lexicon defaults when the cache is empty.
  */
 export async function restrictChatSettings({
-  agent,
+  client,
   restrictIncoming = false,
   restrictGroupInvites = false,
 }: {
-  agent: SessionAgent
+  client: Client
   restrictIncoming?: boolean
   restrictGroupInvites?: boolean
 }): Promise<void> {
-  const did = getDidFromAgentSession(agent)
+  const did = getDidFromClient(client)
   if (!did) return
 
   const cached = getOtherRequiredDataFromCache({did})?.actorDeclaration
@@ -69,22 +67,10 @@ export async function restrictChatSettings({
     return
   }
 
-  /*
-   * Callers thread a bridge `SessionAgent` (session-core / birthdate); wrap it
-   * as an account lex `Client` so the record write goes through the lex path.
-   * The cast is safe: `agentToLexClient` only reads `did` and `fetchHandler`,
-   * both of which the base `Agent` provides - its `AtpAgent` parameter type is
-   * just narrower than it needs. TODO(phase4): take a Client directly once the
-   * bridge is removed.
-   */
-  const client = agentToLexClient(
-    agent as unknown as Parameters<typeof agentToLexClient>[0],
-  )
-
   try {
     await networkRetry(3, () =>
       client.put(chat.bsky.actor.declaration, record, {
-        repo: did as DidString,
+        repo: did,
         rkey: 'self',
       }),
     )

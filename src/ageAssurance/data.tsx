@@ -1,6 +1,7 @@
 import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 import * as AgeRange from 'expo-age-range'
 import {Client} from '@atproto/lex-client'
+import {getPreferences} from '@bsky.app/sdk'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {focusManager, QueryClient, useQuery} from '@tanstack/react-query'
 import {persistQueryClient} from '@tanstack/react-query-persist-client'
@@ -15,7 +16,7 @@ import {
   snoozeBirthdateUpdateAllowedForDid,
 } from '#/state/birthdate'
 import {fetchActorDeclarationRecord} from '#/state/queries/messages/actor-declaration'
-import {type SessionAgent, useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {DEVICE_SIGNALS_SUPPORTED} from '#/ageAssurance/const'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
@@ -33,7 +34,6 @@ import {IS_DEV} from '#/env'
 import {useGeolocation} from '#/geolocation'
 import {app, type chat} from '#/lexicons'
 import {device} from '#/storage'
-import {toLex} from '#/types/bsky'
 
 /**
  * Special query client for age assurance data so we can prefetch on app
@@ -59,10 +59,12 @@ const [, cacheHydrationPromise] = persistQueryClient({
   persister,
 })
 
-export function getDidFromAgentSession(agent: SessionAgent) {
-  const sessionManager = agent.sessionManager
-  if (!sessionManager || !sessionManager.did) return
-  return sessionManager.did
+/**
+ * Reads the active account did from a lex {@link Client}. Logged-out clients
+ * expose `did: undefined`, so this returns undefined in that case.
+ */
+export function getDidFromClient(client: Client) {
+  return client.did
 }
 
 /*
@@ -183,9 +185,9 @@ export function createServerStateQueryKey({did}: {did: string}) {
   return ['serverState', did]
 }
 export async function getServerState({
-  agent,
+  appviewClient,
 }: {
-  agent: SessionAgent
+  appviewClient: Client
 }): Promise<app.bsky.ageassurance.getState.$OutputBody | null> {
   if (debug.enabled && debug.serverState)
     return debug.resolve(debug.serverState)
@@ -194,24 +196,23 @@ export async function getServerState({
     logger.error(`getServerState: missing geolocation countryCode`)
     return null
   }
-  const {data} = await agent.app.bsky.ageassurance.getState({
+  const data = await appviewClient.call(app.bsky.ageassurance.getState, {
     countryCode: geolocation.countryCode,
     regionCode: geolocation.regionCode,
   })
-  const did = getDidFromAgentSession(agent)
+  const did = getDidFromClient(appviewClient)
   if (data && did && createdAtCache.has(did)) {
     /*
      * If account was just created, just use the local cache if available. On
-     * subsequent reloads, the server should have the correct value.
+     * subsequent reloads, the server should have the correct value. The cache
+     * holds ISO datetime strings (written from `new Date().toISOString()`), so
+     * assert the branded DatetimeString at this boundary.
      */
-    data.metadata.accountCreatedAt = createdAtCache.get(did)
+    data.metadata.accountCreatedAt = createdAtCache.get(
+      did,
+    ) as typeof data.metadata.accountCreatedAt
   }
-  /*
-   * TODO(phase4): the bridge agent still returns the old `@atproto/api`
-   * getState output; `toLex` reconciles it with the `#/lexicons` shape at this
-   * single boundary until the agent itself is migrated.
-   */
-  return data ? toLex<app.bsky.ageassurance.getState.$OutputBody>(data) : null
+  return data ?? null
 }
 export function getServerStateFromCache({
   did,
@@ -222,8 +223,12 @@ export function getServerStateFromCache({
     createServerStateQueryKey({did}),
   )
 }
-export async function prefetchServerState({agent}: {agent: SessionAgent}) {
-  const did = getDidFromAgentSession(agent)
+export async function prefetchServerState({
+  appviewClient,
+}: {
+  appviewClient: Client
+}) {
+  const did = getDidFromClient(appviewClient)
 
   if (!did) return
 
@@ -238,7 +243,7 @@ export async function prefetchServerState({agent}: {agent: SessionAgent}) {
 
   try {
     logger.debug(`prefetchServerState: resolving...`)
-    const res = await networkRetry(3, () => getServerState({agent}))
+    const res = await networkRetry(3, () => getServerState({appviewClient}))
     if (res) {
       qc.setQueryData<app.bsky.ageassurance.getState.$OutputBody>(qk, res)
     }
@@ -249,11 +254,15 @@ export async function prefetchServerState({agent}: {agent: SessionAgent}) {
     })
   }
 }
-export async function refetchServerState({agent}: {agent: SessionAgent}) {
-  const did = getDidFromAgentSession(agent)
+export async function refetchServerState({
+  appviewClient,
+}: {
+  appviewClient: Client
+}) {
+  const did = getDidFromClient(appviewClient)
   if (!did) return
   logger.debug(`refetchServerState: fetching...`)
-  const res = await networkRetry(3, () => getServerState({agent}))
+  const res = await networkRetry(3, () => getServerState({appviewClient}))
   if (res) {
     qc.setQueryData<app.bsky.ageassurance.getState.$OutputBody>(
       createServerStateQueryKey({did}),
@@ -283,8 +292,8 @@ export function usePatchServerState() {
   )
 }
 export function useServerStateQuery() {
-  const agent = useAgent()
-  const did = getDidFromAgentSession(agent)
+  const appviewClient = useAppviewClient()
+  const did = getDidFromClient(appviewClient)
   const query = useQuery(
     {
       enabled: !!did,
@@ -294,7 +303,7 @@ export function useServerStateQuery() {
       },
       queryKey: createServerStateQueryKey({did: did!}),
       async queryFn() {
-        return getServerState({agent})
+        return getServerState({appviewClient})
       },
     },
     qc,
@@ -346,15 +355,15 @@ export function createOtherRequiredDataQueryKey({did}: {did: string}) {
   return ['otherRequiredData', did]
 }
 async function getOtherRequiredData({
-  agent,
+  accountClient,
 }: {
-  agent: SessionAgent
+  accountClient: Client
 }): Promise<OtherRequiredData> {
   if (debug.enabled) return debug.resolve(debug.otherRequiredData)
-  const did = getDidFromAgentSession(agent)
+  const did = getDidFromClient(accountClient)
   const [prefs, actorDeclaration] = await Promise.all([
-    agent.getPreferences(),
-    fetchActorDeclarationRecord({did, agent}),
+    accountClient.call(getPreferences),
+    fetchActorDeclarationRecord({did, client: accountClient}),
   ])
   const data: OtherRequiredData = {
     birthdate: prefs.birthDate ? prefs.birthDate.toISOString() : undefined,
@@ -431,11 +440,11 @@ export function setOtherRequiredDataActorDeclarationCache({
   )
 }
 export async function prefetchOtherRequiredData({
-  agent,
+  accountClient,
 }: {
-  agent: SessionAgent
+  accountClient: Client
 }) {
-  const did = getDidFromAgentSession(agent)
+  const did = getDidFromClient(accountClient)
 
   if (!did) return
 
@@ -450,7 +459,9 @@ export async function prefetchOtherRequiredData({
 
   try {
     logger.debug(`prefetchOtherRequiredData: resolving...`)
-    const res = await networkRetry(3, () => getOtherRequiredData({agent}))
+    const res = await networkRetry(3, () =>
+      getOtherRequiredData({accountClient}),
+    )
     qc.setQueryData<OtherRequiredData>(qk, res)
   } catch (err) {
     const e = err as Error
@@ -479,8 +490,8 @@ export function usePatchOtherRequiredData() {
   )
 }
 export function useOtherRequiredDataQuery() {
-  const agent = useAgent()
-  const did = getDidFromAgentSession(agent)
+  const accountClient = usePdsClient()
+  const did = getDidFromClient(accountClient)
   return useQuery(
     {
       enabled: !!did,
@@ -490,7 +501,7 @@ export function useOtherRequiredDataQuery() {
       },
       queryKey: createOtherRequiredDataQueryKey({did: did!}),
       async queryFn() {
-        return getOtherRequiredData({agent})
+        return getOtherRequiredData({accountClient})
       },
     },
     qc,
@@ -585,8 +596,12 @@ export function setDeviceSignalsForRegion({
     prev => ({...prev, [regionKey]: signals}),
   )
 }
-export async function prefetchDeviceSignals({agent}: {agent: SessionAgent}) {
-  const did = getDidFromAgentSession(agent)
+export async function prefetchDeviceSignals({
+  appviewClient,
+}: {
+  appviewClient: Client
+}) {
+  const did = getDidFromClient(appviewClient)
   if (!did) return
 
   /**
@@ -621,8 +636,8 @@ export async function prefetchDeviceSignals({agent}: {agent: SessionAgent}) {
    */
 }
 export function useDeviceSignalsQuery() {
-  const agent = useAgent()
-  const did = getDidFromAgentSession(agent)
+  const appviewClient = useAppviewClient()
+  const did = getDidFromClient(appviewClient)
   const {data: config} = useConfigQuery()
   const geolocation = useGeolocation()
   /*
@@ -665,15 +680,23 @@ export function useDeviceSignalsQuery() {
 }
 
 /**
- * Helper to prefetch all age assurance data from the server.
+ * Helper to prefetch all age assurance data from the server. Reads that hit
+ * the appview (`getState`, device signals) take the appview client; the
+ * preferences/actor-declaration read hits the PDS via the account client.
  */
-export function prefetchAgeAssuranceServerData({agent}: {agent: SessionAgent}) {
+export function prefetchAgeAssuranceServerData({
+  appviewClient,
+  accountClient,
+}: {
+  appviewClient: Client
+  accountClient: Client
+}) {
   return Promise.allSettled([
     // config fetch initiated at the top of the App.platform.tsx files, awaited here
     configPrefetchPromise,
-    prefetchServerState({agent}),
-    prefetchOtherRequiredData({agent}),
-    prefetchDeviceSignals({agent}),
+    prefetchServerState({appviewClient}),
+    prefetchOtherRequiredData({accountClient}),
+    prefetchDeviceSignals({appviewClient}),
   ])
 }
 
