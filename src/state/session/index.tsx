@@ -9,7 +9,7 @@ import {
   useSyncExternalStore,
 } from 'react'
 import {type Client} from '@atproto/lex-client'
-import {PasswordSession} from '@atproto/lex-password-session'
+import {PasswordSession, type SessionData} from '@atproto/lex-password-session'
 
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -19,6 +19,7 @@ import {IS_WEB} from '#/env'
 import {com} from '#/lexicons'
 import {emitSessionDropped} from '../events'
 import {getPublicLexClient, getUnauthenticatedClient} from './clients'
+import {configureModerationForAccount} from './moderation'
 import {type Action, getInitialState, reducer, type State} from './reducer'
 import {
   type AtpSessionEvent,
@@ -29,6 +30,7 @@ import {
   disposeBundle,
   makeSessionHooks,
   type PublicSessionBundle,
+  registerBundleKillSwitch,
   sessionAccountToSessionData,
   type SessionBundle,
   sessionDataToSessionAccount,
@@ -131,14 +133,23 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       bundle: SessionBundle,
       accountDid: string,
       sessionEvent: AtpSessionEvent,
+      sessionData?: SessionData,
     ) => {
-      // Snapshot the (mutable) live session data right away.
+      /*
+       * Build the refreshed account from the payload the hook delivers, NOT the
+       * live session getter. `PasswordSession` fires onUpdated/onDeleted BEFORE
+       * it commits its internal `#sessionData` (see password-session.js), so at
+       * hook time `bundle.session.session` still holds the OLD tokens (and, on
+       * the expiry path, `destroyed` is still false). Reading the live getter
+       * here would (a) persist stale tokens on 'update' -> eventual forced
+       * logout once the real refresh token expires, and (b) keep the user
+       * signed in on 'expired'. On 'update' the payload carries the new session;
+       * on 'expired'/'create-failed' we force it undefined so the reducer clears
+       * tokens and logs out (it treats undefined as "session gone").
+       */
       const refreshedAccount =
-        bundle.session && !bundle.session.destroyed
-          ? sessionDataToSessionAccount(
-              bundle.session.session,
-              bundle.session.session.service,
-            )
+        sessionEvent === 'update' && sessionData
+          ? sessionDataToSessionAccount(sessionData, sessionData.service)
           : undefined
       if (sessionEvent === 'expired' || sessionEvent === 'create-failed') {
         emitSessionDropped()
@@ -420,7 +431,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             hooks,
           )
           newBundle = buildBundle(newSession)
+          registerBundleKillSwitch(newBundle, hooks.kill)
           hooks.arm()
+          /*
+           * Reapply this account's subscribed labelers to the freshly built
+           * appview client. buildBundle starts with an empty per-instance
+           * labeler set, and unlike login/resume/createAccount this rebuild path
+           * never ran configureModerationForAccount - so without this, subscribed
+           * labelers would silently drop from appview requests in follower tabs
+           * until the next full resume. readLabelers is a local storage read (no
+           * network), preserving the branch's no-network intent; setLabelers
+           * mutates the client's Set in place so labels reappear when it
+           * resolves.
+           */
+          void configureModerationForAccount(newBundle, syncedAccount)
           addSessionDebugLog({
             type: 'agent:patch',
             agent: newBundle,

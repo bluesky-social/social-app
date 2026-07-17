@@ -38,8 +38,10 @@ jest.mock('jwt-decode', () => ({
 
 import {
   type AtpSessionEvent,
+  disposeBundle,
   extractPdsUrl,
   makeSessionHooks,
+  registerBundleKillSwitch,
   sessionAccountToSessionData,
   type SessionBundle,
   sessionDataToSessionAccount,
@@ -425,7 +427,12 @@ describe('makeSessionHooks arm-latch + event mapping', () => {
   function setup() {
     const onSessionChange =
       jest.fn<
-        (bundle: SessionBundle, did: string, event: AtpSessionEvent) => void
+        (
+          bundle: SessionBundle,
+          did: string,
+          event: AtpSessionEvent,
+          sessionData?: SessionData,
+        ) => void
       >()
     /* the hook only passes this through by identity; a stub bundle suffices */
     const bundle = {} as SessionBundle
@@ -443,7 +450,7 @@ describe('makeSessionHooks arm-latch + event mapping', () => {
     expect(onSessionChange).not.toHaveBeenCalled()
   })
 
-  it("maps onUpdated -> 'update' after arm(), passing the bundle through", () => {
+  it("maps onUpdated -> 'update' after arm(), passing the bundle + payload through", () => {
     const {onSessionChange, bundle, hooks} = setup()
     hooks.arm()
     void hooks.onUpdated?.call(fakeSession, fakeData)
@@ -451,6 +458,8 @@ describe('makeSessionHooks arm-latch + event mapping', () => {
     expect(onSessionChange.mock.calls[0][0]).toBe(bundle)
     expect(onSessionChange.mock.calls[0][1]).toBe(DID)
     expect(onSessionChange.mock.calls[0][2]).toBe('update')
+    /* the fresh SessionData the library delivers is threaded through verbatim */
+    expect(onSessionChange.mock.calls[0][3]).toBe(fakeData)
   })
 
   it("maps onDeleted -> 'expired' after arm()", () => {
@@ -469,6 +478,169 @@ describe('makeSessionHooks arm-latch + event mapping', () => {
       {} as Parameters<NonNullable<typeof hooks.onUpdateFailure>>[1],
     )
     expect(onSessionChange.mock.calls[0][2]).toBe('network-error')
+  })
+
+  it("does NOT thread a payload on the 'expired' path", () => {
+    /*
+     * onDeleted maps to 'expired' with no sessionData. The provider guards on
+     * `event === 'update' && sessionData`, so a missing payload here is what
+     * forces refreshedAccount === undefined (reducer clears tokens + logs out).
+     */
+    const {onSessionChange, hooks} = setup()
+    hooks.arm()
+    void hooks.onDeleted?.call(fakeSession, fakeData)
+    expect(onSessionChange.mock.calls[0][2]).toBe('expired')
+    expect(onSessionChange.mock.calls[0][3]).toBe(undefined)
+  })
+})
+
+/*
+ * The exact derivation from the provider's onSessionChange (index.tsx). Pinned
+ * here because the payload threading (session-core) and this mapping together
+ * are the fix: read tokens from the delivered payload on 'update', and force
+ * undefined on the drop paths so the reducer logs the user out.
+ */
+function deriveRefreshedAccount(
+  event: AtpSessionEvent,
+  sessionData?: SessionData,
+): SessionAccount | undefined {
+  return event === 'update' && sessionData
+    ? sessionDataToSessionAccount(sessionData, sessionData.service)
+    : undefined
+}
+
+/*
+ * Pins the pre-commit ordering bug fix. `PasswordSession` fires onUpdated with
+ * the fresh session BEFORE committing it internally, so the live getter is
+ * still stale at hook time. Driven through the real library (not a hand-rolled
+ * fixture) so the ordering is authentic.
+ */
+describe('session-hook payload threading (pre-commit ordering)', () => {
+  it('delivers the NEW tokens via the payload even though the live getter is still pre-commit stale', async () => {
+    const fetchMock = makeMockFetch()
+    let session!: PasswordSession
+    let liveGetterAtHookTime: SessionAccount | undefined
+    let refreshedAccountAtHookTime: SessionAccount | undefined
+    const onSessionChange = jest.fn(
+      (
+        _bundle: SessionBundle,
+        _did: string,
+        event: AtpSessionEvent,
+        sessionData?: SessionData,
+      ) => {
+        /* what the OLD code did: snapshot the live (mutable) getter */
+        liveGetterAtHookTime = sessionDataToSessionAccount(
+          session.session,
+          session.session.service,
+        )
+        /* what the fix does: derive from the delivered payload */
+        refreshedAccountAtHookTime = deriveRefreshedAccount(event, sessionData)
+      },
+    )
+    const hooks = makeSessionHooks(
+      onSessionChange,
+      () => ({}) as SessionBundle,
+      () => DID,
+    )
+    session = new PasswordSession(sessionAccountToSessionData(makeAccount()), {
+      ...hooks,
+      fetch: asFetch(fetchMock),
+    })
+    hooks.arm()
+
+    await session.refresh()
+
+    /* pre-commit ordering: at hook time the live getter still held OLD tokens */
+    expect(liveGetterAtHookTime?.accessJwt).toBe('access-jwt')
+    /* the fix reads the fresh tokens from the payload the hook delivered */
+    expect(refreshedAccountAtHookTime?.accessJwt).toBe('access-jwt-2')
+    expect(refreshedAccountAtHookTime?.refreshJwt).toBe('refresh-jwt-2')
+    /* and the session does eventually commit those same tokens */
+    expect(session.session.accessJwt).toBe('access-jwt-2')
+  })
+
+  it("yields refreshedAccount === undefined on the 'expired' path (forces logout)", async () => {
+    const fetchMock = makeMockFetch({
+      'com.atproto.server.refreshSession': () =>
+        new Response(
+          JSON.stringify({error: 'ExpiredToken', message: 'Token expired'}),
+          {status: 400, headers: {'content-type': 'application/json'}},
+        ),
+    })
+    let refreshedAccountAtHookTime: SessionAccount | undefined = makeAccount()
+    let observedEvent: AtpSessionEvent | undefined
+    const onSessionChange = jest.fn(
+      (
+        _bundle: SessionBundle,
+        _did: string,
+        event: AtpSessionEvent,
+        sessionData?: SessionData,
+      ) => {
+        observedEvent = event
+        refreshedAccountAtHookTime = deriveRefreshedAccount(event, sessionData)
+      },
+    )
+    const hooks = makeSessionHooks(
+      onSessionChange,
+      () => ({}) as SessionBundle,
+      () => DID,
+    )
+    const session = new PasswordSession(
+      sessionAccountToSessionData(makeAccount()),
+      {...hooks, fetch: asFetch(fetchMock)},
+    )
+    hooks.arm()
+
+    await expect(session.refresh()).rejects.toBeDefined()
+
+    expect(observedEvent).toBe('expired')
+    expect(refreshedAccountAtHookTime).toBe(undefined)
+  })
+})
+
+/*
+ * Pins the disposal kill-switch (fix 3). `PasswordSession` exposes no local
+ * destroy, so disposeBundle neutralizes the session by tripping the flag inside
+ * the injected fetch - after disposal every request (direct or auto-refresh,
+ * which shares this same captured fetch) throws before touching the network.
+ */
+describe('disposeBundle kill-switch', () => {
+  it('the injected fetch throws after disposeBundle', () => {
+    const hooks = makeSessionHooks(
+      jest.fn(),
+      () => ({}) as SessionBundle,
+      () => DID,
+    )
+    /* the injected fetch is the kill-switch wrapper makeSessionHooks bakes in */
+    const injectedFetch = hooks.fetch!
+
+    /*
+     * A live session is required for disposeBundle to act (it early-returns on
+     * a null/destroyed session).
+     */
+    const session = new PasswordSession(
+      sessionAccountToSessionData(makeAccount()),
+      {...hooks},
+    )
+    const bundle = {session} as unknown as SessionBundle
+    registerBundleKillSwitch(bundle, hooks.kill)
+
+    /*
+     * Before disposal the wrapper does NOT throw synchronously - it delegates
+     * to the async networkAwareFetch and returns a promise. Swallow that
+     * promise's rejection (the real network is unavailable under jest); we only
+     * care that no synchronous throw happened here.
+     */
+    const pending = injectedFetch('https://bsky.social/xrpc/x')
+    expect(pending).toBeInstanceOf(Promise)
+    void pending.catch(() => {})
+
+    disposeBundle(bundle)
+
+    /* after disposal every call through the injected fetch throws */
+    expect(() => injectedFetch('https://bsky.social/xrpc/x')).toThrow(
+      'session disposed',
+    )
   })
 })
 
