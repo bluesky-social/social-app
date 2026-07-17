@@ -191,7 +191,7 @@ function PostContent({record}: {record: app.bsky.feed.post.Main | null}) {
   }
 
   return (
-    <p className="text-md min-[400px]:text-lg leading-snug min-[400px]:leading-snug break-word wrap-break-word whitespace-pre-wrap">
+    <p className="text-md min-[400px]:text-lg leading-snug min-[400px]:leading-snug break-word break-words whitespace-pre-wrap">
       {richText}
     </p>
   )
