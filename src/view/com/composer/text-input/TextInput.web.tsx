@@ -66,19 +66,20 @@ export function TextInput({
     type: 'profile',
     sources: [follows],
   })
+  const autocompleteFnRef = useRef(autocompleteFn)
+  autocompleteFnRef.current = autocompleteFn
   /*
    * Adapter for the tiptap mention plugin, which renders plain profile views.
-   * useCallback keeps the extensions useMemo below stable.
+   * Keep this callback stable because tiptap does not rebuild extensions when
+   * useEditor updates its options. The ref still gives it the latest local
+   * sources after the follows query resolves.
    */
-  const autocomplete = useCallback(
-    async ({query}: {query: string}) => {
-      const items = await autocompleteFn(query, 8)
-      return items
-        .filter(item => item.type === 'profile')
-        .map(item => item.profile)
-    },
-    [autocompleteFn],
-  )
+  const autocomplete = useCallback(async ({query}: {query: string}) => {
+    const items = await autocompleteFnRef.current(query, 8)
+    return items
+      .filter(item => item.type === 'profile')
+      .map(item => item.profile)
+  }, [])
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
 
   const [isDropping, setIsDropping] = useState(false)
