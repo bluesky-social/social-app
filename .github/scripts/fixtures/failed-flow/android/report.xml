@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="Maestro Android" tests="2" failures="1" errors="0">
-  <testcase name="login.yml" classname="Maestro" time="11.8" />
-  <testcase name="create-account.yml" classname="Maestro" time="8.1">
-    <failure message="Element not found: Create account">The expected button was not visible.</failure>
-  </testcase>
-</testsuite>
