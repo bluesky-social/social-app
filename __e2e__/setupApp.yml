@@ -21,10 +21,14 @@ appId: xyz.blueskyweb.app
           visible: "http://10.0.2.2:8081"
           timeout: 60000
       - tapOn: "http://10.0.2.2:8081"
+      - extendedWaitUntil:
+          visible: "Continue"
+          timeout: 180000
+      - tapOn: "Continue"
 - extendedWaitUntil:
     visible:
       id: e2eProxyHeaderInput
-    timeout: 60000
+    timeout: 180000
 - tapOn:
     id: e2eProxyHeaderInput
 - inputText: ${output.result}
