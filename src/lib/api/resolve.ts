@@ -1,4 +1,4 @@
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import {AtUri, type AtUriString, type HandleString} from '@atproto/syntax'
 
 import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'

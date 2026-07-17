@@ -1,4 +1,4 @@
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import {useMutation} from '@tanstack/react-query'
 
 import {usePdsClient, useSessionApi} from '#/state/session'

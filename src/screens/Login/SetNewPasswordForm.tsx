@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {Client} from '@atproto/lex-client'
+import {Client} from '@atproto/lex'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {cleanError, isNetworkError} from '#/lib/strings/errors'

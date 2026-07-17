@@ -1,4 +1,4 @@
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import {type DidString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 

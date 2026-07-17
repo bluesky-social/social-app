@@ -1,4 +1,4 @@
-import {Client} from '@atproto/lex-client'
+import {Client} from '@atproto/lex'
 
 import {device} from '#/storage'
 

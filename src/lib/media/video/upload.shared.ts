@@ -1,4 +1,4 @@
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import {type NsidString} from '@atproto/syntax'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'

@@ -100,7 +100,6 @@
   "dependencies": {
     "@atproto/common-web": "0.5.6",
     "@atproto/lex": "0.2.2",
-    "@atproto/lex-client": "0.2.4",
     "@atproto/lex-password-session": "0.1.7",
     "@atproto/syntax": "0.7.2",
     "@bitdrift/react-native": "^0.6.8",

@@ -1,6 +1,6 @@
 import {TID} from '@atproto/common-web'
 import {type $Typed} from '@atproto/lex'
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import {
   type AtUriString,
   toDatetimeString,

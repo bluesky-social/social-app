@@ -1,4 +1,4 @@
-import {Client} from '@atproto/lex-client'
+import {Client} from '@atproto/lex'
 import {type PasswordSession} from '@atproto/lex-password-session'
 import {api} from '@bsky.app/sdk'
 

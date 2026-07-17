@@ -1,4 +1,4 @@
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 

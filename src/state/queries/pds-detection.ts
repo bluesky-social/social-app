@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {type DidDocument, getPdsEndpoint} from '@atproto/common-web'
-import {Client} from '@atproto/lex-client'
+import {Client} from '@atproto/lex'
 import {type HandleString} from '@atproto/syntax'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 

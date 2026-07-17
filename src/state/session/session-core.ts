@@ -1,5 +1,5 @@
 import {TID} from '@atproto/common-web'
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import {
   PasswordSession,
   type PasswordSessionOptions,

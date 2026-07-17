@@ -1,4 +1,4 @@
-import {type Service} from '@atproto/lex-client'
+import {type Service} from '@atproto/lex'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'

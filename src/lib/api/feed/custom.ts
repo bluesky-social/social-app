@@ -1,5 +1,5 @@
 import {lexParse} from '@atproto/lex'
-import {Client} from '@atproto/lex-client'
+import {Client} from '@atproto/lex'
 
 import {
   getAppLanguageAsContentLanguage,

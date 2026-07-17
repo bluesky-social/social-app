@@ -4,7 +4,7 @@ import {
   type AtIdentifierString,
   type Client,
   type DidString,
-} from '@atproto/lex-client'
+} from '@atproto/lex'
 import {type DatetimeString} from '@atproto/lex-schema'
 import {AtUri, type AtUriString} from '@atproto/syntax'
 import {

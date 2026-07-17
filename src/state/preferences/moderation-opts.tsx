@@ -1,5 +1,5 @@
 import {createContext, useContext, useMemo} from 'react'
-import {Client} from '@atproto/lex-client'
+import {Client} from '@atproto/lex'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 
 import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'

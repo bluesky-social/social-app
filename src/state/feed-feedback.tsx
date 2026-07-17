@@ -7,7 +7,7 @@ import {
   useRef,
 } from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
-import {type Service} from '@atproto/lex-client'
+import {type Service} from '@atproto/lex'
 import {type AtUriString} from '@atproto/syntax'
 import throttle from 'lodash.throttle'
 

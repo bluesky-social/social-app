@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {AppState} from 'react-native'
-import {type AtIdentifierString, type Client} from '@atproto/lex-client'
+import {type AtIdentifierString, type Client} from '@atproto/lex'
 import {AtUri, type AtUriString} from '@atproto/syntax'
 import {
   moderatePost,

@@ -1,4 +1,4 @@
-import {Client} from '@atproto/lex-client'
+import {Client} from '@atproto/lex'
 import {api} from '@bsky.app/sdk'
 
 import {IS_TEST_USER} from '#/lib/constants'

@@ -8,7 +8,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import {type Client} from '@atproto/lex-client'
+import {type Client} from '@atproto/lex'
 import {PasswordSession, type SessionData} from '@atproto/lex-password-session'
 
 import * as persisted from '#/state/persisted'

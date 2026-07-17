@@ -1,4 +1,4 @@
-import {Client} from '@atproto/lex-client'
+import {Client} from '@atproto/lex'
 import {useQuery} from '@tanstack/react-query'
 
 import {com} from '#/lexicons'
