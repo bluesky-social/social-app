@@ -37,6 +37,9 @@ echo "  commit: $COMMIT_HASH"
 BUILD_MARKER="$(mktemp)"
 trap 'rm -f "$BUILD_MARKER"' EXIT
 
+# Make sure the bundled JS ships with up-to-date compiled translations.
+pnpm intl:compile
+
 cd "$ANDROID_DIR"
 ./gradlew assembleRelease
 
