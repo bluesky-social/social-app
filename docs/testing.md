@@ -42,23 +42,21 @@ used. iOS runs on `macos-26-xlarge` with Xcode 26.4. Android runs on
 `Linux-x64-32core`. Both use Java 17 and the Node and pnpm versions declared in
 `package.json`. The iOS job selects an iPhone 17 simulator running iOS 26.5;
 Android uses a Pixel 6 AVD with the API 35 Google APIs x86_64 image.
-Both standalone E2E apps use the `e2e` EAS profile and the same reusable local
-EAS build action as the release build workflows. The profile embeds the E2E JS
-bundle during the native build, so CI does not run Metro or the Expo development
-client. The resulting simulator app and APK are installed directly on the
-selected devices.
+Both development clients use the `e2e` EAS profile and the same reusable local
+EAS build action as the release build workflows; the resulting simulator app
+and APK are installed directly on the selected devices.
 
 The mock-server manager listens on host port 1986 and creates test services on
-port 3000. Android reverses port 3000 into the emulator; port 1986 remains
-host-side because Maestro JavaScript calls it from the runner. Android uses the
-existing Docker Compose PostgreSQL 14 and Redis 7 services on ports 5433 and
-6380. GitHub-hosted macOS cannot run nested Docker virtualization, so iOS
-provisions ephemeral native PostgreSQL 14.x and Redis 7.4.7 on those same ports
-and starts `pnpm --dir dev-env start:external`.
+port 3000. Metro listens on 8081. Android reverses ports 3000 and 8081 into the
+emulator; port 1986 remains host-side because Maestro JavaScript calls it from
+the runner. Android uses the existing Docker Compose PostgreSQL 14 and Redis 7
+services on ports 5433 and 6380. GitHub-hosted macOS cannot run nested Docker
+virtualization, so iOS provisions ephemeral native PostgreSQL 14.x and Redis
+7.4.7 on those same ports and starts `pnpm --dir dev-env start:external`.
 
 Each platform uploads a `nightly-e2e-<platform>-<run-id>` artifact for 14 days.
 It contains JUnit at `report.xml`, Maestro screenshots, videos, command metadata
-and `maestro.log` under `maestro/`, plus native build, mock-server, service,
+and `maestro.log` under `maestro/`, plus Metro, native build, mock-server, service,
 dependency, and translation logs. The workflow always uploads what was captured,
 including when setup or the native build fails before Maestro starts.
 
@@ -69,9 +67,9 @@ the failed setup phase, the commit and workflow links, and links to both artifac
 sets. Successful runs do not post to Slack.
 
 Before relying on the schedule, manually dispatch the workflow and verify both
-embedded E2E apps against `dev-env`, Android localhost routing, artifact uploads
-on success and failure, one Slack message for a forced failure, and no Slack
-message for an all-green run.
+platforms against live Metro and `dev-env`, Android localhost routing, artifact
+uploads on success and failure, one Slack message for a forced failure, and no
+Slack message for an all-green run.
 
 ## Using Flashlight for Performance Testing
 1. Make sure Maestro is installed (optional: only for automated testing) by following the instructions above

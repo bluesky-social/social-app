@@ -117,10 +117,10 @@ jobs:
           xcrun simctl bootstatus "$udid" -b
           echo "Using $device_name on $runtime_name ($udid)"
 
-      - name: Mark iOS E2E app build phase
-        run: echo "Building the iOS E2E app" > artifacts/ios/phase.txt
+      - name: Mark iOS development client build phase
+        run: echo "Building the iOS development client" > artifacts/ios/phase.txt
 
-      - name: Build iOS E2E app
+      - name: Build iOS development client
         uses: ./.github/actions/eas-local-build
         with:
           platform: ios
@@ -128,7 +128,7 @@ jobs:
           output: ${{ runner.temp }}/nightly-e2e-ios.tar.gz
           log-path: artifacts/ios/build.log
 
-      - name: Install iOS E2E app
+      - name: Install iOS development client
         run: |
           build_contents="$RUNNER_TEMP/nightly-e2e-ios-build"
           mkdir -p "$build_contents"
@@ -275,10 +275,10 @@ jobs:
           adb -s emulator-5554 shell settings put global transition_animation_scale 0
           adb -s emulator-5554 shell settings put global animator_duration_scale 0
 
-      - name: Mark Android E2E app build phase
-        run: echo "Building the Android E2E app" > artifacts/android/phase.txt
+      - name: Mark Android development client build phase
+        run: echo "Building the Android development client" > artifacts/android/phase.txt
 
-      - name: Build Android E2E app
+      - name: Build Android development client
         uses: ./.github/actions/eas-local-build
         with:
           platform: android
@@ -286,7 +286,7 @@ jobs:
           output: ${{ runner.temp }}/nightly-e2e-android.apk
           log-path: artifacts/android/build.log
 
-      - name: Install Android E2E app
+      - name: Install Android development client
         run: |
           adb -s emulator-5554 install -r "$RUNNER_TEMP/nightly-e2e-android.apk" \
             2>&1 | tee -a artifacts/android/build.log

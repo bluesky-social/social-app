@@ -22,12 +22,7 @@
       }
     },
     "e2e": {
-      "extends": "base",
-      "distribution": "internal",
-      "ios": {
-        "simulator": true,
-        "resourceClass": "large"
-      },
+      "extends": "development",
       "android": {
         "buildType": "apk"
       },
