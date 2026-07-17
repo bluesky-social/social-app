@@ -7,6 +7,7 @@ import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {isErrorMaybeAppPasswordPermissions} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {
   type SessionAccount,
@@ -75,17 +76,14 @@ export function Deactivated() {
       await queryClient.resetQueries()
       await refreshSession()
     } catch (e: any) {
-      switch (e.message) {
-        case 'Bad token scope':
-          setError(
-            _(
-              msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
-            ),
-          )
-          break
-        default:
-          setError(_(msg`Something went wrong, please try again`))
-          break
+      if (isErrorMaybeAppPasswordPermissions(e)) {
+        setError(
+          _(
+            msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
+          ),
+        )
+      } else {
+        setError(_(msg`Something went wrong, please try again`))
       }
 
       logger.error(e, {

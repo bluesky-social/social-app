@@ -67,9 +67,22 @@ export function isNetworkError(e: unknown) {
   return false
 }
 
+/**
+ * True when an error looks like an App Password hitting an endpoint it lacks
+ * permission for. The PDS reports this under the GENERIC `InvalidToken` error
+ * code (which also covers malformed/expired tokens), with the app-password
+ * specifics only in the message: 'Bad token scope' (auth-verifier) or 'Bad
+ * token method' (pipethrough). So the typed path matches the code AND the
+ * message. (The old check compared against 'TokenInvalid', which the PDS never
+ * sends - the string fallback was doing all the work.)
+ */
 export function isErrorMaybeAppPasswordPermissions(e: unknown) {
-  if (isXrpcError(e) && getErrorName(e) === 'TokenInvalid') {
-    return true
+  if (isXrpcError(e)) {
+    return (
+      getErrorName(e) === 'InvalidToken' &&
+      (e.message.includes('Bad token scope') ||
+        e.message.includes('Bad token method'))
+    )
   }
   const str = String(e)
   return str.includes('Bad token scope') || str.includes('Bad token method')

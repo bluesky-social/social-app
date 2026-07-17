@@ -4,6 +4,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {isErrorMaybeAppPasswordPermissions} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePdsClient, useSessionApi} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
@@ -48,17 +49,14 @@ function DeactivateAccountDialogInner({
         logoutCurrentAccount('Deactivated')
       })
     } catch (e: any) {
-      switch (e.message) {
-        case 'Bad token scope':
-          setError(
-            _(
-              msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
-            ),
-          )
-          break
-        default:
-          setError(_(msg`Something went wrong, please try again`))
-          break
+      if (isErrorMaybeAppPasswordPermissions(e)) {
+        setError(
+          _(
+            msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
+          ),
+        )
+      } else {
+        setError(_(msg`Something went wrong, please try again`))
       }
 
       logger.error(e, {
