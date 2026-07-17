@@ -25,6 +25,7 @@ appId: xyz.blueskyweb.app
           visible: "Continue"
           timeout: 180000
       - tapOn: "Continue"
+      - back
 - extendedWaitUntil:
     visible:
       id: e2eProxyHeaderInput

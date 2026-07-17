@@ -24,6 +24,7 @@ export function TestCtrls() {
   const {logoutEveryAccount, login} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
   const {setShowLoggedOut} = useLoggedOutViewControls()
+  const [isProxyConfigured, setIsProxyConfigured] = useState(false)
   const onPressSignInAlice = async () => {
     console.info('[E2E] Signing in as Alice')
     await login(
@@ -63,21 +64,26 @@ export function TestCtrls() {
           const header = `${proxyHeader}#bsky_appview`
           BLUESKY_PROXY_HEADER.set(header)
           agent.configureProxy(header as any)
+          setIsProxyConfigured(true)
         }}
         style={BTN}
       />
-      <Pressable
-        testID="e2eSignInAlice"
-        onPress={onPressSignInAlice}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
-        testID="e2eSignInBob"
-        onPress={onPressSignInBob}
-        accessibilityRole="button"
-        style={BTN}
-      />
+      {isProxyConfigured && (
+        <>
+          <Pressable
+            testID="e2eSignInAlice"
+            onPress={onPressSignInAlice}
+            accessibilityRole="button"
+            style={BTN}
+          />
+          <Pressable
+            testID="e2eSignInBob"
+            onPress={onPressSignInBob}
+            accessibilityRole="button"
+            style={BTN}
+          />
+        </>
+      )}
       <Pressable
         testID="e2eSignOut"
         onPress={() => logoutEveryAccount('Settings')}
