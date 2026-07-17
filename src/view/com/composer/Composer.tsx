@@ -1266,6 +1266,8 @@ export const ComposePost = ({
     l,
     ax,
     pdsClient,
+    appviewClient,
+    resolveClients,
     canPost,
     isPublishing,
     currentLanguages,
