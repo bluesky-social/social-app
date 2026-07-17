@@ -169,6 +169,52 @@ function platformBlock(platform) {
   return lines.join('\n').slice(0, 3000)
 }
 
+function githubSummary({notify, platforms, shortSha, runUrl, commitUrl}) {
+  const lines = [
+    `# Nightly Maestro E2E ${notify ? 'failed' : 'passed'}`,
+    '',
+    `- Commit: [\`${shortSha}\`](${commitUrl})`,
+    `- Workflow run: [open run](${runUrl})`,
+    '',
+  ]
+
+  for (const platform of platforms) {
+    lines.push(
+      `## ${platform.status === 'success' ? '✅' : '❌'} ${platform.name}`,
+      '',
+      `Job status: \`${platform.status}\``,
+      '',
+    )
+    if (platform.failures.length > 0) {
+      for (const failure of platform.failures.slice(0, 10)) {
+        lines.push(`- **${failure.name}:** ${failure.message}`)
+      }
+      if (platform.failures.length > 10) {
+        lines.push(`- …and ${platform.failures.length - 10} more failed flows`)
+      }
+      lines.push('')
+    } else if (platform.failed && !platform.hasJUnit) {
+      lines.push(
+        `- Setup phase: ${platform.phase || 'No phase metadata was captured'}`,
+        '',
+      )
+    } else if (platform.failed) {
+      lines.push(
+        `- The job failed after JUnit was written (latest phase: ${platform.phase || 'unknown'})`,
+        '',
+      )
+    }
+    if (platform.artifactUrl) {
+      lines.push(
+        `- [${platform.name} logs and artifacts](${platform.artifactUrl})`,
+        '',
+      )
+    }
+  }
+
+  return lines.join('\n').trim()
+}
+
 export function buildSummary({
   iosStatus,
   androidStatus,
@@ -254,6 +300,13 @@ export function buildSummary({
   return {
     notify,
     platforms,
+    githubSummary: githubSummary({
+      notify,
+      platforms,
+      shortSha,
+      runUrl,
+      commitUrl,
+    }),
     payload: {text, blocks},
   }
 }

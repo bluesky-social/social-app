@@ -369,7 +369,7 @@ jobs:
             > e2e-summary.json
           echo "notify=$(jq -r .notify e2e-summary.json)" >> "$GITHUB_OUTPUT"
           echo "payload=$(jq -c .payload e2e-summary.json)" >> "$GITHUB_OUTPUT"
-          jq -r .payload.text e2e-summary.json >> "$GITHUB_STEP_SUMMARY"
+          jq -r .githubSummary e2e-summary.json >> "$GITHUB_STEP_SUMMARY"
 
       - name: Notify Slack of E2E failures
         if: steps.summary.outputs.notify == 'true'
