@@ -60,6 +60,7 @@ stop_pid_file() {
 # shellcheck disable=SC2329 # Invoked by the EXIT/INT/TERM trap below.
 cleanup() {
   set +e
+  stop_pid_file "$artifact_dir/logcat.pid"
   stop_pid_file "$artifact_dir/metro.pid"
   stop_pid_file "$artifact_dir/mock-server.pid"
 
@@ -80,6 +81,12 @@ cleanup() {
 }
 
 trap cleanup EXIT INT TERM
+
+if [[ "$platform" == "android" ]]; then
+  adb -s "$device_id" logcat -c
+  adb -s "$device_id" logcat -v threadtime >"$artifact_dir/logcat.log" 2>&1 &
+  printf '%s\n' "$!" >"$artifact_dir/logcat.pid"
+fi
 
 phase "Starting PostgreSQL, Redis, and mock server"
 if [[ "$platform" == "ios" ]]; then

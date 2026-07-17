@@ -19,7 +19,7 @@ appId: xyz.blueskyweb.app
     when:
       platform: Android
     commands:
-      - openLink: "exp+bluesky://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+      - openLink: "exp+bluesky://expo-development-client/?url=http%3A%2F%2F10.0.2.2%3A8081"
       - runFlow:
           label: "Dismiss Expo dev menu"
           when:

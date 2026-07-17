@@ -27,6 +27,7 @@ stop_pid_file() {
   stop_process_tree "$pid"
 }
 
+stop_pid_file "$artifact_dir/logcat.pid"
 stop_pid_file "$artifact_dir/metro.pid"
 stop_pid_file "$artifact_dir/mock-server.pid"
 stop_pid_file "$artifact_dir/emulator.pid"

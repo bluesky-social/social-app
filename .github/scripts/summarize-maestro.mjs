@@ -75,6 +75,18 @@ export function parseJUnit(xml) {
   return failures
 }
 
+export function parseMaestroCli(log) {
+  const failures = []
+  const failurePattern = /^\[Failed\]\s+(.+?)\s+\([^)]*\)\s+\((.+)\)\s*$/gm
+  for (const match of log.matchAll(failurePattern)) {
+    failures.push({
+      name: concise(match[1], 120),
+      message: concise(match[2]),
+    })
+  }
+  return failures
+}
+
 function walk(root) {
   if (!root || !fs.existsSync(root)) return []
   const entries = fs.readdirSync(root, {withFileTypes: true})
@@ -90,12 +102,20 @@ function readPhase(root) {
 }
 
 function platformResult({name, status, root, artifactUrl}) {
-  const reports = walk(root).filter(file =>
-    /(?:report|junit).*\.xml$/i.test(file),
-  )
-  const failures = reports.flatMap(report =>
+  const files = walk(root)
+  const reports = files.filter(file => /(?:report|junit).*\.xml$/i.test(file))
+  const junitFailures = reports.flatMap(report =>
     parseJUnit(fs.readFileSync(report, 'utf8')),
   )
+  const maestroLogs = files.filter(
+    file => path.basename(file) === 'maestro-cli.log',
+  )
+  const cliFailures = maestroLogs.flatMap(log =>
+    parseMaestroCli(fs.readFileSync(log, 'utf8')),
+  )
+  // A cancelled or timed-out Maestro run may never flush JUnit. Its CLI log is
+  // streamed continuously, so use those failure lines when JUnit has no detail.
+  const failures = junitFailures.length > 0 ? junitFailures : cliFailures
   const failed = status !== 'success' || failures.length > 0
   return {
     name,
@@ -117,6 +137,36 @@ function slackEscape(value) {
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
+}
+
+function platformBlock(platform) {
+  const lines = [
+    `${statusEmoji(platform.status)} *${platform.name}* — job status: \`${platform.status}\``,
+  ]
+  if (platform.failures.length > 0) {
+    for (const failure of platform.failures.slice(0, 8)) {
+      lines.push(
+        `• *${slackEscape(failure.name)}:* ${slackEscape(failure.message)}`,
+      )
+    }
+    if (platform.failures.length > 8) {
+      lines.push(`• …and ${platform.failures.length - 8} more failed flows`)
+    }
+  } else if (platform.failed && !platform.hasJUnit) {
+    lines.push(
+      `• *Setup phase:* ${slackEscape(platform.phase || 'No phase metadata was captured')}`,
+    )
+  } else if (platform.failed) {
+    lines.push(
+      `• Job failed after JUnit was written; latest phase: ${slackEscape(platform.phase || 'unknown')}`,
+    )
+  }
+  if (platform.artifactUrl) {
+    lines.push(
+      `• <${platform.artifactUrl}|Open ${platform.name} logs and artifacts>`,
+    )
+  }
+  return lines.join('\n').slice(0, 3000)
 }
 
 export function buildSummary({
@@ -183,10 +233,28 @@ export function buildSummary({
   }
 
   const text = lines.join('\n').trim()
+  const blocks = [
+    {
+      type: 'header',
+      text: {type: 'plain_text', text: 'Nightly Maestro E2E failed'},
+    },
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `*Commit:* <${commitUrl}|\`${shortSha}\`>\n*Workflow run:* <${runUrl}|open run>`,
+      },
+    },
+    {type: 'divider'},
+    ...platforms.flatMap((platform, index) => [
+      {type: 'section', text: {type: 'mrkdwn', text: platformBlock(platform)}},
+      ...(index < platforms.length - 1 ? [{type: 'divider'}] : []),
+    ]),
+  ]
   return {
     notify,
     platforms,
-    payload: {text},
+    payload: {text, blocks},
   }
 }
 
