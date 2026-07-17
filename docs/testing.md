@@ -42,6 +42,9 @@ used. iOS runs on `macos-26-xlarge` with Xcode 26.4. Android runs on
 `Linux-x64-32core`. Both use Java 17 and the Node and pnpm versions declared in
 `package.json`. The iOS job selects an iPhone 17 simulator running iOS 26.5;
 Android uses a Pixel 6 AVD with the API 35 Google APIs x86_64 image.
+Both development clients use the `e2e` EAS profile and the same reusable local
+EAS build action as the release build workflows; the resulting simulator app
+and APK are installed directly on the selected devices.
 
 The mock-server manager listens on host port 1986 and creates test services on
 port 3000. Metro listens on 8081. Android reverses ports 3000 and 8081 into the

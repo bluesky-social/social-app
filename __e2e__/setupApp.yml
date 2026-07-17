@@ -19,13 +19,17 @@ appId: xyz.blueskyweb.app
     when:
       platform: Android
     commands:
-      - tapOn: 'http://localhost:8081'
+      - openLink: "exp+bluesky://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
       - runFlow:
           label: "Dismiss Expo dev menu"
           when:
             visible: "Continue"
           commands:
             - back
+- extendedWaitUntil:
+    visible:
+      id: e2eProxyHeaderInput
+    timeout: 60000
 - tapOn:
     id: e2eProxyHeaderInput
 - inputText: ${output.result}

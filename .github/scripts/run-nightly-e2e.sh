@@ -142,32 +142,6 @@ if [[ "$platform" == "android" ]]; then
   adb -s "$device_id" reverse tcp:8081 tcp:8081
 fi
 
-phase "Building and installing the development client"
-if [[ "$platform" == "ios" ]]; then
-  # Passing --device makes this Expo version merge simulator and devicectl
-  # results. On Xcode 26.4, devicectl can misclassify the simulator as a
-  # physical device and incorrectly require signing. Exactly one simulator is
-  # booted above, so Expo's default simulator-only resolver selects it.
-  echo "Building for already booted iOS simulator $device_id"
-  EXPO_PUBLIC_ENV=e2e \
-    NODE_ENV=test \
-    RN_SRC_EXT=e2e.ts,e2e.tsx \
-    pnpm exec expo run:ios --no-bundler \
-    2>&1 | tee "$artifact_dir/build.log"
-else
-  expo_device_name="$(adb -s "$device_id" emu avd name | sed -n '1p' | tr -d '\r')"
-  if [[ -z "$expo_device_name" ]]; then
-    echo "Could not resolve the AVD name for $device_id" >&2
-    exit 1
-  fi
-  echo "Building for Android AVD $expo_device_name ($device_id)"
-  EXPO_PUBLIC_ENV=e2e \
-    NODE_ENV=test \
-    RN_SRC_EXT=e2e.ts,e2e.tsx \
-    pnpm exec expo run:android --device "$expo_device_name" --no-bundler \
-    2>&1 | tee "$artifact_dir/build.log"
-fi
-
 phase "Running Maestro flows"
 set +e
 maestro test \

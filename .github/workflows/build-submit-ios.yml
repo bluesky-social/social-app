@@ -129,16 +129,15 @@ jobs:
           google-services-token: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
 
       - name: 🏗️ EAS Build
-        env:
-          PROFILE: ${{ inputs.profile || 'testflight' }}
-        run: >
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_RELEASE=${{ steps.env.outputs.release-version }}
-          SENTRY_DIST=${{ steps.env.outputs.bundle-identifier }}
-          pnpm use-build-number-with-bump
-          pnpm eas build -p ios
-          --profile $PROFILE
-          --local --output build.tar.gz --non-interactive
+        uses: ./.github/actions/eas-local-build
+        with:
+          platform: ios
+          profile: ${{ inputs.profile || 'testflight' }}
+          output: build.tar.gz
+          bump-build-number: "true"
+          sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          sentry-release: ${{ steps.env.outputs.release-version }}
+          sentry-dist: ${{ steps.env.outputs.bundle-identifier }}
 
       - name: 📂 Extract build artifact
         run: |
