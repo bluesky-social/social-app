@@ -2,9 +2,10 @@ import {type com} from '#/lexicons'
 
 /**
  * The `subject` union of the generated `createReport` input body. The lexicon
- * declares only `com.atproto.admin.defs#repoRef` and `com.atproto.repo.strongRef`
- * with branded string fields (`did: l.DidString`, `uri: l.AtUriString`,
- * `cid: l.CidString`).
+ * declares only `com.atproto.admin.defs#repoRef` and `com.atproto.repo.strongRef`.
+ * `did`/`uri` are branded string types (`l.DidString`, `l.AtUriString`); `cid`
+ * is typed `l.CidString`, which is a plain (unbranded) `string` alias, so only
+ * the former two need assertions below.
  */
 type ReportSubject = com.atproto.moderation.createReport.$InputBody['subject']
 
@@ -14,7 +15,7 @@ type RepoRefSubject = Extract<
   {$type: 'com.atproto.admin.defs#repoRef'}
 >
 
-/** The strongRef arm of the subject union, carrying the branded `uri`/`cid`. */
+/** The strongRef arm of the subject union, carrying the branded `uri`. */
 type StrongRefSubject = Extract<
   ReportSubject,
   {$type: 'com.atproto.repo.strongRef'}
@@ -33,8 +34,8 @@ export function accountReportSubject(did: string): ReportSubject {
 
 /**
  * Branded strongRef subject from plain uri/cid strings. The app holds these as
- * plain strings; brand `uri` to the lexicon's `uri` slot (`cid` is a plain
- * string in the generated type, so it needs no assertion).
+ * plain strings; brand `uri` to the lexicon's `uri` slot (`l.CidString` is an
+ * unbranded `string` alias, so `cid` needs no assertion).
  */
 export function recordReportSubject(uri: string, cid: string): ReportSubject {
   return {

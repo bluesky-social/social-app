@@ -9,7 +9,7 @@ import {useNavigation} from '@react-navigation/native'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
-import {getErrorName} from '#/lib/xrpc-error'
+import {getErrorName, getErrorStatus} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useRemoveFeedMutation} from '#/state/queries/preferences'
@@ -247,7 +247,7 @@ function detectKnownError(
   }
 
   // check status codes
-  if (error?.status === 429) {
+  if (getErrorStatus(error) === 429) {
     return KnownError.FeedTooManyRequests
   }
 
