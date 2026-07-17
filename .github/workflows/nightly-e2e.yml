@@ -234,6 +234,9 @@ jobs:
           avd-name: nightly-e2e
           emulator-port: 5554
           disable-animations: true
+          cores: 4
+          ram-size: 6144
+          heap-size: 512
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
           script: |
             echo "Installing the Android development client" > artifacts/android/phase.txt
