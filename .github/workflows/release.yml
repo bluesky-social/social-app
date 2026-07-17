@@ -1,0 +1,219 @@
+---
+name: Release
+
+on:
+  workflow_dispatch:
+
+# A release creates externally visible, non-reversible state in GitHub and both app stores.
+# Never cancel one release in favor of another, and never allow two to overlap.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+# Permissions are granted per job. The mobile build jobs only receive the secrets declared by
+# their reusable workflows rather than the repository's entire secret store.
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Tag commit and create GitHub Release
+    if: github.repository == 'bluesky-social/social-app'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: ⬇️ Checkout release commit
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: 🔎 Validate release commit and version
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SHA: ${{ github.sha }}
+          RELEASE_REF: ${{ github.ref }}
+        run: |
+          if [ "$RELEASE_REF" != "refs/heads/main" ]; then
+            echo "::error::Releases must be dispatched from main, not $RELEASE_REF."
+            exit 1
+          fi
+
+          main_sha=$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq '.object.sha')
+          if [ "$RELEASE_SHA" != "$main_sha" ]; then
+            echo "::error::main advanced from $RELEASE_SHA to $main_sha after this workflow was dispatched. Run it again from the latest commit."
+            exit 1
+          fi
+
+          version=$(jq -r '.version' package.json)
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.0$ ]]; then
+            echo "::error file=package.json::Release version must match 1.X.0; found '$version'."
+            exit 1
+          fi
+
+          echo "Releasing $version from $RELEASE_SHA"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      # gh release create creates the lightweight tag and release together. Supplying --target
+      # guarantees the tag points at the exact main commit validated above.
+      - name: 🏷️ Tag commit and create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SHA: ${{ github.sha }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          check_absent() {
+            kind="$1"
+            endpoint="$2"
+            if response=$(gh api "repos/${GITHUB_REPOSITORY}/${endpoint}" 2>&1); then
+              echo "::error::$kind $VERSION already exists. Refusing to submit duplicate production builds."
+              exit 1
+            elif [[ "$response" == *"(HTTP 404)"* ]]; then
+              return
+            else
+              echo "::error::Could not check for an existing $kind $VERSION."
+              echo "$response"
+              exit 1
+            fi
+          }
+
+          check_absent "Tag" "git/ref/tags/${VERSION}"
+          check_absent "GitHub Release" "releases/tags/${VERSION}"
+
+          gh release create "$VERSION" \
+            --target "$RELEASE_SHA" \
+            --title "$VERSION" \
+            --generate-notes
+
+  ios:
+    name: Production iOS Build
+    needs: [release]
+    uses: ./.github/workflows/build-submit-ios.yml
+    with:
+      profile: production
+      testFlightGroup: "QA Team"
+    secrets:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      ENV_TOKEN: ${{ secrets.ENV_TOKEN }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      BITDRIFT_API_KEY: ${{ secrets.BITDRIFT_API_KEY }}
+      EXPO_PUBLIC_GCP_PROJECT_ID: ${{ secrets.EXPO_PUBLIC_GCP_PROJECT_ID }}
+      GOOGLE_SERVICES_TOKEN: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
+      SLACK_CLIENT_ALERT_WEBHOOK: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+
+  android:
+    name: Production Android Build
+    needs: [release]
+    # The reusable workflow's APK attachment job needs this permission. The build and submit
+    # jobs remain read-only through their own job/workflow permission declarations.
+    permissions:
+      contents: write
+    uses: ./.github/workflows/build-submit-android.yml
+    with:
+      profile: production
+      releaseTag: ${{ needs.release.outputs.version }}
+    secrets:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      ENV_TOKEN: ${{ secrets.ENV_TOKEN }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      BITDRIFT_API_KEY: ${{ secrets.BITDRIFT_API_KEY }}
+      EXPO_PUBLIC_GCP_PROJECT_ID: ${{ secrets.EXPO_PUBLIC_GCP_PROJECT_ID }}
+      GOOGLE_SERVICES_TOKEN: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SLACK_CLIENT_ALERT_WEBHOOK: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+  bump-version:
+    name: Open next version PR
+    needs: [release, ios, android]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      # The builds can take long enough for main to advance. Base the bump on the latest main,
+      # but verify its version is still the one that this workflow just released.
+      - name: ⬇️ Checkout latest main
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: 🧮 Compute next version
+        id: version
+        env:
+          RELEASED: ${{ needs.release.outputs.version }}
+        run: |
+          current=$(jq -r '.version' package.json)
+          if [ "$current" != "$RELEASED" ]; then
+            echo "::error file=package.json::main is now version $current, but this workflow released $RELEASED. Refusing to overwrite a newer version."
+            exit 1
+          fi
+
+          next=$(echo "$RELEASED" | jq -R -r 'split(".") | "\(.[0]).\(.[1] | tonumber + 1).0"')
+          echo "Bumping $RELEASED to $next"
+          echo "next=$next" >> "$GITHUB_OUTPUT"
+          echo "branch=bot/version-bump-$next" >> "$GITHUB_OUTPUT"
+
+      - name: 🔁 Check for an existing version-bump PR
+        id: dedup
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.version.outputs.branch }}
+        run: |
+          existing=$(gh pr list --state open --head "$BRANCH" --json url --jq '.[0].url // ""')
+          if [ -n "$existing" ]; then
+            echo "Version-bump PR already exists: $existing"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: ✏️ Bump version
+        if: steps.dedup.outputs.skip == 'false'
+        env:
+          NEXT: ${{ steps.version.outputs.next }}
+        run: |
+          jq --indent 2 --arg version "$NEXT" '.version = $version' package.json > package.json.tmp
+          mv package.json.tmp package.json
+
+          changed=$(git diff --numstat package.json | awk '{print $1"+"$2}')
+          if [ "$changed" != "1+1" ]; then
+            echo "::error file=package.json::Expected the version bump to change exactly one line."
+            git diff -- package.json
+            exit 1
+          fi
+
+      - name: 📤 Create branch and pull request
+        if: steps.dedup.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.version.outputs.branch }}
+          NEXT: ${{ steps.version.outputs.next }}
+          RELEASED: ${{ needs.release.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add package.json
+          git commit -m "bump version to $NEXT"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --set-upstream origin "$BRANCH"
+
+          # This requires "Allow GitHub Actions to create and approve pull requests" in the
+          # repository's Actions settings; no long-lived personal access token is needed.
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "Bump version to $NEXT" \
+            --body "Released $RELEASED. Bumps the app version to $NEXT for the next release cycle."
