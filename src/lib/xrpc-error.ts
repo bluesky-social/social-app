@@ -1,4 +1,4 @@
-import {XrpcError, XrpcResponseError} from '@atproto/lex-client'
+import {LexError, XrpcError, XrpcResponseError} from '@atproto/lex-client'
 
 /**
  * True for an XRPC error from a lex `Client` (`@atproto/lex-client` `XrpcError`,
@@ -18,9 +18,16 @@ export function getErrorStatus(e: unknown): number | undefined {
   return e instanceof XrpcResponseError ? e.status : undefined
 }
 
-/** The lexicon error code (`err.error`). */
+/**
+ * The lexicon error code (`err.error`). Gated on `LexError` (the base of the
+ * lex error hierarchy) rather than `XrpcError` so sibling `LexError` subclasses
+ * that are NOT `XrpcError` also surface their `.error` - notably
+ * `LexAuthFactorError` (`'AuthFactorTokenRequired'`), which `PasswordSession`
+ * throws for email-2FA logins. Every `XrpcError` is a `LexError`, so all
+ * existing call sites keep working.
+ */
 export function getErrorName(e: unknown): string | undefined {
-  return isXrpcError(e) ? (e as {error?: string}).error : undefined
+  return e instanceof LexError ? e.error : undefined
 }
 
 /**

@@ -296,6 +296,31 @@ export type SessionBundle = {
 }
 
 /**
+ * Kill-switches for live bundles, keyed by bundle identity.
+ *
+ * `PasswordSession` exposes no local (logout-free) destroy, so disposal is
+ * implemented via a closure flag inside the session's injected `fetch` (see
+ * {@link makeSessionHooks}). The `kill()` that trips that flag is produced next
+ * to the hooks - before the bundle exists - so we stash it here once the bundle
+ * is built and look it up in {@link disposeBundle}. A `WeakMap` keeps this off
+ * the {@link SessionBundle} type (the reducer's opaque view must not see it) and
+ * lets the entry be GC'd with the bundle.
+ */
+const bundleKillSwitches = new WeakMap<SessionBundle, () => void>()
+
+/**
+ * Associate a bundle with the `kill()` from its {@link makeSessionHooks}, so
+ * {@link disposeBundle} can neutralize the underlying session. Call once, right
+ * after the bundle is built, at every session-construction site.
+ */
+export function registerBundleKillSwitch(
+  bundle: SessionBundle,
+  kill: () => void,
+) {
+  bundleKillSwitches.set(bundle, kill)
+}
+
+/**
  * Assemble a {@link SessionBundle} from a live session: the account, appview,
  * and chat clients, all read-through views over the one session. The appview
  * proxy header is baked into `buildAppviewClient` (`service: api.app.service`),
@@ -331,11 +356,20 @@ export function buildBundle(session: PasswordSession): SessionBundle {
  * -> `'expired'`, transient failure -> `'network-error'`. The whole
  * {@link SessionBundle} is handed through so the provider can snapshot the live
  * session and use the bundle itself as the reducer's identity token.
+ *
+ * `sessionData` is the fresh payload the library hands the hook. It matters
+ * because `PasswordSession` fires `onUpdated`/`onDeleted` BEFORE committing
+ * `#sessionData` (see `refresh()`/`logout()` in password-session.js), so the
+ * live getter (`bundle.session.session`) still returns the OLD tokens at hook
+ * time. The provider must build the refreshed account from this argument, not
+ * from the live getter. Present on the `'update'` path (the new session) and
+ * absent on the error paths.
  */
 type OnSessionChange = (
   bundle: SessionBundle,
   did: string,
   event: AtpSessionEvent,
+  sessionData?: SessionData,
 ) => void
 
 /**
@@ -352,6 +386,20 @@ type OnSessionChange = (
  * are constructed (the session is created first, then the bundle is built over
  * it).
  *
+ * The hooks thread the fresh `SessionData` the library delivers straight
+ * through to `onSessionChange` (the `'update'` payload). The library fires the
+ * hook BEFORE committing that data internally, so the provider must read tokens
+ * from this argument rather than the (still-stale) live session getter.
+ *
+ * The `fetch` option is wrapped in a kill-switch: `kill()` (returned alongside
+ * `arm()`) sets a closure flag so every subsequent request through this
+ * session - direct fetches AND the internal auto-refresh, which
+ * `PasswordSession` routes through the same `options.fetch` captured at
+ * construction - throws instead of hitting the network. `kill()` also disarms
+ * the hooks so a disposed session can never dispatch into the reducer. This is
+ * the disposal mechanism {@link disposeBundle} relies on (`PasswordSession`
+ * exposes no local destroy).
+ *
  * Exported for testing (the arm-latch + event mapping is the core semantics).
  */
 export function makeSessionHooks(
@@ -360,12 +408,13 @@ export function makeSessionHooks(
   getDid: () => string,
 ) {
   let armed = false
-  const dispatch = (event: AtpSessionEvent) => {
+  let killed = false
+  const dispatch = (event: AtpSessionEvent, sessionData?: SessionData) => {
     if (!armed) {
       return
     }
     const did = getDid()
-    onSessionChange(getBundle(), did, event)
+    onSessionChange(getBundle(), did, event, sessionData)
     /*
      * Mirror the old BskyAppAgent.prepare wiring: log any non-create/update
      * session event. In practice we only emit 'update'/'expired'/'network-error'
@@ -376,9 +425,14 @@ export function makeSessionHooks(
     }
   }
   const hooks: PasswordSessionOptions = {
-    fetch: networkAwareFetch,
-    onUpdated() {
-      dispatch('update')
+    fetch: (input, init) => {
+      if (killed) {
+        throw new Error('session disposed')
+      }
+      return networkAwareFetch(input, init)
+    },
+    onUpdated(data) {
+      dispatch('update', data)
     },
     onDeleted() {
       dispatch('expired')
@@ -390,6 +444,10 @@ export function makeSessionHooks(
   return Object.assign(hooks, {
     arm() {
       armed = true
+    },
+    kill() {
+      killed = true
+      armed = false
     },
   })
 }
@@ -475,6 +533,7 @@ export async function createSessionBundleAndResume(
   }
 
   bundle = buildBundle(session)
+  registerBundleKillSwitch(bundle, hooks.kill)
   const account =
     sessionDataToSessionAccount(session.session, session.session.service) ??
     storedAccount
@@ -527,6 +586,7 @@ export async function createSessionBundleAndLogin(
   })
 
   bundle = buildBundle(session)
+  registerBundleKillSwitch(bundle, hooks.kill)
   const account = sessionDataToSessionAccountOrThrow(session)
   accountDid = account.did
 
@@ -594,6 +654,7 @@ export async function createSessionBundleAndCreateAccount(
   )
 
   bundle = buildBundle(session)
+  registerBundleKillSwitch(bundle, hooks.kill)
   const account = sessionDataToSessionAccountOrThrow(session)
   accountDid = account.did
 
@@ -749,26 +810,25 @@ function sessionDataToSessionAccountOrThrow(
 /**
  * Neutralize a bundle's session so it can never refresh again.
  *
- * Called when switching away from / disposing an account. We null out the
- * session locally (constructing a fresh destroyed-state marker is not exposed,
- * so we rely on the reducer dropping all references) - the important guarantee
- * is that this session's tokens are no longer reachable by any live client. We
- * do NOT call `logout()` here: disposal is a local switch, not a server-side
- * revocation (revocation is handled separately via the push-token unregister
- * temporary sessions). The bundle's clients stay usable enough not to crash
- * late readers.
+ * Called when switching away from / disposing an account. `PasswordSession`
+ * exposes no synchronous, hook-free way to mark itself destroyed without a
+ * network logout (and `logout()`/`delete()` would revoke on the server, which
+ * we do NOT want for a local switch - revocation is handled separately via the
+ * push-token unregister temporary sessions). So we trip the kill-switch
+ * installed in the session's injected `fetch` (see {@link makeSessionHooks} /
+ * {@link registerBundleKillSwitch}): every subsequent request through this
+ * session - direct fetch AND the internal auto-refresh, which shares the same
+ * captured `options.fetch` - throws before touching the network. A tripped
+ * refresh routes into the `onUpdateFailure` path (session preserved locally,
+ * refresh token NOT consumed server-side). `kill()` also disarms the hooks so
+ * the stale bundle can no longer dispatch into the reducer. The important
+ * guarantee - matching the old `dispose()` - is that this session's tokens are
+ * no longer reachable by any live network path.
  */
 export function disposeBundle(bundle: SessionBundle | PublicSessionBundle) {
   const session = bundle.session
   if (!session || session.destroyed) {
     return
   }
-  /*
-   * There is no synchronous, hook-free way to mark a PasswordSession destroyed
-   * without a network logout. PasswordSession.delete() would revoke on the
-   * server, which we do NOT want for a local switch. So we fire-and-forget a
-   * logout-free neutralization by dropping our reference; GC reclaims the
-   * session. Any late fetchHandler call still uses valid tokens until the
-   * bundle is dereferenced by the reducer, which is the pre-existing behavior.
-   */
+  bundleKillSwitches.get(bundle)?.()
 }

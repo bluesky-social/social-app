@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {api} from '@bsky.app/sdk'
+import {Client} from '@atproto/lex-client'
 import {
   type InterpretedLabelValueDefinition,
   LABELS,
@@ -104,10 +104,11 @@ export function isAppLabeler(
     | app.bsky.labeler.defs.LabelerView
     | app.bsky.labeler.defs.LabelerViewDetailed,
 ): boolean {
+  const appLabelers = Client.appLabelers as readonly string[]
   if (typeof labeler === 'string') {
-    return labeler === api.moderation.did
+    return appLabelers.includes(labeler)
   }
-  return labeler.creator.did === api.moderation.did
+  return appLabelers.includes(labeler.creator.did)
 }
 
 export function isLabelerSubscribed(
