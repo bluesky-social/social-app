@@ -143,6 +143,12 @@ EXPO_PUBLIC_ENV=e2e \
 printf '%s\n' "$!" >"$artifact_dir/metro.pid"
 wait_for_port 8081 "Metro"
 
+# Pre-warm Metro bundle so the first Maestro flow doesn't hit a cold-start delay
+phase "Pre-warming Metro bundle"
+bundle_platform="$platform"
+curl -s -o /dev/null "http://localhost:8081/index.bundle?platform=${bundle_platform}&dev=true&minify=false"
+echo "Metro bundle pre-warmed for $bundle_platform"
+
 if [[ "$platform" == "android" ]]; then
   phase "Configuring Android localhost routing"
   adb -s "$device_id" reverse tcp:3000 tcp:3000
