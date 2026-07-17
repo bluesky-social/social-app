@@ -1,4 +1,3 @@
-import {XRPCError} from '@atproto/api'
 import {
   type Procedure,
   type Query,
@@ -15,21 +14,9 @@ import {
 import {isErrorMaybeAppPasswordPermissions, isNetworkError} from '../errors'
 
 /**
- * Old-world fixture: `@atproto/api` XRPCError. `.headers` is a plain record,
- * `.error` is the lexicon code string, `.status` a numeric ResponseType enum.
- */
-function oldError(
-  status: number,
-  error: string,
-  headers?: Record<string, string>,
-) {
-  return new XRPCError(status, error, undefined, headers)
-}
-
-/**
- * New-world fixture: lex `XrpcResponseError`. Built from a WHATWG `Response`
- * (so `.headers` is a `Headers` object and `.status` is the numeric HTTP
- * status) plus a JSON error payload carrying `.error`.
+ * Lex `XrpcResponseError` fixture. Built from a WHATWG `Response` (so
+ * `.headers` is a `Headers` object and `.status` is the numeric HTTP status)
+ * plus a JSON error payload carrying `.error`.
  */
 function lexError(
   status: number,
@@ -45,8 +32,7 @@ function lexError(
 }
 
 describe('isXrpcError', () => {
-  it('matches both old XRPCError and lex XrpcResponseError', () => {
-    expect(isXrpcError(oldError(400, 'TokenInvalid'))).toBe(true)
+  it('matches a lex XrpcResponseError', () => {
     expect(isXrpcError(lexError(400, 'TokenInvalid'))).toBe(true)
   })
 
@@ -58,8 +44,7 @@ describe('isXrpcError', () => {
 })
 
 describe('getErrorStatus', () => {
-  it('reads status from both worlds', () => {
-    expect(typeof getErrorStatus(oldError(400, 'TokenInvalid'))).toBe('number')
+  it('reads status from a lex XrpcResponseError', () => {
     expect(getErrorStatus(lexError(429, 'RateLimitExceeded'))).toBe(429)
   })
 
@@ -69,8 +54,7 @@ describe('getErrorStatus', () => {
 })
 
 describe('getErrorName', () => {
-  it('reads the lexicon error code from both worlds', () => {
-    expect(getErrorName(oldError(400, 'TokenInvalid'))).toBe('TokenInvalid')
+  it('reads the lexicon error code', () => {
     expect(getErrorName(lexError(400, 'TokenInvalid'))).toBe('TokenInvalid')
   })
 
@@ -80,12 +64,6 @@ describe('getErrorName', () => {
 })
 
 describe('getErrorHeader', () => {
-  it('reads a header from the old record shape (case-insensitive)', () => {
-    const e = oldError(429, 'RateLimitExceeded', {'ratelimit-reset': '123'})
-    expect(getErrorHeader(e, 'ratelimit-reset')).toBe('123')
-    expect(getErrorHeader(e, 'RateLimit-Reset')).toBe('123')
-  })
-
   it('reads a header from the lex Headers object', () => {
     const e = lexError(429, 'RateLimitExceeded', {'ratelimit-reset': '123'})
     expect(getErrorHeader(e, 'ratelimit-reset')).toBe('123')
@@ -99,10 +77,7 @@ describe('getErrorHeader', () => {
 })
 
 describe('isErrorMaybeAppPasswordPermissions', () => {
-  it('matches a TokenInvalid error from both worlds', () => {
-    expect(
-      isErrorMaybeAppPasswordPermissions(oldError(400, 'TokenInvalid')),
-    ).toBe(true)
+  it('matches a TokenInvalid error', () => {
     expect(
       isErrorMaybeAppPasswordPermissions(lexError(400, 'TokenInvalid')),
     ).toBe(true)
@@ -118,9 +93,6 @@ describe('isErrorMaybeAppPasswordPermissions', () => {
   })
 
   it('does not match unrelated XRPC errors', () => {
-    expect(
-      isErrorMaybeAppPasswordPermissions(oldError(400, 'InvalidRequest')),
-    ).toBe(false)
     expect(
       isErrorMaybeAppPasswordPermissions(lexError(400, 'InvalidRequest')),
     ).toBe(false)

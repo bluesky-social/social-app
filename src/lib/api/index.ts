@@ -402,10 +402,9 @@ async function resolveMedia(
     return {
       $type: 'app.bsky.embed.video',
       /*
-       * The video blob is a legacy `@atproto/api` BlobRef from the not-yet
-       * -migrated video pipeline (getJobStatus, in composer state/video). Its
-       * structural shape matches the lexicon blob field; the CID hasher handles
-       * both class instances and plain lex blobs (see computeCid).
+       * The video blob is a plain lex blob from the video pipeline
+       * (getJobStatus, in composer state/video). Its structural shape matches
+       * the lexicon blob field and the CID hasher (see computeCid).
        */
       video: videoDraft.pendingPublish.blobRef,
       alt: videoDraft.altText || undefined,

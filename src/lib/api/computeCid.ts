@@ -46,33 +46,14 @@ export async function computeCid(
 }
 
 /**
- * True for a plain-JSON lexicon blob, the shape lex `uploadBlob` now returns
- * (`{$type: 'blob', ref, mimeType, size}` with `ref` a parsed CID). Replaces
- * the old `instanceof BlobRef` check, since lex blobs are plain objects, not
- * class instances (design section F).
+ * True for a plain-JSON lexicon blob, the shape lex `uploadBlob` returns
+ * (`{$type: 'blob', ref, mimeType, size}` with `ref` a parsed CID). Lex blobs
+ * are plain objects, not class instances.
  */
 function isBlobRef(v: unknown): boolean {
   if (v == null || typeof v !== 'object') return false
   const o = v as Record<string, unknown>
   return o.$type === 'blob' && 'ref' in o && 'mimeType' in o
-}
-
-/**
- * True for a legacy `@atproto/api` `BlobRef` class instance. During the
- * migration the video embed path still yields these (its blob comes from the
- * not-yet-migrated `app.bsky.video.getJobStatus` bridge call), so we must keep
- * handling them here even though the composer's own uploads are now plain lex
- * blobs. A class instance is duck-typed by its `ipld()` method plus the
- * `ref`/`mimeType` fields; it has NO `$type` and a non-plain prototype, so it
- * would otherwise slip past both `isBlobRef` and `isPlainObject` and be encoded
- * wrong - silently breaking video reply-chain CIDs.
- */
-function isBlobRefInstance(
-  v: unknown,
-): v is {ipld: () => unknown; ref: unknown; mimeType: unknown} {
-  if (v == null || typeof v !== 'object') return false
-  const o = v as Record<string, unknown>
-  return typeof o.ipld === 'function' && 'ref' in o && 'mimeType' in o
 }
 
 // Returns a transformed version of the object for use in DAG-CBOR.
@@ -85,16 +66,6 @@ function prepareForHashing(v: any): any {
    */
   if (isBlobRef(v)) {
     return v
-  }
-
-  /*
-   * A legacy `BlobRef` class instance must be converted via `ipld()` to the
-   * plain `{$type, ref, mimeType, size}` object; encoding the instance directly
-   * would emit its internal `original` field and omit `$type`, producing the
-   * wrong CID. `ipld()` returns exactly what `isBlobRef` accepts above.
-   */
-  if (isBlobRefInstance(v)) {
-    return v.ipld()
   }
 
   // Walk through arrays

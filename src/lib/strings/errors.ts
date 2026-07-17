@@ -1,6 +1,6 @@
 import {t} from '@lingui/core/macro'
 
-import {getErrorName, getErrorStatus, isXrpcError} from '#/lib/xrpc-error'
+import {getErrorName, isXrpcError} from '#/lib/xrpc-error'
 
 export function cleanError(e: unknown): string {
   if (!e) {
@@ -87,13 +87,11 @@ export function isCancelledError(e: unknown) {
   return str.includes('cancel')
 }
 
-// TODO Replace this with error.shouldRetry() when available. -dsb
 const RETRYABLE_ERRORS = [408, 425, 429, 500, 502, 503, 504, 522, 524]
 export function isRetryableHttpStatus(status: number) {
   return RETRYABLE_ERRORS.includes(status)
 }
 
 export function shouldRetryError(e: unknown) {
-  const status = getErrorStatus(e)
-  return status !== undefined && isRetryableHttpStatus(status)
+  return isXrpcError(e) && e.shouldRetry()
 }

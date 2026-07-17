@@ -7,7 +7,7 @@
  * label simply drops the `https://` scheme for readability.
  *
  * Kept as a dependency-free leaf module (no #/lib/strings/url-helpers import)
- * so its unit tests stay fast and isolated from the heavy @atproto/api graph.
+ * so its unit tests stay fast and isolated from the heavy SDK graph.
  */
 
 function stripLeadingAt(handle: string): string {

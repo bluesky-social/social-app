@@ -66,8 +66,8 @@ function toSystemMessageView(
    * The guard disjunction is kept inline in the `if` (rather than a separate
    * boolean) so TS narrows `ev` to the union of system-message log types, all
    * of which carry a `message: SystemMessageView`. The generated lexicon types
-   * are stricter than the old `@atproto/api` ones (no `[k: string]: unknown`
-   * index signature), so a separate boolean would not narrow the access.
+   * are strict (no `[k: string]: unknown` index signature), so a separate
+   * boolean would not narrow the access.
    */
   if (
     bsky.isType(chat.bsky.convo.defs.logAddMember, ev) ||

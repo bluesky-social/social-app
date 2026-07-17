@@ -1,11 +1,10 @@
 import {app} from '#/lexicons'
 
 /*
- * The generated `$type`-only guards. The old `@atproto/api`
- * `AppBskyGraphDefs.isStarterPackView*` helpers matched on a present,
- * matching `$type`; we reproduce that here against the `#/lexicons` schema's
- * `$type` string rather than delegating to the schema's `isTypeOf` (which
- * treats a missing `$type` as a match).
+ * The generated `$type`-only guards. These match on a present, matching
+ * `$type` against the `#/lexicons` schema's `$type` string rather than
+ * delegating to the schema's `isTypeOf` (which treats a missing `$type` as a
+ * match).
  */
 export function isBasicView(
   v: unknown,

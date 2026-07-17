@@ -288,7 +288,7 @@ export function usePostFeedQuery(
                 .map(slice => {
                   const moderations = slice.items.map(item =>
                     moderatePost(
-                      // off @atproto/api and yields lex-typed slice items.
+                      // the tuner yields lex-typed slice items.
                       item.post,
                       moderationOpts!,
                     ),
@@ -341,7 +341,7 @@ export function usePostFeedQuery(
                       const feedPostSliceItem: FeedPostSliceItem = {
                         _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                         uri: item.post.uri,
-                        // off @atproto/api and yields lex-typed slice items.
+                        // the tuner yields lex-typed slice items.
                         post: item.post,
                         record: item.record,
                         moderation: moderations[i],

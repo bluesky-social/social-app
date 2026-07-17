@@ -205,7 +205,7 @@ export function useFeedPreviews(
               if (item.isFallbackMarker) continue
 
               const moderations = item.items.map(item =>
-                // @atproto/api and yields lex-typed slice items.
+                // the tuner yields lex-typed slice items.
                 moderatePost(item.post, moderationOpts!),
               )
 
@@ -232,7 +232,7 @@ export function useFeedPreviews(
                     const feedPostSliceItem: FeedPostSliceItem = {
                       _reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
                       uri: subItem.post.uri,
-                      // off @atproto/api and yields lex-typed slice items.
+                      // the tuner yields lex-typed slice items.
                       post: subItem.post,
                       record: subItem.record,
                       moderation: moderations[i],
