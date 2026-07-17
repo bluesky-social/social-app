@@ -64,6 +64,14 @@ export class MergeFeedAPI implements FeedAPI {
     })
   }
 
+  setClient(client: Client) {
+    this.client = client
+    this.following.setClient(client)
+    for (const feed of this.customFeeds) {
+      feed.setClient(client)
+    }
+  }
+
   reset() {
     this.following = new MergeFeedSource_Following({
       client: this.client,
@@ -201,6 +209,10 @@ class MergeFeedSource {
   }) {
     this.client = client
     this.feedTuners = feedTuners
+  }
+
+  setClient(client: Client) {
+    this.client = client
   }
 
   get numReady() {

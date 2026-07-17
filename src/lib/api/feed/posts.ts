@@ -27,6 +27,10 @@ export class PostListFeedAPI implements FeedAPI {
     }
   }
 
+  setClient(client: Client) {
+    this.client = client
+  }
+
   async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
     if (this.peek) return this.peek
     throw new Error('Has not fetched yet')

@@ -101,6 +101,10 @@ export function ConvoProvider({
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
+  useEffect(() => {
+    convo.updateClient(chatClient)
+  }, [convo, chatClient])
+
   const appState = useAppState()
   const isActive = appState === 'active'
   useFocusEffect(

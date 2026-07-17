@@ -21,7 +21,6 @@ import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
   INACTIVE_TIMEOUT,
-  NETWORK_FAILURE_STATUSES,
 } from '#/state/messages/convo/const'
 import {
   type ConvoDispatch,
@@ -176,6 +175,7 @@ export class Convo {
       this.setupPlaceholderData(params.placeholderData)
     }
 
+    this.updateClient = this.updateClient.bind(this)
     this.setConvo = this.setConvo.bind(this)
     this.subscribe = this.subscribe.bind(this)
     this.getSnapshot = this.getSnapshot.bind(this)
@@ -192,6 +192,18 @@ export class Convo {
     this.updateGroupMembers = this.updateGroupMembers.bind(this)
     this.updateJoinLink = this.updateJoinLink.bind(this)
     this.updateLockStatus = this.updateLockStatus.bind(this)
+  }
+
+  /**
+   * Swap in a fresh chat client. On web, a cross-tab token sync rebuilds the
+   * session bundle (new client identities, same DID) and disposes the old one,
+   * whose fetch then throws. Every request reads `this.chatClient` per call, so
+   * reassigning the field keeps the convo alive without a reset (which would
+   * drop optimistic `pendingMessages`). Same-DID rebuild keeps `senderUserDid`
+   * valid, so it is intentionally left untouched.
+   */
+  updateClient(client: Client) {
+    this.chatClient = client
   }
 
   private commit() {
@@ -1198,14 +1210,13 @@ export class Convo {
     const status = getErrorStatus(e)
     if (isXrpcError(e)) {
       /*
-       * A status-less xrpc error is a network/transport failure (lex throws
-       * `XrpcInternalError`, which carries no HTTP status). The old bridge
-       * represented the same case with a sentinel `status` of `1`, which is a
-       * member of `NETWORK_FAILURE_STATUSES` - so a network failure was
-       * `recoverable`. Preserve that by treating `undefined` status the same
-       * as a network-failure status here.
+       * Defer to lex's own retry classification: transient statuses
+       * (408/425/429/5xx) and transport/fetch failures are recoverable, while
+       * permanent statuses and internal errors are not. This is the lex-native
+       * analogue of the old `NETWORK_FAILURE_STATUSES` check, and correctly
+       * excludes status-less internal/validation errors that are not retryable.
        */
-      if (status === undefined || NETWORK_FAILURE_STATUSES.includes(status)) {
+      if (e.shouldRetry()) {
         this.pendingMessageFailure = 'recoverable'
       } else {
         this.pendingMessageFailure = 'unrecoverable'

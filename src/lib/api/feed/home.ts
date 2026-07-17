@@ -56,6 +56,12 @@ export class HomeFeedAPI implements FeedAPI {
     this.userInterests = userInterests
   }
 
+  setClient(client: Client) {
+    this.client = client
+    this.following.setClient(client)
+    this.discover.setClient(client)
+  }
+
   reset() {
     this.following = new FollowingFeedAPI({client: this.client})
     this.discover = new CustomFeedAPI({

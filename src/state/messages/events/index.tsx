@@ -51,6 +51,10 @@ export function MessagesEventBusProviderInner({
   )
 
   useEffect(() => {
+    bus.updateClient(chatClient)
+  }, [bus, chatClient])
+
+  useEffect(() => {
     bus.resume()
 
     return () => {

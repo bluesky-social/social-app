@@ -201,6 +201,15 @@ export function usePostFeedQuery(
             cursor: undefined,
           }
 
+      /*
+       * A page-held api captured its client at construction. On web, a
+       * cross-tab token sync rebuilds the session bundle and disposes the old
+       * client (whose fetch then throws), so re-point the api at the current
+       * client before fetching. Safe because the swap is same-DID (fresh
+       * tokens only), so the stateful Merge/Home api's pagination is unaffected.
+       */
+      api.setClient(client)
+
       const res = await api.fetch({cursor, limit: fetchLimit})
 
       /*
@@ -422,7 +431,7 @@ export function usePostFeedQuery(
   return query
 }
 
-export async function pollLatest(page: FeedPage | undefined) {
+export async function pollLatest(page: FeedPage | undefined, client: Client) {
   if (!page) {
     return false
   }
@@ -431,6 +440,9 @@ export async function pollLatest(page: FeedPage | undefined) {
   }
 
   logger.debug('usePostFeedQuery: pollLatest')
+  // The page-held api may carry a disposed client after a session-bundle
+  // rebuild - re-point it at the current client before peeking.
+  page.api.setClient(client)
   const post = await page.api.peekLatest()
   if (post) {
     const slices = page.tuner.tune([post], {

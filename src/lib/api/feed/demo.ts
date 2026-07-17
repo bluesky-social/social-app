@@ -11,6 +11,10 @@ export class DemoFeedAPI implements FeedAPI {
     this.client = client
   }
 
+  setClient(client: Client) {
+    this.client = client
+  }
+
   // eslint-disable-next-line @typescript-eslint/require-await
   async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
     return DEMO_FEED.feed[0]
