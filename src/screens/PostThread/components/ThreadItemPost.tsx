@@ -24,6 +24,10 @@ import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replie
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {
+  ThreadItemPostNumber,
+  type ThreadItemPostNumbering,
+} from '#/screens/PostThread/components/ThreadItemPostNumber'
+import {
   LINEAR_AVI_WIDTH,
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
@@ -295,20 +299,25 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
             </View>
 
             <View style={[a.flex_1]}>
-              <PostMeta
-                author={post.author}
-                moderation={moderation}
-                timestamp={post.indexedAt}
-                postHref={postHref}
-                style={[
-                  a.pb_xs,
-                  maybeApplyGalleryOffsetStyles('meta', {
-                    post,
-                    modui: moderation.ui('contentList'),
-                    additionalCauses: additionalPostAlerts,
-                  }),
-                ]}
-              />
+              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                <PostMeta
+                  author={post.author}
+                  moderation={moderation}
+                  timestamp={post.indexedAt}
+                  postHref={postHref}
+                  style={[
+                    a.pb_xs,
+                    maybeApplyGalleryOffsetStyles('meta', {
+                      post,
+                      modui: moderation.ui('contentList'),
+                      additionalCauses: additionalPostAlerts,
+                    }),
+                  ]}
+                />
+                <ThreadItemPostNumber
+                  value={item.value as ThreadItemPostNumbering}
+                />
+              </View>
               <PostAlerts
                 post={post}
                 modui={moderation.ui('contentList')}

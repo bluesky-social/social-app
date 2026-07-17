@@ -31,6 +31,10 @@ import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {KnownLikers, LikesStat} from '#/screens/PostThread/components/LikesStat'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
+  ThreadItemPostNumber,
+  type ThreadItemPostNumbering,
+} from '#/screens/PostThread/components/ThreadItemPostNumber'
+import {
   LINEAR_AVI_WIDTH,
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
@@ -372,6 +376,11 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 </ProfileHoverCard>
               </View>
             </Link>
+            <View collapsable={false} style={[a.self_center]}>
+              <ThreadItemPostNumber
+                value={item.value as ThreadItemPostNumbering}
+              />
+            </View>
             <View collapsable={false} style={[a.self_center]}>
               <ThreadItemAnchorFollowButton
                 did={post.author.did}

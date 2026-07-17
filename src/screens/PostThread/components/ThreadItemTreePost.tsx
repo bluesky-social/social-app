@@ -23,6 +23,10 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {
+  ThreadItemPostNumber,
+  type ThreadItemPostNumbering,
+} from '#/screens/PostThread/components/ThreadItemPostNumber'
+import {
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
   TREE_AVI_WIDTH,
@@ -327,15 +331,20 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
           interpretFilterAsBlur>
           <ThreadItemTreePostInnerWrapper item={item}>
             <View style={[a.flex_1]}>
-              <PostMeta
-                author={post.author}
-                moderation={moderation}
-                timestamp={post.indexedAt}
-                postHref={postHref}
-                avatarSize={TREE_AVI_WIDTH}
-                style={[a.pb_0]}
-                showAvatar
-              />
+              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                <PostMeta
+                  author={post.author}
+                  moderation={moderation}
+                  timestamp={post.indexedAt}
+                  postHref={postHref}
+                  avatarSize={TREE_AVI_WIDTH}
+                  style={[a.pb_0]}
+                  showAvatar
+                />
+                <ThreadItemPostNumber
+                  value={item.value as ThreadItemPostNumbering}
+                />
+              </View>
               <View style={[a.flex_row]}>
                 <ThreadItemTreeReplyChildReplyLine item={item} />
                 <View style={[a.flex_1, a.pl_2xs]}>
