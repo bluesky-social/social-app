@@ -73,14 +73,17 @@ describe('isXrpcErrorOf', () => {
     ).toBe(true)
   })
 
-  it('does not match a different error code or a non-XRPC value', () => {
+  it('does not match a different error code', () => {
     expect(
       isXrpcErrorOf(
-        chat.bsky.convo.getMessages,
+        chat.bsky.group.approveJoinRequest,
         lexError(400, 'InvalidConvo'),
-        'InvalidConvo',
+        'InsufficientRole',
       ),
-    ).toBe(true)
+    ).toBe(false)
+  })
+
+  it('does not match a non-XRPC value', () => {
     expect(
       isXrpcErrorOf(
         chat.bsky.convo.acceptConvo,
