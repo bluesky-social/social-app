@@ -2,7 +2,7 @@ import {type Insets, Platform} from 'react-native'
 import {type Service} from '@atproto/lex'
 import {api} from '@bsky.app/sdk'
 
-import {BLUESKY_PROXY_DID, IS_DEV} from '#/env'
+import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
 import {type app} from '#/lexicons'
 
 /**
@@ -261,6 +261,14 @@ export const BLUESKY_MOD_SERVICE_HEADERS = {
  * `atproto-proxy` header (replaces the old `BLUESKY_NOTIF_SERVICE_HEADERS`).
  */
 export const NOTIF_SERVICE = `${BLUESKY_PROXY_DID}#bsky_notif` as Service
+
+/**
+ * Service proxy identifier for the chat service. Passed as the `service` option
+ * on the chat client so lex-client emits the `atproto-proxy` header (replaces
+ * the old per-call `DM_SERVICE_HEADERS`). Env-configurable via
+ * `EXPO_PUBLIC_CHAT_PROXY_DID` (see {@link CHAT_PROXY_DID}).
+ */
+export const CHAT_PROXY_SERVICE = `${CHAT_PROXY_DID}#bsky_chat` as Service
 
 export const webLinks = {
   tos: `https://bsky.social/about/support/tos`,

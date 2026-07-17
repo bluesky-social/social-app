@@ -420,6 +420,26 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           const prevBundle = state.currentAgentState.agent as unknown as
             | SessionBundle
             | PublicSessionBundle
+          /*
+           * Any change to ANY saved account fires persisted.onUpdate. The
+           * 'synced-accounts' dispatch above already keeps the accounts list
+           * fresh, so if the CURRENT account's tokens are unchanged there is
+           * nothing to rebuild - a change to a non-current account landed here.
+           * Bail out before rebuilding: rebuild+swap would kill the live bundle
+           * (client-identity churn, in-flight request kills) for no reason.
+           * Fall through to rebuild only when we have no usable live session.
+           */
+          const live =
+            prevBundle.session && !prevBundle.session.destroyed
+              ? prevBundle.session.session
+              : undefined
+          if (
+            live &&
+            live.accessJwt === syncedAccount.accessJwt &&
+            live.refreshJwt === syncedAccount.refreshJwt
+          ) {
+            return
+          }
           let newBundle!: SessionBundle
           const hooks = makeSessionHooks(
             onSessionChange,
@@ -435,30 +455,35 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           hooks.arm()
           /*
            * Reapply this account's subscribed labelers to the freshly built
-           * appview client. buildBundle starts with an empty per-instance
-           * labeler set, and unlike login/resume/createAccount this rebuild path
-           * never ran configureModerationForAccount - so without this, subscribed
-           * labelers would silently drop from appview requests in follower tabs
-           * until the next full resume. readLabelers is a local storage read (no
-           * network), preserving the branch's no-network intent; setLabelers
-           * mutates the client's Set in place so labels reappear when it
-           * resolves.
+           * appview client - buildBundle starts with an empty per-instance
+           * labeler set, and unlike login/resume/createAccount this rebuild
+           * path never runs configureModerationForAccount on its own. The
+           * bundle swap is deferred until the labeler config resolves so the
+           * new bundle enters the reducer with its labelers already applied
+           * (matching the factories, which await moderation before returning).
+           * readLabelers is a local-storage read (microtask-scale, no network,
+           * preserving this branch's no-network intent), and the OLD bundle's
+           * access token stays valid throughout the deferral, so nothing
+           * regresses by waiting.
            */
           void configureModerationForAccount(newBundle, syncedAccount)
-          addSessionDebugLog({
-            type: 'agent:patch',
-            agent: newBundle,
-            prevSession:
-              prevBundle.session && !prevBundle.session.destroyed
-                ? prevBundle.session.session
-                : undefined,
-            nextSession: newBundle.session.session,
-          })
-          store.dispatch({
-            type: 'replaced-current-bundle',
-            newAgent: newBundle,
-            newAccount: syncedAccount,
-          })
+            .catch(() => {})
+            .finally(() => {
+              addSessionDebugLog({
+                type: 'agent:patch',
+                agent: newBundle,
+                prevSession:
+                  prevBundle.session && !prevBundle.session.destroyed
+                    ? prevBundle.session.session
+                    : undefined,
+                nextSession: newBundle.session.session,
+              })
+              store.dispatch({
+                type: 'replaced-current-bundle',
+                newAgent: newBundle,
+                newAccount: syncedAccount,
+              })
+            })
         }
       }
     })

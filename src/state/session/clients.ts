@@ -2,7 +2,11 @@ import {Client} from '@atproto/lex'
 import {type PasswordSession} from '@atproto/lex-password-session'
 import {api} from '@bsky.app/sdk'
 
-import {BLUESKY_PROXY_HEADER, PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {
+  BLUESKY_PROXY_HEADER,
+  CHAT_PROXY_SERVICE,
+  PUBLIC_BSKY_SERVICE,
+} from '#/lib/constants'
 import {networkAwareFetch} from './session-core'
 
 /**
@@ -41,14 +45,16 @@ export function buildAccountClient(session: PasswordSession): Client {
 /**
  * Build the chat client over a {@link PasswordSession}.
  *
- * `api.chat.service` (`did:web:api.bsky.chat#bsky_chat`) is passed as the
- * client's `service`, so lex-client sets `atproto-proxy: did:web:api.bsky.chat#bsky_chat`
- * on every request. This is exactly what the old per-call `DM_SERVICE_HEADERS`
- * did, once and centrally, so `chat.bsky.*` calls are proxied to the chat
- * service.
+ * {@link CHAT_PROXY_SERVICE} (`${CHAT_PROXY_DID}#bsky_chat`, default
+ * `did:web:api.bsky.chat#bsky_chat`) is passed as the client's `service`, so
+ * lex-client sets `atproto-proxy: <that value>` on every request. This is
+ * exactly what the old per-call `DM_SERVICE_HEADERS` did, once and centrally, so
+ * `chat.bsky.*` calls are proxied to the chat service. It is read from the
+ * env-configurable `CHAT_PROXY_DID` (via `EXPO_PUBLIC_CHAT_PROXY_DID`) rather
+ * than the hard-coded SDK constant, restoring the old routing override.
  */
 export function buildChatClient(session: PasswordSession): Client {
-  return new Client(session, {service: api.chat.service})
+  return new Client(session, {service: CHAT_PROXY_SERVICE})
 }
 
 /** Thrown when a write/auth-only client is used with no active session. */

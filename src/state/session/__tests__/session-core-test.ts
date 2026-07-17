@@ -3,7 +3,7 @@ import {
   type PasswordSessionOptions,
   type SessionData,
 } from '@atproto/lex-password-session'
-import {describe, expect, it, jest} from '@jest/globals'
+import {beforeEach, describe, expect, it, jest} from '@jest/globals'
 
 import {type SessionAccount} from '../types'
 
@@ -27,10 +27,44 @@ jest.mock('#/state/queries/messages/restrictChatSettings', () => ({
   restrictChatSettings: () => Promise.resolve(),
 }))
 
+/*
+ * The factory tail awaits `features.refresh(...)`; stub the analytics module so
+ * the factory does not pull GrowthBook (and its native deps) into this
+ * lightweight suite.
+ */
+jest.mock('#/analytics', () => ({
+  features: {refresh: () => Promise.resolve()},
+}))
+
+/*
+ * `configureModerationForAccount` is one of the prep awaits in the resume/login
+ * factories. We replace it with a hook that runs a REAL `session.refresh()`, so
+ * a token rotation happens DURING prep (before arm()) - exactly the 401
+ * auto-refresh scenario the re-snapshot fix guards against. The default is a
+ * no-op so other tests are unaffected; individual tests install the refreshing
+ * behavior via `mockImplementationOnce`. (jest requires out-of-scope factory
+ * references to be `mock`-prefixed.)
+ */
+const mockConfigureModerationForAccount =
+  jest.fn<(bundle: unknown, account: unknown) => Promise<void>>()
+jest.mock('../moderation', () => ({
+  configureModerationForAccount: (bundle: unknown, account: unknown) =>
+    mockConfigureModerationForAccount(bundle, account),
+  configureModerationForGuest: () => {},
+}))
+
 jest.mock('jwt-decode', () => ({
   jwtDecode(token: string) {
     if (token === 'queued-access-jwt') {
       return {scope: 'com.atproto.signupQueued'}
+    }
+    /*
+     * A far-future exp so isSessionExpired() reads this stored token as still
+     * valid, which routes resume() through the sync (no-network) fast path.
+     * That isolates the prep-time refresh as the ONLY token rotation.
+     */
+    if (token === 'valid-access-jwt') {
+      return {scope: 'com.atproto.access', exp: 4102444800}
     }
     return {scope: 'com.atproto.access'}
   },
@@ -783,5 +817,91 @@ describe('refreshSession semantics', () => {
       {fetch: asFetch(fetchMock)},
     )
     await expect(session.refresh()).rejects.toBeDefined()
+  })
+})
+
+/*
+ * Fix 1: the resume/login factories must snapshot the RETURNED account AFTER
+ * the prep awaits, not before. A 401 during prep triggers PasswordSession's
+ * internal auto-refresh (rotating BOTH tokens and firing an onUpdated the
+ * disarmed latch drops); an early snapshot would persist the stale refreshJwt,
+ * which is dead on the next cold start.
+ *
+ * We simulate the mid-prep rotation by making the mocked
+ * `configureModerationForAccount` (a genuine prep await in each factory) run a
+ * real `session.refresh()`. The factory itself is re-required inside
+ * `jest.isolateModulesAsync` AFTER overriding `globalThis.fetch`, because
+ * session-core captures `globalThis.fetch` into `networkAwareFetch` at module
+ * load - and that captured fetch is what PasswordSession's auto-refresh routes
+ * through.
+ */
+describe('factory account snapshot is taken AFTER prep (fix 1)', () => {
+  /** Load a fresh session-core whose networkAwareFetch captures `fetch`. */
+  async function withFreshFactory(
+    fetch: typeof globalThis.fetch,
+    run: (core: typeof import('../session-core')) => Promise<void>,
+  ) {
+    const realFetch = globalThis.fetch
+    globalThis.fetch = fetch
+    try {
+      await jest.isolateModulesAsync(async () => {
+        const core =
+          require('../session-core') as typeof import('../session-core')
+        await run(core)
+      })
+    } finally {
+      globalThis.fetch = realFetch
+    }
+  }
+
+  beforeEach(() => {
+    mockConfigureModerationForAccount.mockReset()
+  })
+
+  it('resume: returned account carries the tokens rotated DURING prep', async () => {
+    /*
+     * A refresh mid-prep rotates the session to access-jwt-2/refresh-jwt-2.
+     * `valid-access-jwt` decodes as non-expired, so resume() takes the sync
+     * fast path and the only refresh is the one prep triggers.
+     */
+    mockConfigureModerationForAccount.mockImplementationOnce(
+      async (bundle: unknown) => {
+        await (bundle as SessionBundle).session.refresh()
+      },
+    )
+    const fetchMock = makeMockFetch()
+
+    await withFreshFactory(asFetch(fetchMock), async core => {
+      const {account, bundle} = await core.createSessionBundleAndResume(
+        makeAccount({accessJwt: 'valid-access-jwt'}),
+        jest.fn(),
+      )
+      /* the moderation prep step ran the refresh */
+      expect(mockConfigureModerationForAccount).toHaveBeenCalledTimes(1)
+      /* the RETURNED account carries the POST-prep (rotated) tokens */
+      expect(account.accessJwt).toBe('access-jwt-2')
+      expect(account.refreshJwt).toBe('refresh-jwt-2')
+      /* and it matches the session's committed state */
+      expect(bundle.session.session.accessJwt).toBe('access-jwt-2')
+    })
+  })
+
+  it('resume: returned account falls back to the stored account when the fast path yields no live token change', async () => {
+    /*
+     * Control: no mid-prep refresh. The re-snapshot still reflects the (still
+     * valid) stored tokens, confirming the moved snapshot did not regress the
+     * happy path.
+     */
+    mockConfigureModerationForAccount.mockResolvedValueOnce(undefined)
+    const fetchMock = makeMockFetch()
+
+    await withFreshFactory(asFetch(fetchMock), async core => {
+      const {account} = await core.createSessionBundleAndResume(
+        makeAccount({accessJwt: 'valid-access-jwt'}),
+        jest.fn(),
+      )
+      expect(account.accessJwt).toBe('valid-access-jwt')
+      expect(account.refreshJwt).toBe('refresh-jwt')
+    })
   })
 })
