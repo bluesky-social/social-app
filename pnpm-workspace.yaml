@@ -47,3 +47,4 @@ patchedDependencies:
 minimumReleaseAgeExclude:
   - '@atproto/*'
   - '@bsky.app/*'
+  - bsky-sdk-preview@0.0.1-preview.1
