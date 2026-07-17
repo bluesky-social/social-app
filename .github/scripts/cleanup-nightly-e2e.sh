@@ -5,6 +5,11 @@ set +e
 platform="${1:?usage: cleanup-nightly-e2e.sh <ios|android> <device-id>}"
 device_id="${2:-}"
 artifact_dir="${GITHUB_WORKSPACE:-$PWD}/artifacts/$platform"
+mkdir -p "$artifact_dir"
+
+if [[ -f i18n.log ]]; then
+  cp i18n.log "$artifact_dir/i18n.log"
+fi
 
 stop_process_tree() {
   local pid="$1"
