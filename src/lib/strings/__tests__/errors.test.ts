@@ -18,12 +18,13 @@ function lexError(
   status: number,
   error: string,
   headers?: Record<string, string>,
+  message = `${error} message`,
 ) {
   const response = new Response(null, {status, headers})
   const method = {} as Procedure | Query
   return new XrpcResponseError(method, response, {
     encoding: 'application/json',
-    body: {error, message: `${error} message`},
+    body: {error, message},
   })
 }
 
@@ -73,13 +74,33 @@ describe('getErrorHeader', () => {
 })
 
 describe('isErrorMaybeAppPasswordPermissions', () => {
-  it('matches a TokenInvalid error', () => {
+  /*
+   * The PDS wire shape: generic error code `InvalidToken`, with the
+   * app-password specifics only in the message ('Bad token scope' from
+   * auth-verifier, 'Bad token method' from pipethrough).
+   */
+  it('matches the InvalidToken + bad-token-message wire shape', () => {
     expect(
-      isErrorMaybeAppPasswordPermissions(lexError(400, 'TokenInvalid')),
+      isErrorMaybeAppPasswordPermissions(
+        lexError(400, 'InvalidToken', undefined, 'Bad token scope'),
+      ),
+    ).toBe(true)
+    expect(
+      isErrorMaybeAppPasswordPermissions(
+        lexError(400, 'InvalidToken', undefined, 'Bad token method'),
+      ),
     ).toBe(true)
   })
 
-  it('still matches the string-based bad-token signals', () => {
+  it('does not match other InvalidToken errors (malformed/expired tokens)', () => {
+    expect(
+      isErrorMaybeAppPasswordPermissions(
+        lexError(400, 'InvalidToken', undefined, 'Malformed token'),
+      ),
+    ).toBe(false)
+  })
+
+  it('still matches the string-based bad-token signals on plain errors', () => {
     expect(
       isErrorMaybeAppPasswordPermissions(new Error('Bad token scope')),
     ).toBe(true)
