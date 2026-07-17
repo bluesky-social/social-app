@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import {resolve} from 'node:path'
 
 import {preact} from '@preact/preset-vite'
+import tailwindcss from '@tailwindcss/vite'
 import legacy from '@vitejs/plugin-legacy'
 import type {Plugin, UserConfig} from 'vite'
 import {analyzer} from 'vite-bundle-analyzer'
@@ -38,6 +39,7 @@ function devOnlyRouter(): Plugin {
 const config: UserConfig = {
   plugins: [
     preact(),
+    tailwindcss(),
     legacy({
       targets: ['defaults', 'not IE 11'],
     }),

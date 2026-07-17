@@ -10,18 +10,13 @@
     "analyze": "ANALYZE=1 vite build",
     "lint": "eslint --cache src",
     "typecheck": "tsc --noEmit",
-    "format": "prettier -w src",
-    "lex": "lex",
-    "lex:install": "lex install",
-    "lex:update": "lex install --update",
-    "lex:ci": "lex install --ci",
-    "lex:build": "lex build --lexicons ./lexicons --out ./src/lexicons --clear",
-    "postinstall": "pnpm lex:ci && pnpm lex:build"
+    "format": "prettier -w src"
   },
   "dependencies": {
     "@atproto/lex": "^0.3.0",
     "@atproto/syntax": "^0.7.2",
-    "@typescript/native": "npm:typescript@^7.0.2",
+    "@bsky.app/sdk": "npm:bsky-sdk-preview@0.0.1-preview.1",
+    "@tailwindcss/vite": "^4.3.2",
     "preact": "^10.29.7"
   },
   "devDependencies": {
@@ -31,6 +26,7 @@
     "@vitejs/plugin-legacy": "^8.2.1",
     "autoprefixer": "^10.5.3",
     "eslint": "^10.7.0",
+    "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-import-x": "^4.17.1",
     "eslint-plugin-simple-import-sort": "^13.0.0",
     "globals": "^17.7.0",
@@ -39,7 +35,7 @@
     "serve": "^14.2.6",
     "tailwindcss": "^4.3.2",
     "terser": "^5.49.0",
-    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.64.0",
     "vite": "^8.1.5",
     "vite-bundle-analyzer": "^1.3.9"
