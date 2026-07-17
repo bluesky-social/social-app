@@ -55,3 +55,4 @@ minimumReleaseAgeExclude:
   - '@oxlint-tsgolint/win32-arm64@7.0.2001'
   - '@oxlint-tsgolint/win32-x64@7.0.2001'
   - oxlint-tsgolint@7.0.2001
+  - bsky-sdk-preview@0.0.1-preview.1
