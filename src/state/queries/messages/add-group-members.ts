@@ -57,33 +57,24 @@ export function useAddGroupMembers(
         chat.bsky.actor.defs.ProfileViewBasic[]
       >(listConvoMembersQueryKey(convoId))
 
-      /*
-       * The profile views come from producers that still emit the old
-       * `@atproto/api` shapes (useProfileQuery migrates in a later task), while
-       * the chat caches are now typed on the lexicon views. Structurally
-       * identical modulo branded strings. TODO(phase4): drop toLex once those
-       * producers migrate.
-       */
       const addedBy: chat.bsky.actor.defs.ProfileViewBasic | undefined =
         myProfile
-          ? bsky.toLex<chat.bsky.actor.defs.ProfileViewBasic>({
+          ? {
               ...myProfile,
               $type: 'chat.bsky.actor.defs#profileViewBasic',
-            })
+            }
           : undefined
 
       const optimisticMembers: chat.bsky.actor.defs.ProfileViewBasic[] =
-        profiles.map(profile =>
-          bsky.toLex<chat.bsky.actor.defs.ProfileViewBasic>({
-            ...profile,
-            $type: 'chat.bsky.actor.defs#profileViewBasic',
-            kind: {
-              $type: 'chat.bsky.actor.defs#groupConvoMember',
-              role: 'standard',
-              addedBy,
-            },
-          }),
-        )
+        profiles.map(profile => ({
+          ...profile,
+          $type: 'chat.bsky.actor.defs#profileViewBasic',
+          kind: {
+            $type: 'chat.bsky.actor.defs#groupConvoMember',
+            role: 'standard',
+            addedBy,
+          },
+        }))
 
       queryClient.setQueryData<chat.bsky.convo.defs.ConvoView>(
         CONVO_KEY(convoId),

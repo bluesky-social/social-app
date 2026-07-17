@@ -91,16 +91,7 @@ export async function post(
   for (let i = 0; i < thread.posts.length; i++) {
     const draft = thread.posts[i]
 
-    /*
-     * Not awaited to avoid waterfalls. `draft.richtext` is still an
-     * `@atproto/api` RichText (composer state is migrated by Task 7); the SDK
-     * RichText is structurally the same transplant, so bridge it here.
-     * TODO(phase4): drop toLex once composer state migrates to SDK RichText.
-     */
-    const rtPromise = resolveRT(
-      resolveClients.appview,
-      bsky.toLex<RichText>(draft.richtext),
-    )
+    const rtPromise = resolveRT(resolveClients.appview, draft.richtext)
     const embedPromise = resolveEmbed(
       clients,
       queryClient,
@@ -138,17 +129,11 @@ export async function post(
       langs,
       labels,
     }
-    /*
-     * `value` is typed `LexMap` (a loose index-signature map). A generated
-     * record type is a valid LexMap at runtime but a strict interface is not
-     * assignable to an index-signature type, so widen with `toLex` at this
-     * boundary. Not a brand cast - the record is already fully typed.
-     */
     writes.push({
       $type: 'com.atproto.repo.applyWrites#create',
       collection: 'app.bsky.feed.post',
       rkey: rkey,
-      value: bsky.toLex(record),
+      value: record,
     })
 
     if (i === 0 && thread.threadgate.some(tg => tg.type !== 'everybody')) {
@@ -156,14 +141,10 @@ export async function post(
         $type: 'com.atproto.repo.applyWrites#create',
         collection: 'app.bsky.feed.threadgate',
         rkey: rkey,
-        value: bsky.toLex(
-          createThreadgateRecord({
-            post: uri,
-            allow: threadgateAllowUISettingToAllowRecordValue(
-              thread.threadgate,
-            ),
-          }),
-        ),
+        value: createThreadgateRecord({
+          post: uri,
+          allow: threadgateAllowUISettingToAllowRecordValue(thread.threadgate),
+        }),
       })
     }
 
@@ -175,12 +156,12 @@ export async function post(
         $type: 'com.atproto.repo.applyWrites#create',
         collection: 'app.bsky.feed.postgate',
         rkey: rkey,
-        value: bsky.toLex({
+        value: {
           ...thread.postgate,
           $type: 'app.bsky.feed.postgate',
           createdAt: now.toISOString(),
           post: uri,
-        }),
+        },
       })
     }
 
@@ -426,7 +407,7 @@ async function resolveMedia(
        * structural shape matches the lexicon blob field; the CID hasher handles
        * both class instances and plain lex blobs (see computeCid).
        */
-      video: bsky.toLex(videoDraft.pendingPublish.blobRef),
+      video: videoDraft.pendingPublish.blobRef,
       alt: videoDraft.altText || undefined,
       captions: captions.length === 0 ? undefined : captions,
       aspectRatio,
@@ -475,13 +456,7 @@ async function resolveMedia(
           title: resolvedLink.title,
           description: resolvedLink.description,
           thumb: blob,
-          /*
-           * associatedRefs comes from getLinkMeta, still typed with the old
-           * `@atproto/api` StrongRef (link-meta.ts is out of scope). The shape
-           * is identical; bridge with toLex.
-           * TODO(phase4): drop toLex once link-meta migrates.
-           */
-          associatedRefs: bsky.toLex(resolvedLink.associatedRefs),
+          associatedRefs: resolvedLink.associatedRefs,
         },
       }
     }

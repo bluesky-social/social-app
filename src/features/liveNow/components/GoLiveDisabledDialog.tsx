@@ -15,7 +15,6 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {type app, com, tools} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 
 export function GoLiveDisabledDialog({
   control,
@@ -60,7 +59,7 @@ export function DialogInner({
       } else {
         await pdsClient.call(
           com.atproto.moderation.createReport,
-          toLex<com.atproto.moderation.createReport.$InputBody>({
+          {
             reasonType: tools.ozone.report.defs.reasonAppeal.value,
             subject: {
               $type: 'com.atproto.repo.strongRef',
@@ -68,7 +67,7 @@ export function DialogInner({
               cid: status.cid,
             },
             reason: details,
-          }),
+          },
           {
             service: api.moderation.service,
           },

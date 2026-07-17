@@ -24,21 +24,7 @@ export function parseReportSubject(
     }
   }
 
-  /*
-   * TODO(phase4): drop toLex once ReportSubject is a #/lexicons union. The view
-   * subjects are structurally the #/lexicons shapes; we bridge here so the
-   * `isType` schema guards below narrow against the lexicon `$type`s.
-   */
-  const subject = bsky.toLex<
-    | app.bsky.actor.defs.ProfileViewBasic
-    | app.bsky.actor.defs.ProfileView
-    | app.bsky.actor.defs.ProfileViewDetailed
-    | app.bsky.actor.defs.StatusView
-    | app.bsky.graph.defs.ListView
-    | app.bsky.feed.defs.GeneratorView
-    | app.bsky.graph.defs.StarterPackView
-    | app.bsky.feed.defs.PostView
-  >(rawSubject)
+  const subject = rawSubject
 
   if (
     bsky.isType(app.bsky.actor.defs.profileViewBasic, subject) ||

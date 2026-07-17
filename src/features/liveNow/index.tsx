@@ -23,7 +23,7 @@ import {
   useMaybeProfileShadow,
 } from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useAgent, usePdsClient, useSession} from '#/state/session'
+import {usePdsClient, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
 import {useDialogContext} from '#/components/Dialog'
 import * as Toast from '#/components/Toast'
@@ -105,8 +105,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
   const moderation = useMemo(() => {
     if (!actor || !('status' in actor && actor.status)) return undefined
     if (!moderationOpts) return undefined
-    // TODO(phase4): drop toLex once profile producers emit #/lexicons views
-    return moderateStatus(bsky.toLex(actor), moderationOpts)
+    return moderateStatus(actor, moderationOpts)
   }, [actor, moderationOpts])
 
   return useMemo(() => {
@@ -120,12 +119,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
     }
 
     if (shadowed && 'status' in shadowed && shadowed.status) {
-      /*
-       * TODO(phase4): drop toLex once profile-shadow emits #/lexicons views.
-       * The shadow store still holds old `@atproto/api` StatusViews, so brand
-       * it once here to feed the new-world validation and returned view.
-       */
-      const status = bsky.toLex<app.bsky.actor.defs.StatusView>(shadowed.status)
+      const status = shadowed.status
       const isValid = isStatusValidForViewers(status, config)
       const isDisabled = status.isDisabled || false
       const isActive = isStatusStillActive(status.expiresAt)
@@ -195,7 +189,6 @@ export function useLiveLinkMetaQuery(url: string | null) {
   const liveNowConfig = useLiveNowConfig()
   const {_} = useLingui()
 
-  const agent = useAgent()
   return useQuery({
     enabled: !!url,
     queryKey: ['link-meta', url],
@@ -213,7 +206,7 @@ export function useLiveLinkMetaQuery(url: string | null) {
         )
       }
 
-      return await getLinkMeta(agent, url)
+      return await getLinkMeta(url)
     },
   })
 }

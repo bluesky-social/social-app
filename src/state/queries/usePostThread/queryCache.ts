@@ -255,27 +255,23 @@ export function* getThreadPlaceholderCandidates(
   for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
     yield postViewToThreadPlaceholder(post)
   }
-  /*
-   * TODO(phase4): drop toLex once the feed/quote/search/bookmarks/explore
-   * `findAllPostsInQueryData` generators are migrated to `#/lexicons` types.
-   */
   for (let post of findAllPostsInFeedQueryData(queryClient, uri)) {
-    yield postViewToThreadPlaceholder(bsky.toLex(post))
+    yield postViewToThreadPlaceholder(post)
   }
   for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
-    yield postViewToThreadPlaceholder(bsky.toLex(post))
+    yield postViewToThreadPlaceholder(post)
   }
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
-    yield postViewToThreadPlaceholder(bsky.toLex(post))
+    yield postViewToThreadPlaceholder(post)
   }
   for (let post of findAllPostsInBookmarksQueryData(queryClient, uri)) {
-    yield postViewToThreadPlaceholder(bsky.toLex(post))
+    yield postViewToThreadPlaceholder(post)
   }
   for (let post of findAllPostsInExploreFeedPreviewsQueryData(
     queryClient,
     uri,
   )) {
-    yield postViewToThreadPlaceholder(bsky.toLex(post))
+    yield postViewToThreadPlaceholder(post)
   }
 }
 
@@ -302,11 +298,7 @@ export function* findAllPostsInQueryData(
 
         const qp = getEmbeddedPost(item.value.post.embed)
         if (qp && didOrHandleUriMatches(atUri, qp)) {
-          /*
-           * TODO(phase4): drop toLex once `embedViewRecordToPostView` in
-           * `#/state/queries/util` is migrated to `#/lexicons` types.
-           */
-          yield bsky.toLex(embedViewRecordToPostView(qp))
+          yield embedViewRecordToPostView(qp)
         }
       }
     }
@@ -335,11 +327,7 @@ export function* findAllProfilesInQueryData(
 
         const qp = getEmbeddedPost(item.value.post.embed)
         if (qp && qp.author.did === did) {
-          /*
-           * TODO(phase4): drop toLex once `getEmbeddedPost` in
-           * `#/state/queries/util` is migrated to `#/lexicons` types.
-           */
-          yield bsky.toLex(qp.author)
+          yield qp.author
         }
       }
     }

@@ -22,7 +22,6 @@ import {Header} from '#/components/Layout'
 import * as ProfileCard from '#/components/ProfileCard'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 import {
   HeaderLabelerButtons,
   ProfileHeaderLabeler,
@@ -112,8 +111,7 @@ const MinimalHeader = memo(function MinimalHeader({
   const profile = useProfileShadow(profileUnshadowed)
   const moderationOpts = useModerationOpts()
   const moderation = useMemo(
-    () =>
-      moderationOpts ? moderateProfile(toLex(profile), moderationOpts) : null,
+    () => (moderationOpts ? moderateProfile(profile, moderationOpts) : null),
     [moderationOpts, profile],
   )
   const [visible, setVisible] = useState(false)

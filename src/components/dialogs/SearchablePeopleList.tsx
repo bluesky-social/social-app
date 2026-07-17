@@ -33,7 +33,6 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
-import {toLex} from '#/types/bsky'
 import {AvatarBubbles} from '../AvatarBubbles'
 import {Error} from '../Error'
 import {ProfileBadges} from '../ProfileBadges'
@@ -411,8 +410,7 @@ function DefaultProfileCard({
   const t = useTheme()
   const {t: l} = useLingui()
   const enabled = canBeMessaged(profile)
-  // TODO(phase4): drop toLex once profile prop emits #/lexicons views
-  const moderation = moderateProfile(toLex(profile), moderationOpts)
+  const moderation = moderateProfile(profile, moderationOpts)
   const handle = sanitizeHandle(profile.handle, '@')
   const displayName = createSanitizedDisplayName(
     profile,
@@ -488,8 +486,7 @@ function ExistingChatCard({
       : createSanitizedDisplayName(
           convo.primaryMember,
           true,
-          // TODO(phase4): drop toLex once convo primaryMember emits #/lexicons views
-          moderateProfile(toLex(convo.primaryMember), moderationOpts).ui(
+          moderateProfile(convo.primaryMember, moderationOpts).ui(
             'displayName',
           ),
         )

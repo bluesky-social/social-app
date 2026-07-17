@@ -22,7 +22,6 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
-import {toLex} from '#/types/bsky'
 
 export function SearchHistory({
   searchHistory,
@@ -207,8 +206,7 @@ function RecentProfileItem({
   const {t: l} = useLingui()
   const width = 80
 
-  // TODO(phase4): drop toLex once profile prop emits #/lexicons views
-  const moderation = moderateProfile(toLex(profile), moderationOpts)
+  const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),

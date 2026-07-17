@@ -24,7 +24,6 @@ import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 import {MoreOptionsMenu} from './MoreOptionsMenu'
 import {SubscribeMenu} from './SubscribeMenu'
 
@@ -130,8 +129,7 @@ export function Header({
       list.description
         ? new RichTextAPI({
             text: list.description,
-            // TODO(phase4): drop toLex once the list view producer emits #/lexicons facets
-            facets: toLex(list.descriptionFacets),
+            facets: list.descriptionFacets,
           })
         : undefined,
     [list],

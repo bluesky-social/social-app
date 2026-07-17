@@ -125,8 +125,7 @@ function DirectChatItem({
   const {isWithinLeftPanel} = useIsWithinSplitView()
 
   const moderation = useMemo(
-    // TODO(phase4): drop toLex once useProfileShadow emits #/lexicons views
-    () => moderateProfile(bsky.toLex(profile), moderationOpts),
+    () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
 
@@ -193,10 +192,7 @@ function GroupChatItem({
 
   const moderation = useMemo(
     () =>
-      groupOwner
-        ? // TODO(phase4): drop toLex once useMaybeProfileShadow emits #/lexicons views
-          moderateProfile(bsky.toLex(groupOwner), moderationOpts)
-        : undefined,
+      groupOwner ? moderateProfile(groupOwner, moderationOpts) : undefined,
     [groupOwner, moderationOpts],
   )
 
@@ -423,15 +419,7 @@ function BaseChatItem({
       for (const member of convo.view.members) {
         unstableCacheProfileView(queryClient, member)
       }
-      /*
-       * `convo.view` comes from the still-old-typed `#/components/dms/util`
-       * (migrates in a later task) while the convo cache is now keyed on the
-       * lexicon ConvoView. TODO(phase4): drop toLex once dms/util migrates.
-       */
-      precacheConvoQuery(
-        queryClient,
-        bsky.toLex<chat.bsky.convo.defs.ConvoView>(convo.view),
-      )
+      precacheConvoQuery(queryClient, convo.view)
       void decrementBadgeCount(convo.view.unreadCount)
       if (isDeletedAccount) {
         e.preventDefault()
@@ -525,10 +513,7 @@ function BaseChatItem({
             }
             onPressIn={() =>
               // see onPress: old-typed dms/util view into the new-typed cache
-              precacheConvoQuery(
-                queryClient,
-                bsky.toLex<chat.bsky.convo.defs.ConvoView>(convo.view),
-              )
+              precacheConvoQuery(queryClient, convo.view)
             }
             onPress={onPress}
             onLongPress={showMenu && IS_NATIVE ? onLongPress : undefined}

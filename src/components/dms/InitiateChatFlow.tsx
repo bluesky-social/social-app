@@ -54,7 +54,6 @@ import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
-import {toLex} from '#/types/bsky'
 
 type NewGroupChatItem = {
   type: 'newGroupChat'
@@ -1071,8 +1070,7 @@ function DefaultProfileCard({
   const t = useTheme()
   const {t: l} = useLingui()
   const enabled = canBeMessaged(profile)
-  // TODO(phase4): drop toLex once profile prop emits #/lexicons views
-  const moderation = moderateProfile(toLex(profile), moderationOpts)
+  const moderation = moderateProfile(profile, moderationOpts)
   const handle = sanitizeHandle(profile.handle, '@')
   const displayName = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),

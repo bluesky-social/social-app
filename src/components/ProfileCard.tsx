@@ -44,7 +44,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {type Metrics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 export function Default({
   profile,
@@ -170,7 +170,7 @@ export function Avatar({
   liveOverride?: boolean
   size?: number
 }) {
-  const moderation = moderateProfile(bsky.toLex(profile), moderationOpts)
+  const moderation = moderateProfile(profile, moderationOpts)
 
   const {isActive: live} = useActorStatus(profile)
 
@@ -240,7 +240,7 @@ function InlineNameAndHandle({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
-  const moderation = moderateProfile(bsky.toLex(profile), moderationOpts)
+  const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
@@ -294,7 +294,7 @@ export function Name({
   style?: StyleProp<ViewStyle>
   textStyle?: StyleProp<TextStyle>
 }) {
-  const moderation = moderateProfile(bsky.toLex(profile), moderationOpts)
+  const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
@@ -479,7 +479,7 @@ export function FollowButtonInner({
 }: FollowButtonProps) {
   const {t: l} = useLingui()
   const profile = useProfileShadow(profileUnshadowed)
-  const moderation = moderateProfile(bsky.toLex(profile), moderationOpts)
+  const moderation = moderateProfile(profile, moderationOpts)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
     logContext,
@@ -617,7 +617,7 @@ export function Labels({
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
-  const moderation = moderateProfile(bsky.toLex(profile), moderationOpts)
+  const moderation = moderateProfile(profile, moderationOpts)
   const modui = moderation.ui('profileList')
   const followedBy = profile.viewer?.followedBy
 

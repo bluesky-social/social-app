@@ -23,7 +23,6 @@ import {
 import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
 import {type ChatInvitePreview} from '#/state/queries/join-links'
-import {type SessionAgent} from '#/state/session'
 import {type Gif} from '#/features/gifPicker/types'
 import {app, chat, com} from '#/lexicons'
 import {createGIFDescription} from '../gif-alt-text'
@@ -31,13 +30,10 @@ import {createGIFDescription} from '../gif-alt-text'
 /**
  * Clients the link resolver needs. `appview` serves the `app.bsky.*` feed/graph
  * reads plus handle resolution; `chat` serves the group join-link previews.
- * `agent` is still threaded through to {@link getLinkMeta}, which has not yet
- * migrated off the bridge - it only reads the (unused) service URL from it.
  */
 export type ResolveClients = {
   appview: Client
   chat: Client
-  agent: SessionAgent
 }
 
 type ResolvedExternalLink = {
@@ -195,7 +191,7 @@ export async function resolveLink(
       view: res.starterPack,
     }
   }
-  return resolveExternal(clients, uri)
+  return resolveExternal(uri)
 
   // Forked from useGetPost. TODO: move into RQ.
   async function getPost({uri}: {uri: string}) {
@@ -267,16 +263,8 @@ function getFileSlug(url: string | undefined): string | undefined {
   return dotIndex > 0 ? filename.slice(0, dotIndex) : undefined
 }
 
-async function resolveExternal(
-  clients: ResolveClients,
-  uri: string,
-): Promise<ResolvedExternalLink> {
-  /*
-   * getLinkMeta still takes the bridge agent (not yet migrated); it only reads
-   * a service URL from it that LINK_META_PROXY ignores. Keep threading the
-   * agent here until link-meta migrates.
-   */
-  const result = await getLinkMeta(clients.agent, uri)
+async function resolveExternal(uri: string): Promise<ResolvedExternalLink> {
+  const result = await getLinkMeta(uri)
   return {
     type: 'external',
     uri: result.url,

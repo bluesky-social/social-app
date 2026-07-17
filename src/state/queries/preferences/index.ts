@@ -44,7 +44,6 @@ import {useAgeAssurance} from '#/ageAssurance'
 import {makeAgeRestrictedModerationPrefs} from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 
 export * from '#/state/queries/preferences/const'
 export * from '#/state/queries/preferences/moderation'
@@ -110,16 +109,8 @@ export function usePreferencesQuery() {
         ) {
           data = {
             ...data,
-            /*
-             * TODO(phase4): drop the toLex bridges once
-             * `#/ageAssurance/util` (makeAgeRestrictedModerationPrefs) sources
-             * `ModerationPrefs` from `@bsky.app/sdk/moderation` instead of
-             * `@atproto/api`. The two shapes differ only in scalar branding
-             * (e.g. MutedWord.actorTarget's UnknownString), so the values are
-             * structurally interchangeable at this boundary.
-             */
-            moderationPrefs: toLex(
-              makeAgeRestrictedModerationPrefs(toLex(data.moderationPrefs)),
+            moderationPrefs: makeAgeRestrictedModerationPrefs(
+              data.moderationPrefs,
             ),
           }
         }

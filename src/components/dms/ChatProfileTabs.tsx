@@ -15,7 +15,6 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import {toLex} from '#/types/bsky'
 
 type Props = {
   testID?: string
@@ -90,8 +89,7 @@ function Tab({
   const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
 
-  // TODO(phase4): drop toLex once profile prop emits #/lexicons views
-  const moderation = moderateProfile(toLex(profile), moderationOpts!)
+  const moderation = moderateProfile(profile, moderationOpts!)
   const displayName = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),

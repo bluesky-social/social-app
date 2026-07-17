@@ -29,7 +29,6 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
 import * as ModuleHeader from '../components/ModuleHeader'
-import {toLex} from '#/types/bsky'
 
 const IMAGE_SIZE = 56
 
@@ -307,8 +306,7 @@ function useModerateTrendingActors(
 
     return actors
       .filter(actor => {
-        // TODO(phase4): drop toLex once TrendView actors emit #/lexicons views
-        const decision = moderateProfile(toLex(actor), moderationOpts)
+        const decision = moderateProfile(actor, moderationOpts)
         return !decision.ui('avatar').filter && !decision.ui('avatar').blur
       })
       .slice(0, 3)

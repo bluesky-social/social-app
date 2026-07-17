@@ -39,7 +39,6 @@ import {IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
 import {type app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -424,8 +423,7 @@ function Inner({
   const {_, i18n} = useLingui()
   const {currentAccount} = useSession()
   const moderation = useMemo(
-    // TODO(phase4): drop toLex once ProfileViewDetailed prop emits #/lexicons views
-    () => moderateProfile(toLex(profile), moderationOpts),
+    () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
   const [descriptionRT] = useRichText(profile.description ?? '')

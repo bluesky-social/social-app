@@ -8,7 +8,6 @@ import {feedUriToHref} from '#/lib/strings/url-helpers'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {type FeedParams} from '#/state/queries/post-feed'
 import {app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 import {FeedTuner} from '../feed-manip'
 import {type FeedTunerFn} from '../feed-manip'
 import {
@@ -264,13 +263,7 @@ class MergeFeedSource_Following extends MergeFeedSource {
     return {
       success: true,
       cursor: res.cursor,
-      /*
-       * TODO(phase4): drop the toLex once `#/lib/api/feed-manip` (FeedTuner)
-       * flips its FeedViewPost source from `@atproto/api` to `#/lexicons`. Its
-       * `_feedPost` is still the old-world view type, which does not assign to
-       * the branded lexicon type this page carries.
-       */
-      feed: slices.map(slice => toLex(slice._feedPost)),
+      feed: slices.map(slice => slice._feedPost),
     }
   }
 }

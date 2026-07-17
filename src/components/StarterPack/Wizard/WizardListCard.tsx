@@ -26,7 +26,6 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
-import {toLex} from '#/types/bsky'
 
 function WizardListCard({
   type,
@@ -140,10 +139,7 @@ export function WizardProfileCard({
   const included = isTarget || state.profiles.some(p => p.did === profile.did)
   const disabled =
     isTarget || (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE)
-  // TODO(phase4): drop toLex once profile prop emits #/lexicons views
-  const moderationUi = moderateProfile(toLex(profile), moderationOpts).ui(
-    'avatar',
-  )
+  const moderationUi = moderateProfile(profile, moderationOpts).ui('avatar')
   const displayName = profile.displayName
     ? sanitizeDisplayName(profile.displayName)
     : `@${sanitizeHandle(profile.handle)}`
@@ -194,11 +190,9 @@ export function WizardFeedCard({
   const isDiscover = generator.uri === DISCOVER_FEED_URI
   const included = isDiscover || state.feeds.some(f => f.uri === generator.uri)
   const disabled = isDiscover || (!included && state.feeds.length >= 3)
-  // TODO(phase4): drop toLex once GeneratorView prop emits #/lexicons views
-  const moderationUi = moderateFeedGenerator(
-    toLex(generator),
-    moderationOpts,
-  ).ui('avatar')
+  const moderationUi = moderateFeedGenerator(generator, moderationOpts).ui(
+    'avatar',
+  )
 
   const onPress = () => {
     if (disabled) return

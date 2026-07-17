@@ -21,7 +21,6 @@ import {Link} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {IS_LIQUID_GLASS} from '#/env'
-import {toLex} from '#/types/bsky'
 import {type ConvoWithDetails} from './util'
 
 const PFP_SIZE = 40
@@ -86,8 +85,7 @@ function ProfileHeaderReady({
   const {t: l} = useLingui()
   const profile = useProfileShadow(convo.primaryMember)
 
-  // TODO(phase4): drop toLex once useProfileShadow emits #/lexicons views
-  const moderation = moderateProfile(toLex(profile), moderationOpts)
+  const moderation = moderateProfile(profile, moderationOpts)
 
   const blockInfo = useMemo(() => {
     const modui = moderation.ui('profileView')

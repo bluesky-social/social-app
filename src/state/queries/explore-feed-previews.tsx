@@ -205,12 +205,8 @@ export function useFeedPreviews(
               if (item.isFallbackMarker) continue
 
               const moderations = item.items.map(item =>
-                // TODO(phase4): drop toLex once feed-manip is migrated off
                 // @atproto/api and yields lex-typed slice items.
-                moderatePost(
-                  bsky.toLex<app.bsky.feed.defs.PostView>(item.post),
-                  moderationOpts!,
-                ),
+                moderatePost(item.post, moderationOpts!),
               )
 
               // apply moderation filters
@@ -236,19 +232,12 @@ export function useFeedPreviews(
                     const feedPostSliceItem: FeedPostSliceItem = {
                       _reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
                       uri: subItem.post.uri,
-                      // TODO(phase4): drop toLex once feed-manip is migrated
                       // off @atproto/api and yields lex-typed slice items.
-                      post: bsky.toLex<app.bsky.feed.defs.PostView>(
-                        subItem.post,
-                      ),
-                      record: bsky.toLex<app.bsky.feed.post.Main>(
-                        subItem.record,
-                      ),
+                      post: subItem.post,
+                      record: subItem.record,
                       moderation: moderations[i],
                       parentAuthor: subItem.parentAuthor
-                        ? bsky.toLex<app.bsky.actor.defs.ProfileViewBasic>(
-                            subItem.parentAuthor,
-                          )
+                        ? subItem.parentAuthor
                         : undefined,
                       isParentBlocked: subItem.isParentBlocked,
                       isParentNotFound: subItem.isParentNotFound,

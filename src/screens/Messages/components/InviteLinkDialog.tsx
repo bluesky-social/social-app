@@ -34,7 +34,6 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {type chat} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 import {CopyTextButton} from './CopyTextButton'
 import {EditTextButton} from './EditTextButton'
 
@@ -69,8 +68,7 @@ export function InviteLinkDialog({
   const ownerName = createSanitizedDisplayName(
     owner,
     false,
-    // TODO(phase4): drop toLex once GroupConvoMember emits #/lexicons views
-    moderateProfile(toLex(owner), moderationOpts).ui('displayName'),
+    moderateProfile(owner, moderationOpts).ui('displayName'),
   )
 
   const {joinLink} = convo.details

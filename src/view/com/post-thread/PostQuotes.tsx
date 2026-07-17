@@ -73,8 +73,7 @@ export function PostQuotes({uri}: {uri: string}) {
           ) {
             return null
           }
-          // TODO(phase4): drop toLex once usePostQuotesQuery emits #/lexicons views
-          const moderation = moderatePost(bsky.toLex(post), moderationOpts)
+          const moderation = moderatePost(post, moderationOpts)
           return {post, record: post.record, moderation}
         }),
       )

@@ -1,7 +1,6 @@
 import {LINK_META_PROXY} from '#/lib/constants'
 import {getGiphyMetaUri} from '#/lib/strings/embed-player'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
-import {type SessionAgent} from '#/state/session'
 import {type app} from '#/lexicons'
 import {isBskyAppUrl} from '../strings/url-helpers'
 
@@ -31,7 +30,6 @@ export interface LinkMeta {
 }
 
 export async function getLinkMeta(
-  agent: SessionAgent,
   url: string,
   timeout = 15e3,
 ): Promise<LinkMeta> {
@@ -80,9 +78,7 @@ export async function getLinkMeta(
 
   try {
     const response = await fetch(
-      `${LINK_META_PROXY(agent.serviceUrl.toString() || '')}${encodeURIComponent(
-        url,
-      )}`,
+      `${LINK_META_PROXY('')}${encodeURIComponent(url)}`,
       {signal: controller.signal},
     )
 

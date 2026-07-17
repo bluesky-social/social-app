@@ -33,7 +33,6 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 import {type app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
@@ -67,7 +66,7 @@ let ProfileHeaderLabeler = ({
   const isSelf = currentAccount?.did === profile.did
 
   const moderation = useMemo(
-    () => moderateProfile(toLex(profile), moderationOpts),
+    () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
   const {mutateAsync: likeMod, isPending: isLikePending} = useLikeMutation()

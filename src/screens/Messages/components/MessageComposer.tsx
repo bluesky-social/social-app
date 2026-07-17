@@ -38,7 +38,6 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {type chat} from '#/lexicons'
-import * as bsky from '#/types/bsky'
 import {type MessageEmbedState} from './MessageInputEmbed'
 
 const MIN_HEIGHT = 40
@@ -70,15 +69,7 @@ export function MessageComposer({
   const {getDraft, clearDraft} = useMessageDraft()
   const composerInternalApiRef = useComposerInternalApiRef()
   const {replyTo: replyToOld, clearReply} = useMessageReplies()
-  /*
-   * `useMessageReplies` (`#/components/dms`, migrates in a later task) still
-   * emits the old `@atproto/api` MessageView; the send path is typed on the
-   * lexicon view. Structurally identical modulo branded strings.
-   * TODO(phase4): drop toLex once dms/MessageReplies migrates.
-   */
-  const replyTo = bsky.toLex<chat.bsky.convo.defs.MessageView | null>(
-    replyToOld,
-  )
+  const replyTo = replyToOld
 
   const [text, setText] = useState(getDraft)
   useSaveMessageDraft(text)

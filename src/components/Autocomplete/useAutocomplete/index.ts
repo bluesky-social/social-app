@@ -62,7 +62,6 @@ export function useAutocomplete({
           key: profile.did,
           type: 'profile' as const,
           value: '@' + profile.handle,
-          // TODO(phase4): drop toLex once searchActorsTypeahead (bridge agent)
           // emits #/lexicons views
           profile: toLex<AutocompleteProfile['profile']>(profile),
         }))
@@ -134,10 +133,7 @@ function moderateProfileItem({
   item: AutocompleteProfile
   moderationOpts: ModerationOpts
 }) {
-  // TODO(phase4): drop toLex once searchActorsTypeahead emits #/lexicons views
-  const modui = moderateProfile(toLex(item.profile), moderationOpts).ui(
-    'profileList',
-  )
+  const modui = moderateProfile(item.profile, moderationOpts).ui('profileList')
   const isExactMatch = query && item.profile.handle.toLowerCase() === query
 
   if (

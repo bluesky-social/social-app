@@ -5,7 +5,6 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import {ContentHider} from '#/components/moderation/ContentHider'
-import {toLex} from '#/types/bsky'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
 
@@ -41,8 +40,7 @@ export function ModeratedFeedEmbed({
   const moderationOpts = useModerationOpts()
   const moderation = useMemo(() => {
     return moderationOpts
-      ? // TODO(phase4): drop toLex once feed embed view emits #/lexicons views
-        moderateFeedGenerator(toLex(embed.view), moderationOpts)
+      ? moderateFeedGenerator(embed.view, moderationOpts)
       : undefined
   }, [embed.view, moderationOpts])
   return (

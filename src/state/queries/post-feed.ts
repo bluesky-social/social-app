@@ -288,9 +288,8 @@ export function usePostFeedQuery(
                 .map(slice => {
                   const moderations = slice.items.map(item =>
                     moderatePost(
-                      // TODO(phase4): drop toLex once feed-manip is migrated
                       // off @atproto/api and yields lex-typed slice items.
-                      bsky.toLex<app.bsky.feed.defs.PostView>(item.post),
+                      item.post,
                       moderationOpts!,
                     ),
                   )
@@ -342,19 +341,12 @@ export function usePostFeedQuery(
                       const feedPostSliceItem: FeedPostSliceItem = {
                         _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                         uri: item.post.uri,
-                        // TODO(phase4): drop toLex once feed-manip is migrated
                         // off @atproto/api and yields lex-typed slice items.
-                        post: bsky.toLex<app.bsky.feed.defs.PostView>(
-                          item.post,
-                        ),
-                        record: bsky.toLex<app.bsky.feed.post.Main>(
-                          item.record,
-                        ),
+                        post: item.post,
+                        record: item.record,
                         moderation: moderations[i],
                         parentAuthor: item.parentAuthor
-                          ? bsky.toLex<app.bsky.actor.defs.ProfileViewBasic>(
-                              item.parentAuthor,
-                            )
+                          ? item.parentAuthor
                           : undefined,
                         isParentBlocked: item.isParentBlocked,
                         isParentNotFound: item.isParentNotFound,

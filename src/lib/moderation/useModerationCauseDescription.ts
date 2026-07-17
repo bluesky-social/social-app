@@ -13,8 +13,6 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {type AppModerationCause} from '#/components/Pills'
-import {type com} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 import {useGlobalLabelStrings} from './useGlobalLabelStrings'
 import {getDefinition, getLabelStrings} from './useLabelInfo'
 
@@ -129,18 +127,7 @@ export function useModerationCauseDescription(
       }
     }
     if (cause.type === 'label') {
-      /*
-       * TODO(phase4): drop `toLex` once `useLabelDefinitions` and the label
-       * cause type share the `#/lexicons` label shape. `labelDefs` still comes
-       * from the old `@atproto/api`-typed producer and `cause.label` is the SDK
-       * label; both are structurally identical to the `#/lexicons` label.
-       */
-      const def =
-        cause.labelDef ||
-        getDefinition(
-          toLex<Parameters<typeof getDefinition>[0]>(labelDefs),
-          toLex<com.atproto.label.defs.Label>(cause.label),
-        )
+      const def = cause.labelDef || getDefinition(labelDefs, cause.label)
       const strings = getLabelStrings(i18n.locale, globalLabelStrings, def)
       const labeler = labelers.find(l => l.creator.did === cause.label.src)
       let source = labeler

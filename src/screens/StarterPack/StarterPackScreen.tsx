@@ -411,8 +411,7 @@ function Header({
   const richText = record.description
     ? new RichTextAPI({
         text: record.description,
-        // TODO(phase4): drop toLex once the starterpack record producer emits #/lexicons facets
-        facets: bsky.toLex(record.descriptionFacets),
+        facets: record.descriptionFacets,
       })
     : undefined
 

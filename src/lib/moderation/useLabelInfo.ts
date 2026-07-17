@@ -12,7 +12,6 @@ import {
 } from '#/lib/moderation/useGlobalLabelStrings'
 import {useLabelDefinitions} from '#/state/preferences'
 import {type app, type com} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 
 export interface LabelInfo {
   label: com.atproto.label.defs.Label
@@ -23,26 +22,14 @@ export interface LabelInfo {
 
 export function useLabelInfo(label: com.atproto.label.defs.Label): LabelInfo {
   const {i18n} = useLingui()
-  /*
-   * TODO(phase4): drop the `toLex` casts once `useLabelDefinitions`
-   * (state/preferences/label-defs) emits `#/lexicons` / `@bsky.app/sdk`
-   * moderation types. It still returns old `@atproto/api`
-   * `InterpretedLabelValueDefinition` / `LabelerViewDetailed`, which are
-   * structurally identical to the SDK/lexicon ones modulo branded strings.
-   */
   const {labelDefs, labelers} = useLabelDefinitions()
-  const def = getDefinition(
-    toLex<Record<string, InterpretedLabelValueDefinition[]>>(labelDefs),
-    label,
-  )
+  const def = getDefinition(labelDefs, label)
   const globalLabelStrings = useGlobalLabelStrings()
   return {
     label,
     def,
     strings: getLabelStrings(i18n.locale, globalLabelStrings, def),
-    labeler: toLex<app.bsky.labeler.defs.LabelerViewDetailed[]>(labelers).find(
-      labeler => label.src === labeler.creator.did,
-    ),
+    labeler: labelers.find(labeler => label.src === labeler.creator.did),
   }
 }
 

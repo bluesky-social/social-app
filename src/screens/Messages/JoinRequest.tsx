@@ -187,9 +187,8 @@ export function JoinRequest({setScreenState}: Props) {
                       {createSanitizedDisplayName(
                         joinLinkPreview.owner,
                         true,
-                        // TODO(phase4): drop toLex once join link preview emits #/lexicons views
                         moderateProfile(
-                          bsky.toLex(joinLinkPreview.owner),
+                          joinLinkPreview.owner,
                           moderationOpts,
                         ).ui('displayName'),
                       )}
@@ -224,14 +223,12 @@ export function JoinRequest({setScreenState}: Props) {
                   ? l`Sign in to request access to this group chat.`
                   : l`Sign in to accept invite.`}{' '}
                 {joinLinkPreview.joinRule === 'followedByOwner' &&
-                  // TODO(phase4): drop toLex once join link preview emits #/lexicons views
                   l`Only people ${createSanitizedDisplayName(
                     joinLinkPreview.owner,
                     true,
-                    moderateProfile(
-                      bsky.toLex(joinLinkPreview.owner),
-                      moderationOpts,
-                    ).ui('displayName'),
+                    moderateProfile(joinLinkPreview.owner, moderationOpts).ui(
+                      'displayName',
+                    ),
                   )} follows can join.`}
               </Text>
               <ActionButtons setScreenState={setScreenState} />

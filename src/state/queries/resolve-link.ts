@@ -7,7 +7,7 @@ import {
   resolveLink,
 } from '#/lib/api/resolve'
 import {STALE} from '#/state/queries/index'
-import {useAgent, useChatClient, useLexClient} from '#/state/session'
+import {useChatClient, useLexClient} from '#/state/session'
 import {type Gif} from '#/features/gifPicker/types'
 
 export const RQKEY_LINK_ROOT = 'resolve-link'
@@ -26,15 +26,13 @@ export function resolveLinkQueryOptions(clients: ResolveClients, url: string) {
 
 /**
  * Bundle the clients the link resolver needs from the session hooks. The
- * appview client serves the `app.bsky.*` reads and handle resolution, the chat
- * client serves group join-link previews, and the bridge agent is still passed
- * through to the not-yet-migrated `getLinkMeta`.
+ * appview client serves the `app.bsky.*` reads and handle resolution, and the
+ * chat client serves group join-link previews.
  */
 export function useResolveClients(): ResolveClients {
   const appview = useLexClient()
   const chat = useChatClient()
-  const agent = useAgent()
-  return {appview, chat, agent}
+  return {appview, chat}
 }
 
 export function useResolveLinkQuery(url: string) {

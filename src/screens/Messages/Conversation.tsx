@@ -46,7 +46,7 @@ import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
 import {IS_LIQUID_GLASS} from '#/env'
 import {chat} from '#/lexicons'
-import {isType, toLex} from '#/types/bsky'
+import {isType} from '#/types/bsky'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatEnded} from './components/ChatEnded'
 import {ChatLocked} from './components/ChatLocked'
@@ -228,8 +228,7 @@ function InnerReady({
   const moderationOpts = useModerationOpts()
   const primaryMemberModeration = useMemo(() => {
     if (!primaryMember || !moderationOpts) return null
-    // TODO(phase4): drop toLex once useMaybeProfileShadow emits #/lexicons views
-    return moderateProfile(toLex(primaryMember), moderationOpts)
+    return moderateProfile(primaryMember, moderationOpts)
   }, [primaryMember, moderationOpts])
 
   const header = <MessagesListHeader convo={convo} />
