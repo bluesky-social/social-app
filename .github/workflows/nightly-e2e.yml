@@ -5,6 +5,11 @@ on:
   schedule:
     - cron: "0 4 * * *"
   workflow_dispatch:
+  # Temporary: allows this stacked PR to exercise the workflow before merge.
+  # Remove before merging.
+  pull_request:
+    branches:
+      - samuel/split-build-pipelines
 
 permissions:
   contents: read
