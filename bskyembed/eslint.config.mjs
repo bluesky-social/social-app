@@ -1,16 +1,9 @@
 // @ts-check
 import js from '@eslint/js'
-<<<<<<< HEAD
 import {defineConfig} from 'eslint/config'
 import tseslint from 'typescript-eslint'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import {importX} from 'eslint-plugin-import-x'
-=======
-import { defineConfig } from 'eslint/config';
-import tseslint from 'typescript-eslint'
-import simpleImportSort from 'eslint-plugin-simple-import-sort'
-import { importX } from 'eslint-plugin-import-x'
->>>>>>> 7cb3499c2 (use pnpm, update eslint/typescript)
 import globals from 'globals'
 
 export default defineConfig(
