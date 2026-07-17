@@ -9,7 +9,7 @@ import {CONTENT_LABELS, labelsToInfo} from '#/labels'
 import {getRkey} from '#/util/rkey'
 import {getVerificationState} from '#/util/verification-state'
 
-import infoIcon from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
+import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
 import playIcon from '../../assets/play_filled_corner0_rounded.svg'
 import starterPackIcon from '../../assets/starterPack.svg'
 
