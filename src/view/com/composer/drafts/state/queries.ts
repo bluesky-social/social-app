@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query'
 
 import {isNetworkError} from '#/lib/strings/errors'
-import {getErrorName} from '#/lib/xrpc-error'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {useAppviewClient} from '#/state/session'
 import {type ComposerState} from '#/view/com/composer/state/composer'
 import {useAnalytics} from '#/analytics'
@@ -209,7 +209,9 @@ export function useSaveDraftMutation() {
     },
     onError: error => {
       // Check for draft limit error
-      if (getErrorName(error) === 'DraftLimitReached') {
+      if (
+        isXrpcErrorOf(app.bsky.draft.createDraft, error, 'DraftLimitReached')
+      ) {
         logger.error('Draft limit reached', {safeMessage: error.message})
         // Error will be handled by caller
       } else if (!isNetworkError(error)) {

@@ -13,7 +13,7 @@ import {
   getDefaultCountry,
 } from '#/lib/international-telephone-codes'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
-import {getErrorName} from '#/lib/xrpc-error'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useAppviewClient} from '#/state/session'
 import {OnboardingPosition} from '#/screens/Onboarding/Layout'
@@ -103,9 +103,21 @@ export function PhoneInput({
             msg`A network error occurred. Please check your internet connection`,
           ),
         )
-      } else if (getErrorName(err) === 'RateLimitExceeded') {
+      } else if (
+        isXrpcErrorOf(
+          app.bsky.contact.startPhoneVerification,
+          err,
+          'RateLimitExceeded',
+        )
+      ) {
         setError(_(msg`Rate limit exceeded. Please try again later.`))
-      } else if (getErrorName(err) === 'InvalidPhone') {
+      } else if (
+        isXrpcErrorOf(
+          app.bsky.contact.startPhoneVerification,
+          err,
+          'InvalidPhone',
+        )
+      ) {
         setError(
           _(
             msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,

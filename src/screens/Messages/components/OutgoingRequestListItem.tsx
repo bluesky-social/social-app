@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {isNetworkError} from '#/lib/strings/errors'
-import {getErrorName} from '#/lib/xrpc-error'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {useWithdrawJoinGroupChatRequest} from '#/state/queries/messages/withdraw-join-group-chat'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -11,7 +11,7 @@ import {createStaticClick, Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {type chat} from '#/lexicons'
+import {chat} from '#/lexicons'
 
 export function OutgoingRequestListItem({
   convo: convoView,
@@ -32,7 +32,13 @@ export function OutgoingRequestListItem({
         let errorMessage = l`Failed to rescind your request. Please try again.`
         if (isNetworkError(error)) {
           errorMessage = l`There was a problem with your internet connection, please try again`
-        } else if (getErrorName(error) === 'InvalidJoinRequest') {
+        } else if (
+          isXrpcErrorOf(
+            chat.bsky.group.withdrawJoinRequest,
+            error,
+            'InvalidJoinRequest',
+          )
+        ) {
           errorMessage = l`Invalid rescind request.`
         }
         Toast.show(errorMessage)

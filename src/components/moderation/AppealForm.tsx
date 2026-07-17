@@ -66,6 +66,7 @@ export function AppealForm({
       )
     },
     onError: err => {
+      /* not a declared error of com.atproto.moderation.createReport (which declares none); server sends it anyway */
       if (isXrpcError(err) && getErrorName(err) === 'AlreadyAppealed') {
         setError(
           _(

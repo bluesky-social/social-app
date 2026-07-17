@@ -140,6 +140,7 @@ export const LoginForm = ({
     } catch (err) {
       const errMsg = String(err)
       setIsProcessing(false)
+      /* matches a LexAuthFactorError from PasswordSession.login (not an XrpcError), so getErrorName - gated on LexError, not isXrpcError - is required here */
       if (getErrorName(err) === 'AuthFactorTokenRequired') {
         setIsAuthFactorTokenNeeded(true)
       } else {

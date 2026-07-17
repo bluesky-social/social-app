@@ -11,7 +11,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {isNetworkError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {getErrorName} from '#/lib/xrpc-error'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
@@ -145,15 +145,29 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
         let errorMessage = l`Failed to join the group chat. Please try again.`
         if (isNetworkError(error)) {
           errorMessage = l`There was a problem with your internet connection, please try again`
-        } else if (getErrorName(error) === 'ConvoLocked') {
+        } else if (
+          isXrpcErrorOf(chat.bsky.group.requestJoin, error, 'ConvoLocked')
+        ) {
           errorMessage = l`This conversation is locked.`
-        } else if (getErrorName(error) === 'FollowRequired') {
+        } else if (
+          isXrpcErrorOf(chat.bsky.group.requestJoin, error, 'FollowRequired')
+        ) {
           errorMessage = l`Only followers can join this group chat.`
-        } else if (getErrorName(error) === 'InvalidCode') {
+        } else if (
+          isXrpcErrorOf(chat.bsky.group.requestJoin, error, 'InvalidCode')
+        ) {
           errorMessage = l`Invalid group chat code.`
-        } else if (getErrorName(error) === 'LinkDisabled') {
+        } else if (
+          isXrpcErrorOf(chat.bsky.group.requestJoin, error, 'LinkDisabled')
+        ) {
           errorMessage = l`This invite link has been disabled.`
-        } else if (getErrorName(error) === 'MemberLimitReached') {
+        } else if (
+          isXrpcErrorOf(
+            chat.bsky.group.requestJoin,
+            error,
+            'MemberLimitReached',
+          )
+        ) {
           errorMessage = l`The member limit has been reached.`
           const preview = data?.joinLinkPreviews[0]
           if (
@@ -164,7 +178,9 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
               convoId: preview.convo.id,
             })
           }
-        } else if (getErrorName(error) === 'UserKicked') {
+        } else if (
+          isXrpcErrorOf(chat.bsky.group.requestJoin, error, 'UserKicked')
+        ) {
           errorMessage = l`You have been previously removed from this group and can’t join it using this link.`
         }
         Toast.show(errorMessage)
@@ -185,7 +201,13 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
         let errorMessage = l`Failed to rescind your request. Please try again.`
         if (isNetworkError(error)) {
           errorMessage = l`There was a problem with your internet connection, please try again`
-        } else if (getErrorName(error) === 'InvalidJoinRequest') {
+        } else if (
+          isXrpcErrorOf(
+            chat.bsky.group.withdrawJoinRequest,
+            error,
+            'InvalidJoinRequest',
+          )
+        ) {
           errorMessage = l`Invalid rescind request.`
         }
         Toast.show(errorMessage)
