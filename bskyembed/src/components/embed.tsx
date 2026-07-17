@@ -280,7 +280,7 @@ function ImageGrid({images}: {images: GridImage[]}) {
       )
     case 2:
       return (
-        <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-[2/1]">
+        <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-2/1">
           {images.map((image, i) => (
             <img
               key={i}
@@ -293,7 +293,7 @@ function ImageGrid({images}: {images: GridImage[]}) {
       )
     case 3:
       return (
-        <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-[2/1]">
+        <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-2/1">
           <div className="flex-1 aspect-square">
             <img
               src={images[0].thumb}
@@ -322,7 +322,7 @@ function ImageGrid({images}: {images: GridImage[]}) {
             return (
               <div
                 key={i}
-                className="relative aspect-[3/2] rounded-sm overflow-hidden">
+                className="relative aspect-3/2 rounded-sm overflow-hidden">
                 <img
                   src={image.thumb}
                   alt={image.alt}
@@ -374,7 +374,7 @@ function ExternalEmbed({
       {content.external.thumb && (
         <img
           src={content.external.thumb}
-          className="aspect-[1200/630] object-cover"
+          className="aspect-1200/630 object-cover"
         />
       )}
       <div className="py-3 px-4">
@@ -503,7 +503,7 @@ function StarterPackEmbed({
     <Link
       href={starterPackHref}
       className="w-full rounded-xl overflow-hidden border dark:border-slate-600 flex flex-col items-stretch">
-      <img src={imageUri} className="aspect-[1200/630] object-cover" />
+      <img src={imageUri} className="aspect-1200/630 object-cover" />
       <div className="py-3 px-4">
         <div className="flex space-x-2 items-center">
           <img src={starterPackIcon} className="w-10 h-10" />
