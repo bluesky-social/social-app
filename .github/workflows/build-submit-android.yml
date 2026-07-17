@@ -29,6 +29,11 @@ on:
         description: Runner for the build job (defaults to Linux-x64-32core)
         required: false
         default: ''
+      releaseTag:
+        type: string
+        description: GitHub Release tag to attach the production APK to
+        required: false
+        default: ''
     outputs:
       package-version:
         description: Version from package.json
@@ -260,14 +265,15 @@ jobs:
           payload: |
             {"text": "Android ${{ inputs.profile || 'testflight-android' }} APK is ready for testing!\n```Artifact: ${{ steps.upload-artifact.outputs.artifact-url }}\nVersion Number: ${{ needs.build.outputs.package-version }}\nBuild Number: ${{ needs.build.outputs.version-code }}```"}
 
-  # Releases are cut from tags named after the version (e.g. "1.124.0"), so when a production
-  # build is dispatched against such a tag we attach the APK to the matching release. This runs
-  # as a separate job so that `contents: write` is isolated here and the build job stays read-only.
+  # Releases are cut from tags named after the version (e.g. "1.124.0"). A build dispatched
+  # directly against a tag uses github.ref_name; the release orchestrator passes releaseTag
+  # because a reusable workflow keeps its caller's original branch ref. This runs as a separate
+  # job so that `contents: write` is isolated here and the build job stays read-only.
   attachToRelease:
     name: Attach APK to GitHub Release
     runs-on: ubuntu-latest
     needs: [build, universalApk]
-    if: ${{ inputs.profile == 'production' && github.ref_type == 'tag' && github.repository == 'bluesky-social/social-app' }}
+    if: ${{ inputs.profile == 'production' && (inputs.releaseTag != '' || github.ref_type == 'tag') && github.repository == 'bluesky-social/social-app' }}
     permissions:
       contents: write
     steps:
@@ -276,18 +282,18 @@ jobs:
         id: release-check
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.ref_name }}
+          TAG: ${{ inputs.releaseTag || github.ref_name }}
         run: |
-          status=$(curl -sS -o /dev/null -w '%{http_code}' \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/releases/tags/${TAG}")
-          if [ "$status" = "200" ]; then
+          if response=$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${TAG}" 2>&1); then
             echo "Found GitHub Release for tag $TAG"
             echo "exists=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "No GitHub Release found for tag $TAG (HTTP $status); skipping APK attachment."
+          elif [[ "$response" == *"(HTTP 404)"* ]]; then
+            echo "No GitHub Release found for tag $TAG; skipping APK attachment."
             echo "exists=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Could not check for a GitHub Release for tag $TAG."
+            echo "$response"
+            exit 1
           fi
 
       - name: ⬇️ Download APK artifact
@@ -305,7 +311,7 @@ jobs:
         if: ${{ steps.release-check.outputs.exists == 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.ref_name }}
+          TAG: ${{ inputs.releaseTag || github.ref_name }}
           APK: Bluesky-${{ needs.build.outputs.package-version }}.apk
         run: |
           gh release upload "$TAG" "$APK" --clobber
@@ -320,4 +326,4 @@ jobs:
           webhook-type: incoming-webhook
           payload-templated: true
           payload: |
-            {"text": "Android APK attached to GitHub Release ${{ github.ref_name }}!\n```Asset: Bluesky-${{ needs.build.outputs.package-version }}.apk\nRelease: ${{ steps.attach.outputs.url }}```"}
+            {"text": "Android APK attached to GitHub Release ${{ inputs.releaseTag || github.ref_name }}!\n```Asset: Bluesky-${{ needs.build.outputs.package-version }}.apk\nRelease: ${{ steps.attach.outputs.url }}```"}
