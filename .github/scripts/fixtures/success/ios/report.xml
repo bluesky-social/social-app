@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Maestro iOS" tests="1" failures="0" errors="0">
+  <testcase name="login.yml" classname="Maestro" time="12.4" />
+</testsuite>
