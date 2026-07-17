@@ -1,15 +1,16 @@
 import '../index.css'
 
 import {Client, isAtUriString} from '@atproto/lex'
+import {app} from '@bsky.app/sdk/lexicons'
 import {h, render} from 'preact'
 
+import {applyTheme, initSystemColorMode} from '#/color-mode'
+import {Container} from '#/components/container'
+import {Link} from '#/components/link'
+import {Post} from '#/components/post'
+import {getRkey} from '#/util/rkey'
+
 import logo from '../../assets/logo.svg'
-import {applyTheme, initSystemColorMode} from '../color-mode'
-import {Container} from '../components/container'
-import {Link} from '../components/link'
-import {Post} from '../components/post'
-import * as app from '../lexicons/app'
-import {getRkey} from '../util/rkey'
 
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
