@@ -4,6 +4,7 @@ import {defineConfig} from 'eslint/config'
 import tseslint from 'typescript-eslint'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import {importX} from 'eslint-plugin-import-x'
+import {createTypeScriptImportResolver} from 'eslint-import-resolver-typescript'
 import globals from 'globals'
 
 export default defineConfig(
@@ -54,6 +55,9 @@ export default defineConfig(
         },
       ],
       'import-x/consistent-type-specifier-style': ['warn', 'prefer-inline'],
+    },
+    settings: {
+      'import-x/resolver-next': [createTypeScriptImportResolver()],
     },
   },
 )

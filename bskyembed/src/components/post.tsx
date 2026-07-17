@@ -1,21 +1,22 @@
+import {app} from '@bsky.app/sdk/lexicons'
+import {RichText} from '@bsky.app/sdk/richtext'
 import {ComponentChild, h} from 'preact'
 
+import {Container} from '#/components/container'
+import {Embed} from '#/components/embed'
+import {Link} from '#/components/link'
+import {VerificationCheck} from '#/components/verification-check'
+import {Like as LikeIcon} from '#/icons/Like'
+import {Reply as ReplyIcon} from '#/icons/Reply'
+import {Repost as RepostIcon} from '#/icons/Repost'
+import {Robot as RobotIcon} from '#/icons/Robot'
+import {CONTENT_LABELS} from '#/labels'
+import {niceDate} from '#/util/nice-date'
+import {prettyNumber} from '#/util/pretty-number'
+import {getRkey} from '#/util/rkey'
+import {getVerificationState} from '#/util/verification-state'
+
 import logo from '../../assets/logo_full_name.svg'
-import {Like as LikeIcon} from '../icons/Like'
-import {Reply as ReplyIcon} from '../icons/Reply'
-import {Repost as RepostIcon} from '../icons/Repost'
-import {Robot as RobotIcon} from '../icons/Robot'
-import {CONTENT_LABELS} from '../labels'
-import * as app from '../lexicons/app'
-import {FacetRenderer} from '../util/facet-renderer'
-import {niceDate} from '../util/nice-date'
-import {prettyNumber} from '../util/pretty-number'
-import {getRkey} from '../util/rkey'
-import {getVerificationState} from '../util/verification-state'
-import {Container} from './container'
-import {Embed} from './embed'
-import {Link} from './link'
-import {VerificationCheck} from './verification-check'
 
 interface Props {
   post: app.bsky.feed.defs.PostView
@@ -147,7 +148,7 @@ function PostContent({record}: {record: app.bsky.feed.post.Main | null}) {
   // render an empty <p> that adds an extra flex gap above the embed
   if (!record?.text) return null
 
-  const rt = new FacetRenderer({text: record.text, facets: record.facets})
+  const rt = new RichText({text: record.text, facets: record.facets})
   const richText: ComponentChild[] = []
 
   let counter = 0

@@ -2,22 +2,22 @@ import '../index.css'
 
 import {AtUriString, Client, type HandleString} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
+import {app, com} from '@bsky.app/sdk/lexicons'
 import {h, render} from 'preact'
 import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 
-import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
-import logo from '../../assets/logo.svg'
 import {
   assertColorModeValues,
   ColorModeValues,
   initSystemColorMode,
-} from '../color-mode'
-import {Container} from '../components/container'
-import {Link} from '../components/link'
-import {Post} from '../components/post'
-import * as app from '../lexicons/app'
-import * as com from '../lexicons/com'
-import {niceDate} from '../util/nice-date'
+} from '#/color-mode'
+import {Container} from '#/components/container'
+import {Link} from '#/components/link'
+import {Post} from '#/components/post'
+import {niceDate} from '#/util/nice-date'
+
+import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
+import logo from '../../assets/logo.svg'
 
 const DEFAULT_POST =
   'https://bsky.app/profile/did:plc:vjug55kidv6sye7ykr5faxxn/post/3jzn6g7ixgq2y'
@@ -85,7 +85,7 @@ function LandingPage() {
               atUri = `at://${did}/app.bsky.feed.post/${rkey}`
             } catch (err) {
               console.log(err)
-              throw new Error('Invalid Bluesky URL')
+              throw new Error('Invalid Bluesky URL', {cause: err})
             }
           }
         }

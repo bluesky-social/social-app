@@ -1,16 +1,17 @@
+import {app} from '@bsky.app/sdk/lexicons'
 import {ComponentChildren, h} from 'preact'
 import {useMemo} from 'preact/hooks'
 
-import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
+import {Link} from '#/components/link'
+import {VerificationCheck} from '#/components/verification-check'
+import {Globe} from '#/icons/Globe'
+import {CONTENT_LABELS, labelsToInfo} from '#/labels'
+import {getRkey} from '#/util/rkey'
+import {getVerificationState} from '#/util/verification-state'
+
+import infoIcon from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
 import playIcon from '../../assets/play_filled_corner0_rounded.svg'
 import starterPackIcon from '../../assets/starterPack.svg'
-import {Globe} from '../icons/Globe'
-import {CONTENT_LABELS, labelsToInfo} from '../labels'
-import * as app from '../lexicons/app'
-import {getRkey} from '../util/rkey'
-import {getVerificationState} from '../util/verification-state'
-import {Link} from './link'
-import {VerificationCheck} from './verification-check'
 
 export function Embed({
   content,
@@ -32,7 +33,7 @@ export function Embed({
     }
 
     // Case 1b: Gallery (Photos v2)
-    if (AppBskyEmbedGallery.isView(content)) {
+    if (app.bsky.embed.gallery.view.isTypeOf(content)) {
       return <GalleryEmbed content={content} labelInfo={labelInfo} />
     }
 
@@ -253,14 +254,14 @@ function GalleryEmbed({
   content,
   labelInfo,
 }: {
-  content: AppBskyEmbedGallery.View
+  content: app.bsky.embed.gallery.View
   labelInfo?: string
 }) {
   if (labelInfo) {
     return <Info>{labelInfo}</Info>
   }
   const images = content.items
-    .filter(AppBskyEmbedGallery.isViewImage)
+    .filter(i => app.bsky.embed.gallery.viewImage.isTypeOf(i))
     .map(i => ({thumb: i.thumbnail, alt: i.alt}))
   return <ImageGrid images={images} />
 }
