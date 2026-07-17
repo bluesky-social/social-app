@@ -1,3 +1,5 @@
+import {Client} from '@atproto/lex-client'
+import {type DatetimeString, type HandleString} from '@atproto/syntax'
 import {useQuery} from '@tanstack/react-query'
 
 import {
@@ -8,20 +10,8 @@ import {
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {createFullHandle} from '#/lib/strings/handles'
 import {useAnalytics} from '#/analytics'
-import {Agent} from '../session/agent'
-
-/*
- * `com.atproto.temp.checkHandleAvailability` is an entryway-only endpoint that
- * isn't generated into `#/lexicons`, so we describe its result union locally.
- * The response is discriminated by `$type`; we narrow against these shapes
- * rather than a branded lexicon guard.
- */
-type CheckHandleAvailabilityResult =
-  | {$type: 'com.atproto.temp.checkHandleAvailability#resultAvailable'}
-  | {
-      $type: 'com.atproto.temp.checkHandleAvailability#resultUnavailable'
-      suggestions: {handle: string; method: string}[]
-    }
+import {com} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export const RQKEY_handleAvailability = (
   handle: string,
@@ -90,24 +80,28 @@ export async function checkHandleAvailability(
   },
 ) {
   if (serviceDid === BSKY_SERVICE_DID) {
-    const agent = new Agent(null, {service: BSKY_SERVICE})
     // entryway has a special API for handle availability
-    const {data} = await agent.com.atproto.temp.checkHandleAvailability({
-      handle,
-      birthDate,
+    const client = new Client({service: BSKY_SERVICE})
+    const data = await client.call(com.atproto.temp.checkHandleAvailability, {
+      handle: handle as HandleString,
+      birthDate: birthDate as DatetimeString | undefined,
       email,
     })
 
-    const result = data.result as CheckHandleAvailabilityResult
+    const result = data.result
 
     if (
-      result.$type ===
-      'com.atproto.temp.checkHandleAvailability#resultAvailable'
+      bsky.isType(
+        com.atproto.temp.checkHandleAvailability.resultAvailable,
+        result,
+      )
     ) {
       return {available: true} as const
     } else if (
-      result.$type ===
-      'com.atproto.temp.checkHandleAvailability#resultUnavailable'
+      bsky.isType(
+        com.atproto.temp.checkHandleAvailability.resultUnavailable,
+        result,
+      )
     ) {
       return {
         available: false,
@@ -120,13 +114,13 @@ export async function checkHandleAvailability(
     }
   } else {
     // 3rd party PDSes won't have this API so just try and resolve the handle
-    const agent = new Agent(null, {service: PUBLIC_BSKY_SERVICE})
+    const client = new Client({service: PUBLIC_BSKY_SERVICE})
     try {
-      const res = await agent.resolveHandle({
-        handle,
+      const res = await client.call(com.atproto.identity.resolveHandle, {
+        handle: handle as HandleString,
       })
 
-      if (res.data.did) {
+      if (res.did) {
         return {available: false} as const
       }
     } catch {}

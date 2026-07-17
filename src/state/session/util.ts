@@ -1,12 +1,10 @@
+import {Client} from '@atproto/lex-client'
 import {PasswordSession} from '@atproto/lex-password-session'
 
 import {isJwtExpired} from '#/lib/jwt'
+import {type TemporaryPushClient} from '#/lib/notifications/notifications'
 import * as persisted from '#/state/persisted'
-import {
-  networkAwareFetch,
-  sessionAccountToSessionData,
-  SessionAgent,
-} from './session-core'
+import {networkAwareFetch, sessionAccountToSessionData} from './session-core'
 import {type SessionAccount} from './types'
 
 /*
@@ -33,22 +31,30 @@ export function isSessionExpired(account: SessionAccount) {
  * Creates and resumes a throwaway session for every stored account.
  * Intended to send push token revocations just before logout.
  *
- * Each returned {@link SessionAgent} wraps a temporary `PasswordSession`
+ * Each returned {@link TemporaryPushClient} wraps a temporary `PasswordSession`
  * resumed over the network to obtain a valid access token. These sessions are
  * deliberately hook-free (no `onUpdated`/`onDeleted`): they must NEVER persist
  * or race the active session. They are used once for the unregister call and
  * discarded (reclaimed by GC), so we never call `logout()` on them.
+ *
+ * Each session is wrapped in a plain account-shaped `Client` (no proxy header)
+ * paired with the account's service origin and handle, matching the contract
+ * {@link unregisterPushToken} consumes.
  */
 export async function createTemporaryAgentsAndResume(
   accounts: SessionAccount[],
-): Promise<SessionAgent[]> {
+): Promise<TemporaryPushClient[]> {
   const settled = await Promise.allSettled(
     accounts.map(async account => {
       const session = await PasswordSession.resume(
         sessionAccountToSessionData(account),
         {fetch: networkAwareFetch},
       )
-      return new SessionAgent(session)
+      return {
+        client: new Client(session),
+        service: session.session.service,
+        handle: session.session.handle,
+      } satisfies TemporaryPushClient
     }),
   )
 

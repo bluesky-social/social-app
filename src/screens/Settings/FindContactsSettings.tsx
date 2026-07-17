@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import * as Contacts from 'expo-contacts'
+import {type DidString} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -28,12 +29,7 @@ import {
   useContactsMatchesQuery,
   useContactsSyncStatusQuery,
 } from '#/state/queries/find-contacts'
-import {
-  useAgent,
-  useAppviewClient,
-  usePdsClient,
-  useSession,
-} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {List} from '#/view/com/util/List'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
@@ -196,7 +192,7 @@ function SyncStatus({
   refetchStatus: () => Promise<any>
 }) {
   const ax = useAnalytics()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const queryClient = useQueryClient()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -221,7 +217,9 @@ function SyncStatus({
 
   const {mutate: dismissMatch} = useMutation({
     mutationFn: async (did: string) => {
-      await agent.app.bsky.contact.dismissMatch({subject: did})
+      await appviewClient.call(app.bsky.contact.dismissMatch, {
+        subject: did as DidString,
+      })
     },
     onMutate: async (did: string) => {
       ax.metric('contacts:settings:dismiss', {})
@@ -493,12 +491,12 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
   const {_, i18n} = useLingui()
   const t = useTheme()
   const ax = useAnalytics()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const queryClient = useQueryClient()
 
   const {mutate: removeData, isPending} = useMutation({
     mutationFn: async () => {
-      await agent.app.bsky.contact.removeData({})
+      await appviewClient.call(app.bsky.contact.removeData, {})
     },
     onMutate: () => ax.metric('contacts:settings:removeData', {}),
     onSuccess: () => {

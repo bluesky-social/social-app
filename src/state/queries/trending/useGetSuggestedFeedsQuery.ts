@@ -7,16 +7,15 @@ import {
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
-import {type app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 export const DEFAULT_LIMIT = 15
 
 export const createGetSuggestedFeedsQueryKey = () => ['suggested-feeds']
 
 export function useGetSuggestedFeedsQuery({enabled}: {enabled?: boolean}) {
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const {data: preferences} = usePreferencesQuery()
   const savedFeeds = preferences?.savedFeeds
 
@@ -26,7 +25,8 @@ export function useGetSuggestedFeedsQuery({enabled}: {enabled?: boolean}) {
     queryKey: createGetSuggestedFeedsQueryKey(),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
-      const {data} = await agent.app.bsky.unspecced.getSuggestedFeeds(
+      const data = await appviewClient.call(
+        app.bsky.unspecced.getSuggestedFeeds,
         {
           limit: DEFAULT_LIMIT,
         },
@@ -38,17 +38,11 @@ export function useGetSuggestedFeedsQuery({enabled}: {enabled?: boolean}) {
         },
       )
 
-      /*
-       * TODO(phase4): drop toLex once getSuggestedFeeds migrates off the bridge
-       * agent (intentionally left on the bridge in Phase 3).
-       */
       return {
-        feeds: toLex<app.bsky.feed.defs.GeneratorView[]>(
-          data.feeds.filter(feed => {
-            const isSaved = !!savedFeeds?.find(s => s.value === feed.uri)
-            return !isSaved
-          }),
-        ),
+        feeds: data.feeds.filter(feed => {
+          const isSaved = !!savedFeeds?.find(s => s.value === feed.uri)
+          return !isSaved
+        }),
       }
     },
   })

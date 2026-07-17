@@ -7,9 +7,8 @@ import {
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
-import {type app} from '#/lexicons'
-import {toLex} from '#/types/bsky'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 export const createSuggestedStarterPacksQueryKey = (interests?: string[]) => [
   'suggested-starter-packs',
@@ -23,7 +22,7 @@ export function useSuggestedStarterPacksQuery({
   enabled?: boolean
   overrideInterests?: string[]
 }) {
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const {data: preferences} = usePreferencesQuery()
   const contentLangs = getContentLanguages().join(',')
 
@@ -32,8 +31,9 @@ export function useSuggestedStarterPacksQuery({
     staleTime: STALE.MINUTES.THREE,
     queryKey: createSuggestedStarterPacksQueryKey(overrideInterests),
     queryFn: async () => {
-      const {data} = await agent.app.bsky.unspecced.getSuggestedStarterPacks(
-        undefined,
+      return await appviewClient.call(
+        app.bsky.unspecced.getSuggestedStarterPacks,
+        {},
         {
           headers: {
             ...createBskyTopicsHeader(
@@ -44,13 +44,6 @@ export function useSuggestedStarterPacksQuery({
             'Accept-Language': contentLangs,
           },
         },
-      )
-      /*
-       * TODO(phase4): drop toLex once getSuggestedStarterPacks migrates off the
-       * bridge agent (intentionally left on the bridge in Phase 3).
-       */
-      return toLex<app.bsky.unspecced.getSuggestedStarterPacks.$OutputBody>(
-        data,
       )
     },
   })

@@ -15,7 +15,7 @@ import {
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {getErrorName} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {OnboardingPosition} from '#/screens/Onboarding/Layout'
 import {
   android,
@@ -34,6 +34,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {useGeolocation} from '#/geolocation'
+import {app} from '#/lexicons'
 import {isFindContactsFeatureEnabled} from '../country-allowlist'
 import {
   constructFullPhoneNumber,
@@ -56,7 +57,7 @@ export function PhoneInput({
   const {_} = useLingui()
   const ax = useAnalytics()
   const t = useTheme()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const location = useGeolocation()
   const [countryCode, setCountryCode] = useState(
     () => state.phoneCountryCode ?? getDefaultCountry(location),
@@ -78,7 +79,7 @@ export function PhoneInput({
       phoneNumber: string
     }) => {
       // sends a onetime code to the user's phone number
-      await agent.app.bsky.contact.startPhoneVerification({
+      await appviewClient.call(app.bsky.contact.startPhoneVerification, {
         phone: constructFullPhoneNumber(phoneCountryCode, phoneNumber),
       })
     },

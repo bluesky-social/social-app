@@ -169,16 +169,14 @@ function keyExtractor(item: Item) {
   return item.key
 }
 
-/*
- * The member list now comes from the migrated lexicon-typed query, but the
- * narrowed `GroupConvoMember` target is still the old-typed shape from
- * `#/components/dms/util` (migrates in a later task) - the guard doubles as
- * the mixed-world bridge. TODO(phase4): retype to the lexicon member types
- * once dms/util migrates.
+/**
+ * Narrows a lexicon `ProfileViewBasic` member to a `GroupConvoMember` (a
+ * `ProfileViewBasic` whose `kind` is a group member, or absent when the
+ * account has been deleted).
  */
 function isGroupMember(
   member: chat.bsky.actor.defs.ProfileViewBasic,
-): member is chat.bsky.actor.defs.ProfileViewBasic & GroupConvoMember {
+): member is GroupConvoMember {
   // Kind is missing when the account has been deleted.
   return (
     member.kind === undefined ||
@@ -205,15 +203,7 @@ function GroupSettings({
 
   const {data: memberListData = [], refetch} = useListConvoMembersQuery({
     convoId: convo.view.id,
-    /*
-     * `convo.members` comes from the still-old-typed `#/components/dms/util`
-     * (migrates in a later task) while the member-list query is now typed on
-     * the lexicon ProfileViewBasic. TODO(phase4): drop toLex once dms/util
-     * migrates.
-     */
-    placeholderData: bsky.toLex<chat.bsky.actor.defs.ProfileViewBasic[]>(
-      convo.members,
-    ),
+    placeholderData: convo.members,
   })
 
   const {data: joinRequestsData, hasNextPage: hasMoreRequests} =

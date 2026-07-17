@@ -745,17 +745,18 @@ export function ListConvosProviderInner({
                   /*
                    * `log.message` can also be a deleted-message view per the
                    * log union, which the strict MessageAndReactionView type
-                   * rejects - the old types absorbed this via the open-union
-                   * catch-all. Keep the pre-migration runtime behavior (always
-                   * store the view we got) and assert the cache type.
+                   * rejects - the raw ConvoView cache type only admits a live
+                   * MessageView here. Keep the pre-migration runtime behavior
+                   * (always store the view we got) and assert into the cache
+                   * type; the runtime value is unchanged.
                    */
-                  lastReaction: bsky.toLex<
-                    NonNullable<chat.bsky.convo.defs.ConvoView['lastReaction']>
-                  >({
+                  lastReaction: {
                     $type: 'chat.bsky.convo.defs#messageAndReactionView',
                     reaction: log.reaction,
                     message: log.message,
-                  }),
+                  } as NonNullable<
+                    chat.bsky.convo.defs.ConvoView['lastReaction']
+                  >,
                   rev: log.rev,
                 }
               }),

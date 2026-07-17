@@ -7,6 +7,7 @@ import {
   useRef,
 } from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
+import {type Service} from '@atproto/lex-client'
 import {type AtUriString} from '@atproto/syntax'
 import throttle from 'lodash.throttle'
 
@@ -22,8 +23,8 @@ import {
 } from '#/state/queries/post-feed'
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {useAnalytics} from '#/analytics'
-import {type app} from '#/lexicons'
-import {useAgent} from './session'
+import {app} from '#/lexicons'
+import {useAppviewClient} from './session'
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
@@ -66,7 +67,7 @@ export function useFeedFeedback(
 ) {
   const ax = useAnalytics()
   const logger = ax.logger.useChild(ax.logger.Context.FeedFeedback)
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
 
   const feed =
     !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo)
@@ -151,15 +152,20 @@ export function useFeedFeedback(
       return
     }
 
-    // Send to the feed
-    agent.app.bsky.feed
-      .sendInteractions(
-        {interactions: interactionsToSend, feed: feed?.uri},
+    /*
+     * Send to the feed generator via a per-call `service` option, which
+     * lex-client turns into the `atproto-proxy` header. This overrides the
+     * appview client's own service target for this one call.
+     */
+    appviewClient
+      .call(
+        app.bsky.feed.sendInteractions,
         {
-          encoding: 'application/json',
-          headers: {
-            'atproto-proxy': `${proxyDid}#bsky_fg`,
-          },
+          interactions: interactionsToSend,
+          feed: feed?.uri as AtUriString | undefined,
+        },
+        {
+          service: `${proxyDid}#bsky_fg` as Service,
         },
       )
       .catch(() => {}) // ignore upstream errors
@@ -173,7 +179,7 @@ export function useFeedFeedback(
     )
     throttledFlushAggregatedStats()
     logger.debug('flushed')
-  }, [agent, throttledFlushAggregatedStats, proxyDid, enabled, feed])
+  }, [appviewClient, throttledFlushAggregatedStats, proxyDid, enabled, feed])
 
   const sendToFeed = useMemo(
     () =>

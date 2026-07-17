@@ -19,10 +19,10 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import {accountReportSubject} from '#/components/moderation/ReportDialog/utils/reportSubject'
 import {P, Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
 import {com, tools} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 
 const COL_WIDTH = 400
 
@@ -51,14 +51,11 @@ export function Takendown() {
       if (!currentAccount) throw new Error('No session')
       await pdsClient.call(
         com.atproto.moderation.createReport,
-        toLex<com.atproto.moderation.createReport.$InputBody>({
+        {
           reasonType: tools.ozone.report.defs.reasonAppeal.value,
-          subject: {
-            $type: 'com.atproto.admin.defs#repoRef',
-            did: currentAccount.did,
-          },
+          subject: accountReportSubject(currentAccount.did),
           reason: appealText,
-        }),
+        },
         {
           service: api.moderation.service,
         },

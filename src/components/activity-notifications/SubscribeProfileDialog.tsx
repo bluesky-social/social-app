@@ -16,7 +16,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {RQKEY_getActivitySubscriptions} from '#/state/queries/activity-subscriptions'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {atoms as a, platform, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {
@@ -33,7 +33,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {type app} from '#/lexicons'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function SubscribeProfileDialog({
@@ -71,7 +71,7 @@ function DialogInner({
   const ax = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const control = Dialog.useDialogContext()
   const queryClient = useQueryClient()
   const initialState = parseActivitySubscription(
@@ -119,7 +119,7 @@ function DialogInner({
     mutationFn: async (
       activitySubscription: Un$Typed<app.bsky.notification.defs.ActivitySubscription>,
     ) => {
-      await agent.app.bsky.notification.putActivitySubscription({
+      await appviewClient.call(app.bsky.notification.putActivitySubscription, {
         subject: profile.did,
         activitySubscription,
       })

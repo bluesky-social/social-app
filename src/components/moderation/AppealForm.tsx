@@ -19,11 +19,14 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import {
+  accountReportSubject,
+  recordReportSubject,
+} from '#/components/moderation/ReportDialog/utils/reportSubject'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID} from '#/env'
 import {com, tools} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 
 export function AppealForm({
   label,
@@ -39,7 +42,6 @@ export function AppealForm({
   const {gtMobile} = useBreakpoints()
   const [details, setDetails] = useState('')
   const {subject} = useLabelSubject({label})
-  const isAccountReport = 'did' in subject
   const pdsClient = usePdsClient()
   const sourceName = labeler
     ? sanitizeHandle(labeler.creator.handle, '@')
@@ -48,19 +50,16 @@ export function AppealForm({
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
-      const $type = !isAccountReport
-        ? 'com.atproto.repo.strongRef'
-        : 'com.atproto.admin.defs#repoRef'
       await pdsClient.call(
         com.atproto.moderation.createReport,
-        toLex<com.atproto.moderation.createReport.$InputBody>({
+        {
           reasonType: tools.ozone.report.defs.reasonAppeal.value,
-          subject: {
-            $type,
-            ...subject,
-          },
+          subject:
+            'did' in subject
+              ? accountReportSubject(subject.did)
+              : recordReportSubject(subject.uri, subject.cid),
           reason: details,
-        }),
+        },
         {
           service: `${label.src}#atproto_labeler` as Service,
         },

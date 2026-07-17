@@ -12,12 +12,12 @@ import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
+import {accountReportSubject} from '#/components/moderation/ReportDialog/utils/reportSubject'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {logger} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {com, tools} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 
 export function AgeAssuranceAppealDialog({
   control,
@@ -54,14 +54,11 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
 
       await pdsClient.call(
         com.atproto.moderation.createReport,
-        toLex<com.atproto.moderation.createReport.$InputBody>({
+        {
           reasonType: tools.ozone.report.defs.reasonAppeal.value,
-          subject: {
-            $type: 'com.atproto.admin.defs#repoRef',
-            did: currentAccount?.did,
-          },
+          subject: accountReportSubject(currentAccount?.did ?? ''),
           reason: `AGE_ASSURANCE_INQUIRY: ` + details,
-        }),
+        },
         {
           service: api.moderation.service,
         },

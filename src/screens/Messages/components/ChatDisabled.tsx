@@ -11,10 +11,10 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
+import {accountReportSubject} from '#/components/moderation/ReportDialog/utils/reportSubject'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {com, tools} from '#/lexicons'
-import {toLex} from '#/types/bsky'
 
 export function ChatDisabled({
   shape = 'pill',
@@ -102,14 +102,11 @@ function DialogInner() {
         throw new Error('No current account, should be unreachable')
       await pdsClient.call(
         com.atproto.moderation.createReport,
-        toLex<com.atproto.moderation.createReport.$InputBody>({
+        {
           reasonType: tools.ozone.report.defs.reasonAppeal.value,
-          subject: {
-            $type: 'com.atproto.admin.defs#repoRef',
-            did: currentAccount.did,
-          },
+          subject: accountReportSubject(currentAccount.did),
           reason: details,
-        }),
+        },
         {
           service: api.moderation.service,
         },
