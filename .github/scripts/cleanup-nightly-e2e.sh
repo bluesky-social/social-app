@@ -24,6 +24,7 @@ stop_pid_file() {
 
 stop_pid_file "$artifact_dir/metro.pid"
 stop_pid_file "$artifact_dir/mock-server.pid"
+stop_pid_file "$artifact_dir/emulator.pid"
 
 if [[ "$platform" == "ios" ]]; then
   if [[ -f "$artifact_dir/redis-bin.txt" ]]; then
