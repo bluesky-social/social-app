@@ -41,7 +41,8 @@ The jobs run Maestro CLI 2.6.1 locally on GitHub Actions; Maestro Cloud is not
 used. iOS runs on `macos-26-xlarge` with Xcode 26.4. Android runs on
 `Linux-x64-32core`. Both use Java 17 and the Node and pnpm versions declared in
 `package.json`. The iOS job selects an iPhone 17 simulator running iOS 26.5;
-Android uses a Pixel 6 AVD with the API 35 Google APIs x86_64 image.
+Android uses `reactivecircus/android-emulator-runner` to provision a Pixel 6 AVD
+with the API 35 Google APIs x86_64 image.
 Both development clients use the `e2e` EAS profile and the same reusable local
 EAS build action as the release build workflows; the resulting simulator app
 and APK are installed directly on the selected devices.

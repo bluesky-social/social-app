@@ -204,77 +204,6 @@ jobs:
           "$RUNNER_TEMP/maestro/bin/maestro" --version | tee artifacts/android/maestro-version.log
           test "$("$RUNNER_TEMP/maestro/bin/maestro" --version)" = "$MAESTRO_VERSION"
 
-      - name: Install and boot one Android emulator
-        run: |
-          echo "Booting Android emulator" > artifacts/android/phase.txt
-          android_sdk="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
-          sdkmanager_bin="$android_sdk/cmdline-tools/latest/bin/sdkmanager"
-          avdmanager_bin="$android_sdk/cmdline-tools/latest/bin/avdmanager"
-          system_image="system-images;android-35;google_apis;x86_64"
-
-          if [ ! -x "$sdkmanager_bin" ] || [ ! -x "$avdmanager_bin" ]; then
-            echo "Android command-line tools were not found under $android_sdk" >&2
-            find "$android_sdk/cmdline-tools" -maxdepth 3 -type f \( \
-              -name sdkmanager -o -name avdmanager \
-            \) -print >&2 || true
-            exit 1
-          fi
-
-          export ANDROID_HOME="$android_sdk"
-          export ANDROID_SDK_ROOT="$android_sdk"
-          export PATH="$android_sdk/platform-tools:$android_sdk/emulator:$PATH"
-          echo "ANDROID_HOME=$android_sdk" >> "$GITHUB_ENV"
-          echo "ANDROID_SDK_ROOT=$android_sdk" >> "$GITHUB_ENV"
-          echo "$android_sdk/platform-tools" >> "$GITHUB_PATH"
-          echo "$android_sdk/emulator" >> "$GITHUB_PATH"
-          echo "Using Android SDK at $android_sdk"
-
-          yes | "$sdkmanager_bin" --sdk_root="$android_sdk" --licenses >/dev/null || true
-          "$sdkmanager_bin" --sdk_root="$android_sdk" \
-            "platform-tools" "emulator" "$system_image"
-
-          export ANDROID_AVD_HOME="$RUNNER_TEMP/.android/avd"
-          mkdir -p "$ANDROID_AVD_HOME"
-          echo "ANDROID_AVD_HOME=$ANDROID_AVD_HOME" >> "$GITHUB_ENV"
-          echo no | "$avdmanager_bin" create avd \
-            --force \
-            --name nightly-e2e \
-            --package "$system_image" \
-            --device pixel_6
-
-          if [ -e /dev/kvm ] && [ ! -w /dev/kvm ]; then
-            sudo chmod 666 /dev/kvm
-          fi
-
-          "$android_sdk/emulator/emulator" @nightly-e2e \
-            -port 5554 \
-            -no-window \
-            -gpu swiftshader_indirect \
-            -no-snapshot \
-            -noaudio \
-            -no-boot-anim \
-            -camera-back none \
-            > artifacts/android/emulator.log 2>&1 &
-          echo "$!" > artifacts/android/emulator.pid
-
-          adb -s emulator-5554 wait-for-device
-          booted=false
-          for _ in $(seq 1 120); do
-            if [ "$(adb -s emulator-5554 shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = "1" ]; then
-              booted=true
-              break
-            fi
-            sleep 5
-          done
-          if [ "$booted" != "true" ]; then
-            echo "Android emulator did not finish booting" >&2
-            exit 1
-          fi
-
-          adb -s emulator-5554 shell settings put global window_animation_scale 0
-          adb -s emulator-5554 shell settings put global transition_animation_scale 0
-          adb -s emulator-5554 shell settings put global animator_duration_scale 0
-
       - name: Mark Android development client build phase
         run: echo "Building the Android development client" > artifacts/android/phase.txt
 
@@ -286,13 +215,25 @@ jobs:
           output: ${{ runner.temp }}/nightly-e2e-android.apk
           log-path: artifacts/android/build.log
 
-      - name: Install Android development client
-        run: |
-          adb -s emulator-5554 install -r "$RUNNER_TEMP/nightly-e2e-android.apk" \
-            2>&1 | tee -a artifacts/android/build.log
+      - name: Mark Android emulator phase
+        run: echo "Booting the Android emulator" > artifacts/android/phase.txt
 
-      - name: Run Android Maestro suite
-        run: .github/scripts/run-nightly-e2e.sh android emulator-5554
+      - name: Boot Android emulator and run Maestro suite
+        uses: reactivecircus/android-emulator-runner@1dcd0090116d15e7c562f8db72807de5e036a4ed # v2.34.0
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          avd-name: nightly-e2e
+          emulator-port: 5554
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
+          script: |
+            echo "Installing the Android development client" > artifacts/android/phase.txt
+            adb -s emulator-5554 install -r "$RUNNER_TEMP/nightly-e2e-android.apk" \
+              2>&1 | tee -a artifacts/android/build.log
+            .github/scripts/run-nightly-e2e.sh android emulator-5554
 
       - name: Clean up Android services and emulator
         if: always()
