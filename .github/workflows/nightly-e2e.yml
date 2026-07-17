@@ -237,8 +237,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
           script: |
             echo "Installing the Android development client" > artifacts/android/phase.txt
-            adb -s emulator-5554 install -r "$RUNNER_TEMP/nightly-e2e-android.apk" \
-              2>&1 | tee -a artifacts/android/build.log
+            adb -s emulator-5554 install -r "$RUNNER_TEMP/nightly-e2e-android.apk" 2>&1 | tee -a artifacts/android/build.log
             .github/scripts/run-nightly-e2e.sh android emulator-5554
 
       - name: Clean up Android services and emulator
