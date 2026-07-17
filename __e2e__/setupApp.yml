@@ -3,28 +3,6 @@ appId: xyz.blueskyweb.app
 - launchApp:
     appId: "xyz.blueskyweb.app"
     clearState: true
-    arguments:
-      "-EXDevMenuIsOnboardingFinished": true
-- runFlow:
-    when:
-      platform: iOS
-    commands:
-      - extendedWaitUntil:
-          visible: "http://localhost:8081"
-          timeout: 60000
-      - tapOn: "http://localhost:8081"
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - extendedWaitUntil:
-          visible: "http://10.0.2.2:8081"
-          timeout: 60000
-      - tapOn: "http://10.0.2.2:8081"
-      - extendedWaitUntil:
-          visible: "Continue"
-          timeout: 180000
-      - tapOn: "Continue"
 - extendedWaitUntil:
     visible:
       id: e2eProxyHeaderInput

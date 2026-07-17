@@ -53,7 +53,7 @@ stop_pid_file() {
   pid="$(cat "$pid_file")"
   [[ -n "$pid" ]] || return 0
 
-  # pnpm and Expo both spawn multiple generations of children.
+  # pnpm can spawn multiple generations of children.
   stop_process_tree "$pid"
 }
 
@@ -61,7 +61,6 @@ stop_pid_file() {
 cleanup() {
   set +e
   stop_pid_file "$artifact_dir/logcat.pid"
-  stop_pid_file "$artifact_dir/metro.pid"
   stop_pid_file "$artifact_dir/mock-server.pid"
 
   if [[ "$platform" == "ios" ]]; then
@@ -134,19 +133,9 @@ fi
 printf '%s\n' "$!" >"$artifact_dir/mock-server.pid"
 wait_for_port 1986 "the E2E mock-server manager"
 
-phase "Starting Metro"
-EXPO_PUBLIC_ENV=e2e \
-  NODE_ENV=test \
-  RN_SRC_EXT=e2e.ts,e2e.tsx \
-  pnpm exec expo start --dev-client --clear --port 8081 \
-  >"$artifact_dir/metro.log" 2>&1 &
-printf '%s\n' "$!" >"$artifact_dir/metro.pid"
-wait_for_port 8081 "Metro"
-
 if [[ "$platform" == "android" ]]; then
   phase "Configuring Android localhost routing"
   adb -s "$device_id" reverse tcp:3000 tcp:3000
-  adb -s "$device_id" reverse tcp:8081 tcp:8081
 fi
 
 phase "Running Maestro flows"
