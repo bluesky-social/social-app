@@ -1,6 +1,6 @@
-import {Client} from '@atproto/lex'
 import {useQuery} from '@tanstack/react-query'
 
+import {createLexClient} from '#/lib/lexClient'
 import {com} from '#/lexicons'
 
 const RQKEY_ROOT = 'service'
@@ -14,7 +14,7 @@ export function useServiceQuery(serviceUrl: string) {
        * Unauthenticated throwaway client pointed at the candidate service -
        * describeServer is a public endpoint on the target PDS/entryway.
        */
-      const client = new Client({service: serviceUrl})
+      const client = createLexClient({service: serviceUrl})
       return await client.call(com.atproto.server.describeServer)
     },
     enabled: isValidUrl(serviceUrl),

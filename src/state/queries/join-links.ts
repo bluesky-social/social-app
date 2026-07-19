@@ -1,9 +1,10 @@
 import {useCallback} from 'react'
-import {type $Typed, Client} from '@atproto/lex'
+import {type $Typed, type Client} from '@atproto/lex'
 import {toDatetimeString} from '@atproto/syntax'
 import {type QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {CHAT_SERVICE} from '#/lib/constants'
+import {createLexClient} from '#/lib/lexClient'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries/index'
 import {createQueryKey, type StructuredQueryKey} from '#/state/queries/util'
@@ -19,7 +20,7 @@ import * as bsky from '#/types/bsky'
  */
 let publicChatClient: Client | undefined
 function getPublicChatClient(): Client {
-  publicChatClient ??= new Client({service: CHAT_SERVICE})
+  publicChatClient ??= createLexClient({service: CHAT_SERVICE})
   return publicChatClient
 }
 

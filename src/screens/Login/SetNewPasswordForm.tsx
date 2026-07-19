@@ -1,8 +1,8 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {Client} from '@atproto/lex'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {createLexClient} from '#/lib/lexClient'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
@@ -62,7 +62,7 @@ export const SetNewPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const client = new Client({service: serviceUrl})
+      const client = createLexClient({service: serviceUrl})
       await client.call(com.atproto.server.resetPassword, {
         token: formattedCode,
         password,

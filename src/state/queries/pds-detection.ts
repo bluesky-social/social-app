@@ -1,11 +1,11 @@
 import {useState} from 'react'
 import {type DidDocument, getPdsEndpoint} from '@atproto/common-web'
-import {Client} from '@atproto/lex'
 import {type HandleString} from '@atproto/syntax'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {DEFAULT_SERVICE, PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
+import {createLexClient} from '#/lib/lexClient'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
@@ -153,7 +153,7 @@ export async function resolvePdsForIdentifier(
    * Unauthenticated throwaway client pointed at the public appview -
    * resolveHandle is a public read.
    */
-  const client = new Client({service: PUBLIC_BSKY_SERVICE})
+  const client = createLexClient({service: PUBLIC_BSKY_SERVICE})
   try {
     let did: string
     if (norm.startsWith('did:')) {
