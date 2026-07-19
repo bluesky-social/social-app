@@ -248,11 +248,11 @@ importers:
         specifier: 0.5.6
         version: 0.5.6
       '@atproto/lex':
-        specifier: 0.2.2
-        version: 0.2.2
+        specifier: 0.3.0
+        version: 0.3.0
       '@atproto/lex-password-session':
-        specifier: 0.1.7
-        version: 0.1.7
+        specifier: 0.1.8
+        version: 0.1.8
       '@atproto/syntax':
         specifier: 0.7.2
         version: 0.7.2
@@ -287,8 +287,8 @@ importers:
         specifier: 2.12.5
         version: 2.12.5(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@bsky.app/sdk':
-        specifier: npm:bsky-sdk-preview@0.0.1-preview.1
-        version: bsky-sdk-preview@0.0.1-preview.1
+        specifier: npm:bsky-sdk-preview@0.0.1-preview.2
+        version: bsky-sdk-preview@0.0.1-preview.2(@atproto/lex@0.3.0)
       '@bsky.app/sift':
         specifier: ^0.3.9
         version: 0.3.9(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -939,8 +939,8 @@ packages:
     resolution: {integrity: sha512-ENR2cWkVrES+UL6TovbCRdX9BJOyHHJUS8jYx3Lxp3j4vEphjn/u+DW7bWloST2O8ID2OuVlt6+28ftNEEjmQQ==}
     engines: {node: '>=22'}
 
-  '@atproto/lex-password-session@0.1.7':
-    resolution: {integrity: sha512-Tv8w+N9i1r9lMGHu4pB7hbtk1+QZhJ/5422Sri8xOHXBA9wt4qhzzu/TMXrNrGk7ISkcI/2eLu8cgAlGk9Eo+A==}
+  '@atproto/lex-password-session@0.1.8':
+    resolution: {integrity: sha512-Zr3HLu6rgadiq2w82VSThOQcNfwTJNlrzlT8n9oBXDBw3CUEq3cTMatzTpdk4HYqv0unaqhaEowcKhJ4eWvSxQ==}
     engines: {node: '>=22'}
 
   '@atproto/lex-resolver@0.2.2':
@@ -951,17 +951,13 @@ packages:
     resolution: {integrity: sha512-UFK0EH8pw31dvL27aoZ5K78z+UMiD3ybIgkCyd7Idm267KM1IpycerTDeABqo4CYP3/IAnzjGpQaUaVc12bELA==}
     engines: {node: '>=22'}
 
-  '@atproto/lex@0.2.2':
-    resolution: {integrity: sha512-e/LBvnRJtIxV88r2cCwPbYS7vD/XG/WXVcbzNAaYVOmgv0Vj/2eq8dWrlWchnIXrYZ/QFd9OlwiNbVzv7Yh2gw==}
+  '@atproto/lex@0.3.0':
+    resolution: {integrity: sha512-Ir5f60NrCScDMZ2JGoxUHOQm+h6XlsDSykk0HzET8/qEeHTLwnI+MJIlBwB64eBoqGQ72qAEoMc8L+bJil+huA==}
     engines: {node: '>=22'}
     hasBin: true
 
   '@atproto/repo@0.10.6':
     resolution: {integrity: sha512-ayX/ieAni4ZMbpdu6VMOCYIjzT8HctCQtcSBWWR8eoynsGZ6FzK/Lln6bH8i0wAj8vPV2pcecd57d33YsahRcQ==}
-    engines: {node: '>=22'}
-
-  '@atproto/syntax@0.6.4':
-    resolution: {integrity: sha512-ELgpShRGMF65cvLXcoMCZFL0HBzy67yz/Nlhox3yOtTh120B09KjjvZYXhMysVog3nUJqv2EW5rf1VRYCeM/hw==}
     engines: {node: '>=22'}
 
   '@atproto/syntax@0.7.2':
@@ -4312,9 +4308,11 @@ packages:
   bser@2.1.1:
     resolution: {integrity: sha512-gQxTNE/GAfIIrmHLUE3oJyp5FO6HRBfhjnw4/wMmA63ZGDJnWBmgY/lyQBpnDUkGmAhbSe39tx2d/iTOAfglwQ==}
 
-  bsky-sdk-preview@0.0.1-preview.1:
-    resolution: {integrity: sha512-mIKnugbD/zues2c0sFdw0jimcM+oQWxc5RxVfU8HnHNV2lwGbarfFo7GDJjgL767LhvN/fC/YWX7KVZS+HQNtA==}
+  bsky-sdk-preview@0.0.1-preview.2:
+    resolution: {integrity: sha512-LOcuvzc6UASiI5os1BUIo9dxAeVPIFiplcVSYbaDCgpH+tkpv2mqSqqsCRTP0g2CaVCwozqaTVy+jnsTO6/9BQ==}
     engines: {node: '>=22.12.0'}
+    peerDependencies:
+      '@atproto/lex': ^0.3.0
 
   buffer-crc32@0.2.13:
     resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
@@ -9402,7 +9400,7 @@ snapshots:
       '@atproto/lex-data': 0.1.5
       tslib: 2.8.1
 
-  '@atproto/lex-password-session@0.1.7':
+  '@atproto/lex-password-session@0.1.8':
     dependencies:
       '@atproto/lex-client': 0.2.4
       '@atproto/lex-schema': 0.2.2
@@ -9427,7 +9425,7 @@ snapshots:
       '@standard-schema/spec': 1.1.0
       tslib: 2.8.1
 
-  '@atproto/lex@0.2.2':
+  '@atproto/lex@0.3.0':
     dependencies:
       '@atproto/lex-builder': 0.1.8
       '@atproto/lex-client': 0.2.4
@@ -9448,11 +9446,6 @@ snapshots:
       '@atproto/syntax': 0.7.2
       varint: 6.0.0
       zod: 3.25.76
-
-  '@atproto/syntax@0.6.4':
-    dependencies:
-      iso-datestring-validator: 2.2.2
-      tslib: 2.8.1
 
   '@atproto/syntax@0.7.2':
     dependencies:
@@ -13455,13 +13448,11 @@ snapshots:
     dependencies:
       node-int64: 0.4.0
 
-  bsky-sdk-preview@0.0.1-preview.1:
+  bsky-sdk-preview@0.0.1-preview.2(@atproto/lex@0.3.0):
     dependencies:
       '@atproto-labs/handle-resolver': 0.4.6
-      '@atproto/lex-client': 0.2.4
-      '@atproto/lex-data': 0.1.5
-      '@atproto/lex-schema': 0.2.2
-      '@atproto/syntax': 0.6.4
+      '@atproto/lex': 0.3.0
+      '@atproto/syntax': 0.7.2
       tlds: 1.261.0
 
   buffer-crc32@0.2.13: {}
