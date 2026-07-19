@@ -1098,7 +1098,7 @@ describe('session', () => {
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-3')
   })
 
-  it('accepts updates from a stale agent', () => {
+  it('ignores updates from a stale agent bundle', () => {
     let state = getInitialState([])
 
     const aliceBundle = makeBundle('https://alice.com')
@@ -1133,6 +1133,13 @@ describe('session', () => {
     expect(state.accounts.length).toBe(2)
     expect(state.currentAgentState.did).toBe('bob-did')
 
+    /*
+     * An 'update' from the stale (background) Alice bundle is now dropped
+     * ENTIRELY - identical state object, no token write. A refresh completing
+     * after switching away must not resurrect fresh tokens into the
+     * switched-away account entry.
+     */
+    const beforeStaleUpdate = state
     state = run(state, [
       {
         type: 'received-agent-event',
@@ -1151,59 +1158,16 @@ describe('session', () => {
         sessionEvent: 'update',
       },
     ])
-    expect(state.accounts.length).toBe(2)
+    expect(beforeStaleUpdate === state).toBe(true)
     expect(state.accounts[1].did).toBe('alice-did')
-    // Should update Alice's tokens because otherwise they'll be stale.
-    expect(state.accounts[1].handle).toBe('alice-updated.test')
-    expect(state.accounts[1].accessJwt).toBe('alice-access-jwt-2')
-    expect(state.accounts[1].refreshJwt).toBe('alice-refresh-jwt-2')
-    expect(printState(state)).toMatchInlineSnapshot(`
-      {
-        "accounts": [
-          {
-            "accessJwt": "bob-access-jwt-1",
-            "active": true,
-            "did": "bob-did",
-            "email": undefined,
-            "emailAuthFactor": false,
-            "emailConfirmed": false,
-            "handle": "bob.test",
-            "isSelfHosted": true,
-            "pdsUrl": undefined,
-            "refreshJwt": "bob-refresh-jwt-1",
-            "service": "https://bob.com/",
-            "signupQueued": false,
-            "status": undefined,
-          },
-          {
-            "accessJwt": "alice-access-jwt-2",
-            "active": true,
-            "did": "alice-did",
-            "email": "alice@foo.bar",
-            "emailAuthFactor": false,
-            "emailConfirmed": false,
-            "handle": "alice-updated.test",
-            "isSelfHosted": true,
-            "pdsUrl": undefined,
-            "refreshJwt": "alice-refresh-jwt-2",
-            "service": "https://alice.com/",
-            "signupQueued": false,
-            "status": undefined,
-          },
-        ],
-        "currentAgentState": {
-          "agent": {
-            "service": "https://bob.com/",
-          },
-          "did": "bob-did",
-        },
-        "needsPersist": true,
-      }
-    `)
+    // Alice's stored tokens are untouched (the stale update did not land).
+    expect(state.accounts[1].handle).toBe('alice.test')
+    expect(state.accounts[1].accessJwt).toBe('alice-access-jwt-1')
+    expect(state.accounts[1].refreshJwt).toBe('alice-refresh-jwt-1')
 
     state = run(state, [
       {
-        // Update Bob.
+        // Update Bob (the current bundle) - this still applies.
         type: 'received-agent-event',
         accountDid: 'bob-did',
         agent: bobBundle,
@@ -1242,16 +1206,16 @@ describe('session', () => {
             "status": undefined,
           },
           {
-            "accessJwt": "alice-access-jwt-2",
+            "accessJwt": "alice-access-jwt-1",
             "active": true,
             "did": "alice-did",
-            "email": "alice@foo.bar",
+            "email": undefined,
             "emailAuthFactor": false,
             "emailConfirmed": false,
-            "handle": "alice-updated.test",
+            "handle": "alice.test",
             "isSelfHosted": true,
             "pdsUrl": undefined,
-            "refreshJwt": "alice-refresh-jwt-2",
+            "refreshJwt": "alice-refresh-jwt-1",
             "service": "https://alice.com/",
             "signupQueued": false,
             "status": undefined,
@@ -1267,7 +1231,7 @@ describe('session', () => {
       }
     `)
 
-    // Ignore other events for inactive agent.
+    // Ignore other events for the inactive agent too (network-error, expired).
     const lastState = state
     state = run(state, [
       {
@@ -1289,6 +1253,100 @@ describe('session', () => {
       },
     ])
     expect(lastState === state).toBe(true)
+  })
+
+  it('drops an update from a stale bundle even when its account entry still exists (no resurrection)', () => {
+    let state = getInitialState([])
+
+    const aliceBundle = makeBundle('https://alice.com')
+    state = run(state, [
+      {
+        type: 'switched-to-account',
+        newAgent: aliceBundle,
+        newAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-1',
+          refreshJwt: 'alice-refresh-jwt-1',
+        }),
+      },
+    ])
+    expect(state.currentAgentState.did).toBe('alice-did')
+
+    // Alice logs out: her account entry stays, but tokens are cleared and the
+    // current bundle becomes the public (logged-out) bundle.
+    state = run(state, [{type: 'logged-out-current-account'}])
+    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.accounts[0].did).toBe('alice-did')
+    expect(state.accounts[0].accessJwt).toBe(undefined)
+    expect(state.accounts[0].refreshJwt).toBe(undefined)
+
+    /*
+     * A refresh that was already in flight on the (now stale) Alice bundle
+     * completes and delivers fresh tokens. It must NOT resurrect them into the
+     * soft-logged-out account entry - the bundle no longer matches the current
+     * (public) bundle, so the event is dropped entirely.
+     */
+    const afterLogout = state
+    state = run(state, [
+      {
+        type: 'received-agent-event',
+        accountDid: 'alice-did',
+        agent: aliceBundle,
+        refreshedAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-2',
+          refreshJwt: 'alice-refresh-jwt-2',
+        }),
+        sessionEvent: 'update',
+      },
+    ])
+    expect(afterLogout === state).toBe(true)
+    expect(state.accounts[0].accessJwt).toBe(undefined)
+    expect(state.accounts[0].refreshJwt).toBe(undefined)
+    expect(state.currentAgentState.did).toBe(undefined)
+  })
+
+  it('applies an update from the current bundle', () => {
+    let state = getInitialState([])
+
+    const aliceBundle = makeBundle('https://alice.com')
+    state = run(state, [
+      {
+        type: 'switched-to-account',
+        newAgent: aliceBundle,
+        newAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-1',
+          refreshJwt: 'alice-refresh-jwt-1',
+        }),
+      },
+    ])
+
+    state = run(state, [
+      {
+        type: 'received-agent-event',
+        accountDid: 'alice-did',
+        agent: aliceBundle,
+        refreshedAccount: makeAccount('https://alice.com', {
+          active: true,
+          did: 'alice-did',
+          handle: 'alice.test',
+          accessJwt: 'alice-access-jwt-2',
+          refreshJwt: 'alice-refresh-jwt-2',
+        }),
+        sessionEvent: 'update',
+      },
+    ])
+    // The current bundle's update lands and rotates the stored tokens.
+    expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-2')
+    expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-2')
+    expect(state.currentAgentState.did).toBe('alice-did')
   })
 
   it('ignores updates from a removed agent', () => {
