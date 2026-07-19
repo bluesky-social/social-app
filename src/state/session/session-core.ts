@@ -51,14 +51,10 @@ import {type SessionAccount} from './types'
 import {isSessionExpired} from './util'
 
 /**
- * The session-change events the reducer/logging/tests speak.
- *
- * Formerly re-exported from the legacy API package; defined locally now that
- * the bridge is gone. These are the exact union members the reducer switches
- * on. In
- * production only `'update'`/`'expired'`/`'network-error'` are ever emitted from
- * {@link makeSessionHooks}; `'create'`/`'create-failed'` remain in the type for
- * the reducer and the session tests.
+ * The session-change events the reducer/logging/tests speak. In production only
+ * `'update'`/`'expired'`/`'network-error'` are ever emitted from
+ * {@link makeSessionHooks}; `'create'`/`'create-failed'` exist only for the
+ * reducer and the session tests.
  */
 export type AtpSessionEvent =
   | 'create'
@@ -71,9 +67,9 @@ export type AtpSessionEvent =
  * Whether an access token was issued for a queued (waitlisted) signup rather
  * than a full session.
  *
- * Canonical implementation - util.ts re-exports it. It lives here (rather
- * than util.ts) so this module stays dependency-light: util.ts pulls in
- * agent.ts and, transitively, a large chunk of the app.
+ * Canonical implementation - util.ts re-exports it. It lives here (rather than
+ * util.ts) so this module stays dependency-light: util.ts transitively pulls in
+ * a large chunk of the app.
  */
 export function isSignupQueued(accessJwt: string | undefined) {
   if (accessJwt) {
@@ -87,8 +83,8 @@ export function isSignupQueued(accessJwt: string | undefined) {
 }
 
 /*
- * Captured once at module load so that the wrapper below is immune to later
- * monkey-patching of globalThis.fetch (mirrors the old BskyAppAgent fetch).
+ * Captured once at module load so the wrapper below is immune to later
+ * monkey-patching of globalThis.fetch.
  */
 const realFetch = globalThis.fetch
 
@@ -97,10 +93,9 @@ const realFetch = globalThis.fetch
  * Any resolved response (including HTTP errors) confirms the network is up; a
  * thrown error (DNS failure, timeout, offline) reports it as lost.
  *
- * This replaces the custom `fetch` previously passed to `BskyAppAgent`. It is
- * intended to be passed as `PasswordSessionOptions.fetch` and as the `fetch`
- * option of unauthenticated lex `Client`s, so every network path in the
- * session stack feeds the same reachability signal.
+ * Passed as `PasswordSessionOptions.fetch` and as the `fetch` option of
+ * unauthenticated lex `Client`s, so every network path in the session stack
+ * feeds the same reachability signal.
  */
 export const networkAwareFetch: typeof fetch = async (...args) => {
   try {
@@ -116,11 +111,10 @@ export const networkAwareFetch: typeof fetch = async (...args) => {
 /**
  * Extract the PDS endpoint URL from a DID document, if present and valid.
  *
- * Local reimplementation of `@atproto/lex-password-session`'s private
- * `extractPdsUrl` util (it lives in a non-exported module, so we cannot import
- * it). Must stay behaviorally identical: `PasswordSession.fetchHandler`
- * derives its request origin as `extractPdsUrl(didDoc) ?? service`, and we use
- * this same derivation to persist `pdsUrl` on the account snapshot.
+ * Must stay behaviorally identical to `@atproto/lex-password-session`'s private
+ * `extractPdsUrl` (non-exported, so we reimplement it): `PasswordSession.
+ * fetchHandler` derives its request origin as `extractPdsUrl(didDoc) ?? service`,
+ * and we reuse this derivation to persist `pdsUrl` on the account snapshot.
  */
 export function extractPdsUrl(didDoc: unknown): string | null {
   if (typeof didDoc !== 'object' || didDoc === null) {
@@ -160,16 +154,15 @@ function canParseUrl(input: string): boolean {
 }
 
 /**
- * Build a minimal synthetic DID document whose only service entry is the
- * given PDS endpoint.
+ * Build a minimal synthetic DID document whose only service entry is the given
+ * PDS endpoint.
  *
- * Why: the persisted `SessionAccount` stores `pdsUrl` but `SessionData` routes
+ * The persisted `SessionAccount` stores `pdsUrl` but `SessionData` routes
  * requests via `extractPdsUrl(didDoc) ?? service`. On the non-expired resume
- * fast path (no network), we synthesize this doc from the stored `pdsUrl` so
- * the very first requests hit the right PDS (entryway accounts have
+ * fast path (no network) we synthesize this doc from the stored `pdsUrl` so the
+ * very first requests hit the right PDS (entryway accounts have
  * service=bsky.social but a different PDS host). After the first refresh,
- * `PasswordSession` refetches `getSession` and replaces this with the real
- * DID document.
+ * `PasswordSession` refetches `getSession` and replaces it with the real doc.
  */
 export function synthDidDoc(
   did: string,
@@ -191,15 +184,13 @@ export function synthDidDoc(
  * Convert live `PasswordSession` session data into the persisted
  * `SessionAccount` snapshot.
  *
- * Replaces `agentToSessionAccount`. The object literal's field ORDER must
- * match the old `agentToSessionAccount` exactly - the reducer's
+ * The object literal's field ORDER is load-bearing: the reducer's
  * `JSON.stringify` fast path and the session test snapshots depend on
- * byte-stable serialization. `service` is normalized through `new URL()` to
- * keep the trailing slash the old `agent.serviceUrl.toString()` produced, and
- * `pdsUrl` likewise (the old code read `agent.pdsUrl?.toString()`, a URL).
+ * byte-stable serialization. `service` and `pdsUrl` are normalized through
+ * `new URL().toString()` for a stable trailing slash.
  *
- * `pdsUrl` intentionally does NOT fall back to `service`: hosted accounts
- * (no didDoc PDS entry) keep `pdsUrl: undefined`, matching the old behavior.
+ * `pdsUrl` intentionally does NOT fall back to `service`: hosted accounts (no
+ * didDoc PDS entry) keep `pdsUrl: undefined`.
  */
 export function sessionDataToSessionAccount(
   session: SessionData | null | undefined,
@@ -231,9 +222,7 @@ export function sessionDataToSessionAccount(
  * Convert a persisted `SessionAccount` back into `SessionData` for
  * constructing/resuming a `PasswordSession`.
  *
- * Replaces `sessionAccountToSession`. Field order mirrors the shape returned
- * by the server (roughly alphabetical, matching the old function). When the
- * account has a stored `pdsUrl`, a synthetic didDoc is injected so
+ * When the account has a stored `pdsUrl`, a synthetic didDoc is injected so
  * `PasswordSession` routes requests to the right PDS before its first refresh
  * (see {@link synthDidDoc}).
  */
@@ -259,11 +248,7 @@ export function sessionAccountToSessionData(
 
 /**
  * The service (entryway) URL for a session, or the public appview URL when
- * logged out / destroyed.
- *
- * Byte-identical to the derivation the old service getter used: a
- * `new URL(...)` over `session.session.service` when the session is live, else
- * `PUBLIC_BSKY_SERVICE`. Used for the {@link SessionBundle.service} getter.
+ * logged out / destroyed. Backs the {@link SessionBundle.service} getter.
  */
 function deriveServiceUrl(session: PasswordSession | null): URL {
   return new URL(
@@ -322,25 +307,19 @@ export function registerBundleKillSwitch(
 
 /**
  * Assemble a {@link SessionBundle} from a live session: the account, appview,
- * and chat clients, all read-through views over the one session. The appview
- * proxy header is baked into `buildAppviewClient` (`service: api.app.service`),
- * so no separate proxy configuration is needed here.
+ * and chat clients, all read-through views over the one session.
  */
 export function buildBundle(session: PasswordSession): SessionBundle {
   return {
     session,
     accountClient: buildAccountClient(session),
     /*
-     * Per-account labelers are applied to the appview client by
-     * configureModerationForAccount; buildAppviewClient carries only the base
-     * Bluesky moderation labeler until then.
+     * Starts with an empty per-account labeler set; configureModerationForAccount
+     * applies this account's labelers afterwards.
      */
     appviewClient: buildAppviewClient(session, []),
     chatClient: buildChatClient(session),
-    /*
-     * Derived from the session so the reducer's opaque view can read `.service`.
-     * A getter keeps it live with the session's state (destroyed -> public).
-     */
+    /* A getter keeps `.service` live with the session's state (destroyed -> public). */
     get service() {
       return deriveServiceUrl(session)
     },
@@ -350,20 +329,19 @@ export function buildBundle(session: PasswordSession): SessionBundle {
 /**
  * The session-change callback the provider passes into the hooks.
  *
- * `PasswordSession` surfaces three hooks (`onUpdated`/`onDeleted`/
- * `onUpdateFailure`) which {@link makeSessionHooks} maps into the
- * {@link AtpSessionEvent} vocabulary: refresh -> `'update'`, dead session/logout
- * -> `'expired'`, transient failure -> `'network-error'`. The whole
- * {@link SessionBundle} is handed through so the provider can snapshot the live
- * session and use the bundle itself as the reducer's identity token.
+ * The whole {@link SessionBundle} is handed through so the provider can snapshot
+ * the live session and use the bundle itself as the reducer's identity token.
  *
- * `sessionData` is the fresh payload the library hands the hook. It matters
- * because `PasswordSession` fires `onUpdated`/`onDeleted` BEFORE committing
+ * `sessionData` is the payload the library hands the hook. It is present on
+ * BOTH the `'update'` path (the fresh, rotated session) and the `'expired'`
+ * path (the DYING session's data, which `refresh()` passes to `onDeleted`
+ * BEFORE it nulls its internal `#sessionData`). It matters because
+ * `PasswordSession` fires `onUpdated`/`onDeleted` BEFORE committing
  * `#sessionData` (see `refresh()`/`logout()` in password-session.js), so the
  * live getter (`bundle.session.session`) still returns the OLD tokens at hook
- * time. The provider must build the refreshed account from this argument, not
- * from the live getter. Present on the `'update'` path (the new session) and
- * absent on the error paths.
+ * time. On `'update'` the provider builds the refreshed account from this
+ * argument; on `'expired'` it reads the dying refreshJwt from it to drive the
+ * compare-and-rescue at the dispatch site.
  */
 type OnSessionChange = (
   bundle: SessionBundle,
@@ -376,31 +354,19 @@ type OnSessionChange = (
  * Build the `PasswordSession` hooks with an arm latch.
  *
  * `PasswordSession` fires `onUpdated` once during login/resume/createAccount
- * (before the factory returns). We must NOT dispatch that initial event to the
- * reducer - it corresponds to today's dropped `'create'` event, which never
- * reached the reducer because `persistSessionHandler` was still undefined
- * during `prepare()`. So hooks are inert until `arm()` is called, after the
- * prepare tail resolves.
+ * before the factory returns. We must NOT dispatch that initial event, so hooks
+ * stay inert until `arm()` is called after the prepare tail resolves.
  *
  * `getBundle` is deferred because the bundle does not exist yet when the hooks
- * are constructed (the session is created first, then the bundle is built over
- * it).
+ * are constructed (session first, then bundle built over it).
  *
- * The hooks thread the fresh `SessionData` the library delivers straight
- * through to `onSessionChange` (the `'update'` payload). The library fires the
- * hook BEFORE committing that data internally, so the provider must read tokens
- * from this argument rather than the (still-stale) live session getter.
- *
- * The `fetch` option is wrapped in a kill-switch: `kill()` (returned alongside
- * `arm()`) sets a closure flag so every subsequent request through this
- * session - direct fetches AND the internal auto-refresh, which
- * `PasswordSession` routes through the same `options.fetch` captured at
- * construction - throws instead of hitting the network. `kill()` also disarms
- * the hooks so a disposed session can never dispatch into the reducer. This is
- * the disposal mechanism {@link disposeBundle} relies on (`PasswordSession`
- * exposes no local destroy).
- *
- * Exported for testing (the arm-latch + event mapping is the core semantics).
+ * The `fetch` option is wrapped in a kill-switch: `kill()` sets a closure flag
+ * so every subsequent request through this session - direct fetches AND the
+ * internal auto-refresh, which `PasswordSession` routes through the same
+ * captured `options.fetch` - throws instead of hitting the network. `kill()`
+ * also disarms the hooks so a disposed session can never dispatch into the
+ * reducer. This is the disposal mechanism {@link disposeBundle} relies on
+ * (`PasswordSession` exposes no local destroy).
  */
 export function makeSessionHooks(
   onSessionChange: OnSessionChange,
@@ -415,11 +381,7 @@ export function makeSessionHooks(
     }
     const did = getDid()
     onSessionChange(getBundle(), did, event, sessionData)
-    /*
-     * Mirror the old BskyAppAgent.prepare wiring: log any non-create/update
-     * session event. In practice we only emit 'update'/'expired'/'network-error'
-     * here, so this logs the error-ish ones.
-     */
+    // Log the error-ish events ('expired'/'network-error').
     if (event !== 'create' && event !== 'update') {
       addSessionErrorLog(did, event)
     }
@@ -434,8 +396,8 @@ export function makeSessionHooks(
     onUpdated(data) {
       dispatch('update', data)
     },
-    onDeleted() {
-      dispatch('expired')
+    onDeleted(data) {
+      dispatch('expired', data)
     },
     onUpdateFailure() {
       dispatch('network-error')
@@ -463,8 +425,7 @@ export type PublicSessionBundle = {
   /**
    * The throwing unauthenticated client (NOT the public client): chat is
    * meaningless logged out, and `useChatClient()` must fail loudly rather than
-   * silently target the public appview. See {@link getUnauthenticatedClient}
-   * and design section J.
+   * silently target the public appview. See {@link getUnauthenticatedClient}.
    */
   chatClient: Client
   /** The public appview URL. See {@link SessionBundle.service}. */
@@ -481,11 +442,10 @@ export function createPublicSessionBundle(): PublicSessionBundle {
   return {
     session: null,
     /*
-     * Write/auth clients throw on use when logged out (design section J): the
-     * public bundle exposes the throwing unauthenticated client for the account
-     * (PDS) and chat clients so an unauthenticated write or chat call fails
-     * loudly instead of silently targeting the public appview. Reads keep the
-     * public client (appviewClient), which reads public data without auth.
+     * The account (PDS) and chat clients throw on use when logged out, so an
+     * unauthenticated write or chat call fails loudly instead of silently
+     * targeting the public appview. Reads keep the public client (appviewClient),
+     * which reads public data without auth.
      */
     accountClient: getUnauthenticatedClient(),
     appviewClient: publicClient,
@@ -495,12 +455,9 @@ export function createPublicSessionBundle(): PublicSessionBundle {
 }
 
 /**
- * Resume a stored account into a {@link SessionBundle}.
- *
- * Preserves the old `createAgentAndResume` behavior: prefer-low-latency gates
- * refresh (not awaited up front), a network resume with one retry for expired
- * sessions, and a synchronous no-network fast path for still-valid stored
- * tokens. The session hooks are armed only after the prepare tail resolves.
+ * Resume a stored account into a {@link SessionBundle}. Expired sessions take a
+ * network resume (one retry); still-valid stored tokens take a synchronous
+ * no-network fast path. Hooks are armed only after the prepare tail resolves.
  */
 export async function createSessionBundleAndResume(
   storedAccount: SessionAccount,
@@ -525,10 +482,7 @@ export async function createSessionBundleAndResume(
       PasswordSession.resume(sessionData, hooks),
     )
   } else {
-    /*
-     * Sync fast path: trust the stored tokens, no network. Matches the old
-     * `agent.sessionManager.session = prev`.
-     */
+    // Sync fast path: trust the stored tokens, no network.
     session = new PasswordSession(sessionData, hooks)
   }
 
@@ -543,19 +497,18 @@ export async function createSessionBundleAndResume(
     sessionDataToSessionAccount(session.session, session.session.service) ??
     storedAccount
 
-  const moderation = configureModerationForAccount(bundle, earlyAccount)
+  configureModerationForAccount(bundle, earlyAccount)
   const aa = prefetchAgeAssuranceServerData({
     appviewClient: bundle.appviewClient,
     accountClient: bundle.accountClient,
   })
-  await Promise.all([gates, moderation, aa])
+  await Promise.all([gates, aa])
   /*
    * Re-snapshot AFTER prep, right before arm(). A 401 during a prep request
    * (e.g. the AA prefetch) triggers PasswordSession's internal auto-refresh,
    * which rotates both tokens; its onUpdated is dropped by the still-disarmed
-   * latch. Snapshotting the returned account here (not before prep) ensures we
-   * persist the fresh refreshJwt rather than a stale one that is dead on the
-   * next cold start.
+   * latch. Snapshotting here (not before prep) persists the fresh refreshJwt
+   * rather than a stale one that is dead on the next cold start.
    */
   const account =
     sessionDataToSessionAccount(session.session, session.session.service) ??
@@ -566,9 +519,6 @@ export async function createSessionBundleAndResume(
 
 /**
  * Log in with credentials and build a {@link SessionBundle}.
- *
- * Preserves `createAgentAndLogin`: `allowTakendown: true`, prefer-fresh-gates
- * refresh, moderation + AA prefetch, and the deferred arm.
  */
 export async function createSessionBundleAndLogin(
   {
@@ -603,26 +553,23 @@ export async function createSessionBundleAndLogin(
 
   bundle = buildBundle(session)
   registerBundleKillSwitch(bundle, hooks.kill)
-  /*
-   * Early snapshot: needed now to seed `accountDid` (the getDid closure the
-   * hooks read). The RETURNED account is re-snapshotted after the prep awaits.
-   */
+  // Early snapshot: needed now to seed `accountDid` (the getDid closure).
   const earlyAccount = sessionDataToSessionAccountOrThrow(session)
   accountDid = earlyAccount.did
 
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
-  const moderation = configureModerationForAccount(bundle, earlyAccount)
+  configureModerationForAccount(bundle, earlyAccount)
   const aa = prefetchAgeAssuranceServerData({
     appviewClient: bundle.appviewClient,
     accountClient: bundle.accountClient,
   })
-  await Promise.all([gates, moderation, aa])
+  await Promise.all([gates, aa])
   /*
-   * Re-snapshot AFTER prep, right before arm(). A 401 during a prep request
+   * Re-snapshot AFTER prep, right before arm(): a 401 during a prep request
    * triggers PasswordSession's internal auto-refresh, which rotates both tokens
-   * and fires an onUpdated the disarmed latch drops; snapshotting here persists
-   * the fresh refreshJwt. If the session was destroyed mid-prep, OrThrow throws
-   * (login effectively failed).
+   * and fires an onUpdated the disarmed latch drops, so this persists the fresh
+   * refreshJwt. If the session was destroyed mid-prep, OrThrow throws (login
+   * effectively failed).
    */
   const account = sessionDataToSessionAccountOrThrow(session)
   hooks.arm()
@@ -630,13 +577,10 @@ export async function createSessionBundleAndLogin(
 }
 
 /**
- * Create an account and build a {@link SessionBundle}.
- *
- * Preserves `createAgentAndCreateAccount` verbatim: local sync writes for
- * created-at/birthdate, the prod vs non-prod deferred server-write block
- * (setPersonalDetails/upsertProfile/overwriteSavedFeeds with TID feed ids,
- * restrictChatSettings gated on AA flags), and snoozeEmailConfirmationPrompt.
- * The deferred writes run as SDK actions against the account (PDS) client.
+ * Create an account and build a {@link SessionBundle}. Writes created-at and
+ * birthdate locally for sync reads, then fires the deferred server-write block
+ * (personal details, profile, saved feeds, and AA-gated chat restrictions) as
+ * SDK actions against the account (PDS) client.
  */
 export async function createSessionBundleAndCreateAccount(
   {
@@ -685,15 +629,13 @@ export async function createSessionBundleAndCreateAccount(
   registerBundleKillSwitch(bundle, hooks.kill)
   /*
    * Early snapshot: needed now to seed `accountDid` and for the DID/handle used
-   * across the local writes and deferred server writes below (all
-   * refresh-stable). The RETURNED account is re-snapshotted after the prep
-   * awaits.
+   * across the local and deferred server writes below (all refresh-stable).
    */
   const earlyAccount = sessionDataToSessionAccountOrThrow(session)
   accountDid = earlyAccount.did
 
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
-  const moderation = configureModerationForAccount(bundle, earlyAccount)
+  configureModerationForAccount(bundle, earlyAccount)
 
   const createdAt = toDatetimeString(new Date())
   const birthdate = birthDate.toISOString()
@@ -819,13 +761,12 @@ export async function createSessionBundleAndCreateAccount(
     })
   }
 
-  await Promise.all([gates, moderation, aa])
+  await Promise.all([gates, aa])
   /*
-   * Re-snapshot AFTER prep, right before arm(). A 401 during a prep request
+   * Re-snapshot AFTER prep, right before arm(): a 401 during a prep request
    * triggers PasswordSession's internal auto-refresh, which rotates both tokens
-   * and fires an onUpdated the disarmed latch drops; snapshotting here persists
-   * the fresh refreshJwt rather than a stale one. If the session was destroyed
-   * mid-prep, OrThrow throws.
+   * and fires an onUpdated the disarmed latch drops, so this persists the fresh
+   * refreshJwt. If the session was destroyed mid-prep, OrThrow throws.
    */
   const account = sessionDataToSessionAccountOrThrow(session)
   hooks.arm()
@@ -834,7 +775,7 @@ export async function createSessionBundleAndCreateAccount(
 
 /**
  * Snapshot a live session as a `SessionAccount`, throwing if there is no active
- * session. Replacement for the old `agentToSessionAccountOrThrow`.
+ * session.
  */
 function sessionDataToSessionAccountOrThrow(
   session: PasswordSession,
@@ -863,9 +804,8 @@ function sessionDataToSessionAccountOrThrow(
  * captured `options.fetch` - throws before touching the network. A tripped
  * refresh routes into the `onUpdateFailure` path (session preserved locally,
  * refresh token NOT consumed server-side). `kill()` also disarms the hooks so
- * the stale bundle can no longer dispatch into the reducer. The important
- * guarantee - matching the old `dispose()` - is that this session's tokens are
- * no longer reachable by any live network path.
+ * the stale bundle can no longer dispatch into the reducer. The guarantee: this
+ * session's tokens are no longer reachable by any live network path.
  */
 export function disposeBundle(bundle: SessionBundle | PublicSessionBundle) {
   const session = bundle.session
@@ -873,4 +813,56 @@ export function disposeBundle(bundle: SessionBundle | PublicSessionBundle) {
     return
   }
   bundleKillSwitches.get(bundle)?.()
+}
+
+/**
+ * Hard bound on how many distinct refresh-token generations the expiry rescue
+ * will burn through for a single did before giving up and logging out. Each
+ * rescue consumes a strictly newer generation (a token that differs from every
+ * one already recorded as failed), so this set can only grow one entry per
+ * expiry and this cap guarantees termination even under a pathological storm
+ * of expiries against ever-newer tokens.
+ */
+export const MAX_EXPIRY_RESCUE_GENERATIONS = 5
+
+/**
+ * Pure decision for the cross-tab expiry rescue (side-effecting rebuild stays
+ * in the provider). Given the dying session's refreshJwt and the "latest known"
+ * candidate accounts for that did (in preference order), pick the first
+ * candidate that carries a usable, strictly-newer generation:
+ *
+ * - has a non-empty `refreshJwt`,
+ * - whose `refreshJwt` DIFFERS from the dying one (a same-token candidate is
+ *   just as dead), and
+ * - whose `refreshJwt` is NOT already recorded as failed (loop guard).
+ *
+ * Returns `undefined` (fall through to logout) when nothing qualifies or the
+ * failed-generation set has hit {@link MAX_EXPIRY_RESCUE_GENERATIONS}.
+ *
+ * `candidates` are tried in order, so the caller passes its most-authoritative
+ * source first (on web, the fresh persisted re-read before the reducer state).
+ */
+export function pickExpiryRescueCandidate({
+  dyingRefreshJwt,
+  candidates,
+  failedRefreshJwts,
+}: {
+  dyingRefreshJwt: string
+  candidates: (SessionAccount | undefined)[]
+  failedRefreshJwts: ReadonlySet<string>
+}): SessionAccount | undefined {
+  if (failedRefreshJwts.size >= MAX_EXPIRY_RESCUE_GENERATIONS) {
+    return undefined
+  }
+  for (const candidate of candidates) {
+    const refreshJwt = candidate?.refreshJwt
+    if (
+      refreshJwt &&
+      refreshJwt !== dyingRefreshJwt &&
+      !failedRefreshJwts.has(refreshJwt)
+    ) {
+      return candidate
+    }
+  }
+  return undefined
 }
