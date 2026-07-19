@@ -103,6 +103,13 @@ appId: xyz.blueskyweb.app
           id: "editFeedsBtn"
       - assertVisible: "Following"
       - assertVisible: "alice-favs"
+      # Two back presses to reach Home: the first pops the saved-feeds editor
+      # back to the Feeds screen, the second pops Feeds back to Home. On iOS the
+      # equivalent path saves changes first (saveChangesBtn calls
+      # navigation.goBack), so a single "Go back" there already lands on Home.
+      # This Android smoke branch never saves, so it needs the extra pop to
+      # leave the screen state on Home, which the shared steps below expect.
+      - tapOn: "Go back"
       - tapOn: "Go back"
 
 # Remove following

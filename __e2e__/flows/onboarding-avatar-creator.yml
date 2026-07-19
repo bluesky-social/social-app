@@ -15,14 +15,24 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "e2eStartOnboarding"
 - tapOn: "Open avatar creator"
-# The avatar-creator bottom sheet opens as a sliver on the short E2E emulator
-# (720x1600), so the picker content sits below the fold. Scroll it into view
-# instead of just waiting. No-op on iOS, where it is already visible.
-- scrollUntilVisible:
-    element:
-      text: "Select an emoji"
-    direction: DOWN
-    timeout: 15000
+# The avatar-creator bottom sheet (Dialog.Inner, non-scrollable) opens only
+# half-expanded on the short E2E emulator (720x1600), a ~220px sliver with the
+# emoji grid below the fold. It is NOT a scroll view, so scrollUntilVisible's
+# swipe grabs the sheet's own drag gesture and flings it closed. Instead, drag
+# the sheet upward to expand it to full height, which brings the picker into
+# view. iOS opens the sheet fully already, so this is Android-only.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - swipe:
+          label: "Drag the bottom sheet up to expand it"
+          start: "50%, 90%"
+          end: "50%, 20%"
+          duration: 600
+      - extendedWaitUntil:
+          visible: "Select an emoji"
+          timeout: 10000
 - tapOn: "Select the zap emoji as your avatar"
 - tapOn:
     label: "Tap on yellow"
@@ -30,6 +40,20 @@ appId: xyz.blueskyweb.app
 - tapOn: "Done"
 - waitForAnimationToEnd
 - tapOn: "Select an avatar"
+# Reopening the creator sheet lands on the same half-expanded sliver on
+# Android, so expand it again before reaching for the emoji grid. No-op on iOS.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - swipe:
+          label: "Drag the bottom sheet up to expand it"
+          start: "50%, 90%"
+          end: "50%, 20%"
+          duration: 600
+      - extendedWaitUntil:
+          visible: "Select an emoji"
+          timeout: 10000
 - tapOn: "Select the atom emoji as your avatar"
 - tapOn: "Done"
 - waitForAnimationToEnd

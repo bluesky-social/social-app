@@ -81,8 +81,16 @@ appId: xyz.blueskyweb.app
     id: "bottomBarProfileBtn"
 - tapOn:
     id: "profilePager-selector-1"
+# Both replies target the thread root ("Test thread" by alice), which sits at
+# the top of bob's Replies tab. That tab renders each post in the thread with
+# its own replyBtn, so scope the tap to the root post's card
+# (feedItem-by-alice.test) rather than relying on which replyBtn Maestro picks
+# first. This keeps both reply taps deterministic regardless of list order or
+# how many posts have rendered.
 - tapOn:
     id: "replyBtn"
+    childOf:
+      id: "feedItem-by-alice.test"
 # Wait for the composer to fully open before typing.
 - extendedWaitUntil:
     visible:
@@ -92,14 +100,20 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "composerPublishBtn"
 # Wait for the composer to close and the thread reply button to return before
-# opening the composer again. Previously this raced and the second replyBtn tap
-# landed before the composer was ready, so the composer never opened.
+# opening the composer again. The replyBtn is effectively always present on this
+# screen, so waiting on its visibility alone does not gate on the composer close
+# animation or the author-feed re-render that follows a post. Without letting
+# those settle, the next replyBtn tap fires mid-transition and is swallowed, so
+# the composer never opens. Wait for the button, then for animations to end.
 - extendedWaitUntil:
     visible:
       id: "replyBtn"
     timeout: 10000
+- waitForAnimationToEnd
 - tapOn:
     id: "replyBtn"
+    childOf:
+      id: "feedItem-by-alice.test"
 # Wait for the composer to fully open before typing.
 - extendedWaitUntil:
     visible:
