@@ -39,10 +39,15 @@ export function useBeginAgeAssurance() {
         throw new Error(`Geolocation not available, cannot init age assurance.`)
       }
 
-      const {token} = await pdsClient.call(com.atproto.server.getServiceAuth, {
-        aud: BLUESKY_PROXY_DID,
-        lxm: `app.bsky.ageassurance.begin`,
-      })
+      const {token} = await pdsClient.call(
+        com.atproto.server.getServiceAuth,
+        {
+          aud: BLUESKY_PROXY_DID,
+          lxm: `app.bsky.ageassurance.begin`,
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
 
       /*
        * A non-refreshing throwaway client scoped to the service-auth token: it

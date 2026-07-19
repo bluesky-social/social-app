@@ -37,10 +37,15 @@ export async function bulkWriteFollows(
 
   const chunks = chunk(followWrites, 50)
   for (const chunk of chunks) {
-    await pdsClient.call(com.atproto.repo.applyWrites, {
-      repo: did,
-      writes: chunk,
-    })
+    await pdsClient.call(
+      com.atproto.repo.applyWrites,
+      {
+        repo: did,
+        writes: chunk,
+      },
+      // service: null strips the appview proxy header - this must hit the account host (PDS)
+      {service: null},
+    )
   }
   await whenFollowsIndexed(appviewClient, did, res => !!res.follows.length)
 

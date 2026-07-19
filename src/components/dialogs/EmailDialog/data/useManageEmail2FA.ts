@@ -19,11 +19,16 @@ export function useManageEmail2FA() {
         throw new Error('No email found for the current account')
       }
 
-      await pdsClient.call(com.atproto.server.updateEmail, {
-        email: currentAccount.email,
-        emailAuthFactor: enabled,
-        token,
-      })
+      await pdsClient.call(
+        com.atproto.server.updateEmail,
+        {
+          email: currentAccount.email,
+          emailAuthFactor: enabled,
+          token,
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       // will update session state at root of app
       await refreshSession()
     },

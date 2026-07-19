@@ -28,19 +28,6 @@ export function getPublicLexClient(): Client {
 }
 
 /**
- * Build the account (PDS) client over a {@link PasswordSession}. Writes and
- * record mutations go here - no `atproto-proxy` header, so requests hit the
- * user's PDS directly (the session's `fetchHandler` resolves the PDS origin per
- * request from the didDoc, falling back to `service`).
- *
- * We intentionally do NOT pass `fetch` here: a client built over a session uses
- * that session's own `fetch` (networkAwareFetch, set at construction).
- */
-export function buildAccountClient(session: PasswordSession): Client {
-  return createLexClient(session)
-}
-
-/**
  * Build the chat client over a {@link PasswordSession}.
  *
  * {@link CHAT_PROXY_SERVICE} (`${CHAT_PROXY_DID}#bsky_chat`, default
@@ -85,20 +72,39 @@ export function getUnauthenticatedClient(): Client {
 }
 
 /**
- * Build the authed appview client over a {@link PasswordSession}. Requests are
- * proxied to the Bluesky appview and carry the per-instance labelers.
+ * Build the single authed Bluesky client over a {@link PasswordSession}. This
+ * is the merged account-plus-appview client: one instance serves both reads
+ * (proxied to the Bluesky appview) and writes (routed to the user's PDS),
+ * because lex-client 0.3.0's record helpers pick the target per call.
+ *
+ * The instance is configured with `service = BLUESKY_PROXY_HEADER.get()`, so by
+ * default every request carries the `atproto-proxy` header and is proxied to
+ * the Bluesky appview, along with the per-instance labelers. The getter exists
+ * so the e2e `TestCtrls` hack can retarget the appview via
+ * `BLUESKY_PROXY_HEADER.set()` before sign-in (the client is built at sign-in,
+ * so it picks up the override).
+ *
+ * Two request shapes take DIFFERENT targets off this one instance:
+ *  - Record helpers (`createRecord`/`putRecord`/...) and the typed record sugar
+ *    (`create`/`put`/`get`/`delete`/`list`) default per-call `service = null`
+ *    in lex-client 0.3.0, which DELETES the `atproto-proxy` header regardless of
+ *    the instance default. So writes auto-target the account host and hit the
+ *    user's PDS through the session's `fetchHandler` (which resolves the PDS
+ *    origin per request from the didDoc, falling back to `service`).
+ *  - Raw `client.call(lexicon, ...)` inherits the appview proxy from the
+ *    instance `service`, UNLESS the call site passes `{service: null}` to strip
+ *    it (needed for `com.atproto.server`/`identity`/`sync`/`temp` calls that
+ *    must hit the PDS directly).
  *
  * The Bluesky moderation labeler (`api.moderation.did`) is deliberately NOT
- * listed here - it must flow only through the global `Client.appLabelers` (see
- * moderation.ts) so it carries the `;redact` suffix; adding it here would
- * produce a duplicate, non-redact header entry.
+ * listed in `labelerDids` - it must flow only through the global
+ * `Client.appLabelers` (see moderation.ts) so it carries the `;redact` suffix;
+ * adding it here would produce a duplicate, non-redact header entry.
  *
- * The proxy `service` is read from `BLUESKY_PROXY_HEADER.get()`, whose default
- * equals `api.app.service`. The getter exists so the e2e `TestCtrls` hack can
- * retarget the appview via `BLUESKY_PROXY_HEADER.set()` before sign-in (the
- * client is built at sign-in, so it picks up the override).
+ * We intentionally do NOT pass `fetch` here: a client built over a session uses
+ * that session's own `fetch` (networkAwareFetch, set at construction).
  */
-export function buildAppviewClient(
+export function buildBskyClient(
   session: PasswordSession,
   labelerDids: string[],
 ): Client {

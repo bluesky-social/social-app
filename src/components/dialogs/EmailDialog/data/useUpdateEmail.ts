@@ -11,10 +11,15 @@ async function updateEmailAndRefreshSession(
   email: string,
   token?: string,
 ) {
-  await pdsClient.call(com.atproto.server.updateEmail, {
-    email: email.trim(),
-    token,
-  })
+  await pdsClient.call(
+    com.atproto.server.updateEmail,
+    {
+      email: email.trim(),
+      token,
+    },
+    // service: null strips the appview proxy header - this must hit the account host (PDS)
+    {service: null},
+  )
   await refreshSession()
 }
 

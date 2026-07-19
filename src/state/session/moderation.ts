@@ -46,9 +46,14 @@ export function readLabelers(did: string): string[] | undefined {
 }
 
 /**
- * Apply an account's subscribed labeler DIDs to a live appview client. The lex
- * `Client` rebuilds the header per request, so this takes effect on the next
- * request without a client rebuild.
+ * Apply an account's subscribed labeler DIDs to a live client. The lex `Client`
+ * rebuilds the header per request, so this takes effect on the next request
+ * without a client rebuild.
+ *
+ * These labelers ride the `atproto-accept-labelers` header, which lex-client
+ * 0.3.0 emits only on raw/query calls: record helpers default `labelers = null`
+ * per call, stripping the header. That is fine here - labelers only matter for
+ * the read/query calls moderation cares about.
  *
  * We filter out the Bluesky moderation labeler: it is already asserted globally
  * via `Client.appLabelers` (with `;redact`), and a user "subscribing" to it
@@ -76,7 +81,8 @@ export function configureModerationForGuest() {
  * per-account labelers already applied, in the same tick.
  *
  * Takes the whole {@link SessionBundle} so it can apply per-account labelers to
- * the authed appview client (`bundle.appviewClient`, backing `useLexClient()`).
+ * the single merged Bluesky client (`bundle.bskyClient`, backing
+ * `useLexClient()`).
  */
 export function configureModerationForAccount(
   bundle: SessionBundle,
@@ -97,7 +103,7 @@ export function configureModerationForAccount(
   // The code below is actually relevant to production (and isn't global).
   const labelerDids = readLabelers(account.did)
   if (labelerDids) {
-    applyLabelersToClient(bundle.appviewClient, labelerDids)
+    applyLabelersToClient(bundle.bskyClient, labelerDids)
   } else {
     /*
      * No cached labelers yet (first session on this device), so the initial
@@ -115,12 +121,13 @@ function switchToBskyAppLabeler() {
 
 /**
  * In the test environment, swap the global app labeler for the test-env
- * moderation authority, resolving its handle via the bundle's authed appview
- * client.
+ * moderation authority, resolving its handle via the bundle's merged Bluesky
+ * client. This is a raw call, so it inherits the appview proxy - which is
+ * correct, as `resolveHandle` is served by the appview.
  */
 async function trySwitchToTestAppLabeler(bundle: SessionBundle) {
   const did = (
-    await bundle.appviewClient
+    await bundle.bskyClient
       .call(com.atproto.identity.resolveHandle, {handle: 'mod-authority.test'})
       .catch(_ => undefined)
   )?.did

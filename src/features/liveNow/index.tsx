@@ -277,16 +277,26 @@ export function useUpsertLiveStatusMutation(
         const collection = 'app.bsky.actor.status'
 
         const existing = await pdsClient
-          .call(com.atproto.repo.getRecord, {repo, collection, rkey: 'self'})
+          // service: null strips the appview proxy header - this must hit the account host (PDS)
+          .call(
+            com.atproto.repo.getRecord,
+            {repo, collection, rkey: 'self'},
+            {service: null},
+          )
           .catch(_e => undefined)
 
-        await pdsClient.call(com.atproto.repo.putRecord, {
-          repo,
-          collection,
-          rkey: 'self',
-          record,
-          swapRecord: existing?.cid || null,
-        })
+        await pdsClient.call(
+          com.atproto.repo.putRecord,
+          {
+            repo,
+            collection,
+            rkey: 'self',
+            record,
+            swapRecord: existing?.cid || null,
+          },
+          // service: null strips the appview proxy header - this must hit the account host (PDS)
+          {service: null},
+        )
       }
 
       await retry(upsert, {

@@ -72,7 +72,12 @@ export function Deactivated() {
   const handleActivate = useCallback(async () => {
     try {
       setPending(true)
-      await pdsClient.call(com.atproto.server.activateAccount)
+      await pdsClient.call(
+        com.atproto.server.activateAccount,
+        undefined,
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       await queryClient.resetQueries()
       await refreshSession()
     } catch (e: any) {

@@ -194,18 +194,23 @@ export function useEditStarterPackMutation({
       if (removedItems.length !== 0) {
         const chunks = chunk(removedItems, 50)
         for (const chunk of chunks) {
-          await pdsClient.call(com.atproto.repo.applyWrites, {
-            repo: pdsClient.assertDid,
-            writes: chunk.map(
-              (
-                i,
-              ): com.atproto.repo.applyWrites.$InputBody['writes'][number] => ({
-                $type: 'com.atproto.repo.applyWrites#delete',
-                collection: 'app.bsky.graph.listitem',
-                rkey: new AtUri(i.uri).rkey,
-              }),
-            ),
-          })
+          await pdsClient.call(
+            com.atproto.repo.applyWrites,
+            {
+              repo: pdsClient.assertDid,
+              writes: chunk.map(
+                (
+                  i,
+                ): com.atproto.repo.applyWrites.$InputBody['writes'][number] => ({
+                  $type: 'com.atproto.repo.applyWrites#delete',
+                  collection: 'app.bsky.graph.listitem',
+                  rkey: new AtUri(i.uri).rkey,
+                }),
+              ),
+            },
+            // service: null strips the appview proxy header - this must hit the account host (PDS)
+            {service: null},
+          )
         }
       }
 
@@ -215,42 +220,52 @@ export function useEditStarterPackMutation({
       if (addedProfiles.length > 0) {
         const chunks = chunk(addedProfiles, 50)
         for (const chunk of chunks) {
-          await pdsClient.call(com.atproto.repo.applyWrites, {
-            repo: pdsClient.assertDid,
-            writes: chunk.map(
-              (
-                p,
-              ): com.atproto.repo.applyWrites.$InputBody['writes'][number] => ({
-                $type: 'com.atproto.repo.applyWrites#create',
-                collection: 'app.bsky.graph.listitem',
-                value: {
-                  $type: 'app.bsky.graph.listitem',
-                  subject: p.did,
-                  list: currentStarterPack.list?.uri,
-                  createdAt: new Date().toISOString(),
-                },
-              }),
-            ),
-          })
+          await pdsClient.call(
+            com.atproto.repo.applyWrites,
+            {
+              repo: pdsClient.assertDid,
+              writes: chunk.map(
+                (
+                  p,
+                ): com.atproto.repo.applyWrites.$InputBody['writes'][number] => ({
+                  $type: 'com.atproto.repo.applyWrites#create',
+                  collection: 'app.bsky.graph.listitem',
+                  value: {
+                    $type: 'app.bsky.graph.listitem',
+                    subject: p.did,
+                    list: currentStarterPack.list?.uri,
+                    createdAt: new Date().toISOString(),
+                  },
+                }),
+              ),
+            },
+            // service: null strips the appview proxy header - this must hit the account host (PDS)
+            {service: null},
+          )
         }
       }
 
       const rkey = parseStarterPackUri(currentStarterPack.uri)!.rkey
-      await pdsClient.call(com.atproto.repo.putRecord, {
-        repo: pdsClient.assertDid,
-        collection: 'app.bsky.graph.starterpack',
-        rkey,
-        record: {
-          $type: 'app.bsky.graph.starterpack',
-          name,
-          description,
-          descriptionFacets,
-          list: currentStarterPack.list?.uri,
-          feeds,
-          createdAt: currentStarterPack.record.createdAt,
-          updatedAt: new Date().toISOString(),
+      await pdsClient.call(
+        com.atproto.repo.putRecord,
+        {
+          repo: pdsClient.assertDid,
+          collection: 'app.bsky.graph.starterpack',
+          rkey,
+          record: {
+            $type: 'app.bsky.graph.starterpack',
+            name,
+            description,
+            descriptionFacets,
+            list: currentStarterPack.list?.uri,
+            feeds,
+            createdAt: currentStarterPack.record.createdAt,
+            updatedAt: new Date().toISOString(),
+          },
         },
-      })
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
     },
     onSuccess: async (_, {currentStarterPack}) => {
       const parsed = parseStarterPackUri(currentStarterPack.uri)

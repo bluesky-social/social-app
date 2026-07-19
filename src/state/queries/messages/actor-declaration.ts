@@ -39,16 +39,21 @@ export function useUpdateActorDeclaration({
           update.allowGroupInvites ??
           current?.associated?.chat?.allowGroupInvites,
       })
-      const result = await pdsClient.call(com.atproto.repo.putRecord, {
-        repo: currentAccount.did as DidString,
-        collection: 'chat.bsky.actor.declaration',
-        rkey: 'self',
-        record: {
-          $type: 'chat.bsky.actor.declaration',
-          allowIncoming,
-          allowGroupInvites,
+      const result = await pdsClient.call(
+        com.atproto.repo.putRecord,
+        {
+          repo: currentAccount.did as DidString,
+          collection: 'chat.bsky.actor.declaration',
+          rkey: 'self',
+          record: {
+            $type: 'chat.bsky.actor.declaration',
+            allowIncoming,
+            allowGroupInvites,
+          },
         },
-      })
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       return result
     },
     onMutate: update => {
@@ -104,11 +109,16 @@ export function useDeleteActorDeclaration() {
   return useMutation({
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not signed in')
-      const result = await pdsClient.call(com.atproto.repo.deleteRecord, {
-        repo: currentAccount.did as DidString,
-        collection: 'chat.bsky.actor.declaration',
-        rkey: 'self',
-      })
+      const result = await pdsClient.call(
+        com.atproto.repo.deleteRecord,
+        {
+          repo: currentAccount.did as DidString,
+          collection: 'chat.bsky.actor.declaration',
+          rkey: 'self',
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       return result
     },
   })

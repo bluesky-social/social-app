@@ -36,8 +36,7 @@ import {unsafeGetAndComputeAgeAssurance} from '#/ageAssurance/state'
 import {features} from '#/analytics'
 import {type app} from '#/lexicons'
 import {
-  buildAccountClient,
-  buildAppviewClient,
+  buildBskyClient,
   buildChatClient,
   getPublicLexClient,
   getUnauthenticatedClient,
@@ -266,10 +265,12 @@ function deriveServiceUrl(session: PasswordSession | null): URL {
 export type SessionBundle = {
   /** The single auth core. Never exposed to the reducer. */
   session: PasswordSession
-  /** Account (writes/records) client - talks to the user's PDS. */
-  accountClient: Client
-  /** Authed appview client (proxied, with labelers). */
-  appviewClient: Client
+  /**
+   * The single authed Bluesky client (merged account + appview). Proxied to
+   * the Bluesky appview and carrying this account's labelers; record helpers
+   * on it auto-target the user's PDS. See {@link buildBskyClient}.
+   */
+  bskyClient: Client
   /** Chat client (proxied to `did:web:api.bsky.chat#bsky_chat`). */
   chatClient: Client
   /**
@@ -306,18 +307,17 @@ export function registerBundleKillSwitch(
 }
 
 /**
- * Assemble a {@link SessionBundle} from a live session: the account, appview,
- * and chat clients, all read-through views over the one session.
+ * Assemble a {@link SessionBundle} from a live session: the merged Bluesky
+ * client and the chat client, both read-through views over the one session.
  */
 export function buildBundle(session: PasswordSession): SessionBundle {
   return {
     session,
-    accountClient: buildAccountClient(session),
     /*
      * Starts with an empty per-account labeler set; configureModerationForAccount
      * applies this account's labelers afterwards.
      */
-    appviewClient: buildAppviewClient(session, []),
+    bskyClient: buildBskyClient(session, []),
     chatClient: buildChatClient(session),
     /* A getter keeps `.service` live with the session's state (destroyed -> public). */
     get service() {
@@ -415,13 +415,19 @@ export function makeSessionHooks(
 }
 
 /**
- * The public (logged-out) bundle. Its appview client points at the public
- * appview; the write/chat clients are the throwing unauthenticated client.
+ * The public (logged-out) bundle. Its `bskyClient` is the public appview client
+ * (reads work logged out); the chat client is the throwing unauthenticated
+ * client.
  */
 export type PublicSessionBundle = {
   session: null
-  accountClient: Client
-  appviewClient: Client
+  /**
+   * The public appview client (reads work logged out). Logged-out WRITE
+   * protection is NOT a property of this client - it lives in the
+   * `usePdsClient` hook's fallback (which returns the throwing unauthenticated
+   * client when there is no session; see index.tsx).
+   */
+  bskyClient: Client
   /**
    * The throwing unauthenticated client (NOT the public client): chat is
    * meaningless logged out, and `useChatClient()` must fail loudly rather than
@@ -442,13 +448,16 @@ export function createPublicSessionBundle(): PublicSessionBundle {
   return {
     session: null,
     /*
-     * The account (PDS) and chat clients throw on use when logged out, so an
-     * unauthenticated write or chat call fails loudly instead of silently
-     * targeting the public appview. Reads keep the public client (appviewClient),
-     * which reads public data without auth.
+     * The public client reads public data without auth. Logged-out write
+     * protection is enforced by the usePdsClient hook (which falls back to the
+     * throwing unauthenticated client when there is no session), NOT here - see
+     * index.tsx.
      */
-    accountClient: getUnauthenticatedClient(),
-    appviewClient: publicClient,
+    bskyClient: publicClient,
+    /*
+     * The chat client throws on use when logged out, so an unauthenticated chat
+     * call fails loudly instead of silently targeting the public appview.
+     */
     chatClient: getUnauthenticatedClient(),
     service: new URL(PUBLIC_BSKY_SERVICE),
   }
@@ -498,10 +507,7 @@ export async function createSessionBundleAndResume(
     storedAccount
 
   configureModerationForAccount(bundle, earlyAccount)
-  const aa = prefetchAgeAssuranceServerData({
-    appviewClient: bundle.appviewClient,
-    accountClient: bundle.accountClient,
-  })
+  const aa = prefetchAgeAssuranceServerData({client: bundle.bskyClient})
   await Promise.all([gates, aa])
   /*
    * Re-snapshot AFTER prep, right before arm(). A 401 during a prep request
@@ -559,10 +565,7 @@ export async function createSessionBundleAndLogin(
 
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
   configureModerationForAccount(bundle, earlyAccount)
-  const aa = prefetchAgeAssuranceServerData({
-    appviewClient: bundle.appviewClient,
-    accountClient: bundle.accountClient,
-  })
+  const aa = prefetchAgeAssuranceServerData({client: bundle.bskyClient})
   await Promise.all([gates, aa])
   /*
    * Re-snapshot AFTER prep, right before arm(): a 401 during a prep request
@@ -650,17 +653,14 @@ export async function createSessionBundleAndCreateAccount(
   setBirthdateForDid({did: earlyAccount.did, birthdate})
   snoozeBirthdateUpdateAllowedForDid(earlyAccount.did)
   // do this last
-  const aa = prefetchAgeAssuranceServerData({
-    appviewClient: bundle.appviewClient,
-    accountClient: bundle.accountClient,
-  })
+  const aa = prefetchAgeAssuranceServerData({client: bundle.bskyClient})
 
   // Not awaited so that we can still get into onboarding.
   // This is OK because we won't let you toggle adult stuff until you set the date.
   if (IS_PROD_SERVICE(service)) {
     void Promise.allSettled([
       networkRetry(3, () => {
-        return bundle.accountClient.call(setPersonalDetails, {
+        return bundle.bskyClient.call(setPersonalDetails, {
           birthDate,
         })
       }).catch(e => {
@@ -670,7 +670,7 @@ export async function createSessionBundleAndCreateAccount(
         throw e
       }),
       networkRetry(3, () => {
-        return bundle.accountClient.call(upsertProfile, prev => {
+        return bundle.bskyClient.call(upsertProfile, prev => {
           const next: Partial<app.bsky.actor.profile.Main> = prev || {}
           next.displayName = handle
           next.createdAt = createdAt
@@ -683,7 +683,7 @@ export async function createSessionBundleAndCreateAccount(
         throw e
       }),
       networkRetry(1, () => {
-        return bundle.accountClient.call(overwriteSavedFeeds, [
+        return bundle.bskyClient.call(overwriteSavedFeeds, [
           {
             ...DISCOVER_SAVED_FEED,
             id: TID.nextStr(),
@@ -704,7 +704,7 @@ export async function createSessionBundleAndCreateAccount(
         const {flags} = unsafeGetAndComputeAgeAssurance({did: earlyAccount.did})
         if (flags?.chatDisabled || flags?.groupChatDisabled) {
           void restrictChatSettings({
-            client: bundle.accountClient,
+            client: bundle.bskyClient,
             restrictIncoming: flags.chatDisabled,
             restrictGroupInvites: flags.groupChatDisabled,
           })
@@ -721,7 +721,7 @@ export async function createSessionBundleAndCreateAccount(
   } else {
     void Promise.allSettled([
       networkRetry(3, () => {
-        return bundle.accountClient.call(setPersonalDetails, {
+        return bundle.bskyClient.call(setPersonalDetails, {
           birthDate,
         })
       }).catch(e => {
@@ -731,7 +731,7 @@ export async function createSessionBundleAndCreateAccount(
         throw e
       }),
       networkRetry(3, () => {
-        return bundle.accountClient.call(upsertProfile, prev => {
+        return bundle.bskyClient.call(upsertProfile, prev => {
           const next: Partial<app.bsky.actor.profile.Main> = prev || {}
           next.createdAt = prev?.createdAt || toDatetimeString(new Date())
           return next
