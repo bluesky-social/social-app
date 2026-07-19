@@ -177,11 +177,16 @@ export async function post(
   }
 
   try {
-    await pdsClient.call(com.atproto.repo.applyWrites, {
-      repo: did,
-      writes: writes,
-      validate: true,
-    })
+    await pdsClient.call(
+      com.atproto.repo.applyWrites,
+      {
+        repo: did,
+        writes: writes,
+        validate: true,
+      },
+      // service: null strips the appview proxy header - this must hit the account host (PDS)
+      {service: null},
+    )
   } catch (err) {
     const e = err as Error
     logger.error(`Failed to create post`, {

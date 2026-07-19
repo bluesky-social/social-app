@@ -112,11 +112,16 @@ export async function getThreadgateRecord({
         return true
       },
       () =>
-        pdsClient.call(com.atproto.repo.getRecord, {
-          repo: urip.host,
-          collection: 'app.bsky.feed.threadgate',
-          rkey: urip.rkey,
-        }),
+        pdsClient.call(
+          com.atproto.repo.getRecord,
+          {
+            repo: urip.host,
+            collection: 'app.bsky.feed.threadgate',
+            rkey: urip.rkey,
+          },
+          // service: null strips the appview proxy header - this must hit the account host (PDS)
+          {service: null},
+        ),
     )
 
     if (data.value && bsky.matches(app.bsky.feed.threadgate, data.value)) {
@@ -155,12 +160,17 @@ export async function writeThreadgateRecord({
   })
 
   await networkRetry(2, () =>
-    pdsClient.call(com.atproto.repo.putRecord, {
-      repo: pdsClient.assertDid,
-      collection: 'app.bsky.feed.threadgate',
-      rkey: postUrip.rkey,
-      record,
-    }),
+    pdsClient.call(
+      com.atproto.repo.putRecord,
+      {
+        repo: pdsClient.assertDid,
+        collection: 'app.bsky.feed.threadgate',
+        rkey: postUrip.rkey,
+        record,
+      },
+      // service: null strips the appview proxy header - this must hit the account host (PDS)
+      {service: null},
+    ),
   )
 }
 

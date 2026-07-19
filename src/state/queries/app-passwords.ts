@@ -13,7 +13,12 @@ export function useAppPasswordsQuery() {
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(),
     queryFn: async () => {
-      const data = await pdsClient.call(com.atproto.server.listAppPasswords, {})
+      const data = await pdsClient.call(
+        com.atproto.server.listAppPasswords,
+        {},
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       return data.passwords
     },
   })
@@ -28,10 +33,15 @@ export function useAppPasswordCreateMutation() {
     {name: string; privileged: boolean}
   >({
     mutationFn: async ({name, privileged}) => {
-      return await pdsClient.call(com.atproto.server.createAppPassword, {
-        name,
-        privileged,
-      })
+      return await pdsClient.call(
+        com.atproto.server.createAppPassword,
+        {
+          name,
+          privileged,
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
     },
     onSuccess() {
       queryClient.invalidateQueries({
@@ -46,9 +56,14 @@ export function useAppPasswordDeleteMutation() {
   const pdsClient = usePdsClient()
   return useMutation<void, Error, {name: string}>({
     mutationFn: async ({name}) => {
-      await pdsClient.call(com.atproto.server.revokeAppPassword, {
-        name,
-      })
+      await pdsClient.call(
+        com.atproto.server.revokeAppPassword,
+        {
+          name,
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
     },
     onSuccess() {
       queryClient.invalidateQueries({

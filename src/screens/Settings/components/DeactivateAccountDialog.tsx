@@ -44,7 +44,12 @@ function DeactivateAccountDialogInner({
   const handleDeactivate = useCallback(async () => {
     try {
       setPending(true)
-      await pdsClient.call(com.atproto.server.deactivateAccount, {})
+      await pdsClient.call(
+        com.atproto.server.deactivateAccount,
+        {},
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       control.close(() => {
         logoutCurrentAccount('Deactivated')
       })

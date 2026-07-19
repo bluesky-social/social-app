@@ -86,9 +86,14 @@ function Inner() {
     setError('')
     setIsProcessing(true)
     try {
-      await pdsClient.call(com.atproto.server.requestPasswordReset, {
-        email: currentAccount.email,
-      })
+      await pdsClient.call(
+        com.atproto.server.requestPasswordReset,
+        {
+          email: currentAccount.email,
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       setStage(Stages.ChangePassword)
     } catch (e: any) {
       if (isNetworkError(e)) {
@@ -130,10 +135,15 @@ function Inner() {
     setError('')
     setIsProcessing(true)
     try {
-      await pdsClient.call(com.atproto.server.resetPassword, {
-        token: formattedCode,
-        password: newPassword,
-      })
+      await pdsClient.call(
+        com.atproto.server.resetPassword,
+        {
+          token: formattedCode,
+          password: newPassword,
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       setStage(Stages.Done)
     } catch (e: any) {
       if (isNetworkError(e)) {

@@ -96,7 +96,12 @@ function DeleteAccountDialogInner({
     }
     try {
       setEmailState(EmailState.PENDING)
-      await pdsClient.call(com.atproto.server.requestAccountDelete)
+      await pdsClient.call(
+        com.atproto.server.requestAccountDelete,
+        undefined,
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       setError('')
       setEmailSentCount(prevCount => prevCount + 1)
       setStep(Step.VERIFY_CODE)
@@ -122,11 +127,16 @@ function DeleteAccountDialogInner({
       // Inform chat service of intent to delete account. The chat client is
       // proxied to the chat service; a failure throws.
       await chatClient.call(chat.bsky.actor.deleteAccount)
-      await pdsClient.call(com.atproto.server.deleteAccount, {
-        did: currentAccount.did as DidString,
-        password,
-        token,
-      })
+      await pdsClient.call(
+        com.atproto.server.deleteAccount,
+        {
+          did: currentAccount.did as DidString,
+          password,
+          token,
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       control.close(() => {
         toast.show(_(msg`Your account has been deleted, see ya! ✌️`))
         resetToTab('HomeTab')

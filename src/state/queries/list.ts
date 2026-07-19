@@ -149,12 +149,17 @@ export function useListMetadataMutation() {
       } else if (avatar === null) {
         record.avatar = undefined
       }
-      const res = await pdsClient.call(com.atproto.repo.putRecord, {
-        repo: currentAccount.did,
-        collection: 'app.bsky.graph.list',
-        rkey,
-        record,
-      })
+      const res = await pdsClient.call(
+        com.atproto.repo.putRecord,
+        {
+          repo: currentAccount.did,
+          collection: 'app.bsky.graph.list',
+          rkey,
+          record,
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
 
       // wait for the appview to update
       await whenAppViewReady(appviewClient, res.uri, v => {
@@ -227,10 +232,15 @@ export function useListDeleteMutation() {
 
       // apply in chunks
       for (const writesChunk of chunk(writes, 10)) {
-        await pdsClient.call(com.atproto.repo.applyWrites, {
-          repo: currentAccount.did as AtIdentifierString,
-          writes: writesChunk,
-        })
+        await pdsClient.call(
+          com.atproto.repo.applyWrites,
+          {
+            repo: currentAccount.did as AtIdentifierString,
+            writes: writesChunk,
+          },
+          // service: null strips the appview proxy header - this must hit the account host (PDS)
+          {service: null},
+        )
       }
 
       // wait for the appview to update. once the list is deleted, getList

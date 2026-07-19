@@ -60,8 +60,9 @@ StateContext.displayName = 'SessionStateContext'
 
 /**
  * Holds the full {@link SessionBundle} (or the logged-out
- * {@link PublicSessionBundle}) for the active account. The three-client hooks
- * (`useLexClient`/`useAppviewClient`/`usePdsClient`) read from here.
+ * {@link PublicSessionBundle}) for the active account. The authed client hooks
+ * (`useLexClient`/`useAppviewClient`/`usePdsClient`), which all return the one
+ * merged `bskyClient` when signed in, read from here.
  */
 const BundleContext = createContext<SessionBundle | PublicSessionBundle | null>(
   null,
@@ -526,12 +527,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     const bundle = state.currentAgentState.agent as unknown as SessionBundle
     const signal = cancelPendingTask()
     /*
-     * Fetch through the account (PDS) client and dispatch the patch. We do NOT
-     * mutate the session object (PasswordSession's data is immutable to us); the
-     * reducer patches only the `accounts` entry, and the email-state hook reads
-     * from the account rather than the session.
+     * Fetch through the merged Bluesky client and dispatch the patch. getSession
+     * must hit the user's PDS, not the appview proxy, so this raw call passes
+     * `{service: null}` to strip the instance's appview `atproto-proxy` header.
+     * We do NOT mutate the session object (PasswordSession's data is immutable to
+     * us); the reducer patches only the `accounts` entry, and the email-state
+     * hook reads from the account rather than the session.
      */
-    const data = await bundle.accountClient.call(com.atproto.server.getSession)
+    const data = await bundle.bskyClient.call(
+      com.atproto.server.getSession,
+      {},
+      {service: null},
+    )
     if (signal.aborted) return
     store.dispatch({
       type: 'partial-refresh-session',
@@ -669,7 +676,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           registerBundleKillSwitch(newBundle, hooks.kill)
           /*
            * Reapply this account's subscribed labelers to the freshly built
-           * appview client: buildBundle starts with an empty per-instance
+           * merged Bluesky client: buildBundle starts with an empty per-instance
            * labeler set, and this rebuild path never runs
            * configureModerationForAccount on its own. It is fully synchronous
            * (the labeler cache is a local MMKV read), so the whole prep + arm +
@@ -857,39 +864,53 @@ export function useRequireAuth() {
 }
 
 /**
- * Authenticated lex {@link Client} for appview reads. Backed by the active
- * bundle's appview client (proxied to the Bluesky appview, with labelers); its
- * identity is stable per-bundle. Falls back to the public client when there is
- * no bundle (logged out, or used outside the provider) so callers can treat it
- * as always-present.
+ * Authenticated lex {@link Client} for the active account. Backed by the active
+ * bundle's single merged Bluesky client (proxied to the Bluesky appview, with
+ * labelers); its identity is stable per-bundle. Falls back to the public client
+ * when there is no bundle (logged out, or used outside the provider) so callers
+ * can treat it as always-present.
+ *
+ * All three authed client hooks (this, {@link useAppviewClient},
+ * {@link usePdsClient}) now return the SAME merged client for a signed-in
+ * account. They differ ONLY in their logged-out fallback: this hook and
+ * `useAppviewClient` fall back to the public read client, while `usePdsClient`
+ * falls back to the throwing unauthenticated client.
  */
 export function useLexClient(): Client {
   const bundle = useContext(BundleContext)
-  return bundle?.appviewClient ?? getPublicLexClient()
+  return bundle?.bskyClient ?? getPublicLexClient()
 }
 
 /**
- * Alias of {@link useLexClient}: the authenticated appview client for the
- * active account.
+ * Alias of {@link useLexClient}: the authenticated merged Bluesky client for the
+ * active account, falling back to the public read client when logged out.
  */
 export function useAppviewClient(): Client {
   const bundle = useContext(BundleContext)
-  return bundle?.appviewClient ?? getPublicLexClient()
+  return bundle?.bskyClient ?? getPublicLexClient()
 }
 
 /**
- * The account (PDS) lex {@link Client} for the active account. Writes and record
- * mutations go here - requests hit the user's PDS directly (no appview proxy).
+ * The authenticated merged Bluesky client for the active account, the SAME
+ * instance returned by {@link useLexClient}/{@link useAppviewClient}. The name
+ * is historical (there is no longer a separate PDS client): use this hook at
+ * call sites whose requests must target the ACCOUNT HOST. Record helpers on the
+ * client auto-target it (lex-client 0.3.0 defaults `service = null` per call);
+ * raw `com.atproto.server`/`identity`/`sync`/`temp` calls must pass
+ * `{service: null}` to strip the appview proxy.
  *
  * Logged out, returns a stable client ({@link getUnauthenticatedClient}) that
  * throws `NotAuthenticatedError` before any network I/O, so an unauthenticated
- * write fails loudly rather than silently hitting `public.api.bsky.app`.
- * Components may safely hold this client while logged out; only calling it
- * throws. To branch on auth state, use {@link useMaybePdsClient} instead.
+ * write fails loudly rather than silently hitting `public.api.bsky.app`. This is
+ * the ONLY logged-out write protection - the public bundle now carries the
+ * public read client in `bskyClient`, so this hook gates on `bundle.session`
+ * (not on a distinct bundle field) to decide whether to throw. Components may
+ * safely hold this client while logged out; only calling it throws. To branch
+ * on auth state, use {@link useMaybePdsClient} instead.
  */
 export function usePdsClient(): Client {
   const bundle = useContext(BundleContext)
-  return bundle?.accountClient ?? getUnauthenticatedClient()
+  return bundle?.session ? bundle.bskyClient : getUnauthenticatedClient()
 }
 
 /**
@@ -907,8 +928,9 @@ export function useChatClient(): Client {
 }
 
 /**
- * The account (PDS) lex {@link Client} for the active account, or `null` when
- * there is no active session (logged out, or used outside the provider).
+ * The authenticated merged Bluesky client for the active account (the same
+ * instance {@link usePdsClient} returns when signed in), or `null` when there is
+ * no active session (logged out, or used outside the provider).
  *
  * The escape hatch for the rare component that genuinely renders a logged-out
  * branch and must decide whether a write path is available. Prefer
@@ -917,7 +939,7 @@ export function useChatClient(): Client {
  */
 export function useMaybePdsClient(): Client | null {
   const bundle = useContext(BundleContext)
-  return bundle?.session ? bundle.accountClient : null
+  return bundle?.session ? bundle.bskyClient : null
 }
 
 /**

@@ -44,7 +44,12 @@ export function DisableEmail2FADialog({
     setError('')
     setIsProcessing(true)
     try {
-      await pdsClient.call(com.atproto.server.requestEmailUpdate)
+      await pdsClient.call(
+        com.atproto.server.requestEmailUpdate,
+        undefined,
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       setStage(Stages.ConfirmCode)
     } catch (e) {
       setError(cleanError(String(e)))
@@ -58,11 +63,16 @@ export function DisableEmail2FADialog({
     setIsProcessing(true)
     try {
       if (currentAccount?.email) {
-        await pdsClient.call(com.atproto.server.updateEmail, {
-          email: currentAccount.email,
-          token: confirmationCode.trim(),
-          emailAuthFactor: false,
-        })
+        await pdsClient.call(
+          com.atproto.server.updateEmail,
+          {
+            email: currentAccount.email,
+            token: confirmationCode.trim(),
+            emailAuthFactor: false,
+          },
+          // service: null strips the appview proxy header - this must hit the account host (PDS)
+          {service: null},
+        )
         await refreshSession()
         Toast.show(_(msg({message: 'Email 2FA disabled', context: 'toast'})))
       }

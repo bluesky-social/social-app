@@ -27,10 +27,9 @@ jest.mock('jwt-decode', () => ({
 }))
 
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
-import {app, chat} from '#/lexicons'
+import {app, chat, com} from '#/lexicons'
 import {
-  buildAccountClient,
-  buildAppviewClient,
+  buildBskyClient,
   buildChatClient,
   getPublicLexClient,
   getUnauthenticatedClient,
@@ -123,11 +122,11 @@ function makeSession(
   })
 }
 
-describe('buildAppviewClient', () => {
+describe('buildBskyClient', () => {
   it('sets the appview atproto-proxy header and includes only the per-instance labelers', async () => {
     const {seen, fetchMock} = makeCapturingFetch()
     const session = makeSession(fetchMock)
-    const client = buildAppviewClient(session, [CUSTOM_LABELER])
+    const client = buildBskyClient(session, [CUSTOM_LABELER])
 
     await client.call(app.bsky.actor.getProfile.main, {actor: HANDLE})
 
@@ -147,36 +146,66 @@ describe('buildAppviewClient', () => {
   it('routes through the session fetchHandler with the bearer token', async () => {
     const {seen, fetchMock} = makeCapturingFetch()
     const session = makeSession(fetchMock)
-    const client = buildAppviewClient(session, [])
+    const client = buildBskyClient(session, [])
 
     await client.call(app.bsky.actor.getProfile.main, {actor: HANDLE})
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
     expect(seen[0].headers.get('authorization')).toBe('Bearer access-jwt')
   })
-})
 
-describe('buildAccountClient', () => {
-  it('has no atproto-proxy header (requests hit the PDS directly)', async () => {
+  it('strips the appview proxy AND accept-labelers headers on a record helper (auto-targets the account host)', async () => {
+    /*
+     * Even though the instance is configured with the appview service and a
+     * per-instance labeler, lex-client 0.3.0's record helpers default per-call
+     * `service = null` / `labelers = null`, deleting both headers so the call
+     * hits the user's PDS. We exercise this via `getRecord`: it shares the
+     * identical `service = null` / `labelers = null` default with the write
+     * helpers (createRecord/putRecord/...), but does not lex-encode a record
+     * body, so it dodges a lex-data CID-encoding incompatibility that makes
+     * createRecord throw before any fetch in this jest environment. The stub
+     * response fails getRecord output validation; `.catch` swallows that
+     * (headers are recorded pre-parse). The request targets bsky.social (the
+     * PDS host), NOT the appview.
+     */
     const {seen, fetchMock} = makeCapturingFetch()
     const session = makeSession(fetchMock)
-    const client = buildAccountClient(session)
+    const client = buildBskyClient(session, [CUSTOM_LABELER])
 
-    await client.call(app.bsky.actor.getProfile.main, {actor: HANDLE})
+    await client.getRecord('app.bsky.feed.post', 'self').catch(() => {})
 
     expect(seen.length).toBe(1)
     expect(seen[0].headers.get('atproto-proxy')).toBeNull()
+    expect(seen[0].headers.get('atproto-accept-labelers')).toBeNull()
   })
 
-  it('routes through the session fetchHandler with the bearer token', async () => {
+  it('inherits the appview proxy on a raw appview query call', async () => {
     const {seen, fetchMock} = makeCapturingFetch()
     const session = makeSession(fetchMock)
-    const client = buildAccountClient(session)
+    const client = buildBskyClient(session, [])
 
-    await client.call(app.bsky.actor.getProfile.main, {actor: HANDLE})
+    await client.call(app.bsky.feed.getTimeline.main, {}).catch(() => {})
 
-    expect(fetchMock).toHaveBeenCalledTimes(1)
-    expect(seen[0].headers.get('authorization')).toBe('Bearer access-jwt')
+    expect(seen.length).toBe(1)
+    expect(seen[0].headers.get('atproto-proxy')).toBe(APPVIEW_PROXY)
+  })
+
+  it('strips the appview proxy on a raw call passed {service: null}', async () => {
+    /*
+     * A raw call inherits the instance appview proxy unless the call site opts
+     * out with `{service: null}` - the escape hatch record helpers apply
+     * automatically. getSession must hit the PDS, so its call passes it.
+     */
+    const {seen, fetchMock} = makeCapturingFetch()
+    const session = makeSession(fetchMock)
+    const client = buildBskyClient(session, [])
+
+    await client
+      .call(com.atproto.server.getSession.main, {}, {service: null})
+      .catch(() => {})
+
+    expect(seen.length).toBe(1)
+    expect(seen[0].headers.get('atproto-proxy')).toBeNull()
   })
 })
 
@@ -288,11 +317,11 @@ describe('getPublicLexClient', () => {
  * section 6).
  */
 describe('labeler-header regression guard', () => {
-  it('appview client emits the global Bluesky labeler redacted and the per-instance labeler plain', async () => {
+  it('bsky client emits the global Bluesky labeler redacted and the per-instance labeler plain', async () => {
     /*
      * The moderation DID flows only through the global Client.appLabelers,
      * which lex-client merges into the header per request with the `;redact`
-     * suffix; buildAppviewClient no longer lists it as a per-instance labeler.
+     * suffix; buildBskyClient no longer lists it as a per-instance labeler.
      * Configure the global appLabelers to the Bluesky moderation DID (matching
      * switchToBskyAppLabeler in moderation.ts) so the composition matches
      * production.
@@ -301,7 +330,7 @@ describe('labeler-header regression guard', () => {
 
     const {seen, fetchMock} = makeCapturingFetch()
     const session = makeSession(fetchMock)
-    const client = buildAppviewClient(session, [CUSTOM_LABELER])
+    const client = buildBskyClient(session, [CUSTOM_LABELER])
     await client
       .call(app.bsky.actor.getProfile.main, {actor: HANDLE})
       .catch(() => {})

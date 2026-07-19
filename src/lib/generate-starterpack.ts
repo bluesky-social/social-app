@@ -36,10 +36,17 @@ export const createStarterPackList = async ({
     purpose: 'app.bsky.graph.defs#referencelist',
   })
   if (!list) throw new Error('List creation failed')
-  await client.call(com.atproto.repo.applyWrites, {
-    repo: client.assertDid,
-    writes: profiles.map(p => createListItem({did: p.did, listUri: list.uri})),
-  })
+  await client.call(
+    com.atproto.repo.applyWrites,
+    {
+      repo: client.assertDid,
+      writes: profiles.map(p =>
+        createListItem({did: p.did, listUri: list.uri}),
+      ),
+    },
+    // service: null strips the appview proxy header - this must hit the account host (PDS)
+    {service: null},
+  )
 
   return list
 }
