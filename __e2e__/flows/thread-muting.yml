@@ -87,15 +87,24 @@ appId: xyz.blueskyweb.app
 # (feedItem-by-alice.test) rather than relying on which replyBtn Maestro picks
 # first. This keeps both reply taps deterministic regardless of list order or
 # how many posts have rendered.
-- tapOn:
-    id: "replyBtn"
-    childOf:
-      id: "feedItem-by-alice.test"
-# Wait for the composer to fully open before typing.
-- extendedWaitUntil:
-    visible:
-      id: "composerPublishBtn"
-    timeout: 10000
+#
+# Even with the close-gating below, the replyBtn tap can land on a recycled list
+# row while the author feed re-renders after a publish, and be swallowed so the
+# composer never opens. Wrapping the tap + open-wait in retry makes opening the
+# composer idempotent: a swallowed tap just re-taps until the publish button
+# appears. A first-try success does not retry.
+- retry:
+    maxRetries: 3
+    commands:
+      - tapOn:
+          id: "replyBtn"
+          childOf:
+            id: "feedItem-by-alice.test"
+      # Wait for the composer to fully open before typing.
+      - extendedWaitUntil:
+          visible:
+            id: "composerPublishBtn"
+          timeout: 10000
 - inputText: "Reply 2"
 - tapOn:
     id: "composerPublishBtn"
@@ -115,15 +124,21 @@ appId: xyz.blueskyweb.app
       id: "replyBtn"
     timeout: 10000
 - waitForAnimationToEnd
-- tapOn:
-    id: "replyBtn"
-    childOf:
-      id: "feedItem-by-alice.test"
-# Wait for the composer to fully open before typing.
-- extendedWaitUntil:
-    visible:
-      id: "composerPublishBtn"
-    timeout: 10000
+# As with Reply 2: even after gating on the composer close, this tap can hit a
+# recycled row during the post-publish feed re-render and be swallowed, so wrap
+# the open in retry to make it idempotent.
+- retry:
+    maxRetries: 3
+    commands:
+      - tapOn:
+          id: "replyBtn"
+          childOf:
+            id: "feedItem-by-alice.test"
+      # Wait for the composer to fully open before typing.
+      - extendedWaitUntil:
+          visible:
+            id: "composerPublishBtn"
+          timeout: 10000
 - inputText: "Reply 3"
 - tapOn:
     id: "composerPublishBtn"
