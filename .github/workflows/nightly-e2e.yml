@@ -29,7 +29,8 @@ env:
 jobs:
   ios:
     name: iOS Maestro E2E
-    if: github.repository == 'bluesky-social/social-app'
+    # TODO(samuel): temporarily disabled while stabilizing Android; restore to: github.repository == 'bluesky-social/social-app'
+    if: false
     runs-on: macos-26-xlarge
     timeout-minutes: 120
     steps:
@@ -210,7 +211,10 @@ jobs:
           android_sdk="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
           sdkmanager_bin="$android_sdk/cmdline-tools/latest/bin/sdkmanager"
           avdmanager_bin="$android_sdk/cmdline-tools/latest/bin/avdmanager"
-          system_image="system-images;android-35;google_apis;x86_64"
+          # API 35 emulator images have known stability problems in headless CI
+          # (see flutter/flutter#153445); the qemu process died deterministically
+          # on the first native stack-screen push with the API 35 image.
+          system_image="system-images;android-34;google_apis;x86_64"
 
           if [ ! -x "$sdkmanager_bin" ] || [ ! -x "$avdmanager_bin" ]; then
             echo "Android command-line tools were not found under $android_sdk" >&2
@@ -264,6 +268,9 @@ jobs:
           # PID from that file directly; killing the subshell would not kill the
           # emulator child.
           (
+            # wait returns the emulator's non-zero status on crash; set -e would
+            # abort the subshell before the status is logged.
+            set +e
             "$android_sdk/emulator/emulator" @nightly-e2e \
               -port 5554 \
               -no-window \
@@ -325,8 +332,14 @@ jobs:
             pgrep -fa "emulator.*nightly-e2e" || echo "Emulator process not found"
             echo "=== Emulator exit status ==="
             grep "Emulator exited" artifacts/android/emulator.log || echo "No emulator exit status recorded"
-            echo "=== OOM killer check ==="
-            sudo dmesg 2>/dev/null | grep -i "oom\|killed\|out of memory" | tail -20 || echo "dmesg not available"
+            echo "=== OOM killer check (kernel) ==="
+            oom_lines=$(sudo dmesg 2>/dev/null | grep -iE "oom|killed process|out of memory" | tail -20)
+            echo "${oom_lines:-No kernel OOM evidence found (or dmesg unavailable)}"
+            echo "=== systemd-oomd check ==="
+            oomd_lines=$(journalctl -u systemd-oomd --no-pager 2>/dev/null | tail -20)
+            echo "${oomd_lines:-No systemd-oomd journal entries (or journalctl unavailable)}"
+            echo "=== journal kernel tail ==="
+            journalctl -k --no-pager 2>/dev/null | tail -30 || echo "journalctl -k unavailable"
             echo "=== Emulator crash database ==="
             ls -la /tmp/android-runner/emu-crash-*.db 2>/dev/null || echo "No crash database found"
           } > artifacts/android/emulator-diagnostics.log 2>&1

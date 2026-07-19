@@ -116,7 +116,10 @@ function platformResult({name, status, root, artifactUrl}) {
   // A cancelled or timed-out Maestro run may never flush JUnit. Its CLI log is
   // streamed continuously, so use those failure lines when JUnit has no detail.
   const failures = junitFailures.length > 0 ? junitFailures : cliFailures
-  const failed = status !== 'success' || failures.length > 0
+  // A skipped platform (e.g. iOS while temporarily disabled) is not a failure
+  // as long as it produced no flow failures.
+  const failed =
+    (status !== 'success' && status !== 'skipped') || failures.length > 0
   return {
     name,
     status,
@@ -129,7 +132,9 @@ function platformResult({name, status, root, artifactUrl}) {
 }
 
 function statusEmoji(status) {
-  return status === 'success' ? ':white_check_mark:' : ':x:'
+  if (status === 'success') return ':white_check_mark:'
+  if (status === 'skipped') return ':fast_forward:'
+  return ':x:'
 }
 
 function slackEscape(value) {
@@ -179,8 +184,14 @@ function githubSummary({notify, platforms, shortSha, runUrl, commitUrl}) {
   ]
 
   for (const platform of platforms) {
+    const headerEmoji =
+      platform.status === 'success'
+        ? '✅'
+        : platform.status === 'skipped'
+          ? '⏭️'
+          : '❌'
     lines.push(
-      `## ${platform.status === 'success' ? '✅' : '❌'} ${platform.name}`,
+      `## ${headerEmoji} ${platform.name}`,
       '',
       `Job status: \`${platform.status}\``,
       '',
