@@ -3,17 +3,17 @@ import {api} from '@bsky.app/sdk'
 
 import {IS_TEST_USER} from '#/lib/constants'
 import {com} from '#/lexicons'
+import {account as accountStorage} from '#/storage'
 import {configureAdditionalModerationAuthorities} from './additional-moderation-authorities'
-import {readLabelers} from './agent-config'
 import {type SessionBundle} from './session-core'
 import {type SessionAccount} from './types'
 
 /*
- * The Bluesky moderation labeler DID is `api.moderation.did` (from
- * '@bsky.app/sdk'), value `did:plc:ar7c4by46qjdydhdevvrndac`. We use it
- * everywhere: the global appLabelers config, the per-account filter, and the
- * appview client's base labeler (matching `buildAppviewClient`); all resolve to
- * identical `atproto-accept-labelers` headers.
+ * The Bluesky moderation labeler (`api.moderation.did`) flows ONLY through the
+ * global `Client.appLabelers` config: lex-client merges the static appLabelers
+ * with each client's per-instance `labelers` into the `atproto-accept-labelers`
+ * header on every request, and appLabelers entries carry the `;redact` suffix
+ * (redaction authority) while plain per-instance labelers don't.
  */
 
 /**
@@ -25,24 +25,42 @@ function configureGlobalAppLabelers(dids: string[]) {
 }
 
 /**
+ * Cache an account's subscribed labeler DIDs. Called on every preferences
+ * fetch, so the cache is eventually consistent with the server.
+ */
+export function saveLabelers(did: string, value: string[]) {
+  accountStorage.set([did, 'labelers'], value)
+}
+
+/**
+ * Read the cached labeler DIDs for an account, or `undefined` if none have
+ * been cached yet (first session on this device) or the entry is unreadable.
+ */
+export function readLabelers(did: string): string[] | undefined {
+  try {
+    return accountStorage.get([did, 'labelers'])
+  } catch {
+    /* a corrupt entry fails JSON.parse inside Storage.get; treat as no cache */
+    return undefined
+  }
+}
+
+/**
  * Apply an account's subscribed labeler DIDs to a live appview client. The lex
- * `Client` rebuilds the `atproto-accept-labelers` header per request, so this
- * takes effect on the very next request without a client rebuild.
+ * `Client` rebuilds the header per request, so this takes effect on the next
+ * request without a client rebuild.
  *
- * The Bluesky moderation labeler is always re-asserted as the base: sending ANY
- * `atproto-accept-labelers` header replaces the server-side default, and
- * `setLabelers` clears then re-adds, so the moderation DID must be included
- * explicitly to stay active.
+ * We filter out the Bluesky moderation labeler: it is already asserted globally
+ * via `Client.appLabelers` (with `;redact`), and a user "subscribing" to it
+ * must not add a second, plain (non-redact) header entry alongside the redacted
+ * one.
  */
 export function applyLabelersToClient(
   client: Client,
   subscribedDids: string[],
 ) {
   const perAccount = subscribedDids.filter(did => did !== api.moderation.did)
-  client.setLabelers([
-    api.moderation.did,
-    ...perAccount,
-  ] as `did:${string}:${string}`[])
+  client.setLabelers(perAccount as `did:${string}:${string}`[])
 }
 
 export function configureModerationForGuest() {
@@ -53,12 +71,14 @@ export function configureModerationForGuest() {
 }
 
 /**
- * Configure moderation labelers for a signed-in account.
+ * Configure moderation labelers for a signed-in account. Fully synchronous:
+ * the labeler cache is a local MMKV read, so the bundle leaves here with its
+ * per-account labelers already applied, in the same tick.
  *
  * Takes the whole {@link SessionBundle} so it can apply per-account labelers to
  * the authed appview client (`bundle.appviewClient`, backing `useLexClient()`).
  */
-export async function configureModerationForAccount(
+export function configureModerationForAccount(
   bundle: SessionBundle,
   account: SessionAccount,
 ) {
@@ -66,17 +86,24 @@ export async function configureModerationForAccount(
   // Don't add any other global behavior here!
   switchToBskyAppLabeler()
   if (IS_TEST_USER(account.handle)) {
-    await trySwitchToTestAppLabeler(bundle)
+    /*
+     * Fire-and-forget: this resolves a handle over the network and only runs
+     * in the test environment. Requests made before it lands use the standard
+     * Bluesky app labeler; that race is acceptable for tests.
+     */
+    void trySwitchToTestAppLabeler(bundle)
   }
 
   // The code below is actually relevant to production (and isn't global).
-  const labelerDids = await readLabelers(account.did).catch(_ => {})
+  const labelerDids = readLabelers(account.did)
   if (labelerDids) {
-    // Apply the per-account labelers to the appview client.
     applyLabelersToClient(bundle.appviewClient, labelerDids)
   } else {
-    // If there are no headers in the storage, we'll not send them on the initial requests.
-    // If we wanted to fix this, we could block on the preferences query here.
+    /*
+     * No cached labelers yet (first session on this device), so the initial
+     * requests go out without them. We could block on the preferences query
+     * here to fix that, but choose not to.
+     */
   }
 
   configureAdditionalModerationAuthorities()
@@ -88,9 +115,8 @@ function switchToBskyAppLabeler() {
 
 /**
  * In the test environment, swap the global app labeler for the test-env
- * moderation authority. The handle is resolved via the bundle's authed appview
- * client; `client.call` returns the response body directly (no `{data}`
- * wrapper), so `resolveHandle`'s output is `{did}`.
+ * moderation authority, resolving its handle via the bundle's authed appview
+ * client.
  */
 async function trySwitchToTestAppLabeler(bundle: SessionBundle) {
   const did = (
