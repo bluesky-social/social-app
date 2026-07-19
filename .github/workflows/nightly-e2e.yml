@@ -29,8 +29,7 @@ env:
 jobs:
   ios:
     name: iOS Maestro E2E
-    # TODO(samuel): temporarily disabled while stabilizing Android; restore to: github.repository == 'bluesky-social/social-app'
-    if: false
+    if: github.repository == 'bluesky-social/social-app'
     runs-on: macos-26-xlarge
     timeout-minutes: 120
     steps:
