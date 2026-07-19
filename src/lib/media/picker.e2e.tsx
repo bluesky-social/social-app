@@ -1,3 +1,4 @@
+import {Asset} from 'expo-asset'
 import {
   documentDirectory,
   getInfoAsync,
@@ -12,17 +13,6 @@ import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {IS_ANDROID} from '#/env'
 import {compressIfNeeded} from './manip'
 import {type PickerImage} from './picker.shared'
-
-/*
- * The Android emulator can't reach the iOS simulator's sample photo library,
- * so run-nightly-e2e.sh seeds a single jpg into the app's external files
- * directory before the flows run. That directory is world-readable via the
- * emulator's sdcardfs, so expo-file-system can read it without any runtime
- * media permission (unlike /sdcard/DCIM, which is gated behind scoped storage
- * on target SDK 35).
- */
-const ANDROID_E2E_MEDIA_DIR =
-  'file:///sdcard/Android/data/xyz.blueskyweb.app/files/e2e'
 
 async function getFile() {
   if (IS_ANDROID) {
@@ -57,25 +47,35 @@ async function getFile() {
   )
 }
 
+/*
+ * The Android emulator can't reach the iOS simulator's sample photo library,
+ * so we load a jpg bundled with the app instead. It is bundled via require()
+ * (resolved by Metro), so it survives `pm clear`, which Maestro's clearState
+ * runs at the start of every flow. An adb-seeded file in app-scoped external
+ * storage does not survive: pm clear wipes that directory each flow, so the
+ * seeded file is gone before the picker mock ever reads it.
+ */
 async function getAndroidFile() {
-  let files = await readDirectoryAsync(ANDROID_E2E_MEDIA_DIR)
-  files = files.filter(file => file.toLowerCase().endsWith('.jpg'))
-  const file = `${ANDROID_E2E_MEDIA_DIR}/${files[0]}`
+  const asset = Asset.fromModule(
+    require('../../../assets/images/welcome-modal-bg.jpg'),
+  )
+  await asset.downloadAsync()
 
-  const fileInfo = await getInfoAsync(file)
+  const path = asset.localUri!
+  const fileInfo = await getInfoAsync(path)
 
   if (!fileInfo.exists) {
     throw new Error('Failed to get file info')
   }
 
   /*
-   * Dimensions of the seeded asset (assets/images/welcome-modal-bg.jpg). Only
+   * Dimensions of the bundled asset (assets/images/welcome-modal-bg.jpg). Only
    * used for downstream aspect-ratio display; the actual bytes are read from
    * disk by compressIfNeeded.
    */
   return await compressIfNeeded(
     {
-      path: file,
+      path,
       mime: 'image/jpeg',
       size: fileInfo.size,
       width: 1432,

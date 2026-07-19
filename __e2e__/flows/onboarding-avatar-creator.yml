@@ -15,8 +15,13 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "e2eStartOnboarding"
 - tapOn: "Open avatar creator"
-- extendedWaitUntil:
-    visible: "Select an emoji"
+# The avatar-creator bottom sheet opens as a sliver on the short E2E emulator
+# (720x1600), so the picker content sits below the fold. Scroll it into view
+# instead of just waiting. No-op on iOS, where it is already visible.
+- scrollUntilVisible:
+    element:
+      text: "Select an emoji"
+    direction: DOWN
     timeout: 15000
 - tapOn: "Select the zap emoji as your avatar"
 - tapOn:

@@ -44,6 +44,12 @@ appId: xyz.blueskyweb.app
     id: "e2eRefreshHome"
 - tapOn:
     id: "replyBtn"
+# Wait for the composer to fully open before typing. Tapping replyBtn right
+# after the previous publish can race the closing composer on Android.
+- extendedWaitUntil:
+    visible:
+      id: "composerPublishBtn"
+    timeout: 10000
 - inputText: "Reply text only"
 - tapOn:
     id: "composerPublishBtn"
@@ -51,6 +57,11 @@ appId: xyz.blueskyweb.app
     id: "composeFAB"
 - tapOn:
     id: "replyBtn"
+# Wait for the composer to fully open before typing.
+- extendedWaitUntil:
+    visible:
+      id: "composerPublishBtn"
+    timeout: 10000
 - inputText: "Reply with an image"
 - tapOn:
     id: "openMediaBtn"
@@ -63,6 +74,11 @@ appId: xyz.blueskyweb.app
     id: "composeFAB"
 - tapOn:
     id: "replyBtn"
+# Wait for the composer to fully open before typing.
+- extendedWaitUntil:
+    visible:
+      id: "composerPublishBtn"
+    timeout: 10000
 - inputText: "Reply with a https://example.com link card"
 - tapOn:
     id: "composerPublishBtn"

@@ -20,6 +20,12 @@ appId: xyz.blueskyweb.app
 - inputText: "Test thread"
 - tapOn:
     id: "composerPublishBtn"
+# Wait for the composer to close and the home feed to settle before signing
+# out. Without a settle guard the next action can race the closing composer.
+- extendedWaitUntil:
+    visible:
+      id: "composeFAB"
+    timeout: 10000
 
 # Login, reply to the thread, and log out
 - tapOn:
@@ -31,9 +37,19 @@ appId: xyz.blueskyweb.app
       id: "viewHeaderHomeFeedPrefsBtn"
 - tapOn:
     id: "replyBtn"
+# Wait for the composer to fully open before typing.
+- extendedWaitUntil:
+    visible:
+      id: "composerPublishBtn"
+    timeout: 10000
 - inputText: "Reply 1"
 - tapOn:
     id: "composerPublishBtn"
+# Wait for the composer to close before signing out.
+- extendedWaitUntil:
+    visible:
+      id: "composeFAB"
+    timeout: 10000
 
 # Login, confirm notification exists, mute thread, and log out
 - tapOn:
@@ -67,14 +83,36 @@ appId: xyz.blueskyweb.app
     id: "profilePager-selector-1"
 - tapOn:
     id: "replyBtn"
+# Wait for the composer to fully open before typing.
+- extendedWaitUntil:
+    visible:
+      id: "composerPublishBtn"
+    timeout: 10000
 - inputText: "Reply 2"
 - tapOn:
     id: "composerPublishBtn"
+# Wait for the composer to close and the thread reply button to return before
+# opening the composer again. Previously this raced and the second replyBtn tap
+# landed before the composer was ready, so the composer never opened.
+- extendedWaitUntil:
+    visible:
+      id: "replyBtn"
+    timeout: 10000
 - tapOn:
     id: "replyBtn"
+# Wait for the composer to fully open before typing.
+- extendedWaitUntil:
+    visible:
+      id: "composerPublishBtn"
+    timeout: 10000
 - inputText: "Reply 3"
 - tapOn:
     id: "composerPublishBtn"
+# Wait for the composer to close and the thread to settle before signing out.
+- extendedWaitUntil:
+    visible:
+      id: "replyBtn"
+    timeout: 10000
 
 # Login, confirm notifications dont exist, unmute the thread, ~~confirm notifications exist~~
 # Mute thread behaviour no longer change old notifications after muting/unmuting a thread -sfn

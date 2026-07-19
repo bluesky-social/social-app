@@ -64,7 +64,10 @@ appId: xyz.blueskyweb.app
     id: "editProfileSaveBtn"
 - assertNotVisible:
     id: "editProfileModal"
-- assertVisible: "alice.test"
+# The display-name node renders the handle as a Text with a nested badge View
+# once the display name is cleared, so the a11y text is not the bare handle
+# string on Android. Match it as a substring instead.
+- assertVisible: ".*alice\\.test.*"
 - assertNotVisible: "One cool hacker"
 
 # Set avi and banner via the edit profile modal

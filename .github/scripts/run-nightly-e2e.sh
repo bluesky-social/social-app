@@ -153,16 +153,6 @@ if [[ "$platform" == "android" ]]; then
   phase "Configuring Android localhost routing"
   adb -s "$device_id" reverse tcp:3000 tcp:3000
   adb -s "$device_id" reverse tcp:8081 tcp:8081
-
-  # The e2e media picker mock reads a seeded photo from the app's external
-  # files directory (see src/lib/media/picker.e2e.tsx). The app must already
-  # be installed (the install step runs before this script), so the directory
-  # exists and is owned by the app; sdcardfs makes it world-readable so the
-  # mock can read the file without any runtime media permission.
-  phase "Seeding e2e media"
-  e2e_media_dir="/sdcard/Android/data/xyz.blueskyweb.app/files/e2e"
-  adb -s "$device_id" shell mkdir -p "$e2e_media_dir"
-  adb -s "$device_id" push assets/images/welcome-modal-bg.jpg "$e2e_media_dir/test.jpg"
 fi
 
 phase "Running Maestro flows"
