@@ -39,7 +39,7 @@ export class MessagesEventBus {
     this.id = nanoid(3)
     this.chatClient = params.chatClient
 
-    this.init()
+    void this.init()
   }
 
   /**
@@ -47,7 +47,8 @@ export class MessagesEventBus {
    * session bundle (new client identities, same DID) and disposes the old one,
    * whose fetch then throws. Every request reads `this.chatClient` per call, so
    * reassigning the field is enough to keep polling alive without tearing down
-   * the bus and its in-memory poll cursor.
+   * the bus and its in-memory poll cursor. init()/poll() also tolerate the
+   * disposed client's mid-flight rejection (see their catch blocks).
    */
   updateClient(client: Client) {
     this.chatClient = client
@@ -251,7 +252,7 @@ export class MessagesEventBus {
        * Initializing transitions us to Ready + resetPoll + emit connect.
        */
       this.status = MessagesEventBusStatus.Initializing
-      this.init()
+      void this.init()
     } else {
       /*
        * A poll failed mid-session but we still have a valid cursor. Resume
@@ -269,9 +270,11 @@ export class MessagesEventBus {
   private async init() {
     logger.debug(`init`, {})
 
+    const requestClient = this.chatClient
+
     try {
       const response = await networkRetry(2, () => {
-        return this.chatClient.call(chat.bsky.convo.getLog, {})
+        return requestClient.call(chat.bsky.convo.getLog, {})
       })
       // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
 
@@ -288,6 +291,18 @@ export class MessagesEventBus {
 
       this.dispatch({event: MessagesEventBusDispatchEvent.Ready})
     } catch (e: any) {
+      /*
+       * A bundle swap disposed the client mid-flight, so this rejection is
+       * expected. Re-run init() against the replacement client instead of
+       * erroring out. We're still in Initializing here (no dispatch happened on
+       * this path), so the retry seeds latestRev and dispatches Ready exactly
+       * once.
+       */
+      if (requestClient !== this.chatClient) {
+        void this.init()
+        return
+      }
+
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`init failed`, {
           safeMessage: e.message,
@@ -336,11 +351,11 @@ export class MessagesEventBus {
   }
 
   private startPoll() {
-    if (!this.isPolling) this.poll()
+    if (!this.isPolling) void this.poll()
 
     this.pollIntervalRef = setInterval(() => {
       if (this.isPolling) return
-      this.poll()
+      void this.poll()
     }, this.pollInterval)
   }
 
@@ -365,9 +380,11 @@ export class MessagesEventBus {
     let needsEmit = false
     let batch: chat.bsky.convo.getLog.$OutputBody['logs'] = []
 
+    const requestClient = this.chatClient
+
     try {
       const response = await networkRetry(2, () => {
-        return this.chatClient.call(chat.bsky.convo.getLog, {
+        return requestClient.call(chat.bsky.convo.getLog, {
           cursor: this.latestRev,
         })
       })
@@ -396,6 +413,14 @@ export class MessagesEventBus {
         }
       }
     } catch (e: any) {
+      /*
+       * A bundle swap disposed the client mid-flight, so this rejection is
+       * expected. Skip the error dispatch (which would stop polling) and let the
+       * next interval poll with the replacement client. The finally block still
+       * clears isPolling, and the empty batch means nothing is emitted below.
+       */
+      if (requestClient !== this.chatClient) return
+
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.warn(`poll events failed`, {
           safeMessage: e.message,
