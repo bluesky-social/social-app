@@ -39,8 +39,7 @@ import {
 } from '#/state/queries/preferences/types'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient, usePdsClient} from '#/state/session'
-import {saveLabelers} from '#/state/session/agent-config'
-import {applyLabelersToClient} from '#/state/session/moderation'
+import {applyLabelersToClient, saveLabelers} from '#/state/session/moderation'
 import {useAgeAssurance} from '#/ageAssurance'
 import {makeAgeRestrictedModerationPrefs} from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
@@ -76,7 +75,7 @@ export function usePreferencesQuery() {
         const labelerDids = res.moderationPrefs.labelers.map(l => l.did)
 
         // save to local storage to ensure there are labels on initial requests
-        void saveLabelers(client.did, labelerDids)
+        saveLabelers(client.did, labelerDids)
 
         /*
          * Sync the subscribed labelers to the live appview client, mirroring the
