@@ -242,8 +242,10 @@ jobs:
             --package "$system_image" \
             --device pixel_6
 
-          # Reduce resolution to lighten SwiftShader rendering workload
-          printf 'hw.lcd.width=720\nhw.lcd.height=1600\nhw.lcd.density=280\n' \
+          # Reduce resolution to lighten the SwiftShader software-rendering
+          # workload, and raise RAM/cores/heap so the debug RN app has headroom.
+          # The default 2560MB RAM led to silent qemu crashes mid-flow.
+          printf 'hw.lcd.width=720\nhw.lcd.height=1600\nhw.lcd.density=280\nhw.ramSize=6144\nhw.cpu.ncore=4\nvm.heapSize=512\n' \
             >> "$ANDROID_AVD_HOME/nightly-e2e.avd/config.ini"
 
           if [ -e /dev/kvm ] && [ ! -w /dev/kvm ]; then
