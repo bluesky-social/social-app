@@ -19,7 +19,18 @@ jest.mock('#/state/events', () => ({
  * bottom-sheet module chain (same approach as session-test.ts).
  */
 jest.mock('#/state/birthdate')
-jest.mock('#/ageAssurance/data')
+/*
+ * `prefetchAgeAssuranceServerData` is a genuine prep await in each factory
+ * (moderation config is synchronous now, so the AA prefetch is where the
+ * fix-1 tests inject a mid-prep token rotation). The default is a no-op;
+ * individual tests install behavior via `mockImplementationOnce`.
+ */
+const mockPrefetchAgeAssuranceServerData = jest.fn<() => void | Promise<void>>()
+jest.mock('#/ageAssurance/data', () => ({
+  prefetchAgeAssuranceServerData: () => mockPrefetchAgeAssuranceServerData(),
+  setBirthdateForDid: () => {},
+  setCreatedAtForDid: () => {},
+}))
 jest.mock('#/ageAssurance/state', () => ({
   unsafeGetAndComputeAgeAssurance: () => ({state: {}, flags: {}}),
 }))
@@ -37,16 +48,18 @@ jest.mock('#/analytics', () => ({
 }))
 
 /*
- * `configureModerationForAccount` is one of the prep awaits in the resume/login
- * factories. We replace it with a hook that runs a REAL `session.refresh()`, so
- * a token rotation happens DURING prep (before arm()) - exactly the 401
- * auto-refresh scenario the re-snapshot fix guards against. The default is a
- * no-op so other tests are unaffected; individual tests install the refreshing
- * behavior via `mockImplementationOnce`. (jest requires out-of-scope factory
- * references to be `mock`-prefixed.)
+ * `configureModerationForAccount` is now fully synchronous (the labeler cache
+ * is a local MMKV read), so it is no longer a prep await - but it still runs
+ * inside each factory with the freshly built bundle, before the awaited prep
+ * steps. The fix-1 tests use this mock to CAPTURE the bundle, then inject a
+ * REAL `session.refresh()` into the awaited AA prefetch (see the
+ * `#/ageAssurance/data` mock above), so a token rotation happens DURING prep
+ * (before arm()) - exactly the 401 auto-refresh scenario the re-snapshot fix
+ * guards against. The default is a no-op so other tests are unaffected.
+ * (jest requires out-of-scope factory references to be `mock`-prefixed.)
  */
 const mockConfigureModerationForAccount =
-  jest.fn<(bundle: unknown, account: unknown) => Promise<void>>()
+  jest.fn<(bundle: unknown, account: unknown) => void>()
 jest.mock('../moderation', () => ({
   configureModerationForAccount: (bundle: unknown, account: unknown) =>
     mockConfigureModerationForAccount(bundle, account),
@@ -75,6 +88,8 @@ import {
   disposeBundle,
   extractPdsUrl,
   makeSessionHooks,
+  MAX_EXPIRY_RESCUE_GENERATIONS,
+  pickExpiryRescueCandidate,
   registerBundleKillSwitch,
   sessionAccountToSessionData,
   type SessionBundle,
@@ -514,17 +529,21 @@ describe('makeSessionHooks arm-latch + event mapping', () => {
     expect(onSessionChange.mock.calls[0][2]).toBe('network-error')
   })
 
-  it("does NOT thread a payload on the 'expired' path", () => {
+  it("threads the dying session payload on the 'expired' path", () => {
     /*
-     * onDeleted maps to 'expired' with no sessionData. The provider guards on
-     * `event === 'update' && sessionData`, so a missing payload here is what
-     * forces refreshedAccount === undefined (reducer clears tokens + logs out).
+     * onDeleted maps to 'expired' AND threads the dying SessionData through
+     * (the library hands onDeleted the session being destroyed, before it nulls
+     * its internal state). The provider reads the dying refreshJwt from this
+     * payload to drive the cross-tab expiry rescue. The provider still guards
+     * `refreshedAccount` on `event === 'update' && sessionData`, so the payload
+     * on 'expired' does NOT produce a refreshedAccount (reducer still clears
+     * tokens + logs out when no rescue applies) - see the provider test below.
      */
     const {onSessionChange, hooks} = setup()
     hooks.arm()
     void hooks.onDeleted?.call(fakeSession, fakeData)
     expect(onSessionChange.mock.calls[0][2]).toBe('expired')
-    expect(onSessionChange.mock.calls[0][3]).toBe(undefined)
+    expect(onSessionChange.mock.calls[0][3]).toBe(fakeData)
   })
 })
 
@@ -603,6 +622,7 @@ describe('session-hook payload threading (pre-commit ordering)', () => {
     })
     let refreshedAccountAtHookTime: SessionAccount | undefined = makeAccount()
     let observedEvent: AtpSessionEvent | undefined
+    let observedSessionData: SessionData | undefined
     const onSessionChange = jest.fn(
       (
         _bundle: SessionBundle,
@@ -611,6 +631,7 @@ describe('session-hook payload threading (pre-commit ordering)', () => {
         sessionData?: SessionData,
       ) => {
         observedEvent = event
+        observedSessionData = sessionData
         refreshedAccountAtHookTime = deriveRefreshedAccount(event, sessionData)
       },
     )
@@ -628,6 +649,13 @@ describe('session-hook payload threading (pre-commit ordering)', () => {
     await expect(session.refresh()).rejects.toBeDefined()
 
     expect(observedEvent).toBe('expired')
+    /*
+     * The dying SessionData IS threaded on 'expired' (its refreshJwt drives the
+     * provider's cross-tab rescue), but it does NOT become a refreshedAccount:
+     * deriveRefreshedAccount only maps the 'update' path, so the reducer still
+     * sees `undefined` and logs out when no rescue applies.
+     */
+    expect(observedSessionData?.refreshJwt).toBe('refresh-jwt')
     expect(refreshedAccountAtHookTime).toBe(undefined)
   })
 })
@@ -827,9 +855,10 @@ describe('refreshSession semantics', () => {
  * disarmed latch drops); an early snapshot would persist the stale refreshJwt,
  * which is dead on the next cold start.
  *
- * We simulate the mid-prep rotation by making the mocked
- * `configureModerationForAccount` (a genuine prep await in each factory) run a
- * real `session.refresh()`. The factory itself is re-required inside
+ * We simulate the mid-prep rotation by capturing the bundle from the mocked
+ * (now synchronous) `configureModerationForAccount` and making the mocked
+ * `prefetchAgeAssuranceServerData` (a genuine prep await in each factory) run
+ * a real `session.refresh()`. The factory itself is re-required inside
  * `jest.isolateModulesAsync` AFTER overriding `globalThis.fetch`, because
  * session-core captures `globalThis.fetch` into `networkAwareFetch` at module
  * load - and that captured fetch is what PasswordSession's auto-refresh routes
@@ -856,19 +885,26 @@ describe('factory account snapshot is taken AFTER prep (fix 1)', () => {
 
   beforeEach(() => {
     mockConfigureModerationForAccount.mockReset()
+    mockPrefetchAgeAssuranceServerData.mockReset()
   })
 
   it('resume: returned account carries the tokens rotated DURING prep', async () => {
     /*
      * A refresh mid-prep rotates the session to access-jwt-2/refresh-jwt-2.
      * `valid-access-jwt` decodes as non-expired, so resume() takes the sync
-     * fast path and the only refresh is the one prep triggers.
+     * fast path and the only refresh is the one prep triggers. The bundle is
+     * captured from the (synchronous) moderation call, and the rotation is
+     * injected into the awaited AA prefetch.
      */
+    let capturedBundle: SessionBundle | undefined
     mockConfigureModerationForAccount.mockImplementationOnce(
-      async (bundle: unknown) => {
-        await (bundle as SessionBundle).session.refresh()
+      (bundle: unknown) => {
+        capturedBundle = bundle as SessionBundle
       },
     )
+    mockPrefetchAgeAssuranceServerData.mockImplementationOnce(async () => {
+      await capturedBundle!.session.refresh()
+    })
     const fetchMock = makeMockFetch()
 
     await withFreshFactory(asFetch(fetchMock), async core => {
@@ -892,7 +928,7 @@ describe('factory account snapshot is taken AFTER prep (fix 1)', () => {
      * valid) stored tokens, confirming the moved snapshot did not regress the
      * happy path.
      */
-    mockConfigureModerationForAccount.mockResolvedValueOnce(undefined)
+    mockConfigureModerationForAccount.mockReturnValueOnce(undefined)
     const fetchMock = makeMockFetch()
 
     await withFreshFactory(asFetch(fetchMock), async core => {
@@ -903,5 +939,91 @@ describe('factory account snapshot is taken AFTER prep (fix 1)', () => {
       expect(account.accessJwt).toBe('valid-access-jwt')
       expect(account.refreshJwt).toBe('refresh-jwt')
     })
+  })
+})
+
+/*
+ * Fix 1: the pure decision behind the cross-tab expiry rescue. Given the dying
+ * session's refreshJwt and a preference-ordered list of "latest known"
+ * candidates, it picks the first candidate that is a usable, strictly-newer,
+ * not-already-failed generation - or undefined (fall through to logout).
+ */
+describe('pickExpiryRescueCandidate', () => {
+  it('picks a candidate whose refreshJwt differs from the dying one', () => {
+    const fresh = makeAccount({refreshJwt: 'refresh-jwt-2'})
+    const picked = pickExpiryRescueCandidate({
+      dyingRefreshJwt: 'refresh-jwt-1',
+      candidates: [fresh],
+      failedRefreshJwts: new Set(),
+    })
+    expect(picked).toBe(fresh)
+  })
+
+  it('rejects a candidate carrying the dying refreshJwt (equally dead)', () => {
+    const picked = pickExpiryRescueCandidate({
+      dyingRefreshJwt: 'refresh-jwt-1',
+      candidates: [makeAccount({refreshJwt: 'refresh-jwt-1'})],
+      failedRefreshJwts: new Set(),
+    })
+    expect(picked).toBe(undefined)
+  })
+
+  it('rejects a candidate with no refreshJwt', () => {
+    const picked = pickExpiryRescueCandidate({
+      dyingRefreshJwt: 'refresh-jwt-1',
+      candidates: [makeAccount({refreshJwt: undefined}), undefined],
+      failedRefreshJwts: new Set(),
+    })
+    expect(picked).toBe(undefined)
+  })
+
+  it('rejects a candidate already recorded as failed (loop guard)', () => {
+    const picked = pickExpiryRescueCandidate({
+      dyingRefreshJwt: 'refresh-jwt-1',
+      candidates: [makeAccount({refreshJwt: 'refresh-jwt-2'})],
+      failedRefreshJwts: new Set(['refresh-jwt-2']),
+    })
+    expect(picked).toBe(undefined)
+  })
+
+  it('tries candidates in order, preferring the first qualifying one', () => {
+    const persistedCandidate = makeAccount({
+      refreshJwt: 'refresh-jwt-persisted',
+    })
+    const reducerCandidate = makeAccount({refreshJwt: 'refresh-jwt-reducer'})
+    const picked = pickExpiryRescueCandidate({
+      dyingRefreshJwt: 'refresh-jwt-1',
+      candidates: [persistedCandidate, reducerCandidate],
+      failedRefreshJwts: new Set(),
+    })
+    expect(picked).toBe(persistedCandidate)
+  })
+
+  it('skips an unusable first candidate and falls back to a later one', () => {
+    const reducerCandidate = makeAccount({refreshJwt: 'refresh-jwt-reducer'})
+    const picked = pickExpiryRescueCandidate({
+      dyingRefreshJwt: 'refresh-jwt-1',
+      /* first candidate is the dying token; second is genuinely newer */
+      candidates: [
+        makeAccount({refreshJwt: 'refresh-jwt-1'}),
+        reducerCandidate,
+      ],
+      failedRefreshJwts: new Set(),
+    })
+    expect(picked).toBe(reducerCandidate)
+  })
+
+  it('gives up once the failed-generation set hits the hard cap', () => {
+    const failed = new Set<string>()
+    for (let i = 0; i < MAX_EXPIRY_RESCUE_GENERATIONS; i++) {
+      failed.add(`refresh-jwt-failed-${i}`)
+    }
+    const picked = pickExpiryRescueCandidate({
+      dyingRefreshJwt: 'refresh-jwt-dying',
+      /* a genuinely newer candidate exists, but the budget is exhausted */
+      candidates: [makeAccount({refreshJwt: 'refresh-jwt-brand-new'})],
+      failedRefreshJwts: failed,
+    })
+    expect(picked).toBe(undefined)
   })
 })
