@@ -124,7 +124,7 @@ function makeSession(
 }
 
 describe('buildAppviewClient', () => {
-  it('sets the appview atproto-proxy header and includes the moderation DID in labelers', async () => {
+  it('sets the appview atproto-proxy header and includes only the per-instance labelers', async () => {
     const {seen, fetchMock} = makeCapturingFetch()
     const session = makeSession(fetchMock)
     const client = buildAppviewClient(session, [CUSTOM_LABELER])
@@ -134,8 +134,14 @@ describe('buildAppviewClient', () => {
     expect(seen.length).toBe(1)
     expect(seen[0].headers.get('atproto-proxy')).toBe(APPVIEW_PROXY)
     const labelers = seen[0].headers.get('atproto-accept-labelers') ?? ''
-    expect(labelers).toContain(api.moderation.did)
     expect(labelers).toContain(CUSTOM_LABELER)
+    /*
+     * The moderation DID is NOT a per-instance labeler: it flows only through
+     * the global Client.appLabelers (unset in this test), where lex-client
+     * merges it into the header with `;redact` on every request. See the
+     * labeler-header regression guard below for the merged composition.
+     */
+    expect(labelers).not.toContain(api.moderation.did)
   })
 
   it('routes through the session fetchHandler with the bearer token', async () => {
@@ -147,10 +153,6 @@ describe('buildAppviewClient', () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
     expect(seen[0].headers.get('authorization')).toBe('Bearer access-jwt')
-    /* the moderation DID is always re-asserted even with no custom labelers */
-    expect(seen[0].headers.get('atproto-accept-labelers')).toContain(
-      api.moderation.did,
-    )
   })
 })
 
@@ -288,10 +290,12 @@ describe('getPublicLexClient', () => {
 describe('labeler-header regression guard', () => {
   it('appview client emits the global Bluesky labeler redacted and the per-instance labeler plain', async () => {
     /*
-     * buildAppviewClient re-asserts api.moderation.did as a base labeler; the
-     * global Client.appLabelers carry the `;redact` suffix. Configure the global
-     * appLabelers to the Bluesky moderation DID (matching switchToBskyAppLabeler
-     * in moderation.ts) so the composition matches production.
+     * The moderation DID flows only through the global Client.appLabelers,
+     * which lex-client merges into the header per request with the `;redact`
+     * suffix; buildAppviewClient no longer lists it as a per-instance labeler.
+     * Configure the global appLabelers to the Bluesky moderation DID (matching
+     * switchToBskyAppLabeler in moderation.ts) so the composition matches
+     * production.
      */
     Client.configure({appLabelers: [api.moderation.did]})
 
@@ -305,6 +309,11 @@ describe('labeler-header regression guard', () => {
 
     /* the global Bluesky moderation labeler is redacted */
     expect(header).toContain(`${api.moderation.did};redact`)
+    /* ...and appears exactly once (no duplicate plain entry) */
+    const occurrences = (header ?? '')
+      .split(',')
+      .filter(entry => entry.includes(api.moderation.did))
+    expect(occurrences).toHaveLength(1)
     /* the per-instance custom labeler is present and plain (no redact) */
     expect(header).toContain(CUSTOM_LABELER)
     expect(header).not.toContain(`${CUSTOM_LABELER};redact`)
