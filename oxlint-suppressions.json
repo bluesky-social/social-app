@@ -1278,9 +1278,6 @@
     "typescript/no-explicit-any": {
       "count": 2
     },
-    "typescript/no-floating-promises": {
-      "count": 4
-    },
     "typescript/no-unsafe-member-access": {
       "count": 2
     }
