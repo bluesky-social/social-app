@@ -252,16 +252,33 @@ jobs:
             sudo chmod 666 /dev/kvm
           fi
 
-          "$android_sdk/emulator/emulator" @nightly-e2e \
-            -port 5554 \
-            -no-window \
-            -gpu swiftshader_indirect \
-            -no-snapshot \
-            -noaudio \
-            -no-boot-anim \
-            -camera-back none \
-            > artifacts/android/emulator.log 2>&1 &
-          echo "$!" > artifacts/android/emulator.pid
+          # Disable the emulator's Vulkan feature so graphics goes through the
+          # plain GLES SwiftShader translator. gfxstream Vulkan via SwiftShader
+          # Subzero crashed qemu silently at a deterministic rendering step;
+          # GLES-only is sufficient since the guest renders with skiagl.
+          #
+          # Run the launch in a background subshell so the emulator's exit
+          # status is recorded when it dies (it is otherwise backgrounded and
+          # its death is invisible). Write the emulator's real PID - not the
+          # subshell's - to emulator.pid, since cleanup-nightly-e2e.sh kills the
+          # PID from that file directly; killing the subshell would not kill the
+          # emulator child.
+          (
+            "$android_sdk/emulator/emulator" @nightly-e2e \
+              -port 5554 \
+              -no-window \
+              -gpu swiftshader_indirect \
+              -feature -Vulkan \
+              -no-snapshot \
+              -noaudio \
+              -no-boot-anim \
+              -camera-back none \
+              > artifacts/android/emulator.log 2>&1 &
+            emulator_pid=$!
+            echo "$emulator_pid" > artifacts/android/emulator.pid
+            wait "$emulator_pid"
+            echo "Emulator exited with status $?" >> artifacts/android/emulator.log
+          ) &
 
           adb -s emulator-5554 wait-for-device
           booted=false
@@ -306,6 +323,8 @@ jobs:
           {
             echo "=== Emulator process status ==="
             pgrep -fa "emulator.*nightly-e2e" || echo "Emulator process not found"
+            echo "=== Emulator exit status ==="
+            grep "Emulator exited" artifacts/android/emulator.log || echo "No emulator exit status recorded"
             echo "=== OOM killer check ==="
             sudo dmesg 2>/dev/null | grep -i "oom\|killed\|out of memory" | tail -20 || echo "dmesg not available"
             echo "=== Emulator crash database ==="
