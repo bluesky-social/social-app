@@ -14,7 +14,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {com} from '#/lexicons'
+import {chat, com} from '#/lexicons'
 
 export function ExportCarDialog({
   control,
@@ -35,7 +35,12 @@ export function ExportCarDialog({
     try {
       setLoading('repo')
       const did = currentAccount.did as DidString
-      const data = await pdsClient.call(com.atproto.sync.getRepo, {did})
+      const data = await pdsClient.call(
+        com.atproto.sync.getRepo,
+        {did},
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       /*
        * getRepo returns raw bytes; the lex client does not surface the response
        * content-type, and this endpoint always returns CAR data, so the constant
@@ -65,24 +70,17 @@ export function ExportCarDialog({
     try {
       setLoading('chat')
       /*
-       * Using the client's low-level fetchHandler because the XRPC client
-       * incorrectly tries to JSON-parse application/jsonl responses (substring
-       * match on application/json). The chat client already proxies to
-       * `did:web:api.bsky.chat`, so no manual proxy header is needed - it would
-       * otherwise be double-set.
+       * lex-client 0.3.0 leaves non-JSON encodings (like this endpoint's
+       * application/jsonl) unparsed and returns the raw bytes, so the old
+       * low-level fetchHandler workaround (which 0.3.0 also removed from
+       * Client) is no longer needed. The chat client's proxy header rides
+       * along as usual.
        */
-      const res = await chatClient.fetchHandler(
-        '/xrpc/chat.bsky.actor.exportAccountData',
-        {},
-      )
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`)
-      }
-      const data = new Uint8Array(await res.arrayBuffer())
+      const data = await chatClient.call(chat.bsky.actor.exportAccountData, {})
       const saveRes = await saveBytesToDisk(
         'chat.jsonl',
         data,
-        res.headers.get('content-type') || 'application/jsonl',
+        'application/jsonl',
       )
 
       if (saveRes) {

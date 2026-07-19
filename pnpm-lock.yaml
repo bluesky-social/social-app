@@ -204,9 +204,6 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@atproto/lex-schema': 0.2.2
-  '@atproto/lex-data': 0.1.5
-  '@atproto/lex-client': 0.2.4
   '@react-native/babel-preset': 0.81.5
   '@react-native/normalize-colors': 0.81.5
   '@expo/image-utils': 0.8.12
@@ -919,8 +916,8 @@ packages:
     resolution: {integrity: sha512-1reaooZfNFunJn2Fz21Up7iFQBPZlifQKlBsRvQoLG67mv43nmH4dZWgnGLD54ShCu8dyZ8Y6Wgh7BCg+2gRSw==}
     engines: {node: '>=22'}
 
-  '@atproto/lex-client@0.2.4':
-    resolution: {integrity: sha512-Y640ET2TF07yjwctfBFZFY1S7Du3h8v5YgGWcSZt1qWeA5JedeNbnioYemY1tj9k0j9hDIWp/cC2WgoibLI9mQ==}
+  '@atproto/lex-client@0.3.0':
+    resolution: {integrity: sha512-P+S3hWdIIOgNTun7J42dvxSyCkQog3Q2ShTjvcwP761TqiRex7zDWaRAaT9gvCy6I4pRuNdBCStysjSMlJeSdg==}
     engines: {node: '>=22'}
 
   '@atproto/lex-data@0.1.5':
@@ -9365,7 +9362,7 @@ snapshots:
       cborg: 4.5.8
       tslib: 2.8.1
 
-  '@atproto/lex-client@0.2.4':
+  '@atproto/lex-client@0.3.0':
     dependencies:
       '@atproto/lex-data': 0.1.5
       '@atproto/lex-json': 0.1.4
@@ -9402,7 +9399,7 @@ snapshots:
 
   '@atproto/lex-password-session@0.1.8':
     dependencies:
-      '@atproto/lex-client': 0.2.4
+      '@atproto/lex-client': 0.3.0
       '@atproto/lex-schema': 0.2.2
       tslib: 2.8.1
 
@@ -9410,7 +9407,7 @@ snapshots:
     dependencies:
       '@atproto-labs/did-resolver': 0.3.5
       '@atproto/crypto': 0.5.4
-      '@atproto/lex-client': 0.2.4
+      '@atproto/lex-client': 0.3.0
       '@atproto/lex-data': 0.1.5
       '@atproto/lex-document': 0.1.6
       '@atproto/lex-schema': 0.2.2
@@ -9428,7 +9425,7 @@ snapshots:
   '@atproto/lex@0.3.0':
     dependencies:
       '@atproto/lex-builder': 0.1.8
-      '@atproto/lex-client': 0.2.4
+      '@atproto/lex-client': 0.3.0
       '@atproto/lex-data': 0.1.5
       '@atproto/lex-installer': 0.1.9
       '@atproto/lex-json': 0.1.4
