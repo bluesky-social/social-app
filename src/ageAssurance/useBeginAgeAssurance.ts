@@ -1,5 +1,4 @@
 import {Platform} from 'react-native'
-import {Client} from '@atproto/lex'
 import {useMutation} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
@@ -9,6 +8,7 @@ import {
   PUBLIC_APPVIEW_DID,
 } from '#/lib/constants'
 import {isNetworkError} from '#/lib/hooks/useCleanError'
+import {createLexClient} from '#/lib/lexClient'
 import {usePdsClient} from '#/state/session'
 import {usePatchAgeAssuranceServerState} from '#/ageAssurance'
 import {logger} from '#/ageAssurance/logger'
@@ -50,7 +50,7 @@ export function useBeginAgeAssurance() {
        * appview with the token as a static Authorization header (a raw client,
        * unlike a session, is allowed to preset that header).
        */
-      const scopedClient = new Client({
+      const scopedClient = createLexClient({
         service: APPVIEW,
         headers: {authorization: `Bearer ${token}`},
       })

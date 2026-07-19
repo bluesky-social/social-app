@@ -1,9 +1,9 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, View} from 'react-native'
-import {Client} from '@atproto/lex'
 import {Trans, useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
+import {createLexClient} from '#/lib/lexClient'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -55,7 +55,7 @@ export const ForgotPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const client = new Client({service: serviceUrl})
+      const client = createLexClient({service: serviceUrl})
       await client.call(com.atproto.server.requestPasswordReset, {email})
       onEmailSent()
     } catch (err) {

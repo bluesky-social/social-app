@@ -1,4 +1,3 @@
-import {Client} from '@atproto/lex'
 import {type DatetimeString, type HandleString} from '@atproto/syntax'
 import {useQuery} from '@tanstack/react-query'
 
@@ -8,6 +7,7 @@ import {
   PUBLIC_BSKY_SERVICE,
 } from '#/lib/constants'
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
+import {createLexClient} from '#/lib/lexClient'
 import {createFullHandle} from '#/lib/strings/handles'
 import {useAnalytics} from '#/analytics'
 import {com} from '#/lexicons'
@@ -81,7 +81,7 @@ export async function checkHandleAvailability(
 ) {
   if (serviceDid === BSKY_SERVICE_DID) {
     // entryway has a special API for handle availability
-    const client = new Client({service: BSKY_SERVICE})
+    const client = createLexClient({service: BSKY_SERVICE})
     const data = await client.call(com.atproto.temp.checkHandleAvailability, {
       handle: handle as HandleString,
       birthDate: birthDate as DatetimeString | undefined,
@@ -114,7 +114,7 @@ export async function checkHandleAvailability(
     }
   } else {
     // 3rd party PDSes won't have this API so just try and resolve the handle
-    const client = new Client({service: PUBLIC_BSKY_SERVICE})
+    const client = createLexClient({service: PUBLIC_BSKY_SERVICE})
     try {
       const res = await client.call(com.atproto.identity.resolveHandle, {
         handle: handle as HandleString,

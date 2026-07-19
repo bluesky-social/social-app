@@ -1,6 +1,5 @@
-import {Client} from '@atproto/lex'
-
 import {type SupportedMimeTypes, VIDEO_SERVICE} from '#/lib/constants'
+import {createLexClient} from '#/lib/lexClient'
 
 export const createVideoEndpointUrl = (
   route: string,
@@ -25,7 +24,7 @@ export const createVideoEndpointUrl = (
  * `#/ageAssurance/useBeginAgeAssurance`.
  */
 export function createVideoServiceClient(token: string) {
-  return new Client({
+  return createLexClient({
     service: VIDEO_SERVICE,
     headers: {authorization: `Bearer ${token}`},
   })
@@ -37,9 +36,7 @@ export function createVideoServiceClient(token: string) {
  * `AtpAgent` at `VIDEO_SERVICE`.
  */
 export function createTokenlessVideoServiceClient() {
-  return new Client({
-    service: VIDEO_SERVICE,
-  })
+  return createLexClient({service: VIDEO_SERVICE})
 }
 
 export function mimeToExt(mimeType: SupportedMimeTypes | (string & {})) {

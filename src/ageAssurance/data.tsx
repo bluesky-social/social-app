@@ -1,6 +1,6 @@
 import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 import * as AgeRange from 'expo-age-range'
-import {Client} from '@atproto/lex'
+import {type Client} from '@atproto/lex'
 import {getPreferences} from '@bsky.app/sdk'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {focusManager, QueryClient, useQuery} from '@tanstack/react-query'
@@ -9,6 +9,7 @@ import debounce from 'lodash.debounce'
 
 import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {createLexClient} from '#/lib/lexClient'
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {getAge} from '#/lib/strings/time'
 import {
@@ -99,9 +100,7 @@ export function setBirthdateForDid({
 export const configQueryKey = ['config']
 export async function getConfig() {
   if (debug.enabled) return debug.resolve(debug.config)
-  const client = new Client({
-    service: PUBLIC_BSKY_SERVICE,
-  })
+  const client = createLexClient({service: PUBLIC_BSKY_SERVICE})
   return await client.call(app.bsky.ageassurance.getConfig)
 }
 export function getConfigFromCache():
