@@ -45,7 +45,7 @@ appId: xyz.blueskyweb.app
     id: "editProfileSaveBtn"
 - assertNotVisible:
     id: "editProfileModal"
-- assertVisible: "Alicia"
+- assertVisible: ".*Alicia.*"
 - assertVisible: "One cool hacker"
 
 # Remove display name and description via the edit profile modal

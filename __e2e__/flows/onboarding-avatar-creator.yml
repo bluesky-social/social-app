@@ -15,6 +15,9 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "e2eStartOnboarding"
 - tapOn: "Open avatar creator"
+- extendedWaitUntil:
+    visible: "Select an emoji"
+    timeout: 15000
 - tapOn: "Select the zap emoji as your avatar"
 - tapOn:
     label: "Tap on yellow"

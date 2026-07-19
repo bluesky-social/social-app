@@ -35,12 +35,31 @@ appId: xyz.blueskyweb.app
     id: "menuItemButton-Feeds"
 - tapOn:
     id: "editFeedsBtn"
-- swipe:
-    label: "Drag feed down"
-    from:
-      id: "feed-drag-handle"
-    direction: "DOWN"
-    duration: 1000
+# The id+direction swipe doesn't register the RNGH pan on Android, so we
+# use an explicit coordinate swipe that travels several row heights. iOS
+# keeps the id-based swipe (its screen aspect ratio differs).
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - swipe:
+          label: "Drag feed down"
+          from:
+            id: "feed-drag-handle"
+          direction: "DOWN"
+          duration: 1000
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - swipe:
+          label: "Drag feed down"
+          start: "93%,31%"
+          end: "93%,45%"
+          duration: 1500
+- assertVisible:
+    id: "saveChangesBtn"
+    enabled: true
 - tapOn:
       label: "Save button"
       id: "saveChangesBtn"
@@ -58,12 +77,28 @@ appId: xyz.blueskyweb.app
     id: "menuItemButton-Feeds"
 - tapOn:
     id: "editFeedsBtn"
-- swipe:
-    label: "Drag feed down"
-    from:
-      id: "feed-drag-handle"
-    direction: "DOWN"
-    duration: 1000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - swipe:
+          label: "Drag feed down"
+          from:
+            id: "feed-drag-handle"
+          direction: "DOWN"
+          duration: 1000
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - swipe:
+          label: "Drag feed down"
+          start: "93%,31%"
+          end: "93%,45%"
+          duration: 1500
+- assertVisible:
+    id: "saveChangesBtn"
+    enabled: true
 - tapOn:
     label: "Save button"
     id: "saveChangesBtn"

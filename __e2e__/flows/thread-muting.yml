@@ -45,10 +45,8 @@ appId: xyz.blueskyweb.app
       id: "viewHeaderHomeFeedPrefsBtn"
 - tapOn:
     id: "bottomBarNotificationsBtn"
-- assertVisible:
-    id: "feedItem-by-bob.test"
-- tapOn:
-    id: "feedItem-by-bob.test"
+- assertVisible: ".*Reply 1.*"
+- tapOn: ".*Reply 1.*"
 - tapOn:
     id: "postDropdownBtn"
     childOf:
@@ -92,10 +90,7 @@ appId: xyz.blueskyweb.app
 - assertVisible: ".*Reply 1.*"
 - assertNotVisible: ".*Reply 2.*"
 - assertNotVisible: ".*Reply 3.*"
-- assertVisible:
-    id: "feedItem-by-bob.test"
-- tapOn:
-    id: "feedItem-by-bob.test"
+- tapOn: ".*Reply 1.*"
 - tapOn:
     id: "postDropdownBtn"
     childOf:

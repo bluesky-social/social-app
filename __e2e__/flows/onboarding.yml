@@ -16,13 +16,28 @@ appId: xyz.blueskyweb.app
     id: "e2eStartOnboarding"
 - tapOn: "Select an avatar"
 - waitForAnimationToEnd
-- assertVisible: "Photos"
-- assertVisible: "Collections"
-- tapOn:
-    point: "50%,22%"
-- waitForAnimationToEnd
-- tapOn: "Done"
-- waitForAnimationToEnd
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - assertVisible: "Photos"
+      - assertVisible: "Collections"
+      - tapOn:
+          point: "50%,22%"
+      - waitForAnimationToEnd
+      - tapOn: "Done"
+      - waitForAnimationToEnd
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      # The system photo picker opened here shows MediaStore photos, which
+      # the e2e run doesn't seed (media is seeded into app-scoped storage for
+      # the composer's mocked picker instead). With no photo to pick, dismiss
+      # the picker and continue - onContinue falls back to the generated
+      # placeholder avatar, and nothing later in the flow depends on the image.
+      - back
+      - waitForAnimationToEnd
 - tapOn:
     id: "onboardingContinue"
 - assertVisible: "What are your interests?"
