@@ -23,7 +23,7 @@ import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
 import {IS_NATIVE, IS_WEB} from '#/env'
 
-function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
+function keyExtractor(item: AppBskyActorDefs.ProfileView, index: number) {
   return `${item.did}-${index}`
 }
 
@@ -87,7 +87,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
     const renderItem = ({
       item,
       index,
-    }: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) => {
+    }: ListRenderItemInfo<AppBskyActorDefs.ProfileView>) => {
       return (
         <View
           style={[

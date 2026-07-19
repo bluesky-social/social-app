@@ -5,7 +5,7 @@ WORKDIR /usr/src/social-app
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Node
-ENV NODE_VERSION=24.15.0
+ENV NODE_VERSION=24.18.0
 ENV NVM_DIR=/usr/share/nvm
 
 # Go
@@ -33,7 +33,7 @@ RUN mkdir --parents $NVM_DIR && \
 RUN \. "$NVM_DIR/nvm.sh" && \
   nvm install $NODE_VERSION && \
   nvm use $NODE_VERSION && \
-  npm install --global pnpm@11.7.0 && \
+  npm install --global pnpm@11.13.1 && \
   pnpm install --frozen-lockfile && \
   cd bskyembed && pnpm install --frozen-lockfile && cd .. && \
   pnpm intl:build && \

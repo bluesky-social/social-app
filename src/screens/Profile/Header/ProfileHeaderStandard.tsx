@@ -13,7 +13,6 @@ import {Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {type Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
 import {
@@ -22,7 +21,7 @@ import {
 } from '#/state/queries/profile'
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
-import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, platform} from '#/alf'
 import {SubscribeProfileButton} from '#/components/activity-notifications/SubscribeProfileButton'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
@@ -34,16 +33,15 @@ import {
   KnownFollowers,
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
-import {ProfileBadges} from '#/components/ProfileBadges'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
-import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
 import {GermButton} from '../components/GermButton'
+import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
@@ -65,8 +63,6 @@ let ProfileHeaderStandard = ({
   hideBackButton = false,
   isPlaceholderProfile,
 }: Props): React.ReactNode => {
-  const t = useTheme()
-  const {gtMobile} = useBreakpoints()
   const profile =
     useProfileShadow<AppBskyActorDefs.ProfileViewDetailed>(profileUnshadowed)
   const {currentAccount} = useSession()
@@ -138,26 +134,10 @@ let ProfileHeaderStandard = ({
           </View>
           <View
             style={[a.flex_col, a.gap_xs, a.pb_sm, live ? a.pt_sm : a.pt_2xs]}>
-            <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
-              <Text
-                emoji
-                testID="profileHeaderDisplayName"
-                style={[
-                  t.atoms.text,
-                  gtMobile ? a.text_4xl : a.text_3xl,
-                  a.self_start,
-                  a.font_bold,
-                  a.leading_tight,
-                ]}>
-                {sanitizeDisplayName(
-                  profile.displayName || sanitizeHandle(profile.handle),
-                  moderation.ui('displayName'),
-                )}
-                <View style={[a.pl_xs, {marginTop: platform({ios: 2})}]}>
-                  <ProfileBadges profile={profile} size="lg" interactive />
-                </View>
-              </Text>
-            </View>
+            <ProfileHeaderDisplayName
+              profile={profile}
+              moderation={moderation}
+            />
             <ProfileHeaderHandle profile={profile} />
           </View>
           {!isPlaceholderProfile && !isBlockedUser && (
@@ -169,7 +149,7 @@ let ProfileHeaderStandard = ({
                     testID="profileHeaderDescription"
                     style={[a.text_md]}
                     numberOfLines={15}
-                    selectable
+                    selectable={platform({android: false, default: true})}
                     value={descriptionRT}
                     enableTags
                     authorHandle={profile.handle}

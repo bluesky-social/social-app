@@ -10,7 +10,7 @@ import {logger} from '#/logger'
 import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
-import {FormError} from '#/components/forms/FormError'
+import {Admonition} from '#/components/Admonition'
 import {useAnalytics} from '#/analytics'
 import {GCP_PROJECT_ID, IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {BackNextButtons} from '../BackNextButtons'
@@ -168,7 +168,7 @@ function StepCaptchaInner({
             <ActivityIndicator size="large" />
           )}
         </View>
-        <FormError error={state.error} />
+        {state.error && <Admonition type="error">{state.error}</Admonition>}
       </View>
       <BackNextButtons
         hideNext

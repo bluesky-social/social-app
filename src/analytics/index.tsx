@@ -1,5 +1,12 @@
-import {createContext, useContext, useMemo} from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useSyncExternalStore,
+} from 'react'
 import {Platform} from 'react-native'
+import {type Result} from '@growthbook/growthbook-react'
 
 import {Logger} from '#/logger'
 import {
@@ -25,7 +32,7 @@ import {type Metrics, metrics} from '#/analytics/metrics'
 import * as refParams from '#/analytics/misc/refParams'
 import * as env from '#/env'
 import {useGeolocationServiceResponse} from '#/geolocation/service'
-import {device} from '#/storage'
+import {account, device} from '#/storage'
 
 export * as utils from '#/analytics/utils'
 export const features = {init, refresh}
@@ -120,6 +127,38 @@ Context.displayName = 'AnalyticsContext'
 export const setupDeviceId = getAndMigrateDeviceId()
 
 /**
+ * Reads the per-account cached `isBetaUser` flag for `did`, kept in sync with
+ * writes from `BetaUserStorageSync` and the beta settings toggle.
+ *
+ * This deliberately does not use `useStorage`, whose `useState` seeds once and
+ * only updates via the change listener. The consuming `AnalyticsContext` lives
+ * above the `<Fragment key={did}>` remount breaker, so on an account switch it
+ * re-renders (with a new did) rather than remounting. `useStorage` would keep
+ * serving the previous account's seeded value until a write happened to fire
+ * its listener, leaking a beta account's flag into a non-beta account. Reading
+ * via `useSyncExternalStore` re-evaluates `getSnapshot` every render, so the
+ * value is always correct for the current did.
+ */
+function useAccountIsBetaUser(did: string | undefined): boolean | undefined {
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      if (!did) return () => {}
+      const sub = account.addOnValueChangedListener(
+        [did, 'isBetaUser'],
+        onChange,
+      )
+      return () => sub.remove()
+    },
+    [did],
+  )
+  const getSnapshot = useCallback(() => {
+    if (!did) return undefined
+    return account.get([did, 'isBetaUser'])
+  }, [did])
+  return useSyncExternalStore(subscribe, getSnapshot)
+}
+
+/**
  * Analytics context provider. Decorates the parent analytics context with
  * additional metadata. Nesting should be done carefully and sparingly.
  */
@@ -140,6 +179,16 @@ export function AnalyticsContext({
   const sessionId = useSessionId()
   const geolocation = useGeolocationServiceResponse()
   const parentContext = useContext(Context)
+  /*
+   * `isBetaUser` is account-specific, so it's cached per account. Read it
+   * scoped to the did for this render's session (from the `metadata` prop when
+   * set, otherwise inherited from the parent context). Without a did (e.g.
+   * logged out, or the top-level context above the session provider) there's
+   * no value, so beta-gated features are never evaluated for an ineligible or
+   * absent account.
+   */
+  const did = metadata?.session?.did ?? parentContext.metadata.session?.did
+  const isBetaUser = useAccountIsBetaUser(did)
   const childContext = useMemo(() => {
     const combinedMetadata = {
       ...parentContext.metadata,
@@ -147,6 +196,7 @@ export function AnalyticsContext({
       base: {
         ...parentContext.metadata.base,
         sessionId,
+        isBetaUser,
       },
       geolocation,
     }
@@ -165,8 +215,41 @@ export function AnalyticsContext({
       },
     }
     return context
-  }, [sessionId, geolocation, parentContext, metadata])
+  }, [parentContext, metadata, sessionId, isBetaUser, geolocation])
   return <Context.Provider value={childContext}>{children}</Context.Provider>
+}
+
+/**
+ * GrowthBook attribute name for the did. Must match the key used in
+ * `setAttributes` (`#/analytics/features`) and the assignment unit configured
+ * in the GrowthBook dashboard.
+ */
+const DID_HASH_ATTRIBUTE = 'did'
+
+/**
+ * Builds the session metadata override for an exposure event so the event's
+ * `did` is sourced from the unit GrowthBook actually bucketed on
+ * (`result.hashValue`) rather than from ambient React session metadata. This
+ * keeps the `did` and the variation in sync, since both then come from the
+ * same evaluation. See APP-2461.
+ *
+ * Only did-bucketed experiments are overridden. Experiments bucketed on
+ * another attribute (e.g. `deviceId`) have a `hashValue` that is not a did, so
+ * we leave their session metadata untouched and let the ambient did stand.
+ */
+function sessionMetadataForResult(
+  parentContext: AnalyticsBaseContextType,
+  result: Result<unknown>,
+): MergeableMetadata | undefined {
+  if (result.hashAttribute !== DID_HASH_ATTRIBUTE) return undefined
+  const {session} = parentContext.metadata
+  if (!session) return undefined
+  return {
+    session: {
+      ...session,
+      did: result.hashValue,
+    },
+  }
 }
 
 /**
@@ -185,22 +268,46 @@ export function AnalyticsFeaturesContext({
    * Side-effects: we need to synchronously set these during the same render
    * cycle. These calls do not trigger re-renders, they just set properties on
    * the singleton GrowthBook instance.
+   *
+   * Order matters here. We register the tracking callbacks _before_ calling
+   * `setAttributes`, because `setAttributes` triggers a synchronous
+   * re-evaluation that can fire exposure events. Registering first guarantees
+   * those events run through this render's callback (with this render's
+   * metadata) rather than a stale callback left over from a previous render,
+   * e.g. after an account switch remounts this provider via the
+   * `<Fragment key={did} />` breaker in `App.<platform>.tsx`. See APP-2461.
+   *
+   * We deliberately keep these synchronous rather than moving them into a
+   * `useEffect`: `setAttributes` must run before children evaluate gates (or
+   * they bucket on the previous account's attributes), and the feature usage
+   * callback has no deferred-replay, so a feature evaluated before it is
+   * registered would lose its `feature:viewed` event entirely.
    */
-  setAttributes(parentContext.metadata)
   feats.setTrackingCallback((experiment, result) => {
-    parentContext.metric('experiment:viewed', {
-      experimentId: experiment.key,
-      variationId: result.key,
-    })
+    parentContext.metric(
+      'experiment:viewed',
+      {
+        experimentId: experiment.key,
+        variationId: result.key,
+      },
+      sessionMetadataForResult(parentContext, result),
+    )
   })
   feats.setFeatureUsageCallback((feature, result) => {
-    parentContext.metric('feature:viewed', {
-      featureId: feature,
-      featureResultValue: result.value,
-      experimentId: result.experiment?.key,
-      variationId: result.experimentResult?.key,
-    })
+    parentContext.metric(
+      'feature:viewed',
+      {
+        featureId: feature,
+        featureResultValue: result.value,
+        experimentId: result.experiment?.key,
+        variationId: result.experimentResult?.key,
+      },
+      result.experimentResult
+        ? sessionMetadataForResult(parentContext, result.experimentResult)
+        : undefined,
+    )
   })
+  setAttributes(parentContext.metadata)
 
   const childContext = useMemo<AnalyticsContextType>(() => {
     return {

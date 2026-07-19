@@ -22,6 +22,7 @@ import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
+import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isNetworkError} from '#/lib/strings/errors'
@@ -308,7 +309,7 @@ let PostFeed = ({
       }
     } catch (e) {
       if (!isNetworkError(e)) {
-        logger.error('Poll latest failed', {feed, message: String(e)})
+        logger.warn('Poll latest failed', {feed, message: String(e)})
       }
     }
   })
@@ -885,13 +886,17 @@ let PostFeed = ({
 
   const shouldRenderEndOfFeed =
     !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed
+  const bottomBarOffset = useBottomBarOffset()
   const FeedFooter = useCallback(() => {
-    /**
+    /*
      * A bit of padding at the bottom of the feed as you scroll and when you
      * reach the end, so that content isn't cut off by the bottom of the
-     * screen.
+     * screen. On mobile web, also clear the fixed bottom bar; on native the
+     * doubled headerOffset already covers the tab bar.
      */
-    const offset = Math.max(headerOffset, 32) * (IS_WEB ? 1 : 2)
+    const offset =
+      Math.max(headerOffset, 32) * (IS_WEB ? 1 : 2) +
+      (IS_WEB ? bottomBarOffset : 0)
 
     return isFetchingNextPage ? (
       <View style={[styles.feedFooter]}>
@@ -903,7 +908,13 @@ let PostFeed = ({
     ) : (
       <View style={{height: offset}} />
     )
-  }, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset])
+  }, [
+    isFetchingNextPage,
+    shouldRenderEndOfFeed,
+    renderEndOfFeed,
+    headerOffset,
+    bottomBarOffset,
+  ])
 
   const liveNowConfig = useLiveNowConfig()
 

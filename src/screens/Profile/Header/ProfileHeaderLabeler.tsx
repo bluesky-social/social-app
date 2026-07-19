@@ -26,6 +26,7 @@ import {atoms as a, tokens, useTheme} from '#/alf'
 import {SubscribeProfileButton} from '#/components/activity-notifications/SubscribeProfileButton'
 import {Button, ButtonText} from '#/components/Button'
 import {type DialogOuterProps, useDialogControl} from '#/components/Dialog'
+import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -307,15 +308,20 @@ export function HeaderLabelerButtons({
   return (
     <>
       {hasSession &&
-        !isMe &&
-        !profile.viewer?.blockedBy &&
-        subscriptionsAllowed && (
-          <SubscribeProfileButton
-            profile={profile}
-            moderationOpts={moderationOpts}
-            disableHint={minimal}
-          />
-        )}
+      !isMe &&
+      !profile.viewer?.blockedBy &&
+      !profile.viewer?.blocking ? (
+        <>
+          <MessageProfileButton profile={profile} />
+          {subscriptionsAllowed && (
+            <SubscribeProfileButton
+              profile={profile}
+              moderationOpts={moderationOpts}
+              disableHint={minimal}
+            />
+          )}
+        </>
+      ) : null}
 
       {isMe ? (
         <>
@@ -323,7 +329,10 @@ export function HeaderLabelerButtons({
             testID="profileHeaderEditProfileButton"
             size="small"
             color="secondary"
-            onPress={editProfileControl.open}
+            onPress={() => {
+              playHaptic('Light')
+              editProfileControl.open()
+            }}
             label={_(msg`Edit profile`)}
             style={a.rounded_full}>
             <ButtonText>

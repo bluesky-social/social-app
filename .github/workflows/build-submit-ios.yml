@@ -10,20 +10,24 @@ on:
         options:
           - testflight
           - production
-      assignTestFlightGroup:
-        type: boolean
-        description: Assign the build to the "QA Team" TestFlight group after submitting
-        default: false
+      testFlightGroup:
+        type: choice
+        description: TestFlight group to assign the build to after submitting
+        options:
+          - none
+          - QA Team
+          - Software Mansion
+        default: none
   workflow_call:
     inputs:
       profile:
         type: string
         description: Build profile to use
         required: true
-      assignTestFlightGroup:
-        type: boolean
-        description: Assign the build to the "QA Team" TestFlight group after submitting
-        default: false
+      testFlightGroup:
+        type: string
+        description: TestFlight group to assign the build to after submitting ("none" to skip)
+        default: none
     outputs:
       package-version:
         description: Version from package.json
@@ -31,6 +35,29 @@ on:
       build-number:
         description: iOS build number
         value: ${{ jobs.build.outputs.build-number }}
+    secrets:
+      EXPO_TOKEN:
+        required: true
+      ENV_TOKEN:
+        required: true
+      SENTRY_DSN:
+        required: true
+      BITDRIFT_API_KEY:
+        required: true
+      EXPO_PUBLIC_GCP_PROJECT_ID:
+        required: true
+      GOOGLE_SERVICES_TOKEN:
+        required: true
+      SENTRY_AUTH_TOKEN:
+        required: true
+      ASC_KEY_ID:
+        required: true
+      ASC_ISSUER_ID:
+        required: true
+      ASC_KEY_P8_BASE64:
+        required: true
+      SLACK_CLIENT_ALERT_WEBHOOK:
+        required: true
 
 # Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
 permissions:
@@ -56,7 +83,7 @@ jobs:
           fi
 
       - name: ⬇️ Checkout
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 5
 
@@ -69,7 +96,7 @@ jobs:
           cache: pnpm
 
       - name: 🪛 Setup jq
-        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
+        uses: dcarbone/install-jq-action@4fcb5062d7ce9bc4382d1a352d19ba3ba2c317c1 # v4.0.1
 
       - name: ⚙️ Install dependencies
         run: pnpm install --frozen-lockfile
@@ -87,7 +114,7 @@ jobs:
 
       - name: ☕️ Assert Cocoapods version
         run: |
-          EXPECTED=1.16.2
+          EXPECTED=1.17.0
           ACTUAL=$(pod --version)
           if [ "$ACTUAL" != "$EXPECTED" ]; then
             echo "Expected Cocoapods $EXPECTED but runner has $ACTUAL."
@@ -97,7 +124,7 @@ jobs:
           fi
 
       - name: 💾 Cache Pods
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         id: pods-cache
         with:
           path: ./ios/Pods
@@ -212,8 +239,9 @@ jobs:
       # TestFlight group. fastlane's distribute_only mode skips the upload and assigns the
       # already-submitted build to the group, polling until Apple finishes processing it.
       - name: 🧪 Assign build to TestFlight group
-        if: ${{ inputs.assignTestFlightGroup }}
+        if: ${{ inputs.testFlightGroup != 'none' }}
         env:
+          TESTFLIGHT_GROUP: ${{ inputs.testFlightGroup }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
@@ -241,7 +269,7 @@ jobs:
             app_identifier:"xyz.blueskyweb.app" \
             app_version:"$APP_VERSION" \
             build_number:"$BUILD_NUMBER" \
-            groups:"QA Team" \
+            groups:"$TESTFLIGHT_GROUP" \
             notify_external_testers:true
 
       - name: 🔔 Notify Slack of Production Build
@@ -256,7 +284,7 @@ jobs:
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         if: ${{ inputs.profile == 'testflight' }}
         with:
           path: most-recent-testflight-commit.txt

@@ -1,3 +1,7 @@
+/**
+ * If a feature is in the beta program, be sure to add a localized description
+ * for it via getFeatureDescription().
+ */
 export enum Features {
   // core flags
   IsBskyTeam = 'is_bsky_team',
@@ -10,10 +14,11 @@ export enum Features {
   ImportContactsSettingsDisable = 'import_contacts:settings:disable',
   LiveNowBetaDisable = 'live_now_beta:disable',
   GroupChatsDisable = 'group_chats:disable',
-  DmsNewMessageComposerEnable = 'dms:new_message_composer:enable',
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
-  NotificationsExpandedProfileCardEnable = 'notifications:expanded_profile_card:enable',
+  PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
+  PostThreadKnownLikersFetchEnable = 'post_thread:known_likers:fetch:enable',
+  CustomLogoJapanEnable = 'custom_logo:japan:enable',
 
   AATest = 'aa-test',
 }

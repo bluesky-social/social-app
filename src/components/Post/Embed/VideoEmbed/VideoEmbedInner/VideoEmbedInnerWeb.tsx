@@ -1,14 +1,25 @@
 import {useCallback, useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
+import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
+import {useFullscreen} from '#/components/hooks/useFullscreen'
 import * as BandwidthEstimate from './bandwidth-estimate'
+import {
+  HLSUnsupportedError,
+  type VideoEmbedInnerWebProps,
+  VideoNotFoundError,
+} from './VideoEmbedInnerWeb.shared'
 import {Controls} from './web-controls/VideoControls'
+
+export {
+  HLSUnsupportedError,
+  VideoNotFoundError,
+} from './VideoEmbedInnerWeb.shared'
 
 export function VideoEmbedInnerWeb({
   embed,
@@ -16,13 +27,7 @@ export function VideoEmbedInnerWeb({
   setActive,
   onScreen,
   lastKnownTime,
-}: {
-  embed: AppBskyEmbedVideo.View
-  active: boolean
-  setActive: () => void
-  onScreen: boolean
-  lastKnownTime: React.RefObject<number | undefined>
-}) {
+}: VideoEmbedInnerWebProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
@@ -30,6 +35,8 @@ export function VideoEmbedInnerWeb({
   const [hlsLoading, setHlsLoading] = useState(false)
   const figId = useId()
   const {_} = useLingui()
+  const [isFullscreen] = useFullscreen(containerRef)
+  const isGif = embed.presentation === 'gif'
 
   // send error up to error boundary
   const [error, setError] = useState<Error | null>(null)
@@ -77,6 +84,9 @@ export function VideoEmbedInnerWeb({
             </figcaption>
           )}
         </figure>
+        {!isFullscreen && !isGif && embed.alt && (
+          <AltBadgeWithDialog text={embed.alt} position="top-right" />
+        )}
         <Controls
           videoRef={videoRef}
           hlsRef={hlsRef}
@@ -88,19 +98,13 @@ export function VideoEmbedInnerWeb({
           onScreen={onScreen}
           fullscreenRef={containerRef}
           hasSubtitleTrack={hasSubtitleTrack}
-          isGif={embed.presentation === 'gif'}
+          isGif={isGif}
           altText={embed.alt}
           updateCuePositions={updateCuePositions}
         />
       </div>
     </View>
   )
-}
-
-export class HLSUnsupportedError extends Error {
-  constructor() {
-    super('HLS is not supported')
-  }
 }
 
 // Bluesky serves HLS as MPEG-TS with H.264 + AAC. `Hls.isSupported()` is loose
@@ -129,12 +133,6 @@ function canPlayBskyVideoCodecs(): boolean {
     mediaSource.isTypeSupported('video/mp4; codecs="avc1.42E01E"') &&
     mediaSource.isTypeSupported('audio/mp4; codecs="mp4a.40.2"')
   )
-}
-
-export class VideoNotFoundError extends Error {
-  constructor() {
-    super('Video not found')
-  }
 }
 
 type CachedPromise<T> = Promise<T> & {value: undefined | T}

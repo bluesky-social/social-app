@@ -22,6 +22,8 @@ export * from '#/geolocation/types'
 const GeolocationContext = createContext<Geolocation>({
   countryCode: undefined,
   regionCode: undefined,
+  serviceGeolocation: undefined,
+  deviceGeolocation: undefined,
 })
 
 const DeviceGeolocationAPIContext = createContext<{
@@ -44,7 +46,17 @@ export function Provider({children}: {children: ReactNode}) {
     'deviceGeolocation',
   ])
   const geolocation = useMemo(() => {
-    return mergeGeolocations(deviceGeolocation, geolocationService)
+    const geo = mergeGeolocations(deviceGeolocation, geolocationService)
+    // create new objects to avoid cyclical references
+    geo.serviceGeolocation = {
+      countryCode: geolocationService?.countryCode,
+      regionCode: geolocationService?.regionCode,
+    }
+    geo.deviceGeolocation = {
+      countryCode: deviceGeolocation?.countryCode,
+      regionCode: deviceGeolocation?.regionCode,
+    }
+    return geo
   }, [deviceGeolocation, geolocationService])
 
   useEffect(() => {

@@ -44,12 +44,13 @@ import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, platform, useTheme, utils} from '#/alf'
+import {atoms as a, native, platform, tokens, useTheme, utils} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {Button} from '#/components/Button'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {useMessageDialogs} from '#/components/dms/MessageOverlays'
 import {useMessageReplies} from '#/components/dms/MessageReplies'
+import {useReplyPreviewText} from '#/components/dms/replyPreview'
 import {ArrowCornerDownRight_Stroke2_Corner3_Rounded as ArrowCornerDownRightIcon} from '#/components/icons/ArrowCornerDownRight'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -73,16 +74,17 @@ const BORDER_RADIUS = 20
 const SQUARED_BORDER_RADIUS = 4
 const DISPLAY_NAME_INSET = 20
 
-function messageIsReply(
-  message:
-    | ChatBskyConvoDefs.MessageView
-    | ChatBskyConvoDefs.DeletedMessageView
-    | null,
-): boolean {
+export type MessageItemNeighbor =
+  | ChatBskyConvoDefs.MessageView
+  | ChatBskyConvoDefs.DeletedMessageView
+  | null
+
+function messageIsReply(message: MessageItemNeighbor): boolean {
   return (
     ChatBskyConvoDefs.isMessageView(message) &&
     (ChatBskyConvoDefs.isMessageView(message.replyTo) ||
-      ChatBskyConvoDefs.isDeletedMessageView(message.replyTo))
+      ChatBskyConvoDefs.isDeletedMessageView(message.replyTo) ||
+      ChatBskyConvoDefs.isMessageBeforeUserJoinedGroupView(message.replyTo))
   )
 }
 
@@ -95,10 +97,7 @@ function isWithinClusterBoundary({
 }: {
   isPending: boolean
   message: ChatBskyConvoDefs.MessageView
-  adjacentMessage:
-    | ChatBskyConvoDefs.MessageView
-    | ChatBskyConvoDefs.DeletedMessageView
-    | null
+  adjacentMessage: MessageItemNeighbor
   isFromSameSender: boolean
   direction: 'prev' | 'next'
 }): boolean {
@@ -134,14 +133,8 @@ let MessageItem = ({
 }: {
   item: ConvoItem & {type: 'message' | 'pending-message'}
   isGroupChat?: boolean
-  prevMessage:
-    | ChatBskyConvoDefs.MessageView
-    | ChatBskyConvoDefs.DeletedMessageView
-    | null
-  nextMessage:
-    | ChatBskyConvoDefs.MessageView
-    | ChatBskyConvoDefs.DeletedMessageView
-    | null
+  prevMessage: MessageItemNeighbor
+  nextMessage: MessageItemNeighbor
   relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
 }): React.ReactNode => {
   const t = useTheme()
@@ -156,14 +149,22 @@ let MessageItem = ({
   const {openReactions} = useMessageDialogs()
   const {scrollToMessage, highlightedMessage} = useMessageReplies()
 
-  // `replyTo` comes back hydrated as the referenced message (or a deleted-
-  // message tombstone). Narrow away the open-union fallback so we only render
-  // shapes we understand.
+  // `replyTo` comes back hydrated as the referenced message, a deleted-message
+  // tombstone, or a before-joined placeholder. Narrow away the open-union
+  // fallback so we only render shapes we understand.
   const replyTo =
     ChatBskyConvoDefs.isMessageView(message.replyTo) ||
-    ChatBskyConvoDefs.isDeletedMessageView(message.replyTo)
+    ChatBskyConvoDefs.isDeletedMessageView(message.replyTo) ||
+    ChatBskyConvoDefs.isMessageBeforeUserJoinedGroupView(message.replyTo)
       ? message.replyTo
       : undefined
+  const replyToMessageId =
+    replyTo && !ChatBskyConvoDefs.isMessageBeforeUserJoinedGroupView(replyTo)
+      ? replyTo.id
+      : undefined
+  const onPressReplyTo = replyToMessageId
+    ? () => scrollToMessage(replyToMessageId)
+    : undefined
 
   const isPending = item.type === 'pending-message'
 
@@ -245,6 +246,8 @@ let MessageItem = ({
 
   const rt = new RichTextAPI({text: message.text, facets: message.facets})
 
+  const isEmojiOnly = isOnlyEmoji(message.text)
+
   const hasEmbed =
     AppBskyEmbedRecord.isView(message.embed) ||
     ChatBskyEmbedJoinLink.isView(message.embed)
@@ -260,16 +263,33 @@ let MessageItem = ({
   const topRadiusSV = useSharedValue(targetTopRadius)
 
   const showDisplayName =
-    isGroupChat && !isFromSelf && isFirstInCluster && !isOnlyEmoji(message.text)
+    isGroupChat && !isFromSelf && isFirstInCluster && !isEmojiOnly
   const showAvatar = isGroupChat && !isFromSelf && isLastInCluster
 
+  /*
+   * Emoji-only messages have no bubble background (see the `!isOnlyEmoji` gate
+   * on the bubble styling below), so the corner-radius animation is invisible
+   * overhead for them. Worse, on Android the resulting re-layout of the parent
+   * Animated.View re-measures the enlarged emoji `<Text>` and some Android
+   * device's text stack drops the trailing glyph on that second pass (while
+   * keeping its reserved width). Set the radii directly for emoji-only messages
+   * so nothing re-lays-out the glyph after its initial paint.
+   */
   useEffect(() => {
-    bottomRadiusSV.set(withTiming(targetBottomRadius, {duration: 300}))
-  }, [targetBottomRadius, bottomRadiusSV])
+    bottomRadiusSV.set(
+      isEmojiOnly
+        ? targetBottomRadius
+        : withTiming(targetBottomRadius, {duration: 300}),
+    )
+  }, [targetBottomRadius, bottomRadiusSV, isEmojiOnly])
 
   useEffect(() => {
-    topRadiusSV.set(withTiming(targetTopRadius, {duration: 300}))
-  }, [targetTopRadius, topRadiusSV])
+    topRadiusSV.set(
+      isEmojiOnly
+        ? targetTopRadius
+        : withTiming(targetTopRadius, {duration: 300}),
+    )
+  }, [targetTopRadius, topRadiusSV, isEmojiOnly])
 
   // Flash the message background when it's been scrolled to (e.g. by tapping a
   // reply that quotes it), so it's easy to spot. Keyed on the highlight `key`
@@ -467,7 +487,7 @@ let MessageItem = ({
                 isGroupChat={isGroupChat}
                 replierDisplayName={displayName}
                 relatedProfiles={relatedProfiles}
-                onPress={() => scrollToMessage(replyTo.id)}
+                onPress={onPressReplyTo}
               />
             ) : displayName && showDisplayName ? (
               <Text
@@ -520,7 +540,7 @@ let MessageItem = ({
                       accessibilityHint={l`Double tap or long press the message to add a reaction`}
                       style={[
                         !isFromSelf && isGroupChat && a.ml_sm,
-                        !isOnlyEmoji(message.text) && [
+                        !isEmojiOnly && [
                           a.rounded_xl,
                           a.py_sm,
                           a.px_md,
@@ -535,12 +555,12 @@ let MessageItem = ({
                           highlightStyle,
                         ],
                       ]}>
-                      {replyTo && !isOnlyEmoji(message.text) ? (
+                      {replyTo && !isEmojiOnly ? (
                         <ReplyQuote
                           replyTo={replyTo}
                           isFromSelf={isFromSelf}
                           relatedProfiles={relatedProfiles}
-                          onPress={() => scrollToMessage(replyTo.id)}
+                          onPress={onPressReplyTo}
                         />
                       ) : null}
                       <RichText
@@ -552,7 +572,7 @@ let MessageItem = ({
                           // glyph, then pull the bottom up by the same amount so
                           // the glyph bottom-aligns with the avatar instead of
                           // sitting above its line-box baseline.
-                          isOnlyEmoji(message.text) && [
+                          isEmojiOnly && [
                             a.leading_tight,
                             // Visually align bottom of the emoji with the avatar
                             !isFromSelf &&
@@ -750,28 +770,56 @@ function ReplyCaption({
   relatedProfiles,
   onPress,
 }: {
-  replyTo: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+  replyTo:
+    | ChatBskyConvoDefs.MessageView
+    | ChatBskyConvoDefs.DeletedMessageView
+    | ChatBskyConvoDefs.MessageBeforeUserJoinedGroupView
   isFromSelf: boolean
   isGroupChat: boolean
   replierDisplayName: string | null
   relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
-  onPress: () => void
+  onPress?: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
 
-  const originalSenderIsSelf = replyTo.sender.did === currentAccount?.did
-  const originalProfile = relatedProfiles.get(replyTo.sender.did)
-  const originalName = originalSenderIsSelf
-    ? null
-    : originalProfile
-      ? createSanitizedDisplayName(originalProfile)
-      : null
+  let caption: string = ''
+  if (
+    ChatBskyConvoDefs.isMessageView(replyTo) ||
+    ChatBskyConvoDefs.isDeletedMessageView(replyTo)
+  ) {
+    const originalSenderIsSelf = replyTo.sender.did === currentAccount?.did
+    const originalProfile = relatedProfiles.get(replyTo.sender.did)
+    const originalName = originalSenderIsSelf
+      ? null
+      : originalProfile
+        ? createSanitizedDisplayName(originalProfile)
+        : null
+
+    caption = isFromSelf
+      ? originalSenderIsSelf
+        ? l`You replied to yourself`
+        : originalName
+          ? l`You replied to ${originalName}`
+          : l`You replied`
+      : originalSenderIsSelf
+        ? l`${replierDisplayName} replied to you`
+        : originalName
+          ? l`${replierDisplayName} replied to ${originalName}`
+          : l`${replierDisplayName} replied`
+  } else {
+    caption = l`Someone replied`
+  }
 
   return (
     <Button
-      label={l`Scroll to the message this is replying to`}
+      label={
+        onPress
+          ? l`Scroll to the message this is replying to`
+          : l`A reply to a message sent before you joined`
+      }
+      disabled={!onPress}
       onPress={onPress}
       style={[
         a.w_full,
@@ -795,23 +843,7 @@ function ReplyCaption({
         style={[a.text_xs, a.flex_shrink, t.atoms.text_contrast_medium]}
         numberOfLines={1}
         emoji>
-        {isFromSelf ? (
-          originalSenderIsSelf ? (
-            <Trans>You replied to yourself</Trans>
-          ) : originalName ? (
-            <Trans>You replied to {originalName}</Trans>
-          ) : (
-            <Trans>You replied</Trans>
-          )
-        ) : originalSenderIsSelf ? (
-          <Trans>{replierDisplayName} replied to you</Trans>
-        ) : originalName ? (
-          <Trans>
-            {replierDisplayName} replied to {originalName}
-          </Trans>
-        ) : (
-          <Trans>{replierDisplayName} replied</Trans>
-        )}
+        {caption}
       </Text>
     </Button>
   )
@@ -827,16 +859,25 @@ function ReplyQuote({
   relatedProfiles,
   onPress,
 }: {
-  replyTo: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+  replyTo:
+    | ChatBskyConvoDefs.MessageView
+    | ChatBskyConvoDefs.DeletedMessageView
+    | ChatBskyConvoDefs.MessageBeforeUserJoinedGroupView
   isFromSelf: boolean
   relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
-  onPress: () => void
+  onPress?: () => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const getReplyPreviewText = useReplyPreviewText()
 
+  const senderDid =
+    ChatBskyConvoDefs.isMessageView(replyTo) ||
+    ChatBskyConvoDefs.isDeletedMessageView(replyTo)
+      ? replyTo.sender.did
+      : undefined
   const senderProfile = useMaybeProfileShadow(
-    relatedProfiles.get(replyTo.sender.did),
+    senderDid ? relatedProfiles.get(senderDid) : undefined,
   )
   // Hide the quoted content if we block, or are blocked by, the original
   // sender - mirroring how the message bubble itself is hidden.
@@ -857,37 +898,41 @@ function ReplyQuote({
   let text: string
   let subtle = false
   if (isBlocked) {
-    text = l`Blocked message hidden`
+    text = l({
+      message: '(blocked message hidden)',
+      comment: 'A reply summary in chat',
+    })
     subtle = true
   } else if (ChatBskyConvoDefs.isMessageView(replyTo)) {
-    text = replyTo.text
-    if (!text.trim()) {
-      subtle = true
-      if (ChatBskyEmbedJoinLink.isView(replyTo.embed)) {
-        text = l`(chat invite link)`
-      } else if (AppBskyEmbedRecord.isView(replyTo.embed)) {
-        text = l`(contains embedded content)`
-      } else {
-        text = l`No text`
-      }
-    }
+    ;({text, subtle} = getReplyPreviewText(replyTo))
+  } else if (ChatBskyConvoDefs.isMessageBeforeUserJoinedGroupView(replyTo)) {
+    text = l({
+      message: `(message sent before you joined)`,
+      comment: 'A reply summary in chat',
+    })
+    subtle = true
   } else {
-    text = l`Deleted message`
+    text = l({message: '(deleted message)', comment: 'A reply summary in chat'})
     subtle = true
   }
 
   return (
     <Button
       label={
-        senderName
-          ? l`Replied-to message from ${senderName}, tap to scroll to it`
-          : l`Replied-to message, tap to scroll to it`
+        !onPress
+          ? l`Replied-to message was sent before you joined`
+          : senderName
+            ? l`Replied-to message from ${senderName}, tap to scroll to it`
+            : l`Replied-to message, tap to scroll to it`
       }
+      disabled={!onPress}
       onPress={onPress}
       style={[
         a.mb_xs,
         a.rounded_md,
         a.p_sm,
+        // The padding above is a little loose, so we tighten it up here.
+        {paddingTop: tokens.space.sm - 2},
         a.flex_col,
         a.align_start,
         a.border,

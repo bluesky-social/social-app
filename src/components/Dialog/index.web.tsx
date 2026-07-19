@@ -12,6 +12,7 @@ import {
   type GestureResponderEvent,
   type LayoutChangeEvent,
   Pressable,
+  type ScrollView,
   type StyleProp,
   View,
   type ViewStyle,
@@ -24,6 +25,7 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
+import {type ListMethods} from '#/view/com/util/List'
 import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Context} from '#/components/Dialog/context'
@@ -224,11 +226,21 @@ export function Inner({
   )
 }
 
-export const ScrollableInner = Inner
+/*
+ * There is no inner ScrollView on web - the ref is accepted for parity with
+ * the native variant and never attached, so native-only scrolling code in
+ * shared callers stays a no-op here.
+ */
+export function ScrollableInner({
+  ref: _ref,
+  ...props
+}: DialogInnerProps & {ref?: React.Ref<ScrollView>}) {
+  return <Inner {...props} />
+}
 
 export const InnerFlatList = forwardRef<
-  FlatList,
-  FlatListProps<any> & {label: string} & {
+  ListMethods,
+  FlatListProps<any> & {label?: string} & {
     webInnerStyle?: StyleProp<ViewStyle>
     webInnerContentContainerStyle?: StyleProp<ViewStyle>
     footer?: React.ReactNode
@@ -247,7 +259,11 @@ export const InnerFlatList = forwardRef<
   const {gtMobile} = useBreakpoints()
   return (
     <Inner
-      label={label}
+      /*
+       * Most shared callers cannot pass a label since the native variant has
+       * no such prop; aria-label is simply absent for them, as before.
+       */
+      label={label as string}
       style={[
         a.overflow_hidden,
         a.px_0,
@@ -256,7 +272,13 @@ export const InnerFlatList = forwardRef<
       ]}
       contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>
       <FlatList
-        ref={ref}
+        /*
+         * The FlatList instance satisfies the (web) ListMethods interface
+         * shared callers hold their refs as, except scrollToTop, which no
+         * platform-agnostic caller can use since the native ListMethods
+         * (FlatList) lacks it too.
+         */
+        ref={ref as React.Ref<FlatList>}
         style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, style]}
         {...props}
       />
@@ -321,7 +343,11 @@ export function Close() {
   )
 }
 
-export function Handle() {
+/*
+ * The drag handle only exists on the native bottom sheet; props are accepted
+ * for parity with the native variant.
+ */
+export function Handle(_props: {difference?: boolean; fill?: string}) {
   return null
 }
 

@@ -1,13 +1,12 @@
 import {XRPCError} from '@atproto/api'
 import {t} from '@lingui/core/macro'
 
-export function cleanError(str: any): string {
-  if (!str) {
+export function cleanError(e: unknown): string {
+  if (!e) {
     return ''
   }
-  if (typeof str !== 'string') {
-    str = str.toString()
-  }
+  // oxlint-disable-next-line typescript/no-base-to-string
+  const str = typeof e === 'string' ? e : e.toString()
   if (isNetworkError(str)) {
     return t`Unable to connect. Please check your internet connection and try again.`
   }
@@ -85,4 +84,10 @@ export function isErrorMaybeAppPasswordPermissions(e: unknown) {
 export function isCancelledError(e: unknown) {
   const str = String(e).toLowerCase()
   return str.includes('cancel')
+}
+
+// TODO Replace this with error.shouldRetry() when available. -dsb
+const RETRYABLE_ERRORS = [408, 425, 429, 500, 502, 503, 504, 522, 524]
+export function shouldRetryError(e: unknown) {
+  return e instanceof XRPCError && RETRYABLE_ERRORS.includes(e.status)
 }

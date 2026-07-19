@@ -163,7 +163,6 @@ export function ComposerPrompt() {
         }),
         web({
           cursor: 'pointer',
-          outline: 'none',
         }),
         pressed && web({outline: 'none'}),
       ]}>

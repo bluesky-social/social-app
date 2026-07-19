@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {type StyleProp, type ViewStyle} from 'react-native'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
@@ -21,7 +21,7 @@ export default function VisibilityView({
   onChangeStatus: onChangeStatusOuter,
   enabled,
 }: VisibilityViewProps) {
-  const onChangeStatus = React.useCallback(
+  const onChangeStatus = useCallback(
     (e: {nativeEvent: {isActive: boolean}}) => {
       onChangeStatusOuter(e.nativeEvent.isActive)
     },

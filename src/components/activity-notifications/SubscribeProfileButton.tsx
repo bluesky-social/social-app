@@ -1,8 +1,6 @@
 import {useCallback, useEffect, useState} from 'react'
 import {type ModerationOpts} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
@@ -11,7 +9,6 @@ import {useDialogControl} from '#/components/Dialog'
 import {BellPlus_Stroke2_Corner0_Rounded as BellPlusIcon} from '#/components/icons/BellPlus'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import * as Tooltip from '#/components/Tooltip'
-import {Text} from '#/components/Typography'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 import type * as bsky from '#/types/bsky'
 import {SubscribeProfileDialog} from './SubscribeProfileDialog'
@@ -25,7 +22,7 @@ export function SubscribeProfileButton({
   moderationOpts: ModerationOpts
   disableHint?: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const requireEmailVerification = useRequireEmailVerification()
   const subscribeDialogControl = useDialogControl()
   const [activitySubscriptionsNudged, setActivitySubscriptionsNudged] =
@@ -84,18 +81,15 @@ export function SubscribeProfileButton({
             size="small"
             color={tooltipVisible ? 'primary_subtle' : 'secondary'}
             shape="round"
-            label={_(msg`Get notified when ${name} posts`)}
+            label={l`Get notified when ${name} posts`}
             onPress={wrappedOnPress}>
             <ButtonIcon icon={Icon} size="md" />
           </Button>
         </Tooltip.Target>
-        <Tooltip.TextBubble>
-          <Text>
-            <Trans>Get notified about new posts</Trans>
-          </Text>
-        </Tooltip.TextBubble>
+        <Tooltip.BubbleText label={l`Get notified about new posts`}>
+          <Trans>Get notified about new posts</Trans>
+        </Tooltip.BubbleText>
       </Tooltip.Outer>
-
       <SubscribeProfileDialog
         control={subscribeDialogControl}
         profile={profile}

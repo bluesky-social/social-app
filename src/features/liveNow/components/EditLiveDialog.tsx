@@ -1,10 +1,6 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  AppBskyActorStatus,
-  type AppBskyEmbedExternal,
-} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -24,6 +20,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {
   displayDuration,
+  getValidLiveStatusRecord,
   useLiveLinkMetaQuery,
   useRemoveLiveStatusMutation,
   useUpsertLiveStatusMutation,
@@ -74,14 +71,10 @@ function DialogInner({
     error: linkMetaError,
   } = useLiveLinkMetaQuery(debouncedUrl)
 
-  const record = useMemo(() => {
-    if (!AppBskyActorStatus.isRecord(status.record)) return null
-    const validation = AppBskyActorStatus.validateRecord(status.record)
-    if (validation.success) {
-      return validation.value
-    }
-    return null
-  }, [status])
+  const record = useMemo(
+    () => getValidLiveStatusRecord(status.record),
+    [status],
+  )
 
   const {
     mutate: goLive,

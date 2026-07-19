@@ -135,7 +135,8 @@ appId: xyz.blueskyweb.app
 
 - tapOn:
     id: "bottomBarSearchBtn"
-- tapOn: "Search for posts, users[,]? or feeds"
+- tapOn:
+    id: "searchScreenInput"
 - inputText: "bob"
 - tapOn:
     id: "searchAutoCompleteResult-bob.test"
