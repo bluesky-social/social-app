@@ -1,7 +1,7 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
+import {HITSLOP_20} from '#/lib/constants'
 import {type Shadow} from '#/state/cache/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
@@ -78,7 +78,7 @@ function Badge({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const verificationsDialogControl = useDialogControl()
   const verifierDialogControl = useDialogControl()
 
@@ -89,10 +89,10 @@ function Badge({
       <Button
         label={
           state.profile.isViewer
-            ? _(msg`View your verifications`)
-            : _(msg`View this user's verifications`)
+            ? l`View your verifications`
+            : l`View this user's verifications`
         }
-        hitSlop={20}
+        hitSlop={HITSLOP_20}
         onPress={evt => {
           evt.preventDefault()
           ax.metric('verification:badge:click', {})
@@ -132,13 +132,11 @@ function Badge({
           </View>
         )}
       </Button>
-
       <VerificationsDialog
         control={verificationsDialogControl}
         profile={profile}
         verificationState={state}
       />
-
       <VerifierDialog
         control={verifierDialogControl}
         profile={profile}

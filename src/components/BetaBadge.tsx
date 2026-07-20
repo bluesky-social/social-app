@@ -2,6 +2,7 @@ import {useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {HITSLOP_20} from '#/lib/constants'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
@@ -76,8 +77,10 @@ export function BetaBadgeButton({
           accessibilityRole="button"
           accessibilityLabel={l`Beta features enabled`}
           accessibilityHint=""
+          hitSlop={HITSLOP_20}
           style={({hovered}) => [
             a.rounded_full,
+            a.transition_transform,
             {
               backgroundColor: t.palette.primary_50,
               padding,
