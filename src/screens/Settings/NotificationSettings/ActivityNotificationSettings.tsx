@@ -44,12 +44,14 @@ type Props = NativeStackScreenProps<
 export function ActivityNotificationSettingsScreen({}: Props) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {data: preferences, isError} = useNotificationSettingsQuery()
+  const {data: preferences, isError: isPreferencesError} =
+    useNotificationSettingsQuery()
   const moderationOpts = useModerationOpts()
 
   const {
     data: subscriptions,
     isPending,
+    isError: isSubscriptionsError,
     error,
     isFetchingNextPage,
     fetchNextPage,
@@ -75,13 +77,13 @@ export function ActivityNotificationSettingsScreen({}: Props) {
   )
 
   const onEndReached = useCallback(() => {
-    if (isFetchingNextPage || !hasNextPage || isError) return
+    if (isFetchingNextPage || !hasNextPage || isSubscriptionsError) return
     void fetchNextPage().catch(err => {
       logger.error('Failed to load more activity subscriptions', {
         message: err,
       })
     })
-  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
+  }, [isFetchingNextPage, hasNextPage, isSubscriptionsError, fetchNextPage])
 
   return (
     <Layout.Screen>
@@ -105,7 +107,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                 subtitleText={l`Get notified about posts and replies from accounts you choose.`}
               />
             </SettingsList.Item>
-            {isError ? (
+            {isPreferencesError ? (
               <View style={[a.px_xl, a.pt_md]}>
                 <Admonition.Admonition type="error">
                   <Trans>Failed to load notification settings.</Trans>
