@@ -76,9 +76,17 @@ export function BetaBadgeButton({
           accessibilityRole="button"
           accessibilityLabel={l`Beta features enabled`}
           accessibilityHint=""
-          style={[
+          style={({hovered}) => [
             a.rounded_full,
-            {backgroundColor: t.palette.primary_50, padding},
+            {
+              backgroundColor: t.palette.primary_50,
+              padding,
+              transform: [
+                {
+                  scale: hovered ? 1.1 : 1,
+                },
+              ],
+            },
           ]}
           onPress={() => setTooltipVisible(v => !v)}>
           <BeakerIcon width={width} fill={t.palette.primary_500} />

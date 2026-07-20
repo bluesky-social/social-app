@@ -88,30 +88,30 @@ export function ProfileBadges({
       ]}>
       {interactive ? (
         <>
+          <VerificationCheckButton
+            profile={shadowed}
+            width={verificationIconWidth}
+          />
           <BetaBadgeButton
             profile={shadowed}
             width={betaIconWidth}
             padding={betaBadgeScaledPadding}
           />
-          <VerificationCheckButton
-            profile={shadowed}
-            width={verificationIconWidth}
-          />
           <BotBadgeButton profile={shadowed} width={botIconWidth} />
         </>
       ) : (
         <>
-          <BetaBadge
-            profile={shadowed}
-            width={betaIconWidth}
-            padding={betaBadgeScaledPadding}
-          />
           {verification.showBadge && (
             <VerificationCheck
               verifier={verification.role === 'verifier'}
               width={verificationIconWidth}
             />
           )}
+          <BetaBadge
+            profile={shadowed}
+            width={betaIconWidth}
+            padding={betaBadgeScaledPadding}
+          />
           <BotBadge profile={shadowed} width={botIconWidth} />
         </>
       )}
