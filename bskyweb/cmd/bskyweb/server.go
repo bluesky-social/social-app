@@ -328,6 +328,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/settings/interests", server.WebGenericNoindex)
 	e.GET("/settings/about", server.WebGenericNoindex)
 	e.GET("/settings/notifications", server.WebGenericNoindex)
+	e.GET("/settings/notifications/activity", server.WebGenericNoindex)
 	e.GET("/sys/debug", server.WebGenericNoindex)
 	e.GET("/sys/debug-mod", server.WebGenericNoindex)
 	e.GET("/sys/log", server.WebGenericNoindex)
