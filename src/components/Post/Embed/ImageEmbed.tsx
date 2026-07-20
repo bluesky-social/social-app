@@ -115,6 +115,7 @@ export function ImageEmbed({
           onPress(0, [singleContainerRef.current], [singleDimsRef.current])
         }
       }
+      console.log(rest.viewContext, 'rest.viewContext')
       return (
         <View style={[a.mt_sm, rest.style]}>
           <ImageContextMenu
@@ -127,9 +128,7 @@ export function ImageEmbed({
               crop={
                 rest.viewContext === PostEmbedViewContext.ThreadHighlighted
                   ? 'none'
-                  : rest.isWithinQuote
-                    ? 'square'
-                    : 'constrained'
+                  : 'constrained'
               }
               image={image}
               onContainerRef={ref => {
