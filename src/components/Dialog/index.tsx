@@ -157,7 +157,8 @@ export function Outer({
     [open, close],
   )
 
-  const isHeightConstrained = nativeOptions?.maxHeight != null
+  const isHeightConstrained =
+    nativeOptions?.maxHeight != null || nativeOptions?.fullHeight === true
 
   const context = useMemo(
     () => ({
