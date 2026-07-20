@@ -257,8 +257,8 @@ importers:
         specifier: ^6.0.2
         version: 6.0.4
       '@bsky.app/alf':
-        specifier: ^0.1.14
-        version: 0.1.14(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+        specifier: ^0.1.15
+        version: 0.1.15(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@bsky.app/expo-dynamic-app-icon':
         specifier: ^1.8.5
         version: 1.8.5(expo@54.0.34(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -1603,8 +1603,8 @@ packages:
   '@braintree/sanitize-url@6.0.4':
     resolution: {integrity: sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==}
 
-  '@bsky.app/alf@0.1.14':
-    resolution: {integrity: sha512-c/KK6avyjEnYzhXDsN0rQaTFSbi8BPg4sJCW8aUk8AtKsO34GTaY6FU1adQ2i8xVfe5UIRu9FJjnBoGpuXj21A==}
+  '@bsky.app/alf@0.1.15':
+    resolution: {integrity: sha512-e6blt+oZ2klv+Cp7u11FeZckoILdXOtUZ11ATERgjZgb4zX3y7rt4e2fI03JkJO31wTvXHG8A1LnM96Az+ndJg==}
     peerDependencies:
       react: '*'
       react-native: '*'
@@ -10069,7 +10069,7 @@ snapshots:
 
   '@braintree/sanitize-url@6.0.4': {}
 
-  '@bsky.app/alf@0.1.14(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
+  '@bsky.app/alf@0.1.15(react-native@0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
       react: 19.1.0
       react-native: 0.81.5(patch_hash=2656ac6deb71b92a4df4af4593d13ace6a5740936432e5e7e8ef32bc3cd05194)(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
