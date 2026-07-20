@@ -24,7 +24,7 @@ import {useAnalytics} from '#/analytics'
 
 const TOPIC_COUNT = 3
 
-export function TrendingFeedsInterstitial() {
+export function FeedTrendingTopicsInterstitial() {
   const {enabled} = useTrendingConfig()
   const {trendingDisabled} = useTrendingSettings()
   const {rightNavVisible} = useLayoutBreakpoints()
