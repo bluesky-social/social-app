@@ -149,7 +149,7 @@ jobs:
           name: nightly-e2e-ios-${{ github.run_id }}
           path: artifacts/ios
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: 7
 
   android:
     name: Android Maestro E2E
@@ -349,7 +349,7 @@ jobs:
           name: nightly-e2e-android-${{ github.run_id }}
           path: artifacts/android
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: 7
 
   report:
     name: Report E2E failures
