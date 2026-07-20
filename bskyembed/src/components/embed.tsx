@@ -390,7 +390,7 @@ function ExternalEmbed({
             className="text-textLight dark:text-textDimmed shrink-0"
           />
           <p className="text-sm leading-none overflow-y-visible overflow-x-clip min-w-0 text-textLight dark:text-textDimmed line-clamp-1">
-            {toNiceDomain(content.external.uri).repeat(20)}
+            {toNiceDomain(content.external.uri)}
           </p>
         </div>
       </div>
