@@ -1,0 +1,72 @@
+---
+name: Local EAS Build
+description: Build an Expo app locally with a selected EAS profile.
+
+inputs:
+  platform:
+    description: EAS platform to build (ios or android)
+    required: true
+  profile:
+    description: EAS build profile
+    required: true
+  output:
+    description: Output path for the local build artifact
+    required: true
+  log-path:
+    description: Optional path to tee build output into
+    required: false
+    default: ""
+  bump-build-number:
+    description: Run the build through use-build-number-with-bump
+    required: false
+    default: "false"
+  sentry-auth-token:
+    description: Optional Sentry authentication token
+    required: false
+    default: ""
+  sentry-release:
+    description: Optional Sentry release
+    required: false
+    default: ""
+  sentry-dist:
+    description: Optional Sentry distribution
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Build locally with EAS
+      shell: bash
+      env:
+        PLATFORM: ${{ inputs.platform }}
+        PROFILE: ${{ inputs.profile }}
+        OUTPUT: ${{ inputs.output }}
+        LOG_PATH: ${{ inputs.log-path }}
+        BUMP_BUILD_NUMBER: ${{ inputs.bump-build-number }}
+        SENTRY_AUTH_TOKEN: ${{ inputs.sentry-auth-token }}
+        SENTRY_RELEASE: ${{ inputs.sentry-release }}
+        SENTRY_DIST: ${{ inputs.sentry-dist }}
+      run: |
+        set -o pipefail
+        build_command=(
+          pnpm eas build
+          --platform "$PLATFORM"
+          --profile "$PROFILE"
+          --local
+          --output "$OUTPUT"
+          --non-interactive
+        )
+
+        if [ -n "$LOG_PATH" ]; then
+          mkdir -p "$(dirname "$LOG_PATH")"
+          if [ "$BUMP_BUILD_NUMBER" = "true" ]; then
+            pnpm use-build-number-with-bump "${build_command[@]}" 2>&1 | tee "$LOG_PATH"
+          else
+            "${build_command[@]}" 2>&1 | tee "$LOG_PATH"
+          fi
+        elif [ "$BUMP_BUILD_NUMBER" = "true" ]; then
+          pnpm use-build-number-with-bump "${build_command[@]}"
+        else
+          "${build_command[@]}"
+        fi

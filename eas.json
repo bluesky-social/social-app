@@ -21,6 +21,17 @@
         "EXPO_PUBLIC_ENV": "production"
       }
     },
+    "e2e": {
+      "extends": "development",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_ENV": "e2e",
+        "NODE_ENV": "test",
+        "RN_SRC_EXT": "e2e.ts,e2e.tsx"
+      }
+    },
     "preview": {
       "extends": "base",
       "distribution": "internal",

@@ -1,0 +1,424 @@
+---
+name: Nightly Maestro E2E
+
+on:
+  schedule:
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly-maestro-e2e-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CI: "1"
+  MAESTRO_VERSION: "2.6.1"
+  MAESTRO_DRIVER_STARTUP_TIMEOUT: "180000"
+  MAESTRO_CLI_NO_ANALYTICS: "1"
+  MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED: "true"
+  MAESTRO_DISABLE_UPDATE_CHECK: "1"
+
+jobs:
+  ios:
+    name: iOS Maestro E2E
+    if: github.repository == 'bluesky-social/social-app'
+    runs-on: macos-26-xlarge
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Select Xcode 26.4
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
+        with:
+          xcode-version: "26.4"
+
+      - name: Prepare E2E configuration
+        run: |
+          mkdir -p artifacts/ios
+          echo "Installing dependencies" > artifacts/ios/phase.txt
+          cp .env.example .env.test
+          cp google-services.json.example google-services.json
+
+      - name: Set up Expo project
+        uses: ./.github/actions/setup-expo-project
+        with:
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Set up Java 17
+        uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install dev-env dependencies
+        run: pnpm --dir dev-env install --frozen-lockfile 2>&1 | tee artifacts/ios/dependencies.log
+
+      - name: Compile translations
+        uses: ./.github/actions/compile-i18n
+
+      - name: Install Maestro 2.6.1
+        run: |
+          echo "Installing Maestro" > artifacts/ios/phase.txt
+          curl -fsSL -o "$RUNNER_TEMP/maestro.zip" \
+            "https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
+          echo "3440825f514f537c6a96bcf5de995780c2a4a7f83a43208fdc95d4f1fecfad3b  $RUNNER_TEMP/maestro.zip" \
+            | shasum -a 256 --check
+          unzip -q "$RUNNER_TEMP/maestro.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/maestro/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/maestro/bin/maestro" --version | tee artifacts/ios/maestro-version.log
+          test "$("$RUNNER_TEMP/maestro/bin/maestro" --version)" = "$MAESTRO_VERSION"
+
+      - name: Boot one iOS simulator
+        run: |
+          echo "Booting iOS simulator" > artifacts/ios/phase.txt
+          device_name="iPhone 17"
+          runtime_name="iOS 26.5"
+
+          runtime_id=$(xcrun simctl list runtimes available --json | jq -r \
+            --arg name "$runtime_name" \
+            '[.runtimes[] | select(.name == $name and .isAvailable != false)] | first | .identifier // empty')
+          if [ -z "$runtime_id" ]; then
+            echo "The $runtime_name simulator runtime is not installed. Available iOS runtimes:" >&2
+            xcrun simctl list runtimes available --json | jq -r \
+              '.runtimes[] | select(.name | startswith("iOS")) | "- \(.name)"' >&2
+            exit 1
+          fi
+
+          device_type_id=$(xcrun simctl list devicetypes --json | jq -r \
+            --arg name "$device_name" \
+            '[.devicetypes[] | select(.name == $name)] | first | .identifier // empty')
+          if [ -z "$device_type_id" ]; then
+            echo "The $device_name simulator device type is not installed" >&2
+            exit 1
+          fi
+
+          udid=$(xcrun simctl list devices available --json | jq -r \
+            --arg runtime "$runtime_id" \
+            --arg name "$device_name" \
+            '[.devices[$runtime][]? | select(.name == $name)] | first | .udid // empty')
+          if [ -z "$udid" ]; then
+            udid=$(xcrun simctl create "$device_name" "$device_type_id" "$runtime_id")
+          fi
+
+          echo "IOS_UDID=$udid" >> "$GITHUB_ENV"
+          xcrun simctl shutdown all || true
+          xcrun simctl boot "$udid"
+          xcrun simctl bootstatus "$udid" -b
+          echo "Using $device_name on $runtime_name ($udid)"
+
+      - name: Mark iOS development client build phase
+        run: echo "Building the iOS development client" > artifacts/ios/phase.txt
+
+      - name: Build iOS development client
+        uses: ./.github/actions/eas-local-build
+        with:
+          platform: ios
+          profile: e2e
+          output: ${{ runner.temp }}/nightly-e2e-ios.tar.gz
+          log-path: artifacts/ios/build.log
+
+      - name: Install iOS development client
+        run: |
+          build_contents="$RUNNER_TEMP/nightly-e2e-ios-build"
+          mkdir -p "$build_contents"
+          tar -xzf "$RUNNER_TEMP/nightly-e2e-ios.tar.gz" -C "$build_contents"
+          app_path=$(find "$build_contents" -type d -name '*.app' -print -quit)
+          if [ -z "$app_path" ]; then
+            echo "The local EAS build did not contain an iOS simulator app" >&2
+            exit 1
+          fi
+          xcrun simctl install "$IOS_UDID" "$app_path" 2>&1 | tee -a artifacts/ios/build.log
+
+      - name: Run iOS Maestro suite
+        run: .github/scripts/run-nightly-e2e.sh ios "$IOS_UDID"
+
+      - name: Clean up iOS services and simulator
+        if: always()
+        run: .github/scripts/cleanup-nightly-e2e.sh ios "${IOS_UDID:-}"
+
+      - name: Upload iOS E2E artifacts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: nightly-e2e-ios-${{ github.run_id }}
+          path: artifacts/ios
+          if-no-files-found: warn
+          retention-days: 7
+
+  android:
+    name: Android Maestro E2E
+    if: github.repository == 'bluesky-social/social-app'
+    # Linux-x64-32core is a repository-managed runner label.
+    runs-on: Linux-x64-32core
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Prepare E2E configuration
+        run: |
+          mkdir -p artifacts/android
+          echo "Installing dependencies" > artifacts/android/phase.txt
+          cp .env.example .env.test
+          cp google-services.json.example google-services.json
+
+      - name: Set up Expo project
+        uses: ./.github/actions/setup-expo-project
+        with:
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Set up Java 17
+        uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install dev-env dependencies
+        run: pnpm --dir dev-env install --frozen-lockfile 2>&1 | tee artifacts/android/dependencies.log
+
+      - name: Compile translations
+        uses: ./.github/actions/compile-i18n
+
+      - name: Install Maestro 2.6.1
+        run: |
+          echo "Installing Maestro" > artifacts/android/phase.txt
+          curl -fsSL -o "$RUNNER_TEMP/maestro.zip" \
+            "https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
+          echo "3440825f514f537c6a96bcf5de995780c2a4a7f83a43208fdc95d4f1fecfad3b  $RUNNER_TEMP/maestro.zip" \
+            | shasum -a 256 --check
+          unzip -q "$RUNNER_TEMP/maestro.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/maestro/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/maestro/bin/maestro" --version | tee artifacts/android/maestro-version.log
+          test "$("$RUNNER_TEMP/maestro/bin/maestro" --version)" = "$MAESTRO_VERSION"
+
+      - name: Install and boot one Android emulator
+        run: |
+          echo "Booting Android emulator" > artifacts/android/phase.txt
+          android_sdk="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
+          sdkmanager_bin="$android_sdk/cmdline-tools/latest/bin/sdkmanager"
+          avdmanager_bin="$android_sdk/cmdline-tools/latest/bin/avdmanager"
+          # API 35 emulator images have known stability problems in headless CI
+          # (see flutter/flutter#153445); the qemu process died deterministically
+          # on the first native stack-screen push with the API 35 image.
+          system_image="system-images;android-34;google_apis;x86_64"
+
+          if [ ! -x "$sdkmanager_bin" ] || [ ! -x "$avdmanager_bin" ]; then
+            echo "Android command-line tools were not found under $android_sdk" >&2
+            find "$android_sdk/cmdline-tools" -maxdepth 3 -type f \( \
+              -name sdkmanager -o -name avdmanager \
+            \) -print >&2 || true
+            exit 1
+          fi
+
+          export ANDROID_HOME="$android_sdk"
+          export ANDROID_SDK_ROOT="$android_sdk"
+          export PATH="$android_sdk/platform-tools:$android_sdk/emulator:$PATH"
+          echo "ANDROID_HOME=$android_sdk" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$android_sdk" >> "$GITHUB_ENV"
+          echo "$android_sdk/platform-tools" >> "$GITHUB_PATH"
+          echo "$android_sdk/emulator" >> "$GITHUB_PATH"
+          echo "Using Android SDK at $android_sdk"
+
+          yes | "$sdkmanager_bin" --sdk_root="$android_sdk" --licenses >/dev/null || true
+          "$sdkmanager_bin" --sdk_root="$android_sdk" \
+            "platform-tools" "emulator" "$system_image"
+
+          export ANDROID_AVD_HOME="$RUNNER_TEMP/.android/avd"
+          mkdir -p "$ANDROID_AVD_HOME"
+          echo "ANDROID_AVD_HOME=$ANDROID_AVD_HOME" >> "$GITHUB_ENV"
+          echo no | "$avdmanager_bin" create avd \
+            --force \
+            --name nightly-e2e \
+            --package "$system_image" \
+            --device pixel_6
+
+          # Reduce resolution to lighten the SwiftShader software-rendering
+          # workload, and raise RAM/cores/heap so the debug RN app has headroom.
+          # The default 2560MB RAM led to silent qemu crashes mid-flow.
+          printf 'hw.lcd.width=720\nhw.lcd.height=1600\nhw.lcd.density=280\nhw.ramSize=6144\nhw.cpu.ncore=4\nvm.heapSize=512\n' \
+            >> "$ANDROID_AVD_HOME/nightly-e2e.avd/config.ini"
+
+          if [ -e /dev/kvm ] && [ ! -w /dev/kvm ]; then
+            sudo chmod 666 /dev/kvm
+          fi
+
+          # Disable the emulator's Vulkan feature so graphics goes through the
+          # plain GLES SwiftShader translator. gfxstream Vulkan via SwiftShader
+          # Subzero crashed qemu silently at a deterministic rendering step;
+          # GLES-only is sufficient since the guest renders with skiagl.
+          #
+          # Run the launch in a background subshell so the emulator's exit
+          # status is recorded when it dies (it is otherwise backgrounded and
+          # its death is invisible). Write the emulator's real PID - not the
+          # subshell's - to emulator.pid, since cleanup-nightly-e2e.sh kills the
+          # PID from that file directly; killing the subshell would not kill the
+          # emulator child.
+          (
+            # wait returns the emulator's non-zero status on crash; set -e would
+            # abort the subshell before the status is logged.
+            set +e
+            "$android_sdk/emulator/emulator" @nightly-e2e \
+              -port 5554 \
+              -no-window \
+              -gpu swiftshader_indirect \
+              -feature -Vulkan \
+              -no-snapshot \
+              -noaudio \
+              -no-boot-anim \
+              -camera-back none \
+              > artifacts/android/emulator.log 2>&1 &
+            emulator_pid=$!
+            echo "$emulator_pid" > artifacts/android/emulator.pid
+            wait "$emulator_pid"
+            echo "Emulator exited with status $?" >> artifacts/android/emulator.log
+          ) &
+
+          adb -s emulator-5554 wait-for-device
+          booted=false
+          for _ in $(seq 1 120); do
+            if [ "$(adb -s emulator-5554 shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = "1" ]; then
+              booted=true
+              break
+            fi
+            sleep 5
+          done
+          if [ "$booted" != "true" ]; then
+            echo "Android emulator did not finish booting" >&2
+            exit 1
+          fi
+
+          adb -s emulator-5554 shell settings put global window_animation_scale 0
+          adb -s emulator-5554 shell settings put global transition_animation_scale 0
+          adb -s emulator-5554 shell settings put global animator_duration_scale 0
+
+      - name: Mark Android development client build phase
+        run: echo "Building the Android development client" > artifacts/android/phase.txt
+
+      - name: Build Android development client
+        uses: ./.github/actions/eas-local-build
+        with:
+          platform: android
+          profile: e2e
+          output: ${{ runner.temp }}/nightly-e2e-android.apk
+          log-path: artifacts/android/build.log
+
+      - name: Install Android development client
+        run: |
+          adb -s emulator-5554 install -r "$RUNNER_TEMP/nightly-e2e-android.apk" \
+            2>&1 | tee -a artifacts/android/build.log
+
+      - name: Run Android Maestro suite
+        run: .github/scripts/run-nightly-e2e.sh android emulator-5554
+
+      - name: Capture emulator crash diagnostics
+        if: always()
+        run: |
+          {
+            echo "=== Emulator process status ==="
+            pgrep -fa "emulator.*nightly-e2e" || echo "Emulator process not found"
+            echo "=== Emulator exit status ==="
+            grep "Emulator exited" artifacts/android/emulator.log || echo "No emulator exit status recorded"
+            echo "=== OOM killer check (kernel) ==="
+            oom_lines=$(sudo dmesg 2>/dev/null | grep -iE "oom|killed process|out of memory" | tail -20)
+            echo "${oom_lines:-No kernel OOM evidence found (or dmesg unavailable)}"
+            echo "=== systemd-oomd check ==="
+            oomd_lines=$(journalctl -u systemd-oomd --no-pager 2>/dev/null | tail -20)
+            echo "${oomd_lines:-No systemd-oomd journal entries (or journalctl unavailable)}"
+            echo "=== journal kernel tail ==="
+            journalctl -k --no-pager 2>/dev/null | tail -30 || echo "journalctl -k unavailable"
+            echo "=== Emulator crash database ==="
+            ls -la /tmp/android-runner/emu-crash-*.db 2>/dev/null || echo "No crash database found"
+          } > artifacts/android/emulator-diagnostics.log 2>&1
+
+      - name: Clean up Android services and emulator
+        if: always()
+        run: .github/scripts/cleanup-nightly-e2e.sh android emulator-5554
+
+      - name: Upload Android E2E artifacts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: nightly-e2e-android-${{ github.run_id }}
+          path: artifacts/android
+          if-no-files-found: warn
+          retention-days: 7
+
+  report:
+    name: Report E2E failures
+    needs: [ios, android]
+    if: ${{ always() && github.repository == 'bluesky-social/social-app' }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Download iOS artifacts
+        continue-on-error: true
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: nightly-e2e-ios-${{ github.run_id }}
+          path: downloaded-artifacts/ios
+
+      - name: Download Android artifacts
+        continue-on-error: true
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: nightly-e2e-android-${{ github.run_id }}
+          path: downloaded-artifacts/android
+
+      - name: Resolve artifact links
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}#artifacts"
+          jq -n --arg run "$run_url" '{ios: $run, android: $run}' > artifact-links.json
+          if gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?per_page=100" \
+            > artifact-response.json; then
+            jq --arg base "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts" \
+              --arg run "$run_url" \
+              '{
+                ios: (.artifacts | map(select(.name | startswith("nightly-e2e-ios-"))) | first | if . then ($base + "/" + (.id | tostring)) else $run end),
+                android: (.artifacts | map(select(.name | startswith("nightly-e2e-android-"))) | first | if . then ($base + "/" + (.id | tostring)) else $run end)
+              }' artifact-response.json > artifact-links.json
+          fi
+
+      - name: Summarize platform results
+        id: summary
+        env:
+          IOS_STATUS: ${{ needs.ios.result }}
+          ANDROID_STATUS: ${{ needs.android.result }}
+        run: |
+          node .github/scripts/summarize-maestro.mjs \
+            --ios-status "$IOS_STATUS" \
+            --android-status "$ANDROID_STATUS" \
+            --ios-root downloaded-artifacts/ios \
+            --android-root downloaded-artifacts/android \
+            --artifact-urls artifact-links.json \
+            --sha "$GITHUB_SHA" \
+            --run-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            --commit-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}" \
+            > e2e-summary.json
+          echo "notify=$(jq -r .notify e2e-summary.json)" >> "$GITHUB_OUTPUT"
+          echo "payload=$(jq -c .payload e2e-summary.json)" >> "$GITHUB_OUTPUT"
+          jq -r .githubSummary e2e-summary.json >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Notify Slack of E2E failures
+        if: steps.summary.outputs.notify == 'true'
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
+        with:
+          webhook: ${{ secrets.E2E_FAILURES_SLACK_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload: ${{ steps.summary.outputs.payload }}
