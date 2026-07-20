@@ -8,7 +8,7 @@ msgstr ""
 "Language: de\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-16 14:04\n"
+"PO-Revision-Date: 2026-07-20 22:14\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -103,12 +103,12 @@ msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, one {# Stunde} other {# Stunden}}"
 
 #. placeholder {0}: labels.length
-#: src/components/moderation/PostAlerts.tsx:149
+#: src/components/moderation/PostAlerts.tsx:157
 msgid "{0, plural, one {# label applied to your post} other {# labels applied to your post}}"
 msgstr "{0, plural, one {# Kennzeichnung wurde auf deinen Post angewendet} other {# Kennzeichnungen wurden auf deinen Post angewendet}}"
 
 #. placeholder {0}: labels.length
-#: src/components/moderation/PostAlerts.tsx:156
+#: src/components/moderation/PostAlerts.tsx:164
 msgid "{0, plural, one {# label applied} other {# labels applied}}"
 msgstr "{0, plural, one {# Kennzeichnung wurde angewendet} other {# Kennzeichnungen wurden angewendet}}"
 
@@ -224,7 +224,7 @@ msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
 #. placeholder {0}: desc.name
-#: src/components/moderation/ContentHider.tsx:100
+#: src/components/moderation/ContentHider.tsx:98
 msgid "{0} (Account)"
 msgstr "{0} (Account)"
 
@@ -797,7 +797,7 @@ msgstr "{rank}."
 
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:106
 msgid "{remaining, plural, one {# character remaining} other {# characters remaining}}"
-msgstr ""
+msgstr "{remaining, plural, one {# Zeichen verbleibend} other {# Zeichen verbleibend}}"
 
 #: src/components/dms/MessageItem.tsx:810
 msgid "{replierDisplayName} replied"
@@ -842,7 +842,7 @@ msgstr "Verifizierungen von {userName}"
 #. Number of images beyond the first 3
 #. placeholder {0}: labels.length
 #. placeholder {0}: totalNumber - 3
-#: src/components/moderation/PostAlerts.tsx:155
+#: src/components/moderation/PostAlerts.tsx:163
 #: src/view/com/composer/ComposerReplyTo.tsx:278
 msgid "+{0}"
 msgstr "+{0}"
@@ -1338,7 +1338,7 @@ msgstr "Füge diesen Feed zu deinen Feeds hinzu"
 msgid "Add to lists"
 msgstr "Zu Listen hinzufügen"
 
-#: src/components/PostControls/BookmarkButton.tsx:144
+#: src/components/PostControls/BookmarkButton.tsx:121
 msgid "Add to saved posts"
 msgstr "Zu gespeicherten Posts hinzufügen"
 
@@ -1400,7 +1400,7 @@ msgstr "Für Erwachsene"
 msgid "Adult content"
 msgstr "Inhalte für Erwachsene"
 
-#: src/components/moderation/ContentHider.tsx:131
+#: src/components/moderation/ContentHider.tsx:129
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:149
 #: src/view/com/composer/labels/LabelsBtn.tsx:123
@@ -2158,24 +2158,24 @@ msgstr "Beginne den Altersverifikationsprozess, indem du die folgenden Felder au
 
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:99
 msgid "Beta Feature"
-msgstr "Beta-Feature"
+msgstr "Beta-Funktion"
 
 #: src/Navigation.tsx:413
 #: src/screens/Settings/BetaFeaturesSettings.tsx:108
 #: src/screens/Settings/Settings.tsx:248
 #: src/screens/Settings/Settings.tsx:251
 msgid "Beta features"
-msgstr ""
+msgstr "Beta-Funktionen"
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:144
 msgctxt "web"
 msgid "Beta features may be unstable. Some changes may require reloading the app."
-msgstr ""
+msgstr "Beta-Funktionen können instabil sein. Einige Änderungen erfordern möglicherweise das Neuladen der App."
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:149
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app."
-msgstr ""
+msgstr "Beta-Funktionen können instabil sein. Einige Änderungen erfordern möglicherweise einen Neustart der App."
 
 #: src/components/dialogs/BirthDateSettings.tsx:163
 msgid "Birthdate"
@@ -2585,7 +2585,7 @@ msgstr "Reaktivierung abbrechen und ausloggen"
 msgid "Cancel reply"
 msgstr "Antwort abbrechen"
 
-#: src/screens/Search/Shell.tsx:595
+#: src/screens/Search/Shell.tsx:584
 msgid "Cancel search"
 msgstr "Suche abbrechen"
 
@@ -2810,7 +2810,7 @@ msgstr "Sieh in <0>{currentEmail}</0> nach einer E-Mail mit dem Bestätigungscod
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:182
 msgid "Check back later!"
-msgstr ""
+msgstr "Schau später noch einmal vorbei!"
 
 #: src/screens/SignupQueued.tsx:79
 #: src/screens/SignupQueued.tsx:83
@@ -3283,7 +3283,7 @@ msgid "Content promoting or depicting self-harm"
 msgstr "Inhalte, die Selbstverletzung fördern oder darstellen"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
-#: src/components/moderation/ScreenHider.tsx:100
+#: src/components/moderation/ScreenHider.tsx:98
 #: src/lib/moderation/useGlobalLabelStrings.ts:22
 #: src/lib/moderation/useModerationCauseDescription.ts:46
 msgid "Content Warning"
@@ -3368,7 +3368,7 @@ msgstr "Konversation nicht gefunden."
 msgid "Copied build version to clipboard"
 msgstr "Die Build-Version wurde in die Zwischenablage kopiert"
 
-#: src/screens/Search/Shell.tsx:515
+#: src/screens/Search/Shell.tsx:504
 msgid "Copied link to clipboard"
 msgstr "Link in die Zwischenablage kopiert"
 
@@ -3741,7 +3741,7 @@ msgstr "Kultur"
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:188
 msgid "Current beta features"
-msgstr ""
+msgstr "Aktuelle Beta-Funktionen"
 
 #: src/components/moderation/BlockDialog.tsx:378
 msgid "Current chat"
@@ -4094,7 +4094,7 @@ msgstr "Neue Feeds entdecken"
 msgid "Discover New Feeds"
 msgstr "Entdecke neue Feeds"
 
-#: src/components/Dialog/index.tsx:413
+#: src/components/Dialog/index.tsx:414
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:83
 msgid "Dismiss"
 msgstr "Verwerfen"
@@ -4135,7 +4135,7 @@ msgstr "Schließt den QR-Scanner"
 #: src/screens/Settings/AccessibilitySettings.tsx:70
 #: src/screens/Settings/AccessibilitySettings.tsx:75
 msgid "Display larger alt text badges"
-msgstr "Größere Alt-Text-Badges zeigen"
+msgstr "Größere Alternativtext-Kennzeichnungen anzeigen"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:310
 #: src/screens/Profile/Header/EditProfileDialog.tsx:316
@@ -4220,7 +4220,7 @@ msgstr "Fertig"
 msgid "Double tap or long press the message to add a reaction"
 msgstr "Doppeltippen oder lange auf die Nachricht drücken, um eine Reaktion hinzuzufügen"
 
-#: src/components/Dialog/index.tsx:414
+#: src/components/Dialog/index.tsx:415
 msgid "Double tap to close the dialog"
 msgstr "Doppeltippen, um den Dialog zu schließen"
 
@@ -4531,7 +4531,7 @@ msgstr "Inhalte für Erwachsene aktivieren"
 #: src/screens/Settings/BetaFeaturesSettings.tsx:117
 #: src/screens/Settings/BetaFeaturesSettings.tsx:124
 msgid "Enable beta features"
-msgstr ""
+msgstr "Beta-Funktionen aktivieren"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:415
 msgid "Enable captions"
@@ -4755,7 +4755,7 @@ msgstr "Liste der Nutzer erweitern"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "Erweitere oder reduziere den gesamten Post, auf den du antwortest"
 
-#: src/components/Post/ShowMoreTextButton.tsx:33
+#: src/components/Post/ShowMoreTextButton.tsx:31
 msgid "Expand post text"
 msgstr "Text des Posts ausklappen"
 
@@ -4803,7 +4803,7 @@ msgid "Explicit sexual images."
 msgstr "Explizite sexuelle Bilder."
 
 #: src/Navigation.tsx:760
-#: src/screens/Search/Shell.tsx:552
+#: src/screens/Search/Shell.tsx:541
 #: src/view/shell/desktop/LeftNav.tsx:677
 #: src/view/shell/Drawer.tsx:473
 msgid "Explore"
@@ -4886,7 +4886,7 @@ msgstr "Fehler beim Ändern des Handles. Bitte versuche es erneut."
 
 #: src/components/Lightbox/Lightbox.web.tsx:302
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:130
-#: src/screens/Search/Shell.tsx:516
+#: src/screens/Search/Shell.tsx:505
 msgid "Failed to copy link"
 msgstr "Link konnte nicht kopiert werden"
 
@@ -5374,7 +5374,7 @@ msgstr "Finde Leute zum Folgen"
 msgid "Find people you know"
 msgstr "Personen finden, die du kennst"
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:753
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Finde Posts, Nutzer und Feeds auf Bluesky"
 
@@ -5712,7 +5712,7 @@ msgstr "Germ DM wieder verbunden"
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:132
 msgid "Get early access to experimental features we’re testing."
-msgstr ""
+msgstr "Erhalte frühzeitig Zugriff auf experimentelle Funktionen, die wir derzeit testen."
 
 #: src/view/shell/Drawer.tsx:431
 msgid "Get help"
@@ -5813,9 +5813,9 @@ msgstr "Verherrlichung von Gewalt"
 
 #: src/components/dialogs/LinkWarning.tsx:127
 #: src/components/dialogs/LinkWarning.tsx:133
-#: src/components/Layout/Header/index.tsx:133
-#: src/components/moderation/ScreenHider.tsx:161
-#: src/components/moderation/ScreenHider.tsx:170
+#: src/components/Layout/Header/index.tsx:134
+#: src/components/moderation/ScreenHider.tsx:157
+#: src/components/moderation/ScreenHider.tsx:166
 #: src/screens/Login/components/AuthLayout/Header/index.tsx:74
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:160
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:163
@@ -6150,7 +6150,7 @@ msgstr "Ausgeblendete Liste"
 
 #: src/components/interstitials/Trending.tsx:133
 #: src/components/interstitials/TrendingVideos.tsx:139
-#: src/components/moderation/ContentHider.tsx:220
+#: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:141
 #: src/components/moderation/PostHider.tsx:140
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:820
@@ -6240,7 +6240,7 @@ msgstr "Nutzerliste ausblenden"
 msgid "Hide verification badges"
 msgstr "Verifizierungsabzeichen ausblenden"
 
-#: src/components/moderation/ContentHider.tsx:171
+#: src/components/moderation/ContentHider.tsx:168
 #: src/components/moderation/PostHider.tsx:94
 msgid "Hides the content"
 msgstr "Blendet den Inhalt aus"
@@ -6831,11 +6831,11 @@ msgid "KWS website"
 msgstr "KWS-Website"
 
 #. placeholder {0}: sanitizeDisplayName(desc.source!)
-#: src/components/moderation/ContentHider.tsx:251
+#: src/components/moderation/ContentHider.tsx:245
 msgid "Labeled by {0}."
 msgstr "Von {0} gekennzeichnet."
 
-#: src/components/moderation/ContentHider.tsx:249
+#: src/components/moderation/ContentHider.tsx:243
 msgid "Labeled by the author."
 msgstr "Vom Autor gekennzeichnet."
 
@@ -6904,7 +6904,7 @@ msgctxt "english-only-resource"
 msgid "Learn more"
 msgstr "Mehr erfahren (auf Englisch)"
 
-#: src/components/moderation/ScreenHider.tsx:147
+#: src/components/moderation/ScreenHider.tsx:143
 msgid "Learn More"
 msgstr "Mehr erfahren"
 
@@ -6937,8 +6937,8 @@ msgstr "Erfahre mehr über das Importieren von Kontakten (auf Englisch)"
 msgid "Learn more about self hosting your PDS."
 msgstr "Erfahre mehr über das Selbst-Hosting deiner PDS (auf Englisch)."
 
-#: src/components/moderation/ContentHider.tsx:169
-#: src/components/moderation/ContentHider.tsx:235
+#: src/components/moderation/ContentHider.tsx:166
+#: src/components/moderation/ContentHider.tsx:230
 msgid "Learn more about the moderation applied to this content"
 msgstr "Erfahre mehr über die Moderation, die auf diesen Inhalt angewendet wurde"
 
@@ -6951,7 +6951,7 @@ msgid "Learn more about these changes and how to share your thoughts with us by 
 msgstr "Erfahre mehr über diese Änderungen und wie du uns deine Meinung mitteilen kannst, indem du unseren Blogpost liest (auf Englisch)."
 
 #: src/components/moderation/PostHider.tsx:116
-#: src/components/moderation/ScreenHider.tsx:134
+#: src/components/moderation/ScreenHider.tsx:132
 msgid "Learn more about this warning"
 msgstr "Erfahre mehr über diese Warnung"
 
@@ -6975,7 +6975,7 @@ msgid "Learn more in your <0>account settings.</0>"
 msgstr "Mehr dazu in deinen <0>Account-Einstellungen</0>"
 
 #: src/components/dialogs/ServerInput.tsx:222
-#: src/components/moderation/ContentHider.tsx:259
+#: src/components/moderation/ContentHider.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:243
 msgid "Learn more."
 msgstr "Mehr erfahren."
@@ -8067,7 +8067,7 @@ msgstr "Noch keine App-Passwörter"
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:177
 msgid "No beta features at the moment."
-msgstr ""
+msgstr "Derzeit sind keine Beta-Funktionen verfügbar."
 
 #: src/components/contacts/screens/ViewMatches.tsx:681
 msgid "No contacts found"
@@ -8570,7 +8570,7 @@ msgstr "Konversationsoptionen öffnen"
 msgid "Open draft"
 msgstr "Entwurf öffnen"
 
-#: src/components/Layout/Header/index.tsx:167
+#: src/components/Layout/Header/index.tsx:168
 msgid "Open drawer menu"
 msgstr "Seitenmenü öffnen"
 
@@ -9369,10 +9369,6 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Post angeheftet"
 
-#: src/components/PostControls/BookmarkButton.tsx:67
-msgid "Post saved"
-msgstr "Post gespeichert"
-
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9862,7 +9858,7 @@ msgstr "Aus Schnellzugriff entfernen?"
 msgid "Remove from saved feeds"
 msgstr "Aus gespeicherten Feeds entfernen"
 
-#: src/components/PostControls/BookmarkButton.tsx:143
+#: src/components/PostControls/BookmarkButton.tsx:120
 #: src/screens/Bookmarks.tsx:252
 msgid "Remove from saved posts"
 msgstr "Aus gespeicherten Posts entfernen"
@@ -9943,7 +9939,7 @@ msgstr "Aus der Liste entfernt"
 msgid "Removed from saved feeds"
 msgstr "Aus gespeicherten Feeds entfernt"
 
-#: src/components/PostControls/BookmarkButton.tsx:107
+#: src/components/PostControls/BookmarkButton.tsx:88
 #: src/screens/Bookmarks.tsx:211
 msgid "Removed from saved posts"
 msgstr "Aus gespeicherten Posts entfernt"
@@ -10564,9 +10560,9 @@ msgstr "Nach oben scrollen"
 #: src/components/forms/SearchInput.tsx:53
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:552
-#: src/screens/Search/Shell.tsx:616
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:541
+#: src/screens/Search/Shell.tsx:604
+#: src/screens/Search/Shell.tsx:741
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr "Suche"
@@ -11125,7 +11121,7 @@ msgstr "Autor-DID teilen"
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:93
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:98
 msgid "Share feedback"
-msgstr ""
+msgstr "Feedback teilen"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:93
 #: src/components/Lightbox/Lightbox.web.tsx:281
@@ -11173,8 +11169,8 @@ msgstr "QR-Code teilen"
 msgid "Share this feed"
 msgstr "Diesen Feed teilen"
 
-#: src/screens/Search/Shell.tsx:568
-#: src/screens/Search/Shell.tsx:638
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:626
 msgid "Share this search"
 msgstr "Diese Suche teilen"
 
@@ -11203,7 +11199,7 @@ msgstr "Teile deine Kontakte, um Freunde finden zu können"
 
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:123
 msgid "Share your thoughts…"
-msgstr ""
+msgstr "Teile deine Gedanken…"
 
 #: src/Navigation.tsx:322
 msgid "Shared Preferences Tester"
@@ -11219,7 +11215,7 @@ msgstr "Beim Teilen deines Altersbereichs wird nur der mit deinem Apple Account 
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr "Beim Teilen deines Altersbereichs wird nur der mit deinem Google Account verknüpfte Bereich offengelegt – zum Beispiel, dass du mindestens 18 Jahre alt bist. <0>Dein genaues Alter und dein Geburtsdatum werden niemals weitergegeben</0> und diese Daten verlassen dieses Gerät niemals. Daher wird der Zugriff nur auf diesem Gerät ermöglicht. Alternativ <1>kannst du unseren vertrauenswürdigen Partner KWS nutzen</1>, um deine Verifizierung abzuschließen und den Zugriff auf allen Plattformen freizuschalten."
 
-#: src/components/moderation/ContentHider.tsx:220
+#: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:143
 #: src/components/moderation/PostHider.tsx:140
 msgid "Show"
@@ -11229,8 +11225,8 @@ msgstr "Anzeigen"
 msgid "Show alt text"
 msgstr "Alt-Text anzeigen"
 
-#: src/components/moderation/ScreenHider.tsx:179
-#: src/components/moderation/ScreenHider.tsx:182
+#: src/components/moderation/ScreenHider.tsx:175
+#: src/components/moderation/ScreenHider.tsx:178
 #: src/features/liveNow/components/LiveStatusDialog.tsx:318
 #: src/features/liveNow/components/LiveStatusDialog.tsx:322
 #: src/screens/List/ListHiddenScreen.tsx:194
@@ -11274,9 +11270,9 @@ msgstr "Liste trotzdem anzeigen"
 msgid "Show lists of users to select from"
 msgstr "Listen von Nutzern anzeigen, aus denen du auswählen kannst"
 
-#: src/components/Post/ShowMoreTextButton.tsx:52
-msgid "Show More"
-msgstr "Mehr anzeigen"
+#: src/components/Post/ShowMoreTextButton.tsx:50
+msgid "Show more"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:594
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
@@ -11341,7 +11337,7 @@ msgstr "Zeigt Informationen darüber an, wann dieser Post erstellt wurde"
 msgid "Shows other accounts you can switch to"
 msgstr "Zeigt andere Accounts an, zu denen du wechseln kannst"
 
-#: src/components/moderation/ContentHider.tsx:172
+#: src/components/moderation/ContentHider.tsx:169
 #: src/components/moderation/PostHider.tsx:94
 msgid "Shows the content"
 msgstr "Zeigt den Inhalt an"
@@ -11436,7 +11432,7 @@ msgstr "Ausloggen?"
 msgid "Sign up"
 msgstr "Registrieren"
 
-#: src/components/moderation/ScreenHider.tsx:98
+#: src/components/moderation/ScreenHider.tsx:96
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
 msgid "Sign-in Required"
 msgstr "Einloggen erforderlich"
@@ -11506,7 +11502,7 @@ msgstr "Soziale Medien, die du kontrollierst."
 #. Name for a feature flag
 #: src/analytics/features/index.ts:84
 msgid "Social proofing on posts"
-msgstr ""
+msgstr "Soziale Bestätigung bei Posts"
 
 #: src/lib/interests.ts:58
 msgid "Software Dev"
@@ -11657,7 +11653,7 @@ msgstr "Sport"
 #. Description of a feature flag (Social proofing on posts)
 #: src/analytics/features/index.ts:90
 msgid "Spot posts your friends and follows have liked."
-msgstr ""
+msgstr "Sieh, welche Posts deinen Freunden und Personen, denen du folgst, gefallen."
 
 #: src/components/PostControls/ShareMenu/RecentChats.tsx:234
 msgid "Start a conversation, and it will appear here."
@@ -11787,7 +11783,7 @@ msgstr "Einspruch einlegen"
 
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:139
 msgid "Submit feedback"
-msgstr ""
+msgstr "Feedback senden"
 
 #: src/components/moderation/ReportDialog/index.tsx:508
 #: src/components/moderation/ReportDialog/index.tsx:569
@@ -12085,7 +12081,7 @@ msgstr "Danke für dein Feedback! Es wurde an den Feed-Betreiber gesendet."
 
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:77
 msgid "Thanks for your feedback!"
-msgstr ""
+msgstr "Danke für dein Feedback!"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:77
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
@@ -12392,7 +12388,7 @@ msgstr "Du besitzt diesen Chat"
 msgid "They won’t be able to rejoin unless you invite them again."
 msgstr "Sie können nicht erneut beitreten, es sei denn, du lädst sie erneut ein."
 
-#: src/components/moderation/ScreenHider.tsx:118
+#: src/components/moderation/ScreenHider.tsx:116
 msgid "This {screenDescription} has been flagged:"
 msgstr "Diese {screenDescription} wurde gekennzeichnet:"
 
@@ -12408,7 +12404,7 @@ msgstr "Dieser Account wurde vom Inhaber als automatisiert gekennzeichnet."
 msgid "This account has one or more attempted verifications, but it is not currently verified."
 msgstr "Für diesen Account gibt es einen oder mehrere Verifizierungsversuche, ist aber derzeit nicht verifiziert."
 
-#: src/components/moderation/ScreenHider.tsx:113
+#: src/components/moderation/ScreenHider.tsx:111
 msgid "This account has requested that users sign in to view their profile."
 msgstr "Dieser Account verlangt, dass Nutzer eingeloggt sind, um das Profil ansehen zu können."
 
@@ -13258,7 +13254,7 @@ msgstr "Von diesem Kennzeichner abmelden"
 msgid "Unsubscribed from list"
 msgstr "Von der Liste abgemeldet"
 
-#: src/view/com/composer/text-input/TextInput.tsx:128
+#: src/view/com/composer/text-input/TextInput.tsx:127
 msgid "Unsupported clipboard content"
 msgstr "Inhalt der Zwischenablage wird nicht unterstützt"
 
@@ -13730,7 +13726,7 @@ msgid "View details"
 msgstr "Details ansehen"
 
 #: src/view/com/posts/ViewFullThread.tsx:31
-#: src/view/com/posts/ViewFullThread.tsx:64
+#: src/view/com/posts/ViewFullThread.tsx:65
 msgid "View full thread"
 msgstr "Vollständigen Thread ansehen"
 
@@ -14001,7 +13997,7 @@ msgstr "Wir benachrichtigen dich, sobald wir deine Freunde gefunden haben."
 
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:101
 msgid "We’d love to hear about your experience testing beta features!"
-msgstr ""
+msgstr "Wir würden gerne hören, wie deine Erfahrungen beim Testen der Beta-Funktionen waren!"
 
 #. placeholder {0}: currentAccount!.email
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:259
@@ -14067,7 +14063,7 @@ msgstr "Es tut uns leid, aber wir konnten deine stummgeschalteten Wörter gerade
 #: src/screens/Search/SearchResults.tsx:412
 #: src/screens/Search/SearchResults.tsx:553
 msgid "We’re sorry, but your search could not be completed."
-msgstr ""
+msgstr "Es tut uns leid, aber deine Suche konnte nicht abgeschlossen werden."
 
 #: src/screens/Search/SearchResults.tsx:411
 #: src/screens/Search/SearchResults.tsx:552

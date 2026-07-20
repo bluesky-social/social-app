@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-16 14:05\n"
+"PO-Revision-Date: 2026-07-20 22:14\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -103,12 +103,12 @@ msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, one {o oră} few {# ore} other {# de ore}}"
 
 #. placeholder {0}: labels.length
-#: src/components/moderation/PostAlerts.tsx:149
+#: src/components/moderation/PostAlerts.tsx:157
 msgid "{0, plural, one {# label applied to your post} other {# labels applied to your post}}"
 msgstr "{0, plural, one {o etichetă aplicată postării dvs.} few {# etichete aplicate postării dvs.} other {# de etichete aplicate postării dvs.}}"
 
 #. placeholder {0}: labels.length
-#: src/components/moderation/PostAlerts.tsx:156
+#: src/components/moderation/PostAlerts.tsx:164
 msgid "{0, plural, one {# label applied} other {# labels applied}}"
 msgstr "{0, plural, one {o etichetă aplicată} few {# etichete aplicate} other {# de etichete aplicate}}"
 
@@ -224,7 +224,7 @@ msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
 #. placeholder {0}: desc.name
-#: src/components/moderation/ContentHider.tsx:100
+#: src/components/moderation/ContentHider.tsx:98
 msgid "{0} (Account)"
 msgstr "{0} (Cont)"
 
@@ -842,7 +842,7 @@ msgstr "Verificările utilizatorului {userName}"
 #. Number of images beyond the first 3
 #. placeholder {0}: labels.length
 #. placeholder {0}: totalNumber - 3
-#: src/components/moderation/PostAlerts.tsx:155
+#: src/components/moderation/PostAlerts.tsx:163
 #: src/view/com/composer/ComposerReplyTo.tsx:278
 msgid "+{0}"
 msgstr "+{0}"
@@ -1338,7 +1338,7 @@ msgstr "Adăugați acest flux la fluxurile dvs."
 msgid "Add to lists"
 msgstr "Adăugare la liste"
 
-#: src/components/PostControls/BookmarkButton.tsx:144
+#: src/components/PostControls/BookmarkButton.tsx:121
 msgid "Add to saved posts"
 msgstr "Adăugare la postările salvate"
 
@@ -1400,7 +1400,7 @@ msgstr "Adulți"
 msgid "Adult content"
 msgstr "Conținut pentru adulți"
 
-#: src/components/moderation/ContentHider.tsx:131
+#: src/components/moderation/ContentHider.tsx:129
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:149
 #: src/view/com/composer/labels/LabelsBtn.tsx:123
@@ -2585,7 +2585,7 @@ msgstr "Anulați reactivarea și deconectați-vă"
 msgid "Cancel reply"
 msgstr "Anulare răspuns"
 
-#: src/screens/Search/Shell.tsx:595
+#: src/screens/Search/Shell.tsx:584
 msgid "Cancel search"
 msgstr "Anulare căutare"
 
@@ -3283,7 +3283,7 @@ msgid "Content promoting or depicting self-harm"
 msgstr "Conținut care promovează sau prezintă autovătămarea"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
-#: src/components/moderation/ScreenHider.tsx:100
+#: src/components/moderation/ScreenHider.tsx:98
 #: src/lib/moderation/useGlobalLabelStrings.ts:22
 #: src/lib/moderation/useModerationCauseDescription.ts:46
 msgid "Content Warning"
@@ -3368,7 +3368,7 @@ msgstr "Conversația nu a fost găsită."
 msgid "Copied build version to clipboard"
 msgstr "Versiunea de compilare a fost copiată în clipboard"
 
-#: src/screens/Search/Shell.tsx:515
+#: src/screens/Search/Shell.tsx:504
 msgid "Copied link to clipboard"
 msgstr "Link copiat în clipboard"
 
@@ -4094,7 +4094,7 @@ msgstr "Descoperiți fluxuri noi"
 msgid "Discover New Feeds"
 msgstr "Descoperiți fluxuri noi"
 
-#: src/components/Dialog/index.tsx:413
+#: src/components/Dialog/index.tsx:414
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:83
 msgid "Dismiss"
 msgstr "Închidere"
@@ -4220,7 +4220,7 @@ msgstr "Finalizare"
 msgid "Double tap or long press the message to add a reaction"
 msgstr "Atingeți de două ori sau apăsați lung mesajul pentru a adăuga o reacție"
 
-#: src/components/Dialog/index.tsx:414
+#: src/components/Dialog/index.tsx:415
 msgid "Double tap to close the dialog"
 msgstr "Atingeți de două ori pentru a închide dialogul"
 
@@ -4755,7 +4755,7 @@ msgstr "Extindeți lista de utilizatori"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "Extindeți sau restrângeți postarea completă la care răspundeți"
 
-#: src/components/Post/ShowMoreTextButton.tsx:33
+#: src/components/Post/ShowMoreTextButton.tsx:31
 msgid "Expand post text"
 msgstr "Extindeți textul postării"
 
@@ -4803,7 +4803,7 @@ msgid "Explicit sexual images."
 msgstr "Imagini sexuale explicite."
 
 #: src/Navigation.tsx:760
-#: src/screens/Search/Shell.tsx:552
+#: src/screens/Search/Shell.tsx:541
 #: src/view/shell/desktop/LeftNav.tsx:677
 #: src/view/shell/Drawer.tsx:473
 msgid "Explore"
@@ -4886,7 +4886,7 @@ msgstr "Nu s-a putut modifica identificatorul. Vă rugăm să încercați din no
 
 #: src/components/Lightbox/Lightbox.web.tsx:302
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:130
-#: src/screens/Search/Shell.tsx:516
+#: src/screens/Search/Shell.tsx:505
 msgid "Failed to copy link"
 msgstr "Copierea link-ului a eșuat"
 
@@ -5374,7 +5374,7 @@ msgstr "Găsiți persoane pe care să le urmăriți"
 msgid "Find people you know"
 msgstr "Găsiți persoane pe care le cunoașteți"
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:753
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Găsiți postări, utilizatori și fluxuri pe Bluesky"
 
@@ -5813,9 +5813,9 @@ msgstr "Glorificarea violenței"
 
 #: src/components/dialogs/LinkWarning.tsx:127
 #: src/components/dialogs/LinkWarning.tsx:133
-#: src/components/Layout/Header/index.tsx:133
-#: src/components/moderation/ScreenHider.tsx:161
-#: src/components/moderation/ScreenHider.tsx:170
+#: src/components/Layout/Header/index.tsx:134
+#: src/components/moderation/ScreenHider.tsx:157
+#: src/components/moderation/ScreenHider.tsx:166
 #: src/screens/Login/components/AuthLayout/Header/index.tsx:74
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:160
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:163
@@ -6150,7 +6150,7 @@ msgstr "Listă ascunsă"
 
 #: src/components/interstitials/Trending.tsx:133
 #: src/components/interstitials/TrendingVideos.tsx:139
-#: src/components/moderation/ContentHider.tsx:220
+#: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:141
 #: src/components/moderation/PostHider.tsx:140
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:820
@@ -6240,7 +6240,7 @@ msgstr "Ascundere listă de utilizatori"
 msgid "Hide verification badges"
 msgstr "Ascundere insigne de verificare"
 
-#: src/components/moderation/ContentHider.tsx:171
+#: src/components/moderation/ContentHider.tsx:168
 #: src/components/moderation/PostHider.tsx:94
 msgid "Hides the content"
 msgstr "Ascundere conținut"
@@ -6831,11 +6831,11 @@ msgid "KWS website"
 msgstr "Website-ul KWS"
 
 #. placeholder {0}: sanitizeDisplayName(desc.source!)
-#: src/components/moderation/ContentHider.tsx:251
+#: src/components/moderation/ContentHider.tsx:245
 msgid "Labeled by {0}."
 msgstr "Etichetat de {0}."
 
-#: src/components/moderation/ContentHider.tsx:249
+#: src/components/moderation/ContentHider.tsx:243
 msgid "Labeled by the author."
 msgstr "Etichetat de autor."
 
@@ -6904,7 +6904,7 @@ msgctxt "english-only-resource"
 msgid "Learn more"
 msgstr "Aflați mai multe"
 
-#: src/components/moderation/ScreenHider.tsx:147
+#: src/components/moderation/ScreenHider.tsx:143
 msgid "Learn More"
 msgstr "Aflați mai multe"
 
@@ -6937,8 +6937,8 @@ msgstr "Aflați mai multe despre importarea contactelor"
 msgid "Learn more about self hosting your PDS."
 msgstr "Aflați mai multe despre găzduirea automată a SDP-ului dvs."
 
-#: src/components/moderation/ContentHider.tsx:169
-#: src/components/moderation/ContentHider.tsx:235
+#: src/components/moderation/ContentHider.tsx:166
+#: src/components/moderation/ContentHider.tsx:230
 msgid "Learn more about the moderation applied to this content"
 msgstr "Aflați mai multe despre moderarea aplicată acestui conținut"
 
@@ -6951,7 +6951,7 @@ msgid "Learn more about these changes and how to share your thoughts with us by 
 msgstr "Aflați mai multe despre aceste modificări și cum să vă împărtășiți gândurile cu noi citind postarea noastră pe blog."
 
 #: src/components/moderation/PostHider.tsx:116
-#: src/components/moderation/ScreenHider.tsx:134
+#: src/components/moderation/ScreenHider.tsx:132
 msgid "Learn more about this warning"
 msgstr "Aflați mai multe despre acest avertisment"
 
@@ -6975,7 +6975,7 @@ msgid "Learn more in your <0>account settings.</0>"
 msgstr "Aflați mai multe în <0>setările contului.</0>"
 
 #: src/components/dialogs/ServerInput.tsx:222
-#: src/components/moderation/ContentHider.tsx:259
+#: src/components/moderation/ContentHider.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:243
 msgid "Learn more."
 msgstr "Aflați mai multe."
@@ -8570,7 +8570,7 @@ msgstr "Deschideți opțiunile conversației"
 msgid "Open draft"
 msgstr "Deschideți schița"
 
-#: src/components/Layout/Header/index.tsx:167
+#: src/components/Layout/Header/index.tsx:168
 msgid "Open drawer menu"
 msgstr "Deschideți meniul sertar"
 
@@ -9369,10 +9369,6 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Postare fixată"
 
-#: src/components/PostControls/BookmarkButton.tsx:67
-msgid "Post saved"
-msgstr "Postare salvată"
-
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9862,7 +9858,7 @@ msgstr "Eliminați din acces rapid?"
 msgid "Remove from saved feeds"
 msgstr "Eliminați din fluxurile salvate"
 
-#: src/components/PostControls/BookmarkButton.tsx:143
+#: src/components/PostControls/BookmarkButton.tsx:120
 #: src/screens/Bookmarks.tsx:252
 msgid "Remove from saved posts"
 msgstr "Eliminare din postări salvate"
@@ -9943,7 +9939,7 @@ msgstr "Eliminat din listă"
 msgid "Removed from saved feeds"
 msgstr "Eliminat din fluxurile salvate"
 
-#: src/components/PostControls/BookmarkButton.tsx:107
+#: src/components/PostControls/BookmarkButton.tsx:88
 #: src/screens/Bookmarks.tsx:211
 msgid "Removed from saved posts"
 msgstr "Eliminat din postări salvate"
@@ -10564,9 +10560,9 @@ msgstr "Derulați până sus"
 #: src/components/forms/SearchInput.tsx:53
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:552
-#: src/screens/Search/Shell.tsx:616
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:541
+#: src/screens/Search/Shell.tsx:604
+#: src/screens/Search/Shell.tsx:741
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr "Căutare"
@@ -11173,8 +11169,8 @@ msgstr "Distribuiți codul QR"
 msgid "Share this feed"
 msgstr "Distribuiți acest flux"
 
-#: src/screens/Search/Shell.tsx:568
-#: src/screens/Search/Shell.tsx:638
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:626
 msgid "Share this search"
 msgstr "Partajați această căutare"
 
@@ -11219,7 +11215,7 @@ msgstr "Partajarea intervalului dvs. de vârstă dezvăluie doar intervalul asoc
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr "Partajarea intervalului dvs. de vârstă dezvăluie doar intervalul asociat cu contul dvs. Google – de exemplu, faptul că aveți cel puțin 18 ani. <0>Vârsta dvs. exactă și ziua de naștere nu sunt niciodată partajate,</0> iar aceste date nu părăsesc niciodată acest dispozitiv. Prin urmare, se activează accesul doar pe acest dispozitiv. Alternativ, <1>puteți folosi partenerul nostru de încredere, KWS</1>, pentru a finaliza verificarea și a activa accesul pe toate platformele."
 
-#: src/components/moderation/ContentHider.tsx:220
+#: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:143
 #: src/components/moderation/PostHider.tsx:140
 msgid "Show"
@@ -11229,8 +11225,8 @@ msgstr "Afișare"
 msgid "Show alt text"
 msgstr "Afișare text alternativ"
 
-#: src/components/moderation/ScreenHider.tsx:179
-#: src/components/moderation/ScreenHider.tsx:182
+#: src/components/moderation/ScreenHider.tsx:175
+#: src/components/moderation/ScreenHider.tsx:178
 #: src/features/liveNow/components/LiveStatusDialog.tsx:318
 #: src/features/liveNow/components/LiveStatusDialog.tsx:322
 #: src/screens/List/ListHiddenScreen.tsx:194
@@ -11274,9 +11270,9 @@ msgstr "Afișați lista oricum"
 msgid "Show lists of users to select from"
 msgstr "Afișați liste de utilizatori din care puteți selecta"
 
-#: src/components/Post/ShowMoreTextButton.tsx:52
-msgid "Show More"
-msgstr "Afișați mai multe"
+#: src/components/Post/ShowMoreTextButton.tsx:50
+msgid "Show more"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:594
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
@@ -11341,7 +11337,7 @@ msgstr "Afișează informații despre când a fost creată această postare"
 msgid "Shows other accounts you can switch to"
 msgstr "Afișează alte conturi la care vă puteți comuta"
 
-#: src/components/moderation/ContentHider.tsx:172
+#: src/components/moderation/ContentHider.tsx:169
 #: src/components/moderation/PostHider.tsx:94
 msgid "Shows the content"
 msgstr "Afișează conținutul"
@@ -11436,7 +11432,7 @@ msgstr "Deconectare?"
 msgid "Sign up"
 msgstr "Înscrieți-vă"
 
-#: src/components/moderation/ScreenHider.tsx:98
+#: src/components/moderation/ScreenHider.tsx:96
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
 msgid "Sign-in Required"
 msgstr "Conectare necesară"
@@ -12392,7 +12388,7 @@ msgstr "Aceștia dețin această conversație"
 msgid "They won’t be able to rejoin unless you invite them again."
 msgstr "Nu se vor putea realătura decât dacă îi invitați din nou."
 
-#: src/components/moderation/ScreenHider.tsx:118
+#: src/components/moderation/ScreenHider.tsx:116
 msgid "This {screenDescription} has been flagged:"
 msgstr "Acest {screenDescription} a fost etichetat:"
 
@@ -12408,7 +12404,7 @@ msgstr "Acest cont a fost marcat ca automatizat de către proprietarul său."
 msgid "This account has one or more attempted verifications, but it is not currently verified."
 msgstr "Acest cont are una sau mai multe verificări, dar nu este verificat în prezent."
 
-#: src/components/moderation/ScreenHider.tsx:113
+#: src/components/moderation/ScreenHider.tsx:111
 msgid "This account has requested that users sign in to view their profile."
 msgstr "Acest cont a solicitat ca utilizatorii să se conecteze pentru a vizualiza profilul lor."
 
@@ -13258,7 +13254,7 @@ msgstr "Dezabonare de la acest etichetator"
 msgid "Unsubscribed from list"
 msgstr "Dezabonat de la listă"
 
-#: src/view/com/composer/text-input/TextInput.tsx:128
+#: src/view/com/composer/text-input/TextInput.tsx:127
 msgid "Unsupported clipboard content"
 msgstr "Conținut clipboard neacceptat"
 
@@ -13730,7 +13726,7 @@ msgid "View details"
 msgstr "Vizualizare detalii"
 
 #: src/view/com/posts/ViewFullThread.tsx:31
-#: src/view/com/posts/ViewFullThread.tsx:64
+#: src/view/com/posts/ViewFullThread.tsx:65
 msgid "View full thread"
 msgstr "Vizualizați întregul fir"
 

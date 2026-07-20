@@ -8,7 +8,7 @@ msgstr ""
 "Language: it\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-16 14:05\n"
+"PO-Revision-Date: 2026-07-20 22:14\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -103,12 +103,12 @@ msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, one {# ora} other {# ore}}"
 
 #. placeholder {0}: labels.length
-#: src/components/moderation/PostAlerts.tsx:149
+#: src/components/moderation/PostAlerts.tsx:157
 msgid "{0, plural, one {# label applied to your post} other {# labels applied to your post}}"
 msgstr "{0, plural, one {# etichetta applicata al tuo post} other {# etichette applicate al tuo post}}"
 
 #. placeholder {0}: labels.length
-#: src/components/moderation/PostAlerts.tsx:156
+#: src/components/moderation/PostAlerts.tsx:164
 msgid "{0, plural, one {# label applied} other {# labels applied}}"
 msgstr "{0, plural, one {# etichetta applicata} other {# etichette applicate}}"
 
@@ -224,7 +224,7 @@ msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
 #. placeholder {0}: desc.name
-#: src/components/moderation/ContentHider.tsx:100
+#: src/components/moderation/ContentHider.tsx:98
 msgid "{0} (Account)"
 msgstr "{0} (account)"
 
@@ -842,7 +842,7 @@ msgstr "Verifiche di {userName}"
 #. Number of images beyond the first 3
 #. placeholder {0}: labels.length
 #. placeholder {0}: totalNumber - 3
-#: src/components/moderation/PostAlerts.tsx:155
+#: src/components/moderation/PostAlerts.tsx:163
 #: src/view/com/composer/ComposerReplyTo.tsx:278
 msgid "+{0}"
 msgstr "+{0}"
@@ -1338,7 +1338,7 @@ msgstr "Aggiungi feed"
 msgid "Add to lists"
 msgstr "Aggiungi a liste"
 
-#: src/components/PostControls/BookmarkButton.tsx:144
+#: src/components/PostControls/BookmarkButton.tsx:121
 msgid "Add to saved posts"
 msgstr "Aggiungi ai post salvati"
 
@@ -1400,7 +1400,7 @@ msgstr "Esplicito"
 msgid "Adult content"
 msgstr "Contenuto per adulti"
 
-#: src/components/moderation/ContentHider.tsx:131
+#: src/components/moderation/ContentHider.tsx:129
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:149
 #: src/view/com/composer/labels/LabelsBtn.tsx:123
@@ -2585,7 +2585,7 @@ msgstr "Annulla la riattivazione e disconnettiti"
 msgid "Cancel reply"
 msgstr "Annulla risposta"
 
-#: src/screens/Search/Shell.tsx:595
+#: src/screens/Search/Shell.tsx:584
 msgid "Cancel search"
 msgstr "Annulla la ricerca"
 
@@ -3283,7 +3283,7 @@ msgid "Content promoting or depicting self-harm"
 msgstr "Contenuti che promuovono o raffigurano autolesionismo"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
-#: src/components/moderation/ScreenHider.tsx:100
+#: src/components/moderation/ScreenHider.tsx:98
 #: src/lib/moderation/useGlobalLabelStrings.ts:22
 #: src/lib/moderation/useModerationCauseDescription.ts:46
 msgid "Content Warning"
@@ -3368,7 +3368,7 @@ msgstr "Conversazione non trovata."
 msgid "Copied build version to clipboard"
 msgstr "Versione della build copiata negli appunti"
 
-#: src/screens/Search/Shell.tsx:515
+#: src/screens/Search/Shell.tsx:504
 msgid "Copied link to clipboard"
 msgstr "Link copiato negli appunti"
 
@@ -4094,7 +4094,7 @@ msgstr "Scopri nuovi feed"
 msgid "Discover New Feeds"
 msgstr "Scopri nuovi feed"
 
-#: src/components/Dialog/index.tsx:413
+#: src/components/Dialog/index.tsx:414
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:83
 msgid "Dismiss"
 msgstr "Ignora"
@@ -4220,7 +4220,7 @@ msgstr "Fatto"
 msgid "Double tap or long press the message to add a reaction"
 msgstr "Tocca due volte o tieni premuto il messaggio per aggiungere una reazione"
 
-#: src/components/Dialog/index.tsx:414
+#: src/components/Dialog/index.tsx:415
 msgid "Double tap to close the dialog"
 msgstr "Tocca due volte per chiudere la finestra"
 
@@ -4755,7 +4755,7 @@ msgstr "Espandi la lista di utenti"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "Espandi o comprimi il post a cui stai rispondendo"
 
-#: src/components/Post/ShowMoreTextButton.tsx:33
+#: src/components/Post/ShowMoreTextButton.tsx:31
 msgid "Expand post text"
 msgstr "Espandi testo del post"
 
@@ -4803,7 +4803,7 @@ msgid "Explicit sexual images."
 msgstr "Immagini sessuali esplicite."
 
 #: src/Navigation.tsx:760
-#: src/screens/Search/Shell.tsx:552
+#: src/screens/Search/Shell.tsx:541
 #: src/view/shell/desktop/LeftNav.tsx:677
 #: src/view/shell/Drawer.tsx:473
 msgid "Explore"
@@ -4886,7 +4886,7 @@ msgstr "Non è stato possibile cambiare il nome utente. Riprovare."
 
 #: src/components/Lightbox/Lightbox.web.tsx:302
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:130
-#: src/screens/Search/Shell.tsx:516
+#: src/screens/Search/Shell.tsx:505
 msgid "Failed to copy link"
 msgstr "Impossibile copiare il link"
 
@@ -5374,7 +5374,7 @@ msgstr "Trova persone da seguire"
 msgid "Find people you know"
 msgstr "Trova persone che conosci"
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:753
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Cerca post, utenti, e feed su Bluesky"
 
@@ -5813,9 +5813,9 @@ msgstr "Glorificazione della violenza"
 
 #: src/components/dialogs/LinkWarning.tsx:127
 #: src/components/dialogs/LinkWarning.tsx:133
-#: src/components/Layout/Header/index.tsx:133
-#: src/components/moderation/ScreenHider.tsx:161
-#: src/components/moderation/ScreenHider.tsx:170
+#: src/components/Layout/Header/index.tsx:134
+#: src/components/moderation/ScreenHider.tsx:157
+#: src/components/moderation/ScreenHider.tsx:166
 #: src/screens/Login/components/AuthLayout/Header/index.tsx:74
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:160
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:163
@@ -6150,7 +6150,7 @@ msgstr "Lista nascosta"
 
 #: src/components/interstitials/Trending.tsx:133
 #: src/components/interstitials/TrendingVideos.tsx:139
-#: src/components/moderation/ContentHider.tsx:220
+#: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:141
 #: src/components/moderation/PostHider.tsx:140
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:820
@@ -6240,7 +6240,7 @@ msgstr "Nascondi elenco utenti"
 msgid "Hide verification badges"
 msgstr "Nascondi spunta di verifica"
 
-#: src/components/moderation/ContentHider.tsx:171
+#: src/components/moderation/ContentHider.tsx:168
 #: src/components/moderation/PostHider.tsx:94
 msgid "Hides the content"
 msgstr "Nasconde il contenuto"
@@ -6831,11 +6831,11 @@ msgid "KWS website"
 msgstr "Sito web di KWS"
 
 #. placeholder {0}: sanitizeDisplayName(desc.source!)
-#: src/components/moderation/ContentHider.tsx:251
+#: src/components/moderation/ContentHider.tsx:245
 msgid "Labeled by {0}."
 msgstr "Etichettato da {0}."
 
-#: src/components/moderation/ContentHider.tsx:249
+#: src/components/moderation/ContentHider.tsx:243
 msgid "Labeled by the author."
 msgstr "Etichettato dall'autore."
 
@@ -6904,7 +6904,7 @@ msgctxt "english-only-resource"
 msgid "Learn more"
 msgstr "Maggiori informazioni"
 
-#: src/components/moderation/ScreenHider.tsx:147
+#: src/components/moderation/ScreenHider.tsx:143
 msgid "Learn More"
 msgstr "Maggiori informazioni"
 
@@ -6937,8 +6937,8 @@ msgstr "Maggiori informazioni sull'importazione dei contatti"
 msgid "Learn more about self hosting your PDS."
 msgstr "Maggiori informazioni su come ospitare il tuo server."
 
-#: src/components/moderation/ContentHider.tsx:169
-#: src/components/moderation/ContentHider.tsx:235
+#: src/components/moderation/ContentHider.tsx:166
+#: src/components/moderation/ContentHider.tsx:230
 msgid "Learn more about the moderation applied to this content"
 msgstr "Maggiori informazioni sulla moderazione applicata a questo contenuto"
 
@@ -6951,7 +6951,7 @@ msgid "Learn more about these changes and how to share your thoughts with us by 
 msgstr "Maggiori informazioni su queste modifiche e su come condividere le tue opinioni con noi nel nostro post sul blog."
 
 #: src/components/moderation/PostHider.tsx:116
-#: src/components/moderation/ScreenHider.tsx:134
+#: src/components/moderation/ScreenHider.tsx:132
 msgid "Learn more about this warning"
 msgstr "Maggiori informazioni su questo avviso"
 
@@ -6975,7 +6975,7 @@ msgid "Learn more in your <0>account settings.</0>"
 msgstr "Maggiori informazioni nelle <0>impostazioni dell'account.</0>"
 
 #: src/components/dialogs/ServerInput.tsx:222
-#: src/components/moderation/ContentHider.tsx:259
+#: src/components/moderation/ContentHider.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:243
 msgid "Learn more."
 msgstr "Maggiori informazioni."
@@ -8570,7 +8570,7 @@ msgstr "Apri opzioni conversazione"
 msgid "Open draft"
 msgstr "Apri bozza"
 
-#: src/components/Layout/Header/index.tsx:167
+#: src/components/Layout/Header/index.tsx:168
 msgid "Open drawer menu"
 msgstr "Apri il menu a scomparsa"
 
@@ -9369,10 +9369,6 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Post fissato"
 
-#: src/components/PostControls/BookmarkButton.tsx:67
-msgid "Post saved"
-msgstr "Post salvato"
-
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9862,7 +9858,7 @@ msgstr "Rimuovere da accesso rapido?"
 msgid "Remove from saved feeds"
 msgstr "Rimuovi dai feed salvati"
 
-#: src/components/PostControls/BookmarkButton.tsx:143
+#: src/components/PostControls/BookmarkButton.tsx:120
 #: src/screens/Bookmarks.tsx:252
 msgid "Remove from saved posts"
 msgstr "Rimuovi dai post salvati"
@@ -9943,7 +9939,7 @@ msgstr "Rimosso dalla lista"
 msgid "Removed from saved feeds"
 msgstr "Rimosso dai feed salvati"
 
-#: src/components/PostControls/BookmarkButton.tsx:107
+#: src/components/PostControls/BookmarkButton.tsx:88
 #: src/screens/Bookmarks.tsx:211
 msgid "Removed from saved posts"
 msgstr "Rimosso dai post salvati"
@@ -10564,9 +10560,9 @@ msgstr "Scorri verso l'alto"
 #: src/components/forms/SearchInput.tsx:53
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:552
-#: src/screens/Search/Shell.tsx:616
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:541
+#: src/screens/Search/Shell.tsx:604
+#: src/screens/Search/Shell.tsx:741
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr "Cerca"
@@ -11173,8 +11169,8 @@ msgstr "Condividi codice QR"
 msgid "Share this feed"
 msgstr "Condividi questo feed"
 
-#: src/screens/Search/Shell.tsx:568
-#: src/screens/Search/Shell.tsx:638
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:626
 msgid "Share this search"
 msgstr "Condividi questa ricerca"
 
@@ -11219,7 +11215,7 @@ msgstr "La condivisione della tua fascia d'età rivela solo l'intervallo associa
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr "La condivisione della tua fascia d'età rivela solo l'intervallo associato al tuo account Google, ad esempio che hai almeno 18 anni. <0>La tua età esatta e la tua data di nascita non vengono mai condivise</0> e questi dati non lasciano mai questo dispositivo. Questo comporta che l'accesso è abilitato solo su questo dispositivo. In alternativa, per completare la verifica e abilitare l'accesso su tutte le piattaforme, <1>puoi utilizzare il nostro partner di fiducia KWS</1>."
 
-#: src/components/moderation/ContentHider.tsx:220
+#: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:143
 #: src/components/moderation/PostHider.tsx:140
 msgid "Show"
@@ -11229,8 +11225,8 @@ msgstr "Mostra"
 msgid "Show alt text"
 msgstr "Mostra testo alternativo"
 
-#: src/components/moderation/ScreenHider.tsx:179
-#: src/components/moderation/ScreenHider.tsx:182
+#: src/components/moderation/ScreenHider.tsx:175
+#: src/components/moderation/ScreenHider.tsx:178
 #: src/features/liveNow/components/LiveStatusDialog.tsx:318
 #: src/features/liveNow/components/LiveStatusDialog.tsx:322
 #: src/screens/List/ListHiddenScreen.tsx:194
@@ -11274,9 +11270,9 @@ msgstr "Mostra comunque lista"
 msgid "Show lists of users to select from"
 msgstr "Mostra le liste di utenti tra cui scegliere"
 
-#: src/components/Post/ShowMoreTextButton.tsx:52
-msgid "Show More"
-msgstr "Mostra di più"
+#: src/components/Post/ShowMoreTextButton.tsx:50
+msgid "Show more"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:594
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
@@ -11341,7 +11337,7 @@ msgstr "Mostra informazioni sulla data di creazione del post"
 msgid "Shows other accounts you can switch to"
 msgstr "Mostra gli altri account a cui puoi passare"
 
-#: src/components/moderation/ContentHider.tsx:172
+#: src/components/moderation/ContentHider.tsx:169
 #: src/components/moderation/PostHider.tsx:94
 msgid "Shows the content"
 msgstr "Mostra il contenuto"
@@ -11436,7 +11432,7 @@ msgstr "Vuoi uscire?"
 msgid "Sign up"
 msgstr "Registrati"
 
-#: src/components/moderation/ScreenHider.tsx:98
+#: src/components/moderation/ScreenHider.tsx:96
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
 msgid "Sign-in Required"
 msgstr "È richiesto l'accesso"
@@ -12392,7 +12388,7 @@ msgstr "È il proprietario di questa chat"
 msgid "They won’t be able to rejoin unless you invite them again."
 msgstr "Non potrà più partecipare finché non lo inviti di nuovo."
 
-#: src/components/moderation/ScreenHider.tsx:118
+#: src/components/moderation/ScreenHider.tsx:116
 msgid "This {screenDescription} has been flagged:"
 msgstr "Questa {screenDescription} è stata segnalata:"
 
@@ -12408,7 +12404,7 @@ msgstr "Questo account è stato contrassegnato come automatizzato dal suo propri
 msgid "This account has one or more attempted verifications, but it is not currently verified."
 msgstr "Questo account ha uno o più tentativi di verifica, ma non è ancora verificato."
 
-#: src/components/moderation/ScreenHider.tsx:113
+#: src/components/moderation/ScreenHider.tsx:111
 msgid "This account has requested that users sign in to view their profile."
 msgstr "Questo account ha richiesto agli utenti di accedere a Bluesky per visualizzare il profilo."
 
@@ -13258,7 +13254,7 @@ msgstr "Disiscriviti da etichetta"
 msgid "Unsubscribed from list"
 msgstr "Disiscritto dalla lista"
 
-#: src/view/com/composer/text-input/TextInput.tsx:128
+#: src/view/com/composer/text-input/TextInput.tsx:127
 msgid "Unsupported clipboard content"
 msgstr "Contenuto degli appunti non supportato"
 
@@ -13730,7 +13726,7 @@ msgid "View details"
 msgstr "Vedi dettagli"
 
 #: src/view/com/posts/ViewFullThread.tsx:31
-#: src/view/com/posts/ViewFullThread.tsx:64
+#: src/view/com/posts/ViewFullThread.tsx:65
 msgid "View full thread"
 msgstr "Vedi la discussione completa"
 

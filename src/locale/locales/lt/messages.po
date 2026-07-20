@@ -8,7 +8,7 @@ msgstr ""
 "Language: lt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-16 14:05\n"
+"PO-Revision-Date: 2026-07-20 22:14\n"
 "Last-Translator: \n"
 "Language-Team: Lithuanian\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && (n%100>19 || n%100<11) ? 0 : (n%10>=2 && n%10<=9) && (n%100>19 || n%100<11) ? 1 : n%1!=0 ? 2: 3);\n"
@@ -971,7 +971,7 @@ msgstr ""
 msgid "7 days"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:17
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:27
 msgid "A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens"
 msgstr ""
 
@@ -1338,7 +1338,7 @@ msgstr ""
 msgid "Add to lists"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:144
+#: src/components/PostControls/BookmarkButton.tsx:121
 msgid "Add to saved posts"
 msgstr ""
 
@@ -1560,7 +1560,7 @@ msgstr ""
 msgid "Already have a code?"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:192
+#: src/components/WelcomeModal.tsx:189
 msgid "Already have an account?"
 msgstr ""
 
@@ -1614,7 +1614,7 @@ msgstr ""
 msgid "An error has occurred"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:448
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:434
 msgid "An error occurred"
 msgstr ""
 
@@ -1631,7 +1631,7 @@ msgstr ""
 msgid "An error occurred while fetching the feed."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:374
+#: src/components/StarterPack/ProfileStarterPacks.tsx:377
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr ""
 
@@ -1684,7 +1684,7 @@ msgstr ""
 msgid "An illustration depicting user avatars flowing from a contact book into the Bluesky app"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:35
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:45
 msgid "An illustration of several Bluesky posts alongside repost, like, and comment icons"
 msgstr ""
 
@@ -2119,8 +2119,8 @@ msgid "Before creating a post or replying, you must first verify your email."
 msgstr ""
 
 #: src/components/dialogs/StarterPackDialog.tsx:72
-#: src/components/StarterPack/ProfileStarterPacks.tsx:264
-#: src/components/StarterPack/ProfileStarterPacks.tsx:274
+#: src/components/StarterPack/ProfileStarterPacks.tsx:267
+#: src/components/StarterPack/ProfileStarterPacks.tsx:277
 #: src/view/screens/Profile.tsx:350
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr ""
@@ -2135,10 +2135,10 @@ msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:155
 #: src/components/dms/MessageProfileButton.tsx:60
-#: src/screens/Messages/ChatList.tsx:169
-#: src/screens/Messages/ChatList.tsx:187
-#: src/screens/Messages/ChatList.tsx:288
-#: src/screens/Messages/ChatList.tsx:544
+#: src/screens/Messages/ChatList.tsx:168
+#: src/screens/Messages/ChatList.tsx:186
+#: src/screens/Messages/ChatList.tsx:287
+#: src/screens/Messages/ChatList.tsx:543
 #: src/screens/Messages/Conversation.tsx:203
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
 msgid "Before you can message another user, you must first verify your email."
@@ -2282,7 +2282,7 @@ msgstr ""
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:203
+#: src/screens/Profile/Sections/Labels.tsx:204
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr ""
 
@@ -2294,7 +2294,7 @@ msgstr ""
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.web.tsx:174
+#: src/view/com/auth/SplashScreen.web.tsx:176
 msgid "Blog"
 msgstr ""
 
@@ -2358,7 +2358,7 @@ msgstr ""
 msgid "Bluesky stores your contacts as encoded data. Removing your contacts will immediately delete this data."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:340
+#: src/components/StarterPack/ProfileStarterPacks.tsx:343
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr ""
 
@@ -2446,7 +2446,7 @@ msgstr ""
 msgid "Browse topic {displayName}"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.web.tsx:169
+#: src/view/com/auth/SplashScreen.web.tsx:171
 msgid "Business"
 msgstr ""
 
@@ -2508,7 +2508,7 @@ msgstr ""
 msgid "By you"
 msgstr ""
 
-#: src/view/com/composer/photos/OpenCameraBtn.tsx:69
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:65
 msgid "Camera"
 msgstr ""
 
@@ -2743,9 +2743,9 @@ msgstr ""
 msgid "Chat not found."
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:570
-#: src/screens/Messages/ChatList.tsx:605
-#: src/screens/Messages/ChatList.tsx:652
+#: src/screens/Messages/ChatList.tsx:569
+#: src/screens/Messages/ChatList.tsx:604
+#: src/screens/Messages/ChatList.tsx:651
 msgid "Chat options"
 msgstr ""
 
@@ -2768,10 +2768,10 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:88
 #: src/Navigation.tsx:515
-#: src/screens/Messages/ChatList.tsx:98
-#: src/screens/Messages/ChatList.tsx:102
-#: src/screens/Messages/ChatList.tsx:672
-#: src/screens/Messages/ChatList.tsx:682
+#: src/screens/Messages/ChatList.tsx:97
+#: src/screens/Messages/ChatList.tsx:101
+#: src/screens/Messages/ChatList.tsx:671
+#: src/screens/Messages/ChatList.tsx:681
 #: src/screens/Messages/Settings.tsx:48
 msgid "Chat settings"
 msgstr ""
@@ -2798,9 +2798,9 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:92
-#: src/screens/Messages/ChatList.tsx:556
-#: src/screens/Messages/ChatList.tsx:596
+#: src/screens/Messages/ChatList.tsx:91
+#: src/screens/Messages/ChatList.tsx:555
+#: src/screens/Messages/ChatList.tsx:595
 msgid "Chats"
 msgstr ""
 
@@ -2837,7 +2837,7 @@ msgstr ""
 msgid "Choose Feeds"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:349
+#: src/components/StarterPack/ProfileStarterPacks.tsx:352
 msgid "Choose for me"
 msgstr ""
 
@@ -3027,8 +3027,8 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/components/Dialog/index.web.tsx:127
-#: src/components/Dialog/index.web.tsx:317
+#: src/components/Dialog/index.web.tsx:129
+#: src/components/Dialog/index.web.tsx:339
 msgid "Close active dialog"
 msgstr ""
 
@@ -3090,7 +3090,7 @@ msgstr ""
 msgid "Close this dialog"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:217
+#: src/components/WelcomeModal.tsx:214
 msgid "Close welcome modal"
 msgstr ""
 
@@ -3293,7 +3293,7 @@ msgstr ""
 msgid "Content warnings"
 msgstr ""
 
-#: src/components/Menu/index.web.tsx:91
+#: src/components/Menu/index.web.tsx:93
 msgid "Context menu backdrop, click to close the menu."
 msgstr ""
 
@@ -3607,7 +3607,7 @@ msgstr ""
 #: src/components/dialogs/StarterPackDialog.tsx:113
 #: src/components/dialogs/StarterPackDialog.tsx:210
 #: src/components/dms/InitiateChatFlow.tsx:502
-#: src/components/StarterPack/ProfileStarterPacks.tsx:329
+#: src/components/StarterPack/ProfileStarterPacks.tsx:332
 msgid "Create"
 msgstr ""
 
@@ -3624,8 +3624,8 @@ msgstr ""
 msgid "Create a QR code for a starter pack"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:207
-#: src/components/StarterPack/ProfileStarterPacks.tsx:316
+#: src/components/StarterPack/ProfileStarterPacks.tsx:210
+#: src/components/StarterPack/ProfileStarterPacks.tsx:319
 #: src/Navigation.tsx:551
 msgid "Create a starter pack"
 msgstr ""
@@ -3635,16 +3635,16 @@ msgstr ""
 msgid "Create a Starter Pack"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:303
+#: src/components/StarterPack/ProfileStarterPacks.tsx:306
 msgid "Create a starter pack for me"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:158
-#: src/components/WelcomeModal.tsx:166
+#: src/components/WelcomeModal.tsx:155
+#: src/components/WelcomeModal.tsx:163
 #: src/screens/Messages/JoinRequest.tsx:310
 #: src/screens/Signup/index.tsx:141
 #: src/view/com/auth/SplashScreen.tsx:106
-#: src/view/com/auth/SplashScreen.web.tsx:116
+#: src/view/com/auth/SplashScreen.web.tsx:118
 #: src/view/shell/bottom-bar/BottomBar.tsx:351
 #: src/view/shell/bottom-bar/BottomBar.tsx:355
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:240
@@ -3670,7 +3670,7 @@ msgstr ""
 msgid "Create an avatar instead"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:214
+#: src/components/StarterPack/ProfileStarterPacks.tsx:217
 msgid "Create another"
 msgstr ""
 
@@ -3698,7 +3698,7 @@ msgstr ""
 
 #: src/screens/Messages/JoinRequest.tsx:304
 #: src/view/com/auth/SplashScreen.tsx:89
-#: src/view/com/auth/SplashScreen.web.tsx:108
+#: src/view/com/auth/SplashScreen.web.tsx:110
 msgid "Create new account"
 msgstr ""
 
@@ -4002,7 +4002,7 @@ msgstr ""
 msgid "Disable 2FA"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:414
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:400
 msgid "Disable captions"
 msgstr ""
 
@@ -4142,7 +4142,7 @@ msgstr ""
 msgid "Display name"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:23
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:33
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
 msgstr ""
 
@@ -4509,7 +4509,7 @@ msgstr ""
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:61
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:64
 msgid "Embedded video player"
 msgstr ""
 
@@ -4533,7 +4533,7 @@ msgstr ""
 msgid "Enable beta features"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:415
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:401
 msgid "Enable captions"
 msgstr ""
 
@@ -4581,7 +4581,7 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:131
+#: src/screens/Profile/Sections/Feed.tsx:132
 msgid "End of feed"
 msgstr ""
 
@@ -4608,7 +4608,7 @@ msgstr ""
 msgid "Enter code"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:433
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:419
 msgid "Enter fullscreen"
 msgstr ""
 
@@ -4738,7 +4738,7 @@ msgstr ""
 msgid "Excludes users you follow"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:432
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:418
 msgid "Exit fullscreen"
 msgstr ""
 
@@ -4809,8 +4809,8 @@ msgstr ""
 msgid "Explore"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:171
-#: src/components/WelcomeModal.tsx:180
+#: src/components/WelcomeModal.tsx:168
+#: src/components/WelcomeModal.tsx:177
 msgid "Explore the app"
 msgstr ""
 
@@ -4974,7 +4974,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:421
+#: src/screens/Messages/ChatList.tsx:420
 #: src/screens/Messages/Inbox.tsx:202
 msgid "Failed to load conversations"
 msgstr ""
@@ -5027,12 +5027,12 @@ msgstr ""
 msgid "Failed to lock group chat"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:637
+#: src/screens/Messages/ChatList.tsx:636
 #: src/view/shell/bottom-bar/BottomBar.tsx:447
 msgid "Failed to mark all chats as read"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:646
+#: src/screens/Messages/ChatList.tsx:645
 #: src/screens/Messages/Inbox.tsx:304
 #: src/view/shell/bottom-bar/BottomBar.tsx:456
 msgid "Failed to mark all requests as read"
@@ -5387,7 +5387,7 @@ msgstr ""
 msgid "Find your friends on Bluesky by verifying your phone number and matching with your contacts. We protect your information and you control what happens next. <0>Learn more</0>"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:21
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:31
 msgid "Find your people"
 msgstr ""
 
@@ -5628,7 +5628,7 @@ msgstr ""
 msgid "Forever"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:30
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:40
 msgid "Forget the noise"
 msgstr ""
 
@@ -5647,7 +5647,7 @@ msgstr ""
 msgid "Four message bubbles representing a group chat. First message: \"Did you hear the news? Bluesky has group chats now!\" Second message: \"omg, no way\" Third message: \"Wow, 50 people in one chat!\" Fourth message: \"You can send invite links too!\""
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:12
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:22
 msgid "Free your feed"
 msgstr ""
 
@@ -5674,7 +5674,7 @@ msgstr ""
 msgid "From these people"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:337
+#: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Generate a starter pack"
 msgstr ""
 
@@ -6548,7 +6548,7 @@ msgstr ""
 msgid "In-app, push, people you follow"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:438
+#: src/screens/Messages/ChatList.tsx:437
 msgid "Inbox empty"
 msgstr ""
 
@@ -6781,7 +6781,7 @@ msgid "Job ID: {0}"
 msgstr ""
 
 #. Link to a page with job openings at Bluesky
-#: src/view/com/auth/SplashScreen.web.tsx:179
+#: src/view/com/auth/SplashScreen.web.tsx:181
 msgid "Jobs"
 msgstr ""
 
@@ -6852,7 +6852,7 @@ msgstr ""
 msgid "Labels applied to this post"
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:194
+#: src/screens/Profile/Sections/Labels.tsx:195
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr ""
 
@@ -6917,7 +6917,7 @@ msgstr ""
 msgid "Learn more about age assurance"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.web.tsx:167
+#: src/view/com/auth/SplashScreen.web.tsx:169
 msgid "Learn more about Bluesky"
 msgstr ""
 
@@ -7042,7 +7042,7 @@ msgstr ""
 msgid "left to go."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:354
+#: src/components/StarterPack/ProfileStarterPacks.tsx:357
 msgid "Let me choose"
 msgstr ""
 
@@ -7293,7 +7293,7 @@ msgid "Load new notifications"
 msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:206
-#: src/screens/Profile/Sections/Feed.tsx:117
+#: src/screens/Profile/Sections/Feed.tsx:118
 #: src/screens/ProfileList/FeedSection.tsx:113
 #: src/view/com/feeds/FeedPage.tsx:168
 msgid "Load new posts"
@@ -7387,7 +7387,7 @@ msgstr ""
 msgid "Make adjustments to email settings for your account"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:311
+#: src/components/StarterPack/ProfileStarterPacks.tsx:314
 msgid "Make one for me"
 msgstr ""
 
@@ -7418,15 +7418,15 @@ msgstr ""
 msgid "Mark all as read"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:656
-#: src/screens/Messages/ChatList.tsx:660
+#: src/screens/Messages/ChatList.tsx:655
+#: src/screens/Messages/ChatList.tsx:659
 #: src/view/shell/bottom-bar/BottomBar.tsx:465
 #: src/view/shell/bottom-bar/BottomBar.tsx:469
 msgid "Mark all chats as read"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:664
-#: src/screens/Messages/ChatList.tsx:668
+#: src/screens/Messages/ChatList.tsx:663
+#: src/screens/Messages/ChatList.tsx:667
 #: src/view/shell/bottom-bar/BottomBar.tsx:473
 #: src/view/shell/bottom-bar/BottomBar.tsx:477
 msgid "Mark all requests as read"
@@ -7441,12 +7441,12 @@ msgstr ""
 msgid "Marked all as read"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:634
+#: src/screens/Messages/ChatList.tsx:633
 #: src/view/shell/bottom-bar/BottomBar.tsx:444
 msgid "Marked all chats as read"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:643
+#: src/screens/Messages/ChatList.tsx:642
 #: src/view/shell/bottom-bar/BottomBar.tsx:453
 msgid "Marked all requests as read"
 msgstr ""
@@ -7893,11 +7893,11 @@ msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:169
 #: src/components/dms/dialogs/NewChatDialog.tsx:184
+#: src/screens/Messages/ChatList.tsx:231
 #: src/screens/Messages/ChatList.tsx:232
-#: src/screens/Messages/ChatList.tsx:233
+#: src/screens/Messages/ChatList.tsx:455
 #: src/screens/Messages/ChatList.tsx:456
-#: src/screens/Messages/ChatList.tsx:457
-#: src/screens/Messages/ChatList.tsx:581
+#: src/screens/Messages/ChatList.tsx:580
 msgid "New chat"
 msgstr ""
 
@@ -8057,7 +8057,7 @@ msgstr ""
 msgid "Night"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:32
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:42
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
 msgstr ""
 
@@ -8143,7 +8143,7 @@ msgstr ""
 msgid "No messages yet"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:14
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:24
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
 msgstr ""
 
@@ -8184,12 +8184,12 @@ msgstr ""
 msgid "No posts here"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:81
+#: src/screens/Profile/Sections/Feed.tsx:82
 #: src/view/screens/Profile.tsx:430
 msgid "No posts yet"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:107
+#: src/view/com/post-thread/PostQuotes.tsx:114
 msgid "No quotes yet"
 msgstr ""
 
@@ -8278,7 +8278,7 @@ msgstr ""
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:109
+#: src/view/com/post-thread/PostQuotes.tsx:116
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
 msgstr ""
 
@@ -8519,7 +8519,7 @@ msgstr ""
 msgid "Only replies"
 msgstr ""
 
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:41
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:39
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr ""
 
@@ -8532,8 +8532,8 @@ msgid "Oops, this profile doesn't exist. Try scanning another one."
 msgstr ""
 
 #: src/components/Lists.tsx:184
-#: src/components/StarterPack/ProfileStarterPacks.tsx:363
-#: src/components/StarterPack/ProfileStarterPacks.tsx:372
+#: src/components/StarterPack/ProfileStarterPacks.tsx:366
+#: src/components/StarterPack/ProfileStarterPacks.tsx:375
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:108
 #: src/view/screens/Profile.tsx:132
@@ -8699,7 +8699,7 @@ msgstr ""
 msgid "Opens alt text dialog"
 msgstr ""
 
-#: src/view/com/composer/photos/OpenCameraBtn.tsx:70
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:66
 msgid "Opens camera on device"
 msgstr ""
 
@@ -8726,13 +8726,13 @@ msgstr ""
 
 #: src/screens/Messages/JoinRequest.tsx:305
 #: src/view/com/auth/SplashScreen.tsx:91
-#: src/view/com/auth/SplashScreen.web.tsx:110
+#: src/view/com/auth/SplashScreen.web.tsx:112
 msgid "Opens flow to create a new Bluesky account"
 msgstr ""
 
 #: src/screens/Messages/JoinRequest.tsx:291
 #: src/view/com/auth/SplashScreen.tsx:118
-#: src/view/com/auth/SplashScreen.web.tsx:124
+#: src/view/com/auth/SplashScreen.web.tsx:126
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr ""
 
@@ -8917,7 +8917,7 @@ msgid "Password updated!"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:395
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
 msgid "Pause"
 msgstr ""
 
@@ -8925,7 +8925,7 @@ msgstr ""
 msgid "Pause GIF"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:346
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:332
 msgid "Pause video"
 msgstr ""
 
@@ -9063,7 +9063,7 @@ msgid "Pinned to your feeds"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:396
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
 msgid "Play"
 msgstr ""
 
@@ -9077,7 +9077,7 @@ msgid "Play GIF"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/index.tsx:169
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:347
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:333
 msgid "Play video"
 msgstr ""
 
@@ -9367,10 +9367,6 @@ msgstr ""
 #: src/state/queries/pinned-post.ts:59
 msgctxt "toast"
 msgid "Post pinned"
-msgstr ""
-
-#: src/components/PostControls/BookmarkButton.tsx:67
-msgid "Post saved"
 msgstr ""
 
 #: src/state/queries/pinned-post.ts:61
@@ -9673,7 +9669,7 @@ msgstr ""
 msgid "Read our blog post"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.web.tsx:172
+#: src/view/com/auth/SplashScreen.web.tsx:174
 msgid "Read the Bluesky blog"
 msgstr ""
 
@@ -9687,11 +9683,11 @@ msgstr ""
 msgid "Read the Bluesky Terms of Service"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:149
+#: src/components/WelcomeModal.tsx:146
 msgid "Real conversations."
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:147
+#: src/components/WelcomeModal.tsx:144
 msgid "Real people."
 msgstr ""
 
@@ -9748,7 +9744,7 @@ msgstr ""
 msgid "Reject join request"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:425
+#: src/screens/Messages/ChatList.tsx:424
 #: src/screens/Messages/Inbox.tsx:206
 msgid "Reload conversations"
 msgstr ""
@@ -9862,7 +9858,7 @@ msgstr ""
 msgid "Remove from saved feeds"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:143
+#: src/components/PostControls/BookmarkButton.tsx:120
 #: src/screens/Bookmarks.tsx:252
 msgid "Remove from saved posts"
 msgstr ""
@@ -9943,7 +9939,7 @@ msgstr ""
 msgid "Removed from saved feeds"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:107
+#: src/components/PostControls/BookmarkButton.tsx:88
 #: src/screens/Bookmarks.tsx:211
 msgid "Removed from saved posts"
 msgstr ""
@@ -10358,10 +10354,10 @@ msgstr ""
 #: src/components/moderation/ReportDialog/index.tsx:297
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:56
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:59
-#: src/components/StarterPack/ProfileStarterPacks.tsx:377
+#: src/components/StarterPack/ProfileStarterPacks.tsx:380
 #: src/screens/Login/LoginForm.tsx:531
 #: src/screens/Login/LoginForm.tsx:537
-#: src/screens/Messages/ChatList.tsx:430
+#: src/screens/Messages/ChatList.tsx:429
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:211
 #: src/screens/Messages/JoinRequests.tsx:361
@@ -10520,8 +10516,8 @@ msgstr ""
 msgid "Say hello!"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:223
-#: src/screens/Messages/ChatList.tsx:447
+#: src/screens/Messages/ChatList.tsx:222
+#: src/screens/Messages/ChatList.tsx:446
 msgid "Say hi to someone"
 msgstr ""
 
@@ -10703,7 +10699,7 @@ msgstr ""
 msgid "See #{tag} posts by user"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.web.tsx:177
+#: src/view/com/auth/SplashScreen.web.tsx:179
 msgid "See jobs at Bluesky"
 msgstr ""
 
@@ -10780,8 +10776,8 @@ msgstr ""
 msgid "Select app language"
 msgstr ""
 
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:60
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:67
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:58
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:65
 msgid "Select caption file (.vtt)"
 msgstr ""
 
@@ -11348,8 +11344,8 @@ msgstr ""
 
 #: src/components/dialogs/Signin.tsx:98
 #: src/components/dialogs/Signin.tsx:100
-#: src/components/WelcomeModal.tsx:197
-#: src/components/WelcomeModal.tsx:209
+#: src/components/WelcomeModal.tsx:194
+#: src/components/WelcomeModal.tsx:206
 #: src/screens/Hashtag.tsx:231
 #: src/screens/Login/index.tsx:143
 #: src/screens/Login/index.tsx:165
@@ -11361,8 +11357,8 @@ msgstr ""
 #: src/screens/Search/SearchResults.tsx:386
 #: src/view/com/auth/SplashScreen.tsx:116
 #: src/view/com/auth/SplashScreen.tsx:123
-#: src/view/com/auth/SplashScreen.web.tsx:122
-#: src/view/com/auth/SplashScreen.web.tsx:130
+#: src/view/com/auth/SplashScreen.web.tsx:124
+#: src/view/com/auth/SplashScreen.web.tsx:132
 #: src/view/shell/bottom-bar/BottomBar.tsx:360
 #: src/view/shell/bottom-bar/BottomBar.tsx:364
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:250
@@ -11499,7 +11495,7 @@ msgstr ""
 msgid "So many thoughts, you should post one"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:151
+#: src/components/WelcomeModal.tsx:148
 msgid "Social media you control."
 msgstr ""
 
@@ -11593,7 +11589,7 @@ msgid "Something went wrong, please try again"
 msgstr ""
 
 #: src/screens/Moderation/index.tsx:112
-#: src/screens/Profile/Sections/Labels.tsx:184
+#: src/screens/Profile/Sections/Labels.tsx:185
 #: src/screens/Settings/BetaFeaturesSettings.tsx:80
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:84
 msgid "Something went wrong, please try again."
@@ -11720,7 +11716,7 @@ msgstr ""
 msgid "Starter Packs"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:295
+#: src/components/StarterPack/ProfileStarterPacks.tsx:298
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr ""
 
@@ -11811,7 +11807,7 @@ msgid "Subscribe to {publicationTitle} on {0}"
 msgstr ""
 
 #. placeholder {0}: labelerInfo.creator.handle
-#: src/screens/Profile/Sections/Labels.tsx:231
+#: src/screens/Profile/Sections/Labels.tsx:232
 msgid "Subscribe to @{0} to use these labels:"
 msgstr ""
 
@@ -12113,7 +12109,7 @@ msgstr ""
 msgid "That username is already taken"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:135
+#: src/view/com/post-thread/PostQuotes.tsx:142
 msgid "That's all, folks!"
 msgstr ""
 
@@ -12596,7 +12592,7 @@ msgstr ""
 msgid "This label was applied to the entire user account and will appear on all posts."
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:218
+#: src/screens/Profile/Sections/Labels.tsx:219
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr ""
 
@@ -13192,7 +13188,7 @@ msgstr ""
 msgid "Unmute thread"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:344
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:330
 msgid "Unmute video"
 msgstr ""
 
@@ -13818,8 +13814,8 @@ msgstr ""
 msgid "View your default post interaction settings"
 msgstr ""
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:59
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:84
+#: src/view/com/home/HomeHeaderLayout.web.tsx:67
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:86
 msgid "View your feeds and explore more"
 msgstr ""
 
@@ -14133,7 +14129,7 @@ msgstr ""
 msgid "what’s up"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.web.tsx:98
+#: src/view/com/auth/SplashScreen.web.tsx:100
 #: src/view/com/composer/Composer.tsx:1602
 #: src/view/com/feeds/ComposerPrompt.tsx:192
 msgid "What's up?"
@@ -14161,7 +14157,7 @@ msgid "Who can verify?"
 msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:80
-#: src/screens/Messages/ChatList.tsx:410
+#: src/screens/Messages/ChatList.tsx:409
 #: src/screens/Messages/Inbox.tsx:191
 msgid "Whoops!"
 msgstr ""
@@ -14563,7 +14559,7 @@ msgstr ""
 msgid "You have unsaved changes. Would you like to save them before viewing your drafts?"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:292
+#: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "You haven't created a starter pack yet!"
 msgstr ""
 
@@ -14622,7 +14618,7 @@ msgstr ""
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:365
+#: src/components/StarterPack/ProfileStarterPacks.tsx:368
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr ""
 
@@ -14980,11 +14976,11 @@ msgid "Your preferred language"
 msgstr ""
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.tsx:102
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.web.tsx:53
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.web.tsx:54
 msgid "Your profile picture"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:26
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:36
 msgid "Your profile picture surrounded by concentric circles of other users' profile pictures"
 msgstr ""
 

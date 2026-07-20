@@ -8,7 +8,7 @@ msgstr ""
 "Language: gd\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-16 14:05\n"
+"PO-Revision-Date: 2026-07-20 22:14\n"
 "Last-Translator: \n"
 "Language-Team: Scottish Gaelic\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n>2 && n<20) ? 2 : 3;\n"
@@ -103,12 +103,12 @@ msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, one {# uair a thìde} two {# uair a thìde} few {# uairean a thìde} other {# uair a thìde}}"
 
 #. placeholder {0}: labels.length
-#: src/components/moderation/PostAlerts.tsx:149
+#: src/components/moderation/PostAlerts.tsx:157
 msgid "{0, plural, one {# label applied to your post} other {# labels applied to your post}}"
 msgstr ""
 
 #. placeholder {0}: labels.length
-#: src/components/moderation/PostAlerts.tsx:156
+#: src/components/moderation/PostAlerts.tsx:164
 msgid "{0, plural, one {# label applied} other {# labels applied}}"
 msgstr ""
 
@@ -224,7 +224,7 @@ msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
 #. placeholder {0}: desc.name
-#: src/components/moderation/ContentHider.tsx:100
+#: src/components/moderation/ContentHider.tsx:98
 msgid "{0} (Account)"
 msgstr "{0} (Cunntas)"
 
@@ -842,7 +842,7 @@ msgstr "An dearbhadh a rinn {userName}"
 #. Number of images beyond the first 3
 #. placeholder {0}: labels.length
 #. placeholder {0}: totalNumber - 3
-#: src/components/moderation/PostAlerts.tsx:155
+#: src/components/moderation/PostAlerts.tsx:163
 #: src/view/com/composer/ComposerReplyTo.tsx:278
 msgid "+{0}"
 msgstr ""
@@ -1338,7 +1338,7 @@ msgstr "Cuir an t-inbhir seo ris na h-inbhirean agad"
 msgid "Add to lists"
 msgstr "Cuir ri liosta"
 
-#: src/components/PostControls/BookmarkButton.tsx:144
+#: src/components/PostControls/BookmarkButton.tsx:121
 msgid "Add to saved posts"
 msgstr "Cuir ris na puist a shàbhail thu"
 
@@ -1400,7 +1400,7 @@ msgstr "Inbheach"
 msgid "Adult content"
 msgstr "Susbaint inbheach"
 
-#: src/components/moderation/ContentHider.tsx:131
+#: src/components/moderation/ContentHider.tsx:129
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:149
 #: src/view/com/composer/labels/LabelsBtn.tsx:123
@@ -2585,7 +2585,7 @@ msgstr "Sguir dhen ath-ghnìomhachadh is clàraich a-mach"
 msgid "Cancel reply"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:595
+#: src/screens/Search/Shell.tsx:584
 msgid "Cancel search"
 msgstr "Sguir dhen lorg"
 
@@ -3283,7 +3283,7 @@ msgid "Content promoting or depicting self-harm"
 msgstr "Susbaint a bhrosnaicheas no a sheallas fèin-dochann"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
-#: src/components/moderation/ScreenHider.tsx:100
+#: src/components/moderation/ScreenHider.tsx:98
 #: src/lib/moderation/useGlobalLabelStrings.ts:22
 #: src/lib/moderation/useModerationCauseDescription.ts:46
 msgid "Content Warning"
@@ -3368,7 +3368,7 @@ msgstr ""
 msgid "Copied build version to clipboard"
 msgstr "Chaidh lethbhreac de thionndadh a’ bhuild a chur air an stòr-bhòrd"
 
-#: src/screens/Search/Shell.tsx:515
+#: src/screens/Search/Shell.tsx:504
 msgid "Copied link to clipboard"
 msgstr ""
 
@@ -4094,7 +4094,7 @@ msgstr "Fidir inbhirean ùra"
 msgid "Discover New Feeds"
 msgstr "Fidir inbhirean ùra"
 
-#: src/components/Dialog/index.tsx:413
+#: src/components/Dialog/index.tsx:414
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:83
 msgid "Dismiss"
 msgstr "Leig seachad"
@@ -4220,7 +4220,7 @@ msgstr "Deiseil"
 msgid "Double tap or long press the message to add a reaction"
 msgstr "Thoir gnogag dhùbailte no dèan brùthadh fada air an teachdaireachd airson frith-fhreagairt a chur"
 
-#: src/components/Dialog/index.tsx:414
+#: src/components/Dialog/index.tsx:415
 msgid "Double tap to close the dialog"
 msgstr "Thoir gnogag dhùbailte air gus an còmhradh a dhùnadh"
 
@@ -4755,7 +4755,7 @@ msgstr "Leudaich liosta an luchd-chleachdaidh"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "Leudaich no co-theannaich am post slàn a tha thu a’ freagairt"
 
-#: src/components/Post/ShowMoreTextButton.tsx:33
+#: src/components/Post/ShowMoreTextButton.tsx:31
 msgid "Expand post text"
 msgstr "Leudaich teacsa a’ phuist"
 
@@ -4803,7 +4803,7 @@ msgid "Explicit sexual images."
 msgstr "Dealbhan feiseil is feòlmhor."
 
 #: src/Navigation.tsx:760
-#: src/screens/Search/Shell.tsx:552
+#: src/screens/Search/Shell.tsx:541
 #: src/view/shell/desktop/LeftNav.tsx:677
 #: src/view/shell/Drawer.tsx:473
 msgid "Explore"
@@ -4886,7 +4886,7 @@ msgstr "Dh’fhàillig atharrachadh an làmhrachain. Feuch ris a-rithist."
 
 #: src/components/Lightbox/Lightbox.web.tsx:302
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:130
-#: src/screens/Search/Shell.tsx:516
+#: src/screens/Search/Shell.tsx:505
 msgid "Failed to copy link"
 msgstr ""
 
@@ -5374,7 +5374,7 @@ msgstr "Lorg daoine airson an leantainn"
 msgid "Find people you know"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:753
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Lorg puist, cleachdaichean is inbhirean air Bluesky"
 
@@ -5813,9 +5813,9 @@ msgstr "Glòrachadh ainneirt"
 
 #: src/components/dialogs/LinkWarning.tsx:127
 #: src/components/dialogs/LinkWarning.tsx:133
-#: src/components/Layout/Header/index.tsx:133
-#: src/components/moderation/ScreenHider.tsx:161
-#: src/components/moderation/ScreenHider.tsx:170
+#: src/components/Layout/Header/index.tsx:134
+#: src/components/moderation/ScreenHider.tsx:157
+#: src/components/moderation/ScreenHider.tsx:166
 #: src/screens/Login/components/AuthLayout/Header/index.tsx:74
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:160
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:163
@@ -6150,7 +6150,7 @@ msgstr "Liosta fhalaichte"
 
 #: src/components/interstitials/Trending.tsx:133
 #: src/components/interstitials/TrendingVideos.tsx:139
-#: src/components/moderation/ContentHider.tsx:220
+#: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:141
 #: src/components/moderation/PostHider.tsx:140
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:820
@@ -6240,7 +6240,7 @@ msgstr "Falaich liosta an luchd-chleachdaidh"
 msgid "Hide verification badges"
 msgstr "Falaich na baidsean dearbhaidh"
 
-#: src/components/moderation/ContentHider.tsx:171
+#: src/components/moderation/ContentHider.tsx:168
 #: src/components/moderation/PostHider.tsx:94
 msgid "Hides the content"
 msgstr "Falaichidh seo an t-susbaint"
@@ -6831,11 +6831,11 @@ msgid "KWS website"
 msgstr "Làrach-lìn KWS"
 
 #. placeholder {0}: sanitizeDisplayName(desc.source!)
-#: src/components/moderation/ContentHider.tsx:251
+#: src/components/moderation/ContentHider.tsx:245
 msgid "Labeled by {0}."
 msgstr "Air a leubaileadh le {0}."
 
-#: src/components/moderation/ContentHider.tsx:249
+#: src/components/moderation/ContentHider.tsx:243
 msgid "Labeled by the author."
 msgstr "Air a leubaileadh leis an ùghdar."
 
@@ -6904,7 +6904,7 @@ msgctxt "english-only-resource"
 msgid "Learn more"
 msgstr "Barrachd fiosrachaidh"
 
-#: src/components/moderation/ScreenHider.tsx:147
+#: src/components/moderation/ScreenHider.tsx:143
 msgid "Learn More"
 msgstr "Barrachd fiosrachaidh"
 
@@ -6937,8 +6937,8 @@ msgstr "Barrachd fiosrachaidh mu ion-phortadh luchd-aithne"
 msgid "Learn more about self hosting your PDS."
 msgstr "Barrachd fiosrachaidh mu fhèin-òstaireachd a’ PDS agad."
 
-#: src/components/moderation/ContentHider.tsx:169
-#: src/components/moderation/ContentHider.tsx:235
+#: src/components/moderation/ContentHider.tsx:166
+#: src/components/moderation/ContentHider.tsx:230
 msgid "Learn more about the moderation applied to this content"
 msgstr "Barrachd fiosrachaidh mun mhodarataireachd a rinneadh air an t-susbaint seo"
 
@@ -6951,7 +6951,7 @@ msgid "Learn more about these changes and how to share your thoughts with us by 
 msgstr "Airson barrachd fiosrachaidh mu na tha ùr agus mar a dh’innseas tu dhuinn dè do bheachd, leugh am post sa bhloga againn."
 
 #: src/components/moderation/PostHider.tsx:116
-#: src/components/moderation/ScreenHider.tsx:134
+#: src/components/moderation/ScreenHider.tsx:132
 msgid "Learn more about this warning"
 msgstr "Barrachd fiosrachaidh mun rabhadh seo"
 
@@ -6975,7 +6975,7 @@ msgid "Learn more in your <0>account settings.</0>"
 msgstr "Faigh barrachd fiosrachaidh ann an <0>roghainnean a’ chunntais</0> agad."
 
 #: src/components/dialogs/ServerInput.tsx:222
-#: src/components/moderation/ContentHider.tsx:259
+#: src/components/moderation/ContentHider.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:243
 msgid "Learn more."
 msgstr "Barrachd fiosrachaidh."
@@ -8570,7 +8570,7 @@ msgstr "Fosgail roghainnean nan còmhraidhean"
 msgid "Open draft"
 msgstr "Fosgail an dreachd"
 
-#: src/components/Layout/Header/index.tsx:167
+#: src/components/Layout/Header/index.tsx:168
 msgid "Open drawer menu"
 msgstr "Fosgail an clàr-taice air an taobh"
 
@@ -9369,10 +9369,6 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Chaidh am post a phrìneachadh"
 
-#: src/components/PostControls/BookmarkButton.tsx:67
-msgid "Post saved"
-msgstr "Chaidh am post a shàbhaladh"
-
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9862,7 +9858,7 @@ msgstr "A bheil thu airson a thoirt air falbh on ghrad-inntrigeadh?"
 msgid "Remove from saved feeds"
 msgstr "Thoir air falbh o na h-inbhirean a shàbhail thu"
 
-#: src/components/PostControls/BookmarkButton.tsx:143
+#: src/components/PostControls/BookmarkButton.tsx:120
 #: src/screens/Bookmarks.tsx:252
 msgid "Remove from saved posts"
 msgstr "Air a thoirt air falbh o na puist a shàbhail thu"
@@ -9943,7 +9939,7 @@ msgstr "Air a thoirt air falbh on liosta"
 msgid "Removed from saved feeds"
 msgstr "Air a thoirt air falbh o na h-inbhirean a shàbhail thu"
 
-#: src/components/PostControls/BookmarkButton.tsx:107
+#: src/components/PostControls/BookmarkButton.tsx:88
 #: src/screens/Bookmarks.tsx:211
 msgid "Removed from saved posts"
 msgstr "Air a thoirt air falbh o na puist a shàbhail thu"
@@ -10564,9 +10560,9 @@ msgstr "Sgrolaich gun bhàrr"
 #: src/components/forms/SearchInput.tsx:53
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:552
-#: src/screens/Search/Shell.tsx:616
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:541
+#: src/screens/Search/Shell.tsx:604
+#: src/screens/Search/Shell.tsx:741
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr "Lorg"
@@ -11173,8 +11169,8 @@ msgstr "Co-roinn an còd QR"
 msgid "Share this feed"
 msgstr "Co-roinn an t-inbhir seo"
 
-#: src/screens/Search/Shell.tsx:568
-#: src/screens/Search/Shell.tsx:638
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:626
 msgid "Share this search"
 msgstr ""
 
@@ -11219,7 +11215,7 @@ msgstr ""
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:220
+#: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:143
 #: src/components/moderation/PostHider.tsx:140
 msgid "Show"
@@ -11229,8 +11225,8 @@ msgstr "Seall"
 msgid "Show alt text"
 msgstr "Seall an roghainn teacsa"
 
-#: src/components/moderation/ScreenHider.tsx:179
-#: src/components/moderation/ScreenHider.tsx:182
+#: src/components/moderation/ScreenHider.tsx:175
+#: src/components/moderation/ScreenHider.tsx:178
 #: src/features/liveNow/components/LiveStatusDialog.tsx:318
 #: src/features/liveNow/components/LiveStatusDialog.tsx:322
 #: src/screens/List/ListHiddenScreen.tsx:194
@@ -11274,9 +11270,9 @@ msgstr "Seall an liosta co-dhiù"
 msgid "Show lists of users to select from"
 msgstr "Seall liostaichean luchd-cleachdaidh airson taghadh a dhèanamh"
 
-#: src/components/Post/ShowMoreTextButton.tsx:52
-msgid "Show More"
-msgstr "Seall barrachd"
+#: src/components/Post/ShowMoreTextButton.tsx:50
+msgid "Show more"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:594
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
@@ -11341,7 +11337,7 @@ msgstr "Innsidh seo cuin a chaidh am post seo a chruthachadh"
 msgid "Shows other accounts you can switch to"
 msgstr "Seallaidh seo na cunntasan eile as urrainn dhut leum thuca"
 
-#: src/components/moderation/ContentHider.tsx:172
+#: src/components/moderation/ContentHider.tsx:169
 #: src/components/moderation/PostHider.tsx:94
 msgid "Shows the content"
 msgstr "Seallaidh seo an t-susbaint"
@@ -11436,7 +11432,7 @@ msgstr "A bheil thu airson clàradh a-mach?"
 msgid "Sign up"
 msgstr ""
 
-#: src/components/moderation/ScreenHider.tsx:98
+#: src/components/moderation/ScreenHider.tsx:96
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
 msgid "Sign-in Required"
 msgstr "Feumaidh tu clàradh a-steach"
@@ -12392,7 +12388,7 @@ msgstr ""
 msgid "They won’t be able to rejoin unless you invite them again."
 msgstr ""
 
-#: src/components/moderation/ScreenHider.tsx:118
+#: src/components/moderation/ScreenHider.tsx:116
 msgid "This {screenDescription} has been flagged:"
 msgstr "Chaidh bratach a chur ris an tuairisgeul seo ({screenDescription}):"
 
@@ -12408,7 +12404,7 @@ msgstr ""
 msgid "This account has one or more attempted verifications, but it is not currently verified."
 msgstr "Chaidh co-dhiù aon oidhirp a dhèanamh an cunntas seo a dhearbhadh ach cha do shoirbhich leis an dearbhadh fhathast."
 
-#: src/components/moderation/ScreenHider.tsx:113
+#: src/components/moderation/ScreenHider.tsx:111
 msgid "This account has requested that users sign in to view their profile."
 msgstr "Tha an cunntas seo a’ sparradh air daoine clàradh a-steach mus fhaicear a’ phròifil aca."
 
@@ -13258,7 +13254,7 @@ msgstr "Cuir crìoch air an fho-sgrìobhadh aig an leubailiche seo"
 msgid "Unsubscribed from list"
 msgstr "Chaidh crìoch a chur air an fho-sgrìobhadh aig an liosta"
 
-#: src/view/com/composer/text-input/TextInput.tsx:128
+#: src/view/com/composer/text-input/TextInput.tsx:127
 msgid "Unsupported clipboard content"
 msgstr ""
 
@@ -13730,7 +13726,7 @@ msgid "View details"
 msgstr "Seall am mion-fhiosrachadh"
 
 #: src/view/com/posts/ViewFullThread.tsx:31
-#: src/view/com/posts/ViewFullThread.tsx:64
+#: src/view/com/posts/ViewFullThread.tsx:65
 msgid "View full thread"
 msgstr "Seall an snàithlean slàn"
 

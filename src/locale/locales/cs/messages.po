@@ -8,7 +8,7 @@ msgstr ""
 "Language: cs\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-16 14:04\n"
+"PO-Revision-Date: 2026-07-20 22:14\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -103,12 +103,12 @@ msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, one {# hodina} few {# hodiny} other {# hodin}}"
 
 #. placeholder {0}: labels.length
-#: src/components/moderation/PostAlerts.tsx:149
+#: src/components/moderation/PostAlerts.tsx:157
 msgid "{0, plural, one {# label applied to your post} other {# labels applied to your post}}"
 msgstr "{0, plural, one {# štítek použit na váš příspěvek} few {# štítky použity na váš příspěvek} many {# štítků použito na váš příspěvek} other {# štítků použito na váš příspěvek}}"
 
 #. placeholder {0}: labels.length
-#: src/components/moderation/PostAlerts.tsx:156
+#: src/components/moderation/PostAlerts.tsx:164
 msgid "{0, plural, one {# label applied} other {# labels applied}}"
 msgstr "{0, plural, one {# štítek použit} few {# štítky použity} many {# štítků použito} other {# štítků použito}}"
 
@@ -224,7 +224,7 @@ msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
 #. placeholder {0}: desc.name
-#: src/components/moderation/ContentHider.tsx:100
+#: src/components/moderation/ContentHider.tsx:98
 msgid "{0} (Account)"
 msgstr "{0} (Účet)"
 
@@ -797,7 +797,7 @@ msgstr "{rank}."
 
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:106
 msgid "{remaining, plural, one {# character remaining} other {# characters remaining}}"
-msgstr ""
+msgstr "{remaining, plural, one {Zbývá # znak} few {Zbývají # znaky} other {Zbývá # znaků}}"
 
 #: src/components/dms/MessageItem.tsx:810
 msgid "{replierDisplayName} replied"
@@ -842,7 +842,7 @@ msgstr "Ověření uživatele {userName}"
 #. Number of images beyond the first 3
 #. placeholder {0}: labels.length
 #. placeholder {0}: totalNumber - 3
-#: src/components/moderation/PostAlerts.tsx:155
+#: src/components/moderation/PostAlerts.tsx:163
 #: src/view/com/composer/ComposerReplyTo.tsx:278
 msgid "+{0}"
 msgstr "+{0}"
@@ -1338,7 +1338,7 @@ msgstr "Přidat tento kanál mezi vaše kanály"
 msgid "Add to lists"
 msgstr "Přidat do seznamů"
 
-#: src/components/PostControls/BookmarkButton.tsx:144
+#: src/components/PostControls/BookmarkButton.tsx:121
 msgid "Add to saved posts"
 msgstr "Přidat do uložených příspěvků"
 
@@ -1400,7 +1400,7 @@ msgstr "Dospělý"
 msgid "Adult content"
 msgstr "Obsah pro dospělé"
 
-#: src/components/moderation/ContentHider.tsx:131
+#: src/components/moderation/ContentHider.tsx:129
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:149
 #: src/view/com/composer/labels/LabelsBtn.tsx:123
@@ -2165,17 +2165,17 @@ msgstr "Funkce beta verze"
 #: src/screens/Settings/Settings.tsx:248
 #: src/screens/Settings/Settings.tsx:251
 msgid "Beta features"
-msgstr ""
+msgstr "Funkce beta verze"
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:144
 msgctxt "web"
 msgid "Beta features may be unstable. Some changes may require reloading the app."
-msgstr ""
+msgstr "Funkce beta verze mohou být nestabilní. Některé změny mohou vyžadovat opětovné načtení aplikace."
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:149
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app."
-msgstr ""
+msgstr "Funkce beta verze mohou být nestabilní. Některé změny mohou vyžadovat restartování aplikace."
 
 #: src/components/dialogs/BirthDateSettings.tsx:163
 msgid "Birthdate"
@@ -2585,7 +2585,7 @@ msgstr "Zrušit opětovné aktivaci a odhlásit se"
 msgid "Cancel reply"
 msgstr "Zrušit odpověď"
 
-#: src/screens/Search/Shell.tsx:595
+#: src/screens/Search/Shell.tsx:584
 msgid "Cancel search"
 msgstr "Zrušit vyhledávání"
 
@@ -2810,7 +2810,7 @@ msgstr "Zkontrolujte <0>{currentEmail}</0> pro e-mail s potvrzovacím kódem, kt
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:182
 msgid "Check back later!"
-msgstr ""
+msgstr "Vraťte se později!"
 
 #: src/screens/SignupQueued.tsx:79
 #: src/screens/SignupQueued.tsx:83
@@ -3283,7 +3283,7 @@ msgid "Content promoting or depicting self-harm"
 msgstr "Obsah propagující nebo zobrazující sebepoškozování"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
-#: src/components/moderation/ScreenHider.tsx:100
+#: src/components/moderation/ScreenHider.tsx:98
 #: src/lib/moderation/useGlobalLabelStrings.ts:22
 #: src/lib/moderation/useModerationCauseDescription.ts:46
 msgid "Content Warning"
@@ -3368,7 +3368,7 @@ msgstr "Konverzace nenalezena."
 msgid "Copied build version to clipboard"
 msgstr "Verze sestavení zkopírována do schránky"
 
-#: src/screens/Search/Shell.tsx:515
+#: src/screens/Search/Shell.tsx:504
 msgid "Copied link to clipboard"
 msgstr "Odkaz zkopírován do schránky"
 
@@ -3741,7 +3741,7 @@ msgstr "Kultura"
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:188
 msgid "Current beta features"
-msgstr ""
+msgstr "Aktuální funkce beta verze"
 
 #: src/components/moderation/BlockDialog.tsx:378
 msgid "Current chat"
@@ -4094,7 +4094,7 @@ msgstr "Objevte nové kanály"
 msgid "Discover New Feeds"
 msgstr "Objevte nové kanály"
 
-#: src/components/Dialog/index.tsx:413
+#: src/components/Dialog/index.tsx:414
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:83
 msgid "Dismiss"
 msgstr "Odmítnout"
@@ -4220,7 +4220,7 @@ msgstr "Hotovo"
 msgid "Double tap or long press the message to add a reaction"
 msgstr "Dvojitým klepnutím nebo dlouhým stisknutím zprávy přidáte reakci"
 
-#: src/components/Dialog/index.tsx:414
+#: src/components/Dialog/index.tsx:415
 msgid "Double tap to close the dialog"
 msgstr "Dvojitým klepnutím zavřete dialog"
 
@@ -4531,7 +4531,7 @@ msgstr "Povolit obsah pro dospělé"
 #: src/screens/Settings/BetaFeaturesSettings.tsx:117
 #: src/screens/Settings/BetaFeaturesSettings.tsx:124
 msgid "Enable beta features"
-msgstr ""
+msgstr "Povolit funkce beta verze"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:415
 msgid "Enable captions"
@@ -4755,7 +4755,7 @@ msgstr "Rozbalit seznam uživatelů"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "Rozbalit nebo sbalit celý příspěvek, na který odpovídáte"
 
-#: src/components/Post/ShowMoreTextButton.tsx:33
+#: src/components/Post/ShowMoreTextButton.tsx:31
 msgid "Expand post text"
 msgstr "Rozbalit text příspěvku"
 
@@ -4803,7 +4803,7 @@ msgid "Explicit sexual images."
 msgstr "Explicitní sexuální obrázky."
 
 #: src/Navigation.tsx:760
-#: src/screens/Search/Shell.tsx:552
+#: src/screens/Search/Shell.tsx:541
 #: src/view/shell/desktop/LeftNav.tsx:677
 #: src/view/shell/Drawer.tsx:473
 msgid "Explore"
@@ -4886,7 +4886,7 @@ msgstr "Nepodařilo se změnit uživatelské jméno. Zkuste to prosím znovu."
 
 #: src/components/Lightbox/Lightbox.web.tsx:302
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:130
-#: src/screens/Search/Shell.tsx:516
+#: src/screens/Search/Shell.tsx:505
 msgid "Failed to copy link"
 msgstr "Nepodařilo se zkopírovat odkaz"
 
@@ -5374,7 +5374,7 @@ msgstr "Najděte lidi, které budete sledovat"
 msgid "Find people you know"
 msgstr "Najděte lidi, které znáte"
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:753
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Najděte příspěvky, uživatele a kanály na Bluesky"
 
@@ -5712,7 +5712,7 @@ msgstr "Germ DM znovu připojeno"
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:132
 msgid "Get early access to experimental features we’re testing."
-msgstr ""
+msgstr "Získejte rychlý přístup k experimentálním funkcím, které testujeme."
 
 #: src/view/shell/Drawer.tsx:431
 msgid "Get help"
@@ -5813,9 +5813,9 @@ msgstr "Glorifikace násilí"
 
 #: src/components/dialogs/LinkWarning.tsx:127
 #: src/components/dialogs/LinkWarning.tsx:133
-#: src/components/Layout/Header/index.tsx:133
-#: src/components/moderation/ScreenHider.tsx:161
-#: src/components/moderation/ScreenHider.tsx:170
+#: src/components/Layout/Header/index.tsx:134
+#: src/components/moderation/ScreenHider.tsx:157
+#: src/components/moderation/ScreenHider.tsx:166
 #: src/screens/Login/components/AuthLayout/Header/index.tsx:74
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:160
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:163
@@ -6150,7 +6150,7 @@ msgstr "Skrytý seznam"
 
 #: src/components/interstitials/Trending.tsx:133
 #: src/components/interstitials/TrendingVideos.tsx:139
-#: src/components/moderation/ContentHider.tsx:220
+#: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:141
 #: src/components/moderation/PostHider.tsx:140
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:820
@@ -6240,7 +6240,7 @@ msgstr "Skrýt seznam uživatelů"
 msgid "Hide verification badges"
 msgstr "Skrýt ověřovací odznaky"
 
-#: src/components/moderation/ContentHider.tsx:171
+#: src/components/moderation/ContentHider.tsx:168
 #: src/components/moderation/PostHider.tsx:94
 msgid "Hides the content"
 msgstr "Skryje obsah"
@@ -6831,11 +6831,11 @@ msgid "KWS website"
 msgstr "Web KWS"
 
 #. placeholder {0}: sanitizeDisplayName(desc.source!)
-#: src/components/moderation/ContentHider.tsx:251
+#: src/components/moderation/ContentHider.tsx:245
 msgid "Labeled by {0}."
 msgstr "Označeno {0}."
 
-#: src/components/moderation/ContentHider.tsx:249
+#: src/components/moderation/ContentHider.tsx:243
 msgid "Labeled by the author."
 msgstr "Označeno autorem."
 
@@ -6904,7 +6904,7 @@ msgctxt "english-only-resource"
 msgid "Learn more"
 msgstr "Zjistit více"
 
-#: src/components/moderation/ScreenHider.tsx:147
+#: src/components/moderation/ScreenHider.tsx:143
 msgid "Learn More"
 msgstr "Zjistit více"
 
@@ -6937,8 +6937,8 @@ msgstr "Zjistit více o importu kontaktů"
 msgid "Learn more about self hosting your PDS."
 msgstr "Zjistěte více o vlastním hostování vašeho PDS."
 
-#: src/components/moderation/ContentHider.tsx:169
-#: src/components/moderation/ContentHider.tsx:235
+#: src/components/moderation/ContentHider.tsx:166
+#: src/components/moderation/ContentHider.tsx:230
 msgid "Learn more about the moderation applied to this content"
 msgstr "Zjistěte více o moderování použitém na tento obsah"
 
@@ -6951,7 +6951,7 @@ msgid "Learn more about these changes and how to share your thoughts with us by 
 msgstr "Více informací o těchto změnách a o tom, jak nám sdělit svůj názor, se dozvíte v našem příspěvku na blogu."
 
 #: src/components/moderation/PostHider.tsx:116
-#: src/components/moderation/ScreenHider.tsx:134
+#: src/components/moderation/ScreenHider.tsx:132
 msgid "Learn more about this warning"
 msgstr "Zjistit více o tomto varování"
 
@@ -6975,7 +6975,7 @@ msgid "Learn more in your <0>account settings.</0>"
 msgstr "Více informací najdete v <0>nastavení účtu.</0>"
 
 #: src/components/dialogs/ServerInput.tsx:222
-#: src/components/moderation/ContentHider.tsx:259
+#: src/components/moderation/ContentHider.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:243
 msgid "Learn more."
 msgstr "Zjistit více."
@@ -8067,7 +8067,7 @@ msgstr "Zatím žádná hesla aplikací"
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:177
 msgid "No beta features at the moment."
-msgstr ""
+msgstr "V tuto chvíli nejsou žádné funkce beta verze."
 
 #: src/components/contacts/screens/ViewMatches.tsx:681
 msgid "No contacts found"
@@ -8570,7 +8570,7 @@ msgstr "Otevřít možnosti konverzace"
 msgid "Open draft"
 msgstr "Otevřít koncept"
 
-#: src/components/Layout/Header/index.tsx:167
+#: src/components/Layout/Header/index.tsx:168
 msgid "Open drawer menu"
 msgstr "Otevřít nabídku"
 
@@ -9369,10 +9369,6 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Příspěvek připnut"
 
-#: src/components/PostControls/BookmarkButton.tsx:67
-msgid "Post saved"
-msgstr "Příspěvek uložen"
-
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9862,7 +9858,7 @@ msgstr "Odebrat z rychlého přístupu?"
 msgid "Remove from saved feeds"
 msgstr "Odebrat z uložených kanálů"
 
-#: src/components/PostControls/BookmarkButton.tsx:143
+#: src/components/PostControls/BookmarkButton.tsx:120
 #: src/screens/Bookmarks.tsx:252
 msgid "Remove from saved posts"
 msgstr "Odebrat z uložených příspěvků"
@@ -9943,7 +9939,7 @@ msgstr "Odebráno ze seznamu"
 msgid "Removed from saved feeds"
 msgstr "Odebráno z uložených kanálů"
 
-#: src/components/PostControls/BookmarkButton.tsx:107
+#: src/components/PostControls/BookmarkButton.tsx:88
 #: src/screens/Bookmarks.tsx:211
 msgid "Removed from saved posts"
 msgstr "Odebráno z uložených příspěvků"
@@ -10564,9 +10560,9 @@ msgstr "Přejít nahoru"
 #: src/components/forms/SearchInput.tsx:53
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:552
-#: src/screens/Search/Shell.tsx:616
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:541
+#: src/screens/Search/Shell.tsx:604
+#: src/screens/Search/Shell.tsx:741
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr "Hledat"
@@ -11125,7 +11121,7 @@ msgstr "Sdílet DID autora"
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:93
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:98
 msgid "Share feedback"
-msgstr ""
+msgstr "Sdílet zpětnou vazbu"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:93
 #: src/components/Lightbox/Lightbox.web.tsx:281
@@ -11173,8 +11169,8 @@ msgstr "Sdílet QR kód"
 msgid "Share this feed"
 msgstr "Sdílet tento kanál"
 
-#: src/screens/Search/Shell.tsx:568
-#: src/screens/Search/Shell.tsx:638
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:626
 msgid "Share this search"
 msgstr "Sdílet toto hledání"
 
@@ -11203,7 +11199,7 @@ msgstr "Sdílejte své kontakty a najděte přátele"
 
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:123
 msgid "Share your thoughts…"
-msgstr ""
+msgstr "Sdílejte své myšlenky…"
 
 #: src/Navigation.tsx:322
 msgid "Shared Preferences Tester"
@@ -11219,7 +11215,7 @@ msgstr "Sdílením vašeho věkového rozmezí odhalíte pouze rozmezí spojené
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr "Sdílení věkového rozmezí odhalí pouze rozmezí spojené s vaším účtem Google – například že je vám alespoň 18 let. <0>Vaše přesné datum narození ani věk nejsou nikdy sdíleny</0> a tato data nikdy neopouštějí toto zařízení. Umožňují tedy přístup pouze na tomto zařízení. Případně <1>můžete využít našeho důvěryhodného partnera KWS</1> a dokončit ověření, které vám umožní přístup na všech platformách."
 
-#: src/components/moderation/ContentHider.tsx:220
+#: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:143
 #: src/components/moderation/PostHider.tsx:140
 msgid "Show"
@@ -11229,8 +11225,8 @@ msgstr "Zobrazit"
 msgid "Show alt text"
 msgstr "Zobrazit alternativní text"
 
-#: src/components/moderation/ScreenHider.tsx:179
-#: src/components/moderation/ScreenHider.tsx:182
+#: src/components/moderation/ScreenHider.tsx:175
+#: src/components/moderation/ScreenHider.tsx:178
 #: src/features/liveNow/components/LiveStatusDialog.tsx:318
 #: src/features/liveNow/components/LiveStatusDialog.tsx:322
 #: src/screens/List/ListHiddenScreen.tsx:194
@@ -11274,9 +11270,9 @@ msgstr "Přesto zobrazit seznam"
 msgid "Show lists of users to select from"
 msgstr "Zobrazit seznamy uživatelů k výběru"
 
-#: src/components/Post/ShowMoreTextButton.tsx:52
-msgid "Show More"
-msgstr "Zobrazit více"
+#: src/components/Post/ShowMoreTextButton.tsx:50
+msgid "Show more"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:594
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
@@ -11341,7 +11337,7 @@ msgstr "Zobrazí informace o tom, kdy byl tento příspěvek vytvořen"
 msgid "Shows other accounts you can switch to"
 msgstr "Zobrazí další účty, na které lze přepnout"
 
-#: src/components/moderation/ContentHider.tsx:172
+#: src/components/moderation/ContentHider.tsx:169
 #: src/components/moderation/PostHider.tsx:94
 msgid "Shows the content"
 msgstr "Zobrazí obsah"
@@ -11436,7 +11432,7 @@ msgstr "Odhlásit se?"
 msgid "Sign up"
 msgstr "Zaregistrovat se"
 
-#: src/components/moderation/ScreenHider.tsx:98
+#: src/components/moderation/ScreenHider.tsx:96
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
 msgid "Sign-in Required"
 msgstr "Vyžadováno přihlášení"
@@ -11506,7 +11502,7 @@ msgstr "Sociální sítě pod vaší kontrolou."
 #. Name for a feature flag
 #: src/analytics/features/index.ts:84
 msgid "Social proofing on posts"
-msgstr ""
+msgstr "Sociální doporučení u příspěvků"
 
 #: src/lib/interests.ts:58
 msgid "Software Dev"
@@ -11657,7 +11653,7 @@ msgstr "Sport"
 #. Description of a feature flag (Social proofing on posts)
 #: src/analytics/features/index.ts:90
 msgid "Spot posts your friends and follows have liked."
-msgstr ""
+msgstr "Zobrazovat příspěvky, které se líbily vašim přátelům a lidem, které sledujete."
 
 #: src/components/PostControls/ShareMenu/RecentChats.tsx:234
 msgid "Start a conversation, and it will appear here."
@@ -11787,7 +11783,7 @@ msgstr "Odeslat odvolání"
 
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:139
 msgid "Submit feedback"
-msgstr ""
+msgstr "Odeslat zpětnou vazbu"
 
 #: src/components/moderation/ReportDialog/index.tsx:508
 #: src/components/moderation/ReportDialog/index.tsx:569
@@ -12085,7 +12081,7 @@ msgstr "Děkujeme za vaši zpětnou vazbu! Byla odeslána provozovateli kanálu.
 
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:77
 msgid "Thanks for your feedback!"
-msgstr ""
+msgstr "Děkujeme za vaši zpětnou vazbu."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:77
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
@@ -12392,7 +12388,7 @@ msgstr "Vlastní tento chat"
 msgid "They won’t be able to rejoin unless you invite them again."
 msgstr "Nebudou se moci znovu připojit, pokud je znovu nepozvete."
 
-#: src/components/moderation/ScreenHider.tsx:118
+#: src/components/moderation/ScreenHider.tsx:116
 msgid "This {screenDescription} has been flagged:"
 msgstr "Tento {screenDescription} byl označen:"
 
@@ -12408,7 +12404,7 @@ msgstr "Tento účet byl jeho vlastníkem označen jako automatizovaný."
 msgid "This account has one or more attempted verifications, but it is not currently verified."
 msgstr "Tento účet má jeden nebo více pokusů o ověření, ale momentálně není ověřený."
 
-#: src/components/moderation/ScreenHider.tsx:113
+#: src/components/moderation/ScreenHider.tsx:111
 msgid "This account has requested that users sign in to view their profile."
 msgstr "Tento účet požaduje, aby se uživatelé pro zobrazení jeho profilu přihlásili."
 
@@ -13258,7 +13254,7 @@ msgstr "Zrušit odběr tohoto labelera"
 msgid "Unsubscribed from list"
 msgstr "Odhlášeno ze seznamu"
 
-#: src/view/com/composer/text-input/TextInput.tsx:128
+#: src/view/com/composer/text-input/TextInput.tsx:127
 msgid "Unsupported clipboard content"
 msgstr "Nepodporovaný obsah schránky"
 
@@ -13730,7 +13726,7 @@ msgid "View details"
 msgstr "Zobrazit podrobnosti"
 
 #: src/view/com/posts/ViewFullThread.tsx:31
-#: src/view/com/posts/ViewFullThread.tsx:64
+#: src/view/com/posts/ViewFullThread.tsx:65
 msgid "View full thread"
 msgstr "Zobrazit celé vlákno"
 
@@ -14001,7 +13997,7 @@ msgstr "Až najdeme vaše přátele, dáme vám vědět."
 
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:101
 msgid "We’d love to hear about your experience testing beta features!"
-msgstr ""
+msgstr "Rádi bychom se dozvěděli o Vašich zkušenostech s testováním funkcí beta verze!"
 
 #. placeholder {0}: currentAccount!.email
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:259
@@ -14067,7 +14063,7 @@ msgstr "Omlouváme se, ale momentálně se nepodařilo načíst vaše ztlumená 
 #: src/screens/Search/SearchResults.tsx:412
 #: src/screens/Search/SearchResults.tsx:553
 msgid "We’re sorry, but your search could not be completed."
-msgstr ""
+msgstr "Omlouváme se, ale Vaše hledání nelze dokončit."
 
 #: src/screens/Search/SearchResults.tsx:411
 #: src/screens/Search/SearchResults.tsx:552

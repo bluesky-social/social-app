@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-16 14:04\n"
+"PO-Revision-Date: 2026-07-20 22:14\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -103,12 +103,12 @@ msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr "{0, plural, one {# órája} other {# órája}}"
 
 #. placeholder {0}: labels.length
-#: src/components/moderation/PostAlerts.tsx:149
+#: src/components/moderation/PostAlerts.tsx:157
 msgid "{0, plural, one {# label applied to your post} other {# labels applied to your post}}"
 msgstr "{0, plural, other {#}} feljegyzést alkalmaztak a bejegyzésedre"
 
 #. placeholder {0}: labels.length
-#: src/components/moderation/PostAlerts.tsx:156
+#: src/components/moderation/PostAlerts.tsx:164
 msgid "{0, plural, one {# label applied} other {# labels applied}}"
 msgstr "{0, plural, other {#}} feljegyzés"
 
@@ -224,7 +224,7 @@ msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
 #. placeholder {0}: desc.name
-#: src/components/moderation/ContentHider.tsx:100
+#: src/components/moderation/ContentHider.tsx:98
 msgid "{0} (Account)"
 msgstr "{0} (fiók)"
 
@@ -842,7 +842,7 @@ msgstr "{userName} hitelesítései"
 #. Number of images beyond the first 3
 #. placeholder {0}: labels.length
 #. placeholder {0}: totalNumber - 3
-#: src/components/moderation/PostAlerts.tsx:155
+#: src/components/moderation/PostAlerts.tsx:163
 #: src/view/com/composer/ComposerReplyTo.tsx:278
 msgid "+{0}"
 msgstr "+{0}"
@@ -1338,7 +1338,7 @@ msgstr "Add hozzá ezt a hírfolyamot a gyűjteményedhez!"
 msgid "Add to lists"
 msgstr "Felvétel listára"
 
-#: src/components/PostControls/BookmarkButton.tsx:144
+#: src/components/PostControls/BookmarkButton.tsx:121
 msgid "Add to saved posts"
 msgstr "Bejegyzés mentése"
 
@@ -1400,7 +1400,7 @@ msgstr "Pornó"
 msgid "Adult content"
 msgstr "Felnőtt tartalom"
 
-#: src/components/moderation/ContentHider.tsx:131
+#: src/components/moderation/ContentHider.tsx:129
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:149
 #: src/view/com/composer/labels/LabelsBtn.tsx:123
@@ -1926,19 +1926,19 @@ msgstr "Egészen biztos vagy benne?"
 #. placeholder {1}: link(languages[1])
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:100
 msgid "Are you searching for posts in {0} or {1}?"
-msgstr ""
+msgstr "Szeretnéd a találatokat {0} vagy {1} nyelvre szűrni?"
 
 #. placeholder {0}: link(languages[0])
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:95
 msgid "Are you searching for posts in {0}?"
-msgstr ""
+msgstr "Szeretnéd a találatokat {0} nyelvre szűrni?"
 
 #. List formatting: {0}, {1}, or {2}
 #. placeholder {0}: head.map(lang => ( <Trans key={lang.code} comment="List formatting: {0}, {1}, {2}"> {link(lang)},{' '} </Trans> ))
 #. placeholder {1}: link(last)
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:110
 msgid "Are you searching for posts in {0}or {1}?"
-msgstr ""
+msgstr "Szeretnéd a találatokat {0}vagy {1} nyelvre szűrni?"
 
 #. placeholder {0}: appPassword.name
 #: src/screens/Settings/AppPasswords.tsx:210
@@ -2585,7 +2585,7 @@ msgstr "Újraaktiválás megszakítása és kilépés"
 msgid "Cancel reply"
 msgstr "Válaszolás megszakítása"
 
-#: src/screens/Search/Shell.tsx:595
+#: src/screens/Search/Shell.tsx:584
 msgid "Cancel search"
 msgstr "Keresés megszakítása"
 
@@ -3283,7 +3283,7 @@ msgid "Content promoting or depicting self-harm"
 msgstr "Önkárosítás ábrázolása vagy népszerűsítése"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
-#: src/components/moderation/ScreenHider.tsx:100
+#: src/components/moderation/ScreenHider.tsx:98
 #: src/lib/moderation/useGlobalLabelStrings.ts:22
 #: src/lib/moderation/useModerationCauseDescription.ts:46
 msgid "Content Warning"
@@ -3368,9 +3368,9 @@ msgstr "A csoportbeszélgetés nem található."
 msgid "Copied build version to clipboard"
 msgstr "Buildszám a vágólapra helyezve"
 
-#: src/screens/Search/Shell.tsx:515
+#: src/screens/Search/Shell.tsx:504
 msgid "Copied link to clipboard"
-msgstr ""
+msgstr "Hivatkozás vágólapra helyezve"
 
 #: src/components/dms/ChatInvite/Root.tsx:99
 #: src/components/dms/MessageContextMenu.tsx:97
@@ -4094,7 +4094,7 @@ msgstr "Új hírfolyamok felfedezése"
 msgid "Discover New Feeds"
 msgstr "Új hírfolyamok felfedezése"
 
-#: src/components/Dialog/index.tsx:413
+#: src/components/Dialog/index.tsx:414
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:83
 msgid "Dismiss"
 msgstr "Bezárás"
@@ -4220,7 +4220,7 @@ msgstr "Kész"
 msgid "Double tap or long press the message to add a reaction"
 msgstr "Koppints kétszer vagy tartsd lenyomva az üzenetet egy reakció hozzáfűzéséhez."
 
-#: src/components/Dialog/index.tsx:414
+#: src/components/Dialog/index.tsx:415
 msgid "Double tap to close the dialog"
 msgstr "Koppints kétszer a párbeszédablak bezárásához"
 
@@ -4755,7 +4755,7 @@ msgstr "Lista kibontása"
 msgid "Expand or collapse the full post you are replying to"
 msgstr "A válasz forrásaként származó bejegyzés kibontása/összecsukása"
 
-#: src/components/Post/ShowMoreTextButton.tsx:33
+#: src/components/Post/ShowMoreTextButton.tsx:31
 msgid "Expand post text"
 msgstr "Továbbiak"
 
@@ -4803,7 +4803,7 @@ msgid "Explicit sexual images."
 msgstr "Szexuális tartalmakat ábrázoló képek."
 
 #: src/Navigation.tsx:760
-#: src/screens/Search/Shell.tsx:552
+#: src/screens/Search/Shell.tsx:541
 #: src/view/shell/desktop/LeftNav.tsx:677
 #: src/view/shell/Drawer.tsx:473
 msgid "Explore"
@@ -4886,7 +4886,7 @@ msgstr "A felhasználónév megváltoztatása meghiúsult. Próbáld újra."
 
 #: src/components/Lightbox/Lightbox.web.tsx:302
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:130
-#: src/screens/Search/Shell.tsx:516
+#: src/screens/Search/Shell.tsx:505
 msgid "Failed to copy link"
 msgstr "A hivatkozás másolása meghiúsult"
 
@@ -5304,7 +5304,7 @@ msgstr "Szűrés nyelv alapján (Jelenlegi: {currentLanguageLabel})"
 #. placeholder {0}: lang.name
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:88
 msgid "Filter this search by {0}"
-msgstr ""
+msgstr "Találatok szűrése {0} nyelvre"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:106
 msgid "Filter who can opt to receive notifications for your activity"
@@ -5374,7 +5374,7 @@ msgstr "Követendő személyek felfedezése"
 msgid "Find people you know"
 msgstr "Ismerősök felkutatása"
 
-#: src/screens/Search/Shell.tsx:765
+#: src/screens/Search/Shell.tsx:753
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Bejegyzések, felhasználók és hírfolyamok felfedezése a Blueskyon"
 
@@ -5813,9 +5813,9 @@ msgstr "Az erőszak népszerűsítése"
 
 #: src/components/dialogs/LinkWarning.tsx:127
 #: src/components/dialogs/LinkWarning.tsx:133
-#: src/components/Layout/Header/index.tsx:133
-#: src/components/moderation/ScreenHider.tsx:161
-#: src/components/moderation/ScreenHider.tsx:170
+#: src/components/Layout/Header/index.tsx:134
+#: src/components/moderation/ScreenHider.tsx:157
+#: src/components/moderation/ScreenHider.tsx:166
 #: src/screens/Login/components/AuthLayout/Header/index.tsx:74
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:160
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:163
@@ -6150,7 +6150,7 @@ msgstr "Rejtett lista"
 
 #: src/components/interstitials/Trending.tsx:133
 #: src/components/interstitials/TrendingVideos.tsx:139
-#: src/components/moderation/ContentHider.tsx:220
+#: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:141
 #: src/components/moderation/PostHider.tsx:140
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:820
@@ -6240,7 +6240,7 @@ msgstr "Felhasználólista elrejtése"
 msgid "Hide verification badges"
 msgstr "Hitelesítési jelvények elrejtése"
 
-#: src/components/moderation/ContentHider.tsx:171
+#: src/components/moderation/ContentHider.tsx:168
 #: src/components/moderation/PostHider.tsx:94
 msgid "Hides the content"
 msgstr "Tartalom elrejtése"
@@ -6831,11 +6831,11 @@ msgid "KWS website"
 msgstr "A KWS honlapja"
 
 #. placeholder {0}: sanitizeDisplayName(desc.source!)
-#: src/components/moderation/ContentHider.tsx:251
+#: src/components/moderation/ContentHider.tsx:245
 msgid "Labeled by {0}."
 msgstr "Feljegyezte a(z) {0}."
 
-#: src/components/moderation/ContentHider.tsx:249
+#: src/components/moderation/ContentHider.tsx:243
 msgid "Labeled by the author."
 msgstr "Feljegyezte a szerző."
 
@@ -6904,14 +6904,14 @@ msgctxt "english-only-resource"
 msgid "Learn more"
 msgstr "További információ"
 
-#: src/components/moderation/ScreenHider.tsx:147
+#: src/components/moderation/ScreenHider.tsx:143
 msgid "Learn More"
 msgstr "További információ"
 
 #: src/screens/Search/SearchResults.tsx:246
 msgctxt "english-only-resource"
 msgid "Learn more about <0>how to use advanced search</0>."
-msgstr ""
+msgstr "<0>További információ a részletes keresőről.</0>"
 
 #: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:66
 msgid "Learn more about age assurance"
@@ -6937,8 +6937,8 @@ msgstr "További információ a névjegyimportálásról"
 msgid "Learn more about self hosting your PDS."
 msgstr "További információ a személyes adatkiszolgálók üzemeltetéséről."
 
-#: src/components/moderation/ContentHider.tsx:169
-#: src/components/moderation/ContentHider.tsx:235
+#: src/components/moderation/ContentHider.tsx:166
+#: src/components/moderation/ContentHider.tsx:230
 msgid "Learn more about the moderation applied to this content"
 msgstr "További információ a tartalommoderálásról"
 
@@ -6951,7 +6951,7 @@ msgid "Learn more about these changes and how to share your thoughts with us by 
 msgstr "A változtatásokról és a visszajelzés mikéntjéről a blogbejegyzésünkben olvashatsz (angol nyelven)."
 
 #: src/components/moderation/PostHider.tsx:116
-#: src/components/moderation/ScreenHider.tsx:134
+#: src/components/moderation/ScreenHider.tsx:132
 msgid "Learn more about this warning"
 msgstr "További információ erről a figyelmeztetésről"
 
@@ -6975,7 +6975,7 @@ msgid "Learn more in your <0>account settings.</0>"
 msgstr "További információ a <0>fiókbeállításokban</0>."
 
 #: src/components/dialogs/ServerInput.tsx:222
-#: src/components/moderation/ContentHider.tsx:259
+#: src/components/moderation/ContentHider.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:243
 msgid "Learn more."
 msgstr "További információ."
@@ -8105,7 +8105,7 @@ msgstr "Még nincsenek követők"
 #. Empty-state message shown in the GIF picker when a search returns zero results. Placeholder is the user’s search query.
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:25
 msgid "No GIFs found for \"{query}\"."
-msgstr "A(z) „{query}” kifejezésre nincs találat."
+msgstr "A(z) „{query}” kifejezésre nincsenek találatok."
 
 #. Empty-state message shown when the trending/featured GIF feed returns no results (rare, usually a transient provider issue).
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:36
@@ -8220,37 +8220,37 @@ msgstr "Nincs találat"
 #: src/components/dms/InitiateChatFlow.tsx:376
 #: src/components/ProgressGuide/FollowDialog.tsx:221
 msgid "No results"
-msgstr "Nincs találat"
+msgstr "Nincsenek találatok"
 
 #. placeholder {0}: interestsDisplayNames[selectedInterest]
 #: src/screens/Search/Explore.tsx:828
 msgid "No results for \"{0}\"."
-msgstr "A(z) „{0}” kifejezésre nincs találat."
+msgstr "A(z) „{0}” kifejezésre nincsenek találatok."
 
 #: src/components/Lists.tsx:203
 #: src/components/Lists.tsx:218
 msgid "No results found"
-msgstr "Nincs találat"
+msgstr "Nincsenek találatok"
 
 #: src/view/screens/Feeds.tsx:466
 msgid "No results found for \"{query}\""
-msgstr "A(z) „{query}” kifejezésre nincs találat"
+msgstr "A(z) „{query}” kifejezésre nincsenek találatok"
 
 #: src/screens/Search/SearchResults.tsx:206
 msgid "No results found for “<0>{query}</0>” with advanced search filters applied."
-msgstr ""
+msgstr "A jelenlegi szűrőkkel nincsenek találatok a(z) „<0>{query}</0>” kifejezésre."
 
 #: src/screens/Search/SearchResults.tsx:218
 msgid "No results found for “<0>{query}</0>”."
-msgstr "A(z) „<0>{query}</0>” kifejezésre nincs találat."
+msgstr "A(z) „<0>{query}</0>” kifejezésre nincsenek találatok."
 
 #: src/screens/Search/SearchResults.tsx:212
 msgid "No results found for your query with advanced search filters applied."
-msgstr ""
+msgstr "A jelenlegi szűrőkkel nincsenek találatok a keresett kifejezésre."
 
 #: src/screens/Search/Explore.tsx:832
 msgid "No results."
-msgstr "Nincs találat."
+msgstr "Nincsenek találatok."
 
 #: src/view/screens/Profile.tsx:557
 msgid "No Starter Packs yet"
@@ -8542,7 +8542,7 @@ msgstr "Hoppá!"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:66
 msgid "Open advanced search options"
-msgstr ""
+msgstr "Részletes keresési beállítások megnyitása"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:311
 msgid "Open avatar creator"
@@ -8570,7 +8570,7 @@ msgstr "Beszélgetési beállítások megnyitása"
 msgid "Open draft"
 msgstr "Piszkozat szerkesztése"
 
-#: src/components/Layout/Header/index.tsx:167
+#: src/components/Layout/Header/index.tsx:168
 msgid "Open drawer menu"
 msgstr "Oldalsó menü megnyitása"
 
@@ -9369,10 +9369,6 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Bejegyzés kitűzve"
 
-#: src/components/PostControls/BookmarkButton.tsx:67
-msgid "Post saved"
-msgstr "Bejegyzés elmentve"
-
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9650,7 +9646,7 @@ msgstr "{0, plural, other {# további válasz}} megjelenítése"
 #: src/screens/Search/SearchResults.tsx:249
 msgctxt "english-only-resource"
 msgid "Read about how to use advanced search filters"
-msgstr ""
+msgstr "További információ a részletes keresésről (angol nyelven)"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:162
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:173
@@ -9790,7 +9786,7 @@ msgstr "Biztosan el akarod távolítani {displayName} felhasználót?"
 
 #: src/screens/Search/components/SearchHistory.tsx:182
 msgid "Remove {q}"
-msgstr ""
+msgstr "A(z) „{q}” kifejezés eltávolítása"
 
 #: src/screens/Settings/Settings.tsx:663
 #: src/screens/Settings/Settings.tsx:666
@@ -9839,7 +9835,7 @@ msgstr "Hírfolyam eltávolítása"
 #. Advanced search filter
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:143
 msgid "Remove filter"
-msgstr ""
+msgstr "Szűrő eltávolítása"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:238
 msgid "Remove from chat"
@@ -9862,7 +9858,7 @@ msgstr "Eltávolítás a fióklistáról"
 msgid "Remove from saved feeds"
 msgstr "Eltávolítás a mentett hírfolyamok közül"
 
-#: src/components/PostControls/BookmarkButton.tsx:143
+#: src/components/PostControls/BookmarkButton.tsx:120
 #: src/screens/Bookmarks.tsx:252
 msgid "Remove from saved posts"
 msgstr "Eltávolítás a mentett bejegyzések közül"
@@ -9943,7 +9939,7 @@ msgstr "Személy levéve a listáról"
 msgid "Removed from saved feeds"
 msgstr "Eltávolítva a mentett hírfolyamok közül"
 
-#: src/components/PostControls/BookmarkButton.tsx:107
+#: src/components/PostControls/BookmarkButton.tsx:88
 #: src/screens/Bookmarks.tsx:211
 msgid "Removed from saved posts"
 msgstr "Eltávolítva a mentett bejegyzések közül"
@@ -10564,9 +10560,9 @@ msgstr "Vissza a tetejére"
 #: src/components/forms/SearchInput.tsx:53
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:552
-#: src/screens/Search/Shell.tsx:616
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:541
+#: src/screens/Search/Shell.tsx:604
+#: src/screens/Search/Shell.tsx:741
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr "Keresés"
@@ -10661,7 +10657,7 @@ msgstr "Profilok keresése"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:248
 msgid "Search query"
-msgstr ""
+msgstr "Keresési kifejezés"
 
 #: src/screens/Profile/ProfileSearch.tsx:38
 msgid "Search..."
@@ -11173,8 +11169,8 @@ msgstr "QR-kód továbbítása"
 msgid "Share this feed"
 msgstr "Hírfolyam továbbítása"
 
-#: src/screens/Search/Shell.tsx:568
-#: src/screens/Search/Shell.tsx:638
+#: src/screens/Search/Shell.tsx:557
+#: src/screens/Search/Shell.tsx:626
 msgid "Share this search"
 msgstr ""
 
@@ -11219,7 +11215,7 @@ msgstr "Az Apple-fiókodban szereplő korcsoport megosztásával megállapíthat
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
 msgstr "A Google-fiókodban szereplő korcsoport megosztásával megállapíthatjuk, hogy felnőtt vagy-e, de a <0>pontos életkorodat és születésnapodat nem</0>. Ezek az adatok a jelenlegi eszközödön maradnak, ezért csak itt oldják fel az életkorhoz kötött funkciókat. Ha szeretnél minden platformon hozzáférést nyerni, akkor <1>igénybe veheted megbízható partnerünk, a KWS szolgáltatását is</1>."
 
-#: src/components/moderation/ContentHider.tsx:220
+#: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:143
 #: src/components/moderation/PostHider.tsx:140
 msgid "Show"
@@ -11229,8 +11225,8 @@ msgstr "Megjelenítés"
 msgid "Show alt text"
 msgstr "Helyettesítő szöveg megjelenítése"
 
-#: src/components/moderation/ScreenHider.tsx:179
-#: src/components/moderation/ScreenHider.tsx:182
+#: src/components/moderation/ScreenHider.tsx:175
+#: src/components/moderation/ScreenHider.tsx:178
 #: src/features/liveNow/components/LiveStatusDialog.tsx:318
 #: src/features/liveNow/components/LiveStatusDialog.tsx:322
 #: src/screens/List/ListHiddenScreen.tsx:194
@@ -11274,9 +11270,9 @@ msgstr "Lista megjelenítése mégis"
 msgid "Show lists of users to select from"
 msgstr "Választható felhasználólisták megjelenítése"
 
-#: src/components/Post/ShowMoreTextButton.tsx:52
-msgid "Show More"
-msgstr "Továbbiak"
+#: src/components/Post/ShowMoreTextButton.tsx:50
+msgid "Show more"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:594
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
@@ -11341,7 +11337,7 @@ msgstr "További információ a bejegyzés dátumáról"
 msgid "Shows other accounts you can switch to"
 msgstr "További fiókok megjelenítése váltás céljából"
 
-#: src/components/moderation/ContentHider.tsx:172
+#: src/components/moderation/ContentHider.tsx:169
 #: src/components/moderation/PostHider.tsx:94
 msgid "Shows the content"
 msgstr "Tartalom megjelenítése"
@@ -11436,7 +11432,7 @@ msgstr "Kijelentkezés"
 msgid "Sign up"
 msgstr "Regisztráció"
 
-#: src/components/moderation/ScreenHider.tsx:98
+#: src/components/moderation/ScreenHider.tsx:96
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
 msgid "Sign-in Required"
 msgstr "Bejelentkezés szükséges"
@@ -12394,7 +12390,7 @@ msgstr "Csoporttulajdonos"
 msgid "They won’t be able to rejoin unless you invite them again."
 msgstr "Már nem lesz képes ismét csatlakozni, hacsak meg nem hívod őt."
 
-#: src/components/moderation/ScreenHider.tsx:118
+#: src/components/moderation/ScreenHider.tsx:116
 msgid "This {screenDescription} has been flagged:"
 msgstr "Ez a(z) {screenDescription} feljegyzést kapott:"
 
@@ -12410,7 +12406,7 @@ msgstr "A fiók tulajdonosa ezt a fiókot automatikusnak jelölte meg."
 msgid "This account has one or more attempted verifications, but it is not currently verified."
 msgstr "Ez a fiók legalább egy hitelesítési javaslattal rendelkezik, de még nincs hitelesítve."
 
-#: src/components/moderation/ScreenHider.tsx:113
+#: src/components/moderation/ScreenHider.tsx:111
 msgid "This account has requested that users sign in to view their profile."
 msgstr "Ez a fiók azt kérte, hogy a megtekintéséhez jelentkezz be."
 
@@ -12922,11 +12918,11 @@ msgstr "A bizalom kapcsolatok, közösségek és egy megosztott környezet útj�
 
 #: src/screens/Search/SearchResults.tsx:233
 msgid "Try a different search term or remove some filters."
-msgstr ""
+msgstr "Próbálkozz másmilyen kifejezéssel vagy kevesebb szűrővel."
 
 #: src/screens/Search/SearchResults.tsx:235
 msgid "Try a different search term."
-msgstr ""
+msgstr "Próbálkozz másmilyen kifejezéssel."
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:221
 #: src/features/inviteFriends/InviteScannerScreen.tsx:226
@@ -13260,7 +13256,7 @@ msgstr "Leiratkozás a feljegyzőről"
 msgid "Unsubscribed from list"
 msgstr "Leiratkoztál a listáról"
 
-#: src/view/com/composer/text-input/TextInput.tsx:128
+#: src/view/com/composer/text-input/TextInput.tsx:127
 msgid "Unsupported clipboard content"
 msgstr "A vágólap tartalma nem támogatott."
 
@@ -13732,7 +13728,7 @@ msgid "View details"
 msgstr "Részletek"
 
 #: src/view/com/posts/ViewFullThread.tsx:31
-#: src/view/com/posts/ViewFullThread.tsx:64
+#: src/view/com/posts/ViewFullThread.tsx:65
 msgid "View full thread"
 msgstr "Teljes válaszlánc megtekintése"
 
@@ -14803,7 +14799,7 @@ msgstr "Túllépted az egyidejűleg megengedett legtöbb lekérést. Próbáld �
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:426
 msgid "You’ve reached the maximum of {MAX_FILTERS, plural, one {# filter} other {# filters}}. Add more values to an existing filter instead of creating new ones."
-msgstr ""
+msgstr "Legfeljebb {MAX_FILTERS, plural, other {#}} különböző szűrőt lehet megadni. Szerkessz egy létező szűrőt ahelyett, hogy újat hoznál létre."
 
 #: src/components/FocusScope/index.tsx:88
 msgid "You've reached the start of the active content."
