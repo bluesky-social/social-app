@@ -38,7 +38,7 @@
   },
   "scripts": {
     "prepare": "is-ci || husky",
-    "postinstall": "pnpm intl:compile-if-needed",
+    "postinstall": "lex install --ci && pnpm lexicons:generate && pnpm intl:compile-if-needed",
     "prebuild": "EXPO_NO_GIT_STATUS=1 expo prebuild --clean",
     "android": "expo run:android",
     "android:prod": "expo run:android --variant release",
@@ -62,6 +62,8 @@
     "lint": "oxlint --quiet src modules",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
+    "lexicons:generate": "lex build --clear --index-file --import-ext ''",
+    "lexicons:update": "lex install --update",
     "typecheck": "pnpm run typecheck:ios && pnpm run typecheck:android && pnpm run typecheck:web",
     "typecheck:ios": "tsgo --project ./tsconfig.check.ios.json",
     "typecheck:android": "tsgo --project ./tsconfig.check.android.json",
@@ -96,8 +98,9 @@
     "prettier": "prettier --check ."
   },
   "dependencies": {
-    "@atproto/api": "0.20.28",
     "@atproto/common-web": "0.5.6",
+    "@atproto/lex": "0.3.0",
+    "@atproto/lex-password-session": "0.1.8",
     "@atproto/syntax": "0.7.2",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
@@ -109,6 +112,7 @@
     "@bsky.app/expo-translate-text": "^0.2.9",
     "@bsky.app/peek-menu": "^0.3.1",
     "@bsky.app/react-native-mmkv": "2.12.5",
+    "@bsky.app/sdk": "npm:bsky-sdk-preview@0.0.1-preview.2",
     "@bsky.app/sift": "^0.3.9",
     "@bsky.app/tapper": "^0.6.1",
     "@bsky.app/video": "0.3.6",
@@ -322,14 +326,17 @@
       "^multiformats/cid$": "<rootDir>/node_modules/multiformats/dist/src/cid.js",
       "^multiformats/bases/base32$": "<rootDir>/node_modules/multiformats/dist/src/bases/base32.js",
       "^multiformats/hashes/digest$": "<rootDir>/node_modules/multiformats/dist/src/hashes/digest.js",
+      "^multiformats/hashes/hasher$": "<rootDir>/node_modules/multiformats/dist/src/hashes/hasher.js",
       "^multiformats/hashes/sha2$": "<rootDir>/node_modules/multiformats/dist/src/hashes/sha2.js",
       "^uint8arrays/from-string$": "<rootDir>/node_modules/uint8arrays/dist/src/from-string.js",
       "^uint8arrays/to-string$": "<rootDir>/node_modules/uint8arrays/dist/src/to-string.js",
       "^unicode-segmenter/grapheme$": "<rootDir>/node_modules/unicode-segmenter/grapheme.cjs",
-      "^await-lock$": "<rootDir>/node_modules/await-lock/build/AwaitLock.js"
+      "^await-lock$": "<rootDir>/node_modules/await-lock/build/AwaitLock.js",
+      "^@ipld/dag-cbor$": "<rootDir>/node_modules/@ipld/dag-cbor/src/index.js",
+      "^cborg$": "<rootDir>/node_modules/cborg/cborg.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|multiformats|uint8arrays|@ipld/.*|cborg|await-lock)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|@bsky.app/sdk|tlds|multiformats|uint8arrays|@ipld/.*|cborg|await-lock)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",

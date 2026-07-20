@@ -6,7 +6,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -26,6 +25,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {UserAddRemoveListsDialog} from '#/components/dialogs/lists/UserAddRemoveListsDialog'
 import {ListFooter} from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 const LOADING_ITEM = {kind: 'loading', _reactKey: '__loading__'} as const
@@ -43,7 +43,7 @@ type Item =
   | typeof LOAD_MORE_ERROR_ITEM
   | {
       kind: 'list_item'
-      listItem: AppBskyGraphDefs.ListItemView
+      listItem: app.bsky.graph.defs.ListItemView
     }
 
 export function ListMembers({

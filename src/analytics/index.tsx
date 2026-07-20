@@ -83,6 +83,16 @@ function createLogger(
     warn: logger.warn.bind(logger),
     error: logger.error.bind(logger),
     useChild: (context: Exclude<Logger['context'], undefined>) => {
+      /*
+       * `metadata` is a real dependency: each parent re-render (e.g. an
+       * account switch, which re-renders AnalyticsContext without remounting
+       * consumers) creates a fresh `createLogger` closure with new metadata,
+       * and without the dep the memoized child would keep logging with the
+       * previous account's metadata. The exhaustive-deps rule misclassifies
+       * it as an outer-scope value (the closure is defined outside a
+       * component) and `--fix` would silently strip it.
+       */
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       return useMemo(() => createLogger(context, metadata), [context, metadata])
     },
     Context: Logger.Context,

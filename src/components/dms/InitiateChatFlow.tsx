@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react'
 import {LayoutAnimation, type TextInput, View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_GROUP_NAME_GRAPHEME_LENGTH} from '#/lib/constants'

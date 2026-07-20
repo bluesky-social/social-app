@@ -1,9 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {
-  type AppBskyActorDefs,
-  type AppBskyActorGetSuggestions,
-  type AppBskyGraphGetSuggestedFollowsByActor,
-} from '@atproto/api'
+import {type AtIdentifierString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -12,8 +8,8 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
-import type * as bsky from '#/types/bsky'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows'
 
@@ -32,18 +28,21 @@ export function useSuggestedFollowsByActorQuery({
   enabled?: boolean
   staleTime?: number
 }) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useQuery({
     staleTime,
     queryKey: suggestedFollowsByActorQueryKey(did),
     queryFn: async () => {
-      const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
-        actor: did,
-      })
-      const suggestions = res.data.suggestions.filter(
+      const data = await client.call(
+        app.bsky.graph.getSuggestedFollowsByActor,
+        {
+          actor: did as AtIdentifierString,
+        },
+      )
+      const suggestions = data.suggestions.filter(
         profile => !profile.viewer?.following,
       )
-      return {suggestions, recId: res.data.recIdStr}
+      return {suggestions, recId: data.recIdStr}
     },
     enabled,
   })
@@ -102,7 +101,7 @@ export function useSuggestedFollowsByActorWithDismiss({
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did)
   yield* findAllProfilesInSuggestedFollowsByActorQueryData(queryClient, did)
 }
@@ -112,7 +111,7 @@ function* findAllProfilesInSuggestedFollowsQueryData(
   did: string,
 ) {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyActorGetSuggestions.OutputSchema>
+    InfiniteData<app.bsky.actor.getSuggestions.$OutputBody>
   >({
     queryKey: [suggestedFollowsQueryKeyRoot],
   })
@@ -135,7 +134,7 @@ function* findAllProfilesInSuggestedFollowsByActorQueryData(
   did: string,
 ) {
   const queryDatas =
-    queryClient.getQueriesData<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema>(
+    queryClient.getQueriesData<app.bsky.graph.getSuggestedFollowsByActor.$OutputBody>(
       {
         queryKey: [suggestedFollowsByActorQueryKeyRoot],
       },

@@ -1,0 +1,35 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.contact.getSyncStatus",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Gets the user's current contact import status. Requires authentication.",
+      "parameters": {
+        "type": "params",
+        "properties": {}
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "syncStatus": {
+              "description": "If present, indicates the user has imported their contacts. If not present, indicates the user never used the feature or called `app.bsky.contact.removeData` and didn't import again since.",
+              "type": "ref",
+              "ref": "app.bsky.contact.defs#syncStatus"
+            }
+          }
+        }
+      },
+      "errors": [
+        {
+          "name": "InvalidDid"
+        },
+        {
+          "name": "InternalError"
+        }
+      ]
+    }
+  }
+}

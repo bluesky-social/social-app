@@ -7,11 +7,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {
-  type AppBskyActorDefs,
-  type ModerationCause,
-  type ModerationUI,
-} from '@atproto/api'
+import {type ModerationCause, type ModerationUI} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -28,13 +24,14 @@ import {
   useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
 interface Props extends React.ComponentProps<typeof Link> {
   disabled: boolean
   iconSize: number
   iconStyles: StyleProp<ViewStyle>
   modui: ModerationUI
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: app.bsky.actor.defs.ProfileViewBasic
   interpretFilterAsBlur?: boolean
   hiderStyle?: StyleProp<ViewStyle>
 }

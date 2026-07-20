@@ -7,7 +7,8 @@ import {
   useRef,
   useState,
 } from 'react'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+
+import {type chat} from '#/lexicons'
 
 /**
  * How long a message stays highlighted after scrolling to it, before the flash
@@ -28,8 +29,8 @@ type MessageRepliesContextType = {
   /**
    * The message currently staged for reply in the composer, or null.
    */
-  replyTo: ChatBskyConvoDefs.MessageView | null
-  setReply: (message: ChatBskyConvoDefs.MessageView) => void
+  replyTo: chat.bsky.convo.defs.MessageView | null
+  setReply: (message: chat.bsky.convo.defs.MessageView) => void
   clearReply: () => void
   /**
    * Scroll the list to a message, if it's currently loaded, and flash it. No-op
@@ -66,9 +67,8 @@ export function MessageRepliesProvider({
    */
   scrollToMessage: (messageId: string) => boolean
 }) {
-  const [replyTo, setReplyTo] = useState<ChatBskyConvoDefs.MessageView | null>(
-    null,
-  )
+  const [replyTo, setReplyTo] =
+    useState<chat.bsky.convo.defs.MessageView | null>(null)
   const [highlightedMessage, setHighlightedMessage] =
     useState<HighlightedMessage | null>(null)
   const highlightKey = useRef(0)
@@ -76,7 +76,7 @@ export function MessageRepliesProvider({
     null,
   )
 
-  const setReply = useCallback((message: ChatBskyConvoDefs.MessageView) => {
+  const setReply = useCallback((message: chat.bsky.convo.defs.MessageView) => {
     setReplyTo(message)
   }, [])
 

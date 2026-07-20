@@ -1,10 +1,8 @@
 import {
-  type AppBskyLabelerDefs,
-  type ComAtprotoLabelDefs,
   type InterpretedLabelValueDefinition,
   interpretLabelValueDefinition,
   LABELS,
-} from '@atproto/api'
+} from '@bsky.app/sdk/moderation'
 import {useLingui} from '@lingui/react'
 import * as bcp47Match from 'bcp-47-match'
 
@@ -13,19 +11,20 @@ import {
   useGlobalLabelStrings,
 } from '#/lib/moderation/useGlobalLabelStrings'
 import {useLabelDefinitions} from '#/state/preferences'
+import {type app, type com} from '#/lexicons'
 
 export interface LabelInfo {
-  label: ComAtprotoLabelDefs.Label
+  label: com.atproto.label.defs.Label
   def: InterpretedLabelValueDefinition
-  strings: ComAtprotoLabelDefs.LabelValueDefinitionStrings
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  strings: com.atproto.label.defs.LabelValueDefinitionStrings
+  labeler: app.bsky.labeler.defs.LabelerViewDetailed | undefined
 }
 
-export function useLabelInfo(label: ComAtprotoLabelDefs.Label): LabelInfo {
+export function useLabelInfo(label: com.atproto.label.defs.Label): LabelInfo {
   const {i18n} = useLingui()
   const {labelDefs, labelers} = useLabelDefinitions()
-  const globalLabelStrings = useGlobalLabelStrings()
   const def = getDefinition(labelDefs, label)
+  const globalLabelStrings = useGlobalLabelStrings()
   return {
     label,
     def,
@@ -36,7 +35,7 @@ export function useLabelInfo(label: ComAtprotoLabelDefs.Label): LabelInfo {
 
 export function getDefinition(
   labelDefs: Record<string, InterpretedLabelValueDefinition[]>,
-  label: ComAtprotoLabelDefs.Label,
+  label: com.atproto.label.defs.Label,
 ): InterpretedLabelValueDefinition {
   // check local definitions
   const customDef =
@@ -71,13 +70,13 @@ export function getLabelStrings(
   locale: string,
   globalLabelStrings: GlobalLabelStrings,
   def: InterpretedLabelValueDefinition,
-): ComAtprotoLabelDefs.LabelValueDefinitionStrings {
+): com.atproto.label.defs.LabelValueDefinitionStrings {
   if (!def.definedBy) {
     // global definition, look up strings
     if (def.identifier in globalLabelStrings) {
       return globalLabelStrings[
         def.identifier
-      ] as ComAtprotoLabelDefs.LabelValueDefinitionStrings
+      ] as com.atproto.label.defs.LabelValueDefinitionStrings
     }
   } else {
     // try to find locale match in the definition's strings

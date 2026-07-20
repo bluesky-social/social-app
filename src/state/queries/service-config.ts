@@ -1,7 +1,8 @@
 import {useQuery} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 type ServiceConfig = {
   checkEmailConfirmed: boolean
@@ -13,18 +14,24 @@ type ServiceConfig = {
 }
 
 export function useServiceConfigQuery() {
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   return useQuery<ServiceConfig>({
     refetchOnWindowFocus: true,
     staleTime: STALE.MINUTES.FIVE,
     queryKey: ['service-config'],
     queryFn: async () => {
       try {
-        const {data} = await agent.api.app.bsky.unspecced.getConfig()
+        const data = await appviewClient.call(app.bsky.unspecced.getConfig)
         return {
           checkEmailConfirmed: Boolean(data.checkEmailConfirmed),
-          // @ts-expect-error not included in types atm
-          topicsEnabled: Boolean(data.topicsEnabled),
+          /*
+           * `topicsEnabled` is served by the appview but is not (yet) part of
+           * the getConfig lexicon schema, so read it through a narrow local
+           * cast rather than the generated body type.
+           */
+          topicsEnabled: Boolean(
+            (data as {topicsEnabled?: boolean}).topicsEnabled,
+          ),
           liveNow: data.liveNow ?? [],
         }
       } catch (e) {

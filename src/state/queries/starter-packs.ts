@@ -1,13 +1,6 @@
-import {
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  type AppBskyGraphGetStarterPack,
-  AppBskyGraphStarterpack,
-  type AppBskyRichtextFacet,
-  type AtpAgent,
-  AtUri,
-  RichText,
-} from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {AtUri, type AtUriString, type DatetimeString} from '@atproto/syntax'
+import {RichText} from '@bsky.app/sdk/richtext'
 import {
   type QueryClient,
   useMutation,
@@ -26,7 +19,8 @@ import {
 import {invalidateActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
 import {STALE} from '#/state/queries/index'
 import {invalidateListMembersQuery} from '#/state/queries/list-members'
-import {useAgent} from '#/state/session'
+import {useAppviewClient, usePdsClient} from '#/state/session'
+import {app, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const RQKEY_ROOT = 'starter-pack'
@@ -56,9 +50,9 @@ export function useStarterPackQuery({
   did?: string
   rkey?: string
 }) {
-  const agent = useAgent()
+  const client = useAppviewClient()
 
-  return useQuery<AppBskyGraphDefs.StarterPackView>({
+  return useQuery<app.bsky.graph.defs.StarterPackView>({
     queryKey: RQKEY(uri ? {uri} : {did, rkey}),
     queryFn: async () => {
       if (!uri) {
@@ -67,10 +61,10 @@ export function useStarterPackQuery({
         uri = httpStarterPackUriToAtUri(uri) as string
       }
 
-      const res = await agent.app.bsky.graph.getStarterPack({
-        starterPack: uri,
+      const res = await client.call(app.bsky.graph.getStarterPack, {
+        starterPack: uri as AtUriString,
       })
-      return res.data.starterPack
+      return res.starterPack
     },
     enabled: Boolean(uri) || Boolean(did && rkey),
     staleTime: STALE.MINUTES.FIVE,
@@ -93,7 +87,7 @@ interface UseCreateStarterPackMutationParams {
   name: string
   description?: string
   profiles: bsky.profile.AnyProfileView[]
-  feeds?: AppBskyFeedDefs.GeneratorView[]
+  feeds?: app.bsky.feed.defs.GeneratorView[]
 }
 
 export function useCreateStarterPackMutation({
@@ -104,7 +98,8 @@ export function useCreateStarterPackMutation({
   onError: (e: Error) => void
 }) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
 
   return useMutation<
     {uri: string; cid: string},
@@ -112,10 +107,10 @@ export function useCreateStarterPackMutation({
     UseCreateStarterPackMutationParams
   >({
     mutationFn: async ({name, description, feeds, profiles}) => {
-      let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
+      let descriptionFacets: app.bsky.richtext.facet.Main[] | undefined
       if (description) {
         const rt = new RichText({text: description})
-        await rt.detectFacets(agent)
+        await rt.detectFacets(appviewClient)
         descriptionFacets = rt.facets
       }
 
@@ -125,30 +120,25 @@ export function useCreateStarterPackMutation({
         description,
         profiles,
         descriptionFacets,
-        agent,
+        client: pdsClient,
       })
 
-      return await agent.app.bsky.graph.starterpack.create(
-        {
-          repo: agent.assertDid,
-        },
-        {
-          name,
-          description,
-          descriptionFacets,
-          list: listRes?.uri,
-          feeds: feeds?.map(f => ({uri: f.uri})),
-          createdAt: new Date().toISOString(),
-        },
-      )
+      return await pdsClient.create(app.bsky.graph.starterpack, {
+        name,
+        description,
+        descriptionFacets,
+        list: listRes?.uri as AtUriString,
+        feeds: feeds?.map(f => ({uri: f.uri})),
+        createdAt: new Date().toISOString() as DatetimeString,
+      })
     },
     onSuccess: async data => {
-      await whenAppViewReady(agent, data.uri, v => {
-        return typeof v?.data.starterPack.uri === 'string'
+      await whenAppViewReady(appviewClient, data.uri, v => {
+        return typeof v?.starterPack.uri === 'string'
       })
       await invalidateActorStarterPacksQuery({
         queryClient,
-        did: agent.session!.did,
+        did: pdsClient.assertDid,
       })
       onSuccess(data)
     },
@@ -166,14 +156,15 @@ export function useEditStarterPackMutation({
   onError: (error: Error) => void
 }) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
 
   return useMutation<
     void,
     Error,
     UseCreateStarterPackMutationParams & {
-      currentStarterPack: AppBskyGraphDefs.StarterPackView
-      currentListItems: AppBskyGraphDefs.ListItemView[]
+      currentStarterPack: app.bsky.graph.defs.StarterPackView
+      currentListItems: app.bsky.graph.defs.ListItemView[]
     }
   >({
     mutationFn: async ({
@@ -184,33 +175,42 @@ export function useEditStarterPackMutation({
       currentStarterPack,
       currentListItems,
     }) => {
-      let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
+      let descriptionFacets: app.bsky.richtext.facet.Main[] | undefined
       if (description) {
         const rt = new RichText({text: description})
-        await rt.detectFacets(agent)
+        await rt.detectFacets(appviewClient)
         descriptionFacets = rt.facets
       }
 
-      if (!AppBskyGraphStarterpack.isRecord(currentStarterPack.record)) {
+      if (!bsky.isType(app.bsky.graph.starterpack, currentStarterPack.record)) {
         throw new Error('Invalid starter pack')
       }
 
       const removedItems = currentListItems.filter(
         i =>
-          i.subject.did !== agent.session?.did &&
+          i.subject.did !== pdsClient.did &&
           !profiles.find(p => p.did === i.subject.did && p.did),
       )
       if (removedItems.length !== 0) {
         const chunks = chunk(removedItems, 50)
         for (const chunk of chunks) {
-          await agent.com.atproto.repo.applyWrites({
-            repo: agent.session!.did,
-            writes: chunk.map(i => ({
-              $type: 'com.atproto.repo.applyWrites#delete',
-              collection: 'app.bsky.graph.listitem',
-              rkey: new AtUri(i.uri).rkey,
-            })),
-          })
+          await pdsClient.call(
+            com.atproto.repo.applyWrites,
+            {
+              repo: pdsClient.assertDid,
+              writes: chunk.map(
+                (
+                  i,
+                ): com.atproto.repo.applyWrites.$InputBody['writes'][number] => ({
+                  $type: 'com.atproto.repo.applyWrites#delete',
+                  collection: 'app.bsky.graph.listitem',
+                  rkey: new AtUri(i.uri).rkey,
+                }),
+              ),
+            },
+            // service: null strips the appview proxy header - this must hit the account host (PDS)
+            {service: null},
+          )
         }
       }
 
@@ -220,46 +220,61 @@ export function useEditStarterPackMutation({
       if (addedProfiles.length > 0) {
         const chunks = chunk(addedProfiles, 50)
         for (const chunk of chunks) {
-          await agent.com.atproto.repo.applyWrites({
-            repo: agent.session!.did,
-            writes: chunk.map(p => ({
-              $type: 'com.atproto.repo.applyWrites#create',
-              collection: 'app.bsky.graph.listitem',
-              value: {
-                $type: 'app.bsky.graph.listitem',
-                subject: p.did,
-                list: currentStarterPack.list?.uri,
-                createdAt: new Date().toISOString(),
-              },
-            })),
-          })
+          await pdsClient.call(
+            com.atproto.repo.applyWrites,
+            {
+              repo: pdsClient.assertDid,
+              writes: chunk.map(
+                (
+                  p,
+                ): com.atproto.repo.applyWrites.$InputBody['writes'][number] => ({
+                  $type: 'com.atproto.repo.applyWrites#create',
+                  collection: 'app.bsky.graph.listitem',
+                  value: {
+                    $type: 'app.bsky.graph.listitem',
+                    subject: p.did,
+                    list: currentStarterPack.list?.uri,
+                    createdAt: new Date().toISOString(),
+                  },
+                }),
+              ),
+            },
+            // service: null strips the appview proxy header - this must hit the account host (PDS)
+            {service: null},
+          )
         }
       }
 
       const rkey = parseStarterPackUri(currentStarterPack.uri)!.rkey
-      await agent.com.atproto.repo.putRecord({
-        repo: agent.session!.did,
-        collection: 'app.bsky.graph.starterpack',
-        rkey,
-        record: {
-          name,
-          description,
-          descriptionFacets,
-          list: currentStarterPack.list?.uri,
-          feeds,
-          createdAt: currentStarterPack.record.createdAt,
-          updatedAt: new Date().toISOString(),
+      await pdsClient.call(
+        com.atproto.repo.putRecord,
+        {
+          repo: pdsClient.assertDid,
+          collection: 'app.bsky.graph.starterpack',
+          rkey,
+          record: {
+            $type: 'app.bsky.graph.starterpack',
+            name,
+            description,
+            descriptionFacets,
+            list: currentStarterPack.list?.uri,
+            feeds,
+            createdAt: currentStarterPack.record.createdAt,
+            updatedAt: new Date().toISOString(),
+          },
         },
-      })
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
     },
     onSuccess: async (_, {currentStarterPack}) => {
       const parsed = parseStarterPackUri(currentStarterPack.uri)
-      await whenAppViewReady(agent, currentStarterPack.uri, v => {
-        return currentStarterPack.cid !== v?.data.starterPack.cid
+      await whenAppViewReady(appviewClient, currentStarterPack.uri, v => {
+        return currentStarterPack.cid !== v?.starterPack.cid
       })
       await invalidateActorStarterPacksQuery({
         queryClient,
-        did: agent.session!.did,
+        did: pdsClient.assertDid,
       })
       if (currentStarterPack.list) {
         await invalidateListMembersQuery({
@@ -269,7 +284,7 @@ export function useEditStarterPackMutation({
       }
       await invalidateStarterPack({
         queryClient,
-        did: agent.session!.did,
+        did: pdsClient.assertDid,
         rkey: parsed!.rkey,
       })
       onSuccess()
@@ -287,35 +302,34 @@ export function useDeleteStarterPackMutation({
   onSuccess: () => void
   onError: (error: Error) => void
 }) {
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async ({listUri, rkey}: {listUri?: string; rkey: string}) => {
-      if (!agent.session) {
-        throw new Error(`Requires signed in user`)
-      }
+      const did = pdsClient.assertDid
 
       if (listUri) {
-        await agent.app.bsky.graph.list.delete({
-          repo: agent.session.did,
+        await pdsClient.delete(app.bsky.graph.list, {
+          repo: did,
           rkey: new AtUri(listUri).rkey,
         })
       }
-      await agent.app.bsky.graph.starterpack.delete({
-        repo: agent.session.did,
+      await pdsClient.delete(app.bsky.graph.starterpack, {
+        repo: did,
         rkey,
       })
     },
     onSuccess: async (_, {listUri, rkey}) => {
       const uri = createStarterPackUri({
-        did: agent.session!.did,
+        did: pdsClient.assertDid,
         rkey,
       })
 
       if (uri) {
-        await whenAppViewReady(agent, uri, v => {
-          return Boolean(v?.data?.starterPack) === false
+        await whenAppViewReady(appviewClient, uri, v => {
+          return Boolean(v?.starterPack) === false
         })
       }
 
@@ -324,11 +338,11 @@ export function useDeleteStarterPackMutation({
       }
       await invalidateActorStarterPacksQuery({
         queryClient,
-        did: agent.session!.did,
+        did: pdsClient.assertDid,
       })
       await invalidateStarterPack({
         queryClient,
-        did: agent.session!.did,
+        did: pdsClient.assertDid,
         rkey,
       })
       onSuccess()
@@ -340,48 +354,51 @@ export function useDeleteStarterPackMutation({
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  client: Client,
   uri: string,
-  fn: (res?: AppBskyGraphGetStarterPack.Response) => boolean,
+  fn: (res?: app.bsky.graph.getStarterPack.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    () => agent.app.bsky.graph.getStarterPack({starterPack: uri}),
+    () =>
+      client.call(app.bsky.graph.getStarterPack, {
+        starterPack: uri as AtUriString,
+      }),
   )
 }
 
 export function precacheStarterPack(
   queryClient: QueryClient,
   starterPack:
-    | AppBskyGraphDefs.StarterPackViewBasic
-    | AppBskyGraphDefs.StarterPackView,
+    | app.bsky.graph.defs.StarterPackViewBasic
+    | app.bsky.graph.defs.StarterPackView,
 ) {
-  if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
+  if (!bsky.isType(app.bsky.graph.starterpack, starterPack.record)) {
     return
   }
 
-  let starterPackView: AppBskyGraphDefs.StarterPackView | undefined
-  if (AppBskyGraphDefs.isStarterPackView(starterPack)) {
+  let starterPackView: app.bsky.graph.defs.StarterPackView | undefined
+  if (bsky.isType(app.bsky.graph.defs.starterPackView, starterPack)) {
     starterPackView = starterPack
   } else if (
-    AppBskyGraphDefs.isStarterPackViewBasic(starterPack) &&
-    bsky.validate(starterPack.record, AppBskyGraphStarterpack.validateRecord)
+    bsky.isType(app.bsky.graph.defs.starterPackViewBasic, starterPack) &&
+    bsky.matches(app.bsky.graph.starterpack, starterPack.record)
   ) {
-    let feeds: AppBskyFeedDefs.GeneratorView[] | undefined
+    let feeds: app.bsky.feed.defs.GeneratorView[] | undefined
     if (starterPack.record.feeds) {
       feeds = []
       for (const feed of starterPack.record.feeds) {
         // note: types are wrong? claims to be `FeedItem`, but we actually
         // get un$typed `GeneratorView` objects here -sfn
-        if (bsky.validate(feed, AppBskyFeedDefs.validateGeneratorView)) {
+        if (bsky.matches(app.bsky.feed.defs.generatorView, feed)) {
           feeds.push(feed)
         }
       }
     }
 
-    const listView: AppBskyGraphDefs.ListViewBasic = {
+    const listView: app.bsky.graph.defs.ListViewBasic = {
       uri: starterPack.record.list,
       // This will be populated once the data from server is fetched
       cid: '',

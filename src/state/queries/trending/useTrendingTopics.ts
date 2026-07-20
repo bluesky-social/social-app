@@ -1,12 +1,13 @@
 import {useCallback, useMemo} from 'react'
-import {type AppBskyUnspeccedDefs, hasMutedWord} from '@atproto/api'
+import {hasMutedWord} from '@bsky.app/sdk/moderation'
 import {useQuery} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import {useLexClient} from '#/state/session'
+import {app} from '#/lexicons'
 
-export type TrendingTopic = AppBskyUnspeccedDefs.TrendingTopic
+export type TrendingTopic = app.bsky.unspecced.defs.TrendingTopic
 
 type Response = {
   topics: TrendingTopic[]
@@ -27,7 +28,7 @@ function dedup(topics: TrendingTopic[]): TrendingTopic[] {
 export const trendingTopicsQueryKey = ['trending-topics']
 
 export function useTrendingTopics() {
-  const agent = useAgent()
+  const client = useLexClient()
   const {data: preferences} = usePreferencesQuery()
   const mutedWords = useMemo(
     () => preferences?.moderationPrefs?.mutedWords ?? [],
@@ -39,7 +40,7 @@ export function useTrendingTopics() {
     staleTime: STALE.MINUTES.THREE,
     queryKey: trendingTopicsQueryKey,
     async queryFn() {
-      const {data} = await agent.app.bsky.unspecced.getTrendingTopics({
+      const data = await client.call(app.bsky.unspecced.getTrendingTopics, {
         limit: DEFAULT_LIMIT,
       })
       return {

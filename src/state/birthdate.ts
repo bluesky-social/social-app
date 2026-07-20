@@ -1,9 +1,10 @@
 import {useMemo} from 'react'
+import {setPersonalDetails} from '@bsky.app/sdk'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
 import {preferencesQueryKey} from '#/state/queries/preferences'
-import {useAgent, useSession} from '#/state/session'
+import {usePdsClient, useSession} from '#/state/session'
 import {usePatchAgeAssuranceOtherRequiredData} from '#/ageAssurance'
 import {isUnderAge} from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
@@ -54,13 +55,14 @@ export function useIsBirthdateUpdateAllowed() {
 
 export function useBirthdateMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const {currentAccount} = useSession()
+  const pdsClient = usePdsClient()
   const patchOtherRequiredData = usePatchAgeAssuranceOtherRequiredData()
 
   return useMutation<void, unknown, {birthDate: Date}>({
     mutationFn: async ({birthDate}: {birthDate: Date}) => {
       const bday = birthDate.toISOString()
-      await agent.setPersonalDetails({birthDate: bday})
+      await pdsClient.call(setPersonalDetails, {birthDate})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -68,7 +70,7 @@ export function useBirthdateMutation() {
 
       if (isUnderAge(birthDate.toISOString(), 18)) {
         await restrictChatSettings({
-          agent,
+          client: pdsClient,
           restrictIncoming: true,
           restrictGroupInvites: true,
         })
@@ -79,7 +81,9 @@ export function useBirthdateMutation() {
        * birthdate, which may change the user's age assurance access level.
        */
       void patchOtherRequiredData({birthdate: bday})
-      snoozeBirthdateUpdateAllowedForDid(agent.sessionManager.did!)
+      if (currentAccount) {
+        snoozeBirthdateUpdateAllowedForDid(currentAccount.did)
+      }
     },
   })
 }

@@ -1,0 +1,35 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.updateAllRead",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Sets conversations from a user as read to the latest message, with filters.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "knownValues": ["request", "accepted"]
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["updatedCount"],
+          "properties": {
+            "updatedCount": {
+              "description": "The count of updated convos.",
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+  }
+}

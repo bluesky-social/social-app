@@ -8,7 +8,6 @@ import Animated, {
   SlideInRight,
   SlideOutLeft,
 } from 'react-native-reanimated'
-import {type ComAtprotoServerCreateAppPassword} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -25,6 +24,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components
 import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {type com} from '#/lexicons'
 import {CopyButton} from './CopyButton'
 
 export function AddAppPasswordDialog({
@@ -70,7 +70,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
     error: validationError,
     isPending,
   } = useMutation<
-    ComAtprotoServerCreateAppPassword.AppPassword,
+    com.atproto.server.createAppPassword.AppPassword,
     Error | DisplayableError
   >({
     mutationFn: async () => {

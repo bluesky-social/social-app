@@ -1,36 +1,59 @@
 import {copyAsync} from 'expo-file-system/legacy'
-import {type AtpAgent, type ComAtprotoRepoUploadBlob} from '@atproto/api'
+import {type BlobRef, type Client, type EncodingString} from '@atproto/lex'
 
 import {safeDeleteAsync} from '#/lib/media/manip'
 
 /**
- * @param encoding Allows overriding the blob's type
+ * The blob-upload response body: `{blob}`. lex `Client.uploadBlob` returns the
+ * full XRPC response, so callers read `res.body.blob` (the parsed blob ref).
+ */
+type UploadBlobResult = {blob: BlobRef}
+
+/**
+ * @param encoding Allows overriding the blob's type. Passed as the lex upload
+ * option (NEVER a content-type header - lex-client throws if the encoding is
+ * set via headers).
  */
 export async function uploadBlob(
-  agent: AtpAgent,
+  client: Client,
   input: string | Blob,
   encoding?: string,
-): Promise<ComAtprotoRepoUploadBlob.Response> {
+): Promise<UploadBlobResult> {
   if (typeof input === 'string' && input.startsWith('file:')) {
     const blob = await asBlob(input)
-    return agent.uploadBlob(blob, {encoding})
+    return uploadBlobResult(client, blob, encoding)
   }
 
   if (typeof input === 'string' && input.startsWith('/')) {
     const blob = await asBlob(`file://${input}`)
-    return agent.uploadBlob(blob, {encoding})
+    return uploadBlobResult(client, blob, encoding)
   }
 
   if (typeof input === 'string' && input.startsWith('data:')) {
     const blob = await fetch(input).then(r => r.blob())
-    return agent.uploadBlob(blob, {encoding})
+    return uploadBlobResult(client, blob, encoding)
   }
 
   if (input instanceof Blob) {
-    return agent.uploadBlob(input, {encoding})
+    return uploadBlobResult(client, input, encoding)
   }
 
   throw new TypeError(`Invalid uploadBlob input: ${typeof input}`)
+}
+
+async function uploadBlobResult(
+  client: Client,
+  blob: Blob,
+  encoding?: string,
+): Promise<UploadBlobResult> {
+  /*
+   * The lex encoding option is a branded mime string (`${string}/${string}`);
+   * callers pass a plain mime string, so assert the brand here.
+   */
+  const res = await client.uploadBlob(blob, {
+    encoding: encoding as EncodingString | undefined,
+  })
+  return {blob: res.body.blob}
 }
 
 async function asBlob(uri: string): Promise<Blob> {

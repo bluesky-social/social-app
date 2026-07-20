@@ -1,6 +1,5 @@
 import {memo} from 'react'
 import {type Insets} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -15,6 +14,7 @@ import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import {PostControlButton, PostControlButtonIcon} from './PostControlButton'
 
 export const BookmarkButton = memo(function BookmarkButton({
@@ -23,7 +23,7 @@ export const BookmarkButton = memo(function BookmarkButton({
   logContext,
   hitSlop,
 }: {
-  post: Shadow<AppBskyFeedDefs.PostView>
+  post: Shadow<app.bsky.feed.defs.PostView>
   big?: boolean
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   hitSlop?: Insets

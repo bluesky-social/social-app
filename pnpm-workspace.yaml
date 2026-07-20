@@ -15,6 +15,7 @@ overrides:
   'react-native-screens': '4.24.0'
 allowBuilds:
   '@sentry/cli': true
+  core-js: false
   'core-js-pure': true
   'esbuild': true
   'unrs-resolver': true
@@ -43,3 +44,4 @@ patchedDependencies:
 minimumReleaseAgeExclude:
   - '@atproto/*'
   - '@bsky.app/*'
+  - bsky-sdk-preview@0.0.1-preview.1

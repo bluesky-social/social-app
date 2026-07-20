@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {XRPCError} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -14,6 +13,7 @@ import {
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useTLDs} from '#/lib/hooks/useTLDs'
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
+import {isXrpcError, isXrpcErrorOf} from '#/lib/xrpc-error'
 import {type AppLanguage} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
@@ -33,6 +33,7 @@ import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useBeginAgeAssurance} from '#/ageAssurance/useBeginAgeAssurance'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 
 export {useDialogControl} from '#/components/Dialog/context'
 
@@ -139,13 +140,15 @@ function Inner() {
         msg`Something went wrong, please try again`,
       )
 
-      if (e instanceof XRPCError) {
-        if (e.error === 'InvalidEmail') {
+      if (isXrpcError(e)) {
+        if (isXrpcErrorOf(app.bsky.ageassurance.begin, e, 'InvalidEmail')) {
           error = _(
             msg`Please enter a valid, non-temporary email address. You may need to access this email in the future.`,
           )
           ax.metric('ageAssurance:initDialogError', {code: 'InvalidEmail'})
-        } else if (e.error === 'DidTooLong') {
+        } else if (
+          isXrpcErrorOf(app.bsky.ageassurance.begin, e, 'DidTooLong')
+        ) {
           error = (
             <>
               <Trans>

@@ -1,7 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
-import {moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'

@@ -1,11 +1,11 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
+import {type DidString} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {saveBytesToDisk} from '#/lib/media/manip'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useChatClient, usePdsClient, useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -14,6 +14,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {chat, com} from '#/lexicons'
 
 export function ExportCarDialog({
   control,
@@ -22,21 +23,33 @@ export function ExportCarDialog({
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
-  const agent = useAgent()
+  const {currentAccount} = useSession()
+  const pdsClient = usePdsClient()
+  const chatClient = useChatClient()
   const [loading, setLoading] = useState<'repo' | 'chat' | false>(false)
 
   const download = useCallback(async () => {
-    if (!agent.session) {
+    if (!currentAccount) {
       return // shouldn't ever happen
     }
     try {
       setLoading('repo')
-      const did = agent.session.did
-      const downloadRes = await agent.com.atproto.sync.getRepo({did})
+      const did = currentAccount.did as DidString
+      const data = await pdsClient.call(
+        com.atproto.sync.getRepo,
+        {did},
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
+      /*
+       * getRepo returns raw bytes; the lex client does not surface the response
+       * content-type, and this endpoint always returns CAR data, so the constant
+       * matches the old header-derived value in practice.
+       */
       const saveRes = await saveBytesToDisk(
         'repo.car',
-        downloadRes.data,
-        downloadRes.headers['content-type'] || 'application/vnd.ipld.car',
+        data,
+        'application/vnd.ipld.car',
       )
 
       if (saveRes) {
@@ -48,28 +61,26 @@ export function ExportCarDialog({
     } finally {
       setLoading(false)
     }
-  }, [l, agent])
+  }, [l, currentAccount, pdsClient])
 
   const downloadChatData = useCallback(async () => {
-    if (!agent.session) {
+    if (!currentAccount) {
       return
     }
     try {
       setLoading('chat')
-      // Using raw fetch because the XRPC client incorrectly tries to JSON-parse
-      // application/jsonl responses (substring match on application/json).
-      const res = await agent.sessionManager.fetchHandler(
-        '/xrpc/chat.bsky.actor.exportAccountData',
-        {headers: DM_SERVICE_HEADERS},
-      )
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`)
-      }
-      const data = new Uint8Array(await res.arrayBuffer())
+      /*
+       * lex-client 0.3.0 leaves non-JSON encodings (like this endpoint's
+       * application/jsonl) unparsed and returns the raw bytes, so the old
+       * low-level fetchHandler workaround (which 0.3.0 also removed from
+       * Client) is no longer needed. The chat client's proxy header rides
+       * along as usual.
+       */
+      const data = await chatClient.call(chat.bsky.actor.exportAccountData, {})
       const saveRes = await saveBytesToDisk(
         'chat.jsonl',
         data,
-        res.headers.get('content-type') || 'application/jsonl',
+        'application/jsonl',
       )
 
       if (saveRes) {
@@ -81,7 +92,7 @@ export function ExportCarDialog({
     } finally {
       setLoading(false)
     }
-  }, [l, agent])
+  }, [l, currentAccount, chatClient])
 
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>

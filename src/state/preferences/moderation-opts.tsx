@@ -1,5 +1,6 @@
 import {createContext, useContext, useMemo} from 'react'
-import {AtpAgent, type ModerationOpts} from '@atproto/api'
+import {Client} from '@atproto/lex'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 
 import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/const'
@@ -38,16 +39,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       return undefined
     }
     return {
-      userDid,
+      /*
+       * `did`/`hiddenPosts` come from persisted storage typed as plain
+       * `string`, so brand them to the SDK's `DidString`/`AtUriString` slots.
+       */
+      userDid: userDid as ModerationOpts['userDid'],
       prefs: {
         ...moderationPrefs,
         labelers: moderationPrefs.labelers.length
           ? moderationPrefs.labelers
-          : AtpAgent.appLabelers.map(did => ({
+          : Client.appLabelers.map(did => ({
               did,
               labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
             })),
-        hiddenPosts: hiddenPosts || [],
+        hiddenPosts: (hiddenPosts ||
+          []) as ModerationOpts['prefs']['hiddenPosts'],
       },
       labelDefs,
     }

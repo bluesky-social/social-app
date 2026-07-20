@@ -1,0 +1,60 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.group.requestJoin",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Sends a request to join a group (via join link) to the group owner. Action taken by the prospective group member.",
+      "errors": [
+        {
+          "name": "ConvoLocked"
+        },
+        {
+          "name": "FollowRequired"
+        },
+        {
+          "name": "InvalidCode"
+        },
+        {
+          "name": "LinkDisabled"
+        },
+        {
+          "name": "MemberLimitReached"
+        },
+        {
+          "name": "UserKicked"
+        }
+      ],
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["code"],
+          "properties": {
+            "code": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["status"],
+          "properties": {
+            "status": {
+              "type": "string",
+              "knownValues": ["joined", "pending"]
+            },
+            "convo": {
+              "description": "The group convo joined. This is only present in the case of status=joined",
+              "type": "ref",
+              "ref": "chat.bsky.convo.defs#convoView"
+            }
+          }
+        }
+      }
+    }
+  }
+}

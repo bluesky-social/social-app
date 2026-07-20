@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
-import {isSignupQueued, useAgent, useSessionApi} from '#/state/session'
+import {isSignupQueued, usePdsClient, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
@@ -15,6 +15,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
 import {IS_IOS, IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {com} from '#/lexicons'
 
 const COL_WIDTH = 400
 
@@ -24,8 +25,8 @@ export function SignupQueued() {
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
   const onboardingDispatch = useOnboardingDispatch()
-  const {logoutCurrentAccount} = useSessionApi()
-  const agent = useAgent()
+  const {logoutCurrentAccount, refreshSession} = useSessionApi()
+  const pdsClient = usePdsClient()
 
   const [isProcessing, setProcessing] = useState(false)
   const [estimatedTime, setEstimatedTime] = useState<string | undefined>(
@@ -38,18 +39,23 @@ export function SignupQueued() {
   const checkStatus = useCallback(async () => {
     setProcessing(true)
     try {
-      const res = await agent.com.atproto.temp.checkSignupQueue()
-      if (res.data.activated) {
+      const res = await pdsClient.call(
+        com.atproto.temp.checkSignupQueue,
+        {},
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
+      if (res.activated) {
         // ready to go, exchange the access token for a usable one and kick off onboarding
-        await agent.sessionManager.refreshSession()
-        if (!isSignupQueued(agent.session?.accessJwt)) {
+        const refreshed = await refreshSession()
+        if (!isSignupQueued(refreshed?.accessJwt)) {
           onboardingDispatch({type: 'start'})
         }
       } else {
         // not ready, update UI
-        setEstimatedTime(msToString(res.data.estimatedTimeMs))
-        if (typeof res.data.placeInQueue !== 'undefined') {
-          setPlaceInQueue(Math.max(res.data.placeInQueue, 1))
+        setEstimatedTime(msToString(res.estimatedTimeMs))
+        if (typeof res.placeInQueue !== 'undefined') {
+          setPlaceInQueue(Math.max(res.placeInQueue, 1))
         }
       }
     } catch (e: any) {
@@ -62,7 +68,8 @@ export function SignupQueued() {
     setEstimatedTime,
     setPlaceInQueue,
     onboardingDispatch,
-    agent,
+    pdsClient,
+    refreshSession,
   ])
 
   useEffect(() => {

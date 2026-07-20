@@ -1,5 +1,5 @@
 import {type TextInput} from 'react-native'
-import {type RichText} from '@atproto/api'
+import {type RichText} from '@bsky.app/sdk/richtext'
 
 export type TextInputRef = {
   focus: () => void

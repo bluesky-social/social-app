@@ -658,11 +658,6 @@
       "count": 3
     }
   },
-  "src/lib/api/feed/demo.ts": {
-    "typescript/require-await": {
-      "count": 2
-    }
-  },
   "src/lib/api/feed/posts.ts": {
     "typescript/require-await": {
       "count": 1
@@ -884,9 +879,6 @@
       "count": 1
     },
     "typescript/no-misused-promises": {
-      "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
       "count": 1
     }
   },
@@ -1176,9 +1168,6 @@
     },
     "typescript/no-misused-promises": {
       "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 1
     }
   },
   "src/screens/Settings/components/DeleteAccountDialog.tsx": {
@@ -1288,9 +1277,6 @@
   "src/state/messages/events/agent.ts": {
     "typescript/no-explicit-any": {
       "count": 2
-    },
-    "typescript/no-floating-promises": {
-      "count": 4
     },
     "typescript/no-unsafe-member-access": {
       "count": 2
@@ -1494,11 +1480,6 @@
       "count": 1
     }
   },
-  "src/state/queries/suggested-follows.ts": {
-    "no-unused-vars": {
-      "count": 1
-    }
-  },
   "src/state/queries/threadgate/index.ts": {
     "typescript/no-explicit-any": {
       "count": 1
@@ -1521,11 +1502,6 @@
       "count": 1
     },
     "typescript/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
-  "src/state/session/agent.ts": {
-    "typescript/no-explicit-any": {
       "count": 1
     }
   },
@@ -1777,7 +1753,7 @@
       "count": 8
     },
     "typescript/no-unsafe-member-access": {
-      "count": 9
+      "count": 8
     }
   },
   "src/view/com/profile/ProfileFollowers.tsx": {
@@ -1916,6 +1892,17 @@
     },
     "typescript/no-unsafe-member-access": {
       "count": 3
+    }
+  },
+  "webpack.config.js": {
+    "import/no-nodejs-modules": {
+      "count": 1
+    },
+    "typescript/no-unsafe-call": {
+      "count": 11
+    },
+    "typescript/no-unsafe-member-access": {
+      "count": 30
     }
   }
 }

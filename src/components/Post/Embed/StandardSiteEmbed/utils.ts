@@ -1,29 +1,31 @@
-import {
-  type AppBskyEmbedExternal,
-  AtUri,
-  type ComAtprotoRepoStrongRef,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 
-export function isStandardSiteDocumentUri(ref: ComAtprotoRepoStrongRef.Main) {
+import {type app, type com} from '#/lexicons'
+
+export function isStandardSiteDocumentUri(
+  ref: com.atproto.repo.strongRef.Main,
+) {
   return new AtUri(ref.uri).collection.startsWith('site.standard.document')
 }
 
 export function isStandardSitePublicationUri(
-  ref: ComAtprotoRepoStrongRef.Main,
+  ref: com.atproto.repo.strongRef.Main,
 ) {
   return new AtUri(ref.uri).collection.startsWith('site.standard.publication')
 }
 
-export function isStandardSiteUri(ref: ComAtprotoRepoStrongRef.Main) {
+export function isStandardSiteUri(ref: com.atproto.repo.strongRef.Main) {
   return new AtUri(ref.uri).collection.startsWith('site.standard.')
 }
 
-export function isStandardSiteEmbed(view: AppBskyEmbedExternal.ViewExternal) {
+export function isStandardSiteEmbed(
+  view: app.bsky.embed.external.ViewExternal,
+) {
   return view.associatedRefs?.some(ref => isStandardSiteUri(ref))
 }
 
 export function isStandardSitePublicationEmbed(
-  view: AppBskyEmbedExternal.ViewExternal,
+  view: app.bsky.embed.external.ViewExternal,
 ) {
   return (
     view.associatedRefs?.some(

@@ -1,11 +1,10 @@
 import {useCallback, useEffect, useImperativeHandle, useMemo} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {
-  type AppBskyLabelerDefs,
   type InterpretedLabelValueDefinition,
   interpretLabelValueDefinitions,
   type ModerationOpts,
-} from '@atproto/api'
+} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -21,13 +20,14 @@ import {Loader} from '#/components/Loader'
 import {LabelerLabelPreference} from '#/components/moderation/LabelPreference'
 import {Text} from '#/components/Typography'
 import {IS_IOS, IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 import {ErrorState} from '../ErrorState'
 import {type SectionRef} from './types'
 
 interface LabelsSectionProps {
   ref: React.Ref<SectionRef>
   isLabelerLoading: boolean
-  labelerInfo: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  labelerInfo: app.bsky.labeler.defs.LabelerViewDetailed | undefined
   labelerError: Error | null
   moderationOpts: ModerationOpts
   scrollElRef: ListRef
@@ -161,7 +161,7 @@ export function LabelerListHeader({
 }: {
   isLabelerLoading: boolean
   labelerError?: Error | null
-  labelerInfo?: AppBskyLabelerDefs.LabelerViewDetailed
+  labelerInfo?: app.bsky.labeler.defs.LabelerViewDetailed
   hasValues: boolean
   isSubscribed: boolean
 }) {

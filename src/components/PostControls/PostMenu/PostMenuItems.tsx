@@ -6,13 +6,8 @@ import {
   type ViewStyle,
 } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
-  AtUri,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -97,6 +92,7 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
+import {type app} from '#/lexicons'
 
 let PostMenuItems = ({
   post,
@@ -110,17 +106,17 @@ let PostMenuItems = ({
   forceGoogleTranslate,
 }: {
   testID: string
-  post: Shadow<AppBskyFeedDefs.PostView>
+  post: Shadow<app.bsky.feed.defs.PostView>
   postFeedContext: string | undefined
   postReqId: string | undefined
-  record: AppBskyFeedPost.Record
+  record: app.bsky.feed.post.Main
   richText: RichTextAPI
   style?: StyleProp<ViewStyle>
   hitSlop?: PressableProps['hitSlop']
   size?: 'lg' | 'md' | 'sm'
   timestamp: string
-  threadgateRecord?: AppBskyFeedThreadgate.Record
-  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  threadgateRecord?: app.bsky.feed.threadgate.Main
+  onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   forceGoogleTranslate: boolean
 }): React.ReactNode => {

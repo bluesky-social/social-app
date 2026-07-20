@@ -1,11 +1,11 @@
 import {useEffect, useMemo, useRef, useState} from 'react'
 import {Platform, Text as RNText, View} from 'react-native'
-import {RichText} from '@atproto/api'
 import {parseLanguageString} from '@atproto/syntax'
 import {
   guessLanguageAsync,
   type LanguageResult,
 } from '@bsky.app/expo-guess-language'
+import {RichText} from '@bsky.app/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 

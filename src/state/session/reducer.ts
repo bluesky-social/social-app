@@ -1,23 +1,22 @@
-import {type AtpAgent, type AtpSessionEvent} from '@atproto/api'
-
 import {unregisterPushToken} from '#/lib/notifications/notifications'
 import {logger} from '#/lib/notifications/util'
-import {createPublicAgent} from './agent'
 import {wrapSessionReducerForLogging} from './logging'
+import {type AtpSessionEvent, createPublicSessionBundle} from './session-core'
 import {type SessionAccount} from './types'
-import {createTemporaryAgentsAndResume} from './util'
+import {createTemporaryClientsAndResume} from './util'
 
-// A hack so that the reducer can't read anything from the agent.
-// From the reducer's point of view, it should be a completely opaque object.
-type OpaqueBskyAgent = {
+/*
+ * A hack so the reducer can't read anything from the session bundle. The
+ * provider stores the full `SessionBundle` here, but the reducer's static type
+ * only sees `service` (a URL, used for logging/snapshots) - structurally the
+ * bundle has more, the reducer sees less.
+ */
+type OpaqueSessionBundle = {
   readonly service: URL
-  readonly api: unknown
-  readonly app: unknown
-  readonly com: unknown
 }
 
 type AgentState = {
-  readonly agent: OpaqueBskyAgent
+  readonly agent: OpaqueSessionBundle
   readonly did: string | undefined
 }
 
@@ -30,14 +29,32 @@ export type State = {
 export type Action =
   | {
       type: 'received-agent-event'
-      agent: OpaqueBskyAgent
+      agent: OpaqueSessionBundle
       accountDid: string
       refreshedAccount: SessionAccount | undefined
       sessionEvent: AtpSessionEvent
     }
   | {
       type: 'switched-to-account'
-      newAgent: OpaqueBskyAgent
+      newAgent: OpaqueSessionBundle
+      newAccount: SessionAccount
+    }
+  | {
+      /*
+       * Swap the current bundle in place, keeping the current did and replacing
+       * the matching account entry, without persisting (avoid write cycles).
+       * `PasswordSession` cannot be patched in place, so the provider rebuilds a
+       * fresh bundle from a set of tokens and swaps it in. Two producers:
+       *
+       * - Same-did cross-tab sync: the leader tab refreshed and broadcast the
+       *   new tokens; this tab rebuilds from them (no network).
+       * - Expiry rescue: the current bundle's refresh token expired, but a
+       *   newer generation for the same did is known (from reducer state or a
+       *   fresh persisted re-read), so the provider rebuilds from that newer
+       *   generation instead of logging out (see onSessionChange in index.tsx).
+       */
+      type: 'replaced-current-bundle'
+      newAgent: OpaqueSessionBundle
       newAccount: SessionAccount
     }
   | {
@@ -63,7 +80,7 @@ export type Action =
 
 function createPublicAgentState(): AgentState {
   return {
-    agent: createPublicAgent(),
+    agent: createPublicSessionBundle(),
     did: undefined,
   }
 }
@@ -80,13 +97,24 @@ let reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'received-agent-event': {
       const {agent, accountDid, refreshedAccount, sessionEvent} = action
-      if (
-        refreshedAccount === undefined &&
-        agent !== state.currentAgentState.agent
-      ) {
-        // If the session got cleared out (e.g. due to expiry or network error) but
-        // this account isn't the active one, don't clear it out at this time.
-        // This way, if the problem is transient, it'll work on next resume.
+      if (agent !== state.currentAgentState.agent) {
+        /*
+         * Any event from a bundle that is not the current one is dropped
+         * entirely, in BOTH directions:
+         *
+         * - A clear (expiry/network-error, refreshedAccount === undefined) from
+         *   a stale background bundle must not log the current user out. If the
+         *   problem is transient, it works on the next resume.
+         * - An update (refreshedAccount present) from a stale bundle must not
+         *   resurrect tokens: a refresh that completes after this bundle was
+         *   logged out / switched away from would otherwise write fresh tokens
+         *   back into a soft-logged-out (or switched-away) account entry.
+         *
+         * Trade-off: a background bundle's in-flight refresh that lands inside
+         * the disposal window now has its (already server-side-rotated) tokens
+         * discarded. The stored generation stays valid within the PDS 2h grace
+         * window, so this is strictly better than the resurrection bug.
+         */
         return state
       }
       if (sessionEvent === 'network-error') {
@@ -138,13 +166,27 @@ let reducer = (state: State, action: Action): State => {
         needsPersist: true,
       }
     }
+    case 'replaced-current-bundle': {
+      const {newAgent, newAccount} = action
+      return {
+        ...state,
+        currentAgentState: {
+          did: state.currentAgentState.did,
+          agent: newAgent,
+        },
+        accounts: state.accounts.map(a =>
+          a.did === newAccount.did ? newAccount : a,
+        ),
+        needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
+      }
+    }
     case 'removed-account': {
       const {accountDid} = action
 
       // side effect
       const account = state.accounts.find(a => a.did === accountDid)
       if (account) {
-        createTemporaryAgentsAndResume([account])
+        createTemporaryClientsAndResume([account])
           .then(agents => unregisterPushToken(agents))
           .then(() =>
             logger.debug('Push token unregistered', {did: accountDid}),
@@ -172,7 +214,7 @@ let reducer = (state: State, action: Action): State => {
       // side effect
       const account = state.accounts.find(a => a.did === accountDid)
       if (account && accountDid) {
-        createTemporaryAgentsAndResume([account])
+        createTemporaryClientsAndResume([account])
           .then(agents => unregisterPushToken(agents))
           .then(() =>
             logger.debug('Push token unregistered', {did: accountDid}),
@@ -200,7 +242,7 @@ let reducer = (state: State, action: Action): State => {
       }
     }
     case 'logged-out-every-account': {
-      createTemporaryAgentsAndResume(state.accounts)
+      createTemporaryClientsAndResume(state.accounts)
         .then(agents => unregisterPushToken(agents))
         .then(() => logger.debug('Push token unregistered'))
         .catch(err => {
@@ -233,24 +275,14 @@ let reducer = (state: State, action: Action): State => {
     }
     case 'partial-refresh-session': {
       const {accountDid, patch} = action
-      const agent = state.currentAgentState.agent as AtpAgent
 
       /*
-       * Only mutating values that are safe. Be very careful with this.
+       * Patch only the account entry: `PasswordSession` has no public session
+       * setter, and consumers that read these fields (useAccountEmailState)
+       * read from `currentAccount` rather than the session.
        */
-      if (agent.session) {
-        agent.session.emailConfirmed =
-          patch.emailConfirmed ?? agent.session.emailConfirmed
-        agent.session.emailAuthFactor =
-          patch.emailAuthFactor ?? agent.session.emailAuthFactor
-      }
-
       return {
         ...state,
-        currentAgentState: {
-          ...state.currentAgentState,
-          agent,
-        },
         accounts: state.accounts.map(a => {
           if (a.did === accountDid) {
             return {

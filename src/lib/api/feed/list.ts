@@ -1,32 +1,33 @@
-import {
-  type Agent,
-  type AppBskyFeedDefs,
-  type AppBskyFeedGetListFeed as GetListFeed,
-} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 
+import {app} from '#/lexicons'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class ListFeedAPI implements FeedAPI {
-  agent: Agent
-  params: GetListFeed.QueryParams
+  client: Client
+  params: app.bsky.feed.getListFeed.$Params
 
   constructor({
-    agent,
+    client,
     feedParams,
   }: {
-    agent: Agent
-    feedParams: GetListFeed.QueryParams
+    client: Client
+    feedParams: app.bsky.feed.getListFeed.$Params
   }) {
-    this.agent = agent
+    this.client = client
     this.params = feedParams
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await this.agent.app.bsky.feed.getListFeed({
+  setClient(client: Client) {
+    this.client = client
+  }
+
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
+    const res = await this.client.call(app.bsky.feed.getListFeed, {
       ...this.params,
       limit: 1,
     })
-    return res.data.feed[0]
+    return res.feed[0]
   }
 
   async fetch({
@@ -36,19 +37,14 @@ export class ListFeedAPI implements FeedAPI {
     cursor: string | undefined
     limit: number
   }): Promise<FeedAPIResponse> {
-    const res = await this.agent.app.bsky.feed.getListFeed({
+    const res = await this.client.call(app.bsky.feed.getListFeed, {
       ...this.params,
       cursor,
       limit,
     })
-    if (res.success) {
-      return {
-        cursor: res.data.cursor,
-        feed: res.data.feed,
-      }
-    }
     return {
-      feed: [],
+      cursor: res.cursor,
+      feed: res.feed,
     }
   }
 }

@@ -1,10 +1,7 @@
 import {Platform, View} from 'react-native'
 import {Image} from 'expo-image'
-import {
-  type AppBskyActorDefs,
-  type AppBskyActorGetProfile,
-  type AtpAgent,
-} from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -13,7 +10,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {until} from '#/lib/async/until'
 import {isNetworkError} from '#/lib/strings/errors'
 import {RQKEY} from '#/state/queries/profile'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -24,13 +21,14 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {app, com} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function GermButton({
   germ,
   profile,
 }: {
-  germ: AppBskyActorDefs.ProfileAssociatedGerm
+  germ: app.bsky.actor.defs.ProfileAssociatedGerm
   profile: bsky.profile.AnyProfileView
 }) {
   const t = useTheme()
@@ -119,25 +117,26 @@ function GermSelfButton({did}: {did: string}) {
   const ax = useAnalytics()
   const {_} = useLingui()
   const selfExplanationDialogControl = Dialog.useDialogControl()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
+  const appviewClient = useAppviewClient()
   const queryClient = useQueryClient()
 
   const {mutate: deleteDeclaration, isPending} = useMutation({
     mutationFn: async () => {
-      const previousRecord = await agent.com.germnetwork.declaration
-        .get({
-          repo: did,
+      const previousRecord = await pdsClient
+        .get(com.germnetwork.declaration, {
+          repo: did as DidString,
           rkey: 'self',
         })
         .then(res => res.value)
         .catch(() => null)
 
-      await agent.com.germnetwork.declaration.delete({
-        repo: did,
+      await pdsClient.delete(com.germnetwork.declaration, {
+        repo: did as DidString,
         rkey: 'self',
       })
 
-      await whenAppViewReady(agent, did, res => !res.data.associated?.germ)
+      await whenAppViewReady(appviewClient, did, res => !res.associated?.germ)
 
       return previousRecord
     },
@@ -147,14 +146,15 @@ function GermSelfButton({did}: {did: string}) {
       async function undo() {
         if (!previousRecord) return
         try {
-          await agent.com.germnetwork.declaration.put(
-            {
-              repo: did,
-              rkey: 'self',
-            },
-            previousRecord,
+          await pdsClient.put(com.germnetwork.declaration, previousRecord, {
+            repo: did as DidString,
+            rkey: 'self',
+          })
+          await whenAppViewReady(
+            appviewClient,
+            did,
+            res => !!res.associated?.germ,
           )
-          await whenAppViewReady(agent, did, res => !!res.data.associated?.germ)
           await queryClient.refetchQueries({queryKey: RQKEY(did)})
 
           Toast.show(_(msg`Germ DM reconnected`))
@@ -277,7 +277,7 @@ function GermSelfButton({did}: {did: string}) {
 }
 
 function constructGermUrl(
-  declaration: AppBskyActorDefs.ProfileAssociatedGerm,
+  declaration: app.bsky.actor.defs.ProfileAssociatedGerm,
   profile: bsky.profile.AnyProfileView,
   viewerDid?: string,
 ) {
@@ -323,14 +323,17 @@ function platform() {
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  appviewClient: Client,
   actor: string,
-  fn: (res: AppBskyActorGetProfile.Response) => boolean,
+  fn: (res: app.bsky.actor.getProfile.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    () => agent.app.bsky.actor.getProfile({actor}),
+    () =>
+      appviewClient.call(app.bsky.actor.getProfile, {
+        actor: actor as DidString,
+      }),
   )
 }

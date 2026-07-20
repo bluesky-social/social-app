@@ -15,7 +15,6 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -34,6 +33,7 @@ import {Fill} from '#/components/Fill'
 import {KeepAwake} from '#/components/KeepAwake'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -85,10 +85,19 @@ function Player({
   // ensures we only load what's requested
   // when it's a youtube video, we need to allow both bsky.app and youtube.com
   const onShouldStartLoadWithRequest = useCallback(
-    (event: ShouldStartLoadRequest) =>
-      event.url === params.playerUri ||
-      (params.source.startsWith('youtube') &&
-        event.url.includes('www.youtube.com')),
+    (event: ShouldStartLoadRequest) => {
+      if (event.url === params.playerUri) return true
+      if (!params.source.startsWith('youtube')) return false
+      /*
+       * Compare the host exactly. A substring check like `includes` would also
+       * match hostile URLs such as `https://www.youtube.com.evil.com`.
+       */
+      try {
+        return new URL(event.url).hostname === 'www.youtube.com'
+      } catch {
+        return false
+      }
+    },
     [params.playerUri, params.source],
   )
 
@@ -122,7 +131,7 @@ export function ExternalPlayer({
   link,
   params,
 }: {
-  link: AppBskyEmbedExternal.ViewExternal
+  link: app.bsky.embed.external.ViewExternal
   params: EmbedPlayerParams
 }) {
   const t = useTheme()

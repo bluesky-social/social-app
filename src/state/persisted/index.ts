@@ -31,6 +31,18 @@ export function get<K extends keyof Schema>(key: K): Schema[K] {
 }
 get satisfies PersistedApi['get']
 
+/**
+ * Native is single-instance: there is no other tab that could have written
+ * newer data behind our back, so the in-memory `_state` is already the truth
+ * and a synchronous fresh read is impossible anyway (AsyncStorage is async).
+ * This mirrors {@link get}; the web implementation is the one that actually
+ * re-reads the store.
+ */
+export function readLatest<K extends keyof Schema>(key: K): Schema[K] {
+  return _state[key]
+}
+readLatest satisfies PersistedApi['readLatest']
+
 export async function write<K extends keyof Schema>(
   key: K,
   value: Schema[K],

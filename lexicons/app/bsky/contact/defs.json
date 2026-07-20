@@ -1,0 +1,57 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.contact.defs",
+  "defs": {
+    "matchAndContactIndex": {
+      "description": "Associates a profile with the positional index of the contact import input in the call to `app.bsky.contact.importContacts`, so clients can know which phone caused a particular match.",
+      "type": "object",
+      "required": ["match", "contactIndex"],
+      "properties": {
+        "match": {
+          "description": "Profile of the matched user.",
+          "type": "ref",
+          "ref": "app.bsky.actor.defs#profileView"
+        },
+        "contactIndex": {
+          "description": "The index of this match in the import contact input.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999
+        }
+      }
+    },
+    "syncStatus": {
+      "type": "object",
+      "required": ["syncedAt", "matchesCount"],
+      "properties": {
+        "syncedAt": {
+          "description": "Last date when contacts where imported.",
+          "type": "string",
+          "format": "datetime"
+        },
+        "matchesCount": {
+          "description": "Number of existing contact matches resulting of the user imports and of their imported contacts having imported the user. Matches stop being counted when the user either follows the matched contact or dismisses the match.",
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "notification": {
+      "description": "A stash object to be sent via bsync representing a notification to be created.",
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": {
+          "description": "The DID of who this notification comes from.",
+          "type": "string",
+          "format": "did"
+        },
+        "to": {
+          "description": "The DID of who this notification should go to.",
+          "type": "string",
+          "format": "did"
+        }
+      }
+    }
+  }
+}

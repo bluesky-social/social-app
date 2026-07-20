@@ -1,6 +1,5 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
@@ -35,6 +34,7 @@ import {ListFooter} from '#/components/Lists'
 import {SearchError} from '#/components/SearchError'
 import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 let SearchResults = ({
@@ -265,7 +265,7 @@ type SearchResultSlice =
   | {
       type: 'post'
       key: string
-      post: AppBskyFeedDefs.PostView
+      post: app.bsky.feed.defs.PostView
     }
   | {
       type: 'loadingMore'
@@ -477,7 +477,7 @@ function SearchPost({
 }: {
   from: Metrics['search:result:press']['tab']
   position: Metrics['search:result:press']['position']
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
 }) {
   const ax = useAnalytics()
 
@@ -645,7 +645,7 @@ let SearchScreenFeedsResults = ({
             item,
             index,
           }: {
-            item: AppBskyFeedDefs.GeneratorView
+            item: app.bsky.feed.defs.GeneratorView
             index: number
           }) => (
             <View
@@ -658,7 +658,7 @@ let SearchScreenFeedsResults = ({
               <SearchFeedCard position={index} view={item} />
             </View>
           )}
-          keyExtractor={(item: AppBskyFeedDefs.GeneratorView) => item.uri}
+          keyExtractor={(item: app.bsky.feed.defs.GeneratorView) => item.uri}
           desktopFixedHeight
           ListFooterComponent={<ListFooter />}
         />
@@ -677,7 +677,7 @@ function SearchFeedCard({
   view,
 }: {
   position: number
-  view: AppBskyFeedDefs.GeneratorView
+  view: app.bsky.feed.defs.GeneratorView
 }) {
   const ax = useAnalytics()
 

@@ -1,6 +1,5 @@
 import {memo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
@@ -19,6 +18,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 
 type ReportDialogParams = {
   convoId: string
@@ -113,7 +113,7 @@ function DoneStep({
 }: {
   convoId: string
   currentScreen: 'list' | 'conversation'
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
 }) {
   const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()

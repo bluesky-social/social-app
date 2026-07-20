@@ -1,8 +1,9 @@
-import {type AppBskyActorDefs} from '@atproto/api'
+import {setPostInteractionSettings} from '@bsky.app/sdk'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {preferencesQueryKey} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import {usePdsClient} from '#/state/session'
+import {type app} from '#/lexicons'
 
 export function usePostInteractionSettingsMutation({
   onError,
@@ -12,10 +13,10 @@ export function usePostInteractionSettingsMutation({
   onSettled?: () => void
 } = {}) {
   const qc = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
   return useMutation({
-    async mutationFn(props: AppBskyActorDefs.PostInteractionSettingsPref) {
-      await agent.setPostInteractionSettings(props)
+    async mutationFn(props: app.bsky.actor.defs.PostInteractionSettingsPref) {
+      await client.call(setPostInteractionSettings, props)
     },
     async onSuccess() {
       await qc.invalidateQueries({

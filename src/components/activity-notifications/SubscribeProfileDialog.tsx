@@ -1,11 +1,7 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyNotificationDefs,
-  type AppBskyNotificationListActivitySubscriptions,
-  type ModerationOpts,
-  type Un$Typed,
-} from '@atproto/api'
+import {type Un$Typed} from '@atproto/lex'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -20,7 +16,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {RQKEY_getActivitySubscriptions} from '#/state/queries/activity-subscriptions'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {atoms as a, platform, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {
@@ -37,6 +33,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function SubscribeProfileDialog({
@@ -74,7 +71,7 @@ function DialogInner({
   const ax = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const control = Dialog.useDialogContext()
   const queryClient = useQueryClient()
   const initialState = parseActivitySubscription(
@@ -120,9 +117,9 @@ function DialogInner({
     error,
   } = useMutation({
     mutationFn: async (
-      activitySubscription: Un$Typed<AppBskyNotificationDefs.ActivitySubscription>,
+      activitySubscription: Un$Typed<app.bsky.notification.defs.ActivitySubscription>,
     ) => {
-      await agent.app.bsky.notification.putActivitySubscription({
+      await appviewClient.call(app.bsky.notification.putActivitySubscription, {
         subject: profile.did,
         activitySubscription,
       })
@@ -148,7 +145,7 @@ function DialogInner({
           queryClient.setQueryData(
             RQKEY_getActivitySubscriptions,
             (
-              old?: InfiniteData<AppBskyNotificationListActivitySubscriptions.OutputSchema>,
+              old?: InfiniteData<app.bsky.notification.listActivitySubscriptions.$OutputBody>,
             ) => {
               if (!old) return old
               return {
@@ -308,8 +305,8 @@ function DialogInner({
 }
 
 function parseActivitySubscription(
-  sub?: AppBskyNotificationDefs.ActivitySubscription,
-): Un$Typed<AppBskyNotificationDefs.ActivitySubscription> {
+  sub?: app.bsky.notification.defs.ActivitySubscription,
+): Un$Typed<app.bsky.notification.defs.ActivitySubscription> {
   if (!sub) return {post: false, reply: false}
   const {post, reply} = sub
   return {post, reply}

@@ -1,0 +1,37 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.unspecced.getSuggestedFeeds",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get a list of suggested feeds",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 25,
+            "default": 10
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["feeds"],
+          "properties": {
+            "feeds": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.feed.defs#generatorView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

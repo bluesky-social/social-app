@@ -1,4 +1,4 @@
-import {DEFAULT_LABEL_SETTINGS} from '@atproto/api'
+import {DEFAULT_LABEL_SETTINGS} from '@bsky.app/sdk'
 
 import {
   type ThreadViewPreferences,

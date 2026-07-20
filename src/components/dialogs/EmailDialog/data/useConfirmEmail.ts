@@ -1,13 +1,15 @@
 import {useMutation} from '@tanstack/react-query'
 
-import {useAgent, useSession} from '#/state/session'
+import {usePdsClient, useSession, useSessionApi} from '#/state/session'
+import {com} from '#/lexicons'
 
 export function useConfirmEmail({
   onSuccess,
   onError,
 }: {onSuccess?: () => void; onError?: () => void} = {}) {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const {currentAccount} = useSession()
+  const {refreshSession} = useSessionApi()
 
   return useMutation({
     mutationFn: async ({token}: {token: string}) => {
@@ -15,12 +17,17 @@ export function useConfirmEmail({
         throw new Error('No email found for the current account')
       }
 
-      await agent.com.atproto.server.confirmEmail({
-        email: currentAccount.email.trim(),
-        token: token.trim(),
-      })
+      await pdsClient.call(
+        com.atproto.server.confirmEmail,
+        {
+          email: currentAccount.email.trim(),
+          token: token.trim(),
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       // will update session state at root of app
-      await agent.resumeSession(agent.session!)
+      await refreshSession()
     },
     onSuccess,
     onError,

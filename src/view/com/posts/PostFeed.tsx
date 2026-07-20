@@ -10,14 +10,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {
-  type AppBskyActorDefs,
-  AppBskyEmbedExternal,
-  AppBskyEmbedGallery,
-  AppBskyEmbedImages,
-  AppBskyEmbedVideo,
-  type AppBskyFeedDefs,
-} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -43,7 +35,7 @@ import {
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {useSession} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {useSelectedFeed} from '#/state/shell/selected-feed'
 import {List, type ListRef} from '#/view/com/util/List'
@@ -71,6 +63,8 @@ import {
   isStatusValidForViewers,
   useLiveNowConfig,
 } from '#/features/liveNow'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {ComposerPrompt} from '../feeds/ComposerPrompt'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
@@ -228,7 +222,7 @@ let PostFeed = ({
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => React.ReactElement
   extraData?: any
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: app.bsky.actor.defs.SavedFeed
   initialNumToRender?: number
   isVideoFeed?: boolean
   lastFetchDate?: () => number
@@ -236,6 +230,7 @@ let PostFeed = ({
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const queryClient = useQueryClient()
+  const client = useAppviewClient()
   const {currentAccount, hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
@@ -251,7 +246,7 @@ let PostFeed = ({
     () => new Set<string>(),
   )
   const onPressShowLess = useCallback(
-    (interaction: AppBskyFeedDefs.Interaction) => {
+    (interaction: app.bsky.feed.defs.Interaction) => {
       if (interaction.item) {
         const uri = interaction.item
         setHasPressedShowLessUris(prev => new Set([...prev, uri]))
@@ -300,7 +295,7 @@ let PostFeed = ({
     }
 
     try {
-      if (await pollLatest(data.pages[0])) {
+      if (await pollLatest(data.pages[0], client)) {
         if (isEmpty) {
           void refetch()
         } else {
@@ -452,7 +447,7 @@ let PostFeed = ({
               )
               if (
                 item &&
-                AppBskyEmbedVideo.isView(item.post.embed) &&
+                bsky.isType(app.bsky.embed.video.view, item.post.embed) &&
                 !blockedOrMutedAuthors.includes(item.post.author.did)
               ) {
                 videos.push({
@@ -957,13 +952,13 @@ let PostFeed = ({
 
       // Events that should fire exactly once for every new post, regardless of
       // its position within a slice or video grid row.
-      const onPostSeen = (post: AppBskyFeedDefs.PostView) => {
+      const onPostSeen = (post: app.bsky.feed.defs.PostView) => {
         if (seenPerPostUrisRef.current.has(post.uri)) return
         seenPerPostUrisRef.current.add(post.uri)
 
         // Standard site embed view tracking
         if (
-          AppBskyEmbedExternal.isView(post.embed) &&
+          bsky.isType(app.bsky.embed.external.view, post.embed) &&
           isStandardSiteEmbed(post.embed.external)
         ) {
           ax.metric('embed:standardSite:view', {url: post.embed.external.uri})
@@ -971,13 +966,21 @@ let PostFeed = ({
 
         // Photo embed impression tracking
         if (
-          AppBskyEmbedImages.isView(post.embed) ||
-          AppBskyEmbedGallery.isView(post.embed)
+          bsky.isType(app.bsky.embed.images.view, post.embed) ||
+          bsky.isType(app.bsky.embed.gallery.view, post.embed)
         ) {
-          const totalImages = AppBskyEmbedGallery.isView(post.embed)
-            ? post.embed.items.filter(AppBskyEmbedGallery.isViewImage).length
+          const totalImages = bsky.isType(
+            app.bsky.embed.gallery.view,
+            post.embed,
+          )
+            ? post.embed.items.filter(item =>
+                bsky.isType(app.bsky.embed.gallery.viewImage, item),
+              ).length
             : post.embed.images.length
-          const useExpandedLayout = AppBskyEmbedGallery.isView(post.embed)
+          const useExpandedLayout = bsky.isType(
+            app.bsky.embed.gallery.view,
+            post.embed,
+          )
             ? totalImages > 4
             : ax.features.enabled(ax.features.PostGalleryEmbedEnable)
           const layout =

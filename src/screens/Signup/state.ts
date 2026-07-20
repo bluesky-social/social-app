@@ -1,9 +1,5 @@
 import {createContext, useCallback, useContext} from 'react'
 import {LayoutAnimation} from 'react-native'
-import {
-  ComAtprotoServerCreateAccount,
-  type ComAtprotoServerDescribeServer,
-} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
@@ -11,11 +7,13 @@ import {DEFAULT_SERVICE} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {type AnalyticsContextType, useAnalytics} from '#/analytics'
+import {com} from '#/lexicons'
 
-export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
+export type ServiceDescription = com.atproto.server.describeServer.$OutputBody
 
 const date = new Date()
 date.setFullYear(date.getFullYear() - 20) // default to 20 years ago
@@ -341,7 +339,13 @@ export function useSubmitSignup() {
       } catch (err) {
         const e = err as Error
         let errMsg = e.toString()
-        if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
+        if (
+          isXrpcErrorOf(
+            com.atproto.server.createAccount,
+            e,
+            'InvalidInviteCode',
+          )
+        ) {
           dispatch({
             type: 'setError',
             value: l`Invite code not accepted. Check that you input it correctly and try again.`,

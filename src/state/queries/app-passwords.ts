@@ -1,39 +1,47 @@
-import {type ComAtprotoServerCreateAppPassword} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent} from '../session'
+import {com} from '#/lexicons'
+import {usePdsClient} from '../session'
 
 const RQKEY_ROOT = 'app-passwords'
 export const RQKEY = () => [RQKEY_ROOT]
 
 export function useAppPasswordsQuery() {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(),
     queryFn: async () => {
-      const res = await agent.com.atproto.server.listAppPasswords({})
-      return res.data.passwords
+      const data = await pdsClient.call(
+        com.atproto.server.listAppPasswords,
+        {},
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
+      return data.passwords
     },
   })
 }
 
 export function useAppPasswordCreateMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   return useMutation<
-    ComAtprotoServerCreateAppPassword.OutputSchema,
+    com.atproto.server.createAppPassword.$OutputBody,
     Error,
     {name: string; privileged: boolean}
   >({
     mutationFn: async ({name, privileged}) => {
-      return (
-        await agent.com.atproto.server.createAppPassword({
+      return await pdsClient.call(
+        com.atproto.server.createAppPassword,
+        {
           name,
           privileged,
-        })
-      ).data
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
     },
     onSuccess() {
       queryClient.invalidateQueries({
@@ -45,12 +53,17 @@ export function useAppPasswordCreateMutation() {
 
 export function useAppPasswordDeleteMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   return useMutation<void, Error, {name: string}>({
     mutationFn: async ({name}) => {
-      await agent.com.atproto.server.revokeAppPassword({
-        name,
-      })
+      await pdsClient.call(
+        com.atproto.server.revokeAppPassword,
+        {
+          name,
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
     },
     onSuccess() {
       queryClient.invalidateQueries({

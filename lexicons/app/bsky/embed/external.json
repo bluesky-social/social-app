@@ -1,0 +1,188 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.embed.external",
+  "defs": {
+    "main": {
+      "type": "object",
+      "description": "A representation of some externally linked content (eg, a URL and 'card'), embedded in a Bluesky record (eg, a post).",
+      "required": ["external"],
+      "properties": {
+        "external": {
+          "type": "ref",
+          "ref": "#external"
+        }
+      }
+    },
+    "external": {
+      "type": "object",
+      "required": ["uri", "title", "description"],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "uri"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "thumb": {
+          "type": "blob",
+          "accept": ["image/*"],
+          "maxSize": 1000000
+        },
+        "associatedRefs": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "com.atproto.repo.strongRef"
+          },
+          "description": "StrongRefs (uri+cid) of the Atmosphere records that backed this view."
+        }
+      }
+    },
+    "view": {
+      "type": "object",
+      "required": ["external"],
+      "properties": {
+        "external": {
+          "type": "ref",
+          "ref": "#viewExternal"
+        }
+      }
+    },
+    "viewExternal": {
+      "type": "object",
+      "required": ["uri", "title", "description"],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "uri"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "thumb": {
+          "type": "string",
+          "format": "uri"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the external content was created, if available. Example: a publication date, for an article."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the external content was updated, if available."
+        },
+        "readingTime": {
+          "type": "integer",
+          "description": "Estimated reading time in minutes, if applicable and available."
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "com.atproto.label.defs#label"
+          }
+        },
+        "source": {
+          "type": "ref",
+          "ref": "#viewExternalSource"
+        },
+        "associatedRefs": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "com.atproto.repo.strongRef"
+          },
+          "description": "StrongRefs (uri+cid) of the Atmosphere records that backed this view."
+        },
+        "associatedProfiles": {
+          "type": "array",
+          "items": {
+            "type": "ref",
+            "ref": "app.bsky.actor.defs#profileViewBasic"
+          },
+          "description": "Profiles of the owners of the Atmosphere records that backed this view."
+        }
+      }
+    },
+    "viewExternalSource": {
+      "type": "object",
+      "description": "The source of an external embed, such as a standard.site publication.",
+      "required": ["uri", "title"],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "uri",
+          "description": "URI of the source, if available. Example: the https:// URL of a site.standard.publication record."
+        },
+        "icon": {
+          "type": "string",
+          "format": "uri",
+          "description": "Fully-qualified URL where an icon representing the source can be fetched. For example, CDN location provided by the App View."
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "theme": {
+          "type": "ref",
+          "ref": "#viewExternalSourceTheme"
+        }
+      }
+    },
+    "viewExternalSourceTheme": {
+      "type": "object",
+      "description": "The theme colors of an external source, such as a site.standard.publication. These colors may be used when rendering an embed from that source.",
+      "properties": {
+        "backgroundRGB": {
+          "type": "ref",
+          "ref": "#colorRGB"
+        },
+        "foregroundRGB": {
+          "type": "ref",
+          "ref": "#colorRGB"
+        },
+        "accentRGB": {
+          "type": "ref",
+          "ref": "#colorRGB"
+        },
+        "accentForegroundRGB": {
+          "type": "ref",
+          "ref": "#colorRGB"
+        }
+      }
+    },
+    "colorRGB": {
+      "type": "object",
+      "description": "RGB color definition, inspired by site.standard.theme.color#rgb",
+      "required": ["r", "g", "b"],
+      "properties": {
+        "r": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "g": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "b": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        }
+      }
+    }
+  }
+}

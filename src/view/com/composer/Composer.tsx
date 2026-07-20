@@ -46,15 +46,9 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as FileSystem from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {
-  AppBskyDraftCreateDraft,
-  AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
-  type AtpAgent,
-  AtUri,
-  ChatBskyGroupDefs,
-  type RichText,
-} from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {AtUri, type AtUriString} from '@atproto/syntax'
+import {type RichText} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -79,6 +73,7 @@ import {useCallOnce} from '#/lib/once'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
@@ -96,8 +91,11 @@ import {
 } from '#/state/preferences/languages'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
-import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
-import {useAgent, useSession} from '#/state/session'
+import {
+  resolveLinkQueryOptions,
+  useResolveClients,
+} from '#/state/queries/resolve-link'
+import {useLexClient, usePdsClient, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
@@ -144,6 +142,8 @@ import {
   IS_WEB_SAFARI,
 } from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
+import {app, chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   draftToComposerPosts,
@@ -267,9 +267,12 @@ export const ComposePost = ({
   const {currentAccount} = useSession()
   const t = useTheme()
   const ax = useAnalytics()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
+  const appviewClient = useLexClient()
+  const resolveClients = useResolveClients()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
+  const currentDispatchUrl = currentAccount!.pdsUrl ?? currentAccount!.service
   const {closeComposer} = useComposerControls()
   const {t: l, i18n} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -462,14 +465,23 @@ export const ComposePost = ({
             },
           })
         },
-        agent,
+        pdsClient,
+        currentDispatchUrl,
         currentDid,
         abortController.signal,
         i18n,
         telemetry,
       )
     },
-    [l, i18n, agent, currentDid, composerDispatch, ax.metric],
+    [
+      l,
+      i18n,
+      pdsClient,
+      currentDispatchUrl,
+      currentDid,
+      composerDispatch,
+      ax.metric,
+    ],
   )
 
   const onInitVideo = useNonReactiveCallback(() => {
@@ -633,7 +645,8 @@ export const ComposePost = ({
               },
             })
           },
-          agent,
+          pdsClient,
+          currentDispatchUrl,
           currentDid,
           abortController.signal,
           i18n,
@@ -646,7 +659,15 @@ export const ComposePost = ({
         })
       }
     },
-    [l, i18n, agent, currentDid, composerDispatch, ax.metric],
+    [
+      l,
+      i18n,
+      pdsClient,
+      currentDispatchUrl,
+      currentDid,
+      composerDispatch,
+      ax.metric,
+    ],
   )
 
   const handleSelectDraft = useCallback(
@@ -719,7 +740,7 @@ export const ComposePost = ({
 
   const getDraftSaveError = useCallback(
     (e: unknown): string => {
-      if (e instanceof AppBskyDraftCreateDraft.DraftLimitReachedError) {
+      if (isXrpcErrorOf(app.bsky.draft.createDraft, e, 'DraftLimitReached')) {
         return l`You've reached the maximum number of drafts`
       }
       return l`Failed to save draft`
@@ -951,14 +972,14 @@ export const ComposePost = ({
     .map(post => post.embed.link!.uri)
   const linkQueries = useQueries({
     queries: linkUris.map(uri => ({
-      ...resolveLinkQueryOptions(agent, uri),
+      ...resolveLinkQueryOptions(resolveClients, uri),
       enabled: false,
     })),
   })
   const hasUnavailableChatInvite = linkQueries.some(
     q =>
       q.data?.type === 'chat-invite' &&
-      !ChatBskyGroupDefs.isJoinLinkPreviewView(q.data.view),
+      !bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, q.data.view),
   )
 
   const canPost =
@@ -1042,12 +1063,16 @@ export const ComposePost = ({
     try {
       logger.info(`composer: posting...`)
       postUri = (
-        await apilib.post(agent, queryClient, {
-          thread: filteredThread,
-          replyTo: replyTo?.uri,
-          onStateChange: setPublishingStage,
-          langs: currentLanguages,
-        })
+        await apilib.post(
+          {pdsClient, appviewClient, resolveClients},
+          queryClient,
+          {
+            thread: filteredThread,
+            replyTo: replyTo?.uri,
+            onStateChange: setPublishingStage,
+            langs: currentLanguages,
+          },
+        )
       ).uris[0]
 
       // Fire published event for every video that made it into the post.
@@ -1071,23 +1096,26 @@ export const ComposePost = ({
             5,
             _e => true,
             async () => {
-              const res = await agent.app.bsky.unspecced.getPostThreadV2({
-                anchor: postUri!,
-                above: false,
-                below: filteredThread.posts.length - 1,
-                branchingFactor: 1,
-              })
-              if (res.data.thread.length !== filteredThread.posts.length) {
+              const res = await appviewClient.call(
+                app.bsky.unspecced.getPostThreadV2,
+                {
+                  anchor: postUri! as AtUriString,
+                  above: false,
+                  below: filteredThread.posts.length - 1,
+                  branchingFactor: 1,
+                },
+              )
+              if (res.thread.length !== filteredThread.posts.length) {
                 throw new Error(`composer: app view is not ready`)
               }
               if (
-                !res.data.thread.every(p =>
-                  AppBskyUnspeccedDefs.isThreadItemPost(p.value),
+                !res.thread.every(p =>
+                  bsky.isType(app.bsky.unspecced.defs.threadItemPost, p.value),
                 )
               ) {
                 throw new Error(`composer: app view returned non-post items`)
               }
-              return res.data.thread
+              return res.thread
             },
             1e3,
           )
@@ -1154,7 +1182,7 @@ export const ComposePost = ({
           const resolved = q.data
           if (
             resolved?.type === 'chat-invite' &&
-            ChatBskyGroupDefs.isJoinLinkPreviewView(resolved.view)
+            bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, resolved.view)
           ) {
             ax.metric('groupchat:inviteLink:shared', {
               convoId: resolved.view.convoId,
@@ -1190,10 +1218,10 @@ export const ComposePost = ({
     setLangPrefs.savePostLanguageToHistory()
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-      void whenAppViewReady(agent, initQuote.uri, res => {
-        const anchor = res.data.thread.at(0)
+      void whenAppViewReady(appviewClient, initQuote.uri, res => {
+        const anchor = res.thread.at(0)
         if (
-          AppBskyUnspeccedDefs.isThreadItemPost(anchor?.value) &&
+          bsky.isType(app.bsky.unspecced.defs.threadItemPost, anchor?.value) &&
           anchor.value.post.quoteCount !== initQuote.quoteCount
         ) {
           onPost?.(postUri)
@@ -1237,7 +1265,9 @@ export const ComposePost = ({
   }, [
     l,
     ax,
-    agent,
+    pdsClient,
+    appviewClient,
+    resolveClients,
     canPost,
     isPublishing,
     currentLanguages,
@@ -2449,17 +2479,17 @@ function useKeyboardVerticalOffset() {
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  appviewClient: Client,
   uri: string,
-  fn: (res: AppBskyUnspeccedGetPostThreadV2.Response) => boolean,
+  fn: (res: app.bsky.unspecced.getPostThreadV2.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
     () =>
-      agent.app.bsky.unspecced.getPostThreadV2({
-        anchor: uri,
+      appviewClient.call(app.bsky.unspecced.getPostThreadV2, {
+        anchor: uri as AtUriString,
         above: false,
         below: 0,
         branchingFactor: 0,

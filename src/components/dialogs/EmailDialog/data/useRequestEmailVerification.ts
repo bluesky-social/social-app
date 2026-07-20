@@ -1,13 +1,19 @@
 import {useMutation} from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import {usePdsClient} from '#/state/session'
+import {com} from '#/lexicons'
 
 export function useRequestEmailVerification() {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
 
   return useMutation({
     mutationFn: async () => {
-      await agent.com.atproto.server.requestEmailConfirmation()
+      await pdsClient.call(
+        com.atproto.server.requestEmailConfirmation,
+        undefined,
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
     },
   })
 }

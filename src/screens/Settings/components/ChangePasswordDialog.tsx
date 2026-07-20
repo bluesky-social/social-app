@@ -8,7 +8,7 @@ import * as EmailValidator from 'email-validator'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
-import {useAgent, useSession} from '#/state/session'
+import {usePdsClient, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {android, atoms as a, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -17,6 +17,7 @@ import * as TextField from '#/components/forms/TextField'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {com} from '#/lexicons'
 
 enum Stages {
   RequestCode = 'RequestCode',
@@ -44,7 +45,7 @@ export function ChangePasswordDialog({
 function Inner() {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const control = Dialog.useDialogContext()
 
   const [stage, setStage] = useState(Stages.RequestCode)
@@ -85,9 +86,14 @@ function Inner() {
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.requestPasswordReset({
-        email: currentAccount.email,
-      })
+      await pdsClient.call(
+        com.atproto.server.requestPasswordReset,
+        {
+          email: currentAccount.email,
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       setStage(Stages.ChangePassword)
     } catch (e: any) {
       if (isNetworkError(e)) {
@@ -129,10 +135,15 @@ function Inner() {
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.resetPassword({
-        token: formattedCode,
-        password: newPassword,
-      })
+      await pdsClient.call(
+        com.atproto.server.resetPassword,
+        {
+          token: formattedCode,
+          password: newPassword,
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       setStage(Stages.Done)
     } catch (e: any) {
       if (isNetworkError(e)) {

@@ -2,7 +2,6 @@ import {useState} from 'react'
 import {Keyboard, View} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyContactStartPhoneVerification} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -14,8 +13,9 @@ import {
   getDefaultCountry,
 } from '#/lib/international-telephone-codes'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {OnboardingPosition} from '#/screens/Onboarding/Layout'
 import {
   android,
@@ -34,6 +34,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {useGeolocation} from '#/geolocation'
+import {app} from '#/lexicons'
 import {isFindContactsFeatureEnabled} from '../country-allowlist'
 import {
   constructFullPhoneNumber,
@@ -56,7 +57,7 @@ export function PhoneInput({
   const {_} = useLingui()
   const ax = useAnalytics()
   const t = useTheme()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const location = useGeolocation()
   const [countryCode, setCountryCode] = useState(
     () => state.phoneCountryCode ?? getDefaultCountry(location),
@@ -78,7 +79,7 @@ export function PhoneInput({
       phoneNumber: string
     }) => {
       // sends a onetime code to the user's phone number
-      await agent.app.bsky.contact.startPhoneVerification({
+      await appviewClient.call(app.bsky.contact.startPhoneVerification, {
         phone: constructFullPhoneNumber(phoneCountryCode, phoneNumber),
       })
     },
@@ -103,12 +104,19 @@ export function PhoneInput({
           ),
         )
       } else if (
-        err instanceof
-        AppBskyContactStartPhoneVerification.RateLimitExceededError
+        isXrpcErrorOf(
+          app.bsky.contact.startPhoneVerification,
+          err,
+          'RateLimitExceeded',
+        )
       ) {
         setError(_(msg`Rate limit exceeded. Please try again later.`))
       } else if (
-        err instanceof AppBskyContactStartPhoneVerification.InvalidPhoneError
+        isXrpcErrorOf(
+          app.bsky.contact.startPhoneVerification,
+          err,
+          'InvalidPhone',
+        )
       ) {
         setError(
           _(

@@ -1,13 +1,8 @@
-import {
-  AppBskyEmbedExternal,
-  AppBskyEmbedRecord,
-  type ChatBskyConvoDefs,
-  ChatBskyEmbedJoinLink,
-  ChatBskyGroupDefs,
-} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
 import {BSKY_APP_HOST, toShortUrl} from '#/lib/strings/url-helpers'
+import {app, chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 /**
  * Describes the embed of a quoted message that has no text of its own, so the
@@ -21,13 +16,13 @@ type ReplyEmbedSummary =
   | {type: 'unknown'}
 
 function summarizeReplyEmbed(
-  embed: ChatBskyConvoDefs.MessageView['embed'],
+  embed: chat.bsky.convo.defs.MessageView['embed'],
 ): ReplyEmbedSummary {
-  if (!AppBskyEmbedRecord.isView(embed)) return {type: 'unknown'}
+  if (!bsky.isType(app.bsky.embed.record.view, embed)) return {type: 'unknown'}
   const {record} = embed
-  if (AppBskyEmbedRecord.isViewRecord(record)) {
+  if (bsky.isType(app.bsky.embed.record.viewRecord, record)) {
     const inner = record.embeds?.[0]
-    if (AppBskyEmbedExternal.isView(inner)) {
+    if (bsky.isType(app.bsky.embed.external.view, inner)) {
       return {type: 'external', uri: inner.external.uri}
     }
     return {type: 'post'}
@@ -45,25 +40,32 @@ function summarizeReplyEmbed(
  * callers can render it in a muted/italic style.
  */
 export function useReplyPreviewText(): (
-  message: ChatBskyConvoDefs.MessageView,
+  message: chat.bsky.convo.defs.MessageView,
 ) => {text: string; subtle: boolean} {
   const {t: l} = useLingui()
 
-  return (message: ChatBskyConvoDefs.MessageView) => {
+  return (message: chat.bsky.convo.defs.MessageView) => {
     const text = message.text
     if (text.trim()) {
       return {text, subtle: false}
     }
 
-    if (ChatBskyEmbedJoinLink.isView(message.embed)) {
+    if (bsky.isType(chat.bsky.embed.joinLink.view, message.embed)) {
       const {joinLinkPreview} = message.embed
-      if (ChatBskyGroupDefs.isJoinLinkPreviewView(joinLinkPreview)) {
+      if (
+        bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, joinLinkPreview)
+      ) {
         return {
           text: `${BSKY_APP_HOST}/chat/${joinLinkPreview.code}`,
           subtle: true,
         }
       }
-      if (ChatBskyGroupDefs.isDisabledJoinLinkPreviewView(joinLinkPreview)) {
+      if (
+        bsky.isType(
+          chat.bsky.group.defs.disabledJoinLinkPreviewView,
+          joinLinkPreview,
+        )
+      ) {
         return {
           text: l({
             message: '(disabled chat invite link)',
@@ -72,7 +74,12 @@ export function useReplyPreviewText(): (
           subtle: true,
         }
       }
-      if (ChatBskyGroupDefs.isInvalidJoinLinkPreviewView(joinLinkPreview)) {
+      if (
+        bsky.isType(
+          chat.bsky.group.defs.invalidJoinLinkPreviewView,
+          joinLinkPreview,
+        )
+      ) {
         return {
           text: l({
             message: '(invalid chat invite link)',

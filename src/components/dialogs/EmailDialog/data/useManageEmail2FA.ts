@@ -1,10 +1,12 @@
 import {useMutation} from '@tanstack/react-query'
 
-import {useAgent, useSession} from '#/state/session'
+import {usePdsClient, useSession, useSessionApi} from '#/state/session'
+import {com} from '#/lexicons'
 
 export function useManageEmail2FA() {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const {currentAccount} = useSession()
+  const {refreshSession} = useSessionApi()
 
   return useMutation({
     mutationFn: async ({
@@ -17,13 +19,18 @@ export function useManageEmail2FA() {
         throw new Error('No email found for the current account')
       }
 
-      await agent.com.atproto.server.updateEmail({
-        email: currentAccount.email,
-        emailAuthFactor: enabled,
-        token,
-      })
+      await pdsClient.call(
+        com.atproto.server.updateEmail,
+        {
+          email: currentAccount.email,
+          emailAuthFactor: enabled,
+          token,
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       // will update session state at root of app
-      await agent.resumeSession(agent.session!)
+      await refreshSession()
     },
   })
 }

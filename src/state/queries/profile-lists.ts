@@ -1,11 +1,13 @@
-import {type AppBskyGraphGetLists, moderateUserList} from '@atproto/api'
+import {type AtIdentifierString} from '@atproto/syntax'
+import {moderateUserList} from '@bsky.app/sdk/moderation'
 import {
   type InfiniteData,
   type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 import {useModerationOpts} from '../preferences/moderation-opts'
 
 const PAGE_SIZE = 30
@@ -17,23 +19,21 @@ export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
   const moderationOpts = useModerationOpts()
   const enabled = opts?.enabled !== false && Boolean(moderationOpts)
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useInfiniteQuery<
-    AppBskyGraphGetLists.OutputSchema,
+    app.bsky.graph.getLists.$OutputBody,
     Error,
-    InfiniteData<AppBskyGraphGetLists.OutputSchema>,
+    InfiniteData<app.bsky.graph.getLists.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getLists({
-        actor: did,
+      return await client.call(app.bsky.graph.getLists, {
+        actor: did as AtIdentifierString,
         limit: PAGE_SIZE,
         cursor: pageParam,
       })
-
-      return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,

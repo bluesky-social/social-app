@@ -1,4 +1,4 @@
-import {AtpAgent} from '@atproto/api'
+import {Client} from '@atproto/lex'
 
 import {device} from '#/storage'
 
@@ -82,9 +82,14 @@ export function configureAdditionalModerationAuthorities() {
     additionalLabelers = []
   }
 
+  /*
+   * Merge with the currently-configured global labelers on the lex `Client`
+   * static and set the merged result back, so every client emits the same
+   * global `atproto-accept-labelers` header.
+   */
   const appLabelers = Array.from(
-    new Set([...AtpAgent.appLabelers, ...additionalLabelers]),
+    new Set([...Client.appLabelers, ...additionalLabelers]),
   )
 
-  AtpAgent.configure({appLabelers})
+  Client.configure({appLabelers: appLabelers as `did:${string}:${string}`[]})
 }

@@ -1,14 +1,19 @@
 import {useCallback, useRef, useState} from 'react'
 import {type TextInput, View} from 'react-native'
+import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {useAgent, useSession, useSessionApi} from '#/state/session'
+import {
+  useChatClient,
+  usePdsClient,
+  useSession,
+  useSessionApi,
+} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {type DialogOuterProps} from '#/components/Dialog'
@@ -24,6 +29,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as toast from '#/components/Toast'
 import {Span, Text} from '#/components/Typography'
+import {chat, com} from '#/lexicons'
 import {resetToTab} from '#/Navigation'
 
 const WHITESPACE_RE = /\s/gu
@@ -72,7 +78,8 @@ function DeleteAccountDialogInner({
   const t = useTheme()
   const {_} = useLingui()
   const cleanError = useCleanError()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
+  const chatClient = useChatClient()
   const {currentAccount} = useSession()
   const {removeAccount} = useSessionApi()
 
@@ -89,7 +96,12 @@ function DeleteAccountDialogInner({
     }
     try {
       setEmailState(EmailState.PENDING)
-      await agent.com.atproto.server.requestAccountDelete()
+      await pdsClient.call(
+        com.atproto.server.requestAccountDelete,
+        undefined,
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       setError('')
       setEmailSentCount(prevCount => prevCount + 1)
       setStep(Step.VERIFY_CODE)
@@ -103,7 +115,7 @@ function DeleteAccountDialogInner({
     } finally {
       setEmailState(EmailState.DEFAULT)
     }
-  }, [agent, cleanError, emailState, setEmailState])
+  }, [pdsClient, cleanError, emailState, setEmailState])
 
   const confirmDeletion = useCallback(async () => {
     try {
@@ -112,18 +124,19 @@ function DeleteAccountDialogInner({
         throw new Error('Invalid did')
       }
       const token = confirmCode.replace(WHITESPACE_RE, '')
-      // Inform chat service of intent to delete account.
-      const {success} = await agent.chat.bsky.actor.deleteAccount(undefined, {
-        headers: DM_SERVICE_HEADERS,
-      })
-      if (!success) {
-        throw new Error('Failed to inform chat service of account deletion')
-      }
-      await agent.com.atproto.server.deleteAccount({
-        did: currentAccount.did,
-        password,
-        token,
-      })
+      // Inform chat service of intent to delete account. The chat client is
+      // proxied to the chat service; a failure throws.
+      await chatClient.call(chat.bsky.actor.deleteAccount)
+      await pdsClient.call(
+        com.atproto.server.deleteAccount,
+        {
+          did: currentAccount.did as DidString,
+          password,
+          token,
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       control.close(() => {
         toast.show(_(msg`Your account has been deleted, see ya! ✌️`))
         resetToTab('HomeTab')
@@ -142,7 +155,8 @@ function DeleteAccountDialogInner({
     }
   }, [
     _,
-    agent,
+    pdsClient,
+    chatClient,
     cleanError,
     confirmCode,
     control,

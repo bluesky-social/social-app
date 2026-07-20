@@ -1,0 +1,23 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.draft.updateDraft",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Updates a draft using private storage (stash). If the draft ID points to a non-existing ID, the update will be silently ignored. This is done because updates don't enforce draft limit, so it accepts all writes, but will ignore invalid ones. Requires authentication.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["draft"],
+          "properties": {
+            "draft": {
+              "type": "ref",
+              "ref": "app.bsky.draft.defs#draftWithId"
+            }
+          }
+        }
+      }
+    }
+  }
+}

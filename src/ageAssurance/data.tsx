@@ -1,12 +1,7 @@
 import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 import * as AgeRange from 'expo-age-range'
-import {
-  type AppBskyAgeassuranceDefs,
-  type AppBskyAgeassuranceGetConfig,
-  type AppBskyAgeassuranceGetState,
-  AtpAgent,
-  type ChatBskyActorDeclaration,
-} from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {getPreferences} from '@bsky.app/sdk'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {focusManager, QueryClient, useQuery} from '@tanstack/react-query'
 import {persistQueryClient} from '@tanstack/react-query-persist-client'
@@ -14,6 +9,7 @@ import debounce from 'lodash.debounce'
 
 import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {createLexClient} from '#/lib/lexClient'
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {getAge} from '#/lib/strings/time'
 import {
@@ -21,7 +17,7 @@ import {
   snoozeBirthdateUpdateAllowedForDid,
 } from '#/state/birthdate'
 import {fetchActorDeclarationRecord} from '#/state/queries/messages/actor-declaration'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {DEVICE_SIGNALS_SUPPORTED} from '#/ageAssurance/const'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
@@ -37,6 +33,7 @@ import {
 } from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
 import {useGeolocation} from '#/geolocation'
+import {app, type chat} from '#/lexicons'
 import {device} from '#/storage'
 
 /**
@@ -63,10 +60,12 @@ const [, cacheHydrationPromise] = persistQueryClient({
   persister,
 })
 
-export function getDidFromAgentSession(agent: AtpAgent) {
-  const sessionManager = agent.sessionManager
-  if (!sessionManager || !sessionManager.did) return
-  return sessionManager.did
+/**
+ * Reads the active account did from a lex {@link Client}. Logged-out clients
+ * expose `did: undefined`, so this returns undefined in that case.
+ */
+export function getDidFromClient(client: Client) {
+  return client.did
 }
 
 /*
@@ -101,16 +100,13 @@ export function setBirthdateForDid({
 export const configQueryKey = ['config']
 export async function getConfig() {
   if (debug.enabled) return debug.resolve(debug.config)
-  const agent = new AtpAgent({
-    service: PUBLIC_BSKY_SERVICE,
-  })
-  const res = await agent.app.bsky.ageassurance.getConfig()
-  return res.data
+  const client = createLexClient({service: PUBLIC_BSKY_SERVICE})
+  return await client.call(app.bsky.ageassurance.getConfig)
 }
 export function getConfigFromCache():
-  | AppBskyAgeassuranceGetConfig.OutputSchema
+  | app.bsky.ageassurance.getConfig.$OutputBody
   | undefined {
-  return qc.getQueryData<AppBskyAgeassuranceGetConfig.OutputSchema>(
+  return qc.getQueryData<app.bsky.ageassurance.getConfig.$OutputBody>(
     configQueryKey,
   )
 }
@@ -131,7 +127,7 @@ export function prefetchConfig() {
       try {
         logger.debug(`prefetchAgeAssuranceConfig: resolving...`)
         const res = await networkRetry(3, () => getConfig())
-        qc.setQueryData<AppBskyAgeassuranceGetConfig.OutputSchema>(
+        qc.setQueryData<app.bsky.ageassurance.getConfig.$OutputBody>(
           configQueryKey,
           res,
         )
@@ -147,7 +143,7 @@ export function prefetchConfig() {
 export async function refetchConfig() {
   logger.debug(`refetchConfig: fetching...`)
   const res = await getConfig()
-  qc.setQueryData<AppBskyAgeassuranceGetConfig.OutputSchema>(
+  qc.setQueryData<app.bsky.ageassurance.getConfig.$OutputBody>(
     configQueryKey,
     res,
   )
@@ -187,7 +183,11 @@ export function useConfigQuery() {
 export function createServerStateQueryKey({did}: {did: string}) {
   return ['serverState', did]
 }
-export async function getServerState({agent}: {agent: AtpAgent}) {
+export async function getServerState({
+  appviewClient,
+}: {
+  appviewClient: Client
+}): Promise<app.bsky.ageassurance.getState.$OutputBody | null> {
   if (debug.enabled && debug.serverState)
     return debug.resolve(debug.serverState)
   const geolocation = device.get(['mergedGeolocation'])
@@ -195,17 +195,21 @@ export async function getServerState({agent}: {agent: AtpAgent}) {
     logger.error(`getServerState: missing geolocation countryCode`)
     return null
   }
-  const {data} = await agent.app.bsky.ageassurance.getState({
+  const data = await appviewClient.call(app.bsky.ageassurance.getState, {
     countryCode: geolocation.countryCode,
     regionCode: geolocation.regionCode,
   })
-  const did = getDidFromAgentSession(agent)
+  const did = getDidFromClient(appviewClient)
   if (data && did && createdAtCache.has(did)) {
     /*
      * If account was just created, just use the local cache if available. On
-     * subsequent reloads, the server should have the correct value.
+     * subsequent reloads, the server should have the correct value. The cache
+     * holds ISO datetime strings (written from `new Date().toISOString()`), so
+     * assert the branded DatetimeString at this boundary.
      */
-    data.metadata.accountCreatedAt = createdAtCache.get(did)
+    data.metadata.accountCreatedAt = createdAtCache.get(
+      did,
+    ) as typeof data.metadata.accountCreatedAt
   }
   return data ?? null
 }
@@ -213,13 +217,17 @@ export function getServerStateFromCache({
   did,
 }: {
   did: string
-}): AppBskyAgeassuranceGetState.OutputSchema | undefined {
-  return qc.getQueryData<AppBskyAgeassuranceGetState.OutputSchema>(
+}): app.bsky.ageassurance.getState.$OutputBody | undefined {
+  return qc.getQueryData<app.bsky.ageassurance.getState.$OutputBody>(
     createServerStateQueryKey({did}),
   )
 }
-export async function prefetchServerState({agent}: {agent: AtpAgent}) {
-  const did = getDidFromAgentSession(agent)
+export async function prefetchServerState({
+  appviewClient,
+}: {
+  appviewClient: Client
+}) {
+  const did = getDidFromClient(appviewClient)
 
   if (!did) return
 
@@ -234,9 +242,9 @@ export async function prefetchServerState({agent}: {agent: AtpAgent}) {
 
   try {
     logger.debug(`prefetchServerState: resolving...`)
-    const res = await networkRetry(3, () => getServerState({agent}))
+    const res = await networkRetry(3, () => getServerState({appviewClient}))
     if (res) {
-      qc.setQueryData<AppBskyAgeassuranceGetState.OutputSchema>(qk, res)
+      qc.setQueryData<app.bsky.ageassurance.getState.$OutputBody>(qk, res)
     }
   } catch (err) {
     const e = err as Error
@@ -245,13 +253,17 @@ export async function prefetchServerState({agent}: {agent: AtpAgent}) {
     })
   }
 }
-export async function refetchServerState({agent}: {agent: AtpAgent}) {
-  const did = getDidFromAgentSession(agent)
+export async function refetchServerState({
+  appviewClient,
+}: {
+  appviewClient: Client
+}) {
+  const did = getDidFromClient(appviewClient)
   if (!did) return
   logger.debug(`refetchServerState: fetching...`)
-  const res = await networkRetry(3, () => getServerState({agent}))
+  const res = await networkRetry(3, () => getServerState({appviewClient}))
   if (res) {
-    qc.setQueryData<AppBskyAgeassuranceGetState.OutputSchema>(
+    qc.setQueryData<app.bsky.ageassurance.getState.$OutputBody>(
       createServerStateQueryKey({did}),
       res,
     )
@@ -261,16 +273,16 @@ export async function refetchServerState({agent}: {agent: AtpAgent}) {
 export function usePatchServerState() {
   const {currentAccount} = useSession()
   return useCallback(
-    (next: AppBskyAgeassuranceDefs.State) => {
+    (next: app.bsky.ageassurance.defs.State) => {
       if (!currentAccount) return
       const did = currentAccount.did
       const prev = getServerStateFromCache({did})
-      const merged: AppBskyAgeassuranceGetState.OutputSchema = {
+      const merged: app.bsky.ageassurance.getState.$OutputBody = {
         metadata: {},
         ...(prev || {}),
         state: next,
       }
-      qc.setQueryData<AppBskyAgeassuranceGetState.OutputSchema>(
+      qc.setQueryData<app.bsky.ageassurance.getState.$OutputBody>(
         createServerStateQueryKey({did}),
         merged,
       )
@@ -279,8 +291,8 @@ export function usePatchServerState() {
   )
 }
 export function useServerStateQuery() {
-  const agent = useAgent()
-  const did = getDidFromAgentSession(agent)
+  const appviewClient = useAppviewClient()
+  const did = getDidFromClient(appviewClient)
   const query = useQuery(
     {
       enabled: !!did,
@@ -290,7 +302,7 @@ export function useServerStateQuery() {
       },
       queryKey: createServerStateQueryKey({did: did!}),
       async queryFn() {
-        return getServerState({agent})
+        return getServerState({appviewClient})
       },
     },
     qc,
@@ -336,21 +348,21 @@ export function useServerStateQuery() {
 
 export type OtherRequiredData = {
   birthdate: string | undefined
-  actorDeclaration?: ChatBskyActorDeclaration.Main
+  actorDeclaration?: chat.bsky.actor.declaration.Main
 }
 export function createOtherRequiredDataQueryKey({did}: {did: string}) {
   return ['otherRequiredData', did]
 }
 async function getOtherRequiredData({
-  agent,
+  accountClient,
 }: {
-  agent: AtpAgent
+  accountClient: Client
 }): Promise<OtherRequiredData> {
   if (debug.enabled) return debug.resolve(debug.otherRequiredData)
-  const did = getDidFromAgentSession(agent)
+  const did = getDidFromClient(accountClient)
   const [prefs, actorDeclaration] = await Promise.all([
-    agent.getPreferences(),
-    fetchActorDeclarationRecord({did, agent}),
+    accountClient.call(getPreferences),
+    fetchActorDeclarationRecord({did, client: accountClient}),
   ])
   const data: OtherRequiredData = {
     birthdate: prefs.birthDate ? prefs.birthDate.toISOString() : undefined,
@@ -411,7 +423,7 @@ export function setOtherRequiredDataActorDeclarationCache({
   actorDeclaration,
 }: {
   did: string
-  actorDeclaration: ChatBskyActorDeclaration.Main
+  actorDeclaration: chat.bsky.actor.declaration.Main
 }) {
   const prev = getOtherRequiredDataFromCache({did})
   const next: OtherRequiredData = {
@@ -426,8 +438,12 @@ export function setOtherRequiredDataActorDeclarationCache({
     next,
   )
 }
-export async function prefetchOtherRequiredData({agent}: {agent: AtpAgent}) {
-  const did = getDidFromAgentSession(agent)
+export async function prefetchOtherRequiredData({
+  accountClient,
+}: {
+  accountClient: Client
+}) {
+  const did = getDidFromClient(accountClient)
 
   if (!did) return
 
@@ -442,7 +458,9 @@ export async function prefetchOtherRequiredData({agent}: {agent: AtpAgent}) {
 
   try {
     logger.debug(`prefetchOtherRequiredData: resolving...`)
-    const res = await networkRetry(3, () => getOtherRequiredData({agent}))
+    const res = await networkRetry(3, () =>
+      getOtherRequiredData({accountClient}),
+    )
     qc.setQueryData<OtherRequiredData>(qk, res)
   } catch (err) {
     const e = err as Error
@@ -471,8 +489,8 @@ export function usePatchOtherRequiredData() {
   )
 }
 export function useOtherRequiredDataQuery() {
-  const agent = useAgent()
-  const did = getDidFromAgentSession(agent)
+  const accountClient = usePdsClient()
+  const did = getDidFromClient(accountClient)
   return useQuery(
     {
       enabled: !!did,
@@ -482,7 +500,7 @@ export function useOtherRequiredDataQuery() {
       },
       queryKey: createOtherRequiredDataQueryKey({did: did!}),
       async queryFn() {
-        return getOtherRequiredData({agent})
+        return getOtherRequiredData({accountClient})
       },
     },
     qc,
@@ -547,7 +565,7 @@ export function getDeviceSignalsFromCacheForRegion({
   region,
 }: {
   did: string
-  region: AppBskyAgeassuranceDefs.ConfigRegion
+  region: app.bsky.ageassurance.defs.ConfigRegion
 }): AgeRange.AgeRangeResponse | undefined {
   const regionKey = createRegionKey(region)
   return getDeviceSignalsMapFromCache({did})?.[regionKey]
@@ -577,8 +595,12 @@ export function setDeviceSignalsForRegion({
     prev => ({...prev, [regionKey]: signals}),
   )
 }
-export async function prefetchDeviceSignals({agent}: {agent: AtpAgent}) {
-  const did = getDidFromAgentSession(agent)
+export async function prefetchDeviceSignals({
+  appviewClient,
+}: {
+  appviewClient: Client
+}) {
+  const did = getDidFromClient(appviewClient)
   if (!did) return
 
   /**
@@ -613,8 +635,8 @@ export async function prefetchDeviceSignals({agent}: {agent: AtpAgent}) {
    */
 }
 export function useDeviceSignalsQuery() {
-  const agent = useAgent()
-  const did = getDidFromAgentSession(agent)
+  const appviewClient = useAppviewClient()
+  const did = getDidFromClient(appviewClient)
   const {data: config} = useConfigQuery()
   const geolocation = useGeolocation()
   /*
@@ -657,15 +679,20 @@ export function useDeviceSignalsQuery() {
 }
 
 /**
- * Helper to prefetch all age assurance data from the server.
+ * Helper to prefetch all age assurance data from the server. Takes the single
+ * merged Bluesky client, which serves both roles: the appview reads (`getState`,
+ * device signals) inherit the appview proxy, while `getPreferences` (an SDK
+ * action that passes `service: null` internally) and `fetchActorDeclarationRecord`
+ * (a typed record `get`, `service: null` by default) auto-target the account
+ * host.
  */
-export function prefetchAgeAssuranceServerData({agent}: {agent: AtpAgent}) {
+export function prefetchAgeAssuranceServerData({client}: {client: Client}) {
   return Promise.allSettled([
     // config fetch initiated at the top of the App.platform.tsx files, awaited here
     configPrefetchPromise,
-    prefetchServerState({agent}),
-    prefetchOtherRequiredData({agent}),
-    prefetchDeviceSignals({agent}),
+    prefetchServerState({appviewClient: client}),
+    prefetchOtherRequiredData({accountClient: client}),
+    prefetchDeviceSignals({appviewClient: client}),
   ])
 }
 
@@ -691,11 +718,11 @@ export type AgeAssuranceServerData = {
   /**
    * The raw config from the appview.
    */
-  config: AppBskyAgeassuranceDefs.Config | undefined
+  config: app.bsky.ageassurance.defs.Config | undefined
   /**
    * The raw state from the appview. Must be further processed before being useful.
    */
-  state: AppBskyAgeassuranceDefs.State | undefined
+  state: app.bsky.ageassurance.defs.State | undefined
   metadata: AgeAssuranceMetadata | undefined
   /**
    * The native on-device age signals for the region the user is currently in,

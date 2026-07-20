@@ -1,0 +1,177 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.group.defs",
+  "defs": {
+    "linkEnabledStatus": {
+      "type": "string",
+      "knownValues": ["enabled", "disabled"]
+    },
+    "joinRule": {
+      "type": "string",
+      "knownValues": ["anyone", "followedByOwner"]
+    },
+    "joinLinkView": {
+      "description": "Join link view to be used within a group view, so the convo is surrounding, not specified inside this view.",
+      "type": "object",
+      "required": [
+        "code",
+        "enabledStatus",
+        "requireApproval",
+        "joinRule",
+        "createdAt"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "enabledStatus": {
+          "type": "ref",
+          "ref": "#linkEnabledStatus"
+        },
+        "requireApproval": {
+          "type": "boolean"
+        },
+        "joinRule": {
+          "type": "ref",
+          "ref": "#joinRule"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    },
+    "joinLinkPreviewView": {
+      "description": "Preview that can be shown in feeds, including to unauthenticated viewers.",
+      "type": "object",
+      "required": [
+        "convoId",
+        "code",
+        "name",
+        "owner",
+        "memberCount",
+        "memberLimit",
+        "requireApproval",
+        "joinRule"
+      ],
+      "properties": {
+        "convoId": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "ref",
+          "ref": "chat.bsky.actor.defs#profileViewBasic"
+        },
+        "memberCount": {
+          "type": "integer"
+        },
+        "memberLimit": {
+          "type": "integer"
+        },
+        "requireApproval": {
+          "type": "boolean"
+        },
+        "joinRule": {
+          "type": "ref",
+          "ref": "#joinRule"
+        },
+        "convo": {
+          "type": "ref",
+          "ref": "chat.bsky.convo.defs#convoView",
+          "description": "Present only if the request is authenticated and the user is a member of the group."
+        },
+        "viewer": {
+          "type": "ref",
+          "ref": "#joinLinkViewerState"
+        }
+      }
+    },
+    "disabledJoinLinkPreviewView": {
+      "description": "Preview for a disabled join link. Carries only the code so clients can correlate with the input and render a disabled state.",
+      "type": "object",
+      "required": ["code"],
+      "properties": {
+        "code": {
+          "type": "string"
+        }
+      }
+    },
+    "invalidJoinLinkPreviewView": {
+      "description": "Preview for a join link code that does not map to an existing link. Carries only the code so clients can correlate with the input and render an invalid state.",
+      "type": "object",
+      "required": ["code"],
+      "properties": {
+        "code": {
+          "type": "string"
+        }
+      }
+    },
+    "joinLinkViewerState": {
+      "type": "object",
+      "properties": {
+        "requestedAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    },
+    "joinRequestView": {
+      "description": "A join request from the perspective of the group owner.",
+      "type": "object",
+      "required": ["convoId", "requestedBy", "requestedAt"],
+      "properties": {
+        "convoId": {
+          "type": "string"
+        },
+        "requestedBy": {
+          "type": "ref",
+          "ref": "chat.bsky.actor.defs#profileViewBasic"
+        },
+        "requestedAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    },
+    "joinRequestConvoView": {
+      "description": "A join request from the perspective of the requester, including enough group context to render the request in a list (e.g. group name, owner, member count).",
+      "type": "object",
+      "required": [
+        "convoId",
+        "name",
+        "owner",
+        "memberCount",
+        "memberLimit",
+        "viewer"
+      ],
+      "properties": {
+        "convoId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "ref",
+          "ref": "chat.bsky.actor.defs#profileViewBasic"
+        },
+        "memberCount": {
+          "type": "integer"
+        },
+        "memberLimit": {
+          "type": "integer"
+        },
+        "viewer": {
+          "type": "ref",
+          "ref": "#joinLinkViewerState"
+        }
+      }
+    }
+  }
+}

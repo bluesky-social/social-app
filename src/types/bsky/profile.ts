@@ -1,10 +1,10 @@
-import {type AppBskyActorDefs, type ChatBskyActorDefs} from '@atproto/api'
+import {type app, type chat} from '#/lexicons'
 
 /**
- * Matches any profile view exported by our SDK
+ * Matches any profile view exported by our SDK.
  */
 export type AnyProfileView =
-  | AppBskyActorDefs.ProfileViewBasic
-  | AppBskyActorDefs.ProfileView
-  | AppBskyActorDefs.ProfileViewDetailed
-  | ChatBskyActorDefs.ProfileViewBasic
+  | app.bsky.actor.defs.ProfileViewBasic
+  | app.bsky.actor.defs.ProfileView
+  | app.bsky.actor.defs.ProfileViewDetailed
+  | chat.bsky.actor.defs.ProfileViewBasic

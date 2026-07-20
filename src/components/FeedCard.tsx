@@ -1,11 +1,7 @@
 import {useCallback, useEffect, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  AtUri,
-  RichText as RichTextApi,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {RichText as RichTextApi} from '@bsky.app/sdk/richtext'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -35,11 +31,12 @@ import {RichText, type RichTextProps} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useActiveLiveEventFeedUris} from '#/features/liveEvents/context'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from './icons/Trash'
 
 type Props = {
-  view: AppBskyFeedDefs.GeneratorView
+  view: app.bsky.feed.defs.GeneratorView
   onPress?: () => void
 }
 
@@ -258,7 +255,7 @@ export function SaveButton({
   pin,
   ...props
 }: {
-  view: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
+  view: app.bsky.feed.defs.GeneratorView | app.bsky.graph.defs.ListView
   pin?: boolean
   text?: boolean
 } & Partial<ButtonProps>) {
@@ -273,7 +270,7 @@ function SaveButtonInner({
   text = true,
   ...buttonProps
 }: {
-  view: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
+  view: app.bsky.feed.defs.GeneratorView | app.bsky.graph.defs.ListView
   pin?: boolean
   text?: boolean
 } & Partial<ButtonProps>) {
@@ -383,7 +380,7 @@ function SaveButtonInner({
 export function createProfileFeedHref({
   feed,
 }: {
-  feed: AppBskyFeedDefs.GeneratorView
+  feed: app.bsky.feed.defs.GeneratorView
 }) {
   const urip = new AtUri(feed.uri)
   const handleOrDid = feed.creator.handle || feed.creator.did

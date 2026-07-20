@@ -4,8 +4,9 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {isErrorMaybeAppPasswordPermissions} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {useAgent, useSessionApi} from '#/state/session'
+import {usePdsClient, useSessionApi} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogOuterProps} from '#/components/Dialog'
@@ -14,6 +15,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {com} from '#/lexicons'
 
 export function DeactivateAccountDialog({
   control,
@@ -34,7 +36,7 @@ function DeactivateAccountDialogInner({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const {logoutCurrentAccount} = useSessionApi()
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | undefined>()
@@ -42,22 +44,24 @@ function DeactivateAccountDialogInner({
   const handleDeactivate = useCallback(async () => {
     try {
       setPending(true)
-      await agent.com.atproto.server.deactivateAccount({})
+      await pdsClient.call(
+        com.atproto.server.deactivateAccount,
+        {},
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
       control.close(() => {
         logoutCurrentAccount('Deactivated')
       })
     } catch (e: any) {
-      switch (e.message) {
-        case 'Bad token scope':
-          setError(
-            _(
-              msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
-            ),
-          )
-          break
-        default:
-          setError(_(msg`Something went wrong, please try again`))
-          break
+      if (isErrorMaybeAppPasswordPermissions(e)) {
+        setError(
+          _(
+            msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
+          ),
+        )
+      } else {
+        setError(_(msg`Something went wrong, please try again`))
       }
 
       logger.error(e, {
@@ -66,7 +70,7 @@ function DeactivateAccountDialogInner({
     } finally {
       setPending(false)
     }
-  }, [agent, control, logoutCurrentAccount, _, setPending])
+  }, [pdsClient, control, logoutCurrentAccount, _, setPending])
 
   return (
     <>

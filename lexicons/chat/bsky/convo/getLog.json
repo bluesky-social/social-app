@@ -1,0 +1,68 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.getLog",
+  "defs": {
+    "main": {
+      "type": "query",
+      "parameters": {
+        "type": "params",
+        "required": [],
+        "properties": {
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["logs"],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "logs": {
+              "type": "array",
+              "items": {
+                "type": "union",
+                "refs": [
+                  "chat.bsky.convo.defs#logBeginConvo",
+                  "chat.bsky.convo.defs#logAcceptConvo",
+                  "chat.bsky.convo.defs#logLeaveConvo",
+                  "chat.bsky.convo.defs#logMuteConvo",
+                  "chat.bsky.convo.defs#logUnmuteConvo",
+                  "chat.bsky.convo.defs#logCreateMessage",
+                  "chat.bsky.convo.defs#logDeleteMessage",
+                  "chat.bsky.convo.defs#logReadMessage",
+                  "chat.bsky.convo.defs#logAddReaction",
+                  "chat.bsky.convo.defs#logRemoveReaction",
+                  "chat.bsky.convo.defs#logReadConvo",
+                  "chat.bsky.convo.defs#logAddMember",
+                  "chat.bsky.convo.defs#logRemoveMember",
+                  "chat.bsky.convo.defs#logMemberJoin",
+                  "chat.bsky.convo.defs#logMemberLeave",
+                  "chat.bsky.convo.defs#logLockConvo",
+                  "chat.bsky.convo.defs#logUnlockConvo",
+                  "chat.bsky.convo.defs#logLockConvoPermanently",
+                  "chat.bsky.convo.defs#logEditGroup",
+                  "chat.bsky.convo.defs#logCreateJoinLink",
+                  "chat.bsky.convo.defs#logEditJoinLink",
+                  "chat.bsky.convo.defs#logEnableJoinLink",
+                  "chat.bsky.convo.defs#logDisableJoinLink",
+                  "chat.bsky.convo.defs#logIncomingJoinRequest",
+                  "chat.bsky.convo.defs#logApproveJoinRequest",
+                  "chat.bsky.convo.defs#logRejectJoinRequest",
+                  "chat.bsky.convo.defs#logOutgoingJoinRequest",
+                  "chat.bsky.convo.defs#logWithdrawIncomingJoinRequest",
+                  "chat.bsky.convo.defs#logWithdrawOutgoingJoinRequest",
+                  "chat.bsky.convo.defs#logReadJoinRequests"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

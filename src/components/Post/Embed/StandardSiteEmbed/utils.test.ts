@@ -1,10 +1,9 @@
-import {type AppBskyEmbedExternal} from '@atproto/api'
-
+import {type app} from '#/lexicons'
 import {isStandardSiteEmbed, isStandardSitePublicationEmbed} from './utils'
 
 function makeView(
   partial: Record<string, unknown>,
-): AppBskyEmbedExternal.ViewExternal {
+): app.bsky.embed.external.ViewExternal {
   return {
     uri: 'https://example.com/post',
     title: 'title',

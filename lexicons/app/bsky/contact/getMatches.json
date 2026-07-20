@@ -1,0 +1,57 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.contact.getMatches",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Returns the matched contacts (contacts that were mutually imported). Excludes dismissed matches. Requires authentication.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["matches"],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "matches": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.actor.defs#profileView"
+              }
+            }
+          }
+        }
+      },
+      "errors": [
+        {
+          "name": "InvalidDid"
+        },
+        {
+          "name": "InvalidLimit"
+        },
+        {
+          "name": "InvalidCursor"
+        },
+        {
+          "name": "InternalError"
+        }
+      ]
+    }
+  }
+}

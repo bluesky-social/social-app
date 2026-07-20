@@ -1,6 +1,7 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
+import {type DatetimeString, toDatetimeString} from '@atproto/syntax'
+import {sanitizeMutedWordValue} from '@bsky.app/sdk/utils'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -35,6 +36,7 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 
 const ONE_DAY = 24 * 60 * 60 * 1000
 
@@ -68,20 +70,20 @@ function MutedWordsInner() {
     const sanitizedValue = sanitizeMutedWordValue(field)
     const surfaces = ['tag', targets.includes('content') && 'content'].filter(
       Boolean,
-    ) as AppBskyActorDefs.MutedWord['targets']
+    ) as app.bsky.actor.defs.MutedWord['targets']
     const actorTarget = excludeFollowing ? 'exclude-following' : 'all'
 
     const now = Date.now()
     const rawDuration = durations.at(0)
     // undefined evaluates to 'forever'
-    let duration: string | undefined
+    let duration: DatetimeString | undefined
 
     if (rawDuration === '24_hours') {
-      duration = new Date(now + ONE_DAY).toISOString()
+      duration = toDatetimeString(new Date(now + ONE_DAY))
     } else if (rawDuration === '7_days') {
-      duration = new Date(now + 7 * ONE_DAY).toISOString()
+      duration = toDatetimeString(new Date(now + 7 * ONE_DAY))
     } else if (rawDuration === '30_days') {
-      duration = new Date(now + 30 * ONE_DAY).toISOString()
+      duration = toDatetimeString(new Date(now + 30 * ONE_DAY))
     }
 
     if (!sanitizedValue || !surfaces.length) {
@@ -421,7 +423,7 @@ function MutedWordsInner() {
 function MutedWordRow({
   style,
   word,
-}: ViewStyleProp & {word: AppBskyActorDefs.MutedWord}) {
+}: ViewStyleProp & {word: app.bsky.actor.defs.MutedWord}) {
   const t = useTheme()
   const {_} = useLingui()
   const {isPending, mutateAsync: removeMutedWord} = useRemoveMutedWordMutation()
@@ -440,7 +442,7 @@ function MutedWordRow({
     updateMutedWord({
       ...word,
       expiresAt: days
-        ? new Date(Date.now() + days * ONE_DAY).toISOString()
+        ? toDatetimeString(new Date(Date.now() + days * ONE_DAY))
         : undefined,
     })
   }

@@ -2,7 +2,3 @@ export const ACTIVE_POLL_INTERVAL = 4e3
 export const MESSAGE_SCREEN_POLL_INTERVAL = 30e3
 export const BACKGROUND_POLL_INTERVAL = 60e3
 export const INACTIVE_TIMEOUT = 60e3 * 5
-
-export const NETWORK_FAILURE_STATUSES = [
-  1, 408, 425, 429, 500, 502, 503, 504, 522, 524,
-]

@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 import * as Notifications from 'expo-notifications'
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
 import {CommonActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'

@@ -8,23 +8,34 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import {type AtpAgent, type AtpSessionEvent} from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {PasswordSession, type SessionData} from '@atproto/lex-password-session'
 
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {com} from '#/lexicons'
 import {emitSessionDropped} from '../events'
-import {
-  agentToSessionAccount,
-  type BskyAppAgent,
-  createAgentAndCreateAccount,
-  createAgentAndLogin,
-  createAgentAndResume,
-  sessionAccountToSession,
-} from './agent'
+import {getPublicLexClient, getUnauthenticatedClient} from './clients'
+import {configureModerationForAccount} from './moderation'
 import {type Action, getInitialState, reducer, type State} from './reducer'
+import {
+  type AtpSessionEvent,
+  buildBundle,
+  createSessionBundleAndCreateAccount,
+  createSessionBundleAndLogin,
+  createSessionBundleAndResume,
+  disposeBundle,
+  makeSessionHooks,
+  pickExpiryRescueCandidate,
+  type PublicSessionBundle,
+  registerBundleKillSwitch,
+  sessionAccountToSessionData,
+  type SessionBundle,
+  sessionDataToSessionAccount,
+} from './session-core'
 export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
@@ -47,8 +58,16 @@ const StateContext = createContext<SessionStateContext>({
 })
 StateContext.displayName = 'SessionStateContext'
 
-const AgentContext = createContext<AtpAgent | null>(null)
-AgentContext.displayName = 'SessionAgentContext'
+/**
+ * Holds the full {@link SessionBundle} (or the logged-out
+ * {@link PublicSessionBundle}) for the active account. The authed client hooks
+ * (`useLexClient`/`useAppviewClient`/`usePdsClient`), which all return the one
+ * merged `bskyClient` when signed in, read from here.
+ */
+const BundleContext = createContext<SessionBundle | PublicSessionBundle | null>(
+  null,
+)
+BundleContext.displayName = 'SessionBundleContext'
 
 const ApiContext = createContext<SessionApiContext>({
   createAccount: async () => {},
@@ -58,6 +77,7 @@ const ApiContext = createContext<SessionApiContext>({
   resumeSession: async () => {},
   removeAccount: () => {},
   partialRefreshSession: async () => {},
+  refreshSession: () => Promise.resolve(undefined),
 })
 ApiContext.displayName = 'SessionApiContext'
 
@@ -110,15 +130,216 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const state = useSyncExternalStore(store.subscribe, store.getState)
   const onboardingDispatch = useOnboardingDispatch()
 
-  const onAgentSessionChange = useCallback(
-    (agent: AtpAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
-      const refreshedAccount = agentToSessionAccount(agent) // Mutable, so snapshot it right away.
-      if (sessionEvent === 'expired' || sessionEvent === 'create-failed') {
+  /*
+   * Failed-token loop guard for the expiry rescue below. Maps a did to the set
+   * of refreshJwts that have already produced an 'expired'. Before rescuing
+   * from a candidate we require its refreshJwt not be in this set, and every
+   * expiry records its dying token here; a successful 'update' clears the set.
+   * See the rescue docblock in onSessionChange for why this is a set (not a
+   * single-shot flag) and why it stays bounded.
+   */
+  const failedExpiryTokensRef = useRef<Map<string, Set<string>>>(new Map())
+  /*
+   * Self-reference shim. The rescue path rebuilds a bundle and must wire it to
+   * this same onSessionChange (so the rescued bundle's own future events flow
+   * back here). Referencing onSessionChange inside its own useCallback body
+   * would be an unsatisfiable exhaustive-deps cycle, so we thread it through a
+   * ref kept current right after the callback is defined.
+   */
+  const onSessionChangeRef = useRef<
+    | ((
+        bundle: SessionBundle,
+        accountDid: string,
+        sessionEvent: AtpSessionEvent,
+        sessionData?: SessionData,
+      ) => void)
+    | null
+  >(null)
+
+  const onSessionChange = useCallback(
+    (
+      bundle: SessionBundle,
+      accountDid: string,
+      sessionEvent: AtpSessionEvent,
+      sessionData?: SessionData,
+    ) => {
+      /*
+       * A successful refresh means this did's world is healthy again, so reset
+       * its failed-token guard set (a later expiry starts a fresh rescue
+       * budget).
+       */
+      if (sessionEvent === 'update' && sessionData) {
+        failedExpiryTokensRef.current.get(accountDid)?.clear()
+      }
+
+      /*
+       * Build the refreshed account from the payload the hook delivers, NOT the
+       * live session getter. `PasswordSession` fires onUpdated/onDeleted BEFORE
+       * it commits its internal `#sessionData` (see password-session.js), so at
+       * hook time `bundle.session.session` still holds the OLD tokens (and, on
+       * the expiry path, `destroyed` is still false). Reading the live getter
+       * here would (a) persist stale tokens on 'update' -> eventual forced
+       * logout once the real refresh token expires, and (b) keep the user
+       * signed in on 'expired'. On 'update' the payload carries the new session;
+       * on 'expired'/'create-failed' we force it undefined so the reducer clears
+       * tokens and logs out (it treats undefined as "session gone").
+       */
+      const refreshedAccount =
+        sessionEvent === 'update' && sessionData
+          ? sessionDataToSessionAccount(sessionData, sessionData.service)
+          : undefined
+
+      /*
+       * Expiry rescue (compare-and-clear + resume-from-newer). THE BUG: a stale
+       * tab (frozen by Chrome, a failed localStorage write, or a native app
+       * killed before its async persist landed) can wake holding a >2h-old
+       * refresh token. Its refresh gets ExpiredToken, and the naive 'expired'
+       * handling clears the tokens in storage and logs out EVERY tab - even
+       * though another tab already rotated to a healthy generation (PDS refresh
+       * tokens keep a 2h grace window after rotation).
+       *
+       * Fix: before letting an expiry become a logout, check whether a NEWER
+       * generation for this did is known, and if so rebuild the current bundle
+       * from it instead of dropping the session. The compare lives here at the
+       * dispatch site (not in the reducer) because the reducer is pure and has
+       * no access to persisted storage.
+       *
+       * Two freshness sources, tried in order:
+       *  - persisted.readLatest('session'): on web this re-reads localStorage
+       *    directly, covering the frozen-tab case where queued cross-tab
+       *    broadcasts have not been processed yet (so both the reducer state and
+       *    persisted's in-memory cache are stale). On native it equals `get`.
+       *  - the reducer's accounts: on native this IS the truth; on web it is
+       *    kept fresh by 'synced-accounts' broadcasts.
+       * On native the two always agree, so the rescue effectively never fires
+       * (the dying bundle is the only generation) and expiry falls straight
+       * through to logout. On web, readLatest is what sees the healthy tokens.
+       *
+       * Termination: a rescued bundle that expires AGAIN now matches persisted
+       * (this tab wrote nothing newer), so no newer candidate exists and it
+       * falls through to a real logout. The failed-token set is the belt-and-
+       * suspenders bound - each rescue consumes a strictly newer generation, so
+       * the set grows by at most one per expiry and is hard-capped
+       * (MAX_EXPIRY_RESCUE_GENERATIONS). A set rather than a single-shot flag is
+       * required: with a flag, a second expiry would fall through to logout and
+       * clobber a healthy THIRD generation another tab just wrote, recreating
+       * the exact bug.
+       */
+      if (sessionEvent === 'expired') {
+        const current = store.getState()
+        const currentAgent = current.currentAgentState.agent as unknown as
+          | SessionBundle
+          | PublicSessionBundle
+        const dyingRefreshJwt = sessionData?.refreshJwt
+        /*
+         * The rescue only applies when the expiring bundle IS the current one.
+         * Otherwise fall through: the reducer's identity guard drops a stale
+         * bundle's expiry anyway.
+         */
+        if (
+          currentAgent === bundle &&
+          current.currentAgentState.did === accountDid &&
+          dyingRefreshJwt
+        ) {
+          /*
+           * Record the dying token FIRST (at the start of handling), so a
+           * rescued-then-failed generation is remembered and never rescued back
+           * into.
+           */
+          let failedSet = failedExpiryTokensRef.current.get(accountDid)
+          if (!failedSet) {
+            failedSet = new Set()
+            failedExpiryTokensRef.current.set(accountDid, failedSet)
+          }
+          failedSet.add(dyingRefreshJwt)
+
+          /*
+           * Prefer the persisted re-read over the reducer state: storage is the
+           * cross-tab source of truth on web (on native they are identical).
+           */
+          const persistedCandidate = persisted
+            .readLatest('session')
+            .accounts.find(a => a.did === accountDid)
+          const reducerCandidate = current.accounts.find(
+            a => a.did === accountDid,
+          )
+          const candidate = pickExpiryRescueCandidate({
+            dyingRefreshJwt,
+            candidates: [persistedCandidate, reducerCandidate],
+            failedRefreshJwts: failedSet,
+          })
+
+          if (candidate) {
+            /*
+             * Rebuild a bundle from the newer tokens synchronously, modeled on
+             * the same-did rebuild in the persisted.onUpdate handler below. No
+             * expiry is dispatched and no emitSessionDropped fires - the session
+             * is not dropped, it is healed.
+             */
+            let newBundle!: SessionBundle
+            const hooks = makeSessionHooks(
+              onSessionChangeRef.current!,
+              () => newBundle,
+              () => candidate.did,
+            )
+            const newSession = new PasswordSession(
+              sessionAccountToSessionData(candidate),
+              hooks,
+            )
+            newBundle = buildBundle(newSession)
+            registerBundleKillSwitch(newBundle, hooks.kill)
+            configureModerationForAccount(newBundle, candidate)
+            /*
+             * Re-snapshot through the freshly built session (fallback covers
+             * the destroyed case, which cannot happen for a just-built,
+             * never-armed session).
+             */
+            const newAccount = newBundle.session.destroyed
+              ? candidate
+              : (sessionDataToSessionAccount(
+                  newBundle.session.session,
+                  newBundle.session.session.service,
+                ) ?? candidate)
+            hooks.arm()
+            store.dispatch({
+              type: 'replaced-current-bundle',
+              newAgent: newBundle,
+              newAccount,
+            })
+            return
+          }
+        }
+      }
+
+      /*
+       * Fall-through-to-logout path (no rescue was taken). emitSessionDropped
+       * fires here - never on the rescue path, where the session survives.
+       * 'create-failed' never fires in production but is kept for parity.
+       *
+       * Gate on the expiring bundle still being current: the reducer drops
+       * events from non-current bundles, and disposal of a replaced bundle
+       * happens in a deferred useEffect. A stale-but-still-armed bundle expiring
+       * in that window must not show a spurious "session expired" toast while
+       * the current session is healthy - only emit when a CURRENT bundle truly
+       * expires with no rescue.
+       */
+      if (
+        (sessionEvent === 'expired' || sessionEvent === 'create-failed') &&
+        store.getState().currentAgentState.agent === bundle
+      ) {
         emitSessionDropped()
       }
+      /*
+       * The bundle is the reducer's identity token: it stores the whole bundle
+       * as `currentAgentState.agent` and compares `action.agent` by identity to
+       * decide whether an event belongs to the active account. A same-bundle
+       * event acts on the active account; a stale (background) bundle does not
+       * match, so its events are ignored (background accounts must not be able
+       * to log the current user out or resurrect tokens).
+       */
       store.dispatch({
         type: 'received-agent-event',
-        agent,
+        agent: bundle,
         refreshedAccount,
         accountDid,
         sessionEvent,
@@ -126,15 +347,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     },
     [store],
   )
+  onSessionChangeRef.current = onSessionChange
 
   const createAccount = useCallback<SessionApiContext['createAccount']>(
     async (params, metrics) => {
       addSessionDebugLog({type: 'method:start', method: 'createAccount'})
       const signal = cancelPendingTask()
       ax.metric('account:create:begin', {})
-      const {agent, account} = await createAgentAndCreateAccount(
+      const {bundle, account} = await createSessionBundleAndCreateAccount(
         params,
-        onAgentSessionChange,
+        onSessionChange,
       )
 
       if (signal.aborted) {
@@ -142,7 +364,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
       store.dispatch({
         type: 'switched-to-account',
-        newAgent: agent,
+        newAgent: bundle,
         newAccount: account,
       })
       ax.metric('account:create:success', metrics, {
@@ -150,16 +372,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       })
       addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
     },
-    [ax, store, onAgentSessionChange, cancelPendingTask],
+    [ax, store, onSessionChange, cancelPendingTask],
   )
 
   const login = useCallback<SessionApiContext['login']>(
     async (params, logContext) => {
       addSessionDebugLog({type: 'method:start', method: 'login'})
       const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndLogin(
+      const {bundle, account} = await createSessionBundleAndLogin(
         params,
-        onAgentSessionChange,
+        onSessionChange,
       )
 
       if (signal.aborted) {
@@ -167,7 +389,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
       store.dispatch({
         type: 'switched-to-account',
-        newAgent: agent,
+        newAgent: bundle,
         newAccount: account,
       })
       ax.metric(
@@ -177,7 +399,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
-    [ax, store, onAgentSessionChange, cancelPendingTask],
+    [ax, store, onSessionChange, cancelPendingTask],
   )
 
   const logoutCurrentAccount = useCallback<
@@ -254,17 +476,40 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         account: storedAccount,
       })
       const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndResume(
+      const {bundle, account} = await createSessionBundleAndResume(
         storedAccount,
-        onAgentSessionChange,
+        onSessionChange,
       )
 
       if (signal.aborted) {
+        /*
+         * A newer task superseded this resume. The bundle is fully built and
+         * armed, so its session can still consume refresh tokens - dispose it
+         * before bailing (fixes a leak where an aborted resume left an armed,
+         * undisposed bundle behind).
+         */
+        disposeBundle(bundle)
+        return
+      }
+      /*
+       * Completion bail: re-read state and drop out if this account's entry is
+       * gone, or its tokens were cleared by a cross-tab logout that raced this
+       * resume (the residual hole where the leader logged in X then out while
+       * this follower's current did was still undefined, so the onUpdate cancel
+       * in 2a did not fire). The check is on the ACCOUNTS entry, not on
+       * "persisted current did": a persisted-current-did check would break
+       * normal user-initiated account switching, where the target account is
+       * deliberately not current yet.
+       */
+      const latest = store.getState()
+      const latestEntry = latest.accounts.find(a => a.did === account.did)
+      if (!latestEntry || !latestEntry.refreshJwt) {
+        disposeBundle(bundle)
         return
       }
       store.dispatch({
         type: 'switched-to-account',
-        newAgent: agent,
+        newAgent: bundle,
         newAccount: account,
       })
       addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
@@ -273,25 +518,58 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         onboardingDispatch({type: 'skip'})
       }
     },
-    [store, onAgentSessionChange, cancelPendingTask, onboardingDispatch],
+    [store, onSessionChange, cancelPendingTask, onboardingDispatch],
   )
 
   const partialRefreshSession = useCallback<
     SessionApiContext['partialRefreshSession']
   >(async () => {
-    const agent = state.currentAgentState.agent as BskyAppAgent
+    const bundle = state.currentAgentState.agent as unknown as SessionBundle
     const signal = cancelPendingTask()
-    const {data} = await agent.com.atproto.server.getSession()
+    /*
+     * Fetch through the merged Bluesky client and dispatch the patch. getSession
+     * must hit the user's PDS, not the appview proxy, so this raw call passes
+     * `{service: null}` to strip the instance's appview `atproto-proxy` header.
+     * We do NOT mutate the session object (PasswordSession's data is immutable to
+     * us); the reducer patches only the `accounts` entry, and the email-state
+     * hook reads from the account rather than the session.
+     */
+    const data = await bundle.bskyClient.call(
+      com.atproto.server.getSession,
+      {},
+      {service: null},
+    )
     if (signal.aborted) return
     store.dispatch({
       type: 'partial-refresh-session',
-      accountDid: agent.session!.did,
+      accountDid: bundle.session.did,
       patch: {
         emailConfirmed: data.emailConfirmed,
         emailAuthFactor: data.emailAuthFactor,
       },
     })
   }, [store, state, cancelPendingTask])
+
+  const refreshSession = useCallback<
+    SessionApiContext['refreshSession']
+  >(async () => {
+    const bundle = store.getState().currentAgentState.agent as unknown as
+      | SessionBundle
+      | PublicSessionBundle
+    if (!bundle.session) return undefined // logged out: nothing to refresh
+    /*
+     * refresh() fires the session's onUpdated hook on success, which the armed
+     * hooks map to an 'update' event; the reducer snapshots the refreshed
+     * account, so no explicit dispatch is needed here. The returned snapshot
+     * lets callers read post-refresh fields without waiting on the (async)
+     * reducer update.
+     */
+    await bundle.session.refresh()
+    return sessionDataToSessionAccount(
+      bundle.session.session,
+      bundle.session.session.service,
+    )
+  }, [store])
 
   const removeAccount = useCallback<SessionApiContext['removeAccount']>(
     account => {
@@ -322,6 +600,26 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const syncedAccount = synced.accounts.find(
         a => a.did === synced.currentAccount?.did,
       )
+      /*
+       * The leader tab's current account, but only if it still has tokens -
+       * a tokenless entry means the leader logged out. When the leader logged
+       * out (`syncedDid === undefined`) while THIS tab thinks it is logged in,
+       * cancel any pending task so a resume racing this logout does not win and
+       * dispatch a switch over the top of the synced logout. We do NOT cancel
+       * unconditionally on every no-current broadcast: a logged-out tab may be
+       * mid-login, and another logged-out tab removing a stored account must not
+       * abort that unrelated in-flight login. resumeSession already cancels at
+       * its start, so the different-did case is covered elsewhere.
+       */
+      const syncedDid = syncedAccount?.refreshJwt
+        ? syncedAccount.did
+        : undefined
+      if (
+        syncedDid === undefined &&
+        state.currentAgentState.did !== undefined
+      ) {
+        cancelPendingTask()
+      }
       if (syncedAccount && syncedAccount.refreshJwt) {
         if (syncedAccount.did !== state.currentAgentState.did) {
           /*
@@ -332,20 +630,123 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
            */
           void resumeSession(syncedAccount)
         } else {
-          const agent = state.currentAgentState.agent as AtpAgent
-          const prevSession = agent.session
-          // eslint-disable-next-line react-compiler/react-compiler
-          agent.sessionManager.session = sessionAccountToSession(syncedAccount)
+          /*
+           * Same account, new tokens synced from the leader tab. PasswordSession
+           * is immutable (no in-place session patch), so rebuild a fresh bundle
+           * from the synced tokens WITHOUT a network call (the leader already
+           * refreshed) and swap it in via `replaced-current-bundle`. The
+           * bundle-identity effect disposes the previous session once it swaps,
+           * which strengthens the single-refresher guarantee (the stale-token
+           * session can no longer refresh).
+           */
+          const prevBundle = state.currentAgentState.agent as unknown as
+            | SessionBundle
+            | PublicSessionBundle
+          /*
+           * Any change to ANY saved account fires persisted.onUpdate, and the
+           * 'synced-accounts' dispatch above already keeps the accounts list
+           * fresh. So if the CURRENT account's tokens are unchanged, a change to
+           * a non-current account landed here: bail out before rebuilding, since
+           * rebuild+swap would kill the live bundle (client-identity churn,
+           * in-flight request kills) for no reason. Fall through to rebuild only
+           * when we have no usable live session.
+           */
+          const live =
+            prevBundle.session && !prevBundle.session.destroyed
+              ? prevBundle.session.session
+              : undefined
+          if (
+            live &&
+            live.accessJwt === syncedAccount.accessJwt &&
+            live.refreshJwt === syncedAccount.refreshJwt
+          ) {
+            return
+          }
+          let newBundle!: SessionBundle
+          const hooks = makeSessionHooks(
+            onSessionChange,
+            () => newBundle,
+            () => syncedAccount.did,
+          )
+          const newSession = new PasswordSession(
+            sessionAccountToSessionData(syncedAccount),
+            hooks,
+          )
+          newBundle = buildBundle(newSession)
+          registerBundleKillSwitch(newBundle, hooks.kill)
+          /*
+           * Reapply this account's subscribed labelers to the freshly built
+           * merged Bluesky client: buildBundle starts with an empty per-instance
+           * labeler set, and this rebuild path never runs
+           * configureModerationForAccount on its own. It is fully synchronous
+           * (the labeler cache is a local MMKV read), so the whole prep + arm +
+           * dispatch sequence below runs in one tick from the onUpdate
+           * broadcast - the new bundle enters the reducer with its labelers
+           * already applied, with no window where the new session is armed but
+           * the reducer still holds the old bundle.
+           */
+          configureModerationForAccount(newBundle, syncedAccount)
+          /*
+           * Defensive race guard. With the whole path synchronous, nothing can
+           * have dispatched between the 'synced-accounts' dispatch above and
+           * here, so these conditions are trivially satisfied today. They are
+           * kept as a cheap invariant check against a future edit reintroducing
+           * an await into this path: a competing rebuild, an account switch, a
+           * logout, or a newer token generation would each show up as a
+           * bundle-identity or token mismatch, and the stale completion must
+           * drop out (self-disposing the never-installed bundle) rather than
+           * clobber the newer bundle or resurrect an authenticated bundle into a
+           * logged-out/other-account slot (the reducer's
+           * 'replaced-current-bundle' keeps the current did and does no identity
+           * check on the outgoing agent).
+           */
+          const current = store.getState()
+          const latestAccount = current.accounts.find(
+            account => account.did === syncedAccount.did,
+          )
+          if (
+            current.currentAgentState.agent !== prevBundle ||
+            latestAccount?.accessJwt !== syncedAccount.accessJwt ||
+            latestAccount?.refreshJwt !== syncedAccount.refreshJwt
+          ) {
+            /*
+             * This bundle was never armed and never installed, so dispose it
+             * here (the install path's normal disposal in the bundle-identity
+             * effect will never run for it).
+             */
+            disposeBundle(newBundle)
+            return
+          }
           addSessionDebugLog({
             type: 'agent:patch',
-            agent,
-            prevSession,
-            nextSession: agent.session,
+            agent: newBundle,
+            prevSession:
+              prevBundle.session && !prevBundle.session.destroyed
+                ? prevBundle.session.session
+                : undefined,
+            nextSession: newBundle.session.session,
+          })
+          /*
+           * Re-read syncedAccount's data through the freshly built session (the
+           * fallbacks cover the destroyed case, which cannot happen here since
+           * the session was just built synchronously and never armed).
+           */
+          const newAccount = newBundle.session.destroyed
+            ? syncedAccount
+            : (sessionDataToSessionAccount(
+                newBundle.session.session,
+                newBundle.session.session.service,
+              ) ?? syncedAccount)
+          hooks.arm()
+          store.dispatch({
+            type: 'replaced-current-bundle',
+            newAgent: newBundle,
+            newAccount,
           })
         }
       }
     })
-  }, [store, state, resumeSession])
+  }, [store, state, resumeSession, onSessionChange, cancelPendingTask])
 
   const stateContext = useMemo(
     () => ({
@@ -367,6 +768,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       resumeSession,
       removeAccount,
       partialRefreshSession,
+      refreshSession,
     }),
     [
       createAccount,
@@ -376,29 +778,37 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       resumeSession,
       removeAccount,
       partialRefreshSession,
+      refreshSession,
     ],
   )
 
+  const bundle = state.currentAgentState.agent as unknown as
+    | SessionBundle
+    | PublicSessionBundle
+
   // @ts-expect-error window type is not declared, debug only
   // eslint-disable-next-line react-hooks/immutability
-  if (__DEV__ && IS_WEB) window.agent = state.currentAgentState.agent
+  if (__DEV__ && IS_WEB) window.bundle = bundle
 
-  const agent = state.currentAgentState.agent as BskyAppAgent
-  const currentAgentRef = useRef(agent)
+  const currentBundleRef = useRef(bundle)
   useEffect(() => {
-    if (currentAgentRef.current !== agent) {
+    if (currentBundleRef.current !== bundle) {
       // Read the previous value and immediately advance the pointer.
-      const prevAgent = currentAgentRef.current
-      currentAgentRef.current = agent
-      addSessionDebugLog({type: 'agent:switch', prevAgent, nextAgent: agent})
-      // We never reuse agents so let's fully neutralize the previous one.
-      // This ensures it won't try to consume any refresh tokens.
-      prevAgent.dispose()
+      const prevBundle = currentBundleRef.current
+      currentBundleRef.current = bundle
+      addSessionDebugLog({
+        type: 'agent:switch',
+        prevAgent: prevBundle,
+        nextAgent: bundle,
+      })
+      // We never reuse bundles so let's fully neutralize the previous one.
+      // This ensures its session won't try to consume any refresh tokens.
+      disposeBundle(prevBundle)
     }
-  }, [agent])
+  }, [bundle])
 
   return (
-    <AgentContext.Provider value={agent}>
+    <BundleContext.Provider value={bundle}>
       <StateContext.Provider value={stateContext}>
         <ApiContext.Provider value={api}>
           <AnalyticsContext
@@ -411,7 +821,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           </AnalyticsContext>
         </ApiContext.Provider>
       </StateContext.Provider>
-    </AgentContext.Provider>
+    </BundleContext.Provider>
   )
 }
 
@@ -453,10 +863,94 @@ export function useRequireAuth() {
   )
 }
 
-export function useAgent(): AtpAgent {
-  const agent = useContext(AgentContext)
-  if (!agent) {
-    throw Error('useAgent() must be below <SessionProvider>.')
-  }
-  return agent
+/**
+ * Authenticated lex {@link Client} for the active account. Backed by the active
+ * bundle's single merged Bluesky client (proxied to the Bluesky appview, with
+ * labelers); its identity is stable per-bundle. Falls back to the public client
+ * when there is no bundle (logged out, or used outside the provider) so callers
+ * can treat it as always-present.
+ *
+ * All three authed client hooks (this, {@link useAppviewClient},
+ * {@link usePdsClient}) now return the SAME merged client for a signed-in
+ * account. They differ ONLY in their logged-out fallback: this hook and
+ * `useAppviewClient` fall back to the public read client, while `usePdsClient`
+ * falls back to the throwing unauthenticated client.
+ */
+export function useLexClient(): Client {
+  const bundle = useContext(BundleContext)
+  return bundle?.bskyClient ?? getPublicLexClient()
+}
+
+/**
+ * Alias of {@link useLexClient}: the authenticated merged Bluesky client for the
+ * active account, falling back to the public read client when logged out.
+ */
+export function useAppviewClient(): Client {
+  const bundle = useContext(BundleContext)
+  return bundle?.bskyClient ?? getPublicLexClient()
+}
+
+/**
+ * The authenticated merged Bluesky client for the active account, the SAME
+ * instance returned by {@link useLexClient}/{@link useAppviewClient}. The name
+ * is historical (there is no longer a separate PDS client): use this hook at
+ * call sites whose requests must target the ACCOUNT HOST. Record helpers on the
+ * client auto-target it (lex-client 0.3.0 defaults `service = null` per call);
+ * raw `com.atproto.server`/`identity`/`sync`/`temp` calls must pass
+ * `{service: null}` to strip the appview proxy.
+ *
+ * Logged out, returns a stable client ({@link getUnauthenticatedClient}) that
+ * throws `NotAuthenticatedError` before any network I/O, so an unauthenticated
+ * write fails loudly rather than silently hitting `public.api.bsky.app`. This is
+ * the ONLY logged-out write protection - the public bundle now carries the
+ * public read client in `bskyClient`, so this hook gates on `bundle.session`
+ * (not on a distinct bundle field) to decide whether to throw. Components may
+ * safely hold this client while logged out; only calling it throws. To branch
+ * on auth state, use {@link useMaybePdsClient} instead.
+ */
+export function usePdsClient(): Client {
+  const bundle = useContext(BundleContext)
+  return bundle?.session ? bundle.bskyClient : getUnauthenticatedClient()
+}
+
+/**
+ * The chat lex {@link Client} for the active account. `chat.bsky.*` calls go
+ * here - proxied to `did:web:api.bsky.chat#bsky_chat`.
+ *
+ * Logged out, returns a stable client ({@link getUnauthenticatedClient}) that
+ * throws `NotAuthenticatedError` before any network I/O. Chat is meaningless
+ * logged out, so this must NOT fall back to the public appview. To branch on
+ * auth state, use {@link useMaybeChatClient} instead.
+ */
+export function useChatClient(): Client {
+  const bundle = useContext(BundleContext)
+  return bundle?.chatClient ?? getUnauthenticatedClient()
+}
+
+/**
+ * The authenticated merged Bluesky client for the active account (the same
+ * instance {@link usePdsClient} returns when signed in), or `null` when there is
+ * no active session (logged out, or used outside the provider).
+ *
+ * The escape hatch for the rare component that genuinely renders a logged-out
+ * branch and must decide whether a write path is available. Prefer
+ * {@link usePdsClient} for the common case; do NOT reach for this hook merely to
+ * dodge the throwing client's `NotAuthenticatedError`.
+ */
+export function useMaybePdsClient(): Client | null {
+  const bundle = useContext(BundleContext)
+  return bundle?.session ? bundle.bskyClient : null
+}
+
+/**
+ * The chat lex {@link Client} for the active account, or `null` when there is
+ * no active session (logged out, or used outside the provider).
+ *
+ * The escape hatch for the rare component that genuinely renders a logged-out
+ * branch. Prefer {@link useChatClient} for the common case; do NOT reach for
+ * this hook merely to dodge the throwing client's `NotAuthenticatedError`.
+ */
+export function useMaybeChatClient(): Client | null {
+  const bundle = useContext(BundleContext)
+  return bundle?.session ? bundle.chatClient : null
 }

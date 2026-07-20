@@ -1,19 +1,31 @@
+import {type Client} from '@atproto/lex'
 import {useMutation} from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import {usePdsClient, useSessionApi} from '#/state/session'
 import {useRequestEmailUpdate} from '#/components/dialogs/EmailDialog/data/useRequestEmailUpdate'
+import {com} from '#/lexicons'
 
 async function updateEmailAndRefreshSession(
-  agent: ReturnType<typeof useAgent>,
+  pdsClient: Client,
+  refreshSession: () => Promise<unknown>,
   email: string,
   token?: string,
 ) {
-  await agent.com.atproto.server.updateEmail({email: email.trim(), token})
-  await agent.resumeSession(agent.session!)
+  await pdsClient.call(
+    com.atproto.server.updateEmail,
+    {
+      email: email.trim(),
+      token,
+    },
+    // service: null strips the appview proxy header - this must hit the account host (PDS)
+    {service: null},
+  )
+  await refreshSession()
 }
 
 export function useUpdateEmail() {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
+  const {refreshSession} = useSessionApi()
   const {mutateAsync: requestEmailUpdate} = useRequestEmailUpdate()
 
   return useMutation<
@@ -23,7 +35,12 @@ export function useUpdateEmail() {
   >({
     mutationFn: async ({email, token}: {email: string; token?: string}) => {
       if (token) {
-        await updateEmailAndRefreshSession(agent, email, token)
+        await updateEmailAndRefreshSession(
+          pdsClient,
+          refreshSession,
+          email,
+          token,
+        )
         return {
           status: 'success',
         }
@@ -34,7 +51,12 @@ export function useUpdateEmail() {
             status: 'tokenRequired',
           }
         } else {
-          await updateEmailAndRefreshSession(agent, email, token)
+          await updateEmailAndRefreshSession(
+            pdsClient,
+            refreshSession,
+            email,
+            token,
+          )
           return {
             status: 'success',
           }

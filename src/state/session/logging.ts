@@ -1,7 +1,6 @@
-import {type AtpSessionData, type AtpSessionEvent} from '@atproto/api'
-
 import {type Schema} from '../persisted'
 import {type Action, type State} from './reducer'
+import {type AtpSessionEvent} from './session-core'
 import {type SessionAccount} from './types'
 
 type Reducer = (state: State, action: Action) => State
@@ -51,10 +50,15 @@ type Log =
       nextAgent: object
     }
   | {
+      /*
+       * Dev-only bundle-swap log. The bundle is treated as an opaque object
+       * (the reducer never reads its internals); the session snapshots are
+       * plain objects captured for debugging.
+       */
       type: 'agent:patch'
       agent: object
-      prevSession: AtpSessionData | undefined
-      nextSession: AtpSessionData | undefined
+      prevSession: object | undefined
+      nextSession: object | undefined
     }
 
 export function wrapSessionReducerForLogging(reducer: Reducer): Reducer {

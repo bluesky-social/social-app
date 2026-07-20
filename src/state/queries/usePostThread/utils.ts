@@ -1,38 +1,24 @@
-import {
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AppBskyFeedThreadgate,
-  AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
-  AtUri,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 
 import {
   type ApiThreadItem,
   type ThreadItem,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
+import {app} from '#/lexicons'
 import {isDevMode} from '#/storage/hooks/dev-mode'
 import * as bsky from '#/types/bsky'
 
 export function getThreadgateRecord(
-  view: AppBskyUnspeccedGetPostThreadV2.OutputSchema['threadgate'],
+  view: app.bsky.unspecced.getPostThreadV2.$OutputBody['threadgate'],
 ) {
-  return bsky.dangerousIsType<AppBskyFeedThreadgate.Record>(
-    view?.record,
-    AppBskyFeedThreadgate.isRecord,
-  )
+  return bsky.isType(app.bsky.feed.threadgate, view?.record)
     ? view?.record
     : undefined
 }
 
-export function getRootPostAtUri(post: AppBskyFeedDefs.PostView) {
-  if (
-    bsky.dangerousIsType<AppBskyFeedPost.Record>(
-      post.record,
-      AppBskyFeedPost.isRecord,
-    )
-  ) {
+export function getRootPostAtUri(post: app.bsky.feed.defs.PostView) {
+  if (bsky.isType(app.bsky.feed.post, post.record)) {
     /**
      * If the record has no `reply` field, it is a root post.
      */
@@ -45,8 +31,8 @@ export function getRootPostAtUri(post: AppBskyFeedDefs.PostView) {
   }
 }
 
-export function getPostRecord(post: AppBskyFeedDefs.PostView) {
-  return post.record as AppBskyFeedPost.Record
+export function getPostRecord(post: app.bsky.feed.defs.PostView) {
+  return post.record as app.bsky.feed.post.Main
 }
 
 export function getTraversalMetadata({
@@ -60,7 +46,7 @@ export function getTraversalMetadata({
   nextItem?: ApiThreadItem
   parentMetadata?: TraversalMetadata
 }): TraversalMetadata {
-  if (!AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
+  if (!bsky.isType(app.bsky.unspecced.defs.threadItemPost, item.value)) {
     throw new Error(`Expected thread item to be a post`)
   }
   const repliesCount = item.value.post.replyCount || 0

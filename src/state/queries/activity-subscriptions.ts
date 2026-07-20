@@ -1,8 +1,4 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyNotificationDeclaration,
-  type AppBskyNotificationListActivitySubscriptions,
-} from '@atproto/api'
+import {type AtIdentifierString} from '@atproto/syntax'
 import {t} from '@lingui/core/macro'
 import {
   type InfiniteData,
@@ -13,23 +9,25 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import * as Toast from '#/components/Toast'
+import {app} from '#/lexicons'
 
 export const RQKEY_getActivitySubscriptions = ['activity-subscriptions']
 export const RQKEY_getNotificationDeclaration = ['notification-declaration']
 
 export function useActivitySubscriptionsQuery() {
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   return useInfiniteQuery({
     queryKey: RQKEY_getActivitySubscriptions,
     queryFn: async ({pageParam}) => {
-      const response =
-        await agent.app.bsky.notification.listActivitySubscriptions({
+      return await client.call(
+        app.bsky.notification.listActivitySubscriptions,
+        {
           cursor: pageParam,
-        })
-      return response.data
+        },
+      )
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: prev => prev.cursor,
@@ -37,14 +35,14 @@ export function useActivitySubscriptionsQuery() {
 }
 
 export function useNotificationDeclarationQuery() {
-  const agent = useAgent()
+  const client = usePdsClient()
   const {currentAccount} = useSession()
   return useQuery({
     queryKey: RQKEY_getNotificationDeclaration,
     queryFn: async () => {
       try {
-        const response = await agent.app.bsky.notification.declaration.get({
-          repo: currentAccount!.did,
+        const response = await client.get(app.bsky.notification.declaration, {
+          repo: currentAccount!.did as AtIdentifierString,
           rkey: 'self',
         })
         return response
@@ -57,7 +55,7 @@ export function useNotificationDeclarationQuery() {
             value: {
               $type: 'app.bsky.notification.declaration',
               allowSubscriptions: 'followers',
-            } satisfies AppBskyNotificationDeclaration.Record,
+            } satisfies app.bsky.notification.declaration.Main,
           }
         } else {
           throw err
@@ -68,17 +66,18 @@ export function useNotificationDeclarationQuery() {
 }
 
 export function useNotificationDeclarationMutation() {
-  const agent = useAgent()
+  const client = usePdsClient()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (record: AppBskyNotificationDeclaration.Record) => {
-      const response = await agent.app.bsky.notification.declaration.put(
+    mutationFn: async (record: app.bsky.notification.declaration.Main) => {
+      const response = await client.put(
+        app.bsky.notification.declaration,
+        record,
         {
-          repo: currentAccount!.did,
+          repo: currentAccount!.did as AtIdentifierString,
           rkey: 'self',
         },
-        record,
       )
       return response
     },
@@ -88,7 +87,7 @@ export function useNotificationDeclarationMutation() {
         (old?: {
           uri: string
           cid: string
-          value: AppBskyNotificationDeclaration.Record
+          value: app.bsky.notification.declaration.Main
         }) => {
           if (!old) return old
           return {
@@ -109,9 +108,9 @@ export function useNotificationDeclarationMutation() {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyNotificationListActivitySubscriptions.OutputSchema>
+    InfiniteData<app.bsky.notification.listActivitySubscriptions.$OutputBody>
   >({
     queryKey: RQKEY_getActivitySubscriptions,
   })

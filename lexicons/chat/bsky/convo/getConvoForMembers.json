@@ -1,0 +1,58 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.getConvoForMembers",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get or create a 1-1 conversation for the given members. Always returns the same direct (non-group) conversation. To create a group conversation, use createGroup.",
+      "errors": [
+        {
+          "name": "AccountSuspended"
+        },
+        {
+          "name": "BlockedActor"
+        },
+        {
+          "name": "BlockedSubject"
+        },
+        {
+          "name": "MessagesDisabled"
+        },
+        {
+          "name": "NotFollowedBySender"
+        },
+        {
+          "name": "RecipientNotFound"
+        }
+      ],
+      "parameters": {
+        "type": "params",
+        "required": ["members"],
+        "properties": {
+          "members": {
+            "type": "array",
+            "minLength": 1,
+            "maxLength": 10,
+            "items": {
+              "type": "string",
+              "format": "did"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convo"],
+          "properties": {
+            "convo": {
+              "type": "ref",
+              "ref": "chat.bsky.convo.defs#convoView"
+            }
+          }
+        }
+      }
+    }
+  }
+}

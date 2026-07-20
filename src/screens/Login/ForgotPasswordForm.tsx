@@ -1,12 +1,11 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, View} from 'react-native'
-import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
+import {createLexClient} from '#/lib/lexClient'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {Agent} from '#/state/session/agent'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -16,9 +15,10 @@ import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {com} from '#/lexicons'
 import {FormContainer} from './FormContainer'
 
-type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
+type ServiceDescription = com.atproto.server.describeServer.$OutputBody
 
 export const ForgotPasswordForm = ({
   error,
@@ -55,8 +55,8 @@ export const ForgotPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const agent = new Agent(null, {service: serviceUrl})
-      await agent.com.atproto.server.requestPasswordReset({email})
+      const client = createLexClient({service: serviceUrl})
+      await client.call(com.atproto.server.requestPasswordReset, {email})
       onEmailSent()
     } catch (err) {
       logger.warn('Failed to request password reset', {error: err})

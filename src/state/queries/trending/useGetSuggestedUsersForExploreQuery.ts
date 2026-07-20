@@ -1,7 +1,3 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyUnspeccedGetSuggestedUsersForExplore,
-} from '@atproto/api'
 import {type QueryClient, useQuery} from '@tanstack/react-query'
 
 import {
@@ -12,7 +8,8 @@ import {logger} from '#/logger'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 export type QueryProps = {
   category?: string | null
@@ -26,7 +23,7 @@ export const createGetSuggestedUsersForExploreQueryKey = (
 ) => [getSuggestedUsersForExploreQueryKeyRoot, props.category, props.limit]
 
 export function useGetSuggestedUsersForExploreQuery(props: QueryProps = {}) {
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const {data: preferences} = usePreferencesQuery()
 
   return useQuery({
@@ -36,7 +33,8 @@ export function useGetSuggestedUsersForExploreQuery(props: QueryProps = {}) {
       const contentLangs = getContentLanguages().join(',')
       const userInterests = aggregateUserInterests(preferences)
 
-      const {data} = await agent.app.bsky.unspecced.getSuggestedUsersForExplore(
+      const data = await appviewClient.call(
+        app.bsky.unspecced.getSuggestedUsersForExplore,
         {
           category: props.category ?? undefined,
           limit: props.limit || 10,
@@ -60,13 +58,12 @@ export function useGetSuggestedUsersForExploreQuery(props: QueryProps = {}) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
-  const responses =
-    queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedUsersForExplore.OutputSchema>(
-      {
-        queryKey: [getSuggestedUsersForExploreQueryKeyRoot],
-      },
-    )
+): Generator<app.bsky.actor.defs.ProfileView, void> {
+  const responses = queryClient.getQueriesData<{
+    actors: app.bsky.actor.defs.ProfileView[]
+  }>({
+    queryKey: [getSuggestedUsersForExploreQueryKeyRoot],
+  })
   for (const [_key, response] of responses) {
     if (!response) {
       continue

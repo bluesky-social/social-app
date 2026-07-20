@@ -1,5 +1,5 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {type AppBskyVideoDefs, type AtpAgent, type BlobRef} from '@atproto/api'
+import {type BlobRef, type Client} from '@atproto/lex'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
@@ -14,9 +14,10 @@ import {
 import {type VideoTelemetry} from '#/lib/media/video/telemetry'
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {uploadVideo} from '#/lib/media/video/upload'
-import {createVideoAgent} from '#/lib/media/video/util'
+import {createTokenlessVideoServiceClient} from '#/lib/media/video/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {app} from '#/lexicons'
 
 type CaptionsTrack = {lang: string; file: File}
 
@@ -50,7 +51,7 @@ export type VideoAction =
     }
   | {
       type: 'update_job_status'
-      jobStatus: AppBskyVideoDefs.JobStatus
+      jobStatus: app.bsky.video.defs.JobStatus
       signal: AbortSignal
     }
 
@@ -119,7 +120,7 @@ type ProcessingState = {
   asset: ImagePickerAsset
   video: CompressedVideo
   jobId: string
-  jobStatus: AppBskyVideoDefs.JobStatus | null
+  jobStatus: app.bsky.video.defs.JobStatus | null
   pendingPublish?: undefined
   telemetry: VideoTelemetry
   altText: string
@@ -274,7 +275,8 @@ function trunc2dp(num: number) {
 export async function processVideo(
   asset: ImagePickerAsset,
   dispatch: (action: VideoAction) => void,
-  agent: AtpAgent,
+  client: Client,
+  dispatchUrl: string | URL,
   did: string,
   signal: AbortSignal,
   i18n: I18n,
@@ -317,12 +319,13 @@ export async function processVideo(
     signal,
   })
 
-  let uploadResponse: AppBskyVideoDefs.JobStatus | undefined
+  let uploadResponse: app.bsky.video.defs.JobStatus | undefined
   try {
     telemetry.uploadStarted(video.size)
     uploadResponse = await uploadVideo({
       video,
-      agent,
+      client,
+      dispatchUrl,
       did,
       signal,
       i18n,
@@ -358,12 +361,14 @@ export async function processVideo(
       return // Exit async loop
     }
 
-    const videoAgent = createVideoAgent()
-    let status: AppBskyVideoDefs.JobStatus | undefined
+    const videoClient = createTokenlessVideoServiceClient()
+    let status: app.bsky.video.defs.JobStatus | undefined
     let blob: BlobRef | undefined
     try {
-      const response = await videoAgent.app.bsky.video.getJobStatus({jobId})
-      status = response.data.jobStatus
+      const response = await videoClient.call(app.bsky.video.getJobStatus, {
+        jobId,
+      })
+      status = response.jobStatus
       pollFailures = 0
 
       if (status.state === 'JOB_STATE_COMPLETED') {

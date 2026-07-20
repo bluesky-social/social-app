@@ -1,9 +1,11 @@
-import {
-  ComAtprotoModerationDefs as RootReportDefs,
-  ToolsOzoneReportDefs as OzoneReportDefs,
-} from '@atproto/api'
-
 import {type ParsedReportSubject} from '#/components/moderation/ReportDialog/types'
+import {com, tools} from '#/lexicons'
+
+const OzoneReportDefs = tools.ozone.report.defs
+const RootReportDefs = com.atproto.moderation.defs
+
+type OzoneReasonType = tools.ozone.report.defs.ReasonType
+type RootReasonType = com.atproto.moderation.defs.ReasonType
 
 export const DMCA_LINK = 'https://bsky.social/about/support/copyright'
 export const SUPPORT_PAGE = 'https://bsky.social/about/support'
@@ -16,60 +18,87 @@ export const NEW_TO_OLD_REASON_MAPPING: Record<string, string> = {}
  * Matches the mapping defined in the Ozone codebase:
  * @see https://github.com/bluesky-social/atproto/blob/4c15fb47cec26060bff2e710e95869a90c9d7fdd/packages/ozone/src/mod-service/profile.ts#L16-L64
  */
-export const NEW_TO_OLD_REASONS_MAP: Record<
-  OzoneReportDefs.ReasonType,
-  RootReportDefs.ReasonType
-> = {
-  [OzoneReportDefs.REASONAPPEAL]: RootReportDefs.REASONAPPEAL,
-  [OzoneReportDefs.REASONOTHER]: RootReportDefs.REASONOTHER,
+export const NEW_TO_OLD_REASONS_MAP: Record<OzoneReasonType, RootReasonType> = {
+  [OzoneReportDefs.reasonAppeal.value]: RootReportDefs.reasonAppeal.value,
+  [OzoneReportDefs.reasonOther.value]: RootReportDefs.reasonOther.value,
 
-  [OzoneReportDefs.REASONVIOLENCEANIMAL]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONVIOLENCETHREATS]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONVIOLENCEGRAPHICCONTENT]:
-    RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONVIOLENCEGLORIFICATION]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONVIOLENCEEXTREMISTCONTENT]:
-    RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONVIOLENCETRAFFICKING]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONVIOLENCEOTHER]: RootReportDefs.REASONVIOLATION,
+  [OzoneReportDefs.reasonViolenceAnimal.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonViolenceThreats.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonViolenceGraphicContent.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonViolenceGlorification.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonViolenceExtremistContent.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonViolenceTrafficking.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonViolenceOther.value]:
+    RootReportDefs.reasonViolation.value,
 
-  [OzoneReportDefs.REASONSEXUALABUSECONTENT]: RootReportDefs.REASONSEXUAL,
-  [OzoneReportDefs.REASONSEXUALNCII]: RootReportDefs.REASONSEXUAL,
-  [OzoneReportDefs.REASONSEXUALDEEPFAKE]: RootReportDefs.REASONSEXUAL,
-  [OzoneReportDefs.REASONSEXUALANIMAL]: RootReportDefs.REASONSEXUAL,
-  [OzoneReportDefs.REASONSEXUALUNLABELED]: RootReportDefs.REASONSEXUAL,
-  [OzoneReportDefs.REASONSEXUALOTHER]: RootReportDefs.REASONSEXUAL,
+  [OzoneReportDefs.reasonSexualAbuseContent.value]:
+    RootReportDefs.reasonSexual.value,
+  [OzoneReportDefs.reasonSexualNCII.value]: RootReportDefs.reasonSexual.value,
+  [OzoneReportDefs.reasonSexualDeepfake.value]:
+    RootReportDefs.reasonSexual.value,
+  [OzoneReportDefs.reasonSexualAnimal.value]: RootReportDefs.reasonSexual.value,
+  [OzoneReportDefs.reasonSexualUnlabeled.value]:
+    RootReportDefs.reasonSexual.value,
+  [OzoneReportDefs.reasonSexualOther.value]: RootReportDefs.reasonSexual.value,
 
-  [OzoneReportDefs.REASONCHILDSAFETYCSAM]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONCHILDSAFETYGROOM]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONCHILDSAFETYPRIVACY]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONCHILDSAFETYHARASSMENT]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONCHILDSAFETYOTHER]: RootReportDefs.REASONVIOLATION,
+  [OzoneReportDefs.reasonChildSafetyCSAM.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonChildSafetyGroom.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonChildSafetyPrivacy.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonChildSafetyHarassment.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonChildSafetyOther.value]:
+    RootReportDefs.reasonViolation.value,
 
-  [OzoneReportDefs.REASONHARASSMENTTROLL]: RootReportDefs.REASONRUDE,
-  [OzoneReportDefs.REASONHARASSMENTTARGETED]: RootReportDefs.REASONRUDE,
-  [OzoneReportDefs.REASONHARASSMENTHATESPEECH]: RootReportDefs.REASONRUDE,
-  [OzoneReportDefs.REASONHARASSMENTDOXXING]: RootReportDefs.REASONRUDE,
-  [OzoneReportDefs.REASONHARASSMENTOTHER]: RootReportDefs.REASONRUDE,
+  [OzoneReportDefs.reasonHarassmentTroll.value]:
+    RootReportDefs.reasonRude.value,
+  [OzoneReportDefs.reasonHarassmentTargeted.value]:
+    RootReportDefs.reasonRude.value,
+  [OzoneReportDefs.reasonHarassmentHateSpeech.value]:
+    RootReportDefs.reasonRude.value,
+  [OzoneReportDefs.reasonHarassmentDoxxing.value]:
+    RootReportDefs.reasonRude.value,
+  [OzoneReportDefs.reasonHarassmentOther.value]:
+    RootReportDefs.reasonRude.value,
 
-  [OzoneReportDefs.REASONMISLEADINGBOT]: RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONMISLEADINGIMPERSONATION]:
-    RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONMISLEADINGSPAM]: RootReportDefs.REASONSPAM,
-  [OzoneReportDefs.REASONMISLEADINGSCAM]: RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONMISLEADINGELECTIONS]: RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONMISLEADINGOTHER]: RootReportDefs.REASONMISLEADING,
+  [OzoneReportDefs.reasonMisleadingBot.value]:
+    RootReportDefs.reasonMisleading.value,
+  [OzoneReportDefs.reasonMisleadingImpersonation.value]:
+    RootReportDefs.reasonMisleading.value,
+  [OzoneReportDefs.reasonMisleadingSpam.value]: RootReportDefs.reasonSpam.value,
+  [OzoneReportDefs.reasonMisleadingScam.value]:
+    RootReportDefs.reasonMisleading.value,
+  [OzoneReportDefs.reasonMisleadingElections.value]:
+    RootReportDefs.reasonMisleading.value,
+  [OzoneReportDefs.reasonMisleadingOther.value]:
+    RootReportDefs.reasonMisleading.value,
 
-  [OzoneReportDefs.REASONRULESITESECURITY]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONRULEPROHIBITEDSALES]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONRULEBANEVASION]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONRULEOTHER]: RootReportDefs.REASONVIOLATION,
+  [OzoneReportDefs.reasonRuleSiteSecurity.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonRuleProhibitedSales.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonRuleBanEvasion.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonRuleOther.value]: RootReportDefs.reasonViolation.value,
 
-  [OzoneReportDefs.REASONSELFHARMCONTENT]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONSELFHARMED]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONSELFHARMSTUNTS]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONSELFHARMSUBSTANCES]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONSELFHARMOTHER]: RootReportDefs.REASONVIOLATION,
+  [OzoneReportDefs.reasonSelfHarmContent.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonSelfHarmED.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonSelfHarmStunts.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonSelfHarmSubstances.value]:
+    RootReportDefs.reasonViolation.value,
+  [OzoneReportDefs.reasonSelfHarmOther.value]:
+    RootReportDefs.reasonViolation.value,
 }
 
 /**
@@ -77,43 +106,45 @@ export const NEW_TO_OLD_REASONS_MAP: Record<
  * @see https://github.com/bluesky-social/proposals/tree/main/0009-mod-report-granularity#backwards-compatibility
  */
 export const OLD_TO_NEW_REASONS_MAP: Record<
-  Exclude<RootReportDefs.ReasonType, OzoneReportDefs.ReasonType>,
-  OzoneReportDefs.ReasonType
+  Exclude<RootReasonType, OzoneReasonType>,
+  OzoneReasonType
 > = {
-  [RootReportDefs.REASONSPAM]: [OzoneReportDefs.REASONMISLEADINGSPAM],
-  [RootReportDefs.REASONVIOLATION]: [OzoneReportDefs.REASONRULEOTHER],
-  [RootReportDefs.REASONMISLEADING]: [OzoneReportDefs.REASONMISLEADINGOTHER],
-  [RootReportDefs.REASONSEXUAL]: [OzoneReportDefs.REASONSEXUALUNLABELED],
-  [RootReportDefs.REASONRUDE]: [OzoneReportDefs.REASONHARASSMENTOTHER],
-  [RootReportDefs.REASONOTHER]: [OzoneReportDefs.REASONOTHER],
-  [RootReportDefs.REASONAPPEAL]: [OzoneReportDefs.REASONAPPEAL],
+  [RootReportDefs.reasonSpam.value]: OzoneReportDefs.reasonMisleadingSpam.value,
+  [RootReportDefs.reasonViolation.value]: OzoneReportDefs.reasonRuleOther.value,
+  [RootReportDefs.reasonMisleading.value]:
+    OzoneReportDefs.reasonMisleadingOther.value,
+  [RootReportDefs.reasonSexual.value]:
+    OzoneReportDefs.reasonSexualUnlabeled.value,
+  [RootReportDefs.reasonRude.value]:
+    OzoneReportDefs.reasonHarassmentOther.value,
+  [RootReportDefs.reasonOther.value]: OzoneReportDefs.reasonOther.value,
+  [RootReportDefs.reasonAppeal.value]: OzoneReportDefs.reasonAppeal.value,
 }
 
 /**
  * Set of report reasons that should optionally include additional details from
  * the reporter.
  */
-export const OTHER_REPORT_REASONS: Set<OzoneReportDefs.ReasonType> = new Set([
-  OzoneReportDefs.REASONVIOLENCEOTHER,
-  OzoneReportDefs.REASONSEXUALOTHER,
-  OzoneReportDefs.REASONCHILDSAFETYOTHER,
-  OzoneReportDefs.REASONHARASSMENTOTHER,
-  OzoneReportDefs.REASONMISLEADINGOTHER,
-  OzoneReportDefs.REASONRULEOTHER,
-  OzoneReportDefs.REASONSELFHARMOTHER,
-  OzoneReportDefs.REASONOTHER,
+export const OTHER_REPORT_REASONS: Set<OzoneReasonType> = new Set([
+  OzoneReportDefs.reasonViolenceOther.value,
+  OzoneReportDefs.reasonSexualOther.value,
+  OzoneReportDefs.reasonChildSafetyOther.value,
+  OzoneReportDefs.reasonHarassmentOther.value,
+  OzoneReportDefs.reasonMisleadingOther.value,
+  OzoneReportDefs.reasonRuleOther.value,
+  OzoneReportDefs.reasonSelfHarmOther.value,
+  OzoneReportDefs.reasonOther.value,
 ])
 
 /**
  * Set of report reasons that should only be sent to Bluesky's moderation service.
  */
-export const BSKY_LABELER_ONLY_REPORT_REASONS: Set<OzoneReportDefs.ReasonType> =
-  new Set([
-    OzoneReportDefs.REASONCHILDSAFETYCSAM,
-    OzoneReportDefs.REASONCHILDSAFETYGROOM,
-    OzoneReportDefs.REASONCHILDSAFETYOTHER,
-    OzoneReportDefs.REASONVIOLENCEEXTREMISTCONTENT,
-  ])
+export const BSKY_LABELER_ONLY_REPORT_REASONS: Set<OzoneReasonType> = new Set([
+  OzoneReportDefs.reasonChildSafetyCSAM.value,
+  OzoneReportDefs.reasonChildSafetyGroom.value,
+  OzoneReportDefs.reasonChildSafetyOther.value,
+  OzoneReportDefs.reasonViolenceExtremistContent.value,
+])
 
 /**
  * Set of _parsed_ subject types that should only be sent to Bluesky's

@@ -1,46 +1,57 @@
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedGetFeed as GetCustomFeed,
-  AtpAgent,
-  jsonStringToLex,
-} from '@atproto/api'
+import {lexParse} from '@atproto/lex'
+import {Client} from '@atproto/lex'
 
 import {
   getAppLanguageAsContentLanguage,
   getContentLanguages,
 } from '#/state/preferences/languages'
+import {app} from '#/lexicons'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
+/**
+ * Input params for {@link CustomFeedAPI}. The generated `$Params` type reflects
+ * post-parse output, where `limit` (which has a lexicon default) is required;
+ * callers supply only `feed` and let `limit`/`cursor` come from `fetch`.
+ */
+type CustomFeedParams = {feed: app.bsky.feed.getFeed.$Params['feed']} & Partial<
+  Omit<app.bsky.feed.getFeed.$Params, 'feed'>
+>
+
 export class CustomFeedAPI implements FeedAPI {
-  agent: AtpAgent
-  params: GetCustomFeed.QueryParams
+  client: Client
+  params: CustomFeedParams
   userInterests?: string
 
   constructor({
-    agent,
+    client,
     feedParams,
     userInterests,
   }: {
-    agent: AtpAgent
-    feedParams: GetCustomFeed.QueryParams
+    client: Client
+    feedParams: CustomFeedParams
     userInterests?: string
   }) {
-    this.agent = agent
+    this.client = client
     this.params = feedParams
     this.userInterests = userInterests
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  setClient(client: Client) {
+    this.client = client
+  }
+
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
     const contentLangs = getContentLanguages().join(',')
-    const res = await this.agent.app.bsky.feed.getFeed(
+    const res = await this.client.call(
+      app.bsky.feed.getFeed,
       {
         ...this.params,
         limit: 1,
       },
       {headers: {'Accept-Language': contentLangs}},
     )
-    return res.data.feed[0]
+    return res.feed[0]
   }
 
   async fetch({
@@ -51,41 +62,49 @@ export class CustomFeedAPI implements FeedAPI {
     limit: number
   }): Promise<FeedAPIResponse> {
     const contentLangs = getContentLanguages().join(',')
-    const agent = this.agent
     const isBlueskyOwned = isBlueskyOwnedFeed(this.params.feed)
 
-    const res = agent.did
-      ? await this.agent.app.bsky.feed.getFeed(
-          {
-            ...this.params,
-            cursor,
-            limit,
+    let feed: app.bsky.feed.defs.FeedViewPost[]
+    let resCursor: string | undefined
+
+    if (this.client.did) {
+      const res = await this.client.call(
+        app.bsky.feed.getFeed,
+        {
+          ...this.params,
+          cursor,
+          limit,
+        },
+        {
+          headers: {
+            ...(isBlueskyOwned
+              ? createBskyTopicsHeader(this.userInterests)
+              : {}),
+            'Accept-Language': contentLangs,
           },
-          {
-            headers: {
-              ...(isBlueskyOwned
-                ? createBskyTopicsHeader(this.userInterests)
-                : {}),
-              'Accept-Language': contentLangs,
-            },
-          },
-        )
-      : await loggedOutFetch({...this.params, cursor, limit})
-    if (res.success) {
-      // NOTE
-      // some custom feeds fail to enforce the pagination limit
-      // so we manually truncate here
-      // -prf
-      if (res.data.feed.length > limit) {
-        res.data.feed = res.data.feed.slice(0, limit)
+        },
+      )
+      feed = res.feed
+      resCursor = res.cursor
+    } else {
+      const res = await loggedOutFetch({...this.params, cursor, limit})
+      if (!res.success) {
+        return {feed: []}
       }
-      return {
-        cursor: res.data.feed.length ? res.data.cursor : undefined,
-        feed: res.data.feed,
-      }
+      feed = res.data.feed
+      resCursor = res.data.cursor
+    }
+
+    // NOTE
+    // some custom feeds fail to enforce the pagination limit
+    // so we manually truncate here
+    // -prf
+    if (feed.length > limit) {
+      feed = feed.slice(0, limit)
     }
     return {
-      feed: [],
+      cursor: feed.length ? resCursor : undefined,
+      feed,
     }
   }
 }
@@ -105,15 +124,16 @@ async function loggedOutFetch({
   feed: string
   limit: number
   cursor?: string
-}) {
+}): Promise<{success: boolean; data: app.bsky.feed.getFeed.$OutputBody}> {
   let contentLangs = getAppLanguageAsContentLanguage()
 
-  /**
-   * Copied from our root `Agent` class
-   * @see https://github.com/bluesky-social/atproto/blob/60df3fc652b00cdff71dd9235d98a7a4bb828f05/packages/api/src/agent.ts#L120
+  /*
+   * Copied from our root `Agent` class. The global (`;redact`-suffixed) app
+   * labelers are kept on the lex `Client` static (synced in
+   * `#/state/session/moderation`), replacing the old `AtpAgent.appLabelers`.
    */
   const labelersHeader = {
-    'atproto-accept-labelers': AtpAgent.appLabelers
+    'atproto-accept-labelers': Client.appLabelers
       .map(l => `${l};redact`)
       .join(', '),
   }
@@ -129,7 +149,7 @@ async function loggedOutFetch({
     },
   )
   let data = res.ok
-    ? (jsonStringToLex(await res.text()) as GetCustomFeed.OutputSchema)
+    ? (lexParse(await res.text()) as app.bsky.feed.getFeed.$OutputBody)
     : null
   if (data?.feed?.length) {
     return {
@@ -146,7 +166,7 @@ async function loggedOutFetch({
     {method: 'GET', headers: {'Accept-Language': '', ...labelersHeader}},
   )
   data = res.ok
-    ? (jsonStringToLex(await res.text()) as GetCustomFeed.OutputSchema)
+    ? (lexParse(await res.text()) as app.bsky.feed.getFeed.$OutputBody)
     : null
   if (data?.feed?.length) {
     return {

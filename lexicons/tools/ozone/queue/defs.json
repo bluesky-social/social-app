@@ -1,0 +1,148 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.queue.defs",
+  "defs": {
+    "queueView": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "subjectTypes",
+        "reportTypes",
+        "createdBy",
+        "createdAt",
+        "updatedAt",
+        "enabled",
+        "stats"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Queue ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the queue"
+        },
+        "subjectTypes": {
+          "type": "array",
+          "minLength": 1,
+          "items": {
+            "type": "string",
+            "knownValues": ["account", "record", "message"]
+          },
+          "description": "Subject types this queue accepts."
+        },
+        "collection": {
+          "type": "string",
+          "format": "nsid",
+          "description": "Collection name for record subjects (e.g., 'app.bsky.feed.post')"
+        },
+        "reportTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minLength": 1,
+          "description": "Report reason types this queue accepts (fully qualified NSIDs)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description of the queue"
+        },
+        "createdBy": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of moderator who created this queue"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether this queue is currently active"
+        },
+        "deletedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the queue was deleted, if applicable"
+        },
+        "stats": {
+          "type": "ref",
+          "ref": "#queueStats",
+          "description": "Statistics about this queue"
+        }
+      }
+    },
+    "queueStats": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "pendingCount": {
+          "type": "integer",
+          "description": "Number of reports in 'open' status"
+        },
+        "actionedCount": {
+          "type": "integer",
+          "description": "Number of reports in 'closed' status"
+        },
+        "escalatedCount": {
+          "type": "integer",
+          "description": "Number of reports in 'escalated' status"
+        },
+        "inboundCount": {
+          "type": "integer",
+          "description": "Reports received in this queue in the last 24 hours."
+        },
+        "actionRate": {
+          "type": "integer",
+          "description": "Percentage of reports actioned (actionedCount / inboundCount * 100), rounded to nearest integer. Absent when inboundCount is 0."
+        },
+        "avgHandlingTimeSec": {
+          "type": "integer",
+          "description": "Average time in seconds from report creation to close, for reports closed in this period."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When these statistics were last computed"
+        }
+      }
+    },
+    "assignmentView": {
+      "type": "object",
+      "required": ["id", "did", "queue", "startAt"],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "moderator": {
+          "type": "ref",
+          "ref": "tools.ozone.team.defs#member",
+          "description": "The moderator assigned to this queue"
+        },
+        "queue": {
+          "type": "ref",
+          "ref": "#queueView"
+        },
+        "startAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "endAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    }
+  }
+}

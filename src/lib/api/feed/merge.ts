@@ -1,8 +1,5 @@
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedGetTimeline,
-  type AtpAgent,
-} from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {type AtUriString} from '@atproto/syntax'
 import shuffle from 'lodash.shuffle'
 
 import {bundleAsync} from '#/lib/async/bundle'
@@ -10,6 +7,7 @@ import {timeout} from '#/lib/async/timeout'
 import {feedUriToHref} from '#/lib/strings/url-helpers'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {type FeedParams} from '#/state/queries/post-feed'
+import {app} from '#/lexicons'
 import {FeedTuner} from '../feed-manip'
 import {type FeedTunerFn} from '../feed-manip'
 import {
@@ -22,9 +20,21 @@ import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
 
+/**
+ * Internal result shape for a single feed page fetch. Lex `client.call`
+ * returns the response body directly (throwing on error), so we no longer
+ * carry the old `{success, headers, data}` wrapper - `success` here just
+ * distinguishes an empty/errored fetch from a populated one.
+ */
+type FeedPage = {
+  success: boolean
+  cursor?: string
+  feed: app.bsky.feed.defs.FeedViewPost[]
+}
+
 export class MergeFeedAPI implements FeedAPI {
   userInterests?: string
-  agent: AtpAgent
+  client: Client
   params: FeedParams
   feedTuners: FeedTunerFn[]
   following: MergeFeedSource_Following
@@ -34,29 +44,37 @@ export class MergeFeedAPI implements FeedAPI {
   sampleCursor = 0
 
   constructor({
-    agent,
+    client,
     feedParams,
     feedTuners,
     userInterests,
   }: {
-    agent: AtpAgent
+    client: Client
     feedParams: FeedParams
     feedTuners: FeedTunerFn[]
     userInterests?: string
   }) {
-    this.agent = agent
+    this.client = client
     this.params = feedParams
     this.feedTuners = feedTuners
     this.userInterests = userInterests
     this.following = new MergeFeedSource_Following({
-      agent: this.agent,
+      client: this.client,
       feedTuners: this.feedTuners,
     })
   }
 
+  setClient(client: Client) {
+    this.client = client
+    this.following.setClient(client)
+    for (const feed of this.customFeeds) {
+      feed.setClient(client)
+    }
+  }
+
   reset() {
     this.following = new MergeFeedSource_Following({
-      agent: this.agent,
+      client: this.client,
       feedTuners: this.feedTuners,
     })
     this.customFeeds = []
@@ -68,7 +86,7 @@ export class MergeFeedAPI implements FeedAPI {
         this.params.mergeFeedSources.map(
           feedUri =>
             new MergeFeedSource_Custom({
-              agent: this.agent,
+              client: this.client,
               feedUri,
               feedTuners: this.feedTuners,
               userInterests: this.userInterests,
@@ -80,11 +98,11 @@ export class MergeFeedAPI implements FeedAPI {
     }
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await this.agent.getTimeline({
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
+    const res = await this.client.call(app.bsky.feed.getTimeline, {
       limit: 1,
     })
-    return res.data.feed[0]
+    return res.feed[0]
   }
 
   async fetch({
@@ -127,7 +145,7 @@ export class MergeFeedAPI implements FeedAPI {
     await Promise.all(promises)
 
     // assemble a response by sampling from feeds with content
-    const posts: AppBskyFeedDefs.FeedViewPost[] = []
+    const posts: app.bsky.feed.defs.FeedViewPost[] = []
     while (posts.length < limit) {
       let slice = this.sampleItem()
       if (slice[0]) {
@@ -175,22 +193,26 @@ export class MergeFeedAPI implements FeedAPI {
 }
 
 class MergeFeedSource {
-  agent: AtpAgent
+  client: Client
   feedTuners: FeedTunerFn[]
   sourceInfo: ReasonFeedSource | undefined
   cursor: string | undefined = undefined
-  queue: AppBskyFeedDefs.FeedViewPost[] = []
+  queue: app.bsky.feed.defs.FeedViewPost[] = []
   hasMore = true
 
   constructor({
-    agent,
+    client,
     feedTuners,
   }: {
-    agent: AtpAgent
+    client: Client
     feedTuners: FeedTunerFn[]
   }) {
-    this.agent = agent
+    this.client = client
     this.feedTuners = feedTuners
+  }
+
+  setClient(client: Client) {
+    this.client = client
   }
 
   get numReady() {
@@ -201,7 +223,7 @@ class MergeFeedSource {
     return this.hasMore && this.queue.length === 0
   }
 
-  take(n: number): AppBskyFeedDefs.FeedViewPost[] {
+  take(n: number): app.bsky.feed.defs.FeedViewPost[] {
     return this.queue.splice(0, n)
   }
 
@@ -212,9 +234,9 @@ class MergeFeedSource {
   _fetchNextInner = bundleAsync(async (n: number) => {
     const res = await this._getFeed(this.cursor, n)
     if (res.success) {
-      this.cursor = res.data.cursor
-      if (res.data.feed.length) {
-        this.queue = this.queue.concat(res.data.feed)
+      this.cursor = res.cursor
+      if (res.feed.length) {
+        this.queue = this.queue.concat(res.feed)
       } else {
         this.hasMore = false
       }
@@ -226,7 +248,7 @@ class MergeFeedSource {
   protected _getFeed(
     _cursor: string | undefined,
     _limit: number,
-  ): Promise<AppBskyFeedGetTimeline.Response> {
+  ): Promise<FeedPage> {
     throw new Error('Must be overridden')
   }
 }
@@ -241,39 +263,45 @@ class MergeFeedSource_Following extends MergeFeedSource {
   protected async _getFeed(
     cursor: string | undefined,
     limit: number,
-  ): Promise<AppBskyFeedGetTimeline.Response> {
-    const res = await this.agent.getTimeline({cursor, limit})
+  ): Promise<FeedPage> {
+    const res = await this.client.call(app.bsky.feed.getTimeline, {
+      cursor,
+      limit,
+    })
     // run the tuner pre-emptively to ensure better mixing
-    const slices = this.tuner.tune(res.data.feed, {
+    const slices = this.tuner.tune(res.feed, {
       dryRun: false,
     })
-    res.data.feed = slices.map(slice => slice._feedPost)
-    return res
+    return {
+      success: true,
+      cursor: res.cursor,
+      feed: slices.map(slice => slice._feedPost),
+    }
   }
 }
 
 class MergeFeedSource_Custom extends MergeFeedSource {
-  agent: AtpAgent
+  client: Client
   minDate: Date
   feedUri: string
   userInterests?: string
 
   constructor({
-    agent,
+    client,
     feedUri,
     feedTuners,
     userInterests,
   }: {
-    agent: AtpAgent
+    client: Client
     feedUri: string
     feedTuners: FeedTunerFn[]
     userInterests?: string
   }) {
     super({
-      agent,
+      client,
       feedTuners,
     })
-    this.agent = agent
+    this.client = client
     this.feedUri = feedUri
     this.userInterests = userInterests
     this.sourceInfo = {
@@ -287,15 +315,16 @@ class MergeFeedSource_Custom extends MergeFeedSource {
   protected async _getFeed(
     cursor: string | undefined,
     limit: number,
-  ): Promise<AppBskyFeedGetTimeline.Response> {
+  ): Promise<FeedPage> {
     try {
       const contentLangs = getContentLanguages().join(',')
       const isBlueskyOwned = isBlueskyOwnedFeed(this.feedUri)
-      const res = await this.agent.app.bsky.feed.getFeed(
+      const res = await this.client.call(
+        app.bsky.feed.getFeed,
         {
           cursor,
           limit,
-          feed: this.feedUri,
+          feed: this.feedUri as AtUriString,
         },
         {
           headers: {
@@ -306,26 +335,25 @@ class MergeFeedSource_Custom extends MergeFeedSource {
           },
         },
       )
+      let feed = res.feed
       // NOTE
       // some custom feeds fail to enforce the pagination limit
       // so we manually truncate here
       // -prf
-      if (limit && res.data.feed.length > limit) {
-        res.data.feed = res.data.feed.slice(0, limit)
+      if (limit && feed.length > limit) {
+        feed = feed.slice(0, limit)
       }
       // filter out older posts
-      res.data.feed = res.data.feed.filter(
-        post => new Date(post.post.indexedAt) > this.minDate,
-      )
+      feed = feed.filter(post => new Date(post.post.indexedAt) > this.minDate)
       // attach source info
-      for (const post of res.data.feed) {
+      for (const post of feed) {
         // @ts-ignore
         post.__source = this.sourceInfo
       }
-      return res
+      return {success: true, cursor: res.cursor, feed}
     } catch {
       // dont bubble custom-feed errors
-      return {success: false, headers: {}, data: {feed: []}}
+      return {success: false, feed: []}
     }
   }
 }

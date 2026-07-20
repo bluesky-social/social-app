@@ -1,17 +1,11 @@
-import {
-  type AppBskyActorDefs,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  type AtUri,
-} from '@atproto/api'
+import {type AtUri} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
   type QueryKey,
 } from '@tanstack/react-query'
 
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export type StructuredQueryKey<T extends Record<string, unknown>> = readonly [
@@ -93,7 +87,7 @@ export async function truncateAndInvalidate<T = any>(
 // of the currentUri that is being checked.
 export function didOrHandleUriMatches(
   atUri: AtUri,
-  record: {uri: string; author: AppBskyActorDefs.ProfileViewBasic},
+  record: {uri: string; author: app.bsky.actor.defs.ProfileViewBasic},
 ) {
   if (atUri.host.startsWith('did:')) {
     return atUri.href === record.uri
@@ -104,26 +98,19 @@ export function didOrHandleUriMatches(
 
 export function getEmbeddedPost(
   v: unknown,
-): AppBskyEmbedRecord.ViewRecord | undefined {
-  if (
-    bsky.dangerousIsType<AppBskyEmbedRecord.View>(v, AppBskyEmbedRecord.isView)
-  ) {
+): app.bsky.embed.record.ViewRecord | undefined {
+  if (bsky.isType(app.bsky.embed.record.view, v)) {
     if (
-      AppBskyEmbedRecord.isViewRecord(v.record) &&
-      AppBskyFeedPost.isRecord(v.record.value)
+      bsky.isType(app.bsky.embed.record.viewRecord, v.record) &&
+      bsky.isType(app.bsky.feed.post, v.record.value)
     ) {
       return v.record
     }
   }
-  if (
-    bsky.dangerousIsType<AppBskyEmbedRecordWithMedia.View>(
-      v,
-      AppBskyEmbedRecordWithMedia.isView,
-    )
-  ) {
+  if (bsky.isType(app.bsky.embed.recordWithMedia.view, v)) {
     if (
-      AppBskyEmbedRecord.isViewRecord(v.record.record) &&
-      AppBskyFeedPost.isRecord(v.record.record.value)
+      bsky.isType(app.bsky.embed.record.viewRecord, v.record.record) &&
+      bsky.isType(app.bsky.feed.post, v.record.record.value)
     ) {
       return v.record.record
     }
@@ -131,8 +118,8 @@ export function getEmbeddedPost(
 }
 
 export function embedViewRecordToPostView(
-  v: AppBskyEmbedRecord.ViewRecord,
-): AppBskyFeedDefs.PostView {
+  v: app.bsky.embed.record.ViewRecord,
+): app.bsky.feed.defs.PostView {
   return {
     uri: v.uri,
     cid: v.cid,

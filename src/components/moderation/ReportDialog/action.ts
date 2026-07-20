@@ -1,21 +1,25 @@
-import {
-  type $Typed,
-  type ChatBskyConvoDefs,
-  type ComAtprotoModerationCreateReport,
-} from '@atproto/api'
+import {type Service} from '@atproto/lex'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {usePdsClient} from '#/state/session'
+import {com} from '#/lexicons'
 import {NEW_TO_OLD_REASONS_MAP} from './const'
 import {type ReportState} from './state'
 import {type ParsedReportSubject} from './types'
+import {
+  accountReportSubject,
+  chatReportSubject,
+  recordReportSubject,
+} from './utils/reportSubject'
+
+type CreateReportBody = com.atproto.moderation.createReport.$InputBody
 
 export function useSubmitReportMutation() {
   const {_} = useLingui()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
 
   return useMutation({
     async mutationFn({
@@ -52,23 +56,22 @@ export function useSubmitReportMutation() {
         reasonType = backwardsCompatibleReasonType
       }
 
-      let report:
-        | ComAtprotoModerationCreateReport.InputSchema
-        | (Omit<ComAtprotoModerationCreateReport.InputSchema, 'subject'> & {
-            subject:
-              | $Typed<ChatBskyConvoDefs.MessageRef>
-              | $Typed<ChatBskyConvoDefs.ConvoRef>
-          })
+      /*
+       * The generated `createReport` subject union only declares repoRef and
+       * strongRef; chat subjects (message/convo refs) are accepted on the wire
+       * but not in the lexicon. The builders in `./utils/reportSubject` brand
+       * the plain-string ids into the schema `subject` slot, keeping the
+       * runtime values exact and confining the chat-subject assertion to one
+       * place.
+       */
+      let report: CreateReportBody
 
       switch (subject.type) {
         case 'account': {
           report = {
             reasonType,
             reason: state.details,
-            subject: {
-              $type: 'com.atproto.admin.defs#repoRef',
-              did: subject.did,
-            },
+            subject: accountReportSubject(subject.did),
           }
           break
         }
@@ -80,11 +83,7 @@ export function useSubmitReportMutation() {
           report = {
             reasonType,
             reason: state.details,
-            subject: {
-              $type: 'com.atproto.repo.strongRef',
-              uri: subject.uri,
-              cid: subject.cid,
-            },
+            subject: recordReportSubject(subject.uri, subject.cid),
           }
           break
         }
@@ -92,12 +91,12 @@ export function useSubmitReportMutation() {
           report = {
             reasonType,
             reason: state.details,
-            subject: {
+            subject: chatReportSubject({
               $type: 'chat.bsky.convo.defs#messageRef',
               messageId: subject.message.id,
               convoId: subject.convoId,
               did: subject.message.sender.did,
-            },
+            }),
           }
           break
         }
@@ -105,11 +104,11 @@ export function useSubmitReportMutation() {
           report = {
             reasonType,
             reason: state.details,
-            subject: {
+            subject: chatReportSubject({
               $type: 'chat.bsky.convo.defs#convoRef',
               convoId: subject.convoId,
               did: subject.did,
-            },
+            }),
           }
           break
         }
@@ -123,11 +122,14 @@ export function useSubmitReportMutation() {
           report,
         })
       } else {
-        await agent.createModerationReport(report, {
-          encoding: 'application/json',
-          headers: {
-            'atproto-proxy': `${labeler.creator.did}#atproto_labeler`,
-          },
+        /*
+         * Route the report through the selected labeler's moderation service
+         * via the `atproto-proxy` header, which lex-client sets from the
+         * per-call `service` option (previously an explicit header on the
+         * bridge agent).
+         */
+        await pdsClient.call(com.atproto.moderation.createReport, report, {
+          service: `${labeler.creator.did}#atproto_labeler` as Service,
         })
       }
     },

@@ -1,9 +1,5 @@
-import {
-  type AppBskyFeedDefs,
-  AppBskyFeedThreadgate,
-  type AtpAgent,
-  AtUri,
-} from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry, retry} from '#/lib/async/retry'
@@ -17,8 +13,9 @@ import {
   threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate/util'
 import {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread'
-import {useAgent} from '#/state/session'
+import {usePdsClient} from '#/state/session'
 import {useThreadgateHiddenReplyUrisAPI} from '#/state/threadgate-hidden-replies'
+import {app, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export * from '#/state/queries/threadgate/types'
@@ -40,9 +37,9 @@ export function useThreadgateRecordQuery({
   initialData,
 }: {
   postUri?: string
-  initialData?: AppBskyFeedThreadgate.Record
+  initialData?: app.bsky.feed.threadgate.Main
 } = {}) {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
 
   return useQuery({
     enabled: !!postUri,
@@ -51,7 +48,7 @@ export function useThreadgateRecordQuery({
     staleTime: STALE.MINUTES.ONE,
     async queryFn() {
       return getThreadgateRecord({
-        agent,
+        pdsClient,
         postUri: postUri!,
       })
     },
@@ -68,7 +65,7 @@ export function useThreadgateViewQuery({
   initialData,
 }: {
   postUri?: string
-  initialData?: AppBskyFeedDefs.ThreadgateView
+  initialData?: app.bsky.feed.defs.ThreadgateView
 } = {}) {
   const getPost = useGetPost()
 
@@ -85,24 +82,23 @@ export function useThreadgateViewQuery({
 }
 
 export async function getThreadgateRecord({
-  agent,
+  pdsClient,
   postUri,
 }: {
-  agent: AtpAgent
+  pdsClient: Client
   postUri: string
-}): Promise<AppBskyFeedThreadgate.Record | null> {
+}): Promise<app.bsky.feed.threadgate.Main | null> {
   const urip = new AtUri(postUri)
 
   if (!urip.host.startsWith('did:')) {
-    const res = await agent.resolveHandle({
-      handle: urip.host,
+    const {did} = await pdsClient.call(com.atproto.identity.resolveHandle, {
+      handle: urip.host as `${string}.${string}`,
     })
-    // @ts-expect-error TODO new-sdk-migration
-    urip.host = res.data.did
+    urip.host = did
   }
 
   try {
-    const {data} = await retry(
+    const data = await retry(
       2,
       e => {
         /*
@@ -116,17 +112,19 @@ export async function getThreadgateRecord({
         return true
       },
       () =>
-        agent.api.com.atproto.repo.getRecord({
-          repo: urip.host,
-          collection: 'app.bsky.feed.threadgate',
-          rkey: urip.rkey,
-        }),
+        pdsClient.call(
+          com.atproto.repo.getRecord,
+          {
+            repo: urip.host,
+            collection: 'app.bsky.feed.threadgate',
+            rkey: urip.rkey,
+          },
+          // service: null strips the appview proxy header - this must hit the account host (PDS)
+          {service: null},
+        ),
     )
 
-    if (
-      data.value &&
-      bsky.validate(data.value, AppBskyFeedThreadgate.validateRecord)
-    ) {
+    if (data.value && bsky.matches(app.bsky.feed.threadgate, data.value)) {
       return data.value
     } else {
       return null
@@ -146,13 +144,13 @@ export async function getThreadgateRecord({
 }
 
 export async function writeThreadgateRecord({
-  agent,
+  pdsClient,
   postUri,
   threadgate,
 }: {
-  agent: AtpAgent
+  pdsClient: Client
   postUri: string
-  threadgate: AppBskyFeedThreadgate.Record
+  threadgate: app.bsky.feed.threadgate.Main
 }) {
   const postUrip = new AtUri(postUri)
   const record = createThreadgateRecord({
@@ -162,36 +160,41 @@ export async function writeThreadgateRecord({
   })
 
   await networkRetry(2, () =>
-    agent.api.com.atproto.repo.putRecord({
-      repo: agent.session!.did,
-      collection: 'app.bsky.feed.threadgate',
-      rkey: postUrip.rkey,
-      record,
-    }),
+    pdsClient.call(
+      com.atproto.repo.putRecord,
+      {
+        repo: pdsClient.assertDid,
+        collection: 'app.bsky.feed.threadgate',
+        rkey: postUrip.rkey,
+        record,
+      },
+      // service: null strips the appview proxy header - this must hit the account host (PDS)
+      {service: null},
+    ),
   )
 }
 
 export async function upsertThreadgate(
   {
-    agent,
+    pdsClient,
     postUri,
   }: {
-    agent: AtpAgent
+    pdsClient: Client
     postUri: string
   },
   callback: (
-    threadgate: AppBskyFeedThreadgate.Record | null,
-  ) => Promise<AppBskyFeedThreadgate.Record | undefined>,
+    threadgate: app.bsky.feed.threadgate.Main | null,
+  ) => Promise<app.bsky.feed.threadgate.Main | undefined>,
 ) {
   const prev = await getThreadgateRecord({
-    agent,
+    pdsClient,
     postUri,
   })
   const next = await callback(prev)
   if (!next) return
   validateThreadgateRecordOrThrow(next)
   await writeThreadgateRecord({
-    agent,
+    pdsClient,
     postUri,
     threadgate: next,
   })
@@ -201,15 +204,15 @@ export async function upsertThreadgate(
  * Update the allow list for a threadgate record.
  */
 export async function updateThreadgateAllow({
-  agent,
+  pdsClient,
   postUri,
   allow,
 }: {
-  agent: AtpAgent
+  pdsClient: Client
   postUri: string
   allow: ThreadgateAllowUISetting[]
 }) {
-  return upsertThreadgate({agent, postUri}, async prev => {
+  return upsertThreadgate({pdsClient, postUri}, async prev => {
     if (prev) {
       return {
         ...prev,
@@ -225,7 +228,7 @@ export async function updateThreadgateAllow({
 }
 
 export function useSetThreadgateAllowMutation() {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const getPost = useGetPost()
   const updatePostThreadThreadgate = useUpdatePostThreadThreadgateQueryCache()
@@ -238,7 +241,7 @@ export function useSetThreadgateAllowMutation() {
       postUri: string
       allow: ThreadgateAllowUISetting[]
     }) => {
-      return upsertThreadgate({agent, postUri}, async prev => {
+      return upsertThreadgate({pdsClient, postUri}, async prev => {
         if (prev) {
           return {
             ...prev,
@@ -253,7 +256,7 @@ export function useSetThreadgateAllowMutation() {
       })
     },
     async onSuccess(_, {postUri, allow}) {
-      const data = await retry<AppBskyFeedDefs.ThreadgateView | undefined>(
+      const data = await retry<app.bsky.feed.defs.ThreadgateView | undefined>(
         5, // 5 tries
         _e => true,
         async () => {
@@ -290,7 +293,7 @@ export function useSetThreadgateAllowMutation() {
 }
 
 export function useToggleReplyVisibilityMutation() {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const hiddenReplies = useThreadgateHiddenReplyUrisAPI()
 
@@ -310,7 +313,7 @@ export function useToggleReplyVisibilityMutation() {
         hiddenReplies.removeHiddenReplyUri(replyUri)
       }
 
-      await upsertThreadgate({agent, postUri}, async prev => {
+      await upsertThreadgate({pdsClient, postUri}, async prev => {
         if (prev) {
           if (action === 'hide') {
             return mergeThreadgateRecords(prev, {
@@ -363,9 +366,9 @@ export class InvalidInteractionSettingsError extends Error {
 }
 
 export function validateThreadgateRecordOrThrow(
-  record: AppBskyFeedThreadgate.Record,
+  record: app.bsky.feed.threadgate.Main,
 ) {
-  const result = AppBskyFeedThreadgate.validateRecord(record)
+  const result = bsky.safeParse(app.bsky.feed.threadgate, record)
 
   if (result.success) {
     if ((result.value.hiddenReplies?.length ?? 0) > MAX_HIDDEN_REPLIES) {

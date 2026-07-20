@@ -6,7 +6,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -37,6 +36,7 @@ import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
+import {type app} from '#/lexicons'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -57,7 +57,7 @@ interface ProfileFeedgensProps {
   emptyStateIcon?: React.ComponentType<any> | React.ReactElement
 }
 
-function keyExtractor(item: AppBskyGraphDefs.StarterPackViewBasic) {
+function keyExtractor(item: app.bsky.graph.defs.StarterPackViewBasic) {
   return item.uri
 }
 
@@ -147,7 +147,7 @@ export function ProfileStarterPacks({
     ({
       item,
       index,
-    }: ListRenderItemInfo<AppBskyGraphDefs.StarterPackViewBasic>) => {
+    }: ListRenderItemInfo<app.bsky.graph.defs.StarterPackViewBasic>) => {
       return (
         <View
           style={[

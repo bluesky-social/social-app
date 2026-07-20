@@ -4,12 +4,22 @@
  * tested in isolation (the search-posts query hook re-exports these).
  */
 
-import {type AppBskyFeedSearchPostsV2} from '@atproto/api'
+import {type l} from '@atproto/lex'
 
 import {
   filtersToApiParams,
   type SearchFilters,
 } from '#/screens/Search/searchParams'
+import {type app} from '#/lexicons'
+
+/**
+ * Input params for `app.bsky.feed.searchPostsV2`. Uses the schema's input type
+ * (not `$Params`, which is the output type with defaults applied and `limit`
+ * required) since these are the params we build up and pass to `client.call`.
+ */
+type SearchPostsV2Params = l.InferInput<
+  typeof app.bsky.feed.searchPostsV2.$params
+>
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}/
 
@@ -180,21 +190,27 @@ function mergeList(a?: string[], b?: string[]): string[] | undefined {
 export function buildSearchPostsV2Filters(
   embedded: Omit<ExtractedSearchParams, 'q'>,
   filters?: SearchFilters,
-): AppBskyFeedSearchPostsV2.QueryParams {
+): SearchPostsV2Params {
   const apiFilters = filters ? filtersToApiParams(filters) : {}
-  const params: AppBskyFeedSearchPostsV2.QueryParams = {}
+  const params: SearchPostsV2Params = {}
 
+  /*
+   * The values below originate from free-text operators and the advanced-search
+   * dialog as plain strings; the lexicon input params brand them by format
+   * (at-identifier, uri, etc.). The backend validates these, so we assert the
+   * branded types at assignment rather than validating client-side.
+   */
   const authors = mergeList(
     embedded.author ? [embedded.author] : undefined,
     apiFilters.authors,
   )
-  if (authors) params.authors = authors
+  if (authors) params.authors = authors as SearchPostsV2Params['authors']
 
   const mentions = mergeList(
     embedded.mentions ? [embedded.mentions] : undefined,
     apiFilters.mentions,
   )
-  if (mentions) params.mentions = mentions
+  if (mentions) params.mentions = mentions as SearchPostsV2Params['mentions']
 
   const domains = mergeList(
     embedded.domain ? [embedded.domain] : undefined,
@@ -206,7 +222,7 @@ export function buildSearchPostsV2Filters(
     embedded.url ? [embedded.url] : undefined,
     apiFilters.urls,
   )
-  if (urls) params.urls = urls
+  if (urls) params.urls = urls as SearchPostsV2Params['urls']
 
   const hashtags = mergeList(embedded.tag, apiFilters.hashtags)
   if (hashtags) params.hashtags = hashtags
@@ -226,12 +242,16 @@ export function buildSearchPostsV2Filters(
    * are always include), so they pass straight through from the dialog filters.
    */
   if (apiFilters.excludeAuthors)
-    params.excludeAuthors = apiFilters.excludeAuthors
+    params.excludeAuthors =
+      apiFilters.excludeAuthors as SearchPostsV2Params['excludeAuthors']
   if (apiFilters.excludeMentions)
-    params.excludeMentions = apiFilters.excludeMentions
+    params.excludeMentions =
+      apiFilters.excludeMentions as SearchPostsV2Params['excludeMentions']
   if (apiFilters.excludeDomains)
     params.excludeDomains = apiFilters.excludeDomains
-  if (apiFilters.excludeUrls) params.excludeUrls = apiFilters.excludeUrls
+  if (apiFilters.excludeUrls)
+    params.excludeUrls =
+      apiFilters.excludeUrls as SearchPostsV2Params['excludeUrls']
   if (apiFilters.excludeHashtags)
     params.excludeHashtags = apiFilters.excludeHashtags
 
@@ -245,8 +265,8 @@ export function buildSearchPostsV2Filters(
 }
 
 /**
- * Consistent with timestamp parsing in @atproto/api. Only the date is used; the
- * time is appended here since the lexicon expects a datetime value.
+ * Consistent with atproto timestamp parsing. Only the date is used; the time
+ * is appended here since the lexicon expects a datetime value.
  */
 const parseTimestamp = (value: string | undefined): string | undefined => {
   if (!value) return undefined

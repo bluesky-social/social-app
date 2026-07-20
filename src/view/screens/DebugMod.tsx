@@ -2,21 +2,16 @@ import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {useSharedValue} from 'react-native-reanimated'
 import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type ComAtprotoLabelDefs,
   interpretLabelValueDefinition,
   type LabelPreference,
   LABELS,
-  mock,
   moderatePost,
   moderateProfile,
   type ModerationBehavior,
   type ModerationDecision,
   type ModerationOpts,
-  RichText,
-} from '@atproto/api'
+} from '@bsky.app/sdk/moderation'
+import {RichText} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -53,6 +48,7 @@ import {
 import * as Layout from '#/components/Layout'
 import * as ProfileCard from '#/components/ProfileCard'
 import {H1, H3, P, Text} from '#/components/Typography'
+import {type app, type com} from '#/lexicons'
 import {ScreenHider} from '../../components/moderation/ScreenHider'
 import {NotificationFeedItem} from '../com/notifications/NotificationFeedItem'
 import {PagerHeaderProvider} from '../com/pager/PagerHeaderContext'
@@ -61,6 +57,211 @@ import {PostFeedItem} from '../com/posts/PostFeedItem'
 const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
   LABELS,
 ) as (keyof typeof LABELS)[]
+
+const FAKE_CID = 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq'
+
+/*
+ * Local test-data builders for this dev-only moderation debug screen. These
+ * replace the `mock` object the old api package used to export (the SDK does
+ * not ship one). Each builder returns a plain `#/lexicons` object literal with
+ * the same field values the old `mock` builders produced. Branded string slots
+ * (`did`/`at-uri`/`cid`/`lang`) are cast, since this is trusted mock data.
+ */
+const mock = {
+  post({
+    text,
+    facets,
+    reply,
+    embed,
+  }: {
+    text: string
+    facets?: app.bsky.feed.post.Main['facets']
+    reply?: app.bsky.feed.post.Main['reply']
+    embed?: app.bsky.feed.post.Main['embed']
+  }): app.bsky.feed.post.Main {
+    return {
+      $type: 'app.bsky.feed.post',
+      text,
+      facets,
+      reply,
+      embed,
+      langs: ['en'],
+      createdAt:
+        new Date().toISOString() as app.bsky.feed.post.Main['createdAt'],
+    }
+  },
+  postView({
+    record,
+    author,
+    embed,
+    replyCount,
+    repostCount,
+    likeCount,
+    viewer,
+    labels,
+  }: {
+    record: app.bsky.feed.post.Main
+    author: app.bsky.actor.defs.ProfileViewBasic
+    embed?: app.bsky.feed.defs.PostView['embed']
+    replyCount?: number
+    repostCount?: number
+    likeCount?: number
+    viewer?: app.bsky.feed.defs.ViewerState
+    labels?: com.atproto.label.defs.Label[]
+  }): app.bsky.feed.defs.PostView {
+    return {
+      $type: 'app.bsky.feed.defs#postView',
+      uri: `at://${author.did}/app.bsky.feed.post/fake`,
+      cid: FAKE_CID,
+      author,
+      record,
+      embed,
+      replyCount,
+      repostCount,
+      likeCount,
+      indexedAt:
+        new Date().toISOString() as app.bsky.feed.defs.PostView['indexedAt'],
+      viewer,
+      labels,
+    }
+  },
+  embedRecordView({
+    record,
+    author,
+    labels,
+  }: {
+    record: app.bsky.feed.post.Main
+    author: app.bsky.actor.defs.ProfileViewBasic
+    labels?: com.atproto.label.defs.Label[]
+  }): app.bsky.embed.record.View {
+    return {
+      $type: 'app.bsky.embed.record#view',
+      record: {
+        $type: 'app.bsky.embed.record#viewRecord',
+        uri: `at://${author.did}/app.bsky.feed.post/fake`,
+        cid: FAKE_CID,
+        author,
+        value: record,
+        labels,
+        indexedAt:
+          new Date().toISOString() as app.bsky.embed.record.ViewRecord['indexedAt'],
+      },
+    }
+  },
+  profileViewBasic({
+    handle,
+    displayName,
+    description,
+    viewer,
+    labels,
+  }: {
+    handle: string
+    displayName?: string
+    description?: string
+    viewer?: app.bsky.actor.defs.ViewerState
+    labels?: com.atproto.label.defs.Label[]
+  }): app.bsky.actor.defs.ProfileViewBasic & {description?: string} {
+    return {
+      did: `did:web:${handle}`,
+      handle: handle as app.bsky.actor.defs.ProfileViewBasic['handle'],
+      displayName,
+      description,
+      viewer,
+      labels,
+    }
+  },
+  actorViewerState({
+    muted,
+    mutedByList,
+    blockedBy,
+    blocking,
+    blockingByList,
+    following,
+    followedBy,
+  }: {
+    muted?: boolean
+    mutedByList?: app.bsky.graph.defs.ListViewBasic
+    blockedBy?: boolean
+    blocking?: string
+    blockingByList?: app.bsky.graph.defs.ListViewBasic
+    following?: string
+    followedBy?: string
+  }): app.bsky.actor.defs.ViewerState {
+    return {
+      muted,
+      mutedByList,
+      blockedBy,
+      blocking: blocking as app.bsky.actor.defs.ViewerState['blocking'],
+      blockingByList,
+      following: following as app.bsky.actor.defs.ViewerState['following'],
+      followedBy: followedBy as app.bsky.actor.defs.ViewerState['followedBy'],
+    }
+  },
+  replyNotification({
+    author,
+    record,
+    labels,
+  }: {
+    record: app.bsky.feed.post.Main
+    author: app.bsky.actor.defs.ProfileViewBasic
+    labels?: com.atproto.label.defs.Label[]
+  }): app.bsky.notification.listNotifications.Notification {
+    return {
+      uri: `at://${author.did}/app.bsky.feed.post/fake`,
+      cid: FAKE_CID,
+      author: author as app.bsky.actor.defs.ProfileView,
+      reason: 'reply',
+      reasonSubject: `at://${author.did}/app.bsky.feed.post/fake-parent`,
+      record,
+      isRead: false,
+      indexedAt:
+        new Date().toISOString() as app.bsky.notification.listNotifications.Notification['indexedAt'],
+      labels,
+    }
+  },
+  followNotification({
+    author,
+    subjectDid,
+    labels,
+  }: {
+    author: app.bsky.actor.defs.ProfileViewBasic
+    subjectDid: string
+    labels?: com.atproto.label.defs.Label[]
+  }): app.bsky.notification.listNotifications.Notification {
+    return {
+      uri: `at://${author.did}/app.bsky.graph.follow/fake`,
+      cid: FAKE_CID,
+      author: author as app.bsky.actor.defs.ProfileView,
+      reason: 'follow',
+      record: {
+        $type: 'app.bsky.graph.follow',
+        createdAt: new Date().toISOString(),
+        subject: subjectDid,
+      },
+      isRead: false,
+      indexedAt:
+        new Date().toISOString() as app.bsky.notification.listNotifications.Notification['indexedAt'],
+      labels,
+    }
+  },
+  label({
+    val,
+    uri,
+    src,
+  }: {
+    val: string
+    uri: string
+    src?: string
+  }): com.atproto.label.defs.Label {
+    return {
+      src: (src ||
+        'did:plc:fake-labeler') as com.atproto.label.defs.Label['src'],
+      uri: uri as com.atproto.label.defs.Label['uri'],
+      val,
+      cts: new Date().toISOString() as com.atproto.label.defs.Label['cts'],
+    }
+  },
+}
 
 export const DebugModScreen = ({}: NativeStackScreenProps<
   CommonNavigatorParams,
@@ -73,7 +274,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
   const [target, setTarget] = useState<string[]>(['account'])
   const [visibility, setVisiblity] = useState<string[]>(['warn'])
   const [customLabelDef, setCustomLabelDef] =
-    useState<ComAtprotoLabelDefs.LabelValueDefinition>({
+    useState<com.atproto.label.defs.LabelValueDefinition>({
       identifier: 'custom',
       blurs: 'content',
       severity: 'alert',
@@ -140,7 +341,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
         blockingByList: undefined,
       }),
     })
-    mockedProfile.did = did
+    mockedProfile.did = did as app.bsky.actor.defs.ProfileViewBasic['did']
     mockedProfile.avatar = 'https://bsky.social/about/images/favicon-32x32.png'
     // @ts-expect-error ProfileViewBasic is close enough -esb
     mockedProfile.banner =
@@ -164,36 +365,35 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
               }),
             ]
           : undefined,
-      embed:
-        target[0] === 'embed'
-          ? mock.embedRecordView({
-              record: mock.post({
-                text: 'Embed',
-              }),
-              labels:
-                scenario[0] === 'label' && target[0] === 'embed'
-                  ? [
-                      mock.label({
-                        src: isSelfLabel ? did : undefined,
-                        val: label[0],
-                        uri: `at://${did}/app.bsky.feed.post/fake`,
-                      }),
-                    ]
-                  : undefined,
-              author: profile,
-            })
-          : {
-              $type: 'app.bsky.embed.images#view',
-              images: [
-                {
-                  thumb:
-                    'https://bsky.social/about/images/social-card-default-gradient.png',
-                  fullsize:
-                    'https://bsky.social/about/images/social-card-default-gradient.png',
-                  alt: '',
-                },
-              ],
-            },
+      embed: (target[0] === 'embed'
+        ? mock.embedRecordView({
+            record: mock.post({
+              text: 'Embed',
+            }),
+            labels:
+              scenario[0] === 'label' && target[0] === 'embed'
+                ? [
+                    mock.label({
+                      src: isSelfLabel ? did : undefined,
+                      val: label[0],
+                      uri: `at://${did}/app.bsky.feed.post/fake`,
+                    }),
+                  ]
+                : undefined,
+            author: profile,
+          })
+        : {
+            $type: 'app.bsky.embed.images#view',
+            images: [
+              {
+                thumb:
+                  'https://bsky.social/about/images/social-card-default-gradient.png',
+                fullsize:
+                  'https://bsky.social/about/images/social-card-default-gradient.png',
+                alt: '',
+              },
+            ],
+          }) as app.bsky.feed.defs.PostView['embed'],
     })
   }, [scenario, label, target, profile, isSelfLabel, did])
 
@@ -226,7 +426,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     })
     const [item] = groupNotifications([notif])
     item.subject = mock.postView({
-      record: notif.record as AppBskyFeedPost.Record,
+      record: notif.record as app.bsky.feed.post.Main,
       author: profile,
       labels: notif.labels,
     })
@@ -242,9 +442,13 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     return item
   }, [profile, currentAccount])
 
-  const modOpts = useMemo(() => {
+  const modOpts = useMemo<ModerationOpts>(() => {
     return {
-      userDid: isLoggedOut ? '' : isTargetMe ? did : 'did:web:alice.test',
+      userDid: (isLoggedOut
+        ? ''
+        : isTargetMe
+          ? did
+          : 'did:web:alice.test') as ModerationOpts['userDid'],
       prefs: {
         adultContentEnabled: !noAdult,
         labels: {
@@ -629,9 +833,9 @@ function CustomLabelForm({
   def,
   setDef,
 }: {
-  def: ComAtprotoLabelDefs.LabelValueDefinition
+  def: com.atproto.label.defs.LabelValueDefinition
   setDef: React.Dispatch<
-    React.SetStateAction<ComAtprotoLabelDefs.LabelValueDefinition>
+    React.SetStateAction<com.atproto.label.defs.LabelValueDefinition>
   >
 }) {
   const t = useTheme()
@@ -833,7 +1037,7 @@ function MockPostFeedItem({
   post,
   moderation,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   moderation: ModerationDecision
 }) {
   const t = useTheme()
@@ -847,7 +1051,7 @@ function MockPostFeedItem({
   return (
     <PostFeedItem
       post={post}
-      record={post.record as AppBskyFeedPost.Record}
+      record={post.record as app.bsky.feed.post.Main}
       moderation={moderation}
       parentAuthor={undefined}
       showReplyTo={false}
@@ -864,7 +1068,7 @@ function MockPostThreadItem({
   moderationOpts,
   isReply,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   moderationOpts: ModerationOpts
   isReply?: boolean
 }) {
@@ -919,7 +1123,7 @@ function MockAccountCard({
   profile,
   moderation,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: app.bsky.actor.defs.ProfileViewBasic
   moderation: ModerationDecision
 }) {
   const t = useTheme()
@@ -943,7 +1147,7 @@ function MockAccountScreen({
   moderation,
   moderationOpts,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: app.bsky.actor.defs.ProfileViewBasic
   moderation: ModerationDecision
   moderationOpts: ModerationOpts
 }) {

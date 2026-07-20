@@ -1,16 +1,10 @@
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
-  type AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadOtherV2,
-  type AppBskyUnspeccedGetPostThreadV2,
-  type ModerationDecision,
-} from '@atproto/api'
+import {type ModerationDecision} from '@bsky.app/sdk/moderation'
+
+import {type app} from '#/lexicons'
 
 export type ApiThreadItem =
-  | AppBskyUnspeccedGetPostThreadV2.ThreadItem
-  | AppBskyUnspeccedGetPostThreadOtherV2.ThreadItem
+  | app.bsky.unspecced.getPostThreadV2.ThreadItem
+  | app.bsky.unspecced.getPostThreadOtherV2.ThreadItem
 
 export const postThreadQueryKeyRoot = 'post-thread-v2' as const
 
@@ -18,13 +12,13 @@ export const createPostThreadQueryKey = (props: PostThreadParams) =>
   [postThreadQueryKeyRoot, props] as const
 
 export const createPostThreadOtherQueryKey = (
-  props: Omit<AppBskyUnspeccedGetPostThreadOtherV2.QueryParams, 'anchor'> & {
+  props: Omit<app.bsky.unspecced.getPostThreadOtherV2.$Params, 'anchor'> & {
     anchor?: string
   },
 ) => [postThreadQueryKeyRoot, 'other', props] as const
 
 export type PostThreadParams = Pick<
-  AppBskyUnspeccedGetPostThreadV2.QueryParams,
+  app.bsky.unspecced.getPostThreadV2.$Params,
   'sort'
 > & {
   anchor?: string
@@ -33,9 +27,9 @@ export type PostThreadParams = Pick<
 
 export type UsePostThreadQueryResult = {
   hasOtherReplies: boolean
-  thread: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]
-  threadgate?: Omit<AppBskyFeedDefs.ThreadgateView, 'record'> & {
-    record: AppBskyFeedThreadgate.Record
+  thread: app.bsky.unspecced.getPostThreadV2.ThreadItem[]
+  threadgate?: Omit<app.bsky.feed.defs.ThreadgateView, 'record'> & {
+    record: app.bsky.feed.threadgate.Main
   }
 }
 
@@ -45,9 +39,9 @@ export type ThreadItem =
       key: string
       uri: string
       depth: number
-      value: Omit<AppBskyUnspeccedDefs.ThreadItemPost, 'post'> & {
-        post: Omit<AppBskyFeedDefs.PostView, 'record'> & {
-          record: AppBskyFeedPost.Record
+      value: Omit<app.bsky.unspecced.defs.ThreadItemPost, 'post'> & {
+        post: Omit<app.bsky.feed.defs.PostView, 'record'> & {
+          record: app.bsky.feed.post.Main
         }
       }
       isBlurred: boolean
@@ -67,7 +61,7 @@ export type ThreadItem =
       key: string
       uri: string
       depth: number
-      value: AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated
+      value: app.bsky.unspecced.defs.ThreadItemNoUnauthenticated
       ui: {
         showParentReplyLine: boolean
         showChildReplyLine: boolean
@@ -78,14 +72,14 @@ export type ThreadItem =
       key: string
       uri: string
       depth: number
-      value: AppBskyUnspeccedDefs.ThreadItemNotFound
+      value: app.bsky.unspecced.defs.ThreadItemNotFound
     }
   | {
       type: 'threadPostBlocked'
       key: string
       uri: string
       depth: number
-      value: AppBskyUnspeccedDefs.ThreadItemBlocked
+      value: app.bsky.unspecced.defs.ThreadItemBlocked
     }
   | {
       type: 'replyComposer'

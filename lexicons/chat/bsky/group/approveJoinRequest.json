@@ -1,0 +1,50 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.group.approveJoinRequest",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Approves a request to join a group (via join link) the user owns. Action taken by the group owner.",
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        },
+        {
+          "name": "InsufficientRole"
+        },
+        {
+          "name": "MemberLimitReached"
+        }
+      ],
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convoId", "member"],
+          "properties": {
+            "convoId": {
+              "type": "string"
+            },
+            "member": {
+              "type": "string",
+              "format": "did"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convo"],
+          "properties": {
+            "convo": {
+              "type": "ref",
+              "ref": "chat.bsky.convo.defs#convoView"
+            }
+          }
+        }
+      }
+    }
+  }
+}

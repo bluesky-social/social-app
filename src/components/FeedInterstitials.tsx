@@ -7,7 +7,6 @@ import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -39,6 +38,7 @@ import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {FollowDialogWithoutGuide} from './ProgressGuide/FollowDialog'
 
@@ -564,7 +564,7 @@ export function SuggestedFeeds() {
   const {gtMobile} = useBreakpoints()
 
   const feeds = useMemo(() => {
-    const items: AppBskyFeedDefs.GeneratorView[] = []
+    const items: app.bsky.feed.defs.GeneratorView[] = []
 
     if (!data) return items
 

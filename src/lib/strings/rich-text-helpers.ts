@@ -1,5 +1,7 @@
-import {AppBskyRichtextFacet, type RichText} from '@atproto/api'
+import {type RichText} from '@bsky.app/sdk/richtext'
 
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {linkRequiresWarning} from './url-helpers'
 
 export function richTextToString(rt: RichText, loose: boolean): string {
@@ -14,7 +16,7 @@ export function richTextToString(rt: RichText, loose: boolean): string {
   for (const segment of rt.segments()) {
     const link = segment.link
 
-    if (link && AppBskyRichtextFacet.validateLink(link).success) {
+    if (link && bsky.matches(app.bsky.richtext.facet.link, link)) {
       const href = link.uri
       const text = segment.text
 

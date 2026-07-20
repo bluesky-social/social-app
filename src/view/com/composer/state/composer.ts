@@ -1,11 +1,6 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {
-  type AppBskyActorDefs,
-  type AppBskyDraftDefs,
-  type AppBskyFeedPostgate,
-  AppBskyRichtextFacet,
-  RichText,
-} from '@atproto/api'
+import {type AtUriString, toDatetimeString} from '@atproto/syntax'
+import {RichText} from '@bsky.app/sdk/richtext'
 import {nanoid} from 'nanoid/non-secure'
 
 import {type VideoTelemetry} from '#/lib/media/video/telemetry'
@@ -28,6 +23,8 @@ import {
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
 import {type Gif} from '#/features/gifPicker/types'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   createVideoState,
   type VideoAction,
@@ -102,7 +99,7 @@ export type PostAction =
 
 export type ThreadDraft = {
   posts: PostDraft[]
-  postgate: AppBskyFeedPostgate.Record
+  postgate: app.bsky.feed.postgate.Main
   threadgate: ThreadgateAllowUISetting[]
 }
 
@@ -121,7 +118,7 @@ export type ComposerState = {
 }
 
 export type ComposerAction =
-  | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
+  | {type: 'update_postgate'; postgate: app.bsky.feed.postgate.Main}
   | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
   | {
       type: 'update_post'
@@ -143,8 +140,8 @@ export type ComposerAction =
       type: 'restore_from_draft'
       draftId: string
       posts: PostDraft[]
-      threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow']
-      postgateEmbeddingRules: AppBskyDraftDefs.Draft['postgateEmbeddingRules']
+      threadgateAllow: app.bsky.draft.defs.Draft['threadgateAllow']
+      postgateEmbeddingRules: app.bsky.draft.defs.Draft['postgateEmbeddingRules']
 
       /** Map of localRefPath -> loaded media path/URL */
       loadedMedia: Map<string, string>
@@ -154,7 +151,7 @@ export type ComposerAction =
   | {
       type: 'clear'
       initInteractionSettings:
-        | AppBskyActorDefs.PostInteractionSettingsPref
+        | app.bsky.actor.defs.PostInteractionSettingsPref
         | undefined
     }
   | {
@@ -322,8 +319,8 @@ export function composerReducer(
           }),
           threadgate: threadgateRecordToAllowUISetting({
             $type: 'app.bsky.feed.threadgate',
-            post: '',
-            createdAt: new Date().toString(),
+            post: '' as AtUriString,
+            createdAt: toDatetimeString(new Date()),
             allow: threadgateAllow,
           }),
         },
@@ -629,7 +626,7 @@ export function createComposerState({
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
   initInteractionSettings:
-    | AppBskyActorDefs.PostInteractionSettingsPref
+    | app.bsky.actor.defs.PostInteractionSettingsPref
     | undefined
 }): ComposerState {
   let media: ImagesMedia | GalleryMedia | undefined
@@ -677,7 +674,7 @@ export function createComposerState({
     if (initRichText.facets) {
       for (const facet of initRichText.facets) {
         for (const feature of facet.features) {
-          if (AppBskyRichtextFacet.isLink(feature)) {
+          if (bsky.isType(app.bsky.richtext.facet.link, feature)) {
             if (isBskyPostUrl(feature.uri)) {
               detectedPostUris.set(feature.uri, {facet, rt: initRichText})
             } else {
@@ -747,8 +744,8 @@ export function createComposerState({
       }),
       threadgate: threadgateRecordToAllowUISetting({
         $type: 'app.bsky.feed.threadgate',
-        post: '',
-        createdAt: new Date().toString(),
+        post: '' as AtUriString,
+        createdAt: toDatetimeString(new Date()),
         allow: initInteractionSettings?.threadgateAllowRules,
       }),
     },

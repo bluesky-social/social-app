@@ -1,14 +1,17 @@
+import {type Client} from '@atproto/lex'
 import {
-  type $Typed,
-  type AppBskyGraphDefs,
-  type AppBskyGraphGetList,
-  type AppBskyGraphList,
-  type AtpAgent,
+  type AtIdentifierString,
   AtUri,
-  type ComAtprotoRepoApplyWrites,
-  type Facet,
-  type Un$Typed,
-} from '@atproto/api'
+  type AtUriString,
+  type DatetimeString,
+  type NsidString,
+} from '@atproto/syntax'
+import {
+  blockActorList,
+  muteActorList,
+  unblockActorList,
+  unmuteActorList,
+} from '@bsky.app/sdk'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
@@ -16,7 +19,8 @@ import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
+import {app, com} from '#/lexicons'
 import {FEED_INFO_RQKEY_ROOT} from './feed'
 import {invalidate as invalidateMyLists} from './my-lists'
 import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
@@ -25,19 +29,19 @@ export const RQKEY_ROOT = 'list'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 
 export function useListQuery(uri?: string) {
-  const agent = useAgent()
-  return useQuery<AppBskyGraphDefs.ListView, Error>({
+  const client = useAppviewClient()
+  return useQuery<app.bsky.graph.defs.ListView, Error>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       if (!uri) {
         throw new Error('URI not provided')
       }
-      const res = await agent.app.bsky.graph.getList({
-        list: uri,
+      const res = await client.call(app.bsky.graph.getList, {
+        list: uri as AtUriString,
         limit: 1,
       })
-      return res.data.list
+      return res.list
     },
     enabled: !!uri,
   })
@@ -47,13 +51,14 @@ export interface ListCreateMutateParams {
   purpose: string
   name: string
   description: string
-  descriptionFacets: Facet[] | undefined
+  descriptionFacets: app.bsky.richtext.facet.Main[] | undefined
   avatar: ImageMeta | null | undefined
 }
 export function useListCreateMutation() {
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   return useMutation<{uri: string; cid: string}, Error, ListCreateMutateParams>(
     {
       async mutationFn({
@@ -72,33 +77,24 @@ export function useListCreateMutation() {
         ) {
           throw new Error('Invalid list purpose: must be curatelist or modlist')
         }
-        const record: Un$Typed<AppBskyGraphList.Record> = {
+        const record: Omit<app.bsky.graph.list.Main, '$type'> = {
           purpose,
           name,
           description,
           descriptionFacets,
           avatar: undefined,
-          createdAt: new Date().toISOString(),
+          createdAt: new Date().toISOString() as DatetimeString,
         }
         if (avatar) {
-          const blobRes = await uploadBlob(agent, avatar.path, avatar.mime)
-          record.avatar = blobRes.data.blob
+          const blobRes = await uploadBlob(pdsClient, avatar.path, avatar.mime)
+          record.avatar = blobRes.blob
         }
-        const res = await agent.app.bsky.graph.list.create(
-          {
-            repo: currentAccount.did,
-          },
-          record,
-        )
+        const res = await pdsClient.create(app.bsky.graph.list, record)
 
         // wait for the appview to update
-        await whenAppViewReady(
-          agent,
-          res.uri,
-          (v: AppBskyGraphGetList.Response) => {
-            return typeof v?.data?.list.uri === 'string'
-          },
-        )
+        await whenAppViewReady(appviewClient, res.uri, v => {
+          return typeof v?.list.uri === 'string'
+        })
         return res
       },
       onSuccess() {
@@ -115,12 +111,13 @@ export interface ListMetadataMutateParams {
   uri: string
   name: string
   description: string
-  descriptionFacets: Facet[] | undefined
+  descriptionFacets: app.bsky.richtext.facet.Main[] | undefined
   avatar: ImageMeta | null | undefined
 }
 export function useListMetadataMutation() {
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   return useMutation<
     {uri: string; cid: string},
@@ -137,7 +134,7 @@ export function useListMetadataMutation() {
       }
 
       // get the current record
-      const {value: record} = await agent.app.bsky.graph.list.get({
+      const {value: record} = await pdsClient.get(app.bsky.graph.list, {
         repo: currentAccount.did,
         rkey,
       })
@@ -147,31 +144,30 @@ export function useListMetadataMutation() {
       record.description = description
       record.descriptionFacets = descriptionFacets
       if (avatar) {
-        const blobRes = await uploadBlob(agent, avatar.path, avatar.mime)
-        record.avatar = blobRes.data.blob
+        const blobRes = await uploadBlob(pdsClient, avatar.path, avatar.mime)
+        record.avatar = blobRes.blob
       } else if (avatar === null) {
         record.avatar = undefined
       }
-      const res = (
-        await agent.com.atproto.repo.putRecord({
+      const res = await pdsClient.call(
+        com.atproto.repo.putRecord,
+        {
           repo: currentAccount.did,
           collection: 'app.bsky.graph.list',
           rkey,
           record,
-        })
-      ).data
+        },
+        // service: null strips the appview proxy header - this must hit the account host (PDS)
+        {service: null},
+      )
 
       // wait for the appview to update
-      await whenAppViewReady(
-        agent,
-        res.uri,
-        (v: AppBskyGraphGetList.Response) => {
-          const list = v.data.list
-          return (
-            list.name === record.name && list.description === record.description
-          )
-        },
-      )
+      await whenAppViewReady(appviewClient, res.uri, v => {
+        const list = v.list
+        return (
+          list.name === record.name && list.description === record.description
+        )
+      })
       return res
     },
     onSuccess(data, variables) {
@@ -191,7 +187,8 @@ export function useListMetadataMutation() {
 
 export function useListDeleteMutation() {
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
@@ -199,11 +196,11 @@ export function useListDeleteMutation() {
         return
       }
       // fetch all the listitem records that belong to this list
-      let cursor
+      let cursor: string | undefined
       let listitemRecordUris: string[] = []
       for (let i = 0; i < 100; i++) {
-        const res = await agent.app.bsky.graph.listitem.list({
-          repo: currentAccount.did,
+        const res = await pdsClient.list(app.bsky.graph.listitem, {
+          repo: currentAccount.did as AtIdentifierString,
           cursor,
           limit: 100,
         })
@@ -221,11 +218,11 @@ export function useListDeleteMutation() {
       // batch delete the list and listitem records
       const createDel = (
         uri: string,
-      ): $Typed<ComAtprotoRepoApplyWrites.Delete> => {
+      ): com.atproto.repo.applyWrites.$InputBody['writes'][number] => {
         const urip = new AtUri(uri)
         return {
           $type: 'com.atproto.repo.applyWrites#delete',
-          collection: urip.collection,
+          collection: urip.collection as NsidString,
           rkey: urip.rkey,
         }
       }
@@ -235,15 +232,22 @@ export function useListDeleteMutation() {
 
       // apply in chunks
       for (const writesChunk of chunk(writes, 10)) {
-        await agent.com.atproto.repo.applyWrites({
-          repo: currentAccount.did,
-          writes: writesChunk,
-        })
+        await pdsClient.call(
+          com.atproto.repo.applyWrites,
+          {
+            repo: currentAccount.did as AtIdentifierString,
+            writes: writesChunk,
+          },
+          // service: null strips the appview proxy header - this must hit the account host (PDS)
+          {service: null},
+        )
       }
 
-      // wait for the appview to update
-      await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
-        return !v?.success
+      // wait for the appview to update. once the list is deleted, getList
+      // throws (404), `until` catches it and passes `undefined` here, so an
+      // absent body signals a completed delete.
+      await whenAppViewReady(appviewClient, uri, v => {
+        return !v
       })
     },
     onSuccess() {
@@ -258,17 +262,17 @@ export function useListDeleteMutation() {
 
 export function useListMuteMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   return useMutation<void, Error, {uri: string; mute: boolean}>({
     mutationFn: async ({uri, mute}) => {
       if (mute) {
-        await agent.muteModList(uri)
+        await appviewClient.call(muteActorList, {list: uri as AtUriString})
       } else {
-        await agent.unmuteModList(uri)
+        await appviewClient.call(unmuteActorList, {list: uri as AtUriString})
       }
 
-      await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
-        return Boolean(v?.data.list.viewer?.muted) === mute
+      await whenAppViewReady(appviewClient, uri, v => {
+        return Boolean(v?.list.viewer?.muted) === mute
       })
     },
     onSuccess(data, variables) {
@@ -281,19 +285,20 @@ export function useListMuteMutation() {
 
 export function useListBlockMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   return useMutation<void, Error, {uri: string; block: boolean}>({
     mutationFn: async ({uri, block}) => {
       if (block) {
-        await agent.blockModList(uri)
+        await pdsClient.call(blockActorList, {list: uri as AtUriString})
       } else {
-        await agent.unblockModList(uri)
+        await pdsClient.call(unblockActorList, {list: uri as AtUriString})
       }
 
-      await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
+      await whenAppViewReady(appviewClient, uri, v => {
         return block
-          ? typeof v?.data.list.viewer?.blocked === 'string'
-          : !v?.data.list.viewer?.blocked
+          ? typeof v?.list.viewer?.blocked === 'string'
+          : !v?.list.viewer?.blocked
       })
     },
     onSuccess(data, variables) {
@@ -305,17 +310,17 @@ export function useListBlockMutation() {
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  client: Client,
   uri: string,
-  fn: (res: AppBskyGraphGetList.Response) => boolean,
+  fn: (res: app.bsky.graph.getList.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
     () =>
-      agent.app.bsky.graph.getList({
-        list: uri,
+      client.call(app.bsky.graph.getList, {
+        list: uri as AtUriString,
         limit: 1,
       }),
   )
