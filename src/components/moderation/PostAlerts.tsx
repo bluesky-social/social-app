@@ -54,7 +54,15 @@ export function PostAlerts({
   const isOwnPost = !!post && post.author.did === currentAccount?.did
   const allLabels: ComAtprotoLabelDefs.Label[] =
     isOwnPost && view === 'expanded'
-      ? [...(post.labels ?? []), ...(post.author.labels ?? [])]
+      ? [
+          ...(post.labels ?? []),
+          /*
+           * Account labels appear on Profile. We don't show them here unless the
+           * user's mod settings are configured such that the labels land in the
+           * modui handling.
+           */
+          // ...(post.author.labels ?? [])
+        ]
       : []
   /*
    * Labels that the moderation system already surfaces in this context -
