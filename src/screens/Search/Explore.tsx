@@ -5,9 +5,7 @@ import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
@@ -62,6 +60,7 @@ import {
 } from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {StarterPack} from '#/components/icons/StarterPack'
+import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {boostInterests} from '#/components/InterestTabs'
 import {Loader} from '#/components/Loader'
@@ -78,7 +77,7 @@ import {
 
 function LoadMore({item}: {item: ExploreScreenItems & {type: 'loadMore'}}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const handleOnPress = () => {
     void item.onLoadMore()
@@ -86,7 +85,7 @@ function LoadMore({item}: {item: ExploreScreenItems & {type: 'loadMore'}}) {
 
   return (
     <Button
-      label={_(msg`Load more`)}
+      label={l`Load more`}
       onPress={handleOnPress}
       style={[a.relative, a.w_full]}>
       {({hovered, pressed}) => (
@@ -138,6 +137,7 @@ type ExploreScreenItems =
       key: string
       title: string
       icon: React.ComponentType<SVGIconProps>
+      iconSize?: IcoProps['size']
       searchButton?: {
         label: string
         metricsTag: Metrics['explore:module:searchButtonPress']['module']
@@ -215,7 +215,7 @@ export function Explore({
   headerHeight: number
 }) {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {data: preferences, error: preferencesError} = usePreferencesQuery()
   const moderationOpts = useModerationOpts()
@@ -367,10 +367,11 @@ export function Explore({
     i.push({
       type: 'tabbedHeader',
       key: 'suggested-accounts-header',
-      title: _(msg`Suggested accounts`),
+      title: l`Suggested accounts`,
       icon: Person,
+      iconSize: 'md',
       searchButton: {
-        label: _(msg`Search for more accounts`),
+        label: l`Search for more accounts`,
         metricsTag: 'suggestedAccounts',
         tab: 'user',
       },
@@ -383,7 +384,7 @@ export function Explore({
       i.push({
         type: 'error',
         key: 'suggestedUsersError',
-        message: _(msg`Failed to load suggested follows`),
+        message: l`Failed to load suggested follows`,
         error: cleanError(suggestedUsersError),
       })
     } else {
@@ -431,7 +432,7 @@ export function Explore({
     }
     return i
   }, [
-    _,
+    l,
     moderationOpts,
     suggestedUsers,
     suggestedUsersIsLoading,
@@ -445,10 +446,11 @@ export function Explore({
     i.push({
       type: 'header',
       key: 'suggested-feeds-header',
-      title: _(msg`Discover new feeds`),
+      title: l`Discover feeds`,
       icon: ListSparkle,
+      iconSize: 'md',
       searchButton: {
-        label: _(msg`Search for more feeds`),
+        label: l`Search for more feeds`,
         metricsTag: 'suggestedFeeds',
         tab: 'feed',
       },
@@ -474,14 +476,14 @@ export function Explore({
           i.push({
             type: 'error',
             key: 'suggestedFeedsError',
-            message: _(msg`Failed to load suggested feeds`),
+            message: l`Failed to load suggested feeds`,
             error: cleanError(suggestedFeedsError),
           })
         } else if (preferencesError) {
           i.push({
             type: 'error',
             key: 'preferencesError',
-            message: _(msg`Failed to load feeds preferences`),
+            message: l`Failed to load feeds preferences`,
             error: cleanError(preferencesError),
           })
         } else {
@@ -511,7 +513,7 @@ export function Explore({
             i.push({
               type: 'loadMore',
               key: 'loadMoreFeeds',
-              message: _(msg`Load more suggested feeds`),
+              message: l`Load more suggested feeds`,
               isLoadingMore: isLoadingMoreFeeds,
               onLoadMore: onLoadMoreFeeds,
             })
@@ -522,21 +524,21 @@ export function Explore({
           i.push({
             type: 'error',
             key: 'feedsError',
-            message: _(msg`Failed to load feeds`),
+            message: l`Failed to load feeds`,
             error: cleanError(feedsError),
           })
         } else if (suggestedFeedsError) {
           i.push({
             type: 'error',
             key: 'suggestedFeedsError',
-            message: _(msg`Failed to load suggested feeds`),
+            message: l`Failed to load suggested feeds`,
             error: cleanError(suggestedFeedsError),
           })
         } else if (preferencesError) {
           i.push({
             type: 'error',
             key: 'preferencesError',
-            message: _(msg`Failed to load feeds preferences`),
+            message: l`Failed to load feeds preferences`,
             error: cleanError(preferencesError),
           })
         } else {
@@ -567,21 +569,21 @@ export function Explore({
           i.push({
             type: 'error',
             key: 'feedsError',
-            message: _(msg`Failed to load feeds`),
+            message: l`Failed to load feeds`,
             error: cleanError(feedsError),
           })
         } else if (suggestedFeedsError) {
           i.push({
             type: 'error',
             key: 'suggestedFeedsError',
-            message: _(msg`Failed to load suggested feeds`),
+            message: l`Failed to load suggested feeds`,
             error: cleanError(suggestedFeedsError),
           })
         } else if (preferencesError) {
           i.push({
             type: 'error',
             key: 'preferencesError',
-            message: _(msg`Failed to load feeds preferences`),
+            message: l`Failed to load feeds preferences`,
             error: cleanError(preferencesError),
           })
         } else {
@@ -602,7 +604,7 @@ export function Explore({
             i.push({
               type: 'loadMore',
               key: 'loadMoreFeeds',
-              message: _(msg`Load more suggested feeds`),
+              message: l`Load more suggested feeds`,
               isLoadingMore: isLoadingMoreFeeds,
               onLoadMore: onLoadMoreFeeds,
             })
@@ -613,21 +615,21 @@ export function Explore({
           i.push({
             type: 'error',
             key: 'feedsError',
-            message: _(msg`Failed to load feeds`),
+            message: l`Failed to load feeds`,
             error: cleanError(feedsError),
           })
         } else if (suggestedFeedsError) {
           i.push({
             type: 'error',
             key: 'feedsError',
-            message: _(msg`Failed to load suggested feeds`),
+            message: l`Failed to load suggested feeds`,
             error: cleanError(suggestedFeedsError),
           })
         } else if (preferencesError) {
           i.push({
             type: 'error',
             key: 'preferencesError',
-            message: _(msg`Failed to load feeds preferences`),
+            message: l`Failed to load feeds preferences`,
             error: cleanError(preferencesError),
           })
         } else {
@@ -637,7 +639,7 @@ export function Explore({
     }
     return i
   }, [
-    _,
+    l,
     ax,
     useFullExperience,
     suggestedFeeds,
@@ -657,9 +659,9 @@ export function Explore({
     i.push({
       type: 'header',
       key: 'suggested-starterPacks-header',
-      title: _(msg`Starter Packs`),
+      title: l`Starter Packs`,
       icon: StarterPack,
-      iconSize: 'xl',
+      iconSize: 'md',
     })
 
     if (isLoadingSuggestedSPs || isRefetchingSuggestedSPs) {
@@ -684,7 +686,7 @@ export function Explore({
     return i
   }, [
     suggestedSPs,
-    _,
+    l,
     isLoadingSuggestedSPs,
     suggestedSPsError,
     isRefetchingSuggestedSPs,
@@ -773,7 +775,7 @@ export function Explore({
           return (
             <View style={[a.pb_md]}>
               <ModuleHeader.Container style={[a.pb_xs]}>
-                <ModuleHeader.Icon icon={item.icon} />
+                <ModuleHeader.Icon icon={item.icon} size={item.iconSize} />
                 <ModuleHeader.TitleText>{item.title}</ModuleHeader.TitleText>
                 {item.searchButton && (
                   <ModuleHeader.SearchButton
@@ -795,6 +797,12 @@ export function Explore({
         case 'trendingTopics': {
           return (
             <View style={[a.pb_md]}>
+              <ModuleHeader.Container bottomBorder={true}>
+                <ModuleHeader.Icon icon={TrendingIcon} size="md" />
+                <ModuleHeader.TitleText>
+                  <Trans>Trending</Trans>
+                </ModuleHeader.TitleText>
+              </ModuleHeader.Container>
               <ExploreTrendingTopics />
             </View>
           )
@@ -1015,9 +1023,7 @@ export function Explore({
         case 'preview:loadMoreError': {
           return (
             <LoadMoreRetryBtn
-              label={_(
-                msg`There was an issue fetching posts. Tap here to try again.`,
-              )}
+              label={l`There was an issue fetching posts. Tap here to try again.`}
               onPress={handleOnPressRetry}
             />
           )
@@ -1042,7 +1048,7 @@ export function Explore({
       moderationOpts,
       interestsDisplayNames,
       useFullExperience,
-      _,
+      l,
       fetchNextPageFeedPreviews,
     ],
   )
