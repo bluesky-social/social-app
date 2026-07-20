@@ -28,6 +28,7 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {type PostSource} from '#/state/unstable-post-source'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {LikesStat} from '#/screens/PostThread/components/LikesStat'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
   LINEAR_AVI_WIDTH,
@@ -42,7 +43,6 @@ import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Tra
 import {GalleryBleed} from '#/components/images/Gallery'
 import {Link} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
-import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
@@ -200,10 +200,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const authorHref = makeProfileLink(post.author)
   const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did
 
-  const likesHref = useMemo(() => {
-    const urip = new AtUri(post.uri)
-    return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
-  }, [post.uri, post.author])
   const repostsHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
@@ -384,14 +380,14 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             </View>
           </View>
           <View style={[a.pb_sm]}>
-            <LabelsOnMyPost post={post} style={[a.pb_sm]} />
             <ContentHider
               modui={moderation.ui('contentView')}
               ignoreMute
               childContainerStyle={[a.pt_sm]}>
               <PostAlerts
+                post={post}
                 modui={moderation.ui('contentView')}
-                size="lg"
+                view="expanded"
                 includeMute
                 style={[a.pb_sm]}
                 additionalCauses={additionalPostAlerts}
@@ -444,6 +440,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   a.py_md,
                   t.atoms.border_contrast_low,
                 ]}>
+                <LikesStat post={post} />
                 {post.repostCount != null && post.repostCount !== 0 ? (
                   <Link to={repostsHref} label={l`Reposts of this post`}>
                     <Text
@@ -479,25 +476,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                           value={post.quoteCount}
                           one="quote"
                           other="quotes"
-                        />
-                      </Trans>
-                    </Text>
-                  </Link>
-                ) : null}
-                {post.likeCount != null && post.likeCount !== 0 ? (
-                  <Link to={likesHref} label={l`Likes on this post`}>
-                    <Text
-                      testID="likeCount-expanded"
-                      style={[a.text_md, t.atoms.text_contrast_medium]}>
-                      <Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
-                        <Text
-                          style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-                          {formatPostStatCount(post.likeCount)}
-                        </Text>{' '}
-                        <Plural
-                          value={post.likeCount}
-                          one="like"
-                          other="likes"
                         />
                       </Trans>
                     </Text>

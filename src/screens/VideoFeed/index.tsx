@@ -48,6 +48,10 @@ import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
+  createPlaybackTelemetry,
+  type PlaybackTelemetry,
+} from '#/lib/media/video/playbackTelemetry'
+import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
@@ -551,7 +555,7 @@ let VideoItem = ({
         <>
           <VideoItemPlaceholder embed={embed} />
           {shouldRenderVideo && player && (
-            <VideoItemInner player={player} embed={embed} />
+            <VideoItemInner player={player} embed={embed} active={active} />
           )}
           {moderation && (
             <Overlay
@@ -575,12 +579,16 @@ VideoItem = memo(VideoItem)
 function VideoItemInner({
   player,
   embed,
+  active,
 }: {
   player: VideoPlayer
   embed: AppBskyEmbedVideo.View
+  active: boolean
 }) {
   const {bottom} = useSafeAreaInsets()
   const [isReady, setIsReady] = useState(!IS_ANDROID)
+
+  usePlaybackTelemetry({player, active})
 
   useEventListener(player, 'timeUpdate', evt => {
     if (IS_ANDROID && !isReady && evt.currentTime >= 0.05) {
@@ -607,6 +615,52 @@ function VideoItemInner({
       accessibilityIgnoresInvertColors
     />
   )
+}
+
+/**
+ * Opens a Sentry playback span while this item is the active video. Adjacent
+ * players are preloaded by updateVideoState, so record whether the player was
+ * already ready at activation to separate load time from swipe latency.
+ */
+function usePlaybackTelemetry({
+  player,
+  active,
+}: {
+  player: VideoPlayer
+  active: boolean
+}) {
+  const telemetryRef = useRef<PlaybackTelemetry | null>(null)
+
+  useEffect(() => {
+    if (!active) return
+    telemetryRef.current ??= createPlaybackTelemetry({
+      surface: 'immersiveFeed',
+      presentation: 'video',
+    })
+    const telemetry = telemetryRef.current
+    const preloaded = player.status === 'readyToPlay'
+    telemetry.activated({preloaded})
+    if (preloaded) {
+      telemetry.ready()
+    }
+    return () => {
+      telemetry.deactivated()
+    }
+  }, [active, player])
+
+  useEventListener(player, 'statusChange', evt => {
+    if (evt.status === 'readyToPlay') {
+      telemetryRef.current?.ready()
+    } else if (evt.status === 'error') {
+      telemetryRef.current?.error(evt.error?.message ?? 'unknown')
+    }
+  })
+
+  useEventListener(player, 'playingChange', evt => {
+    if (evt.isPlaying) {
+      telemetryRef.current?.playing()
+    }
+  })
 }
 
 function ModerationOverlay({

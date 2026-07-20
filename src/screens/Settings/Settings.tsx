@@ -36,6 +36,7 @@ import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/co
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
+import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
 import {Bell_Stroke2_Corner0_Rounded as NotificationIcon} from '#/components/icons/Bell'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
 import {ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon} from '#/components/icons/Chevron'
@@ -240,6 +241,14 @@ export function SettingsScreen({}: Props) {
             <SettingsList.ItemIcon icon={EarthIcon} />
             <SettingsList.ItemText>
               <Trans>Languages</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            to="/settings/beta-features"
+            label={l`Beta features`}>
+            <SettingsList.ItemIcon icon={BeakerIcon} />
+            <SettingsList.ItemText>
+              <Trans>Beta features</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.PressableItem

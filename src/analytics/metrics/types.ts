@@ -1461,4 +1461,6 @@ export type Events = {
     jobId?: string
     elapsedInPhaseMs: number
   }
+
+  'post:likedBy:click': {}
 }

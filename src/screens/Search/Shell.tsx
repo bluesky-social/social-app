@@ -36,7 +36,6 @@ import {useSession} from '#/state/session'
 import {
   countActiveFilters,
   definedFilterParams,
-  filtersToLegacyParams,
   filtersToRouteParams,
   hasActiveFilters,
   parseHistoryEntry,
@@ -45,7 +44,6 @@ import {
   serializeHistoryEntry,
   withoutFilterParams,
 } from '#/screens/Search/searchParams'
-import {makeSearchQuery} from '#/screens/Search/utils'
 import {
   atoms as a,
   native,
@@ -71,7 +69,6 @@ import {AutocompleteResults} from './components/AutocompleteResults'
 import {DetectedLanguagesAdmonition} from './components/DetectedLanguagesAdmonition'
 import {SearchAutocompleteInput} from './components/SearchAutocompleteInput'
 import {SearchHistory} from './components/SearchHistory'
-import {SearchLanguageDropdown} from './components/SearchLanguageDropdown'
 import {Explore} from './Explore'
 import {SearchResults} from './SearchResults'
 
@@ -121,10 +118,6 @@ export function SearchScreenShell({
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
-
-  const searchV2Enabled = ax.features.enabled(ax.features.SearchV2Enable)
-  const advancedSearchV2Enabled =
-    searchV2Enabled && ax.features.enabled(ax.features.AdvancedSearchV2Enable)
 
   // Get tab parameter from route params
   const tabParam = (route.params as {q?: string; tab?: TabParam})?.tab
@@ -207,11 +200,10 @@ export function SearchScreenShell({
     [accountHistory, setAccountHistory],
   )
 
-  const {query, queryWithParams, filters, setFilters, hasFilters} =
-    useQueryManager({
-      initialQuery: queryParam,
-      fixedParams,
-    })
+  const {query, filters, setFilters, hasFilters} = useQueryManager({
+    initialQuery: queryParam,
+    fixedParams,
+  })
   const showFilters = Boolean((query || hasFilters) && !showAutocomplete)
 
   const onChangeLang = useCallback(
@@ -560,12 +552,7 @@ export function SearchScreenShell({
                     {isExplore ? <Trans>Explore</Trans> : <Trans>Search</Trans>}
                   </Layout.Header.TitleText>
                 </Layout.Header.Content>
-                {showFilters && !advancedSearchV2Enabled ? (
-                  <SearchLanguageDropdown
-                    value={filters.lang ?? ''}
-                    onChange={onChangeLang}
-                  />
-                ) : showFilters && advancedSearchV2Enabled ? (
+                {showFilters ? (
                   <View style={[a.flex_row, a.align_center, a.gap_sm]}>
                     <AdvancedSearchDialog
                       disabled={activeTab > 1}
@@ -591,7 +578,7 @@ export function SearchScreenShell({
           )}
           <View style={[a.px_lg, a.pt_sm, a.pb_sm, a.overflow_hidden]}>
             <View style={[a.gap_sm]}>
-              {searchV2Enabled && query && !showAutocomplete && (
+              {query && !showAutocomplete && (
                 <DetectedLanguagesAdmonition
                   query={query}
                   filters={filters}
@@ -635,7 +622,7 @@ export function SearchScreenShell({
                     />
                   </View>
                 </View>
-                {showFilters && !showHeader && advancedSearchV2Enabled ? (
+                {showFilters && !showHeader ? (
                   <View style={[a.flex_row, a.align_center, a.gap_sm]}>
                     <AdvancedSearchDialog
                       disabled={activeTab > 1}
@@ -655,15 +642,6 @@ export function SearchScreenShell({
                   </View>
                 ) : null}
               </View>
-
-              {showFilters && !showHeader && !advancedSearchV2Enabled && (
-                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                  <SearchLanguageDropdown
-                    value={filters.lang ?? ''}
-                    onChange={onChangeLang}
-                  />
-                </View>
-              )}
             </View>
           </View>
         </Layout.Center>
@@ -676,7 +654,6 @@ export function SearchScreenShell({
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             query={query}
-            queryWithParams={queryWithParams}
             filters={filters}
             hasFilters={hasFilters}
             headerHeight={headerHeight}
@@ -728,7 +705,6 @@ let SearchScreenInner = ({
   activeTab,
   setActiveTab,
   query,
-  queryWithParams,
   filters,
   hasFilters,
   headerHeight,
@@ -737,7 +713,6 @@ let SearchScreenInner = ({
   activeTab: number
   setActiveTab: React.Dispatch<React.SetStateAction<number>>
   query: string
-  queryWithParams: string
   filters: SearchFilters
   hasFilters: boolean
   headerHeight: number
@@ -754,7 +729,6 @@ let SearchScreenInner = ({
   return query || hasFilters ? (
     <SearchResults
       query={query}
-      queryWithParams={queryWithParams}
       filters={filters}
       hasFilters={hasFilters}
       activeTab={activeTab}
@@ -840,7 +814,6 @@ function useQueryManager({
   return useMemo(
     () => ({
       query,
-      queryWithParams: makeSearchQuery(query, filtersToLegacyParams(filters)),
       filters,
       setFilters,
       hasFilters: hasActiveFilters(filters),

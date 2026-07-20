@@ -108,6 +108,7 @@ import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
 import {AppPasswordsScreen} from '#/screens/Settings/AppPasswords'
 import {AutomationLabelSettingsScreen} from '#/screens/Settings/AutomationLabelSettings'
+import {BetaFeaturesSettingsScreen} from '#/screens/Settings/BetaFeaturesSettings'
 import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaSettings'
 import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
 import {FindContactsSettingsScreen} from '#/screens/Settings/FindContactsSettings'
@@ -402,6 +403,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => AccountSettingsScreen}
         options={{
           title: title(msg`Account`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="BetaFeaturesSettings"
+        getComponent={() => BetaFeaturesSettingsScreen}
+        options={{
+          title: title(msg`Beta features`),
           requireAuth: true,
         }}
       />
@@ -994,14 +1003,15 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
     })
 
     if (IS_WEB) {
-      const referrerInfo = Referrer.getReferrerInfo()
-      if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-        ax.metric('deepLink:referrerReceived', {
-          to: window.location.href,
-          referrer: referrerInfo?.referrer,
-          hostname: referrerInfo?.hostname,
-        })
-      }
+      void Referrer.getReferrerInfo().then(referrerInfo => {
+        if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+          ax.metric('deepLink:referrerReceived', {
+            to: window.location.href,
+            referrer: referrerInfo?.referrer,
+            hostname: referrerInfo?.hostname,
+          })
+        }
+      })
     }
 
     // temp, just testing

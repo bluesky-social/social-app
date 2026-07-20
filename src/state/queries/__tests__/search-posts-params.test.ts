@@ -26,6 +26,23 @@ describe(`extractSearchPostsParams`, () => {
       input: `cats to:alice`,
       output: {q: `cats`, mentions: `alice`},
     },
+    // Handles may be typed with a leading @ (e.g. from:@alice.bsky.social),
+    // which the appview rejects. Strip it to match the advanced-search dialog.
+    {
+      name: `strips a leading @ from from:`,
+      input: `cats from:@alice.bsky.social`,
+      output: {q: `cats`, author: `alice.bsky.social`},
+    },
+    {
+      name: `strips a leading @ from mentions:`,
+      input: `cats mentions:@alice.bsky.social`,
+      output: {q: `cats`, mentions: `alice.bsky.social`},
+    },
+    {
+      name: `strips a leading @ from to: (mentions alias)`,
+      input: `cats to:@alice.bsky.social`,
+      output: {q: `cats`, mentions: `alice.bsky.social`},
+    },
     // `me` is resolved by the backend, so the :me operators stay in q verbatim
     // instead of being lifted into author/mentions.
     {

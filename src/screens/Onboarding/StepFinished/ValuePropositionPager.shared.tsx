@@ -4,6 +4,16 @@ import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
 
+export type ValuePropositionPagerProps = {
+  step: 0 | 1 | 2
+  /**
+   * Only the native pager changes pages itself (by swiping); the web pager
+   * is driven entirely by the step prop.
+   */
+  setStep: (step: 0 | 1 | 2) => void
+  avatarUri?: string
+}
+
 export function useValuePropText(step: 0 | 1 | 2) {
   const {_} = useLingui()
 

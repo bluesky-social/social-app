@@ -228,7 +228,6 @@ let ProfileHeaderShell = ({
       {!isPlaceholderProfile &&
         (isMe ? (
           <LabelsOnMe
-            type="account"
             labels={profile.labels}
             style={[
               a.px_lg,

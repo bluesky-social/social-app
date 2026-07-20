@@ -6,11 +6,14 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {urls} from '#/lib/constants'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useCallOnce} from '#/lib/once'
-import {cleanError} from '#/lib/strings/errors'
+import {
+  cleanError,
+  isNetworkError,
+  shouldRetryError,
+} from '#/lib/strings/errors'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
-import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSearchPostsV2Query} from '#/state/queries/search-posts-v2'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -36,7 +39,6 @@ import type * as bsky from '#/types/bsky'
 
 let SearchResults = ({
   query,
-  queryWithParams,
   filters,
   hasFilters,
   activeTab,
@@ -44,7 +46,6 @@ let SearchResults = ({
   headerHeight,
 }: {
   query: string
-  queryWithParams: string
   filters: SearchFilters
   hasFilters: boolean
   activeTab: number
@@ -75,7 +76,6 @@ let SearchResults = ({
           <SearchScreenPostResults
             hasFilters={hasFilters}
             query={query}
-            queryWithParams={queryWithParams}
             filters={filters}
             sort="top"
             active={activePage === 0}
@@ -88,7 +88,6 @@ let SearchResults = ({
           <SearchScreenPostResults
             hasFilters={hasFilters}
             query={query}
-            queryWithParams={queryWithParams}
             filters={filters}
             sort="latest"
             active={activePage === 1}
@@ -111,15 +110,7 @@ let SearchResults = ({
       title: string
       component: React.ReactNode
     }[]
-  }, [
-    l,
-    query,
-    queryWithParams,
-    filters,
-    hasFilters,
-    hasPostFilters,
-    activePage,
-  ])
+  }, [l, query, filters, hasFilters, hasPostFilters, activePage])
 
   // There may be fewer tabs after changing the search options.
   const selectedPage = activePage > sections.length - 1 ? 0 : activePage
@@ -204,13 +195,8 @@ function NoResultsText({
   hasFilters?: boolean
   query: string
 }) {
-  const ax = useAnalytics()
   const t = useTheme()
   const {t: l} = useLingui()
-
-  const searchV2Enabled = ax.features.enabled(ax.features.SearchV2Enable)
-  const advancedSearchV2Enabled =
-    searchV2Enabled && ax.features.enabled(ax.features.AdvancedSearchV2Enable)
 
   return (
     <>
@@ -257,35 +243,19 @@ function NoResultsText({
           a.leading_snug,
           t.atoms.text_contrast_high,
         ]}>
-        {advancedSearchV2Enabled ? (
-          <Trans context="english-only-resource">
-            Learn more about{' '}
-            <InlineLinkText
-              label={l({
-                message: 'Read about how to use advanced search filters',
-                context: 'english-only-resource',
-              })}
-              to={urls.website.blog.searchTipsAndTricks}
-              style={[a.text_md, a.leading_snug]}>
-              how to use advanced search
-            </InlineLinkText>
-            .
-          </Trans>
-        ) : (
-          <Trans context="english-only-resource">
-            Learn more about{' '}
-            <InlineLinkText
-              label={l({
-                message: 'Read about how to use search filters',
-                context: 'english-only-resource',
-              })}
-              to={urls.website.blog.searchTipsAndTricks}
-              style={[a.text_md, a.leading_snug]}>
-              how to use search filters
-            </InlineLinkText>
-            .
-          </Trans>
-        )}
+        <Trans context="english-only-resource">
+          Learn more about{' '}
+          <InlineLinkText
+            label={l({
+              message: 'Read about how to use advanced search filters',
+              context: 'english-only-resource',
+            })}
+            to={urls.website.blog.searchTipsAndTricks}
+            style={[a.text_md, a.leading_snug]}>
+            how to use advanced search
+          </InlineLinkText>
+          .
+        </Trans>
       </Text>
     </>
   )
@@ -305,14 +275,12 @@ type SearchResultSlice =
 let SearchScreenPostResults = ({
   hasFilters = false,
   query,
-  queryWithParams,
   filters,
   sort,
   active,
 }: {
   hasFilters: boolean
   query: string
-  queryWithParams: string
   filters?: SearchFilters
   sort?: 'top' | 'latest'
   active: boolean
@@ -323,30 +291,15 @@ let SearchScreenPostResults = ({
   const [isPTR, setIsPTR] = useState(false)
   const trackPostView = usePostViewTracking('SearchResults')
 
-  const searchV2Enabled = ax.features.enabled(ax.features.SearchV2Enable)
-
   const augmentedV2Query = useMemo(() => {
     return augmentSearchQuery(query || '')
   }, [query])
-  const augmentedV1Query = useMemo(() => {
-    return augmentSearchQuery(queryWithParams || '')
-  }, [queryWithParams])
 
-  /*
-   * Both hooks are called to keep hook order stable; `enabled` ensures only the
-   * gated one actually fetches. V2 sends structured `filters` as separate
-   * params, V1 keeps the existing single-`q` behavior.
-   */
-  const v1 = useSearchPostsQuery({
-    query: augmentedV1Query,
-    sort,
-    enabled: active && !searchV2Enabled,
-  })
   const v2 = useSearchPostsV2Query({
     query: augmentedV2Query,
     filters,
     sort,
-    enabled: active && searchV2Enabled,
+    enabled: active,
   })
   const {
     isFetched,
@@ -357,7 +310,7 @@ let SearchScreenPostResults = ({
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = searchV2Enabled ? v2 : v1
+  } = v2
 
   const t = useTheme()
   const onPullToRefresh = useCallback(async () => {
@@ -453,7 +406,11 @@ let SearchScreenPostResults = ({
 
   return error ? (
     <EmptyState
-      messageText={l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`}
+      messageText={
+        shouldRetryError(error) || isNetworkError(error)
+          ? l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`
+          : l`We’re sorry, but your search could not be completed.`
+      }
       error={cleanError(error)}
     />
   ) : (
@@ -590,7 +547,11 @@ let SearchScreenUserResults = ({
   if (error) {
     return (
       <EmptyState
-        messageText={l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`}
+        messageText={
+          shouldRetryError(error) || isNetworkError(error)
+            ? l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`
+            : l`We’re sorry, but your search could not be completed.`
+        }
         error={error.toString()}
       />
     )

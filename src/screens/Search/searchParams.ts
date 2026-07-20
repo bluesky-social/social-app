@@ -188,27 +188,6 @@ export function withoutFilterParams(
   }
   return base
 }
-
-/**
- * Converts structured filters back into the legacy free-text operators used by
- * search v1. UI-only filters are intentionally dropped because the old path
- * could not apply them.
- */
-export function filtersToLegacyParams(
-  filters: SearchFilters,
-): Record<string, string> {
-  const params: Record<string, string> = {}
-  if (filters.author) params.from = filters.author
-  if (filters.mentions) params.mentions = filters.mentions
-  if (filters.domain) params.domain = filters.domain
-  if (filters.url) params.url = filters.url
-  if (filters.tag) params.tag = filters.tag
-  if (filters.lang) params.lang = filters.lang
-  if (filters.since) params.since = filters.since
-  if (filters.until) params.until = filters.until
-  return params
-}
-
 /**
  * Maps each multi-value SearchFilters key to its `app.bsky.feed.searchPostsV2`
  * param name. Search v1 only honored the first value for the singular lexicon
