@@ -146,6 +146,7 @@ function BottomSheetNativeComponentInner({
   const insets = useSafeAreaInsets()
   const cornerRadius = rest.cornerRadius ?? 0
   const {height: screenHeight} = useWindowDimensions()
+  const isHeightConstrained = maxHeight != null || rest.fullHeight === true
 
   // sigh... on older Android versions, screenHeight does not include safe area insets
   // on newer Androids + iOS, it does. we need to find the inner bit + the bottom inset
@@ -182,7 +183,7 @@ function BottomSheetNativeComponentInner({
         ]}>
         <View
           onLayout={onLayout}
-          style={maxHeight == null ? undefined : {flex: 1}}>
+          style={isHeightConstrained ? {flex: 1} : undefined}>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>
       </View>
