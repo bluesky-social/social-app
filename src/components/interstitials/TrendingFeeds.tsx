@@ -8,7 +8,13 @@ import {useTrendingSettings} from '#/state/preferences/trending'
 import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/service-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, useGutters, useTheme, type ViewStyleProp} from '#/alf'
+import {
+  atoms as a,
+  useGutters,
+  useLayoutBreakpoints,
+  useTheme,
+  type ViewStyleProp,
+} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import {Link} from '#/components/Link'
@@ -21,8 +27,9 @@ const TOPIC_COUNT = 3
 export function TrendingFeedsInterstitial() {
   const {enabled} = useTrendingConfig()
   const {trendingDisabled} = useTrendingSettings()
+  const {rightNavVisible} = useLayoutBreakpoints()
 
-  return enabled && !trendingDisabled ? <Inner /> : null
+  return enabled && !trendingDisabled && !rightNavVisible ? <Inner /> : null
 }
 
 function Inner() {
