@@ -11,9 +11,9 @@ import {useCreateGroupChat} from '#/state/queries/messages/create-group-chat'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import * as Dialog from '#/components/Dialog'
 import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
+import {InitiateChatFlow} from '#/components/dms/InitiateChatFlow'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
-import {InitiateChatFlow} from '../InitiateChatFlow'
 
 export function SendViaChatDialog({
   control,
