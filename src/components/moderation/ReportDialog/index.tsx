@@ -249,23 +249,7 @@ function Inner(props: ReportDialogProps) {
     } finally {
       setIsPending(false)
     }
-    /*
-     * Depend on the specific props members used, not the whole props object.
-     * props is a new object every render, so depending on it recreates this
-     * callback each render, which on Android tears down the pending
-     * setTimeout(close) before it fires and the dialog never closes on the
-     * fast submit path (APP-1999).
-     */
-  }, [
-    logger,
-    submitReport,
-    props.subject,
-    props.control,
-    props.onAfterSubmit,
-    state,
-    ax,
-    l,
-  ])
+  }, [logger, submitReport, props, state, ax, l])
 
   useCallOnce(() => {
     ax.metric('reportDialog:open', {
