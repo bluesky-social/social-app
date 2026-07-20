@@ -150,10 +150,10 @@ function TranslationLink({
         label={l`Translate`}
         hoverStyle={[
           native({opacity: 0.5}),
-          web([a.underline, {textDecorationColor: t.palette.primary_500}]),
+          web([a.underline, {textDecorationColor: t.atoms.text_link.color}]),
         ]}
         hitSlop={HITSLOP_30}>
-        <Text style={[a.text_sm, {color: t.palette.primary_500}]}>
+        <Text style={[a.text_sm, t.atoms.text_link]}>
           <Trans>Translate</Trans>
         </Text>
       </Link>
@@ -229,7 +229,7 @@ function TranslationError({
           label={l`Try Google Translate`}
           hoverStyle={[
             native({opacity: 0.5}),
-            web([a.underline, {textDecorationColor: t.palette.primary_500}]),
+            web([a.underline, {textDecorationColor: t.atoms.text_link.color}]),
           ]}
           hitSlop={HITSLOP_30}>
           <Text
@@ -237,7 +237,7 @@ function TranslationError({
               a.text_xs,
               a.font_medium,
               a.leading_snug,
-              {color: t.palette.primary_500},
+              t.atoms.text_link,
             ]}>
             <Trans>Try Google Translate</Trans>
           </Text>

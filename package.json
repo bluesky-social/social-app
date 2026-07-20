@@ -101,7 +101,7 @@
     "@atproto/syntax": "0.7.2",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
-    "@bsky.app/alf": "^0.1.14",
+    "@bsky.app/alf": "^0.1.15",
     "@bsky.app/expo-dynamic-app-icon": "^1.8.5",
     "@bsky.app/expo-guess-language": "^0.2.8",
     "@bsky.app/expo-image-crop-tool": "^0.5.1",
