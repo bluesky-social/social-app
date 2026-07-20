@@ -1055,11 +1055,6 @@
       "count": 1
     }
   },
-  "src/screens/Profile/components/ProfileFeedHeader.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 5
-    }
-  },
   "src/screens/ProfileList/FeedSection.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
@@ -1406,11 +1401,6 @@
       "count": 2
     }
   },
-  "src/state/queries/feed.ts": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/state/queries/handle.ts": {
     "typescript/no-floating-promises": {
       "count": 1
@@ -1754,11 +1744,6 @@
     },
     "typescript/no-misused-promises": {
       "count": 2
-    }
-  },
-  "src/view/com/posts/PostFeed.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 1
     }
   },
   "src/view/com/posts/PostFeedErrorMessage.tsx": {

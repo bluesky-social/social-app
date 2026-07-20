@@ -24,20 +24,20 @@ import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
-import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
-  Heart2_Stroke2_Corner0_Rounded as Heart,
+  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilledIcon,
+  Heart2_Stroke2_Corner0_Rounded as HeartIcon,
 } from '#/components/icons/Heart2'
 import {
-  Pin_Filled_Corner0_Rounded as PinFilled,
-  Pin_Stroke2_Corner0_Rounded as Pin,
+  Pin_Filled_Corner0_Rounded as PinFilledIcon,
+  Pin_Stroke2_Corner0_Rounded as PinIcon,
 } from '#/components/icons/Pin'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import * as Menu from '#/components/Menu'
@@ -74,14 +74,20 @@ export function ProfileFeedHeaderSkeleton() {
               width: 34,
             },
           ]}>
-          <Pin size="lg" fill={t.atoms.text_contrast_low.color} />
+          <PinIcon size="lg" fill={t.atoms.text_contrast_low.color} />
         </View>
       </Layout.Header.Slot>
     </Layout.Header.Outer>
   )
 }
 
-export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
+export function ProfileFeedHeader({
+  info,
+  isTrending,
+}: {
+  info: FeedSourceFeedInfo
+  isTrending: boolean
+}) {
   const t = useTheme()
   const {t: l, i18n} = useLingui()
   const ax = useAnalytics()
@@ -243,42 +249,48 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                         emoji>
                         {info.displayName}
                       </Text>
-                      <View style={[a.flex_row, {gap: 6}]}>
-                        <Text
-                          style={[
-                            a.flex_shrink,
-                            a.text_sm,
-                            a.leading_snug,
-                            t.atoms.text_contrast_medium,
-                          ]}
-                          numberOfLines={1}>
-                          {sanitizeHandle(info.creatorHandle, '@')}
-                        </Text>
-                        <View style={[a.flex_row, a.align_center, {gap: 2}]}>
-                          <HeartFilled
-                            size="xs"
-                            fill={
-                              likeUri
-                                ? t.palette.pink
-                                : t.atoms.text_contrast_low.color
-                            }
-                          />
+                      {!isTrending ? (
+                        <View style={[a.flex_row, a.gap_2xs]}>
                           <Text
                             style={[
+                              a.flex_shrink,
                               a.text_sm,
                               a.leading_snug,
-                              t.atoms.text_contrast_medium,
+                              t.atoms.text_contrast_high,
                             ]}
                             numberOfLines={1}>
-                            {formatCount(i18n, likeCount)}
+                            {sanitizeHandle(info.creatorHandle, '@')}
                           </Text>
+                          {likeCount > 0 ? (
+                            <View
+                              style={[a.flex_row, a.align_center, {gap: 2}]}>
+                              <HeartFilledIcon
+                                size="xs"
+                                fill={
+                                  likeUri
+                                    ? t.palette.pink
+                                    : t.atoms.text_contrast_low.color
+                                }
+                                style={[{width: 14, height: 14}]}
+                              />
+                              <Text
+                                style={[
+                                  a.text_sm,
+                                  a.leading_snug,
+                                  t.atoms.text_contrast_high,
+                                ]}
+                                numberOfLines={1}>
+                                {formatCount(i18n, likeCount)}
+                              </Text>
+                            </View>
+                          ) : null}
                         </View>
-                      </View>
+                      ) : null}
                     </View>
 
-                    <Ellipsis
+                    <EllipsisIcon
                       size="md"
-                      fill={t.atoms.text_contrast_low.color}
+                      fill={t.atoms.text_contrast_high.color}
                     />
                   </View>
                 </>
@@ -286,7 +298,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
             </Button>
           </Layout.Header.Content>
 
-          {hasSession && (
+          {!isTrending && hasSession ? (
             <Layout.Header.Slot>
               {isPinned ? (
                 <Menu.Root>
@@ -300,7 +312,10 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                           variant="ghost"
                           shape="square"
                           color="secondary">
-                          <PinFilled size="lg" fill={t.palette.primary_500} />
+                          <PinFilledIcon
+                            size="lg"
+                            fill={t.palette.primary_500}
+                          />
                         </Button>
                       )
                     }}
@@ -310,23 +325,23 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                     <Menu.Item
                       disabled={isFeedStateChangePending}
                       label={l`Unpin from home`}
-                      onPress={onTogglePinned}>
+                      onPress={() => void onTogglePinned()}>
                       <Menu.ItemText>{l`Unpin from home`}</Menu.ItemText>
-                      <Menu.ItemIcon icon={X} position="right" />
+                      <Menu.ItemIcon icon={XIcon} position="right" />
                     </Menu.Item>
                     <Menu.Item
                       disabled={isFeedStateChangePending}
                       label={
                         isSaved ? l`Remove from my feeds` : l`Save to my feeds`
                       }
-                      onPress={onToggleSaved}>
+                      onPress={() => void onToggleSaved()}>
                       <Menu.ItemText>
                         {isSaved
                           ? l`Remove from my feeds`
                           : l`Save to my feeds`}
                       </Menu.ItemText>
                       <Menu.ItemIcon
-                        icon={isSaved ? Trash : Plus}
+                        icon={isSaved ? TrashIcon : PlusIcon}
                         position="right"
                       />
                     </Menu.Item>
@@ -339,12 +354,12 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                   variant="ghost"
                   shape="square"
                   color="secondary"
-                  onPress={onTogglePinned}>
-                  <ButtonIcon icon={Pin} size="lg" />
+                  onPress={() => void onTogglePinned()}>
+                  <ButtonIcon icon={PinIcon} size="lg" />
                 </Button>
               )}
             </Layout.Header.Slot>
-          )}
+          ) : null}
         </Layout.Header.Outer>
       </Layout.Center>
       <Dialog.Outer control={infoControl}>
@@ -358,7 +373,8 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
             setLikeUri={setLikeUri}
             likeCount={likeCount}
             isPinned={isPinned}
-            onTogglePinned={onTogglePinned}
+            isTrending={isTrending}
+            onTogglePinned={() => void onTogglePinned()}
             isFeedStateChangePending={isFeedStateChangePending}
           />
         </Dialog.ScrollableInner>
@@ -373,6 +389,7 @@ function DialogInner({
   setLikeUri,
   likeCount,
   isPinned,
+  isTrending,
   onTogglePinned,
   isFeedStateChangePending,
 }: {
@@ -381,6 +398,7 @@ function DialogInner({
   setLikeUri: (uri: string) => void
   likeCount: number
   isPinned: boolean
+  isTrending: boolean
   onTogglePinned: () => void
   isFeedStateChangePending: boolean
 }) {
@@ -472,12 +490,13 @@ function DialogInner({
           color="secondary"
           shape="round"
           onPress={onPressShare}>
-          <ButtonIcon icon={Share} size="lg" />
+          <ButtonIcon icon={ShareIcon} size="lg" />
         </Button>
       </View>
       <RichText value={info.description} style={[a.text_md]} />
-      <View style={[a.flex_row, a.gap_sm, a.align_center]}>
-        {typeof likeCount === 'number' && (
+
+      {typeof likeCount === 'number' && likeCount > 0 ? (
+        <View style={[a.flex_row, a.gap_sm, a.align_center]}>
           <InlineLinkText
             label={l`View users who like this feed`}
             to={makeCustomFeedLink(info.creatorDid, feedRkey, 'liked-by')}
@@ -487,41 +506,47 @@ function DialogInner({
               Liked by <Plural value={likeCount} one="# user" other="# users" />
             </Trans>
           </InlineLinkText>
-        )}
-      </View>
-      {hasSession && (
+        </View>
+      ) : null}
+      {hasSession ? (
         <>
-          <View style={[a.flex_row, a.gap_sm, a.align_center, a.pt_sm]}>
-            <Button
-              disabled={isLikePending || isUnlikePending}
-              label={l`Like this feed`}
-              size="small"
-              color="secondary"
-              onPress={onToggleLiked}
-              style={[a.flex_1]}>
-              {isLiked ? (
-                <HeartFilled size="sm" fill={t.palette.pink} />
-              ) : (
-                <ButtonIcon icon={Heart} />
-              )}
+          {!isTrending ? (
+            <View style={[a.flex_row, a.gap_sm, a.align_center, a.pt_sm]}>
+              <Button
+                disabled={isLikePending || isUnlikePending}
+                label={l`Like this feed`}
+                size="small"
+                color="secondary"
+                onPress={() => void onToggleLiked()}
+                style={[a.flex_1]}>
+                {isLiked ? (
+                  <HeartFilledIcon size="sm" fill={t.palette.pink} />
+                ) : (
+                  <ButtonIcon icon={HeartIcon} />
+                )}
 
-              <ButtonText>
-                {isLiked ? <Trans>Unlike</Trans> : <Trans>Like</Trans>}
-              </ButtonText>
-            </Button>
-            <Button
-              disabled={isFeedStateChangePending}
-              label={isPinned ? l`Unpin feed` : l`Pin feed`}
-              size="small"
-              color={isPinned ? 'secondary' : 'primary'}
-              onPress={onTogglePinned}
-              style={[a.flex_1]}>
-              <ButtonText>
-                {isPinned ? <Trans>Unpin feed</Trans> : <Trans>Pin feed</Trans>}
-              </ButtonText>
-              <ButtonIcon icon={Pin} position="right" />
-            </Button>
-          </View>
+                <ButtonText>
+                  {isLiked ? <Trans>Unlike</Trans> : <Trans>Like</Trans>}
+                </ButtonText>
+              </Button>
+              <Button
+                disabled={isFeedStateChangePending}
+                label={isPinned ? l`Unpin feed` : l`Pin feed`}
+                size="small"
+                color={isPinned ? 'secondary' : 'primary'}
+                onPress={onTogglePinned}
+                style={[a.flex_1]}>
+                <ButtonText>
+                  {isPinned ? (
+                    <Trans>Unpin feed</Trans>
+                  ) : (
+                    <Trans>Pin feed</Trans>
+                  )}
+                </ButtonText>
+                <ButtonIcon icon={PinIcon} position="right" />
+              </Button>
+            </View>
+          ) : null}
 
           <View style={[a.pt_xs, a.gap_lg]}>
             <Divider />
@@ -541,7 +566,7 @@ function DialogInner({
                 <ButtonText>
                   <Trans>Report feed</Trans>
                 </ButtonText>
-                <ButtonIcon icon={CircleInfo} position="right" />
+                <ButtonIcon icon={CircleInfoIcon} position="right" />
               </Button>
             </View>
 
@@ -556,7 +581,7 @@ function DialogInner({
             )}
           </View>
         </>
-      )}
+      ) : null}
     </View>
   )
 }

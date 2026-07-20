@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
@@ -26,6 +25,7 @@ import {
   type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {PostFeed} from '#/view/com/posts/PostFeed'
@@ -44,6 +44,7 @@ import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {IS_NATIVE} from '#/env'
+import {router} from '#/routes'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export function ProfileFeedScreen(props: Props) {
@@ -52,7 +53,7 @@ export function ProfileFeedScreen(props: Props) {
   const feedParams: FeedParams | undefined = props.route.params.feedCacheKey
     ? {feedCacheKey: props.route.params.feedCacheKey}
     : undefined
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const uri = useMemo(
     () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
@@ -70,7 +71,7 @@ export function ProfileFeedScreen(props: Props) {
       <Layout.Screen testID="profileFeedScreenError">
         <ErrorScreen
           showHeader
-          title={_(msg`Could not load feed`)}
+          title={l`Could not load feed`}
           message={cleanError(error)}
           onPressTryAgain={() => void refetch()}
         />
@@ -131,7 +132,7 @@ export function ProfileFeedScreenInner({
   feedInfo: FeedSourceFeedInfo
   feedParams: FeedParams | undefined
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {hasSession} = useSession()
   const {openComposer} = useOpenComposer()
   const isScreenFocused = useIsFocused()
@@ -145,6 +146,7 @@ export function ProfileFeedScreenInner({
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const queryClient = useQueryClient()
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
+  const {data: trending} = useTrendingTopics()
   const scrollElRef = useAnimatedRef() as ListRef
 
   const onScrollToTop = useCallback(() => {
@@ -168,10 +170,10 @@ export function ProfileFeedScreenInner({
       <EmptyState
         icon={HashtagWideIcon}
         iconSize="2xl"
-        message={_(msg`This feed is empty.`)}
+        message={l`This feed is empty.`}
       />
     )
-  }, [_])
+  }, [l])
 
   const isVideoFeed = useMemo(() => {
     const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
@@ -181,13 +183,34 @@ export function ProfileFeedScreenInner({
     return IS_NATIVE && _isVideoFeed
   }, [feedInfo])
 
+  const isTrending = useMemo(
+    () =>
+      trending?.topics.some(topic => {
+        // Compatibility if the API returns an AT URI.
+        if (topic.link === feedInfo.uri) return true
+
+        const [routeName, params] = router.matchPath(topic.link)
+
+        if (routeName !== 'ProfileFeed') return false
+
+        const owner = params.name?.toLowerCase()
+
+        return (
+          params.rkey === feedInfo.route.params.rkey &&
+          (owner === feedInfo.creatorDid.toLowerCase() ||
+            owner === feedInfo.creatorHandle.toLowerCase())
+        )
+      }) ?? false,
+    [trending?.topics, feedInfo],
+  )
+
   return (
     <>
-      <ProfileFeedHeader info={feedInfo} />
-
+      <ProfileFeedHeader info={feedInfo} isTrending={isTrending} />
       <FeedFeedbackProvider value={feedFeedback}>
         <PostFeed
           enabled
+          description={isTrending ? feedInfo.description : undefined}
           feed={feed}
           feedParams={feedParams}
           pollInterval={60e3}
@@ -199,22 +222,20 @@ export function ProfileFeedScreenInner({
           isVideoFeed={isVideoFeed}
         />
       </FeedFeedbackProvider>
-
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onScrollToTop}
-          label={_(msg`Load new posts`)}
+          label={l`Load new posts`}
           showIndicator={hasNew}
         />
       )}
-
       {hasSession && (
         <FAB
           testID="composeFAB"
           onPress={() => openComposer({logContext: 'Fab'})}
           icon={<EditBigIcon size="lg" fill={t.palette.white} />}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
+          accessibilityLabel={l`New post`}
           accessibilityHint=""
         />
       )}
