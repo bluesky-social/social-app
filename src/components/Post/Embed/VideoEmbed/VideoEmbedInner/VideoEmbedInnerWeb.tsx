@@ -10,6 +10,7 @@ import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import * as BandwidthEstimate from './bandwidth-estimate'
 import {
+  HLSFatalError,
   HLSUnsupportedError,
   type VideoEmbedInnerWebProps,
   VideoNotFoundError,
@@ -17,6 +18,7 @@ import {
 import {Controls} from './web-controls/VideoControls'
 
 export {
+  HLSFatalError,
   HLSUnsupportedError,
   VideoNotFoundError,
 } from './VideoEmbedInnerWeb.shared'
@@ -133,19 +135,6 @@ function canPlayBskyVideoCodecs(): boolean {
     mediaSource.isTypeSupported('video/mp4; codecs="avc1.42E01E"') &&
     mediaSource.isTypeSupported('audio/mp4; codecs="mp4a.40.2"')
   )
-}
-
-/**
- * Fatal hls.js playback error. `detail` is the hls.js error details code
- * (e.g. bufferAppendError), which buckets failures more usefully than the
- * error message.
- */
-export class HLSFatalError extends Error {
-  detail: string
-  constructor(detail: string, cause: Error) {
-    super(cause.message, {cause})
-    this.detail = detail
-  }
 }
 
 type CachedPromise<T> = Promise<T> & {value: undefined | T}
