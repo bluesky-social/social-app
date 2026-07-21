@@ -441,7 +441,15 @@ export function InitiateChatFlow({
       _items.unshift({type: 'newGroupChat', key: 'newGroupChat'})
     }
 
-    return _items
+    const profileDids = new Set<string>()
+
+    return _items.filter(item => {
+      if (item.type !== 'profile') return true
+      if (profileDids.has(item.profile.did)) return false
+
+      profileDids.add(item.profile.did)
+      return true
+    })
   }, [
     isError,
     chatState,
