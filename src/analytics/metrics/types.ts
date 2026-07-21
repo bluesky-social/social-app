@@ -779,13 +779,13 @@ export type Events = {
   }
 
   'search:results:loaded': {
-    tab: 'top' | 'latest' | 'people' | 'feeds'
+    tab: 'top' | 'latest' | 'people' | 'feeds' | 'starterPacks'
     initialCount: number
   }
 
   'search:result:press': {
-    tab?: 'top' | 'latest' | 'people' | 'feeds'
-    resultType: 'post' | 'profile' | 'feed'
+    tab?: 'top' | 'latest' | 'people' | 'feeds' | 'starterPacks'
+    resultType: 'post' | 'profile' | 'feed' | 'starterPack'
     position: number
     uri: string
   }
