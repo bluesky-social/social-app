@@ -183,12 +183,9 @@ export function ProfileFeedScreenInner({
     return IS_NATIVE && _isVideoFeed
   }, [feedInfo])
 
-  const isTrending = useMemo(
-    () =>
-      feedInfo.creatorDid.toLowerCase() === TRENDING_DID ||
-      feedInfo.creatorHandle.toLowerCase() === TRENDING_HANDLE,
-    [feedInfo],
-  )
+  const isTrending =
+    feedInfo.creatorDid.toLowerCase() === TRENDING_DID ||
+    feedInfo.creatorHandle.toLowerCase() === TRENDING_HANDLE
 
   return (
     <>
