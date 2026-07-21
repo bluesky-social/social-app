@@ -17,11 +17,13 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useGutters, useTheme, type ViewStyleProp} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
+import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import {Link} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import * as ModuleHeader from '../components/ModuleHeader'
 
 const TOPIC_COUNT = 5
 
@@ -37,27 +39,36 @@ function Inner() {
   const ax = useAnalytics()
   const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery()
   const noTopics = !isLoading && !error && !trending?.trends?.length
+  const showLoading = isLoading || isRefetching
 
-  return isLoading || isRefetching ? (
-    Array.from({length: TOPIC_COUNT}).map((__, i) => (
-      <TrendingTopicRowSkeleton key={i} withPosts={i === 0} />
-    ))
-  ) : error || !trending?.trends || noTopics ? null : (
-    <>
-      {trending.trends.map((trend, index) => (
-        <TrendRow
-          key={trend.link}
-          trend={trend}
-          rank={index + 1}
-          onPress={() => {
-            ax.metric('trendingTopic:click', {
-              context: 'explore',
-              recId: trending.recId,
-            })
-          }}
-        />
-      ))}
-    </>
+  if (!showLoading && (error || !trending?.trends || noTopics)) return null
+
+  return (
+    <View style={[a.pb_md]}>
+      <ModuleHeader.Container bottomBorder>
+        <ModuleHeader.Icon icon={TrendingIcon} size="md" />
+        <ModuleHeader.TitleText>
+          <Trans>Trending</Trans>
+        </ModuleHeader.TitleText>
+      </ModuleHeader.Container>
+      {showLoading
+        ? Array.from({length: TOPIC_COUNT}).map((__, i) => (
+            <TrendingTopicRowSkeleton key={i} withPosts={i === 0} />
+          ))
+        : trending?.trends.map((trend, index) => (
+            <TrendRow
+              key={trend.link}
+              trend={trend}
+              rank={index + 1}
+              onPress={() => {
+                ax.metric('trendingTopic:click', {
+                  context: 'explore',
+                  recId: trending.recId,
+                })
+              }}
+            />
+          ))}
+    </View>
   )
 }
 

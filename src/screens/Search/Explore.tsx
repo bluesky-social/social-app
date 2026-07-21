@@ -60,7 +60,6 @@ import {
 } from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {StarterPack} from '#/components/icons/StarterPack'
-import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {boostInterests} from '#/components/InterestTabs'
 import {Loader} from '#/components/Loader'
@@ -795,17 +794,7 @@ export function Explore({
           )
         }
         case 'trendingTopics': {
-          return (
-            <View style={[a.pb_md]}>
-              <ModuleHeader.Container bottomBorder={true}>
-                <ModuleHeader.Icon icon={TrendingIcon} size="md" />
-                <ModuleHeader.TitleText>
-                  <Trans>Trending</Trans>
-                </ModuleHeader.TitleText>
-              </ModuleHeader.Container>
-              <ExploreTrendingTopics />
-            </View>
-          )
+          return <ExploreTrendingTopics />
         }
         case 'trendingVideos': {
           return <ExploreTrendingVideos />
