@@ -1,0 +1,63 @@
+---
+name: Write Environment Variables
+description: Write the .env file and google-services.json used by the build.
+
+inputs:
+  env-token:
+    description: Base .env contents (ENV_TOKEN secret)
+    required: true
+  sentry-dsn:
+    description: Sentry DSN (SENTRY_DSN secret)
+    required: true
+  bitdrift-api-key:
+    description: Bitdrift API key (BITDRIFT_API_KEY secret)
+    required: true
+  gcp-project-id:
+    description: GCP project ID (EXPO_PUBLIC_GCP_PROJECT_ID secret)
+    required: true
+  google-services-token:
+    description: google-services.json contents (GOOGLE_SERVICES_TOKEN secret)
+    required: true
+  expo-public-env:
+    description: >
+      EXPO_PUBLIC_ENV value. Only set for OTA deploys where eas.json isn't used;
+      for regular builds this is normally handled in eas.json.
+    required: false
+    default: ''
+
+outputs:
+  release-version:
+    description: Version from package.json
+    value: ${{ steps.env.outputs.release-version }}
+  bundle-identifier:
+    description: git SHA of HEAD
+    value: ${{ steps.env.outputs.bundle-identifier }}
+
+runs:
+  using: composite
+  steps:
+    - name: ✏️ Write environment variables
+      id: env
+      shell: bash
+      env:
+        ENV_TOKEN: ${{ inputs.env-token }}
+        SENTRY_DSN: ${{ inputs.sentry-dsn }}
+        BITDRIFT_API_KEY: ${{ inputs.bitdrift-api-key }}
+        GCP_PROJECT_ID: ${{ inputs.gcp-project-id }}
+        GOOGLE_SERVICES_TOKEN: ${{ inputs.google-services-token }}
+        EXPO_PUBLIC_ENV: ${{ inputs.expo-public-env }}
+      run: |
+        echo "$ENV_TOKEN" > .env
+        # EXPO_PUBLIC_ENV is normally handled in eas.json; only written here for OTA deploys.
+        if [ -n "$EXPO_PUBLIC_ENV" ]; then
+          echo "EXPO_PUBLIC_ENV=$EXPO_PUBLIC_ENV" >> .env
+        fi
+        echo "EXPO_PUBLIC_RELEASE_VERSION=$(jq -r '.version' package.json)" >> .env
+        echo "release-version=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
+        echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse HEAD)" >> .env
+        echo "bundle-identifier=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+        echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
+        echo "EXPO_PUBLIC_SENTRY_DSN=$SENTRY_DSN" >> .env
+        echo "EXPO_PUBLIC_BITDRIFT_API_KEY=$BITDRIFT_API_KEY" >> .env
+        echo "EXPO_PUBLIC_GCP_PROJECT_ID=$GCP_PROJECT_ID" >> .env
+        echo "$GOOGLE_SERVICES_TOKEN" > google-services.json

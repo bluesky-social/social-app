@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {useAnimatedRef} from 'react-native-reanimated'
 import {type ChatBskyActorGetStatus, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {
@@ -275,7 +274,7 @@ export function ChatList({
   const t = useTheme()
   const {t: l} = useLingui()
   const aa = useAgeAssurance()
-  const scrollElRef: ListRef = useAnimatedRef()
+  const scrollElRef: ListRef = useRef(null)
   const {isWithinSplitView} = useIsWithinSplitView()
 
   const openChatControl = useCallback(() => {

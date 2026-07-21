@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.128.0",
+  "version": "1.129.0",
   "private": true,
   "engines": {
     "node": ">=24.18.0"
@@ -62,7 +62,10 @@
     "lint": "oxlint --quiet src modules",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
-    "typecheck": "tsgo --project ./tsconfig.check.json",
+    "typecheck": "pnpm run typecheck:ios && pnpm run typecheck:android && pnpm run typecheck:web",
+    "typecheck:ios": "tsc --project ./tsconfig.check.ios.json",
+    "typecheck:android": "tsc --project ./tsconfig.check.android.json",
+    "typecheck:web": "tsc --project ./tsconfig.check.web.json",
     "e2e:mock-server": "cd dev-env && pnpm start",
     "e2e:build": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
     "e2e:build-android": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:android",
@@ -98,7 +101,7 @@
     "@atproto/syntax": "0.7.2",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
-    "@bsky.app/alf": "^0.1.14",
+    "@bsky.app/alf": "^0.1.15",
     "@bsky.app/expo-dynamic-app-icon": "^1.8.5",
     "@bsky.app/expo-guess-language": "^0.2.8",
     "@bsky.app/expo-image-crop-tool": "^0.5.1",
@@ -158,6 +161,7 @@
     "expo": "54.0.34",
     "expo-age-range": "0.2.18",
     "expo-application": "~7.0.8",
+    "expo-asset": "~12.0.13",
     "expo-blur": "~15.0.8",
     "expo-build-properties": "~1.0.10",
     "expo-camera": "~17.0.10",
@@ -270,7 +274,7 @@
     "@types/psl": "1.1.1",
     "@types/react": "^19.1.17",
     "@types/react-dom": "^19.1.11",
-    "@typescript/native-preview": "^7.0.0-dev.20260428.1",
+    "@typescript/native": "npm:typescript@^7.0.2",
     "babel-jest": "^29.7.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-compiler": "19.1.0-rc.3",
@@ -295,7 +299,7 @@
     "react-refresh": "^0.14.0",
     "svgo": "^4.0.2",
     "ts-plugin-sort-import-suggestions": "^1.0.4",
-    "typescript": "^6.0.2",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "webpack-bundle-analyzer": "^4.10.1"
   },
   "jest": {

@@ -474,17 +474,6 @@ export function SearchScreenShell({
     }
   }, [setShowAutocomplete])
 
-  const onSearchInputBlur = useCallback(() => {
-    /*
-     * Bind autocomplete visibility to focus state on native. On web this
-     * doesn't work because of focus management, which would render the
-     * autocomplete results uninteractable.
-     */
-    if (IS_NATIVE) {
-      setShowAutocomplete(false)
-    }
-  }, [])
-
   const focusSearchInput = useCallback(
     (tab?: TabParam) => {
       textInput.current?.focus()
@@ -609,7 +598,6 @@ export function SearchScreenShell({
                       ref={textInput}
                       value={searchText}
                       onFocus={onSearchInputFocus}
-                      onBlur={onSearchInputBlur}
                       onChangeText={onChangeText}
                       onClearText={onPressClearQuery}
                       onSubmitEditing={onSubmit('typed')}
