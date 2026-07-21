@@ -1,15 +1,13 @@
 import {View} from 'react-native'
 import {type AppBskyFeedDefs, AtUri, moderateProfile} from '@atproto/api'
-import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {enforceLen} from '#/lib/strings/helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useLikedBySampleQuery} from '#/state/queries/post-liked-by'
 import {useSession} from '#/state/session'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {InlineLinkText, Link} from '#/components/Link'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
@@ -18,27 +16,56 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
 const AVI_SIZE = 20
-const MAX_NAME_LENGTH = 16
 
 /**
- * The likes stat for the expanded anchor post. When the viewer follows some
- * of the post's recent likers, renders social proof - a face pile plus
- * "Liked by A, B, and N others" - in place of the plain "N likes" text,
- * which it falls back to otherwise.
- *
- * Known likers are sourced client-side from a single `getLikes` request (100
- * likes, the API max per page), so they are a sample of the most recent
- * likers, not an exhaustive list. Only the faces and names are affected by
- * sampling - the "N others" count is derived from the post's total like
- * count.
+ * The plain "N likes" stat for the expanded anchor post, linking to the likes
+ * list. Renders nothing when the post has no likes.
  */
 export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
+  const {t: l} = useLingui()
+  const formatPostStatCount = useFormatPostStatCount()
+  const ax = useAnalytics()
+
+  const likeCount = post.likeCount ?? 0
+  if (likeCount === 0) return null
+
+  const urip = new AtUri(post.uri)
+  const likesHref = makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
+
+  return (
+    <Link
+      to={likesHref}
+      label={l`Likes on this post`}
+      onPress={() => ax.metric('post:likedBy:click', {})}>
+      <Text
+        testID="likeCount-expanded"
+        style={[a.text_md, t.atoms.text_contrast_medium]}>
+        <Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
+          <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+            {formatPostStatCount(likeCount)}
+          </Text>{' '}
+          <Plural value={likeCount} one="like" other="likes" />
+        </Trans>
+      </Text>
+    </Link>
+  )
+}
+
+/**
+ * Social proof for the expanded anchor post. When the viewer follows some of
+ * the post's recent likers, renders a face pile plus "Liked by A and B" on
+ * its own row below the interaction stats line. Renders nothing otherwise.
+ *
+ * Known likers are sourced client-side from a single `getLikes` request (100
+ * likes, the API max per page), so they are a sample of the most recent
+ * likers, not an exhaustive list.
+ */
+export function KnownLikers({post}: {post: AppBskyFeedDefs.PostView}) {
+  const t = useTheme()
   const {t: l} = useLingui()
   const {hasSession, currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
-  const formatPostStatCount = useFormatPostStatCount()
   const ax = useAnalytics()
 
   const likeCount = post.likeCount ?? 0
@@ -78,67 +105,34 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
     knownLikersAndModeration.length > 0 &&
     ax.features.enabled(ax.features.PostThreadKnownLikersEnable)
 
-  if (!showKnownLikers) {
-    return (
-      <Link
-        to={likesHref}
-        label={l`Likes on this post`}
-        onPress={onPressLikedBy}>
-        <Text
-          testID="likeCount-expanded"
-          style={[a.text_md, t.atoms.text_contrast_medium]}>
-          <Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
-            <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-              {formatPostStatCount(likeCount)}
-            </Text>{' '}
-            <Plural value={likeCount} one="like" other="likes" />
-          </Trans>
-        </Text>
-      </Link>
-    )
-  }
+  if (!showKnownLikers) return null
 
   const aviStackProfiles = knownLikersAndModeration
     .slice(0, 3)
     .map(({actor}) => actor)
-  const maxNames = gtMobile ? 2 : 1
   const names = knownLikersAndModeration
-    .slice(0, maxNames)
+    .slice(0, 2)
     .map(({actor, moderation}) => {
       return {
         did: actor.did,
         href: makeProfileLink(actor),
-        displayName: enforceLen(
-          sanitizeDisplayName(
-            actor.displayName || actor.handle,
-            moderation.ui('displayName'),
-          ),
-          MAX_NAME_LENGTH,
-          true,
+        displayName: sanitizeDisplayName(
+          actor.displayName || actor.handle,
+          moderation.ui('displayName'),
         ),
       }
     })
-  const others = likeCount - names.length
-
   /*
    * The row link's a11y label mirrors the visible sentence so screen readers
    * announce the social proof.
    */
-  const othersLabel = plural(others, {
-    one: `${formatPostStatCount(others)} other`,
-    other: `${formatPostStatCount(others)} others`,
-  })
   const rowLabel =
     names.length >= 2
-      ? others > 0
-        ? l`${names[0].displayName}, ${names[1].displayName}, and ${othersLabel} like this`
-        : l`${names[0].displayName} and ${names[1].displayName} like this`
-      : others > 0
-        ? l`${names[0].displayName} and ${othersLabel} like this`
-        : l`${names[0].displayName} likes this`
+      ? l`Liked by ${names[0].displayName} and ${names[1].displayName}`
+      : l`Liked by ${names[0].displayName}`
 
-  const textStyle = [a.text_md, t.atoms.text_contrast_medium]
-  const nameStyle = [a.text_md, a.font_semi_bold, t.atoms.text]
+  const textStyle = [a.text_sm, t.atoms.text_contrast_medium]
+  const nameStyle = [a.text_sm, a.font_semi_bold, t.atoms.text]
 
   /*
    * Nested inside the row link, but the deepest link claims the press, so
@@ -160,10 +154,8 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
 
   return (
     /*
-     * The full-width wrapper keeps the social proof on its own line within
-     * the wrapping stats row, rather than wrapping mid-row and orphaning
-     * whichever count stat comes last. The link itself hugs its content so
-     * the empty space to the right of the text is not pressable.
+     * The full-width wrapper forces the social proof onto its own line below
+     * the count stats within the wrapping stats row.
      */
     <View style={[a.w_full, a.flex_row]}>
       <Link
@@ -172,39 +164,14 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
         style={[a.flex_row, a.align_center, a.gap_sm, a.flex_shrink]}
         onPress={onPressLikedBy}>
         <AvatarStack profiles={aviStackProfiles} size={AVI_SIZE} />
-        <Text
-          testID="knownLikersStat"
-          numberOfLines={1}
-          style={[a.flex_shrink, textStyle]}>
+        <Text testID="knownLikersStat" style={[a.flex_shrink, textStyle]}>
           {names.length >= 2 ? (
-            others > 0 ? (
-              <Trans comment="Social proof on the likes stat; the bolded names are people the viewer follows who liked the post, and the count is the remaining number of likes">
-                {nameLink(names[0])}, {nameLink(names[1])}, and{' '}
-                <Plural
-                  value={others}
-                  one={`${formatPostStatCount(others)} other`}
-                  other={`${formatPostStatCount(others)} others`}
-                />{' '}
-                like this
-              </Trans>
-            ) : (
-              <Trans comment="Social proof on the likes stat; the bolded names are people the viewer follows who liked the post and are its only likes">
-                {nameLink(names[0])} and {nameLink(names[1])} like this
-              </Trans>
-            )
-          ) : others > 0 ? (
-            <Trans comment="Social proof on the likes stat; the bolded name is a person the viewer follows who liked the post, and the count is the remaining number of likes">
-              {nameLink(names[0])} and{' '}
-              <Plural
-                value={others}
-                one={`${formatPostStatCount(others)} other`}
-                other={`${formatPostStatCount(others)} others`}
-              />{' '}
-              like this
+            <Trans comment="Social proof below the post stats; the bolded names are people the viewer follows who liked the post">
+              Liked by {nameLink(names[0])} and {nameLink(names[1])}
             </Trans>
           ) : (
-            <Trans comment="Social proof on the likes stat; the bolded name is a person the viewer follows who liked the post and is its only like">
-              {nameLink(names[0])} likes this
+            <Trans comment="Social proof below the post stats; the bolded name is a person the viewer follows who liked the post">
+              Liked by {nameLink(names[0])}
             </Trans>
           )}
         </Text>
