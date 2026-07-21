@@ -44,7 +44,9 @@ export function ListFooter({
       style={[
         a.w_full,
         a.align_center,
+        a.border_t,
         a.pb_lg,
+        t.atoms.border_contrast_low,
         {height: height ?? 180, paddingTop: 30},
         style,
       ]}>
