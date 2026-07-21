@@ -194,62 +194,94 @@ export function ProfileFeedHeader({
         <Layout.Header.Outer>
           <Layout.Header.BackButton />
           <Layout.Header.Content align="left">
-            <Button
-              label={l`Open feed info screen`}
-              style={[
-                a.justify_start,
-                {
-                  paddingVertical: IS_WEB ? 2 : 4,
-                  paddingRight: 8,
-                },
-              ]}
-              onPress={() => {
-                playHaptic()
-                infoControl.open()
-              }}>
-              {({hovered, pressed}) => (
-                <>
-                  <View
+            {isTrending ? (
+              <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+                <View style={[a.flex_1]}>
+                  <Text
                     style={[
-                      a.absolute,
-                      a.inset_0,
-                      a.rounded_sm,
-                      a.transition_all,
-                      t.atoms.bg_contrast_25,
-                      {
-                        opacity: 0,
-                        left: IS_WEB ? -2 : -4,
-                        right: 0,
-                      },
-                      pressed && {
-                        opacity: 1,
-                      },
-                      hovered && {
-                        opacity: 1,
-                        transform: [{scaleX: 1.01}, {scaleY: 1.1}],
-                      },
+                      a.text_md,
+                      a.font_bold,
+                      a.leading_snug,
+                      gtMobile && a.text_lg,
                     ]}
-                  />
+                    numberOfLines={2}
+                    emoji>
+                    {info.displayName}
+                  </Text>
+                </View>
+                <Button
+                  label={l`Open feed info screen`}
+                  size="medium"
+                  shape="round"
+                  color="secondary"
+                  variant="ghost"
+                  onPress={() => {
+                    playHaptic()
+                    infoControl.open()
+                  }}>
+                  <ButtonIcon icon={EllipsisIcon} />
+                </Button>
+              </View>
+            ) : (
+              <Button
+                label={l`Open feed info screen`}
+                style={[
+                  a.justify_start,
+                  {
+                    paddingVertical: IS_WEB ? 2 : 4,
+                    paddingRight: 8,
+                  },
+                ]}
+                onPress={() => {
+                  playHaptic()
+                  infoControl.open()
+                }}>
+                {({hovered, pressed}) => (
+                  <>
+                    <View
+                      style={[
+                        a.absolute,
+                        a.inset_0,
+                        a.rounded_sm,
+                        a.transition_all,
+                        t.atoms.bg_contrast_25,
+                        {
+                          opacity: 0,
+                          left: IS_WEB ? -2 : -4,
+                          right: 0,
+                        },
+                        pressed && {
+                          opacity: 1,
+                        },
+                        hovered && {
+                          opacity: 1,
+                          transform: [{scaleX: 1.01}, {scaleY: 1.1}],
+                        },
+                      ]}
+                    />
 
-                  <View
-                    style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-                    {info.avatar && (
-                      <UserAvatar size={36} type="algo" avatar={info.avatar} />
-                    )}
+                    <View
+                      style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+                      {info.avatar && (
+                        <UserAvatar
+                          size={36}
+                          type="algo"
+                          avatar={info.avatar}
+                        />
+                      )}
 
-                    <View style={[a.flex_1]}>
-                      <Text
-                        style={[
-                          a.text_md,
-                          a.font_bold,
-                          a.leading_snug,
-                          gtMobile && a.text_lg,
-                        ]}
-                        numberOfLines={2}
-                        emoji>
-                        {info.displayName}
-                      </Text>
-                      {!isTrending ? (
+                      <View style={[a.flex_1]}>
+                        <Text
+                          style={[
+                            a.text_md,
+                            a.font_bold,
+                            a.leading_snug,
+                            gtMobile && a.text_lg,
+                          ]}
+                          numberOfLines={2}
+                          emoji>
+                          {info.displayName}
+                        </Text>
                         <View style={[a.flex_row, a.gap_2xs]}>
                           <Text
                             style={[
@@ -285,17 +317,17 @@ export function ProfileFeedHeader({
                             </View>
                           ) : null}
                         </View>
-                      ) : null}
-                    </View>
+                      </View>
 
-                    <EllipsisIcon
-                      size="md"
-                      fill={t.atoms.text_contrast_high.color}
-                    />
-                  </View>
-                </>
-              )}
-            </Button>
+                      <EllipsisIcon
+                        size="md"
+                        fill={t.atoms.text_contrast_high.color}
+                      />
+                    </View>
+                  </>
+                )}
+              </Button>
+            )}
           </Layout.Header.Content>
 
           {!isTrending && hasSession ? (
