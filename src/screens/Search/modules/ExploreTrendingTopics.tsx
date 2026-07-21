@@ -126,7 +126,7 @@ export function TrendRow({
             </Text>
             <View style={[a.flex_1, a.gap_2xs]}>
               <Text
-                style={[a.text_sm, a.font_medium, a.leading_snug]}
+                style={[a.text_sm, a.font_semi_bold, a.leading_snug]}
                 numberOfLines={1}>
                 {trend.displayName}
               </Text>

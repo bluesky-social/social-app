@@ -58,7 +58,7 @@ export function ExploreInterestsCard() {
           ]}>
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>
             <ShapesIcon fill={t.atoms.text.color} />
-            <Text style={[a.text_lg, a.font_medium, a.leading_snug]}>
+            <Text style={[a.text_lg, a.font_semi_bold]}>
               <Trans>Your interests</Trans>
             </Text>
           </View>
