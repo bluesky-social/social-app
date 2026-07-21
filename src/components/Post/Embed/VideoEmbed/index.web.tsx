@@ -109,7 +109,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const fullBleed =
     aspectRatio === undefined ||
     aspectRatio < 1 / 2 ||
-    cardWidth < MIN_CARD_WIDTH
+    (containerWidth > 0 && cardWidth < MIN_CARD_WIDTH)
 
   const contents = (
     <div
