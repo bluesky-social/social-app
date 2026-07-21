@@ -19,7 +19,7 @@ describe('uploadParts', () => {
     const uploadPart: UploadPartFn = ({part}) =>
       Promise.resolve({
         partNumber: part.partNumber,
-        etag: `etag-${part.partNumber}`,
+        sizeBytes: part.size,
       })
 
     const results = await uploadParts({
@@ -32,7 +32,7 @@ describe('uploadParts', () => {
     })
 
     expect(results.map(r => r.partNumber)).toEqual([1, 2, 3])
-    expect(results.map(r => r.etag)).toEqual(['etag-1', 'etag-2', 'etag-3'])
+    expect(results.map(r => r.sizeBytes)).toEqual([10, 10, 5])
   })
 
   it('respects the concurrency cap', async () => {
@@ -43,7 +43,7 @@ describe('uploadParts', () => {
       maxActive = Math.max(maxActive, active)
       await new Promise(r => setTimeout(r, 5))
       active--
-      return {partNumber: part.partNumber, etag: `e${part.partNumber}`}
+      return {partNumber: part.partNumber, sizeBytes: part.size}
     }
 
     await uploadParts({
@@ -69,7 +69,7 @@ describe('uploadParts', () => {
       }
       return Promise.resolve({
         partNumber: part.partNumber,
-        etag: `e${part.partNumber}`,
+        sizeBytes: part.size,
       })
     }
 
@@ -109,7 +109,7 @@ describe('uploadParts', () => {
       onProgress(chunk.byteLength)
       return Promise.resolve({
         partNumber: part.partNumber,
-        etag: `e${part.partNumber}`,
+        sizeBytes: part.size,
       })
     }
 

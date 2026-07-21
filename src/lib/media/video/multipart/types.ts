@@ -8,14 +8,10 @@ export type PartPlan = {
   size: number
 }
 
-/**
- * Result of uploading a single part. `etag` is the value the storage backend
- * (R2) returns for the part; the complete request lists these back to assemble
- * the object.
- */
+/** Receipt returned by the video service after recording a part. */
 export type PartUploadResult = {
   partNumber: number
-  etag: string
+  sizeBytes: number
 }
 
 /**
@@ -29,10 +25,7 @@ export type ChunkReader = {
 }
 
 /**
- * Uploads one part to storage and resolves with its ETag. This is the only
- * protocol-specific seam - for the presigned R2 approach it does a direct PUT
- * to the presigned URL and reads the ETag off the response. Injected into the
- * orchestrator so the transport can be filled in once the backend lands.
+ * Uploads one part through the video service's first-party proxy.
  */
 export type UploadPartFn = (args: {
   part: PartPlan
@@ -40,3 +33,40 @@ export type UploadPartFn = (args: {
   onProgress: (bytesSent: number) => void
   signal: AbortSignal
 }) => Promise<PartUploadResult>
+
+export type StartUploadResponse = {
+  jobId: string
+  partSizeBytes: number
+  partCount: number
+  expiresAt: string
+}
+
+export type UploadState =
+  | 'created'
+  | 'finishing'
+  | 'completed'
+  | 'failed'
+  | 'aborted'
+  | 'expired'
+
+export type UploadStatusResponse = {
+  jobId: string
+  partSizeBytes: number
+  partCount: number
+  receivedParts: number[]
+  expiresAt: string
+  state: UploadState
+  completedJobId?: string
+  jobStatus?: import('@atproto/api').AppBskyVideoDefs.JobStatus
+  failureReason?: string
+}
+
+export type FinishUploadResponse = {
+  completedJobId: string
+  jobStatus: import('@atproto/api').AppBskyVideoDefs.JobStatus
+}
+
+export type AbortUploadResponse = Pick<
+  UploadStatusResponse,
+  'completedJobId' | 'failureReason'
+> & {state: 'aborted' | 'completed' | 'failed' | 'expired'}

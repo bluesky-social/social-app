@@ -12,10 +12,7 @@ import {
  * Uploads every part with a concurrency cap and per-part retry, aggregating
  * byte progress into `setProgress`. Reads each chunk lazily just before its
  * upload so only `concurrency` chunks are in memory at once. Resolves with the
- * part results ordered by part number, ready for the complete request.
- *
- * `uploadPart` is the transport seam - it stays stubbed until the presigned R2
- * PUT is wired up.
+ * part results ordered by part number.
  */
 export async function uploadParts({
   parts,
@@ -38,11 +35,15 @@ export async function uploadParts({
 }): Promise<PartUploadResult[]> {
   const reportPartProgress = createProgressAggregator(totalBytes, setProgress)
   const results: PartUploadResult[] = new Array(parts.length)
+  const workerController = new AbortController()
+  const abortWorkers = () => workerController.abort()
+  signal.addEventListener('abort', abortWorkers, {once: true})
+  const workerSignal = workerController.signal
 
   let nextIndex = 0
   async function worker() {
     while (true) {
-      if (signal.aborted) {
+      if (workerSignal.aborted) {
         throw new AbortError()
       }
       const index = nextIndex++
@@ -56,7 +57,7 @@ export async function uploadParts({
         chunk,
         uploadPart,
         maxAttempts,
-        signal,
+        signal: workerSignal,
         onProgress: bytesSent => reportPartProgress(part.partNumber, bytesSent),
       })
     }
@@ -66,7 +67,22 @@ export async function uploadParts({
     {length: Math.min(concurrency, parts.length)},
     () => worker(),
   )
-  await Promise.all(workers)
+  const settled = await Promise.allSettled(
+    workers.map(async workerPromise => {
+      try {
+        await workerPromise
+      } catch (err) {
+        workerController.abort()
+        throw err
+      }
+    }),
+  )
+  signal.removeEventListener('abort', abortWorkers)
+  const failure = settled.find(
+    (result): result is PromiseRejectedResult => result.status === 'rejected',
+  )
+  if (signal.aborted) throw new AbortError()
+  if (failure) throw failure.reason
   return results
 }
 

@@ -6,6 +6,8 @@ import {nanoid} from 'nanoid/non-secure'
 import {AbortError} from '#/lib/async/cancelable'
 import {ServerError} from '#/lib/media/video/errors'
 import {type CompressedVideo} from '#/lib/media/video/types'
+import {Features, features} from '#/analytics/features'
+import {MultipartFallbackError, uploadVideoMultipart} from './multipart/upload'
 import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
 import {createVideoEndpointUrl, mimeToExt} from './util'
 
@@ -28,6 +30,15 @@ export async function uploadVideo({
     throw new AbortError()
   }
   await getVideoUploadLimits(agent, i18n)
+
+  if (features.isOn(Features.VideoMultipartUploadEnable)) {
+    try {
+      return await uploadVideoMultipart({video, agent, setProgress, signal})
+    } catch (err) {
+      if (!(err instanceof MultipartFallbackError)) throw err
+      setProgress(0)
+    }
+  }
 
   const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
     did,

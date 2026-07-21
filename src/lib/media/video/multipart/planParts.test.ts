@@ -1,4 +1,4 @@
-import {planParts} from './planParts'
+import {getMissingParts, planParts} from './planParts'
 
 describe('planParts', () => {
   it('splits an evenly divisible size into full parts', () => {
@@ -36,5 +36,12 @@ describe('planParts', () => {
 
   it('throws for a non-positive part size', () => {
     expect(() => planParts(100, 0)).toThrow()
+  })
+
+  it('selects only parts the server has not received', () => {
+    const parts = planParts(25, 10)
+    expect(getMissingParts(parts, [1, 3])).toEqual([
+      {partNumber: 2, offset: 10, size: 10},
+    ])
   })
 })

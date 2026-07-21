@@ -387,7 +387,7 @@ export async function processVideo(
       telemetry.processingFailed(e)
       dispatch({
         type: 'to_error',
-        error: i18n._(msg`Video failed to process`),
+        error: getProcessingErrorMessage(status?.error, i18n),
         signal,
       })
       return // Exit async loop
@@ -417,6 +417,19 @@ export async function processVideo(
     }
 
     return // Exit async loop
+  }
+}
+
+function getProcessingErrorMessage(error: string | undefined, i18n: I18n) {
+  switch (error) {
+    case 'video_too_long':
+      return i18n._(msg`The selected video is too long.`)
+    case 'bad_aspect_ratio':
+      return i18n._(msg`The selected video has an unsupported aspect ratio.`)
+    case 'unsupported_codec':
+      return i18n._(msg`The selected video uses an unsupported format.`)
+    default:
+      return i18n._(msg`Video failed to process`)
   }
 }
 

@@ -20,3 +20,11 @@ export function planParts(totalSize: number, partSize: number): PartPlan[] {
   }
   return parts
 }
+
+export function getMissingParts(
+  parts: PartPlan[],
+  receivedPartNumbers: number[],
+): PartPlan[] {
+  const received = new Set(receivedPartNumbers)
+  return parts.filter(part => !received.has(part.partNumber))
+}
