@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {AtUri} from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {TRENDING_HANDLE} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {makeCustomFeedLink, makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
@@ -509,7 +510,9 @@ function DialogInner({
                 style={[a.text_sm, a.underline, t.atoms.text_contrast_medium]}
                 numberOfLines={1}
                 onPress={() => control.close()}>
-                {sanitizeHandle(info.creatorHandle, '@')}
+                {info.creatorHandle === TRENDING_HANDLE
+                  ? l`Bluesky`
+                  : sanitizeHandle(info.creatorHandle, '@')}
               </InlineLinkText>
             </Trans>
           </Text>
