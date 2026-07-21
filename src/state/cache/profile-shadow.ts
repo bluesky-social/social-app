@@ -41,6 +41,8 @@ export type {Shadow} from './types'
 export interface ProfileShadow {
   followingUri: string | undefined
   muted: boolean | undefined
+  mutedReposts: boolean | undefined
+  mutedQuoteposts: boolean | undefined
   blockingUri: string | undefined
   verification: AppBskyActorDefs.VerificationState
   status: AppBskyActorDefs.StatusView | undefined
@@ -243,6 +245,16 @@ export function isProfileShadowApplied<
   if ('muted' in shadow) {
     if (profile.viewer?.muted !== shadow.muted) return false
   }
+  if ('mutedReposts' in shadow) {
+    const viewer: bsky.mute.ViewerStateWithScopedMutes | undefined =
+      profile.viewer
+    if (viewer?.mutedReposts !== shadow.mutedReposts) return false
+  }
+  if ('mutedQuoteposts' in shadow) {
+    const viewer: bsky.mute.ViewerStateWithScopedMutes | undefined =
+      profile.viewer
+    if (viewer?.mutedQuoteposts !== shadow.mutedQuoteposts) return false
+  }
   if ('blockingUri' in shadow) {
     if (profile.viewer?.blocking !== shadow.blockingUri) return false
   }
@@ -265,6 +277,8 @@ export function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
   profile: TProfileView,
   shadow: Partial<ProfileShadow>,
 ): Shadow<TProfileView> {
+  const viewer: bsky.mute.ViewerStateWithScopedMutes | undefined =
+    profile.viewer
   return castAsShadow({
     ...profile,
     viewer: {
@@ -274,13 +288,19 @@ export function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
           ? shadow.followingUri
           : profile.viewer?.following,
       muted: 'muted' in shadow ? shadow.muted : profile.viewer?.muted,
+      mutedReposts:
+        'mutedReposts' in shadow ? shadow.mutedReposts : viewer?.mutedReposts,
+      mutedQuoteposts:
+        'mutedQuoteposts' in shadow
+          ? shadow.mutedQuoteposts
+          : viewer?.mutedQuoteposts,
       blocking:
         'blockingUri' in shadow ? shadow.blockingUri : profile.viewer?.blocking,
       activitySubscription:
         'activitySubscription' in shadow
           ? shadow.activitySubscription
           : profile.viewer?.activitySubscription,
-    },
+    } satisfies bsky.mute.ViewerStateWithScopedMutes,
     verification:
       'verification' in shadow ? shadow.verification : profile.verification,
     status:

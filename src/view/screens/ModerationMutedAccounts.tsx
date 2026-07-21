@@ -1,12 +1,16 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
+import {
+  type AppBskyActorDefs as ActorDefs,
+  type ModerationOpts,
+} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useMyMutedAccountsQuery} from '#/state/queries/my-muted-accounts'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
@@ -14,15 +18,16 @@ import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import * as Pills from '#/components/Pills'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {getMuteState} from '#/types/bsky/mute'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'ModerationMutedAccounts'
 >
 export function ModerationMutedAccounts({}: Props) {
-  const t = useTheme()
   const moderationOpts = useModerationOpts()
 
   const [isPTRing, setIsPTRing] = useState(false)
@@ -73,29 +78,12 @@ export function ModerationMutedAccounts({}: Props) {
   }) => {
     if (!moderationOpts) return null
     return (
-      <View
-        style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}
-        key={item.did}>
-        <ProfileCard.Link profile={item} testID={`mutedAccount-${index}`}>
-          <ProfileCard.Outer>
-            <ProfileCard.Header>
-              <ProfileCard.Avatar
-                profile={item}
-                moderationOpts={moderationOpts}
-              />
-              <ProfileCard.NameAndHandle
-                profile={item}
-                moderationOpts={moderationOpts}
-              />
-            </ProfileCard.Header>
-            <ProfileCard.Labels
-              profile={item}
-              moderationOpts={moderationOpts}
-            />
-            <ProfileCard.Description profile={item} />
-          </ProfileCard.Outer>
-        </ProfileCard.Link>
-      </View>
+      <MutedAccountRow
+        key={item.did}
+        profile={item}
+        moderationOpts={moderationOpts}
+        index={index}
+      />
     )
   }
   return (
@@ -147,6 +135,93 @@ export function ModerationMutedAccounts({}: Props) {
         )}
       </Layout.Center>
     </Layout.Screen>
+  )
+}
+
+function MutedAccountRow({
+  profile,
+  moderationOpts,
+  index,
+}: {
+  profile: ActorDefs.ProfileView
+  moderationOpts: ModerationOpts
+  index: number
+}) {
+  const t = useTheme()
+  /*
+   * Shadow the profile so the mute-kind pill updates live when the mute is
+   * edited elsewhere in the app.
+   */
+  const shadowed = useProfileShadow(profile)
+  const {muted, mutedReposts, mutedQuoteposts} = getMuteState(shadowed.viewer)
+
+  return (
+    <View style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
+      <ProfileCard.Link profile={shadowed} testID={`mutedAccount-${index}`}>
+        <ProfileCard.Outer>
+          <ProfileCard.Header>
+            <ProfileCard.Avatar
+              profile={shadowed}
+              moderationOpts={moderationOpts}
+            />
+            <ProfileCard.NameAndHandle
+              profile={shadowed}
+              moderationOpts={moderationOpts}
+            />
+          </ProfileCard.Header>
+          {(muted || mutedReposts || mutedQuoteposts) && (
+            <Pills.Row>
+              <MuteKindPill
+                muted={muted}
+                mutedReposts={mutedReposts}
+                mutedQuoteposts={mutedQuoteposts}
+              />
+            </Pills.Row>
+          )}
+          <ProfileCard.Labels
+            profile={shadowed}
+            moderationOpts={moderationOpts}
+          />
+          <ProfileCard.Description profile={shadowed} />
+        </ProfileCard.Outer>
+      </ProfileCard.Link>
+    </View>
+  )
+}
+
+function MuteKindPill({
+  muted,
+  mutedReposts,
+  mutedQuoteposts,
+}: {
+  muted: boolean
+  mutedReposts: boolean
+  mutedQuoteposts: boolean
+}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.justify_center,
+        t.atoms.bg_contrast_50,
+        {
+          paddingHorizontal: 6,
+          paddingVertical: 3,
+          borderRadius: 4,
+        },
+      ]}>
+      <Text style={[a.text_xs, a.leading_tight]}>
+        {muted ? (
+          <Trans>All activity muted</Trans>
+        ) : mutedReposts && mutedQuoteposts ? (
+          <Trans>Reposts and quote posts muted</Trans>
+        ) : mutedReposts ? (
+          <Trans>Reposts muted</Trans>
+        ) : (
+          <Trans>Quote posts muted</Trans>
+        )}
+      </Text>
+    </View>
   )
 }
 
