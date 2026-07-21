@@ -25,7 +25,6 @@ import {
   type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {PostFeed} from '#/view/com/posts/PostFeed'
@@ -44,7 +43,9 @@ import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {IS_NATIVE} from '#/env'
-import {router} from '#/routes'
+
+const TRENDING_DID = 'did:plc:qrz3lhbyuxbeilrc6nekdqme'
+const TRENDING_HANDLE = 'trending.bsky.app'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export function ProfileFeedScreen(props: Props) {
@@ -146,7 +147,6 @@ export function ProfileFeedScreenInner({
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const queryClient = useQueryClient()
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
-  const {data: trending} = useTrendingTopics()
   const scrollElRef = useAnimatedRef() as ListRef
 
   const onScrollToTop = useCallback(() => {
@@ -185,23 +185,9 @@ export function ProfileFeedScreenInner({
 
   const isTrending = useMemo(
     () =>
-      trending?.topics.some(topic => {
-        // Compatibility if the API returns an AT URI.
-        if (topic.link === feedInfo.uri) return true
-
-        const [routeName, params] = router.matchPath(topic.link)
-
-        if (routeName !== 'ProfileFeed') return false
-
-        const owner = params.name?.toLowerCase()
-
-        return (
-          params.rkey === feedInfo.route.params.rkey &&
-          (owner === feedInfo.creatorDid.toLowerCase() ||
-            owner === feedInfo.creatorHandle.toLowerCase())
-        )
-      }) ?? false,
-    [trending?.topics, feedInfo],
+      feedInfo.creatorDid.toLowerCase() === TRENDING_DID ||
+      feedInfo.creatorHandle.toLowerCase() === TRENDING_HANDLE,
+    [feedInfo],
   )
 
   return (
