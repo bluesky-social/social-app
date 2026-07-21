@@ -59,14 +59,19 @@ export function ProfileBadges({
 }) {
   const shadowed = useProfileShadow(profile)
   const verification = useSimpleVerificationState({profile})
-  const hasBadges = useHasProfileBadges(profile)
+  const badgeVisibility = [
+    verification.showBadge,
+    useIsBetaBadgeVisible(profile),
+    isBotAccount(shadowed),
+  ]
+  const badgeCount = badgeVisibility.filter(Boolean).length
   const nativeScaleMultiplier = useNativeFontScale()
   const {
     fonts: {scaleMultiplier: alfScaleMultiplier},
   } = useAlf()
 
   // if nothing to show, don't render the container at all
-  if (hasBadges.length < 1) return null
+  if (badgeCount < 1) return null
 
   const isOnTheSmallSide = size === 'xs' || size === 'sm'
 
@@ -80,20 +85,18 @@ export function ProfileBadges({
   const betaBadgeScaledPadding = betaBadgePadding[size] * scaleMultiplier
 
   const gap = isOnTheSmallSide ? a.gap_2xs : a.gap_xs
-  const hitSlops = new Array(hasBadges.length).fill(HITSLOP_20)
   const padding = gap.gap / 2
+  let visibleBadgeIndex = 0
+  const hitSlops = badgeVisibility.map(isVisible => {
+    if (!isVisible) return HITSLOP_20
 
-  switch (hasBadges.length) {
-    case 2:
-      hitSlops[0] = {...HITSLOP_20, right: padding}
-      hitSlops[1] = {...HITSLOP_20, left: padding}
-      break
-    case 3:
-      hitSlops[0] = {...HITSLOP_20, right: padding}
-      hitSlops[1] = {...HITSLOP_20, right: padding, left: padding}
-      hitSlops[2] = {...HITSLOP_20, left: padding}
-      break
-  }
+    const index = visibleBadgeIndex++
+    return {
+      ...HITSLOP_20,
+      left: index === 0 ? HITSLOP_20.left : padding,
+      right: index === badgeCount - 1 ? HITSLOP_20.right : padding,
+    }
+  })
 
   return (
     <View style={[a.flex_row, a.align_center, gap, style]}>
@@ -134,16 +137,4 @@ export function ProfileBadges({
       )}
     </View>
   )
-}
-
-function useHasProfileBadges(profile: bsky.profile.AnyProfileView) {
-  const shadowed = useProfileShadow(profile)
-  const verification = useSimpleVerificationState({profile})
-  const isBetaBadgeVisible = useIsBetaBadgeVisible(profile)
-
-  return [
-    verification.showBadge,
-    isBetaBadgeVisible,
-    isBotAccount(shadowed),
-  ].filter(val => val)
 }
