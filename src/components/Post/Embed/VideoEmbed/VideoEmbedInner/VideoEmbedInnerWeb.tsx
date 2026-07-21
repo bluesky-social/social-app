@@ -10,6 +10,7 @@ import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import * as BandwidthEstimate from './bandwidth-estimate'
 import {
+  HLSFatalError,
   HLSUnsupportedError,
   type VideoEmbedInnerWebProps,
   VideoNotFoundError,
@@ -17,6 +18,7 @@ import {
 import {Controls} from './web-controls/VideoControls'
 
 export {
+  HLSFatalError,
   HLSUnsupportedError,
   VideoNotFoundError,
 } from './VideoEmbedInnerWeb.shared'
@@ -306,7 +308,7 @@ function useHLS({
         ) {
           setError(new VideoNotFoundError())
         } else {
-          setError(data.error)
+          setError(new HLSFatalError(data.details, data.error))
         }
       } else {
         console.error(data.error)

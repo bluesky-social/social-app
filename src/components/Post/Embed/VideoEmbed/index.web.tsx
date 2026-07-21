@@ -18,10 +18,12 @@ import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {
+  HLSFatalError,
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
   VideoNotFoundError,
 } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb'
+import {useAnalytics} from '#/analytics'
 import {IS_WEB_FIREFOX} from '#/env'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
@@ -69,9 +71,9 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const [key, setKey] = useState(0)
   const renderError = useCallback(
     (error: unknown) => (
-      <VideoError error={error} retry={() => setKey(key + 1)} />
+      <VideoError embed={embed} error={error} retry={() => setKey(key + 1)} />
     ),
-    [key],
+    [key, embed],
   )
 
   let aspectRatio: number | undefined
@@ -222,22 +224,62 @@ export const OnlyNearScreen = ({children}: {children: React.ReactNode}) => {
   return nearScreen ? children : null
 }
 
-function VideoError({error, retry}: {error: unknown; retry: () => void}) {
+function VideoError({
+  embed,
+  error,
+  retry,
+}: {
+  embed: AppBskyEmbedVideo.View
+  error: unknown
+  retry: () => void
+}) {
   const {_} = useLingui()
+  const ax = useAnalytics()
 
   let showRetryButton = true
   let text = null
+  let errorClass: string
 
   if (error instanceof VideoNotFoundError) {
     text = _(msg`Video not found.`)
+    errorClass = 'VideoNotFoundError'
   } else if (error instanceof HLSUnsupportedError) {
     showRetryButton = false
     text = _(
       msg`This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC).`,
     )
+    errorClass = 'HLSUnsupportedError'
   } else {
     text = _(msg`An error occurred while loading the video. Please try again.`)
+    if (error instanceof HLSFatalError) {
+      errorClass = error.detail
+    } else if (error instanceof Error) {
+      errorClass = error.name || 'Error'
+    } else {
+      errorClass = 'Unknown'
+    }
   }
+
+  const errorMessage = error instanceof Error ? error.message : String(error)
+  const presentation = embed.presentation === 'gif' ? 'gif' : 'video'
+  const playlist = embed.playlist
+  /*
+   * Fire exactly once per failure - the analytics context identity can change
+   * (session/geolocation updates) while this fallback stays mounted, which
+   * would otherwise re-run the effect and double-count.
+   */
+  const fired = useRef(false)
+  useEffect(() => {
+    if (fired.current) return
+    fired.current = true
+    ax.metric('video:playback:failed', {
+      surface: 'feed',
+      presentation,
+      errorClass,
+      errorMessage: errorMessage.slice(0, 256),
+      playlist,
+    })
+  }, [ax, presentation, playlist, errorClass, errorMessage])
 
   return (
     <VideoFallback.Container>
