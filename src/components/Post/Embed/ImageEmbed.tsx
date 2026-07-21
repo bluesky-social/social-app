@@ -115,7 +115,6 @@ export function ImageEmbed({
           onPress(0, [singleContainerRef.current], [singleDimsRef.current])
         }
       }
-      console.log(rest.viewContext, 'rest.viewContext')
       return (
         <View style={[a.mt_sm, rest.style]}>
           <ImageContextMenu
