@@ -735,13 +735,13 @@ let PostMenuItems = ({
                     testID="postDropdownMuteBtn"
                     label={
                       getMuteState(postAuthor.viewer).isMutedAny
-                        ? l`Edit muted account`
+                        ? l`Edit muting`
                         : l`Mute account`
                     }
                     onPress={() => muteDialogControl.open()}>
                     <Menu.ItemText>
                       {getMuteState(postAuthor.viewer).isMutedAny
-                        ? l`Edit muted account`
+                        ? l`Edit muting`
                         : l`Mute account`}
                     </Menu.ItemText>
                     <Menu.ItemIcon icon={MuteIcon} position="right" />

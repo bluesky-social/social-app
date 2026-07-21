@@ -1,11 +1,16 @@
 import {useCallback, useMemo, useState} from 'react'
-import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {
+  type GestureResponderEvent,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {
   type AppBskyActorDefs as ActorDefs,
   moderateProfile,
   type ModerationOpts,
 } from '@atproto/api'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {getModerationCauseKey} from '#/lib/moderation'
@@ -15,15 +20,20 @@ import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useMyMutedAccountsQuery} from '#/state/queries/my-muted-accounts'
+import {useProfileMuteMutationQueue} from '#/state/queries/profile'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import {MuteDialog} from '#/components/moderation/MuteDialog'
 import * as Pills from '#/components/Pills'
 import * as ProfileCard from '#/components/ProfileCard'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {getMuteState} from '#/types/bsky/mute'
+import {getMuteState, type MuteKind} from '#/types/bsky/mute'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -150,12 +160,15 @@ function MutedAccountRow({
   index: number
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
   /*
    * Shadow the profile so the mute-kind pill updates live when the mute is
    * edited elsewhere in the app.
    */
   const shadowed = useProfileShadow(profile)
   const {muted, mutedReposts, mutedQuoteposts} = getMuteState(shadowed.viewer)
+  const [queueMute, queueUnmute] = useProfileMuteMutationQueue(shadowed)
+  const muteDialogControl = useDialogControl()
 
   /*
    * Same pill row as ProfileCard.Labels, except the generic "Account Muted"
@@ -168,6 +181,38 @@ function MutedAccountRow({
   const causes = [...modui.alerts, ...modui.informs].filter(
     cause => cause.type !== 'muted',
   )
+
+  const muteAccount = async (kinds?: MuteKind[]) => {
+    try {
+      await queueMute(kinds)
+      Toast.show(l({message: 'Account muted', context: 'toast'}))
+    } catch (err) {
+      const e = err as Error
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to mute account', {message: e})
+        Toast.show(l`There was an issue! ${e.toString()}`, {type: 'error'})
+      }
+    }
+  }
+
+  const unmuteAccount = async () => {
+    try {
+      await queueUnmute()
+      Toast.show(l({message: 'Account unmuted', context: 'toast'}))
+    } catch (err) {
+      const e = err as Error
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to unmute account', {message: e})
+        Toast.show(l`There was an issue! ${e.toString()}`, {type: 'error'})
+      }
+    }
+  }
+
+  const onPressEditMute = (e: GestureResponderEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    muteDialogControl.open()
+  }
 
   return (
     <View style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
@@ -182,6 +227,17 @@ function MutedAccountRow({
               profile={shadowed}
               moderationOpts={moderationOpts}
             />
+            <Button
+              testID={`mutedAccount-${index}-editMuteBtn`}
+              label={l`Edit muting`}
+              size="small"
+              variant="solid"
+              color="secondary"
+              onPress={onPressEditMute}>
+              <ButtonText>
+                <Trans>Edit muting</Trans>
+              </ButtonText>
+            </Button>
           </ProfileCard.Header>
           <Pills.Row style={[a.pt_xs]}>
             {followedBy && <Pills.FollowsYou />}
@@ -199,6 +255,12 @@ function MutedAccountRow({
           <ProfileCard.Description profile={shadowed} />
         </ProfileCard.Outer>
       </ProfileCard.Link>
+      <MuteDialog
+        control={muteDialogControl}
+        profile={shadowed}
+        onMute={kinds => void muteAccount(kinds)}
+        onUnmute={() => void unmuteAccount()}
+      />
     </View>
   )
 }

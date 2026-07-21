@@ -87,7 +87,7 @@ function MuteDialogInner({
       <View style={[a.pb_lg, a.gap_sm]}>
         <Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>
           {isMutedAny ? (
-            <Trans>Edit muted account</Trans>
+            <Trans>Edit account muting</Trans>
           ) : (
             <Trans>Mute account?</Trans>
           )}

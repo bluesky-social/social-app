@@ -444,13 +444,13 @@ let ProfileMenu = ({
                           testID="profileHeaderDropdownMuteBtn"
                           label={
                             getMuteState(profile.viewer).isMutedAny
-                              ? l`Edit muted account`
+                              ? l`Edit muting`
                               : l`Mute account`
                           }
                           onPress={() => muteDialogControl.open()}>
                           <Menu.ItemText>
                             {getMuteState(profile.viewer).isMutedAny ? (
-                              <Trans>Edit muted account</Trans>
+                              <Trans>Edit muting</Trans>
                             ) : (
                               <Trans>Mute account</Trans>
                             )}
