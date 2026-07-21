@@ -530,7 +530,7 @@ function LightboxImage({
     const dismissTranslateY =
       isActive && openProgressValue === 1 ? dismissSwipeTranslateY.get() : 0
 
-    if (openProgressValue === 0 && isFlyingAway.get()) {
+    if (openProgressValue === 0) {
       return {
         isHidden: true,
         isResting: false,
