@@ -78,6 +78,7 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
         visible={isMounted}
         animationType="none"
         onRequestClose={close}
+        supportedOrientations={['portrait', 'landscape']}
         statusBarTranslucent>
         <Pressable
           accessibilityRole="button"
