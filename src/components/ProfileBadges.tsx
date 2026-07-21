@@ -1,5 +1,6 @@
 import {View} from 'react-native'
 
+import {HITSLOP_20} from '#/lib/constants'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {atoms as a, useAlf, type ViewStyleProp} from '#/alf'
 import {useNativeFontScale} from '#/alf/util/dimensions'
@@ -65,7 +66,7 @@ export function ProfileBadges({
   } = useAlf()
 
   // if nothing to show, don't render the container at all
-  if (!hasBadges) return null
+  if (hasBadges.length < 1) return null
 
   const isOnTheSmallSide = size === 'xs' || size === 'sm'
 
@@ -78,35 +79,51 @@ export function ProfileBadges({
   const betaIconWidth = betaIconSizes[size] * scaleMultiplier
   const betaBadgeScaledPadding = betaBadgePadding[size] * scaleMultiplier
 
+  const gap = isOnTheSmallSide ? a.gap_2xs : a.gap_xs
+  const hitSlops = new Array(hasBadges.length).fill(HITSLOP_20)
+  const padding = gap.gap / 2
+
+  switch (hasBadges.length) {
+    case 2:
+      hitSlops[0] = {...HITSLOP_20, right: padding}
+      hitSlops[1] = {...HITSLOP_20, left: padding}
+      break
+    case 3:
+      hitSlops[0] = {...HITSLOP_20, right: padding}
+      hitSlops[1] = {...HITSLOP_20, right: padding, left: padding}
+      hitSlops[2] = {...HITSLOP_20, left: padding}
+      break
+  }
+
   return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        isOnTheSmallSide ? a.gap_2xs : a.gap_xs,
-        style,
-      ]}>
+    <View style={[a.flex_row, a.align_center, gap, style]}>
       {interactive ? (
         <>
           <VerificationCheckButton
             profile={shadowed}
             width={verificationIconWidth}
+            hitSlop={hitSlops[0]}
           />
           <BetaBadgeButton
             profile={shadowed}
             width={betaIconWidth}
             padding={betaBadgeScaledPadding}
+            hitSlop={hitSlops[1]}
           />
-          <BotBadgeButton profile={shadowed} width={botIconWidth} />
+          <BotBadgeButton
+            profile={shadowed}
+            width={botIconWidth}
+            hitSlop={hitSlops[2]}
+          />
         </>
       ) : (
         <>
-          {verification.showBadge && (
+          {verification.showBadge ? (
             <VerificationCheck
               verifier={verification.role === 'verifier'}
               width={verificationIconWidth}
             />
-          )}
+          ) : null}
           <BetaBadge
             profile={shadowed}
             width={betaIconWidth}
@@ -124,5 +141,9 @@ function useHasProfileBadges(profile: bsky.profile.AnyProfileView) {
   const verification = useSimpleVerificationState({profile})
   const isBetaBadgeVisible = useIsBetaBadgeVisible(profile)
 
-  return verification.showBadge || isBotAccount(shadowed) || isBetaBadgeVisible
+  return [
+    verification.showBadge,
+    isBetaBadgeVisible,
+    isBotAccount(shadowed),
+  ].filter(val => val)
 }

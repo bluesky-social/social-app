@@ -1,7 +1,6 @@
-import {View} from 'react-native'
+import {type Insets, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {HITSLOP_20} from '#/lib/constants'
 import {type Shadow} from '#/state/cache/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
@@ -52,16 +51,25 @@ export function shouldShowVerificationCheckButton(
 export function VerificationCheckButton({
   profile,
   width,
+  hitSlop,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
   width: number
+  hitSlop: Insets
 }) {
   const state = useFullVerificationState({
     profile,
   })
 
   if (shouldShowVerificationCheckButton(state)) {
-    return <Badge profile={profile} verificationState={state} width={width} />
+    return (
+      <Badge
+        profile={profile}
+        verificationState={state}
+        width={width}
+        hitSlop={hitSlop}
+      />
+    )
   }
 
   return null
@@ -71,10 +79,12 @@ function Badge({
   profile,
   verificationState: state,
   width,
+  hitSlop,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
   verificationState: FullVerificationState
   width: number
+  hitSlop: Insets
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -92,7 +102,7 @@ function Badge({
             ? l`View your verifications`
             : l`View this user's verifications`
         }
-        hitSlop={HITSLOP_20}
+        hitSlop={hitSlop}
         onPress={evt => {
           evt.preventDefault()
           ax.metric('verification:badge:click', {})

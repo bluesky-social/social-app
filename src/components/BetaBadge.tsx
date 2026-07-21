@@ -1,8 +1,7 @@
 import {useState} from 'react'
-import {Pressable, View} from 'react-native'
+import {type Insets, Pressable, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {HITSLOP_20} from '#/lib/constants'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
@@ -54,10 +53,12 @@ export function BetaBadgeButton({
   profile,
   width,
   padding,
+  hitSlop,
 }: {
   profile: bsky.profile.AnyProfileView
   width: number
   padding: number
+  hitSlop: Insets
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -77,7 +78,7 @@ export function BetaBadgeButton({
           accessibilityRole="button"
           accessibilityLabel={l`Beta features enabled`}
           accessibilityHint=""
-          hitSlop={HITSLOP_20}
+          hitSlop={hitSlop}
           style={({hovered}) => [
             a.rounded_full,
             a.transition_transform,
