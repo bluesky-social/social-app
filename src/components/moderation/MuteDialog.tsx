@@ -10,6 +10,7 @@ import {type DialogControlProps} from '#/components/Dialog'
 import * as SegmentedControl from '#/components/forms/SegmentedControl'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {getMuteState, type MuteKind} from '#/types/bsky/mute'
 import {type AnyProfileView} from '#/types/bsky/profile'
 
@@ -62,7 +63,7 @@ function MuteDialogInner({
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const {mutedReposts, mutedQuoteposts, isMutedAny} = getMuteState(
+  const {muted, mutedReposts, mutedQuoteposts, isMutedAny} = getMuteState(
     profile.viewer,
   )
 
@@ -98,7 +99,7 @@ function MuteDialogInner({
           </Trans>
         </Text>
       </View>
-      <View style={[a.pb_lg, a.gap_lg]}>
+      <View style={[a.pb_xl, a.gap_md]}>
         <SegmentedControl.Root
           label={l`Mute type`}
           type="radio"
@@ -115,6 +116,16 @@ function MuteDialogInner({
             </SegmentedControl.ItemText>
           </SegmentedControl.Item>
         </SegmentedControl.Root>
+        {scope === 'all' &&
+          (muted ? (
+            <Text style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
+              <Trans>All activity from this account is muted.</Trans>
+            </Text>
+          ) : (
+            <Text style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
+              <Trans>All activity from this account will be muted.</Trans>
+            </Text>
+          ))}
         {scope === 'some' && (
           <Toggle.Group
             type="checkbox"
@@ -174,15 +185,18 @@ function MuteDialogInner({
             </ButtonText>
           </Button>
         )}
-        <Button
-          color="secondary"
-          size="large"
-          label={l`Close dialog`}
-          onPress={() => control.close()}>
-          <ButtonText>
-            <Trans>Cancel</Trans>
-          </ButtonText>
-        </Button>
+        {/* Web renders a Dialog.Close X button, so Cancel is redundant there */}
+        {IS_NATIVE && (
+          <Button
+            color="secondary"
+            size="large"
+            label={l`Close dialog`}
+            onPress={() => control.close()}>
+            <ButtonText>
+              <Trans>Cancel</Trans>
+            </ButtonText>
+          </Button>
+        )}
       </View>
     </Dialog.ScrollableInner>
   )

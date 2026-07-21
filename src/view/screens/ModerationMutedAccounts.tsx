@@ -2,11 +2,13 @@ import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type AppBskyActorDefs as ActorDefs,
+  moderateProfile,
   type ModerationOpts,
 } from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {getModerationCauseKey} from '#/lib/moderation'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -155,6 +157,18 @@ function MutedAccountRow({
   const shadowed = useProfileShadow(profile)
   const {muted, mutedReposts, mutedQuoteposts} = getMuteState(shadowed.viewer)
 
+  /*
+   * Same pill row as ProfileCard.Labels, except the generic "Account Muted"
+   * label is replaced by the mute-kind pill - every row on this screen is
+   * muted, so the kind is the useful information.
+   */
+  const moderation = moderateProfile(shadowed, moderationOpts)
+  const modui = moderation.ui('profileList')
+  const followedBy = shadowed.viewer?.followedBy
+  const causes = [...modui.alerts, ...modui.informs].filter(
+    cause => cause.type !== 'muted',
+  )
+
   return (
     <View style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
       <ProfileCard.Link profile={shadowed} testID={`mutedAccount-${index}`}>
@@ -169,19 +183,19 @@ function MutedAccountRow({
               moderationOpts={moderationOpts}
             />
           </ProfileCard.Header>
-          {(muted || mutedReposts || mutedQuoteposts) && (
-            <Pills.Row>
+          <Pills.Row style={[a.pt_xs]}>
+            {followedBy && <Pills.FollowsYou />}
+            {(muted || mutedReposts || mutedQuoteposts) && (
               <MuteKindPill
                 muted={muted}
                 mutedReposts={mutedReposts}
                 mutedQuoteposts={mutedQuoteposts}
               />
-            </Pills.Row>
-          )}
-          <ProfileCard.Labels
-            profile={shadowed}
-            moderationOpts={moderationOpts}
-          />
+            )}
+            {causes.map(cause => (
+              <Pills.Label key={getModerationCauseKey(cause)} cause={cause} />
+            ))}
+          </Pills.Row>
           <ProfileCard.Description profile={shadowed} />
         </ProfileCard.Outer>
       </ProfileCard.Link>
