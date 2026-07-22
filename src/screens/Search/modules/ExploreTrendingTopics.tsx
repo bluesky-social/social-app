@@ -223,7 +223,7 @@ export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
         t.atoms.border_contrast_low,
       ]}>
       <View style={[{width: 20}]}>
-        <LoadingPlaceholder width={12} height={12} style={[a.rounded_full]} />
+        <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} />
       </View>
       <View style={[a.flex_1, a.gap_sm]}>
         <LoadingPlaceholder width={90} height={17} />
@@ -231,6 +231,16 @@ export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
           <LoadingPlaceholder width={70} height={16} />
           <LoadingPlaceholder width={40} height={16} />
           <LoadingPlaceholder width={60} height={16} />
+        </View>
+        <View style={[a.flex_1, a.gap_sm]}>
+          <View style={[a.mt_2xs, a.flex_row, a.gap_sm, a.align_center]}>
+            <LoadingPlaceholder
+              width={24}
+              height={24}
+              style={[a.rounded_full]}
+            />
+            <LoadingPlaceholder width={60} height={16} />
+          </View>
         </View>
       </View>
       {/* TODO Image placeholder goes here when images are available. -dsb */}
