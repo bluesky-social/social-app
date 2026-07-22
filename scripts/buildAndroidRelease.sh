@@ -41,7 +41,9 @@ trap 'rm -f "$BUILD_MARKER"' EXIT
 pnpm intl:compile
 
 cd "$ANDROID_DIR"
-./gradlew assembleRelease
+# Build only arm64: Apple Silicon Macs run arm64 emulator images and all modern
+# devices are arm64, so the other three ABIs just quadruple the NDK compile.
+./gradlew assembleRelease --max-workers=2 --no-daemon -PreactNativeArchitectures=arm64-v8a
 
 # Grab the freshly built APK: not an already-renamed bsky-* file, and newer than
 # the marker so it is guaranteed to be this run's output. There are no ABI splits
