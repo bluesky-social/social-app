@@ -7,20 +7,21 @@ import {
   ChevronTopBottom_Stroke2_Corner0_Rounded as ChevronUpDownIcon,
 } from '#/components/icons/Chevron'
 import * as Menu from '#/components/Menu'
-import {type FollowingFilter} from './utils'
+import {type FromFilter} from './utils'
 
-export function FollowingDropdown({
+export function FromDropdown({
   value,
   onChange,
 }: {
-  value: FollowingFilter
-  onChange: (value: FollowingFilter) => void
+  value: FromFilter
+  onChange: (value: FromFilter) => void
 }) {
   const {t: l} = useLingui()
 
-  const options: {value: FollowingFilter; label: string}[] = [
+  const options: {value: FromFilter; label: string}[] = [
     {value: 'anyone', label: l`Anyone`},
-    {value: 'following', label: l`People you follow`},
+    {value: 'following', label: l`People I follow`},
+    {value: 'me', label: l`Me`},
   ]
   const currentLabel = options.find(o => o.value === value)?.label ?? l`Anyone`
 

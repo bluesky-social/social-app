@@ -84,6 +84,30 @@ export function tokenizeQuery(raw: string): string[] {
 }
 
 /**
+ * Splits a bare `from:me` token out of a query. The "Me" author filter always
+ * travels inside `q` as a `from:me` token (the backend resolves `me` to the
+ * viewer), but the UI never shows it as text: the search input strips it for
+ * display and the advanced-search dialog represents it in the From dropdown.
+ * Tokenization keeps quoted phrases intact, so a `from:me` inside quotes stays
+ * in the query text.
+ */
+export function extractFromMe(query: string): {q: string; fromMe: boolean} {
+  const tokens = tokenizeQuery(query)
+  const kept = tokens.filter(token => token !== 'from:me')
+  return {q: kept.join(' '), fromMe: kept.length !== tokens.length}
+}
+
+/**
+ * Re-appends the `from:me` token when the "Me" author filter is active.
+ * Idempotent: a query that already carries a bare `from:me` is returned as-is.
+ */
+export function appendFromMe(query: string, fromMe: boolean): string {
+  if (!fromMe) return query
+  if (tokenizeQuery(query).includes('from:me')) return query
+  return query ? `${query} from:me` : 'from:me'
+}
+
+/**
  * Lifts the operators that `app.bsky.feed.searchPosts` accepts as structured
  * params out of the free-text query, so the backend filters on them directly.
  * Recognized operators are stripped from `q`; everything else (free text,

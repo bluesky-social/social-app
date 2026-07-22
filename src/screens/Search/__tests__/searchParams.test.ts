@@ -4,6 +4,7 @@ import {
   countActiveFilters,
   definedFilterParams,
   filtersToApiParams,
+  hasActiveFilters,
   hasPostOnlyFilters,
   parseHistoryEntry,
   readSearchFilters,
@@ -52,6 +53,14 @@ describe(`searchParams`, () => {
 
     it(`returns true when lang is combined with a post-only filter`, () => {
       expect(hasPostOnlyFilters({lang: 'en', author: 'alice'})).toBe(true)
+    })
+  })
+
+  describe(`hasActiveFilters`, () => {
+    it(`includes the structured Me author filter`, () => {
+      expect(hasActiveFilters({})).toBe(false)
+      expect(hasActiveFilters({from: 'me'})).toBe(true)
+      expect(hasActiveFilters({author: 'alice'})).toBe(true)
     })
   })
 
@@ -130,8 +139,9 @@ describe(`searchParams`, () => {
   })
 
   describe(`countActiveFilters`, () => {
-    it(`counts each set filter key once`, () => {
+    it(`counts each structured filter key once`, () => {
       expect(countActiveFilters({})).toBe(0)
+      expect(countActiveFilters({from: 'me'})).toBe(1)
       expect(
         countActiveFilters({author: 'alice bob', domain: 'bsky.app'}),
       ).toBe(2)
@@ -149,6 +159,14 @@ describe(`searchParams`, () => {
       expect(parseHistoryEntry(stored)).toEqual({
         q: 'cats',
         filters: {author: 'alice'},
+      })
+    })
+
+    it(`round-trips a promoted Me-only search`, () => {
+      const stored = serializeHistoryEntry('', {from: 'me'})
+      expect(parseHistoryEntry(stored)).toEqual({
+        q: '',
+        filters: {from: 'me'},
       })
     })
 

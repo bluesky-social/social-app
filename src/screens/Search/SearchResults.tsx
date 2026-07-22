@@ -43,6 +43,7 @@ let SearchResults = ({
   query,
   filters,
   hasFilters,
+  fromMe,
   activeTab,
   onPageSelected,
   headerHeight,
@@ -50,6 +51,7 @@ let SearchResults = ({
   query: string
   filters: SearchFilters
   hasFilters: boolean
+  fromMe: boolean
   activeTab: number
   onPageSelected: (page: number) => void
   headerHeight: number
@@ -61,7 +63,7 @@ let SearchResults = ({
    * to people and feeds too, so it must not hide those tabs (which would also
    * regress the non-v2 legacy language dropdown). Other filters are post-only.
    */
-  const hasPostFilters = hasPostOnlyFilters(filters)
+  const hasPostFilters = hasPostOnlyFilters(filters) || fromMe
   const activePage = hasPostFilters && activeTab > 1 ? 0 : activeTab
   const tabShape = hasPostFilters ? 'filtered' : 'plain'
 

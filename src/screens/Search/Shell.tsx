@@ -32,6 +32,7 @@ import {
   unstableCacheProfileView,
   useProfilesQuery,
 } from '#/state/queries/profile'
+import {extractFromMe} from '#/state/queries/search-posts-params'
 import {useSession} from '#/state/session'
 import {
   countActiveFilters,
@@ -123,8 +124,18 @@ export function SearchScreenShell({
   const tabParam = (route.params as {q?: string; tab?: TabParam})?.tab
   const [activeTab, setActiveTab] = useState(() => getTabIndex(tabParam))
 
+  /*
+   * A raw `from:me` operator stays visible in the search input. Submitting the
+   * advanced dialog promotes it to a structured `from=me` filter and removes
+   * it from `q`; the API layer reconstructs the operator for post search.
+   */
+  const {query, fromMe, filters, setFilters, hasFilters} = useQueryManager({
+    initialQuery: queryParam,
+    fixedParams,
+  })
+
   // Query terms
-  const [searchText, setSearchText] = useState<string>(queryParam)
+  const [searchText, setSearchText] = useState<string>(query)
   const searchTextRef = useRef(searchText)
   const updateSearchText = useCallback((text: string) => {
     searchTextRef.current = text
@@ -200,10 +211,6 @@ export function SearchScreenShell({
     [accountHistory, setAccountHistory],
   )
 
-  const {query, filters, setFilters, hasFilters} = useQueryManager({
-    initialQuery: queryParam,
-    fixedParams,
-  })
   const showFilters = Boolean((query || hasFilters) && !showAutocomplete)
 
   const onChangeLang = useCallback(
@@ -233,13 +240,13 @@ export function SearchScreenShell({
   useEffect(() => {
     if (IS_NATIVE) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      updateSearchText(queryParam)
+      updateSearchText(query)
     }
-  }, [queryParam, updateSearchText])
+  }, [query, updateSearchText])
   useFocusEffect(
     useNonReactiveCallback(() => {
       if (IS_WEB) {
-        updateSearchText(queryParam)
+        updateSearchText(query)
       }
     }),
   )
@@ -329,11 +336,12 @@ export function SearchScreenShell({
   ])
 
   const onSubmit = (source: 'typed' | 'autocomplete') => () => {
+    const nextQuery = searchTextRef.current
     ax.metric('search:query', {
       source,
       filterCount: countActiveFilters(filters),
     })
-    navigateToItem(searchTextRef.current)
+    navigateToItem(nextQuery)
   }
 
   const onSubmitAdvanced = useCallback(
@@ -644,6 +652,7 @@ export function SearchScreenShell({
             query={query}
             filters={filters}
             hasFilters={hasFilters}
+            fromMe={fromMe}
             headerHeight={headerHeight}
             focusSearchInput={focusSearchInput}
           />
@@ -695,6 +704,7 @@ let SearchScreenInner = ({
   query,
   filters,
   hasFilters,
+  fromMe,
   headerHeight,
   focusSearchInput,
 }: {
@@ -703,6 +713,7 @@ let SearchScreenInner = ({
   query: string
   filters: SearchFilters
   hasFilters: boolean
+  fromMe: boolean
   headerHeight: number
   focusSearchInput: (tab?: TabParam) => void
 }): React.ReactNode => {
@@ -719,6 +730,7 @@ let SearchScreenInner = ({
       query={query}
       filters={filters}
       hasFilters={hasFilters}
+      fromMe={fromMe}
       activeTab={activeTab}
       headerHeight={headerHeight}
       onPageSelected={onPageSelected}
@@ -769,8 +781,13 @@ function useQueryManager({
   const navigation = useNavigation<NavigationProp>()
   const route = useRoute()
 
-  // Free text only - structured filters live in sibling route params now.
+  // A raw Me operator remains part of the query until the advanced dialog
+  // promotes it to the structured `from` filter.
   const query = initialQuery
+  const fromMe = useMemo(
+    () => extractFromMe(initialQuery).fromMe,
+    [initialQuery],
+  )
 
   const filters = useMemo(() => {
     const fromRoute = readSearchFilters(route.params as Record<string, unknown>)
@@ -802,11 +819,12 @@ function useQueryManager({
   return useMemo(
     () => ({
       query,
+      fromMe,
       filters,
       setFilters,
       hasFilters: hasActiveFilters(filters),
     }),
-    [query, filters, setFilters],
+    [query, fromMe, filters, setFilters],
   )
 }
 
