@@ -1,5 +1,10 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
-import {Alert, AppState, type AppStateStatus} from 'react-native'
+import {
+  Alert,
+  AppState,
+  Image as RNImage,
+  type AppStateStatus,
+} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
 import {
   checkForUpdateAsync,
@@ -448,14 +453,16 @@ export function useOTAUpdates() {
  * Splash screen for while the app is updating
  */
 export const splash = (scheme: 'light' | 'dark') => {
+  const source =
+    scheme === 'light'
+      ? require('../../../assets/splash/splash.png')
+      : require('../../../assets/splash/splash-dark.png')
+
   return {
-    image:
-      scheme === 'light'
-        ? require('../../../assets/splash/splash.png')
-        : require('../../../assets/splash/splash-dark.png'),
+    image: RNImage.resolveAssetSource(source).uri,
     imageFullScreen: true,
     imageResizeMode: 'cover',
-    backgroundColor: scheme === 'light' ? '#0c7cff' : '#0c2a49',
+    backgroundColor: scheme === 'light' ? '#006AFF' : '#002861',
     spinner: {
       enabled: true,
       color: '#ffffff',
