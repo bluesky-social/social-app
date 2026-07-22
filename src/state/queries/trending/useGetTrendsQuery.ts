@@ -16,6 +16,7 @@ export const DEFAULT_LIMIT = 5
 
 type QueryProps = {
   limit?: number
+  refetchOnWindowFocus?: boolean
 }
 
 function dedupe<T extends {link: string}>(trends: T[]): T[] {
@@ -42,6 +43,7 @@ export function useGetTrendsQuery(props: QueryProps = {}) {
 
   return useQuery({
     enabled: !!preferences,
+    refetchOnWindowFocus: props.refetchOnWindowFocus,
     staleTime: STALE.MINUTES.THREE,
     queryKey: createGetTrendsQueryKey({limit}),
     queryFn: async () => {

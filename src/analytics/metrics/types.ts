@@ -745,10 +745,6 @@ export type Events = {
     context: 'sidebar' | 'interstitial' | 'explore'
     recId?: string
   }
-  'recommendedTopic:click': {
-    context: 'explore'
-    recId?: string
-  }
   'trendingVideos:show': {
     context: 'settings'
   }

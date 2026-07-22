@@ -30,7 +30,13 @@ function Inner() {
   const ax = useAnalytics()
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
-  const {data: trending, error, isLoading} = useGetTrendsQuery()
+  const {
+    data: trending,
+    error,
+    isLoading,
+  } = useGetTrendsQuery({
+    refetchOnWindowFocus: true,
+  })
   const noTopics = !isLoading && !error && !trending?.trends?.length
 
   const onConfirmHide = () => {

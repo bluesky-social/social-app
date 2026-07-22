@@ -41,6 +41,7 @@ export function Inner() {
     isLoading,
   } = useGetTrendsQuery({
     limit: TRENDING_LIMIT,
+    refetchOnWindowFocus: true,
   })
   const noTopics = !isLoading && !error && !trending?.trends?.length
 
