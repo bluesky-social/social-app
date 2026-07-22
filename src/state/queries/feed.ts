@@ -327,7 +327,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
       count += page.feeds.length
     }
     if (count < limit && (data?.pages.length || 0) < 6) {
-      query.fetchNextPage()
+      void query.fetchNextPage()
       lastPageCountRef.current = data?.pages?.length || 0
     }
   }, [query, limit])

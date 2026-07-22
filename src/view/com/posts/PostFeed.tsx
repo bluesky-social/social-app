@@ -17,6 +17,7 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedVideo,
   type AppBskyFeedDefs,
+  type RichText as RichTextType,
 } from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -50,7 +51,7 @@ import {List, type ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
-import {useBreakpoints, useLayoutBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints, useLayoutBreakpoints, useTheme} from '#/alf'
 import {
   AgeAssuranceDismissibleFeedBanner,
   useInternalState as useAgeAssuranceBannerState,
@@ -64,6 +65,7 @@ import {FeedTrendingTopicsInterstitial} from '#/components/interstitials/FeedTre
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
+import {RichText} from '#/components/RichText'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
@@ -104,6 +106,11 @@ type FeedRow =
   | {
       type: 'fallbackMarker'
       key: string
+    }
+  | {
+      type: 'description'
+      key: string
+      value: RichTextType
     }
   | {
       type: 'sliceItem'
@@ -194,6 +201,7 @@ const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
 
 let PostFeed = ({
   feed,
+  description,
   feedParams,
   ignoreFilterFor,
   style,
@@ -216,6 +224,7 @@ let PostFeed = ({
   isVideoFeed = false,
 }: {
   feed: FeedDescriptor
+  description?: RichTextType
   feedParams?: FeedParams
   ignoreFilterFor?: string
   style?: StyleProp<ViewStyle>
@@ -232,13 +241,14 @@ let PostFeed = ({
   progressViewOffset?: number
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => React.ReactElement
-  extraData?: any
+  extraData?: Record<string, unknown>
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
   initialNumToRender?: number
   isVideoFeed?: boolean
   lastFetchDate?: () => number
 }): React.ReactNode => {
   const ax = useAnalytics()
+  const t = useTheme()
   const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
@@ -389,6 +399,7 @@ let PostFeed = ({
    * Cached value of whether the current feed was selected at startup. We don't
    * want this to update when user swipes.
    */
+  // oxlint-disable-next-line react/hook-use-state
   const [isCurrentFeedAtStartupSelected] = useState(selectedFeed === feed)
 
   const blockedOrMutedAuthors = usePostAuthorShadowFilter(
@@ -680,8 +691,17 @@ let PostFeed = ({
       }
     }
 
+    if (description?.text) {
+      arr.unshift({
+        key: 'description',
+        type: 'description',
+        value: description,
+      })
+    }
+
     return arr
   }, [
+    description,
     isFetched,
     isError,
     isEmpty,
@@ -793,6 +813,18 @@ let PostFeed = ({
         return <PostFeedLoadingPlaceholder />
       } else if (row.type === 'feedShutdownMsg') {
         return <FeedShutdownMsg feedUri={feedUriOrActorDid} />
+      } else if (row.type === 'description') {
+        return (
+          <RichText
+            value={row.value}
+            style={[
+              a.m_md,
+              a.text_md,
+              a.leading_snug,
+              t.atoms.text_contrast_high,
+            ]}
+          />
+        )
       } else if (row.type === 'interstitialFollows') {
         return <SuggestedFollows feed={feed} />
       } else if (row.type === 'interstitialProgressGuide') {
@@ -893,6 +925,7 @@ let PostFeed = ({
       feedTab,
       feedCacheKey,
       onPressShowLess,
+      t,
     ],
   )
 
