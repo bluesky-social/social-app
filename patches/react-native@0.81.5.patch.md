@@ -45,6 +45,26 @@ fight the computed centering inset.
 
 Issue: https://github.com/facebook/react-native/issues/55090
 
+## RCTScrollViewComponentView.mm Patch - ScrollView pinch/pan ignored outside content area on New Arch
+
+**TODO: Remove after bumping React Native to 0.87+** (fixed upstream by facebook/react-native#56747,
+commit efcab20908; first shipped in 0.87.0-rc.0).
+
+On Fabric, `betterHitTest` in `RCTScrollViewComponentView` deliberately skips the `_containerView`
+and hit-tests its grandchildren, returning `self` (the wrapper component view) when the touch lands
+inside the scroll view bounds but outside any content. UIKit only delivers touches to a gesture
+recognizer when the hit view is the recognizer's view or a descendant of it, and the `UIScrollView`
+is a *child* of the wrapper - so its native pinch/pan recognizers never see those touches. In the
+lightbox this means pinch-to-zoom and pan-while-zoomed only respond when the fingers are over the
+image itself, not over the letterbox bars above/below it. On the old architecture, default UIKit
+hit-testing returns the `UIScrollView` itself for those touches, so everything works.
+
+Backport of the upstream one-liner: return `_scrollView` instead of `self` so touches in the
+content-less area are attributed to the `UIScrollView`.
+
+Issue: https://github.com/facebook/react-native/issues/54123
+PR: https://github.com/react/react-native/pull/56747
+
 ## RCTTextLayoutManager.mm Patch - Text overflows instead of wrapping on the last line
 
 Issue: https://github.com/react/react-native/issues/53450#issuecomment-3298157830 

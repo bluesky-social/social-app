@@ -80,6 +80,15 @@ index 1494fd225aff1fa0429e917404d6b4ca5fc961c5..682e41b141c38c830bbcd9f2ce0de07b
      _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
    }
  
+@@ -507,7 +515,7 @@ - (UIView *)betterHitTest:(CGPoint)point withEvent:(UIEvent *)event
+     }
+   }
+ 
+-  return isPointInside ? self : nil;
++  return isPointInside ? _scrollView : nil;
+ }
+ 
+ /*
 @@ -1038,6 +1046,11 @@ - (void)_adjustForMaintainVisibleContentPosition
    }
  }
