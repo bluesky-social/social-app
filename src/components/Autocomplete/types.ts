@@ -46,4 +46,16 @@ export type AutocompleteApi = {
   query: string
   items: AutocompleteItem[]
   isFetching: boolean
+  isError: boolean
+}
+
+/**
+ * A locally cached dataset injected into autocomplete results. Items are
+ * pre-hydrated and ordered most-relevant-first; array order encodes
+ * recency/priority and is used as the tie-break when ranking matches.
+ */
+export type LocalSource = {
+  /** stable id, e.g. 'recents', 'convo-members', 'follows' */
+  key: string
+  items: AutocompleteItem[]
 }

@@ -28,10 +28,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {type NavigationProp, type SearchParams} from '#/lib/routes/types'
 import {listenSoftReset} from '#/state/events'
-import {
-  unstableCacheProfileView,
-  useProfilesQuery,
-} from '#/state/queries/profile'
+import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {
   countActiveFilters,
@@ -41,7 +38,6 @@ import {
   parseHistoryEntry,
   readSearchFilters,
   type SearchFilters,
-  serializeHistoryEntry,
   withoutFilterParams,
 } from '#/screens/Search/searchParams'
 import {
@@ -62,7 +58,8 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
-import {account, useStorage} from '#/storage'
+import {useSearchHistory} from '#/features/searchHistory'
+import {useRecentSearchesSource} from '#/features/searchHistory/useRecentSearchesSource'
 import type * as bsky from '#/types/bsky'
 import {AdvancedSearchDialog} from './components/AdvancedSearchDialog'
 import {AutocompleteResults} from './components/AutocompleteResults'
@@ -116,7 +113,6 @@ export function SearchScreenShell({
   const route = useRoute()
   const textInput = useRef<TextInput>(null)
   const {t: l} = useLingui()
-  const {currentAccount} = useSession()
   const queryClient = useQueryClient()
 
   // Get tab parameter from route params
@@ -131,6 +127,8 @@ export function SearchScreenShell({
     setSearchText(text)
   }, [])
 
+  const recents = useRecentSearchesSource({profilesOnly: true})
+
   const {items: autocompleteItems, isFetching: isAutocompleteFetching} =
     useAutocomplete({
       type: 'profile',
@@ -140,65 +138,19 @@ export function SearchScreenShell({
        * query on web to keep the hook a no-op instead of doing wasted work.
        */
       query: IS_NATIVE ? searchText : '',
+      sources: IS_NATIVE ? [recents] : undefined,
     })
 
   const [showAutocomplete, setShowAutocomplete] = useState(false)
 
-  const [termHistory = [], setTermHistory] = useStorage(account, [
-    currentAccount?.did ?? 'pwi',
-    'searchTermHistory',
-  ] as const)
-  const [accountHistory = [], setAccountHistory] = useStorage(account, [
-    currentAccount?.did ?? 'pwi',
-    'searchAccountHistory',
-  ])
-
-  const {data: accountHistoryProfiles} = useProfilesQuery({
-    handles: accountHistory,
-    maintainData: true,
-  })
-
-  const updateSearchHistory = useCallback(
-    (q: string, searchFilters: SearchFilters = {}) => {
-      if (!q) return
-      /*
-       * Store the query plus any advanced-search filters. Term-only searches
-       * serialize to a plain string (back-compatible with existing history);
-       * filtered searches serialize to JSON. Dedupe on the serialized form.
-       */
-      const item = serializeHistoryEntry(q, searchFilters)
-      const newSearchHistory = [
-        item,
-        ...termHistory.filter(search => search !== item),
-      ].slice(0, 6)
-      setTermHistory(newSearchHistory)
-    },
-    [termHistory, setTermHistory],
-  )
-
-  const updateProfileHistory = useCallback(
-    (item: bsky.profile.AnyProfileView) => {
-      const newAccountHistory = [
-        item.did,
-        ...accountHistory.filter(p => p !== item.did),
-      ].slice(0, 10)
-      setAccountHistory(newAccountHistory)
-    },
-    [accountHistory, setAccountHistory],
-  )
-
-  const deleteSearchHistoryItem = useCallback(
-    (item: string) => {
-      setTermHistory(termHistory.filter(search => search !== item))
-    },
-    [termHistory, setTermHistory],
-  )
-  const deleteProfileHistoryItem = useCallback(
-    (item: bsky.profile.AnyProfileView) => {
-      setAccountHistory(accountHistory.filter(p => p !== item.did))
-    },
-    [accountHistory, setAccountHistory],
-  )
+  const {
+    termHistory,
+    profiles: historyProfiles,
+    updateSearchHistory,
+    updateProfileHistory,
+    deleteSearchHistoryItem,
+    deleteProfileHistoryItem,
+  } = useSearchHistory()
 
   const {query, filters, setFilters, hasFilters} = useQueryManager({
     initialQuery: queryParam,
@@ -671,11 +623,7 @@ export function SearchScreenShell({
             ) : (
               <SearchHistory
                 searchHistory={termHistory}
-                selectedProfiles={
-                  accountHistoryProfiles?.profiles.filter(p =>
-                    accountHistory.includes(p.did),
-                  ) ?? []
-                }
+                selectedProfiles={historyProfiles}
                 onItemClick={handleHistoryItemClick}
                 onProfileClick={handleProfileClick}
                 onRemoveItemClick={deleteSearchHistoryItem}

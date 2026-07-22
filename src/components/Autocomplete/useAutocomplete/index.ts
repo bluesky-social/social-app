@@ -1,39 +1,38 @@
 import {useCallback, useMemo} from 'react'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {keepPreviousData, useQuery} from '@tanstack/react-query'
 
-import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
-import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 import {
   type AutocompleteApi,
   type AutocompleteItem,
   type AutocompleteItemType,
-  type AutocompleteProfile,
+  type LocalSource,
 } from '#/components/Autocomplete/types'
+import {mergeAutocompleteResults} from './mergeAutocompleteResults'
+import {DEFAULT_MOD_OPTS, moderateProfileItem} from './moderation'
 import {useEmojiSearch} from './useEmojiSearch'
-
-const DEFAULT_MOD_OPTS = {
-  userDid: undefined,
-  prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
-}
 
 export function useAutocomplete({
   type,
   query: q,
   limit,
   showSearchFallback = false,
+  sources,
 }: {
   type: AutocompleteItemType
   query: string
   limit?: number
   showSearchFallback?: boolean
+  sources?: LocalSource[]
 }): AutocompleteApi {
   const agent = useAgent()
   const moderationOpts = useModerationOpts()
   const emojiSearch = useEmojiSearch()
+
+  // Going from "foo" to "foo." should not clear matches.
+  const nq = q.toLowerCase().trim().replace(/\.$/, '')
 
   const query = useQuery({
     staleTime: STALE.MINUTES.ONE,
@@ -46,14 +45,10 @@ export function useAutocomplete({
     ],
     async queryFn() {
       if (type === 'profile') {
-        // TODO return recents
         if (!q) return []
 
-        // Going from "foo" to "foo." should not clear matches.
-        q = q.toLowerCase().trim().replace(/\.$/, '')
-
         const res = await agent.searchActorsTypeahead({
-          q,
+          q: nq,
           limit: limit || 8,
         })
 
@@ -80,7 +75,7 @@ export function useAutocomplete({
 
           if (item.type === 'profile') {
             const moderated = moderateProfileItem({
-              query: q,
+              query: nq,
               item,
               moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
             })
@@ -92,19 +87,40 @@ export function useAutocomplete({
 
         return results
       },
-      [q, moderationOpts],
+      [nq, moderationOpts],
     ),
     placeholderData: keepPreviousData,
   })
 
   const items = useMemo(() => {
-    if (!query.data) {
-      return []
-    }
+    const moderatedSources = sources?.map(source => ({
+      ...source,
+      items: source.items.filter(item => {
+        if (item.type !== 'profile') return true
+        return !!moderateProfileItem({
+          query: nq,
+          item,
+          moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
+        })
+      }),
+    }))
 
-    const results = [...query.data]
+    let results = mergeAutocompleteResults({
+      query: q,
+      sources: moderatedSources,
+      remoteItems: query.data ?? [],
+    })
 
     if (showSearchFallback && q) {
+      /*
+       * A recent search term matching the query would duplicate the fallback
+       * row (their keys differ, so key dedupe can't catch it). Drop the
+       * matching term and let the fallback row stand in for it.
+       */
+      results = results.filter(
+        item =>
+          !(item.type === 'search' && item.value.trim().toLowerCase() === nq),
+      )
       results.unshift({
         key: `search-${q}`,
         type: 'search' as const,
@@ -112,35 +128,15 @@ export function useAutocomplete({
       })
     }
 
-    return results
-  }, [query.data, showSearchFallback, q])
+    return limit ? results.slice(0, limit) : results
+  }, [query.data, showSearchFallback, q, nq, sources, moderationOpts, limit])
 
   return {
     query: q,
     items,
     isFetching: query.isFetching,
+    isError: query.isError,
   }
 }
 
-function moderateProfileItem({
-  query,
-  item,
-  moderationOpts,
-}: {
-  query: string
-  item: AutocompleteProfile
-  moderationOpts: ModerationOpts
-}) {
-  const modui = moderateProfile(item.profile, moderationOpts).ui('profileList')
-  const isExactMatch = query && item.profile.handle.toLowerCase() === query
-
-  if (
-    (isExactMatch && !moduiContainsHideableOffense(modui)) ||
-    !modui.filter ||
-    isJustAMute(modui)
-  ) {
-    return item
-  }
-
-  return null
-}
+export * from './useAutocompleteFn'

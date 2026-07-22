@@ -29,7 +29,6 @@ import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {blobToDataUri, isUriImage} from '#/lib/media/util'
-import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {
   type LinkFacetMatch,
   suggestLinkCardUri,
@@ -37,9 +36,11 @@ import {
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
+import {useAutocompleteFn} from '#/components/Autocomplete'
 import {type Emoji} from '#/components/EmojiPicker'
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
+import {useFollowsSource} from '#/features/autocomplete/useFollowsSource'
 import {type TextInputProps} from './TextInput.types'
 import {type AutocompleteRef, createSuggestion} from './web/Autocomplete'
 import {LinkDecorator} from './web/LinkDecorator'
@@ -60,7 +61,25 @@ export function TextInput({
   autoFocus,
 }: TextInputProps) {
   const {theme: t, fonts} = useAlf()
-  const autocomplete = useActorAutocompleteFn()
+  const follows = useFollowsSource()
+  const autocompleteFn = useAutocompleteFn({
+    type: 'profile',
+    sources: [follows],
+  })
+  const autocompleteFnRef = useRef(autocompleteFn)
+  autocompleteFnRef.current = autocompleteFn
+  /*
+   * Adapter for the tiptap mention plugin, which renders plain profile views.
+   * Keep this callback stable because tiptap does not rebuild extensions when
+   * useEditor updates its options. The ref still gives it the latest local
+   * sources after the follows query resolves.
+   */
+  const autocomplete = useCallback(async ({query}: {query: string}) => {
+    const items = await autocompleteFnRef.current(query, 8)
+    return items
+      .filter(item => item.type === 'profile')
+      .map(item => item.profile)
+  }, [])
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
 
   const [isDropping, setIsDropping] = useState(false)
