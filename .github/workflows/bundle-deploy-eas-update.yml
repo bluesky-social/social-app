@@ -34,6 +34,9 @@ jobs:
       # A version bump forces a native build even if the fingerprint is unchanged
       changes-detected: ${{ steps.fingerprint.outputs.includes-changes ||
         steps.version.outputs.version-changed }}
+      # Native-autolinking hash of this commit. recordBaseline persists it as the
+      # next baseline once both native builds have shipped this native surface.
+      native-hash: ${{ steps.fingerprint.outputs.current-native-hash }}
 
     steps:
       - name: Check for EXPO_TOKEN
@@ -93,10 +96,15 @@ jobs:
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@b5556913e4aef3964cfd5936d0add3fc0d809bdb # v0.2.0
+        uses: bluesky-social/github-actions/fingerprint-native@c816fb4e387f8d53b8c81ec20b4cabdee8840d00 # v0.3.0
         with:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}
+          # Baseline is a repo variable advanced by the recordBaseline job after
+          # each successful native deploy, instead of a frozen actions/cache entry.
+          # Empty on the very first run, in which case the action falls back to the
+          # legacy cache baseline.
+          baseline-native-hash: ${{ vars.MOST_RECENT_TESTFLIGHT_NATIVE_HASH }}
 
       - name: 🔤 Compile translations
         uses: ./.github/actions/compile-i18n
@@ -154,20 +162,6 @@ jobs:
           DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}
           RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
           CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
-
-      - name: ⬇️ Restore Cache
-        id: get-base-commit
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        if: ${{ !steps.fingerprint.outputs.includes-changes &&
-          !steps.version.outputs.version-changed }}
-        with:
-          path: most-recent-testflight-commit.txt
-          key: most-recent-testflight-commit
-
-      - name: ✏️ Write commit hash to cache
-        if: ${{ !steps.fingerprint.outputs.includes-changes &&
-          !steps.version.outputs.version-changed }}
-        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt
 
   buildIfNecessaryIOS:
     name: Build and Submit iOS
@@ -230,3 +224,47 @@ jobs:
       ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
       ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
       ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+  # Advance the fingerprint baseline only after BOTH native builds have shipped
+  # the new native surface. This replaces the old actions/cache baseline, which
+  # only advanced on cache eviction and so silently froze - freezing meant every
+  # fingerprint looked changed and OTA updates stopped deploying entirely.
+  #
+  # This runs only on the native-build path (both build jobs succeeded). On the
+  # OTA path those jobs are skipped, so this job is skipped too - correct, since
+  # an OTA update by definition leaves the native surface (and thus the hash)
+  # unchanged, so there is nothing to advance.
+  #
+  # Isolated as its own job so the token that can write repo variables lives
+  # nowhere else in the pipeline. The built-in GITHUB_TOKEN cannot manage Actions
+  # variables under any `permissions:` setting, so a PAT/App token with
+  # `variables: write` is required (EAS_BASELINE_VARIABLE_TOKEN).
+  recordBaseline:
+    name: Record fingerprint baseline
+    runs-on: ubuntu-latest
+    needs: [bundleDeploy, buildIfNecessaryIOS, buildIfNecessaryAndroid]
+    if: ${{ (inputs.channel || 'testflight') == 'testflight' &&
+      needs.buildIfNecessaryIOS.result == 'success' &&
+      needs.buildIfNecessaryAndroid.result == 'success' &&
+      github.repository == 'bluesky-social/social-app' }}
+    # No repo checkout or GITHUB_TOKEN work happens here; only the PAT is used.
+    permissions: {}
+    steps:
+      - name: ✏️ Advance baseline repo variable
+        env:
+          # PAT/App token with `variables: write`; see the job comment above
+          GH_TOKEN: ${{ secrets.EAS_BASELINE_VARIABLE_TOKEN }}
+          REPO: ${{ github.repository }}
+          NATIVE_HASH: ${{ needs.bundleDeploy.outputs.native-hash }}
+        run: |
+          # Fail loudly rather than writing an empty baseline. A blank value here
+          # would make the next run's fast-path comparison always mismatch and
+          # force perpetual native builds - the exact silent failure we're fixing.
+          if [ -z "$NATIVE_HASH" ]; then
+            echo "::error::bundleDeploy did not emit a native hash; refusing to write an empty baseline."
+            exit 1
+          fi
+          echo "Advancing MOST_RECENT_TESTFLIGHT_NATIVE_HASH to $NATIVE_HASH"
+          gh variable set MOST_RECENT_TESTFLIGHT_NATIVE_HASH \
+            --repo "$REPO" \
+            --body "$NATIVE_HASH"
