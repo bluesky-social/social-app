@@ -35,7 +35,7 @@ export function OTAInfo() {
       mutationFn: async () => {
         await Updates.fetchUpdateAsync()
         await Updates.reloadAsync({
-          reloadScreenOptions: splash(t.scheme),
+          reloadScreenOptions: await splash(t.scheme),
         })
       },
       onError: error =>

@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {Alert, AppState, type AppStateStatus} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
+import {Asset} from 'expo-asset'
 import {
   checkForUpdateAsync,
   fetchUpdateAsync,
@@ -60,7 +61,7 @@ async function updateTestflight(scheme: 'light' | 'dark') {
           style: 'default',
           onPress: async () => {
             await reloadAsync({
-              reloadScreenOptions: splash(scheme),
+              reloadScreenOptions: await splash(scheme),
             })
           },
         },
@@ -96,7 +97,7 @@ export function useApplyPullRequestOTAUpdate() {
             onPress: async () => {
               await fetchUpdateAsync()
               await reloadAsync({
-                reloadScreenOptions: splash(t.scheme),
+                reloadScreenOptions: await splash(t.scheme),
               })
             },
           },
@@ -219,7 +220,7 @@ export function useOTAUpdates() {
           if (lastMinimize.current <= Date.now() - MINIMUM_MINIMIZE_TIME) {
             if (isUpdatePending) {
               await reloadAsync({
-                reloadScreenOptions: splash(t.scheme),
+                reloadScreenOptions: await splash(t.scheme),
               })
             } else {
               setCheckTimeout()
@@ -243,15 +244,30 @@ export function useOTAUpdates() {
 /**
  * Splash screen for while the app is updating
  */
-export const splash = (scheme: 'light' | 'dark') => {
+export const splash = async (scheme: 'light' | 'dark') => {
+  const source =
+    scheme === 'light'
+      ? require('../../../assets/splash/splash.png')
+      : require('../../../assets/splash/splash-dark.png')
+  let image: string | undefined
+
+  try {
+    const [asset] = await Asset.loadAsync([source])
+    image = asset?.localUri ?? undefined
+    if (!image) {
+      logger.warn('Failed to materialize the OTA splash screen image')
+    }
+  } catch (err) {
+    logger.warn('Failed to materialize the OTA splash screen image', {
+      safeMessage: err,
+    })
+  }
+
   return {
-    image:
-      scheme === 'light'
-        ? require('../../../assets/splash/splash.png')
-        : require('../../../assets/splash/splash-dark.png'),
+    image,
     imageFullScreen: true,
     imageResizeMode: 'cover',
-    backgroundColor: scheme === 'light' ? '#0c7cff' : '#0c2a49',
+    backgroundColor: scheme === 'light' ? '#006AFF' : '#002861',
     spinner: {
       enabled: true,
       color: '#ffffff',
