@@ -18,6 +18,11 @@ concurrency:
 # bundle-size and fingerprint diffs
 permissions: {}
 
+# denis release tag in bluesky-social/tango whose linux-amd64 binary the PR OTA
+# job downloads. Bump this one line to roll denis.
+env:
+  DENIS_RELEASE_TAG: denis-v0.1.1
+
 jobs:
   # Populate this from main so every PR can restore the same trusted baseline.
   webpack-analyzer-base:
@@ -220,3 +225,96 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           gh pr edit "$PR_NUMBER" --remove-label "bot: fingerprint changed" || true
+
+  # Automatic per-PR OTA preview, published to the pull-request-<N> channel on
+  # denis. Replaces the old `@github-actions ota` comment trigger. Gated to
+  # same-repo PRs (fork guard) opened by someone with repo write access, so a
+  # fork or an external contributor's PR can never run with the denis publish
+  # role in scope.
+  publish-pr-ota:
+    name: Publish PR OTA to denis
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      (github.event.pull_request.author_association == 'MEMBER' ||
+      github.event.pull_request.author_association == 'OWNER' ||
+      github.event.pull_request.author_association == 'COLLABORATOR')
+    concurrency:
+      group: pr-ota-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: 🛠️ Setup Expo project
+        uses: ./.github/actions/setup-expo-project
+        with:
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 🔤 Compile translations
+        uses: ./.github/actions/compile-i18n
+
+      - name: ✏️ Write environment variables
+        id: env
+        uses: ./.github/actions/write-env
+        with:
+          env-token: ${{ secrets.ENV_TOKEN }}
+          sentry-dsn: ${{ secrets.SENTRY_DSN }}
+          bitdrift-api-key: ${{ secrets.BITDRIFT_API_KEY }}
+          gcp-project-id: ${{ secrets.EXPO_PUBLIC_GCP_PROJECT_ID }}
+          google-services-token: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
+          expo-public-env: testflight
+
+      - name: 🏗️ Create Bundle
+        run: >
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_RELEASE=${{ steps.env.outputs.release-version }}
+          SENTRY_DIST=${{ steps.env.outputs.bundle-identifier }}
+          pnpm export
+
+      - name: ☁️ Configure AWS credentials (denis, PR-scoped)
+        uses: aws-actions/configure-aws-credentials@254c19bd240aabef8777f48595e9d2d7b972184b # v6.2.1
+        with:
+          role-to-assume: arn:aws:iam::007404326489:role/denis-ci-publish-pr
+          aws-region: us-east-2
+          # Defense-in-depth: the base role is already scoped to pr/*, but narrow
+          # this session further to just THIS PR's prefix so a bug can't write to
+          # another PR's objects or the prod tree.
+          inline-session-policy: |-
+            {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": ["s3:PutObject", "s3:DeleteObject"],
+                  "Resource": "arn:aws:s3:::bsky-denis-ota-prod/pr/${{ github.event.pull_request.number }}/*"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": "s3:ListBucket",
+                  "Resource": "arn:aws:s3:::bsky-denis-ota-prod",
+                  "Condition": {
+                    "StringLike": { "s3:prefix": "pr/${{ github.event.pull_request.number }}/*" }
+                  }
+                }
+              ]
+            }
+
+      - name: ⬇️ Setup denis CLI
+        uses: ./.github/actions/setup-denis
+        with:
+          release-tag: ${{ env.DENIS_RELEASE_TAG }}
+          app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
+          private-key: ${{ secrets.SYNC_INTERNAL_PK }}
+
+      - name: 🚀 Publish OTA to denis (S3)
+        run: pnpm use-build-number bash scripts/denisPublish.sh
+        env:
+          RUNTIME_VERSION: ''
+          CHANNEL_NAME: pull-request-${{ github.event.pull_request.number }}
