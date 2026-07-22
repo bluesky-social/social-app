@@ -43,3 +43,11 @@ patchedDependencies:
 minimumReleaseAgeExclude:
   - '@atproto/*'
   - '@bsky.app/*'
+  # todo: remove when old enough
+  - '@oxlint-tsgolint/darwin-arm64@7.0.2001'
+  - '@oxlint-tsgolint/darwin-x64@7.0.2001'
+  - '@oxlint-tsgolint/linux-arm64@7.0.2001'
+  - '@oxlint-tsgolint/linux-x64@7.0.2001'
+  - '@oxlint-tsgolint/win32-arm64@7.0.2001'
+  - '@oxlint-tsgolint/win32-x64@7.0.2001'
+  - oxlint-tsgolint@7.0.2001
