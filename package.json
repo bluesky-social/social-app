@@ -105,7 +105,7 @@
     "@bsky.app/expo-dynamic-app-icon": "^1.8.5",
     "@bsky.app/expo-guess-language": "^0.2.8",
     "@bsky.app/expo-image-crop-tool": "^0.5.1",
-    "@bsky.app/expo-scroll-edge-effect": "^0.1.4",
+    "@bsky.app/expo-scroll-edge-effect": "^0.1.9",
     "@bsky.app/expo-translate-text": "^0.2.9",
     "@bsky.app/peek-menu": "^0.3.1",
     "@bsky.app/sift": "^0.3.9",
