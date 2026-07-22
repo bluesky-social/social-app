@@ -60,6 +60,7 @@ import {
   PostFeedVideoGridRow,
   PostFeedVideoGridRowPlaceholder,
 } from '#/components/feeds/PostFeedVideoGridRow'
+import {FeedTrendingTopicsInterstitial} from '#/components/interstitials/FeedTrendingTopics'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
@@ -138,6 +139,10 @@ type FeedRow =
     }
   | {
       type: 'interstitialTrending'
+      key: string
+    }
+  | {
+      type: 'interstitialFeedTrendingTopics'
       key: string
     }
   | {
@@ -540,6 +545,11 @@ let PostFeed = ({
                         key: 'composerPrompt-' + sliceIndex,
                       })
                     }
+                  } else if (sliceIndex === 1) {
+                    arr.push({
+                      type: 'interstitialFeedTrendingTopics',
+                      key: 'interstitialFeedTrendingTopics-' + sliceIndex,
+                    })
                   } else if (sliceIndex === 15) {
                     if (areVideoFeedsEnabled && !trendingVideoDisabled) {
                       arr.push({
@@ -791,6 +801,8 @@ let PostFeed = ({
         return <AgeAssuranceDismissibleFeedBanner />
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
+      } else if (row.type === 'interstitialFeedTrendingTopics') {
+        return <FeedTrendingTopicsInterstitial />
       } else if (row.type === 'liveEventFeedsAndTrendingBanner') {
         return <DiscoverFeedLiveEventFeedsAndTrendingBanner />
       } else if (row.type === 'composerPrompt') {

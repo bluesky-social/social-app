@@ -28,10 +28,8 @@ function dedupe<T extends {link: string}>(trends: T[]): T[] {
   })
 }
 
-export const createGetTrendsQueryKey = (props: QueryProps = {}) => [
-  'trends',
-  props.limit ?? DEFAULT_LIMIT,
-]
+export const createGetTrendsQueryKey = (limit?: number) =>
+  limit === undefined ? ['trends'] : ['trends', {limit}]
 
 export function useGetTrendsQuery(props: QueryProps = {}) {
   const agent = useAgent()
@@ -45,7 +43,7 @@ export function useGetTrendsQuery(props: QueryProps = {}) {
     enabled: !!preferences,
     refetchOnWindowFocus: props.refetchOnWindowFocus,
     staleTime: STALE.MINUTES.THREE,
-    queryKey: createGetTrendsQueryKey({limit}),
+    queryKey: createGetTrendsQueryKey(limit),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
       const {data} = await agent.app.bsky.unspecced.getTrends(
