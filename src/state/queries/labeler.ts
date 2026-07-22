@@ -1,4 +1,5 @@
 import {type AppBskyLabelerDefs} from '@atproto/api'
+import {chunkArray} from '@atproto/common-web'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 
@@ -120,11 +121,7 @@ export function useLabelerSubscriptionMutation() {
       const invalidLabelers: string[] = []
       if (labelerDids.length) {
         try {
-          const CHUNK_SIZE = 25
-          const chunks: string[][] = []
-          for (let i = 0; i < labelerDids.length; i += CHUNK_SIZE) {
-            chunks.push(labelerDids.slice(i, i + CHUNK_SIZE))
-          }
+          const chunks = chunkArray(labelerDids, 25)
           const results = await Promise.all(
             chunks.map(actors => agent.getProfiles({actors})),
           )
