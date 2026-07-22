@@ -1,5 +1,6 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
+import {LinearGradient} from 'expo-linear-gradient'
 import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -50,6 +51,16 @@ function Inner() {
 
   const shadowColor = alpha(t.palette.primary_100, 0.5)
 
+  const gradient = {
+    values: [
+      [0, t.palette.white],
+      [0.1, t.palette.primary_25],
+      [0.9, t.palette.primary_25],
+      [1, t.palette.white],
+    ],
+    hover_value: t.palette.white,
+  }
+
   if (error || noTopics) {
     return null
   }
@@ -64,6 +75,13 @@ function Inner() {
         a.border_t,
         t.atoms.border_contrast_low,
       ]}>
+      <LinearGradient
+        colors={gradient.values.map(c => c[1]) as [string, string, ...string[]]}
+        locations={
+          gradient.values.map(c => c[0]) as [number, number, ...number[]]
+        }
+        style={[a.absolute, a.inset_0]}
+      />
       <View
         style={[
           a.relative,
@@ -84,7 +102,12 @@ function Inner() {
         </View>
         <Link label={l`See more trending topics`} to="/search">
           <Text
-            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}
+            style={[
+              a.text_sm,
+              a.font_medium,
+              a.leading_snug,
+              t.atoms.text_contrast_high,
+            ]}
             numberOfLines={1}>
             <Trans>See more</Trans>
           </Text>
@@ -94,11 +117,11 @@ function Inner() {
         style={[
           a.relative,
           a.z_10,
+          a.border,
           a.rounded_xl,
           t.atoms.bg,
           {
             borderColor: t.palette.primary_100,
-            borderWidth: 0.5,
             boxShadow: `0 0 16px 0 ${shadowColor}`,
             elevation: 8,
             shadowColor: shadowColor,
@@ -147,7 +170,12 @@ function TrendRow({
       label={l`Browse topic ${trend.displayName}`}
       to={trend.link}
       onPress={onPress}
-      style={[rank < TOPIC_COUNT && a.border_b, t.atoms.border_contrast_low]}
+      style={[
+        rank < TOPIC_COUNT && a.border_b,
+        {
+          borderColor: t.palette.primary_100,
+        },
+      ]}
       PressableComponent={Pressable}>
       {({hovered, pressed}) => (
         <>
@@ -158,7 +186,6 @@ function TrendRow({
               a.flex_row,
               a.flex_row,
               {
-                borderColor: t.palette.primary_100,
                 gap: 6,
                 padding: 14,
                 paddingLeft: 16,
