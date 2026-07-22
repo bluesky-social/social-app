@@ -217,7 +217,7 @@ export function TrendingTopicRowSkeleton() {
       style={[
         gutters,
         a.w_full,
-        a.py_lg,
+        a.py_md,
         a.flex_row,
         a.gap_sm,
         a.border_b,
@@ -226,15 +226,20 @@ export function TrendingTopicRowSkeleton() {
       <View style={[{width: 20}]}>
         <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} />
       </View>
-      <View style={[a.flex_1, a.gap_sm]}>
+      <View style={[a.flex_1, a.gap_2xs]}>
         <LoadingPlaceholder width={90} height={17} />
         <View style={[a.flex_row, a.gap_sm, a.align_center]}>
           <LoadingPlaceholder width={70} height={16} />
           <LoadingPlaceholder width={40} height={16} />
           <LoadingPlaceholder width={60} height={16} />
         </View>
+        <View style={[a.flex_row, a.gap_sm, a.align_center]}>
+          <LoadingPlaceholder width={50} height={16} />
+          <LoadingPlaceholder width={70} height={16} />
+          <LoadingPlaceholder width={30} height={16} />
+        </View>
         <View style={[a.flex_1, a.gap_sm]}>
-          <View style={[a.mt_2xs, a.flex_row, a.gap_sm, a.align_center]}>
+          <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}>
             <LoadingPlaceholder
               width={24}
               height={24}
