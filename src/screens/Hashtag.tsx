@@ -6,6 +6,7 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
@@ -19,10 +20,12 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
+import {FAB} from '#/view/com/util/fab/FAB'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
@@ -42,6 +45,9 @@ export default function HashtagScreen({
 }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
   const {tag, author} = route.params
   const {t: l} = useLingui()
+  const t = useTheme()
+  const {hasSession} = useSession()
+  const {openComposer} = useOpenComposer()
 
   const decodedTag = useMemo(() => {
     return decodeURIComponent(tag)
@@ -73,6 +79,10 @@ export default function HashtagScreen({
     }
     void shareUrl(url.toString())
   }, [tag, author])
+
+  const onPressCompose = useCallback(() => {
+    openComposer({text: `${fullTag} `, logContext: 'Fab'})
+  }, [openComposer, fullTag])
 
   const [activeTab, setActiveTab] = useState(0)
 
@@ -147,6 +157,17 @@ export default function HashtagScreen({
           <View key={i}>{section.component}</View>
         ))}
       </Pager>
+
+      {hasSession && (
+        <FAB
+          testID="composeFAB"
+          onPress={onPressCompose}
+          icon={<EditBigIcon size="lg" fill={t.palette.white} />}
+          accessibilityRole="button"
+          accessibilityLabel={l({message: `New post`, context: 'action'})}
+          accessibilityHint=""
+        />
+      )}
     </Layout.Screen>
   )
 }
