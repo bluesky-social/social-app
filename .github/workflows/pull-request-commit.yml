@@ -228,18 +228,18 @@ jobs:
 
   # Automatic per-PR OTA preview, published to the pull-request-<N> channel on
   # denis. Replaces the old `@github-actions ota` comment trigger. Gated to
-  # same-repo PRs (fork guard) opened by someone with repo write access, so a
-  # fork or an external contributor's PR can never run with the denis publish
-  # role in scope.
+  # same-repo PRs (fork guard): a branch can only exist in this repo if someone
+  # with write access pushed it, so an outside contributor (who can only open a
+  # PR from a fork) never runs this job with the denis publish role in scope.
+  # This matches the fork-guard gate the other jobs in this workflow use;
+  # author_association is deliberately NOT checked (it can't identify a private
+  # org member and would skip their PRs).
   publish-pr-ota:
     name: Publish PR OTA to denis
     runs-on: ubuntu-latest
     if: >-
       github.event_name == 'pull_request' &&
-      github.event.pull_request.head.repo.full_name == github.repository &&
-      (github.event.pull_request.author_association == 'MEMBER' ||
-      github.event.pull_request.author_association == 'OWNER' ||
-      github.event.pull_request.author_association == 'COLLABORATOR')
+      github.event.pull_request.head.repo.full_name == github.repository
     concurrency:
       group: pr-ota-${{ github.event.pull_request.number }}
       cancel-in-progress: true
