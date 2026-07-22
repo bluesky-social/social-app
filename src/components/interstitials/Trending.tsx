@@ -20,6 +20,8 @@ import {TrendingTopicLink} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
+const TRENDING_LIMIT = 14
+
 export function TrendingInterstitial() {
   const {enabled} = useTrendingConfig()
   const {trendingDisabled} = useTrendingSettings()
@@ -33,7 +35,13 @@ export function Inner() {
   const gutters = useGutters([0, 'base', 0, 'base'])
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
-  const {data: trending, error, isLoading} = useGetTrendsQuery()
+  const {
+    data: trending,
+    error,
+    isLoading,
+  } = useGetTrendsQuery({
+    limit: TRENDING_LIMIT,
+  })
   const noTopics = !isLoading && !error && !trending?.trends?.length
 
   const onConfirmHide = useCallback(() => {

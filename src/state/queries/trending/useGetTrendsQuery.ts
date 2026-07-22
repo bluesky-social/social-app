@@ -14,11 +14,28 @@ import {useAgent} from '#/state/session'
 
 export const DEFAULT_LIMIT = 5
 
-export const createGetTrendsQueryKey = () => ['trends']
+type QueryProps = {
+  limit?: number
+}
 
-export function useGetTrendsQuery() {
+function dedupe<T extends {link: string}>(trends: T[]): T[] {
+  const seen = new Set<string>()
+  return trends.filter(trend => {
+    if (seen.has(trend.link)) return false
+    seen.add(trend.link)
+    return true
+  })
+}
+
+export const createGetTrendsQueryKey = (props: QueryProps = {}) => [
+  'trends',
+  props.limit ?? DEFAULT_LIMIT,
+]
+
+export function useGetTrendsQuery(props: QueryProps = {}) {
   const agent = useAgent()
   const {data: preferences} = usePreferencesQuery()
+  const limit = props.limit ?? DEFAULT_LIMIT
   const mutedWords = useMemo(() => {
     return preferences?.moderationPrefs?.mutedWords || []
   }, [preferences?.moderationPrefs])
@@ -26,12 +43,12 @@ export function useGetTrendsQuery() {
   return useQuery({
     enabled: !!preferences,
     staleTime: STALE.MINUTES.THREE,
-    queryKey: createGetTrendsQueryKey(),
+    queryKey: createGetTrendsQueryKey({limit}),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
       const {data} = await agent.app.bsky.unspecced.getTrends(
         {
-          limit: DEFAULT_LIMIT,
+          limit,
         },
         {
           headers: {
@@ -49,12 +66,14 @@ export function useGetTrendsQuery() {
       (data: AppBskyUnspeccedGetTrends.OutputSchema) => {
         return {
           recId: data.recIdStr,
-          trends: (data.trends ?? []).filter(t => {
-            return !hasMutedWord({
-              mutedWords,
-              text: t.topic + ' ' + t.displayName + ' ' + t.category,
-            })
-          }),
+          trends: dedupe(
+            (data.trends ?? []).filter(t => {
+              return !hasMutedWord({
+                mutedWords,
+                text: `${t.topic} ${t.displayName} ${t.category}`,
+              })
+            }),
+          ),
         }
       },
       [mutedWords],
