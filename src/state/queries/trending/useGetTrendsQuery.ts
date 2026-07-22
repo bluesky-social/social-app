@@ -44,6 +44,7 @@ export function useGetTrendsQuery() {
     select: useCallback(
       (data: AppBskyUnspeccedGetTrends.OutputSchema) => {
         return {
+          recId: data.recIdStr,
           trends: (data.trends ?? []).filter(t => {
             return !hasMutedWord({
               mutedWords,
