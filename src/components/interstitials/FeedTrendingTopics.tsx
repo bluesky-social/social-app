@@ -53,10 +53,10 @@ function Inner() {
 
   const gradient = {
     values: [
-      [0, t.palette.white],
+      [0, t.atoms.bg.backgroundColor],
       [0.1, t.palette.primary_25],
       [0.9, t.palette.primary_25],
-      [1, t.palette.white],
+      [1, t.atoms.bg.backgroundColor],
     ],
     hover_value: t.palette.white,
   }
