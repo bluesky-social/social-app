@@ -201,11 +201,6 @@ export function InterestTabs({
 
   return (
     <View style={[a.relative, a.flex_row]}>
-      {/*
-       * BlockDrawerGesture must wrap the ScrollView directly - Gesture.Native()
-       * only works when attached to the natively scrollable view. On the new
-       * arch (Android), attaching it to a wrapper view breaks scrolling.
-       */}
       <BlockDrawerGesture>
         <DraggableScrollView
           ref={listRef}
