@@ -20,6 +20,7 @@ export enum Features {
   PostThreadKnownLikersFetchEnable = 'post_thread:known_likers:fetch:enable',
   CustomLogoJapanEnable = 'custom_logo:japan:enable',
   SearchStarterPacksV2Enable = 'search_starter_packs_v2:enable',
+  FollowSortEnable = 'follow_sort:enable',
 
   AATest = 'aa-test',
 }

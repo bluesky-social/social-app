@@ -1736,16 +1736,6 @@
       "count": 9
     }
   },
-  "src/view/com/profile/ProfileFollowers.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 2
-    }
-  },
-  "src/view/com/profile/ProfileFollows.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 2
-    }
-  },
   "src/view/com/util/EmptyState.tsx": {
     "typescript/no-explicit-any": {
       "count": 1

@@ -475,25 +475,30 @@ export type Events = {
   'profile:followers:view': {
     contextProfileDid: string
     isOwnProfile: boolean
+    sort?: 'latest' | 'top'
   }
   'profile:followers:paginate': {
     contextProfileDid: string
     itemCount: number
     page: number
+    sort?: 'latest' | 'top'
   }
   'profile:following:view': {
     contextProfileDid: string
     isOwnProfile: boolean
+    sort?: 'latest' | 'top'
   }
   'profile:following:paginate': {
     contextProfileDid: string
     itemCount: number
     page: number
+    sort?: 'latest' | 'top'
   }
   'profileCard:seen': {
     contextProfileDid?: string
     profileDid: string
     position?: number
+    sort?: 'latest' | 'top'
   }
   'profile:mute': {}
   'profile:unmute': {}

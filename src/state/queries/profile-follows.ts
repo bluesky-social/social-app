@@ -5,28 +5,40 @@ import {
   type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
+import shuffle from 'lodash.shuffle'
 
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
+import {useAnalytics} from '#/analytics'
 
+const DEFAULT_SORT = 'latest'
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 // TODO refactor invalidate on mutate?
 const RQKEY_ROOT = 'profile-follows'
-export const RQKEY = (did: string) => [RQKEY_ROOT, did]
+export const RQKEY = (did: string, sort: 'latest' | 'top' = DEFAULT_SORT) => [
+  RQKEY_ROOT,
+  did,
+  sort,
+]
 
 export function useProfileFollowsQuery(
   did: string | undefined,
   {
     limit,
+    sort,
   }: {
     limit?: number
-  } = {
-    limit: PAGE_SIZE,
-  },
+    sort?: 'latest' | 'top'
+  } = {},
 ) {
+  const ax = useAnalytics()
+  const isSortEnabled = ax.features.enabled(ax.features.FollowSortEnable)
   const agent = useAgent()
+
+  const sortParam = isSortEnabled ? sort || DEFAULT_SORT : undefined
+
   return useInfiniteQuery<
     AppBskyGraphGetFollows.OutputSchema,
     Error,
@@ -35,13 +47,20 @@ export function useProfileFollowsQuery(
     RQPageParam
   >({
     staleTime: STALE.MINUTES.ONE,
-    queryKey: RQKEY(did || ''),
+    queryKey: RQKEY(did || '', sortParam),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await agent.app.bsky.graph.getFollows({
         actor: did || '',
         limit: limit || PAGE_SIZE,
         cursor: pageParam,
+        sort: sortParam,
       })
+      if (sortParam === 'top' && pageParam === undefined) {
+        return {
+          ...res.data,
+          follows: shuffle(res.data.follows),
+        }
+      }
       return res.data
     },
     initialPageParam: undefined,
