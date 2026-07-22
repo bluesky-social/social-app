@@ -53,7 +53,7 @@ function Inner() {
       </ModuleHeader.Container>
       {showLoading
         ? Array.from({length: TOPIC_COUNT}).map((__, i) => (
-            <TrendingTopicRowSkeleton key={i} withPosts={i === 0} />
+            <TrendingTopicRowSkeleton key={i} />
           ))
         : trending?.trends.map((trend, index) => (
             <TrendRow
@@ -185,6 +185,7 @@ export function TrendRow({
   )
 }
 
+// Unused atm, but leaving here so we don't lose localization. -dsb
 export function useCategoryDisplayName(
   category: AppBskyUnspeccedDefs.TrendView['category'],
 ) {
@@ -207,7 +208,7 @@ export function useCategoryDisplayName(
   }
 }
 
-export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
+export function TrendingTopicRowSkeleton() {
   const t = useTheme()
   const gutters = useGutters([0, 'base'])
 
