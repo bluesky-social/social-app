@@ -48,7 +48,6 @@ import {
   StarterPackCardSkeleton,
 } from '#/screens/Search/components/StarterPackCard'
 import {ExploreInterestsCard} from '#/screens/Search/modules/ExploreInterestsCard'
-import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
 import {atoms as a, native, platform, useTheme} from '#/alf'
@@ -152,10 +151,6 @@ type ExploreScreenItems =
     }
   | {
       type: 'trendingVideos'
-      key: string
-    }
-  | {
-      type: 'recommendations'
       key: string
     }
   | {
@@ -806,9 +801,6 @@ export function Explore({
         }
         case 'trendingVideos': {
           return <ExploreTrendingVideos />
-        }
-        case 'recommendations': {
-          return <ExploreRecommendations />
         }
         case 'profile': {
           return (

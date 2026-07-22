@@ -45,7 +45,10 @@ function Inner() {
           trend={trend}
           rank={index + 1}
           onPress={() => {
-            ax.metric('trendingTopic:click', {context: 'explore'})
+            ax.metric('trendingTopic:click', {
+              context: 'explore',
+              recId: trending.recId,
+            })
           }}
         />
       ))}
