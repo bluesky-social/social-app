@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {type AtUri} from '@atproto/api'
+import {type AppBskyUnspeccedDefs, type AtUri} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -10,7 +10,6 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 // import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 // import {CloseQuote_Filled_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
 // import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {type TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
 import {atoms as a, native, useTheme, type ViewStyleProp} from '#/alf'
 import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
@@ -22,7 +21,7 @@ export function TrendingTopic({
   style,
   hovered,
 }: {
-  topic: TrendingTopic
+  topic: AppBskyUnspeccedDefs.TrendView
   size?: 'large' | 'small'
   hovered?: boolean
 } & ViewStyleProp) {
@@ -137,7 +136,7 @@ export function TrendingTopicLink({
   children,
   ...rest
 }: {
-  topic: TrendingTopic
+  topic: AppBskyUnspeccedDefs.TrendView
 } & Omit<LinkProps, 'to' | 'label'>) {
   const topic = useTopic(raw)
 
@@ -168,7 +167,9 @@ type ParsedTrendingTopic =
       uri: AtUri
     }
 
-export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
+export function useTopic(
+  raw: AppBskyUnspeccedDefs.TrendView,
+): ParsedTrendingTopic {
   const {_} = useLingui()
   return useMemo(() => {
     const {topic: displayName, link} = raw

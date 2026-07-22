@@ -747,6 +747,7 @@ export type Events = {
   }
   'recommendedTopic:click': {
     context: 'explore'
+    recId?: string
   }
   'trendingVideos:show': {
     context: 'settings'

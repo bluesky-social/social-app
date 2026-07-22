@@ -4,8 +4,8 @@ import {Trans} from '@lingui/react/macro'
 
 import {
   DEFAULT_LIMIT as RECOMMENDATIONS_COUNT,
-  useTrendingTopics,
-} from '#/state/queries/trending/useTrendingTopics'
+  useGetTrendsQuery,
+} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/service-config'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Hashtag_Stroke2_Corner0_Rounded} from '#/components/icons/Hashtag'
@@ -29,9 +29,9 @@ function Inner() {
   const t = useTheme()
   const ax = useAnalytics()
   const gutters = useGutters([0, 'compact'])
-  const {data: trending, error, isLoading} = useTrendingTopics()
-  const noRecs = !isLoading && !error && !trending?.suggested?.length
-  const allFeeds = trending?.suggested && isAllFeeds(trending.suggested)
+  const {data: trending, error, isLoading} = useGetTrendsQuery()
+  const noRecs = !isLoading && !error && !trending?.trends?.length
+  const allFeeds = trending?.trends && isAllFeeds(trending.trends)
 
   return error || noRecs ? null : (
     <>
@@ -82,14 +82,17 @@ function Inner() {
             Array(RECOMMENDATIONS_COUNT)
               .fill(0)
               .map((_, i) => <TrendingTopicSkeleton key={i} index={i} />)
-          ) : !trending?.suggested ? null : (
+          ) : !trending?.trends ? null : (
             <>
-              {trending.suggested.map(topic => (
+              {trending.trends.map(topic => (
                 <TrendingTopicLink
                   key={topic.link}
                   topic={topic}
                   onPress={() => {
-                    ax.metric('recommendedTopic:click', {context: 'explore'})
+                    ax.metric('recommendedTopic:click', {
+                      context: 'explore',
+                      recId: trending.recId,
+                    })
                   }}>
                   {({hovered}) => (
                     <TrendingTopic
@@ -112,7 +115,7 @@ function Inner() {
   )
 }
 
-function isAllFeeds(topics: AppBskyUnspeccedDefs.TrendingTopic[]) {
+function isAllFeeds(topics: AppBskyUnspeccedDefs.TrendView[]) {
   return topics.every(topic => {
     const segments = topic.link.split('/').slice(1)
     return segments[0] === 'profile' && segments[2] === 'feed'
