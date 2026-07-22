@@ -178,10 +178,19 @@ func bskyProfileURL(handle string) string {
 	return fmt.Sprintf("https://bsky.app/profile/%s", handle)
 }
 
-// extractPostMedia returns thumbnail URLs for the post's image, gallery,
-// or video embed, byte-identical to what we put in og:image. Callers
-// derive thumbnailUrl from urls[0].
-func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) []string {
+// postImage pairs an og:image thumbnail URL with the author-provided alt
+// text ("" when none), so templates can emit og:image:alt alongside
+// og:image.
+type postImage struct {
+	Thumb string
+	Alt   string
+}
+
+// extractPostMedia returns thumbnails (with alt text) for the post's image,
+// gallery, or video embed. Thumb values are byte-identical to what we put
+// in og:image; JSON-LD callers flatten via imageURLs. Callers derive
+// thumbnailUrl from the first entry.
+func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) []postImage {
 	if pv == nil || pv.Embed == nil || embedHidden {
 		return nil
 	}
@@ -193,7 +202,7 @@ func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) []string 
 		return galleryThumbs(pv.Embed.EmbedGallery_View.Items)
 	}
 	if pv.Embed.EmbedVideo_View != nil && pv.Embed.EmbedVideo_View.Thumbnail != nil {
-		return []string{*pv.Embed.EmbedVideo_View.Thumbnail}
+		return []postImage{videoThumb(pv.Embed.EmbedVideo_View)}
 	}
 	if pv.Embed.EmbedRecordWithMedia_View != nil && pv.Embed.EmbedRecordWithMedia_View.Media != nil {
 		media := pv.Embed.EmbedRecordWithMedia_View.Media
@@ -204,14 +213,16 @@ func extractPostMedia(pv *appbsky.FeedDefs_PostView, embedHidden bool) []string 
 			return galleryThumbs(media.EmbedGallery_View.Items)
 		}
 		if media.EmbedVideo_View != nil && media.EmbedVideo_View.Thumbnail != nil {
-			return []string{*media.EmbedVideo_View.Thumbnail}
+			return []postImage{videoThumb(media.EmbedVideo_View)}
 		}
 	}
 	return nil
 }
 
-// imageThumbs returns the thumb URLs, or nil if empty.
-func imageThumbs(images []*appbsky.EmbedImages_ViewImage) []string {
+// imageURLs flattens postImages to their thumb URLs. JSON-LD image[] uses
+// this so its strings stay byte-identical to og:image (per Google's
+// requirement).
+func imageURLs(images []postImage) []string {
 	if len(images) == 0 {
 		return nil
 	}
@@ -222,16 +233,38 @@ func imageThumbs(images []*appbsky.EmbedImages_ViewImage) []string {
 	return urls
 }
 
-// galleryThumbs returns the thumbnail URLs of image items in a gallery
-// embed, or nil if empty. Items_Elem is a union; non-image variants and
-// nil entries are skipped so future gallery item types don't break SEO
+// videoThumb pairs a video embed's poster thumbnail with the video's alt
+// text. Callers must ensure v.Thumbnail is non-nil.
+func videoThumb(v *appbsky.EmbedVideo_View) postImage {
+	img := postImage{Thumb: *v.Thumbnail}
+	if v.Alt != nil {
+		img.Alt = *v.Alt
+	}
+	return img
+}
+
+// imageThumbs returns the thumb URLs and alt text, or nil if empty.
+func imageThumbs(images []*appbsky.EmbedImages_ViewImage) []postImage {
+	if len(images) == 0 {
+		return nil
+	}
+	out := make([]postImage, 0, len(images))
+	for _, img := range images {
+		out = append(out, postImage{Thumb: img.Thumb, Alt: img.Alt})
+	}
+	return out
+}
+
+// galleryThumbs returns the thumbnails (with alt text) of image items in a
+// gallery embed, or nil if empty. Items_Elem is a union; non-image variants
+// and nil entries are skipped so future gallery item types don't break SEO
 // extraction. Empty Thumbnail strings are also skipped to avoid emitting
 // <meta property="og:image" content=""> if the appview ever returns one.
-func galleryThumbs(items []*appbsky.EmbedGallery_View_Items_Elem) []string {
+func galleryThumbs(items []*appbsky.EmbedGallery_View_Items_Elem) []postImage {
 	if len(items) == 0 {
 		return nil
 	}
-	urls := make([]string, 0, len(items))
+	out := make([]postImage, 0, len(items))
 	for _, item := range items {
 		if item == nil || item.EmbedGallery_ViewImage == nil {
 			continue
@@ -239,12 +272,15 @@ func galleryThumbs(items []*appbsky.EmbedGallery_View_Items_Elem) []string {
 		if item.EmbedGallery_ViewImage.Thumbnail == "" {
 			continue
 		}
-		urls = append(urls, item.EmbedGallery_ViewImage.Thumbnail)
+		out = append(out, postImage{
+			Thumb: item.EmbedGallery_ViewImage.Thumbnail,
+			Alt:   item.EmbedGallery_ViewImage.Alt,
+		})
 	}
-	if len(urls) == 0 {
+	if len(out) == 0 {
 		return nil
 	}
-	return urls
+	return out
 }
 
 // findVideoEmbed returns the post's video embed view, or nil if there is
@@ -525,7 +561,7 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 		return discussionForumPosting{}
 	}
 	embedHidden := postEmbedHidden(pv, hideLabels)
-	images := extractPostMedia(pv, embedHidden)
+	images := imageURLs(extractPostMedia(pv, embedHidden))
 	var thumb string
 	if len(images) > 0 {
 		thumb = images[0]
@@ -600,7 +636,7 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) c
 		return comment{}
 	}
 	embedHidden := postEmbedHidden(pv, hideLabels)
-	images := extractPostMedia(pv, embedHidden)
+	images := imageURLs(extractPostMedia(pv, embedHidden))
 	var thumb string
 	if len(images) > 0 {
 		thumb = images[0]
