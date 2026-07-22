@@ -34,9 +34,6 @@ jobs:
       # A version bump forces a native build even if the fingerprint is unchanged
       changes-detected: ${{ steps.fingerprint.outputs.includes-changes ||
         steps.version.outputs.version-changed }}
-      # Native-autolinking hash of this commit. recordBaseline persists it as the
-      # next baseline once both native builds have shipped this native surface.
-      native-hash: ${{ steps.fingerprint.outputs.current-native-hash }}
 
     steps:
       - name: Check for EXPO_TOKEN
@@ -96,7 +93,7 @@ jobs:
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@c816fb4e387f8d53b8c81ec20b4cabdee8840d00 # v0.3.0
+        uses: bluesky-social/github-actions/fingerprint-native@a2423573f4de195827afd4e88017d8a21260bff6 # v0.3.0
         with:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}
@@ -105,6 +102,25 @@ jobs:
           # Empty on the very first run, in which case the action falls back to the
           # legacy cache baseline.
           baseline-native-hash: ${{ vars.MOST_RECENT_TESTFLIGHT_NATIVE_HASH }}
+
+      # Hand the native hash to recordBaseline via an artifact rather than a job
+      # output: this workflow has documented (see buildIfNecessary* below) that
+      # GitHub suppresses md5-like hash values in job outputs as possible secrets,
+      # which would leave recordBaseline with an empty value. An artifact is not
+      # subject to that filtering. Written unconditionally so it exists on both
+      # the OTA and native-build paths.
+      - name: 💾 Save native hash
+        env:
+          NATIVE_HASH: ${{ steps.fingerprint.outputs.current-native-hash }}
+        run: printf '%s' "$NATIVE_HASH" > native-hash.txt
+
+      - name: 🚀 Upload native hash
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: native-hash-${{ github.run_id }}
+          path: native-hash.txt
+          retention-days: 1
+          if-no-files-found: error
 
       - name: 🔤 Compile translations
         uses: ./.github/actions/compile-i18n
@@ -247,21 +263,28 @@ jobs:
       needs.buildIfNecessaryIOS.result == 'success' &&
       needs.buildIfNecessaryAndroid.result == 'success' &&
       github.repository == 'bluesky-social/social-app' }}
-    # No repo checkout or GITHUB_TOKEN work happens here; only the PAT is used.
-    permissions: {}
+    # Only actions:read (to download the intra-run artifact) is needed from the
+    # built-in token; the repo-variable write uses the PAT, not GITHUB_TOKEN.
+    permissions:
+      actions: read
     steps:
+      - name: ⬇️ Download native hash
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: native-hash-${{ github.run_id }}
+
       - name: ✏️ Advance baseline repo variable
         env:
           # PAT/App token with `variables: write`; see the job comment above
           GH_TOKEN: ${{ secrets.EAS_BASELINE_VARIABLE_TOKEN }}
           REPO: ${{ github.repository }}
-          NATIVE_HASH: ${{ needs.bundleDeploy.outputs.native-hash }}
         run: |
+          NATIVE_HASH="$(cat native-hash.txt)"
           # Fail loudly rather than writing an empty baseline. A blank value here
           # would make the next run's fast-path comparison always mismatch and
           # force perpetual native builds - the exact silent failure we're fixing.
           if [ -z "$NATIVE_HASH" ]; then
-            echo "::error::bundleDeploy did not emit a native hash; refusing to write an empty baseline."
+            echo "::error::native hash artifact was empty; refusing to write an empty baseline."
             exit 1
           fi
           echo "Advancing MOST_RECENT_TESTFLIGHT_NATIVE_HASH to $NATIVE_HASH"
