@@ -1,6 +1,7 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
+import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -8,6 +9,7 @@ import {useTrendingSettings} from '#/state/preferences/trending'
 import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/service-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {formatCount} from '#/view/com/util/numeric/format'
 import {
   atoms as a,
   useGutters,
@@ -15,6 +17,7 @@ import {
   useTheme,
   type ViewStyleProp,
 } from '#/alf'
+import {alpha} from '#/alf/utils'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import {Link} from '#/components/Link'
@@ -45,6 +48,8 @@ function Inner() {
   } = useGetTrendsQuery({limit: TOPIC_COUNT})
   const noTopics = !isLoading && !error && !trending?.trends?.length
 
+  const shadowColor = alpha(t.palette.primary_100, 0.5)
+
   if (error || noTopics) {
     return null
   }
@@ -70,7 +75,7 @@ function Inner() {
           a.gap_sm,
         ]}>
         <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_xs]}>
-          <TrendingIcon width={18} fill={t.atoms.text.color} />
+          <TrendingIcon width={18} />
           <Text
             style={[a.text_md, a.font_medium, a.leading_snug]}
             numberOfLines={1}>
@@ -94,9 +99,9 @@ function Inner() {
           {
             borderColor: t.palette.primary_100,
             borderWidth: 0.5,
-            boxShadow: `0 0 16px 0 ${t.palette.primary_100}`,
+            boxShadow: `0 0 16px 0 ${shadowColor}`,
             elevation: 8,
-            shadowColor: t.palette.primary_100,
+            shadowColor: shadowColor,
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 1,
             shadowRadius: 16,
@@ -132,7 +137,7 @@ function TrendRow({
   onPress?: () => void
 }) {
   const t = useTheme()
-  const {t: l} = useLingui()
+  const {t: l, i18n} = useLingui()
 
   const actors = useModerateTrendingActors(trend.actors)
 
@@ -152,8 +157,8 @@ function TrendRow({
               a.w_full,
               a.flex_row,
               a.flex_row,
-              t.atoms.border_contrast_low,
               {
+                borderColor: t.palette.primary_100,
                 gap: 6,
                 padding: 14,
                 paddingLeft: 16,
@@ -176,7 +181,23 @@ function TrendRow({
               <Text style={[a.text_md, a.font_medium]} numberOfLines={1}>
                 {trend.displayName}
               </Text>
-              <AvatarStack size={24} profiles={actors} />
+              <View style={[a.flex_row, a.gap_sm, a.align_center]}>
+                {actors.length > 0 ? (
+                  <AvatarStack size={24} profiles={actors} />
+                ) : null}
+                <Text
+                  style={[a.text_sm, t.atoms.text_contrast_medium]}
+                  numberOfLines={1}>
+                  {trend.postCount >= 1000 ? (
+                    <Trans comment="Over 1,000 posts">1K+ posts</Trans>
+                  ) : (
+                    <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'">
+                      {formatCount(i18n, trend.postCount)}{' '}
+                      {plural(trend.postCount, {one: 'post', other: 'posts'})}
+                    </Trans>
+                  )}
+                </Text>
+              </View>
             </View>
           </View>
         </>
