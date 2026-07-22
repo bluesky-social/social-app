@@ -53,3 +53,27 @@ export function listenFocusSearch(fn: () => void): UnlistenFn {
   emitter.on('focus-search', fn)
   return () => emitter.off('focus-search', fn)
 }
+
+export function emitFocusNextPost() {
+  emitter.emit('focus-next-post')
+}
+export function listenFocusNextPost(fn: () => void): UnlistenFn {
+  emitter.on('focus-next-post', fn)
+  return () => emitter.off('focus-next-post', fn)
+}
+
+export function emitFocusPrevPost() {
+  emitter.emit('focus-prev-post')
+}
+export function listenFocusPrevPost(fn: () => void): UnlistenFn {
+  emitter.on('focus-prev-post', fn)
+  return () => emitter.off('focus-prev-post', fn)
+}
+
+export function emitOpenFocusedPost() {
+  emitter.emit('open-focused-post')
+}
+export function listenOpenFocusedPost(fn: () => void): UnlistenFn {
+  emitter.on('open-focused-post', fn)
+  return () => emitter.off('open-focused-post', fn)
+}

@@ -46,12 +46,14 @@ export function Post({
   hideTopBorder,
   style,
   onBeforePress,
+  ref,
 }: {
   post: AppBskyFeedDefs.PostView
   showReplyLine?: boolean
   hideTopBorder?: boolean
   style?: StyleProp<ViewStyle>
   onBeforePress?: () => void
+  ref?: React.Ref<View>
 }) {
   const moderationOpts = useModerationOpts()
   const record = useMemo<AppBskyFeedPost.Record | undefined>(
@@ -90,6 +92,7 @@ export function Post({
         hideTopBorder={hideTopBorder}
         style={style}
         onBeforePress={onBeforePress}
+        ref={ref}
       />
     )
   }
@@ -105,6 +108,7 @@ function PostInner({
   hideTopBorder,
   style,
   onBeforePress: outerOnBeforePress,
+  ref,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
@@ -114,6 +118,7 @@ function PostInner({
   hideTopBorder?: boolean
   style?: StyleProp<ViewStyle>
   onBeforePress?: () => void
+  ref?: React.Ref<View>
 }) {
   const queryClient = useQueryClient()
   const t = useTheme()
@@ -158,6 +163,7 @@ function PostInner({
   return (
     <GalleryBleed>
       <Link
+        ref={ref}
         href={itemHref}
         style={[
           styles.outer,

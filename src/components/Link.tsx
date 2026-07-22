@@ -4,6 +4,7 @@ import {
   Linking,
   type NativeSyntheticEvent,
   type TargetedEvent,
+  type View,
 } from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {useLingui} from '@lingui/react/macro'
@@ -16,6 +17,7 @@ import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
 import {useGroupChatJoinIntent} from '#/lib/hooks/useIntentHandler'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import * as KeyboardActivation from '#/lib/hotkeys/KeyboardActivation'
 import {type AllNavigatorParams, type RouteParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
@@ -144,8 +146,8 @@ export function useLink({
   const groupChatJoinIntent = useGroupChatJoinIntent()
 
   const onPress = useCallback(
-    (e: GestureResponderEvent) => {
-      const exitEarlyIfFalse = outerOnPress?.(e)
+    (e?: GestureResponderEvent) => {
+      const exitEarlyIfFalse = outerOnPress?.(e as GestureResponderEvent)
 
       if (exitEarlyIfFalse === false) return
 
@@ -157,7 +159,7 @@ export function useLink({
       )
 
       if (IS_WEB) {
-        e.preventDefault()
+        e?.preventDefault()
       }
 
       const chatInviteCode = getChatInviteCodeFromUrl(href)
@@ -175,7 +177,7 @@ export function useLink({
         if (isExternal) {
           void openLink(href, overridePresentation, shouldProxy)
         } else {
-          const shouldOpenInNewTab = shouldClickOpenNewTab(e)
+          const shouldOpenInNewTab = e ? shouldClickOpenNewTab(e) : false
 
           if (isBskyDownloadUrl(href)) {
             void shareUrl(BSKY_DOWNLOAD_URL)
@@ -300,6 +302,7 @@ export function useLink({
 export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
   Omit<ButtonProps, 'onPress' | 'disabled'> & {
     overridePresentation?: boolean
+    ref?: React.Ref<View>
   }
 
 /**
@@ -320,6 +323,7 @@ export function Link({
   shouldProxy,
   overridePresentation,
   peek,
+  ref,
   ...rest
 }: LinkProps) {
   const {href, isExternal, onPress, onLongPress, openExternally} = useLink({
@@ -331,12 +335,15 @@ export function Link({
     shouldProxy: shouldProxy,
     overridePresentation,
   })
+  const activate = useCallback(() => onPress(), [onPress])
+  KeyboardActivation.useRegistration(activate)
 
   // Peek is iOS-only and only makes sense for external web links.
   const peekEnabled = Boolean(peek && IS_IOS && isExternal)
 
   const button = (
     <Button
+      ref={ref}
       {...rest}
       style={[a.justify_start, rest.style]}
       role="link"
@@ -368,17 +375,19 @@ export function Link({
     // the peek animation clips to the same corners as the rendered card.
     const borderRadius = flatten(rest.style)?.borderRadius
     return (
-      <LinkPeek
-        href={href}
-        onPreviewPress={openExternally}
-        shouldProxy={shouldProxy}
-        borderRadius={typeof borderRadius === 'number' ? borderRadius : 0}>
-        {button}
-      </LinkPeek>
+      <KeyboardActivation.Isolation>
+        <LinkPeek
+          href={href}
+          onPreviewPress={openExternally}
+          shouldProxy={shouldProxy}
+          borderRadius={typeof borderRadius === 'number' ? borderRadius : 0}>
+          {button}
+        </LinkPeek>
+      </KeyboardActivation.Isolation>
     )
   }
 
-  return button
+  return <KeyboardActivation.Isolation>{button}</KeyboardActivation.Isolation>
 }
 
 /**

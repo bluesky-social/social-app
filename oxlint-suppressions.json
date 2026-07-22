@@ -1839,17 +1839,6 @@
       "count": 1
     }
   },
-  "src/view/screens/Feeds.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 3
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
   "src/view/screens/Home.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
