@@ -1631,9 +1631,8 @@ let ComposerPost = memo(function ComposerPost({
     async (uri: string) => {
       if (
         uri.startsWith('data:video/') ||
-        (IS_WEB && uri.startsWith('data:image/gif'))
+        uri.startsWith('data:image/gif')
       ) {
-        if (IS_NATIVE) return // web only
         const [mimeType] = uri.slice('data:'.length).split(';')
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
           Toast.show(l`Unsupported video type: ${mimeType}`, {
