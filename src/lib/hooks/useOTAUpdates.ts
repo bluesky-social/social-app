@@ -1,17 +1,20 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {Alert, AppState, type AppStateStatus} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
+import {Asset} from 'expo-asset'
 import {
   checkForUpdateAsync,
   fetchUpdateAsync,
   isEnabled,
   reloadAsync,
+  type ReloadScreenOptions,
   setExtraParamAsync,
   useUpdates,
 } from 'expo-updates'
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useTheme} from '#/alf'
 import {IS_ANDROID, IS_IOS, IS_TESTFLIGHT} from '#/env'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
@@ -39,7 +42,7 @@ async function setExtraParamsPullRequest(channel: string) {
   await setExtraParamAsync('channel', channel)
 }
 
-async function updateTestflight() {
+async function updateTestflight(scheme: 'light' | 'dark') {
   await setExtraParams()
 
   const res = await checkForUpdateAsync()
@@ -57,7 +60,9 @@ async function updateTestflight() {
           text: 'Relaunch',
           style: 'default',
           onPress: async () => {
-            await reloadAsync()
+            await reloadAsync({
+              reloadScreenOptions: await splash(scheme),
+            })
           },
         },
       ],
@@ -66,6 +71,7 @@ async function updateTestflight() {
 }
 
 export function useApplyPullRequestOTAUpdate() {
+  const t = useTheme()
   const {currentlyRunning} = useUpdates()
   const [pending, setPending] = useState(false)
   const currentChannel = currentlyRunning?.channel
@@ -90,7 +96,9 @@ export function useApplyPullRequestOTAUpdate() {
             style: 'default',
             onPress: async () => {
               await fetchUpdateAsync()
-              await reloadAsync()
+              await reloadAsync({
+                reloadScreenOptions: await splash(t.scheme),
+              })
             },
           },
         ],
@@ -106,7 +114,7 @@ export function useApplyPullRequestOTAUpdate() {
 
   const revertToEmbedded = async () => {
     try {
-      await updateTestflight()
+      await updateTestflight(t.scheme)
     } catch (e: any) {
       logger.error('Internal OTA Update Error', {error: `${e}`})
     }
@@ -124,6 +132,7 @@ export function useApplyPullRequestOTAUpdate() {
 export function useOTAUpdates() {
   const shouldReceiveUpdates = isEnabled && !__DEV__
 
+  const t = useTheme()
   const appState = useRef<AppStateStatus>('active')
   const lastMinimize = useRef(0)
   const ranInitialCheck = useRef(false)
@@ -155,13 +164,13 @@ export function useOTAUpdates() {
 
   const onIsTestFlight = useCallback(async () => {
     try {
-      await updateTestflight()
+      await updateTestflight(t.scheme)
     } catch (err: any) {
       if (!isNetworkError(err)) {
         logger.error('Internal OTA Update Error', {safeMessage: err})
       }
     }
-  }, [])
+  }, [t.scheme])
 
   useEffect(() => {
     // We don't need to check anything if the current update is a PR update
@@ -210,7 +219,9 @@ export function useOTAUpdates() {
           // chances are that there isn't anything important going on in the current session.
           if (lastMinimize.current <= Date.now() - MINIMUM_MINIMIZE_TIME) {
             if (isUpdatePending) {
-              await reloadAsync()
+              await reloadAsync({
+                reloadScreenOptions: await splash(t.scheme),
+              })
             } else {
               setCheckTimeout()
             }
@@ -227,5 +238,40 @@ export function useOTAUpdates() {
       clearTimeout(timeout.current)
       subscription.remove()
     }
-  }, [isUpdatePending, currentChannel, setCheckTimeout])
+  }, [isUpdatePending, currentChannel, setCheckTimeout, t.scheme])
+}
+
+/**
+ * Splash screen for while the app is updating
+ */
+export const splash = async (scheme: 'light' | 'dark') => {
+  const source =
+    scheme === 'light'
+      ? require('../../../assets/splash/splash.png')
+      : require('../../../assets/splash/splash-dark.png')
+  let image: string | undefined
+
+  try {
+    const [asset] = await Asset.loadAsync([source])
+    image = asset?.localUri ?? undefined
+    if (!image) {
+      logger.warn('Failed to materialize the OTA splash screen image')
+    }
+  } catch (err) {
+    logger.warn('Failed to materialize the OTA splash screen image', {
+      safeMessage: err,
+    })
+  }
+
+  return {
+    image,
+    imageFullScreen: true,
+    imageResizeMode: 'cover',
+    backgroundColor: scheme === 'light' ? '#006AFF' : '#002861',
+    spinner: {
+      enabled: true,
+      color: '#ffffff',
+      size: 'large',
+    },
+  } satisfies ReloadScreenOptions
 }
