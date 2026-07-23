@@ -122,7 +122,7 @@ jobs:
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@21761a2827a7f9f0c9cb31ce973ac55ccab3b74f # v0.3.0
+        uses: bluesky-social/github-actions/fingerprint-native@594f8b014440e76aa4e12cc0110d602fe3b5c348 # v0.3.0
         with:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}
