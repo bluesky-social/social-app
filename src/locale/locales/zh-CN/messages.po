@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-20 22:14\n"
+"PO-Revision-Date: 2026-07-23 17:09\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -196,7 +196,10 @@ msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {正在关注} other {正在关注}}"
 
 #. placeholder {0}: profile.postsCount || 0
+#. placeholder {0}: trend.postCount
+#: src/components/interstitials/FeedTrendingTopics.tsx:220
 #: src/screens/Profile/Header/Metrics.tsx:58
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:150
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {帖文} other {帖文}}"
 
@@ -227,6 +230,16 @@ msgstr "{1} {0}"
 #: src/components/moderation/ContentHider.tsx:98
 msgid "{0} (Account)"
 msgstr "{0}（账户)"
+
+#. '{postCount} {posts}', e.g., '1.2K posts'
+#. '{postCount} {posts}', e.g., '1.2K posts'
+#. placeholder {0}: formatCount(i18n, trend.postCount)
+#. placeholder {1}: import {useMemo} from 'react' import {Pressable, View} from 'react-native' import {Image} from 'expo-image' import { type AppBskyUnspeccedDefs, moderateProfile, RichText as RichTextApi, } from '@atproto/api' import {plural} from '@lingui/core/macro' import {Trans, useLingui} from '@lingui/react/macro' import {useModerationOpts} from '#/state/preferences/moderation-opts' import {useTrendingSettings} from '#/state/preferences/trending' import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery' import {useTrendingConfig} from '#/state/service-config' import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder' import {formatCount} from '#/view/com/util/numeric/format' import {atoms as a, useGutters, useTheme, type ViewStyleProp} from '#/alf' import {AvatarStack} from '#/components/AvatarStack' import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending' import {Link} from '#/components/Link' import {RichText} from '#/components/RichText' import {SubtleHover} from '#/components/SubtleHover' import {Text} from '#/components/Typography' import {useAnalytics} from '#/analytics' import * as ModuleHeader from '../components/ModuleHeader' const TOPIC_COUNT = 5 const IMAGE_SIZE = 56 export function ExploreTrendingTopics() { const {enabled} = useTrendingConfig() const {trendingDisabled} = useTrendingSettings() return enabled && !trendingDisabled ? <Inner /> : null } function Inner() { const ax = useAnalytics() const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery() const noTopics = !isLoading && !error && !trending?.trends?.length const showLoading = isLoading || isRefetching if (!showLoading && (error || !trending?.trends || noTopics)) return null return ( <View style={[a.pb_md]}> <ModuleHeader.Container bottomBorder> <ModuleHeader.Icon icon={TrendingIcon} size="md" /> <ModuleHeader.TitleText> <Trans>Trending</Trans> </ModuleHeader.TitleText> </ModuleHeader.Container> {showLoading ? Array.from({length: TOPIC_COUNT}).map((__, i) => ( <TrendingTopicRowSkeleton key={i} /> )) : trending?.trends.map((trend, index) => ( <TrendRow key={trend.link} trend={trend} rank={index + 1} onPress={() => { ax.metric('trendingTopic:click', { context: 'explore', recId: trending.recId, }) }} /> ))} </View> ) } export function TrendRow({ trend, rank, children, onPress, }: ViewStyleProp & { trend: AppBskyUnspeccedDefs.TrendView rank: number children?: React.ReactNode onPress?: () => void }) { const t = useTheme() const {t: l, i18n} = useLingui() const gutters = useGutters([0, 'base']) const actors = useModerateTrendingActors(trend.actors) const description = useMemo(() => { if (!trend.description) return const rt = new RichTextApi({text: trend.description}) rt.detectFacetsWithoutResolution() return rt }, [trend.description]) let imageUrl = null // TODO Image URL goes here when available. -dsb return ( <Link testID={trend.link} label={l`Browse topic ${trend.displayName}`} to={trend.link} onPress={onPress} style={[a.border_b, t.atoms.border_contrast_low]} PressableComponent={Pressable}> {({hovered, pressed}) => ( <> <SubtleHover hover={hovered || pressed} native /> <View style={[gutters, a.w_full, a.flex_row, a.py_md, a.gap_sm]}> <Text style={[ a.text_sm, a.font_medium, t.atoms.text_contrast_low, { fontVariant: ['tabular-nums'], }, ]}> <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'> {rank}. </Trans> </Text> <View style={[a.flex_1, a.gap_2xs]}> <Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]} numberOfLines={1}> {trend.displayName} </Text> {description ? ( <RichText value={description} disableLinks style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={2} /> ) : null} <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}> {actors.length > 0 ? ( <AvatarStack size={24} profiles={actors} /> ) : null} <Text style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}> <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'"> {formatCount(i18n, trend.postCount)}{' '} {plural(trend.postCount, {one: 'post', other: 'posts'})} </Trans> </Text> </View> </View> {imageUrl ? ( <Image source={{ uri: imageUrl, }} alt={trend.topic} style={[ a.flex_0, a.rounded_md, t.atoms.bg_contrast_25, { width: IMAGE_SIZE, height: IMAGE_SIZE, }, ]} contentFit="cover" accessible={true} accessibilityIgnoresInvertColors useAppleWebpCodec /> ) : null} </View> {children} </> )} </Link> ) } // Unused atm, but leaving here so we don't lose localization. -dsb export function useCategoryDisplayName( category: AppBskyUnspeccedDefs.TrendView['category'], ) { const {t: l} = useLingui() switch (category) { case 'sports': return l`Sports` case 'politics': return l`Politics` case 'video-games': return l`Video Games` case 'pop-culture': return l`Entertainment` case 'news': return l`News` case 'other': default: return null } } export function TrendingTopicRowSkeleton() { const t = useTheme() const gutters = useGutters([0, 'base']) return ( <View style={[ gutters, a.w_full, a.py_md, a.flex_row, a.gap_sm, a.border_b, t.atoms.border_contrast_low, ]}> <View style={[{width: 20}]}> <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} /> </View> <View style={[a.flex_1, a.gap_2xs]}> <LoadingPlaceholder width={90} height={17} /> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={70} height={16} /> <LoadingPlaceholder width={40} height={16} /> <LoadingPlaceholder width={60} height={16} /> </View> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={50} height={16} /> <LoadingPlaceholder width={70} height={16} /> <LoadingPlaceholder width={30} height={16} /> </View> <View style={[a.flex_1, a.gap_sm]}> <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={24} height={24} style={[a.rounded_full]} /> <LoadingPlaceholder width={60} height={16} /> </View> </View> </View> {/* TODO Image placeholder goes here when images are available. -dsb */} </View> ) } function useModerateTrendingActors( actors: AppBskyUnspeccedDefs.TrendView['actors'], ) { const moderationOpts = useModerationOpts() return useMemo(() => { if (!moderationOpts) return [] return actors .filter(actor => { const decision = moderateProfile(actor, moderationOpts) return !decision.ui('avatar').filter && !decision.ui('avatar').blur }) .slice(0, 3) }, [actors, moderationOpts]) } 
+#. placeholder {1}: import {useMemo} from 'react' import {Pressable, View} from 'react-native' import {LinearGradient} from 'expo-linear-gradient' import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api' import {plural} from '@lingui/core/macro' import {Trans, useLingui} from '@lingui/react/macro' import {useModerationOpts} from '#/state/preferences/moderation-opts' import {useTrendingSettings} from '#/state/preferences/trending' import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery' import {useTrendingConfig} from '#/state/service-config' import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder' import {formatCount} from '#/view/com/util/numeric/format' import { atoms as a, useGutters, useLayoutBreakpoints, useTheme, type ViewStyleProp, } from '#/alf' import {alpha} from '#/alf/utils' import {AvatarStack} from '#/components/AvatarStack' import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending' import {Link} from '#/components/Link' import {SubtleHover} from '#/components/SubtleHover' import {Text} from '#/components/Typography' import {useAnalytics} from '#/analytics' const TOPIC_COUNT = 3 export function FeedTrendingTopicsInterstitial() { const {enabled} = useTrendingConfig() const {trendingDisabled} = useTrendingSettings() const {rightNavVisible} = useLayoutBreakpoints() return enabled && !trendingDisabled && !rightNavVisible ? <Inner /> : null } function Inner() { const t = useTheme() const {t: l} = useLingui() const gutters = useGutters([0, 'base']) const ax = useAnalytics() const { data: trending, error, isLoading, isRefetching, } = useGetTrendsQuery({limit: TOPIC_COUNT}) const noTopics = !isLoading && !error && !trending?.trends?.length const shadowColor = alpha(t.palette.primary_100, 0.5) const gradient = { values: [ [0, t.atoms.bg.backgroundColor], [0.1, t.palette.primary_25], [0.9, t.palette.primary_25], [1, t.atoms.bg.backgroundColor], ], hover_value: t.palette.white, } if (error || noTopics) { return null } return ( <View style={[ gutters, a.pt_lg, a.pb_xl, a.gap_sm, a.border_t, t.atoms.border_contrast_low, ]}> <LinearGradient colors={gradient.values.map(c => c[1]) as [string, string, ...string[]]} locations={ gradient.values.map(c => c[0]) as [number, number, ...number[]] } style={[a.absolute, a.inset_0]} /> <View style={[ a.relative, a.z_20, a.px_xs, a.flex_row, a.align_center, a.justify_between, a.gap_sm, ]}> <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_xs]}> <TrendingIcon width={18} /> <Text style={[a.text_md, a.font_medium, a.leading_snug]} numberOfLines={1}> <Trans>Trending</Trans> </Text> </View> <Link label={l`See more trending topics`} to="/search"> <Text style={[ a.text_sm, a.font_medium, a.leading_snug, t.atoms.text_contrast_high, ]} numberOfLines={1}> <Trans>See more</Trans> </Text> </Link> </View> <View style={[ a.relative, a.z_10, a.border, a.rounded_xl, t.atoms.bg, { borderColor: t.palette.primary_100, boxShadow: `0 0 16px 0 ${shadowColor}`, elevation: 8, shadowColor: shadowColor, shadowOffset: {width: 0, height: 0}, shadowOpacity: 1, shadowRadius: 16, }, ]}> {isLoading || isRefetching ? Array.from({length: TOPIC_COUNT}).map((_, i) => ( <TrendingTopicRowSkeleton key={i} rank={i + 1} /> )) : trending?.trends?.map((trend, index) => ( <TrendRow key={trend.link} trend={trend} rank={index + 1} onPress={() => { ax.metric('trendingTopic:click', {context: 'interstitial'}) }} /> ))} </View> </View> ) } function TrendRow({ trend, rank, onPress, }: ViewStyleProp & { trend: AppBskyUnspeccedDefs.TrendView rank: number children?: React.ReactNode onPress?: () => void }) { const t = useTheme() const {t: l, i18n} = useLingui() const actors = useModerateTrendingActors(trend.actors) return ( <Link testID={trend.link} label={l`Browse topic ${trend.displayName}`} to={trend.link} onPress={onPress} style={[ rank < TOPIC_COUNT && a.border_b, { borderColor: t.palette.primary_100, }, ]} PressableComponent={Pressable}> {({hovered, pressed}) => ( <> <SubtleHover hover={hovered || pressed} native /> <View style={[ a.w_full, a.flex_row, a.flex_row, { gap: 6, padding: 14, paddingLeft: 16, }, ]}> <Text style={[ a.text_md, a.font_semi_bold, t.atoms.text_contrast_low, { fontVariant: ['tabular-nums'], }, ]}> <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'> {rank}. </Trans> </Text> <View style={[a.flex_1, a.gap_xs]}> <Text style={[a.text_md, a.font_medium]} numberOfLines={1}> {trend.displayName} </Text> <View style={[a.flex_row, a.gap_sm, a.align_center]}> {actors.length > 0 ? ( <AvatarStack size={24} profiles={actors} /> ) : null} <Text style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}> <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'"> {formatCount(i18n, trend.postCount)}{' '} {plural(trend.postCount, {one: 'post', other: 'posts'})} </Trans> </Text> </View> </View> </View> </> )} </Link> ) } function TrendingTopicRowSkeleton({rank}: {rank: number}) { const t = useTheme() return ( <View style={[ a.w_full, a.flex_row, a.px_lg, a.py_lg, a.flex_row, rank < TOPIC_COUNT && a.border_b, t.atoms.border_contrast_low, { gap: 6, }, ]}> <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} /> <View style={[a.flex_1, a.gap_xs]}> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={70} height={17} /> <LoadingPlaceholder width={40} height={17} /> <LoadingPlaceholder width={60} height={17} /> </View> <LoadingPlaceholder width={24} height={24} style={[a.rounded_full]} /> </View> </View> ) } function useModerateTrendingActors( actors: AppBskyUnspeccedDefs.TrendView['actors'], ) { const moderationOpts = useModerationOpts() return useMemo(() => { if (!moderationOpts) return [] return actors .filter(actor => { const decision = moderateProfile(actor, moderationOpts) return !decision.ui('avatar').filter && !decision.ui('avatar').blur }) .slice(0, 3) }, [actors, moderationOpts]) } 
+#: src/components/interstitials/FeedTrendingTopics.tsx:218
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
+msgid "{0} {1}"
+msgstr ""
 
 #. Pattern: {wordValue} in tags
 #. placeholder {0}: word.value
@@ -259,7 +272,7 @@ msgstr "{0} 和 {1} 已受邀加入对话"
 #: src/screens/PostThread/components/LikesStat.tsx:135
 #: src/screens/PostThread/components/LikesStat.tsx:191
 msgid "{0} and {1} like this"
-msgstr "{0} 和 {1} 喜欢了这条内容"
+msgstr ""
 
 #. Social proof on the likes stat; the bolded name is a person the viewer follows who liked the post, and the count is the remaining number of likes
 #. placeholder {0}: nameLink(names[0])
@@ -267,12 +280,12 @@ msgstr "{0} 和 {1} 喜欢了这条内容"
 #. placeholder {2}: formatPostStatCount(others)
 #: src/screens/PostThread/components/LikesStat.tsx:196
 msgid "{0} and {others, plural, one {{1} other} other {{2} others}} like this"
-msgstr "{0} 及{others, plural, other {其他 {2} 人}}喜欢了这条内容"
+msgstr ""
 
 #. placeholder {0}: names[0].displayName
 #: src/screens/PostThread/components/LikesStat.tsx:137
 msgid "{0} and {othersLabel} like this"
-msgstr "{0} 和 {othersLabel} 喜欢了这条内容"
+msgstr ""
 
 #. placeholder {0}: profile.followsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:49
@@ -330,7 +343,7 @@ msgstr "{0} 离开了群组"
 #: src/screens/PostThread/components/LikesStat.tsx:138
 #: src/screens/PostThread/components/LikesStat.tsx:206
 msgid "{0} likes this"
-msgstr "{0} 喜欢了这条内容"
+msgstr ""
 
 #. placeholder {0}: formatTime(currentTime)
 #. placeholder {1}: formatTime(duration)
@@ -395,13 +408,13 @@ msgstr "{0}、{1} 以及{memberCount, plural,one {其他 # 人}other {其他 # �
 #. placeholder {3}: formatPostStatCount(others)
 #: src/screens/PostThread/components/LikesStat.tsx:181
 msgid "{0}, {1}, and {others, plural, one {{2} other} other {{3} others}} like this"
-msgstr "{0}、{1} 和{others, plural, other {其他 {3} 人}}喜欢了这条内容"
+msgstr ""
 
 #. placeholder {0}: names[0].displayName
 #. placeholder {1}: names[1].displayName
 #: src/screens/PostThread/components/LikesStat.tsx:134
 msgid "{0}, {1}, and {othersLabel} like this"
-msgstr "{0}、{1} 和 {othersLabel} 喜欢了这条内容"
+msgstr ""
 
 #. placeholder {0}: feed.displayName
 #. placeholder {1}: sanitizeHandle(feed.creatorHandle, '@')
@@ -780,7 +793,7 @@ msgstr "{numMatches, plural, one {找到了 # 位联系人} other {找到了 # �
 #. placeholder {1}: formatPostStatCount(others)
 #: src/screens/PostThread/components/LikesStat.tsx:127
 msgid "{others, plural, one {{0} other} other {{1} others}}"
-msgstr "{others, plural, other {其他 {1} 人}}"
+msgstr ""
 
 #: src/components/NewskieDialog.tsx:115
 msgid "{profileName} joined Bluesky {timeAgoString} ago"
@@ -791,7 +804,9 @@ msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
 msgstr "{profileName}在 {timeAgoString}前使用新手包加入了 Bluesky"
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:101
+#. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
+#: src/components/interstitials/FeedTrendingTopics.tsx:203
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:123
 msgid "{rank}."
 msgstr "{rank}."
 
@@ -820,11 +835,6 @@ msgstr "{requestCount, plural, one {# 条邀请} other {# 条邀请}}"
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:56
 msgid "{requestCount}+ requests"
 msgstr "超过 {requestCount} 条邀请"
-
-#. trending topic time spent trending. should be as short as possible to fit in a pill
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:191
-msgid "{type}h ago"
-msgstr "{type} 小时前"
 
 #: src/components/verification/VerifierDialog.tsx:62
 msgid "{userName} is a trusted verifier"
@@ -989,8 +999,8 @@ msgstr "发生了网络错误，请检查你的网络连接"
 #: src/components/dms/dialogs/NewChatDialog.tsx:56
 #: src/components/dms/dialogs/NewChatDialog.tsx:94
 #: src/components/dms/LeaveConvoPrompt.tsx:38
-#: src/components/moderation/BlockDialog.tsx:287
-#: src/components/moderation/BlockDialog.tsx:313
+#: src/components/moderation/BlockDialog.tsx:284
+#: src/components/moderation/BlockDialog.tsx:310
 #: src/screens/Messages/JoinRequests.tsx:192
 #: src/screens/Messages/JoinRequests.tsx:225
 msgid "A network error occurred. Please check your internet connection."
@@ -1707,7 +1717,7 @@ msgstr "不在这些选项中的问题"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:92
 msgid "An issue occurred creating the group chat, please try again."
-msgstr "创建群组对话时出现问题，请重试。"
+msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 msgid "An issue occurred starting the chat, please try again."
@@ -1715,7 +1725,7 @@ msgstr "开始对话时出现问题，请重试。"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:50
 msgid "An issue occurred while trying to open the chat"
-msgstr "开启对话时出现问题"
+msgstr ""
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:52
@@ -2185,9 +2195,9 @@ msgstr "出生日期"
 msgid "Birthday"
 msgstr "出生日期"
 
-#: src/components/moderation/BlockDialog.tsx:186
-#: src/components/moderation/BlockDialog.tsx:192
-#: src/components/moderation/BlockDialog.tsx:211
+#: src/components/moderation/BlockDialog.tsx:187
+#: src/components/moderation/BlockDialog.tsx:193
+#: src/components/moderation/BlockDialog.tsx:213
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:227
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
 msgid "Block"
@@ -2305,6 +2315,7 @@ msgstr "标签搜索"
 
 #: src/components/dialogs/ServerInput.tsx:144
 #: src/components/dialogs/ServerInput.tsx:146
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Bluesky"
 msgstr "Bluesky"
 
@@ -2425,24 +2436,25 @@ msgstr "在探索页面浏览更多建议"
 msgid "Browse other feeds"
 msgstr "浏览其他动态源"
 
-#: src/components/TrendingTopics.tsx:179
+#: src/components/TrendingTopics.tsx:58
 msgid "Browse posts about {displayName}"
 msgstr "浏览有关 {displayName} 的帖文"
 
-#: src/components/TrendingTopics.tsx:187
+#: src/components/TrendingTopics.tsx:66
 msgid "Browse posts tagged with {displayName}"
 msgstr "浏览带有标签 {displayName} 的帖文"
 
-#: src/components/TrendingTopics.tsx:196
+#: src/components/TrendingTopics.tsx:75
 msgid "Browse starter pack {displayName}"
 msgstr "浏览新手包 {displayName}"
 
 #. placeholder {0}: trend.displayName
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:83
+#: src/components/interstitials/FeedTrendingTopics.tsx:170
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:104
 msgid "Browse topic {0}"
 msgstr "浏览 {0} 话题"
 
-#: src/components/TrendingTopics.tsx:233
+#: src/components/TrendingTopics.tsx:112
 msgid "Browse topic {displayName}"
 msgstr "浏览话题 {displayName}"
 
@@ -2462,7 +2474,7 @@ msgstr "返回到主页时间线的按钮"
 #: src/components/moderation/ReportDialog/index.tsx:847
 #: src/screens/Messages/JoinRequest.tsx:177
 #: src/screens/Search/components/StarterPackCard.tsx:107
-#: src/screens/Search/Explore.tsx:971
+#: src/screens/Search/Explore.tsx:960
 msgid "By {0}"
 msgstr "来自 {0}"
 
@@ -2473,9 +2485,9 @@ msgstr "来自 @{0}"
 
 #. The group chat creator, in the format 'By {displayName}'.
 #. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile(joinLinkPreview.owner, moderationOpts).ui( 'displayName', ), )
-#. placeholder {0}: sanitizeHandle(info.creatorHandle, '@')
+#. placeholder {0}: info.creatorHandle === TRENDING_HANDLE ? l`Bluesky` : sanitizeHandle(info.creatorHandle, '@')
 #: src/components/intents/GroupChatJoinDialog.tsx:379
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:451
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:502
 msgid "By <0>{0}</0>"
 msgstr "来自 <0>{0}</0>"
 
@@ -2534,7 +2546,7 @@ msgstr "需要相机权限"
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:175
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:181
 #: src/components/Menu/index.tsx:373
-#: src/components/moderation/BlockDialog.tsx:202
+#: src/components/moderation/BlockDialog.tsx:204
 #: src/components/PostControls/RepostButton.tsx:210
 #: src/components/Prompt.tsx:152
 #: src/components/Prompt.tsx:154
@@ -2738,8 +2750,8 @@ msgctxt "toast"
 msgid "Chat muted"
 msgstr "已隐藏对话"
 
-#: src/components/moderation/BlockDialog.tsx:289
-#: src/components/moderation/BlockDialog.tsx:317
+#: src/components/moderation/BlockDialog.tsx:286
+#: src/components/moderation/BlockDialog.tsx:314
 msgid "Chat not found."
 msgstr "无法找到对话。"
 
@@ -2749,7 +2761,7 @@ msgstr "无法找到对话。"
 msgid "Chat options"
 msgstr "对话选项"
 
-#: src/components/moderation/BlockDialog.tsx:293
+#: src/components/moderation/BlockDialog.tsx:290
 msgid "Chat owners cannot leave a group chat."
 msgstr "对话所有者无法离开对话。"
 
@@ -3047,7 +3059,7 @@ msgstr "关闭横幅"
 #: src/components/dialogs/LanguageSelectDialog.tsx:322
 #: src/components/dialogs/LanguageSelectDialog.tsx:354
 #: src/components/dialogs/NotificationSettingsDialog.tsx:102
-#: src/components/moderation/BlockDialog.tsx:199
+#: src/components/moderation/BlockDialog.tsx:201
 #: src/components/verification/VerificationsDialog.tsx:138
 #: src/components/verification/VerifierDialog.tsx:140
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:36
@@ -3264,10 +3276,6 @@ msgstr "已屏蔽该内容"
 #: src/screens/Moderation/index.tsx:362
 msgid "Content filters"
 msgstr "内容过滤器"
-
-#: src/screens/Search/modules/ExploreRecommendations.tsx:60
-msgid "Content from across the network we think you might like."
-msgstr "我们从网络的各个角落精选出了你可能会感兴趣的内容。"
 
 #: src/screens/Settings/LanguageSettings.tsx:177
 msgid "Content languages"
@@ -3540,11 +3548,11 @@ msgstr "无法关注所有匹配的联系人。{0}"
 msgid "Could not leave chat"
 msgstr "无法离开对话"
 
-#: src/components/moderation/BlockDialog.tsx:285
+#: src/components/moderation/BlockDialog.tsx:282
 msgid "Could not leave chat."
 msgstr "无法离开对话。"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:73
+#: src/screens/Profile/ProfileFeed/index.tsx:72
 msgid "Could not load feed"
 msgstr "无法加载动态源"
 
@@ -3562,7 +3570,7 @@ msgstr "无法加载资料"
 msgid "Could not mute chat"
 msgstr "无法隐藏对话"
 
-#: src/components/moderation/BlockDialog.tsx:311
+#: src/components/moderation/BlockDialog.tsx:308
 msgid "Could not remove member."
 msgstr "无法移除成员。"
 
@@ -3743,7 +3751,7 @@ msgstr "文化"
 msgid "Current beta features"
 msgstr "当前测试功能"
 
-#: src/components/moderation/BlockDialog.tsx:378
+#: src/components/moderation/BlockDialog.tsx:375
 msgid "Current chat"
 msgstr "当前对话"
 
@@ -4079,16 +4087,16 @@ msgstr "已断开与 Germ DM 的连接"
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "阻止平台向未登录用户显示我的账户"
 
+#: src/screens/Search/Explore.tsx:448
+msgid "Discover feeds"
+msgstr ""
+
 #: src/view/com/posts/FollowingEmptyState.tsx:64
 #: src/view/com/posts/FollowingEmptyState.tsx:69
 #: src/view/com/posts/FollowingEndOfFeed.tsx:65
 #: src/view/com/posts/FollowingEndOfFeed.tsx:70
 msgid "Discover new custom feeds"
 msgstr "探索新的自定义动态源"
-
-#: src/screens/Search/Explore.tsx:453
-msgid "Discover new feeds"
-msgstr "探索新的动态源"
 
 #: src/view/screens/Feeds.tsx:723
 msgid "Discover New Feeds"
@@ -4111,11 +4119,11 @@ msgstr "忽略错误"
 msgid "Dismiss getting started guide"
 msgstr "跳过入门指南"
 
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:44
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:42
 msgid "Dismiss interests"
 msgstr "忽略兴趣"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:82
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:74
 #: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:64
 msgid "Dismiss live event banner"
 msgstr "关闭直播活动横幅"
@@ -4365,8 +4373,8 @@ msgstr "编辑图片"
 msgid "Edit interaction settings"
 msgstr "编辑互动选项"
 
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:99
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:106
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:93
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:100
 msgid "Edit interests"
 msgstr "编辑兴趣"
 
@@ -4650,7 +4658,7 @@ msgstr "输入你的用户名和密码"
 msgid "Enters full screen"
 msgstr "进入全屏模式"
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:224
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:198
 msgid "Entertainment"
 msgstr "娱乐"
 
@@ -4979,16 +4987,16 @@ msgstr "无法离开群组对话"
 msgid "Failed to load conversations"
 msgstr "无法加载对话"
 
-#: src/screens/Search/Explore.tsx:530
-#: src/screens/Search/Explore.tsx:575
-#: src/screens/Search/Explore.tsx:621
+#: src/screens/Search/Explore.tsx:526
+#: src/screens/Search/Explore.tsx:571
+#: src/screens/Search/Explore.tsx:617
 msgid "Failed to load feeds"
 msgstr "无法加载动态源"
 
-#: src/screens/Search/Explore.tsx:489
-#: src/screens/Search/Explore.tsx:544
-#: src/screens/Search/Explore.tsx:589
-#: src/screens/Search/Explore.tsx:635
+#: src/screens/Search/Explore.tsx:485
+#: src/screens/Search/Explore.tsx:540
+#: src/screens/Search/Explore.tsx:585
+#: src/screens/Search/Explore.tsx:631
 msgid "Failed to load feeds preferences"
 msgstr "无法加载动态源偏好设置"
 
@@ -5012,14 +5020,14 @@ msgstr "无法加载首选项。"
 msgid "Failed to load profiles"
 msgstr "无法加载个人资料"
 
-#: src/screens/Search/Explore.tsx:482
-#: src/screens/Search/Explore.tsx:537
-#: src/screens/Search/Explore.tsx:582
-#: src/screens/Search/Explore.tsx:628
+#: src/screens/Search/Explore.tsx:478
+#: src/screens/Search/Explore.tsx:533
+#: src/screens/Search/Explore.tsx:578
+#: src/screens/Search/Explore.tsx:624
 msgid "Failed to load suggested feeds"
 msgstr "无法加载建议的动态源"
 
-#: src/screens/Search/Explore.tsx:391
+#: src/screens/Search/Explore.tsx:386
 msgid "Failed to load suggested follows"
 msgstr "无法加载建议关注"
 
@@ -5212,7 +5220,7 @@ msgstr "动态源创建者"
 msgid "Feed identifier"
 msgstr "动态源标识符"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:353
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:401
 msgid "Feed menu"
 msgstr "动态源菜单"
 
@@ -5259,10 +5267,6 @@ msgstr "动态源是一种自定义算法，用户仅需掌握一点编程知识
 msgctxt "toast"
 msgid "Feeds updated!"
 msgstr "已更新动态源！"
-
-#: src/screens/Search/modules/ExploreRecommendations.tsx:66
-msgid "Feeds we think you might like."
-msgstr "我们认为你可能会喜欢的动态源。"
 
 #: src/screens/Settings/components/OTAInfo.tsx:61
 msgid "Fetch update"
@@ -5764,7 +5768,7 @@ msgstr "当有人向你发送信息时收到通知。"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:367
 msgid "Get notifications when there's activity on posts you're subscribed to."
-msgstr "当你订阅的帖文有状态更新时收到通知。"
+msgstr ""
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:89
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:90
@@ -6148,7 +6152,7 @@ msgstr "由你的内容审核设置所隐藏。"
 msgid "Hidden list"
 msgstr "隐藏列表"
 
-#: src/components/interstitials/Trending.tsx:133
+#: src/components/interstitials/Trending.tsx:143
 #: src/components/interstitials/TrendingVideos.tsx:139
 #: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:141
@@ -6158,7 +6162,7 @@ msgstr "隐藏列表"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:23
 #: src/lib/moderation/useLabelBehaviorDescription.ts:28
 #: src/lib/moderation/useLabelBehaviorDescription.ts:33
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:128
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:137
 msgid "Hide"
 msgstr "隐藏"
 
@@ -6198,7 +6202,7 @@ msgstr "为所有人隐藏回复"
 msgid "Hide reply for me"
 msgstr "仅为我隐藏回复"
 
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:111
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:105
 msgid "Hide this card"
 msgstr "隐藏这张卡片"
 
@@ -6218,12 +6222,12 @@ msgstr "要隐藏这则回复吗？"
 msgid "Hide translation"
 msgstr "隐藏翻译"
 
-#: src/components/interstitials/Trending.tsx:115
+#: src/components/interstitials/Trending.tsx:125
 msgid "Hide trending topics"
 msgstr "隐藏热门话题"
 
-#: src/components/interstitials/Trending.tsx:131
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:126
+#: src/components/interstitials/Trending.tsx:141
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:135
 msgid "Hide trending topics?"
 msgstr "要隐藏热门话题吗？"
 
@@ -6320,10 +6324,6 @@ msgstr "托管服务提供商：{0}"
 #: src/screens/Login/LoginForm.tsx:657
 msgid "Hosting provider: Bluesky"
 msgstr "托管服务提供商：Bluesky"
-
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:179
-msgid "Hot"
-msgstr "热门"
 
 #: src/components/contacts/components/InviteInfo.tsx:54
 msgid "How it works:"
@@ -6993,8 +6993,8 @@ msgstr "离开"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:109
 #: src/components/dms/MessagesListBlockedFooter.tsx:116
-#: src/components/moderation/BlockDialog.tsx:384
-#: src/components/moderation/BlockDialog.tsx:391
+#: src/components/moderation/BlockDialog.tsx:381
+#: src/components/moderation/BlockDialog.tsx:388
 #: src/screens/Messages/components/ChatEnded.tsx:66
 #: src/screens/Messages/components/ChatLocked.tsx:112
 msgid "Leave chat"
@@ -7034,7 +7034,7 @@ msgstr "离开 Bluesky"
 msgid "Leaving this chat will lock it permanently and you won’t be able to rejoin."
 msgstr "离开此对话将触发永久锁定，你将无法重新加入。"
 
-#: src/components/moderation/BlockDialog.tsx:277
+#: src/components/moderation/BlockDialog.tsx:274
 msgid "Left group chat."
 msgstr "离开群组对话。"
 
@@ -7066,7 +7066,7 @@ msgctxt "Name of app icon variant"
 msgid "Light"
 msgstr "浅色"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:509
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:564
 msgid "Like"
 msgstr "喜欢"
 
@@ -7085,7 +7085,7 @@ msgstr "喜欢 10 则帖文"
 msgid "Like 10 posts to train the Discover feed"
 msgstr "喜欢 10 则帖文以训练“Discover”资讯源"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:497
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:552
 msgid "Like this feed"
 msgstr "喜欢此动态源"
 
@@ -7112,7 +7112,7 @@ msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr "{0, plural, one {# 位用户} other {# 位用户}}喜欢"
 
 #: src/components/LabelingServiceCard/index.tsx:96
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:486
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:540
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:169
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:183
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
@@ -7258,12 +7258,12 @@ msgstr "直播"
 msgid "Live event happening now: {0}"
 msgstr "正在进行的直播活动：{0}"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:43
 #: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:33
 msgid "Live event hidden"
 msgstr "已隐藏直播活动"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:53
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:45
 #: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:35
 msgid "Live event unhidden"
 msgstr "已取消隐藏直播活动"
@@ -7279,12 +7279,12 @@ msgstr "直播功能正在测试阶段"
 msgid "Live link"
 msgstr "直播链接"
 
-#: src/screens/Search/Explore.tsx:90
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr "加载更多"
 
-#: src/screens/Search/Explore.tsx:519
-#: src/screens/Search/Explore.tsx:610
+#: src/screens/Search/Explore.tsx:515
+#: src/screens/Search/Explore.tsx:606
 msgid "Load more suggested feeds"
 msgstr "加载更多建议的动态源"
 
@@ -7292,7 +7292,7 @@ msgstr "加载更多建议的动态源"
 msgid "Load new notifications"
 msgstr "加载更多通知"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:206
+#: src/screens/Profile/ProfileFeed/index.tsx:208
 #: src/screens/Profile/Sections/Feed.tsx:117
 #: src/screens/ProfileList/FeedSection.tsx:113
 #: src/view/com/feeds/FeedPage.tsx:168
@@ -7475,7 +7475,7 @@ msgstr "媒体文件已存储到其他设备"
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr "可能会令部分受众不安或造成不适的媒体内容。"
 
-#: src/components/moderation/BlockDialog.tsx:303
+#: src/components/moderation/BlockDialog.tsx:300
 msgid "Member removed from group chat."
 msgstr "已从群组对话中移除成员。"
 
@@ -7867,7 +7867,6 @@ msgstr "需要举报侵害版权、法律要求及合规性问题吗？"
 msgid "Nevermind, create a handle for me"
 msgstr "不用了，请帮我创建一个账户代码"
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:184
 #: src/view/com/profile/ProfileMenu.tsx:398
 msgid "New"
 msgstr "最新"
@@ -7982,7 +7981,7 @@ msgstr "新信息"
 msgid "New password"
 msgstr "新密码"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:217
+#: src/screens/Profile/ProfileFeed/index.tsx:218
 #: src/screens/ProfileList/index.tsx:237
 #: src/screens/ProfileList/index.tsx:280
 #: src/view/screens/Feeds.tsx:545
@@ -8025,7 +8024,7 @@ msgid "Newest replies first"
 msgstr "最新回复优先"
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:226
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:200
 msgid "News"
 msgstr "新闻"
 
@@ -8223,7 +8222,7 @@ msgid "No results"
 msgstr "没有结果"
 
 #. placeholder {0}: interestsDisplayNames[selectedInterest]
-#: src/screens/Search/Explore.tsx:828
+#: src/screens/Search/Explore.tsx:817
 msgid "No results for \"{0}\"."
 msgstr "找不到符合“{0}”的结果。"
 
@@ -8248,7 +8247,7 @@ msgstr "找不到符合 “<0>{query}</0>” 的结果。"
 msgid "No results found for your query with advanced search filters applied."
 msgstr "应用高级搜索筛选后，未找到匹配的结果。"
 
-#: src/screens/Search/Explore.tsx:832
+#: src/screens/Search/Explore.tsx:821
 msgid "No results."
 msgstr "没有结果。"
 
@@ -8396,7 +8395,7 @@ msgstr "糟糕！"
 #. Confirm button text.
 #: src/components/contacts/screens/GetContacts.tsx:317
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:227
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:49
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:44
 #: src/screens/Settings/AppIconSettings/index.tsx:46
 #: src/screens/Settings/AppIconSettings/index.tsx:232
 msgid "OK"
@@ -8579,12 +8578,13 @@ msgstr "开启抽屉菜单"
 msgid "Open emoji picker"
 msgstr "开启表情符号选择器"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:192
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:214
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:228
 msgid "Open feed info screen"
 msgstr "开启动态源详情页面"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:293
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:298
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:338
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:343
 msgid "Open feed options menu"
 msgstr "开启动态源选项菜单"
 
@@ -9023,8 +9023,8 @@ msgid "Pictures meant for adults."
 msgstr "不适合未成年人的图片。"
 
 #: src/components/FeedCard.tsx:364
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:514
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:520
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:569
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:578
 #: src/screens/SavedFeeds.tsx:559
 msgid "Pin feed"
 msgstr "固定动态源"
@@ -9034,7 +9034,7 @@ msgstr "固定动态源"
 msgid "Pin to home"
 msgstr "固定到主页"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:337
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:385
 msgid "Pin to Home"
 msgstr "固定到主页"
 
@@ -9048,8 +9048,8 @@ msgid "Pinned"
 msgstr "已固定"
 
 #. placeholder {0}: info.displayName
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:159
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:173
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:166
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:180
 msgid "Pinned {0} to Home"
 msgstr "固定 {0} 到主页"
 
@@ -9261,7 +9261,7 @@ msgid "Please write your message below:"
 msgstr "请在以下栏位填写你的信息："
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:220
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
 msgid "Politics"
 msgstr "政治"
 
@@ -9717,10 +9717,6 @@ msgstr "最近的搜索记录"
 msgid "Recently used"
 msgstr "最近使用"
 
-#: src/screens/Search/modules/ExploreRecommendations.tsx:55
-msgid "Recommended"
-msgstr "推荐"
-
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Reconnect"
 msgstr "重新连接"
@@ -9841,8 +9837,8 @@ msgstr "移除筛选器"
 msgid "Remove from chat"
 msgstr "从对话中移除"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:320
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:325
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:368
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:373
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:176
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:179
 #: src/screens/SavedFeeds.tsx:549
@@ -9876,8 +9872,8 @@ msgstr "删除图片"
 msgid "Remove live status"
 msgstr "移除直播状态"
 
-#: src/components/moderation/BlockDialog.tsx:365
-#: src/components/moderation/BlockDialog.tsx:372
+#: src/components/moderation/BlockDialog.tsx:362
+#: src/components/moderation/BlockDialog.tsx:369
 msgid "Remove member"
 msgstr "移除成员"
 
@@ -9948,7 +9944,7 @@ msgstr "已从帖文收藏里删除"
 msgid "Removed from starter pack"
 msgstr "已从你的新手包中删除"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:121
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:128
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:77
 #: src/view/com/posts/FeedShutdownMsg.tsx:45
 msgid "Removed from your feeds"
@@ -10094,8 +10090,8 @@ msgstr "举报对话"
 msgid "Report dialog"
 msgstr "举报页面"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:536
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:542
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:596
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:602
 msgid "Report feed"
 msgstr "举报动态源"
 
@@ -10483,8 +10479,8 @@ msgstr "保存二维码"
 msgid "Save these options for next time"
 msgstr "保存这些选项以供下次使用"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:320
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:326
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:368
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:374
 msgid "Save to my feeds"
 msgstr "保存到我的动态源"
 
@@ -10505,7 +10501,7 @@ msgstr "已保存动态源"
 msgid "Saved Posts"
 msgstr "帖文收藏"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:131
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:138
 #: src/screens/ProfileList/components/Header.tsx:88
 msgid "Saved to your feeds"
 msgstr "已保存到你的动态源"
@@ -10608,11 +10604,11 @@ msgstr "搜索 {q}"
 msgid "Search for feeds that you want to suggest to others."
 msgstr "通过搜索来添加你想分享的动态源。"
 
-#: src/screens/Search/Explore.tsx:378
+#: src/screens/Search/Explore.tsx:373
 msgid "Search for more accounts"
 msgstr "搜索更多账户"
 
-#: src/screens/Search/Explore.tsx:456
+#: src/screens/Search/Explore.tsx:452
 msgid "Search for more feeds"
 msgstr "搜索更多动态源"
 
@@ -10705,12 +10701,17 @@ msgstr "查看 Bluesky 的工作职缺"
 
 #: src/components/FeedInterstitials.tsx:491
 #: src/components/FeedInterstitials.tsx:549
+#: src/components/interstitials/FeedTrendingTopics.tsx:112
 msgid "See more"
 msgstr "浏览更多"
 
 #: src/components/FeedInterstitials.tsx:472
 msgid "See more suggested profiles"
 msgstr "查看更多建议的个人资料"
+
+#: src/components/interstitials/FeedTrendingTopics.tsx:103
+msgid "See more trending topics"
+msgstr ""
 
 #: src/view/com/profile/ProfileFollows.tsx:190
 #: src/view/com/profile/ProfileFollows.tsx:191
@@ -10964,7 +10965,7 @@ msgstr "发送验证电子邮件"
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:105
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:111
 msgid "Send via direct message"
-msgstr "通过私人信息发送"
+msgstr ""
 
 #. placeholder {0}: i18n.date(new Date(message.sentAt), { timeStyle: 'short', })
 #: src/components/dms/MessageContextMenu.tsx:175
@@ -11165,7 +11166,7 @@ msgstr "分享资料"
 msgid "Share QR code"
 msgstr "分享二维码"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:469
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:522
 msgid "Share this feed"
 msgstr "分享此动态源"
 
@@ -11272,7 +11273,7 @@ msgstr "显示可供选择的用户列表"
 
 #: src/components/Post/ShowMoreTextButton.tsx:50
 msgid "Show more"
-msgstr ""
+msgstr "显示更多"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:594
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
@@ -11607,7 +11608,7 @@ msgstr "发生错误，请稍后重试。"
 msgid "Something went wrong. Please try again."
 msgstr "发生错误，请重试。"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:532
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:592
 msgid "Something wrong? Let us know."
 msgstr "看起来有点问题？请告诉我们。"
 
@@ -11646,7 +11647,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr "垃圾信息或其他虚假欺骗行为"
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:218
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:192
 msgid "Sports"
 msgstr "运动"
 
@@ -11711,7 +11712,7 @@ msgstr "你创建的新手包"
 msgid "Starter pack is invalid"
 msgstr "无效的新手包"
 
-#: src/screens/Search/Explore.tsx:665
+#: src/screens/Search/Explore.tsx:661
 #: src/view/screens/Profile.tsx:240
 msgid "Starter Packs"
 msgstr "新手包"
@@ -11850,7 +11851,7 @@ msgstr "成功认证"
 msgid "Suggested"
 msgstr "建议"
 
-#: src/screens/Search/Explore.tsx:375
+#: src/screens/Search/Explore.tsx:369
 msgid "Suggested accounts"
 msgstr "建议账户"
 
@@ -12262,7 +12263,7 @@ msgstr "无法加载 GIFs，检查你的网络链接并再试一次。"
 msgid "There was a problem with your internet connection, please try again"
 msgstr "你的网络连接发生了一些问题，请重试"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:177
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:184
 #: src/screens/ProfileList/components/Header.tsx:91
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:79
 #: src/screens/SavedFeeds.tsx:99
@@ -12270,7 +12271,7 @@ msgstr "你的网络连接发生了一些问题，请重试"
 msgid "There was an issue contacting the server"
 msgstr "连接服务器时出现问题"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:416
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:467
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:101
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "连接至服务器时出现问题。请检查网络连接并重试。"
@@ -12279,8 +12280,8 @@ msgstr "连接至服务器时出现问题。请检查网络连接并重试。"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "刷新通知时出现问题，点击重试。"
 
-#: src/screens/Search/Explore.tsx:1027
-#: src/view/com/posts/PostFeed.tsx:778
+#: src/screens/Search/Explore.tsx:1015
+#: src/view/com/posts/PostFeed.tsx:808
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "刷新帖文时出现问题，点击重试。"
 
@@ -12305,7 +12306,7 @@ msgstr "获取你的服务信息时出现问题"
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
 msgstr "更新动态源时出现问题。请检查网络连接并重试。"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:136
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:143
 #: src/view/com/posts/FeedShutdownMsg.tsx:53
 #: src/view/com/posts/FeedShutdownMsg.tsx:74
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
@@ -12380,7 +12381,7 @@ msgstr "这些偏好设置只适用于“Following”动态源。"
 msgid "These URLs"
 msgstr "这些链接"
 
-#: src/components/moderation/BlockDialog.tsx:356
+#: src/components/moderation/BlockDialog.tsx:353
 msgid "They own this chat"
 msgstr "他们是此对话的所有者"
 
@@ -12533,7 +12534,7 @@ msgid "This feed is empty! You may need to follow more users or tune your langua
 msgstr "此动态源为空。可能你需要先关注更多用户，或检查你的语言设置。"
 
 #: src/components/StarterPack/Main/PostsList.tsx:41
-#: src/screens/Profile/ProfileFeed/index.tsx:171
+#: src/screens/Profile/ProfileFeed/index.tsx:170
 #: src/screens/ProfileList/FeedSection.tsx:78
 msgid "This feed is empty."
 msgstr "此动态源为空。"
@@ -12889,7 +12890,9 @@ msgstr "你的设备不支持将原文翻译成相同语言。"
 msgid "Tree view"
 msgstr "树形视图"
 
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:48
+#: src/components/interstitials/FeedTrendingTopics.tsx:100
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:51
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:54
 msgid "Trending"
 msgstr "热门"
 
@@ -12898,7 +12901,7 @@ msgstr "热门"
 msgid "Trending GIFs"
 msgstr "热门 GIFs"
 
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:55
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:61
 msgid "Trending options"
 msgstr "热门选项"
 
@@ -13023,9 +13026,9 @@ msgstr "动态源信息不可用"
 #: src/components/dms/MessageItem.tsx:746
 #: src/components/dms/MessagesListBlockedFooter.tsx:97
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
-#: src/components/moderation/BlockDialog.tsx:186
-#: src/components/moderation/BlockDialog.tsx:190
-#: src/components/moderation/BlockDialog.tsx:211
+#: src/components/moderation/BlockDialog.tsx:187
+#: src/components/moderation/BlockDialog.tsx:191
+#: src/components/moderation/BlockDialog.tsx:213
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:227
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:365
@@ -13065,8 +13068,8 @@ msgstr "要取消屏蔽账户吗？"
 msgid "Unblock list"
 msgstr "取消屏蔽列表"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:58
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:64
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:56
 #: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:40
 #: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:46
 #: src/screens/Profile/components/GermButton.tsx:186
@@ -13128,7 +13131,7 @@ msgstr "未标记的成人内容"
 msgid "Unlabeled, abusive, or non-consensual adult content"
 msgstr "未标记、具骚扰性，或非自愿的成人内容"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:509
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:564
 msgid "Unlike"
 msgstr "取消喜欢"
 
@@ -13198,14 +13201,14 @@ msgid "Unpin"
 msgstr "取消固定"
 
 #: src/components/FeedCard.tsx:355
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:514
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:520
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:569
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:576
 #: src/screens/SavedFeeds.tsx:467
 msgid "Unpin feed"
 msgstr "取消固定动态源"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:312
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:314
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:360
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:362
 msgid "Unpin from home"
 msgstr "从主页取消固定"
 
@@ -13220,7 +13223,7 @@ msgid "Unpin moderation list"
 msgstr "取消固定限制列表"
 
 #. placeholder {0}: info.displayName
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:162
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:169
 msgid "Unpinned {0} from Home"
 msgstr "从主页取消固定 {0}"
 
@@ -13629,7 +13632,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr "来自 {0} 的视频。点击以播放或暂停视频"
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:222
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
 msgid "Video Games"
 msgstr "电子游戏"
 
@@ -13687,7 +13690,7 @@ msgstr "查看 {0} 的头像"
 #. placeholder {0}: authors[0].profile.displayName || authors[0].profile.handle
 #. placeholder {0}: info.creatorHandle
 #. placeholder {0}: profile.handle
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:454
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:505
 #: src/screens/Search/components/SearchProfileCard.tsx:37
 #: src/screens/VideoFeed/index.tsx:863
 #: src/view/com/notifications/NotificationFeedItem.tsx:619
@@ -13798,7 +13801,7 @@ msgstr "查看由 @{0} 提供的标记服务。"
 msgid "View this user's verifications"
 msgstr "查看此用户的认证"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:482
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:536
 msgid "View users who like this feed"
 msgstr "查看此动态源被谁喜欢"
 
@@ -14358,7 +14361,7 @@ msgstr "你已获得认证。一旦你更改名称，你将会失去认证状态
 msgid "You are verified. You will lose your verification status if you change your handle. <0>Learn more.</0>"
 msgstr "你已获得认证。一旦你更改账户代码，你将会失去认证状态。<0>了解详情。</0>"
 
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:46
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:43
 msgid "You can adjust your interests at any time from \"Content and media\" settings."
 msgstr "你可以随时在设置“内容与媒体”中调整你的兴趣。"
 
@@ -14435,9 +14438,9 @@ msgstr "你仍然可以查看对话记录，但无法发送新信息。"
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "你最多可以选择 {MAX_GALLERY_IMAGES, plural,other {# 张图片}}。"
 
-#: src/components/interstitials/Trending.tsx:132
+#: src/components/interstitials/Trending.tsx:142
 #: src/components/interstitials/TrendingVideos.tsx:138
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:127
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:136
 msgid "You can update this later from your settings."
 msgstr "你可以随时在设置里重新更改。"
 
@@ -14610,7 +14613,7 @@ msgstr "你最多只能添加 {STARTER_PACK_MAX_SIZE, plural,other {{STARTER_PAC
 msgid "You may only add up to 3 feeds"
 msgstr "你最多只能添加 3 个动态源"
 
-#: src/components/moderation/BlockDialog.tsx:321
+#: src/components/moderation/BlockDialog.tsx:318
 msgid "You must be a chat owner to remove a member."
 msgstr "你必须是对话所有人才能移除成员。"
 
@@ -14635,7 +14638,7 @@ msgstr "你必须授予权限以访问媒体内容。"
 msgid "You need to verify your email address before you can enable email 2FA."
 msgstr "你需要验证你的电子邮箱地址才能启用电子邮箱两步验证。"
 
-#: src/components/moderation/BlockDialog.tsx:352
+#: src/components/moderation/BlockDialog.tsx:349
 msgid "You own this chat"
 msgstr "你是此对话的所有者"
 
@@ -14927,7 +14930,7 @@ msgid "Your hosting provider is detected automatically from the username you ent
 msgstr "你的托管服务提供商将根据你输入的用户名自动检测。"
 
 #: src/Navigation.tsx:466
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:68
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:62
 #: src/screens/Settings/ContentAndMediaSettings.tsx:94
 #: src/screens/Settings/ContentAndMediaSettings.tsx:97
 #: src/screens/Settings/InterestsSettings.tsx:49
@@ -14939,7 +14942,7 @@ msgctxt "toast"
 msgid "Your interests have been updated!"
 msgstr "已更新你的兴趣！"
 
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:95
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:89
 msgid "Your interests help us find what you like!"
 msgstr "选择兴趣主题可以帮助我们推荐更多你喜欢的内容！"
 

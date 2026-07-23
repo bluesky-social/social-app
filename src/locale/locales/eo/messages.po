@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-20 22:14\n"
+"PO-Revision-Date: 2026-07-23 17:09\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -196,7 +196,10 @@ msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {sekvata} other {sekvataj}}"
 
 #. placeholder {0}: profile.postsCount || 0
+#. placeholder {0}: trend.postCount
+#: src/components/interstitials/FeedTrendingTopics.tsx:220
 #: src/screens/Profile/Header/Metrics.tsx:58
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:150
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {afiŝo} other {afiŝoj}}"
 
@@ -227,6 +230,16 @@ msgstr "{0} · {1}"
 #: src/components/moderation/ContentHider.tsx:98
 msgid "{0} (Account)"
 msgstr "{0} (Konto)"
+
+#. '{postCount} {posts}', e.g., '1.2K posts'
+#. '{postCount} {posts}', e.g., '1.2K posts'
+#. placeholder {0}: formatCount(i18n, trend.postCount)
+#. placeholder {1}: import {useMemo} from 'react' import {Pressable, View} from 'react-native' import {Image} from 'expo-image' import { type AppBskyUnspeccedDefs, moderateProfile, RichText as RichTextApi, } from '@atproto/api' import {plural} from '@lingui/core/macro' import {Trans, useLingui} from '@lingui/react/macro' import {useModerationOpts} from '#/state/preferences/moderation-opts' import {useTrendingSettings} from '#/state/preferences/trending' import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery' import {useTrendingConfig} from '#/state/service-config' import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder' import {formatCount} from '#/view/com/util/numeric/format' import {atoms as a, useGutters, useTheme, type ViewStyleProp} from '#/alf' import {AvatarStack} from '#/components/AvatarStack' import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending' import {Link} from '#/components/Link' import {RichText} from '#/components/RichText' import {SubtleHover} from '#/components/SubtleHover' import {Text} from '#/components/Typography' import {useAnalytics} from '#/analytics' import * as ModuleHeader from '../components/ModuleHeader' const TOPIC_COUNT = 5 const IMAGE_SIZE = 56 export function ExploreTrendingTopics() { const {enabled} = useTrendingConfig() const {trendingDisabled} = useTrendingSettings() return enabled && !trendingDisabled ? <Inner /> : null } function Inner() { const ax = useAnalytics() const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery() const noTopics = !isLoading && !error && !trending?.trends?.length const showLoading = isLoading || isRefetching if (!showLoading && (error || !trending?.trends || noTopics)) return null return ( <View style={[a.pb_md]}> <ModuleHeader.Container bottomBorder> <ModuleHeader.Icon icon={TrendingIcon} size="md" /> <ModuleHeader.TitleText> <Trans>Trending</Trans> </ModuleHeader.TitleText> </ModuleHeader.Container> {showLoading ? Array.from({length: TOPIC_COUNT}).map((__, i) => ( <TrendingTopicRowSkeleton key={i} /> )) : trending?.trends.map((trend, index) => ( <TrendRow key={trend.link} trend={trend} rank={index + 1} onPress={() => { ax.metric('trendingTopic:click', { context: 'explore', recId: trending.recId, }) }} /> ))} </View> ) } export function TrendRow({ trend, rank, children, onPress, }: ViewStyleProp & { trend: AppBskyUnspeccedDefs.TrendView rank: number children?: React.ReactNode onPress?: () => void }) { const t = useTheme() const {t: l, i18n} = useLingui() const gutters = useGutters([0, 'base']) const actors = useModerateTrendingActors(trend.actors) const description = useMemo(() => { if (!trend.description) return const rt = new RichTextApi({text: trend.description}) rt.detectFacetsWithoutResolution() return rt }, [trend.description]) let imageUrl = null // TODO Image URL goes here when available. -dsb return ( <Link testID={trend.link} label={l`Browse topic ${trend.displayName}`} to={trend.link} onPress={onPress} style={[a.border_b, t.atoms.border_contrast_low]} PressableComponent={Pressable}> {({hovered, pressed}) => ( <> <SubtleHover hover={hovered || pressed} native /> <View style={[gutters, a.w_full, a.flex_row, a.py_md, a.gap_sm]}> <Text style={[ a.text_sm, a.font_medium, t.atoms.text_contrast_low, { fontVariant: ['tabular-nums'], }, ]}> <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'> {rank}. </Trans> </Text> <View style={[a.flex_1, a.gap_2xs]}> <Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]} numberOfLines={1}> {trend.displayName} </Text> {description ? ( <RichText value={description} disableLinks style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={2} /> ) : null} <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}> {actors.length > 0 ? ( <AvatarStack size={24} profiles={actors} /> ) : null} <Text style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}> <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'"> {formatCount(i18n, trend.postCount)}{' '} {plural(trend.postCount, {one: 'post', other: 'posts'})} </Trans> </Text> </View> </View> {imageUrl ? ( <Image source={{ uri: imageUrl, }} alt={trend.topic} style={[ a.flex_0, a.rounded_md, t.atoms.bg_contrast_25, { width: IMAGE_SIZE, height: IMAGE_SIZE, }, ]} contentFit="cover" accessible={true} accessibilityIgnoresInvertColors useAppleWebpCodec /> ) : null} </View> {children} </> )} </Link> ) } // Unused atm, but leaving here so we don't lose localization. -dsb export function useCategoryDisplayName( category: AppBskyUnspeccedDefs.TrendView['category'], ) { const {t: l} = useLingui() switch (category) { case 'sports': return l`Sports` case 'politics': return l`Politics` case 'video-games': return l`Video Games` case 'pop-culture': return l`Entertainment` case 'news': return l`News` case 'other': default: return null } } export function TrendingTopicRowSkeleton() { const t = useTheme() const gutters = useGutters([0, 'base']) return ( <View style={[ gutters, a.w_full, a.py_md, a.flex_row, a.gap_sm, a.border_b, t.atoms.border_contrast_low, ]}> <View style={[{width: 20}]}> <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} /> </View> <View style={[a.flex_1, a.gap_2xs]}> <LoadingPlaceholder width={90} height={17} /> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={70} height={16} /> <LoadingPlaceholder width={40} height={16} /> <LoadingPlaceholder width={60} height={16} /> </View> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={50} height={16} /> <LoadingPlaceholder width={70} height={16} /> <LoadingPlaceholder width={30} height={16} /> </View> <View style={[a.flex_1, a.gap_sm]}> <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={24} height={24} style={[a.rounded_full]} /> <LoadingPlaceholder width={60} height={16} /> </View> </View> </View> {/* TODO Image placeholder goes here when images are available. -dsb */} </View> ) } function useModerateTrendingActors( actors: AppBskyUnspeccedDefs.TrendView['actors'], ) { const moderationOpts = useModerationOpts() return useMemo(() => { if (!moderationOpts) return [] return actors .filter(actor => { const decision = moderateProfile(actor, moderationOpts) return !decision.ui('avatar').filter && !decision.ui('avatar').blur }) .slice(0, 3) }, [actors, moderationOpts]) } 
+#. placeholder {1}: import {useMemo} from 'react' import {Pressable, View} from 'react-native' import {LinearGradient} from 'expo-linear-gradient' import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api' import {plural} from '@lingui/core/macro' import {Trans, useLingui} from '@lingui/react/macro' import {useModerationOpts} from '#/state/preferences/moderation-opts' import {useTrendingSettings} from '#/state/preferences/trending' import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery' import {useTrendingConfig} from '#/state/service-config' import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder' import {formatCount} from '#/view/com/util/numeric/format' import { atoms as a, useGutters, useLayoutBreakpoints, useTheme, type ViewStyleProp, } from '#/alf' import {alpha} from '#/alf/utils' import {AvatarStack} from '#/components/AvatarStack' import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending' import {Link} from '#/components/Link' import {SubtleHover} from '#/components/SubtleHover' import {Text} from '#/components/Typography' import {useAnalytics} from '#/analytics' const TOPIC_COUNT = 3 export function FeedTrendingTopicsInterstitial() { const {enabled} = useTrendingConfig() const {trendingDisabled} = useTrendingSettings() const {rightNavVisible} = useLayoutBreakpoints() return enabled && !trendingDisabled && !rightNavVisible ? <Inner /> : null } function Inner() { const t = useTheme() const {t: l} = useLingui() const gutters = useGutters([0, 'base']) const ax = useAnalytics() const { data: trending, error, isLoading, isRefetching, } = useGetTrendsQuery({limit: TOPIC_COUNT}) const noTopics = !isLoading && !error && !trending?.trends?.length const shadowColor = alpha(t.palette.primary_100, 0.5) const gradient = { values: [ [0, t.atoms.bg.backgroundColor], [0.1, t.palette.primary_25], [0.9, t.palette.primary_25], [1, t.atoms.bg.backgroundColor], ], hover_value: t.palette.white, } if (error || noTopics) { return null } return ( <View style={[ gutters, a.pt_lg, a.pb_xl, a.gap_sm, a.border_t, t.atoms.border_contrast_low, ]}> <LinearGradient colors={gradient.values.map(c => c[1]) as [string, string, ...string[]]} locations={ gradient.values.map(c => c[0]) as [number, number, ...number[]] } style={[a.absolute, a.inset_0]} /> <View style={[ a.relative, a.z_20, a.px_xs, a.flex_row, a.align_center, a.justify_between, a.gap_sm, ]}> <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_xs]}> <TrendingIcon width={18} /> <Text style={[a.text_md, a.font_medium, a.leading_snug]} numberOfLines={1}> <Trans>Trending</Trans> </Text> </View> <Link label={l`See more trending topics`} to="/search"> <Text style={[ a.text_sm, a.font_medium, a.leading_snug, t.atoms.text_contrast_high, ]} numberOfLines={1}> <Trans>See more</Trans> </Text> </Link> </View> <View style={[ a.relative, a.z_10, a.border, a.rounded_xl, t.atoms.bg, { borderColor: t.palette.primary_100, boxShadow: `0 0 16px 0 ${shadowColor}`, elevation: 8, shadowColor: shadowColor, shadowOffset: {width: 0, height: 0}, shadowOpacity: 1, shadowRadius: 16, }, ]}> {isLoading || isRefetching ? Array.from({length: TOPIC_COUNT}).map((_, i) => ( <TrendingTopicRowSkeleton key={i} rank={i + 1} /> )) : trending?.trends?.map((trend, index) => ( <TrendRow key={trend.link} trend={trend} rank={index + 1} onPress={() => { ax.metric('trendingTopic:click', {context: 'interstitial'}) }} /> ))} </View> </View> ) } function TrendRow({ trend, rank, onPress, }: ViewStyleProp & { trend: AppBskyUnspeccedDefs.TrendView rank: number children?: React.ReactNode onPress?: () => void }) { const t = useTheme() const {t: l, i18n} = useLingui() const actors = useModerateTrendingActors(trend.actors) return ( <Link testID={trend.link} label={l`Browse topic ${trend.displayName}`} to={trend.link} onPress={onPress} style={[ rank < TOPIC_COUNT && a.border_b, { borderColor: t.palette.primary_100, }, ]} PressableComponent={Pressable}> {({hovered, pressed}) => ( <> <SubtleHover hover={hovered || pressed} native /> <View style={[ a.w_full, a.flex_row, a.flex_row, { gap: 6, padding: 14, paddingLeft: 16, }, ]}> <Text style={[ a.text_md, a.font_semi_bold, t.atoms.text_contrast_low, { fontVariant: ['tabular-nums'], }, ]}> <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'> {rank}. </Trans> </Text> <View style={[a.flex_1, a.gap_xs]}> <Text style={[a.text_md, a.font_medium]} numberOfLines={1}> {trend.displayName} </Text> <View style={[a.flex_row, a.gap_sm, a.align_center]}> {actors.length > 0 ? ( <AvatarStack size={24} profiles={actors} /> ) : null} <Text style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}> <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'"> {formatCount(i18n, trend.postCount)}{' '} {plural(trend.postCount, {one: 'post', other: 'posts'})} </Trans> </Text> </View> </View> </View> </> )} </Link> ) } function TrendingTopicRowSkeleton({rank}: {rank: number}) { const t = useTheme() return ( <View style={[ a.w_full, a.flex_row, a.px_lg, a.py_lg, a.flex_row, rank < TOPIC_COUNT && a.border_b, t.atoms.border_contrast_low, { gap: 6, }, ]}> <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} /> <View style={[a.flex_1, a.gap_xs]}> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={70} height={17} /> <LoadingPlaceholder width={40} height={17} /> <LoadingPlaceholder width={60} height={17} /> </View> <LoadingPlaceholder width={24} height={24} style={[a.rounded_full]} /> </View> </View> ) } function useModerateTrendingActors( actors: AppBskyUnspeccedDefs.TrendView['actors'], ) { const moderationOpts = useModerationOpts() return useMemo(() => { if (!moderationOpts) return [] return actors .filter(actor => { const decision = moderateProfile(actor, moderationOpts) return !decision.ui('avatar').filter && !decision.ui('avatar').blur }) .slice(0, 3) }, [actors, moderationOpts]) } 
+#: src/components/interstitials/FeedTrendingTopics.tsx:218
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
+msgid "{0} {1}"
+msgstr ""
 
 #. Pattern: {wordValue} in tags
 #. placeholder {0}: word.value
@@ -791,13 +804,15 @@ msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
 msgstr "{profileName} aliĝis al Bluesky uzante startpakon antaŭ {timeAgoString}"
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:101
+#. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
+#: src/components/interstitials/FeedTrendingTopics.tsx:203
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:123
 msgid "{rank}."
 msgstr "{rank}."
 
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:106
 msgid "{remaining, plural, one {# character remaining} other {# characters remaining}}"
-msgstr ""
+msgstr "{remaining, plural, one {# signo restanta} other {# signoj restantaj}}"
 
 #: src/components/dms/MessageItem.tsx:810
 msgid "{replierDisplayName} replied"
@@ -820,11 +835,6 @@ msgstr "{requestCount, plural, one {# peto} other {# petoj}}"
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:56
 msgid "{requestCount}+ requests"
 msgstr "{requestCount}+ petoj"
-
-#. trending topic time spent trending. should be as short as possible to fit in a pill
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:191
-msgid "{type}h ago"
-msgstr "antaŭ {type}h"
 
 #: src/components/verification/VerifierDialog.tsx:62
 msgid "{userName} is a trusted verifier"
@@ -905,7 +915,7 @@ msgstr "<0>{0}</0> {1, plural, one {konservo} other {konservoj}}"
 #. placeholder {0}: formatPostStatCount(likeCount)
 #: src/screens/PostThread/components/LikesStat.tsx:90
 msgid "<0>{0}</0> {likeCount, plural, one {like} other {likes}}"
-msgstr ""
+msgstr "<0>{0}</0> {likeCount, plural, one {ŝato} other {ŝatoj}}"
 
 #. placeholder {0}: getName(items[0])
 #. placeholder {1}: getName(items[1] /* [0] is self, skip it */)
@@ -989,8 +999,8 @@ msgstr "Reta eraro okazis. Bonvolu kontroli vian interretan konekton"
 #: src/components/dms/dialogs/NewChatDialog.tsx:56
 #: src/components/dms/dialogs/NewChatDialog.tsx:94
 #: src/components/dms/LeaveConvoPrompt.tsx:38
-#: src/components/moderation/BlockDialog.tsx:287
-#: src/components/moderation/BlockDialog.tsx:313
+#: src/components/moderation/BlockDialog.tsx:284
+#: src/components/moderation/BlockDialog.tsx:310
 #: src/screens/Messages/JoinRequests.tsx:192
 #: src/screens/Messages/JoinRequests.tsx:225
 msgid "A network error occurred. Please check your internet connection."
@@ -1707,7 +1717,7 @@ msgstr "Problemo neinkludita inter ĉi tiuj opcioj"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:92
 msgid "An issue occurred creating the group chat, please try again."
-msgstr "Problemo okazis kreante la grupan babilejon, bonvolu reprovi."
+msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 msgid "An issue occurred starting the chat, please try again."
@@ -1715,7 +1725,7 @@ msgstr "Problemo okazis komencante la babilejon, bonvolu reprovi."
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:50
 msgid "An issue occurred while trying to open the chat"
-msgstr "Problemo okazis dum provo malfermi la babilejon"
+msgstr ""
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:52
@@ -2185,9 +2195,9 @@ msgstr "Naskiĝdato"
 msgid "Birthday"
 msgstr "Naskiĝtago"
 
-#: src/components/moderation/BlockDialog.tsx:186
-#: src/components/moderation/BlockDialog.tsx:192
-#: src/components/moderation/BlockDialog.tsx:211
+#: src/components/moderation/BlockDialog.tsx:187
+#: src/components/moderation/BlockDialog.tsx:193
+#: src/components/moderation/BlockDialog.tsx:213
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:227
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
 msgid "Block"
@@ -2305,6 +2315,7 @@ msgstr "eĥoŝanĝo ĉiuĵaŭde"
 
 #: src/components/dialogs/ServerInput.tsx:144
 #: src/components/dialogs/ServerInput.tsx:146
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:514
 msgid "Bluesky"
 msgstr "Bluesky"
 
@@ -2348,7 +2359,7 @@ msgstr "Bluesky estas pli feliĉiga kun amikoj! Ĉu vi volas inviti iujn el viaj
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:105
 msgid "Bluesky needs camera access to scan QR codes from other profiles."
-msgstr ""
+msgstr "Bluesky bezonas aliron al la kamerao por skani la QR-kodojn de aliaj profiloj."
 
 #: src/screens/Takendown.tsx:213
 msgid "Bluesky Social Terms of Service"
@@ -2425,24 +2436,25 @@ msgstr "Foliumi pli da proponoj sur la paĝo Esplori"
 msgid "Browse other feeds"
 msgstr "Foliumi aliajn fluojn"
 
-#: src/components/TrendingTopics.tsx:179
+#: src/components/TrendingTopics.tsx:58
 msgid "Browse posts about {displayName}"
 msgstr "Foliumi afiŝojn pri {displayName}"
 
-#: src/components/TrendingTopics.tsx:187
+#: src/components/TrendingTopics.tsx:66
 msgid "Browse posts tagged with {displayName}"
 msgstr "Foliumi afiŝojn etikeditajn per {displayName}"
 
-#: src/components/TrendingTopics.tsx:196
+#: src/components/TrendingTopics.tsx:75
 msgid "Browse starter pack {displayName}"
 msgstr "Foliumi startpakon {displayName}"
 
 #. placeholder {0}: trend.displayName
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:83
+#: src/components/interstitials/FeedTrendingTopics.tsx:170
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:104
 msgid "Browse topic {0}"
 msgstr "Foliumi temon {0}"
 
-#: src/components/TrendingTopics.tsx:233
+#: src/components/TrendingTopics.tsx:112
 msgid "Browse topic {displayName}"
 msgstr "Foliumi temon {displayName}"
 
@@ -2462,7 +2474,7 @@ msgstr "Butono por reveni al la hejma novaĵfluo"
 #: src/components/moderation/ReportDialog/index.tsx:847
 #: src/screens/Messages/JoinRequest.tsx:177
 #: src/screens/Search/components/StarterPackCard.tsx:107
-#: src/screens/Search/Explore.tsx:971
+#: src/screens/Search/Explore.tsx:960
 msgid "By {0}"
 msgstr "De {0}"
 
@@ -2473,9 +2485,9 @@ msgstr "de @{0}"
 
 #. The group chat creator, in the format 'By {displayName}'.
 #. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile(joinLinkPreview.owner, moderationOpts).ui( 'displayName', ), )
-#. placeholder {0}: sanitizeHandle(info.creatorHandle, '@')
+#. placeholder {0}: info.creatorHandle === TRENDING_HANDLE ? l`Bluesky` : sanitizeHandle(info.creatorHandle, '@')
 #: src/components/intents/GroupChatJoinDialog.tsx:379
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:451
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:502
 msgid "By <0>{0}</0>"
 msgstr "De <0>{0}</0>"
 
@@ -2510,11 +2522,11 @@ msgstr "De vi"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:69
 msgid "Camera"
-msgstr "Fotilo"
+msgstr "Kamerao"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:96
 msgid "Camera access needed"
-msgstr ""
+msgstr "Aliro al kamerao estas bezonata"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:213
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:133
@@ -2534,7 +2546,7 @@ msgstr ""
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:175
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:181
 #: src/components/Menu/index.tsx:373
-#: src/components/moderation/BlockDialog.tsx:202
+#: src/components/moderation/BlockDialog.tsx:204
 #: src/components/PostControls/RepostButton.tsx:210
 #: src/components/Prompt.tsx:152
 #: src/components/Prompt.tsx:154
@@ -2738,8 +2750,8 @@ msgctxt "toast"
 msgid "Chat muted"
 msgstr "Babilejo silentigita"
 
-#: src/components/moderation/BlockDialog.tsx:289
-#: src/components/moderation/BlockDialog.tsx:317
+#: src/components/moderation/BlockDialog.tsx:286
+#: src/components/moderation/BlockDialog.tsx:314
 msgid "Chat not found."
 msgstr "Babilejo netrovita."
 
@@ -2749,7 +2761,7 @@ msgstr "Babilejo netrovita."
 msgid "Chat options"
 msgstr "Babilejaj opcioj"
 
-#: src/components/moderation/BlockDialog.tsx:293
+#: src/components/moderation/BlockDialog.tsx:290
 msgid "Chat owners cannot leave a group chat."
 msgstr ""
 
@@ -3047,7 +3059,7 @@ msgstr "Fermi rubandon"
 #: src/components/dialogs/LanguageSelectDialog.tsx:322
 #: src/components/dialogs/LanguageSelectDialog.tsx:354
 #: src/components/dialogs/NotificationSettingsDialog.tsx:102
-#: src/components/moderation/BlockDialog.tsx:199
+#: src/components/moderation/BlockDialog.tsx:201
 #: src/components/verification/VerificationsDialog.tsx:138
 #: src/components/verification/VerifierDialog.tsx:140
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:36
@@ -3264,10 +3276,6 @@ msgstr "Enhavo blokita"
 #: src/screens/Moderation/index.tsx:362
 msgid "Content filters"
 msgstr "Filtriloj por la enhavo"
-
-#: src/screens/Search/modules/ExploreRecommendations.tsx:60
-msgid "Content from across the network we think you might like."
-msgstr "Enhavo el la tuta reto, kiu eble plaĉos al vi."
 
 #: src/screens/Settings/LanguageSettings.tsx:177
 msgid "Content languages"
@@ -3540,11 +3548,11 @@ msgstr "Ne eblis eksekvi ĉiujn trovitajn kontaktojn. {0}"
 msgid "Could not leave chat"
 msgstr "Ne eblis foriri el babilejo"
 
-#: src/components/moderation/BlockDialog.tsx:285
+#: src/components/moderation/BlockDialog.tsx:282
 msgid "Could not leave chat."
 msgstr "Ne eblis foriri el la babilejo."
 
-#: src/screens/Profile/ProfileFeed/index.tsx:73
+#: src/screens/Profile/ProfileFeed/index.tsx:72
 msgid "Could not load feed"
 msgstr "Ne eblis ŝargi fluon"
 
@@ -3562,7 +3570,7 @@ msgstr "Ne eblis ŝargi profilon"
 msgid "Could not mute chat"
 msgstr "Ne eblis silentigi babilejon"
 
-#: src/components/moderation/BlockDialog.tsx:311
+#: src/components/moderation/BlockDialog.tsx:308
 msgid "Could not remove member."
 msgstr "Ne eblis forigi anon."
 
@@ -3743,7 +3751,7 @@ msgstr "Kulturo"
 msgid "Current beta features"
 msgstr ""
 
-#: src/components/moderation/BlockDialog.tsx:378
+#: src/components/moderation/BlockDialog.tsx:375
 msgid "Current chat"
 msgstr "Nuna babilejo"
 
@@ -4079,16 +4087,16 @@ msgstr "Malkonekti Germ DM"
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "Malinstigi apojn por ke ili ne montru mian konton al elsalutintaj uzantoj"
 
+#: src/screens/Search/Explore.tsx:448
+msgid "Discover feeds"
+msgstr ""
+
 #: src/view/com/posts/FollowingEmptyState.tsx:64
 #: src/view/com/posts/FollowingEmptyState.tsx:69
 #: src/view/com/posts/FollowingEndOfFeed.tsx:65
 #: src/view/com/posts/FollowingEndOfFeed.tsx:70
 msgid "Discover new custom feeds"
 msgstr "Malkovri novajn proprajn fluojn"
-
-#: src/screens/Search/Explore.tsx:453
-msgid "Discover new feeds"
-msgstr "Malkovri novajn fluojn"
 
 #: src/view/screens/Feeds.tsx:723
 msgid "Discover New Feeds"
@@ -4111,11 +4119,11 @@ msgstr "Ignori eraron"
 msgid "Dismiss getting started guide"
 msgstr "Ignori enkondukon"
 
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:44
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:42
 msgid "Dismiss interests"
 msgstr "Forĵeti interesojn"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:82
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:74
 #: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:64
 msgid "Dismiss live event banner"
 msgstr ""
@@ -4365,8 +4373,8 @@ msgstr "Redakti bildon"
 msgid "Edit interaction settings"
 msgstr "Redakti interagajn agordojn"
 
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:99
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:106
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:93
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:100
 msgid "Edit interests"
 msgstr "Redakti interesojn"
 
@@ -4650,7 +4658,7 @@ msgstr "Entajpu vian uzantnomon kaj pasvorton"
 msgid "Enters full screen"
 msgstr "Ŝaltas plenekranon"
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:224
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:198
 msgid "Entertainment"
 msgstr "Amuzo"
 
@@ -4979,16 +4987,16 @@ msgstr "Malsukcesis foriri el grupa babilejo"
 msgid "Failed to load conversations"
 msgstr "Malsukcesis ŝargi konversaciojn"
 
-#: src/screens/Search/Explore.tsx:530
-#: src/screens/Search/Explore.tsx:575
-#: src/screens/Search/Explore.tsx:621
+#: src/screens/Search/Explore.tsx:526
+#: src/screens/Search/Explore.tsx:571
+#: src/screens/Search/Explore.tsx:617
 msgid "Failed to load feeds"
 msgstr "Fiaskis ŝargi fluojn"
 
-#: src/screens/Search/Explore.tsx:489
-#: src/screens/Search/Explore.tsx:544
-#: src/screens/Search/Explore.tsx:589
-#: src/screens/Search/Explore.tsx:635
+#: src/screens/Search/Explore.tsx:485
+#: src/screens/Search/Explore.tsx:540
+#: src/screens/Search/Explore.tsx:585
+#: src/screens/Search/Explore.tsx:631
 msgid "Failed to load feeds preferences"
 msgstr "Malsukcesis ŝargi preferojn de fluoj"
 
@@ -5012,14 +5020,14 @@ msgstr "Malsukcesis ŝargi preferon."
 msgid "Failed to load profiles"
 msgstr "Malsukcesis ŝargi profilojn"
 
-#: src/screens/Search/Explore.tsx:482
-#: src/screens/Search/Explore.tsx:537
-#: src/screens/Search/Explore.tsx:582
-#: src/screens/Search/Explore.tsx:628
+#: src/screens/Search/Explore.tsx:478
+#: src/screens/Search/Explore.tsx:533
+#: src/screens/Search/Explore.tsx:578
+#: src/screens/Search/Explore.tsx:624
 msgid "Failed to load suggested feeds"
 msgstr "Malsukcesis ŝargi propontiajn fluojn"
 
-#: src/screens/Search/Explore.tsx:391
+#: src/screens/Search/Explore.tsx:386
 msgid "Failed to load suggested follows"
 msgstr "Malsukcesis ŝargi proponitajn kontojn"
 
@@ -5212,7 +5220,7 @@ msgstr "Kreinto de fluo"
 msgid "Feed identifier"
 msgstr "Identigilo de fluo"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:353
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:401
 msgid "Feed menu"
 msgstr "Menuo de la fluo"
 
@@ -5259,10 +5267,6 @@ msgstr "Fluoj estas propraj algoritmoj, kiujn uzantoj konstruas kun malmulto da 
 msgctxt "toast"
 msgid "Feeds updated!"
 msgstr "Fluoj ĝisdatigitaj!"
-
-#: src/screens/Search/modules/ExploreRecommendations.tsx:66
-msgid "Feeds we think you might like."
-msgstr "Fluoj, kiuj eble plaĉos al vi."
 
 #: src/screens/Settings/components/OTAInfo.tsx:61
 msgid "Fetch update"
@@ -6148,7 +6152,7 @@ msgstr "Kaŝita laŭ viaj agordoj pri kontrolado."
 msgid "Hidden list"
 msgstr "Kaŝita listo"
 
-#: src/components/interstitials/Trending.tsx:133
+#: src/components/interstitials/Trending.tsx:143
 #: src/components/interstitials/TrendingVideos.tsx:139
 #: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:141
@@ -6158,7 +6162,7 @@ msgstr "Kaŝita listo"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:23
 #: src/lib/moderation/useLabelBehaviorDescription.ts:28
 #: src/lib/moderation/useLabelBehaviorDescription.ts:33
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:128
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:137
 msgid "Hide"
 msgstr "Kaŝi"
 
@@ -6198,7 +6202,7 @@ msgstr "Kaŝi respondon por ĉiuj"
 msgid "Hide reply for me"
 msgstr "Kaŝi respondon por mi"
 
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:111
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:105
 msgid "Hide this card"
 msgstr "Kaŝi ĉi tiun karton"
 
@@ -6218,12 +6222,12 @@ msgstr "Ĉu kaŝi ĉi tiun respondon?"
 msgid "Hide translation"
 msgstr "Kaŝi tradukon"
 
-#: src/components/interstitials/Trending.tsx:115
+#: src/components/interstitials/Trending.tsx:125
 msgid "Hide trending topics"
 msgstr "Kaŝi furorajn temojn"
 
-#: src/components/interstitials/Trending.tsx:131
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:126
+#: src/components/interstitials/Trending.tsx:141
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:135
 msgid "Hide trending topics?"
 msgstr "Ĉu kaŝi furorajn temojn?"
 
@@ -6320,10 +6324,6 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:657
 msgid "Hosting provider: Bluesky"
 msgstr ""
-
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:179
-msgid "Hot"
-msgstr "Populara"
 
 #: src/components/contacts/components/InviteInfo.tsx:54
 msgid "How it works:"
@@ -6993,8 +6993,8 @@ msgstr "Foriri"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:109
 #: src/components/dms/MessagesListBlockedFooter.tsx:116
-#: src/components/moderation/BlockDialog.tsx:384
-#: src/components/moderation/BlockDialog.tsx:391
+#: src/components/moderation/BlockDialog.tsx:381
+#: src/components/moderation/BlockDialog.tsx:388
 #: src/screens/Messages/components/ChatEnded.tsx:66
 #: src/screens/Messages/components/ChatLocked.tsx:112
 msgid "Leave chat"
@@ -7034,7 +7034,7 @@ msgstr "Elirante el Bluesky"
 msgid "Leaving this chat will lock it permanently and you won’t be able to rejoin."
 msgstr ""
 
-#: src/components/moderation/BlockDialog.tsx:277
+#: src/components/moderation/BlockDialog.tsx:274
 msgid "Left group chat."
 msgstr "Foriris el grupa babilejo."
 
@@ -7066,7 +7066,7 @@ msgctxt "Name of app icon variant"
 msgid "Light"
 msgstr "Hela"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:509
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:564
 msgid "Like"
 msgstr "Ŝati"
 
@@ -7085,7 +7085,7 @@ msgstr "Ŝatu 10 afiŝojn"
 msgid "Like 10 posts to train the Discover feed"
 msgstr "Ŝatu 10 afiŝojn por trejni la fluon Discover"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:497
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:552
 msgid "Like this feed"
 msgstr "Ŝati ĉi tiun fluon"
 
@@ -7112,7 +7112,7 @@ msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr "Ŝatata de {0, plural, one {# uzanto} other {# uzantoj}}"
 
 #: src/components/LabelingServiceCard/index.tsx:96
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:486
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:540
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:169
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:183
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
@@ -7258,12 +7258,12 @@ msgstr "TUJELSENDAS"
 msgid "Live event happening now: {0}"
 msgstr "Tujelsenda evento okazas nun: {0}"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:51
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:43
 #: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:33
 msgid "Live event hidden"
 msgstr "Tujelsenda evento kaŝita"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:53
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:45
 #: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:35
 msgid "Live event unhidden"
 msgstr "Tujelsenda evento malkaŝita"
@@ -7279,12 +7279,12 @@ msgstr ""
 msgid "Live link"
 msgstr "Tujelsenda ligilo"
 
-#: src/screens/Search/Explore.tsx:90
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr "Ŝargi pli"
 
-#: src/screens/Search/Explore.tsx:519
-#: src/screens/Search/Explore.tsx:610
+#: src/screens/Search/Explore.tsx:515
+#: src/screens/Search/Explore.tsx:606
 msgid "Load more suggested feeds"
 msgstr "Ŝargi pliajn proponitajn fluojn"
 
@@ -7292,7 +7292,7 @@ msgstr "Ŝargi pliajn proponitajn fluojn"
 msgid "Load new notifications"
 msgstr "Ŝargi novajn sciigojn"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:206
+#: src/screens/Profile/ProfileFeed/index.tsx:208
 #: src/screens/Profile/Sections/Feed.tsx:117
 #: src/screens/ProfileList/FeedSection.tsx:113
 #: src/view/com/feeds/FeedPage.tsx:168
@@ -7475,7 +7475,7 @@ msgstr "Aŭdvidaĵo konservita en alia aparato"
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr "Aŭdvidaĵoj, kiuj povas esti maltrankviligaj aŭ nekonvenaj por kelkaj spektantoj."
 
-#: src/components/moderation/BlockDialog.tsx:303
+#: src/components/moderation/BlockDialog.tsx:300
 msgid "Member removed from group chat."
 msgstr "Ano forigita el la grupa babilejo."
 
@@ -7867,7 +7867,6 @@ msgstr "Ĉu vi bezonas raporti kopirajtan malobservon, jurpeton aŭ problemon pr
 msgid "Nevermind, create a handle for me"
 msgstr "Ne gravas, krei identigilon por mi"
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:184
 #: src/view/com/profile/ProfileMenu.tsx:398
 msgid "New"
 msgstr "Nova"
@@ -7982,7 +7981,7 @@ msgstr ""
 msgid "New password"
 msgstr "Nova pasvorto"
 
-#: src/screens/Profile/ProfileFeed/index.tsx:217
+#: src/screens/Profile/ProfileFeed/index.tsx:218
 #: src/screens/ProfileList/index.tsx:237
 #: src/screens/ProfileList/index.tsx:280
 #: src/view/screens/Feeds.tsx:545
@@ -8025,7 +8024,7 @@ msgid "Newest replies first"
 msgstr "La plej novaj respondoj unue"
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:226
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:200
 msgid "News"
 msgstr "Novaĵoj"
 
@@ -8223,7 +8222,7 @@ msgid "No results"
 msgstr "Sen rezultoj"
 
 #. placeholder {0}: interestsDisplayNames[selectedInterest]
-#: src/screens/Search/Explore.tsx:828
+#: src/screens/Search/Explore.tsx:817
 msgid "No results for \"{0}\"."
 msgstr "Sen rezultoj por \"{0}\"."
 
@@ -8248,7 +8247,7 @@ msgstr "Neniu rezulto trovita por \"<0>{query}</0>\"."
 msgid "No results found for your query with advanced search filters applied."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:832
+#: src/screens/Search/Explore.tsx:821
 msgid "No results."
 msgstr "Sen rezultoj."
 
@@ -8396,7 +8395,7 @@ msgstr "Ho ve!"
 #. Confirm button text.
 #: src/components/contacts/screens/GetContacts.tsx:317
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:227
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:49
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:44
 #: src/screens/Settings/AppIconSettings/index.tsx:46
 #: src/screens/Settings/AppIconSettings/index.tsx:232
 msgid "OK"
@@ -8550,7 +8549,7 @@ msgstr "Malfermi la profilbildan kreilon"
 
 #: src/view/com/feeds/ComposerPrompt.tsx:201
 msgid "Open camera"
-msgstr "Malfermi fotilon"
+msgstr "Malfermi kameraon"
 
 #: src/components/dms/ChatInvite/Root.tsx:104
 #: src/components/intents/GroupChatJoinDialog.tsx:453
@@ -8579,12 +8578,13 @@ msgstr "Malfermi flankmenuon"
 msgid "Open emoji picker"
 msgstr "Malfermi emoĝi-elektilon"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:192
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:214
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:228
 msgid "Open feed info screen"
 msgstr "Malfermi la informekranon de la fluo"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:293
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:298
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:338
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:343
 msgid "Open feed options menu"
 msgstr "Malfermi la opciomenuon de la fluo"
 
@@ -8701,7 +8701,7 @@ msgstr "Malfermas dialogujon de alternativa teksto"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:70
 msgid "Opens camera on device"
-msgstr "Malfermas fotilon de aparato"
+msgstr "Malfermas kameraon de aparato"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:44
 msgid "Opens captions and alt text dialog"
@@ -8717,7 +8717,7 @@ msgstr "Malfermas redaktilon"
 
 #: src/view/com/feeds/ComposerPrompt.tsx:202
 msgid "Opens device camera"
-msgstr "Malfermi fotilon de aparato"
+msgstr "Malfermi kameraon de aparato"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post.
 #: src/view/com/composer/SelectMediaButton.tsx:517
@@ -9023,8 +9023,8 @@ msgid "Pictures meant for adults."
 msgstr "Bildoj destinitaj por adoltoj."
 
 #: src/components/FeedCard.tsx:364
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:514
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:520
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:569
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:578
 #: src/screens/SavedFeeds.tsx:559
 msgid "Pin feed"
 msgstr "Alpingli fluon"
@@ -9034,7 +9034,7 @@ msgstr "Alpingli fluon"
 msgid "Pin to home"
 msgstr "Alpingli al hejmo"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:337
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:385
 msgid "Pin to Home"
 msgstr "Alpingli al hejmo"
 
@@ -9048,8 +9048,8 @@ msgid "Pinned"
 msgstr "Alpinglita"
 
 #. placeholder {0}: info.displayName
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:159
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:173
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:166
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:180
 msgid "Pinned {0} to Home"
 msgstr "{0} alpinglita al hejmo"
 
@@ -9261,7 +9261,7 @@ msgid "Please write your message below:"
 msgstr "Bonvolu tajpi vian mesaĝon sube:"
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:220
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
 msgid "Politics"
 msgstr "Politiko"
 
@@ -9717,10 +9717,6 @@ msgstr "Lastaj serĉoj"
 msgid "Recently used"
 msgstr "Laste uzitaj"
 
-#: src/screens/Search/modules/ExploreRecommendations.tsx:55
-msgid "Recommended"
-msgstr "Rekomenditaj"
-
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Reconnect"
 msgstr "Rekonekti"
@@ -9841,8 +9837,8 @@ msgstr ""
 msgid "Remove from chat"
 msgstr "Forigi el babilejo"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:320
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:325
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:368
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:373
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:176
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:179
 #: src/screens/SavedFeeds.tsx:549
@@ -9876,8 +9872,8 @@ msgstr "Forigi bildon"
 msgid "Remove live status"
 msgstr "Forigi tujelsendan staton"
 
-#: src/components/moderation/BlockDialog.tsx:365
-#: src/components/moderation/BlockDialog.tsx:372
+#: src/components/moderation/BlockDialog.tsx:362
+#: src/components/moderation/BlockDialog.tsx:369
 msgid "Remove member"
 msgstr ""
 
@@ -9948,7 +9944,7 @@ msgstr "Forigita el konservitaj afiŝoj"
 msgid "Removed from starter pack"
 msgstr "Forigita el la startpako"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:121
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:128
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:77
 #: src/view/com/posts/FeedShutdownMsg.tsx:45
 msgid "Removed from your feeds"
@@ -10094,8 +10090,8 @@ msgstr "Raporti konversacion"
 msgid "Report dialog"
 msgstr "Raporta dialogujo"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:536
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:542
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:596
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:602
 msgid "Report feed"
 msgstr "Raporti fluon"
 
@@ -10483,8 +10479,8 @@ msgstr "Konservi QR-kodon"
 msgid "Save these options for next time"
 msgstr "Konservi tiujn opciojn por venonta fojo"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:320
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:326
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:368
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:374
 msgid "Save to my feeds"
 msgstr "Konservi al miaj fluoj"
 
@@ -10505,7 +10501,7 @@ msgstr "Konservitaj fluoj"
 msgid "Saved Posts"
 msgstr "Konservitaj afiŝoj"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:131
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:138
 #: src/screens/ProfileList/components/Header.tsx:88
 msgid "Saved to your feeds"
 msgstr "Konservita al viaj fluoj"
@@ -10608,11 +10604,11 @@ msgstr ""
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Serĉu fluojn, kiujn vi volas proponi al aliuloj."
 
-#: src/screens/Search/Explore.tsx:378
+#: src/screens/Search/Explore.tsx:373
 msgid "Search for more accounts"
 msgstr "Serĉi pliajn kontojn"
 
-#: src/screens/Search/Explore.tsx:456
+#: src/screens/Search/Explore.tsx:452
 msgid "Search for more feeds"
 msgstr "Serĉi pliajn fluojn"
 
@@ -10705,12 +10701,17 @@ msgstr "Vidu laborpostenojn ĉe Bluesky"
 
 #: src/components/FeedInterstitials.tsx:491
 #: src/components/FeedInterstitials.tsx:549
+#: src/components/interstitials/FeedTrendingTopics.tsx:112
 msgid "See more"
 msgstr "Vidi pli"
 
 #: src/components/FeedInterstitials.tsx:472
 msgid "See more suggested profiles"
 msgstr "Vidi pli da proponataj profiloj"
+
+#: src/components/interstitials/FeedTrendingTopics.tsx:103
+msgid "See more trending topics"
+msgstr ""
 
 #: src/view/com/profile/ProfileFollows.tsx:190
 #: src/view/com/profile/ProfileFollows.tsx:191
@@ -10964,7 +10965,7 @@ msgstr "Sendi konfirman retmesaĝon"
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:105
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:111
 msgid "Send via direct message"
-msgstr "Sendi per rekta mesaĝo"
+msgstr ""
 
 #. placeholder {0}: i18n.date(new Date(message.sentAt), { timeStyle: 'short', })
 #: src/components/dms/MessageContextMenu.tsx:175
@@ -11165,7 +11166,7 @@ msgstr ""
 msgid "Share QR code"
 msgstr "Konigi QR-kodon"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:469
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:522
 msgid "Share this feed"
 msgstr "Konigi ĉi tiun fluon"
 
@@ -11607,7 +11608,7 @@ msgstr "Io misfunkciis. Bonvolu reprovi post momento."
 msgid "Something went wrong. Please try again."
 msgstr "Io misfunkciis. Bonvolu reprovi."
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:532
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:592
 msgid "Something wrong? Let us know."
 msgstr "Ĉu io misfunkciis? Sciigu nin."
 
@@ -11646,7 +11647,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr "Trudmesaĝoj aŭ alia neaŭtentika konduto aŭ trompo"
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:218
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:192
 msgid "Sports"
 msgstr "Sporto"
 
@@ -11711,7 +11712,7 @@ msgstr "Startpako de vi"
 msgid "Starter pack is invalid"
 msgstr "Startpako nevalidas"
 
-#: src/screens/Search/Explore.tsx:665
+#: src/screens/Search/Explore.tsx:661
 #: src/view/screens/Profile.tsx:240
 msgid "Starter Packs"
 msgstr "Startpakoj"
@@ -11850,7 +11851,7 @@ msgstr "Sukcese konfirmita"
 msgid "Suggested"
 msgstr "Proponita"
 
-#: src/screens/Search/Explore.tsx:375
+#: src/screens/Search/Explore.tsx:369
 msgid "Suggested accounts"
 msgstr "Proponitaj kontoj"
 
@@ -12262,7 +12263,7 @@ msgstr "Estis problemo ŝargante GIF-ojn. Kontrolu vian konekton kaj reprovu."
 msgid "There was a problem with your internet connection, please try again"
 msgstr "Estis problemo kun via interreta konekto, bonvolu reprovi denove"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:177
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:184
 #: src/screens/ProfileList/components/Header.tsx:91
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:79
 #: src/screens/SavedFeeds.tsx:99
@@ -12270,7 +12271,7 @@ msgstr "Estis problemo kun via interreta konekto, bonvolu reprovi denove"
 msgid "There was an issue contacting the server"
 msgstr "Estis problemo konektante servilon"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:416
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:467
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:101
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr "Estis problemo konektante servilon, bonvolu kontroli vian interretan konekton kaj reprovu."
@@ -12279,8 +12280,8 @@ msgstr "Estis problemo konektante servilon, bonvolu kontroli vian interretan kon
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Estis problemo ŝargante sciigojn. Tuŝetu ĉi tie por reprovi."
 
-#: src/screens/Search/Explore.tsx:1027
-#: src/view/com/posts/PostFeed.tsx:778
+#: src/screens/Search/Explore.tsx:1015
+#: src/view/com/posts/PostFeed.tsx:808
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Estis problemo ŝargante afiŝojn. Tuŝeti ĉi tie por reprovi."
 
@@ -12305,7 +12306,7 @@ msgstr "Problemo okazis dum ŝarĝi infomojn de via servo"
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
 msgstr "Estis problemo forigante ĉi tiun fluon. Bonvolu kontroli vian interretan konekton kaj reprovu."
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:136
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:143
 #: src/view/com/posts/FeedShutdownMsg.tsx:53
 #: src/view/com/posts/FeedShutdownMsg.tsx:74
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
@@ -12380,7 +12381,7 @@ msgstr "Ĉi tiuj agordoj nur aplikas al la Following-fluo."
 msgid "These URLs"
 msgstr ""
 
-#: src/components/moderation/BlockDialog.tsx:356
+#: src/components/moderation/BlockDialog.tsx:353
 msgid "They own this chat"
 msgstr "Tiu homo posedas ĉi tiun babilejon"
 
@@ -12533,7 +12534,7 @@ msgid "This feed is empty! You may need to follow more users or tune your langua
 msgstr "Ĉi tiu fluo malplenas! Eble vi devas sekvi pli da uzantoj aŭ ŝanĝi viajn lingvajn agordojn."
 
 #: src/components/StarterPack/Main/PostsList.tsx:41
-#: src/screens/Profile/ProfileFeed/index.tsx:171
+#: src/screens/Profile/ProfileFeed/index.tsx:170
 #: src/screens/ProfileList/FeedSection.tsx:78
 msgid "This feed is empty."
 msgstr "Ĉi tiu fluo malplenas."
@@ -12889,7 +12890,9 @@ msgstr "Tradukado al la sama lingvo estas nedisponebla sur via aparato."
 msgid "Tree view"
 msgstr "Arbovido"
 
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:48
+#: src/components/interstitials/FeedTrendingTopics.tsx:100
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:51
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:54
 msgid "Trending"
 msgstr "Furoraĵoj"
 
@@ -12898,7 +12901,7 @@ msgstr "Furoraĵoj"
 msgid "Trending GIFs"
 msgstr "Furoraj GIF-oj"
 
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:55
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:61
 msgid "Trending options"
 msgstr "Opcioj pri furoraĵoj"
 
@@ -13023,9 +13026,9 @@ msgstr "Nedisponeblaj informoj pri fluo"
 #: src/components/dms/MessageItem.tsx:746
 #: src/components/dms/MessagesListBlockedFooter.tsx:97
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
-#: src/components/moderation/BlockDialog.tsx:186
-#: src/components/moderation/BlockDialog.tsx:190
-#: src/components/moderation/BlockDialog.tsx:211
+#: src/components/moderation/BlockDialog.tsx:187
+#: src/components/moderation/BlockDialog.tsx:191
+#: src/components/moderation/BlockDialog.tsx:213
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:227
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:365
@@ -13065,8 +13068,8 @@ msgstr "Ĉu malbloki konton?"
 msgid "Unblock list"
 msgstr "Malbloki liston"
 
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:58
-#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:64
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
+#: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:56
 #: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:40
 #: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:46
 #: src/screens/Profile/components/GermButton.tsx:186
@@ -13128,7 +13131,7 @@ msgstr "Neetikedita poradolta enhavo"
 msgid "Unlabeled, abusive, or non-consensual adult content"
 msgstr "Neetikedita, perforta aŭ ne-interkonsentita poradolta enhavo"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:509
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:564
 msgid "Unlike"
 msgstr "Ne plu ŝati"
 
@@ -13198,14 +13201,14 @@ msgid "Unpin"
 msgstr "Depingli"
 
 #: src/components/FeedCard.tsx:355
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:514
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:520
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:569
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:576
 #: src/screens/SavedFeeds.tsx:467
 msgid "Unpin feed"
 msgstr "Depingli fluon"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:312
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:314
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:360
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:362
 msgid "Unpin from home"
 msgstr "Depingli de la hejmpaĝo"
 
@@ -13220,7 +13223,7 @@ msgid "Unpin moderation list"
 msgstr "Depingli kontrol-liston"
 
 #. placeholder {0}: info.displayName
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:162
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:169
 msgid "Unpinned {0} from Home"
 msgstr "{0} depinglita de Hejmo"
 
@@ -13337,7 +13340,7 @@ msgstr "Alŝuti tekstodosieron al:"
 #: src/view/com/util/UserBanner.tsx:164
 #: src/view/com/util/UserBanner.tsx:167
 msgid "Upload from Camera"
-msgstr "Alŝuti el la fotilo"
+msgstr "Alŝuti el la kamerao"
 
 #: src/view/com/util/UserAvatar.tsx:511
 #: src/view/com/util/UserBanner.tsx:181
@@ -13629,7 +13632,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr "Videaĵo de {0}. Tuŝetu por ludi aŭ paŭzigi la videaĵon"
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:222
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
 msgid "Video Games"
 msgstr "Videoludoj"
 
@@ -13687,7 +13690,7 @@ msgstr "Vidi la profilbildon de {0}"
 #. placeholder {0}: authors[0].profile.displayName || authors[0].profile.handle
 #. placeholder {0}: info.creatorHandle
 #. placeholder {0}: profile.handle
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:454
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:505
 #: src/screens/Search/components/SearchProfileCard.tsx:37
 #: src/screens/VideoFeed/index.tsx:863
 #: src/view/com/notifications/NotificationFeedItem.tsx:619
@@ -13798,7 +13801,7 @@ msgstr "Vidi la etikedadan servon provizitan de @{0}"
 msgid "View this user's verifications"
 msgstr "Vidi konfirmojn de ĉi tiu uzanto"
 
-#: src/screens/Profile/components/ProfileFeedHeader.tsx:482
+#: src/screens/Profile/components/ProfileFeedHeader.tsx:536
 msgid "View users who like this feed"
 msgstr "Vidi uzantojn, kiuj ŝatis ĉi tiun fluon"
 
@@ -14358,7 +14361,7 @@ msgstr "Vi estas konfirmita. Vi perdos vian konfirman staton, se vi ŝanĝos via
 msgid "You are verified. You will lose your verification status if you change your handle. <0>Learn more.</0>"
 msgstr "Vi estas konfirmita. Vi perdos vian konfirman staton, se vi ŝanĝos vian identigilon. <0>Eksciu pli.</0>"
 
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:46
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:43
 msgid "You can adjust your interests at any time from \"Content and media\" settings."
 msgstr "Vi povas adapti viajn interesojn iam ajn de agordoj pri \"Enhavo kaj aŭdvidaĵoj\"."
 
@@ -14435,9 +14438,9 @@ msgstr "Vi povas legi babilejan historion sed ne povas sendi novajn mesaĝojn."
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "Vi povas elekti {MAX_GALLERY_IMAGES, plural, one {# bildon} other {# bildojn}} entute."
 
-#: src/components/interstitials/Trending.tsx:132
+#: src/components/interstitials/Trending.tsx:142
 #: src/components/interstitials/TrendingVideos.tsx:138
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:127
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:136
 msgid "You can update this later from your settings."
 msgstr "Vi povas ĝisdatigi ĉi tion poste en viaj agordoj."
 
@@ -14610,7 +14613,7 @@ msgstr "Vi eblas aldoni maksimume {STARTER_PACK_MAX_SIZE, plural, one {{STARTER_
 msgid "You may only add up to 3 feeds"
 msgstr "Vi povas aldoni maksimume 3 fluojn"
 
-#: src/components/moderation/BlockDialog.tsx:321
+#: src/components/moderation/BlockDialog.tsx:318
 msgid "You must be a chat owner to remove a member."
 msgstr "Vi devas esti babilejan posedanton por forpeli anon."
 
@@ -14635,7 +14638,7 @@ msgstr "Vi devas permesi aliron al via aŭdvida biblioteko."
 msgid "You need to verify your email address before you can enable email 2FA."
 msgstr "Vi konfirmu vian retpoŝtadreson, antaŭ ol vi povos ŝalti retpoŝtan 2FA-on."
 
-#: src/components/moderation/BlockDialog.tsx:352
+#: src/components/moderation/BlockDialog.tsx:349
 msgid "You own this chat"
 msgstr "Vi posedas ĉi tiun babilejon"
 
@@ -14927,7 +14930,7 @@ msgid "Your hosting provider is detected automatically from the username you ent
 msgstr ""
 
 #: src/Navigation.tsx:466
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:68
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:62
 #: src/screens/Settings/ContentAndMediaSettings.tsx:94
 #: src/screens/Settings/ContentAndMediaSettings.tsx:97
 #: src/screens/Settings/InterestsSettings.tsx:49
@@ -14939,7 +14942,7 @@ msgctxt "toast"
 msgid "Your interests have been updated!"
 msgstr "Viaj interesoj estis ĝisdatigitaj!"
 
-#: src/screens/Search/modules/ExploreInterestsCard.tsx:95
+#: src/screens/Search/modules/ExploreInterestsCard.tsx:89
 msgid "Your interests help us find what you like!"
 msgstr "Viaj interesoj helpas nin ekscii, kion vi ŝatas!"
 
