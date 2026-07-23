@@ -42,7 +42,7 @@ jobs:
         run: |
           mkdir -p artifacts/ios
           echo "Installing dependencies" > artifacts/ios/phase.txt
-          cp .env.example .env.test
+          cp .env.example .env.development
           cp google-services.json.example google-services.json
 
       - name: Set up Expo project
@@ -167,7 +167,7 @@ jobs:
         run: |
           mkdir -p artifacts/android
           echo "Installing dependencies" > artifacts/android/phase.txt
-          cp .env.example .env.test
+          cp .env.example .env.development
           cp google-services.json.example google-services.json
 
       - name: Set up Expo project
