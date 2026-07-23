@@ -5,7 +5,6 @@ import {
   type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
-import shuffle from 'lodash.shuffle'
 
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
@@ -55,12 +54,6 @@ export function useProfileFollowsQuery(
         cursor: pageParam,
         sort: sortParam,
       })
-      if (sortParam === 'top' && pageParam === undefined) {
-        return {
-          ...res.data,
-          follows: shuffle(res.data.follows),
-        }
-      }
       return res.data
     },
     initialPageParam: undefined,
