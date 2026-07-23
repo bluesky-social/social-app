@@ -119,6 +119,7 @@ msgstr "{0, plural, one {O apreciere} few {# aprecieri} other {# de aprecieri}}"
 
 #. placeholder {0}: convo.details.memberCount
 #: src/components/dialogs/SearchablePeopleList.tsx:555
+#: src/components/dms/InitiateChatFlow.tsx:1038
 msgid "{0, plural, one {# member} other {# members}}"
 msgstr "{0, plural, one {un membru} few {# membrii} other {# de membrii}}"
 
@@ -197,9 +198,9 @@ msgstr "{0, plural, one {urmărit} few {urmăriți} other {de urmăriți}}"
 
 #. placeholder {0}: profile.postsCount || 0
 #. placeholder {0}: trend.postCount
-#: src/components/interstitials/FeedTrendingTopics.tsx:220
+#: src/components/interstitials/FeedTrendingTopics.tsx:223
 #: src/screens/Profile/Header/Metrics.tsx:58
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:150
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:153
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {postare} few {postări} other {de postări}}"
 
@@ -234,10 +235,10 @@ msgstr "{0} (Cont)"
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. placeholder {0}: formatCount(i18n, trend.postCount)
-#. placeholder {1}: import {useMemo} from 'react' import {Pressable, View} from 'react-native' import {Image} from 'expo-image' import { type AppBskyUnspeccedDefs, moderateProfile, RichText as RichTextApi, } from '@atproto/api' import {plural} from '@lingui/core/macro' import {Trans, useLingui} from '@lingui/react/macro' import {useModerationOpts} from '#/state/preferences/moderation-opts' import {useTrendingSettings} from '#/state/preferences/trending' import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery' import {useTrendingConfig} from '#/state/service-config' import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder' import {formatCount} from '#/view/com/util/numeric/format' import {atoms as a, useGutters, useTheme, type ViewStyleProp} from '#/alf' import {AvatarStack} from '#/components/AvatarStack' import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending' import {Link} from '#/components/Link' import {RichText} from '#/components/RichText' import {SubtleHover} from '#/components/SubtleHover' import {Text} from '#/components/Typography' import {useAnalytics} from '#/analytics' import * as ModuleHeader from '../components/ModuleHeader' const TOPIC_COUNT = 5 const IMAGE_SIZE = 56 export function ExploreTrendingTopics() { const {enabled} = useTrendingConfig() const {trendingDisabled} = useTrendingSettings() return enabled && !trendingDisabled ? <Inner /> : null } function Inner() { const ax = useAnalytics() const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery() const noTopics = !isLoading && !error && !trending?.trends?.length const showLoading = isLoading || isRefetching if (!showLoading && (error || !trending?.trends || noTopics)) return null return ( <View style={[a.pb_md]}> <ModuleHeader.Container bottomBorder> <ModuleHeader.Icon icon={TrendingIcon} size="md" /> <ModuleHeader.TitleText> <Trans>Trending</Trans> </ModuleHeader.TitleText> </ModuleHeader.Container> {showLoading ? Array.from({length: TOPIC_COUNT}).map((__, i) => ( <TrendingTopicRowSkeleton key={i} /> )) : trending?.trends.map((trend, index) => ( <TrendRow key={trend.link} trend={trend} rank={index + 1} onPress={() => { ax.metric('trendingTopic:click', { context: 'explore', recId: trending.recId, }) }} /> ))} </View> ) } export function TrendRow({ trend, rank, children, onPress, }: ViewStyleProp & { trend: AppBskyUnspeccedDefs.TrendView rank: number children?: React.ReactNode onPress?: () => void }) { const t = useTheme() const {t: l, i18n} = useLingui() const gutters = useGutters([0, 'base']) const actors = useModerateTrendingActors(trend.actors) const description = useMemo(() => { if (!trend.description) return const rt = new RichTextApi({text: trend.description}) rt.detectFacetsWithoutResolution() return rt }, [trend.description]) let imageUrl = null // TODO Image URL goes here when available. -dsb return ( <Link testID={trend.link} label={l`Browse topic ${trend.displayName}`} to={trend.link} onPress={onPress} style={[a.border_b, t.atoms.border_contrast_low]} PressableComponent={Pressable}> {({hovered, pressed}) => ( <> <SubtleHover hover={hovered || pressed} native /> <View style={[gutters, a.w_full, a.flex_row, a.py_md, a.gap_sm]}> <Text style={[ a.text_sm, a.font_medium, t.atoms.text_contrast_low, { fontVariant: ['tabular-nums'], }, ]}> <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'> {rank}. </Trans> </Text> <View style={[a.flex_1, a.gap_2xs]}> <Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]} numberOfLines={1}> {trend.displayName} </Text> {description ? ( <RichText value={description} disableLinks style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={2} /> ) : null} <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}> {actors.length > 0 ? ( <AvatarStack size={24} profiles={actors} /> ) : null} <Text style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}> <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'"> {formatCount(i18n, trend.postCount)}{' '} {plural(trend.postCount, {one: 'post', other: 'posts'})} </Trans> </Text> </View> </View> {imageUrl ? ( <Image source={{ uri: imageUrl, }} alt={trend.topic} style={[ a.flex_0, a.rounded_md, t.atoms.bg_contrast_25, { width: IMAGE_SIZE, height: IMAGE_SIZE, }, ]} contentFit="cover" accessible={true} accessibilityIgnoresInvertColors useAppleWebpCodec /> ) : null} </View> {children} </> )} </Link> ) } // Unused atm, but leaving here so we don't lose localization. -dsb export function useCategoryDisplayName( category: AppBskyUnspeccedDefs.TrendView['category'], ) { const {t: l} = useLingui() switch (category) { case 'sports': return l`Sports` case 'politics': return l`Politics` case 'video-games': return l`Video Games` case 'pop-culture': return l`Entertainment` case 'news': return l`News` case 'other': default: return null } } export function TrendingTopicRowSkeleton() { const t = useTheme() const gutters = useGutters([0, 'base']) return ( <View style={[ gutters, a.w_full, a.py_md, a.flex_row, a.gap_sm, a.border_b, t.atoms.border_contrast_low, ]}> <View style={[{width: 20}]}> <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} /> </View> <View style={[a.flex_1, a.gap_2xs]}> <LoadingPlaceholder width={90} height={17} /> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={70} height={16} /> <LoadingPlaceholder width={40} height={16} /> <LoadingPlaceholder width={60} height={16} /> </View> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={50} height={16} /> <LoadingPlaceholder width={70} height={16} /> <LoadingPlaceholder width={30} height={16} /> </View> <View style={[a.flex_1, a.gap_sm]}> <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={24} height={24} style={[a.rounded_full]} /> <LoadingPlaceholder width={60} height={16} /> </View> </View> </View> {/* TODO Image placeholder goes here when images are available. -dsb */} </View> ) } function useModerateTrendingActors( actors: AppBskyUnspeccedDefs.TrendView['actors'], ) { const moderationOpts = useModerationOpts() return useMemo(() => { if (!moderationOpts) return [] return actors .filter(actor => { const decision = moderateProfile(actor, moderationOpts) return !decision.ui('avatar').filter && !decision.ui('avatar').blur }) .slice(0, 3) }, [actors, moderationOpts]) } 
-#. placeholder {1}: import {useMemo} from 'react' import {Pressable, View} from 'react-native' import {LinearGradient} from 'expo-linear-gradient' import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api' import {plural} from '@lingui/core/macro' import {Trans, useLingui} from '@lingui/react/macro' import {useModerationOpts} from '#/state/preferences/moderation-opts' import {useTrendingSettings} from '#/state/preferences/trending' import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery' import {useTrendingConfig} from '#/state/service-config' import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder' import {formatCount} from '#/view/com/util/numeric/format' import { atoms as a, useGutters, useLayoutBreakpoints, useTheme, type ViewStyleProp, } from '#/alf' import {alpha} from '#/alf/utils' import {AvatarStack} from '#/components/AvatarStack' import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending' import {Link} from '#/components/Link' import {SubtleHover} from '#/components/SubtleHover' import {Text} from '#/components/Typography' import {useAnalytics} from '#/analytics' const TOPIC_COUNT = 3 export function FeedTrendingTopicsInterstitial() { const {enabled} = useTrendingConfig() const {trendingDisabled} = useTrendingSettings() const {rightNavVisible} = useLayoutBreakpoints() return enabled && !trendingDisabled && !rightNavVisible ? <Inner /> : null } function Inner() { const t = useTheme() const {t: l} = useLingui() const gutters = useGutters([0, 'base']) const ax = useAnalytics() const { data: trending, error, isLoading, isRefetching, } = useGetTrendsQuery({limit: TOPIC_COUNT}) const noTopics = !isLoading && !error && !trending?.trends?.length const shadowColor = alpha(t.palette.primary_100, 0.5) const gradient = { values: [ [0, t.atoms.bg.backgroundColor], [0.1, t.palette.primary_25], [0.9, t.palette.primary_25], [1, t.atoms.bg.backgroundColor], ], hover_value: t.palette.white, } if (error || noTopics) { return null } return ( <View style={[ gutters, a.pt_lg, a.pb_xl, a.gap_sm, a.border_t, t.atoms.border_contrast_low, ]}> <LinearGradient colors={gradient.values.map(c => c[1]) as [string, string, ...string[]]} locations={ gradient.values.map(c => c[0]) as [number, number, ...number[]] } style={[a.absolute, a.inset_0]} /> <View style={[ a.relative, a.z_20, a.px_xs, a.flex_row, a.align_center, a.justify_between, a.gap_sm, ]}> <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_xs]}> <TrendingIcon width={18} /> <Text style={[a.text_md, a.font_medium, a.leading_snug]} numberOfLines={1}> <Trans>Trending</Trans> </Text> </View> <Link label={l`See more trending topics`} to="/search"> <Text style={[ a.text_sm, a.font_medium, a.leading_snug, t.atoms.text_contrast_high, ]} numberOfLines={1}> <Trans>See more</Trans> </Text> </Link> </View> <View style={[ a.relative, a.z_10, a.border, a.rounded_xl, t.atoms.bg, { borderColor: t.palette.primary_100, boxShadow: `0 0 16px 0 ${shadowColor}`, elevation: 8, shadowColor: shadowColor, shadowOffset: {width: 0, height: 0}, shadowOpacity: 1, shadowRadius: 16, }, ]}> {isLoading || isRefetching ? Array.from({length: TOPIC_COUNT}).map((_, i) => ( <TrendingTopicRowSkeleton key={i} rank={i + 1} /> )) : trending?.trends?.map((trend, index) => ( <TrendRow key={trend.link} trend={trend} rank={index + 1} onPress={() => { ax.metric('trendingTopic:click', {context: 'interstitial'}) }} /> ))} </View> </View> ) } function TrendRow({ trend, rank, onPress, }: ViewStyleProp & { trend: AppBskyUnspeccedDefs.TrendView rank: number children?: React.ReactNode onPress?: () => void }) { const t = useTheme() const {t: l, i18n} = useLingui() const actors = useModerateTrendingActors(trend.actors) return ( <Link testID={trend.link} label={l`Browse topic ${trend.displayName}`} to={trend.link} onPress={onPress} style={[ rank < TOPIC_COUNT && a.border_b, { borderColor: t.palette.primary_100, }, ]} PressableComponent={Pressable}> {({hovered, pressed}) => ( <> <SubtleHover hover={hovered || pressed} native /> <View style={[ a.w_full, a.flex_row, a.flex_row, { gap: 6, padding: 14, paddingLeft: 16, }, ]}> <Text style={[ a.text_md, a.font_semi_bold, t.atoms.text_contrast_low, { fontVariant: ['tabular-nums'], }, ]}> <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'> {rank}. </Trans> </Text> <View style={[a.flex_1, a.gap_xs]}> <Text style={[a.text_md, a.font_medium]} numberOfLines={1}> {trend.displayName} </Text> <View style={[a.flex_row, a.gap_sm, a.align_center]}> {actors.length > 0 ? ( <AvatarStack size={24} profiles={actors} /> ) : null} <Text style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}> <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'"> {formatCount(i18n, trend.postCount)}{' '} {plural(trend.postCount, {one: 'post', other: 'posts'})} </Trans> </Text> </View> </View> </View> </> )} </Link> ) } function TrendingTopicRowSkeleton({rank}: {rank: number}) { const t = useTheme() return ( <View style={[ a.w_full, a.flex_row, a.px_lg, a.py_lg, a.flex_row, rank < TOPIC_COUNT && a.border_b, t.atoms.border_contrast_low, { gap: 6, }, ]}> <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} /> <View style={[a.flex_1, a.gap_xs]}> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={70} height={17} /> <LoadingPlaceholder width={40} height={17} /> <LoadingPlaceholder width={60} height={17} /> </View> <LoadingPlaceholder width={24} height={24} style={[a.rounded_full]} /> </View> </View> ) } function useModerateTrendingActors( actors: AppBskyUnspeccedDefs.TrendView['actors'], ) { const moderationOpts = useModerationOpts() return useMemo(() => { if (!moderationOpts) return [] return actors .filter(actor => { const decision = moderateProfile(actor, moderationOpts) return !decision.ui('avatar').filter && !decision.ui('avatar').blur }) .slice(0, 3) }, [actors, moderationOpts]) } 
-#: src/components/interstitials/FeedTrendingTopics.tsx:218
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
+#. placeholder {1}: import {useMemo} from 'react' import {Pressable, View} from 'react-native' import {Image} from 'expo-image' import { type AppBskyUnspeccedDefs, moderateProfile, RichText as RichTextApi, } from '@atproto/api' import {plural} from '@lingui/core/macro' import {Trans, useLingui} from '@lingui/react/macro' import {useModerationOpts} from '#/state/preferences/moderation-opts' import {useTrendingSettings} from '#/state/preferences/trending' import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery' import {useTrendingConfig} from '#/state/service-config' import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder' import {formatCount} from '#/view/com/util/numeric/format' import {atoms as a, useGutters, useTheme, type ViewStyleProp} from '#/alf' import {AvatarStack} from '#/components/AvatarStack' import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending' import {Link} from '#/components/Link' import {RichText} from '#/components/RichText' import {SubtleHover} from '#/components/SubtleHover' import {Text} from '#/components/Typography' import {useAnalytics} from '#/analytics' import * as ModuleHeader from '../components/ModuleHeader' const TOPIC_COUNT = 5 const IMAGE_SIZE = 56 export function ExploreTrendingTopics() { const {enabled} = useTrendingConfig() const {trendingDisabled} = useTrendingSettings() return enabled && !trendingDisabled ? <Inner /> : null } function Inner() { const ax = useAnalytics() const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery() const noTopics = !isLoading && !error && !trending?.trends?.length const showLoading = isLoading || isRefetching if (!showLoading && (error || !trending?.trends || noTopics)) return null return ( <View style={[a.pb_md]}> <ModuleHeader.Container bottomBorder> <ModuleHeader.Icon icon={TrendingIcon} size="md" /> <ModuleHeader.TitleText> <Trans>Trending</Trans> </ModuleHeader.TitleText> </ModuleHeader.Container> {showLoading ? Array.from({length: TOPIC_COUNT}).map((__, i) => ( <TrendingTopicRowSkeleton key={i} /> )) : trending?.trends.map((trend, index) => ( <TrendRow key={trend.link} trend={trend} rank={index + 1} onPress={() => { ax.metric('trendingTopic:click', { context: 'explore', recId: trending.recId, }) }} /> ))} </View> ) } export function TrendRow({ trend, rank, children, onPress, }: ViewStyleProp & { trend: AppBskyUnspeccedDefs.TrendView rank: number children?: React.ReactNode onPress?: () => void }) { const t = useTheme() const {t: l, i18n} = useLingui() const gutters = useGutters([0, 'base']) const actors = useModerateTrendingActors(trend.actors) const description = useMemo(() => { if (!trend.description) return const rt = new RichTextApi({text: trend.description}) rt.detectFacetsWithoutResolution() return rt }, [trend.description]) let imageUrl = null // TODO Image URL goes here when available. -dsb return ( <Link testID={trend.link} label={l`Browse topic ${trend.displayName}`} to={trend.link} onPress={onPress} style={[a.border_b, t.atoms.border_contrast_low]} PressableComponent={Pressable}> {({hovered, pressed}) => ( <> <SubtleHover hover={hovered || pressed} native /> <View style={[gutters, a.w_full, a.flex_row, a.py_md, a.gap_sm]}> <Text style={[ a.text_sm, a.font_medium, t.atoms.text_contrast_low, { fontVariant: ['tabular-nums'], }, ]}> <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'> {rank}. </Trans> </Text> <View style={[a.flex_1, a.gap_2xs]}> <Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]} numberOfLines={1}> {trend.displayName} </Text> {description ? ( <RichText value={description} disableLinks style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={2} /> ) : null} <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}> {actors.length > 0 ? ( <AvatarStack size={24} profiles={actors} /> ) : null} <Text style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}> {trend.postCount >= 1000 ? ( <Trans comment="Over 1,000 posts">1K+ posts</Trans> ) : ( <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'"> {formatCount(i18n, trend.postCount)}{' '} {plural(trend.postCount, {one: 'post', other: 'posts'})} </Trans> )} </Text> </View> </View> {imageUrl ? ( <Image source={{ uri: imageUrl, }} alt={trend.topic} style={[ a.flex_0, a.rounded_md, t.atoms.bg_contrast_25, { width: IMAGE_SIZE, height: IMAGE_SIZE, }, ]} contentFit="cover" accessible={true} accessibilityIgnoresInvertColors useAppleWebpCodec /> ) : null} </View> {children} </> )} </Link> ) } // Unused atm, but leaving here so we don't lose localization. -dsb export function useCategoryDisplayName( category: AppBskyUnspeccedDefs.TrendView['category'], ) { const {t: l} = useLingui() switch (category) { case 'sports': return l`Sports` case 'politics': return l`Politics` case 'video-games': return l`Video Games` case 'pop-culture': return l`Entertainment` case 'news': return l`News` case 'other': default: return null } } export function TrendingTopicRowSkeleton() { const t = useTheme() const gutters = useGutters([0, 'base']) return ( <View style={[ gutters, a.w_full, a.py_md, a.flex_row, a.gap_sm, a.border_b, t.atoms.border_contrast_low, ]}> <View style={[{width: 20}]}> <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} /> </View> <View style={[a.flex_1, a.gap_2xs]}> <LoadingPlaceholder width={90} height={17} /> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={70} height={16} /> <LoadingPlaceholder width={40} height={16} /> <LoadingPlaceholder width={60} height={16} /> </View> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={50} height={16} /> <LoadingPlaceholder width={70} height={16} /> <LoadingPlaceholder width={30} height={16} /> </View> <View style={[a.flex_1, a.gap_sm]}> <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={24} height={24} style={[a.rounded_full]} /> <LoadingPlaceholder width={60} height={16} /> </View> </View> </View> {/* TODO Image placeholder goes here when images are available. -dsb */} </View> ) } function useModerateTrendingActors( actors: AppBskyUnspeccedDefs.TrendView['actors'], ) { const moderationOpts = useModerationOpts() return useMemo(() => { if (!moderationOpts) return [] return actors .filter(actor => { const decision = moderateProfile(actor, moderationOpts) return !decision.ui('avatar').filter && !decision.ui('avatar').blur }) .slice(0, 3) }, [actors, moderationOpts]) } 
+#. placeholder {1}: import {useMemo} from 'react' import {Pressable, View} from 'react-native' import {LinearGradient} from 'expo-linear-gradient' import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api' import {plural} from '@lingui/core/macro' import {Trans, useLingui} from '@lingui/react/macro' import {useModerationOpts} from '#/state/preferences/moderation-opts' import {useTrendingSettings} from '#/state/preferences/trending' import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery' import {useTrendingConfig} from '#/state/service-config' import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder' import {formatCount} from '#/view/com/util/numeric/format' import { atoms as a, useGutters, useLayoutBreakpoints, useTheme, type ViewStyleProp, } from '#/alf' import {alpha} from '#/alf/utils' import {AvatarStack} from '#/components/AvatarStack' import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending' import {Link} from '#/components/Link' import {SubtleHover} from '#/components/SubtleHover' import {Text} from '#/components/Typography' import {useAnalytics} from '#/analytics' const TOPIC_COUNT = 3 export function FeedTrendingTopicsInterstitial() { const {enabled} = useTrendingConfig() const {trendingDisabled} = useTrendingSettings() const {rightNavVisible} = useLayoutBreakpoints() return enabled && !trendingDisabled && !rightNavVisible ? <Inner /> : null } function Inner() { const t = useTheme() const {t: l} = useLingui() const gutters = useGutters([0, 'base']) const ax = useAnalytics() const { data: trending, error, isLoading, isRefetching, } = useGetTrendsQuery({limit: TOPIC_COUNT}) const noTopics = !isLoading && !error && !trending?.trends?.length const shadowColor = alpha(t.palette.primary_100, 0.5) const gradient = { values: [ [0, t.atoms.bg.backgroundColor], [0.1, t.palette.primary_25], [0.9, t.palette.primary_25], [1, t.atoms.bg.backgroundColor], ], hover_value: t.palette.white, } if (error || noTopics) { return null } return ( <View style={[ gutters, a.pt_lg, a.pb_xl, a.gap_sm, a.border_t, t.atoms.border_contrast_low, ]}> <LinearGradient colors={gradient.values.map(c => c[1]) as [string, string, ...string[]]} locations={ gradient.values.map(c => c[0]) as [number, number, ...number[]] } style={[a.absolute, a.inset_0]} /> <View style={[ a.relative, a.z_20, a.px_xs, a.flex_row, a.align_center, a.justify_between, a.gap_sm, ]}> <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_xs]}> <TrendingIcon width={18} /> <Text style={[a.text_md, a.font_medium, a.leading_snug]} numberOfLines={1}> <Trans>Trending</Trans> </Text> </View> <Link label={l`See more trending topics`} to="/search"> <Text style={[ a.text_sm, a.font_medium, a.leading_snug, t.atoms.text_contrast_high, ]} numberOfLines={1}> <Trans>See more</Trans> </Text> </Link> </View> <View style={[ a.relative, a.z_10, a.border, a.rounded_xl, t.atoms.bg, { borderColor: t.palette.primary_100, boxShadow: `0 0 16px 0 ${shadowColor}`, elevation: 8, shadowColor: shadowColor, shadowOffset: {width: 0, height: 0}, shadowOpacity: 1, shadowRadius: 16, }, ]}> {isLoading || isRefetching ? Array.from({length: TOPIC_COUNT}).map((_, i) => ( <TrendingTopicRowSkeleton key={i} rank={i + 1} /> )) : trending?.trends?.map((trend, index) => ( <TrendRow key={trend.link} trend={trend} rank={index + 1} onPress={() => { ax.metric('trendingTopic:click', {context: 'interstitial'}) }} /> ))} </View> </View> ) } function TrendRow({ trend, rank, onPress, }: ViewStyleProp & { trend: AppBskyUnspeccedDefs.TrendView rank: number children?: React.ReactNode onPress?: () => void }) { const t = useTheme() const {t: l, i18n} = useLingui() const actors = useModerateTrendingActors(trend.actors) return ( <Link testID={trend.link} label={l`Browse topic ${trend.displayName}`} to={trend.link} onPress={onPress} style={[ rank < TOPIC_COUNT && a.border_b, { borderColor: t.palette.primary_100, }, ]} PressableComponent={Pressable}> {({hovered, pressed}) => ( <> <SubtleHover hover={hovered || pressed} native /> <View style={[ a.w_full, a.flex_row, a.flex_row, { gap: 6, padding: 14, paddingLeft: 16, }, ]}> <Text style={[ a.text_md, a.font_semi_bold, t.atoms.text_contrast_low, { fontVariant: ['tabular-nums'], }, ]}> <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'> {rank}. </Trans> </Text> <View style={[a.flex_1, a.gap_xs]}> <Text style={[a.text_md, a.font_medium]} numberOfLines={1}> {trend.displayName} </Text> <View style={[a.flex_row, a.gap_sm, a.align_center]}> {actors.length > 0 ? ( <AvatarStack size={24} profiles={actors} /> ) : null} <Text style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}> {trend.postCount >= 1000 ? ( <Trans comment="Over 1,000 posts">1K+ posts</Trans> ) : ( <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'"> {formatCount(i18n, trend.postCount)}{' '} {plural(trend.postCount, {one: 'post', other: 'posts'})} </Trans> )} </Text> </View> </View> </View> </> )} </Link> ) } function TrendingTopicRowSkeleton({rank}: {rank: number}) { const t = useTheme() return ( <View style={[ a.w_full, a.flex_row, a.px_lg, a.py_lg, a.flex_row, rank < TOPIC_COUNT && a.border_b, t.atoms.border_contrast_low, { gap: 6, }, ]}> <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} /> <View style={[a.flex_1, a.gap_xs]}> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={70} height={17} /> <LoadingPlaceholder width={40} height={17} /> <LoadingPlaceholder width={60} height={17} /> </View> <LoadingPlaceholder width={24} height={24} style={[a.rounded_full]} /> </View> </View> ) } function useModerateTrendingActors( actors: AppBskyUnspeccedDefs.TrendView['actors'], ) { const moderationOpts = useModerationOpts() return useMemo(() => { if (!moderationOpts) return [] return actors .filter(actor => { const decision = moderateProfile(actor, moderationOpts) return !decision.ui('avatar').filter && !decision.ui('avatar').blur }) .slice(0, 3) }, [actors, moderationOpts]) } 
+#: src/components/interstitials/FeedTrendingTopics.tsx:221
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:151
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
@@ -263,29 +264,6 @@ msgstr "{0} a fost adăugat la conversație"
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:46
 msgid "{0} and {1} added to chat"
 msgstr "{0} și {1} au fost adăugați la conversație"
-
-#. Social proof on the likes stat; the bolded names are people the viewer follows who liked the post and are its only likes
-#. placeholder {0}: nameLink(names[0])
-#. placeholder {0}: names[0].displayName
-#. placeholder {1}: nameLink(names[1])
-#. placeholder {1}: names[1].displayName
-#: src/screens/PostThread/components/LikesStat.tsx:135
-#: src/screens/PostThread/components/LikesStat.tsx:191
-msgid "{0} and {1} like this"
-msgstr ""
-
-#. Social proof on the likes stat; the bolded name is a person the viewer follows who liked the post, and the count is the remaining number of likes
-#. placeholder {0}: nameLink(names[0])
-#. placeholder {1}: formatPostStatCount(others)
-#. placeholder {2}: formatPostStatCount(others)
-#: src/screens/PostThread/components/LikesStat.tsx:196
-msgid "{0} and {others, plural, one {{1} other} other {{2} others}} like this"
-msgstr ""
-
-#. placeholder {0}: names[0].displayName
-#: src/screens/PostThread/components/LikesStat.tsx:137
-msgid "{0} and {othersLabel} like this"
-msgstr ""
 
 #. placeholder {0}: profile.followsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:49
@@ -336,14 +314,6 @@ msgstr "{0} a părăsit conversația"
 #: src/components/dms/getSystemMessageInfo.ts:97
 msgid "{0} left the group"
 msgstr "{0} a părăsit grupul"
-
-#. Social proof on the likes stat; the bolded name is a person the viewer follows who liked the post and is its only like
-#. placeholder {0}: nameLink(names[0])
-#. placeholder {0}: names[0].displayName
-#: src/screens/PostThread/components/LikesStat.tsx:138
-#: src/screens/PostThread/components/LikesStat.tsx:206
-msgid "{0} likes this"
-msgstr ""
 
 #. placeholder {0}: formatTime(currentTime)
 #. placeholder {1}: formatTime(duration)
@@ -400,21 +370,6 @@ msgstr "{0}, "
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:49
 msgid "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added to chat"
 msgstr "{0}, {1} și {memberCount, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}} au fost adăugați la conversație"
-
-#. Social proof on the likes stat; the bolded names are people the viewer follows who liked the post, and the count is the remaining number of likes
-#. placeholder {0}: nameLink(names[0])
-#. placeholder {1}: nameLink(names[1])
-#. placeholder {2}: formatPostStatCount(others)
-#. placeholder {3}: formatPostStatCount(others)
-#: src/screens/PostThread/components/LikesStat.tsx:181
-msgid "{0}, {1}, and {others, plural, one {{2} other} other {{3} others}} like this"
-msgstr ""
-
-#. placeholder {0}: names[0].displayName
-#. placeholder {1}: names[1].displayName
-#: src/screens/PostThread/components/LikesStat.tsx:134
-msgid "{0}, {1}, and {othersLabel} like this"
-msgstr ""
 
 #. placeholder {0}: feed.displayName
 #. placeholder {1}: sanitizeHandle(feed.creatorHandle, '@')
@@ -703,7 +658,7 @@ msgid "{following} following"
 msgstr "{following} urmăriți"
 
 #: src/components/dms/components/GroupChatProfileCard.tsx:62
-#: src/components/dms/InitiateChatFlow.tsx:945
+#: src/components/dms/InitiateChatFlow.tsx:1158
 msgid "{handle} can’t be added"
 msgstr "{handle} nu poate fi adăugat(ă)"
 
@@ -711,7 +666,7 @@ msgstr "{handle} nu poate fi adăugat(ă)"
 msgid "{handle} can't be messaged"
 msgstr "Nu se pot trimite mesaje către {handle}"
 
-#: src/components/dms/InitiateChatFlow.tsx:906
+#: src/components/dms/InitiateChatFlow.tsx:1119
 msgid "{handle} can’t be messaged"
 msgstr "Nu se pot trimite mesaje către {handle}"
 
@@ -789,12 +744,6 @@ msgstr "{notificationCount, plural, one {Un element necitit} few {# elemente nec
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr "{numMatches, plural, one {un contact găsit} few {# contacte găsite} other {# de contacte găsite}}"
 
-#. placeholder {0}: formatPostStatCount(others)
-#. placeholder {1}: formatPostStatCount(others)
-#: src/screens/PostThread/components/LikesStat.tsx:127
-msgid "{others, plural, one {{0} other} other {{1} others}}"
-msgstr ""
-
 #: src/components/NewskieDialog.tsx:115
 msgid "{profileName} joined Bluesky {timeAgoString} ago"
 msgstr "{profileName} s-a alăturat la Bluesky cu {timeAgoString} în urmă"
@@ -858,7 +807,7 @@ msgid "+{0}"
 msgstr "+{0}"
 
 #. Indicates the number of additional profiles are in the Starter Pack e.g. +12
-#: src/screens/Search/components/StarterPackCard.tsx:250
+#: src/screens/Search/components/StarterPackCard.tsx:258
 msgid "+{computedTotal}"
 msgstr "+{computedTotal}"
 
@@ -893,14 +842,14 @@ msgstr "<0>{0}</0> {1, plural, one {urmărit} few {urmăriți} other {de urmări
 #. Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.quoteCount)
 #. placeholder {1}: post.quoteCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:470
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:469
 msgid "<0>{0}</0> {1, plural, one {quote} other {quotes}}"
 msgstr "<0>{0}</0> {1, plural, one {citat} few {citate} other {de citate}}"
 
 #. Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.repostCount)
 #. placeholder {1}: post.repostCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:449
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:448
 msgid "<0>{0}</0> {1, plural, one {repost} other {reposts}}"
 msgstr "<0>{0}</0> {1, plural, one {repostare} few {repostări} other {de repostări}}"
 
@@ -913,7 +862,7 @@ msgstr "<0>{0}</0> {1, plural, one {salvare} few {salvări} other {de salvări}}
 
 #. Like count display, the <0> tags enclose the number of likes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(likeCount)
-#: src/screens/PostThread/components/LikesStat.tsx:90
+#: src/screens/PostThread/components/LikesStat.tsx:44
 msgid "<0>{0}</0> {likeCount, plural, one {like} other {likes}}"
 msgstr "<0>{0}</0> {likeCount, plural, one {apreciere} few {aprecieri} other {de aprecieri}}"
 
@@ -941,7 +890,7 @@ msgid "<0>{displayName}</0><1/><2> added you</2>"
 msgstr "<0>{displayName}</0><1/><2> v-a adăugat</2>"
 
 #: src/screens/Hashtag.tsx:230
-#: src/screens/Search/SearchResults.tsx:385
+#: src/screens/Search/SearchResults.tsx:412
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr "<0>Conectați-vă</0><1> sau </1><2>creați un cont</2><3> </3><4>pentru a căuta știri, sport, politică și tot ce se întâmplă pe Bluesky.</4>"
 
@@ -958,6 +907,13 @@ msgstr "<0>Dvs.</0> și<1> </1><2>{0} </2> sunteți incluși în pachetul dvs. d
 #: src/screens/Profile/Header/Handle.tsx:58
 msgid "⚠Invalid Handle"
 msgstr "⚠Identificator invalid"
+
+#. Over 1,000 posts
+#. Over 1,000 posts
+#: src/components/interstitials/FeedTrendingTopics.tsx:219
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:149
+msgid "1K+ posts"
+msgstr "Peste 1000 de postări"
 
 #: src/components/dialogs/MutedWords.tsx:202
 #: src/components/dialogs/MutedWords.tsx:551
@@ -981,7 +937,7 @@ msgstr "30 de zile"
 msgid "7 days"
 msgstr "7 zile"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:17
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:27
 msgid "A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens"
 msgstr "O colecție de fluxuri populare pe care le puteți găsi pe Bluesky, inclusiv News, Booksky, Game Dev, Blacksky și Fountain Pens"
 
@@ -998,6 +954,8 @@ msgstr "A apărut o eroare de rețea. Vă rugăm să verificați conexiunea la i
 #: src/components/contacts/screens/VerifyNumber.tsx:155
 #: src/components/dms/dialogs/NewChatDialog.tsx:56
 #: src/components/dms/dialogs/NewChatDialog.tsx:94
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:71
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:110
 #: src/components/dms/LeaveConvoPrompt.tsx:38
 #: src/components/moderation/BlockDialog.tsx:284
 #: src/components/moderation/BlockDialog.tsx:310
@@ -1038,10 +996,11 @@ msgid "A screenshot of the post composer with a new button next to the post butt
 msgstr "O captură de ecran a unui compozitor de postări cu un buton nou lângă cel de postare care spune „Schițe”, cu un efect de artificii în formă de curcubeu. Mai jos, textul din editor spune „Hei, ai auzit știrile? Bluesky are schițe acum!!!”."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:109
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:125
 msgid "A selected recipient is not followed by the sender."
 msgstr "Un destinatar selectat nu este urmărit de expeditor."
 
-#: src/Navigation.tsx:474
+#: src/Navigation.tsx:483
 #: src/screens/Settings/AboutSettings.tsx:85
 #: src/screens/Settings/Settings.tsx:264
 #: src/screens/Settings/Settings.tsx:267
@@ -1090,11 +1049,11 @@ msgstr "Acces solicitat! Proprietarul grupului va analiza cererea dvs."
 msgid "Accessibility"
 msgstr "Accesibilitate"
 
-#: src/Navigation.tsx:389
+#: src/Navigation.tsx:390
 msgid "Accessibility Settings"
 msgstr "Setări de accesibilitate"
 
-#: src/Navigation.tsx:405
+#: src/Navigation.tsx:406
 #: src/screens/Settings/AccountSettings.tsx:54
 #: src/screens/Settings/Settings.tsx:174
 #: src/screens/Settings/Settings.tsx:177
@@ -1169,10 +1128,14 @@ msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. 
 msgstr "Conturile cu bifa albastră în formă de feston <0><1/></0> pot verifica alte persoane. Acești verificatori de încredere sunt selectați de Bluesky."
 
 #: src/lib/hooks/useNotificationHandler.ts:214
-#: src/screens/Settings/NotificationSettings/index.tsx:226
-#: src/screens/Settings/NotificationSettings/index.tsx:365
+#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:105
+#: src/screens/Settings/NotificationSettings/index.tsx:225
 msgid "Activity from others"
 msgstr "Activitate de la alții"
+
+#: src/Navigation.tsx:459
+msgid "Activity notifications"
+msgstr "Notificări de activitate"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:191
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:319
@@ -1241,7 +1204,7 @@ msgstr "Adăugați o altă postare"
 msgid "Add another post to thread"
 msgstr "Adăugați o altă postare firului"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:435
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:439
 msgid "Add another search filter"
 msgstr "Adăugați un alt filtru de căutare"
 
@@ -1263,7 +1226,7 @@ msgstr "Adăugați o etichetă de automatizare contului"
 msgid "Add emoji reaction"
 msgstr "Adăugați reacție emoji"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:443
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:447
 msgid "Add filter"
 msgstr "Adăugare filtru"
 
@@ -1570,7 +1533,7 @@ msgstr "Permiteți accesul la mesajele directe"
 msgid "Already have a code?"
 msgstr "Aveți deja un cod?"
 
-#: src/components/WelcomeModal.tsx:192
+#: src/components/WelcomeModal.tsx:189
 msgid "Already have an account?"
 msgstr "Aveți deja un cont?"
 
@@ -1624,7 +1587,7 @@ msgstr "Un e-mail a fost trimis la {0}. Acesta include un cod de confirmare pe c
 msgid "An error has occurred"
 msgstr "A apărut o eroare"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:448
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:434
 msgid "An error occurred"
 msgstr "A apărut o eroare"
 
@@ -1641,7 +1604,7 @@ msgstr "A apărut o eroare la preluarea conturilor sugerate."
 msgid "An error occurred while fetching the feed."
 msgstr "A apărut o eroare în timpul preluării fluxului."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:374
+#: src/components/StarterPack/ProfileStarterPacks.tsx:377
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "A apărut o eroare la generarea pachetului de pornire. Doriți să încercați din nou?"
 
@@ -1650,11 +1613,11 @@ msgstr "A apărut o eroare la generarea pachetului de pornire. Doriți să înce
 msgid "An error occurred while hiding suggestion. {0}"
 msgstr "A apărut o eroare la ascunderea sugestiei. {0}"
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:188
+#: src/components/Post/Embed/VideoEmbed/index.tsx:197
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "A apărut o eroare la încărcarea videoclipului. Vă rugăm să încercați din nou mai târziu."
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:239
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:308
 msgid "An error occurred while loading the video. Please try again."
 msgstr "A apărut o eroare la încărcarea videoclipului. Vă rugăm să încercați din nou."
 
@@ -1694,7 +1657,7 @@ msgstr "A apărut o eroare. {0}"
 msgid "An illustration depicting user avatars flowing from a contact book into the Bluesky app"
 msgstr "O ilustrație care prezintă avataruri de utilizator care se transferă dintr-o agendă de contacte în aplicația Bluesky"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:35
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:45
 msgid "An illustration of several Bluesky posts alongside repost, like, and comment icons"
 msgstr "O ilustrație a mai multor postări Bluesky alături de pictograme de repostare, apreciere și comentare"
 
@@ -1715,17 +1678,15 @@ msgstr "Un link de invitație permite utilizatorilor să se alăture acestei con
 msgid "An issue not included in these options"
 msgstr "O problemă care nu este inclusă în aceste opțiuni"
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:92
-msgid "An issue occurred creating the group chat, please try again."
-msgstr ""
-
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:69
 msgid "An issue occurred starting the chat, please try again."
 msgstr "A apărut o problemă la începerea conversației, vă rugăm să încercați din nou."
 
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:50
-msgid "An issue occurred while trying to open the chat"
-msgstr ""
+#: src/components/dms/dialogs/NewChatDialog.tsx:92
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:108
+msgid "An issue occurred starting the group chat, please try again."
+msgstr "A apărut o problemă la pornirea conversației de grup, vă rugăm să încercați din nou."
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:52
@@ -1779,8 +1740,8 @@ msgid "Any date"
 msgstr "Orice dată"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:457
-#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:25
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:26
 msgid "Anyone"
 msgstr "Oricine"
 
@@ -1812,7 +1773,7 @@ msgstr "Oricine mă urmărește"
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 msgstr "Oricine îl are nu va mai putea să se alăture sau să solicite să se alăture. Puteți oricând să creați unul nou."
 
-#: src/Navigation.tsx:482
+#: src/Navigation.tsx:491
 #: src/screens/Settings/AppIconSettings/index.tsx:65
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:19
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:24
@@ -1850,7 +1811,7 @@ msgstr "Numele parolelor de aplicație trebuie să aibă cel puțin 4 caractere"
 msgid "App passwords"
 msgstr "Parole de aplicații"
 
-#: src/Navigation.tsx:357
+#: src/Navigation.tsx:358
 #: src/screens/Settings/AppPasswords.tsx:51
 msgid "App Passwords"
 msgstr "Parole de aplicație"
@@ -1901,7 +1862,7 @@ msgstr "Contestați această decizie"
 msgid "Appeal this label"
 msgstr "Contestați această etichetă"
 
-#: src/Navigation.tsx:397
+#: src/Navigation.tsx:398
 #: src/screens/Settings/AppearanceSettings.tsx:73
 #: src/screens/Settings/Settings.tsx:226
 #: src/screens/Settings/Settings.tsx:229
@@ -1919,12 +1880,12 @@ msgid "Apply Pull Request"
 msgstr "Aplicați solicitarea de tragere"
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:610
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:611
 msgid "Archived from {0}"
 msgstr "Arhivat de la {0}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:581
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:619
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:582
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:620
 msgid "Archived post"
 msgstr "Postare arhivată"
 
@@ -2029,7 +1990,7 @@ msgid "Aurora"
 msgstr "Aurora"
 
 #: src/components/BotAccountAlert.tsx:32
-#: src/components/BotBadge.tsx:63
+#: src/components/BotBadge.tsx:65
 msgid "Automated account"
 msgstr "Cont automatizat"
 
@@ -2043,7 +2004,7 @@ msgstr "Automat"
 msgid "Automation label"
 msgstr "Etichetă cont automatizat"
 
-#: src/Navigation.tsx:421
+#: src/Navigation.tsx:422
 #: src/screens/Settings/AutomationLabelSettings.tsx:103
 msgid "Automation Label"
 msgstr "Etichetă cont automatizat"
@@ -2063,9 +2024,9 @@ msgstr "Disponibil"
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
 #: src/components/dms/AddMembersFlow.tsx:533
-#: src/components/dms/InitiateChatFlow.tsx:540
-#: src/components/dms/InitiateChatFlow.tsx:758
-#: src/components/dms/InitiateChatFlow.tsx:765
+#: src/components/dms/InitiateChatFlow.tsx:645
+#: src/components/dms/InitiateChatFlow.tsx:863
+#: src/components/dms/InitiateChatFlow.tsx:870
 #: src/components/moderation/AppealForm.tsx:145
 #: src/components/moderation/AppealForm.tsx:146
 #: src/screens/Login/ChooseAccountForm.tsx:96
@@ -2129,8 +2090,8 @@ msgid "Before creating a post or replying, you must first verify your email."
 msgstr "Înainte de a crea o postare sau un răspuns, trebuie să vă verificați mai întâi e-mailul."
 
 #: src/components/dialogs/StarterPackDialog.tsx:72
-#: src/components/StarterPack/ProfileStarterPacks.tsx:264
-#: src/components/StarterPack/ProfileStarterPacks.tsx:274
+#: src/components/StarterPack/ProfileStarterPacks.tsx:267
+#: src/components/StarterPack/ProfileStarterPacks.tsx:277
 #: src/view/screens/Profile.tsx:350
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr "Înainte de a crea un pachet de pornire, trebuie să vă verificați mai întâi e-mailul."
@@ -2145,10 +2106,10 @@ msgstr "Înainte de a primi notificări despre postările noi de la {name}, treb
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:155
 #: src/components/dms/MessageProfileButton.tsx:60
-#: src/screens/Messages/ChatList.tsx:169
-#: src/screens/Messages/ChatList.tsx:187
-#: src/screens/Messages/ChatList.tsx:288
-#: src/screens/Messages/ChatList.tsx:544
+#: src/screens/Messages/ChatList.tsx:168
+#: src/screens/Messages/ChatList.tsx:186
+#: src/screens/Messages/ChatList.tsx:287
+#: src/screens/Messages/ChatList.tsx:543
 #: src/screens/Messages/Conversation.tsx:203
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
 msgid "Before you can message another user, you must first verify your email."
@@ -2170,12 +2131,18 @@ msgstr "Începeți procesul de verificare a vârstei completând câmpurile de m
 msgid "Beta Feature"
 msgstr "Caracteristică beta"
 
-#: src/Navigation.tsx:413
+#: src/Navigation.tsx:414
 #: src/screens/Settings/BetaFeaturesSettings.tsx:108
 #: src/screens/Settings/Settings.tsx:248
 #: src/screens/Settings/Settings.tsx:251
 msgid "Beta features"
 msgstr "Caracteristici beta"
+
+#: src/components/BetaBadge.tsx:79
+#: src/components/BetaBadge.tsx:99
+#: src/components/BetaBadge.tsx:100
+msgid "Beta features enabled"
+msgstr "Caracteristici beta activate"
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:144
 msgctxt "web"
@@ -2279,7 +2246,7 @@ msgstr "Blocat"
 msgid "Blocked accounts"
 msgstr "Conturi blocate"
 
-#: src/Navigation.tsx:193
+#: src/Navigation.tsx:194
 #: src/view/screens/ModerationBlockedAccounts.tsx:95
 msgid "Blocked Accounts"
 msgstr "Conturi blocate"
@@ -2292,7 +2259,7 @@ msgstr "Conturile blocate nu pot răspunde în firele dvs., să vă menționeze,
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Conturile blocate nu pot răspunde în firele dvs., să vă menționeze, sau să interacționeze într-un fel cu dvs. Nu le veți putea vedea conținutul și ei nu vor putea să-l vadă pe al dvs."
 
-#: src/screens/Profile/Sections/Labels.tsx:203
+#: src/screens/Profile/Sections/Labels.tsx:204
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "Blocarea nu împiedică acest etichetator să plaseze etichete pe contul dvs."
 
@@ -2319,7 +2286,7 @@ msgstr "bloomscrolling booksky"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:635
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:636
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky nu poate confirma autenticitatea datei revendicate."
 
@@ -2369,7 +2336,7 @@ msgstr "Termenii de Serviciu a Bluesky Social"
 msgid "Bluesky stores your contacts as encoded data. Removing your contacts will immediately delete this data."
 msgstr "Bluesky stochează contactele dvs. sub formă de date codificate. Eliminarea contactelor va duce la ștergerea imediată a acestor date."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:340
+#: src/components/StarterPack/ProfileStarterPacks.tsx:343
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Bluesky va alege un set de conturi recomandate de la persoanele din rețeaua dvs."
 
@@ -2473,7 +2440,7 @@ msgstr "Buton pentru a reveni la cronologia principală"
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:847
 #: src/screens/Messages/JoinRequest.tsx:177
-#: src/screens/Search/components/StarterPackCard.tsx:107
+#: src/screens/Search/components/StarterPackCard.tsx:112
 #: src/screens/Search/Explore.tsx:960
 msgid "By {0}"
 msgstr "De {0}"
@@ -2516,11 +2483,11 @@ msgstr "Prin crearea unui cont sunteți de acord cu <0>Termenii de Serviciu</0> 
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "Prin crearea unui cont sunteți de acord cu <0>Termenii de Serviciu</0>."
 
-#: src/screens/Search/components/StarterPackCard.tsx:106
+#: src/screens/Search/components/StarterPackCard.tsx:111
 msgid "By you"
 msgstr "De dvs."
 
-#: src/view/com/composer/photos/OpenCameraBtn.tsx:69
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:65
 msgid "Camera"
 msgstr "Cameră"
 
@@ -2597,7 +2564,7 @@ msgstr "Anulați reactivarea și deconectați-vă"
 msgid "Cancel reply"
 msgstr "Anulare răspuns"
 
-#: src/screens/Search/Shell.tsx:584
+#: src/screens/Search/Shell.tsx:592
 msgid "Cancel search"
 msgstr "Anulare căutare"
 
@@ -2710,7 +2677,7 @@ msgid "Changes to the starter pack will not be reflected in the list after creat
 msgstr "Modificările la pachetul de pornire nu se vor reflecta în listă după creare. Lista va fi o copie independentă."
 
 #: src/lib/hooks/useNotificationHandler.ts:133
-#: src/Navigation.tsx:500
+#: src/Navigation.tsx:509
 #: src/view/shell/bottom-bar/BottomBar.tsx:242
 #: src/view/shell/desktop/LeftNav.tsx:698
 #: src/view/shell/Drawer.tsx:525
@@ -2755,9 +2722,9 @@ msgstr "Conversație amuțită"
 msgid "Chat not found."
 msgstr "Conversația nu a fost găsită."
 
-#: src/screens/Messages/ChatList.tsx:570
-#: src/screens/Messages/ChatList.tsx:605
-#: src/screens/Messages/ChatList.tsx:652
+#: src/screens/Messages/ChatList.tsx:569
+#: src/screens/Messages/ChatList.tsx:604
+#: src/screens/Messages/ChatList.tsx:651
 msgid "Chat options"
 msgstr "Opțiuni conversație"
 
@@ -2766,10 +2733,11 @@ msgid "Chat owners cannot leave a group chat."
 msgstr "Proprietarii conversațiilor nu pot părăsi o conversație de grup."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:73
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:88
 msgid "Chat recipient is not followed by the sender."
 msgstr "Destinatarul conversației nu este urmărit de expeditor."
 
-#: src/Navigation.tsx:520
+#: src/Navigation.tsx:529
 msgid "Chat request inbox"
 msgstr "Inbox cerere de conversație"
 
@@ -2779,11 +2747,11 @@ msgid "Chat requests"
 msgstr "Cereri de conversație"
 
 #: src/components/dms/ConvoMenu.tsx:88
-#: src/Navigation.tsx:515
-#: src/screens/Messages/ChatList.tsx:98
-#: src/screens/Messages/ChatList.tsx:102
-#: src/screens/Messages/ChatList.tsx:672
-#: src/screens/Messages/ChatList.tsx:682
+#: src/Navigation.tsx:524
+#: src/screens/Messages/ChatList.tsx:97
+#: src/screens/Messages/ChatList.tsx:101
+#: src/screens/Messages/ChatList.tsx:671
+#: src/screens/Messages/ChatList.tsx:681
 #: src/screens/Messages/Settings.tsx:48
 msgid "Chat settings"
 msgstr "Setări conversație"
@@ -2810,9 +2778,9 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr "Conversație dezamuțită"
 
-#: src/screens/Messages/ChatList.tsx:92
-#: src/screens/Messages/ChatList.tsx:556
-#: src/screens/Messages/ChatList.tsx:596
+#: src/screens/Messages/ChatList.tsx:91
+#: src/screens/Messages/ChatList.tsx:555
+#: src/screens/Messages/ChatList.tsx:595
 msgid "Chats"
 msgstr "Conversații"
 
@@ -2849,7 +2817,7 @@ msgstr "Alegeți metoda de verificare a domeniului"
 msgid "Choose Feeds"
 msgstr "Alegeți fluxuri"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:349
+#: src/components/StarterPack/ProfileStarterPacks.tsx:352
 msgid "Choose for me"
 msgstr "Alegeți pentru mine"
 
@@ -3015,7 +2983,7 @@ msgstr "Faceți clic pentru a reîncerca mesajul eșuat"
 #: src/components/dms/AfterReportDialog.tsx:212
 #: src/components/dms/AfterReportDialog.tsx:217
 #: src/components/dms/EmojiPopup.android.tsx:59
-#: src/components/dms/InitiateChatFlow.tsx:565
+#: src/components/dms/InitiateChatFlow.tsx:670
 #: src/components/intents/GroupChatJoinDialog.tsx:246
 #: src/components/intents/GroupChatJoinDialog.tsx:281
 #: src/components/NewskieDialog.tsx:169
@@ -3039,8 +3007,8 @@ msgstr "Faceți clic pentru a reîncerca mesajul eșuat"
 msgid "Close"
 msgstr "Închidere"
 
-#: src/components/Dialog/index.web.tsx:127
-#: src/components/Dialog/index.web.tsx:317
+#: src/components/Dialog/index.web.tsx:129
+#: src/components/Dialog/index.web.tsx:339
 msgid "Close active dialog"
 msgstr "Închideți dialogul activ"
 
@@ -3082,7 +3050,7 @@ msgstr "Închideți vizualizatorul de imagini"
 #: src/components/ContextMenu/Backdrop.ios.tsx:53
 #: src/components/ContextMenu/Backdrop.ios.tsx:79
 #: src/components/ContextMenu/Backdrop.tsx:45
-#: src/components/Lightbox/chrome/ImageMenu.tsx:84
+#: src/components/Lightbox/chrome/ImageMenu.tsx:85
 msgid "Close menu"
 msgstr "Închideți meniul"
 
@@ -3102,7 +3070,7 @@ msgstr "Închideți bannerul cu cereri primite"
 msgid "Close this dialog"
 msgstr "Închideți acest dialog"
 
-#: src/components/WelcomeModal.tsx:217
+#: src/components/WelcomeModal.tsx:214
 msgid "Close welcome modal"
 msgstr "Închideți fereastra de bun venit"
 
@@ -3144,7 +3112,7 @@ msgid "Comics"
 msgstr "Benzi Desenate"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:46
-#: src/Navigation.tsx:347
+#: src/Navigation.tsx:348
 #: src/view/screens/CommunityGuidelines.tsx:28
 msgid "Community Guidelines"
 msgstr "Regulile Comunității"
@@ -3265,7 +3233,7 @@ msgstr "Conținut & media"
 msgid "Content and media"
 msgstr "Conținut și media"
 
-#: src/Navigation.tsx:458
+#: src/Navigation.tsx:467
 msgid "Content and Media"
 msgstr "Conținut și media"
 
@@ -3301,7 +3269,7 @@ msgstr "Avertisment privind conținutul"
 msgid "Content warnings"
 msgstr "Avertismente privind conținutul"
 
-#: src/components/Menu/index.web.tsx:91
+#: src/components/Menu/index.web.tsx:93
 msgid "Context menu backdrop, click to close the menu."
 msgstr "Fundal meniu contextual, faceți clic pentru a închide meniul."
 
@@ -3334,7 +3302,7 @@ msgid "Continue thread..."
 msgstr "Continuați firul..."
 
 #: src/components/dms/AddMembersFlow.tsx:324
-#: src/components/dms/InitiateChatFlow.tsx:493
+#: src/components/dms/InitiateChatFlow.tsx:598
 msgid "Continue to group name"
 msgstr "Continuați la numele grupului"
 
@@ -3376,7 +3344,7 @@ msgstr "Conversația nu a fost găsită."
 msgid "Copied build version to clipboard"
 msgstr "Versiunea de compilare a fost copiată în clipboard"
 
-#: src/screens/Search/Shell.tsx:504
+#: src/screens/Search/Shell.tsx:512
 msgid "Copied link to clipboard"
 msgstr "Link copiat în clipboard"
 
@@ -3384,7 +3352,7 @@ msgstr "Link copiat în clipboard"
 #: src/components/dms/MessageContextMenu.tsx:97
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:273
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:77
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:75
 #: src/lib/sharing.ts:24
 #: src/lib/sharing.ts:42
 msgid "Copied to clipboard"
@@ -3418,8 +3386,8 @@ msgstr "Copiere parolă de aplicație"
 msgid "Copy at:// URI"
 msgstr "Copiere at:// URI"
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:154
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:157
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:152
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:155
 msgid "Copy author DID"
 msgstr "Copiere DID autor"
 
@@ -3457,10 +3425,10 @@ msgstr "Copiere Link"
 msgid "Copy link to list"
 msgstr "Copiere link listă"
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:142
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:145
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:88
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:91
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:140
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:143
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:86
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:89
 msgid "Copy link to post"
 msgstr "Copiere link postare"
 
@@ -3478,8 +3446,8 @@ msgstr "Copiere link pachet de pornire"
 msgid "Copy message text"
 msgstr "Copiere mesaj text"
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:145
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:148
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:143
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:146
 msgid "Copy post at:// URI"
 msgstr "Copiere at:// URI postare"
 
@@ -3498,7 +3466,7 @@ msgstr "Copiați valoarea înregistrării TXT"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:41
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:108
-#: src/Navigation.tsx:352
+#: src/Navigation.tsx:353
 #: src/view/screens/CopyrightPolicy.tsx:25
 msgid "Copyright Policy"
 msgstr "Politica Privind Drepturile de Autor"
@@ -3614,8 +3582,8 @@ msgstr "vaci porci"
 #. Text on button to create a new starter pack
 #: src/components/dialogs/StarterPackDialog.tsx:113
 #: src/components/dialogs/StarterPackDialog.tsx:210
-#: src/components/dms/InitiateChatFlow.tsx:502
-#: src/components/StarterPack/ProfileStarterPacks.tsx:329
+#: src/components/dms/InitiateChatFlow.tsx:607
+#: src/components/StarterPack/ProfileStarterPacks.tsx:332
 msgid "Create"
 msgstr "Creare"
 
@@ -3632,9 +3600,9 @@ msgstr "Creați o listă din acest pachet de pornire"
 msgid "Create a QR code for a starter pack"
 msgstr "Creați un cod QR pentru un pachet de pornire"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:207
-#: src/components/StarterPack/ProfileStarterPacks.tsx:316
-#: src/Navigation.tsx:551
+#: src/components/StarterPack/ProfileStarterPacks.tsx:210
+#: src/components/StarterPack/ProfileStarterPacks.tsx:319
+#: src/Navigation.tsx:560
 msgid "Create a starter pack"
 msgstr "Creați un pachet de pornire"
 
@@ -3643,12 +3611,12 @@ msgstr "Creați un pachet de pornire"
 msgid "Create a Starter Pack"
 msgstr "Creați un pachet de pornire"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:303
+#: src/components/StarterPack/ProfileStarterPacks.tsx:306
 msgid "Create a starter pack for me"
 msgstr "Creați un pachet de pornire pentru mine"
 
-#: src/components/WelcomeModal.tsx:158
-#: src/components/WelcomeModal.tsx:166
+#: src/components/WelcomeModal.tsx:155
+#: src/components/WelcomeModal.tsx:163
 #: src/screens/Messages/JoinRequest.tsx:310
 #: src/screens/Signup/index.tsx:141
 #: src/view/com/auth/SplashScreen.tsx:106
@@ -3665,7 +3633,7 @@ msgstr "Creare cont"
 #: src/components/dialogs/Signin.tsx:87
 #: src/components/dialogs/Signin.tsx:89
 #: src/screens/Hashtag.tsx:236
-#: src/screens/Search/SearchResults.tsx:391
+#: src/screens/Search/SearchResults.tsx:418
 msgid "Create an account"
 msgstr "Creați un cont"
 
@@ -3678,11 +3646,11 @@ msgstr "Creați un cont fără a utiliza acest pachet de pornire"
 msgid "Create an avatar instead"
 msgstr "Creați un avatar în schimb"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:214
+#: src/components/StarterPack/ProfileStarterPacks.tsx:217
 msgid "Create another"
 msgstr "Creați altul"
 
-#: src/components/dms/InitiateChatFlow.tsx:501
+#: src/components/dms/InitiateChatFlow.tsx:606
 msgid "Create group chat"
 msgstr "Creare conversație de grup"
 
@@ -4010,7 +3978,7 @@ msgstr "Dezactivare"
 msgid "Disable 2FA"
 msgstr "Dezactivați A2F"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:414
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:400
 msgid "Disable captions"
 msgstr "Dezactivare subtitrări"
 
@@ -4150,7 +4118,7 @@ msgstr "Afișați mai mare insignele de text alternativ"
 msgid "Display name"
 msgstr "Nume afișat"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:23
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:33
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
 msgstr "Renunțați la troli și la titluri senzaționale. Găsiți oameni autentici și conversații care contează pentru dvs."
 
@@ -4232,7 +4200,7 @@ msgstr "Atingeți de două ori sau apăsați lung mesajul pentru a adăuga o rea
 msgid "Double tap to close the dialog"
 msgstr "Atingeți de două ori pentru a închide dialogul"
 
-#: src/screens/VideoFeed/index.tsx:1161
+#: src/screens/VideoFeed/index.tsx:1178
 msgid "Double tap to like"
 msgstr "Atingeți de două ori pentru a aprecia"
 
@@ -4336,6 +4304,7 @@ msgstr "Tulburări de alimentație"
 
 #: src/screens/Messages/components/EditTextButton.tsx:52
 #: src/screens/Settings/AccountSettings.tsx:148
+#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:250
 #: src/screens/StarterPack/StarterPackScreen.tsx:604
 #: src/screens/StarterPack/Wizard/index.tsx:331
 #: src/screens/StarterPack/Wizard/index.tsx:336
@@ -4405,7 +4374,7 @@ msgstr "Editare stare în direct"
 msgid "Edit moderation list"
 msgstr "Editare listă de moderare"
 
-#: src/Navigation.tsx:362
+#: src/Navigation.tsx:363
 #: src/view/screens/Feeds.tsx:511
 msgid "Edit My Feeds"
 msgstr "Editați fluxurile mele"
@@ -4413,6 +4382,11 @@ msgstr "Editați fluxurile mele"
 #: src/screens/Messages/ConversationSettings/index.tsx:544
 msgid "Edit name"
 msgstr "Editare nume"
+
+#. placeholder {0}: createSanitizedDisplayName( profile, )
+#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:242
+msgid "Edit notifications from {0}"
+msgstr "Editați notificările de la {0}"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:114
 msgid "Edit People"
@@ -4452,7 +4426,7 @@ msgstr "Editare listă de utilizatori"
 msgid "Edit who can reply"
 msgstr "Editați cine poate răspunde"
 
-#: src/Navigation.tsx:556
+#: src/Navigation.tsx:565
 msgid "Edit your starter pack"
 msgstr "Editați-vă pachetul de pornire"
 
@@ -4508,8 +4482,8 @@ msgstr "Încorporare cod HTML"
 
 #: src/components/dialogs/Embed.tsx:105
 #: src/components/dialogs/Embed.tsx:109
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:120
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:125
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:118
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:123
 msgid "Embed post"
 msgstr "Încorporare postare"
 
@@ -4517,7 +4491,7 @@ msgstr "Încorporare postare"
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr "Încorporați această postare în website-ul dvs. Pur și simplu copiați următorul fragment și lipiți-l în codul HTML al website-ului dvs."
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:61
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:66
 msgid "Embedded video player"
 msgstr "Cititor video încorporat"
 
@@ -4541,7 +4515,7 @@ msgstr "Activare conținut pentru adulți"
 msgid "Enable beta features"
 msgstr "Activare caracteristici beta"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:415
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:401
 msgid "Enable captions"
 msgstr "Activare subtitrări"
 
@@ -4558,12 +4532,13 @@ msgstr "Activare conținut media extern"
 msgid "Enable media players for"
 msgstr "Activare cititor media pentru"
 
+#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:139
 #: src/view/screens/Storybook/Admonitions.tsx:76
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
 msgstr "Activați notificările pentru un cont accesând profilul acestuia și apăsând pe <0>pictograma clopoțel</0> <1/>."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:136
-#: src/screens/Settings/NotificationSettings/index.tsx:140
+#: src/screens/Settings/NotificationSettings/index.tsx:135
+#: src/screens/Settings/NotificationSettings/index.tsx:139
 msgid "Enable push notifications"
 msgstr "Activare notificări push"
 
@@ -4589,7 +4564,7 @@ msgstr "Activare videoclipuri în tendințe în fluxul dvs. Descoperă"
 msgid "Enabled"
 msgstr "Activat"
 
-#: src/screens/Profile/Sections/Feed.tsx:131
+#: src/screens/Profile/Sections/Feed.tsx:132
 msgid "End of feed"
 msgstr "Sfârșitul fluxului"
 
@@ -4616,7 +4591,7 @@ msgstr "Introduceți un cuvânt sau o etichetă"
 msgid "Enter code"
 msgstr "Introduceți codul"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:433
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:419
 msgid "Enter fullscreen"
 msgstr "Intrați în modul Ecran complet"
 
@@ -4658,7 +4633,7 @@ msgstr "Introduceți-vă numele de utilizator și parola"
 msgid "Enters full screen"
 msgstr "Intrați în modul Ecran complet"
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:198
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:202
 msgid "Entertainment"
 msgstr "Divertisment"
 
@@ -4692,7 +4667,7 @@ msgstr "A apărut o eroare la salvarea fișierului"
 msgid "Error receiving captcha response."
 msgstr "Eroare la primirea răspunsului captcha."
 
-#: src/screens/Search/SearchResults.tsx:179
+#: src/screens/Search/SearchResults.tsx:206
 msgid "Error: {error}"
 msgstr "Eroare: {error}"
 
@@ -4704,8 +4679,8 @@ msgstr "Toată lumea poate răspunde"
 msgid "Everybody can reply to this post."
 msgstr "Toată lumea poate răspunde la această postare."
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:168
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:171
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:170
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:173
 msgid "Everyone"
 msgstr "Toți"
 
@@ -4719,8 +4694,8 @@ msgctxt "allow messages from"
 msgid "Everyone"
 msgstr "Toți"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:299
-#: src/screens/Settings/NotificationSettings/index.tsx:401
+#: src/screens/Settings/NotificationSettings/index.tsx:298
+#: src/screens/Settings/NotificationSettings/index.tsx:387
 msgid "Everything else"
 msgstr "Toate celelalte"
 
@@ -4746,7 +4721,7 @@ msgstr "Excludeți utilizatorii pe care îi urmăriți"
 msgid "Excludes users you follow"
 msgstr "Exclude utilizatorii pe care îi urmăriți"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:432
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:418
 msgid "Exit fullscreen"
 msgstr "Ieșire ecran complet"
 
@@ -4767,7 +4742,7 @@ msgstr "Extindeți sau restrângeți postarea completă la care răspundeți"
 msgid "Expand post text"
 msgstr "Extindeți textul postării"
 
-#: src/screens/VideoFeed/index.tsx:1037
+#: src/screens/VideoFeed/index.tsx:1054
 msgid "Expands or collapses post text"
 msgstr "Extinde sau restrânge text postare"
 
@@ -4810,15 +4785,15 @@ msgstr "Conținut media explicit sau potențial deranjant."
 msgid "Explicit sexual images."
 msgstr "Imagini sexuale explicite."
 
-#: src/Navigation.tsx:760
-#: src/screens/Search/Shell.tsx:541
+#: src/Navigation.tsx:769
+#: src/screens/Search/Shell.tsx:549
 #: src/view/shell/desktop/LeftNav.tsx:677
 #: src/view/shell/Drawer.tsx:473
 msgid "Explore"
 msgstr "Explorare"
 
-#: src/components/WelcomeModal.tsx:171
-#: src/components/WelcomeModal.tsx:180
+#: src/components/WelcomeModal.tsx:168
+#: src/components/WelcomeModal.tsx:177
 msgid "Explore the app"
 msgstr "Explorați aplicația"
 
@@ -4852,7 +4827,7 @@ msgstr "Conținut media extern"
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr "Conținut media extern poate permite website-urilor să colecteze informații despre dvs. și dispozitivul dvs. Nicio informație nu este trimisă sau solicitată până nu apăsați butonul „redare”."
 
-#: src/Navigation.tsx:381
+#: src/Navigation.tsx:382
 #: src/screens/Settings/ExternalMediaPreferences.tsx:35
 msgid "External Media Preferences"
 msgstr "Preferințe conținut media extern"
@@ -4894,7 +4869,7 @@ msgstr "Nu s-a putut modifica identificatorul. Vă rugăm să încercați din no
 
 #: src/components/Lightbox/Lightbox.web.tsx:302
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:130
-#: src/screens/Search/Shell.tsx:505
+#: src/screens/Search/Shell.tsx:513
 msgid "Failed to copy link"
 msgstr "Copierea link-ului a eșuat"
 
@@ -4982,7 +4957,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Nu s-a reușit părăsirea conversației de grup"
 
-#: src/screens/Messages/ChatList.tsx:421
+#: src/screens/Messages/ChatList.tsx:420
 #: src/screens/Messages/Inbox.tsx:202
 msgid "Failed to load conversations"
 msgstr "Încărcarea conversațiilor a eșuat"
@@ -5002,9 +4977,10 @@ msgstr "Încărcarea preferințelor fluxurilor a eșuat"
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:85
 #: src/screens/Messages/Settings.tsx:369
-#: src/screens/Settings/NotificationSettings/index.tsx:149
-#: src/screens/Settings/NotificationSettings/index.tsx:268
-#: src/screens/Settings/NotificationSettings/index.tsx:285
+#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:112
+#: src/screens/Settings/NotificationSettings/index.tsx:148
+#: src/screens/Settings/NotificationSettings/index.tsx:267
+#: src/screens/Settings/NotificationSettings/index.tsx:284
 msgid "Failed to load notification settings."
 msgstr "Setările de notificare nu au putut fi încărcate."
 
@@ -5035,12 +5011,12 @@ msgstr "Încărcarea sugestiilor de urmărire a eșuat"
 msgid "Failed to lock group chat"
 msgstr "Blocarea conversației de grup a eșuat"
 
-#: src/screens/Messages/ChatList.tsx:637
+#: src/screens/Messages/ChatList.tsx:636
 #: src/view/shell/bottom-bar/BottomBar.tsx:447
 msgid "Failed to mark all chats as read"
 msgstr "Nu s-a reușit marcarea tuturor conversațiilor ca fiind citite"
 
-#: src/screens/Messages/ChatList.tsx:646
+#: src/screens/Messages/ChatList.tsx:645
 #: src/screens/Messages/Inbox.tsx:304
 #: src/view/shell/bottom-bar/BottomBar.tsx:456
 msgid "Failed to mark all requests as read"
@@ -5199,7 +5175,7 @@ msgstr "Cont fals sau bot"
 msgid "False information about elections"
 msgstr "Informații false despre alegeri"
 
-#: src/Navigation.tsx:292
+#: src/Navigation.tsx:293
 msgid "Feed"
 msgstr "Flux"
 
@@ -5244,10 +5220,10 @@ msgctxt "toast"
 msgid "Feedback sent to feed operator"
 msgstr "Feedback trimis operatorului fluxului"
 
-#: src/Navigation.tsx:536
+#: src/Navigation.tsx:545
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
-#: src/screens/Search/SearchResults.tsx:104
+#: src/screens/Search/SearchResults.tsx:113
 #: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:239
@@ -5277,11 +5253,11 @@ msgstr "Preluare actualizare"
 msgid "File saved successfully!"
 msgstr "Fișier salvat cu succes!"
 
-#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:48
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:49
 msgid "Filter by author"
 msgstr "Filtrare după autor"
 
-#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:29
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:30
 msgid "Filter by author (currently: {currentLabel})"
 msgstr "Filtrare după autor (în prezent: {currentLabel})"
 
@@ -5314,7 +5290,7 @@ msgstr "Filtrați această căutare după {0}"
 msgid "Filter who can opt to receive notifications for your activity"
 msgstr "Filtrați cine poate opta să primească notificări pentru activitatea dvs."
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:163
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:165
 msgid "Filter who you receive notifications from"
 msgstr "Filtrați de la cine primiți notificări"
 
@@ -5356,8 +5332,8 @@ msgstr "Găsiți conturi de urmărit"
 msgid "Find and invite friends"
 msgstr "Găsire și invitare prieteni"
 
-#: src/Navigation.tsx:445
-#: src/Navigation.tsx:578
+#: src/Navigation.tsx:446
+#: src/Navigation.tsx:587
 msgid "Find Contacts"
 msgstr "Găsire contacte"
 
@@ -5378,7 +5354,7 @@ msgstr "Găsiți persoane pe care să le urmăriți"
 msgid "Find people you know"
 msgstr "Găsiți persoane pe care le cunoașteți"
 
-#: src/screens/Search/Shell.tsx:753
+#: src/screens/Search/Shell.tsx:765
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Găsiți postări, utilizatori și fluxuri pe Bluesky"
 
@@ -5391,7 +5367,7 @@ msgstr "Găsiți-vă prietenii"
 msgid "Find your friends on Bluesky by verifying your phone number and matching with your contacts. We protect your information and you control what happens next. <0>Learn more</0>"
 msgstr "Găsiți-vă prietenii pe Bluesky verificându-vă numărul de telefon și potrivindu-vă cu contactele. Noi vă protejăm informațiile, iar dvs. controlați ce se întâmplă în continuare. <0>Aflați mai multe</0>"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:21
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:31
 msgid "Find your people"
 msgstr "Găsiți-vă oamenii"
 
@@ -5433,7 +5409,7 @@ msgstr "Focalizați câmpul de căutare"
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:409
-#: src/screens/VideoFeed/index.tsx:920
+#: src/screens/VideoFeed/index.tsx:937
 #: src/view/com/notifications/NotificationFeedItem.tsx:864
 #: src/view/com/notifications/NotificationFeedItem.tsx:871
 msgid "Follow"
@@ -5449,7 +5425,7 @@ msgstr "Urmăriți pe {0}"
 msgid "Follow {displayName}"
 msgstr "Urmărire pe {displayName}"
 
-#: src/screens/VideoFeed/index.tsx:899
+#: src/screens/VideoFeed/index.tsx:916
 msgid "Follow {handle}"
 msgstr "Urmăriți pe {handle}"
 
@@ -5532,7 +5508,7 @@ msgid "Followers can join"
 msgstr "Urmăritorii se pot alătura"
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:246
+#: src/Navigation.tsx:247
 msgid "Followers of @{0} that you know"
 msgstr "Urmăritori ai lui @{0} pe care îi știți"
 
@@ -5548,7 +5524,7 @@ msgstr "Urmăritori pe care îi știți"
 #: src/components/ProfileHoverCard/index.web.tsx:505
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:405
-#: src/screens/VideoFeed/index.tsx:918
+#: src/screens/VideoFeed/index.tsx:935
 #: src/view/com/notifications/NotificationFeedItem.tsx:842
 #: src/view/com/notifications/NotificationFeedItem.tsx:859
 msgid "Following"
@@ -5573,7 +5549,7 @@ msgstr "Urmăriți pe {0}"
 msgid "Following {displayName}"
 msgstr "Urmăriți pe {displayName}"
 
-#: src/screens/VideoFeed/index.tsx:898
+#: src/screens/VideoFeed/index.tsx:915
 msgid "Following {handle}"
 msgstr "Urmăriți pe {handle}"
 
@@ -5582,7 +5558,7 @@ msgstr "Urmăriți pe {handle}"
 msgid "Following feed preferences"
 msgstr "Preferințe flux Urmăriți"
 
-#: src/Navigation.tsx:368
+#: src/Navigation.tsx:369
 #: src/screens/Settings/FollowingFeedPreferences.tsx:57
 msgid "Following Feed Preferences"
 msgstr "Preferințe flux urmăriți"
@@ -5632,7 +5608,7 @@ msgstr "Pentru Dvs."
 msgid "Forever"
 msgstr "Permanent"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:30
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:40
 msgid "Forget the noise"
 msgstr "Uitați de zgomot"
 
@@ -5651,11 +5627,13 @@ msgstr "Ați uitat parola?"
 msgid "Four message bubbles representing a group chat. First message: \"Did you hear the news? Bluesky has group chats now!\" Second message: \"omg, no way\" Third message: \"Wow, 50 people in one chat!\" Fourth message: \"You can send invite links too!\""
 msgstr "Patru bule de mesaj care reprezintă o conversație de grup. Primul mesaj: „Ai auzit noutatea? Bluesky are acum conversații de grup!” Al doilea mesaj: „Doamne, nu se poate” Al treilea mesaj: „Uau, 50 de persoane într-o singură conversație!” Al patrulea mesaj: „Poți trimite și linkuri de invitație!”"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:12
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:22
 msgid "Free your feed"
 msgstr "Eliberați-vă fluxul"
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:406
+#. Filter search results by a specific post author
+#. Filter who you receive notifications from
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:159
 msgid "From"
 msgstr "De la"
@@ -5678,7 +5656,7 @@ msgstr "De la <0/>"
 msgid "From these people"
 msgstr "De la aceste persoane"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:337
+#: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Generate a starter pack"
 msgstr "Generați un pachet de pornire"
 
@@ -5722,39 +5700,39 @@ msgstr "Obțineți acces timpuriu la caracteristicile experimentale pe care le t
 msgid "Get help"
 msgstr "Obțineți ajutor"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:403
+#: src/screens/Settings/NotificationSettings/index.tsx:389
 msgid "Get notifications for starter pack joins, verification, and other activity."
 msgstr "Primiți notificări pentru înscrieri cu pachetele de pornire, verificări și alte activități."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:325
+#: src/screens/Settings/NotificationSettings/index.tsx:324
 msgid "Get notifications when people follow you."
 msgstr "Primiți notificări când oamenii vă urmăresc."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:317
+#: src/screens/Settings/NotificationSettings/index.tsx:316
 msgid "Get notifications when people like your posts."
 msgstr "Primiți notificări când oamenii apreciază postările dvs."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:380
+#: src/screens/Settings/NotificationSettings/index.tsx:366
 msgid "Get notifications when people like your reposts."
 msgstr "Primiți notificări când oamenii vă apreciază repostările."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:341
+#: src/screens/Settings/NotificationSettings/index.tsx:340
 msgid "Get notifications when people mention you."
 msgstr "Primiți notificări când oamenii vă menționează."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:349
+#: src/screens/Settings/NotificationSettings/index.tsx:348
 msgid "Get notifications when people quote your posts."
 msgstr "Primiți notificări când oamenii citează postările dvs."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:333
+#: src/screens/Settings/NotificationSettings/index.tsx:332
 msgid "Get notifications when people reply to your posts."
 msgstr "Primiți notificări când oamenii răspund la postările dvs."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:358
+#: src/screens/Settings/NotificationSettings/index.tsx:357
 msgid "Get notifications when people repost your posts."
 msgstr "Primiți notificări când oamenii repostează postările dvs."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:389
+#: src/screens/Settings/NotificationSettings/index.tsx:375
 msgid "Get notifications when people repost your reposts."
 msgstr "Primiți notificări când oamenii vă repostează repostările."
 
@@ -5766,14 +5744,14 @@ msgstr "Primiți notificări când oamenii vă trimit cereri de mesaj."
 msgid "Get notifications when people send you messages."
 msgstr "Primiți notificări când oamenii vă trimit mesaje."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:367
-msgid "Get notifications when there's activity on posts you're subscribed to."
-msgstr ""
-
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:89
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:90
 msgid "Get notified about new posts"
 msgstr "Primiți notificări despre postări noi"
+
+#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:106
+msgid "Get notified about posts and replies from accounts you choose."
+msgstr "Primiți notificări despre postările și răspunsurile de la conturile pe care le alegeți."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:226
 msgid "Get notified of new posts from {name}"
@@ -5826,8 +5804,8 @@ msgstr "Glorificarea violenței"
 #: src/screens/ProfileList/components/ErrorScreen.tsx:35
 #: src/screens/ProfileList/components/ErrorScreen.tsx:41
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1222
-#: src/screens/VideoFeed/index.tsx:1226
+#: src/screens/VideoFeed/index.tsx:1239
+#: src/screens/VideoFeed/index.tsx:1243
 #: src/view/com/auth/LoggedOut.tsx:127
 #: src/view/com/profile/ProfileFollowers.tsx:211
 #: src/view/com/profile/ProfileFollowers.tsx:212
@@ -5880,7 +5858,7 @@ msgid "Go live for"
 msgstr "Intrați în direct pentru"
 
 #. placeholder {0}: name.displayName
-#: src/screens/PostThread/components/LikesStat.tsx:152
+#: src/screens/PostThread/components/LikesStat.tsx:146
 msgid "Go to {0}'s profile"
 msgstr "Mergeți la profilul lui {0}"
 
@@ -5984,7 +5962,7 @@ msgctxt "toast"
 msgid "Group chat name updated"
 msgstr "Numele conversației de grup a fost actualizat"
 
-#: src/Navigation.tsx:505
+#: src/Navigation.tsx:514
 #: src/screens/Messages/ConversationSettings/index.tsx:113
 msgid "Group chat settings"
 msgstr "Setări conversație în grup"
@@ -6014,16 +5992,17 @@ msgid "Group chats can only have a maximum of {0, plural, other {# people}}."
 msgstr "Conversațiile de grup pot avea maximum {0, plural, one {} few {# persoane}other {# de persoane}}."
 
 #: src/components/dialogs/SearchablePeopleList.tsx:565
+#: src/components/dms/InitiateChatFlow.tsx:1048
 msgid "Group is locked"
 msgstr "Grupul este blocat"
 
-#: src/components/dms/InitiateChatFlow.tsx:264
-#: src/components/dms/InitiateChatFlow.tsx:600
+#: src/components/dms/InitiateChatFlow.tsx:292
+#: src/components/dms/InitiateChatFlow.tsx:705
 #: src/screens/Messages/ConversationSettings/prompts.tsx:50
 msgid "Group name"
 msgstr "Numele grupului"
 
-#: src/components/dms/InitiateChatFlow.tsx:625
+#: src/components/dms/InitiateChatFlow.tsx:730
 #: src/screens/Messages/ConversationSettings/prompts.tsx:69
 msgid "Group name is too long. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, other {The maximum number of characters is #.}}"
 msgstr "Numele grupului este prea lung. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, one {} few {Numărul maxim de caractere este #.}other {Numărul maxim de caractere este #.}}"
@@ -6081,7 +6060,7 @@ msgstr "Activități dăunătoare sau cu risc ridicat"
 msgid "Harming or endangering minors"
 msgstr "Exploatarea minorilor sau punerea lor în pericol"
 
-#: src/Navigation.tsx:489
+#: src/Navigation.tsx:498
 msgid "Hashtag"
 msgstr "Hashtag"
 
@@ -6144,7 +6123,7 @@ msgstr "Salut!"
 msgid "Hidden"
 msgstr "Ascuns"
 
-#: src/screens/VideoFeed/index.tsx:697
+#: src/screens/VideoFeed/index.tsx:714
 msgid "Hidden by your moderation settings."
 msgstr "Ascuns de setările dvs. de moderare."
 
@@ -6297,8 +6276,8 @@ msgstr "Hmmmm, nu am putut încărca acest serviciu de moderare."
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Stați așa! Oferim acces la videoclipuri treptat și încă sunteți pe lista de așteptare. Verificați din nou în curând!"
 
-#: src/Navigation.tsx:755
-#: src/Navigation.tsx:776
+#: src/Navigation.tsx:764
+#: src/Navigation.tsx:785
 #: src/view/shell/bottom-bar/BottomBar.tsx:196
 #: src/view/shell/desktop/LeftNav.tsx:667
 #: src/view/shell/Drawer.tsx:499
@@ -6409,6 +6388,7 @@ msgstr "Dacă vă actualizați adresa de e-mail, e-mailul A2F va fi dezactivat."
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
 msgstr "Dacă doriți să vă modificați parola, vă vom trimite un cod pentru a verifica dacă acesta este contul dvs."
 
+#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:157
 #: src/view/screens/Storybook/Admonitions.tsx:90
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Privacy and Security</0>."
 msgstr "Dacă doriți să restricționați cine poate primi notificări pentru activitatea contului dvs., puteți modifica acest lucru în <0>Setări → Confidențialitate și securitate</0>."
@@ -6548,7 +6528,7 @@ msgstr "În aplicație, Push, Toată lumea"
 msgid "In-app, push, people you follow"
 msgstr "În aplicație, Push, Persoane pe care le urmăriți"
 
-#: src/screens/Messages/ChatList.tsx:438
+#: src/screens/Messages/ChatList.tsx:437
 msgid "Inbox empty"
 msgstr "Inbox gol"
 
@@ -6560,6 +6540,7 @@ msgstr "Inbox zero!"
 #. Advanced search filter
 #. Advanced search filter
 #. Advanced search filter
+#. Include search results with or without replies
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:47
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:58
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:75
@@ -6852,7 +6833,7 @@ msgstr "Etichete adăugate"
 msgid "Labels applied to this post"
 msgstr "Etichete aplicate pe această postare"
 
-#: src/screens/Profile/Sections/Labels.tsx:194
+#: src/screens/Profile/Sections/Labels.tsx:195
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr "Etichetele sunt adnotări pentru utilizatori și conținut. Ele pot fi utilizate pentru a ascunde, avertiza și categoriza rețeaua."
 
@@ -6864,7 +6845,7 @@ msgstr "Etichete de pe contul dvs."
 msgid "Language"
 msgstr "Limbă"
 
-#: src/Navigation.tsx:219
+#: src/Navigation.tsx:220
 msgid "Language Settings"
 msgstr "Setări limbă"
 
@@ -6889,7 +6870,7 @@ msgid "Last initiated just now"
 msgstr "Ultima inițiere chiar acum"
 
 #: src/screens/Hashtag.tsx:97
-#: src/screens/Search/SearchResults.tsx:86
+#: src/screens/Search/SearchResults.tsx:95
 #: src/screens/Topic.tsx:64
 msgid "Latest"
 msgstr "Cele mai recente"
@@ -6908,7 +6889,7 @@ msgstr "Aflați mai multe"
 msgid "Learn More"
 msgstr "Aflați mai multe"
 
-#: src/screens/Search/SearchResults.tsx:246
+#: src/screens/Search/SearchResults.tsx:273
 msgctxt "english-only-resource"
 msgid "Learn more about <0>how to use advanced search</0>."
 msgstr "Aflați mai multe despre <0>cum să folosiți căutarea avansată</0>."
@@ -7042,7 +7023,7 @@ msgstr "Ați părăsit conversația de grup."
 msgid "left to go."
 msgstr "rămas de făcut."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:354
+#: src/components/StarterPack/ProfileStarterPacks.tsx:357
 msgid "Let me choose"
 msgstr "Doresc să aleg"
 
@@ -7093,8 +7074,8 @@ msgstr "Apreciați acest flux"
 msgid "Like this labeler"
 msgstr "Apreciați acest etichetator"
 
-#: src/Navigation.tsx:297
-#: src/Navigation.tsx:302
+#: src/Navigation.tsx:298
+#: src/Navigation.tsx:303
 msgid "Liked by"
 msgstr "Apreciat de"
 
@@ -7111,6 +7092,24 @@ msgstr "Apreciat De"
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr "Apreciat de {0, plural, one {un utilizator} few {# utilizatori} other {# de utilizatori}}"
 
+#. Social proof below the post stats; the bolded name is a person the viewer follows who liked the post
+#. placeholder {0}: nameLink(names[0])
+#. placeholder {0}: names[0].displayName
+#: src/screens/PostThread/components/LikesStat.tsx:132
+#: src/screens/PostThread/components/LikesStat.tsx:173
+msgid "Liked by {0}"
+msgstr "Apreciat de {0}"
+
+#. Social proof below the post stats; the bolded names are people the viewer follows who liked the post
+#. placeholder {0}: nameLink(names[0])
+#. placeholder {0}: names[0].displayName
+#. placeholder {1}: nameLink(names[1])
+#. placeholder {1}: names[1].displayName
+#: src/screens/PostThread/components/LikesStat.tsx:131
+#: src/screens/PostThread/components/LikesStat.tsx:169
+msgid "Liked by {0} and {1}"
+msgstr "Apreciat de {0} și {1}"
+
 #: src/components/LabelingServiceCard/index.tsx:96
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:540
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:169
@@ -7119,19 +7118,19 @@ msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "Apreciat de {likeCount, plural, one {un utilizator} few {# utilizatori} other {# de utilizatori}}"
 
 #: src/lib/hooks/useNotificationHandler.ts:158
-#: src/screens/Settings/NotificationSettings/index.tsx:160
-#: src/screens/Settings/NotificationSettings/index.tsx:315
+#: src/screens/Settings/NotificationSettings/index.tsx:159
+#: src/screens/Settings/NotificationSettings/index.tsx:314
 #: src/view/screens/Profile.tsx:238
 msgid "Likes"
 msgstr "Aprecieri"
 
 #: src/lib/hooks/useNotificationHandler.ts:200
-#: src/screens/Settings/NotificationSettings/index.tsx:239
-#: src/screens/Settings/NotificationSettings/index.tsx:378
+#: src/screens/Settings/NotificationSettings/index.tsx:238
+#: src/screens/Settings/NotificationSettings/index.tsx:364
 msgid "Likes of your reposts"
 msgstr "Aprecieri pentru repostările dvs."
 
-#: src/screens/PostThread/components/LikesStat.tsx:85
+#: src/screens/PostThread/components/LikesStat.tsx:39
 msgid "Likes on this post"
 msgstr "Aprecieri la această postare"
 
@@ -7144,7 +7143,7 @@ msgstr "Liniar"
 msgid "Link copied to clipboard"
 msgstr "Link copiat în clipboard"
 
-#: src/Navigation.tsx:252
+#: src/Navigation.tsx:253
 msgid "List"
 msgstr "Listă"
 
@@ -7230,7 +7229,7 @@ msgctxt "toast"
 msgid "List unmuted"
 msgstr "Listă dezamuțită"
 
-#: src/Navigation.tsx:173
+#: src/Navigation.tsx:174
 #: src/view/screens/Lists.tsx:60
 #: src/view/screens/Profile.tsx:233
 #: src/view/screens/Profile.tsx:241
@@ -7293,7 +7292,7 @@ msgid "Load new notifications"
 msgstr "Încărcați notificări noi"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:208
-#: src/screens/Profile/Sections/Feed.tsx:117
+#: src/screens/Profile/Sections/Feed.tsx:118
 #: src/screens/ProfileList/FeedSection.tsx:113
 #: src/view/com/feeds/FeedPage.tsx:168
 msgid "Load new posts"
@@ -7336,7 +7335,7 @@ msgstr "Blocați această conversație de grup"
 msgid "Locked"
 msgstr "Blocat"
 
-#: src/Navigation.tsx:327
+#: src/Navigation.tsx:328
 msgid "Log"
 msgstr "Jurnal"
 
@@ -7387,7 +7386,7 @@ msgstr "GIF-uri dragoste"
 msgid "Make adjustments to email settings for your account"
 msgstr "Ajustați setările de e-mail pentru contul dvs."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:311
+#: src/components/StarterPack/ProfileStarterPacks.tsx:314
 msgid "Make one for me"
 msgstr "Faceți unul pentru mine"
 
@@ -7418,15 +7417,15 @@ msgstr "Manual"
 msgid "Mark all as read"
 msgstr "Marcați toate ca citite"
 
-#: src/screens/Messages/ChatList.tsx:656
-#: src/screens/Messages/ChatList.tsx:660
+#: src/screens/Messages/ChatList.tsx:655
+#: src/screens/Messages/ChatList.tsx:659
 #: src/view/shell/bottom-bar/BottomBar.tsx:465
 #: src/view/shell/bottom-bar/BottomBar.tsx:469
 msgid "Mark all chats as read"
 msgstr "Marcați toate conversațiile ca citite"
 
-#: src/screens/Messages/ChatList.tsx:664
-#: src/screens/Messages/ChatList.tsx:668
+#: src/screens/Messages/ChatList.tsx:663
+#: src/screens/Messages/ChatList.tsx:667
 #: src/view/shell/bottom-bar/BottomBar.tsx:473
 #: src/view/shell/bottom-bar/BottomBar.tsx:477
 msgid "Mark all requests as read"
@@ -7441,12 +7440,12 @@ msgstr "Marcare ca citit"
 msgid "Marked all as read"
 msgstr "Marcate toate ca citite"
 
-#: src/screens/Messages/ChatList.tsx:634
+#: src/screens/Messages/ChatList.tsx:633
 #: src/view/shell/bottom-bar/BottomBar.tsx:444
 msgid "Marked all chats as read"
 msgstr "Toate conversațiile au fost marcate ca citite"
 
-#: src/screens/Messages/ChatList.tsx:643
+#: src/screens/Messages/ChatList.tsx:642
 #: src/view/shell/bottom-bar/BottomBar.tsx:453
 msgid "Marked all requests as read"
 msgstr "Toate cererile au fost marcate ca citite"
@@ -7455,6 +7454,10 @@ msgstr "Toate cererile au fost marcate ca citite"
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:92
 msgid "Maybe later"
 msgstr "Poate mai târziu"
+
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:24
+msgid "Me"
+msgstr "Eu"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:375
 #: src/view/screens/Profile.tsx:236
@@ -7493,8 +7496,8 @@ msgid "mentioned users"
 msgstr "utilizatori menționați"
 
 #: src/lib/hooks/useNotificationHandler.ts:179
-#: src/screens/Settings/NotificationSettings/index.tsx:193
-#: src/screens/Settings/NotificationSettings/index.tsx:340
+#: src/screens/Settings/NotificationSettings/index.tsx:192
+#: src/screens/Settings/NotificationSettings/index.tsx:339
 #: src/view/screens/Notifications.tsx:99
 msgid "Mentions"
 msgstr "Mențiuni"
@@ -7563,7 +7566,7 @@ msgstr "Mesajul este prea lung ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgid "Message options"
 msgstr "Opțiuni mesaj"
 
-#: src/Navigation.tsx:770
+#: src/Navigation.tsx:779
 msgid "Messages"
 msgstr "Mesaje"
 
@@ -7592,7 +7595,7 @@ msgstr "Conținut înșelător"
 msgid "Missing media"
 msgstr "Conținut media lipsă"
 
-#: src/Navigation.tsx:178
+#: src/Navigation.tsx:179
 #: src/screens/Moderation/index.tsx:100
 msgid "Moderation"
 msgstr "Moderare"
@@ -7636,7 +7639,7 @@ msgstr "Listă de moderare actualizată"
 msgid "Moderation lists"
 msgstr "Liste de moderare"
 
-#: src/Navigation.tsx:183
+#: src/Navigation.tsx:184
 #: src/view/screens/ModerationModlists.tsx:60
 msgid "Moderation Lists"
 msgstr "Liste de moderare"
@@ -7645,7 +7648,7 @@ msgstr "Liste de moderare"
 msgid "moderation settings"
 msgstr "setări de moderare"
 
-#: src/Navigation.tsx:312
+#: src/Navigation.tsx:313
 msgid "Moderation states"
 msgstr "Stări moderare"
 
@@ -7786,7 +7789,7 @@ msgstr "Amuțită"
 msgid "Muted accounts"
 msgstr "Conturi amuțite"
 
-#: src/Navigation.tsx:188
+#: src/Navigation.tsx:189
 #: src/view/screens/ModerationMutedAccounts.tsx:107
 msgid "Muted Accounts"
 msgstr "Conturi Amuțite"
@@ -7892,11 +7895,11 @@ msgstr "{postsCount, plural, one {Postare nouă} few {Postări noi} other {Post�
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:169
 #: src/components/dms/dialogs/NewChatDialog.tsx:184
+#: src/screens/Messages/ChatList.tsx:231
 #: src/screens/Messages/ChatList.tsx:232
-#: src/screens/Messages/ChatList.tsx:233
+#: src/screens/Messages/ChatList.tsx:455
 #: src/screens/Messages/ChatList.tsx:456
-#: src/screens/Messages/ChatList.tsx:457
-#: src/screens/Messages/ChatList.tsx:581
+#: src/screens/Messages/ChatList.tsx:580
 msgid "New chat"
 msgstr "Conversație nouă"
 
@@ -7930,25 +7933,25 @@ msgid "New Feature"
 msgstr "Caracteristică nouă"
 
 #: src/lib/hooks/useNotificationHandler.ts:193
-#: src/screens/Settings/NotificationSettings/index.tsx:171
-#: src/screens/Settings/NotificationSettings/index.tsx:324
+#: src/screens/Settings/NotificationSettings/index.tsx:170
+#: src/screens/Settings/NotificationSettings/index.tsx:323
 msgid "New followers"
 msgstr "Urmăritori noi"
 
-#: src/components/dms/InitiateChatFlow.tsx:249
-#: src/components/dms/InitiateChatFlow.tsx:263
+#: src/components/dms/InitiateChatFlow.tsx:277
+#: src/components/dms/InitiateChatFlow.tsx:291
 msgid "New group chat"
 msgstr "Conversație de grup nouă"
 
 #. Button used to create a new group chat.
 #. Button used to create a new group chat.
-#: src/components/dms/InitiateChatFlow.tsx:800
-#: src/components/dms/InitiateChatFlow.tsx:834
+#: src/components/dms/InitiateChatFlow.tsx:905
+#: src/components/dms/InitiateChatFlow.tsx:939
 msgctxt "action"
 msgid "New group chat"
 msgstr "Conversație de grup nouă"
 
-#: src/components/dms/InitiateChatFlow.tsx:300
+#: src/components/dms/InitiateChatFlow.tsx:332
 msgid "New group chat with:"
 msgstr "Conversație de grup nouă cu:"
 
@@ -7965,13 +7968,13 @@ msgstr "Listă nouă"
 
 #: src/screens/Messages/Settings.tsx:289
 #: src/screens/Settings/NotificationSettings/components/ChatNotificationDialogs.tsx:31
-#: src/screens/Settings/NotificationSettings/index.tsx:282
+#: src/screens/Settings/NotificationSettings/index.tsx:281
 msgid "New message requests"
 msgstr "Cereri de mesaje noi"
 
 #: src/screens/Messages/Settings.tsx:268
 #: src/screens/Settings/NotificationSettings/components/ChatNotificationDialogs.tsx:21
-#: src/screens/Settings/NotificationSettings/index.tsx:265
+#: src/screens/Settings/NotificationSettings/index.tsx:264
 msgid "New messages"
 msgstr "Mesaje noi"
 
@@ -8024,14 +8027,14 @@ msgid "Newest replies first"
 msgstr "Cele mai noi răspunsuri primele"
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:200
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:204
 msgid "News"
 msgstr "Știri"
 
 #: src/components/contacts/screens/ViewMatches.tsx:395
 #: src/components/contacts/screens/ViewMatches.tsx:410
 #: src/components/dms/AddMembersFlow.tsx:325
-#: src/components/dms/InitiateChatFlow.tsx:494
+#: src/components/dms/InitiateChatFlow.tsx:599
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/ForgotPasswordForm.tsx:150
 #: src/screens/Login/SetNewPasswordForm.tsx:171
@@ -8056,7 +8059,7 @@ msgstr "Imaginea următoare"
 msgid "Night"
 msgstr "Noapte"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:32
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:42
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
 msgstr "Fără reclame, fără urmărire invazivă, fără capcane de implicare. Bluesky vă respectă timpul și atenția."
 
@@ -8142,7 +8145,7 @@ msgstr "Niciun conținut media încă"
 msgid "No messages yet"
 msgstr "Niciun mesaj încă"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:14
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:24
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
 msgstr "Gata cu algoritmii plini cu informații inutile. Găsiți fluxuri care funcționează pentru dvs., nu împotriva dvs."
 
@@ -8183,12 +8186,12 @@ msgstr "Nimeni nu poate trimite mesaje"
 msgid "No posts here"
 msgstr "Nici o postare aici"
 
-#: src/screens/Profile/Sections/Feed.tsx:81
+#: src/screens/Profile/Sections/Feed.tsx:82
 #: src/view/screens/Profile.tsx:430
 msgid "No posts yet"
 msgstr "Nicio postare încă"
 
-#: src/view/com/post-thread/PostQuotes.tsx:107
+#: src/view/com/post-thread/PostQuotes.tsx:114
 msgid "No quotes yet"
 msgstr "Încă nu există citate"
 
@@ -8216,7 +8219,7 @@ msgstr "Niciun rezultat"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:250
 #: src/components/dms/AddMembersFlow.tsx:257
-#: src/components/dms/InitiateChatFlow.tsx:376
+#: src/components/dms/InitiateChatFlow.tsx:469
 #: src/components/ProgressGuide/FollowDialog.tsx:221
 msgid "No results"
 msgstr "Niciun rezultat"
@@ -8235,15 +8238,15 @@ msgstr "Nu s-au găsit rezultate"
 msgid "No results found for \"{query}\""
 msgstr "Niciun rezultat găsit pentru „{query}”"
 
-#: src/screens/Search/SearchResults.tsx:206
+#: src/screens/Search/SearchResults.tsx:233
 msgid "No results found for “<0>{query}</0>” with advanced search filters applied."
 msgstr "Nu s-au găsit rezultate pentru „<0>{query}</0>” cu filtrele de căutare avansată aplicate."
 
-#: src/screens/Search/SearchResults.tsx:218
+#: src/screens/Search/SearchResults.tsx:245
 msgid "No results found for “<0>{query}</0>”."
 msgstr "Niciun rezultat găsit pentru „<0>{query}</0>”."
 
-#: src/screens/Search/SearchResults.tsx:212
+#: src/screens/Search/SearchResults.tsx:239
 msgid "No results found for your query with advanced search filters applied."
 msgstr "Nu s-au găsit rezultate pentru interogarea dvs. cu filtrele de căutare avansată aplicate."
 
@@ -8277,7 +8280,7 @@ msgstr "Nimeni"
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr "Nimeni nu a apreciat asta încă. Poate ar trebui să fiți primul!"
 
-#: src/view/com/post-thread/PostQuotes.tsx:109
+#: src/view/com/post-thread/PostQuotes.tsx:116
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
 msgstr "Nimeni nu a citat asta încă. Poate ar trebui să fiți primul!"
 
@@ -8297,6 +8300,10 @@ msgstr "Imagini intime neconsensuale"
 msgid "Non-sexual Nudity"
 msgstr "Nuditate non-sexuală"
 
+#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:220
+msgid "None"
+msgstr "Nimic"
+
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:263
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:266
 msgid "None of these words"
@@ -8315,7 +8322,7 @@ msgstr "Indisponibil pe această platformă."
 msgid "Not followed by anyone you’re following"
 msgstr "Nu este urmărit de cineva pe care urmăriți"
 
-#: src/Navigation.tsx:168
+#: src/Navigation.tsx:169
 #: src/view/screens/Profile.tsx:132
 msgid "Not Found"
 msgstr "Nu a fost găsit"
@@ -8332,7 +8339,7 @@ msgstr "Notă despre partajare"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Notă: Bluesky este o rețea deschisă și publică. Această setare limitează doar vizibilitatea conținutului dvs. pe aplicația și pe site-ul Bluesky, iar alte aplicații ar putea să nu respecte această setare. Conținutul dvs. poate fi afișat în continuare utilizatorilor deconectați de alte aplicații și site-uri web."
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:135
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:133
 msgid "Note: This post is only visible to logged-in users."
 msgstr "Notă: Această postare este vizibilă numai pentru utilizatorii conectați."
 
@@ -8341,8 +8348,8 @@ msgid "Nothing saved yet"
 msgstr "Nimic salvat încă"
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
-#: src/Navigation.tsx:452
-#: src/Navigation.tsx:531
+#: src/Navigation.tsx:453
+#: src/Navigation.tsx:540
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr "Setări pentru notificări"
@@ -8352,11 +8359,12 @@ msgstr "Setări pentru notificări"
 msgid "Notification sounds"
 msgstr "Sunete notificare"
 
-#: src/Navigation.tsx:526
-#: src/Navigation.tsx:765
+#: src/Navigation.tsx:535
+#: src/Navigation.tsx:774
 #: src/screens/Messages/Settings.tsx:255
 #: src/screens/Notifications/ActivityList.tsx:31
-#: src/screens/Settings/NotificationSettings/index.tsx:126
+#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
+#: src/screens/Settings/NotificationSettings/index.tsx:125
 #: src/screens/Settings/Settings.tsx:198
 #: src/screens/Settings/Settings.tsx:201
 #: src/view/screens/Notifications.tsx:128
@@ -8403,10 +8411,10 @@ msgstr "OK"
 
 #: src/components/BotAccountAlert.tsx:52
 #: src/components/BotAccountAlert.tsx:57
-#: src/components/dms/InitiateChatFlow.tsx:733
+#: src/components/dms/InitiateChatFlow.tsx:838
 #: src/components/dms/MessageItem.tsx:742
 #: src/screens/Login/PasswordUpdatedForm.tsx:35
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:641
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:642
 msgid "Okay"
 msgstr "Ok"
 
@@ -8430,10 +8438,12 @@ msgid "Onboarding reset"
 msgstr "Resetare înregistrare"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:117
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:133
 msgid "One of the selected recipients does not allow group chats."
 msgstr "Unul dintre destinatarii selectați nu permite conversații de grup."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:100
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:116
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "Unul dintre destinatarii selectați v-a blocat și nu-i se pot scrie mesaje."
 
@@ -8518,7 +8528,7 @@ msgstr "Doar postări cu videoclipuri"
 msgid "Only replies"
 msgstr "Doar răspunsuri"
 
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:41
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:39
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr "Doar fișierele WebVTT (.vtt) sunt acceptate"
 
@@ -8531,8 +8541,8 @@ msgid "Oops, this profile doesn't exist. Try scanning another one."
 msgstr "Ups, acest profil nu există. Încercați să scanați altul."
 
 #: src/components/Lists.tsx:184
-#: src/components/StarterPack/ProfileStarterPacks.tsx:363
-#: src/components/StarterPack/ProfileStarterPacks.tsx:372
+#: src/components/StarterPack/ProfileStarterPacks.tsx:366
+#: src/components/StarterPack/ProfileStarterPacks.tsx:375
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:108
 #: src/view/screens/Profile.tsx:132
@@ -8627,7 +8637,7 @@ msgstr "Deschideți pagina de depanare pentru moderare"
 msgid "Open muted words and tags settings"
 msgstr "Deschideți cuvinte amuțite și setări etichete"
 
-#: src/screens/Search/components/StarterPackCard.tsx:120
+#: src/screens/Search/components/StarterPackCard.tsx:128
 msgid "Open pack"
 msgstr "Deschidere pachet"
 
@@ -8699,7 +8709,7 @@ msgstr "Deschide detalii suplimentare pentru o intrare de depanare"
 msgid "Opens alt text dialog"
 msgstr "Deschide dialogul de text alternativ"
 
-#: src/view/com/composer/photos/OpenCameraBtn.tsx:70
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:66
 msgid "Opens camera on device"
 msgstr "Deschide camera pe dispozitiv"
 
@@ -8917,7 +8927,7 @@ msgid "Password updated!"
 msgstr "Parolă actualizată!"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:395
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
 msgid "Pause"
 msgstr "Pauză"
 
@@ -8925,12 +8935,12 @@ msgstr "Pauză"
 msgid "Pause GIF"
 msgstr "Puneți în pauză GIF-ul"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:346
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:332
 msgid "Pause video"
 msgstr "Pauză videoclip"
 
 #: src/screens/ProfileList/index.tsx:167
-#: src/screens/Search/SearchResults.tsx:98
+#: src/screens/Search/SearchResults.tsx:107
 #: src/screens/StarterPack/StarterPackScreen.tsx:195
 msgid "People"
 msgstr "Persoane"
@@ -8944,17 +8954,18 @@ msgid "People {ownerName} follows can request to join"
 msgstr "Persoanele urmărite de {ownerName} pot solicita să se alăture"
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:239
+#: src/Navigation.tsx:240
 msgid "People followed by @{0}"
 msgstr "Persoane urmărite de @{0}"
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:232
+#: src/Navigation.tsx:233
 msgid "People following @{0}"
 msgstr "Persoane care urmăresc @{0}"
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:178
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:182
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:23
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:180
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:184
 msgid "People I follow"
 msgstr "Persoane pe care le urmăriți"
 
@@ -8977,7 +8988,6 @@ msgid "People I follow can request to join"
 msgstr "Persoanele pe care le urmăresc pot solicita să se alăture"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:510
-#: src/screens/Search/components/AdvancedSearchDialog/FollowingDropdown.tsx:23
 msgid "People you follow"
 msgstr "Persoane pe care le urmăriți"
 
@@ -9063,7 +9073,7 @@ msgid "Pinned to your feeds"
 msgstr "Fixat la fluxurile dvs."
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:396
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
 msgid "Play"
 msgstr "Redare"
 
@@ -9076,8 +9086,8 @@ msgstr "Redați {0}"
 msgid "Play GIF"
 msgstr "Redare GIF"
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:169
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:347
+#: src/components/Post/Embed/VideoEmbed/index.tsx:178
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:333
 msgid "Play video"
 msgstr "Redați videoclipul"
 
@@ -9261,7 +9271,7 @@ msgid "Please write your message below:"
 msgstr "Vă rugăm să vă scrieți mesajul mai jos:"
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:198
 msgid "Politics"
 msgstr "Politică"
 
@@ -9303,10 +9313,10 @@ msgid "Post blocked"
 msgstr "Postare blocată"
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:265
-#: src/Navigation.tsx:272
-#: src/Navigation.tsx:279
-#: src/Navigation.tsx:286
+#: src/Navigation.tsx:266
+#: src/Navigation.tsx:273
+#: src/Navigation.tsx:280
+#: src/Navigation.tsx:287
 msgid "Post by @{0}"
 msgstr "Postare de @{0}"
 
@@ -9340,7 +9350,7 @@ msgstr "Postare ascunsă de dvs."
 msgid "Post interaction settings"
 msgstr "Setări interacțiune postare"
 
-#: src/Navigation.tsx:199
+#: src/Navigation.tsx:200
 #: src/screens/ModerationInteractionSettings/index.tsx:35
 msgid "Post Interaction Settings"
 msgstr "Setări de interacțiune postare"
@@ -9377,6 +9387,7 @@ msgstr "Fixarea postării a fost anulată"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:257
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:269
 #: src/screens/ProfileList/index.tsx:167
+#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:197
 #: src/view/screens/Profile.tsx:234
 msgid "Posts"
@@ -9393,6 +9404,10 @@ msgstr "Postările pot fi amuțite în funcție de text, etichete sau ambele. V�
 #: src/view/com/posts/PostFeedErrorMessage.tsx:76
 msgid "Posts hidden"
 msgstr "Postări ascunse"
+
+#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:214
+msgid "Posts, Replies"
+msgstr "Postări, Răspunsuri"
 
 #: src/components/dialogs/LinkWarning.tsx:89
 msgid "Potentially misleading link"
@@ -9445,20 +9460,21 @@ msgstr "Confidențialitate"
 msgid "Privacy and security"
 msgstr "Confidențialitate și securitate"
 
-#: src/Navigation.tsx:429
-#: src/Navigation.tsx:437
+#: src/Navigation.tsx:430
+#: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:45
 msgid "Privacy and Security"
 msgstr "Confidențialitate și securitate"
 
+#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:161
 #: src/view/screens/Storybook/Admonitions.tsx:94
 msgid "Privacy and Security settings"
 msgstr "Setări de confidențialitate și securitate"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:36
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:103
-#: src/Navigation.tsx:337
+#: src/Navigation.tsx:338
 #: src/screens/Settings/AboutSettings.tsx:102
 #: src/screens/Settings/AboutSettings.tsx:105
 #: src/view/screens/PrivacyPolicy.tsx:25
@@ -9595,12 +9611,12 @@ msgstr "Postări citat dezactivate"
 
 #: src/lib/hooks/useNotificationHandler.ts:186
 #: src/screens/Post/PostQuotes.tsx:31
-#: src/screens/Settings/NotificationSettings/index.tsx:204
-#: src/screens/Settings/NotificationSettings/index.tsx:347
+#: src/screens/Settings/NotificationSettings/index.tsx:203
+#: src/screens/Settings/NotificationSettings/index.tsx:346
 msgid "Quotes"
 msgstr "Citate"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:466
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:465
 msgid "Quotes of this post"
 msgstr "Citatele acestei postări"
 
@@ -9643,7 +9659,7 @@ msgstr "Reactivați-vă contul"
 msgid "Read {0, plural, one {# more reply} other {# more replies}}"
 msgstr "Citiți încă {0, plural, one {un răspuns} few {# răspunsuri} other {# de răspunsuri}}"
 
-#: src/screens/Search/SearchResults.tsx:249
+#: src/screens/Search/SearchResults.tsx:276
 msgctxt "english-only-resource"
 msgid "Read about how to use advanced search filters"
 msgstr "Citiți despre cum să utilizați filtrele de căutare avansată"
@@ -9653,11 +9669,11 @@ msgstr "Citiți despre cum să utilizați filtrele de căutare avansată"
 msgid "Read blog post"
 msgstr "Citiți postarea de pe blog"
 
-#: src/screens/VideoFeed/index.tsx:1038
+#: src/screens/VideoFeed/index.tsx:1055
 msgid "Read less"
 msgstr "Citiți mai puțin"
 
-#: src/screens/VideoFeed/index.tsx:1038
+#: src/screens/VideoFeed/index.tsx:1055
 msgid "Read more"
 msgstr "Citiți mai multe"
 
@@ -9683,11 +9699,11 @@ msgstr "Citiți Politica de Confidențialitate Bluesky"
 msgid "Read the Bluesky Terms of Service"
 msgstr "Citiți Termenii de Serviciu Bluesky"
 
-#: src/components/WelcomeModal.tsx:149
+#: src/components/WelcomeModal.tsx:146
 msgid "Real conversations."
 msgstr "Conversații reale."
 
-#: src/components/WelcomeModal.tsx:147
+#: src/components/WelcomeModal.tsx:144
 msgid "Real people."
 msgstr "Oameni reali."
 
@@ -9740,7 +9756,7 @@ msgstr "Respingere cerere de conversație"
 msgid "Reject join request"
 msgstr "Respingere cerere de alăturare"
 
-#: src/screens/Messages/ChatList.tsx:425
+#: src/screens/Messages/ChatList.tsx:424
 #: src/screens/Messages/Inbox.tsx:206
 msgid "Reload conversations"
 msgstr "Reîncărcați conversațiile"
@@ -10010,8 +10026,9 @@ msgstr "Mesaj la care s-a răspuns, atingeți pentru a derula la el"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:274
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:286
 #: src/lib/hooks/useNotificationHandler.ts:172
-#: src/screens/Settings/NotificationSettings/index.tsx:182
-#: src/screens/Settings/NotificationSettings/index.tsx:331
+#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:218
+#: src/screens/Settings/NotificationSettings/index.tsx:181
+#: src/screens/Settings/NotificationSettings/index.tsx:330
 #: src/view/screens/Profile.tsx:235
 msgid "Replies"
 msgstr "Răspunsuri"
@@ -10199,18 +10216,18 @@ msgid "Reposted by you"
 msgstr "Repostat de dvs."
 
 #: src/lib/hooks/useNotificationHandler.ts:165
-#: src/screens/Settings/NotificationSettings/index.tsx:215
-#: src/screens/Settings/NotificationSettings/index.tsx:356
+#: src/screens/Settings/NotificationSettings/index.tsx:214
+#: src/screens/Settings/NotificationSettings/index.tsx:355
 msgid "Reposts"
 msgstr "Repostări"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:445
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:444
 msgid "Reposts of this post"
 msgstr "Repostări ale acestei postări"
 
 #: src/lib/hooks/useNotificationHandler.ts:207
-#: src/screens/Settings/NotificationSettings/index.tsx:252
-#: src/screens/Settings/NotificationSettings/index.tsx:387
+#: src/screens/Settings/NotificationSettings/index.tsx:251
+#: src/screens/Settings/NotificationSettings/index.tsx:373
 msgid "Reposts of your reposts"
 msgstr "Repostări ale repostărilor dvs."
 
@@ -10245,7 +10262,7 @@ msgstr "Solicitat"
 msgid "Requests"
 msgstr "Cereri"
 
-#: src/Navigation.tsx:510
+#: src/Navigation.tsx:519
 #: src/screens/Messages/JoinRequests.tsx:59
 #: src/screens/Messages/JoinRequests.tsx:425
 msgid "Requests to join"
@@ -10350,10 +10367,10 @@ msgstr "Reîncearcă ultima acțiune, care a eșuat"
 #: src/components/moderation/ReportDialog/index.tsx:297
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:56
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:59
-#: src/components/StarterPack/ProfileStarterPacks.tsx:377
+#: src/components/StarterPack/ProfileStarterPacks.tsx:380
 #: src/screens/Login/LoginForm.tsx:531
 #: src/screens/Login/LoginForm.tsx:537
-#: src/screens/Messages/ChatList.tsx:430
+#: src/screens/Messages/ChatList.tsx:429
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:211
 #: src/screens/Messages/JoinRequests.tsx:361
@@ -10387,7 +10404,7 @@ msgstr "Revine la acasă"
 
 #: src/screens/ProfileList/components/ErrorScreen.tsx:36
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:577
-#: src/screens/VideoFeed/index.tsx:1223
+#: src/screens/VideoFeed/index.tsx:1240
 #: src/view/screens/NotFound.tsx:54
 msgid "Returns to previous page"
 msgstr "Revine la pagina anterioară"
@@ -10458,7 +10475,7 @@ msgstr "Salvare schiță"
 msgid "Save draft?"
 msgstr "Salvați schița?"
 
-#: src/components/Lightbox/chrome/ImageMenu.tsx:98
+#: src/components/Lightbox/chrome/ImageMenu.tsx:99
 #: src/components/MediaPreview.tsx:231
 #: src/components/Post/Embed/ImageContextMenu.tsx:70
 #: src/components/StarterPack/ShareDialog.tsx:144
@@ -10496,7 +10513,7 @@ msgid "Saved Feeds"
 msgstr "Fluxuri salvate"
 
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:145
-#: src/Navigation.tsx:570
+#: src/Navigation.tsx:579
 #: src/screens/Bookmarks.tsx:59
 msgid "Saved Posts"
 msgstr "Postări salvate"
@@ -10512,8 +10529,8 @@ msgstr "Salvat în fluxurile dvs."
 msgid "Say hello!"
 msgstr "Spuneți salut!"
 
-#: src/screens/Messages/ChatList.tsx:223
-#: src/screens/Messages/ChatList.tsx:447
+#: src/screens/Messages/ChatList.tsx:222
+#: src/screens/Messages/ChatList.tsx:446
 msgid "Say hi to someone"
 msgstr "Spuneți salut cuiva"
 
@@ -10527,7 +10544,7 @@ msgstr "Scanare"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:82
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:23
-#: src/Navigation.tsx:317
+#: src/Navigation.tsx:318
 msgid "Scan QR code"
 msgstr "Scanare cod QR"
 
@@ -10556,16 +10573,16 @@ msgstr "Derulați până sus"
 #: src/components/forms/SearchInput.tsx:53
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:224
-#: src/screens/Search/Shell.tsx:541
-#: src/screens/Search/Shell.tsx:604
-#: src/screens/Search/Shell.tsx:741
+#: src/screens/Search/Shell.tsx:549
+#: src/screens/Search/Shell.tsx:612
+#: src/screens/Search/Shell.tsx:753
 #: src/view/shell/bottom-bar/BottomBar.tsx:216
 msgid "Search"
 msgstr "Căutare"
 
 #. placeholder {0}: profile.handle
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:258
+#: src/Navigation.tsx:259
 #: src/screens/Profile/ProfileSearch.tsx:37
 msgid "Search @{0}'s posts"
 msgstr "Căutați în postările lui @{0}"
@@ -10622,7 +10639,7 @@ msgid "Search GIFs"
 msgstr "Căutați GIF-uri"
 
 #: src/screens/Hashtag.tsx:228
-#: src/screens/Search/SearchResults.tsx:383
+#: src/screens/Search/SearchResults.tsx:410
 msgid "Search is currently unavailable when logged out"
 msgstr "Căutarea nu este disponibilă în prezent când sunteți deconectat"
 
@@ -10777,12 +10794,13 @@ msgstr "Selectați o opțiune"
 msgid "Select app language"
 msgstr "Selectați limba aplicației"
 
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:60
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:67
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:58
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:65
 msgid "Select caption file (.vtt)"
 msgstr "Selectați fișierul subtitrare (.vtt)"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:501
+#: src/components/dms/InitiateChatFlow.tsx:984
 msgid "Select chat \"{name}\""
 msgstr "Selectați conversația „{name}”"
 
@@ -10823,7 +10841,7 @@ msgstr "Selectare GIF"
 msgid "Select GIF \"{0}\""
 msgstr "Selectare GIF „{0}”"
 
-#: src/components/dms/InitiateChatFlow.tsx:725
+#: src/components/dms/InitiateChatFlow.tsx:830
 msgid "Select group chat members"
 msgstr "Selectați membrii de conversație de grup"
 
@@ -10942,7 +10960,8 @@ msgstr "Trimitere mesaj"
 msgid "Send post to {name}"
 msgstr "Trimitere postare către {name}"
 
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:72
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:167
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:176
 msgid "Send post to..."
 msgstr "Trimitere postare către..."
 
@@ -10960,12 +10979,12 @@ msgstr "Trimiteți mesajul de pe telefonul dvs."
 msgid "Send verification email"
 msgstr "Trimitere e-mail de verificare"
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:116
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:122
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:105
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:111
-msgid "Send via direct message"
-msgstr ""
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:114
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:120
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:103
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:109
+msgid "Send via chat"
+msgstr "Trimitere prin conversație"
 
 #. placeholder {0}: i18n.date(new Date(message.sentAt), { timeStyle: 'short', })
 #: src/components/dms/MessageContextMenu.tsx:175
@@ -11018,14 +11037,14 @@ msgstr "Setați manual furnizorul de găzduire"
 msgid "Sets email for password reset"
 msgstr "Setează e-mailul pentru resetarea parolei"
 
-#: src/Navigation.tsx:214
+#: src/Navigation.tsx:215
 #: src/screens/Settings/Settings.tsx:99
 #: src/view/shell/desktop/LeftNav.tsx:755
 #: src/view/shell/Drawer.tsx:668
 msgid "Settings"
 msgstr "Setări"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:221
+#: src/screens/Settings/NotificationSettings/index.tsx:220
 msgid "Settings for activity from others"
 msgstr "Setări pentru activitate de la alții"
 
@@ -11033,49 +11052,49 @@ msgstr "Setări pentru activitate de la alții"
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "Setări pentru a permite celorlalți să fie notificați despre postările dvs."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:155
+#: src/screens/Settings/NotificationSettings/index.tsx:154
 msgid "Settings for like notifications"
 msgstr "Setări pentru notificări de aprecieri"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:188
+#: src/screens/Settings/NotificationSettings/index.tsx:187
 msgid "Settings for mention notifications"
 msgstr "Setări pentru notificări de mențiuni"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:166
+#: src/screens/Settings/NotificationSettings/index.tsx:165
 msgid "Settings for new follower notifications"
 msgstr "Setări pentru notificări de urmăritor nou"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:294
+#: src/screens/Settings/NotificationSettings/index.tsx:293
 msgid "Settings for notifications for everything else"
 msgstr "Setări pentru notificări pentru orice altceva"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:234
+#: src/screens/Settings/NotificationSettings/index.tsx:233
 msgid "Settings for notifications for likes of your reposts"
 msgstr "Setări pentru notificări de aprecieri ale repostărilor dvs."
 
 #: src/screens/Messages/Settings.tsx:280
-#: src/screens/Settings/NotificationSettings/index.tsx:277
+#: src/screens/Settings/NotificationSettings/index.tsx:276
 msgid "Settings for notifications for new message requests"
 msgstr "Setări pentru notificări privind cererile de mesaje noi"
 
 #: src/screens/Messages/Settings.tsx:259
-#: src/screens/Settings/NotificationSettings/index.tsx:260
+#: src/screens/Settings/NotificationSettings/index.tsx:259
 msgid "Settings for notifications for new messages"
 msgstr "Setări pentru notificări privind mesaje noi"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:247
+#: src/screens/Settings/NotificationSettings/index.tsx:246
 msgid "Settings for notifications for reposts of your reposts"
 msgstr "Setări pentru notificări de repostări ale repostărilor dvs."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:199
+#: src/screens/Settings/NotificationSettings/index.tsx:198
 msgid "Settings for quote notifications"
 msgstr "Setări pentru notificări de citate"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:177
+#: src/screens/Settings/NotificationSettings/index.tsx:176
 msgid "Settings for reply notifications"
 msgstr "Setări pentru notificări de răspuns"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:210
+#: src/screens/Settings/NotificationSettings/index.tsx:209
 msgid "Settings for repost notifications"
 msgstr "Setări pentru notificări de repostare"
 
@@ -11112,8 +11131,8 @@ msgstr "Partajați intervalul de vârstă"
 msgid "Share anyway"
 msgstr "Distribuiți oricum"
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:176
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:179
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:174
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:177
 msgid "Share author DID"
 msgstr "Partajare DID autor"
 
@@ -11124,7 +11143,7 @@ msgstr "Partajare DID autor"
 msgid "Share feedback"
 msgstr "Partajare feedback"
 
-#: src/components/Lightbox/chrome/ImageMenu.tsx:93
+#: src/components/Lightbox/chrome/ImageMenu.tsx:94
 #: src/components/Lightbox/Lightbox.web.tsx:281
 #: src/components/Lightbox/Lightbox.web.tsx:307
 msgid "Share image"
@@ -11151,8 +11170,8 @@ msgstr "Dialogul de distribuire link"
 msgid "Share my profile"
 msgstr "Partajați-mi profilul"
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:167
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:170
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:165
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:168
 msgid "Share post at:// URI"
 msgstr "Distribuiți postarea at:// URI"
 
@@ -11170,8 +11189,8 @@ msgstr "Distribuiți codul QR"
 msgid "Share this feed"
 msgstr "Distribuiți acest flux"
 
-#: src/screens/Search/Shell.tsx:557
-#: src/screens/Search/Shell.tsx:626
+#: src/screens/Search/Shell.tsx:565
+#: src/screens/Search/Shell.tsx:634
 msgid "Share this search"
 msgstr "Partajați această căutare"
 
@@ -11183,8 +11202,8 @@ msgstr "Distribuiți acest pachet de pornire"
 msgid "Share this starter pack and help people join your community on Bluesky."
 msgstr "Distribuiți acest pachet de pornire și ajutați oamenii să se alăture comunității dvs. pe Bluesky."
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:132
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:135
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:160
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:166
 #: src/screens/StarterPack/StarterPackScreen.tsx:638
@@ -11202,7 +11221,7 @@ msgstr "Partajați-vă contactele pentru a găsi prieteni"
 msgid "Share your thoughts…"
 msgstr "Împărtășiți-vă gândurile…"
 
-#: src/Navigation.tsx:322
+#: src/Navigation.tsx:323
 msgid "Shared Preferences Tester"
 msgstr "Tester Preferințe Partajate"
 
@@ -11231,8 +11250,8 @@ msgstr "Afișare text alternativ"
 #: src/features/liveNow/components/LiveStatusDialog.tsx:318
 #: src/features/liveNow/components/LiveStatusDialog.tsx:322
 #: src/screens/List/ListHiddenScreen.tsx:194
-#: src/screens/VideoFeed/index.tsx:700
-#: src/screens/VideoFeed/index.tsx:706
+#: src/screens/VideoFeed/index.tsx:717
+#: src/screens/VideoFeed/index.tsx:723
 msgid "Show anyway"
 msgstr "Afișați oricum"
 
@@ -11330,7 +11349,7 @@ msgstr "Afișează avertismente și filtrează din fluxuri"
 msgid "Show when you’re live"
 msgstr "Afișați când sunteți în direct"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:582
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:583
 msgid "Shows information about when this post was created"
 msgstr "Afișează informații despre când a fost creată această postare"
 
@@ -11345,8 +11364,8 @@ msgstr "Afișează conținutul"
 
 #: src/components/dialogs/Signin.tsx:98
 #: src/components/dialogs/Signin.tsx:100
-#: src/components/WelcomeModal.tsx:197
-#: src/components/WelcomeModal.tsx:209
+#: src/components/WelcomeModal.tsx:194
+#: src/components/WelcomeModal.tsx:206
 #: src/screens/Hashtag.tsx:231
 #: src/screens/Login/index.tsx:143
 #: src/screens/Login/index.tsx:165
@@ -11355,7 +11374,7 @@ msgstr "Afișează conținutul"
 #: src/screens/Login/LoginForm.tsx:560
 #: src/screens/Messages/JoinRequest.tsx:290
 #: src/screens/Messages/JoinRequest.tsx:296
-#: src/screens/Search/SearchResults.tsx:386
+#: src/screens/Search/SearchResults.tsx:413
 #: src/view/com/auth/SplashScreen.tsx:116
 #: src/view/com/auth/SplashScreen.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:124
@@ -11496,7 +11515,7 @@ msgstr "Amânare memento"
 msgid "So many thoughts, you should post one"
 msgstr "Atât de multe gânduri, ar trebui să postați măcar unul"
 
-#: src/components/WelcomeModal.tsx:151
+#: src/components/WelcomeModal.tsx:148
 msgid "Social media you control."
 msgstr "O rețea socială pe care dvs. o controlați."
 
@@ -11590,7 +11609,7 @@ msgid "Something went wrong, please try again"
 msgstr "Ceva n-a mers bine, vă rugăm să încercați din nou"
 
 #: src/screens/Moderation/index.tsx:112
-#: src/screens/Profile/Sections/Labels.tsx:184
+#: src/screens/Profile/Sections/Labels.tsx:185
 #: src/screens/Settings/BetaFeaturesSettings.tsx:80
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:84
 msgid "Something went wrong, please try again."
@@ -11647,7 +11666,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr "Spam sau alt comportament inautentic sau înșelăciune"
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:192
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
 msgid "Sports"
 msgstr "Sport"
 
@@ -11665,7 +11684,7 @@ msgstr "Începeți o conversație și ea va apărea aici."
 msgid "Start a group chat"
 msgstr "Începeți o conversație de grup"
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:191
+#: src/components/dms/dialogs/NewChatDialog.tsx:192
 msgid "Start a new chat"
 msgstr "Începeți o conversație nouă"
 
@@ -11679,17 +11698,17 @@ msgstr "Începeți să adaugați persoane"
 msgid "Start adding people!"
 msgstr "Începeți să adaugați persoane!"
 
-#: src/components/dms/InitiateChatFlow.tsx:726
+#: src/components/dms/InitiateChatFlow.tsx:831
 msgid "Start chat"
 msgstr "Începeți conversația"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:428
-#: src/components/dms/InitiateChatFlow.tsx:874
+#: src/components/dms/InitiateChatFlow.tsx:1087
 msgid "Start chat with {displayName}"
 msgstr "Începeți conversația cu {displayName}"
 
-#: src/Navigation.tsx:541
-#: src/Navigation.tsx:546
+#: src/Navigation.tsx:550
+#: src/Navigation.tsx:555
 #: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Starter Pack"
 msgstr "Pachet de pornire"
@@ -11712,12 +11731,16 @@ msgstr "Pachet de pornire de dvs."
 msgid "Starter pack is invalid"
 msgstr "Pachetul de pornire nu este valid"
 
+#: src/screens/Search/SearchResults.tsx:120
+msgid "Starter packs"
+msgstr "Pachete de pornire"
+
 #: src/screens/Search/Explore.tsx:661
 #: src/view/screens/Profile.tsx:240
 msgid "Starter Packs"
 msgstr "Pachete de pornire"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:295
+#: src/components/StarterPack/ProfileStarterPacks.tsx:298
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Pachetele de pornire vă permit să partajați cu ușurință fluxurile și persoanele preferate cu prietenii dvs."
 
@@ -11751,7 +11774,7 @@ msgstr "Spațiu de stocare curățat, trebuie să reporniți aplicația acum."
 msgid "Stored as part of a secure code for matching with others"
 msgstr "Stocat ca parte a unui cod securizat pentru a se potrivi cu alții"
 
-#: src/Navigation.tsx:307
+#: src/Navigation.tsx:308
 #: src/screens/Settings/Settings.tsx:465
 msgid "Storybook"
 msgstr "Storybook"
@@ -11808,7 +11831,7 @@ msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Abonați-vă la {publicationTitle} pe {0}"
 
 #. placeholder {0}: labelerInfo.creator.handle
-#: src/screens/Profile/Sections/Labels.tsx:231
+#: src/screens/Profile/Sections/Labels.tsx:232
 msgid "Subscribe to @{0} to use these labels:"
 msgstr "Abonați-vă la @{0} pentru a utiliza aceste etichete:"
 
@@ -11847,7 +11870,7 @@ msgid "Successfully verified"
 msgstr "Verificat cu succes"
 
 #: src/components/dms/AddMembersFlow.tsx:243
-#: src/components/dms/InitiateChatFlow.tsx:350
+#: src/components/dms/InitiateChatFlow.tsx:432
 msgid "Suggested"
 msgstr "Sugerate"
 
@@ -11880,7 +11903,7 @@ msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr "Apus de soare"
 
-#: src/Navigation.tsx:332
+#: src/Navigation.tsx:333
 #: src/view/screens/Support.tsx:25
 #: src/view/screens/Support.tsx:28
 msgid "Support"
@@ -11891,10 +11914,12 @@ msgid "Support for this feature in your country has not been enabled yet! Please
 msgstr "Această caracteristică nu este încă disponibilă în țara dvs.! Vă rugăm să reveniți mai târziu."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:98
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:114
 msgid "Suspended accounts cannot participate in a group chat."
 msgstr "Conturile suspendate nu pot participa la o conversație de grup."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:60
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:75
 msgid "Suspended accounts cannot participate in chat."
 msgstr "Conturile suspendate nu pot participa la conversație."
 
@@ -12057,7 +12082,7 @@ msgstr "Termeni"
 #: src/components/dialogs/BirthDateSettings.tsx:181
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:31
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:98
-#: src/Navigation.tsx:342
+#: src/Navigation.tsx:343
 #: src/screens/Settings/AboutSettings.tsx:94
 #: src/screens/Settings/AboutSettings.tsx:97
 #: src/view/screens/TermsOfService.tsx:25
@@ -12110,11 +12135,11 @@ msgstr "Acest pachet de pornire nu a putut fi găsit."
 msgid "That username is already taken"
 msgstr "Acel nume de utilizator este deja luat"
 
-#: src/view/com/post-thread/PostQuotes.tsx:135
+#: src/view/com/post-thread/PostQuotes.tsx:142
 msgid "That's all, folks!"
 msgstr "Asta-i tot, oameni buni!"
 
-#: src/screens/VideoFeed/index.tsx:1195
+#: src/screens/VideoFeed/index.tsx:1212
 msgid "That's everything!"
 msgstr "Asta e tot!"
 
@@ -12593,7 +12618,7 @@ msgstr "Această etichetă a fost aplicată de dvs."
 msgid "This label was applied to the entire user account and will appear on all posts."
 msgstr "Această etichetă a fost aplicată întregului cont de utilizator și va apărea pe toate postările."
 
-#: src/screens/Profile/Sections/Labels.tsx:218
+#: src/screens/Profile/Sections/Labels.tsx:219
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "Acest etichetator nu a declarat etichetele pe care le publică și s-ar putea să nu fie activ."
 
@@ -12638,7 +12663,7 @@ msgstr "Această persoană vă blochează"
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:622
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:623
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Această postare pretinde că a fost creată pe <0>{0}</0>, dar a fost văzută prima dată de Bluesky pe <1>{1}</1>."
 
@@ -12646,7 +12671,7 @@ msgstr "Această postare pretinde că a fost creată pe <0>{0}</0>, dar a fost v
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Această postare are un tip necunoscut de threadgate. Este posibil ca aplicația dvs. să nu fie actualizată la zi."
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:157
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:155
 msgid "This post is only visible to logged-in users."
 msgstr "Această postare este vizibilă numai pentru utilizatorii conectați."
 
@@ -12700,6 +12725,7 @@ msgid "This user doesn't have any followers."
 msgstr "Acest utilizator nu are urmăritori."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:64
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:79
 msgid "This user has blocked you and cannot be messaged."
 msgstr "Acest utilizator v-a blocat și nu-i se pot scrie mesaje."
 
@@ -12709,6 +12735,7 @@ msgid "This user has blocked you. You cannot view their content."
 msgstr "Acest utilizator v-a blocat. Nu puteți vizualiza conținutul acestuia."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:68
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:83
 msgid "This user has disabled chat and cannot be messaged."
 msgstr "Acest utilizator a dezactivat conversația și nu-i se pot scrie mesaje."
 
@@ -12734,7 +12761,7 @@ msgstr "Acest utilizator este nou aici. Apăsați pentru mai multe informații d
 msgid "This user isn't following anyone."
 msgstr "Acest utilizator nu urmărește pe nimeni."
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:236
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:304
 msgid "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 msgstr "Acest videoclip nu poate fi redat pe dispozitivul dvs. Este posibil ca browserul sau sistemul dvs. să nu aibă codec-urile video necesare (H.264/AAC)."
 
@@ -12783,7 +12810,7 @@ msgstr "Preferințe fir"
 msgid "Threaded"
 msgstr "Fire"
 
-#: src/Navigation.tsx:375
+#: src/Navigation.tsx:376
 msgid "Threads Preferences"
 msgstr "Preferințe fire"
 
@@ -12843,7 +12870,7 @@ msgid "Too many contacts - you've exceeded the number of contacts you can import
 msgstr "Prea multe contacte - ați depășit numărul de contacte pe care le puteți importa pentru a vă găsi prietenii"
 
 #: src/screens/Hashtag.tsx:86
-#: src/screens/Search/SearchResults.tsx:74
+#: src/screens/Search/SearchResults.tsx:83
 #: src/screens/Topic.tsx:58
 msgid "Top"
 msgstr "Sus"
@@ -12855,7 +12882,7 @@ msgstr "Sus"
 msgid "Top replies first"
 msgstr "Răspunsurile de top primele"
 
-#: src/Navigation.tsx:494
+#: src/Navigation.tsx:503
 msgid "Topic"
 msgstr "Subiect"
 
@@ -12917,11 +12944,11 @@ msgstr "Trolling"
 msgid "Trust emerges from relationships, communities, and shared context, so we’re also enabling <0>trusted verifiers</0>: organizations that can directly issue verification."
 msgstr "Încrederea rezultă din relații, comunități și context comun, așa că activăm și <0>verificatori de încredere</0>: organizații care pot emite în mod direct verificări."
 
-#: src/screens/Search/SearchResults.tsx:233
+#: src/screens/Search/SearchResults.tsx:260
 msgid "Try a different search term or remove some filters."
 msgstr "Încercați un alt termen de căutare sau eliminați câteva filtre."
 
-#: src/screens/Search/SearchResults.tsx:235
+#: src/screens/Search/SearchResults.tsx:262
 msgid "Try a different search term."
 msgstr "Încercați un alt termen de căutare."
 
@@ -12996,10 +13023,12 @@ msgid "Unable to fetch join requests."
 msgstr "Imposibil de preluat cererile de alăturare."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:113
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:129
 msgid "Unable to find a selected recipient."
 msgstr "Imposibil de găsit destinatarul selectat."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:77
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:92
 msgid "Unable to find the selected recipient."
 msgstr "Imposibil de găsit destinatarul selectat."
 
@@ -13103,7 +13132,7 @@ msgstr "Nu mai urmăriți pe {0}"
 msgid "Unfollow account"
 msgstr "Nu mai urmăriți contul"
 
-#: src/screens/VideoFeed/index.tsx:902
+#: src/screens/VideoFeed/index.tsx:919
 msgid "Unfollows the user"
 msgstr "Anulează urmărirea utilizatorului"
 
@@ -13191,7 +13220,7 @@ msgstr "Dezamuțiți această conversație de grup"
 msgid "Unmute thread"
 msgstr "Dezamuțire fir"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:344
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:330
 msgid "Unmute video"
 msgstr "Activați sunetul videoclipului"
 
@@ -13509,7 +13538,7 @@ msgstr "Verificare eșuată, încercați din nou."
 msgid "Verification settings"
 msgstr "Setări de verificare"
 
-#: src/Navigation.tsx:207
+#: src/Navigation.tsx:208
 #: src/screens/Moderation/VerificationSettings.tsx:34
 msgid "Verification Settings"
 msgstr "Setări de verificare"
@@ -13617,7 +13646,7 @@ msgstr "Videoclip"
 msgid "Video failed to process"
 msgstr "Procesarea videoclipului a eșuat"
 
-#: src/Navigation.tsx:562
+#: src/Navigation.tsx:571
 msgid "Video Feed"
 msgstr "Flux video"
 
@@ -13627,24 +13656,24 @@ msgid "Video from {0}: {text}"
 msgstr "Videoclip de la {0}: {text}"
 
 #. placeholder {0}: sanitizeHandle( post.author.handle, '@', )
-#: src/screens/VideoFeed/index.tsx:1157
+#: src/screens/VideoFeed/index.tsx:1174
 msgid "Video from {0}. Tap to play or pause the video"
 msgstr "Videoclip de la {0}. Atingeți pentru a reda sau pentru a întrerupe videoclipul"
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:200
 msgid "Video Games"
 msgstr "Jocuri video"
 
-#: src/screens/VideoFeed/index.tsx:1156
+#: src/screens/VideoFeed/index.tsx:1173
 msgid "Video is paused"
 msgstr "Redarea videoclipului este întreruptă"
 
-#: src/screens/VideoFeed/index.tsx:1156
+#: src/screens/VideoFeed/index.tsx:1173
 msgid "Video is playing"
 msgstr "Videoclipul se redă"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:232
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:299
 msgid "Video not found."
 msgstr "Videoclipul nu a fost găsit."
 
@@ -13692,7 +13721,7 @@ msgstr "Vizualizați avatarul lui {0}"
 #. placeholder {0}: profile.handle
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:505
 #: src/screens/Search/components/SearchProfileCard.tsx:37
-#: src/screens/VideoFeed/index.tsx:863
+#: src/screens/VideoFeed/index.tsx:880
 #: src/view/com/notifications/NotificationFeedItem.tsx:619
 msgid "View {0}'s profile"
 msgstr "Vizualizați profilul lui {0}"
@@ -13723,8 +13752,8 @@ msgstr "Vizualizați postarea pe blog pentru mai multe detalii"
 msgid "View debug entry"
 msgstr "Vizualizați intrarea de depanare"
 
-#: src/screens/VideoFeed/index.tsx:728
-#: src/screens/VideoFeed/index.tsx:746
+#: src/screens/VideoFeed/index.tsx:745
+#: src/screens/VideoFeed/index.tsx:763
 msgid "View details"
 msgstr "Vizualizare detalii"
 
@@ -13797,7 +13826,7 @@ msgstr "Vizualizați linkul de invitație pentru această conversație de grup"
 msgid "View the labeling service provided by @{0}"
 msgstr "Vizualizați serviciul de etichetare furnizat de @{0}"
 
-#: src/components/verification/VerificationCheckButton.tsx:93
+#: src/components/verification/VerificationCheckButton.tsx:103
 msgid "View this user's verifications"
 msgstr "Vizualizați verificările acestui utilizator"
 
@@ -13830,7 +13859,7 @@ msgstr "Vizualizați listele dvs. de moderare"
 msgid "View your muted accounts"
 msgstr "Vizualizați conturile dvs. amuțite"
 
-#: src/components/verification/VerificationCheckButton.tsx:92
+#: src/components/verification/VerificationCheckButton.tsx:102
 msgid "View your verifications"
 msgstr "Vizualizați-vă verificările"
 
@@ -14034,7 +14063,7 @@ msgid "We're having network issues, try again"
 msgstr "Avem probleme cu rețeaua, încercați din nou"
 
 #: src/components/dms/AddMembersFlow.tsx:197
-#: src/components/dms/InitiateChatFlow.tsx:289
+#: src/components/dms/InitiateChatFlow.tsx:321
 msgid "We’re having network issues, try again"
 msgstr "Avem probleme cu rețeaua, încercați din nou"
 
@@ -14063,13 +14092,15 @@ msgstr "Ne pare rău, dar nu am reușit să rezolvăm această listă. Dacă pro
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "Ne pare rău, dar nu am putut încărca cuvintele dvs. amuțite în acest moment. Vă rugăm să încercați din nou."
 
-#: src/screens/Search/SearchResults.tsx:412
-#: src/screens/Search/SearchResults.tsx:553
+#: src/screens/Search/SearchResults.tsx:439
+#: src/screens/Search/SearchResults.tsx:580
+#: src/screens/Search/SearchResults.tsx:777
 msgid "We’re sorry, but your search could not be completed."
 msgstr "Ne pare rău, dar căutarea dvs. nu a putut fi finalizată."
 
-#: src/screens/Search/SearchResults.tsx:411
-#: src/screens/Search/SearchResults.tsx:552
+#: src/screens/Search/SearchResults.tsx:438
+#: src/screens/Search/SearchResults.tsx:579
+#: src/screens/Search/SearchResults.tsx:776
 msgid "We’re sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Ne pare rău, dar căutarea dvs. nu a putut fi finalizată. Vă rugăm să încercați din nou peste câteva minute."
 
@@ -14160,7 +14191,7 @@ msgid "Who can verify?"
 msgstr "Cine poate verifica?"
 
 #: src/screens/Home/NoFeedsPinned.tsx:80
-#: src/screens/Messages/ChatList.tsx:410
+#: src/screens/Messages/ChatList.tsx:409
 #: src/screens/Messages/Inbox.tsx:191
 msgid "Whoops!"
 msgstr "Hopa!"
@@ -14450,6 +14481,7 @@ msgid "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reac
 msgstr "Nu puteți adăuga mai mult de {EMOJI_REACTION_LIMIT, plural, one {o reacție emoji} few {# reacții emoji} other {# de reacții emoji}}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:105
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:121
 msgid "You cannot create a group chat yet."
 msgstr "Încă nu puteți crea conversații de grup."
 
@@ -14562,7 +14594,7 @@ msgstr "Aveți modificări nesalvate la această schiță, doriți să le salva�
 msgid "You have unsaved changes. Would you like to save them before viewing your drafts?"
 msgstr "Aveți modificări nesalvate. Doriți să le salvați înainte de a vă vizualiza schițele?"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:292
+#: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "You haven't created a starter pack yet!"
 msgstr "Încă nu ați creat un pachet de pornire!"
 
@@ -14621,7 +14653,7 @@ msgstr "Trebuie să fiți proprietarul conversației pentru a elimina un membru.
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
 msgstr "Trebuie să aveți cel puțin 13 ani pentru a utiliza Bluesky. Citiți <0>Termenii de Serviciu</0> pentru mai multe informații."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:365
+#: src/components/StarterPack/ProfileStarterPacks.tsx:368
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr "Trebuie să urmăriți cel puțin alte șapte persoane pentru a genera un pachet de pornire."
 
@@ -14798,7 +14830,7 @@ msgstr "Ați atins numărul maxim de schițe"
 msgid "You've reached the maximum number of requests allowed. Please try again later."
 msgstr "Ați atins numărul maxim de solicitări permise. Vă rugăm să încercați din nou mai târziu."
 
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:426
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:430
 msgid "You’ve reached the maximum of {MAX_FILTERS, plural, one {# filter} other {# filters}}. Add more values to an existing filter instead of creating new ones."
 msgstr "Ați atins numărul maxim de {MAX_FILTERS, plural, one {un filtru} few {# filtre} other {# de filtre}}. Adăugați mai multe valori unui filtru existent în loc să creați unele noi."
 
@@ -14814,7 +14846,7 @@ msgstr "Ați atins limita zilnică pentru încărcări de videoclipuri (prea mul
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Ați atins limita zilnică pentru încărcări de videoclipuri (prea multe videoclipuri)"
 
-#: src/screens/VideoFeed/index.tsx:1204
+#: src/screens/VideoFeed/index.tsx:1221
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Ați rămas fără videoclipuri de vizionat. Poate e un moment bun pentru a face o pauză?"
 
@@ -14834,11 +14866,11 @@ msgstr "Contul dumneavoastră a fost suspendat"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Contul dvs. nu este încă suficient de vechi pentru a încărca videoclipuri. Vă rugăm să încercați din nou mai târziu."
 
-#: src/components/dms/InitiateChatFlow.tsx:731
+#: src/components/dms/InitiateChatFlow.tsx:836
 msgid "Your account is too new"
 msgstr "Contul dvs. este prea nou"
 
-#: src/components/dms/InitiateChatFlow.tsx:732
+#: src/components/dms/InitiateChatFlow.tsx:837
 msgid "Your account must be at least 7 days old to create a new group chat."
 msgstr "Contul dvs. trebuie să aibă cel puțin 7 zile pentru a crea o nouă conversație de grup."
 
@@ -14929,7 +14961,7 @@ msgstr "Furnizorul dvs. de servicii de găzduire nu poate fi identificat pe baza
 msgid "Your hosting provider is detected automatically from the username you enter."
 msgstr "Furnizorul dvs. de găzduire este detectat automat din numele de utilizator pe care îl introduceți."
 
-#: src/Navigation.tsx:466
+#: src/Navigation.tsx:475
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:62
 #: src/screens/Settings/ContentAndMediaSettings.tsx:94
 #: src/screens/Settings/ContentAndMediaSettings.tsx:97
@@ -14979,11 +15011,11 @@ msgid "Your preferred language"
 msgstr "Limba dvs. preferată"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.tsx:102
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.web.tsx:53
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.web.tsx:54
 msgid "Your profile picture"
 msgstr "Imaginea dvs. de profil"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:26
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:36
 msgid "Your profile picture surrounded by concentric circles of other users' profile pictures"
 msgstr "Imaginea dvs. de profil înconjurată de cercuri concentrice cu imagini de profil ale altor utilizatori"
 
@@ -15015,3 +15047,4 @@ msgstr "Numele de utilizator și parola dvs. vor fi partajate cu <0>{host}</0>. 
 #: src/components/verification/VerificationsDialog.tsx:67
 msgid "Your verifications"
 msgstr "Verificările dvs."
+
