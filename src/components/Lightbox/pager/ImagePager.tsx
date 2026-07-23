@@ -60,13 +60,11 @@ const SLOW_SPRING: WithSpringConfig = {
   mass: IS_IOS ? 1.25 : 0.75,
   damping: 300,
   stiffness: 800,
-  restDisplacementThreshold: 0.001,
 }
 const FAST_SPRING: WithSpringConfig = {
   mass: IS_IOS ? 1.25 : 0.75,
   damping: 150,
   stiffness: 900,
-  restDisplacementThreshold: 0.001,
 }
 
 function canAnimate(lightbox: Lightbox): boolean {
@@ -532,7 +530,7 @@ function LightboxImage({
     const dismissTranslateY =
       isActive && openProgressValue === 1 ? dismissSwipeTranslateY.get() : 0
 
-    if (openProgressValue === 0 && isFlyingAway.get()) {
+    if (openProgressValue === 0) {
       return {
         isHidden: true,
         isResting: false,
@@ -609,6 +607,7 @@ function LightboxImage({
           return withSpring(0, {
             stiffness: 700,
             damping: 50,
+            mass: 1,
             reduceMotion: ReduceMotion.Never,
           })
         })

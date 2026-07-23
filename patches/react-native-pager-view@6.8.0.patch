@@ -1,3 +1,129 @@
+diff --git a/ios/Fabric/RNCPagerViewComponentView.mm b/ios/Fabric/RNCPagerViewComponentView.mm
+index 652a5c123100e7010011f07649517aa9e0cbc554..efbc3af622c4fee8267a78144b906c7b5de7859c 100644
+--- a/ios/Fabric/RNCPagerViewComponentView.mm
++++ b/ios/Fabric/RNCPagerViewComponentView.mm
+@@ -90,6 +90,62 @@ - (void)willMoveToSuperview:(UIView *)newSuperview {
+     }
+ }
+ 
++/*
++ * UIKit resolves several behaviors (status-bar-tap scroll-to-top, safe area
++ * propagation, appearance callbacks) by walking parentViewController from a
++ * view's nearest view controller up to the window's root view controller.
++ * The Paper implementation embeds the UIPageViewController into that chain
++ * via reactAddControllerToClosestParent:, but this Fabric implementation
++ * leaves it orphaned (parentViewController == nil), which among other things
++ * makes UIKit ignore every scroll view rendered inside the pager when
++ * handling the status bar scroll-to-top tap. Attach the page view controller
++ * to the nearest ancestor view controller to restore parity with Paper.
++ */
++- (void)attachNativePageViewControllerToNearestParent {
++    if (_nativePageViewController == nil ||
++        _nativePageViewController.parentViewController != nil) {
++        return;
++    }
++    UIResponder *responder = self.nextResponder;
++    while (responder != nil && ![responder isKindOfClass:[UIViewController class]]) {
++        responder = responder.nextResponder;
++    }
++    UIViewController *parent = (UIViewController *)responder;
++    if (parent == nil) {
++        return;
++    }
++    [parent addChildViewController:_nativePageViewController];
++    [_nativePageViewController didMoveToParentViewController:parent];
++}
++
++- (void)detachNativePageViewControllerFromParent {
++    if (_nativePageViewController.parentViewController == nil) {
++        return;
++    }
++    [_nativePageViewController willMoveToParentViewController:nil];
++    [_nativePageViewController removeFromParentViewController];
++}
++
++- (void)didMoveToWindow {
++    [super didMoveToWindow];
++    if (self.window != nil) {
++        [self attachNativePageViewControllerToNearestParent];
++    }
++}
++
++- (void)layoutSubviews {
++    [super layoutSubviews];
++    /*
++     * On the first didMoveToWindow the ancestor view controller may not be
++     * wired up yet (see callstack/react-native-pager-view#1089 for the same
++     * timing issue in v8), so retry here; the attach is a cheap no-op once
++     * the controller has a parent.
++     */
++    if (self.window != nil) {
++        [self attachNativePageViewControllerToNearestParent];
++    }
++}
++
+ 
+ #pragma mark - React API
+ 
+@@ -126,6 +182,13 @@ -(void)updateLayoutMetrics:(const facebook::react::LayoutMetrics &)layoutMetrics
+ 
+ -(void)prepareForRecycle {
+     [super prepareForRecycle];
++    /*
++     * Undo the child view controller relationship added in
++     * attachNativePageViewControllerToNearestParent, otherwise the parent
++     * view controller keeps the page view controller (and its subtree) alive
++     * after unmount.
++     */
++    [self detachNativePageViewControllerFromParent];
+     _nativePageViewController = nil;
+     _currentIndex = -1;
+ }
+@@ -421,8 +484,44 @@ + (ComponentDescriptorProvider)componentDescriptorProvider
+ }
+ 
+ 
++/*
++ * Finds the navigation controller managing this pager via the responder
++ * chain, so the pager can cooperate with the controller's back gesture.
++ */
++- (UINavigationController *)nearestNavigationController {
++    UIResponder *responder = self.nextResponder;
++    while (responder != nil) {
++        if ([responder isKindOfClass:[UINavigationController class]]) {
++            return (UINavigationController *)responder;
++        }
++        responder = responder.nextResponder;
++    }
++    return nil;
++}
++
+ - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+ 
++    // iOS 26+ full-screen back gesture (interactiveContentPopGestureRecognizer)
++    if (@available(iOS 26.0, *)) {
++        if (gestureRecognizer == self.panGestureRecognizer &&
++            otherGestureRecognizer != nil &&
++            otherGestureRecognizer == [self nearestNavigationController].interactiveContentPopGestureRecognizer) {
++            UIPanGestureRecognizer* panGestureRecognizer = (UIPanGestureRecognizer*) gestureRecognizer;
++            CGPoint velocity = [panGestureRecognizer velocityInView:self];
++            BOOL isLTR = [self isLtrLayout];
++            BOOL isBackGesture = (isLTR && velocity.x > 0) || (!isLTR && velocity.x < 0);
++
++            if (self.currentIndex == 0 && isBackGesture) {
++                scrollView.panGestureRecognizer.enabled = false;
++            } else {
++                const auto &viewProps = *std::static_pointer_cast<const RNCViewPagerProps>(_props);
++                scrollView.panGestureRecognizer.enabled = viewProps.scrollEnabled;
++            }
++
++            return YES;
++        }
++    }
++
+     // Recognize simultaneously only if the other gesture is RN Screen's pan gesture (one that is used to perform fullScreenGestureEnabled)
+     if (gestureRecognizer == self.panGestureRecognizer && [NSStringFromClass([otherGestureRecognizer class]) isEqual: @"RNSPanGestureRecognizer"]) {
+         UIPanGestureRecognizer* panGestureRecognizer = (UIPanGestureRecognizer*) gestureRecognizer;
 diff --git a/ios/RNCPagerView.m b/ios/RNCPagerView.m
 index adfc7c6f2224b898a02319d352bb4fe11a18fd7e..939bb801c5b0ca6f93b77cb0507c19d137e08e77 100644
 --- a/ios/RNCPagerView.m

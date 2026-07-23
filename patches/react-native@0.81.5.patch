@@ -1,3 +1,28 @@
+diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
+index c593d9ee2155a826352ebca34845aa5792b2eec3..3c26cd737f21116ff0aa48190e97e6c0649b5fac 100644
+--- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
++++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
+@@ -101,6 +101,20 @@ - (void)setContentOffset:(CGPoint)contentOffset
+       RCTSanitizeNaNValue(contentOffset.y, @"scrollView.contentOffset.y"));
+ }
+ 
++- (void)setCenterContent:(BOOL)centerContent
++{
++  if (_centerContent != centerContent) {
++    _centerContent = centerContent;
++    [self centerContentIfNeeded];
++  }
++}
++
++- (void)setContentSize:(CGSize)contentSize
++{
++  [super setContentSize:contentSize];
++  [self centerContentIfNeeded];
++}
++
+ - (void)setFrame:(CGRect)frame
+ {
+   [super setFrame:frame];
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
 index 914a2494a57923fbf185644b7e2bb8aca8848e56..0deac55f22350f5e8377d8963fb1c2434bf6abfd 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
@@ -11,11 +36,60 @@ index 914a2494a57923fbf185644b7e2bb8aca8848e56..0deac55f22350f5e8377d8963fb1c243
  @end
  
  NS_ASSUME_NONNULL_END
+diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
+index 0d231bc8aa938da296eb3b981e8ac9595a43b87f..be0a10d9c4de1892fa00bcbf8d63d739b66d8ffe 100644
+--- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
+@@ -76,7 +76,17 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+     return;
+   }
+ 
+-  const auto &oldConcreteProps = static_cast<const PullToRefreshViewProps &>(*_props);
++  /*
++   * TODO: Remove after upgrading React Native to 0.82+ (fixed upstream by
++   * facebook/react-native#52615, #52584 and #53231).
++   * Diff against oldProps instead of _props. During the initial-layout replay
++   * from layoutSubviews, _props already holds the new props, so diffing
++   * against it is a no-op and tintColor/progressViewOffset are never applied
++   * on mount (facebook/react-native#56343). oldProps is null-guarded because
++   * the create-mutation path passes nullptr.
++   */
++  const auto &oldConcreteProps = static_cast<const PullToRefreshViewProps &>(
++      oldProps ? *oldProps : *PullToRefreshViewShadowNode::defaultSharedProps());
+   const auto &newConcreteProps = static_cast<const PullToRefreshViewProps &>(*props);
+ 
+   if (newConcreteProps.tintColor != oldConcreteProps.tintColor) {
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-index 1494fd225aff1fa0429e917404d6b4ca5fc961c5..df643f5c844ad2e684de5161528eba17f4a188d0 100644
+index 1494fd225aff1fa0429e917404d6b4ca5fc961c5..682e41b141c38c830bbcd9f2ce0de07b18f13977 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-@@ -1038,6 +1038,11 @@ - (void)_adjustForMaintainVisibleContentPosition
+@@ -380,7 +380,15 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+ 
+   MAP_SCROLL_VIEW_PROP(zoomScale);
+ 
+-  if (oldScrollViewProps.contentInset != newScrollViewProps.contentInset) {
++  // When disabling centerContent, reset inset to prop value
++  // (enabling is handled automatically by the setCenterContent: setter)
++  if (oldScrollViewProps.centerContent && !newScrollViewProps.centerContent) {
++    _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
++  }
++
++  // Only apply contentInset from props if centerContent is disabled
++  // When centerContent is enabled, the inset is calculated by centerContentIfNeeded
++  if (oldScrollViewProps.contentInset != newScrollViewProps.contentInset && !newScrollViewProps.centerContent) {
+     _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
+   }
+ 
+@@ -507,7 +515,7 @@ - (UIView *)betterHitTest:(CGPoint)point withEvent:(UIEvent *)event
+     }
+   }
+ 
+-  return isPointInside ? self : nil;
++  return isPointInside ? _scrollView : nil;
+ }
+ 
+ /*
+@@ -1038,6 +1046,11 @@ - (void)_adjustForMaintainVisibleContentPosition
    }
  }
  
@@ -150,6 +224,23 @@ index 8b6571698fc5dd091a0d8980a33bb40295faf305..27c97bfeb6f13907c89f1d85f2bb8b8a
        reactChoreographer.postFrameCallback(ReactChoreographer.CallbackType.IDLE_EVENT, this)
      }
    }
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
+index 216bb23beb023ef6c3ae814c17e05bccbda7fc91..6ad5cc1d9ed5b8cd2df08ad77adca56c6bb58ff4 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
+@@ -386,9 +386,10 @@ - (TextMeasurement)_measureTextStorage:(NSTextStorage *)textStorage
+     size.height = enumeratedLinesHeight;
+   }
+ 
++  CGFloat epsilon = 0.001;
+   size = (CGSize){
+-      ceil(size.width * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
+-      ceil(size.height * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
++    ceil((size.width + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
++    ceil((size.height + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
+ 
+   __block auto attachments = TextMeasurement::Attachments{};
+ 
 diff --git a/third-party-podspecs/fmt.podspec b/third-party-podspecs/fmt.podspec
 index 2f38990e226c13f483aaf1b986302d4094243814..9b02e481e290299be20a6f09c42056ff51695e9b 100644
 --- a/third-party-podspecs/fmt.podspec

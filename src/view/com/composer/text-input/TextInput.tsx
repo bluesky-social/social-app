@@ -227,7 +227,6 @@ export function TextInput({
           allowFontScaling
           multiline
           scrollEnabled={false}
-          numberOfLines={2}
           // Note: should be the default value, but as of v1.104
           // it switched to "none" on Android
           autoCapitalize="sentences"

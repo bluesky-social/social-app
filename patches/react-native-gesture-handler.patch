@@ -1,0 +1,31 @@
+diff --git a/apple/RNGestureHandler.mm b/apple/RNGestureHandler.mm
+index c4f760c41a9965245edcfa5e7cb781f8d2c7b66a..bf7d1fb092e22cbcedf787e606876e533879f810 100644
+--- a/apple/RNGestureHandler.mm
++++ b/apple/RNGestureHandler.mm
+@@ -470,15 +470,19 @@ + (RNGestureHandler *)findGestureHandlerByRecognizer:(UIGestureRecognizer *)reco
+ 
+   // We may try to extract "DummyGestureHandler" in case when "otherGestureRecognizer" belongs to
+   // a native view being wrapped with "NativeViewGestureHandler"
+-  RNGHUIView *reactView = recognizer.view;
+-  while (reactView != nil && reactView.reactTag == nil) {
+-    reactView = reactView.superview;
+-  }
++  RNGHUIView *view = recognizer.view;
++  while (view != nil) {
++    for (UIGestureRecognizer *candidateRecognizer in view.gestureRecognizers) {
++      if ([candidateRecognizer isKindOfClass:[RNDummyGestureRecognizer class]]) {
++        return candidateRecognizer.gestureHandler;
++      }
++    }
+ 
+-  for (UIGestureRecognizer *recognizer in reactView.gestureRecognizers) {
+-    if ([recognizer isKindOfClass:[RNDummyGestureRecognizer class]]) {
+-      return recognizer.gestureHandler;
++    if ([view isKindOfClass:[RCTViewComponentView class]]) {
++      return nil;
+     }
++
++    view = view.superview;
+   }
+ 
+   return nil;

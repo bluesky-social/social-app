@@ -8,6 +8,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import Animated, {
+  type AnimatedStyle,
   FadeIn,
   FadeOut,
   interpolateColor,
@@ -662,7 +663,7 @@ function BlockedPlaceholder({
   style,
 }: {
   profile: Shadow<ChatBskyActorDefs.ProfileViewBasic>
-  style?: StyleProp<ViewStyle>
+  style?: AnimatedStyle<ViewStyle>
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
