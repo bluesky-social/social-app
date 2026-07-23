@@ -59,9 +59,10 @@ export const config: AppBskyAgeassuranceDefs.Config = {
       ],
     },
     {
-      // On-device verification region. KWS is included as a fallback for
-      // platforms without the native age API (e.g. web) or when the device
+      // On-device verification region, native-only (web users in TX are not
+      // age assured). KWS is included as a fallback for when the device
       // result is insufficient.
+      platforms: ['ios', 'android'],
       countryCode: 'US',
       regionCode: 'TX',
       minAccessAge: 18,
