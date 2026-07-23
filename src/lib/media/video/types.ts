@@ -22,7 +22,7 @@ export type CompressedVideo = {
 }
 
 // Source container metadata read off the input before any encoding decision.
-// Same shape across native (expo-bluesky-video-compress probe) and web
+// Same shape across native (@bsky.app/video-compressor probe) and web
 // (mediabunny Input + track inspection). Numbers are raw - no bucketing.
 export type ProbedMetadata = {
   mimeType: string
