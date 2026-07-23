@@ -6,7 +6,10 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {ServerError} from '#/lib/media/video/errors'
-import {type CompressedVideo} from '#/lib/media/video/types'
+import {
+  type CompressedVideo,
+  type VideoUploadTransport,
+} from '#/lib/media/video/types'
 import {Features, features} from '#/analytics/features'
 import {MultipartFallbackError, uploadVideoMultipart} from './multipart/upload'
 import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
@@ -19,6 +22,7 @@ export async function uploadVideo({
   setProgress,
   signal,
   i18n,
+  onTransport,
 }: {
   video: CompressedVideo
   agent: AtpAgent
@@ -26,6 +30,7 @@ export async function uploadVideo({
   setProgress: (progress: number) => void
   signal: AbortSignal
   i18n: I18n
+  onTransport?: (transport: VideoUploadTransport) => void
 }) {
   if (signal.aborted) {
     throw new AbortError()
@@ -34,11 +39,20 @@ export async function uploadVideo({
 
   if (features.isOn(Features.VideoMultipartUploadEnable)) {
     try {
-      return await uploadVideoMultipart({video, agent, setProgress, signal})
+      return await uploadVideoMultipart({
+        video,
+        agent,
+        setProgress,
+        signal,
+        onStarted: () => onTransport?.('multipart'),
+      })
     } catch (err) {
       if (!(err instanceof MultipartFallbackError)) throw err
+      onTransport?.('legacy-fallback')
       setProgress(0)
     }
+  } else {
+    onTransport?.('legacy')
   }
 
   const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {

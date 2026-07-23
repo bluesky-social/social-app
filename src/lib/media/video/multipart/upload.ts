@@ -26,14 +26,17 @@ export async function uploadVideoMultipart({
   agent,
   setProgress,
   signal,
+  onStarted,
 }: {
   video: CompressedVideo
   agent: AtpAgent
   setProgress: (progress: number) => void
   signal: AbortSignal
+  onStarted?: () => void
 }): Promise<AppBskyVideoDefs.JobStatus> {
   throwIfAborted(signal)
-  let token = await mintToken(agent)
+  const tokenProvider = createTokenProvider(agent)
+  const token = await tokenProvider.get()
   const name = `${nanoid(12)}.${mimeToExt(video.mimeType)}`
   let session
   try {
@@ -46,10 +49,14 @@ export async function uploadVideoMultipart({
       err instanceof Error ? err.message : 'Multipart upload unavailable',
     )
   }
+  onStarted?.()
 
   const {jobId} = session
   const abortOnCancel = () => {
-    void abortUpload(jobId, token).catch(() => {})
+    void tokenProvider
+      .get()
+      .then(currentToken => abortUpload(jobId, currentToken))
+      .catch(() => {})
   }
   signal.addEventListener('abort', abortOnCancel, {once: true})
   let reader: ReturnType<typeof createChunkReader> | undefined
@@ -64,24 +71,28 @@ export async function uploadVideoMultipart({
       await uploadParts({
         parts,
         reader,
-        uploadPart: createUploadPart(jobId, token),
+        uploadPart: createUploadPart(jobId, tokenProvider.get),
         totalBytes: video.size,
         setProgress,
         signal,
       })
     } catch (err) {
       if (signal.aborted) throw new AbortError()
-      return await abortThenFallbackOrResolve(jobId, token, err)
+      return await abortThenFallbackOrResolve(
+        jobId,
+        await tokenProvider.get(),
+        err,
+      )
     }
 
     // Finish stores this credential for the later PDS blob upload, so use a
     // fresh token rather than the one that may have aged during transfer.
-    token = await mintToken(agent)
+    await tokenProvider.get(true)
     const activeReader = reader
     if (!activeReader) throw new Error('Video chunk reader is unavailable')
     return await finishAndRecover({
       jobId,
-      token,
+      getToken: tokenProvider.get,
       signal,
       resendMissingParts: async receivedPartNumbers => {
         const missing = getMissingParts(parts, receivedPartNumbers)
@@ -91,7 +102,7 @@ export async function uploadVideoMultipart({
         await uploadParts({
           parts: missing,
           reader: activeReader,
-          uploadPart: createUploadPart(jobId, token),
+          uploadPart: createUploadPart(jobId, tokenProvider.get),
           totalBytes: missingBytes,
           setProgress: progress =>
             setProgress(
@@ -110,18 +121,19 @@ export async function uploadVideoMultipart({
 
 async function finishAndRecover({
   jobId,
-  token,
+  getToken,
   signal,
   resendMissingParts,
 }: {
   jobId: string
-  token: string
+  getToken: () => Promise<string>
   signal: AbortSignal
   resendMissingParts: (receivedPartNumbers: number[]) => Promise<boolean>
 }): Promise<AppBskyVideoDefs.JobStatus> {
   let createdFailures = 0
   while (true) {
     throwIfAborted(signal)
+    const token = await getToken()
     try {
       const result = await finishUpload(jobId, token, signal)
       return result.jobStatus
@@ -221,12 +233,33 @@ async function abortThenFallbackOrResolve(
   )
 }
 
-function mintToken(agent: AtpAgent) {
-  return getServiceAuthToken({
-    agent,
-    lxm: 'com.atproto.repo.uploadBlob',
-    exp: Date.now() / 1000 + 60 * 30,
-  })
+function createTokenProvider(agent: AtpAgent) {
+  let token: string | undefined
+  let expiresAt = 0
+  let refresh: Promise<string> | undefined
+
+  async function get(forceRefresh = false) {
+    if (!forceRefresh && token && Date.now() < expiresAt - 60_000) return token
+    if (!refresh) {
+      const exp = Math.floor(Date.now() / 1000) + 60 * 30
+      refresh = getServiceAuthToken({
+        agent,
+        lxm: 'com.atproto.repo.uploadBlob',
+        exp,
+      })
+        .then(nextToken => {
+          token = nextToken
+          expiresAt = exp * 1000
+          return nextToken
+        })
+        .finally(() => {
+          refresh = undefined
+        })
+    }
+    return refresh
+  }
+
+  return {get}
 }
 
 function throwIfAborted(signal: AbortSignal) {

@@ -5,6 +5,7 @@ import {nanoid} from 'nanoid/non-secure'
 import {
   type ProbedMetadata,
   type VideoCompressSkipReason,
+  type VideoUploadTransport,
 } from '#/lib/media/video/types'
 import {Sentry} from '#/logger/sentry/lib'
 import {type Metrics} from '#/analytics/metrics'
@@ -45,6 +46,7 @@ export type VideoTelemetry = {
   compressCompleted: (video: {size: number; mimeType: string}) => void
   compressFailed: (e: unknown) => void
   uploadStarted: (bytes: number) => void
+  uploadTransport: (transport: VideoUploadTransport) => void
   uploadCompleted: (jobId: string) => void
   uploadFailed: (e: unknown) => void
   processingStarted: (jobId: string) => void
@@ -70,6 +72,7 @@ export function createVideoTelemetry({
   let phaseStartedAt = startedAt
   let jobId: string | undefined
   let uploadBytes: number | undefined
+  let uploadTransport: VideoUploadTransport = 'legacy'
   let txnEnded = false
   let abortBound = true
 
@@ -226,6 +229,11 @@ export function createVideoTelemetry({
       metric('video:upload:uploadStarted', {uploadId, engine, bytes})
     },
 
+    uploadTransport(transport) {
+      uploadTransport = transport
+      phaseSpan?.setAttribute('video.upload.transport', transport)
+    },
+
     uploadCompleted(id) {
       jobId = id
       const elapsedMs = Date.now() - phaseStartedAt
@@ -238,6 +246,7 @@ export function createVideoTelemetry({
         elapsedMs,
         throughputBytesPerSec:
           elapsedMs > 0 ? Math.round((bytes * 1000) / elapsedMs) : 0,
+        transport: uploadTransport,
       })
       endPhaseSpan()
       phase = undefined
@@ -250,6 +259,7 @@ export function createVideoTelemetry({
         bytes: uploadBytes ?? 0,
         errorClass: errorClass(e),
         elapsedMs: Date.now() - phaseStartedAt,
+        transport: uploadTransport,
       })
       endTxn('error')
       detachAbort()

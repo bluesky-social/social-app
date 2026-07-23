@@ -326,6 +326,7 @@ export async function processVideo(
       did,
       signal,
       i18n,
+      onTransport: telemetry.uploadTransport,
       setProgress: p => {
         dispatch({type: 'update_progress', progress: p, signal})
       },
