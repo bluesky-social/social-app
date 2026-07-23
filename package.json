@@ -184,7 +184,7 @@
     "expo-media-library": "~18.2.1",
     "expo-notifications": "~0.32.17",
     "expo-paste-input": "^0.2.1",
-    "expo-privacy-sensitive": "^0.1.0",
+    "expo-privacy-sensitive": "^0.2.0",
     "expo-screen-orientation": "~9.0.8",
     "expo-sharing": "~14.0.8",
     "expo-sms": "^14.0.7",
