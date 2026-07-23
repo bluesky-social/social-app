@@ -27,6 +27,9 @@ jobs:
     if: github.repository == 'bluesky-social/social-app'
     name: Bundle and Deploy EAS Update
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-deploy
       cancel-in-progress: true
@@ -91,34 +94,51 @@ jobs:
           node-version-file: package.json
           cache: pnpm
 
+      - name: ⬇️ Load fingerprint baseline
+        id: baseline
+        if: ${{ (inputs.channel || 'testflight') == 'testflight' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          url=$(gh api \
+            "repos/${GITHUB_REPOSITORY}/actions/artifacts?name=testflight-native-fingerprint&per_page=100" \
+            --jq 'first(.artifacts[] | select(.expired == false)) | .archive_download_url' \
+            2>/dev/null || true)
+
+          if [ -n "$url" ] && [ "$url" != "null" ]; then
+            mkdir baseline-artifact
+            if curl -sSL -H "Authorization: Bearer $GH_TOKEN" -o baseline.zip "$url" \
+              && unzip -q baseline.zip -d baseline-artifact; then
+              if jq -e '.sources | type == "array"' \
+                baseline-artifact/native-fingerprint.json >/dev/null; then
+                echo "path=baseline-artifact/native-fingerprint.json" >> "$GITHUB_OUTPUT"
+              else
+                echo "::warning::Ignoring invalid fingerprint baseline artifact."
+              fi
+            else
+              echo "::warning::Could not download fingerprint baseline artifact."
+            fi
+          fi
+
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@a2423573f4de195827afd4e88017d8a21260bff6 # v0.3.0
+        uses: bluesky-social/github-actions/fingerprint-native@21761a2827a7f9f0c9cb31ce973ac55ccab3b74f # v0.3.0
         with:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}
-          # Baseline is a repo variable advanced by the recordBaseline job after
-          # each successful native deploy, instead of a frozen actions/cache entry.
-          # Empty on the very first run, in which case the action falls back to the
-          # legacy cache baseline.
-          baseline-native-hash: ${{ vars.MOST_RECENT_TESTFLIGHT_NATIVE_HASH }}
+          # The recordBaseline job uploads this marker after a successful deploy;
+          # on the native path, that requires both builds to succeed. A missing
+          # marker forces native builds so they can seed the baseline safely.
+          baseline-fingerprint-path: ${{ steps.baseline.outputs.path }}
 
-      # Hand the native hash to recordBaseline via an artifact rather than a job
-      # output: this workflow has documented (see buildIfNecessary* below) that
-      # GitHub suppresses md5-like hash values in job outputs as possible secrets,
-      # which would leave recordBaseline with an empty value. An artifact is not
-      # subject to that filtering. Written unconditionally so it exists on both
-      # the OTA and native-build paths.
-      - name: 💾 Save native hash
-        env:
-          NATIVE_HASH: ${{ steps.fingerprint.outputs.current-native-hash }}
-        run: printf '%s' "$NATIVE_HASH" > native-hash.txt
-
-      - name: 🚀 Upload native hash
+      # Hand the full fingerprint to recordBaseline through a short-lived
+      # artifact. It is uploaded unconditionally but promoted to the persistent
+      # baseline only after both native builds succeed.
+      - name: 🚀 Upload native fingerprint
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: native-hash-${{ github.run_id }}
-          path: native-hash.txt
+          name: native-fingerprint-${{ github.run_id }}
+          path: ${{ steps.fingerprint.outputs.current-fingerprint-path }}
           retention-days: 1
           if-no-files-found: error
 
@@ -246,48 +266,42 @@ jobs:
   # only advanced on cache eviction and so silently froze - freezing meant every
   # fingerprint looked changed and OTA updates stopped deploying entirely.
   #
-  # This runs only on the native-build path (both build jobs succeeded). On the
-  # OTA path those jobs are skipped, so this job is skipped too - correct, since
-  # an OTA update by definition leaves the native surface (and thus the hash)
-  # unchanged, so there is nothing to advance.
+  # On the native-build path, this runs only after both builds succeed. A
+  # successful OTA deploy also records its fingerprint, refreshing the
+  # persistent marker's retention without changing the native baseline.
   #
-  # Isolated as its own job so the token that can write repo variables lives
-  # nowhere else in the pipeline. The built-in GITHUB_TOKEN cannot manage Actions
-  # variables under any `permissions:` setting, so a PAT/App token with
-  # `variables: write` is required (EAS_BASELINE_VARIABLE_TOKEN).
+  # The persistent artifact replaces the old actions/cache marker without
+  # requiring a PAT or mutable repository variable. Each successful deploy adds
+  # an immutable marker; the next run reads the newest non-expired one using the
+  # built-in GITHUB_TOKEN.
   recordBaseline:
     name: Record fingerprint baseline
     runs-on: ubuntu-latest
     needs: [bundleDeploy, buildIfNecessaryIOS, buildIfNecessaryAndroid]
-    if: ${{ (inputs.channel || 'testflight') == 'testflight' &&
-      needs.buildIfNecessaryIOS.result == 'success' &&
-      needs.buildIfNecessaryAndroid.result == 'success' &&
+    if: ${{ always() &&
+      (inputs.channel || 'testflight') == 'testflight' &&
+      needs.bundleDeploy.result == 'success' &&
+      (needs.bundleDeploy.outputs.changes-detected != 'true' ||
+      (needs.buildIfNecessaryIOS.result == 'success' &&
+      needs.buildIfNecessaryAndroid.result == 'success')) &&
       github.repository == 'bluesky-social/social-app' }}
-    # Only actions:read (to download the intra-run artifact) is needed from the
-    # built-in token; the repo-variable write uses the PAT, not GITHUB_TOKEN.
     permissions:
       actions: read
     steps:
-      - name: ⬇️ Download native hash
+      - name: ⬇️ Download native fingerprint
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          name: native-hash-${{ github.run_id }}
+          name: native-fingerprint-${{ github.run_id }}
 
-      - name: ✏️ Advance baseline repo variable
-        env:
-          # PAT/App token with `variables: write`; see the job comment above
-          GH_TOKEN: ${{ secrets.EAS_BASELINE_VARIABLE_TOKEN }}
-          REPO: ${{ github.repository }}
-        run: |
-          NATIVE_HASH="$(cat native-hash.txt)"
-          # Fail loudly rather than writing an empty baseline. A blank value here
-          # would make the next run's fast-path comparison always mismatch and
-          # force perpetual native builds - the exact silent failure we're fixing.
-          if [ -z "$NATIVE_HASH" ]; then
-            echo "::error::native hash artifact was empty; refusing to write an empty baseline."
-            exit 1
-          fi
-          echo "Advancing MOST_RECENT_TESTFLIGHT_NATIVE_HASH to $NATIVE_HASH"
-          gh variable set MOST_RECENT_TESTFLIGHT_NATIVE_HASH \
-            --repo "$REPO" \
-            --body "$NATIVE_HASH"
+      - name: 🧐 Validate native fingerprint
+        run: >
+          jq -e '.sources | type == "array"' native-fingerprint.json >/dev/null ||
+          (echo "::error::native fingerprint artifact was invalid; refusing to record it as the baseline." && exit 1)
+
+      - name: 🚀 Record fingerprint baseline
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: testflight-native-fingerprint
+          path: native-fingerprint.json
+          retention-days: 90
+          if-no-files-found: error
