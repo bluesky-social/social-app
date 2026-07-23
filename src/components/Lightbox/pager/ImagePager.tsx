@@ -247,8 +247,32 @@ function ImageView({
   const [isDragging, setIsDragging] = useState(false)
   const [showControls, setShowControls] = useState(true)
   const [isAltExpanded, setIsAltExpanded] = useState(false)
+  const [hasFullyOpened, setHasFullyOpened] = useState(false)
   const dismissSwipeTranslateY = useSharedValue(0)
   const isFlyingAway = useSharedValue(false)
+
+  // Hold the neighbor window at 0 until the open animation completes, so we
+  // only decode the active image during the most memory-constrained moment.
+  // Mirrors the orientation-unlock gate below.
+  // Hold the neighbor window at 0 until the open animation completes, so we
+  // only decode the active image during the most memory-constrained moment.
+  // Mirrors the orientation-unlock gate below.
+  useAnimatedReaction(
+    () => openProgress.get() === 1,
+    isOpen => {
+      if (isOpen) {
+        runOnJS(setHasFullyOpened)(true)
+      }
+    },
+  )
+
+  // On a rotation remount openProgress is already 1, so the reaction above
+  // never sees a change; seed the flag directly for that case.
+  useEffect(() => {
+    if (openProgress.get() === 1) {
+      setHasFullyOpened(true)
+    }
+  }, [openProgress])
 
   const containerStyle = useAnimatedStyle(() => {
     if (openProgress.get() < 1) {
@@ -413,22 +437,24 @@ function ImageView({
         style={styles.pager}>
         {images.map((imageSrc, i) => (
           <View key={`${i}-${imageSrc.uri}`}>
-            <LightboxImage
-              onTap={onTap}
-              onZoom={onZoom}
-              imageSrc={imageSrc}
-              onRequestClose={handleRequestClose}
-              isScrollViewBeingDragged={isDragging}
-              showControls={showControls}
-              safeAreaRef={safeAreaRef}
-              isScaled={isScaled}
-              isFlyingAway={isFlyingAway}
-              isActive={i === imageIndex}
-              dismissSwipeTranslateY={dismissSwipeTranslateY}
-              openProgress={openProgress}
-              thumbRects={thumbRects}
-              imageIndex={i}
-            />
+            {Math.abs(i - imageIndex) <= (hasFullyOpened ? 1 : 0) ? (
+              <LightboxImage
+                onTap={onTap}
+                onZoom={onZoom}
+                imageSrc={imageSrc}
+                onRequestClose={handleRequestClose}
+                isScrollViewBeingDragged={isDragging}
+                showControls={showControls}
+                safeAreaRef={safeAreaRef}
+                isScaled={isScaled}
+                isFlyingAway={isFlyingAway}
+                isActive={i === imageIndex}
+                dismissSwipeTranslateY={dismissSwipeTranslateY}
+                openProgress={openProgress}
+                thumbRects={thumbRects}
+                imageIndex={i}
+              />
+            ) : null}
           </View>
         ))}
       </PagerView>
