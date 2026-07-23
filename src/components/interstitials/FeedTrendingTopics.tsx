@@ -215,14 +215,10 @@ function TrendRow({
                 <Text
                   style={[a.text_sm, t.atoms.text_contrast_medium]}
                   numberOfLines={1}>
-                  {trend.postCount >= 1000 ? (
-                    <Trans comment="Over 1,000 posts">1K+ posts</Trans>
-                  ) : (
-                    <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'">
-                      {formatCount(i18n, trend.postCount)}{' '}
-                      {plural(trend.postCount, {one: 'post', other: 'posts'})}
-                    </Trans>
-                  )}
+                  <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'">
+                    {formatCount(i18n, trend.postCount)}{' '}
+                    {plural(trend.postCount, {one: 'post', other: 'posts'})}
+                  </Trans>
                 </Text>
               </View>
             </View>
