@@ -99,10 +99,15 @@ jobs:
         if: ${{ (inputs.channel || 'testflight') == 'testflight' }}
         env:
           GH_TOKEN: ${{ github.token }}
+          REPOSITORY_ID: ${{ github.repository_id }}
         run: |
           url=$(gh api \
             "repos/${GITHUB_REPOSITORY}/actions/artifacts?name=testflight-native-fingerprint&per_page=100" \
-            --jq 'first(.artifacts[] | select(.expired == false)) | .archive_download_url' \
+            --jq "[.artifacts[] | select(
+              .expired == false and
+              .workflow_run.head_branch == \"main\" and
+              .workflow_run.head_repository_id == (\$ENV.REPOSITORY_ID | tonumber)
+            )] | max_by(.created_at) | .archive_download_url" \
             2>/dev/null || true)
 
           if [ -n "$url" ] && [ "$url" != "null" ]; then
@@ -122,7 +127,7 @@ jobs:
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@594f8b014440e76aa4e12cc0110d602fe3b5c348 # v0.3.0
+        uses: bluesky-social/github-actions/fingerprint-native@dbb7ac9d2fed7cafc8488ba707d315b3fb3ea431 # v0.3.0
         with:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}
