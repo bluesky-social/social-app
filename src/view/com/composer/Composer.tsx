@@ -2638,9 +2638,14 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const progress = state.progress
+  const processingProgress =
+    state.status === 'processing' ? state.jobStatus?.progress : undefined
   const shouldRotate =
-    state.status === 'processing' && (progress === 0 || progress === 1)
-  let wheelProgress = shouldRotate ? 0.33 : progress
+    state.status === 'processing' &&
+    (processingProgress === undefined ||
+      processingProgress <= 0 ||
+      processingProgress >= 100)
+  let wheelProgress = progress
 
   const rotate = useDerivedValue(() => {
     if (shouldRotate) {
@@ -2689,7 +2694,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
       break
     case 'error':
       text = l`Error`
-      wheelProgress = 100
+      wheelProgress = 1
       break
     case 'done':
       if (isGif) {
