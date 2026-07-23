@@ -134,6 +134,7 @@ export function PostThread({uri}: {uri: string}) {
         uri: anchor.uri,
         cid: post.cid,
         text: post.record.text,
+        facets: post.record.facets,
         author: post.author,
         embed: post.embed,
         moderation: anchor.moderation,
