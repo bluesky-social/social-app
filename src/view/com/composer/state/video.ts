@@ -17,6 +17,7 @@ import {uploadVideo} from '#/lib/media/video/upload'
 import {createVideoAgent} from '#/lib/media/video/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {advanceVideoProgress, videoProgressForPhase} from './videoProgress'
 
 type CaptionsTrack = {lang: string; file: File}
 
@@ -74,7 +75,7 @@ export type NoVideoState = typeof NO_VIDEO
 
 type ErrorState = {
   status: 'error'
-  progress: 100
+  progress: number
   abortController: AbortController
   asset: ImagePickerAsset | null
   video: CompressedVideo | null
@@ -128,7 +129,7 @@ type ProcessingState = {
 
 type DoneState = {
   status: 'done'
-  progress: 100
+  progress: 1
   abortController: AbortController
   asset: ImagePickerAsset
   video: CompressedVideo
@@ -173,7 +174,7 @@ export function videoReducer(
   if (action.type === 'to_error') {
     return {
       status: 'error',
-      progress: 100,
+      progress: state.progress,
       abortController: state.abortController,
       error: action.error,
       asset: state.asset ?? null,
@@ -187,7 +188,11 @@ export function videoReducer(
     if (state.status === 'compressing' || state.status === 'uploading') {
       return {
         ...state,
-        progress: action.progress,
+        progress: advanceVideoProgress(
+          state.progress,
+          state.status,
+          action.progress,
+        ),
       }
     }
   } else if (action.type === 'update_alt_text') {
@@ -204,7 +209,7 @@ export function videoReducer(
     if (state.status === 'compressing') {
       return {
         status: 'uploading',
-        progress: 0,
+        progress: videoProgressForPhase('uploading', 0),
         abortController: state.abortController,
         asset: state.asset,
         video: action.video,
@@ -218,7 +223,7 @@ export function videoReducer(
     if (state.status === 'uploading') {
       return {
         status: 'processing',
-        progress: 0,
+        progress: videoProgressForPhase('processing', 0),
         abortController: state.abortController,
         asset: state.asset,
         video: state.video,
@@ -236,7 +241,11 @@ export function videoReducer(
         jobStatus: action.jobStatus,
         progress:
           action.jobStatus.progress !== undefined
-            ? action.jobStatus.progress / 100
+            ? advanceVideoProgress(
+                state.progress,
+                'processing',
+                action.jobStatus.progress / 100,
+              )
             : state.progress,
       }
     }
@@ -244,7 +253,7 @@ export function videoReducer(
     if (state.status === 'processing') {
       return {
         status: 'done',
-        progress: 100,
+        progress: 1,
         abortController: state.abortController,
         asset: state.asset,
         video: state.video,
