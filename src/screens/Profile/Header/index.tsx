@@ -1,12 +1,12 @@
 import {memo, useMemo, useState} from 'react'
 import {type LayoutChangeEvent, StyleSheet, View} from 'react-native'
 import Animated, {
-  runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {
   type AppBskyActorDefs,
   type AppBskyLabelerDefs,
@@ -151,7 +151,7 @@ const MinimalHeader = memo(function MinimalHeader({
     () => scrollY.get() > 100,
     (value, prev) => {
       if (prev !== value) {
-        runOnJS(setVisible)(value)
+        scheduleOnRN(setVisible, value)
       }
     },
   )

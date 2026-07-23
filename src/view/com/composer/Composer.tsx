@@ -32,7 +32,6 @@ import Animated, {
   interpolateColor,
   LayoutAnimationConfig,
   LinearTransition,
-  runOnUI,
   scrollTo,
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -45,6 +44,7 @@ import Animated, {
   ZoomOut,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnUI} from 'react-native-worklets'
 import * as FileSystem from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
@@ -2377,7 +2377,7 @@ function useScrollTracker({
 
   const onScrollViewContentSizeChange = useCallback(
     (_width: number, height: number) => {
-      runOnUI(onScrollViewContentSizeChangeUIThread)(height)
+      scheduleOnUI(onScrollViewContentSizeChangeUIThread, height)
     },
     [onScrollViewContentSizeChangeUIThread],
   )

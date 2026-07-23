@@ -2,10 +2,10 @@ import {forwardRef, memo, useDeferredValue, useMemo} from 'react'
 import {RefreshControl, type ViewToken} from 'react-native'
 import {
   type FlatListPropsWithLayout,
-  runOnJS,
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated'
+import {scheduleOnRN} from 'react-native-worklets'
 import {updateActiveVideoViewAsync} from '@bsky.app/video'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
@@ -85,7 +85,7 @@ let List = forwardRef<ListMethods, ListProps>(
         onBeginDragFromContext?.(e, ctx)
       },
       onEndDrag(e, ctx) {
-        runOnJS(updateActiveVideoViewAsync)()
+        scheduleOnRN(updateActiveVideoViewAsync)
         onEndDragFromContext?.(e, ctx)
       },
       onScroll(e, ctx) {
@@ -95,18 +95,18 @@ let List = forwardRef<ListMethods, ListProps>(
         if (isScrolledDown.get() !== didScrollDown) {
           isScrolledDown.set(didScrollDown)
           if (onScrolledDownChange != null) {
-            runOnJS(handleScrolledDownChange)(didScrollDown)
+            scheduleOnRN(handleScrolledDownChange, didScrollDown)
           }
         }
 
         if (IS_IOS) {
-          runOnJS(dedupe)(updateActiveVideoViewAsync)
+          scheduleOnRN(dedupe, updateActiveVideoViewAsync)
         }
       },
       // Note: adding onMomentumBegin here makes simulator scroll
       // lag on Android. So either don't add it, or figure out why.
       onMomentumEnd(e, ctx) {
-        runOnJS(updateActiveVideoViewAsync)()
+        scheduleOnRN(updateActiveVideoViewAsync)
         onMomentumEndFromContext?.(e, ctx)
       },
     })

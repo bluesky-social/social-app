@@ -5,7 +5,6 @@ import Animated, {
   clamp,
   interpolate,
   interpolateColor,
-  runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
@@ -14,6 +13,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated'
+import {scheduleOnRN} from 'react-native-worklets'
 
 import {useHaptics} from '#/lib/haptics'
 import {type GestureActions} from './GestureActionView.shared'
@@ -74,17 +74,17 @@ export function GestureActionView({
     () => transX,
     () => {
       if (transX.get() === 0) {
-        runOnJS(setActiveAction)(null)
+        scheduleOnRN(setActiveAction, null)
       } else if (transX.get() < 0) {
         if (
           actions.leftSecond &&
           transX.get() <= -actions.leftSecond.threshold
         ) {
           if (activeAction !== 'leftSecond') {
-            runOnJS(setActiveAction)('leftSecond')
+            scheduleOnRN(setActiveAction, 'leftSecond')
           }
         } else if (activeAction !== 'leftFirst') {
-          runOnJS(setActiveAction)('leftFirst')
+          scheduleOnRN(setActiveAction, 'leftFirst')
         }
       } else if (transX.get() > 0) {
         if (
@@ -92,10 +92,10 @@ export function GestureActionView({
           transX.get() > actions.rightSecond.threshold
         ) {
           if (activeAction !== 'rightSecond') {
-            runOnJS(setActiveAction)('rightSecond')
+            scheduleOnRN(setActiveAction, 'rightSecond')
           }
         } else if (activeAction !== 'rightFirst') {
-          runOnJS(setActiveAction)('rightFirst')
+          scheduleOnRN(setActiveAction, 'rightFirst')
         }
       }
     },
@@ -127,7 +127,7 @@ export function GestureActionView({
             !hitSecond.get()
           ) {
             runPopAnimation()
-            runOnJS(haptic)()
+            scheduleOnRN(haptic)
             hitSecond.set(true)
           } else if (
             hitSecond.get() &&
@@ -144,7 +144,7 @@ export function GestureActionView({
             !hitFirst.get()
           ) {
             runPopAnimation()
-            runOnJS(haptic)()
+            scheduleOnRN(haptic)
             hitFirst.set(true)
           } else if (
             hitFirst.get() &&
@@ -161,7 +161,7 @@ export function GestureActionView({
             !hitSecond.get()
           ) {
             runPopAnimation()
-            runOnJS(haptic)()
+            scheduleOnRN(haptic)
             hitSecond.set(true)
           } else if (
             hitSecond.get() &&
@@ -178,7 +178,7 @@ export function GestureActionView({
             !hitFirst.get()
           ) {
             runPopAnimation()
-            runOnJS(haptic)()
+            scheduleOnRN(haptic)
             hitFirst.set(true)
           } else if (
             hitFirst.get() &&
@@ -193,15 +193,15 @@ export function GestureActionView({
       'worklet'
       if (e.translationX < 0) {
         if (hitSecond.get() && actions.leftSecond) {
-          runOnJS(actions.leftSecond.action)()
+          scheduleOnRN(actions.leftSecond.action)
         } else if (hitFirst.get() && actions.leftFirst) {
-          runOnJS(actions.leftFirst.action)()
+          scheduleOnRN(actions.leftFirst.action)
         }
       } else if (e.translationX > 0) {
         if (hitSecond.get() && actions.rightSecond) {
-          runOnJS(actions.rightSecond.action)()
+          scheduleOnRN(actions.rightSecond.action)
         } else if (hitSecond.get() && actions.rightFirst) {
-          runOnJS(actions.rightFirst.action)()
+          scheduleOnRN(actions.rightFirst.action)
         }
       }
       transX.set(() => withTiming(0, {duration: 200}))

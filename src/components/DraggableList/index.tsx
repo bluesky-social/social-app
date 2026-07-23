@@ -4,7 +4,6 @@ import Animated, {
   type AnimatedRef,
   measure,
   Reanimated3DefaultSpringConfig,
-  runOnJS,
   scrollTo,
   type SharedValue,
   useAnimatedRef,
@@ -14,6 +13,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated'
+import {scheduleOnRN} from 'react-native-worklets'
 
 import {useHaptics} from '#/lib/haptics'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -26,7 +26,7 @@ import {IS_IOS} from '#/env'
  *
  * All positioning is driven by a `slots` map (key → index) and translateY
  * (no discrete `top` changes). On drag end the new slot assignment is
- * computed on the UI thread first, then React state is updated via runOnJS.
+ * computed on the UI thread first, then React state is updated via scheduleOnRN.
  *
  * See SortableList.web.tsx for the web implementation using pointer events.
  */
@@ -265,9 +265,9 @@ function SortableItem<T>({
       measureDone.set(false)
       lastHapticSlot.set(mySlot)
       if (onDragStart) {
-        runOnJS(onDragStart)()
+        scheduleOnRN(onDragStart)
       }
-      runOnJS(playHaptic)()
+      scheduleOnRN(playHaptic)
     })
     .onChange(e => {
       'worklet'
@@ -285,7 +285,7 @@ function SortableItem<T>({
       const clampedSlot = Math.max(0, Math.min(currentSlot, itemCount - 1))
       if (IS_IOS && clampedSlot !== lastHapticSlot.get()) {
         lastHapticSlot.set(clampedSlot)
-        runOnJS(playHaptic)('Light')
+        scheduleOnRN(playHaptic, 'Light')
       }
     })
     .onEnd(() => {
@@ -326,13 +326,13 @@ function SortableItem<T>({
                 dragStartSlot: -1,
               })
               dragY.set(0)
-              runOnJS(onCommitReorder)(sorted)
+              scheduleOnRN(onCommitReorder, sorted)
             } else {
               const s = state.get()
               state.set({...s, activeKey: '', dragStartSlot: -1})
               dragY.set(0)
               if (onDragEnd) {
-                runOnJS(onDragEnd)()
+                scheduleOnRN(onDragEnd)
               }
             }
           }
@@ -347,7 +347,7 @@ function SortableItem<T>({
         const s = state.get()
         state.set({...s, activeKey: '', dragStartSlot: -1})
         if (onDragEnd) {
-          runOnJS(onDragEnd)()
+          scheduleOnRN(onDragEnd)
         }
       }
     })

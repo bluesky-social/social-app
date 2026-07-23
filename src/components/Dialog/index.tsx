@@ -21,11 +21,11 @@ import {
 } from 'react-native'
 import {useReanimatedKeyboardAnimation} from 'react-native-keyboard-controller'
 import Animated, {
-  runOnJS,
   type ScrollEvent,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -315,9 +315,9 @@ export const InnerFlatList = forwardRef<
     }
     const {contentOffset} = e
     if (contentOffset.y > 0 && !disableDrag) {
-      runOnJS(setDisableDrag)(true)
+      scheduleOnRN(setDisableDrag, true)
     } else if (contentOffset.y <= 1 && disableDrag) {
-      runOnJS(setDisableDrag)(false)
+      scheduleOnRN(setDisableDrag, false)
     }
   }
 

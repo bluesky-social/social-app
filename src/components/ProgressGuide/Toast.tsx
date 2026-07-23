@@ -9,12 +9,12 @@ import {
 import {Pressable, useWindowDimensions, View} from 'react-native'
 import Animated, {
   Easing,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -69,7 +69,7 @@ export const ProgressGuideToast = forwardRef<
           duration: 400,
           easing: Easing.out(Easing.cubic),
         },
-        () => runOnJS(setIsntOpen)(),
+        () => scheduleOnRN(setIsntOpen),
       ),
     )
   }, [setIsOpen, opacity])
@@ -88,7 +88,7 @@ export const ProgressGuideToast = forwardRef<
           duration: 100,
           easing: Easing.out(Easing.cubic),
         },
-        () => runOnJS(playCheckmark)(),
+        () => scheduleOnRN(playCheckmark),
       ),
     )
     translateY.set(0)
