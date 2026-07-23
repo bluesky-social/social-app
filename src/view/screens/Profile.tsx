@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {ScrollForwarderView} from 'react-native-scroll-forwarder/src'
+import {ScrollForwarderView} from 'react-native-scroll-forwarder'
 import {
   type AppBskyActorDefs,
   moderateProfile,
