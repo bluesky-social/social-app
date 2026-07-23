@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef} from 'react'
+import {type ReactNode, useCallback, useEffect, useRef} from 'react'
 import {type ScrollView, StyleSheet, View} from 'react-native'
 import {type SharedValue} from 'react-native-reanimated'
 
@@ -11,6 +11,8 @@ export interface TabBarProps {
   testID?: string
   selectedPage: number
   items: string[]
+  // Optional icon rendered before each item's label, aligned by index.
+  itemIcons?: ReactNode[]
   indicatorColor?: string
   backgroundColor?: string
 
@@ -34,6 +36,7 @@ export function TabBar({
   testID,
   selectedPage,
   items,
+  itemIcons,
   onSelect,
   onPressSelected,
 }: TabBarProps) {
@@ -122,7 +125,9 @@ export function TabBar({
               hoverStyle={t.atoms.bg_contrast_25}
               onPress={() => onPressItem(i)}
               accessibilityRole="tab">
-              <View style={styles.itemInner}>
+              <View
+                style={[styles.itemInner, a.flex_row, a.align_start, a.gap_xs]}>
+                {itemIcons?.[i]}
                 <Text
                   emoji
                   testID={testID ? `${testID}-${item}` : undefined}

@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {type ReactNode, useCallback} from 'react'
 import {
   type LayoutChangeEvent,
   ScrollView,
@@ -26,6 +26,8 @@ export interface TabBarProps {
   testID?: string
   selectedPage: number
   items: string[]
+  // Optional icon rendered before each item's label, aligned by index.
+  itemIcons?: ReactNode[]
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
   dragProgress: SharedValue<number>
@@ -43,6 +45,7 @@ export function TabBar({
   testID,
   selectedPage,
   items,
+  itemIcons,
   onSelect,
   onPressSelected,
   dragProgress,
@@ -348,6 +351,7 @@ export function TabBar({
                   testID={testID}
                   dragProgress={dragProgress}
                   item={item}
+                  icon={itemIcons?.[i]}
                   onPressItem={onPressItem}
                   onItemLayout={onItemLayout}
                   onTextLayout={onTextLayout}
@@ -380,6 +384,7 @@ function TabBarItem({
   testID,
   dragProgress,
   item,
+  icon,
   onPressItem,
   onItemLayout,
   onTextLayout,
@@ -388,6 +393,7 @@ function TabBarItem({
   testID: string | undefined
   dragProgress: SharedValue<number>
   item: string
+  icon?: ReactNode
   onPressItem: (index: number) => void
   onItemLayout: (index: number, layout: {x: number; width: number}) => void
   onTextLayout: (index: number, layout: {width: number}) => void
@@ -429,7 +435,15 @@ function TabBarItem({
         hoverStyle={t.atoms.bg_contrast_25}
         onPress={() => onPressItem(index)}
         accessibilityRole="tab">
-        <Animated.View style={[style, styles.itemInner]}>
+        <Animated.View
+          style={[
+            style,
+            styles.itemInner,
+            a.flex_row,
+            a.align_start,
+            a.gap_xs,
+          ]}>
+          {icon}
           <Text
             emoji
             testID={testID ? `${testID}-${item}` : undefined}
