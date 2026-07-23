@@ -156,20 +156,34 @@ export function PagerWithHeader({
     [currentPage, headerOnlyHeight, lastForcedScrollY, scrollRefs, scrollY],
   )
 
+  // HACK: onScroll reports bogus values of exactly -headerHeight on initial
+  // load and again after header height changes. We filter them out until
+  // the first real scroll event arrives for each header height. This lets
+  // legitimate scroll-to-top events through while still rejecting the
+  // spurious ones that would cause visual jumps. - sfp
+  const hasReceivedScroll = useSharedValue(false)
+  const lastKnownHeaderHeight = useSharedValue(0)
   const onScrollWorklet = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
       const nextScrollY = e.contentOffset.y
-      // HACK: onScroll is reporting some strange values on load (negative header height).
-      // Highly improbable that you'd be overscrolled by over 400px -
-      // in fact, I actually can't do it, so let's just ignore those. -sfn
-      const isPossiblyInvalid =
-        headerHeight > 0 && Math.round(nextScrollY * 2) / 2 === -headerHeight
-      if (!isPossiblyInvalid) {
-        scrollY.set(nextScrollY)
+      // Reset the filter whenever the header height changes, because
+      // a new batch of bogus -headerHeight events will appear.
+      if (headerHeight !== lastKnownHeaderHeight.get()) {
+        lastKnownHeaderHeight.set(headerHeight)
+        hasReceivedScroll.set(false)
       }
+      if (!hasReceivedScroll.get()) {
+        const isPossiblyInvalid =
+          headerHeight > 0 && Math.round(nextScrollY * 2) / 2 === -headerHeight
+        if (isPossiblyInvalid) {
+          return
+        }
+        hasReceivedScroll.set(true)
+      }
+      scrollY.set(nextScrollY)
     },
-    [scrollY, headerHeight],
+    [scrollY, headerHeight, hasReceivedScroll, lastKnownHeaderHeight],
   )
 
   const onPageSelectedInner = useCallback(
@@ -269,26 +283,30 @@ let PagerTabBar = ({
       ],
     }
   })
-  const headerRef = useRef<View>(null)
-  const fallbackHeaderOnlyHeight = useRef(0)
+  const pendingHeaderHeightForWhenSentinelReady = useRef<number | undefined>(
+    undefined,
+  )
+  const sentinelHasRenderedRef = useRef(false)
   return (
     <Animated.View
       pointerEvents={IS_IOS ? 'auto' : 'box-none'}
       style={[styles.tabBarMobile, headerTransform, t.atoms.bg]}>
       <View
-        ref={headerRef}
         pointerEvents={IS_IOS ? 'auto' : 'box-none'}
         collapsable={false}
         onLayout={(e: LayoutChangeEvent) => {
-          // Fallback measurement using onLayout directly on the header wrapper.
-          // This is more reliable than .measure() on Android after certain
-          // navigation transitions (e.g. returning from the logged-out view)
-          // where .measure() can fail to return a height. in general though,
-          // we should prefer using .measure() when possible as this can
-          // fire too early and cause layout thrashing.
-          // ref: https://github.com/bluesky-social/social-app/pull/9964 -sfp
-          if (isHeaderReady) {
-            fallbackHeaderOnlyHeight.current = e.nativeEvent.layout.height
+          // we want to measure this view's height to get the header height.
+          // however, we risk doing it too early if the header hasn't rendered yet.
+          // therefore, we use a sentinel view and wait for *that* to layout before
+          // we set the header height, using the last measured height from this
+          // onLayout. after the sentinel has rendered for the first time, we can
+          // just straightforwardly set the header height here directly -sfn
+          const height = e.nativeEvent.layout.height
+          // note: sentinel only renders after `isHeaderReady` has turned `true`
+          if (sentinelHasRenderedRef.current) {
+            onHeaderOnlyLayout(height)
+          } else {
+            pendingHeaderHeightForWhenSentinelReady.current = height
           }
         }}>
         {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
@@ -298,22 +316,19 @@ let PagerTabBar = ({
           // Instead, we'll render a brand node conditionally and get fresh layout.
           isHeaderReady && (
             <View
+              testID="layout-sentinel"
               collapsable={false}
               // It wouldn't be enough to do this in a `ref` of an effect because,
               // even if `isHeaderReady` might have turned `true`, the associated
               // layout might not have been performed yet on the native side.
               onLayout={() => {
-                headerRef.current?.measure(
-                  (_x: number, _y: number, _width: number, height: number) => {
-                    // sometimes height is `undefined` on Android, see above
-                    if (height !== undefined) {
-                      onHeaderOnlyLayout(height)
-                    } else {
-                      // if measure fails, use the value we got from `onLayout`
-                      onHeaderOnlyLayout(fallbackHeaderOnlyHeight.current)
-                    }
-                  },
-                )
+                if (!sentinelHasRenderedRef.current) {
+                  sentinelHasRenderedRef.current = true
+                  const height = pendingHeaderHeightForWhenSentinelReady.current
+                  if (height !== undefined) {
+                    onHeaderOnlyLayout(height)
+                  }
+                }
               }}
             />
           )
