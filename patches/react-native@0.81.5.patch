@@ -241,6 +241,20 @@ index 216bb23beb023ef6c3ae814c17e05bccbda7fc91..6ad5cc1d9ed5b8cd2df08ad77adca56c
  
    __block auto attachments = TextMeasurement::Attachments{};
  
+diff --git a/Libraries/Components/ScrollView/ScrollViewStickyHeader.js b/Libraries/Components/ScrollView/ScrollViewStickyHeader.js
+--- a/Libraries/Components/ScrollView/ScrollViewStickyHeader.js
++++ b/Libraries/Components/ScrollView/ScrollViewStickyHeader.js
+@@ -312,7 +312,9 @@ const ScrollViewStickyHeader: component(
+ 
+ const styles = StyleSheet.create({
+   header: {
+-    zIndex: 10,
++    // Keep sticky headers above form controls, whose internal chrome uses
++    // z-index values up to 20.
++    zIndex: 30,
+   },
+   fill: {
+     flex: 1,
 diff --git a/third-party-podspecs/fmt.podspec b/third-party-podspecs/fmt.podspec
 index 2f38990e226c13f483aaf1b986302d4094243814..9b02e481e290299be20a6f09c42056ff51695e9b 100644
 --- a/third-party-podspecs/fmt.podspec
