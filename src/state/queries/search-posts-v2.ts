@@ -16,6 +16,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent} from '#/state/session'
 import {type SearchFilters} from '#/screens/Search/searchParams'
 import {
+  appendFromMe,
   buildSearchPostsV2Filters,
   extractSearchPostsParams,
 } from './search-posts-params'
@@ -51,10 +52,11 @@ export function useSearchPostsV2Query({
   const moderationOpts = useModerationOpts()
   const selectArgs = useMemo(
     () => ({
-      isSearchingSpecificUser: /from:(\w+)/.test(query) || !!filters?.author,
+      isSearchingSpecificUser:
+        /from:(\w+)/.test(query) || !!filters?.author || filters?.from === 'me',
       moderationOpts,
     }),
-    [query, filters?.author, moderationOpts],
+    [query, filters?.author, filters?.from, moderationOpts],
   )
   const lastRun = useRef<{
     data: InfiniteData<AppBskyFeedSearchPostsV2.OutputSchema>
@@ -78,9 +80,10 @@ export function useSearchPostsV2Query({
        */
       const {q, ...embedded} = extractSearchPostsParams(query)
       const builtFilters = buildSearchPostsV2Filters(embedded, filters)
+      const finalQuery = appendFromMe(q, filters?.from === 'me')
       const res = await agent.app.bsky.feed.searchPostsV2({
         ...builtFilters,
-        query: q,
+        query: finalQuery,
         limit: 25,
         cursor: pageParam,
         /*

@@ -1,6 +1,5 @@
-import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {type Insets, View} from 'react-native'
+import {useLingui} from '@lingui/react/macro'
 
 import {type Shadow} from '#/state/cache/types'
 import {atoms as a, useTheme} from '#/alf'
@@ -52,16 +51,25 @@ export function shouldShowVerificationCheckButton(
 export function VerificationCheckButton({
   profile,
   width,
+  hitSlop,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
   width: number
+  hitSlop: Insets
 }) {
   const state = useFullVerificationState({
     profile,
   })
 
   if (shouldShowVerificationCheckButton(state)) {
-    return <Badge profile={profile} verificationState={state} width={width} />
+    return (
+      <Badge
+        profile={profile}
+        verificationState={state}
+        width={width}
+        hitSlop={hitSlop}
+      />
+    )
   }
 
   return null
@@ -71,14 +79,16 @@ function Badge({
   profile,
   verificationState: state,
   width,
+  hitSlop,
 }: {
   profile: Shadow<bsky.profile.AnyProfileView>
   verificationState: FullVerificationState
   width: number
+  hitSlop: Insets
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const verificationsDialogControl = useDialogControl()
   const verifierDialogControl = useDialogControl()
 
@@ -89,10 +99,10 @@ function Badge({
       <Button
         label={
           state.profile.isViewer
-            ? _(msg`View your verifications`)
-            : _(msg`View this user's verifications`)
+            ? l`View your verifications`
+            : l`View this user's verifications`
         }
-        hitSlop={20}
+        hitSlop={hitSlop}
         onPress={evt => {
           evt.preventDefault()
           ax.metric('verification:badge:click', {})
@@ -132,13 +142,11 @@ function Badge({
           </View>
         )}
       </Button>
-
       <VerificationsDialog
         control={verificationsDialogControl}
         profile={profile}
         verificationState={state}
       />
-
       <VerifierDialog
         control={verifierDialogControl}
         profile={profile}

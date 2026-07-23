@@ -19,3 +19,16 @@ export class VideoNotFoundError extends Error {
     super('Video not found')
   }
 }
+
+/**
+ * Fatal hls.js playback error. `detail` is the hls.js error details code
+ * (e.g. bufferAppendError), which buckets failures more usefully than the
+ * error message.
+ */
+export class HLSFatalError extends Error {
+  detail: string
+  constructor(detail: string, cause: Error) {
+    super(cause.message, {cause})
+    this.detail = detail
+  }
+}

@@ -244,14 +244,6 @@
       "count": 3
     }
   },
-  "src/components/Post/Embed/ImageEmbed.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 2
-    },
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx": {
     "typescript/no-floating-promises": {
       "count": 2
@@ -288,19 +280,6 @@
   "src/components/PostControls/DiscoverDebug.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
-    }
-  },
-  "src/components/PostControls/ShareMenu/ShareMenuItems.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 3
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 3
     }
   },
   "src/components/PostControls/ShareMenu/index.tsx": {
@@ -1055,11 +1034,6 @@
       "count": 1
     }
   },
-  "src/screens/Profile/components/ProfileFeedHeader.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 5
-    }
-  },
   "src/screens/ProfileList/FeedSection.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
@@ -1406,11 +1380,6 @@
       "count": 2
     }
   },
-  "src/state/queries/feed.ts": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/state/queries/handle.ts": {
     "typescript/no-floating-promises": {
       "count": 1
@@ -1617,14 +1586,6 @@
       "count": 1
     }
   },
-  "src/view/com/composer/text-input/TextInput.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/view/com/composer/text-input/TextInput.web.tsx": {
     "typescript/no-misused-promises": {
       "count": 1
@@ -1762,11 +1723,6 @@
     },
     "typescript/no-misused-promises": {
       "count": 2
-    }
-  },
-  "src/view/com/posts/PostFeed.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 1
     }
   },
   "src/view/com/posts/PostFeedErrorMessage.tsx": {

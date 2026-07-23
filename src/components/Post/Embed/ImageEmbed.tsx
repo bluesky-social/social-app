@@ -59,7 +59,7 @@ export function ImageEmbed({
 
   // Captured from AutoSizedImage so the peek-commit handler can reuse the same
   // ref + dims that a tap would — keeps the lightbox's return animation intact.
-  const singleContainerRef = useRef<AnimatedRef<any> | null>(null)
+  const singleContainerRef = useRef<AnimatedRef<React.Component> | null>(null)
   const singleDimsRef = useRef<Dimensions | null>(null)
 
   if (images.length > 0) {
@@ -71,7 +71,7 @@ export function ImageEmbed({
     }))
     const onPress = (
       index: number,
-      refs: AnimatedRef<any>[],
+      refs: AnimatedRef<React.Component>[],
       fetchedDims: (Dimensions | null)[],
     ) => {
       if (postContext) {
@@ -97,7 +97,7 @@ export function ImageEmbed({
     }
     const onPressIn = (_: number) => {
       InteractionManager.runAfterInteractions(() => {
-        Image.prefetch(
+        void Image.prefetch(
           items.map(i => i.uri),
           'memory',
         )
@@ -115,6 +115,7 @@ export function ImageEmbed({
           onPress(0, [singleContainerRef.current], [singleDimsRef.current])
         }
       }
+
       return (
         <View style={[a.mt_sm, rest.style]}>
           <ImageContextMenu
@@ -127,9 +128,7 @@ export function ImageEmbed({
               crop={
                 rest.viewContext === PostEmbedViewContext.ThreadHighlighted
                   ? 'none'
-                  : rest.isWithinQuote
-                    ? 'square'
-                    : 'constrained'
+                  : 'constrained'
               }
               image={image}
               onContainerRef={ref => {

@@ -588,7 +588,7 @@ function VideoItemInner({
   const {bottom} = useSafeAreaInsets()
   const [isReady, setIsReady] = useState(!IS_ANDROID)
 
-  usePlaybackTelemetry({player, active})
+  usePlaybackTelemetry({player, active, playlist: embed.playlist})
 
   useEventListener(player, 'timeUpdate', evt => {
     if (IS_ANDROID && !isReady && evt.currentTime >= 0.05) {
@@ -625,10 +625,13 @@ function VideoItemInner({
 function usePlaybackTelemetry({
   player,
   active,
+  playlist,
 }: {
   player: VideoPlayer
   active: boolean
+  playlist: string
 }) {
+  const ax = useAnalytics()
   const telemetryRef = useRef<PlaybackTelemetry | null>(null)
 
   useEffect(() => {
@@ -652,7 +655,21 @@ function usePlaybackTelemetry({
     if (evt.status === 'readyToPlay') {
       telemetryRef.current?.ready()
     } else if (evt.status === 'error') {
-      telemetryRef.current?.error(evt.error?.message ?? 'unknown')
+      const message = evt.error?.message ?? 'unknown'
+      telemetryRef.current?.error(message)
+      /*
+       * Adjacent players are preloaded and can error before the user ever
+       * swipes to them - only count failures the user actually sees.
+       */
+      if (active) {
+        ax.metric('video:playback:failed', {
+          surface: 'immersiveFeed',
+          presentation: 'video',
+          errorClass: 'PlayerError',
+          errorMessage: message.slice(0, 256),
+          playlist,
+        })
+      }
     }
   })
 

@@ -181,6 +181,7 @@ function BlockDialogInner({
   const footer = (
     <View style={[a.w_full, a.gap_sm, a.justify_end]}>
       <Button
+        disabled={isLoading}
         color={profile.viewer?.blocking ? undefined : 'negative'}
         size="large"
         label={profile.viewer?.blocking ? l`Unblock` : l`Block`}
@@ -192,6 +193,7 @@ function BlockDialogInner({
             <Trans>Block</Trans>
           )}
         </ButtonText>
+        {isLoading ? <ButtonIcon icon={Loader} /> : null}
       </Button>
       <Button
         color="secondary"
@@ -211,11 +213,6 @@ function BlockDialogInner({
         label={profile.viewer?.blocking ? l`Unblock` : l`Block`}
         style={[web([{maxWidth: 420}])]}>
         {listHeader}
-        {isLoading ? (
-          <View style={[a.pb_2xl, a.align_center, a.justify_center]}>
-            <Loader size="xl" />
-          </View>
-        ) : null}
         {footer}
       </Dialog.ScrollableInner>
     )

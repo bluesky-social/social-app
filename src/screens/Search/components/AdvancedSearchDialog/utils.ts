@@ -1,4 +1,5 @@
 import {
+  extractFromMe,
   extractSearchPostsParams,
   tokenizeQuery,
 } from '#/state/queries/search-posts-params'
@@ -14,10 +15,11 @@ export type RepliesFilter = 'all' | 'none' | 'only'
 export type MediaFilter = 'all' | 'media' | 'video'
 
 /**
- * Whether to limit results to authors the user follows. Serializes into the
- * `following` sibling param ('following' -> following:true, anyone -> unset).
+ * Which authors to limit results to. 'following' serializes into the
+ * `following` sibling param (following=true); 'me' serializes into the `from`
+ * sibling param (from=me); 'anyone' leaves both unset.
  */
-export type FollowingFilter = 'anyone' | 'following'
+export type FromFilter = 'anyone' | 'following' | 'me'
 
 export type FilterField = 'authors' | 'mentions' | 'domains' | 'urls' | 'tags'
 
@@ -93,7 +95,7 @@ export type DialogState = {
   language: string
   replies: RepliesFilter
   media: MediaFilter
-  following: FollowingFilter
+  following: FromFilter
   since: string
   until: string
   filters: AdvancedFilter[]
@@ -141,18 +143,27 @@ function isSimpleWord(word: string): boolean {
  * populate "none of these words" - but only when their contents are simple
  * words. Anything that wouldn't round-trip (embedded quotes, a negated phrase
  * like -"a b", etc.) is left verbatim in the main "all of these words" query
- * text instead of parsed.
+ * text instead of parsed. A bare `from:me` is pulled out into the `fromMe`
+ * flag, which drives the "Me" author filter (the backend resolves `me` to the
+ * viewer, so it never becomes a structured `author` value).
  */
 function parseFreeText(raw: string): {
   query: string
   exactPhrase: string
   negatedWords: string
+  fromMe: boolean
 } {
   const queryParts: string[] = []
   const negatedWords: string[] = []
   let exactPhrase = ''
+  let fromMe = false
 
   for (const token of tokenizeQuery(raw)) {
+    // from:me -> "Me" author filter rather than free text.
+    if (token === 'from:me') {
+      fromMe = true
+      continue
+    }
     // "phrase" -> "exact phrase", only if it has no inner quote.
     if (token.startsWith('"') && token.endsWith('"') && token.length > 1) {
       const inner = token.slice(1, -1)
@@ -176,6 +187,7 @@ function parseFreeText(raw: string): {
     query: queryParts.join(' '),
     exactPhrase,
     negatedWords: negatedWords.join(' '),
+    fromMe,
   }
 }
 
@@ -208,7 +220,7 @@ export function parseAdvancedSearch(
    * can be expressed as operators; exclude rows come solely from filter params.
    */
   const lifted = extractSearchPostsParams(q)
-  const freeText = parseFreeText(lifted.q)
+  const {fromMe, ...freeText} = parseFreeText(lifted.q)
 
   const includeValues: Record<FilterField, string> = {
     authors: mergeValues(filters.author, lifted.author),
@@ -255,12 +267,24 @@ export function parseAdvancedSearch(
   const since = filters.since ?? lifted.since
   const until = filters.until ?? lifted.until
 
+  /*
+   * A raw `from:me` operator and the structured `from=me` filter both map to
+   * the "Me" author filter. The raw operator is promoted to the structured
+   * filter when the dialog is submitted.
+   */
+  let following: FromFilter = 'anyone'
+  if (fromMe || filters.from === 'me') {
+    following = 'me'
+  } else if (filters.following === 'true') {
+    following = 'following'
+  }
+
   return {
     ...freeText,
     language: lang,
     replies,
     media,
-    following: filters.following === 'true' ? 'following' : 'anyone',
+    following,
     since: since && isValidDate(since) ? since : '',
     until: until && isValidDate(until) ? until : '',
     filters: filterRows,
@@ -279,7 +303,7 @@ export function serializeAdvancedSearch(state: {
   language: string
   replies: RepliesFilter
   media: MediaFilter
-  following: FollowingFilter
+  following: FromFilter
   dateSince: string
   dateSinceActive: boolean
   dateUntil: string
@@ -352,7 +376,21 @@ export function serializeAdvancedSearch(state: {
   if (state.replies === 'only') filters.replies = 'only'
   if (state.media === 'media') filters.media = 'true'
   else if (state.media === 'video') filters.video = 'true'
-  if (state.following === 'following') filters.following = 'true'
 
-  return {q: parts.join(' '), filters}
+  /*
+   * Re-parse the final text because a user can type `from:me` after the dialog
+   * has opened. Advanced submission removes every bare token from the search
+   * input and promotes it to the structured From filter. Quoted `"from:me"`
+   * remains ordinary query text.
+   */
+  const {q, fromMe} = extractFromMe(parts.join(' '))
+  if (state.following === 'following') filters.following = 'true'
+  else if (state.following === 'me' || fromMe) filters.from = 'me'
+
+  /*
+   * Submitting the dialog promotes a raw `from:me` operator to `from=me`, so it
+   * leaves the search text and is represented by the From dropdown. The query
+   * hook reconstructs the backend operator at the API boundary.
+   */
+  return {q, filters}
 }

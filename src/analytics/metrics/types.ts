@@ -513,7 +513,7 @@ export type Events = {
       | 'ProgressGuide'
     location: 'Card' | 'Profile' | 'FollowAll'
     recSource?: 'Search'
-    recId?: number | string
+    recId?: string
     position: number
     suggestedDid: string
     category: string | null
@@ -526,7 +526,7 @@ export type Events = {
       | 'ProfileHeader'
       | 'Onboarding'
       | 'SeeMoreSuggestedUsers'
-    recId?: number | string
+    recId?: string
     position: number
     suggestedDid: string
     category: string | null
@@ -541,7 +541,7 @@ export type Events = {
       | 'SeeMoreSuggestedUsers'
       | 'ProgressGuide'
     recSource?: 'Search'
-    recId?: number | string
+    recId?: string
     position: number
     suggestedDid: string
     category: string | null
@@ -553,11 +553,11 @@ export type Events = {
       | 'ProfileInterstitial'
       | 'ProfileHeader'
       | 'Onboarding'
-    recId?: number | string
+    recId?: string
   }
   'suggestedUser:dismiss': {
     logContext: 'DiscoverInterstitial' | 'ProfileInterstitial' | 'ProfileHeader'
-    recId?: number | string
+    recId?: string
     position: number
     suggestedDid: string
   }
@@ -608,7 +608,7 @@ export type Events = {
 
   // Group chat adoption
   'groupchat:create': {
-    logContext: 'NewChatDialog'
+    logContext: 'NewChatDialog' | 'SendViaChatDialog'
   }
   'groupchat:landingPage:view': {
     hasSession: boolean
@@ -746,9 +746,7 @@ export type Events = {
   }
   'trendingTopic:click': {
     context: 'sidebar' | 'interstitial' | 'explore'
-  }
-  'recommendedTopic:click': {
-    context: 'explore'
+    recId?: string
   }
   'trendingVideos:show': {
     context: 'settings'
@@ -782,13 +780,13 @@ export type Events = {
   }
 
   'search:results:loaded': {
-    tab: 'top' | 'latest' | 'people' | 'feeds'
+    tab: 'top' | 'latest' | 'people' | 'feeds' | 'starterPacks'
     initialCount: number
   }
 
   'search:result:press': {
-    tab?: 'top' | 'latest' | 'people' | 'feeds'
-    resultType: 'post' | 'profile' | 'feed'
+    tab?: 'top' | 'latest' | 'people' | 'feeds' | 'starterPacks'
+    resultType: 'post' | 'profile' | 'feed' | 'starterPack'
     position: number
     uri: string
   }
@@ -1348,6 +1346,26 @@ export type Events = {
   'invite:followersPromo:press': {}
   // user dismissed the empty-followers promo banner
   'invite:followersPromo:dismiss': {}
+
+  /**
+   * Fired when a video fails terminally during playback: unreachable (404),
+   * undecodable, or the client lacks the required codecs. Complements the
+   * Sentry-only video.playback spans with a countable, unsampled event.
+   */
+  'video:playback:failed': {
+    surface: 'feed' | 'immersiveFeed'
+    presentation: 'video' | 'gif'
+    /**
+     * Coarse failure bucket: VideoNotFoundError, HLSUnsupportedError, an
+     * hls.js error details code (e.g. bufferAppendError), or PlayerError on
+     * native.
+     */
+    errorClass: string
+    /** Truncated to 256 chars */
+    errorMessage: string
+    /** HLS playlist URL, identifies the exact video for server-side lookup */
+    playlist: string
+  }
 
   // === Video upload funnel (Frontend Spec section D) ===
   // Every event carries uploadId (client-generated UUID, ties one upload

@@ -28,6 +28,11 @@ on:
         type: string
         description: TestFlight group to assign the build to after submitting ("none" to skip)
         default: none
+      runner:
+        type: string
+        description: Runner for the build job (defaults to macos-26-xlarge)
+        required: false
+        default: ''
     outputs:
       package-version:
         description: Version from package.json
@@ -66,8 +71,8 @@ permissions:
 jobs:
   build:
     if: github.repository == 'bluesky-social/social-app'
-    name: Build and Submit iOS
-    runs-on: macos-26-xlarge
+    name: Build iOS
+    runs-on: ${{ inputs.runner || 'macos-26-xlarge' }}
     concurrency:
       group: ios-build
       cancel-in-progress: false
@@ -75,38 +80,15 @@ jobs:
       package-version: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
       build-number: ${{ steps.ipa-build-number.outputs.build-number }}
     steps:
-      - name: Check for EXPO_TOKEN
-        run: >
-          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
-            echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
-            exit 1
-          fi
-
       - name: ⬇️ Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 5
 
-      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-
-      - name: 🔧 Setup Node
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+      - name: 🔧 Setup Expo project
+        uses: ./.github/actions/setup-expo-project
         with:
-          node-version-file: package.json
-          cache: pnpm
-
-      - name: 🪛 Setup jq
-        uses: dcarbone/install-jq-action@4fcb5062d7ce9bc4382d1a352d19ba3ba2c317c1 # v4.0.1
-
-      - name: ⚙️ Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: 🔨 Setup Expo CLI
-        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
-        with:
-          eas-version: '19.0.5'
-          packager: 'pnpm --allow-build=dtrace-provider'
-          token: ${{ secrets.EXPO_TOKEN }}
+          expo-token: ${{ secrets.EXPO_TOKEN }}
 
       - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
@@ -133,38 +115,29 @@ jobs:
           key: ${{ runner.os }}-pods-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: 🔤 Compile translations
-        run: pnpm intl:build 2>&1 | tee i18n.log
-
-      - name: Check for i18n compilation errors
-        run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation
-          errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
+        uses: ./.github/actions/compile-i18n
 
       # EXPO_PUBLIC_ENV is handled in eas.json
       - name: ✏️ Write environment variables
         id: env
-        run: |
-          echo "${{ secrets.ENV_TOKEN }}" > .env
-          echo "EXPO_PUBLIC_RELEASE_VERSION=$(jq -r '.version' package.json)" >> .env
-          echo "EXPO_PUBLIC_RELEASE_VERSION=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
-          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse HEAD)" >> .env
-          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
-          echo "EXPO_PUBLIC_SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
-          echo "EXPO_PUBLIC_BITDRIFT_API_KEY=${{ secrets.BITDRIFT_API_KEY }}" >> .env
-          echo "EXPO_PUBLIC_GCP_PROJECT_ID=${{ secrets.EXPO_PUBLIC_GCP_PROJECT_ID }}" >> .env
-          echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
+        uses: ./.github/actions/write-env
+        with:
+          env-token: ${{ secrets.ENV_TOKEN }}
+          sentry-dsn: ${{ secrets.SENTRY_DSN }}
+          bitdrift-api-key: ${{ secrets.BITDRIFT_API_KEY }}
+          gcp-project-id: ${{ secrets.EXPO_PUBLIC_GCP_PROJECT_ID }}
+          google-services-token: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
 
       - name: 🏗️ EAS Build
-        env:
-          PROFILE: ${{ inputs.profile || 'testflight' }}
-        run: >
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
-          SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
-          pnpm use-build-number-with-bump
-          pnpm eas build -p ios
-          --profile $PROFILE
-          --local --output build.tar.gz --non-interactive
+        uses: ./.github/actions/eas-local-build
+        with:
+          platform: ios
+          profile: ${{ inputs.profile || 'testflight' }}
+          output: build.tar.gz
+          bump-build-number: "true"
+          sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          sentry-release: ${{ steps.env.outputs.release-version }}
+          sentry-dist: ${{ steps.env.outputs.bundle-identifier }}
 
       - name: 📂 Extract build artifact
         run: |
@@ -201,16 +174,6 @@ jobs:
             exit 1
           fi
 
-      - name: 🚀 Deploy
-        run: pnpm eas submit -p ios --non-interactive --path "$BUILD_DIR/Bluesky.ipa"
-
-      - name: 🪲 Upload dSYM to Sentry
-        run: >
-          SENTRY_ORG=blueskyweb
-          SENTRY_PROJECT=app
-          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          pnpm sentry-cli debug-files upload "$BUILD_DIR/Bluesky.app.dSYM.zip" --include-sources
-
       - name: 📚 Get version from package.json
         id: get-build-info
         run: bash scripts/setGitHubOutput.sh
@@ -220,6 +183,7 @@ jobs:
       # number that actually lands in App Store Connect. `eas build:version:get` reads the
       # remote counter, which a --local build does not advance, so it can be off by one —
       # using it here would make distribute_only poll for a nonexistent build.
+      # PlistBuddy is macOS-only, which is why this stays in the build job.
       - name: 🔢 Read build number from IPA
         id: ipa-build-number
         run: |
@@ -235,18 +199,98 @@ jobs:
           echo "IPA build number: $build_number"
           echo "build-number=$build_number" >> "$GITHUB_OUTPUT"
 
+      # Hand the IPA and dSYM off to the submit job. Retention is deliberately short since
+      # this artifact only exists to bridge the two jobs within a single run.
+      - name: 🚀 Upload build artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ios-build-${{ github.run_id }}
+          retention-days: 1
+          if-no-files-found: error
+          path: |
+            ${{ env.BUILD_DIR }}/Bluesky.ipa
+            ${{ env.BUILD_DIR }}/Bluesky.app.dSYM.zip
+
+  submit:
+    name: Submit iOS
+    # Submission and dSYM upload are I/O bound and don't need the xlarge builder.
+    runs-on: macos-26
+    needs: [build]
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          # eas submit reads the app config from the repo
+          fetch-depth: 5
+
+      - name: 🔧 Setup Expo project
+        uses: ./.github/actions/setup-expo-project
+        with:
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: ⬇️ Download build artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ios-build-${{ github.run_id }}
+          path: ios-build
+
+      - name: 🚀 Deploy
+        run: pnpm eas submit -p ios --non-interactive --path ios-build/Bluesky.ipa
+
+      - name: 🪲 Upload dSYM to Sentry
+        env:
+          SENTRY_ORG: blueskyweb
+          SENTRY_PROJECT: app
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: pnpm sentry-cli debug-files upload ios-build/Bluesky.app.dSYM.zip --include-sources
+
+      - name: 🔔 Notify Slack of Production Build
+        if: ${{ inputs.profile == 'production' }}
+        uses: slackapi/slack-github-action@0d95c9a7becc1e6e297d76df9bc735c44f4cbcbc # v3.0.5
+        with:
+          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload-templated: true
+          payload: |
+            {"text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ needs.build.outputs.package-version }}\nBuild Number: ${{ needs.build.outputs.build-number }}```"}
+
+      # Record the commit only after a successful submit, so a failed submit doesn't advance
+      # the baseline used for the next testflight build's changelog.
+      - name: ⬇️ Restore Cache
+        id: get-base-commit
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        if: ${{ inputs.profile == 'testflight' }}
+        with:
+          path: most-recent-testflight-commit.txt
+          key: most-recent-testflight-commit
+
+      - name: ✏️ Write commit hash to cache
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        if: ${{ inputs.profile == 'testflight' }}
+        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt
+
+  distribute:
+    name: Assign build to TestFlight group
+    # fastlane and jq ship preinstalled on the macOS runner image, and this step mostly idles
+    # polling Apple processing, so it runs on a normal-size runner.
+    runs-on: macos-26
+    needs: [build, submit]
+    # testFlightGroup defaults to 'none' on both workflow_call and dispatch; guard against the
+    # empty string too, since `!= 'none'` alone would be true for ''.
+    if: ${{ inputs.testFlightGroup && inputs.testFlightGroup != 'none' }}
+    steps:
       # eas submit only uploads to App Store Connect; it can't assign a build to a
       # TestFlight group. fastlane's distribute_only mode skips the upload and assigns the
       # already-submitted build to the group, polling until Apple finishes processing it.
       - name: 🧪 Assign build to TestFlight group
-        if: ${{ inputs.testFlightGroup != 'none' }}
         env:
           TESTFLIGHT_GROUP: ${{ inputs.testFlightGroup }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
-          APP_VERSION: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
-          BUILD_NUMBER: ${{ steps.ipa-build-number.outputs.build-number }}
+          APP_VERSION: ${{ needs.build.outputs.package-version }}
+          BUILD_NUMBER: ${{ needs.build.outputs.build-number }}
         run: |
           # Ensure the API key material is removed even if fastlane exits non-zero
           # (the step runs under `bash -e`, which would otherwise abort before cleanup).
@@ -271,27 +315,3 @@ jobs:
             build_number:"$BUILD_NUMBER" \
             groups:"$TESTFLIGHT_GROUP" \
             notify_external_testers:true
-
-      - name: 🔔 Notify Slack of Production Build
-        if: ${{ inputs.profile == 'production' }}
-        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
-        with:
-          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          webhook-type: incoming-webhook
-          payload-templated: true
-          payload: |
-            {"text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.ipa-build-number.outputs.build-number }}```"}
-
-      - name: ⬇️ Restore Cache
-        id: get-base-commit
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        if: ${{ inputs.profile == 'testflight' }}
-        with:
-          path: most-recent-testflight-commit.txt
-          key: most-recent-testflight-commit
-
-      - name: ✏️ Write commit hash to cache
-        env:
-          GITHUB_SHA: ${{ github.sha }}
-        if: ${{ inputs.profile == 'testflight' }}
-        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt

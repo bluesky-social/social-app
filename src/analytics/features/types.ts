@@ -20,6 +20,7 @@ export enum Features {
   PostThreadKnownLikersFetchEnable = 'post_thread:known_likers:fetch:enable',
   CustomLogoJapanEnable = 'custom_logo:japan:enable',
   VideoMultipartUploadEnable = 'video:multipart_upload:enable',
+  SearchStarterPacksV2Enable = 'search_starter_packs_v2:enable',
 
   AATest = 'aa-test',
 }
