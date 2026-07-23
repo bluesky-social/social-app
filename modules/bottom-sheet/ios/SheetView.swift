@@ -135,6 +135,10 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
       return
     }
 
+    if let screenHeight = Util.getScreenHeight() {
+      self.maxHeight = screenHeight
+    }
+
     let sheetVc = SheetViewController()
     sheetVc.setDetents(contentHeight: self.clampHeight(contentHeight), preventExpansion: self.preventExpansion, fullHeight: self.fullHeight)
     if let sheet = sheetVc.sheetPresentationController {
