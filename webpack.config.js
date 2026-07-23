@@ -62,6 +62,16 @@ module.exports = async function (env, argv) {
   }
   config = withAlias(config, {
     'react-native$': 'react-native-web',
+    /*
+     * Codegen specs import this via a deep `react-native/*` path, which skips
+     * the exact-match alias above and pulls RN core into the web bundle. RN
+     * core's platform-extension modules have no `.web` variant, so they
+     * resolve to themselves and blow up with a TDZ error on startup.
+     */
+    'react-native/Libraries/Utilities/codegenNativeComponent$': path.join(
+      __dirname,
+      'src/lib/web-shims/codegenNativeComponent.js',
+    ),
     'react-native-webview': 'react-native-web-webview',
     'react-native-gesture-handler': false, // RNGH should not be used on web, so let's cause a build error if it sneaks in
     '@sentry-internal/replay': false, // not used, ~300kb of dead weight
