@@ -1,4 +1,4 @@
-import {type NativeProps} from './ScrollForwarderViewNativeComponent'
+import {type NativeProps} from './types'
 
 export function ScrollForwarderView({children}: NativeProps) {
   return children

@@ -1,2 +1,2 @@
 export {ScrollForwarderView} from './ScrollForwarderView'
-export * from './ScrollForwarderViewNativeComponent'
+export type {NativeProps} from './types'
