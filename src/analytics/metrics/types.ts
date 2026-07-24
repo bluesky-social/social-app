@@ -5,7 +5,10 @@
 import {type Platform} from 'react-native'
 
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
-import {type VideoCompressSkipReason} from '#/lib/media/video/types'
+import {
+  type VideoCompressSkipReason,
+  type VideoUploadTransport,
+} from '#/lib/media/video/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
@@ -1443,6 +1446,7 @@ export type Events = {
     bytes: number
     elapsedMs: number
     throughputBytesPerSec: number
+    transport: VideoUploadTransport
   }
   'video:upload:uploadFailed': {
     uploadId: string
@@ -1450,6 +1454,7 @@ export type Events = {
     bytes: number
     errorClass: string
     elapsedMs: number
+    transport: VideoUploadTransport
   }
   'video:upload:processingStarted': {
     uploadId: string

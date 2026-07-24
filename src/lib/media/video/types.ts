@@ -8,6 +8,8 @@ export type VideoCompressSkipReason =
   | 'no-webcodecs'
   | 'compress-error-fallback'
 
+export type VideoUploadTransport = 'multipart' | 'legacy' | 'legacy-fallback'
+
 export type CompressedVideo = {
   uri: string
   mimeType: string
