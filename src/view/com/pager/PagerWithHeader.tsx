@@ -8,13 +8,13 @@ import {
 } from 'react-native'
 import Animated, {
   type AnimatedRef,
-  runOnUI,
   scrollTo,
   type SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import {scheduleOnUI} from 'react-native-worklets'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {
@@ -181,7 +181,7 @@ export function PagerWithHeader({
   )
 
   const onTabPressed = useCallback(() => {
-    runOnUI(adjustScrollForOtherPages)('dragging')
+    scheduleOnUI(adjustScrollForOtherPages, 'dragging')
   }, [adjustScrollForOtherPages])
 
   return (

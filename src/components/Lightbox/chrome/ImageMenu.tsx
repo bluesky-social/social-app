@@ -2,12 +2,12 @@ import {useRef, useState} from 'react'
 import {Modal, Pressable, StyleSheet, View} from 'react-native'
 import Animated, {
   interpolate,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
 } from 'react-native-reanimated'
+import {scheduleOnRN} from 'react-native-worklets'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
@@ -52,7 +52,7 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
     progress.set(
       withTiming(0, TIMING_OUT, finished => {
         if (finished) {
-          runOnJS(setIsMounted)(false)
+          scheduleOnRN(setIsMounted, false)
         }
       }),
     )

@@ -14,7 +14,6 @@ import {
   type PanGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
-  runOnJS,
   type SharedValue,
   useAnimatedProps,
   useAnimatedReaction,
@@ -24,6 +23,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {Image} from 'expo-image'
 
 import {
@@ -84,7 +84,7 @@ const ImageItem = ({
       'worklet'
       const nextIsScaled = e.zoomScale > 1
       if (scaled !== nextIsScaled) {
-        runOnJS(handleZoom)(nextIsScaled)
+        scheduleOnRN(handleZoom, nextIsScaled)
       }
     },
     onBeginDrag() {
@@ -118,7 +118,7 @@ const ImageItem = ({
 
   const singleTap = Gesture.Tap().onEnd(() => {
     'worklet'
-    runOnJS(onTap)()
+    scheduleOnRN(onTap)
   })
 
   const doubleTap = Gesture.Tap()
@@ -142,7 +142,7 @@ const ImageItem = ({
           screenSize,
         )
       }
-      runOnJS(zoomTo)(nextZoomRect)
+      scheduleOnRN(zoomTo, nextZoomRect)
     })
 
   const composedGesture = Gesture.Exclusive(
@@ -199,9 +199,9 @@ const ImageItem = ({
     },
     (show, prevShow) => {
       if (!prevShow && show) {
-        runOnJS(setShowLoader)(true)
+        scheduleOnRN(setShowLoader, true)
       } else if (prevShow && !show) {
-        runOnJS(setShowLoader)(false)
+        scheduleOnRN(setShowLoader, false)
       }
     },
   )

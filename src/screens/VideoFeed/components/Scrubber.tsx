@@ -8,8 +8,6 @@ import {
 import Animated, {
   clamp,
   interpolate,
-  runOnJS,
-  runOnUI,
   type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -20,6 +18,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
+import {scheduleOnRN, scheduleOnUI} from 'react-native-worklets'
 import {useEventListener} from 'expo'
 import {type VideoPlayer} from 'expo-video'
 
@@ -66,7 +65,7 @@ export function Scrubber({
     () => Math.round(seekProgressSV.get()),
     (progress, prevProgress) => {
       if (progress !== prevProgress) {
-        runOnJS(setCurrentSeekTime)(progress)
+        scheduleOnRN(setCurrentSeekTime, progress)
       }
     },
   )
@@ -76,11 +75,11 @@ export function Scrubber({
       player?.seekBy(time)
 
       setTimeout(() => {
-        runOnUI(() => {
+        scheduleOnUI(() => {
           'worklet'
           isSeekingSV.set(false)
           seekingAnimationSV.set(withTiming(0, {duration: 500}))
-        })()
+        })
       }, 50)
     },
     [player, isSeekingSV, seekingAnimationSV],
@@ -116,7 +115,7 @@ export function Scrubber({
 
         // it's seek by, so offset by the current time
         // seekBy sets isSeekingSV back to false, so no need to do that here
-        runOnJS(seekBy)(newTime - currentTimeSV.get())
+        scheduleOnRN(seekBy, newTime - currentTimeSV.get())
       })
   }, [
     scrollGesture,
@@ -253,7 +252,7 @@ function PlayerListener({
     if (duration !== 0) {
       setDuration(Math.round(duration))
     }
-    runOnUI(updateTime)(evt.currentTime, duration)
+    scheduleOnUI(updateTime, evt.currentTime, duration)
   })
 
   return null
