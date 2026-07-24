@@ -6,7 +6,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {HELP_DESK_URL} from '#/lib/constants'
+import {HELP_DESK_URL, HITSLOP_10} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useApplyPullRequestOTAUpdate} from '#/lib/hooks/useOTAUpdates'
 import {
@@ -647,9 +647,9 @@ function AccountRow({
             {({props, state}) => (
               <Pressable
                 {...props}
+                hitSlop={HITSLOP_10}
                 style={[
                   a.absolute,
-                  a.z_10,
                   {top: 10, right: tokens.space.lg},
                   a.p_xs,
                   a.rounded_full,
