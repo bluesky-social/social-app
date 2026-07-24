@@ -83,7 +83,8 @@ function createLogger(
     warn: logger.warn.bind(logger),
     error: logger.error.bind(logger),
     useChild: (context: Exclude<Logger['context'], undefined>) => {
-      return useMemo(() => createLogger(context, metadata), [context])
+      // oxlint-disable-next-line react-hooks/exhaustive-deps
+      return useMemo(() => createLogger(context, metadata), [context, metadata])
     },
     Context: Logger.Context,
   }
