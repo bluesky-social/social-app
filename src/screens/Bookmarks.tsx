@@ -5,8 +5,7 @@ import {
   type AppBskyBookmarkDefs,
   AppBskyFeedDefs,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {
   type NavigationProp,
@@ -202,13 +201,13 @@ function BookmarkNotFound({
   post: $Typed<AppBskyFeedDefs.NotFoundPost>
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {mutateAsync: bookmark} = useBookmarkMutation()
 
   const remove = async () => {
     try {
       await bookmark({action: 'delete', uri: post.uri})
-      toast.show(_(msg`Removed from saved posts`), {
+      toast.show(l`Removed from saved posts`, {
         type: 'info',
       })
     } catch (err) {
@@ -249,7 +248,7 @@ function BookmarkNotFound({
         </Text>
       </View>
       <Button
-        label={_(msg`Remove from saved posts`)}
+        label={l`Remove from saved posts`}
         size="tiny"
         color="secondary"
         onPress={() => void remove()}>
@@ -283,17 +282,17 @@ function BookmarkItem({
 
 function BookmarksEmpty() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp<CommonNavigatorParams>>()
 
   return (
     <EmptyState
       icon={BookmarkDeleteLarge}
-      message={_(msg`Nothing saved yet`)}
+      message={l`Nothing saved yet`}
       textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
       button={{
-        label: _(msg`Button to go back to the home timeline`),
-        text: _(msg`Go home`),
+        label: l`Button to go back to the home timeline`,
+        text: l`Go home`,
         onPress: () => navigation.navigate('Home' as never),
         size: 'small',
         color: 'secondary',

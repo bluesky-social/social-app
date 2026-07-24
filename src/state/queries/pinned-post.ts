@@ -1,5 +1,4 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -10,7 +9,7 @@ import {useAgent, useSession} from '../session'
 import {useProfileUpdateMutation} from './profile'
 
 export function usePinnedPostMutation() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -56,9 +55,9 @@ export function usePinnedPostMutation() {
         })
 
         if (pinCurrentPost) {
-          Toast.show(_(msg({message: 'Post pinned', context: 'toast'})))
+          Toast.show(l({message: 'Post pinned', context: 'toast'}))
         } else {
-          Toast.show(_(msg({message: 'Post unpinned', context: 'toast'})))
+          Toast.show(l({message: 'Post unpinned', context: 'toast'}))
         }
 
         queryClient.invalidateQueries({
@@ -72,7 +71,7 @@ export function usePinnedPostMutation() {
           ),
         })
       } catch (e: any) {
-        Toast.show(_(msg`Failed to pin post`))
+        Toast.show(l`Failed to pin post`)
         logger.error('Failed to pin post', {message: String(e)})
         // revert optimistic update
         updatePostShadow(queryClient, postUri, {

@@ -7,8 +7,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -90,7 +89,7 @@ export function ProfileStarterPacks({
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   const items = data?.pages.flatMap(page => page.starterPacks)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const EmptyComponent = useCallback(() => {
     if (emptyStateMessage || emptyStateButton || emptyStateIcon) {
@@ -101,9 +100,7 @@ export function ProfileStarterPacks({
             iconSize="3xl"
             message={
               emptyStateMessage ??
-              _(
-                msg`Starter packs let you share your favorite feeds and people with your friends.`,
-              )
+              l`Starter packs let you share your favorite feeds and people with your friends.`
             }
             button={emptyStateButton}
           />
@@ -111,7 +108,7 @@ export function ProfileStarterPacks({
       )
     }
     return <Empty />
-  }, [_, emptyStateMessage, emptyStateButton, emptyStateIcon])
+  }, [l, emptyStateMessage, emptyStateButton, emptyStateIcon])
 
   useImperativeHandle(ref, () => ({
     scrollToTop: () => {},
@@ -193,7 +190,7 @@ export function ProfileStarterPacks({
 }
 
 function CreateAnother() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
 
@@ -207,7 +204,7 @@ function CreateAnother() {
         t.atoms.border_contrast_low,
       ]}>
       <Button
-        label={_(msg`Create a starter pack`)}
+        label={l`Create a starter pack`}
         variant="solid"
         color="secondary"
         size="small"
@@ -223,7 +220,7 @@ function CreateAnother() {
 }
 
 function Empty() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const confirmDialogControl = useDialogControl()
   const followersDialogControl = useDialogControl()
@@ -303,7 +300,7 @@ function Empty() {
       </View>
       <View style={[a.flex_row, a.gap_md, {marginLeft: 'auto'}]}>
         <Button
-          label={_(msg`Create a starter pack for me`)}
+          label={l`Create a starter pack for me`}
           variant="ghost"
           color="primary"
           size="small"
@@ -316,7 +313,7 @@ function Empty() {
           {isGenerating && <Loader size="md" />}
         </Button>
         <Button
-          label={_(msg`Create a starter pack`)}
+          label={l`Create a starter pack`}
           variant="ghost"
           color="primary"
           size="small"
@@ -333,7 +330,6 @@ function Empty() {
           </ButtonText>
         </Button>
       </View>
-
       <Prompt.Outer control={confirmDialogControl}>
         <Prompt.Content>
           <Prompt.TitleText>
@@ -349,12 +345,12 @@ function Empty() {
         <Prompt.Actions>
           <Prompt.Action
             color="primary"
-            cta={_(msg`Choose for me`)}
+            cta={l`Choose for me`}
             onPress={generate}
           />
           <Prompt.Action
             color="secondary"
-            cta={_(msg`Let me choose`)}
+            cta={l`Let me choose`}
             onPress={() => {
               navigation.navigate('StarterPackWizard', {})
             }}
@@ -363,21 +359,17 @@ function Empty() {
       </Prompt.Outer>
       <Prompt.Basic
         control={followersDialogControl}
-        title={_(msg`Oops!`)}
-        description={_(
-          msg`You must be following at least seven other people to generate a starter pack.`,
-        )}
+        title={l`Oops!`}
+        description={l`You must be following at least seven other people to generate a starter pack.`}
         onConfirm={() => {}}
         showCancel={false}
       />
       <Prompt.Basic
         control={errorDialogControl}
-        title={_(msg`Oops!`)}
-        description={_(
-          msg`An error occurred while generating your starter pack. Want to try again?`,
-        )}
+        title={l`Oops!`}
+        description={l`An error occurred while generating your starter pack. Want to try again?`}
         onConfirm={generate}
-        confirmButtonCta={_(msg`Retry`)}
+        confirmButtonCta={l`Retry`}
       />
     </LinearGradientBackground>
   )

@@ -2,8 +2,7 @@ import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme, web} from '#/alf'
@@ -17,7 +16,7 @@ import {IS_WEB} from '#/env'
 
 export function BookmarksAnnouncement() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
 
@@ -33,9 +32,8 @@ export function BookmarksAnnouncement() {
       onClose={onClose}
       nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner
-        label={_(msg`Introducing saved posts AKA bookmarks`)}
+        label={l`Introducing saved posts AKA bookmarks`}
         style={[web({maxWidth: 440})]}
         contentContainerStyle={[
           {
@@ -117,13 +115,11 @@ export function BookmarksAnnouncement() {
                     aspectRatio: 333 / 104,
                   },
                 ]}
-                alt={_(
-                  msg({
-                    message: `A screenshot of a post with a new button next to the share button that allows you to save the post to your bookmarks. The post is from @jcsalterego.bsky.social and reads "inventing a saturday that immediately follows monday".`,
-                    comment:
-                      'Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.',
-                  }),
-                )}
+                alt={l({
+                  message: `A screenshot of a post with a new button next to the share button that allows you to save the post to your bookmarks. The post is from @jcsalterego.bsky.social and reads "inventing a saturday that immediately follows monday".`,
+                  comment:
+                    'Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.',
+                })}
                 useAppleWebpCodec
               />
             </View>
@@ -162,7 +158,7 @@ export function BookmarksAnnouncement() {
 
           {!IS_WEB && (
             <Button
-              label={_(msg`Close`)}
+              label={l`Close`}
               size="large"
               color="primary"
               onPress={() => {

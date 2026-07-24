@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {usePreventRemove} from '@react-navigation/native'
 
 import {
@@ -18,7 +17,7 @@ import {IS_NATIVE} from '#/env'
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsFlow'>
 export function FindContactsFlowScreen({navigation}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const [state, dispatch] = useFindContactsFlowState()
 
@@ -59,8 +58,8 @@ export function FindContactsFlowScreen({navigation}: Props) {
         </LayoutAnimationConfig>
       ) : (
         <ErrorScreen
-          title={_(msg`Not available on this platform.`)}
-          message={_(msg`Please use the native app to sync your contacts.`)}
+          title={l`Not available on this platform.`}
+          message={l`Please use the native app to sync your contacts.`}
           showHeader
         />
       )}

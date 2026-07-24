@@ -5,8 +5,7 @@ import Animated, {
   type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {useContextMenuContext} from './context'
@@ -21,7 +20,7 @@ export function Backdrop({
   onPress?: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {mode} = useContextMenuContext()
 
   const reduced = mode === 'auxiliary-only'
@@ -42,8 +41,8 @@ export function Backdrop({
       style={[a.absolute, a.inset_0, t.atoms.bg_contrast_975, animatedStyle]}>
       <Pressable
         style={a.flex_1}
-        accessibilityLabel={_(msg`Close menu`)}
-        accessibilityHint={_(msg`Tap to close context menu`)}
+        accessibilityLabel={l`Close menu`}
+        accessibilityHint={l`Tap to close context menu`}
         onPress={onPress}
       />
     </Animated.View>

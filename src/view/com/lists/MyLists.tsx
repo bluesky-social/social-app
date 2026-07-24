@@ -8,8 +8,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {cleanError} from '#/lib/strings/errors'
@@ -43,7 +42,7 @@ export function MyLists({
 }) {
   const pal = usePalette('default')
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
   const [isPTRing, setIsPTRing] = useState(false)
   const {data, isFetching, isFetched, isError, error, refetch} =
@@ -68,17 +67,13 @@ export function MyLists({
   let emptyText
   switch (filter) {
     case 'curate':
-      emptyText = _(
-        msg`Lists allow you to see content from your favorite people.`,
-      )
+      emptyText = l`Lists allow you to see content from your favorite people.`
       break
     case 'mod':
-      emptyText = _(
-        msg`Public, sharable lists of users to mute or block in bulk.`,
-      )
+      emptyText = l`Public, sharable lists of users to mute or block in bulk.`
       break
     default:
-      emptyText = _(msg`You have no lists.`)
+      emptyText = l`You have no lists.`
       break
   }
 

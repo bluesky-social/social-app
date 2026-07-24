@@ -3,8 +3,7 @@ import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as SMS from 'expo-sms'
 import {type ModerationOpts} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
@@ -84,7 +83,7 @@ export function ViewMatches({
   onNext: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const gutter = useGutters([0, 'wide'])
   const moderationOpts = useModerationOpts()
@@ -141,11 +140,11 @@ export function ViewMatches({
       }),
     onSuccess: () => {
       setDidFollowAll(true)
-      Toast.show(_(msg`All friends followed!`), {type: 'success'})
+      Toast.show(l`All friends followed!`, {type: 'success'})
       cumulativeFollowCount.current += followableDids.length
     },
     onError: _err => {
-      Toast.show(_(msg`Failed to follow all your friends, please try again`), {
+      Toast.show(l`Failed to follow all your friends, please try again`, {
         type: 'error',
       })
       for (const did of followableDids) {
@@ -232,15 +231,13 @@ export function ViewMatches({
       dispatch({type: 'DISMISS_MATCH_FAILED', payload: {did}})
       if (isNetworkError(err)) {
         Toast.show(
-          _(
-            msg`Failed to hide suggestion, please check your internet connection`,
-          ),
+          l`Failed to hide suggestion, please check your internet connection`,
           {type: 'error'},
         )
       } else {
         logger.error('Dismissing match failed', {safeMessage: err})
         Toast.show(
-          _(msg`An error occurred while hiding suggestion. ${cleanError(err)}`),
+          l`An error occurred while hiding suggestion. ${cleanError(err)}`,
           {type: 'error'},
         )
       }
@@ -273,7 +270,7 @@ export function ViewMatches({
             }>
             {item.count > 1 && (
               <Button
-                label={_(msg`Follow all`)}
+                label={l`Follow all`}
                 size="small"
                 color="primary_subtle"
                 onPress={() => followAll()}
@@ -309,7 +306,7 @@ export function ViewMatches({
       case 'no matches header':
         return (
           <Header
-            titleText={_(msg`You got here first`)}
+            titleText={l`You got here first`}
             largeTitle
             subtitleText={
               <Trans>
@@ -353,7 +350,7 @@ export function ViewMatches({
           ]}>
           {context === 'Onboarding' && <OnboardingPosition />}
           <SearchInput
-            placeholder={_(msg`Search contacts`)}
+            placeholder={l`Search contacts`}
             value={search}
             onFocus={() => {
               onFocus()
@@ -392,7 +389,7 @@ export function ViewMatches({
           {paddingBottom: insets.bottom + tokens.space.md},
         ]}>
         <Button
-          label={context === 'Onboarding' ? _(msg`Next`) : _(msg`Done`)}
+          label={context === 'Onboarding' ? l`Next` : l`Done`}
           onPress={() => {
             if (context === 'Onboarding') {
               ax.metric('onboarding:contacts:nextPressed', {
@@ -444,19 +441,19 @@ function MatchItem({
 }) {
   const gutter = useGutters([0, 'wide'])
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const shadow = useProfileShadow(profile)
 
   const contactName = useMemo(() => {
     if (!contact) return null
 
     const name = contact.name ?? contact.firstName ?? contact.lastName
-    if (name) return _(msg`Your contact ${name}`)
+    if (name) return l`Your contact ${name}`
     const phone =
       contact.phoneNumbers?.find(p => p.isPrimary) ?? contact.phoneNumbers?.[0]
     if (phone?.number) return phone.number
     return null
-  }, [contact, _])
+  }, [contact, l])
 
   if (!moderationOpts) return null
 
@@ -497,7 +494,7 @@ function MatchItem({
           <Button
             color="secondary"
             variant="ghost"
-            label={_(msg`Remove suggestion`)}
+            label={l`Remove suggestion`}
             onPress={() => onRemoveSuggestion(profile.did)}
             hoverStyle={[a.bg_transparent, {opacity: 0.5}]}
             hitSlop={8}>
@@ -518,7 +515,7 @@ function ContactItem({
 }) {
   const gutter = useGutters([0, 'wide'])
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
 
@@ -564,7 +561,7 @@ function ContactItem({
         </Text>
         {phoneNumber && currentAccount && (
           <Button
-            label={_(msg`Invite ${name} to join Bluesky`)}
+            label={l`Invite ${name} to join Bluesky`}
             color="secondary"
             size="small"
             onPress={async () => {
@@ -574,12 +571,10 @@ function ContactItem({
               try {
                 await SMS.sendSMSAsync(
                   [phoneNumber],
-                  _(
-                    msg`I'm on Bluesky as ${currentAccount.handle} - come find me! https://bsky.app/download`,
-                  ),
+                  l`I'm on Bluesky as ${currentAccount.handle} - come find me! https://bsky.app/download`,
                 )
               } catch (err) {
-                Toast.show(_(msg`Failed to launch SMS app`), {type: 'error'})
+                Toast.show(l`Failed to launch SMS app`, {type: 'error'})
                 logger.error('Could not launch SMS', {safeMessage: err})
               }
             }}>

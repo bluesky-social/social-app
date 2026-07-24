@@ -3,8 +3,7 @@ import {
   type InterpretedLabelValueDefinition,
   type LabelPreference,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
@@ -78,15 +77,13 @@ export function Buttons({
   hideLabel?: string
   disabled?: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <View style={[{minHeight: 35}, a.w_full]}>
       <ToggleButton.Group
         disabled={disabled}
-        label={_(
-          msg`Configure content filtering setting for category: ${name}`,
-        )}
+        label={l`Configure content filtering setting for category: ${name}`}
         values={values}
         onChange={onChange}>
         {ignoreLabel && (
@@ -120,7 +117,7 @@ export function GlobalLabelPreference({
   labelDefinition: InterpretedLabelValueDefinition
   disabled?: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const {identifier} = labelDefinition
   const {data: preferences} = usePreferencesQuery()
@@ -138,9 +135,9 @@ export function GlobalLabelPreference({
         }
 
   const labelOptions = {
-    hide: _(msg`Hide`),
-    warn: _(msg`Warn`),
-    ignore: _(msg`Show`),
+    hide: l`Hide`,
+    warn: l`Warn`,
+    ignore: l`Show`,
   }
 
   return (
@@ -180,7 +177,7 @@ export function LabelerLabelPreference({
   disabled?: boolean
   labelerDid?: string
 }) {
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
   const {gtPhone} = useBreakpoints()
 
@@ -254,7 +251,7 @@ export function LabelerLabelPreference({
                 <Trans>
                   Configured in{' '}
                   <InlineLinkText
-                    label={_(msg`moderation settings`)}
+                    label={l`moderation settings`}
                     to="/moderation"
                     style={a.text_sm}>
                     moderation settings
@@ -266,7 +263,6 @@ export function LabelerLabelPreference({
           </View>
         )}
       </Content>
-
       {showConfig && (
         <>
           {cantConfigure ? (

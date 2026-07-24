@@ -6,8 +6,7 @@ import {
   type ModerationOpts,
   type Un$Typed,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {
   type InfiniteData,
@@ -72,7 +71,7 @@ function DialogInner({
   includeProfile?: boolean
 }) {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const agent = useAgent()
   const control = Dialog.useDialogContext()
@@ -136,9 +135,7 @@ function DialogInner({
         if (!activitySubscription.post && !activitySubscription.reply) {
           ax.metric('activitySubscription:disable', {})
           Toast.show(
-            _(
-              msg`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`,
-            ),
+            l`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`,
             {
               type: 'success',
             },
@@ -168,15 +165,13 @@ function DialogInner({
           })
           if (!initialState.post && !initialState.reply) {
             Toast.show(
-              _(
-                msg`You'll start receiving notifications for ${sanitizeHandle(profile.handle, '@')}!`,
-              ),
+              l`You'll start receiving notifications for ${sanitizeHandle(profile.handle, '@')}!`,
               {
                 type: 'success',
               },
             )
           } else {
-            Toast.show(_(msg`Changes saved`), {
+            Toast.show(l`Changes saved`, {
               type: 'success',
             })
           }
@@ -195,7 +190,7 @@ function DialogInner({
 
     if (isDirty) {
       return {
-        label: _(msg`Save changes`),
+        label: l`Save changes`,
         color: hasAny ? 'primary' : 'negative',
         onPress: () => saveChanges(state),
         disabled: isSaving,
@@ -204,26 +199,26 @@ function DialogInner({
       // on web, a disabled save button feels more natural than a massive close button
       if (IS_WEB) {
         return {
-          label: _(msg`Save changes`),
+          label: l`Save changes`,
           color: 'secondary',
           disabled: true,
         }
       } else {
         return {
-          label: _(msg`Cancel`),
+          label: l`Cancel`,
           color: 'secondary',
           onPress: () => control.close(),
         }
       }
     }
-  }, [state, initialState, control, _, isSaving, saveChanges])
+  }, [state, initialState, control, l, isSaving, saveChanges])
 
   const name = createSanitizedDisplayName(profile, false)
 
   return (
     <Dialog.ScrollableInner
       style={web({maxWidth: 400})}
-      label={_(msg`Get notified of new posts from ${name}`)}>
+      label={l`Get notified of new posts from ${name}`}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_xs]}>
           <Text style={[a.font_bold, a.text_2xl]}>
@@ -249,12 +244,12 @@ function DialogInner({
         )}
 
         <Toggle.Group
-          label={_(msg`Subscribe to account activity`)}
+          label={l`Subscribe to account activity`}
           values={values}
           onChange={onChange}>
           <View style={[a.gap_sm]}>
             <Toggle.Item
-              label={_(msg`Posts`)}
+              label={l`Posts`}
               name="post"
               style={[
                 a.flex_1,
@@ -271,7 +266,7 @@ function DialogInner({
               <Toggle.Switch />
             </Toggle.Item>
             <Toggle.Item
-              label={_(msg`Replies`)}
+              label={l`Replies`}
               name="reply"
               style={[
                 a.flex_1,
@@ -301,7 +296,6 @@ function DialogInner({
           {isSaving && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )

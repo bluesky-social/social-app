@@ -4,7 +4,7 @@ import {
   type AppBskyGraphDefs,
   AppBskyGraphStarterpack,
 } from '@atproto/api'
-import {msg, plural} from '@lingui/core/macro'
+import {plural, t} from '@lingui/core/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import * as Toast from '#/components/Toast'
@@ -77,12 +77,10 @@ function reducer(state: State, action: Action): State {
     case 'AddProfile':
       if (state.profiles.length > STARTER_PACK_MAX_SIZE) {
         Toast.show(
-          msg`You may only add up to ${plural(STARTER_PACK_MAX_SIZE, {
+          t`You may only add up to ${plural(STARTER_PACK_MAX_SIZE, {
             other: `${STARTER_PACK_MAX_SIZE} profiles`,
-          })}`.message ?? '',
-          {
-            type: 'info',
-          },
+          })}`,
+          {type: 'info'},
         )
       } else {
         updatedState = {...state, profiles: [...state.profiles, action.profile]}
@@ -98,9 +96,7 @@ function reducer(state: State, action: Action): State {
       break
     case 'AddFeed':
       if (state.feeds.length >= 3) {
-        Toast.show(msg`You may only add up to 3 feeds`.message ?? '', {
-          type: 'info',
-        })
+        Toast.show(t`You may only add up to 3 feeds`, {type: 'info'})
       } else {
         updatedState = {...state, feeds: [...state.feeds, action.feed]}
       }

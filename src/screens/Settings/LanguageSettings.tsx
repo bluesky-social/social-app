@@ -1,7 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {
@@ -30,7 +29,7 @@ const DEDUPED_LANGUAGES = LANGUAGES.filter(
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 export function LanguageSettingsScreen({}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
 
@@ -115,12 +114,12 @@ export function LanguageSettingsScreen({}: Props) {
               <Select.Root
                 value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
                 onValueChange={onChangeAppLanguage}>
-                <Select.Trigger label={_(msg`Select app language`)}>
+                <Select.Trigger label={l`Select app language`}>
                   <Select.ValueText />
                   <Select.Icon />
                 </Select.Trigger>
                 <Select.Content
-                  label={_(msg`App language`)}
+                  label={l`App language`}
                   renderItem={({label, value}) => (
                     <Select.Item value={value} label={label}>
                       <Select.ItemIndicator />
@@ -149,12 +148,12 @@ export function LanguageSettingsScreen({}: Props) {
               <Select.Root
                 value={langPrefs.primaryLanguage}
                 onValueChange={onChangePrimaryLanguage}>
-                <Select.Trigger label={_(msg`Select primary language`)}>
+                <Select.Trigger label={l`Select primary language`}>
                   <Select.ValueText />
                   <Select.Icon />
                 </Select.Trigger>
                 <Select.Content
-                  label={_(msg`Primary language`)}
+                  label={l`Primary language`}
                   renderItem={({label, value}) => (
                     <Select.Item value={value} label={label}>
                       <Select.ItemIndicator />
@@ -192,7 +191,7 @@ export function LanguageSettingsScreen({}: Props) {
 
               <View style={[a.w_full, web({maxWidth: 400})]}>
                 <Toggle.Group
-                  label={_(msg`Select content languages`)}
+                  label={l`Select content languages`}
                   values={contentLanguages}
                   onChange={setContentLanguages}>
                   <Toggle.PanelGroup>
@@ -215,7 +214,7 @@ export function LanguageSettingsScreen({}: Props) {
                       )
                     })}
                     <Button
-                      label={_(msg`Add more languages…`)}
+                      label={l`Add more languages…`}
                       onPress={contentLanguagePrefsControl.open}>
                       <Toggle.Panel adjacent="leading">
                         <Toggle.PanelIcon icon={PlusIcon} />

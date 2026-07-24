@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -48,7 +47,7 @@ export function FeedSection({
   const [hasNew, setHasNew] = useState(false)
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const isScreenFocused = useIsFocused()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
@@ -75,11 +74,11 @@ export function FeedSection({
         <EmptyState
           icon={HashtagWideIcon}
           iconSize="2xl"
-          message={_(msg`This feed is empty.`)}
+          message={l`This feed is empty.`}
         />
         {isOwner && (
           <Button
-            label={_(msg`Start adding people`)}
+            label={l`Start adding people`}
             onPress={onPressAddUser}
             color="primary"
             size="small">
@@ -91,7 +90,7 @@ export function FeedSection({
         )}
       </View>
     )
-  }, [_, onPressAddUser, isOwner])
+  }, [l, onPressAddUser, isOwner])
 
   return (
     <View>
@@ -110,7 +109,7 @@ export function FeedSection({
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onScrollToTop}
-          label={_(msg`Load new posts`)}
+          label={l`Load new posts`}
           showIndicator={hasNew}
         />
       )}

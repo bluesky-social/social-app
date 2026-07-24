@@ -5,7 +5,7 @@ import {
   interpretLabelValueDefinition,
   LABELS,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import * as bcp47Match from 'bcp-47-match'
 
 import {

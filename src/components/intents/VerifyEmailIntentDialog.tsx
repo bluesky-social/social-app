@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useAgent, useSession} from '#/state/session'
@@ -31,7 +30,7 @@ export function VerifyEmailIntentDialog() {
 function Inner({}: {control: DialogControlProps}) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {verifyEmailState: state} = useIntentDialogs()
   const [status, setStatus] = useState<
     'loading' | 'success' | 'failure' | 'resent'
@@ -59,7 +58,7 @@ function Inner({}: {control: DialogControlProps}) {
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Verify email dialog`)}
+      label={l`Verify email dialog`}
       style={[
         gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
       ]}>
@@ -114,7 +113,7 @@ function Inner({}: {control: DialogControlProps}) {
           <>
             <Divider />
             <Button
-              label={_(msg`Resend Verification Email`)}
+              label={l`Resend Verification Email`}
               onPress={onPressResendEmail}
               color="secondary_inverted"
               size="large"
@@ -127,7 +126,6 @@ function Inner({}: {control: DialogControlProps}) {
           </>
         )}
       </View>
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )

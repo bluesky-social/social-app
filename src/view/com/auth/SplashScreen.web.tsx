@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -30,7 +29,7 @@ export const SplashScreen = ({
   onPressSignin: () => void
   onPressCreateAccount: () => void
 }) => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {isTabletOrMobile: IS_WEB_MOBILE} = useWebMediaQueries()
   const [showClipOverlay, setShowClipOverlay] = useState(false)
@@ -66,7 +65,6 @@ export const SplashScreen = ({
           <TimesIcon width={24} style={t.atoms.text} />
         </Pressable>
       )}
-
       <Layout.Center style={[a.h_full, a.flex_1]} ignoreTabletLayoutOffset>
         <View
           testID="noSessionView"
@@ -107,10 +105,8 @@ export const SplashScreen = ({
               <Button
                 testID="createAccountButton"
                 onPress={onPressCreateAccount}
-                label={_(msg`Create new account`)}
-                accessibilityHint={_(
-                  msg`Opens flow to create a new Bluesky account`,
-                )}
+                label={l`Create new account`}
+                accessibilityHint={l`Opens flow to create a new Bluesky account`}
                 size="large"
                 variant="solid"
                 color="primary">
@@ -121,10 +117,8 @@ export const SplashScreen = ({
               <Button
                 testID="signInButton"
                 onPress={onPressSignin}
-                label={_(msg`Sign in`)}
-                accessibilityHint={_(
-                  msg`Opens flow to sign in to your existing Bluesky account`,
-                )}
+                label={l`Sign in`}
+                accessibilityHint={l`Opens flow to sign in to your existing Bluesky account`}
                 size="large"
                 variant="solid"
                 color="secondary">
@@ -147,7 +141,7 @@ export const SplashScreen = ({
 
 function Footer() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <View
@@ -166,25 +160,23 @@ function Footer() {
         t.atoms.border_contrast_medium,
       ]}>
       <InlineLinkText
-        label={_(msg`Learn more about Bluesky`)}
+        label={l`Learn more about Bluesky`}
         to="https://bsky.social">
         <Trans>Business</Trans>
       </InlineLinkText>
       <InlineLinkText
-        label={_(msg`Read the Bluesky blog`)}
+        label={l`Read the Bluesky blog`}
         to="https://bsky.social/about/blog">
         <Trans>Blog</Trans>
       </InlineLinkText>
       <InlineLinkText
-        label={_(msg`See jobs at Bluesky`)}
+        label={l`See jobs at Bluesky`}
         to="https://bsky.social/about/join">
         <Trans comment="Link to a page with job openings at Bluesky">
           Jobs
         </Trans>
       </InlineLinkText>
-
       <View style={a.flex_1} />
-
       <AppLanguageDropdown />
     </View>
   )

@@ -1,8 +1,7 @@
 import {Fragment, useCallback} from 'react'
 import {Linking, View} from 'react-native'
 import {LABELS} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {getLabelingServiceTitle, isAppLabeler} from '#/lib/moderation'
@@ -81,7 +80,7 @@ function ErrorState({error}: {error: string}) {
 export function ModerationScreen(
   _props: NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>,
 ) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {
     isLoading: isPreferencesLoading,
     error: preferencesError,
@@ -109,7 +108,7 @@ export function ModerationScreen(
           <ErrorState
             error={
               preferencesError?.toString() ||
-              _(msg`Something went wrong, please try again.`)
+              l`Something went wrong, please try again.`
             }
           />
         ) : (
@@ -157,7 +156,7 @@ export function ModerationScreenInner({
 }: {
   preferences: UsePreferencesQueryResponse
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
@@ -184,7 +183,7 @@ export function ModerationScreenInner({
   const handleCleanup = async () => {
     try {
       await removeLabelers({dids: unavailableDids})
-      Toast.show(_(msg`Removed unavailable services`), {
+      Toast.show(l`Removed unavailable services`, {
         type: 'success',
       })
     } catch (e: any) {
@@ -234,7 +233,7 @@ export function ModerationScreenInner({
               your{' '}
               <InlineLinkText
                 to="/settings/account"
-                label={_(msg`Go to account settings`)}>
+                label={l`Go to account settings`}>
                 account settings
               </InlineLinkText>
               .
@@ -242,7 +241,6 @@ export function ModerationScreenInner({
           </Admonition.Admonition>
         </View>
       )}
-
       <Text
         style={[
           a.text_md,
@@ -252,7 +250,6 @@ export function ModerationScreenInner({
         ]}>
         <Trans>Moderation tools</Trans>
       </Text>
-
       <View
         style={[
           a.w_full,
@@ -261,12 +258,12 @@ export function ModerationScreenInner({
           t.atoms.bg_contrast_25,
         ]}>
         <Link
-          label={_(msg`View your default post interaction settings`)}
+          label={l`View your default post interaction settings`}
           testID="interactionSettingsBtn"
           to="/moderation/interaction-settings">
           {state => (
             <SubItem
-              title={_(msg`Interaction settings`)}
+              title={l`Interaction settings`}
               icon={EditBig}
               style={[
                 (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
@@ -277,11 +274,11 @@ export function ModerationScreenInner({
         <Divider />
         <Button
           testID="mutedWordsBtn"
-          label={_(msg`Open muted words and tags settings`)}
+          label={l`Open muted words and tags settings`}
           onPress={() => mutedWordsDialogControl.open()}>
           {state => (
             <SubItem
-              title={_(msg`Muted words & tags`)}
+              title={l`Muted words & tags`}
               icon={Filter}
               style={[
                 (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
@@ -291,12 +288,12 @@ export function ModerationScreenInner({
         </Button>
         <Divider />
         <Link
-          label={_(msg`View your moderation lists`)}
+          label={l`View your moderation lists`}
           testID="moderationlistsBtn"
           to="/moderation/modlists">
           {state => (
             <SubItem
-              title={_(msg`Moderation lists`)}
+              title={l`Moderation lists`}
               icon={Group}
               style={[
                 (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
@@ -306,12 +303,12 @@ export function ModerationScreenInner({
         </Link>
         <Divider />
         <Link
-          label={_(msg`View your muted accounts`)}
+          label={l`View your muted accounts`}
           testID="mutedAccountsBtn"
           to="/moderation/muted-accounts">
           {state => (
             <SubItem
-              title={_(msg`Muted accounts`)}
+              title={l`Muted accounts`}
               icon={Person}
               style={[
                 (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
@@ -321,12 +318,12 @@ export function ModerationScreenInner({
         </Link>
         <Divider />
         <Link
-          label={_(msg`View your blocked accounts`)}
+          label={l`View your blocked accounts`}
           testID="blockedAccountsBtn"
           to="/moderation/blocked-accounts">
           {state => (
             <SubItem
-              title={_(msg`Blocked accounts`)}
+              title={l`Blocked accounts`}
               icon={CircleBanSign}
               style={[
                 (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
@@ -336,12 +333,12 @@ export function ModerationScreenInner({
         </Link>
         <Divider />
         <Link
-          label={_(msg`Manage verification settings`)}
+          label={l`Manage verification settings`}
           testID="verificationSettingsBtn"
           to="/moderation/verification-settings">
           {state => (
             <SubItem
-              title={_(msg`Verification settings`)}
+              title={l`Verification settings`}
               icon={CircleCheck}
               style={[
                 (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
@@ -350,7 +347,6 @@ export function ModerationScreenInner({
           )}
         </Link>
       </View>
-
       <Text
         style={[
           a.pt_2xl,
@@ -361,11 +357,9 @@ export function ModerationScreenInner({
         ]}>
         <Trans>Content filters</Trans>
       </Text>
-
       <AgeAssuranceAdmonition style={[a.pb_md]}>
         {aaCopy.notice}
       </AgeAssuranceAdmonition>
-
       <View style={[a.gap_md]}>
         <View
           style={[
@@ -389,7 +383,7 @@ export function ModerationScreenInner({
                   <Trans>Enable adult content</Trans>
                 </Text>
                 <Toggle.Item
-                  label={_(msg`Toggle to enable or disable adult content`)}
+                  label={l`Toggle to enable or disable adult content`}
                   disabled={adultContentUIDisabled}
                   name="adultContent"
                   value={adultContentEnabled}
@@ -412,7 +406,7 @@ export function ModerationScreenInner({
                     <Trans>
                       Adult content can only be enabled via the Web at{' '}
                       <InlineLinkText
-                        label={_(msg`The Bluesky web application`)}
+                        label={l`The Bluesky web application`}
                         to=""
                         onPress={evt => {
                           evt.preventDefault()
@@ -445,7 +439,6 @@ export function ModerationScreenInner({
           )}
         </View>
       </View>
-
       <Text
         style={[
           a.text_md,
@@ -456,7 +449,6 @@ export function ModerationScreenInner({
         ]}>
         <Trans>Advanced</Trans>
       </Text>
-
       {unavailableDids.length > 0 && (
         <Admonition.Outer type="tip" style={[a.mb_md]}>
           <Admonition.Row>
@@ -470,7 +462,7 @@ export function ModerationScreenInner({
             </Admonition.Content>
             <Admonition.Button
               color="primary_subtle"
-              label={_(msg`Remove unavailable moderation services`)}
+              label={l`Remove unavailable moderation services`}
               onPress={handleCleanup}
               disabled={isRemovingLabelers}>
               <ButtonText>
@@ -481,7 +473,6 @@ export function ModerationScreenInner({
           </Admonition.Row>
         </Admonition.Outer>
       )}
-
       {isLabelersLoading ? (
         <View style={[a.w_full, a.align_center, a.p_lg]}>
           <Loader size="xl" />

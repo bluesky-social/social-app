@@ -6,8 +6,7 @@ import {
   type AppBskyContactGetSyncStatus,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
@@ -57,7 +56,7 @@ import {bulkWriteFollows} from '../Onboarding/util'
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'FindContactsSettings'>
 export function FindContactsSettingsScreen({}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
 
   const {data, error, refetch} = useContactsSyncStatusQuery()
@@ -92,7 +91,7 @@ export function FindContactsSettingsScreen({}: Props) {
           )
         ) : error ? (
           <ErrorScreen
-            title={_(msg`Error getting the latest data.`)}
+            title={l`Error getting the latest data.`}
             message={cleanError(error)}
             onPressTryAgain={refetch}
           />
@@ -103,8 +102,8 @@ export function FindContactsSettingsScreen({}: Props) {
         )
       ) : (
         <ErrorScreen
-          title={_(msg`Not available on this platform.`)}
-          message={_(msg`Please use the native app to import your contacts.`)}
+          title={l`Not available on this platform.`}
+          message={l`Please use the native app to import your contacts.`}
         />
       )}
     </Layout.Screen>
@@ -114,7 +113,7 @@ export function FindContactsSettingsScreen({}: Props) {
 function Intro() {
   const gutter = useGutters(['base'])
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const inviteFriendsControl = useDialogControl()
 
@@ -136,12 +135,10 @@ function Intro() {
           control what happens next.{' '}
           <InlineLinkText
             to={urls.website.blog.findFriendsAnnouncement}
-            label={_(
-              msg({
-                message: `Learn more about importing contacts`,
-                context: `english-only-resource`,
-              }),
-            )}
+            label={l({
+              message: `Learn more about importing contacts`,
+              context: `english-only-resource`,
+            })}
             style={[a.text_md, a.leading_snug]}>
             <Trans context="english-only-resource">Learn more</Trans>
           </InlineLinkText>
@@ -150,7 +147,7 @@ function Intro() {
       {isAvailable ? (
         <Link
           to={{screen: 'FindContactsFlow'}}
-          label={_(msg`Import contacts`)}
+          label={l`Import contacts`}
           size="large"
           color="primary"
           style={[a.flex_1, a.justify_center]}>
@@ -169,7 +166,7 @@ function Intro() {
         )
       )}
       <Button
-        label={_(msg`Share my profile`)}
+        label={l`Share my profile`}
         size="large"
         color="secondary"
         onPress={() => {
@@ -196,7 +193,7 @@ function SyncStatus({
   const ax = useAnalytics()
   const agent = useAgent()
   const queryClient = useQueryClient()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
 
   const {
@@ -229,14 +226,12 @@ function SyncStatus({
       refetchMatches()
       if (isNetworkError(err)) {
         Toast.show(
-          _(
-            msg`Could not follow all matches - please check your network connection.`,
-          ),
+          l`Could not follow all matches - please check your network connection.`,
           {type: 'error'},
         )
       } else {
         logger.error('Failed to follow all matches', {safeMessage: err})
-        Toast.show(_(msg`Could not follow all matches. ${cleanError(err)}`), {
+        Toast.show(l`Could not follow all matches. ${cleanError(err)}`, {
           type: 'error',
         })
       }
@@ -302,7 +297,7 @@ function MatchItem({
   dismissMatch: (did: string) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const shadow = useProfileShadow(profile)
 
@@ -346,7 +341,7 @@ function MatchItem({
             <Button
               color="secondary"
               variant="ghost"
-              label={_(msg`Remove suggestion`)}
+              label={l`Remove suggestion`}
               onPress={() => dismissMatch(profile.did)}
               hoverStyle={[a.bg_transparent, {opacity: 0.5}]}
               hitSlop={8}>
@@ -368,7 +363,7 @@ function StatusHeader({
   isPending: boolean
   isAnyUnfollowed: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -415,19 +410,17 @@ function StatusHeader({
       }
     },
     onSuccess: () => {
-      Toast.show(_(msg`Followed all matches`), {type: 'success'})
+      Toast.show(l`Followed all matches`, {type: 'success'})
     },
     onError: err => {
       if (isNetworkError(err)) {
         Toast.show(
-          _(
-            msg`Could not follow all matches - please check your network connection.`,
-          ),
+          l`Could not follow all matches - please check your network connection.`,
           {type: 'error'},
         )
       } else {
         logger.error('Failed to follow all matches', {safeMessage: err})
-        Toast.show(_(msg`Could not follow all matches. ${cleanError(err)}`), {
+        Toast.show(l`Could not follow all matches. ${cleanError(err)}`, {
           type: 'error',
         })
       }
@@ -462,7 +455,7 @@ function StatusHeader({
         </Text>
         {isAnyUnfollowed && (
           <Button
-            label={_(msg`Follow all`)}
+            label={l`Follow all`}
             color="primary"
             size="small"
             variant="ghost"
@@ -484,7 +477,7 @@ function StatusHeader({
 }
 
 function StatusFooter({syncedAt}: {syncedAt: string}) {
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
   const ax = useAnalytics()
   const agent = useAgent()
@@ -496,7 +489,7 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
     },
     onMutate: () => ax.metric('contacts:settings:removeData', {}),
     onSuccess: () => {
-      Toast.show(_(msg`Contacts removed`))
+      Toast.show(l`Contacts removed`)
       queryClient.setQueryData<AppBskyContactGetSyncStatus.OutputSchema>(
         findContactsStatusQueryKey,
         {syncStatus: undefined},
@@ -505,14 +498,12 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
     onError: err => {
       if (isNetworkError(err)) {
         Toast.show(
-          _(
-            msg`Failed to remove data due to a network error, please check your internet connection.`,
-          ),
+          l`Failed to remove data due to a network error, please check your internet connection.`,
           {type: 'error'},
         )
       } else {
         logger.error('Remove data failed', {safeMessage: err})
-        Toast.show(_(msg`Failed to remove data. ${cleanError(err)}`), {
+        Toast.show(l`Failed to remove data. ${cleanError(err)}`, {
           type: 'error',
         })
       }
@@ -541,7 +532,7 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
           </Text>
         </View>
         <Link
-          label={_(msg`Resync contacts`)}
+          label={l`Resync contacts`}
           to={{screen: 'FindContactsFlow'}}
           onPress={() => {
             const daysSinceLastSync = Math.floor(
@@ -561,7 +552,6 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
           </ButtonText>
         </Link>
       </View>
-
       <View style={[a.gap_xs, a.align_start]}>
         <Text style={[a.text_md, a.font_semi_bold]}>
           <Trans>Delete contacts</Trans>
@@ -573,7 +563,7 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
           </Trans>
         </Text>
         <Button
-          label={_(msg`Remove all contacts`)}
+          label={l`Remove all contacts`}
           onPress={() => removeData()}
           size="small"
           color="negative_subtle"

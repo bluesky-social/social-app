@@ -8,8 +8,7 @@ import {
   type ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -70,7 +69,7 @@ export function ProfileScreen(props: Props) {
 }
 
 function ProfileScreenInner({route}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   const name =
@@ -130,7 +129,7 @@ function ProfileScreenInner({route}: Props) {
       <SafeAreaView style={[a.flex_1]}>
         <ErrorScreen
           testID="profileErrorScreen"
-          title={profileError ? _(msg`Not Found`) : _(msg`Oops!`)}
+          title={profileError ? l`Not Found` : l`Oops!`}
           message={cleanError(resolveError || profileError)}
           onPressTryAgain={onPressTryAgain}
           showHeader
@@ -189,7 +188,7 @@ function ProfileScreenLoaded({
   })
   const [currentPage, setCurrentPage] = useState(0)
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const [scrollViewTag, setScrollViewTag] = useState<number | null>(null)
 
@@ -231,16 +230,16 @@ function ProfileScreenLoaded({
   const showListsTab = hasSession && (isMe || listCount > 0)
 
   const sectionTitles = [
-    showFiltersTab ? _(msg`Labels`) : undefined,
-    showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
-    showPostsTab ? _(msg`Posts`) : undefined,
-    showRepliesTab ? _(msg`Replies`) : undefined,
-    showMediaTab ? _(msg`Media`) : undefined,
-    showVideosTab ? _(msg`Videos`) : undefined,
-    showLikesTab ? _(msg`Likes`) : undefined,
-    showFeedsTab ? _(msg`Feeds`) : undefined,
-    showStarterPacksTab ? _(msg`Starter Packs`) : undefined,
-    showListsTab && !hasLabeler ? _(msg`Lists`) : undefined,
+    showFiltersTab ? l`Labels` : undefined,
+    showListsTab && hasLabeler ? l`Lists` : undefined,
+    showPostsTab ? l`Posts` : undefined,
+    showRepliesTab ? l`Replies` : undefined,
+    showMediaTab ? l`Media` : undefined,
+    showVideosTab ? l`Videos` : undefined,
+    showLikesTab ? l`Likes` : undefined,
+    showFeedsTab ? l`Feeds` : undefined,
+    showStarterPacksTab ? l`Starter Packs` : undefined,
+    showListsTab && !hasLabeler ? l`Lists` : undefined,
   ].filter(Boolean) as string[]
 
   let nextIndex = 0
@@ -393,7 +392,7 @@ function ProfileScreenLoaded({
     <ScreenHider
       testID="profileView"
       style={styles.container}
-      screenDescription={_(msg`user`)}
+      screenDescription={l`user`}
       modui={moderation.ui('profileView')}>
       <PagerWithHeader
         testID="profilePager"
@@ -440,12 +439,12 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No posts yet`)}
+                emptyStateMessage={l`No posts yet`}
                 emptyStateButton={
                   isMe
                     ? {
-                        label: _(msg`Write a post`),
-                        text: _(msg`Write a post`),
+                        label: l`Write a post`,
+                        text: l`Write a post`,
                         onPress: () =>
                           openComposer({logContext: 'ProfileFeed'}),
                         size: 'small',
@@ -467,7 +466,7 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No replies yet`)}
+                emptyStateMessage={l`No replies yet`}
                 emptyStateIcon={MessageIcon}
               />
             )
@@ -482,12 +481,12 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No media yet`)}
+                emptyStateMessage={l`No media yet`}
                 emptyStateButton={
                   isMe
                     ? {
-                        label: _(msg`Post a photo`),
-                        text: _(msg`Post a photo`),
+                        label: l`Post a photo`,
+                        text: l`Post a photo`,
                         onPress: () =>
                           openComposer({logContext: 'ProfileFeed'}),
                         size: 'small',
@@ -509,12 +508,12 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No video posts yet`)}
+                emptyStateMessage={l`No video posts yet`}
                 emptyStateButton={
                   isMe
                     ? {
-                        label: _(msg`Post a video`),
-                        text: _(msg`Post a video`),
+                        label: l`Post a video`,
+                        text: l`Post a video`,
                         onPress: () =>
                           openComposer({logContext: 'ProfileFeed'}),
                         size: 'small',
@@ -536,7 +535,7 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
-                emptyStateMessage={_(msg`No likes yet`)}
+                emptyStateMessage={l`No likes yet`}
                 emptyStateIcon={HeartIcon}
               />
             )
@@ -565,16 +564,14 @@ function ProfileScreenLoaded({
                 setScrollViewTag={setScrollViewTag}
                 emptyStateMessage={
                   isMe
-                    ? _(
-                        msg`Starter Packs let you share your favorite feeds and people with your friends.`,
-                      )
-                    : _(msg`No Starter Packs yet`)
+                    ? l`Starter Packs let you share your favorite feeds and people with your friends.`
+                    : l`No Starter Packs yet`
                 }
                 emptyStateButton={
                   isMe
                     ? {
-                        label: _(msg`Create a Starter Pack`),
-                        text: _(msg`Create a Starter Pack`),
+                        label: l`Create a Starter Pack`,
+                        text: l`Create a Starter Pack`,
                         onPress: wrappedNavToWizard,
                         color: 'primary',
                         size: 'small',
@@ -604,7 +601,7 @@ function ProfileScreenLoaded({
           onPress={onPressCompose}
           icon={<EditBigIcon size="lg" fill={t.palette.white} />}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
+          accessibilityLabel={l`New post`}
           accessibilityHint=""
         />
       )}

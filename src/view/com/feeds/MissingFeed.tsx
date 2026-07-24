@@ -1,7 +1,6 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -29,7 +28,7 @@ export function MissingFeed({
   error?: unknown
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = Dialog.useDialogControl()
 
   const type = getFeedTypeFromUri(uri)
@@ -39,10 +38,10 @@ export function MissingFeed({
       <Button
         label={
           type === 'feed'
-            ? _(msg`Could not connect to custom feed`)
-            : _(msg`Deleted list`)
+            ? l`Could not connect to custom feed`
+            : l`Deleted list`
         }
-        accessibilityHint={_(msg`Tap for more information`)}
+        accessibilityHint={l`Tap for more information`}
         onPress={control.open}
         style={[
           a.flex_1,
@@ -93,7 +92,6 @@ export function MissingFeed({
           </View>
         </View>
       </Button>
-
       <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <DialogInner uri={uri} type={type} error={error} />
@@ -113,7 +111,7 @@ function DialogInner({
 }) {
   const control = Dialog.useDialogContext()
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const atUri = new AtUri(uri)
   const {data: profile, isError: isProfileError} = useProfileQuery({
     did: atUri.host,
@@ -123,9 +121,7 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={
-        type === 'feed'
-          ? _(msg`Unavailable feed information`)
-          : _(msg`Deleted list`)
+        type === 'feed' ? l`Unavailable feed information` : l`Deleted list`
       }
       style={web({maxWidth: 500})}>
       <View style={[a.gap_sm]}>
@@ -208,7 +204,7 @@ function DialogInner({
       </View>
       {IS_NATIVE && (
         <Button
-          label={_(msg`Close`)}
+          label={l`Close`}
           onPress={() => control.close()}
           size="small"
           variant="solid"

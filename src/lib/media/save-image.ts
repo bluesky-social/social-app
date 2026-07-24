@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import * as MediaLibrary from 'expo-media-library'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import * as Toast from '#/components/Toast'
 import {IS_NATIVE} from '#/env'
@@ -11,7 +10,7 @@ import {saveImageToMediaLibrary} from './manip'
  * Same as `saveImageToMediaLibrary`, but also handles permissions and toasts
  */
 export function useSaveImageToMediaLibrary() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [permissionResponse, requestPermission, getPermission] =
     MediaLibrary.usePermissions({
       granularPermissions: ['photo'],
@@ -26,9 +25,9 @@ export function useSaveImageToMediaLibrary() {
         try {
           await saveImageToMediaLibrary({uri})
 
-          Toast.show(_(msg`Image saved`))
+          Toast.show(l`Image saved`)
         } catch (e: any) {
-          Toast.show(_(msg`Failed to save image: ${String(e)}`), {
+          Toast.show(l`Failed to save image: ${String(e)}`, {
             type: 'error',
           })
         }
@@ -47,22 +46,18 @@ export function useSaveImageToMediaLibrary() {
           } else {
             // since we've been explicitly denied, show a toast.
             Toast.show(
-              _(
-                msg`Images cannot be saved unless permission is granted to access your photo library.`,
-              ),
+              l`Images cannot be saved unless permission is granted to access your photo library.`,
               {type: 'error'},
             )
           }
         } else {
           Toast.show(
-            _(
-              msg`Permission to access your photo library was denied. Please enable it in your system settings.`,
-            ),
+            l`Permission to access your photo library was denied. Please enable it in your system settings.`,
             {type: 'error'},
           )
         }
       }
     },
-    [permissionResponse, requestPermission, getPermission, _],
+    [permissionResponse, requestPermission, getPermission, l],
   )
 }

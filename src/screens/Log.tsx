@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
@@ -26,7 +25,7 @@ export function LogScreen({}: NativeStackScreenProps<
   'Log'
 >) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [expanded, setExpanded] = useState<string[]>([])
   const timeAgo = useGetTimeAgo()
   const tick = useTickEveryMinute()
@@ -69,10 +68,8 @@ export function LogScreen({}: NativeStackScreenProps<
                     a.gap_sm,
                   ]}
                   onPress={toggler(entry.id)}
-                  accessibilityLabel={_(msg`View debug entry`)}
-                  accessibilityHint={_(
-                    msg`Opens additional details for a debug entry`,
-                  )}>
+                  accessibilityLabel={l`View debug entry`}
+                  accessibilityHint={l`Opens additional details for a debug entry`}>
                   {entry.level === 'warn' || entry.level === 'error' ? (
                     <WarningIcon size="sm" fill={t.palette.negative_500} />
                   ) : (

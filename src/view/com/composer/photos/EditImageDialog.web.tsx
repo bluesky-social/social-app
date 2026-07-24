@@ -2,8 +2,7 @@ import 'react-image-crop/dist/ReactCrop.css'
 
 import {useCallback, useImperativeHandle, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import ReactCrop, {type PercentCrop} from 'react-image-crop'
 
@@ -34,14 +33,14 @@ function DialogInner({
   circularCrop,
   aspectRatio,
 }: EditImageDialogProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [pending, setPending] = useState(false)
   const ref = useRef<{save: () => Promise<void>}>(null)
 
   const cancelButton = useCallback(
     () => (
       <Button
-        label={_(msg`Cancel`)}
+        label={l`Cancel`}
         disabled={pending}
         onPress={() => control.close()}
         size="small"
@@ -54,13 +53,13 @@ function DialogInner({
         </ButtonText>
       </Button>
     ),
-    [control, _, pending],
+    [control, l, pending],
   )
 
   const saveButton = useCallback(
     () => (
       <Button
-        label={_(msg`Save`)}
+        label={l`Save`}
         onPress={async () => {
           setPending(true)
           await ref.current?.save()
@@ -78,12 +77,12 @@ function DialogInner({
         {pending && <ButtonIcon icon={Loader} />}
       </Button>
     ),
-    [_, pending],
+    [l, pending],
   )
 
   return (
     <Dialog.Inner
-      label={_(msg`Edit image`)}
+      label={l`Edit image`}
       header={
         <Dialog.Header renderLeft={cancelButton} renderRight={saveButton}>
           <Dialog.HeaderText>

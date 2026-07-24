@@ -7,8 +7,7 @@ import {
   AtUri,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {JOINED_THIS_WEEK} from '#/lib/constants'
@@ -119,7 +118,7 @@ function LandingScreenLoaded({
   moderationOpts: ModerationOpts
 }) {
   const {creator, listItemsSample, feeds} = starterPack
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const ax = useAnalytics()
   const t = useTheme()
   const activeStarterPack = useActiveStarterPack()
@@ -207,7 +206,7 @@ function LandingScreenLoaded({
           ) : null}
           <View style={[a.gap_sm]}>
             <Button
-              label={_(msg`Join Bluesky`)}
+              label={l`Join Bluesky`}
               onPress={onJoinPress}
               color="primary"
               size="large">
@@ -307,7 +306,7 @@ function LandingScreenLoaded({
             ) : null}
           </View>
           <Button
-            label={_(msg`Create an account without using this starter pack`)}
+            label={l`Create an account without using this starter pack`}
             variant="solid"
             color="secondary"
             size="large"

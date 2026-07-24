@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, type StyleProp, View, type ViewStyle} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
@@ -33,16 +32,16 @@ interface Props {
 
 export function SubtitleDialogBtn(props: Props) {
   const control = Dialog.useDialogControl()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <View style={[a.flex_row, a.my_xs]}>
       <Button
-        label={IS_WEB ? _(msg`Captions & alt text`) : _(msg`Alt text`)}
+        label={IS_WEB ? l`Captions & alt text` : l`Alt text`}
         accessibilityHint={
           IS_WEB
-            ? _(msg`Opens captions and alt text dialog`)
-            : _(msg`Opens alt text dialog`)
+            ? l`Opens captions and alt text dialog`
+            : l`Opens alt text dialog`
         }
         size="small"
         color="secondary"
@@ -75,7 +74,7 @@ function SubtitleDialogInner({
   setCaptions,
 }: Props) {
   const control = Dialog.useDialogContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {primaryLanguage} = useLanguagePrefs()
 
@@ -104,15 +103,15 @@ function SubtitleDialogInner({
   })
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Video settings`)}>
+    <Dialog.ScrollableInner label={l`Video settings`}>
       <View style={a.gap_md}>
         <Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
           <Trans>Alt text</Trans>
         </Text>
         <TextField.Root isInvalid={isOverMaxLength}>
           <Dialog.Input
-            label={_(msg`Alt text`)}
-            placeholder={_(msg`Add alt text (optional)`)}
+            label={l`Alt text`}
+            placeholder={l`Add alt text (optional)`}
             value={altText}
             onChangeText={setAltText}
             maxLength={MAX_ALT_TEXT * 10}
@@ -189,7 +188,7 @@ function SubtitleDialogInner({
 
         <View style={web([a.flex_row, a.justify_end])}>
           <Button
-            label={_(msg`Done`)}
+            label={l`Done`}
             size={IS_WEB ? 'small' : 'large'}
             color="primary"
             variant="solid"
@@ -223,7 +222,7 @@ function SubtitleFileRow({
   setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void
   style: StyleProp<ViewStyle>
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   const handleValueChange = useCallback(
@@ -281,9 +280,8 @@ function SubtitleFileRow({
           </select>
         </View>
       </View>
-
       <Button
-        label={_(msg`Remove caption file`)}
+        label={l`Remove caption file`}
         size="tiny"
         shape="round"
         variant="outline"

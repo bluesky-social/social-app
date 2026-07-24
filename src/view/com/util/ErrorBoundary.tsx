@@ -1,7 +1,6 @@
 import {Component, type ErrorInfo, type ReactNode} from 'react'
 import {type StyleProp, type ViewStyle} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
 import {ErrorScreen} from './error/ErrorScreen'
@@ -50,14 +49,12 @@ export class ErrorBoundary extends Component<Props, State> {
 }
 
 function TranslatedErrorScreen({details}: {details?: string}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <ErrorScreen
-      title={_(msg`Oh no!`)}
-      message={_(
-        msg`There was an unexpected issue in the application. Please let us know if this happened to you!`,
-      )}
+      title={l`Oh no!`}
+      message={l`There was an unexpected issue in the application. Please let us know if this happened to you!`}
       details={details}
     />
   )

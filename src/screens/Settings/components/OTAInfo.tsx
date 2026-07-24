@@ -1,6 +1,5 @@
 import * as Updates from 'expo-updates'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useMutation, useQuery} from '@tanstack/react-query'
 
@@ -12,7 +11,7 @@ import * as Toast from '#/components/Toast'
 import * as SettingsList from '../components/SettingsList'
 
 export function OTAInfo() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {
     data: isAvailable,
     isPending: isPendingInfo,
@@ -58,7 +57,7 @@ export function OTAInfo() {
         )}
       </SettingsList.ItemText>
       <Button
-        label={isAvailable ? _(msg`Update`) : _(msg`Fetch update`)}
+        label={isAvailable ? l`Update` : l`Fetch update`}
         disabled={isFetchingInfo || isPendingUpdate}
         variant="solid"
         size="small"

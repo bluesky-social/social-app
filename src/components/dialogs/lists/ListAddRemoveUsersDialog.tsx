@@ -1,8 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {type AppBskyGraphDefs, type ModerationOpts} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -57,7 +56,7 @@ function DialogInner({
     profile: bsky.profile.AnyProfileView,
   ) => void | undefined
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
   const {data: listMembers} = useAllListMembersQuery(list.uri)
 
@@ -78,7 +77,7 @@ function DialogInner({
 
   return (
     <SearchablePeopleList
-      title={_(msg`Add people to list`)}
+      title={l`Add people to list`}
       renderProfileCard={renderProfileCard}
     />
   )
@@ -114,7 +113,7 @@ function UserResult({
   ) => void | undefined
   moderationOpts?: ModerationOpts
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const membership = useMemo(
     () => getMembership(listMembers, profile.did),
     [listMembers, profile.did],
@@ -122,7 +121,7 @@ function UserResult({
   const {mutate: listMembershipAdd, isPending: isAddingPending} =
     useListMembershipAddMutation({
       onSuccess: () => {
-        Toast.show(_(msg`Added to list`))
+        Toast.show(l`Added to list`)
         onChange?.('add', profile)
       },
       onError: e =>
@@ -133,7 +132,7 @@ function UserResult({
   const {mutate: listMembershipRemove, isPending: isRemovingPending} =
     useListMembershipRemoveMutation({
       onSuccess: () => {
-        Toast.show(_(msg`Removed from list`))
+        Toast.show(l`Removed from list`)
         onChange?.('remove', profile)
       },
       onError: e =>
@@ -175,8 +174,8 @@ function UserResult({
           <Button
             label={
               membership === false
-                ? _(msg`Add user to list`)
-                : _(msg`Remove user from list`)
+                ? l`Add user to list`
+                : l`Remove user from list`
             }
             onPress={onToggleMembership}
             disabled={isMutating}

@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
@@ -11,8 +10,8 @@ import {useAnalytics} from '#/analytics'
 export function ThreadItemShowOtherReplies({onPress}: {onPress: () => void}) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
-  const label = _(msg`Show more replies`)
+  const {t: l} = useLingui()
+  const label = l`Show more replies`
 
   return (
     <Button

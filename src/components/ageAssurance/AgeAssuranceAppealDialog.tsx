@@ -1,8 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {ToolsOzoneReportDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
@@ -23,12 +22,12 @@ export function AgeAssuranceAppealDialog({
 }: {
   control: Dialog.DialogControlProps
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
-        label={_(msg`Contact our moderation team`)}
+        label={l`Contact our moderation team`}
         style={[web({maxWidth: 400})]}>
         <Inner control={control} />
         <Dialog.Close />
@@ -38,7 +37,7 @@ export function AgeAssuranceAppealDialog({
 }
 
 function Inner({control}: {control: Dialog.DialogControlProps}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
@@ -68,22 +67,17 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
     },
     onError: err => {
       logger.error('AgeAssuranceAppealDialog failed', {safeMessage: err})
-      Toast.show(
-        _(msg`Age assurance inquiry failed to send, please try again.`),
-        {
-          type: 'error',
-        },
-      )
+      Toast.show(l`Age assurance inquiry failed to send, please try again.`, {
+        type: 'error',
+      })
     },
     onSuccess: () => {
       control.close()
       Toast.show(
-        _(
-          msg({
-            message: 'Age assurance inquiry was submitted',
-            context: 'toast',
-          }),
-        ),
+        l({
+          message: 'Age assurance inquiry was submitted',
+          context: 'toast',
+        }),
       )
     },
   })
@@ -93,18 +87,15 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
       <View style={[a.align_start]}>
         <AgeAssuranceBadge />
       </View>
-
       <Text style={[a.text_2xl, a.font_bold, a.pt_md, a.leading_tight]}>
         <Trans>Contact us</Trans>
       </Text>
-
       <Text style={[a.text_sm, a.pt_sm, a.leading_snug]}>
         <Trans>
           Please provide any additional details you feel moderators may need in
           order to properly assess your Age Assurance status.
         </Trans>
       </Text>
-
       <View style={[a.pt_md]}>
         <Dialog.Input
           multiline
@@ -113,13 +104,13 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
           onChangeText={details => {
             setDetails(details)
           }}
-          label={_(msg`Additional details (limit 1000 characters)`)}
+          label={l`Additional details (limit 1000 characters)`}
           numberOfLines={4}
           onSubmitEditing={() => mutate()}
         />
         <View style={[a.pt_md, a.gap_sm, gtPhone && [a.flex_row_reverse]]}>
           <Button
-            label={_(msg`Submit`)}
+            label={l`Submit`}
             size="small"
             variant="solid"
             color="primary"
@@ -130,7 +121,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
             {isPending && <ButtonIcon icon={Loader} position="right" />}
           </Button>
           <Button
-            label={_(msg`Cancel`)}
+            label={l`Cancel`}
             size="small"
             variant="solid"
             color="secondary"

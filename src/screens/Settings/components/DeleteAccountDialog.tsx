@@ -1,7 +1,6 @@
 import {useCallback, useRef, useState} from 'react'
 import {type TextInput, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
@@ -70,7 +69,7 @@ function DeleteAccountDialogInner({
 }) {
   const passwordRef = useRef<TextInput | null>(null)
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const cleanError = useCleanError()
   const agent = useAgent()
   const {currentAccount} = useSession()
@@ -125,7 +124,7 @@ function DeleteAccountDialogInner({
         token,
       })
       control.close(() => {
-        toast.show(_(msg`Your account has been deleted, see ya! ✌️`))
+        toast.show(l`Your account has been deleted, see ya! ✌️`)
         resetToTab('HomeTab')
         removeAccount(currentAccount)
       })
@@ -141,7 +140,7 @@ function DeleteAccountDialogInner({
       setStep(Step.VERIFY_CODE)
     }
   }, [
-    _,
+    l,
     agent,
     cleanError,
     confirmCode,
@@ -180,7 +179,7 @@ function DeleteAccountDialogInner({
         <>
           <Prompt.Content>
             <Prompt.TitleText>
-              {_(msg`Delete account “${currentHandle}”`)}
+              {l`Delete account “${currentHandle}”`}
             </Prompt.TitleText>
             <Prompt.DescriptionText>
               <Trans>
@@ -196,7 +195,7 @@ function DeleteAccountDialogInner({
           <Prompt.Actions>
             <Prompt.Action
               icon={emailState === EmailState.PENDING ? Loader : Envelope}
-              cta={_(msg`Send email`)}
+              cta={l`Send email`}
               shouldCloseOnPress={false}
               onPress={handleSendEmail}
             />
@@ -211,7 +210,7 @@ function DeleteAccountDialogInner({
             <Trans>
               You can also{' '}
               <SimpleInlineLinkText
-                label={_(msg`Temporarily deactivate your account`)}
+                label={l`Temporarily deactivate your account`}
                 {...createStaticClick(handleDeactivate)}>
                 temporarily deactivate
               </SimpleInlineLinkText>{' '}
@@ -227,7 +226,7 @@ function DeleteAccountDialogInner({
         <>
           <Prompt.Content>
             <Prompt.TitleText>
-              {_(msg`Delete account “${currentHandle}”`)}
+              {l`Delete account “${currentHandle}”`}
             </Prompt.TitleText>
             <Prompt.DescriptionText>
               <Trans>
@@ -260,7 +259,7 @@ function DeleteAccountDialogInner({
               <Trans>
                 Email sent!{' '}
                 <SimpleInlineLinkText
-                  label={_(msg`Click here to resend the email`)}
+                  label={l`Click here to resend the email`}
                   {...createStaticClick(handleSendEmail)}>
                   Click here to resend.
                 </SimpleInlineLinkText>
@@ -269,7 +268,7 @@ function DeleteAccountDialogInner({
               <Trans>
                 Don’t see a code?{' '}
                 <SimpleInlineLinkText
-                  label={_(msg`Click here to resend the email`)}
+                  label={l`Click here to resend the email`}
                   {...createStaticClick(handleSendEmail)}>
                   Click here to resend.
                 </SimpleInlineLinkText>
@@ -288,7 +287,7 @@ function DeleteAccountDialogInner({
               <TextField.Input
                 inputRef={passwordRef}
                 testID="newPasswordInput"
-                label={_(msg`Enter your password`)}
+                label={l`Enter your password`}
                 autoCapitalize="none"
                 autoCorrect={false}
                 returnKeyType="done"
@@ -306,7 +305,7 @@ function DeleteAccountDialogInner({
             <Prompt.Action
               color="negative"
               disabled={!isValidCode(confirmCode) || !isPasswordValid(password)}
-              cta={_(msg`Delete my account`)}
+              cta={l`Delete my account`}
               shouldCloseOnPress={false}
               onPress={handleDeleteAccount}
             />
@@ -324,7 +323,7 @@ function DeleteAccountDialogInner({
         <>
           <Prompt.Content>
             <Prompt.TitleText>
-              {_(msg`Are you really, really sure?`)}
+              {l`Are you really, really sure?`}
             </Prompt.TitleText>
             <Prompt.DescriptionText>
               <Trans>
@@ -335,7 +334,7 @@ function DeleteAccountDialogInner({
                 and all associated data. Note that this will affect any other{' '}
                 <SimpleInlineLinkText
                   to="https://bsky.social/about/faq"
-                  label={_(msg`AT Protocol FAQ`)}>
+                  label={l`AT Protocol FAQ`}>
                   AT Protocol
                 </SimpleInlineLinkText>{' '}
                 services you use with this account.
@@ -345,7 +344,7 @@ function DeleteAccountDialogInner({
           <Prompt.Actions>
             <Prompt.Action
               color="negative"
-              cta={_(msg`Yes, delete my account`)}
+              cta={l`Yes, delete my account`}
               shouldCloseOnPress={false}
               onPress={handleConfirmDeletion}
             />

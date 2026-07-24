@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
@@ -32,13 +31,12 @@ export function DeviceLocationRequestDialog({
 }: Props & {
   control: Dialog.DialogOuterProps['control']
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner
-        label={_(msg`Update your location`)}
+        label={l`Update your location`}
         style={[web({maxWidth: 380})]}>
         <DeviceLocationRequestDialogInner
           onLocationAcquired={onLocationAcquired}
@@ -51,7 +49,7 @@ export function DeviceLocationRequestDialog({
 
 function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {close} = Dialog.useDialogContext()
   const requestDeviceLocation = useRequestDeviceGeolocation()
   const cleanError = useCleanError()
@@ -78,13 +76,11 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
             closeDialog: close,
           })
         } else {
-          setError(_(msg`Failed to resolve location. Please try again.`))
+          setError(l`Failed to resolve location. Please try again.`)
         }
       } else {
         setError(
-          _(
-            msg`Unable to access location. You'll need to visit your system settings to enable location services for Bluesky.`,
-          ),
+          l`Unable to access location. You'll need to visit your system settings to enable location services for Bluesky.`,
         )
       }
     } catch (e: any) {
@@ -114,18 +110,16 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
           </Trans>
         </Text>
       </View>
-
       {error && (
         <View style={[a.pb_xs]}>
           <Admonition type="error">{error}</Admonition>
         </View>
       )}
-
       <View style={[a.gap_sm]}>
         {!dialogDisabled && (
           <Button
             disabled={isRequesting}
-            label={_(msg`Allow location access`)}
+            label={l`Allow location access`}
             onPress={onPressConfirm}
             size={IS_WEB ? 'small' : 'large'}
             color="primary">
@@ -138,7 +132,7 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
 
         {!IS_WEB && (
           <Button
-            label={_(msg`Cancel`)}
+            label={l`Cancel`}
             onPress={() => close()}
             size={IS_WEB ? 'small' : 'large'}
             color="secondary">

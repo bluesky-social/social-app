@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
@@ -14,7 +13,7 @@ import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from './icons/Globe'
 
 export function AppLanguageDropdown() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const queryClient = useQueryClient()
   const langPrefs = useLanguagePrefs()
@@ -38,7 +37,7 @@ export function AppLanguageDropdown() {
     <Select.Root
       value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
       onValueChange={onChangeAppLanguage}>
-      <Select.Trigger label={_(msg`Change app language`)}>
+      <Select.Trigger label={l`Change app language`}>
         {({props}) => (
           <Button
             {...props}
@@ -60,7 +59,7 @@ export function AppLanguageDropdown() {
             ]}>
             <ButtonIcon icon={EarthIcon} size="md" />
             <Select.ValueText
-              placeholder={_(msg`Select an app language`)}
+              placeholder={l`Select an app language`}
               style={[t.atoms.text_contrast_medium]}
             />
             <Select.Icon style={[t.atoms.text_contrast_medium]} />
@@ -68,7 +67,7 @@ export function AppLanguageDropdown() {
         )}
       </Select.Trigger>
       <Select.Content
-        label={_(msg`Select language`)}
+        label={l`Select language`}
         renderItem={({label, value}) => (
           <Select.Item value={value} label={label} style={web([a.pointer])}>
             <Select.ItemIndicator />

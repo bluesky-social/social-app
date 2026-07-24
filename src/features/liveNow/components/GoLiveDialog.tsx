@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
@@ -50,7 +49,7 @@ const DURATIONS = Array.from({length: (4 * 60) / 5}).map((_, i) => (i + 1) * 5)
 
 function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const control = Dialog.useDialogContext()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
   const [liveLinkError, setLiveLinkError] = useState('')
   const [duration, setDuration] = useState(60)
@@ -102,9 +101,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const hasLink = !!debouncedUrl && !isSourceInvalid
 
   return (
-    <Dialog.ScrollableInner
-      label={_(msg`Go Live`)}
-      style={web({maxWidth: 420})}>
+    <Dialog.ScrollableInner label={l`Go Live`} style={web({maxWidth: 420})}>
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_semi_bold, a.text_2xl]}>
@@ -138,8 +135,8 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             </TextField.LabelText>
             <TextField.Root isInvalid={isSourceInvalid}>
               <TextField.Input
-                label={_(msg`Live link`)}
-                placeholder={_(msg`www.mylivestream.tv`)}
+                label={l`Live link`}
+                placeholder={l`www.mylivestream.tv`}
                 value={liveLink}
                 onChangeText={setLiveLink}
                 onFocus={() => setLiveLinkError('')}
@@ -183,7 +180,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             <Select.Root
               value={String(duration)}
               onValueChange={onChangeDuration}>
-              <Select.Trigger label={_(msg`Select duration`)}>
+              <Select.Trigger label={l`Select duration`}>
                 <Text style={[ios(a.py_xs)]}>
                   {displayDuration(i18n, duration)}
                   {'  '}
@@ -236,7 +233,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
           })}>
           {hasLink && (
             <Button
-              label={_(msg`Go Live`)}
+              label={l`Go Live`}
               size={platform({native: 'large', web: 'small'})}
               color="primary"
               variant="solid"
@@ -251,7 +248,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             </Button>
           )}
           <Button
-            label={_(msg`Cancel`)}
+            label={l`Cancel`}
             onPress={() => control.close()}
             size={platform({native: 'large', web: 'small'})}
             color="secondary"

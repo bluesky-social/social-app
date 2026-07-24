@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -27,7 +26,7 @@ export function SigninDialog() {
 
 function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
@@ -44,7 +43,7 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Sign in to Bluesky or create a new account`)}
+      label={l`Sign in to Bluesky or create a new account`}
       style={[gtMobile ? {width: 'auto', maxWidth: 420} : a.w_full]}>
       <View style={[!IS_NATIVE && a.p_2xl]}>
         <View
@@ -84,7 +83,7 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
             color="primary"
             size="large"
             onPress={showCreateAccount}
-            label={_(msg`Create an account`)}>
+            label={l`Create an account`}>
             <ButtonText>
               <Trans>Create an account</Trans>
             </ButtonText>
@@ -95,7 +94,7 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
             color="secondary"
             size="large"
             onPress={showSignIn}
-            label={_(msg`Sign in`)}>
+            label={l`Sign in`}>
             <ButtonText>
               <Trans>Sign in</Trans>
             </ButtonText>
@@ -104,7 +103,6 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
 
         {IS_NATIVE && <View style={{height: 10}} />}
       </View>
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )

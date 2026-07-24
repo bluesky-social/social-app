@@ -5,8 +5,7 @@ import {
   AppBskyFeedGetAuthorFeed,
   AtUri,
 } from '@atproto/api'
-import {msg as msgLingui} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -47,7 +46,7 @@ export function PostFeedErrorMessage({
   onPressTryAgain: () => void
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
 }) {
-  const {_: _l} = useLingui()
+  const {t: l} = useLingui()
   const knownError = useMemo(
     () => detectKnownError(feedDesc, error),
     [feedDesc, error],
@@ -73,7 +72,7 @@ export function PostFeedErrorMessage({
       <EmptyState
         icon={WarningIcon}
         iconSize="2xl"
-        message={_l(msgLingui`Posts hidden`)}
+        message={l`Posts hidden`}
         style={{paddingVertical: 40}}
       />
     )
@@ -99,36 +98,22 @@ function FeedgenErrorMessage({
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
 }) {
   const pal = usePalette('default')
-  const {_: _l} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const msg = useMemo(
     () =>
       ({
         [KnownError.Unknown]: '',
         [KnownError.Block]: '',
-        [KnownError.FeedgenDoesNotExist]: _l(
-          msgLingui`Hmm, we're having trouble finding this feed. It may have been deleted.`,
-        ),
-        [KnownError.FeedgenMisconfigured]: _l(
-          msgLingui`Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue.`,
-        ),
-        [KnownError.FeedgenBadResponse]: _l(
-          msgLingui`Hmm, the feed server gave a bad response. Please let the feed owner know about this issue.`,
-        ),
-        [KnownError.FeedgenOffline]: _l(
-          msgLingui`Hmm, the feed server appears to be offline. Please let the feed owner know about this issue.`,
-        ),
-        [KnownError.FeedSignedInOnly]: _l(
-          msgLingui`This content is not viewable without a Bluesky account.`,
-        ),
-        [KnownError.FeedgenUnknown]: _l(
-          msgLingui`Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue.`,
-        ),
-        [KnownError.FeedTooManyRequests]: _l(
-          msgLingui`This feed is currently receiving high traffic and is temporarily unavailable. Please try again later.`,
-        ),
+        [KnownError.FeedgenDoesNotExist]: l`Hmm, we're having trouble finding this feed. It may have been deleted.`,
+        [KnownError.FeedgenMisconfigured]: l`Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue.`,
+        [KnownError.FeedgenBadResponse]: l`Hmm, the feed server gave a bad response. Please let the feed owner know about this issue.`,
+        [KnownError.FeedgenOffline]: l`Hmm, the feed server appears to be offline. Please let the feed owner know about this issue.`,
+        [KnownError.FeedSignedInOnly]: l`This content is not viewable without a Bluesky account.`,
+        [KnownError.FeedgenUnknown]: l`Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue.`,
+        [KnownError.FeedTooManyRequests]: l`This feed is currently receiving high traffic and is temporarily unavailable. Please try again later.`,
       })[knownError],
-    [_l, knownError],
+    [l, knownError],
   )
   const [__, uri] = feedDesc.split('|')
   const [ownerDid] = safeParseFeedgenUri(uri)
@@ -149,14 +134,12 @@ function FeedgenErrorMessage({
       await removeFeed(savedFeedConfig)
     } catch (err) {
       Toast.show(
-        _l(
-          msgLingui`There was an issue removing this feed. Please check your internet connection and try again.`,
-        ),
+        l`There was an issue removing this feed. Please check your internet connection and try again.`,
         'exclamation-circle',
       )
       logger.error('Failed to remove feed', {message: err})
     }
-  }, [removeFeed, _l, savedFeedConfig])
+  }, [removeFeed, l, savedFeedConfig])
 
   const cta = useMemo(() => {
     switch (knownError) {
@@ -174,20 +157,20 @@ function FeedgenErrorMessage({
               savedFeedConfig && (
                 <Button
                   type="inverted"
-                  label={_l(msgLingui`Remove feed`)}
+                  label={l`Remove feed`}
                   onPress={onRemoveFeed}
                 />
               )}
             <Button
               type="default-light"
-              label={_l(msgLingui`View profile`)}
+              label={l`View profile`}
               onPress={onViewProfile}
             />
           </View>
         )
       }
     }
-  }, [knownError, onViewProfile, onRemoveFeed, _l, savedFeedConfig])
+  }, [knownError, onViewProfile, onRemoveFeed, l, savedFeedConfig])
 
   return (
     <>
@@ -212,13 +195,12 @@ function FeedgenErrorMessage({
 
         {cta}
       </View>
-
       <Prompt.Basic
         control={removePromptControl}
-        title={_l(msgLingui`Remove feed?`)}
-        description={_l(msgLingui`Remove this feed from your saved feeds`)}
+        title={l`Remove feed?`}
+        description={l`Remove this feed from your saved feeds`}
         onConfirm={onPressRemoveFeed}
-        confirmButtonCta={_l(msgLingui`Remove`)}
+        confirmButtonCta={l`Remove`}
         confirmButtonColor="negative"
       />
     </>

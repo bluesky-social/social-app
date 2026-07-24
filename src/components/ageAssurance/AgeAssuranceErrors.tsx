@@ -1,5 +1,4 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {type ViewStyleProp} from '#/alf'
@@ -9,7 +8,7 @@ import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '
 import {refetchConfig} from '#/ageAssurance/data'
 
 export function AgeAssuranceConfigUnavailableError(props: ViewStyleProp) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
     <Admonition.Outer type="error" style={props.style}>
       <Admonition.Row>
@@ -25,7 +24,7 @@ export function AgeAssuranceConfigUnavailableError(props: ViewStyleProp) {
         </Admonition.Content>
         <Admonition.Button
           color="negative_subtle"
-          label={_(msg`Retry`)}
+          label={l`Retry`}
           onPress={() => refetchConfig().catch(() => {})}>
           <ButtonText>
             <Trans>Retry</Trans>

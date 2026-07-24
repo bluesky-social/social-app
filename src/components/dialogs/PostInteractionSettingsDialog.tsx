@@ -5,8 +5,7 @@ import {
   type AppBskyFeedPostgate,
   AtUri,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -109,11 +108,11 @@ export function PostInteractionSettingsControlledDialog({
 }
 
 function DialogInner(props: Omit<PostInteractionSettingsFormProps, 'control'>) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Edit post interaction settings`)}
+      label={l`Edit post interaction settings`}
       style={[web({maxWidth: 400}), a.w_full]}>
       <Header />
       <PostInteractionSettingsForm {...props} />
@@ -164,7 +163,7 @@ export function PostInteractionSettingsDialogControlledInner(
   props: PostInteractionSettingsDialogProps,
 ) {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const [isSaving, setIsSaving] = useState(false)
 
@@ -237,9 +236,7 @@ export function PostInteractionSettingsDialogControlledInner(
         safeMessage: e.message,
       })
       Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
+        l`There was an issue. Please check your internet connection and try again.`,
         {
           type: 'error',
         },
@@ -248,7 +245,7 @@ export function PostInteractionSettingsDialogControlledInner(
       setIsSaving(false)
     }
   }, [
-    _,
+    l,
     ax,
     props.postUri,
     props.rootPostUri,
@@ -263,7 +260,7 @@ export function PostInteractionSettingsDialogControlledInner(
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Edit post interaction settings`)}
+      label={l`Edit post interaction settings`}
       style={[web({maxWidth: 400}), a.w_full]}>
       {isLoading ? (
         <View
@@ -312,7 +309,7 @@ export function PostInteractionSettingsForm({
   onChangePersist,
 }: PostInteractionSettingsFormProps) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const playHaptic = useHaptics()
   const [showLists, setShowLists] = useState(false)
   const {
@@ -428,7 +425,7 @@ export function PostInteractionSettingsForm({
           </Text>
 
           <Toggle.Group
-            label={_(msg`Set who can reply to your post`)}
+            label={l`Set who can reply to your post`}
             type="radio"
             maxSelections={1}
             disabled={replySettingsDisabled}
@@ -448,7 +445,7 @@ export function PostInteractionSettingsForm({
               <Toggle.Item
                 name="everyone"
                 type="checkbox"
-                label={_(msg`Allow anyone to reply`)}
+                label={l`Allow anyone to reply`}
                 style={[a.flex_1]}>
                 {({selected}) => (
                   <Toggle.Panel active={selected}>
@@ -462,7 +459,7 @@ export function PostInteractionSettingsForm({
               <Toggle.Item
                 name="nobody"
                 type="checkbox"
-                label={_(msg`Disable replies entirely`)}
+                label={l`Disable replies entirely`}
                 style={[a.flex_1]}>
                 {({selected}) => (
                   <Toggle.Panel active={selected}>
@@ -477,9 +474,7 @@ export function PostInteractionSettingsForm({
           </Toggle.Group>
 
           <Toggle.Group
-            label={_(
-              msg`Set precisely which groups of people can reply to your post`,
-            )}
+            label={l`Set precisely which groups of people can reply to your post`}
             values={toggleGroupValues}
             onChange={toggleGroupOnChange}
             disabled={replySettingsDisabled}>
@@ -487,7 +482,7 @@ export function PostInteractionSettingsForm({
               <Toggle.Item
                 name="followers"
                 type="checkbox"
-                label={_(msg`Allow your followers to reply`)}
+                label={l`Allow your followers to reply`}
                 hitSlop={0}>
                 {({selected}) => (
                   <Toggle.Panel active={selected} adjacent="trailing">
@@ -501,7 +496,7 @@ export function PostInteractionSettingsForm({
               <Toggle.Item
                 name="following"
                 type="checkbox"
-                label={_(msg`Allow people you follow to reply`)}
+                label={l`Allow people you follow to reply`}
                 hitSlop={0}>
                 {({selected}) => (
                   <Toggle.Panel active={selected} adjacent="both">
@@ -515,7 +510,7 @@ export function PostInteractionSettingsForm({
               <Toggle.Item
                 name="mention"
                 type="checkbox"
-                label={_(msg`Allow people you mention to reply`)}
+                label={l`Allow people you mention to reply`}
                 hitSlop={0}>
                 {({selected}) => (
                   <Toggle.Panel active={selected} adjacent="both">
@@ -530,8 +525,8 @@ export function PostInteractionSettingsForm({
               <Button
                 label={
                   showLists
-                    ? _(msg`Hide lists`)
-                    : _(msg`Show lists of users to select from`)
+                    ? l`Hide lists`
+                    : l`Show lists of users to select from`
                 }
                 accessibilityRole="togglebutton"
                 hitSlop={0}
@@ -595,7 +590,7 @@ export function PostInteractionSettingsForm({
                       key={list.uri}
                       name={`list:${list.uri}`}
                       type="checkbox"
-                      label={_(msg`Allow users in ${list.name} to reply`)}
+                      label={l`Allow users in ${list.name} to reply`}
                       hitSlop={0}>
                       {({selected}) => (
                         <Toggle.Panel
@@ -619,14 +614,13 @@ export function PostInteractionSettingsForm({
           </Toggle.Group>
         </View>
       </View>
-
       <Toggle.Item
         name="quoteposts"
         type="checkbox"
         label={
           quotesEnabled
-            ? _(msg`Disable quote posts of this post`)
-            : _(msg`Enable quote posts of this post`)
+            ? l`Disable quote posts of this post`
+            : l`Enable quote posts of this post`
         }
         value={quotesEnabled}
         onChange={onChangeQuotesEnabled}>
@@ -639,14 +633,13 @@ export function PostInteractionSettingsForm({
           </Toggle.Panel>
         )}
       </Toggle.Item>
-
       {typeof persist !== 'undefined' && (
         <View style={[{minHeight: 24}, a.justify_center]}>
           {isDirty ? (
             <Toggle.Item
               name="persist"
               type="checkbox"
-              label={_(msg`Save these options for next time`)}
+              label={l`Save these options for next time`}
               value={persist}
               onChange={() => onChangePersist?.(!persist)}>
               <Toggle.Checkbox />
@@ -662,10 +655,9 @@ export function PostInteractionSettingsForm({
           )}
         </View>
       )}
-
       <Button
         disabled={!canSave || isSaving}
-        label={_(msg`Save`)}
+        label={l`Save`}
         onPress={onSave}
         color="primary"
         size="large">

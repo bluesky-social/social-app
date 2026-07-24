@@ -1,8 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyGraphDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -35,7 +34,7 @@ export function ListHiddenScreen({
   list: AppBskyGraphDefs.ListView
   preferences: UsePreferencesQueryResponse
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
   const {gtMobile} = useBreakpoints()
@@ -63,9 +62,7 @@ export function ListHiddenScreen({
         setIsProcessing(false)
         logger.error('Failed to unmute list', {message: e})
         Toast.show(
-          _(
-            msg`There was an issue. Please check your internet connection and try again.`,
-          ),
+          l`There was an issue. Please check your internet connection and try again.`,
         )
         return
       }
@@ -77,9 +74,7 @@ export function ListHiddenScreen({
         setIsProcessing(false)
         logger.error('Failed to unblock list', {message: e})
         Toast.show(
-          _(
-            msg`There was an issue. Please check your internet connection and try again.`,
-          ),
+          l`There was an issue. Please check your internet connection and try again.`,
         )
         return
       }
@@ -87,7 +82,7 @@ export function ListHiddenScreen({
     queryClient.invalidateQueries({
       queryKey: [listQueryRoot],
     })
-    Toast.show(_(msg`Unsubscribed from list`))
+    Toast.show(l`Unsubscribed from list`)
     setIsProcessing(false)
   }
 
@@ -95,13 +90,11 @@ export function ListHiddenScreen({
     if (!savedFeedConfig) return
     try {
       await removeSavedFeed(savedFeedConfig)
-      Toast.show(_(msg`Removed from saved feeds`))
+      Toast.show(l`Removed from saved feeds`)
     } catch (e) {
       logger.error('Failed to remove list from saved feeds', {message: e})
       Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
+        l`There was an issue. Please check your internet connection and try again.`,
       )
     } finally {
       setIsProcessing(false)
@@ -171,7 +164,7 @@ export function ListHiddenScreen({
               variant="solid"
               color="secondary"
               size="large"
-              label={_(msg`Remove from saved feeds`)}
+              label={l`Remove from saved feeds`}
               onPress={onRemoveList}
               disabled={isProcessing}>
               <ButtonText>
@@ -187,7 +180,7 @@ export function ListHiddenScreen({
               variant="solid"
               color="secondary"
               size="large"
-              label={_(msg`Show list anyway`)}
+              label={l`Show list anyway`}
               onPress={() => setIsContentVisible(true)}
               disabled={isProcessing}>
               <ButtonText>
@@ -199,7 +192,7 @@ export function ListHiddenScreen({
               variant="solid"
               color="secondary"
               size="large"
-              label={_(msg`Unsubscribe from list`)}
+              label={l`Unsubscribe from list`}
               onPress={() => {
                 if (isModList) {
                   onUnsubscribe()
@@ -220,7 +213,7 @@ export function ListHiddenScreen({
         <Button
           variant="solid"
           color="primary"
-          label={_(msg`Return to previous page`)}
+          label={l`Return to previous page`}
           onPress={goBack}
           size="large"
           disabled={isProcessing}>

@@ -1,6 +1,5 @@
 import {type StyleProp, type TextStyle} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {HITSLOP_20} from '#/lib/constants'
@@ -22,7 +21,7 @@ export function InviteInfo({
    */
   iconOffset?: number
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = Dialog.useDialogControl()
 
   const style = [a.text_md, a.leading_snug, a.mt_xs]
@@ -30,16 +29,15 @@ export function InviteInfo({
   return (
     <>
       <Button
-        label={_(msg`Learn more about how inviting friends works`)}
+        label={l`Learn more about how inviting friends works`}
         onPress={control.open}
         hitSlop={HITSLOP_20}
         style={android({transform: [{translateY: iconOffset}]})}>
         <InfoIcon style={iconStyle} size="sm" />
       </Button>
-
       <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
-        <Dialog.ScrollableInner label={_(msg`Invite Friends`)}>
+        <Dialog.ScrollableInner label={l`Invite Friends`}>
           <Text style={[a.text_2xl, a.font_bold]}>
             <Trans>Invite Friends</Trans>
           </Text>
@@ -70,7 +68,7 @@ export function InviteInfo({
           </Text>
 
           <Button
-            label={_(msg`Done`)}
+            label={l`Done`}
             onPress={() => control.close()}
             size="large"
             color="primary"

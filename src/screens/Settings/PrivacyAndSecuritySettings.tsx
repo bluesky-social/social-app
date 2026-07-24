@@ -1,6 +1,5 @@
 import {type AppBskyNotificationDeclaration} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -26,7 +25,7 @@ type Props = NativeStackScreenProps<
   'PrivacyAndSecuritySettings'
 >
 export function PrivacyAndSecuritySettingsScreen({}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {data: appPasswords} = useAppPasswordsQuery()
   const {currentAccount} = useSession()
@@ -69,7 +68,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
           </SettingsList.Item>
           <SettingsList.LinkItem
             to="/settings/app-passwords"
-            label={_(msg`App passwords`)}>
+            label={l`App passwords`}>
             <SettingsList.ItemIcon icon={KeyIcon} />
             <SettingsList.ItemText>
               <Trans>App passwords</Trans>
@@ -81,9 +80,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
             )}
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            label={_(
-              msg`Settings for allowing others to be notified of your posts`,
-            )}
+            label={l`Settings for allowing others to be notified of your posts`}
             to={{screen: 'ActivityPrivacySettings'}}
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={BellRingingIcon} />
@@ -124,9 +121,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
                   </Admonition.Text>
                   <Admonition.Text>
                     <InlineLinkText
-                      label={_(
-                        msg`Learn more about what is public on Bluesky.`,
-                      )}
+                      label={l`Learn more about what is public on Bluesky.`}
                       to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
                       <Trans>Learn more about what is public on Bluesky.</Trans>
                     </InlineLinkText>

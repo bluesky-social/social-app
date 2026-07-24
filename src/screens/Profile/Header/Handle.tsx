@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
@@ -19,7 +18,7 @@ export function ProfileHeaderHandle({
   disableTaps?: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const invalidHandle = isInvalidHandle(profile.handle)
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
   return (
@@ -55,7 +54,7 @@ export function ProfileHeaderHandle({
           }),
         ]}>
         {invalidHandle
-          ? _(msg`⚠Invalid Handle`)
+          ? l`⚠Invalid Handle`
           : sanitizeHandle(
               profile.handle,
               '@',

@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -60,7 +59,7 @@ function PostThreadFollowBtnLoaded({
   profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
   const navigation = useNavigation()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const profile = useProfileShadow(profileUnshadowed)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
@@ -114,7 +113,7 @@ function PostThreadFollowBtnLoaded({
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to follow', {message: String(e)})
-            Toast.show(_(msg`There was an issue! ${e.toString()}`), {
+            Toast.show(l`There was an issue! ${e.toString()}`, {
               type: 'error',
             })
           }
@@ -127,21 +126,21 @@ function PostThreadFollowBtnLoaded({
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to unfollow', {message: String(e)})
-            Toast.show(_(msg`There was an issue! ${e.toString()}`), {
+            Toast.show(l`There was an issue! ${e.toString()}`, {
               type: 'error',
             })
           }
         }
       })
     }
-  }, [isFollowing, requireAuth, queueFollow, _, queueUnfollow])
+  }, [isFollowing, requireAuth, queueFollow, l, queueUnfollow])
 
   if (!showFollowBtn) return null
 
   return (
     <Button
       testID="followBtn"
-      label={_(msg`Follow ${profile.handle}`)}
+      label={l`Follow ${profile.handle}`}
       onPress={onPress}
       size="small"
       color={isFollowing ? 'secondary' : 'secondary_inverted'}

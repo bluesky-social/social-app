@@ -1,8 +1,7 @@
 import {useState} from 'react'
 import {Modal, Pressable, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -19,19 +18,18 @@ export function EmojiPopup({
   onEmojiSelected: (emoji: string) => void
 }) {
   const [modalVisible, setModalVisible] = useState(false)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   return (
     <>
       <Pressable
-        accessibilityLabel={_(msg`Open full emoji list`)}
+        accessibilityLabel={l`Open full emoji list`}
         accessibilityHint=""
         accessibilityRole="button"
         onPress={() => setModalVisible(true)}>
         {children}
       </Pressable>
-
       <Modal
         animationType="slide"
         visible={modalVisible}
@@ -56,7 +54,7 @@ export function EmojiPopup({
               <Trans>Add Reaction</Trans>
             </Text>
             <Button
-              label={_(msg`Close`)}
+              label={l`Close`}
               onPress={() => setModalVisible(false)}
               size="small"
               variant="ghost"

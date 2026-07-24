@@ -7,8 +7,7 @@ import {
   type ModerationOpts,
   type ModerationUI,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE} from '#/lib/constants'
@@ -52,15 +51,15 @@ function WizardListCard({
   moderationUi: ModerationUI
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Toggle.Item
-      name={type === 'user' ? _(msg`Person toggle`) : _(msg`Feed toggle`)}
+      name={type === 'user' ? l`Person toggle` : l`Feed toggle`}
       label={
         included
-          ? _(msg`Remove ${displayName} from starter pack`)
-          : _(msg`Add ${displayName} to starter pack`)
+          ? l`Remove ${displayName} from starter pack`
+          : l`Add ${displayName} to starter pack`
       }
       value={included}
       disabled={btnType === 'remove' || disabled}
@@ -103,7 +102,7 @@ function WizardListCard({
         <Checkbox />
       ) : !disabled ? (
         <Button
-          label={_(msg`Remove`)}
+          label={l`Remove`}
           variant="solid"
           color="secondary"
           size="small"

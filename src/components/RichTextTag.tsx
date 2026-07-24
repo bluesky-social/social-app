@@ -1,7 +1,6 @@
 import {useMemo} from 'react'
 import {type StyleProp, Text as RNText, type TextStyle} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -35,7 +34,7 @@ export function RichTextTag({
   authorHandle?: string
   textStyle: StyleProp<TextStyle>
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {isLoading: isPreferencesLoading, data: preferences} =
     usePreferencesQuery()
   const {
@@ -50,10 +49,10 @@ export function RichTextTag({
   } = useRemoveMutedWordsMutation()
   const navigation = useNavigation<NavigationProp>()
   const isCashtag = tag.startsWith('$')
-  const label = isCashtag ? _(msg`Cashtag ${tag}`) : _(msg`Hashtag ${tag}`)
+  const label = isCashtag ? l`Cashtag ${tag}` : l`Hashtag ${tag}`
   const hint = IS_NATIVE
-    ? _(msg`Long press to open tag menu for ${isCashtag ? tag : `#${tag}`}`)
-    : _(msg`Click to open tag menu for ${isCashtag ? tag : `#${tag}`}`)
+    ? l`Long press to open tag menu for ${isCashtag ? tag : `#${tag}`}`
+    : l`Click to open tag menu for ${isCashtag ? tag : `#${tag}`}`
 
   const isMuted = Boolean(
     (preferences?.moderationPrefs.mutedWords?.find(
@@ -111,7 +110,7 @@ export function RichTextTag({
       <Menu.Outer>
         <Menu.Group>
           <Menu.Item
-            label={_(msg`See ${isCashtag ? tag : `#${tag}`} posts`)}
+            label={l`See ${isCashtag ? tag : `#${tag}`} posts`}
             onPress={() => {
               navigation.push('Hashtag', {
                 tag: encodeURIComponent(tag),
@@ -128,7 +127,7 @@ export function RichTextTag({
           </Menu.Item>
           {authorHandle && !isInvalidHandle(authorHandle) && (
             <Menu.Item
-              label={_(msg`See ${isCashtag ? tag : `#${tag}`} posts by user`)}
+              label={l`See ${isCashtag ? tag : `#${tag}`} posts by user`}
               onPress={() => {
                 navigation.push('Hashtag', {
                   tag: encodeURIComponent(tag),
@@ -150,8 +149,8 @@ export function RichTextTag({
         <Menu.Item
           label={
             isMuted
-              ? _(msg`Unmute ${isCashtag ? tag : `#${tag}`}`)
-              : _(msg`Mute ${isCashtag ? tag : `#${tag}`}`)
+              ? l`Unmute ${isCashtag ? tag : `#${tag}`}`
+              : l`Mute ${isCashtag ? tag : `#${tag}`}`
           }
           onPress={() => {
             if (isMuted) {
@@ -166,8 +165,8 @@ export function RichTextTag({
           }}>
           <Menu.ItemText>
             {isMuted
-              ? _(msg`Unmute ${isCashtag ? tag : `#${tag}`}`)
-              : _(msg`Mute ${isCashtag ? tag : `#${tag}`}`)}
+              ? l`Unmute ${isCashtag ? tag : `#${tag}`}`
+              : l`Mute ${isCashtag ? tag : `#${tag}`}`}
           </Menu.ItemText>
           <Menu.ItemIcon icon={isPreferencesLoading ? Loader : Mute} />
         </Menu.Item>

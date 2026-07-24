@@ -1,8 +1,7 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
@@ -124,7 +123,7 @@ export function FeedsScreen(_props: Props) {
     isFetchingNextPage: isPopularFeedsFetchingNextPage,
     hasNextPage: hasNextPopularFeedsPage,
   } = useGetPopularFeedsQuery()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {
     data: searchResults,
     mutate: search,
@@ -434,7 +433,7 @@ export function FeedsScreen(_props: Props) {
             <FeedsAboutHeader />
             <View style={{paddingHorizontal: 12, paddingBottom: 4}}>
               <SearchInput
-                placeholder={_(msg`Search feeds`)}
+                placeholder={l`Search feeds`}
                 value={query}
                 onChangeText={onChangeQuery}
                 onClearText={onPressCancelSearch}
@@ -483,7 +482,7 @@ export function FeedsScreen(_props: Props) {
       return null
     },
     [
-      _,
+      l,
       pal.border,
       pal.textLight,
       query,
@@ -508,7 +507,7 @@ export function FeedsScreen(_props: Props) {
             <Link
               testID="editFeedsBtn"
               to="/settings/saved-feeds"
-              label={_(msg`Edit My Feeds`)}
+              label={l`Edit My Feeds`}
               size="small"
               variant="ghost"
               color="secondary"
@@ -535,14 +534,13 @@ export function FeedsScreen(_props: Props) {
           sideBorders={false}
         />
       </Layout.Center>
-
       {hasSession && (
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}
           icon={<EditBigIcon size="lg" fill={t.palette.white} />}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
+          accessibilityLabel={l`New post`}
           accessibilityHint=""
         />
       )}
@@ -560,7 +558,7 @@ function FeedOrFollowing({savedFeed}: {savedFeed: SavedFeedItem}) {
 
 function FollowingFeed() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
     <View
       style={[
@@ -593,7 +591,7 @@ function FollowingFeed() {
           />
         </View>
         <FeedCard.TitleAndByline
-          title={_(msg({message: 'Following', context: 'feed-name'}))}
+          title={l({message: 'Following', context: 'feed-name'})}
         />
       </FeedCard.Header>
     </View>

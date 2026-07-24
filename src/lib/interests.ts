@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 export const interests = [
   'animals',
@@ -44,35 +43,35 @@ export const popularInterests = [
 ] satisfies Interest[]
 
 export function useInterestsDisplayNames() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return useMemo<Record<string, string>>(() => {
     return {
       // Keep this alphabetized
-      animals: _(msg`Animals`),
-      art: _(msg`Art`),
-      books: _(msg`Books`),
-      comedy: _(msg`Comedy`),
-      comics: _(msg`Comics`),
-      culture: _(msg`Culture`),
-      dev: _(msg`Software Dev`),
-      education: _(msg`Education`),
-      finance: _(msg`Finance`),
-      food: _(msg`Food`),
-      gaming: _(msg`Video Games`),
-      journalism: _(msg`Journalism`),
-      movies: _(msg`Movies`),
-      music: _(msg`Music`),
-      nature: _(msg`Nature`),
-      news: _(msg`News`),
-      pets: _(msg`Pets`),
-      photography: _(msg`Photography`),
-      politics: _(msg`Politics`),
-      science: _(msg`Science`),
-      sports: _(msg`Sports`),
-      tech: _(msg`Tech`),
-      tv: _(msg`TV`),
-      writers: _(msg`Writers`),
+      animals: l`Animals`,
+      art: l`Art`,
+      books: l`Books`,
+      comedy: l`Comedy`,
+      comics: l`Comics`,
+      culture: l`Culture`,
+      dev: l`Software Dev`,
+      education: l`Education`,
+      finance: l`Finance`,
+      food: l`Food`,
+      gaming: l`Video Games`,
+      journalism: l`Journalism`,
+      movies: l`Movies`,
+      music: l`Music`,
+      nature: l`Nature`,
+      news: l`News`,
+      pets: l`Pets`,
+      photography: l`Photography`,
+      politics: l`Politics`,
+      science: l`Science`,
+      sports: l`Sports`,
+      tech: l`Tech`,
+      tv: l`TV`,
+      writers: l`Writers`,
     } satisfies Record<Interest, string>
-  }, [_])
+  }, [l])
 }

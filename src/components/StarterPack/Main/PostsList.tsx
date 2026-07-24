@@ -1,7 +1,6 @@
 import {forwardRef, useCallback, useImperativeHandle} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {PostFeed} from '#/view/com/posts/PostFeed'
@@ -20,7 +19,7 @@ interface ProfilesListProps {
 export const PostsList = forwardRef<SectionRef, ProfilesListProps>(
   function PostsListImpl({listUri, headerHeight, scrollElRef}, ref) {
     const feed: FeedDescriptor = `list|${listUri}`
-    const {_} = useLingui()
+    const {t: l} = useLingui()
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -38,10 +37,10 @@ export const PostsList = forwardRef<SectionRef, ProfilesListProps>(
         <EmptyState
           icon={HashtagWideIcon}
           iconSize="2xl"
-          message={_(msg`This feed is empty.`)}
+          message={l`This feed is empty.`}
         />
       )
-    }, [_])
+    }, [l])
 
     return (
       <View>

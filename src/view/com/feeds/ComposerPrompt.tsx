@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -27,7 +26,7 @@ import {IS_NATIVE} from '#/env'
 export function ComposerPrompt() {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
   const profile = useCurrentAccountProfile()
   const [hover, setHover] = useState(false)
@@ -144,8 +143,8 @@ export function ComposerPrompt() {
       onPress={onPress}
       android_ripple={null}
       accessibilityRole="button"
-      accessibilityLabel={_(msg`Compose new post`)}
-      accessibilityHint={_(msg`Opens the post composer`)}
+      accessibilityLabel={l`Compose new post`}
+      accessibilityHint={l`Opens the post composer`}
       onPointerEnter={() => setHover(true)}
       onPointerLeave={() => setHover(false)}
       style={({pressed}) => [
@@ -198,8 +197,8 @@ export function ComposerPrompt() {
                 e.stopPropagation()
                 onPressCamera()
               }}
-              label={_(msg`Open camera`)}
-              accessibilityHint={_(msg`Opens device camera`)}
+              label={l`Open camera`}
+              accessibilityHint={l`Opens device camera`}
               variant="ghost"
               shape="round">
               {({hovered, pressed, focused}) => (
@@ -220,8 +219,8 @@ export function ComposerPrompt() {
               e.stopPropagation()
               onPressImage()
             }}
-            label={_(msg`Add image`)}
-            accessibilityHint={_(msg`Opens image picker`)}
+            label={l`Add image`}
+            accessibilityHint={l`Opens image picker`}
             variant="ghost"
             shape="round">
             {({hovered, pressed, focused}) => (

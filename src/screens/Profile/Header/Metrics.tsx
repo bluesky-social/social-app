@@ -1,7 +1,7 @@
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type Shadow} from '#/state/cache/types'
@@ -16,7 +16,7 @@ export function ProfileHeaderMetrics({
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const following = formatCount(i18n, profile.followsCount || 0)
   const followers = formatCount(i18n, profile.followersCount || 0)
   const pluralizedFollowers = plural(profile.followersCount || 0, {
@@ -46,7 +46,7 @@ export function ProfileHeaderMetrics({
         testID="profileHeaderFollowsButton"
         style={[a.flex_row, t.atoms.text]}
         to={makeProfileLink(profile, 'follows')}
-        label={_(msg`${profile.followsCount || 0} following`)}>
+        label={l`${profile.followsCount || 0} following`}>
         <Text style={[a.font_semi_bold, a.text_md]}>{following} </Text>
         <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
           {pluralizedFollowings}

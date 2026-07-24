@@ -1,8 +1,7 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, type AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {differenceInMinutes} from 'date-fns'
 
@@ -52,7 +51,7 @@ function DialogInner({
   embed: AppBskyEmbedExternal.View
 }) {
   const control = Dialog.useDialogContext()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
 
   const [liveLink, setLiveLink] = useState(embed.external.uri)
@@ -110,7 +109,7 @@ function DialogInner({
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`You are Live`)}
+      label={l`You are Live`}
       style={web({maxWidth: 420})}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_sm]}>
@@ -143,8 +142,8 @@ function DialogInner({
             </TextField.LabelText>
             <TextField.Root isInvalid={!!liveLinkError || !!linkMetaError}>
               <TextField.Input
-                label={_(msg`Live link`)}
-                placeholder={_(msg`www.mylivestream.tv`)}
+                label={l`Live link`}
+                placeholder={l`www.mylivestream.tv`}
                 value={liveLink}
                 onChangeText={setLiveLink}
                 onFocus={() => setLiveLinkError('')}
@@ -194,7 +193,7 @@ function DialogInner({
           })}>
           {isDirty ? (
             <Button
-              label={_(msg`Save`)}
+              label={l`Save`}
               size={platform({native: 'large', web: 'small'})}
               color="primary"
               variant="solid"
@@ -207,7 +206,7 @@ function DialogInner({
             </Button>
           ) : (
             <Button
-              label={_(msg`Close`)}
+              label={l`Close`}
               size={platform({native: 'large', web: 'small'})}
               color="primary"
               variant="solid"
@@ -218,7 +217,7 @@ function DialogInner({
             </Button>
           )}
           <Button
-            label={_(msg`Remove live status`)}
+            label={l`Remove live status`}
             onPress={() => removeLiveStatus()}
             size={platform({native: 'large', web: 'small'})}
             color="negative_subtle"

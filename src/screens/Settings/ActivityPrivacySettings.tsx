@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {type AppBskyNotificationDeclaration} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {
@@ -89,7 +88,7 @@ export function Inner({
   }
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {mutate} = useNotificationDeclarationMutation()
 
   const onChangeFilter = ([declaration]: string[]) => {
@@ -102,14 +101,12 @@ export function Inner({
   return (
     <Toggle.Group
       type="radio"
-      label={_(
-        msg`Filter who can opt to receive notifications for your activity`,
-      )}
+      label={l`Filter who can opt to receive notifications for your activity`}
       values={[notificationDeclaration.value.allowSubscriptions]}
       onChange={onChangeFilter}>
       <View style={[a.gap_sm]}>
         <Toggle.Item
-          label={_(msg`Anyone who follows me`)}
+          label={l`Anyone who follows me`}
           name="followers"
           style={[a.flex_row, a.py_xs, a.gap_sm]}>
           <Toggle.Radio />
@@ -118,7 +115,7 @@ export function Inner({
           </Toggle.LabelText>
         </Toggle.Item>
         <Toggle.Item
-          label={_(msg`Only followers who I follow`)}
+          label={l`Only followers who I follow`}
           name="mutuals"
           style={[a.flex_row, a.py_xs, a.gap_sm]}>
           <Toggle.Radio />
@@ -127,7 +124,7 @@ export function Inner({
           </Toggle.LabelText>
         </Toggle.Item>
         <Toggle.Item
-          label={_(msg({context: 'enable for', message: `No one`}))}
+          label={l({context: 'enable for', message: `No one`})}
           name="none"
           style={[a.flex_row, a.py_xs, a.gap_sm]}>
           <Toggle.Radio />

@@ -2,8 +2,7 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoLabelDefs, ToolsOzoneReportDefs} from '@atproto/api'
 import {XRPCError} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
@@ -32,7 +31,7 @@ export function AppealForm({
   control: Dialog.DialogOuterProps['control']
   onPressBack: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {labeler, strings} = useLabelInfo(label)
   const {gtMobile} = useBreakpoints()
   const [details, setDetails] = useState('')
@@ -69,18 +68,16 @@ export function AppealForm({
     onError: err => {
       if (err instanceof XRPCError && err.error === 'AlreadyAppealed') {
         setError(
-          _(
-            msg`You've already appealed this label and it's being reviewed by our moderation team.`,
-          ),
+          l`You've already appealed this label and it's being reviewed by our moderation team.`,
         )
       } else {
-        setError(_(msg`Failed to submit appeal, please try again.`))
+        setError(l`Failed to submit appeal, please try again.`)
       }
       logger.error('Failed to submit label appeal', {message: err})
     },
     onSuccess: () => {
       control.close()
-      Toast.show(_(msg({message: 'Appeal submitted', context: 'toast'})))
+      Toast.show(l({message: 'Appeal submitted', context: 'toast'}))
     },
   })
 
@@ -115,12 +112,10 @@ export function AppealForm({
       )}
       <View style={[a.my_md]}>
         <Dialog.Input
-          label={_(msg`Text input field`)}
-          placeholder={_(
-            msg`Please explain why you think this label was incorrectly applied by ${
-              labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src
-            }`,
-          )}
+          label={l`Text input field`}
+          placeholder={l`Please explain why you think this label was incorrectly applied by ${
+            labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src
+          }`}
           value={details}
           onChangeText={setDetails}
           autoFocus={true}
@@ -129,7 +124,6 @@ export function AppealForm({
           maxLength={300}
         />
       </View>
-
       <View
         style={
           gtMobile
@@ -142,8 +136,8 @@ export function AppealForm({
           color="secondary"
           size="large"
           onPress={onPressBack}
-          label={_(msg`Back`)}>
-          <ButtonText>{_(msg`Back`)}</ButtonText>
+          label={l`Back`}>
+          <ButtonText>{l`Back`}</ButtonText>
         </Button>
         <Button
           testID="submitBtn"
@@ -151,8 +145,8 @@ export function AppealForm({
           color="primary"
           size="large"
           onPress={onSubmit}
-          label={_(msg`Submit`)}>
-          <ButtonText>{_(msg`Submit`)}</ButtonText>
+          label={l`Submit`}>
+          <ButtonText>{l`Submit`}</ButtonText>
           {isPending && <ButtonIcon icon={Loader} />}
         </Button>
       </View>

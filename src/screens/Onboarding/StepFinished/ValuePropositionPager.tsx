@@ -2,8 +2,7 @@ import {useRef, useState} from 'react'
 import {View} from 'react-native'
 import PagerView from 'react-native-pager-view'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -65,7 +64,7 @@ function Page({
   image: string
   avatarUri?: string
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {title, description, alt} = useValuePropText(page)
 
@@ -99,11 +98,10 @@ function Page({
             ]}
             accessibilityIgnoresInvertColors
             useAppleWebpCodec
-            alt={_(msg`Your profile picture`)}
+            alt={l`Your profile picture`}
           />
         )}
       </View>
-
       <View style={[a.mt_4xl, a.gap_2xl, a.px_xl, a.align_center]}>
         <View style={[a.flex_row, a.gap_sm]}>
           <Dot active={page === 0} />

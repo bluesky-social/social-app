@@ -1,8 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {type ModerationCause} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
@@ -46,7 +45,7 @@ function ModerationDetailsDialogInner({
 }) {
   const t = useTheme()
   const xGutters = useGutters([0, 'base'])
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const desc = useModerationCauseDescription(modcause)
   const {currentAccount} = useSession()
   const timeDiff = useGetTimeAgo({future: true})
@@ -67,14 +66,12 @@ function ModerationDetailsDialogInner({
   let name
   let description
   if (!modcause) {
-    name = _(msg`Content Warning`)
-    description = _(
-      msg`Moderator has chosen to set a general warning on the content.`,
-    )
+    name = l`Content Warning`
+    description = l`Moderator has chosen to set a general warning on the content.`
   } else if (modcause.type === 'blocking') {
     if (modcause.source.type === 'list') {
       const list = modcause.source.list
-      name = _(msg`User Blocked by List`)
+      name = l`User Blocked by List`
       description = (
         <Trans>
           This user is included in the{' '}
@@ -88,25 +85,19 @@ function ModerationDetailsDialogInner({
         </Trans>
       )
     } else {
-      name = _(msg`User Blocked`)
-      description = _(
-        msg`You have blocked this user. You cannot view their content.`,
-      )
+      name = l`User Blocked`
+      description = l`You have blocked this user. You cannot view their content.`
     }
   } else if (modcause.type === 'blocked-by') {
-    name = _(msg`User Blocks You`)
-    description = _(
-      msg`This user has blocked you. You cannot view their content.`,
-    )
+    name = l`User Blocks You`
+    description = l`This user has blocked you. You cannot view their content.`
   } else if (modcause.type === 'block-other') {
-    name = _(msg`Content Not Available`)
-    description = _(
-      msg`This content is not available because one of the users involved has blocked the other.`,
-    )
+    name = l`Content Not Available`
+    description = l`This content is not available because one of the users involved has blocked the other.`
   } else if (modcause.type === 'muted') {
     if (modcause.source.type === 'list') {
       const list = modcause.source.list
-      name = _(msg`Account Muted by List`)
+      name = l`Account Muted by List`
       description = (
         <Trans>
           This user is included in the{' '}
@@ -120,23 +111,21 @@ function ModerationDetailsDialogInner({
         </Trans>
       )
     } else {
-      name = _(msg`Account Muted`)
-      description = _(msg`You have muted this account.`)
+      name = l`Account Muted`
+      description = l`You have muted this account.`
     }
   } else if (modcause.type === 'mute-word') {
-    name = _(msg`Post Hidden by Muted Word`)
-    description = _(msg`You've chosen to hide a word or tag within this post.`)
+    name = l`Post Hidden by Muted Word`
+    description = l`You've chosen to hide a word or tag within this post.`
   } else if (modcause.type === 'hidden') {
-    name = _(msg`Post Hidden by You`)
-    description = _(msg`You have hidden this post.`)
+    name = l`Post Hidden by You`
+    description = l`You have hidden this post.`
   } else if (modcause.type === 'reply-hidden') {
     const isYou = currentAccount?.did === modcause.source.did
-    name = isYou
-      ? _(msg`Reply Hidden by You`)
-      : _(msg`Reply Hidden by Thread Author`)
+    name = isYou ? l`Reply Hidden by You` : l`Reply Hidden by Thread Author`
     description = isYou
-      ? _(msg`You hid this reply.`)
-      : _(msg`The author of this thread has hidden this reply.`)
+      ? l`You hid this reply.`
+      : l`The author of this thread has hidden this reply.`
   } else if (modcause.type === 'label') {
     name = desc.name
     description = (
@@ -151,12 +140,12 @@ function ModerationDetailsDialogInner({
   }
 
   const sourceName =
-    desc.source || desc.sourceDisplayName || _(msg`an unknown labeler`)
+    desc.source || desc.sourceDisplayName || l`an unknown labeler`
 
   if (isAppealing && modcause?.type === 'label') {
     return (
       <Dialog.ScrollableInner
-        label={_(msg`Appeal label`)}
+        label={l`Appeal label`}
         style={web({
           maxWidth: 460,
         })}>
@@ -172,7 +161,7 @@ function ModerationDetailsDialogInner({
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Moderation details`)}
+      label={l`Moderation details`}
       contentContainerStyle={{
         paddingLeft: 0,
         paddingRight: 0,
@@ -216,7 +205,7 @@ function ModerationDetailsDialogInner({
               variant="solid"
               color="primary_subtle"
               size="small"
-              label={_(msg`Appeal this label`)}
+              label={l`Appeal this label`}
               style={[gtPhone ? undefined : a.w_full]}
               onPress={() => setIsAppealing(true)}>
               <ButtonText>
@@ -235,7 +224,6 @@ function ModerationDetailsDialogInner({
           </Admonition>
         )}
       </View>
-
       {modcause?.type === 'label' && (
         <View
           style={[
@@ -302,9 +290,7 @@ function ModerationDetailsDialogInner({
           )}
         </View>
       )}
-
       {IS_NATIVE && <View style={{height: 40}} />}
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )

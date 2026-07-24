@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {HITSLOP_10, MAX_ALT_TEXT} from '#/lib/constants'
@@ -65,7 +64,7 @@ export function GifAltTextDialogLoaded({
   thumb: string | undefined
 }) {
   const control = Dialog.useDialogControl()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const [altTextDraft, setAltTextDraft] = useState(altText || vendorAltText)
   return (
@@ -73,7 +72,7 @@ export function GifAltTextDialogLoaded({
       <TouchableOpacity
         testID="altTextButton"
         accessibilityRole="button"
-        accessibilityLabel={_(msg`Add alt text`)}
+        accessibilityLabel={l`Add alt text`}
         accessibilityHint=""
         hitSlop={HITSLOP_10}
         onPress={control.open}
@@ -100,14 +99,12 @@ export function GifAltTextDialogLoaded({
           <Trans>ALT</Trans>
         </Text>
       </TouchableOpacity>
-
       <Admonition type="info" style={[a.mt_sm]}>
         <Trans>
           Alt text describes images for blind and low-vision users, and helps
           give context to everyone.
         </Trans>
       </Admonition>
-
       <Dialog.Outer
         control={control}
         onClose={() => {
@@ -144,10 +141,10 @@ function AltTextInner({
   thumb: string | undefined
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
+    <Dialog.ScrollableInner label={l`Add alt text`}>
       <View style={a.flex_col_reverse}>
         <View style={[a.mt_md, a.gap_md]}>
           <View style={[a.gap_sm]}>
@@ -157,7 +154,7 @@ function AltTextInner({
               </TextField.LabelText>
               <TextField.Root>
                 <Dialog.Input
-                  label={_(msg`Alt text`)}
+                  label={l`Alt text`}
                   placeholder={vendorAltText}
                   onChangeText={onChange}
                   defaultValue={altText}
@@ -196,7 +193,7 @@ function AltTextInner({
 
           <AltTextCounterWrapper altText={altText}>
             <Button
-              label={_(msg`Save`)}
+              label={l`Save`}
               size="large"
               color="primary"
               variant="solid"

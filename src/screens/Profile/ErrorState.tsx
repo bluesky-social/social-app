@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -13,7 +12,7 @@ import {Text} from '#/components/Typography'
 
 export function ErrorState({error}: {error: string}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
 
   const onPressBack = useCallback(() => {
@@ -27,7 +26,6 @@ export function ErrorState({error}: {error: string}) {
   return (
     <View style={[a.px_xl]}>
       <CircleInfo width={48} style={[t.atoms.text_contrast_low]} />
-
       <Text style={[a.text_xl, a.font_semi_bold, a.pb_md, a.pt_xl]}>
         <Trans>Hmmmm, we couldn't load that moderation service.</Trans>
       </Text>
@@ -54,13 +52,12 @@ export function ErrorState({error}: {error: string}) {
         ]}>
         <Text style={[a.text_md, a.leading_normal]}>{error}</Text>
       </View>
-
       <View style={{flexDirection: 'row'}}>
         <Button
           size="small"
           color="secondary"
           variant="solid"
-          label={_(msg`Go Back`)}
+          label={l`Go Back`}
           accessibilityHint="Returns to previous page"
           onPress={onPressBack}>
           <ButtonText>

@@ -1,6 +1,5 @@
 import {Keyboard, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {
@@ -28,7 +27,7 @@ export function LabelsBtn({
   onChange: (v: SelfLabel[]) => void
 }) {
   const control = Dialog.useDialogControl()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const hasLabel = labels.length > 0
 
@@ -58,10 +57,8 @@ export function LabelsBtn({
           Keyboard.dismiss()
           control.open()
         }}
-        label={_(msg`Content warnings`)}
-        accessibilityHint={_(
-          msg`Opens a dialog to add a content warning to your post`,
-        )}>
+        label={l`Content warnings`}
+        accessibilityHint={l`Opens a dialog to add a content warning to your post`}>
         <ButtonIcon icon={hasLabel ? Check : Shield_Stroke2_Corner0_Rounded} />
         <ButtonText numberOfLines={1} maxFontSizeMultiplier={2}>
           {labels.length > 0 ? (
@@ -72,7 +69,6 @@ export function LabelsBtn({
         </ButtonText>
         <ButtonIcon icon={TinyChevronIcon} size="2xs" />
       </Button>
-
       <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <DialogInner
@@ -94,13 +90,13 @@ function DialogInner({
   updateAdultLabels: (labels: AdultSelfLabel[]) => void
   updateOtherLabels: (labels: OtherSelfLabel[]) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = Dialog.useDialogContext()
   const t = useTheme()
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Add a content warning`)}
+      label={l`Add a content warning`}
       style={[{maxWidth: 500}, a.w_full]}>
       <View style={[a.flex_1]}>
         <View style={[a.gap_sm]}>
@@ -131,25 +127,25 @@ function DialogInner({
                 t.atoms.border_contrast_medium,
               ]}>
               <Toggle.Group
-                label={_(msg`Adult Content labels`)}
+                label={l`Adult Content labels`}
                 values={labels}
                 onChange={values => {
                   updateAdultLabels(values as AdultSelfLabel[])
                 }}>
                 <View style={[a.gap_sm]}>
-                  <Toggle.Item name="sexual" label={_(msg`Suggestive`)}>
+                  <Toggle.Item name="sexual" label={l`Suggestive`}>
                     <Toggle.Checkbox />
                     <Toggle.LabelText>
                       <Trans>Suggestive</Trans>
                     </Toggle.LabelText>
                   </Toggle.Item>
-                  <Toggle.Item name="nudity" label={_(msg`Nudity`)}>
+                  <Toggle.Item name="nudity" label={l`Nudity`}>
                     <Toggle.Checkbox />
                     <Toggle.LabelText>
                       <Trans>Nudity</Trans>
                     </Toggle.LabelText>
                   </Toggle.Item>
-                  <Toggle.Item name="porn" label={_(msg`Porn`)}>
+                  <Toggle.Item name="porn" label={l`Porn`}>
                     <Toggle.Checkbox />
                     <Toggle.LabelText>
                       <Trans>Adult</Trans>
@@ -189,12 +185,12 @@ function DialogInner({
                 t.atoms.border_contrast_medium,
               ]}>
               <Toggle.Group
-                label={_(msg`Adult Content labels`)}
+                label={l`Adult Content labels`}
                 values={labels}
                 onChange={values => {
                   updateOtherLabels(values as OtherSelfLabel[])
                 }}>
-                <Toggle.Item name="graphic-media" label={_(msg`Graphic Media`)}>
+                <Toggle.Item name="graphic-media" label={l`Graphic Media`}>
                   <Toggle.Checkbox />
                   <Toggle.LabelText>
                     <Trans>Graphic Media</Trans>
@@ -213,10 +209,9 @@ function DialogInner({
           </View>
         </View>
       </View>
-
       <View style={[a.mt_sm, web([a.flex_row, a.ml_auto])]}>
         <Button
-          label={_(msg`Done`)}
+          label={l`Done`}
           onPress={() => control.close()}
           color="primary"
           size={IS_WEB ? 'small' : 'large'}

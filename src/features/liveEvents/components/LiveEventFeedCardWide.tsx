@@ -2,8 +2,7 @@ import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useCallOnce} from '#/lib/once'
@@ -27,7 +26,7 @@ export function LiveEventFeedCardWide({
   metricContext: LiveEventFeedMetricContext
 }) {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
 
   const layout = feed.layouts.wide
@@ -51,7 +50,7 @@ export function LiveEventFeedCardWide({
   return (
     <Link
       to={url}
-      label={_(msg`Live event happening now: ${feed.title}`)}
+      label={l`Live event happening now: ${feed.title}`}
       style={[a.w_full]}
       onPress={() => {
         ax.metric('liveEvents:feedBanner:click', {

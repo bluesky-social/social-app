@@ -2,8 +2,7 @@ import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme, web} from '#/alf'
@@ -28,7 +27,7 @@ export const enabled = createIsEnabledCheck(props => {
 
 export function DraftsAnnouncement() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
 
@@ -44,9 +43,8 @@ export function DraftsAnnouncement() {
       onClose={onClose}
       nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle fill={t.palette.primary_400} />
-
       <Dialog.ScrollableInner
-        label={_(msg`Introducing drafts`)}
+        label={l`Introducing drafts`}
         style={[web({maxWidth: 440})]}
         contentContainerStyle={[
           {
@@ -94,13 +92,11 @@ export function DraftsAnnouncement() {
                 aspectRatio: 393 / 226,
               },
             ]}
-            alt={_(
-              msg({
-                message: `A screenshot of the post composer with a new button next to the post button that says "Drafts", with a rainbow firework effect. Below, the text in the composer reads "Hey, did you hear the news? Bluesky has drafts now!!!".`,
-                comment:
-                  'Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.',
-              }),
-            )}
+            alt={l({
+              message: `A screenshot of the post composer with a new button next to the post button that says "Drafts", with a rainbow firework effect. Below, the text in the composer reads "Hey, did you hear the news? Bluesky has drafts now!!!".`,
+              comment:
+                'Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.',
+            })}
             useAppleWebpCodec
           />
         </View>
@@ -137,7 +133,7 @@ export function DraftsAnnouncement() {
 
           {!IS_WEB && (
             <Button
-              label={_(msg`Close`)}
+              label={l`Close`}
               size="large"
               color="primary"
               onPress={() => control.close()}

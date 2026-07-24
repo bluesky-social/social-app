@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls} from '#/lib/constants'
@@ -35,7 +34,7 @@ export function EditProfileDialog({
   control: Dialog.DialogControlProps
   onUpdate?: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const cancelControl = Dialog.useDialogControl()
   const [dirty, setDirty] = useState(false)
 
@@ -70,13 +69,12 @@ export function EditProfileDialog({
         setDirty={setDirty}
         onPressCancel={onPressCancel}
       />
-
       <Prompt.Basic
         control={cancelControl}
-        title={_(msg`Discard changes?`)}
-        description={_(msg`Are you sure you want to discard your changes?`)}
+        title={l`Discard changes?`}
+        description={l`Are you sure you want to discard your changes?`}
         onConfirm={() => control.close()}
-        confirmButtonCta={_(msg`Discard`)}
+        confirmButtonCta={l`Discard`}
         confirmButtonColor="negative"
       />
     </Dialog.Outer>
@@ -94,7 +92,7 @@ function DialogInner({
   setDirty: (dirty: boolean) => void
   onPressCancel: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogContext()
   const verification = useSimpleVerificationState({
@@ -183,7 +181,7 @@ function DialogInner({
         newUserBanner,
       })
       control.close(() => onUpdate?.())
-      Toast.show(_(msg({message: 'Profile updated', context: 'toast'})))
+      Toast.show(l({message: 'Profile updated', context: 'toast'}))
     } catch (e: any) {
       logger.error('Failed to update user profile', {message: String(e)})
     }
@@ -197,7 +195,7 @@ function DialogInner({
     newUserAvatar,
     newUserBanner,
     setImageError,
-    _,
+    l,
   ])
 
   const displayNameTooLong = isOverMaxGraphemeCount({
@@ -212,7 +210,7 @@ function DialogInner({
   const cancelButton = useCallback(
     () => (
       <Button
-        label={_(msg`Cancel`)}
+        label={l`Cancel`}
         onPress={onPressCancel}
         size="small"
         color="primary"
@@ -224,13 +222,13 @@ function DialogInner({
         </ButtonText>
       </Button>
     ),
-    [onPressCancel, _],
+    [onPressCancel, l],
   )
 
   const saveButton = useCallback(
     () => (
       <Button
-        label={_(msg`Save`)}
+        label={l`Save`}
         onPress={onPressSave}
         disabled={
           !dirty ||
@@ -250,7 +248,7 @@ function DialogInner({
       </Button>
     ),
     [
-      _,
+      l,
       t,
       dirty,
       onPressSave,
@@ -262,7 +260,7 @@ function DialogInner({
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Edit profile`)}
+      label={l`Edit profile`}
       style={[a.overflow_hidden]}
       contentContainerStyle={[a.px_0, a.pt_0]}
       header={
@@ -313,8 +311,8 @@ function DialogInner({
             <Dialog.Input
               defaultValue={displayName}
               onChangeText={setDisplayName}
-              label={_(msg`Display name`)}
-              placeholder={_(msg`e.g. Alice Lastname`)}
+              label={l`Display name`}
+              placeholder={l`e.g. Alice Lastname`}
               testID="editProfileDisplayNameInput"
             />
           </TextField.Root>
@@ -342,12 +340,10 @@ function DialogInner({
                 You are verified. You will lose your verification status if you
                 change your display name.{' '}
                 <InlineLinkText
-                  label={_(
-                    msg({
-                      message: `Learn more`,
-                      context: `english-only-resource`,
-                    }),
-                  )}
+                  label={l({
+                    message: `Learn more`,
+                    context: `english-only-resource`,
+                  })}
                   to={urls.website.blog.initialVerificationAnnouncement}>
                   <Trans context="english-only-resource">Learn more.</Trans>
                 </InlineLinkText>
@@ -364,8 +360,8 @@ function DialogInner({
               defaultValue={description}
               onChangeText={setDescription}
               multiline
-              label={_(msg`Description`)}
-              placeholder={_(msg`Tell us a bit about yourself`)}
+              label={l`Description`}
+              placeholder={l`Tell us a bit about yourself`}
               testID="editProfileDescriptionInput"
             />
           </TextField.Root>

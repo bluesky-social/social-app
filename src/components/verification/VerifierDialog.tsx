@@ -1,7 +1,6 @@
 import {Text as RNText, View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
@@ -51,15 +50,15 @@ function Inner({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
 
   const isSelf = profile.did === currentAccount?.did
   const userName = getUserDisplayName(profile)
   const label = isSelf
-    ? _(msg`You are a trusted verifier`)
-    : _(msg`${userName} is a trusted verifier`)
+    ? l`You are a trusted verifier`
+    : l`${userName} is a trusted verifier`
 
   return (
     <Dialog.ScrollableInner
@@ -84,9 +83,7 @@ function Inner({
                 aspectRatio: 353 / 160,
               },
             ]}
-            alt={_(
-              msg`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
-            )}
+            alt={l`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`}
             useAppleWebpCodec
           />
         </View>
@@ -118,12 +115,10 @@ function Inner({
           <Link
             overridePresentation
             to={urls.website.blog.initialVerificationAnnouncement}
-            label={_(
-              msg({
-                message: `Learn more about verification on Bluesky`,
-                context: `english-only-resource`,
-              }),
-            )}
+            label={l({
+              message: `Learn more about verification on Bluesky`,
+              context: `english-only-resource`,
+            })}
             size="small"
             color="primary"
             style={[a.justify_center]}
@@ -137,7 +132,7 @@ function Inner({
             </ButtonText>
           </Link>
           <Button
-            label={_(msg`Close dialog`)}
+            label={l`Close dialog`}
             size="small"
             color="secondary"
             onPress={() => {

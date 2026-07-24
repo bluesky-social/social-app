@@ -1,8 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {XRPCError} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {validate as validateEmail} from 'email-validator'
 
@@ -41,15 +40,12 @@ export function AgeAssuranceInitDialog({
 }: {
   control: Dialog.DialogControlProps
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner
-        label={_(
-          msg`Begin the age assurance process by completing the fields below.`,
-        )}
+        label={l`Begin the age assurance process by completing the fields below.`}
         style={[
           web({
             maxWidth: 400,
@@ -63,7 +59,7 @@ export function AgeAssuranceInitDialog({
 }
 
 function Inner() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const langPrefs = useLanguagePrefs()
@@ -98,9 +94,7 @@ function Inner() {
 
       if (tlds && isEmailMaybeInvalid(email, tlds)) {
         setEmailError(
-          _(
-            msg`Please double-check that you have entered your email address correctly.`,
-          ),
+          l`Please double-check that you have entered your email address correctly.`,
         )
         return {status: 'maybe'}
       }
@@ -108,7 +102,7 @@ function Inner() {
       return {status: 'valid'}
     }
 
-    setEmailError(_(msg`Please enter a valid email address.`))
+    setEmailError(l`Please enter a valid email address.`)
     setDisabled(true)
 
     return {status: 'invalid'}
@@ -135,15 +129,11 @@ function Inner() {
 
       setSuccess(true)
     } catch (e) {
-      let error: React.ReactNode = _(
-        msg`Something went wrong, please try again`,
-      )
+      let error: React.ReactNode = l`Something went wrong, please try again`
 
       if (e instanceof XRPCError) {
         if (e.error === 'InvalidEmail') {
-          error = _(
-            msg`Please enter a valid, non-temporary email address. You may need to access this email in the future.`,
-          )
+          error = l`Please enter a valid, non-temporary email address. You may need to access this email in the future.`
           ax.metric('ageAssurance:initDialogError', {code: 'InvalidEmail'})
         } else if (e.error === 'DidTooLong') {
           error = (
@@ -153,7 +143,7 @@ function Inner() {
                 your account. Please{' '}
                 <SimpleInlineLinkText
                   to={createSupportLink({code: SupportCode.AA_DID, email})}
-                  label={_(msg`Contact support`)}>
+                  label={l`Contact support`}>
                   contact support
                 </SimpleInlineLinkText>{' '}
                 for assistance.
@@ -197,7 +187,7 @@ function Inner() {
                 <Trans>
                   We have partnered with{' '}
                   <SimpleInlineLinkText
-                    label={_(msg`KWS website`)}
+                    label={l`KWS website`}
                     to={urls.kwsHome}
                     style={[a.text_sm, a.leading_snug]}>
                     KWS
@@ -220,7 +210,7 @@ function Inner() {
         {success ? (
           <View style={[a.w_full]}>
             <Button
-              label={_(msg`Close dialog`)}
+              label={l`Close dialog`}
               size="large"
               variant="solid"
               color="secondary"
@@ -253,8 +243,8 @@ function Inner() {
                 </TextField.LabelText>
                 <TextField.Root isInvalid={!!emailError}>
                   <TextField.Input
-                    label={_(msg`Your email`)}
-                    placeholder={_(msg`Your email`)}
+                    label={l`Your email`}
+                    placeholder={l`Your email`}
                     value={email}
                     onChangeText={setEmail}
                     onFocus={() => setEmailError('')}
@@ -289,7 +279,7 @@ function Inner() {
                   <Trans>Your preferred language</Trans>
                 </TextField.LabelText>
                 <LanguageSelect
-                  label={_(msg`Preferred language`)}
+                  label={l`Preferred language`}
                   value={language}
                   onChange={value => {
                     setLanguage(value)
@@ -310,7 +300,7 @@ function Inner() {
 
               <Button
                 disabled={disabled}
-                label={_(msg`Begin age assurance process`)}
+                label={l`Begin age assurance process`}
                 size="large"
                 variant="solid"
                 color="primary"

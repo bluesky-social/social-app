@@ -1,7 +1,6 @@
 import {memo} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {
@@ -27,7 +26,7 @@ export const ThreadItemReadMore = memo(function ThreadItemReadMore({
   view: PostThreadParams['view']
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const isTreeView = view === 'tree'
   const indent = Math.max(0, item.depth - 1)
 
@@ -69,7 +68,7 @@ export const ThreadItemReadMore = memo(function ThreadItemReadMore({
         ]}
       />
       <Link
-        label={_(msg`Read more replies`)}
+        label={l`Read more replies`}
         to={item.href}
         style={[a.pt_sm, a.pb_md, a.gap_xs]}>
         {({hovered, pressed}) => {

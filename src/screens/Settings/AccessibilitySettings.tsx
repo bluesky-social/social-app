@@ -1,5 +1,4 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -27,7 +26,7 @@ type Props = NativeStackScreenProps<
   'AccessibilitySettings'
 >
 export function AccessibilitySettingsScreen({}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
@@ -56,7 +55,7 @@ export function AccessibilitySettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <Toggle.Item
               name="require_alt_text"
-              label={_(msg`Require alt text before posting`)}
+              label={l`Require alt text before posting`}
               value={requireAltTextEnabled ?? false}
               onChange={value => setRequireAltTextEnabled(value)}
               style={[a.w_full]}>
@@ -67,7 +66,7 @@ export function AccessibilitySettingsScreen({}: Props) {
             </Toggle.Item>
             <Toggle.Item
               name="large_alt_badge"
-              label={_(msg`Display larger alt text badges`)}
+              label={l`Display larger alt text badges`}
               value={!!largeAltBadgeEnabled}
               onChange={value => setLargeAltBadgeEnabled(value)}
               style={[a.w_full]}>
@@ -87,7 +86,7 @@ export function AccessibilitySettingsScreen({}: Props) {
                 </SettingsList.ItemText>
                 <Toggle.Item
                   name="haptics"
-                  label={_(msg`Disable haptic feedback`)}
+                  label={l`Disable haptic feedback`}
                   value={hapticsDisabled ?? false}
                   onChange={value => setHapticsDisabled(value)}
                   style={[a.w_full]}>

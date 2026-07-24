@@ -1,8 +1,7 @@
 import {memo, useEffect} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorSearchActors, type ModerationOpts} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {type InfiniteData} from '@tanstack/react-query'
 
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
@@ -60,7 +59,7 @@ export function SuggestedAccountsTabBar({
   hideDefaultTab?: boolean
   defaultTabLabel?: string
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const interestsDisplayNames = useInterestsDisplayNames()
   const {data: preferences} = usePreferencesQuery()
@@ -83,7 +82,7 @@ export function SuggestedAccountsTabBar({
         hideDefaultTab
           ? interestsDisplayNames
           : {
-              all: defaultTabLabel || _(msg`For You`),
+              all: defaultTabLabel || l`For You`,
               ...interestsDisplayNames,
             }
       }

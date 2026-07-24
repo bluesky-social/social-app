@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -19,7 +18,7 @@ import {Loader} from '#/components/Loader'
 import {StarterPackCard} from './StarterPackCard'
 
 export function StepSuggestedStarterpacks() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const moderationOpts = useModerationOpts()
 
@@ -44,7 +43,6 @@ export function StepSuggestedStarterpacks() {
           Find people to follow
         </Trans>
       </OnboardingTitleText>
-
       <View
         style={[
           a.overflow_hidden,
@@ -81,7 +79,6 @@ export function StepSuggestedStarterpacks() {
           </View>
         )}
       </View>
-
       <OnboardingControls.Portal>
         {isError ? (
           <View style={[a.gap_md, gtMobile ? a.flex_row : a.flex_col]}>
@@ -89,7 +86,7 @@ export function StepSuggestedStarterpacks() {
               disabled={isRefetching}
               color="secondary"
               size="large"
-              label={_(msg`Retry`)}
+              label={l`Retry`}
               onPress={() => refetch()}>
               <ButtonText>
                 <Trans>Retry</Trans>
@@ -99,7 +96,7 @@ export function StepSuggestedStarterpacks() {
             <Button
               color="secondary"
               size="large"
-              label={_(msg`Skip to next step`)}
+              label={l`Skip to next step`}
               onPress={() => dispatch({type: 'next'})}>
               <ButtonText>
                 <Trans>Skip</Trans>
@@ -111,7 +108,7 @@ export function StepSuggestedStarterpacks() {
             <Button
               color="primary"
               size="large"
-              label={_(msg`Continue to next step`)}
+              label={l`Continue to next step`}
               onPress={() => dispatch({type: 'next'})}>
               <ButtonText>
                 <Trans>Continue</Trans>

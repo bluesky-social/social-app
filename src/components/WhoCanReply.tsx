@@ -12,8 +12,7 @@ import {
   type AppBskyGraphDefs,
   AtUri,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -49,7 +48,7 @@ interface WhoCanReplyProps {
 export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const infoDialogControl = useDialogControl()
   const editDialogControl = useDialogControl()
 
@@ -82,10 +81,10 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
     settings.length === 1 && settings[0].type === 'everybody'
   const noOneCanReply = settings.length === 1 && settings[0].type === 'nobody'
   const description = anyoneCanReply
-    ? _(msg`Everybody can reply`)
+    ? l`Everybody can reply`
     : noOneCanReply
-      ? _(msg`Replies disabled`)
-      : _(msg`Some people can reply`)
+      ? l`Replies disabled`
+      : l`Some people can reply`
 
   const onPressOpen = () => {
     if (IS_NATIVE && Keyboard.isVisible()) {
@@ -112,9 +111,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
   return (
     <>
       <Button
-        label={
-          isThreadAuthor ? _(msg`Edit who can reply`) : _(msg`Who can reply`)
-        }
+        label={isThreadAuthor ? l`Edit who can reply` : l`Who can reply`}
         onPress={onPressOpen}
         {...(isThreadAuthor
           ? Platform.select({
@@ -161,7 +158,6 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
           </View>
         )}
       </Button>
-
       {isThreadAuthor ? (
         <PostInteractionSettingsDialog
           postUri={post.uri}
@@ -213,13 +209,13 @@ function WhoCanReplyDialog({
   settings: ThreadgateAllowUISetting[]
   embeddingDisabled: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
-        label={_(msg`Dialog: adjust who can interact with this post`)}
+        label={l`Dialog: adjust who can interact with this post`}
         style={web({maxWidth: 400})}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_semi_bold, a.text_xl, a.pb_sm]}>
@@ -233,7 +229,7 @@ function WhoCanReplyDialog({
         </View>
         {IS_NATIVE && (
           <Button
-            label={_(msg`Close`)}
+            label={l`Close`}
             onPress={() => control.close()}
             size="small"
             variant="solid"

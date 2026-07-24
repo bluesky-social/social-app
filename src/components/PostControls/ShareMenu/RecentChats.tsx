@@ -4,8 +4,7 @@ import {
   moderateProfile,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -118,7 +117,7 @@ function RecentChatItem({
   convo: ConvoWithDetails
   primaryMember: ChatBskyActorDefs.ProfileViewBasic
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   const primaryProfile = useProfileShadow(primaryMember)
@@ -143,7 +142,7 @@ function RecentChatItem({
   return (
     <Button
       onPress={onPress}
-      label={_(msg`Send post to ${name}`)}
+      label={l`Send post to ${name}`}
       style={[
         a.flex_col,
         {width: WIDTH},

@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -52,7 +51,7 @@ export function ProfileFeedSection({
   emptyStateIcon,
   postFeedRef,
 }: FeedSectionProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const [hasNew, setHasNew] = useState(false)
   const [isScrolledDown, setIsScrolledDown] = useState(false)
@@ -81,12 +80,12 @@ export function ProfileFeedSection({
           style={{width: '100%'}}
           icon={emptyStateIcon || EditIcon}
           iconSize="3xl"
-          message={emptyStateMessage || _(msg`No posts yet`)}
+          message={emptyStateMessage || l`No posts yet`}
           button={emptyStateButton}
         />
       </View>
     )
-  }, [_, emptyStateButton, emptyStateIcon, emptyStateMessage])
+  }, [l, emptyStateButton, emptyStateIcon, emptyStateMessage])
 
   useEffect(() => {
     if (IS_IOS && isFocused && scrollElRef.current) {
@@ -118,7 +117,7 @@ export function ProfileFeedSection({
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onScrollToTop}
-          label={_(msg`Load new posts`)}
+          label={l`Load new posts`}
           showIndicator={hasNew}
         />
       )}

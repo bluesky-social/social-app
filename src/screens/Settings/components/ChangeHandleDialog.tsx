@@ -11,8 +11,7 @@ import Animated, {
   SlideOutRight,
 } from 'react-native-reanimated'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
@@ -62,7 +61,7 @@ export function ChangeHandleDialog({
 
 function ChangeHandleDialogInner() {
   const control = Dialog.useDialogContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const agent = useAgent()
   const {
     data: serviceInfo,
@@ -77,7 +76,7 @@ function ChangeHandleDialogInner() {
   const cancelButton = useCallback(
     () => (
       <Button
-        label={_(msg`Cancel`)}
+        label={l`Cancel`}
         onPress={() => control.close()}
         size="small"
         color="primary"
@@ -88,12 +87,12 @@ function ChangeHandleDialogInner() {
         </ButtonText>
       </Button>
     ),
-    [control, _],
+    [control, l],
   )
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Change Handle`)}
+      label={l`Change Handle`}
       header={
         <Dialog.Header renderLeft={cancelButton}>
           <Dialog.HeaderText>
@@ -105,8 +104,8 @@ function ChangeHandleDialogInner() {
       <View style={[a.flex_1, a.pt_lg, a.px_xl]}>
         {serviceInfoError ? (
           <ErrorScreen
-            title={_(msg`Oops!`)}
-            message={_(msg`There was an issue fetching your service info`)}
+            title={l`Oops!`}
+            message={l`There was an issue fetching your service info`}
             details={cleanError(serviceInfoError)}
             onPressTryAgain={refetch}
           />
@@ -150,7 +149,7 @@ function ProvidedHandlePage({
   serviceInfo: ComAtprotoServerDescribeServer.OutputSchema
   goToOwnHandle: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [subdomain, setSubdomain] = useState('')
   const agent = useAgent()
   const control = Dialog.useDialogContext()
@@ -194,7 +193,7 @@ function ProvidedHandlePage({
       <View style={[a.flex_1, a.gap_md]}>
         {isSuccess && (
           <Animated.View entering={FadeIn} exiting={FadeOut}>
-            <SuccessMessage text={_(msg`Handle changed!`)} />
+            <SuccessMessage text={l`Handle changed!`} />
           </Animated.View>
         )}
         {error && (
@@ -211,12 +210,10 @@ function ProvidedHandlePage({
                 You are verified. You will lose your verification status if you
                 change your handle.{' '}
                 <InlineLinkText
-                  label={_(
-                    msg({
-                      message: `Learn more`,
-                      context: `english-only-resource`,
-                    }),
-                  )}
+                  label={l({
+                    message: `Learn more`,
+                    context: `english-only-resource`,
+                  })}
                   to={urls.website.blog.initialVerificationAnnouncement}>
                   <Trans context="english-only-resource">Learn more.</Trans>
                 </InlineLinkText>
@@ -233,8 +230,8 @@ function ProvidedHandlePage({
                 editable={!isPending}
                 defaultValue={subdomain}
                 onChangeText={text => setSubdomain(text)}
-                label={_(msg`New handle`)}
-                placeholder={_(msg`e.g. alice`)}
+                label={l`New handle`}
+                placeholder={l`e.g. alice`}
                 autoCapitalize="none"
                 autoCorrect={false}
               />
@@ -252,7 +249,7 @@ function ProvidedHandlePage({
             </Trans>
           </Text>
           <Button
-            label={_(msg`Save new handle`)}
+            label={l`Save new handle`}
             variant="solid"
             size="large"
             color={validation.overall ? 'primary' : 'secondary'}
@@ -275,12 +272,10 @@ function ProvidedHandlePage({
               If you have your own domain, you can use that as your handle. This
               lets you self-verify your identity.{' '}
               <InlineLinkText
-                label={_(
-                  msg({
-                    message: `Learn more`,
-                    context: `english-only-resource`,
-                  }),
-                )}
+                label={l({
+                  message: `Learn more`,
+                  context: `english-only-resource`,
+                })}
                 to="https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial"
                 style={[a.font_semi_bold]}
                 disableMismatchWarning>
@@ -289,7 +284,7 @@ function ProvidedHandlePage({
             </Trans>
           </Text>
           <Button
-            label={_(msg`I have my own domain`)}
+            label={l`I have my own domain`}
             variant="outline"
             color="primary"
             size="large"
@@ -306,7 +301,7 @@ function ProvidedHandlePage({
 }
 
 function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
   const [dnsPanel, setDNSPanel] = useState(true)
@@ -353,7 +348,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
     <View style={[a.flex_1, a.gap_lg]}>
       {isSuccess && (
         <Animated.View entering={FadeIn} exiting={FadeOut}>
-          <SuccessMessage text={_(msg`Handle changed!`)} />
+          <SuccessMessage text={l`Handle changed!`} />
         </Animated.View>
       )}
       {error && (
@@ -384,8 +379,8 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
           <TextField.Root>
             <TextField.Icon icon={AtIcon} />
             <Dialog.Input
-              label={_(msg`New handle`)}
-              placeholder={_(msg`e.g. alice.com`)}
+              label={l`New handle`}
+              placeholder={l`e.g. alice.com`}
               editable={!isPending}
               defaultValue={domain}
               onChangeText={text => {
@@ -398,16 +393,16 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
           </TextField.Root>
         </View>
         <SegmentedControl.Root
-          label={_(msg`Choose domain verification method`)}
+          label={l`Choose domain verification method`}
           type="tabs"
           value={dnsPanel ? 'dns' : 'file'}
           onChange={values => setDNSPanel(values === 'dns')}>
-          <SegmentedControl.Item value="dns" label={_(msg`DNS Panel`)}>
+          <SegmentedControl.Item value="dns" label={l`DNS Panel`}>
             <SegmentedControl.ItemText>
               <Trans>DNS Panel</Trans>
             </SegmentedControl.ItemText>
           </SegmentedControl.Item>
-          <SegmentedControl.Item value="file" label={_(msg`No DNS Panel`)}>
+          <SegmentedControl.Item value="file" label={l`No DNS Panel`}>
             <SegmentedControl.ItemText>
               <Trans>No DNS Panel</Trans>
             </SegmentedControl.ItemText>
@@ -433,7 +428,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
                 <CopyButton
                   color="secondary"
                   value="_atproto"
-                  label={_(msg`Copy host`)}
+                  label={l`Copy host`}
                   style={[a.bg_transparent]}
                   hoverStyle={[a.bg_transparent]}
                   hitSlop={HITSLOP_10}>
@@ -454,7 +449,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
                 <CopyButton
                   color="secondary"
                   value={'did=' + currentAccount?.did}
-                  label={_(msg`Copy TXT record value`)}
+                  label={l`Copy TXT record value`}
                   style={[a.bg_transparent]}
                   hoverStyle={[a.bg_transparent]}
                   hitSlop={HITSLOP_10}>
@@ -501,7 +496,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
             </Text>
             <CopyButton
               value={currentAccount?.did ?? ''}
-              label={_(msg`Copy DID`)}
+              label={l`Copy DID`}
               size="large"
               shape="rectangular"
               color="secondary"
@@ -522,7 +517,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
           entering={FadeIn}
           exiting={FadeOut}
           layout={native(LinearTransition)}>
-          <SuccessMessage text={_(msg`Domain verified!`)} />
+          <SuccessMessage text={l`Domain verified!`} />
         </Animated.View>
       )}
       <Animated.View layout={native(LinearTransition)}>
@@ -541,10 +536,10 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         <Button
           label={
             isVerified
-              ? _(msg`Update to ${domain}`)
+              ? l`Update to ${domain}`
               : dnsPanel
-                ? _(msg`Verify DNS Record`)
-                : _(msg`Verify Text File`)
+                ? l`Verify DNS Record`
+                : l`Verify Text File`
           }
           variant="solid"
           size="large"
@@ -573,8 +568,8 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         </Button>
 
         <Button
-          label={_(msg`Use default provider`)}
-          accessibilityHint={_(msg`Returns to previous page`)}
+          label={l`Use default provider`}
+          accessibilityHint={l`Returns to previous page`}
           onPress={goToServiceHandle}
           variant="outline"
           color="secondary"
@@ -600,23 +595,21 @@ class DidMismatchError extends Error {
 }
 
 function ChangeHandleError({error}: {error: unknown}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
-  let message = _(msg`Failed to change handle. Please try again.`)
+  let message = l`Failed to change handle. Please try again.`
 
   if (error instanceof Error) {
     if (error.message.startsWith('Handle already taken')) {
-      message = _(msg`Handle already taken. Please try a different one.`)
+      message = l`Handle already taken. Please try a different one.`
     } else if (error.message === 'Reserved handle') {
-      message = _(msg`This handle is reserved. Please try a different one.`)
+      message = l`This handle is reserved. Please try a different one.`
     } else if (error.message === 'Handle too long') {
-      message = _(msg`Handle too long. Please try a shorter one.`)
+      message = l`Handle too long. Please try a shorter one.`
     } else if (error.message === 'Input/handle must be a valid handle') {
-      message = _(msg`Invalid handle. Please try a different one.`)
+      message = l`Invalid handle. Please try a different one.`
     } else if (error.message === 'Rate Limit Exceeded') {
-      message = _(
-        msg`Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again.`,
-      )
+      message = l`Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again.`
     }
   }
 

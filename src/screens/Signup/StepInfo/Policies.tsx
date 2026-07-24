@@ -1,8 +1,7 @@
 import {type ReactElement} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -16,7 +15,7 @@ export const Policies = ({
   serviceDescription: ComAtprotoServerDescribeServer.OutputSchema
 }) => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   if (!serviceDescription) {
     return <View />
@@ -43,14 +42,14 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Terms of Service`)}
+          label={l`Read the Bluesky Terms of Service`}
           key="tos"
           to={tos}>
           Terms of Service
         </InlineLinkText>{' '}
         and{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Privacy Policy`)}
+          label={l`Read the Bluesky Privacy Policy`}
           key="pp"
           to={pp}>
           Privacy Policy
@@ -63,7 +62,7 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Terms of Service`)}
+          label={l`Read the Bluesky Terms of Service`}
           key="tos"
           to={tos}>
           Terms of Service
@@ -76,7 +75,7 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Privacy Policy`)}
+          label={l`Read the Bluesky Privacy Policy`}
           key="pp"
           to={pp}>
           Privacy Policy

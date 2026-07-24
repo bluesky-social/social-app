@@ -1,7 +1,6 @@
 import {useMemo, useState} from 'react'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {
@@ -43,7 +42,7 @@ type Props = NativeStackScreenProps<
   'ProfileKnownFollowers'
 >
 export const ProfileKnownFollowersScreen = ({route}: Props) => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const initialNumToRender = useInitialNumToRender()
 
   const {name} = route.params
@@ -95,12 +94,12 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
   if (followers.length < 1) {
     return (
       <Layout.Screen>
-        <ViewHeader title={_(msg`Followers you know`)} />
+        <ViewHeader title={l`Followers you know`} />
         <ListMaybePlaceholder
           isLoading={isDidLoading || isFollowersLoading}
           isError={isError}
           emptyType="results"
-          emptyMessage={_(msg`You don't follow any users who follow @${name}.`)}
+          emptyMessage={l`You don't follow any users who follow @${name}.`}
           errorMessage={cleanError(resolveError || error)}
           onRetry={isError ? refetch : undefined}
           topBorder={false}
@@ -112,7 +111,7 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
 
   return (
     <Layout.Screen>
-      <ViewHeader title={_(msg`Followers you know`)} />
+      <ViewHeader title={l`Followers you know`} />
       <List
         data={followers}
         renderItem={renderItem}

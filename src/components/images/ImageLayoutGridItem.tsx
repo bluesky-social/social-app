@@ -3,8 +3,7 @@ import {type AnimatedRef} from 'react-native-reanimated'
 import {Image, type ImageStyle} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {type Dimensions} from '#/lib/media/types'
@@ -47,7 +46,7 @@ export function GalleryItem({
   thumbDimsRef,
 }: Props) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const largeAltBadge = useLargeAltBadgeEnabled()
   const image = images[index]
   const hasAlt = !!image.alt
@@ -88,7 +87,7 @@ export function GalleryItem({
             imageStyle,
           ]}
           accessibilityRole="button"
-          accessibilityLabel={image.alt || _(msg`Image`)}
+          accessibilityLabel={image.alt || l`Image`}
           accessibilityHint="">
           <Image
             source={{uri: image.thumb}}

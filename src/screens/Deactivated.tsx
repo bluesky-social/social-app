@@ -1,8 +1,7 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -29,7 +28,7 @@ import {IS_WEB} from '#/env'
 const COL_WIDTH = 400
 
 export function Deactivated() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const {currentAccount, accounts} = useSession()
@@ -77,13 +76,11 @@ export function Deactivated() {
       switch (e.message) {
         case 'Bad token scope':
           setError(
-            _(
-              msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
-            ),
+            l`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
           )
           break
         default:
-          setError(_(msg`Something went wrong, please try again`))
+          setError(l`Something went wrong, please try again`)
           break
       }
 
@@ -93,7 +90,7 @@ export function Deactivated() {
     } finally {
       setPending(false)
     }
-  }, [_, agent, setPending, setError, queryClient])
+  }, [l, agent, setPending, setError, queryClient])
 
   return (
     <View style={[a.util_screen_outer, a.flex_1]}>
@@ -130,7 +127,7 @@ export function Deactivated() {
 
             <View style={[a.gap_sm]}>
               <Button
-                label={_(msg`Reactivate your account`)}
+                label={l`Reactivate your account`}
                 size="large"
                 variant="solid"
                 color="primary"
@@ -141,7 +138,7 @@ export function Deactivated() {
                 {pending && <ButtonIcon icon={Loader} position="right" />}
               </Button>
               <Button
-                label={_(msg`Cancel reactivation and sign out`)}
+                label={l`Cancel reactivation and sign out`}
                 size="large"
                 variant="solid"
                 color="secondary"
@@ -181,7 +178,7 @@ export function Deactivated() {
               <AccountList
                 onSelectAccount={onSelectAccount}
                 onSelectOther={onPressAddAccount}
-                otherLabel={_(msg`Add account`)}
+                otherLabel={l`Add account`}
                 pendingDid={pendingDid}
               />
             </>
@@ -192,7 +189,7 @@ export function Deactivated() {
                 <Trans>Or, continue with another account.</Trans>
               </Text>
               <Button
-                label={_(msg`Sign in or create an account`)}
+                label={l`Sign in or create an account`}
                 size="large"
                 variant="solid"
                 color="secondary"

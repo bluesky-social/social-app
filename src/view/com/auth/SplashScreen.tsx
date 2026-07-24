@@ -2,8 +2,7 @@ import {useMemo} from 'react'
 import {Image as RNImage, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
@@ -28,7 +27,7 @@ export const SplashScreen = ({
   onPressCreateAccount: () => void
 }) => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const isDarkMode = t.name !== 'light'
 
   const playHaptic = useHaptics()
@@ -60,7 +59,6 @@ export const SplashScreen = ({
         source={{uri: isDarkMode ? darkSplashImageUri : splashImageUri}}
         style={[a.absolute, a.inset_0]}
       />
-
       <Animated.View
         entering={FadeIn.duration(90)}
         exiting={FadeOut.duration(90)}
@@ -86,10 +84,8 @@ export const SplashScreen = ({
               onPressCreateAccount()
               playHaptic('Light')
             }}
-            label={_(msg`Create new account`)}
-            accessibilityHint={_(
-              msg`Opens flow to create a new Bluesky account`,
-            )}
+            label={l`Create new account`}
+            accessibilityHint={l`Opens flow to create a new Bluesky account`}
             size="large"
             color={isDarkMode ? 'secondary_inverted' : 'secondary'}
             style={[
@@ -115,10 +111,8 @@ export const SplashScreen = ({
               onPressSignin()
               playHaptic('Light')
             }}
-            label={_(msg`Sign in`)}
-            accessibilityHint={_(
-              msg`Opens flow to sign in to your existing Bluesky account`,
-            )}
+            label={l`Sign in`}
+            accessibilityHint={l`Opens flow to sign in to your existing Bluesky account`}
             size="large"
             hoverStyle={{opacity: 0.5}}>
             <ButtonText style={{color: 'white'}}>

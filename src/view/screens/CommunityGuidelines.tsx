@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -21,11 +20,11 @@ type Props = NativeStackScreenProps<
 >
 export const CommunityGuidelinesScreen = (_props: Props) => {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Layout.Screen>
-      <ViewHeader title={_(msg`Community Guidelines`)} />
+      <ViewHeader title={l`Community Guidelines`} />
       <ScrollView style={[s.hContentRegion, pal.view]}>
         <View style={[s.p20]}>
           <Text style={pal.text}>

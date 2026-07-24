@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {type AppBskyLabelerDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
@@ -52,14 +51,14 @@ export function Title({value}: {value: string}) {
 }
 
 export function Description({value, handle}: {value?: string; handle: string}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return value ? (
     <Text numberOfLines={2}>
       <RichText value={value} />
     </Text>
   ) : (
     <Text emoji style={[a.leading_snug]}>
-      {_(msg`By ${sanitizeHandle(handle, '@')}`)}
+      {l`By ${sanitizeHandle(handle, '@')}`}
     </Text>
   )
 }
@@ -150,7 +149,7 @@ export function Link({
   children,
   labeler,
 }: LabelingServiceProps & Pick<LinkProps, 'children'>) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <InternalLink
@@ -160,9 +159,7 @@ export function Link({
           name: labeler.creator.did,
         },
       }}
-      label={_(
-        msg`View the labeling service provided by @${labeler.creator.handle}`,
-      )}>
+      label={l`View the labeling service provided by @${labeler.creator.handle}`}>
       {children}
     </InternalLink>
   )

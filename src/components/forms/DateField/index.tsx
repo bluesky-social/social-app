@@ -1,8 +1,7 @@
 import {useCallback, useImperativeHandle, useState} from 'react'
 import {Keyboard, View} from 'react-native'
 import DatePicker from 'react-native-date-picker'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -37,7 +36,7 @@ export function DateField({
   maximumDate,
   minimumDate,
 }: DateFieldProps) {
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogControl()
 
@@ -125,7 +124,7 @@ export function DateField({
               />
             </View>
             <Button
-              label={_(msg`Done`)}
+              label={l`Done`}
               onPress={() => {
                 /*
                  * Commit the currently shown date even if the user never

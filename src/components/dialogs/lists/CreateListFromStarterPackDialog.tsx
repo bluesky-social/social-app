@@ -8,8 +8,7 @@ import {
   type ComAtprotoRepoApplyWrites,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -38,7 +37,7 @@ export function CreateListFromStarterPackDialog({
   control: Dialog.DialogControlProps
   starterPack: AppBskyGraphDefs.StarterPackView
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const agent = useAgent()
   const ax = useAnalytics()
@@ -124,7 +123,7 @@ export function CreateListFromStarterPackDialog({
       })
     } catch (e) {
       logger.error('Failed to add members to list', {safeMessage: e})
-      Toast.show(_(msg`List created, but failed to add some members`), {
+      Toast.show(l`List created, but failed to add some members`, {
         type: 'error',
       })
     }
@@ -145,7 +144,7 @@ export function CreateListFromStarterPackDialog({
         nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <Dialog.ScrollableInner
-          label={_(msg`Create list from starter pack`)}
+          label={l`Create list from starter pack`}
           style={web({maxWidth: 400})}>
           <View style={[a.gap_lg]}>
             <Text style={[a.text_xl, a.font_bold]}>
@@ -177,7 +176,7 @@ export function CreateListFromStarterPackDialog({
                 a.pt_sm,
               ]}>
               <Button
-                label={_(msg`Create list`)}
+                label={l`Create list`}
                 onPress={onPressCreate}
                 size={platform({
                   web: 'small',
@@ -189,7 +188,7 @@ export function CreateListFromStarterPackDialog({
                 </ButtonText>
               </Button>
               <Button
-                label={_(msg`Cancel`)}
+                label={l`Cancel`}
                 onPress={() => control.close()}
                 size={platform({
                   web: 'small',
@@ -205,7 +204,6 @@ export function CreateListFromStarterPackDialog({
           <Dialog.Close />
         </Dialog.ScrollableInner>
       </Dialog.Outer>
-
       <CreateOrEditListDialog
         control={createDialogControl}
         purpose="app.bsky.graph.defs#curatelist"
@@ -216,13 +214,12 @@ export function CreateListFromStarterPackDialog({
           avatar: starterPack.list?.avatar,
         }}
       />
-
       <Dialog.Outer
         control={loadingDialogControl}
         nativeOptions={{preventDismiss: true}}>
         <Dialog.Handle />
         <Dialog.ScrollableInner
-          label={_(msg`Adding members to list...`)}
+          label={l`Adding members to list...`}
           style={web({maxWidth: 400})}>
           <View style={[a.align_center, a.gap_lg, a.py_5xl]}>
             <Loader size="xl" />

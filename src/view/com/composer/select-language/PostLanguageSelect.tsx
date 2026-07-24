@@ -6,8 +6,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
@@ -43,7 +42,7 @@ export function PostLanguageSelect({
    */
   nudgeAt?: number
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
   const languageDialogControl = Dialog.useDialogControl()
@@ -88,7 +87,7 @@ export function PostLanguageSelect({
   return (
     <>
       <Menu.Root>
-        <Menu.Trigger label={_(msg`Select post language`)}>
+        <Menu.Trigger label={l`Select post language`}>
           {({props}) => (
             <LanguageBtn
               currentLanguages={currentLanguages}
@@ -107,7 +106,7 @@ export function PostLanguageSelect({
               return (
                 <Menu.Item
                   key={historyItem}
-                  label={_(msg`Select ${langName}`)}
+                  label={l`Select ${langName}`}
                   onPress={() => {
                     setLangPrefs.setPostLanguage(historyItem)
                     onSelectLanguage?.(historyItem)
@@ -122,7 +121,7 @@ export function PostLanguageSelect({
           </Menu.Group>
           <Menu.Divider />
           <Menu.Item
-            label={_(msg`More languages...`)}
+            label={l`More languages...`}
             onPress={languageDialogControl.open}>
             <Menu.ItemText>
               <Trans>More languages...</Trans>
@@ -131,7 +130,6 @@ export function PostLanguageSelect({
           </Menu.Item>
         </Menu.Outer>
       </Menu.Root>
-
       <LanguageSelectDialog
         titleText={<Trans>Choose post languages</Trans>}
         subtitleText={<Trans>Select up to 3 languages used in this post</Trans>}
@@ -157,7 +155,7 @@ function LanguageBtn({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const langPrefs = useLanguagePrefs()
 
   const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
@@ -191,13 +189,11 @@ function LanguageBtn({
       testID="selectLangBtn"
       size="small"
       hitSlop={LANG_DROPDOWN_HITSLOP}
-      label={_(
-        msg({
-          message: `Post language selection`,
-          comment: `Accessibility label for button that opens dialog to choose post language settings`,
-        }),
-      )}
-      accessibilityHint={_(msg`Opens post language settings`)}
+      label={l({
+        message: `Post language selection`,
+        comment: `Accessibility label for button that opens dialog to choose post language settings`,
+      })}
+      accessibilityHint={l`Opens post language settings`}
       style={[a.mr_xs, a.overflow_hidden]}
       {...props}
       onPress={e => {

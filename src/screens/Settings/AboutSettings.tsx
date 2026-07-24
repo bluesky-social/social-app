@@ -2,8 +2,7 @@ import {Platform} from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
 import * as FileSystem from 'expo-file-system/legacy'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useMutation} from '@tanstack/react-query'
@@ -33,7 +32,7 @@ import {OTAInfo} from './components/OTAInfo'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AboutSettings'>
 export function AboutSettingsScreen({}: Props) {
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const [devModeEnabled, setDevModeEnabled] = useDevMode()
   const [demoModeEnabled, setDemoModeEnabled] = useDemoMode()
   const sendErrorReportControl = Prompt.usePromptControl()
@@ -56,22 +55,20 @@ export function AboutSettingsScreen({}: Props) {
       onSuccess: sizeDiffBytes => {
         if (IS_ANDROID) {
           Toast.show(
-            _(
-              msg({
-                message: `Image cache cleared, freed ${i18n.number(
-                  Math.abs(sizeDiffBytes / 1024 / 1024),
-                  {
-                    notation: 'compact',
-                    style: 'unit',
-                    unit: 'megabyte',
-                  },
-                )}`,
-                comment: `Android-only toast message which includes amount of space freed using localized number formatting`,
-              }),
-            ),
+            l({
+              message: `Image cache cleared, freed ${i18n.number(
+                Math.abs(sizeDiffBytes / 1024 / 1024),
+                {
+                  notation: 'compact',
+                  style: 'unit',
+                  unit: 'megabyte',
+                },
+              )}`,
+              comment: `Android-only toast message which includes amount of space freed using localized number formatting`,
+            }),
           )
         } else {
-          Toast.show(_(msg`Image cache cleared`))
+          Toast.show(l`Image cache cleared`)
         }
       },
     })
@@ -91,7 +88,7 @@ export function AboutSettingsScreen({}: Props) {
         <SettingsList.Container>
           <SettingsList.LinkItem
             to="https://bsky.social/about/support/tos"
-            label={_(msg`Terms of Service`)}>
+            label={l`Terms of Service`}>
             <SettingsList.ItemIcon icon={NewspaperIcon} />
             <SettingsList.ItemText>
               <Trans>Terms of Service</Trans>
@@ -99,22 +96,20 @@ export function AboutSettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             to="https://bsky.social/about/support/privacy-policy"
-            label={_(msg`Privacy Policy`)}>
+            label={l`Privacy Policy`}>
             <SettingsList.ItemIcon icon={NewspaperIcon} />
             <SettingsList.ItemText>
               <Trans>Privacy Policy</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            to={STATUS_PAGE_URL}
-            label={_(msg`Status Page`)}>
+          <SettingsList.LinkItem to={STATUS_PAGE_URL} label={l`Status Page`}>
             <SettingsList.ItemIcon icon={GlobeIcon} />
             <SettingsList.ItemText>
               <Trans>Status Page</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.Divider />
-          <SettingsList.LinkItem to="/sys/log" label={_(msg`System log`)}>
+          <SettingsList.LinkItem to="/sys/log" label={l`System log`}>
             <SettingsList.ItemIcon icon={CodeLinesIcon} />
             <SettingsList.ItemText>
               <Trans>System log</Trans>
@@ -122,7 +117,7 @@ export function AboutSettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.PressableItem
             onPress={() => sendErrorReportControl.open()}
-            label={_(msg`Send error report`)}>
+            label={l`Send error report`}>
             <SettingsList.ItemIcon icon={BubblesIcon} />
             <SettingsList.ItemText>
               <Trans>Send error report</Trans>
@@ -131,7 +126,7 @@ export function AboutSettingsScreen({}: Props) {
           {IS_NATIVE && (
             <SettingsList.PressableItem
               onPress={() => onClearImageCache()}
-              label={_(msg`Clear image cache`)}
+              label={l`Clear image cache`}
               disabled={isClearingImageCache}>
               <SettingsList.ItemIcon icon={BroomSparkleIcon} />
               <SettingsList.ItemText>
@@ -141,32 +136,28 @@ export function AboutSettingsScreen({}: Props) {
             </SettingsList.PressableItem>
           )}
           <SettingsList.PressableItem
-            label={_(msg`Version ${env.APP_VERSION}`)}
-            accessibilityHint={_(msg`Copies build version to clipboard`)}
+            label={l`Version ${env.APP_VERSION}`}
+            accessibilityHint={l`Copies build version to clipboard`}
             onLongPress={() => {
               const newDevModeEnabled = !devModeEnabled
               setDevModeEnabled(newDevModeEnabled)
               Toast.show(
                 newDevModeEnabled
-                  ? _(
-                      msg({
-                        message: 'Developer mode enabled',
-                        context: 'toast',
-                      }),
-                    )
-                  : _(
-                      msg({
-                        message: 'Developer mode disabled',
-                        context: 'toast',
-                      }),
-                    ),
+                  ? l({
+                      message: 'Developer mode enabled',
+                      context: 'toast',
+                    })
+                  : l({
+                      message: 'Developer mode disabled',
+                      context: 'toast',
+                    }),
               )
             }}
             onPress={() => {
               setStringAsync(
                 `Build version: ${env.APP_VERSION}; Bundle info: ${env.APP_METADATA}; Bundle date: ${env.BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}; Device ID: ${getDeviceId() ?? 'N/A'}`,
               )
-              Toast.show(_(msg`Copied build version to clipboard`))
+              Toast.show(l`Copied build version to clipboard`)
             }}>
             <SettingsList.ItemIcon icon={WrenchIcon} />
             <SettingsList.ItemText>

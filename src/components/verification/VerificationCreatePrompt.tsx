@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
@@ -26,7 +25,7 @@ export function VerificationCreatePrompt({
   control: DialogControlProps
   profile: bsky.profile.AnyProfileView
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const moderationOpts = useModerationOpts()
   const {mutateAsync: create, isPending} = useVerificationCreateMutation()
@@ -34,28 +33,27 @@ export function VerificationCreatePrompt({
   const onConfirm = useCallback(async () => {
     try {
       await create({profile})
-      Toast.show(_(msg`Successfully verified`))
+      Toast.show(l`Successfully verified`)
       control.close()
     } catch (e) {
-      setError(_(msg`Verification failed, please try again.`))
+      setError(l`Verification failed, please try again.`)
       logger.error('Failed to create a verification', {
         safeMessage: e,
       })
     }
-  }, [_, profile, create, control])
+  }, [l, profile, create, control])
 
   return (
     <Prompt.Outer control={control}>
       <View style={[a.flex_row, a.align_center, a.gap_sm, a.pb_sm]}>
         <VerifiedCheck width={18} />
         <Prompt.TitleText style={[a.pb_0]}>
-          {_(msg`Verify this account?`)}
+          {l`Verify this account?`}
         </Prompt.TitleText>
       </View>
       <Prompt.DescriptionText>
-        {_(msg`This action can be undone at any time.`)}
+        {l`This action can be undone at any time.`}
       </Prompt.DescriptionText>
-
       {moderationOpts ? (
         <ProfileCard.Header>
           <ProfileCard.Avatar
@@ -68,13 +66,11 @@ export function VerificationCreatePrompt({
           />
         </ProfileCard.Header>
       ) : null}
-
       {error && (
         <View style={[a.pt_lg]}>
           <Admonition type="error">{error}</Admonition>
         </View>
       )}
-
       <View style={[a.pt_xl]}>
         {profile.displayName ? (
           <Prompt.Actions>
@@ -82,9 +78,9 @@ export function VerificationCreatePrompt({
               variant="solid"
               color="primary"
               size={gtMobile ? 'small' : 'large'}
-              label={_(msg`Verify account`)}
+              label={l`Verify account`}
               onPress={onConfirm}>
-              <ButtonText>{_(msg`Verify account`)}</ButtonText>
+              <ButtonText>{l`Verify account`}</ButtonText>
               {isPending && <ButtonIcon icon={Loader} />}
             </Button>
             <Prompt.Cancel />
@@ -98,7 +94,6 @@ export function VerificationCreatePrompt({
           </Admonition>
         )}
       </View>
-
       <Dialog.Close />
     </Prompt.Outer>
   )

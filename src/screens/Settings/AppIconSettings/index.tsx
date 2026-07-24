@@ -1,8 +1,7 @@
 import {useState} from 'react'
 import {Alert, View} from 'react-native'
 import * as DynamicAppIcon from '@bsky.app/expo-dynamic-app-icon'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -20,7 +19,7 @@ import {IS_ANDROID, IS_INTERNAL} from '#/env'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppIconSettings'>
 export function AppIconSettingsScreen({}: Props) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const sets = useAppIconSets()
   const [currentAppIcon, setCurrentAppIcon] = useState(() =>
     getAppIconName(DynamicAppIcon.getAppIcon()),
@@ -32,18 +31,15 @@ export function AppIconSettingsScreen({}: Props) {
         sets.defaults.find(i => i.id === icon) ??
         sets.core.find(i => i.id === icon)
       Alert.alert(
-        next
-          ? _(msg`Change app icon to "${next.name}"`)
-          : _(msg`Change app icon`),
-        // unfortunately necessary -sfn
-        _(msg`The app will be restarted`),
+        next ? l`Change app icon to "${next.name}"` : l`Change app icon`,
+        l`The app will be restarted`,
         [
           {
-            text: _(msg`Cancel`),
+            text: l`Cancel`,
             style: 'cancel',
           },
           {
-            text: _(msg`OK`),
+            text: l`OK`,
             onPress: () => {
               setCurrentAppIcon(setAppIcon(icon))
             },
@@ -67,10 +63,9 @@ export function AppIconSettingsScreen({}: Props) {
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-
       <Layout.Content contentContainerStyle={[a.p_lg]}>
         <Group
-          label={_(msg`Default icons`)}
+          label={l`Default icons`}
           value={currentAppIcon}
           onChange={onSetAppIcon}>
           {sets.defaults.map((icon, i) => (
@@ -97,7 +92,7 @@ export function AppIconSettingsScreen({}: Props) {
               <Trans>Bluesky+</Trans>
             </Text>
             <Group
-              label={_(msg`Bluesky+ icons`)}
+              label={l`Bluesky+ icons`}
               value={currentAppIcon}
               onChange={onSetAppIcon}>
               {sets.core.map((icon, i) => (
@@ -170,10 +165,10 @@ function Row({
   isEnd: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
-    <Toggle.Item label={_(msg`Set app icon to ${icon.name}`)} name={icon.id}>
+    <Toggle.Item label={l`Set app icon to ${icon.name}`} name={icon.id}>
       {({hovered, pressed}) => (
         <View
           style={[
@@ -212,24 +207,24 @@ function RowText({children}: {children: React.ReactNode}) {
 }
 
 function AppIcon({icon, size = 50}: {icon: AppIconSet; size: number}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
     <PressableScale
       accessibilityLabel={icon.name}
-      accessibilityHint={_(msg`Changes app icon`)}
+      accessibilityHint={l`Changes app icon`}
       targetScale={0.95}
       onPress={() => {
         if (IS_ANDROID) {
           Alert.alert(
-            _(msg`Change app icon to "${icon.name}"`),
-            _(msg`The app will be restarted`),
+            l`Change app icon to "${icon.name}"`,
+            l`The app will be restarted`,
             [
               {
-                text: _(msg`Cancel`),
+                text: l`Cancel`,
                 style: 'cancel',
               },
               {
-                text: _(msg`OK`),
+                text: l`OK`,
                 onPress: () => {
                   DynamicAppIcon.setAppIcon(icon.id)
                 },

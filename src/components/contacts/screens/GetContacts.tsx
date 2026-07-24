@@ -8,8 +8,8 @@ import {
   AppBskyContactImportContacts,
   type Un$Typed,
 } from '@atproto/api'
-import {msg, t} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {t} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
@@ -52,7 +52,7 @@ export function GetContacts({
   onCancel: () => void
   context: 'Onboarding' | 'Standalone'
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const agent = useAgent()
   const insets = useSafeAreaInsets()
@@ -143,32 +143,26 @@ export function GetContacts({
       })
       if (isNetworkError(err)) {
         Toast.show(
-          _(
-            msg`There was a problem with your internet connection, please try again`,
-          ),
+          l`There was a problem with your internet connection, please try again`,
           {type: 'error'},
         )
       } else if (
         err instanceof AppBskyContactImportContacts.TooManyContactsError
       ) {
         Toast.show(
-          _(
-            msg`Too many contacts - you've exceeded the number of contacts you can import to find your friends`,
-          ),
+          l`Too many contacts - you've exceeded the number of contacts you can import to find your friends`,
           {type: 'error'},
         )
       } else if (
         err instanceof AppBskyContactImportContacts.InvalidTokenError
       ) {
         Toast.show(
-          _(
-            msg`Could not upload contacts. You need to re-verify your phone number to proceed`,
-          ),
+          l`Could not upload contacts. You need to re-verify your phone number to proceed`,
           {type: 'error'},
         )
       } else {
         logger.error('Error uploading contacts', {safeMessage: err})
-        Toast.show(_(msg`Could not upload contacts. ${cleanError(err)}`), {
+        Toast.show(l`Could not upload contacts. ${cleanError(err)}`, {
           type: 'error',
         })
       }
@@ -270,7 +264,7 @@ export function GetContacts({
           </Trans>
         </Text>
         <Button
-          label={_(msg`Find my friends`)}
+          label={l`Find my friends`}
           size="large"
           color="primary"
           onPress={() => getContacts()}
@@ -289,7 +283,7 @@ export function GetContacts({
           )}
         </Button>
         <Button
-          label={_(msg`Cancel`)}
+          label={l`Cancel`}
           size="large"
           color="secondary"
           onPress={onCancel}>

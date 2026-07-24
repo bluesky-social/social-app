@@ -4,8 +4,7 @@ import type Animated from 'react-native-reanimated'
 import {useAnimatedRef, useScrollOffset} from 'react-native-reanimated'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -63,7 +62,7 @@ function SavedFeedsInner({
   preferences: UsePreferencesQueryResponse
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
@@ -89,14 +88,14 @@ function SavedFeedsInner({
   const onSaveChanges = async () => {
     try {
       await overwriteSavedFeeds(currentFeeds)
-      Toast.show(_(msg({message: 'Feeds updated!', context: 'toast'})))
+      Toast.show(l({message: 'Feeds updated!', context: 'toast'}))
       if (navigation.canGoBack()) {
         navigation.goBack()
       } else {
         navigation.navigate('Feeds')
       }
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), {
+      Toast.show(l`There was an issue contacting the server`, {
         type: 'error',
       })
       logger.error('Failed to toggle pinned feed', {message: e})
@@ -117,7 +116,7 @@ function SavedFeedsInner({
           size="small"
           color={hasUnsavedChanges ? 'primary' : 'secondary'}
           onPress={onSaveChanges}
-          label={_(msg`Save changes`)}
+          label={l`Save changes`}
           disabled={isOverwritePending || !hasUnsavedChanges}>
           <ButtonIcon icon={isOverwritePending ? Loader : SaveIcon} />
           <ButtonText>
@@ -125,7 +124,6 @@ function SavedFeedsInner({
           </ButtonText>
         </Button>
       </Layout.Header.Outer>
-
       <Layout.Content ref={scrollRef} scrollEnabled={!isDragging}>
         {noSavedFeedsOfAnyType && (
           <View style={[t.atoms.border_contrast_low, a.border_b]}>
@@ -229,7 +227,7 @@ function SavedFeedsInner({
               expertise.{' '}
               <InlineLinkText
                 to="https://github.com/bluesky-social/feed-generator"
-                label={_(msg`See this guide`)}
+                label={l`See this guide`}
                 disableMismatchWarning
                 style={[a.leading_snug]}>
                 See this guide
@@ -249,7 +247,7 @@ function SavedFeedsA11y({
   preferences: UsePreferencesQueryResponse
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
@@ -268,14 +266,14 @@ function SavedFeedsA11y({
   const onSaveChanges = async () => {
     try {
       await overwriteSavedFeeds(currentFeeds)
-      Toast.show(_(msg({message: 'Feeds updated!', context: 'toast'})))
+      Toast.show(l({message: 'Feeds updated!', context: 'toast'}))
       if (navigation.canGoBack()) {
         navigation.goBack()
       } else {
         navigation.navigate('Feeds')
       }
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), {
+      Toast.show(l`There was an issue contacting the server`, {
         type: 'error',
       })
       logger.error('Failed to toggle pinned feed', {message: e})
@@ -308,7 +306,7 @@ function SavedFeedsA11y({
           size="small"
           color={hasUnsavedChanges ? 'primary' : 'secondary'}
           onPress={onSaveChanges}
-          label={_(msg`Save changes`)}
+          label={l`Save changes`}
           disabled={isOverwritePending || !hasUnsavedChanges}>
           <ButtonIcon icon={isOverwritePending ? Loader : SaveIcon} />
           <ButtonText>
@@ -316,7 +314,6 @@ function SavedFeedsA11y({
           </ButtonText>
         </Button>
       </Layout.Header.Outer>
-
       <Layout.Content>
         {noSavedFeedsOfAnyType && (
           <View style={[t.atoms.border_contrast_low, a.border_b]}>
@@ -400,7 +397,7 @@ function SavedFeedsA11y({
               expertise.{' '}
               <InlineLinkText
                 to="https://github.com/bluesky-social/feed-generator"
-                label={_(msg`See this guide`)}
+                label={l`See this guide`}
                 disableMismatchWarning
                 style={[a.leading_snug]}>
                 See this guide
@@ -435,7 +432,7 @@ function PinnedFeedItem({
   onMoveUp?: () => void
   onMoveDown?: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const playHaptic = useHaptics()
   const feedUri = feed.value
@@ -464,7 +461,7 @@ function PinnedFeedItem({
       <View style={[a.pr_sm, a.flex_row, a.align_center, a.gap_sm]}>
         <Button
           testID={`feed-${feed.type}-togglePin`}
-          label={_(msg`Unpin feed`)}
+          label={l`Unpin feed`}
           onPress={onTogglePinned}
           size="small"
           color="primary_subtle"
@@ -475,7 +472,7 @@ function PinnedFeedItem({
           <>
             <Button
               testID={`feed-${feed.type}-moveUp`}
-              label={_(msg`Move feed up`)}
+              label={l`Move feed up`}
               onPress={onMoveUp}
               disabled={index === 0}
               size="small"
@@ -485,7 +482,7 @@ function PinnedFeedItem({
             </Button>
             <Button
               testID={`feed-${feed.type}-moveDown`}
-              label={_(msg`Move feed down`)}
+              label={l`Move feed down`}
               onPress={onMoveDown}
               disabled={index === total! - 1}
               size="small"
@@ -513,7 +510,7 @@ function UnpinnedFeedItem({
     React.SetStateAction<AppBskyActorDefs.SavedFeed[]>
   >
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const playHaptic = useHaptics()
   const feedUri = feed.value
@@ -546,7 +543,7 @@ function UnpinnedFeedItem({
       <View style={[a.pr_lg, a.flex_row, a.align_center, a.gap_sm]}>
         <Button
           testID={`feed-${feedUri}-toggleSave`}
-          label={_(msg`Remove from my feeds`)}
+          label={l`Remove from my feeds`}
           onPress={onPressRemove}
           size="small"
           color="secondary"
@@ -556,7 +553,7 @@ function UnpinnedFeedItem({
         </Button>
         <Button
           testID={`feed-${feed.type}-togglePin`}
-          label={_(msg`Pin feed`)}
+          label={l`Pin feed`}
           onPress={onTogglePinned}
           size="small"
           color="secondary"

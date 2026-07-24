@@ -5,8 +5,7 @@ import {
   type TextInputSelectionChangeEvent,
   View,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {mergeRefs} from '#/lib/merge-refs'
 import {atoms as a, ios, platform, useTheme} from '#/alf'
@@ -30,7 +29,7 @@ export function OTPInput({
   onComplete?: (code: string) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const innerRef = useRef<TextInput>(null)
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const [selection, setSelection] = useState({start: 0, end: 0})
@@ -52,7 +51,7 @@ export function OTPInput({
 
   return (
     <Pressable
-      accessibilityLabel={_(msg`Focus code input`)}
+      accessibilityLabel={l`Focus code input`}
       accessibilityRole="button"
       accessibilityHint=""
       style={[a.w_full, a.relative]}

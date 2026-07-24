@@ -1,7 +1,7 @@
 import {memo, useCallback} from 'react'
 import {View} from 'react-native'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
@@ -37,7 +37,7 @@ let RepostButton = ({
   embeddingDisabled,
 }: Props): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const requireAuth = useRequireAuth()
   const dialogControl = Dialog.useDialogControl()
   const formatPostStatCount = useFormatPostStatCount()
@@ -64,26 +64,22 @@ let RepostButton = ({
         onLongPress={onLongPress}
         label={
           isReposted
-            ? _(
-                msg({
-                  message: `Undo repost (${plural(repostCount || 0, {
-                    one: '# repost',
-                    other: '# reposts',
-                  })})`,
-                  comment:
-                    'Accessibility label for the repost button when the post has been reposted, verb followed by number of reposts and noun',
-                }),
-              )
-            : _(
-                msg({
-                  message: `Repost (${plural(repostCount || 0, {
-                    one: '# repost',
-                    other: '# reposts',
-                  })})`,
-                  comment:
-                    'Accessibility label for the repost button when the post has not been reposted, verb form followed by number of reposts and noun form',
-                }),
-              )
+            ? l({
+                message: `Undo repost (${plural(repostCount || 0, {
+                  one: '# repost',
+                  other: '# reposts',
+                })})`,
+                comment:
+                  'Accessibility label for the repost button when the post has been reposted, verb followed by number of reposts and noun',
+              })
+            : l({
+                message: `Repost (${plural(repostCount || 0, {
+                  one: '# repost',
+                  other: '# reposts',
+                })})`,
+                comment:
+                  'Accessibility label for the repost button when the post has not been reposted, verb form followed by number of reposts and noun form',
+              })
         }>
         <PostControlButtonIcon icon={RepostIcon} />
         {typeof repostCount !== 'undefined' && repostCount > 0 && (
@@ -121,7 +117,7 @@ let RepostButtonDialogInner = ({
   embeddingDisabled: boolean
 }): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const playHaptic = useHaptics()
   const control = Dialog.useDialogContext()
 
@@ -143,15 +139,15 @@ let RepostButtonDialogInner = ({
   const onPressClose = useCallback(() => control.close(), [control])
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Repost or quote post`)}>
+    <Dialog.ScrollableInner label={l`Repost or quote post`}>
       <View style={a.gap_xl}>
         <View style={a.gap_xs}>
           <Button
             style={[a.justify_start, a.px_md, a.gap_sm]}
             label={
               isReposted
-                ? _(msg`Remove repost`)
-                : _(msg({message: `Repost`, context: 'action'}))
+                ? l`Remove repost`
+                : l({message: `Repost`, context: 'action'})
             }
             onPress={onPressRepost}
             size="large"
@@ -170,11 +166,7 @@ let RepostButtonDialogInner = ({
             disabled={embeddingDisabled}
             testID="quoteBtn"
             style={[a.justify_start, a.px_md, a.gap_sm]}
-            label={
-              embeddingDisabled
-                ? _(msg`Quote posts disabled`)
-                : _(msg`Quote post`)
-            }
+            label={embeddingDisabled ? l`Quote posts disabled` : l`Quote post`}
             onPress={onPressQuote}
             size="large"
             variant="ghost"
@@ -202,7 +194,7 @@ let RepostButtonDialogInner = ({
           </Button>
         </View>
         <Button
-          label={_(msg`Cancel quote post`)}
+          label={l`Cancel quote post`}
           onPress={onPressClose}
           size="large"
           color="secondary">

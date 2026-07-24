@@ -1,7 +1,6 @@
 import {memo} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {type ThreadItem} from '#/state/queries/usePostThread'
@@ -21,11 +20,11 @@ export const ThreadItemReadMoreUp = memo(function ThreadItemReadMoreUp({
   item: Extract<ThreadItem, {type: 'readMoreUp'}>
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Link
-      label={_(msg`Continue thread`)}
+      label={l`Continue thread`}
       to={item.href}
       style={[
         a.gap_xs,

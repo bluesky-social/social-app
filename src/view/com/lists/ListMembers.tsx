@@ -7,8 +7,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -70,7 +69,7 @@ export function ListMembers({
   desktopFixedHeightOffset?: number
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [isRefreshing, setIsRefreshing] = useState(false)
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
@@ -176,9 +175,7 @@ export function ListMembers({
         case 'load_more_error': {
           return (
             <LoadMoreRetryBtn
-              label={_(
-                msg`There was an issue fetching the list. Tap here to try again.`,
-              )}
+              label={l`There was an issue fetching the list. Tap here to try again.`}
               onPress={onPressRetryLoadMore}
             />
           )
@@ -212,7 +209,7 @@ export function ListMembers({
                     {isOwner && (
                       <Button
                         testID={`user-${profile.handle}-editBtn`}
-                        label={_(msg({message: 'Edit', context: 'action'}))}
+                        label={l({message: 'Edit', context: 'action'})}
                         onPress={e => onPressEditMembership(e, profile)}
                         size="small"
                         color="secondary">
@@ -244,7 +241,7 @@ export function ListMembers({
       moderationOpts,
       isOwner,
       onPressEditMembership,
-      _,
+      l,
       t,
     ],
   )

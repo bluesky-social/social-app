@@ -1,8 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
@@ -19,7 +18,7 @@ import {IS_NATIVE} from '#/env'
 
 export function InitialVerificationAnnouncement() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const nuxDialogs = useNuxDialogContext()
@@ -34,9 +33,8 @@ export function InitialVerificationAnnouncement() {
   return (
     <Dialog.Outer control={control} onClose={onClose}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner
-        label={_(msg`Announcing verification on Bluesky`)}
+        label={l`Announcing verification on Bluesky`}
         style={[
           gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
         ]}>
@@ -82,9 +80,7 @@ export function InitialVerificationAnnouncement() {
                   aspectRatio: 353 / 160,
                 },
               ]}
-              alt={_(
-                msg`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
-              )}
+              alt={l`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`}
               useAppleWebpCodec
             />
           </View>
@@ -117,9 +113,7 @@ export function InitialVerificationAnnouncement() {
                   aspectRatio: 353 / 196,
                 },
               ]}
-              alt={_(
-                msg`An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name.`,
-              )}
+              alt={l`An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name.`}
               useAppleWebpCodec
             />
           </View>
@@ -159,7 +153,7 @@ export function InitialVerificationAnnouncement() {
             <Link
               overridePresentation
               to={urls.website.blog.initialVerificationAnnouncement}
-              label={_(msg`Read blog post`)}
+              label={l`Read blog post`}
               size="small"
               variant="solid"
               color="primary"
@@ -175,7 +169,7 @@ export function InitialVerificationAnnouncement() {
             </Link>
             {IS_NATIVE && (
               <Button
-                label={_(msg`Close`)}
+                label={l`Close`}
                 size="small"
                 variant="solid"
                 color="secondary"

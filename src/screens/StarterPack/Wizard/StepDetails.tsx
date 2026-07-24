@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useProfileQuery} from '#/state/queries/profile'
@@ -13,7 +12,7 @@ import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
 
 export function StepDetails() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const [state, dispatch] = useWizardState()
 
@@ -45,20 +44,16 @@ export function StepDetails() {
           </TextField.LabelText>
           <TextField.Root>
             <TextField.Input
-              label={
-                name ? _(msg`${name}'s starter pack`) : _(msg`My starter pack`)
-              }
+              label={name ? l`${name}'s starter pack` : l`My starter pack`}
               value={state.name}
               onChangeText={text => dispatch({type: 'SetName', name: text})}
             />
             <TextField.SuffixText
-              label={_(
-                msg({
-                  comment:
-                    'Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field',
-                  message: `${state.name?.length} out of 50`,
-                }),
-              )}>
+              label={l({
+                comment:
+                  'Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field',
+                message: `${state.name?.length} out of 50`,
+              })}>
               <Text style={[t.atoms.text_contrast_medium]}>
                 {state.name?.length ?? 0}/50
               </Text>
@@ -73,8 +68,8 @@ export function StepDetails() {
             <TextField.Input
               label={
                 name
-                  ? _(msg`${name}'s favorite feeds and people - join me!`)
-                  : _(msg`My favorite feeds and people - join me!`)
+                  ? l`${name}'s favorite feeds and people - join me!`
+                  : l`My favorite feeds and people - join me!`
               }
               value={state.description}
               onChangeText={text =>

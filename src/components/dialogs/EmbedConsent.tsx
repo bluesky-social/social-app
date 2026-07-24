@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {
@@ -25,7 +24,7 @@ export function EmbedConsentDialog({
   source: EmbedPlayerSource
   onAccept: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const setExternalEmbedPref = useSetExternalEmbedPref()
 
   const onShowAllPress = useCallback(() => {
@@ -51,7 +50,7 @@ export function EmbedConsentDialog({
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
-        label={_(msg`External Media`)}
+        label={l`External Media`}
         style={web({maxWidth: 400})}>
         <View style={a.gap_sm}>
           <Text style={[a.text_2xl, a.font_bold]}>
@@ -77,7 +76,7 @@ export function EmbedConsentDialog({
         </View>
         <View style={a.gap_md}>
           <Button
-            label={_(msg`Enable external media`)}
+            label={l`Enable external media`}
             onPress={onShowAllPress}
             onAccessibilityEscape={control.close}
             color="primary"
@@ -87,7 +86,7 @@ export function EmbedConsentDialog({
             </ButtonText>
           </Button>
           <Button
-            label={_(msg`Enable this source only`)}
+            label={l`Enable this source only`}
             onPress={onShowPress}
             onAccessibilityEscape={control.close}
             color="secondary"
@@ -97,7 +96,7 @@ export function EmbedConsentDialog({
             </ButtonText>
           </Button>
           <Button
-            label={_(msg`No thanks`)}
+            label={l`No thanks`}
             onAccessibilityEscape={control.close}
             onPress={onHidePress}
             color="secondary"

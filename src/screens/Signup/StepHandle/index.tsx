@@ -7,8 +7,7 @@ import Animated, {
   LinearTransition,
 } from 'react-native-reanimated'
 import {useSift} from '@bsky.app/sift'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {
@@ -34,7 +33,7 @@ import {BackNextButtons} from '../BackNextButtons'
 import {HandleSuggestions} from './HandleSuggestions'
 
 export function StepHandle() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const t = useTheme()
   const {state, dispatch} = useSignupContext()
@@ -87,7 +86,7 @@ export function StepHandle() {
         ax.metric('signup:handleTaken', {typeahead: false})
         dispatch({
           type: 'setError',
-          value: _(msg`That username is already taken`),
+          value: l`That username is already taken`,
           field: 'handle',
         })
         return

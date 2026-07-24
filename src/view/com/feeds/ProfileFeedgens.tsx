@@ -12,8 +12,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -64,7 +63,7 @@ export function ProfileFeedgens({
   testID,
   setScrollViewTag,
 }: ProfileFeedgensProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const [isPTRing, setIsPTRing] = useState(false)
   const {height} = useWindowDimensions()
@@ -157,15 +156,15 @@ export function ProfileFeedgens({
             icon={HashtagWideIcon}
             message={
               isSelf
-                ? _(msg`You haven't made any custom feeds yet.`)
-                : _(msg`No custom feeds yet`)
+                ? l`You haven't made any custom feeds yet.`
+                : l`No custom feeds yet`
             }
             textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
             button={
               isSelf
                 ? {
-                    label: _(msg`Browse custom feeds`),
-                    text: _(msg`Browse custom feeds`),
+                    label: l`Browse custom feeds`,
+                    text: l`Browse custom feeds`,
                     onPress: () => navigation.navigate('Feeds' as never),
                     size: 'small',
                     color: 'secondary',
@@ -181,9 +180,7 @@ export function ProfileFeedgens({
       } else if (item === LOAD_MORE_ERROR_ITEM) {
         return (
           <LoadMoreRetryBtn
-            label={_(
-              msg`There was an issue fetching your lists. Tap here to try again.`,
-            )}
+            label={l`There was an issue fetching your lists. Tap here to try again.`}
             onPress={onPressRetryLoadMore}
           />
         )
@@ -206,7 +203,7 @@ export function ProfileFeedgens({
       return null
     },
     [
-      _,
+      l,
       t,
       error,
       refetch,

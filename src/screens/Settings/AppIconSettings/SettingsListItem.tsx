@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {AppIconImage} from '#/screens/Settings/AppIconSettings/AppIconImage'
@@ -10,13 +9,13 @@ import {atoms as a} from '#/alf'
 import {Shapes_Stroke2_Corner0_Rounded as Shapes} from '#/components/icons/Shapes'
 
 export function SettingsListItem() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const icon = useCurrentAppIcon()
 
   return (
     <SettingsList.LinkItem
       to="/settings/app-icon"
-      label={_(msg`App Icon`)}
+      label={l`App Icon`}
       contentContainerStyle={[a.align_start]}>
       <SettingsList.ItemIcon icon={Shapes} />
       <View style={[a.flex_1]}>
