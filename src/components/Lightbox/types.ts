@@ -31,6 +31,7 @@ export type ImageSource = {
   thumbRef?: AnimatedRef | null
   thumbBorderRadius?: number
   alt?: string
+  baseSaveName?: string
   type: 'image' | 'circle-avi' | 'rect-avi'
 }
 
