@@ -1,4 +1,5 @@
 import {type AppBskyLabelerDefs} from '@atproto/api'
+import {chunkArray} from '@atproto/common-web'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 
@@ -119,10 +120,14 @@ export function useLabelerSubscriptionMutation() {
       ).map(l => l.did)
       const invalidLabelers: string[] = []
       if (labelerDids.length) {
-        const profiles = await agent.getProfiles({actors: labelerDids})
-        if (profiles.data) {
+        try {
+          const chunks = chunkArray(labelerDids, 25)
+          const results = await Promise.all(
+            chunks.map(actors => agent.getProfiles({actors})),
+          )
+          const allProfiles = results.flatMap(res => res.data?.profiles ?? [])
           for (const did of labelerDids) {
-            const exists = profiles.data.profiles.find(p => p.did === did)
+            const exists = allProfiles.find(p => p.did === did)
             if (exists) {
               // profile came back but it's not a valid labeler
               if (exists.associated && !exists.associated.labeler) {
@@ -133,6 +138,8 @@ export function useLabelerSubscriptionMutation() {
               invalidLabelers.push(did)
             }
           }
+        } catch (e) {
+          invalidLabelers.length = 0
         }
       }
       if (invalidLabelers.length) {
