@@ -649,6 +649,7 @@ function AccountRow({
                 {...props}
                 style={[
                   a.absolute,
+                  a.z_10,
                   {top: 10, right: tokens.space.lg},
                   a.p_xs,
                   a.rounded_full,
