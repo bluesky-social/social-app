@@ -78,7 +78,7 @@ export function FilterBlock({
                 })}
                 onPress={() => onChange({mode: 'include'})}>
                 <Menu.ItemText>
-                  <Trans>Include</Trans>
+                  <Trans>Post type</Trans>
                 </Menu.ItemText>
                 <Menu.ItemRadio selected={filter.mode === 'include'} />
               </Menu.Item>
