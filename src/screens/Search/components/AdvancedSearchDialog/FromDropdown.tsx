@@ -19,12 +19,12 @@ export function FromDropdown({
   const {t: l} = useLingui()
 
   const options: {value: FromFilter; label: string}[] = [
-    {value: 'anyone', label: l`No author filtering`},
+    {value: 'anyone', label: l`No author filter`},
     {value: 'following', label: l`People I follow`},
     {value: 'me', label: l`Me`},
   ]
   const currentLabel =
-    options.find(o => o.value === value)?.label ?? l`No author filtering`
+    options.find(o => o.value === value)?.label ?? l`No author filter`
 
   return (
     <Menu.Root>

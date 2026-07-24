@@ -19,12 +19,12 @@ export function MediaDropdown({
   const {t: l} = useLingui()
 
   const options: {value: MediaFilter; label: string}[] = [
-    {value: 'all', label: l`No media filtering`},
+    {value: 'all', label: l`No media filter`},
     {value: 'media', label: l`Only posts with media`},
     {value: 'video', label: l`Only posts with videos`},
   ]
   const currentLabel =
-    options.find(o => o.value === value)?.label ?? l`No media filtering`
+    options.find(o => o.value === value)?.label ?? l`No media filter`
 
   return (
     <Menu.Root>

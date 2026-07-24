@@ -19,12 +19,12 @@ export function RepliesDropdown({
   const {t: l} = useLingui()
 
   const options: {value: RepliesFilter; label: string}[] = [
-    {value: 'all', label: l`No post filtering`},
+    {value: 'all', label: l`No post filter`},
     {value: 'none', label: l`Only posts`},
     {value: 'only', label: l`Only replies`},
   ]
   const currentLabel =
-    options.find(o => o.value === value)?.label ?? l`No post filtering`
+    options.find(o => o.value === value)?.label ?? l`No post filter`
 
   return (
     <Menu.Root>
