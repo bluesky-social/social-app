@@ -433,7 +433,7 @@ func TestExtractPostMedia_GallerySkipsUnknownItems(t *testing.T) {
 		},
 	}
 	got := extractPostMedia(pv, false)
-	if len(got) != 1 || got[0] != thumb {
+	if len(got) != 1 || got[0].Thumb != thumb {
 		t.Errorf("expected single thumb, got %v", got)
 	}
 
@@ -445,6 +445,56 @@ func TestExtractPostMedia_GallerySkipsUnknownItems(t *testing.T) {
 	}
 	if got := extractPostMedia(pv, false); got != nil {
 		t.Errorf("expected nil for empty/unknown-only gallery, got %v", got)
+	}
+}
+
+// Alt text must ride along with the thumb for every embed shape so
+// og:image:alt can be emitted (issue #8033 adjacent: describe images to
+// screen readers and link-preview consumers).
+func TestExtractPostMedia_IncludesAlt(t *testing.T) {
+	thumb := "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:alice/a@jpeg"
+
+	// images embed
+	pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "pic")
+	pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+		EmbedImages_View: &appbsky.EmbedImages_View{
+			Images: []*appbsky.EmbedImages_ViewImage{{Thumb: thumb, Alt: "a red bird"}},
+		},
+	}
+	got := extractPostMedia(pv, false)
+	if len(got) != 1 || got[0].Alt != "a red bird" {
+		t.Errorf("images embed: expected alt to be extracted, got %v", got)
+	}
+
+	// gallery embed
+	pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+		EmbedGallery_View: &appbsky.EmbedGallery_View{
+			Items: []*appbsky.EmbedGallery_View_Items_Elem{
+				{EmbedGallery_ViewImage: &appbsky.EmbedGallery_ViewImage{Thumbnail: thumb, Alt: "a blue bird"}},
+			},
+		},
+	}
+	got = extractPostMedia(pv, false)
+	if len(got) != 1 || got[0].Alt != "a blue bird" {
+		t.Errorf("gallery embed: expected alt to be extracted, got %v", got)
+	}
+
+	// video embed: poster thumb carries the video's alt text
+	pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+		EmbedVideo_View: &appbsky.EmbedVideo_View{Thumbnail: strPtr(thumb), Alt: strPtr("a bird singing")},
+	}
+	got = extractPostMedia(pv, false)
+	if len(got) != 1 || got[0].Alt != "a bird singing" {
+		t.Errorf("video embed: expected alt to be extracted, got %v", got)
+	}
+
+	// video embed without alt: empty string, not a panic
+	pv.Embed = &appbsky.FeedDefs_PostView_Embed{
+		EmbedVideo_View: &appbsky.EmbedVideo_View{Thumbnail: strPtr(thumb)},
+	}
+	got = extractPostMedia(pv, false)
+	if len(got) != 1 || got[0].Alt != "" {
+		t.Errorf("video embed without alt: expected empty alt, got %v", got)
 	}
 }
 
