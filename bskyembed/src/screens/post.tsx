@@ -1,24 +1,25 @@
 import '../index.css'
 
-import {AppBskyFeedDefs, AtpAgent} from '@atproto/api'
+import {Client, isAtUriString} from '@atproto/lex'
+import {api} from '@bsky.app/sdk'
+import {app} from '@bsky.app/sdk/lexicons'
 import {h, render} from 'preact'
 
+import {applyTheme, initSystemColorMode} from '#/color-mode'
+import {Container} from '#/components/container'
+import {Link} from '#/components/link'
+import {Post} from '#/components/post'
+import {getRkey} from '#/util/rkey'
+
 import logo from '../../assets/logo.svg'
-import {applyTheme, initSystemColorMode} from '../color-mode'
-import {Container} from '../components/container'
-import {Link} from '../components/link'
-import {Post} from '../components/post'
-import {getRkey} from '../util/rkey'
 
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
 
-const agent = new AtpAgent({
-  service: 'https://public.api.bsky.app',
-})
+const client = new Client(api.app.urlPublic)
 
 const uri = `at://${window.location.pathname.slice('/embed/'.length)}`
-if (!uri) {
+if (!isAtUriString(uri)) {
   throw new Error('No uri in path')
 }
 
@@ -40,23 +41,25 @@ switch (colorMode) {
     break
 }
 
-agent
-  .getPostThread({
-    uri,
-    depth: 0,
-    parentHeight: 0,
+client
+  .call(app.bsky.feed.getPosts, {
+    uris: [uri],
   })
-  .then(({data}) => {
-    if (!AppBskyFeedDefs.isThreadViewPost(data.thread)) {
-      throw new Error('Expected a ThreadViewPost')
+  .then(({posts}) => {
+    const post = posts[0]
+
+    if (!post) {
+      throw new Error('Post not found')
     }
-    const pwiOptOut = !!data.thread.post.author.labels?.find(
+
+    const pwiOptOut = !!post.author.labels?.find(
       label => label.val === '!no-unauthenticated',
     )
+
     if (pwiOptOut) {
-      render(<PwiOptOut thread={data.thread} />, root)
+      render(<PwiOptOut post={post} />, root)
     } else {
-      render(<Post thread={data.thread} />, root)
+      render(<Post post={post} />, root)
     }
   })
   .catch(err => {
@@ -64,8 +67,8 @@ agent
     render(<ErrorMessage />, root)
   })
 
-function PwiOptOut({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
-  const href = `/profile/${thread.post.author.did}/post/${getRkey(thread.post)}`
+function PwiOptOut({post}: {post: app.bsky.feed.defs.PostView}) {
+  const href = `/profile/${post.author.did}/post/${getRkey({uri: post.uri})}`
   return (
     <Container href={href}>
       <Link
