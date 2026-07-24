@@ -277,6 +277,9 @@ importers:
       '@bsky.app/peek-menu':
         specifier: ^0.3.1
         version: 0.3.1(expo@54.0.35(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@bsky.app/react-native-uitextview':
+        specifier: ^2.4.1
+        version: 2.4.1(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@bsky.app/sift':
         specifier: ^0.3.9
         version: 0.3.9(expo@54.0.35(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -664,9 +667,6 @@ importers:
       react-native-svg:
         specifier: 15.12.1
         version: 15.12.1(patch_hash=ae309e9542214f5ae54935e253dedd236765feedac7be343f81d532d7fe09310)(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      react-native-uitextview:
-        specifier: ^2.2.0
-        version: 2.2.0(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react-native-uuid:
         specifier: ^2.0.3
         version: 2.0.4
@@ -1659,6 +1659,12 @@ packages:
       expo: '*'
       react: '*'
       react-native: '*'
+
+  '@bsky.app/react-native-uitextview@2.4.1':
+    resolution: {integrity: sha512-NM6h9m3YXPnL7Sc7dZAA/UQLbHgBR0sMf5nBSkq0DgS1+t1TpZ8/WahsdDa8//OEkP1P2RBNPoWFLtNE555wCg==}
+    peerDependencies:
+      react: '*'
+      react-native: '>=0.81.5'
 
   '@bsky.app/sift@0.3.9':
     resolution: {integrity: sha512-EmwK6EGtxl6Mz4Z96J2EFi5aeiKeGiqueVCQHVms9C6ms6wMS0/HcqC/48RgFN+nSsM7Wr8sFCg1EcNnWyOQMQ==}
@@ -8031,12 +8037,6 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-uitextview@2.2.0:
-    resolution: {integrity: sha512-Vbv3cTAuyfkYrfsR2YKFsOd9OYgfys+IX5yvvYY7Wd6TrOd6FSGrX93xtQHjeLXV1ds6fDJcFJsuLi3S4Ypr8A==}
-    peerDependencies:
-      react: '*'
-      react-native: '*'
-
   react-native-uuid@2.0.4:
     resolution: {integrity: sha512-LSJNeh559qC17fgVPBsWuTSW/OygFp2dwTcf94IQBLYft5FzIQS9pCsuT36OPvyvDOMb6yiGr6TafaJDnz9PPQ==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
@@ -10378,6 +10378,11 @@ snapshots:
   '@bsky.app/peek-menu@0.3.1(expo@54.0.35(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
       expo: 54.0.35(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
+      react-native: 0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0)
+
+  '@bsky.app/react-native-uitextview@2.4.1(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
+    dependencies:
       react: 19.1.0
       react-native: 0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0)
 
@@ -17768,11 +17773,6 @@ snapshots:
       react: 19.1.0
       react-native: 0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0)
       warn-once: 0.1.1
-
-  react-native-uitextview@2.2.0(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
-    dependencies:
-      react: 19.1.0
-      react-native: 0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0)
 
   react-native-uuid@2.0.4: {}
 
