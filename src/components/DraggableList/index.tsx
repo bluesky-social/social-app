@@ -42,7 +42,7 @@ interface SortableListProps<T> {
   itemHeight: number
   /** Ref to the parent Animated.ScrollView for auto-scroll. */
   scrollRef?: AnimatedRef<Animated.ScrollView>
-  /** Scroll offset shared value from useScrollViewOffset. */
+  /** Scroll offset shared value from useScrollOffset. */
   scrollOffset?: SharedValue<number>
 }
 

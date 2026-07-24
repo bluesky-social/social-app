@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import type Animated from 'react-native-reanimated'
-import {useAnimatedRef, useScrollViewOffset} from 'react-native-reanimated'
+import {useAnimatedRef, useScrollOffset} from 'react-native-reanimated'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import {msg} from '@lingui/core/macro'
@@ -69,7 +69,7 @@ function SavedFeedsInner({
     useOverwriteSavedFeedsMutation()
   const navigation = useNavigation<NavigationProp>()
   const scrollRef = useAnimatedRef<Animated.ScrollView>()
-  const scrollOffset = useScrollViewOffset(scrollRef)
+  const scrollOffset = useScrollOffset(scrollRef)
 
   /*
    * Use optimistic data if exists and no error, otherwise fallback to remote
