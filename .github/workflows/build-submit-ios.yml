@@ -254,22 +254,6 @@ jobs:
           payload: |
             {"text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ needs.build.outputs.package-version }}\nBuild Number: ${{ needs.build.outputs.build-number }}```"}
 
-      # Record the commit only after a successful submit, so a failed submit doesn't advance
-      # the baseline used for the next testflight build's changelog.
-      - name: ⬇️ Restore Cache
-        id: get-base-commit
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        if: ${{ inputs.profile == 'testflight' }}
-        with:
-          path: most-recent-testflight-commit.txt
-          key: most-recent-testflight-commit
-
-      - name: ✏️ Write commit hash to cache
-        env:
-          GITHUB_SHA: ${{ github.sha }}
-        if: ${{ inputs.profile == 'testflight' }}
-        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt
-
   distribute:
     name: Assign build to TestFlight group
     # fastlane and jq ship preinstalled on the macOS runner image, and this step mostly idles
