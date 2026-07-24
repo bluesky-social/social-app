@@ -713,6 +713,11 @@ export const ComposePost = ({
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
   const onClose = useCallback(() => {
+    // HACKFIX: Android keyboard doesn't consistently dismiss IME
+    // TODO: investigate the root cause and fix properly -sfn
+    if (IS_ANDROID) {
+      Keyboard.dismiss()
+    }
     closeComposer()
     clearThumbnailCache(queryClient)
     revokeAllMediaUrls()
