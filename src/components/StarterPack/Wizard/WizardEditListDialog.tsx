@@ -6,8 +6,7 @@ import {
   type AppBskyFeedDefs,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -46,7 +45,7 @@ export function WizardEditListDialog({
   moderationOpts: ModerationOpts
   profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const initialNumToRender = useInitialNumToRender()
 
@@ -119,7 +118,7 @@ export function WizardEditListDialog({
             <View style={{width: 60}}>
               {IS_WEB && (
                 <Button
-                  label={_(msg`Close`)}
+                  label={l`Close`}
                   variant="ghost"
                   color="primary"
                   size="small"

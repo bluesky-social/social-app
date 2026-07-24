@@ -5,8 +5,7 @@ import {
   type AppBskyGraphDefs,
   AtUri,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -97,7 +96,7 @@ export function FeedSourceCardLoaded({
   error?: unknown
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   /*
    * LOAD STATE
@@ -185,12 +184,8 @@ export function FeedSourceCardLoaded({
         testID={`feed-${feed.displayName}`}
         label={
           feed.type === 'feed'
-            ? _(
-                msg`${feed.displayName}, a feed by ${sanitizeHandle(feed.creatorHandle, '@')}, liked by ${feed.likeCount || 0}`,
-              )
-            : _(
-                msg`${feed.displayName}, a list by ${sanitizeHandle(feed.creatorHandle, '@')}`,
-              )
+            ? l`${feed.displayName}, a feed by ${sanitizeHandle(feed.creatorHandle, '@')}, liked by ${feed.likeCount || 0}`
+            : l`${feed.displayName}, a list by ${sanitizeHandle(feed.creatorHandle, '@')}`
         }
         to={{
           screen: feed.type === 'feed' ? 'ProfileFeed' : 'ProfileList',

@@ -1,6 +1,5 @@
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useListBlockMutation, useListMuteMutation} from '#/state/queries/list'
@@ -15,7 +14,7 @@ import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 
 export function SubscribeMenu({list}: {list: AppBskyGraphDefs.ListView}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const subscribeMutePromptControl = Prompt.usePromptControl()
   const subscribeBlockPromptControl = Prompt.usePromptControl()
@@ -30,13 +29,11 @@ export function SubscribeMenu({list}: {list: AppBskyGraphDefs.ListView}) {
   const onSubscribeMute = async () => {
     try {
       await muteList({uri: list.uri, mute: true})
-      Toast.show(_(msg({message: 'List muted', context: 'toast'})))
+      Toast.show(l({message: 'List muted', context: 'toast'}))
       ax.metric('moderation:subscribedToList', {listType: 'mute'})
     } catch {
       Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
+        l`There was an issue. Please check your internet connection and try again.`,
         {type: 'error'},
       )
     }
@@ -45,13 +42,11 @@ export function SubscribeMenu({list}: {list: AppBskyGraphDefs.ListView}) {
   const onSubscribeBlock = async () => {
     try {
       await blockList({uri: list.uri, block: true})
-      Toast.show(_(msg({message: 'List blocked', context: 'toast'})))
+      Toast.show(l({message: 'List blocked', context: 'toast'}))
       ax.metric('moderation:subscribedToList', {listType: 'block'})
     } catch {
       Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
+        l`There was an issue. Please check your internet connection and try again.`,
         {type: 'error'},
       )
     }
@@ -60,7 +55,7 @@ export function SubscribeMenu({list}: {list: AppBskyGraphDefs.ListView}) {
   return (
     <>
       <Menu.Root>
-        <Menu.Trigger label={_(msg`Subscribe to this list`)}>
+        <Menu.Trigger label={l`Subscribe to this list`}>
           {({props}) => (
             <Button
               label={props.accessibilityLabel}
@@ -80,7 +75,7 @@ export function SubscribeMenu({list}: {list: AppBskyGraphDefs.ListView}) {
         <Menu.Outer showCancel>
           <Menu.Group>
             <Menu.Item
-              label={_(msg`Mute accounts`)}
+              label={l`Mute accounts`}
               onPress={subscribeMutePromptControl.open}>
               <Menu.ItemText>
                 <Trans>Mute accounts</Trans>
@@ -88,7 +83,7 @@ export function SubscribeMenu({list}: {list: AppBskyGraphDefs.ListView}) {
               <Menu.ItemIcon position="right" icon={MuteIcon} />
             </Menu.Item>
             <Menu.Item
-              label={_(msg`Block accounts`)}
+              label={l`Block accounts`}
               onPress={subscribeBlockPromptControl.open}>
               <Menu.ItemText>
                 <Trans>Block accounts</Trans>
@@ -98,25 +93,19 @@ export function SubscribeMenu({list}: {list: AppBskyGraphDefs.ListView}) {
           </Menu.Group>
         </Menu.Outer>
       </Menu.Root>
-
       <Prompt.Basic
         control={subscribeMutePromptControl}
-        title={_(msg`Mute these accounts?`)}
-        description={_(
-          msg`Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.`,
-        )}
+        title={l`Mute these accounts?`}
+        description={l`Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.`}
         onConfirm={onSubscribeMute}
-        confirmButtonCta={_(msg`Mute list`)}
+        confirmButtonCta={l`Mute list`}
       />
-
       <Prompt.Basic
         control={subscribeBlockPromptControl}
-        title={_(msg`Block these accounts?`)}
-        description={_(
-          msg`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
-        )}
+        title={l`Block these accounts?`}
+        description={l`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`}
         onConfirm={onSubscribeBlock}
-        confirmButtonCta={_(msg`Block list`)}
+        confirmButtonCta={l`Block list`}
         confirmButtonColor="negative"
       />
     </>

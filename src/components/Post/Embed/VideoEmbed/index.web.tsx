@@ -8,8 +8,7 @@ import {
 } from 'react'
 import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
@@ -288,7 +287,7 @@ function VideoError({
   error: unknown
   retry: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
 
   let showRetryButton = true
@@ -296,16 +295,14 @@ function VideoError({
   let errorClass: string
 
   if (error instanceof VideoNotFoundError) {
-    text = _(msg`Video not found.`)
+    text = l`Video not found.`
     errorClass = 'VideoNotFoundError'
   } else if (error instanceof HLSUnsupportedError) {
     showRetryButton = false
-    text = _(
-      msg`This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC).`,
-    )
+    text = l`This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC).`
     errorClass = 'HLSUnsupportedError'
   } else {
-    text = _(msg`An error occurred while loading the video. Please try again.`)
+    text = l`An error occurred while loading the video. Please try again.`
     if (error instanceof HLSFatalError) {
       errorClass = error.detail
     } else if (error instanceof Error) {

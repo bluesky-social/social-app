@@ -2,8 +2,7 @@ import {useMemo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {useHaptics} from '#/lib/haptics'
@@ -35,7 +34,7 @@ export const ExternalEmbed = ({
   style?: StyleProp<ViewStyle>
   hideAlt?: boolean
 }) => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const playHaptic = useHaptics()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
@@ -85,7 +84,7 @@ export const ExternalEmbed = ({
 
   return (
     <Link
-      label={link.title || _(msg`Open link to ${niceUrl}`)}
+      label={link.title || l`Open link to ${niceUrl}`}
       to={link.uri}
       shouldProxy={true}
       peek

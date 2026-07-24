@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {Keyboard, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {toNiceDomain} from '#/lib/strings/url-helpers'
@@ -26,7 +25,7 @@ export function HostingProvider({
 }) {
   const serverInputControl = useDialogControl()
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const onPressSelectService = useCallback(() => {
     Keyboard.dismiss()
@@ -47,7 +46,7 @@ export function HostingProvider({
           </Text>
           <Button
             label={toNiceDomain(serviceUrl)}
-            accessibilityHint={_(msg`Changes hosting provider`)}
+            accessibilityHint={l`Changes hosting provider`}
             onPress={onPressSelectService}
             variant="ghost"
             color="secondary"
@@ -67,7 +66,7 @@ export function HostingProvider({
         <Button
           testID="selectServiceButton"
           label={toNiceDomain(serviceUrl)}
-          accessibilityHint={_(msg`Changes hosting provider`)}
+          accessibilityHint={l`Changes hosting provider`}
           variant="solid"
           color="secondary"
           style={[

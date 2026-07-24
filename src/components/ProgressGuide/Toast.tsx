@@ -15,8 +15,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Portal} from '#/components/Portal'
@@ -40,7 +39,7 @@ export const ProgressGuideToast = forwardRef<
   ProgressGuideToastProps
 >(function ProgressGuideToast({title, subtitle, visibleDuration}, ref) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const insets = useSafeAreaInsets()
   const [isOpen, setIsOpen] = useState(false)
   const translateY = useSharedValue(0)
@@ -156,7 +155,7 @@ export const ProgressGuideToast = forwardRef<
               },
             ]}
             onPress={close}
-            accessibilityLabel={_(msg`Tap to dismiss`)}
+            accessibilityLabel={l`Tap to dismiss`}
             accessibilityHint="">
             <AnimatedCheck
               fill={t.palette.primary_500}

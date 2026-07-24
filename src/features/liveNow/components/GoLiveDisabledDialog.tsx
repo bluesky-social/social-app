@@ -1,8 +1,7 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, ToolsOzoneReportDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
@@ -38,7 +37,7 @@ export function DialogInner({
   control: Dialog.DialogControlProps
   status: AppBskyActorDefs.StatusView
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const agent = useAgent()
   const [details, setDetails] = useState('')
 
@@ -74,13 +73,13 @@ export function DialogInner({
       }
     },
     onError: () => {
-      Toast.show(_(msg`Failed to submit appeal, please try again.`), {
+      Toast.show(l`Failed to submit appeal, please try again.`, {
         type: 'error',
       })
     },
     onSuccess: () => {
       control.close()
-      Toast.show(_(msg({message: 'Appeal submitted', context: 'toast'})), {
+      Toast.show(l({message: 'Appeal submitted', context: 'toast'}), {
         type: 'success',
       })
     },
@@ -90,7 +89,7 @@ export function DialogInner({
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Appeal livestream suspension`)}
+      label={l`Appeal livestream suspension`}
       style={[web({maxWidth: 400})]}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_md]}>
@@ -119,10 +118,8 @@ export function DialogInner({
 
         <View style={[a.gap_md]}>
           <Dialog.Input
-            label={_(msg`Text input field`)}
-            placeholder={_(
-              msg`Please explain why you think your Go Live access was incorrectly disabled.`,
-            )}
+            label={l`Text input field`}
+            placeholder={l`Please explain why you think your Go Live access was incorrectly disabled.`}
             value={details}
             onChangeText={setDetails}
             autoFocus={true}
@@ -136,8 +133,8 @@ export function DialogInner({
             color="primary"
             size="large"
             onPress={onSubmit}
-            label={_(msg`Submit`)}>
-            <ButtonText>{_(msg`Submit`)}</ButtonText>
+            label={l`Submit`}>
+            <ButtonText>{l`Submit`}</ButtonText>
             {isPending && <ButtonIcon icon={Loader} />}
           </Button>
         </View>

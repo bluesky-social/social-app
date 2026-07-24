@@ -5,8 +5,7 @@ import {
   AtUri,
   moderatePost,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {
   type InfiniteData,
   type QueryClient,
@@ -120,7 +119,7 @@ export function useFeedPreviews(
   )
 
   const uris = feeds.map(feed => feed.uri)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const agent = useAgent()
   const {data: preferences} = usePreferencesQuery()
   const userInterests = aggregateUserInterests(preferences)
@@ -180,7 +179,7 @@ export function useFeedPreviews(
           items.push({
             type: 'preview:error',
             key: 'error',
-            message: _(msg`An error occurred while fetching the feed.`),
+            message: l`An error occurred while fetching the feed.`,
             error: cleanError(error),
           })
         } else if (isEmpty) {
@@ -340,7 +339,7 @@ export function useFeedPreviews(
       isError,
       isPending,
       moderationOpts,
-      _,
+      l,
       error,
     ]),
   }

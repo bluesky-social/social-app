@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -46,14 +45,14 @@ export function Text({children}: {children: React.ReactNode}) {
 }
 
 export function RetryButton({onPress}: {onPress: () => void}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Button
       onPress={onPress}
       size="small"
       color="secondary_inverted"
-      label={_(msg`Retry`)}>
+      label={l`Retry`}>
       <ButtonIcon icon={ArrowRotateIcon} />
       <ButtonText>
         <Trans>Retry</Trans>

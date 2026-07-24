@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useMemo} from 'react'
 import {ScrollView, View} from 'react-native'
 import {AppBskyEmbedVideo, AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -35,7 +34,7 @@ const FEED_PARAMS: {
 
 export function TrendingVideos() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const gutters = useGutters([0, 'base'])
   const {data, isLoading, error} = usePostFeedQuery(FEED_DESC, FEED_PARAMS)
@@ -87,7 +86,7 @@ export function TrendingVideos() {
           <Trans>Trending Videos</Trans>
         </Text>
         <Button
-          label={_(msg`Dismiss this section`)}
+          label={l`Dismiss this section`}
           size="tiny"
           variant="solid"
           color="secondary"
@@ -96,7 +95,6 @@ export function TrendingVideos() {
           <ButtonIcon icon={X} size="sm" />
         </Button>
       </View>
-
       <BlockDrawerGesture>
         <ScrollView
           horizontal
@@ -131,12 +129,11 @@ export function TrendingVideos() {
           </View>
         </ScrollView>
       </BlockDrawerGesture>
-
       <Prompt.Basic
         control={trendingPrompt}
-        title={_(msg`Hide trending videos?`)}
-        description={_(msg`You can update this later from your settings.`)}
-        confirmButtonCta={_(msg`Hide`)}
+        title={l`Hide trending videos?`}
+        description={l`You can update this later from your settings.`}
+        confirmButtonCta={l`Hide`}
         onConfirm={onConfirmHide}
       />
     </View>
@@ -186,7 +183,7 @@ function VideoCards({
 
 function ViewMoreCard() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const href = useMemo(() => {
     const urip = new AtUri(VIDEO_FEED_URI)
@@ -197,7 +194,7 @@ function ViewMoreCard() {
     <View style={[{width: CARD_WIDTH * 2}]}>
       <Link
         to={href}
-        label={_(msg`View more`)}
+        label={l`View more`}
         style={[
           a.justify_center,
           a.align_center,
@@ -225,7 +222,7 @@ function ViewMoreCard() {
               color="primary"
               size="small"
               shape="round"
-              label={_(msg`View more trending videos`)}>
+              label={l`View more trending videos`}>
               <ButtonIcon icon={ChevronRight} />
             </Button>
           </View>

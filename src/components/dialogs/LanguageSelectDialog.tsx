@@ -1,7 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {languageName} from '#/locale/helpers'
@@ -107,7 +106,7 @@ export function DialogInner({
   const [search, setSearch] = useState('')
 
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const handleClose = () => {
     control.close(() => {
@@ -218,7 +217,7 @@ export function DialogInner({
             size="small"
             color="secondary"
             shape="round"
-            label={_(msg`Close dialog`)}
+            label={l`Close dialog`}
             onPress={handleClose}>
             <ButtonIcon icon={XIcon} />
           </Button>
@@ -229,8 +228,8 @@ export function DialogInner({
         <SearchInput
           value={search}
           onChangeText={setSearch}
-          placeholder={_(msg`Search languages`)}
-          label={_(msg`Search languages`)}
+          placeholder={l`Search languages`}
+          label={l`Search languages`}
           maxLength={50}
           onClearText={() => setSearch('')}
         />
@@ -246,13 +245,13 @@ export function DialogInner({
 
   const flatListData = [
     ...(isCheckedRecentEmpty
-      ? [{type: 'header', label: _(msg`Recently used`)}]
+      ? [{type: 'header', label: l`Recently used`}]
       : []),
     ...displayedLanguages.checkedRecent.map(lang => ({type: 'item', lang})),
     ...displayedLanguages.uncheckedRecent.map(lang => ({type: 'item', lang})),
     ...(isDisplayedLanguagesEmpty
       ? []
-      : [{type: 'header', label: _(msg`All languages`)}]),
+      : [{type: 'header', label: l`All languages`}]),
     ...displayedLanguages.all.map(lang => ({type: 'item', lang})),
   ]
 
@@ -264,7 +263,7 @@ export function DialogInner({
       onChange={setCheckedLanguagesCode2}
       type="checkbox"
       maxSelections={maxLanguages}
-      label={_(msg`Select languages`)}
+      label={l`Select languages`}
       style={web([a.contents])}>
       <Dialog.InnerFlatList
         data={flatListData}
@@ -319,7 +318,7 @@ export function DialogInner({
           <Dialog.FlatListFooter
             onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}>
             <Button
-              label={_(msg`Close dialog`)}
+              label={l`Close dialog`}
               onPress={handleClose}
               color="primary"
               size="large">
@@ -335,23 +334,19 @@ export function DialogInner({
 }
 
 function DialogError({details}: {details?: string}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = Dialog.useDialogContext()
 
   return (
-    <Dialog.ScrollableInner
-      style={a.gap_md}
-      label={_(msg`An error has occurred`)}>
+    <Dialog.ScrollableInner style={a.gap_md} label={l`An error has occurred`}>
       <Dialog.Close />
       <ErrorScreen
-        title={_(msg`Oh no!`)}
-        message={_(
-          msg`There was an unexpected issue in the application. Please let us know if this happened to you!`,
-        )}
+        title={l`Oh no!`}
+        message={l`There was an unexpected issue in the application. Please let us know if this happened to you!`}
         details={details}
       />
       <Button
-        label={_(msg`Close dialog`)}
+        label={l`Close dialog`}
         onPress={() => control.close()}
         color="primary"
         size="large">

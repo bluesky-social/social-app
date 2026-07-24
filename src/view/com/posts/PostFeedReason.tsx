@@ -1,7 +1,6 @@
 import {StyleSheet, View} from 'react-native'
 import {AppBskyFeedDefs, type ModerationDecision} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {isReasonFeedSource, type ReasonFeedSource} from '#/lib/api/feed/types'
@@ -30,13 +29,13 @@ export function PostFeedReason({
   onOpenReposter?: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const {currentAccount} = useSession()
 
   if (isReasonFeedSource(reason)) {
     return (
-      <Link label={_(msg`Go to feed`)} to={reason.href}>
+      <Link label={l`Go to feed`} to={reason.href}>
         <Text
           style={[
             t.atoms.text_contrast_medium,
@@ -74,9 +73,7 @@ export function PostFeedReason({
       <Link
         style={styles.includeReason}
         to={makeProfileLink(reason.by)}
-        label={
-          isOwner ? _(msg`Reposted by you`) : _(msg`Reposted by ${reposter}`)
-        }
+        label={isOwner ? l`Reposted by you` : l`Reposted by ${reposter}`}
         onPress={onOpenReposter}>
         <RepostIcon
           style={[t.atoms.text_contrast_medium, {marginRight: 3}]}

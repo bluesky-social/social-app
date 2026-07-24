@@ -2,8 +2,8 @@ import {useCallback, useEffect, useState} from 'react'
 import {Modal, ScrollView, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
@@ -19,7 +19,7 @@ import {IS_IOS, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 const COL_WIDTH = 400
 
 export function SignupQueued() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
@@ -76,7 +76,7 @@ export function SignupQueued() {
       variant="solid"
       color="primary"
       size="large"
-      label={_(msg`Check my status`)}
+      label={l`Check my status`}
       onPress={checkStatus}
       disabled={isProcessing}>
       <ButtonText>
@@ -91,7 +91,7 @@ export function SignupQueued() {
       variant="ghost"
       size="large"
       color="primary"
-      label={_(msg`Sign out`)}
+      label={l`Sign out`}
       onPress={() => logoutCurrentAccount('SignupQueued')}>
       <ButtonText>
         <Trans>Sign out</Trans>

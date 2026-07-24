@@ -5,8 +5,7 @@ import {
   AppBskyGraphStarterpack,
   moderateProfile,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -32,7 +31,7 @@ export function StarterPackCard({
   onPress?: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
   const link = useStarterPackLink({view})
@@ -108,8 +107,8 @@ export function StarterPackCard({
                   ]}
                   numberOfLines={1}>
                   {view.creator?.did === currentAccount?.did
-                    ? _(msg`By you`)
-                    : _(msg`By ${sanitizeHandle(view.creator.handle, '@')}`)}
+                    ? l`By you`
+                    : l`By ${sanitizeHandle(view.creator.handle, '@')}`}
                 </Text>
               </View>
               <Link

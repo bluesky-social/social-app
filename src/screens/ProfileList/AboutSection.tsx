@@ -1,8 +1,7 @@
 import {useCallback, useImperativeHandle, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useSession} from '#/state/session'
@@ -35,7 +34,7 @@ export function AboutSection({
   headerHeight,
   scrollElRef,
 }: AboutSectionProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const {gtMobile} = useBreakpoints()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
@@ -61,7 +60,7 @@ export function AboutSection({
         <View style={[a.px_sm, a.py_sm]}>
           <Button
             testID="addUserBtn"
-            label={_(msg`Add a user to this list`)}
+            label={l`Add a user to this list`}
             onPress={onPressAddUser}
             color="primary"
             size="small"
@@ -79,7 +78,7 @@ export function AboutSection({
       <View style={[a.px_lg, a.py_md, a.flex_row_reverse]}>
         <Button
           testID="addUserBtn"
-          label={_(msg`Add a user to this list`)}
+          label={l`Add a user to this list`}
           onPress={onPressAddUser}
           color="primary"
           size="small"
@@ -92,16 +91,16 @@ export function AboutSection({
         </Button>
       </View>
     )
-  }, [isOwner, _, onPressAddUser, gtMobile])
+  }, [isOwner, l, onPressAddUser, gtMobile])
 
   const renderEmptyState = useCallback(() => {
     return (
       <View style={[a.gap_xl, a.align_center]}>
-        <EmptyState icon={ListIcon} message={_(msg`This list is empty.`)} />
+        <EmptyState icon={ListIcon} message={l`This list is empty.`} />
         {isOwner && (
           <Button
             testID="emptyStateAddUserBtn"
-            label={_(msg`Start adding people`)}
+            label={l`Start adding people`}
             onPress={onPressAddUser}
             color="primary"
             size="small">
@@ -113,7 +112,7 @@ export function AboutSection({
         )}
       </View>
     )
-  }, [_, isOwner, onPressAddUser])
+  }, [l, isOwner, onPressAddUser])
 
   return (
     <View>
@@ -129,7 +128,7 @@ export function AboutSection({
       {isScrolledDown && (
         <LoadLatestBtn
           onPress={onScrollToTop}
-          label={_(msg`Scroll to top`)}
+          label={l`Scroll to top`}
           showIndicator={false}
         />
       )}

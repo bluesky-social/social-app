@@ -3,8 +3,7 @@ import {
   type ChatBskyConvoDefs,
   type ComAtprotoModerationCreateReport,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -14,7 +13,7 @@ import {type ReportState} from './state'
 import {type ParsedReportSubject} from './types'
 
 export function useSubmitReportMutation() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const agent = useAgent()
 
   return useMutation({
@@ -26,10 +25,10 @@ export function useSubmitReportMutation() {
       state: ReportState
     }) {
       if (!state.selectedOption) {
-        throw new Error(_(msg`Please select a reason for this report`))
+        throw new Error(l`Please select a reason for this report`)
       }
       if (!state.selectedLabeler) {
-        throw new Error(_(msg`Please select a moderation service`))
+        throw new Error(l`Please select a moderation service`)
       }
 
       const labeler = state.selectedLabeler

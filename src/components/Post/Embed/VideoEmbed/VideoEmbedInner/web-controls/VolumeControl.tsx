@@ -1,8 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -26,7 +25,7 @@ export function VolumeControl({
   onEndHover: () => void
   drawFocus: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [volume, setVolume] = useVideoVolumeState()
 
   const onVolumeChange = useCallback(
@@ -77,7 +76,7 @@ export function VolumeControl({
               min={0}
               max={100}
               value={sliderVolume}
-              aria-label={_(msg`Volume`)}
+              aria-label={l`Volume`}
               style={
                 // Ridiculous safari hack for old version of safari. Fixed in sonoma beta -h
                 IS_WEB_SAFARI
@@ -93,8 +92,8 @@ export function VolumeControl({
       )}
       <ControlButton
         active={muted || volume === 0}
-        activeLabel={_(msg({message: `Unmute`, context: 'video'}))}
-        inactiveLabel={_(msg({message: `Mute`, context: 'video'}))}
+        activeLabel={l({message: `Unmute`, context: 'video'})}
+        inactiveLabel={l({message: `Mute`, context: 'video'})}
         activeIcon={MuteIcon}
         inactiveIcon={UnmuteIcon}
         onPress={onPressMute}

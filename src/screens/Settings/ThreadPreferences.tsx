@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {
@@ -23,7 +22,7 @@ import * as SettingsList from './components/SettingsList'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
 export function ThreadPreferencesScreen({}: Props) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {sort, setSort, view, setView} = useThreadPreferences({save: true})
 
   return (
@@ -49,28 +48,24 @@ export function ThreadPreferencesScreen({}: Props) {
                 <Trans>Sort replies to the same post by:</Trans>
               </Text>
               <Toggle.Group
-                label={_(msg`Sort replies by`)}
+                label={l`Sort replies by`}
                 type="radio"
                 values={sort ? [sort] : []}
                 onChange={values => setSort(normalizeSort(values[0]))}>
                 <View style={[a.gap_sm, a.flex_1]}>
-                  <Toggle.Item name="top" label={_(msg`Top replies first`)}>
+                  <Toggle.Item name="top" label={l`Top replies first`}>
                     <Toggle.Radio />
                     <Toggle.LabelText>
                       <Trans>Top replies first</Trans>
                     </Toggle.LabelText>
                   </Toggle.Item>
-                  <Toggle.Item
-                    name="oldest"
-                    label={_(msg`Oldest replies first`)}>
+                  <Toggle.Item name="oldest" label={l`Oldest replies first`}>
                     <Toggle.Radio />
                     <Toggle.LabelText>
                       <Trans>Oldest replies first</Trans>
                     </Toggle.LabelText>
                   </Toggle.Item>
-                  <Toggle.Item
-                    name="newest"
-                    label={_(msg`Newest replies first`)}>
+                  <Toggle.Item name="newest" label={l`Newest replies first`}>
                     <Toggle.Radio />
                     <Toggle.LabelText>
                       <Trans>Newest replies first</Trans>
@@ -89,7 +84,7 @@ export function ThreadPreferencesScreen({}: Props) {
             <Toggle.Item
               type="checkbox"
               name="threaded-mode"
-              label={_(msg`Tree view`)}
+              label={l`Tree view`}
               value={view === 'tree'}
               onChange={value =>
                 setView(normalizeView({treeViewEnabled: value}))

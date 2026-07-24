@@ -1,17 +1,16 @@
 import {useMemo} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {type AppIconSet} from '#/screens/Settings/AppIconSettings/types'
 
 export function useAppIconSets() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return useMemo(() => {
     const defaults = [
       {
         id: 'default_light',
-        name: _(msg({context: 'Name of app icon variant', message: 'Light'})),
+        name: l({context: 'Name of app icon variant', message: 'Light'}),
         iosImage: () => {
           return require(
             `../../../../assets/app-icons/ios_icon_legacy_light.png`,
@@ -25,7 +24,7 @@ export function useAppIconSets() {
       },
       {
         id: 'default_dark',
-        name: _(msg({context: 'Name of app icon variant', message: 'Dark'})),
+        name: l({context: 'Name of app icon variant', message: 'Dark'}),
         iosImage: () => {
           return require(
             `../../../../assets/app-icons/ios_icon_legacy_dark.png`,
@@ -45,7 +44,7 @@ export function useAppIconSets() {
     const core = [
       {
         id: 'core_aurora',
-        name: _(msg({context: 'Name of app icon variant', message: 'Aurora'})),
+        name: l({context: 'Name of app icon variant', message: 'Aurora'}),
         iosImage: () => {
           return require(
             `../../../../assets/app-icons/ios_icon_core_aurora.png`,
@@ -69,7 +68,7 @@ export function useAppIconSets() {
       // },
       {
         id: 'core_sunrise',
-        name: _(msg({context: 'Name of app icon variant', message: 'Sunrise'})),
+        name: l({context: 'Name of app icon variant', message: 'Sunrise'}),
         iosImage: () => {
           return require(
             `../../../../assets/app-icons/ios_icon_core_sunrise.png`,
@@ -83,7 +82,7 @@ export function useAppIconSets() {
       },
       {
         id: 'core_sunset',
-        name: _(msg({context: 'Name of app icon variant', message: 'Sunset'})),
+        name: l({context: 'Name of app icon variant', message: 'Sunset'}),
         iosImage: () => {
           return require(
             `../../../../assets/app-icons/ios_icon_core_sunset.png`,
@@ -97,9 +96,7 @@ export function useAppIconSets() {
       },
       {
         id: 'core_midnight',
-        name: _(
-          msg({context: 'Name of app icon variant', message: 'Midnight'}),
-        ),
+        name: l({context: 'Name of app icon variant', message: 'Midnight'}),
         iosImage: () => {
           return require(
             `../../../../assets/app-icons/ios_icon_core_midnight.png`,
@@ -113,9 +110,7 @@ export function useAppIconSets() {
       },
       {
         id: 'core_flat_blue',
-        name: _(
-          msg({context: 'Name of app icon variant', message: 'Flat Blue'}),
-        ),
+        name: l({context: 'Name of app icon variant', message: 'Flat Blue'}),
         iosImage: () => {
           return require(
             `../../../../assets/app-icons/ios_icon_core_flat_blue.png`,
@@ -129,9 +124,7 @@ export function useAppIconSets() {
       },
       {
         id: 'core_flat_white',
-        name: _(
-          msg({context: 'Name of app icon variant', message: 'Flat White'}),
-        ),
+        name: l({context: 'Name of app icon variant', message: 'Flat White'}),
         iosImage: () => {
           return require(
             `../../../../assets/app-icons/ios_icon_core_flat_white.png`,
@@ -145,9 +138,7 @@ export function useAppIconSets() {
       },
       {
         id: 'core_flat_black',
-        name: _(
-          msg({context: 'Name of app icon variant', message: 'Flat Black'}),
-        ),
+        name: l({context: 'Name of app icon variant', message: 'Flat Black'}),
         iosImage: () => {
           return require(
             `../../../../assets/app-icons/ios_icon_core_flat_black.png`,
@@ -161,12 +152,10 @@ export function useAppIconSets() {
       },
       {
         id: 'core_classic',
-        name: _(
-          msg({
-            context: 'Name of app icon variant',
-            message: 'Bluesky Classic™',
-          }),
-        ),
+        name: l({
+          context: 'Name of app icon variant',
+          message: 'Bluesky Classic™',
+        }),
         iosImage: () => {
           return require(
             `../../../../assets/app-icons/ios_icon_core_classic.png`,
@@ -184,5 +173,5 @@ export function useAppIconSets() {
       defaults,
       core,
     }
-  }, [_])
+  }, [l])
 }

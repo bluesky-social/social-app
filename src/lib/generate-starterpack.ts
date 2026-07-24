@@ -6,8 +6,7 @@ import {
   type ComAtprotoRepoApplyWrites,
   type Facet,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import {until} from '#/lib/async/until'
@@ -59,7 +58,7 @@ export function useGenerateStarterPackMutation({
   onSuccess: ({uri, cid}: {uri: string; cid: string}) => void
   onError: (e: Error) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const agent = useAgent()
 
   return useMutation<{uri: string; cid: string}, Error, void>({
@@ -101,7 +100,7 @@ export function useGenerateStarterPackMutation({
         25,
         true,
       )
-      const starterPackName = _(msg`${displayName}'s Starter Pack`)
+      const starterPackName = l`${displayName}'s Starter Pack`
 
       const list = await createStarterPackList({
         name: starterPackName,

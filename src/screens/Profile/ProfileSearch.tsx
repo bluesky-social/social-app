@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {
   type CommonNavigatorParams,
@@ -14,7 +13,7 @@ import {SearchScreenShell} from '#/screens/Search/Shell'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileSearch'>
 export const ProfileSearchScreen = ({route}: Props) => {
   const {name, q: queryParam = ''} = route.params
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
 
   const {data: resolvedDid} = useResolveDidQuery(name)
@@ -33,9 +32,9 @@ export const ProfileSearchScreen = ({route}: Props) => {
       inputPlaceholder={
         profile
           ? currentAccount?.did === profile.did
-            ? _(msg`Search my posts`)
-            : _(msg`Search @${profile.handle}'s posts`)
-          : _(msg`Search...`)
+            ? l`Search my posts`
+            : l`Search @${profile.handle}'s posts`
+          : l`Search...`
       }
       fixedParams={fixedParams}
       queryParam={queryParam}

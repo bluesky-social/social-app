@@ -16,8 +16,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -49,7 +48,7 @@ function PlaceholderOverlay({
   isPlayerActive: boolean
   onPress: (event: GestureResponderEvent) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   // If the player is active and not loading, we don't want to show the overlay.
   if (isPlayerActive && !isLoading) return null
@@ -58,8 +57,8 @@ function PlaceholderOverlay({
     <View style={[a.absolute, a.inset_0, {zIndex: 2}]}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={_(msg`Play Video`)}
-        accessibilityHint={_(msg`Plays the video`)}
+        accessibilityLabel={l`Play Video`}
+        accessibilityHint={l`Plays the video`}
         onPress={onPress}
         style={[a.flex_1, a.justify_center, a.align_center]}>
         {!isPlayerActive ? (

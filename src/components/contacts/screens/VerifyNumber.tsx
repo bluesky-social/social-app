@@ -4,8 +4,7 @@ import {
   AppBskyContactStartPhoneVerification,
   AppBskyContactVerifyPhone,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
@@ -41,7 +40,7 @@ export function VerifyNumber({
   onSkip: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const agent = useAgent()
   const gutters = useGutters([0, 'wide'])
@@ -95,23 +94,19 @@ export function VerifyNumber({
         setError({
           retryable: true,
           isResendError: false,
-          message: _(
-            msg`A network error occurred. Please check your internet connection.`,
-          ),
+          message: l`A network error occurred. Please check your internet connection.`,
         })
       } else if (err instanceof AppBskyContactVerifyPhone.InvalidCodeError) {
         setError({
           retryable: true,
           isResendError: true,
-          message: _(msg`This code is invalid. Resend to get a new code.`),
+          message: l`This code is invalid. Resend to get a new code.`,
         })
       } else if (err instanceof AppBskyContactVerifyPhone.InvalidPhoneError) {
         setError({
           retryable: false,
           isResendError: false,
-          message: _(
-            msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
-          ),
+          message: l`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
         })
       } else if (
         err instanceof AppBskyContactVerifyPhone.RateLimitExceededError
@@ -119,16 +114,14 @@ export function VerifyNumber({
         setError({
           retryable: true,
           isResendError: false,
-          message: _(
-            msg`Too many attempts. Please wait a few minutes and try again.`,
-          ),
+          message: l`Too many attempts. Please wait a few minutes and try again.`,
         })
       } else {
         logger.error('Verify phone number failed', {safeMessage: err})
         setError({
           retryable: true,
           isResendError: false,
-          message: _(msg`An error occurred. ${cleanError(err)}`),
+          message: l`An error occurred. ${cleanError(err)}`,
         })
       }
     },
@@ -140,7 +133,7 @@ export function VerifyNumber({
     },
     onSuccess: () => {
       dispatch({type: 'RESEND_VERIFICATION_CODE'})
-      Toast.show(_(msg`A new code has been sent`))
+      Toast.show(l`A new code has been sent`)
     },
     onMutate: () => {
       setOtpCode('')
@@ -151,9 +144,7 @@ export function VerifyNumber({
         setError({
           retryable: true,
           isResendError: true,
-          message: _(
-            msg`A network error occurred. Please check your internet connection.`,
-          ),
+          message: l`A network error occurred. Please check your internet connection.`,
         })
       } else if (
         err instanceof AppBskyContactStartPhoneVerification.InvalidPhoneError
@@ -161,9 +152,7 @@ export function VerifyNumber({
         setError({
           retryable: false,
           isResendError: true,
-          message: _(
-            msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
-          ),
+          message: l`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
         })
       } else if (
         err instanceof
@@ -172,16 +161,14 @@ export function VerifyNumber({
         setError({
           retryable: true,
           isResendError: true,
-          message: _(
-            msg`Too many codes sent. Please wait a few minutes and try again.`,
-          ),
+          message: l`Too many codes sent. Please wait a few minutes and try again.`,
         })
       } else {
         logger.error('Resend failed', {safeMessage: err})
         setError({
           retryable: true,
           isResendError: true,
-          message: _(msg`An error occurred. ${cleanError(err)}`),
+          message: l`An error occurred. ${cleanError(err)}`,
         })
       }
     },
@@ -199,7 +186,7 @@ export function VerifyNumber({
             size="small"
             color="secondary"
             variant="ghost"
-            label={_(msg`Skip contact sharing and continue to the app`)}
+            label={l`Skip contact sharing and continue to the app`}
             onPress={onSkip}>
             <ButtonText>
               <Trans>Skip</Trans>
@@ -227,9 +214,7 @@ export function VerifyNumber({
         </Text>
         <View style={[a.mt_2xl]}>
           <OTPInput
-            label={_(
-              msg`Enter 6-digit code that was sent to your phone number`,
-            )}
+            label={l`Enter 6-digit code that was sent to your phone number`}
             value={otpCode}
             onChange={setOtpCode}
             onComplete={code => verifyNumber(code)}
@@ -276,7 +261,7 @@ function OTPStatus({
   onRetry: () => void
   lastCodeSentAt: Date | null
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   const [time, setTime] = useState(Date.now())
@@ -301,10 +286,10 @@ function OTPStatus({
 
   if (isSuccess) {
     Icon = CircleCheckIcon
-    text = _(msg`Phone number verified`)
+    text = l`Phone number verified`
     textColor = t.palette.positive_500
   } else if (isPending) {
-    text = _(msg`Verifying...`)
+    text = l`Verifying...`
   } else if (error) {
     Icon = WarningIcon
     text = error.message
@@ -342,12 +327,11 @@ function OTPStatus({
           </Text>
         </View>
       )}
-
       {showRetryButton && (
         <Button
           size="small"
           color="secondary_inverted"
-          label={_(msg`Retry`)}
+          label={l`Retry`}
           onPress={onRetry}
           style={[a.mt_2xl]}>
           <ButtonIcon icon={RetryIcon} />
@@ -356,13 +340,12 @@ function OTPStatus({
           </ButtonText>
         </Button>
       )}
-
       {showResendButton && (
         <Button
           size="large"
           color="secondary"
           variant="ghost"
-          label={_(msg`Resend code`)}
+          label={l`Resend code`}
           disabled={isResendingCode || isWaiting}
           onPress={onResend}
           style={[a.mt_2xl]}>

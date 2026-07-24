@@ -2,8 +2,7 @@ import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme, web} from '#/alf'
@@ -34,7 +33,7 @@ export const enabled = createIsEnabledCheck(props => {
 
 export function FindContactsAnnouncement() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
@@ -51,9 +50,8 @@ export function FindContactsAnnouncement() {
       onClose={onClose}
       nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner
-        label={_(msg`Introducing finding friends via contacts`)}
+        label={l`Introducing finding friends via contacts`}
         style={[web({maxWidth: 440})]}
         contentContainerStyle={[
           {
@@ -75,9 +73,7 @@ export function FindContactsAnnouncement() {
               accessibilityIgnoresInvertColors
               source={require('../../../../assets/images/find_friends_illustration.webp')}
               style={[a.w_full, {aspectRatio: 1278 / 661}]}
-              alt={_(
-                msg`An illustration depicting user avatars flowing from a contact book into the Bluesky app`,
-              )}
+              alt={l`An illustration depicting user avatars flowing from a contact book into the Bluesky app`}
               useAppleWebpCodec
             />
           </View>
@@ -113,7 +109,7 @@ export function FindContactsAnnouncement() {
           </View>
 
           <Button
-            label={_(msg`Import Contacts`)}
+            label={l`Import Contacts`}
             size="large"
             color="primary"
             onPress={() => {

@@ -1,8 +1,7 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {differenceInSeconds} from 'date-fns'
 
@@ -28,7 +27,7 @@ export function NewskieDialog({
   disabled?: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = useDialogControl()
 
   const createdAt = profile.createdAt
@@ -45,9 +44,7 @@ export function NewskieDialog({
     <View style={[a.pr_2xs]}>
       <Button
         disabled={disabled}
-        label={_(
-          msg`This user is new here. Press for more info about when they joined.`,
-        )}
+        label={l`This user is new here. Press for more info about when they joined.`}
         hitSlop={HITSLOP_10}
         onPress={control.open}>
         {({hovered, pressed}) => (
@@ -60,7 +57,6 @@ export function NewskieDialog({
           />
         )}
       </Button>
-
       <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <DialogInner profile={profile} createdAt={createdAt} now={now} />
@@ -79,7 +75,7 @@ function DialogInner({
   now: number
 }) {
   const control = Dialog.useDialogContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const moderationOpts = useModerationOpts()
   const {currentAccount} = useSession()
@@ -100,26 +96,22 @@ function DialogInner({
 
     if (isMe) {
       if (profile.joinedViaStarterPack) {
-        return _(
-          msg`You joined Bluesky using a starter pack ${timeAgoString} ago`,
-        )
+        return l`You joined Bluesky using a starter pack ${timeAgoString} ago`
       } else {
-        return _(msg`You joined Bluesky ${timeAgoString} ago`)
+        return l`You joined Bluesky ${timeAgoString} ago`
       }
     } else {
       if (profile.joinedViaStarterPack) {
-        return _(
-          msg`${profileName} joined Bluesky using a starter pack ${timeAgoString} ago`,
-        )
+        return l`${profileName} joined Bluesky using a starter pack ${timeAgoString} ago`
       } else {
-        return _(msg`${profileName} joined Bluesky ${timeAgoString} ago`)
+        return l`${profileName} joined Bluesky ${timeAgoString} ago`
       }
     }
   }
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`New user info dialog`)}
+      label={l`New user info dialog`}
       style={web({maxWidth: 400})}>
       <View style={[a.gap_md]}>
         <View style={[a.align_center]}>
@@ -166,7 +158,7 @@ function DialogInner({
 
         {IS_NATIVE && (
           <Button
-            label={_(msg`Close`)}
+            label={l`Close`}
             color="secondary"
             size="small"
             style={[a.mt_sm]}
@@ -177,7 +169,6 @@ function DialogInner({
           </Button>
         )}
       </View>
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )

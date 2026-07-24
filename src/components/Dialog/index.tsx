@@ -26,8 +26,7 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
@@ -386,7 +385,7 @@ export function Handle({
   fill?: string
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {screenReaderEnabled} = useA11y()
   const {close} = useDialogContext()
 
@@ -395,8 +394,8 @@ export function Handle({
       <Pressable
         accessible={screenReaderEnabled}
         onPress={() => close()}
-        accessibilityLabel={_(msg`Dismiss`)}
-        accessibilityHint={_(msg`Double tap to close the dialog`)}>
+        accessibilityLabel={l`Dismiss`}
+        accessibilityHint={l`Double tap to close the dialog`}>
         <View
           style={[
             a.rounded_sm,

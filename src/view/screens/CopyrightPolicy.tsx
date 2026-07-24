@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -18,11 +17,11 @@ import {ViewHeader} from '../com/util/ViewHeader'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CopyrightPolicy'>
 export const CopyrightPolicyScreen = (_props: Props) => {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Layout.Screen>
-      <ViewHeader title={_(msg`Copyright Policy`)} />
+      <ViewHeader title={l`Copyright Policy`} />
       <ScrollView style={[s.hContentRegion, pal.view]}>
         <View style={[s.p20]}>
           <Text style={pal.text}>

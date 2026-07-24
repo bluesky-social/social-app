@@ -1,13 +1,12 @@
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 
 export function ContactsHeroImage() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <View
@@ -24,9 +23,7 @@ export function ContactsHeroImage() {
         source={require('../../../../assets/images/find_friends_illustration.webp')}
         accessibilityIgnoresInvertColors
         style={[a.w_full, {aspectRatio: 1278 / 661}]}
-        alt={_(
-          msg`An illustration depicting user avatars flowing from a contact book into the Bluesky app`,
-        )}
+        alt={l`An illustration depicting user avatars flowing from a contact book into the Bluesky app`}
         useAppleWebpCodec
       />
     </View>

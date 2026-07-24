@@ -1,8 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {TID} from '@atproto/common-web'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED} from '#/lib/constants'
@@ -22,7 +21,7 @@ export function NoFeedsPinned({
 }: {
   preferences: UsePreferencesQueryResponse
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const headerOffset = useHeaderOffset()
   const {isPending, mutateAsync: overwriteSavedFeeds} =
     useOverwriteSavedFeedsMutation()
@@ -91,23 +90,23 @@ export function NoFeedsPinned({
         <View style={[a.flex_row, a.gap_md, a.justify_center, a.flex_wrap]}>
           <Button
             disabled={isPending}
-            label={_(msg`Apply default recommended feeds`)}
+            label={l`Apply default recommended feeds`}
             size="large"
             variant="solid"
             color="primary"
             onPress={addRecommendedFeeds}>
             <ButtonIcon icon={Plus} position="left" />
-            <ButtonText>{_(msg`Add recommended feeds`)}</ButtonText>
+            <ButtonText>{l`Add recommended feeds`}</ButtonText>
           </Button>
 
           <Link
-            label={_(msg`Browse other feeds`)}
+            label={l`Browse other feeds`}
             to="/feeds"
             size="large"
             variant="solid"
             color="secondary">
             <ButtonIcon icon={ListSparkle} position="left" />
-            <ButtonText>{_(msg`Browse other feeds`)}</ButtonText>
+            <ButtonText>{l`Browse other feeds`}</ButtonText>
           </Link>
         </View>
       </View>

@@ -1,8 +1,7 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 
@@ -22,7 +21,7 @@ interface WelcomeModalProps {
 }
 
 export function WelcomeModal({control}: WelcomeModalProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {gtMobile} = useBreakpoints()
@@ -152,7 +151,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                 <View>
                   <Button
                     onPress={onPressCreateAccount}
-                    label={_(msg`Create account`)}
+                    label={l`Create account`}
                     size="large"
                     color="primary"
                     style={{
@@ -165,7 +164,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                   </Button>
                   <Button
                     onPress={onPressExplore}
-                    label={_(msg`Explore the app`)}
+                    label={l`Explore the app`}
                     size="large"
                     color="primary"
                     variant="ghost"
@@ -191,7 +190,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                       onPointerEnter={() => setSignInLinkHovered(true)}
                       onPointerLeave={() => setSignInLinkHovered(false)}
                       accessibilityRole="button"
-                      accessibilityLabel={_(msg`Sign in`)}
+                      accessibilityLabel={l`Sign in`}
                       accessibilityHint="">
                       <Text
                         style={[
@@ -211,7 +210,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
               </View>
             </View>
             <Button
-              label={_(msg`Close welcome modal`)}
+              label={l`Close welcome modal`}
               style={[
                 a.absolute,
                 {

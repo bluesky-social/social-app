@@ -1,7 +1,7 @@
 import {type StyleProp, type ViewStyle} from 'react-native'
 import {View} from 'react-native'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -18,7 +18,7 @@ export function TimeIndicator({
   style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   if (isNaN(time)) {
     return null
@@ -30,12 +30,10 @@ export function TimeIndicator({
   return (
     <View
       pointerEvents="none"
-      accessibilityLabel={_(
-        msg`Time remaining: ${plural(Number(time) || 0, {
-          one: '# second',
-          other: '# seconds',
-        })}`,
-      )}
+      accessibilityLabel={l`Time remaining: ${plural(Number(time) || 0, {
+        one: '# second',
+        other: '# seconds',
+      })}`}
       accessibilityHint=""
       style={[
         {

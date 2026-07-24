@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -50,7 +49,7 @@ export function CreateOrEditListDialog({
   onSave?: (uri: string) => void
   initialValues?: InitialListValues
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const cancelControl = Dialog.useDialogControl()
   const [dirty, setDirty] = useState(false)
 
@@ -92,13 +91,12 @@ export function CreateOrEditListDialog({
         onPressCancel={onPressCancel}
         initialValues={initialValues}
       />
-
       <Prompt.Basic
         control={cancelControl}
-        title={_(msg`Discard changes?`)}
-        description={_(msg`Are you sure you want to discard your changes?`)}
+        title={l`Discard changes?`}
+        description={l`Are you sure you want to discard your changes?`}
         onConfirm={() => control.close()}
-        confirmButtonCta={_(msg`Discard`)}
+        confirmButtonCta={l`Discard`}
         confirmButtonColor="negative"
       />
     </Dialog.Outer>
@@ -131,7 +129,7 @@ function DialogInner({
   }, [list, purpose])
   const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist'
 
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const agent = useAgent()
   const control = Dialog.useDialogContext()
@@ -238,8 +236,8 @@ function DialogInner({
         })
         Toast.show(
           isCurateList
-            ? _(msg({message: 'User list updated', context: 'toast'}))
-            : _(msg({message: 'Moderation list updated', context: 'toast'})),
+            ? l({message: 'User list updated', context: 'toast'})
+            : l({message: 'Moderation list updated', context: 'toast'}),
         )
         control.close(() => onSave?.(list.uri))
       } else {
@@ -252,8 +250,8 @@ function DialogInner({
         })
         Toast.show(
           isCurateList
-            ? _(msg({message: 'User list created', context: 'toast'}))
-            : _(msg({message: 'Moderation list created', context: 'toast'})),
+            ? l({message: 'User list created', context: 'toast'})
+            : l({message: 'Moderation list created', context: 'toast'}),
         )
         control.close(() => onSave?.(uri))
       }
@@ -273,7 +271,7 @@ function DialogInner({
     activePurpose,
     isCurateList,
     agent,
-    _,
+    l,
   ])
 
   const displayNameTooLong = isOverMaxGraphemeCount({
@@ -288,7 +286,7 @@ function DialogInner({
   const cancelButton = useCallback(
     () => (
       <Button
-        label={_(msg`Cancel`)}
+        label={l`Cancel`}
         onPress={onPressCancel}
         size="small"
         color="primary"
@@ -300,13 +298,13 @@ function DialogInner({
         </ButtonText>
       </Button>
     ),
-    [onPressCancel, _],
+    [onPressCancel, l],
   )
 
   const saveButton = useCallback(
     () => (
       <Button
-        label={_(msg`Save`)}
+        label={l`Save`}
         onPress={onPressSave}
         disabled={
           !dirty ||
@@ -327,7 +325,7 @@ function DialogInner({
       </Button>
     ),
     [
-      _,
+      l,
       t,
       dirty,
       onPressSave,
@@ -360,19 +358,19 @@ function DialogInner({
 
   const title = list
     ? isCurateList
-      ? _(msg`Edit user list`)
-      : _(msg`Edit moderation list`)
+      ? l`Edit user list`
+      : l`Edit moderation list`
     : isCurateList
-      ? _(msg`Create user list`)
-      : _(msg`Create moderation list`)
+      ? l`Create user list`
+      : l`Create moderation list`
 
   const displayNamePlaceholder = isCurateList
-    ? _(msg`e.g. Great Posters`)
-    : _(msg`e.g. Spammers`)
+    ? l`e.g. Great Posters`
+    : l`e.g. Spammers`
 
   const descriptionPlaceholder = isCurateList
-    ? _(msg`e.g. The posters who never miss.`)
-    : _(msg`e.g. Users that repeatedly reply with ads.`)
+    ? l`e.g. The posters who never miss.`
+    : l`e.g. Users that repeatedly reply with ads.`
 
   return (
     <Dialog.ScrollableInner
@@ -413,7 +411,7 @@ function DialogInner({
             <Dialog.Input
               defaultValue={displayName}
               onChangeText={onChangeDisplayName}
-              label={_(msg`Name`)}
+              label={l`Name`}
               placeholder={displayNamePlaceholder}
               testID="editListNameInput"
             />
@@ -450,7 +448,7 @@ function DialogInner({
               defaultValue={descriptionRt.text}
               onChangeText={onChangeDescription}
               multiline
-              label={_(msg`Description`)}
+              label={l`Description`}
               placeholder={descriptionPlaceholder}
               testID="editListDescriptionInput"
             />

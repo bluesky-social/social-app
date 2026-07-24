@@ -1,7 +1,6 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
@@ -49,7 +48,7 @@ function LinkWarningDialogInner({
   link?: {href: string; displayText: string; share?: boolean}
 }) {
   const control = Dialog.useDialogContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const openLink = useOpenLink()
   const {gtMobile} = useBreakpoints()
@@ -79,8 +78,8 @@ function LinkWarningDialogInner({
       style={web({maxWidth: 450})}
       label={
         potentiallyMisleading
-          ? _(msg`Potentially misleading link warning`)
-          : _(msg`Leaving Bluesky`)
+          ? l`Potentially misleading link warning`
+          : l`Leaving Bluesky`
       }>
       <View style={[a.gap_2xl]}>
         <View style={[a.gap_sm]}>
@@ -109,8 +108,8 @@ function LinkWarningDialogInner({
             gtMobile && [a.flex_row_reverse, a.justify_start],
           ]}>
           <Button
-            label={link?.share ? _(msg`Share link`) : _(msg`Visit site`)}
-            accessibilityHint={_(msg`Opens link ${link?.href ?? ''}`)}
+            label={link?.share ? l`Share link` : l`Visit site`}
+            accessibilityHint={l`Opens link ${link?.href ?? ''}`}
             onPress={onPressVisit}
             size="large"
             variant="solid"
@@ -124,7 +123,7 @@ function LinkWarningDialogInner({
             </ButtonText>
           </Button>
           <Button
-            label={_(msg`Go back`)}
+            label={l`Go back`}
             onPress={onCancel}
             size="large"
             variant="ghost"

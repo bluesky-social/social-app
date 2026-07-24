@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useA11y} from '#/state/a11y'
@@ -16,7 +15,7 @@ import {IS_ANDROID} from '#/env'
 
 export function Content({state}: {state: PolicyUpdateState}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {screenReaderEnabled} = useA11y()
 
   const handleClose = useCallback(() => {
@@ -28,27 +27,27 @@ export function Content({state}: {state: PolicyUpdateState}) {
     terms: {
       overridePresentation: false,
       to: `https://bsky.social/about/support/tos`,
-      label: _(msg`Terms of Service`),
+      label: l`Terms of Service`,
     },
     privacy: {
       overridePresentation: false,
       to: `https://bsky.social/about/support/privacy-policy`,
-      label: _(msg`Privacy Policy`),
+      label: l`Privacy Policy`,
     },
     copyright: {
       overridePresentation: false,
       to: `https://bsky.social/about/support/copyright`,
-      label: _(msg`Copyright Policy`),
+      label: l`Copyright Policy`,
     },
     guidelines: {
       overridePresentation: false,
       to: `https://bsky.social/about/support/community-guidelines`,
-      label: _(msg`Community Guidelines`),
+      label: l`Community Guidelines`,
     },
     blog: {
       overridePresentation: false,
       to: `https://bsky.social/about/blog/08-14-2025-updated-terms-and-policies`,
-      label: _(msg`Our blog post`),
+      label: l`Our blog post`,
     },
   }
   const linkButtonStyles = {
@@ -58,10 +57,8 @@ export function Content({state}: {state: PolicyUpdateState}) {
   } as const
 
   const label = IS_ANDROID
-    ? _(
-        msg`We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post.`,
-      )
-    : _(msg`We're updating our policies`)
+    ? l`We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post.`
+    : l`We're updating our policies`
 
   return (
     <Overlay label={label}>
@@ -160,10 +157,8 @@ export function Content({state}: {state: PolicyUpdateState}) {
 
         <View style={[a.w_full, a.gap_md]}>
           <Button
-            label={_(msg`Continue`)}
-            accessibilityHint={_(
-              msg`Tap to acknowledge that you understand and agree to these updates and continue using Bluesky`,
-            )}
+            label={l`Continue`}
+            accessibilityHint={l`Tap to acknowledge that you understand and agree to these updates and continue using Bluesky`}
             color="primary"
             size="large"
             onPress={handleClose}>

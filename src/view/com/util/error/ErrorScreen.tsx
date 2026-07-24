@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -28,7 +27,7 @@ export function ErrorScreen({
 }) {
   const t = useTheme()
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Layout.Center testID={testID}>
@@ -88,10 +87,8 @@ export function ErrorScreen({
               variant="solid"
               color="secondary_inverted"
               size="small"
-              label={_(msg`Retry`)}
-              accessibilityHint={_(
-                msg`Retries the last action, which errored out`,
-              )}>
+              label={l`Retry`}
+              accessibilityHint={l`Retries the last action, which errored out`}>
               <ButtonIcon icon={ArrowRotateCounterClockwiseIcon} />
               <ButtonText>
                 <Trans context="action">Try again</Trans>

@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -27,7 +26,7 @@ export function DisableEmail2FADialog({
 }: {
   control: Dialog.DialogOuterProps['control']
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
@@ -62,13 +61,13 @@ export function DisableEmail2FADialog({
           emailAuthFactor: false,
         })
         await agent.resumeSession(agent.session!)
-        Toast.show(_(msg({message: 'Email 2FA disabled', context: 'toast'})))
+        Toast.show(l({message: 'Email 2FA disabled', context: 'toast'}))
       }
       control.close()
     } catch (e) {
       const errMsg = String(e)
       if (errMsg.includes('Token is invalid')) {
-        setError(_(msg`Invalid 2FA confirmation code.`))
+        setError(l`Invalid 2FA confirmation code.`)
       } else {
         setError(cleanError(errMsg))
       }
@@ -118,7 +117,7 @@ export function DisableEmail2FADialog({
                 color="primary"
                 size={gtMobile ? 'small' : 'large'}
                 onPress={onSendEmail}
-                label={_(msg`Send verification email`)}
+                label={l`Send verification email`}
                 disabled={isProcessing}>
                 <ButtonText>
                   <Trans>Send verification email</Trans>
@@ -131,7 +130,7 @@ export function DisableEmail2FADialog({
                 color="primary"
                 size={gtMobile ? 'small' : 'large'}
                 onPress={() => setStage(Stages.ConfirmCode)}
-                label={_(msg`I have a code`)}
+                label={l`I have a code`}
                 disabled={isProcessing}>
                 <ButtonText>
                   <Trans>I have a code</Trans>
@@ -148,7 +147,7 @@ export function DisableEmail2FADialog({
                   <TextField.Icon icon={Lock} />
                   <Dialog.Input
                     testID="confirmationCode"
-                    label={_(msg`Confirmation code`)}
+                    label={l`Confirmation code`}
                     autoCapitalize="none"
                     autoFocus
                     autoCorrect={false}
@@ -171,7 +170,7 @@ export function DisableEmail2FADialog({
                   color="primary"
                   size={gtMobile ? 'small' : 'large'}
                   onPress={onSendEmail}
-                  label={_(msg`Resend email`)}
+                  label={l`Resend email`}
                   disabled={isProcessing}>
                   <ButtonText>
                     <Trans>Resend email</Trans>
@@ -183,7 +182,7 @@ export function DisableEmail2FADialog({
                   color="primary"
                   size={gtMobile ? 'small' : 'large'}
                   onPress={onConfirmDisable}
-                  label={_(msg`Confirm`)}
+                  label={l`Confirm`}
                   disabled={isProcessing}>
                   <ButtonText>
                     <Trans>Confirm</Trans>

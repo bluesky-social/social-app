@@ -1,8 +1,7 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
@@ -35,7 +34,7 @@ export function Header({
   list: AppBskyGraphDefs.ListView
   preferences: UsePreferencesQueryResponse
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST
@@ -73,9 +72,7 @@ export function Header({
           },
         ])
         Toast.show(
-          pinned
-            ? _(msg`Pinned to your feeds`)
-            : _(msg`Unpinned from your feeds`),
+          pinned ? l`Pinned to your feeds` : l`Unpinned from your feeds`,
         )
       } else {
         await addSavedFeeds([
@@ -85,10 +82,10 @@ export function Header({
             pinned: true,
           },
         ])
-        Toast.show(_(msg`Saved to your feeds`))
+        Toast.show(l`Saved to your feeds`)
       }
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), {
+      Toast.show(l`There was an issue contacting the server`, {
         type: 'error',
       })
       logger.error('Failed to toggle pinned feed', {message: e})
@@ -98,13 +95,11 @@ export function Header({
   const onUnsubscribeMute = async () => {
     try {
       await muteList({uri: list.uri, mute: false})
-      Toast.show(_(msg({message: 'List unmuted', context: 'toast'})))
+      Toast.show(l({message: 'List unmuted', context: 'toast'}))
       ax.metric('moderation:unsubscribedFromList', {listType: 'mute'})
     } catch {
       Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
+        l`There was an issue. Please check your internet connection and try again.`,
       )
     }
   }
@@ -112,13 +107,11 @@ export function Header({
   const onUnsubscribeBlock = async () => {
     try {
       await blockList({uri: list.uri, block: false})
-      Toast.show(_(msg({message: 'List unblocked', context: 'toast'})))
+      Toast.show(l({message: 'List unblocked', context: 'toast'}))
       ax.metric('moderation:unsubscribedFromList', {listType: 'block'})
     } catch {
       Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
+        l`There was an issue. Please check your internet connection and try again.`,
       )
     }
   }
@@ -148,7 +141,7 @@ export function Header({
           <Button
             testID={isPinned ? 'unpinBtn' : 'pinBtn'}
             color={isPinned ? 'secondary' : 'primary_subtle'}
-            label={isPinned ? _(msg`Unpin`) : _(msg`Pin to home`)}
+            label={isPinned ? l`Unpin` : l`Pin to home`}
             onPress={onTogglePinned}
             disabled={isPending}
             size="small"
@@ -163,7 +156,7 @@ export function Header({
             <Button
               testID="unblockBtn"
               color="secondary"
-              label={_(msg`Unblock`)}
+              label={l`Unblock`}
               onPress={onUnsubscribeBlock}
               size="small"
               style={[a.rounded_full]}
@@ -177,7 +170,7 @@ export function Header({
             <Button
               testID="unmuteBtn"
               color="secondary"
-              label={_(msg`Unmute`)}
+              label={l`Unmute`}
               onPress={onUnsubscribeMute}
               size="small"
               style={[a.rounded_full]}

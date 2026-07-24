@@ -54,7 +54,6 @@ export function ClearableDateField({
         onChangeDate={() => {}}
         onConfirm={onConfirm}
       />
-
       {active && (
         /*
          * Nudged left of the browser's native date-picker icon, which (in

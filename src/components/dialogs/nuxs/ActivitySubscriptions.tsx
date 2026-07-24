@@ -1,8 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme, web} from '#/alf'
@@ -15,7 +14,7 @@ import {IS_WEB} from '#/env'
 
 export function ActivitySubscriptionsNUX() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
 
@@ -28,9 +27,8 @@ export function ActivitySubscriptionsNUX() {
   return (
     <Dialog.Outer control={control} onClose={onClose}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner
-        label={_(msg`Introducing activity notifications`)}
+        label={l`Introducing activity notifications`}
         style={[web({maxWidth: 400})]}
         contentContainerStyle={[
           {
@@ -110,9 +108,7 @@ export function ActivitySubscriptionsNUX() {
                     aspectRatio: 398 / 268,
                   },
                 ]}
-                alt={_(
-                  msg`A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature.`,
-                )}
+                alt={l`A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature.`}
                 useAppleWebpCodec
               />
             </View>
@@ -157,7 +153,7 @@ export function ActivitySubscriptionsNUX() {
 
           {!IS_WEB && (
             <Button
-              label={_(msg`Close`)}
+              label={l`Close`}
               size="large"
               variant="solid"
               color="primary"

@@ -1,7 +1,6 @@
 import {useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {retry} from '#/lib/async/retry'
@@ -61,7 +60,7 @@ export function useAgeAssuranceRedirectDialogControl() {
 }
 
 export function AgeAssuranceRedirectDialog() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = useAgeAssuranceRedirectDialogControl()
 
   // for testing
@@ -70,9 +69,8 @@ export function AgeAssuranceRedirectDialog() {
   return (
     <Dialog.Outer control={control.control} onClose={() => control.clear()}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner
-        label={_(msg`Verifying your age assurance status`)}
+        label={l`Verifying your age assurance status`}
         style={[web({maxWidth: 400})]}>
         <Inner optimisticState={control.value} />
       </Dialog.ScrollableInner>
@@ -83,7 +81,7 @@ export function AgeAssuranceRedirectDialog() {
 export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const agent = useAgent()
   const polling = useRef(false)
   const unmounted = useRef(false)
@@ -171,7 +169,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           {IS_NATIVE && (
             <View style={[a.w_full, a.pt_lg]}>
               <Button
-                label={_(msg`Close`)}
+                label={l`Close`}
                 size="large"
                 variant="solid"
                 color="secondary"
@@ -183,7 +181,6 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
             </View>
           )}
         </View>
-
         <Dialog.Close />
       </>
     )
@@ -230,7 +227,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
         {error && IS_NATIVE && (
           <View style={[a.w_full, a.pt_lg]}>
             <Button
-              label={_(msg`Close`)}
+              label={l`Close`}
               size="large"
               variant="solid"
               color="secondary"
@@ -242,7 +239,6 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           </View>
         )}
       </View>
-
       {error && <Dialog.Close />}
     </>
   )

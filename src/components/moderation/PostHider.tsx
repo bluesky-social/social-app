@@ -12,8 +12,7 @@ import {
   type ModerationCause,
   type ModerationUI,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -55,7 +54,7 @@ export function PostHider({
 }: Props) {
   const queryClient = useQueryClient()
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [override, setOverride] = useState(false)
   const control = useModerationDetailsDialogControl()
   const blur =
@@ -91,7 +90,7 @@ export function PostHider({
       }}
       accessibilityRole="button"
       accessibilityLabel={
-        override ? _(msg`Hides the content`) : _(msg`Shows the content`)
+        override ? l`Hides the content` : l`Shows the content`
       }
       accessibilityHint=""
       style={[
@@ -113,7 +112,7 @@ export function PostHider({
           control.open()
         }}
         accessibilityRole="button"
-        accessibilityLabel={_(msg`Learn more about this warning`)}
+        accessibilityLabel={l`Learn more about this warning`}
         accessibilityHint="">
         <View
           style={[

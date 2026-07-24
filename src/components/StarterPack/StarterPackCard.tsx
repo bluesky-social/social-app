@@ -2,8 +2,7 @@ import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -58,7 +57,7 @@ export function Card({
 }) {
   const {record, creator, joinedAllTimeCount} = starterPack
 
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
 
@@ -87,8 +86,8 @@ export function Card({
             style={[a.leading_snug, t.atoms.text_contrast_medium]}
             numberOfLines={1}>
             {creator?.did === currentAccount?.did
-              ? _(msg`Starter pack by you`)
-              : _(msg`Starter pack by ${sanitizeHandle(creator.handle, '@')}`)}
+              ? l`Starter pack by you`
+              : l`Starter pack by ${sanitizeHandle(creator.handle, '@')}`}
           </Text>
         </View>
       </View>
@@ -113,7 +112,7 @@ export function useStarterPackLink({
 }: {
   view: bsky.starterPack.AnyStarterPackView
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const qc = useQueryClient()
   const {rkey, handleOrDid} = useMemo(() => {
     const rkey = new AtUri(view.uri).rkey
@@ -131,8 +130,8 @@ export function useStarterPackLink({
       view.record,
       AppBskyGraphStarterpack.isRecord,
     )
-      ? _(msg`Navigate to ${view.record.name}`)
-      : _(msg`Navigate to starter pack`),
+      ? l`Navigate to ${view.record.name}`
+      : l`Navigate to starter pack`,
     precache,
   }
 }
@@ -145,7 +144,7 @@ export function Link({
   onPress?: () => void
   children: BaseLinkProps['children']
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const {record} = starterPack
   const {rkey, handleOrDid} = useMemo(() => {
@@ -166,7 +165,7 @@ export function Link({
   return (
     <BaseLink
       to={`/starter-pack/${handleOrDid}/${rkey}`}
-      label={_(msg`Navigate to ${record.name}`)}
+      label={l`Navigate to ${record.name}`}
       onPress={() => {
         precacheResolvedUri(
           queryClient,

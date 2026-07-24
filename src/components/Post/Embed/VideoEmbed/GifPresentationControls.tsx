@@ -1,6 +1,5 @@
 import {ActivityIndicator, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
@@ -22,15 +21,15 @@ export function GifPresentationControls({
   isLoading?: boolean
   altText?: string
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const largeBadge = useLargeAltBadgeEnabled()
 
   return (
     <>
       <Button
-        label={isPlaying ? _(msg`Pause GIF`) : _(msg`Play GIF`)}
-        accessibilityHint={_(msg`Plays or pauses the GIF`)}
+        label={isPlaying ? l`Pause GIF` : l`Play GIF`}
+        accessibilityHint={l`Plays or pauses the GIF`}
         style={[
           a.absolute,
           a.align_center,

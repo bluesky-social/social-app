@@ -7,8 +7,7 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {BlurView} from 'expo-blur'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {useContextMenuContext} from './context'
@@ -32,7 +31,7 @@ export function Backdrop(props: Props) {
 }
 
 function BlurredBackdrop({animation, intensity = 50, onPress}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const animatedProps = useAnimatedProps(() => ({
     intensity: interpolate(
@@ -50,8 +49,8 @@ function BlurredBackdrop({animation, intensity = 50, onPress}: Props) {
       tint="systemMaterialDark">
       <Pressable
         style={a.flex_1}
-        accessibilityLabel={_(msg`Close menu`)}
-        accessibilityHint={_(msg`Tap to close context menu`)}
+        accessibilityLabel={l`Close menu`}
+        accessibilityHint={l`Tap to close context menu`}
         onPress={onPress}
       />
     </AnimatedBlurView>
@@ -60,7 +59,7 @@ function BlurredBackdrop({animation, intensity = 50, onPress}: Props) {
 
 function OpacityBackdrop({animation, onPress}: Props) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
@@ -76,8 +75,8 @@ function OpacityBackdrop({animation, onPress}: Props) {
       style={[a.absolute, a.inset_0, t.atoms.bg_contrast_975, animatedStyle]}>
       <Pressable
         style={a.flex_1}
-        accessibilityLabel={_(msg`Close menu`)}
-        accessibilityHint={_(msg`Tap to close context menu`)}
+        accessibilityLabel={l`Close menu`}
+        accessibilityHint={l`Tap to close context menu`}
         onPress={onPress}
       />
     </Animated.View>

@@ -2,8 +2,7 @@ import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useCallOnce} from '#/lib/once'
 import {isBskyCustomFeedUrl} from '#/lib/strings/url-helpers'
@@ -26,7 +25,7 @@ export function LiveEventFeedCardCompact({
   feed: LiveEventFeed
   metricContext: LiveEventFeedMetricContext
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
 
   const layout = feed.layouts.compact
@@ -50,7 +49,7 @@ export function LiveEventFeedCardCompact({
   return (
     <Link
       to={url}
-      label={_(msg`Live event happening now: ${feed.title}`)}
+      label={l`Live event happening now: ${feed.title}`}
       style={[a.w_full]}
       onPress={() => {
         ax.metric('liveEvents:feedBanner:click', {

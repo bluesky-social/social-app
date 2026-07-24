@@ -2,8 +2,7 @@ import {useCallback} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {useAnimatedRef} from 'react-native-reanimated'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -47,7 +46,7 @@ export function ProfileSubpageHeader({
   avatarType: UserAvatarType | 'starter-pack'
 }>) {
   const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const {openLightbox} = useLightboxControls()
   const pal = usePalette('default')
@@ -90,7 +89,6 @@ export function ProfileSubpageHeader({
         <Layout.Header.Content />
         {children}
       </Layout.Header.Outer>
-
       <View
         style={{
           flexDirection: 'row',
@@ -105,7 +103,7 @@ export function ProfileSubpageHeader({
             testID="headerAviButton"
             onPress={onPressAvi}
             accessibilityRole="image"
-            accessibilityLabel={_(msg`View the avatar`)}
+            accessibilityLabel={l`View the avatar`}
             accessibilityHint=""
             style={{width: 58}}>
             {avatarType === 'starter-pack' ? (

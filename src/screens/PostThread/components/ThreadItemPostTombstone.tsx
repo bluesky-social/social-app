@@ -1,7 +1,6 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {LINEAR_AVI_WIDTH, OUTER_SPACE} from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
@@ -15,16 +14,16 @@ export type ThreadItemPostTombstoneProps = {
 
 export function ThreadItemPostTombstone({type}: ThreadItemPostTombstoneProps) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {copy, Icon} = useMemo(() => {
     switch (type) {
       case 'blocked':
-        return {copy: _(msg`Post blocked`), Icon: PersonXIcon}
+        return {copy: l`Post blocked`, Icon: PersonXIcon}
       case 'not-found':
       default:
-        return {copy: _(msg`Post not found`), Icon: TrashIcon}
+        return {copy: l`Post not found`, Icon: TrashIcon}
     }
-  }, [_, type])
+  }, [l, type])
 
   return (
     <View

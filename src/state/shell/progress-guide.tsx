@@ -1,6 +1,5 @@
 import {createContext, useContext, useMemo, useRef, useState} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {
   ProgressGuideToast,
@@ -72,7 +71,7 @@ export function useProgressGuideControls() {
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {mutateAsync, variables, isPending} =
     useSetActiveProgressGuideMutation()
@@ -213,28 +212,28 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           <>
             <ProgressGuideToast
               ref={firstLikeToastRef}
-              title={_(msg`Your first like!`)}
-              subtitle={_(msg`Like 10 posts to train the Discover feed`)}
+              title={l`Your first like!`}
+              subtitle={l`Like 10 posts to train the Discover feed`}
             />
             <ProgressGuideToast
               ref={fifthLikeToastRef}
-              title={_(msg`Half way there!`)}
-              subtitle={_(msg`Like 10 posts to train the Discover feed`)}
+              title={l`Half way there!`}
+              subtitle={l`Like 10 posts to train the Discover feed`}
             />
             <ProgressGuideToast
               ref={tenthLikeToastRef}
-              title={_(msg`Task complete - 10 likes!`)}
-              subtitle={_(msg`The Discover feed now knows what you like`)}
+              title={l`Task complete - 10 likes!`}
+              subtitle={l`The Discover feed now knows what you like`}
             />
             <ProgressGuideToast
               ref={fifthFollowToastRef}
-              title={_(msg`Half way there!`)}
-              subtitle={_(msg`Follow 10 accounts`)}
+              title={l`Half way there!`}
+              subtitle={l`Follow 10 accounts`}
             />
             <ProgressGuideToast
               ref={tenthFollowToastRef}
-              title={_(msg`Task complete - 10 follows!`)}
-              subtitle={_(msg`You've found some people to follow`)}
+              title={l`Task complete - 10 follows!`}
+              subtitle={l`You've found some people to follow`}
             />
           </>
         )}

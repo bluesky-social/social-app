@@ -1,7 +1,6 @@
 import {useRef} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
@@ -15,7 +14,7 @@ export function SubtitleFilePicker({
   onSelectFile,
   disabled,
 }: SubtitleFilePickerProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ref = useRef<HTMLInputElement>(null)
 
   const handleClick = () => {
@@ -36,7 +35,7 @@ export function SubtitleFilePicker({
         logger.error('Invalid subtitle file type', {
           safeMessage: `File: ${selectedFile.name} (${selectedFile.type})`,
         })
-        Toast.show(_(msg`Only WebVTT (.vtt) files are supported`))
+        Toast.show(l`Only WebVTT (.vtt) files are supported`)
       }
     }
   }
@@ -55,7 +54,7 @@ export function SubtitleFilePicker({
       <View style={a.flex_row}>
         <Button
           onPress={handleClick}
-          label={_(msg`Select caption file (.vtt)`)}
+          label={l`Select caption file (.vtt)`}
           size="large"
           color="primary"
           variant="solid"
