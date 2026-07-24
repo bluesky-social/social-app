@@ -390,7 +390,7 @@ function DialogInner({
                 a.mb_sm,
               ]}>
               <Trans comment="Include search results with or without replies">
-                Include
+                Post type
               </Trans>
             </Text>
             <View style={[a.flex_row]}>
