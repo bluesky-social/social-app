@@ -136,4 +136,4 @@ docs/superpowers/
 .claude/worktrees
 
 # pnpm
-.pnpm-store
+.pnpm-store/
