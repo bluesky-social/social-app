@@ -1,5 +1,5 @@
 import {memo, useMemo} from 'react'
-import {Text as RNText, View} from 'react-native'
+import {Text as RNText, useWindowDimensions, View} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -181,6 +181,15 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const {currentAccount, hasSession} = useSession()
   const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
   const formatPostStatCount = useFormatPostStatCount()
+
+  /*
+   * The lightbox unlocks device orientation while open, which re-lays-out this
+   * screen behind it. Rotating to landscape makes the anchor text fit on fewer
+   * lines, and iOS caches that stale single-line measurement while the view is
+   * occluded, so it stays clipped after returning to portrait. Keying the text
+   * on the window width remounts it on rotation, forcing a fresh measurement.
+   */
+  const {width: windowWidth} = useWindowDimensions()
 
   const post = postShadow
   const record = item.value.post.record
@@ -394,6 +403,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               />
               {richText?.text ? (
                 <RichText
+                  key={windowWidth}
                   enableTags
                   selectable
                   value={richText}
