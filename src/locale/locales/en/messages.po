@@ -192,10 +192,7 @@ msgid "{0, plural, one {following} other {following}}"
 msgstr ""
 
 #. placeholder {0}: profile.postsCount || 0
-#. placeholder {0}: trend.postCount
-#: src/components/interstitials/FeedTrendingTopics.tsx:220
 #: src/screens/Profile/Header/Metrics.tsx:58
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:150
 msgid "{0, plural, one {post} other {posts}}"
 msgstr ""
 
@@ -226,16 +223,6 @@ msgstr ""
 #: src/components/moderation/ContentHider.tsx:98
 msgid "{0} (Account)"
 msgstr ""
-
-#. '{postCount} {posts}', e.g., '1.2K posts'
-#. '{postCount} {posts}', e.g., '1.2K posts'
-#. placeholder {0}: formatCount(i18n, trend.postCount)
-#. placeholder {1}: import {useMemo} from 'react' import {Pressable, View} from 'react-native' import {Image} from 'expo-image' import { type AppBskyUnspeccedDefs, moderateProfile, RichText as RichTextApi, } from '@atproto/api' import {plural} from '@lingui/core/macro' import {Trans, useLingui} from '@lingui/react/macro' import {useModerationOpts} from '#/state/preferences/moderation-opts' import {useTrendingSettings} from '#/state/preferences/trending' import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery' import {useTrendingConfig} from '#/state/service-config' import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder' import {formatCount} from '#/view/com/util/numeric/format' import {atoms as a, useGutters, useTheme, type ViewStyleProp} from '#/alf' import {AvatarStack} from '#/components/AvatarStack' import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending' import {Link} from '#/components/Link' import {RichText} from '#/components/RichText' import {SubtleHover} from '#/components/SubtleHover' import {Text} from '#/components/Typography' import {useAnalytics} from '#/analytics' import * as ModuleHeader from '../components/ModuleHeader' const TOPIC_COUNT = 5 const IMAGE_SIZE = 56 export function ExploreTrendingTopics() { const {enabled} = useTrendingConfig() const {trendingDisabled} = useTrendingSettings() return enabled && !trendingDisabled ? <Inner /> : null } function Inner() { const ax = useAnalytics() const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery() const noTopics = !isLoading && !error && !trending?.trends?.length const showLoading = isLoading || isRefetching if (!showLoading && (error || !trending?.trends || noTopics)) return null return ( <View style={[a.pb_md]}> <ModuleHeader.Container bottomBorder> <ModuleHeader.Icon icon={TrendingIcon} size="md" /> <ModuleHeader.TitleText> <Trans>Trending</Trans> </ModuleHeader.TitleText> </ModuleHeader.Container> {showLoading ? Array.from({length: TOPIC_COUNT}).map((__, i) => ( <TrendingTopicRowSkeleton key={i} /> )) : trending?.trends.map((trend, index) => ( <TrendRow key={trend.link} trend={trend} rank={index + 1} onPress={() => { ax.metric('trendingTopic:click', { context: 'explore', recId: trending.recId, }) }} /> ))} </View> ) } export function TrendRow({ trend, rank, children, onPress, }: ViewStyleProp & { trend: AppBskyUnspeccedDefs.TrendView rank: number children?: React.ReactNode onPress?: () => void }) { const t = useTheme() const {t: l, i18n} = useLingui() const gutters = useGutters([0, 'base']) const actors = useModerateTrendingActors(trend.actors) const description = useMemo(() => { if (!trend.description) return const rt = new RichTextApi({text: trend.description}) rt.detectFacetsWithoutResolution() return rt }, [trend.description]) let imageUrl = null // TODO Image URL goes here when available. -dsb return ( <Link testID={trend.link} label={l`Browse topic ${trend.displayName}`} to={trend.link} onPress={onPress} style={[a.border_b, t.atoms.border_contrast_low]} PressableComponent={Pressable}> {({hovered, pressed}) => ( <> <SubtleHover hover={hovered || pressed} native /> <View style={[gutters, a.w_full, a.flex_row, a.py_md, a.gap_sm]}> <Text style={[ a.text_sm, a.font_medium, t.atoms.text_contrast_low, { fontVariant: ['tabular-nums'], }, ]}> <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'> {rank}. </Trans> </Text> <View style={[a.flex_1, a.gap_2xs]}> <Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]} numberOfLines={1}> {trend.displayName} </Text> {description ? ( <RichText value={description} disableLinks style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={2} /> ) : null} <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}> {actors.length > 0 ? ( <AvatarStack size={24} profiles={actors} /> ) : null} <Text style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}> <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'"> {formatCount(i18n, trend.postCount)}{' '} {plural(trend.postCount, {one: 'post', other: 'posts'})} </Trans> </Text> </View> </View> {imageUrl ? ( <Image source={{ uri: imageUrl, }} alt={trend.topic} style={[ a.flex_0, a.rounded_md, t.atoms.bg_contrast_25, { width: IMAGE_SIZE, height: IMAGE_SIZE, }, ]} contentFit="cover" accessible={true} accessibilityIgnoresInvertColors useAppleWebpCodec /> ) : null} </View> {children} </> )} </Link> ) } // Unused atm, but leaving here so we don't lose localization. -dsb export function useCategoryDisplayName( category: AppBskyUnspeccedDefs.TrendView['category'], ) { const {t: l} = useLingui() switch (category) { case 'sports': return l`Sports` case 'politics': return l`Politics` case 'video-games': return l`Video Games` case 'pop-culture': return l`Entertainment` case 'news': return l`News` case 'other': default: return null } } export function TrendingTopicRowSkeleton() { const t = useTheme() const gutters = useGutters([0, 'base']) return ( <View style={[ gutters, a.w_full, a.py_md, a.flex_row, a.gap_sm, a.border_b, t.atoms.border_contrast_low, ]}> <View style={[{width: 20}]}> <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} /> </View> <View style={[a.flex_1, a.gap_2xs]}> <LoadingPlaceholder width={90} height={17} /> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={70} height={16} /> <LoadingPlaceholder width={40} height={16} /> <LoadingPlaceholder width={60} height={16} /> </View> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={50} height={16} /> <LoadingPlaceholder width={70} height={16} /> <LoadingPlaceholder width={30} height={16} /> </View> <View style={[a.flex_1, a.gap_sm]}> <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={24} height={24} style={[a.rounded_full]} /> <LoadingPlaceholder width={60} height={16} /> </View> </View> </View> {/* TODO Image placeholder goes here when images are available. -dsb */} </View> ) } function useModerateTrendingActors( actors: AppBskyUnspeccedDefs.TrendView['actors'], ) { const moderationOpts = useModerationOpts() return useMemo(() => { if (!moderationOpts) return [] return actors .filter(actor => { const decision = moderateProfile(actor, moderationOpts) return !decision.ui('avatar').filter && !decision.ui('avatar').blur }) .slice(0, 3) }, [actors, moderationOpts]) } 
-#. placeholder {1}: import {useMemo} from 'react' import {Pressable, View} from 'react-native' import {LinearGradient} from 'expo-linear-gradient' import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api' import {plural} from '@lingui/core/macro' import {Trans, useLingui} from '@lingui/react/macro' import {useModerationOpts} from '#/state/preferences/moderation-opts' import {useTrendingSettings} from '#/state/preferences/trending' import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery' import {useTrendingConfig} from '#/state/service-config' import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder' import {formatCount} from '#/view/com/util/numeric/format' import { atoms as a, useGutters, useLayoutBreakpoints, useTheme, type ViewStyleProp, } from '#/alf' import {alpha} from '#/alf/utils' import {AvatarStack} from '#/components/AvatarStack' import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending' import {Link} from '#/components/Link' import {SubtleHover} from '#/components/SubtleHover' import {Text} from '#/components/Typography' import {useAnalytics} from '#/analytics' const TOPIC_COUNT = 3 export function FeedTrendingTopicsInterstitial() { const {enabled} = useTrendingConfig() const {trendingDisabled} = useTrendingSettings() const {rightNavVisible} = useLayoutBreakpoints() return enabled && !trendingDisabled && !rightNavVisible ? <Inner /> : null } function Inner() { const t = useTheme() const {t: l} = useLingui() const gutters = useGutters([0, 'base']) const ax = useAnalytics() const { data: trending, error, isLoading, isRefetching, } = useGetTrendsQuery({limit: TOPIC_COUNT}) const noTopics = !isLoading && !error && !trending?.trends?.length const shadowColor = alpha(t.palette.primary_100, 0.5) const gradient = { values: [ [0, t.atoms.bg.backgroundColor], [0.1, t.palette.primary_25], [0.9, t.palette.primary_25], [1, t.atoms.bg.backgroundColor], ], hover_value: t.palette.white, } if (error || noTopics) { return null } return ( <View style={[ gutters, a.pt_lg, a.pb_xl, a.gap_sm, a.border_t, t.atoms.border_contrast_low, ]}> <LinearGradient colors={gradient.values.map(c => c[1]) as [string, string, ...string[]]} locations={ gradient.values.map(c => c[0]) as [number, number, ...number[]] } style={[a.absolute, a.inset_0]} /> <View style={[ a.relative, a.z_20, a.px_xs, a.flex_row, a.align_center, a.justify_between, a.gap_sm, ]}> <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_xs]}> <TrendingIcon width={18} /> <Text style={[a.text_md, a.font_medium, a.leading_snug]} numberOfLines={1}> <Trans>Trending</Trans> </Text> </View> <Link label={l`See more trending topics`} to="/search"> <Text style={[ a.text_sm, a.font_medium, a.leading_snug, t.atoms.text_contrast_high, ]} numberOfLines={1}> <Trans>See more</Trans> </Text> </Link> </View> <View style={[ a.relative, a.z_10, a.border, a.rounded_xl, t.atoms.bg, { borderColor: t.palette.primary_100, boxShadow: `0 0 16px 0 ${shadowColor}`, elevation: 8, shadowColor: shadowColor, shadowOffset: {width: 0, height: 0}, shadowOpacity: 1, shadowRadius: 16, }, ]}> {isLoading || isRefetching ? Array.from({length: TOPIC_COUNT}).map((_, i) => ( <TrendingTopicRowSkeleton key={i} rank={i + 1} /> )) : trending?.trends?.map((trend, index) => ( <TrendRow key={trend.link} trend={trend} rank={index + 1} onPress={() => { ax.metric('trendingTopic:click', {context: 'interstitial'}) }} /> ))} </View> </View> ) } function TrendRow({ trend, rank, onPress, }: ViewStyleProp & { trend: AppBskyUnspeccedDefs.TrendView rank: number children?: React.ReactNode onPress?: () => void }) { const t = useTheme() const {t: l, i18n} = useLingui() const actors = useModerateTrendingActors(trend.actors) return ( <Link testID={trend.link} label={l`Browse topic ${trend.displayName}`} to={trend.link} onPress={onPress} style={[ rank < TOPIC_COUNT && a.border_b, { borderColor: t.palette.primary_100, }, ]} PressableComponent={Pressable}> {({hovered, pressed}) => ( <> <SubtleHover hover={hovered || pressed} native /> <View style={[ a.w_full, a.flex_row, a.flex_row, { gap: 6, padding: 14, paddingLeft: 16, }, ]}> <Text style={[ a.text_md, a.font_semi_bold, t.atoms.text_contrast_low, { fontVariant: ['tabular-nums'], }, ]}> <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'> {rank}. </Trans> </Text> <View style={[a.flex_1, a.gap_xs]}> <Text style={[a.text_md, a.font_medium]} numberOfLines={1}> {trend.displayName} </Text> <View style={[a.flex_row, a.gap_sm, a.align_center]}> {actors.length > 0 ? ( <AvatarStack size={24} profiles={actors} /> ) : null} <Text style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}> <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'"> {formatCount(i18n, trend.postCount)}{' '} {plural(trend.postCount, {one: 'post', other: 'posts'})} </Trans> </Text> </View> </View> </View> </> )} </Link> ) } function TrendingTopicRowSkeleton({rank}: {rank: number}) { const t = useTheme() return ( <View style={[ a.w_full, a.flex_row, a.px_lg, a.py_lg, a.flex_row, rank < TOPIC_COUNT && a.border_b, t.atoms.border_contrast_low, { gap: 6, }, ]}> <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} /> <View style={[a.flex_1, a.gap_xs]}> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={70} height={17} /> <LoadingPlaceholder width={40} height={17} /> <LoadingPlaceholder width={60} height={17} /> </View> <LoadingPlaceholder width={24} height={24} style={[a.rounded_full]} /> </View> </View> ) } function useModerateTrendingActors( actors: AppBskyUnspeccedDefs.TrendView['actors'], ) { const moderationOpts = useModerationOpts() return useMemo(() => { if (!moderationOpts) return [] return actors .filter(actor => { const decision = moderateProfile(actor, moderationOpts) return !decision.ui('avatar').filter && !decision.ui('avatar').blur }) .slice(0, 3) }, [actors, moderationOpts]) } 
-#: src/components/interstitials/FeedTrendingTopics.tsx:218
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
-msgid "{0} {1}"
-msgstr "{0} {1}"
 
 #. Pattern: {wordValue} in tags
 #. placeholder {0}: word.value
@@ -652,6 +639,13 @@ msgstr ""
 msgid "{following} following"
 msgstr ""
 
+#. '{postCount} {posts}', e.g., '1.2K posts'
+#. '{postCount} {posts}', e.g., '1.2K posts'
+#: src/components/interstitials/FeedTrendingTopics.tsx:204
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
+msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
+msgstr "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
+
 #: src/components/dms/components/GroupChatProfileCard.tsx:62
 #: src/components/dms/InitiateChatFlow.tsx:1158
 msgid "{handle} can’t be added"
@@ -749,7 +743,7 @@ msgstr ""
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:203
+#: src/components/interstitials/FeedTrendingTopics.tsx:189
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:123
 msgid "{rank}."
 msgstr ""
@@ -1088,7 +1082,7 @@ msgstr ""
 msgid "Account options"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:680
+#: src/screens/Settings/Settings.tsx:681
 msgid "Account removed from quick access"
 msgstr ""
 
@@ -1184,11 +1178,11 @@ msgstr ""
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1602
+#: src/view/com/composer/Composer.tsx:1607
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2268
+#: src/view/com/composer/Composer.tsx:2273
 msgid "Add another post to thread"
 msgstr ""
 
@@ -1939,7 +1933,7 @@ msgstr ""
 msgid "Are you sure you want to rescind your request to join {0}?"
 msgstr "Are you sure you want to rescind your request to join {0}?"
 
-#: src/view/com/composer/Composer.tsx:1738
+#: src/view/com/composer/Composer.tsx:1743
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -2008,6 +2002,10 @@ msgstr ""
 #: src/screens/Signup/StepHandle/HandleSuggestions/index.tsx:88
 msgid "Available"
 msgstr ""
+
+#: src/screens/Onboarding/StepProfile/index.tsx:326
+msgid "Avatar creator"
+msgstr "Avatar creator"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -2404,7 +2402,7 @@ msgid "Browse starter pack {displayName}"
 msgstr ""
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:170
+#: src/components/interstitials/FeedTrendingTopics.tsx:156
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:104
 msgid "Browse topic {0}"
 msgstr ""
@@ -2532,8 +2530,8 @@ msgstr "Camera access needed"
 #: src/screens/Settings/Settings.tsx:309
 #: src/screens/Takendown.tsx:102
 #: src/screens/Takendown.tsx:105
-#: src/view/com/composer/Composer.tsx:1816
-#: src/view/com/composer/Composer.tsx:1826
+#: src/view/com/composer/Composer.tsx:1821
+#: src/view/com/composer/Composer.tsx:1831
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:228
@@ -2822,7 +2820,7 @@ msgstr ""
 msgid "Choose post languages"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:108
+#: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:106
 msgid "Choose this color as your avatar"
 msgstr ""
 
@@ -2847,7 +2845,7 @@ msgstr ""
 msgid "Choose your password"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:203
+#: src/screens/Signup/index.tsx:201
 msgid "Choose your username"
 msgstr ""
 
@@ -2996,7 +2994,7 @@ msgid "Close"
 msgstr ""
 
 #: src/components/Dialog/index.web.tsx:129
-#: src/components/Dialog/index.web.tsx:339
+#: src/components/Dialog/index.web.tsx:342
 msgid "Close active dialog"
 msgstr ""
 
@@ -3066,7 +3064,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1824
+#: src/view/com/composer/Composer.tsx:1829
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -3109,7 +3107,7 @@ msgstr ""
 msgid "Complete onboarding and start using your account"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:205
+#: src/screens/Signup/index.tsx:203
 msgid "Complete the challenge"
 msgstr ""
 
@@ -3120,7 +3118,7 @@ msgid "Compose new post"
 msgstr ""
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1700
+#: src/view/com/composer/Composer.tsx:1705
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -3128,11 +3126,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2672
+#: src/view/com/composer/Composer.tsx:2677
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2674
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing video..."
 msgstr ""
 
@@ -3190,8 +3188,8 @@ msgid "Contact our support team"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:156
-#: src/screens/Signup/index.tsx:250
-#: src/screens/Signup/index.tsx:253
+#: src/screens/Signup/index.tsx:248
+#: src/screens/Signup/index.tsx:251
 msgid "Contact support"
 msgstr ""
 
@@ -3266,7 +3264,7 @@ msgstr ""
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:149
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:152
 #: src/screens/Onboarding/StepInterests/index.tsx:93
-#: src/screens/Onboarding/StepProfile/index.tsx:304
+#: src/screens/Onboarding/StepProfile/index.tsx:301
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:305
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:117
 msgid "Continue"
@@ -3295,7 +3293,7 @@ msgid "Continue to group name"
 msgstr "Continue to group name"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:90
-#: src/screens/Onboarding/StepProfile/index.tsx:301
+#: src/screens/Onboarding/StepProfile/index.tsx:298
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:302
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:114
 #: src/screens/Signup/BackNextButtons.tsx:61
@@ -3606,7 +3604,7 @@ msgstr ""
 #: src/components/WelcomeModal.tsx:155
 #: src/components/WelcomeModal.tsx:163
 #: src/screens/Messages/JoinRequest.tsx:310
-#: src/screens/Signup/index.tsx:141
+#: src/screens/Signup/index.tsx:139
 #: src/view/com/auth/SplashScreen.tsx:108
 #: src/view/com/auth/SplashScreen.web.tsx:118
 #: src/view/shell/bottom-bar/BottomBar.tsx:351
@@ -3630,7 +3628,7 @@ msgstr ""
 msgid "Create an account without using this starter pack"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:317
+#: src/screens/Onboarding/StepProfile/index.tsx:314
 msgid "Create an avatar instead"
 msgstr ""
 
@@ -3858,7 +3856,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:796
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:798
-#: src/view/com/composer/Composer.tsx:1712
+#: src/view/com/composer/Composer.tsx:1717
 msgid "Delete post"
 msgstr ""
 
@@ -4009,9 +4007,9 @@ msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1492
-#: src/view/com/composer/Composer.tsx:1536
-#: src/view/com/composer/Composer.tsx:1745
+#: src/view/com/composer/Composer.tsx:1497
+#: src/view/com/composer/Composer.tsx:1541
+#: src/view/com/composer/Composer.tsx:1750
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -4022,14 +4020,14 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1490
+#: src/view/com/composer/Composer.tsx:1495
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1507
-#: src/view/com/composer/Composer.tsx:1737
+#: src/view/com/composer/Composer.tsx:1512
+#: src/view/com/composer/Composer.tsx:1742
 msgid "Discard post?"
 msgstr ""
 
@@ -4058,7 +4056,7 @@ msgstr ""
 msgid "Discover New Feeds"
 msgstr ""
 
-#: src/components/Dialog/index.tsx:414
+#: src/components/Dialog/index.tsx:398
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:83
 msgid "Dismiss"
 msgstr ""
@@ -4067,7 +4065,7 @@ msgstr ""
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2593
+#: src/view/com/composer/Composer.tsx:2598
 msgid "Dismiss error"
 msgstr ""
 
@@ -4169,8 +4167,8 @@ msgstr ""
 #: src/lib/media/picker.tsx:37
 #: src/screens/Login/components/HostingProviderDialog.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:255
-#: src/screens/Onboarding/StepProfile/index.tsx:354
-#: src/screens/Onboarding/StepProfile/index.tsx:357
+#: src/screens/Onboarding/StepProfile/index.tsx:353
+#: src/screens/Onboarding/StepProfile/index.tsx:356
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:214
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:221
 #: src/view/com/composer/labels/LabelsBtn.tsx:219
@@ -4184,7 +4182,7 @@ msgstr ""
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
-#: src/components/Dialog/index.tsx:415
+#: src/components/Dialog/index.tsx:399
 msgid "Double tap to close the dialog"
 msgstr ""
 
@@ -4621,11 +4619,11 @@ msgstr ""
 msgid "Enters full screen"
 msgstr ""
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:198
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:202
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2692
+#: src/view/com/composer/Composer.tsx:2697
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr ""
@@ -5068,7 +5066,7 @@ msgstr "Failed to rescind your request. Please try again."
 msgid "Failed to resolve location. Please try again."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:726
+#: src/view/com/composer/Composer.tsx:731
 msgid "Failed to save draft"
 msgstr ""
 
@@ -5769,11 +5767,11 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2702
 msgid "GIF uploaded"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:259
+#: src/screens/Onboarding/StepProfile/index.tsx:256
 msgid "Give your profile a face"
 msgstr ""
 
@@ -6069,7 +6067,7 @@ msgstr ""
 msgid "Have we got your location wrong? <0>Tap here to update your location with GPS.</0>"
 msgstr "Have we got your location wrong? <0>Tap here to update your location with GPS.</0>"
 
-#: src/screens/Signup/index.tsx:248
+#: src/screens/Signup/index.tsx:246
 msgid "Having trouble?"
 msgstr ""
 
@@ -6085,7 +6083,7 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:262
+#: src/screens/Onboarding/StepProfile/index.tsx:259
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr ""
 
@@ -6745,7 +6743,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2612
+#: src/view/com/composer/Composer.tsx:2617
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -6785,8 +6783,8 @@ msgstr ""
 msgid "Journalism"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1540
-#: src/view/com/composer/Composer.tsx:1550
+#: src/view/com/composer/Composer.tsx:1545
+#: src/view/com/composer/Composer.tsx:1555
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr ""
@@ -8015,7 +8013,7 @@ msgid "Newest replies first"
 msgstr ""
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:200
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:204
 msgid "News"
 msgstr ""
 
@@ -8435,11 +8433,11 @@ msgstr "One of the selected recipients does not allow group chats."
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "One of the selected recipients has blocked you and cannot be messaged."
 
-#: src/view/com/composer/Composer.tsx:934
+#: src/view/com/composer/Composer.tsx:939
 msgid "One or more GIFs is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:931
+#: src/view/com/composer/Composer.tsx:936
 msgid "One or more images is missing alt text."
 msgstr ""
 
@@ -8451,11 +8449,11 @@ msgstr ""
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 
-#: src/view/com/composer/Composer.tsx:737
+#: src/view/com/composer/Composer.tsx:742
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:941
+#: src/view/com/composer/Composer.tsx:946
 msgid "One or more videos is missing alt text."
 msgstr ""
 
@@ -8541,7 +8539,7 @@ msgstr ""
 msgid "Open advanced search options"
 msgstr "Open advanced search options"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:311
+#: src/screens/Onboarding/StepProfile/index.tsx:308
 msgid "Open avatar creator"
 msgstr ""
 
@@ -8572,7 +8570,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageComposer.tsx:213
-#: src/view/com/composer/Composer.tsx:2245
+#: src/view/com/composer/Composer.tsx:2250
 msgid "Open emoji picker"
 msgstr ""
 
@@ -9259,7 +9257,7 @@ msgid "Please write your message below:"
 msgstr ""
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:198
 msgid "Politics"
 msgstr ""
 
@@ -9267,7 +9265,7 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1890
+#: src/view/com/composer/Composer.tsx:1895
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -9287,12 +9285,12 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1888
+#: src/view/com/composer/Composer.tsx:1893
 msgctxt "action"
 msgid "Post All"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1549
+#: src/view/com/composer/Composer.tsx:1554
 msgid "Post anyway"
 msgstr "Post anyway"
 
@@ -9475,11 +9473,11 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2691
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2688
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing video..."
 msgstr ""
 
@@ -9526,22 +9524,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1874
+#: src/view/com/composer/Composer.tsx:1879
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1869
+#: src/view/com/composer/Composer.tsx:1874
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1858
+#: src/view/com/composer/Composer.tsx:1863
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1863
+#: src/view/com/composer/Composer.tsx:1868
 msgid "Publish reply"
 msgstr ""
 
@@ -9762,7 +9760,7 @@ msgstr ""
 #: src/screens/Messages/ConversationSettings/Member.tsx:162
 #: src/screens/Messages/ConversationSettings/prompts.tsx:178
 #: src/screens/Moderation/index.tsx:477
-#: src/screens/Settings/Settings.tsx:682
+#: src/screens/Settings/Settings.tsx:683
 #: src/view/com/posts/PostFeedErrorMessage.tsx:221
 msgid "Remove"
 msgstr ""
@@ -9788,8 +9786,8 @@ msgstr "Remove {displayName}?"
 msgid "Remove {q}"
 msgstr "Remove {q}"
 
-#: src/screens/Settings/Settings.tsx:663
-#: src/screens/Settings/Settings.tsx:666
+#: src/screens/Settings/Settings.tsx:664
+#: src/screens/Settings/Settings.tsx:667
 msgid "Remove account"
 msgstr ""
 
@@ -9849,7 +9847,7 @@ msgstr "Remove from chat"
 msgid "Remove from my feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:676
+#: src/screens/Settings/Settings.tsx:677
 msgid "Remove from quick access?"
 msgstr ""
 
@@ -10034,7 +10032,7 @@ msgstr ""
 msgid "Reply"
 msgstr "Reply"
 
-#: src/view/com/composer/Composer.tsx:1886
+#: src/view/com/composer/Composer.tsx:1891
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -10443,22 +10441,22 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1530
+#: src/view/com/composer/Composer.tsx:1535
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1502
+#: src/view/com/composer/Composer.tsx:1507
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1530
+#: src/view/com/composer/Composer.tsx:1535
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1504
+#: src/view/com/composer/Composer.tsx:1509
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr ""
@@ -10706,7 +10704,7 @@ msgstr ""
 
 #: src/components/FeedInterstitials.tsx:491
 #: src/components/FeedInterstitials.tsx:549
-#: src/components/interstitials/FeedTrendingTopics.tsx:112
+#: src/components/interstitials/FeedTrendingTopics.tsx:96
 msgid "See more"
 msgstr ""
 
@@ -10714,7 +10712,7 @@ msgstr ""
 msgid "See more suggested profiles"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:103
+#: src/components/interstitials/FeedTrendingTopics.tsx:82
 msgid "See more trending topics"
 msgstr "See more trending topics"
 
@@ -10750,7 +10748,7 @@ msgstr ""
 msgid "Select {langName}"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:68
+#: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
 msgstr ""
 
@@ -10766,11 +10764,11 @@ msgstr ""
 msgid "Select an app language"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/AvatarCircle.tsx:66
+#: src/screens/Onboarding/StepProfile/AvatarCircle.tsx:65
 msgid "Select an avatar"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:66
+#: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:65
 msgid "Select an emoji"
 msgstr ""
 
@@ -10867,7 +10865,7 @@ msgstr ""
 msgid "Select telephone code"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:84
+#: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:82
 msgid "Select the {emojiName} emoji as your avatar"
 msgstr ""
 
@@ -11473,7 +11471,7 @@ msgstr ""
 msgid "Skip contact sharing and continue to the app"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1547
+#: src/view/com/composer/Composer.tsx:1552
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
@@ -11654,7 +11652,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr ""
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:192
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
 msgid "Sports"
 msgstr ""
 
@@ -11750,7 +11748,7 @@ msgstr ""
 #. placeholder {1}: state.serviceDescription && !state.serviceDescription.phoneVerificationRequired ? '2' : '3'
 #. placeholder {1}: state.totalSteps
 #: src/screens/Onboarding/Layout.tsx:226
-#: src/screens/Signup/index.tsx:191
+#: src/screens/Signup/index.tsx:189
 msgid "Step {0} of {1}"
 msgstr ""
 
@@ -12564,7 +12562,7 @@ msgstr "This group is locked by a moderation action on the owner"
 msgid "This handle is reserved. Please try a different one."
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:142
+#: src/screens/Onboarding/StepProfile/index.tsx:140
 msgid "This image could not be used. Try a different format like .jpg or .png."
 msgstr "This image could not be used. Try a different format like .jpg or .png."
 
@@ -12671,7 +12669,7 @@ msgstr ""
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1122
+#: src/view/com/composer/Composer.tsx:1127
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
@@ -12771,7 +12769,7 @@ msgid "This will irreversibly delete your Bluesky account <0>{currentHandle}</0>
 msgstr ""
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/Settings.tsx:677
+#: src/screens/Settings/Settings.tsx:678
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
@@ -12905,8 +12903,8 @@ msgstr "Translation to the same language is unavailable on your device."
 msgid "Tree view"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:100
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:51
+#: src/components/interstitials/FeedTrendingTopics.tsx:79
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:50
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:54
 msgid "Trending"
 msgstr ""
@@ -13278,7 +13276,7 @@ msgstr ""
 msgid "Unsupported clipboard content"
 msgstr "Unsupported clipboard content"
 
-#: src/view/com/composer/Composer.tsx:1639
+#: src/view/com/composer/Composer.tsx:1644
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
@@ -13344,7 +13342,7 @@ msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:315
+#: src/screens/Onboarding/StepProfile/index.tsx:312
 msgid "Upload a photo instead"
 msgstr ""
 
@@ -13371,7 +13369,7 @@ msgstr ""
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2684
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -13385,7 +13383,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2681
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading video..."
 msgstr ""
 
@@ -13649,7 +13647,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr ""
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:200
 msgid "Video Games"
 msgstr ""
 
@@ -13669,7 +13667,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2699
+#: src/view/com/composer/Composer.tsx:2704
 msgid "Video uploaded"
 msgstr ""
 
@@ -13688,7 +13686,7 @@ msgstr ""
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1229
+#: src/view/com/composer/Composer.tsx:1234
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
@@ -13777,7 +13775,7 @@ msgstr ""
 msgid "View more trending videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1224
+#: src/view/com/composer/Composer.tsx:1229
 msgid "View post"
 msgstr ""
 
@@ -14059,7 +14057,7 @@ msgstr "We’re having network issues, try again"
 msgid "We’re introducing a new layer of verification on Bluesky — an easy-to-see checkmark."
 msgstr ""
 
-#: src/screens/Signup/index.tsx:142
+#: src/screens/Signup/index.tsx:140
 msgid "We’re so excited to have you join us!"
 msgstr "We’re so excited to have you join us!"
 
@@ -14096,7 +14094,7 @@ msgstr "We’re sorry, but your search could not be completed. Please try again 
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1120
+#: src/view/com/composer/Composer.tsx:1125
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
@@ -14152,7 +14150,7 @@ msgid "what’s up"
 msgstr "what’s up"
 
 #: src/view/com/auth/SplashScreen.web.tsx:100
-#: src/view/com/composer/Composer.tsx:1603
+#: src/view/com/composer/Composer.tsx:1608
 #: src/view/com/feeds/ComposerPrompt.tsx:192
 msgid "What's up?"
 msgstr ""
@@ -14238,7 +14236,7 @@ msgstr "Would you like to block this user and/or leave this conversation?"
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1518
+#: src/view/com/composer/Composer.tsx:1523
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
@@ -14247,12 +14245,12 @@ msgstr ""
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1699
+#: src/view/com/composer/Composer.tsx:1704
 msgid "Write post"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1601
+#: src/view/com/composer/Composer.tsx:1606
 msgid "Write your reply"
 msgstr ""
 
@@ -14428,7 +14426,7 @@ msgstr ""
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 
-#: src/view/com/composer/Composer.tsx:1523
+#: src/view/com/composer/Composer.tsx:1528
 msgid "You can only save drafts up to 1000 characters."
 msgstr ""
 
@@ -14574,7 +14572,7 @@ msgstr ""
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1513
+#: src/view/com/composer/Composer.tsx:1518
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr ""
 
@@ -14734,11 +14732,11 @@ msgstr "You won’t be able to rejoin unless you’re invited."
 msgid "You: {message}"
 msgstr "You: {message}"
 
-#: src/screens/Signup/index.tsx:160
+#: src/screens/Signup/index.tsx:158
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:165
+#: src/screens/Signup/index.tsx:163
 msgid "You'll follow the suggested users once you finish creating your account!"
 msgstr ""
 
@@ -14810,7 +14808,7 @@ msgstr ""
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:724
+#: src/view/com/composer/Composer.tsx:729
 msgid "You've reached the maximum number of drafts"
 msgstr ""
 
@@ -14838,7 +14836,7 @@ msgstr ""
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:201
+#: src/screens/Signup/index.tsx:199
 msgid "Your account"
 msgstr ""
 
@@ -14986,11 +14984,11 @@ msgstr ""
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1220
+#: src/view/com/composer/Composer.tsx:1225
 msgid "Your post was sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1217
+#: src/view/com/composer/Composer.tsx:1222
 msgid "Your posts were sent"
 msgstr ""
 
@@ -15011,7 +15009,7 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1219
+#: src/view/com/composer/Composer.tsx:1224
 msgid "Your reply was sent"
 msgstr ""
 
@@ -15024,7 +15022,7 @@ msgstr ""
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1548
+#: src/view/com/composer/Composer.tsx:1553
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 

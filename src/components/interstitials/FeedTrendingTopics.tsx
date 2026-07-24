@@ -1,8 +1,7 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
-import {plural} from '@lingui/core/macro'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useTrendingSettings} from '#/state/preferences/trending'
@@ -149,6 +148,7 @@ function TrendRow({
   const {t: l, i18n} = useLingui()
 
   const actors = useModerateTrendingActors(trend.actors)
+  const formattedPostCount = formatCount(i18n, trend.postCount)
 
   return (
     <Link
@@ -202,8 +202,12 @@ function TrendRow({
                   style={[a.text_sm, t.atoms.text_contrast_medium]}
                   numberOfLines={1}>
                   <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'">
-                    {formatCount(i18n, trend.postCount)}{' '}
-                    {plural(trend.postCount, {one: 'post', other: 'posts'})}
+                    {formattedPostCount}{' '}
+                    <Plural
+                      value={{postCount: trend.postCount}}
+                      one="post"
+                      other="posts"
+                    />
                   </Trans>
                 </Text>
               </View>
