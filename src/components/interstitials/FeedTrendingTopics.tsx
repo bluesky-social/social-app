@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
@@ -50,16 +49,6 @@ function Inner() {
 
   const shadowColor = alpha(t.palette.primary_100, 0.5)
 
-  const gradient = {
-    values: [
-      [0, t.atoms.bg.backgroundColor],
-      [0.1, t.palette.primary_25],
-      [0.9, t.palette.primary_25],
-      [1, t.atoms.bg.backgroundColor],
-    ],
-    hover_value: t.palette.white,
-  }
-
   if (error || noTopics) {
     return null
   }
@@ -74,13 +63,6 @@ function Inner() {
         a.border_t,
         t.atoms.border_contrast_low,
       ]}>
-      <LinearGradient
-        colors={gradient.values.map(c => c[1]) as [string, string, ...string[]]}
-        locations={
-          gradient.values.map(c => c[0]) as [number, number, ...number[]]
-        }
-        style={[a.absolute, a.inset_0]}
-      />
       <View
         style={[
           a.relative,
@@ -93,23 +75,27 @@ function Inner() {
         ]}>
         <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_xs]}>
           <TrendingIcon width={18} />
-          <Text
-            style={[a.text_md, a.font_medium, a.leading_snug]}
-            numberOfLines={1}>
+          <Text style={[a.text_md, a.font_medium]} numberOfLines={1}>
             <Trans>Trending</Trans>
           </Text>
         </View>
         <Link label={l`See more trending topics`} to="/search">
-          <Text
-            style={[
-              a.text_sm,
-              a.font_medium,
-              a.leading_snug,
-              t.atoms.text_contrast_high,
-            ]}
-            numberOfLines={1}>
-            <Trans>See more</Trans>
-          </Text>
+          {({hovered, pressed}) => (
+            <Text
+              style={[
+                a.text_sm,
+                a.font_medium,
+                {
+                  color:
+                    hovered || pressed
+                      ? t.palette.contrast_800
+                      : t.palette.contrast_500,
+                },
+              ]}
+              numberOfLines={1}>
+              <Trans>See more</Trans>
+            </Text>
+          )}
         </Link>
       </View>
       <View
