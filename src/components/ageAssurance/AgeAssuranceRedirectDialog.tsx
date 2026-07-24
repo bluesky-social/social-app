@@ -1,7 +1,6 @@
 import {useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {retry} from '#/lib/async/retry'
 import {wait} from '#/lib/async/wait'

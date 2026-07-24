@@ -1,7 +1,6 @@
 import {memo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {

@@ -20,8 +20,10 @@ import {
 import {logger} from '#/logger'
 import {type ComposerImage, createInitialImages} from '#/state/gallery'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
-import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate'
-import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
+import {
+  type ThreadgateAllowUISetting,
+  threadgateRecordToAllowUISetting,
+} from '#/state/queries/threadgate'
 import {type ComposerOpts} from '#/state/shell/composer'
 import {
   type LinkFacetMatch,

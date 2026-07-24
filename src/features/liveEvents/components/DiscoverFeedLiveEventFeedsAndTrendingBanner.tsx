@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useLayoutBreakpoints} from '#/alf'
 import {Button} from '#/components/Button'

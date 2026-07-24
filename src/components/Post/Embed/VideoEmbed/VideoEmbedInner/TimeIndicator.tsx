@@ -1,5 +1,4 @@
-import {type StyleProp, type ViewStyle} from 'react-native'
-import {View} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 

@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import * as Contacts from 'expo-contacts'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useQuery} from '@tanstack/react-query'
 
 import {urls} from '#/lib/constants'

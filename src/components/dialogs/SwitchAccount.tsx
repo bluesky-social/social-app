@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {type SessionAccount, useSession} from '#/state/session'

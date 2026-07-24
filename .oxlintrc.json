@@ -1,10 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "typescript",
-    "react",
-    "import"
-  ],
+  "plugins": ["typescript", "react", "import"],
   "categories": {
     "correctness": "off"
   },
@@ -25,26 +21,13 @@
       ".cjs",
       ".mjs"
     ],
-    "import-x/external-module-folders": [
-      "node_modules",
-      "node_modules/@types"
-    ],
+    "import-x/external-module-folders": ["node_modules", "node_modules/@types"],
     "import-x/parsers": {
-      "@typescript-eslint/parser": [
-        ".ts",
-        ".tsx",
-        ".cts",
-        ".mts"
-      ]
+      "@typescript-eslint/parser": [".ts", ".tsx", ".cts", ".mts"]
     },
     "import-x/resolver": {
       "node": {
-        "extensions": [
-          ".js",
-          ".web.js",
-          ".ios.js",
-          ".android.js"
-        ]
+        "extensions": [".js", ".web.js", ".ios.js", ".android.js"]
       }
     }
   },
@@ -132,7 +115,7 @@
     "import/default": "error",
     "import/no-named-as-default": "warn",
     "import/no-named-as-default-member": "warn",
-    "import/no-duplicates": "warn",
+    "import/no-duplicates": ["warn", {"preferInline": true}],
     "react/rules-of-hooks": "error",
     "react/exhaustive-deps": "warn",
     "typescript/await-thenable": "error",
@@ -178,12 +161,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "**/*.ts",
-        "**/*.tsx",
-        "**/*.mts",
-        "**/*.cts"
-      ],
+      "files": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
       "rules": {
         "constructor-super": "off",
         "getter-return": "off",
@@ -208,9 +186,7 @@
       }
     },
     {
-      "files": [
-        "**/*.{js,jsx,ts,tsx}"
-      ],
+      "files": ["**/*.{js,jsx,ts,tsx}"],
       "rules": {
         "bsky-internal/avoid-unwrapped-text": [
           "error",
@@ -279,12 +255,8 @@
           "error",
           {
             "groups": [
-              [
-                "^\\u0000"
-              ],
-              [
-                "^node:"
-              ],
+              ["^\\u0000"],
+              ["^node:"],
               [
                 "^(react\\/(.*)$)|^(react$)|^(react-native(.*)$)",
                 "^(expo(.*)$)|^(expo$)",
@@ -299,9 +271,7 @@
                 "^#\\/",
                 "^\\."
               ],
-              [
-                "^"
-              ]
+              ["^"]
             ]
           }
         ],
@@ -321,10 +291,7 @@
             "paths": [
               {
                 "name": "react",
-                "importNames": [
-                  "React",
-                  "default"
-                ],
+                "importNames": ["React", "default"],
                 "message": "React is already in the global type namespace. Use named imports for runtime modules."
               }
             ]
@@ -351,10 +318,7 @@
             "allowTernary": true
           }
         ],
-        "import/consistent-type-specifier-style": [
-          "warn",
-          "prefer-inline"
-        ],
+        "import/consistent-type-specifier-style": ["warn", "prefer-inline"],
         "import/no-nodejs-modules": "error",
         "typescript/consistent-type-imports": [
           "warn",

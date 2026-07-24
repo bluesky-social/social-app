@@ -2,9 +2,9 @@ import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
   type AtpAgent,
+  AtUri,
   type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
-import {AtUri} from '@atproto/api'
 
 import {DM_SERVICE_HEADERS, IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
@@ -25,8 +25,7 @@ import {
   isShortLink,
   makeRecordUri,
 } from '#/lib/strings/url-helpers'
-import {type ComposerImage} from '#/state/gallery'
-import {createComposerImage} from '#/state/gallery'
+import {type ComposerImage, createComposerImage} from '#/state/gallery'
 import {type ChatInvitePreview} from '#/state/queries/join-links'
 import {type Gif} from '#/features/gifPicker/types'
 import {createGIFDescription} from '../gif-alt-text'

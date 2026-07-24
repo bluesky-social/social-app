@@ -1,9 +1,11 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {type ComAtprotoLabelDefs, ToolsOzoneReportDefs} from '@atproto/api'
-import {XRPCError} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {
+  type ComAtprotoLabelDefs,
+  ToolsOzoneReportDefs,
+  XRPCError,
+} from '@atproto/api'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import {useLabelSubject} from '#/lib/moderation'
