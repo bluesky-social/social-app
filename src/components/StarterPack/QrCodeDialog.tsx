@@ -4,8 +4,7 @@ import type ViewShot from 'react-native-view-shot'
 import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
@@ -32,7 +31,7 @@ export function QrCodeDialog({
   link?: string
   control: DialogControlProps
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const [isSaveProcessing, setIsSaveProcessing] = useState(false)
@@ -65,9 +64,7 @@ export function QrCodeDialog({
 
         if (!res.granted) {
           Toast.show(
-            _(
-              msg`You must grant access to your photo library to save a QR code`,
-            ),
+            l`You must grant access to your photo library to save a QR code`,
           )
           return
         }
@@ -78,7 +75,7 @@ export function QrCodeDialog({
           // works with the add-only permission on iOS (APP-2374)
           await saveToLibraryAsync(`file://${uri}`)
         } catch (e: unknown) {
-          Toast.show(_(msg`An error occurred while saving the QR code!`), {
+          Toast.show(l`An error occurred while saving the QR code!`, {
             type: 'error',
           })
           logger.error('Failed to save QR code', {error: e})
@@ -118,8 +115,8 @@ export function QrCodeDialog({
       setIsSaveProcessing(false)
       Toast.show(
         IS_WEB
-          ? _(msg`QR code has been downloaded!`)
-          : _(msg`QR code saved to your camera roll!`),
+          ? l`QR code has been downloaded!`
+          : l`QR code saved to your camera roll!`,
       )
       control.close()
     })
@@ -140,7 +137,7 @@ export function QrCodeDialog({
         shareType: 'qrcode',
         qrShareType: 'copy',
       })
-      Toast.show(_(msg`QR code copied to your clipboard!`))
+      Toast.show(l`QR code copied to your clipboard!`)
       setIsCopyProcessing(false)
       control.close()
     })
@@ -165,8 +162,7 @@ export function QrCodeDialog({
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner
-        label={_(msg`Create a QR code for a starter pack`)}>
+      <Dialog.ScrollableInner label={l`Create a QR code for a starter pack`}>
         <View style={[a.flex_1, a.align_center, a.gap_5xl]}>
           <Suspense fallback={<Loading />}>
             {!link ? (
@@ -181,7 +177,7 @@ export function QrCodeDialog({
                     gtMobile && [a.flex_row, a.justify_center, a.flex_wrap],
                   ]}>
                   <Button
-                    label={_(msg`Copy QR code`)}
+                    label={l`Copy QR code`}
                     color="primary_subtle"
                     size="large"
                     onPress={IS_WEB ? onCopyPress : onSharePress}>
@@ -199,7 +195,7 @@ export function QrCodeDialog({
                     </ButtonText>
                   </Button>
                   <Button
-                    label={_(msg`Save QR code`)}
+                    label={l`Save QR code`}
                     color="secondary"
                     size="large"
                     onPress={onSavePress}>

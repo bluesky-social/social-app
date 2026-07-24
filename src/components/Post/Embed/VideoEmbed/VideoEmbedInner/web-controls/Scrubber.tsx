@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {clamp} from '#/lib/numbers'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -30,7 +29,7 @@ export function Scrubber({
   togglePlayPause: () => void
   drawFocus: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const [scrubberActive, setScrubberActive] = useState(false)
   const {
@@ -192,16 +191,12 @@ export function Scrubber({
         </View>
         <div
           ref={circleRef}
-          aria-label={_(
-            msg`Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause`,
-          )}
+          aria-label={l`Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause`}
           role="slider"
           aria-valuemax={duration}
           aria-valuemin={0}
           aria-valuenow={currentTime}
-          aria-valuetext={_(
-            msg`${formatTime(currentTime)} of ${formatTime(duration)}`,
-          )}
+          aria-valuetext={l`${formatTime(currentTime)} of ${formatTime(duration)}`}
           tabIndex={0}
           onFocus={onFocus}
           onBlur={onBlur}

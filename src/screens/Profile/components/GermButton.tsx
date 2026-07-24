@@ -5,8 +5,7 @@ import {
   type AppBskyActorGetProfile,
   type AtpAgent,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
@@ -35,7 +34,7 @@ export function GermButton({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const linkWarningControl = Dialog.useDialogControl()
 
@@ -72,7 +71,7 @@ export function GermButton({
             return false
           }
         }}
-        label={_(msg`Open Germ DM`)}
+        label={l`Open Germ DM`}
         overridePresentation={false}
         shouldProxy={false}
         style={[
@@ -117,7 +116,7 @@ function GermLogo({size}: {size: 'small' | 'large'}) {
 function GermSelfButton({did}: {did: string}) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const selfExplanationDialogControl = Dialog.useDialogControl()
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -157,15 +156,12 @@ function GermSelfButton({did}: {did: string}) {
           await whenAppViewReady(agent, did, res => !!res.data.associated?.germ)
           await queryClient.refetchQueries({queryKey: RQKEY(did)})
 
-          Toast.show(_(msg`Germ DM reconnected`))
+          Toast.show(l`Germ DM reconnected`)
           ax.metric('profile:associated:germ:self-reconnect', {})
         } catch (e: any) {
-          Toast.show(
-            _(msg`Failed to reconnect Germ DM. Error: ${e?.message}`),
-            {
-              type: 'error',
-            },
-          )
+          Toast.show(l`Failed to reconnect Germ DM. Error: ${e?.message}`, {
+            type: 'error',
+          })
           if (!isNetworkError(e)) {
             ax.logger.error('Failed to reconnect Germ DM link', {
               safeMessage: e,
@@ -183,7 +179,7 @@ function GermSelfButton({did}: {did: string}) {
               <Trans>Germ DM disconnected</Trans>
             </Toast.Text>
             {previousRecord && (
-              <Toast.Action label={_(msg`Undo`)} onPress={() => void undo()}>
+              <Toast.Action label={l`Undo`} onPress={() => void undo()}>
                 <Trans>Undo</Trans>
               </Toast.Action>
             )}
@@ -192,12 +188,9 @@ function GermSelfButton({did}: {did: string}) {
       })
     },
     onError: error => {
-      Toast.show(
-        _(msg`Failed to disconnect Germ DM. Error: ${error?.message}`),
-        {
-          type: 'error',
-        },
-      )
+      Toast.show(l`Failed to disconnect Germ DM. Error: ${error?.message}`, {
+        type: 'error',
+      })
       if (!isNetworkError(error)) {
         ax.logger.error('Failed to disconnect Germ DM link', {
           safeMessage: error,
@@ -209,7 +202,7 @@ function GermSelfButton({did}: {did: string}) {
   return (
     <>
       <Button
-        label={_(msg`Learn more about your Germ DM link`)}
+        label={l`Learn more about your Germ DM link`}
         onPress={() => {
           ax.metric('profile:associated:germ:click-self-info', {})
           selfExplanationDialogControl.open()
@@ -225,13 +218,12 @@ function GermSelfButton({did}: {did: string}) {
           <Trans>Germ DM</Trans>
         </Text>
       </Button>
-
       <Dialog.Outer
         control={selfExplanationDialogControl}
         nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <Dialog.ScrollableInner
-          label={_(msg`Germ DM Link`)}
+          label={l`Germ DM Link`}
           style={web([{maxWidth: 400, borderRadius: 36}])}>
           <View style={[a.flex_row, a.align_center, {gap: 6}]}>
             <GermLogo size="large" />
@@ -250,7 +242,7 @@ function GermSelfButton({did}: {did: string}) {
           </Text>
           <View style={[a.mt_2xl, a.gap_md]}>
             <Button
-              label={_(msg`Got it`)}
+              label={l`Got it`}
               size="large"
               color="primary"
               onPress={() => selfExplanationDialogControl.close()}>
@@ -259,7 +251,7 @@ function GermSelfButton({did}: {did: string}) {
               </ButtonText>
             </Button>
             <Button
-              label={_(msg`Disconnect Germ DM`)}
+              label={l`Disconnect Germ DM`}
               size="large"
               color="secondary"
               onPress={() => deleteDeclaration()}

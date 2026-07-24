@@ -4,8 +4,7 @@ import {
   type AppBskyGraphGetStarterPacksWithMembership,
   AppBskyGraphStarterpack,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -88,7 +87,7 @@ export function StarterPackDialog({
 }
 
 function Empty({onStartWizard}: {onStartWizard: () => void}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   return (
@@ -102,10 +101,9 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
           <Trans>You have no starter packs.</Trans>
         </Text>
       </View>
-
       <View style={[a.align_center]}>
         <Button
-          label={_(msg`Create starter pack`)}
+          label={l`Create starter pack`}
           color="secondary_inverted"
           size="small"
           onPress={onStartWizard}>
@@ -131,7 +129,7 @@ function StarterPackList({
   enabled?: boolean
 }) {
   const control = Dialog.useDialogContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data: subject} = useProfileQuery({did: targetDid})
 
   const {
@@ -184,7 +182,7 @@ function StarterPackList({
           <Trans>Add to starter packs</Trans>
         </Text>
         <Button
-          label={_(msg`Close`)}
+          label={l`Close`}
           onPress={onClose}
           variant="ghost"
           color="secondary"
@@ -202,7 +200,7 @@ function StarterPackList({
               <Trans>New starter pack</Trans>
             </Text>
             <Button
-              label={_(msg`Create starter pack`)}
+              label={l`Create starter pack`}
               color="secondary_inverted"
               size="small"
               onPress={onStartWizard}>
@@ -260,7 +258,7 @@ function StarterPackItem({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const isSelf = subject?.did === currentAccount?.did
 
@@ -271,26 +269,26 @@ function StarterPackItem({
     useListMembershipAddMutation({
       subject,
       onSuccess: () => {
-        Toast.show(_(msg`Added to starter pack`))
+        Toast.show(l`Added to starter pack`)
       },
       onError: err => {
         if (!isNetworkError(err)) {
           logger.error('Failed to add to starter pack', {safeMessage: err})
         }
-        Toast.show(_(msg`Failed to add to starter pack`), {type: 'error'})
+        Toast.show(l`Failed to add to starter pack`, {type: 'error'})
       },
     })
 
   const {mutate: removeMembership, isPending: isPendingRemove} =
     useListMembershipRemoveMutation({
       onSuccess: () => {
-        Toast.show(_(msg`Removed from starter pack`))
+        Toast.show(l`Removed from starter pack`)
       },
       onError: err => {
         if (!isNetworkError(err)) {
           logger.error('Failed to remove from starter pack', {safeMessage: err})
         }
-        Toast.show(_(msg`Failed to remove from starter pack`), {type: 'error'})
+        Toast.show(l`Failed to remove from starter pack`, {type: 'error'})
       },
     })
 
@@ -371,9 +369,8 @@ function StarterPackItem({
             )}
         </View>
       </View>
-
       <Button
-        label={isInPack ? _(msg`Remove`) : _(msg`Add`)}
+        label={isInPack ? l`Remove` : l`Add`}
         color={isInPack ? 'secondary' : 'primary_subtle'}
         size="tiny"
         disabled={isPending || isSelf}

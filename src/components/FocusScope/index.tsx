@@ -14,8 +14,7 @@ import {
   Text,
   View,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useA11y} from '#/state/a11y'
 
@@ -40,7 +39,7 @@ export function FocusScope({children}: {children: React.ReactNode}) {
  * remain within the active content section.
  */
 function FocusTrap({children}: {children: React.ReactNode}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const child = useRef<View>(null)
 
   /*
@@ -84,12 +83,8 @@ function FocusTrap({children}: {children: React.ReactNode}) {
     <>
       <Pressable
         accessible
-        accessibilityLabel={_(
-          msg`You've reached the start of the active content.`,
-        )}
-        accessibilityHint={_(
-          msg`Please go back, or activate this element to return to the start of the active content.`,
-        )}
+        accessibilityLabel={l`You've reached the start of the active content.`}
+        accessibilityHint={l`Please go back, or activate this element to return to the start of the active content.`}
         accessibilityActions={[{name: 'activate', label: 'activate'}]}
         onAccessibilityAction={event => {
           switch (event.nativeEvent.actionName) {
@@ -108,12 +103,8 @@ function FocusTrap({children}: {children: React.ReactNode}) {
         {decoratedChildren}
       </View>
       <Pressable
-        accessibilityLabel={_(
-          msg`You've reached the end of the active content.`,
-        )}
-        accessibilityHint={_(
-          msg`Please go back, or activate this element to return to the start of the active content.`,
-        )}
+        accessibilityLabel={l`You've reached the end of the active content.`}
+        accessibilityHint={l`Please go back, or activate this element to return to the start of the active content.`}
         accessibilityActions={[{name: 'activate', label: 'activate'}]}
         onAccessibilityAction={event => {
           switch (event.nativeEvent.actionName) {

@@ -1,6 +1,5 @@
 import {type AppBskyActorDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -44,7 +43,7 @@ export function MoreOptionsMenu({
   list: AppBskyGraphDefs.ListView
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const editListDialogControl = useDialogControl()
@@ -74,9 +73,9 @@ export function MoreOptionsMenu({
     if (!savedFeedConfig) return
     try {
       await removeSavedFeed(savedFeedConfig)
-      Toast.show(_(msg`Removed from your feeds`))
+      Toast.show(l`Removed from your feeds`)
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), {
+      Toast.show(l`There was an issue contacting the server`, {
         type: 'error',
       })
       logger.error('Failed to remove pinned list', {message: e})
@@ -90,7 +89,7 @@ export function MoreOptionsMenu({
       await removeSavedFeed(savedFeedConfig)
     }
 
-    Toast.show(_(msg({message: 'List deleted', context: 'toast'})))
+    Toast.show(l({message: 'List deleted', context: 'toast'}))
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
@@ -102,9 +101,9 @@ export function MoreOptionsMenu({
     try {
       if (!savedFeedConfig) return
       await removeSavedFeed(savedFeedConfig)
-      Toast.show(_(msg`Unpinned list`))
+      Toast.show(l`Unpinned list`)
     } catch {
-      Toast.show(_(msg`Failed to unpin list`), {
+      Toast.show(l`Failed to unpin list`, {
         type: 'error',
       })
     }
@@ -113,13 +112,11 @@ export function MoreOptionsMenu({
   const onUnsubscribeMute = async () => {
     try {
       await muteList({uri: list.uri, mute: false})
-      Toast.show(_(msg({message: 'List unmuted', context: 'toast'})))
+      Toast.show(l({message: 'List unmuted', context: 'toast'}))
       ax.metric('moderation:unsubscribedFromList', {listType: 'mute'})
     } catch {
       Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
+        l`There was an issue. Please check your internet connection and try again.`,
       )
     }
   }
@@ -127,13 +124,11 @@ export function MoreOptionsMenu({
   const onUnsubscribeBlock = async () => {
     try {
       await blockList({uri: list.uri, block: false})
-      Toast.show(_(msg({message: 'List unblocked', context: 'toast'})))
+      Toast.show(l({message: 'List unblocked', context: 'toast'}))
       ax.metric('moderation:unsubscribedFromList', {listType: 'block'})
     } catch {
       Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
+        l`There was an issue. Please check your internet connection and try again.`,
       )
     }
   }
@@ -141,7 +136,7 @@ export function MoreOptionsMenu({
   return (
     <>
       <Menu.Root>
-        <Menu.Trigger label={_(msg`More options`)}>
+        <Menu.Trigger label={l`More options`}>
           {({props}) => (
             <Button
               label={props.accessibilityLabel}
@@ -157,7 +152,7 @@ export function MoreOptionsMenu({
         <Menu.Outer showCancel>
           <Menu.Group>
             <Menu.Item
-              label={IS_WEB ? _(msg`Copy link to list`) : _(msg`Share via...`)}
+              label={IS_WEB ? l`Copy link to list` : l`Share via...`}
               onPress={onPressShare}>
               <Menu.ItemText>
                 {IS_WEB ? (
@@ -173,7 +168,7 @@ export function MoreOptionsMenu({
             </Menu.Item>
             {savedFeedConfig && (
               <Menu.Item
-                label={_(msg`Remove from my feeds`)}
+                label={l`Remove from my feeds`}
                 onPress={onRemoveFromSavedFeeds}>
                 <Menu.ItemText>
                   <Trans>Remove from my feeds</Trans>
@@ -188,7 +183,7 @@ export function MoreOptionsMenu({
           {isOwner ? (
             <Menu.Group>
               <Menu.Item
-                label={_(msg`Edit list details`)}
+                label={l`Edit list details`}
                 onPress={editListDialogControl.open}>
                 <Menu.ItemText>
                   <Trans>Edit list details</Trans>
@@ -196,7 +191,7 @@ export function MoreOptionsMenu({
                 <Menu.ItemIcon position="right" icon={PencilLineIcon} />
               </Menu.Item>
               <Menu.Item
-                label={_(msg`Delete list`)}
+                label={l`Delete list`}
                 onPress={deleteListPromptControl.open}>
                 <Menu.ItemText>
                   <Trans>Delete list</Trans>
@@ -207,7 +202,7 @@ export function MoreOptionsMenu({
           ) : (
             <Menu.Group>
               <Menu.Item
-                label={_(msg`Report list`)}
+                label={l`Report list`}
                 onPress={reportDialogControl.open}>
                 <Menu.ItemText>
                   <Trans>Report list</Trans>
@@ -222,7 +217,7 @@ export function MoreOptionsMenu({
               <Menu.Divider />
               <Menu.Group>
                 <Menu.Item
-                  label={_(msg`Unpin moderation list`)}
+                  label={l`Unpin moderation list`}
                   onPress={onUnpinModList}>
                   <Menu.ItemText>
                     <Trans>Unpin moderation list</Trans>
@@ -239,7 +234,7 @@ export function MoreOptionsMenu({
               <Menu.Group>
                 {isBlocking && (
                   <Menu.Item
-                    label={_(msg`Unblock list`)}
+                    label={l`Unblock list`}
                     onPress={onUnsubscribeBlock}>
                     <Menu.ItemText>
                       <Trans>Unblock list</Trans>
@@ -248,9 +243,7 @@ export function MoreOptionsMenu({
                   </Menu.Item>
                 )}
                 {isMuting && (
-                  <Menu.Item
-                    label={_(msg`Unmute list`)}
-                    onPress={onUnsubscribeMute}>
+                  <Menu.Item label={l`Unmute list`} onPress={onUnsubscribeMute}>
                     <Menu.ItemText>
                       <Trans>Unmute list</Trans>
                     </Menu.ItemText>
@@ -262,20 +255,15 @@ export function MoreOptionsMenu({
           )}
         </Menu.Outer>
       </Menu.Root>
-
       <CreateOrEditListDialog control={editListDialogControl} list={list} />
-
       <Prompt.Basic
         control={deleteListPromptControl}
-        title={_(msg`Delete this list?`)}
-        description={_(
-          msg`If you delete this list, you won't be able to recover it.`,
-        )}
+        title={l`Delete this list?`}
+        description={l`If you delete this list, you won't be able to recover it.`}
         onConfirm={onPressDelete}
-        confirmButtonCta={_(msg`Delete`)}
+        confirmButtonCta={l`Delete`}
         confirmButtonColor="negative"
       />
-
       <ReportDialog
         control={reportDialogControl}
         subject={{

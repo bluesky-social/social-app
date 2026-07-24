@@ -1,8 +1,7 @@
 import {useMemo, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useSession} from '#/state/session'
 import {atoms as a, tokens, useTheme} from '#/alf'
@@ -25,7 +24,7 @@ export function EmojiReactionPicker({
   children?: TriggerProps['children']
   onEmojiSelect: (emoji: string) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const t = useTheme()
   const isFromSelf = message.sender?.did === currentAccount?.did
@@ -77,7 +76,7 @@ export function EmojiReactionPicker({
         return (
           <ContextMenu.Item
             position={position}
-            label={_(msg`React with ${emoji}`)}
+            label={l`React with ${emoji}`}
             key={emoji}
             onPress={() => onEmojiSelect(emoji)}
             unstyled

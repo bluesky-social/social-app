@@ -1,7 +1,6 @@
 import {useMemo} from 'react'
 import {type AppBskyUnspeccedDefs, type AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 // import {makeProfileLink} from '#/lib/routes/links'
@@ -48,14 +47,14 @@ type ParsedTrendingTopic =
 export function useTopic(
   raw: AppBskyUnspeccedDefs.TrendView,
 ): ParsedTrendingTopic {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return useMemo(() => {
     const {topic: displayName, link} = raw
 
     if (link.startsWith('/search')) {
       return {
         type: 'topic',
-        label: _(msg`Browse posts about ${displayName}`),
+        label: l`Browse posts about ${displayName}`,
         displayName,
         uri: undefined,
         url: link,
@@ -63,7 +62,7 @@ export function useTopic(
     } else if (link.startsWith('/hashtag')) {
       return {
         type: 'tag',
-        label: _(msg`Browse posts tagged with ${displayName}`),
+        label: l`Browse posts tagged with ${displayName}`,
         displayName,
         // displayName: displayName.replace(/^#/, ''),
         uri: undefined,
@@ -72,7 +71,7 @@ export function useTopic(
     } else if (link.startsWith('/starter-pack')) {
       return {
         type: 'starter-pack',
-        label: _(msg`Browse starter pack ${displayName}`),
+        label: l`Browse starter pack ${displayName}`,
         displayName,
         uri: undefined,
         url: link,
@@ -109,10 +108,10 @@ export function useTopic(
 
     return {
       type: 'unknown',
-      label: _(msg`Browse topic ${displayName}`),
+      label: l`Browse topic ${displayName}`,
       displayName,
       uri: undefined,
       url: link,
     }
-  }, [_, raw])
+  }, [l, raw])
 }

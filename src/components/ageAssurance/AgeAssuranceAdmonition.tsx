@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, select, useTheme, type ViewStyleProp} from '#/alf'
@@ -40,7 +39,7 @@ function Inner({
   control: Dialog.DialogControlProps
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
 
   return (
@@ -90,7 +89,7 @@ function Inner({
               <Trans>
                 Learn more in your{' '}
                 <InlineLinkText
-                  label={_(msg`Go to account settings`)}
+                  label={l`Go to account settings`}
                   to={'/settings/account'}
                   style={[a.text_sm, a.leading_snug, a.font_semi_bold]}
                   onPress={() => {

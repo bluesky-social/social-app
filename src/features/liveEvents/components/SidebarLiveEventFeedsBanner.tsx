@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
@@ -18,7 +17,7 @@ export function SidebarLiveEventFeedsBanner() {
 }
 
 function Inner({feed}: {feed: LiveEventFeed}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const layout = feed.layouts.wide
 
   const {mutate: update, variables} = useUpdateLiveEventPreferences({
@@ -37,7 +36,7 @@ function Inner({feed}: {feed: LiveEventFeed}) {
           </Toast.Text>
           {undoAction && (
             <Toast.Action
-              label={_(msg`Undo`)}
+              label={l`Undo`}
               onPress={() => {
                 if (undoAction) {
                   update(undoAction)
@@ -57,11 +56,10 @@ function Inner({feed}: {feed: LiveEventFeed}) {
   return (
     <View style={[a.relative]}>
       <LiveEventFeedCardCompact feed={feed} metricContext="sidebar" />
-
       <View
         style={[a.justify_center, a.absolute, {top: 0, right: 6, bottom: 0}]}>
         <Button
-          label={_(msg`Dismiss live event banner`)}
+          label={l`Dismiss live event banner`}
           size="tiny"
           shape="round"
           style={[a.z_10]}

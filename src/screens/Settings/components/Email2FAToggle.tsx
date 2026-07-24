@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useSession} from '#/state/session'
 import {useDialogControl} from '#/components/Dialog'
@@ -12,7 +11,7 @@ import {DisableEmail2FADialog} from './DisableEmail2FADialog'
 import * as SettingsList from './SettingsList'
 
 export function Email2FAToggle() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const disableDialogControl = useDialogControl()
   const emailDialogControl = useEmailDialogControl()
@@ -27,9 +26,7 @@ export function Email2FAToggle() {
     <>
       <DisableEmail2FADialog control={disableDialogControl} />
       <SettingsList.BadgeButton
-        label={
-          currentAccount?.emailAuthFactor ? _(msg`Change`) : _(msg`Enable`)
-        }
+        label={currentAccount?.emailAuthFactor ? l`Change` : l`Enable`}
         onPress={onToggle}
       />
     </>

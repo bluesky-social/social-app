@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
@@ -33,7 +32,7 @@ function DeactivateAccountDialogInner({
   control: DialogOuterProps['control']
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const agent = useAgent()
   const {logoutCurrentAccount} = useSessionApi()
   const [pending, setPending] = useState(false)
@@ -50,13 +49,11 @@ function DeactivateAccountDialogInner({
       switch (e.message) {
         case 'Bad token scope':
           setError(
-            _(
-              msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
-            ),
+            l`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
           )
           break
         default:
-          setError(_(msg`Something went wrong, please try again`))
+          setError(l`Something went wrong, please try again`)
           break
       }
 
@@ -66,11 +63,11 @@ function DeactivateAccountDialogInner({
     } finally {
       setPending(false)
     }
-  }, [agent, control, logoutCurrentAccount, _, setPending])
+  }, [agent, control, logoutCurrentAccount, l, setPending])
 
   return (
     <>
-      <Prompt.TitleText>{_(msg`Deactivate account`)}</Prompt.TitleText>
+      <Prompt.TitleText>{l`Deactivate account`}</Prompt.TitleText>
       <Prompt.DescriptionText>
         <Trans>
           Your profile, posts, feeds, and lists will no longer be visible to
@@ -78,7 +75,6 @@ function DeactivateAccountDialogInner({
           logging in.
         </Trans>
       </Prompt.DescriptionText>
-
       <View style={[a.pb_xl]}>
         <Divider />
         <View style={[a.gap_sm, a.pt_lg, a.pb_xl]}>
@@ -102,14 +98,13 @@ function DeactivateAccountDialogInner({
         <Button
           color="negative"
           size="large"
-          label={_(msg`Yes, deactivate`)}
+          label={l`Yes, deactivate`}
           onPress={handleDeactivate}>
-          <ButtonText>{_(msg`Yes, deactivate`)}</ButtonText>
+          <ButtonText>{l`Yes, deactivate`}</ButtonText>
           {pending && <ButtonIcon icon={Loader} position="right" />}
         </Button>
         <Prompt.Cancel />
       </Prompt.Actions>
-
       {error && (
         <View
           style={[

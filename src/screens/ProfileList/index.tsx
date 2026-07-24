@@ -7,8 +7,7 @@ import {
   moderateUserList,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -61,7 +60,7 @@ export function ProfileListScreen(props: Props) {
 }
 
 function ProfileListScreenInner(props: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {name: handleOrDid, rkey} = props.route.params
   const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
     AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
@@ -84,9 +83,7 @@ function ProfileListScreenInner(props: Props) {
         </Layout.Header.Outer>
         <Layout.Content centerContent>
           <ErrorScreen
-            error={_(
-              msg`We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`,
-            )}
+            error={l`We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`}
           />
         </Layout.Content>
       </>
@@ -151,7 +148,7 @@ function ProfileListScreenLoaded({
   preferences: UsePreferencesQueryResponse
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
@@ -164,7 +161,7 @@ function ProfileListScreenLoaded({
   const isOwner = currentAccount?.did === list.creator.did
   const scrollElRef = useAnimatedRef()
   const addUserDialogControl = useDialogControl()
-  const sectionTitlesCurate = [_(msg`Posts`), _(msg`People`)]
+  const sectionTitlesCurate = [l`Posts`, l`People`]
   // modlist only
   const [headerHeight, setHeaderHeight] = useState<number | null>(null)
 
@@ -172,7 +169,7 @@ function ProfileListScreenLoaded({
     return moderateUserList(list, moderationOpts)
   }, [list, moderationOpts])
 
-  useSetTitle(isHidden ? _(msg`List Hidden`) : list.name)
+  useSetTitle(isHidden ? l`List Hidden` : list.name)
 
   const onChangeMembers = () => {
     if (isCurateList) {
@@ -234,7 +231,7 @@ function ProfileListScreenLoaded({
               onPress={() => openComposer({logContext: 'Fab'})}
               icon={<EditBigIcon size="lg" fill={t.palette.white} />}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`New post`)}
+              accessibilityLabel={l`New post`}
               accessibilityHint=""
             />
           </View>
@@ -277,7 +274,7 @@ function ProfileListScreenLoaded({
             onPress={() => openComposer({logContext: 'Fab'})}
             icon={<EditBigIcon size="lg" fill={t.palette.white} />}
             accessibilityRole="button"
-            accessibilityLabel={_(msg`New post`)}
+            accessibilityLabel={l`New post`}
             accessibilityHint=""
           />
         </View>

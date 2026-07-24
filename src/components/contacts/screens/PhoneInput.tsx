@@ -3,8 +3,7 @@ import {Keyboard, View} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyContactStartPhoneVerification} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
@@ -53,7 +52,7 @@ export function PhoneInput({
   context: 'Onboarding' | 'Standalone'
   onSkip: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const t = useTheme()
   const agent = useAgent()
@@ -98,26 +97,22 @@ export function PhoneInput({
     onError: err => {
       if (isNetworkError(err)) {
         setError(
-          _(
-            msg`A network error occurred. Please check your internet connection`,
-          ),
+          l`A network error occurred. Please check your internet connection`,
         )
       } else if (
         err instanceof
         AppBskyContactStartPhoneVerification.RateLimitExceededError
       ) {
-        setError(_(msg`Rate limit exceeded. Please try again later.`))
+        setError(l`Rate limit exceeded. Please try again later.`)
       } else if (
         err instanceof AppBskyContactStartPhoneVerification.InvalidPhoneError
       ) {
         setError(
-          _(
-            msg`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
-          ),
+          l`The verification provider was unable to send a code to your phone number. Please check your phone number and try again.`,
         )
       } else {
         logger.error('Verify phone number failed', {safeMessage: err})
-        setError(_(msg`An error occurred. ${cleanError(err)}`))
+        setError(l`An error occurred. ${cleanError(err)}`)
       }
     },
   })
@@ -139,7 +134,7 @@ export function PhoneInput({
         phoneNumber: result.formatted,
       })
     } else {
-      setFormatError(result.reason ?? _(msg`Invalid phone number`))
+      setFormatError(result.reason ?? l`Invalid phone number`)
     }
   }
 
@@ -157,7 +152,7 @@ export function PhoneInput({
             size="small"
             color="secondary"
             variant="ghost"
-            label={_(msg`Skip contact sharing and continue to the app`)}
+            label={l`Skip contact sharing and continue to the app`}
             onPress={onSkip}>
             <ButtonText>
               <Trans>Skip</Trans>
@@ -201,7 +196,7 @@ export function PhoneInput({
             <View style={[a.flex_1]}>
               <TextField.Root isInvalid={!!formatError || !isFeatureEnabled}>
                 <TextField.Input
-                  label={_(msg`Phone number`)}
+                  label={l`Phone number`}
                   value={phoneNumber}
                   onChangeText={text => {
                     if (formatError) setFormatError('')
@@ -252,7 +247,7 @@ export function PhoneInput({
         <View style={[gutters, {paddingBottom}]}>
           <Button
             disabled={!phoneNumber || isPending}
-            label={_(msg`Send code`)}
+            label={l`Send code`}
             size="large"
             color="primary"
             onPress={onSubmitNumber}>
@@ -269,7 +264,7 @@ export function PhoneInput({
 
 function LegalDisclaimer() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const style = [a.text_xs, t.atoms.text_contrast_medium, a.leading_snug]
 
@@ -299,12 +294,10 @@ function LegalDisclaimer() {
           time by visiting settings.{' '}
           <InlineLinkText
             to={urls.website.support.findFriendsPrivacyPolicy}
-            label={_(
-              msg({
-                message: `Learn more about importing contacts`,
-                context: `english-only-resource`,
-              }),
-            )}
+            label={l({
+              message: `Learn more about importing contacts`,
+              context: `english-only-resource`,
+            })}
             style={[a.text_xs, a.leading_snug]}>
             <Trans context="english-only-resource">Learn more</Trans>
           </InlineLinkText>

@@ -2,8 +2,7 @@ import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, select, useTheme, utils, web} from '#/alf'
@@ -31,7 +30,7 @@ export const enabled = createIsEnabledCheck(props => {
 
 export function LiveNowBetaDialog() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
 
@@ -55,9 +54,8 @@ export function LiveNowBetaDialog() {
       onClose={onClose}
       nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle fill={t.palette.primary_700} />
-
       <Dialog.ScrollableInner
-        label={_(msg`Show when you’re live`)}
+        label={l`Show when you’re live`}
         style={[web({maxWidth: 440})]}
         contentContainerStyle={[
           {
@@ -143,13 +141,11 @@ export function LiveNowBetaDialog() {
                     aspectRatio: 652 / 211,
                   },
                 ]}
-                alt={_(
-                  msg({
-                    message: `A screenshot of a post from @esb.lol, showing the user is currently livestreaming content on Twitch. The post reads: "Hello! I'm live on Twitch, and I'm testing Bluesky's latest feature too!"`,
-                    comment:
-                      'Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.',
-                  }),
-                )}
+                alt={l({
+                  message: `A screenshot of a post from @esb.lol, showing the user is currently livestreaming content on Twitch. The post reads: "Hello! I'm live on Twitch, and I'm testing Bluesky's latest feature too!"`,
+                  comment:
+                    'Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.',
+                })}
                 useAppleWebpCodec
               />
             </View>
@@ -189,7 +185,7 @@ export function LiveNowBetaDialog() {
 
           {!IS_WEB && (
             <Button
-              label={_(msg`Close`)}
+              label={l`Close`}
               size="large"
               color="primary"
               onPress={() => {

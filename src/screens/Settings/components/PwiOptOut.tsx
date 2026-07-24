@@ -1,8 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {type $Typed, ComAtprotoLabelDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {
@@ -17,7 +16,7 @@ import * as bsky from '#/types/bsky'
 
 export function PwiOptOut() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const updateProfile = useProfileUpdateMutation()
@@ -84,9 +83,7 @@ export function PwiOptOut() {
         disabled={!canToggle || updateProfile.isPending}
         value={isOptedOut}
         onChange={onToggleOptOut}
-        label={_(
-          msg`Discourage apps from showing my account to logged-out users`,
-        )}
+        label={l`Discourage apps from showing my account to logged-out users`}
         style={[a.w_full]}>
         <Toggle.LabelText style={[a.flex_1]}>
           <Trans>
@@ -95,7 +92,6 @@ export function PwiOptOut() {
         </Toggle.LabelText>
         <Toggle.Platform />
       </Toggle.Item>
-
       <Text style={[a.leading_snug, t.atoms.text_contrast_high]}>
         <Trans>
           Bluesky will not show your profile and posts to logged-out users.

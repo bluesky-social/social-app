@@ -1,7 +1,6 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
@@ -20,22 +19,22 @@ export function ThreadError({
   onRetry: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const cleanError = useCleanError()
 
   const {title, message} = useMemo(() => {
-    let title = _(msg`Error loading post`)
-    let message = _(msg`Something went wrong. Please try again in a moment.`)
+    let title = l`Error loading post`
+    let message = l`Something went wrong. Please try again in a moment.`
 
     const {raw, clean} = cleanError(error)
 
     if (error.message.startsWith('Post not found')) {
-      title = _(msg`Post not found`)
+      title = l`Post not found`
       message = clean || raw || message
     }
 
     return {title, message}
-  }, [_, error, cleanError])
+  }, [l, error, cleanError])
 
   return (
     <Layout.Center>
@@ -78,7 +77,7 @@ export function ThreadError({
             </Text>
           </View>
           <Button
-            label={_(msg`Retry`)}
+            label={l`Retry`}
             size="small"
             variant="solid"
             color="secondary_inverted"

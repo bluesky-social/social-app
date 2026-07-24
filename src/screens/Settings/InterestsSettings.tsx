@@ -1,7 +1,6 @@
 import {useMemo, useState} from 'react'
 import {type TextStyle, View, type ViewStyle} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
@@ -87,7 +86,7 @@ function Inner({
   preferences: UsePreferencesQueryResponse
   setIsSaving: (isSaving: boolean) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const agent = useAgent()
   const qc = useQueryClient()
   const interestsDisplayNames = useInterestsDisplayNames()
@@ -134,21 +133,17 @@ function Inner({
         ])
 
         Toast.show(
-          _(
-            msg({
-              message: 'Your interests have been updated!',
-              context: 'toast',
-            }),
-          ),
+          l({
+            message: 'Your interests have been updated!',
+            context: 'toast',
+          }),
         )
       } catch (error) {
         Toast.show(
-          _(
-            msg({
-              message: 'Failed to save your interests.',
-              context: 'toast',
-            }),
-          ),
+          l({
+            message: 'Failed to save your interests.',
+            context: 'toast',
+          }),
           {
             type: 'error',
           },
@@ -157,7 +152,7 @@ function Inner({
         setIsSaving(false)
       }
     }, 1500)
-  }, [_, agent, setIsSaving, qc, preselectedInterests])
+  }, [l, agent, setIsSaving, qc, preselectedInterests])
 
   const onChangeInterests = async (interests: string[]) => {
     setInterests(interests)
@@ -171,11 +166,10 @@ function Inner({
           <Trans>We recommend selecting at least two interests.</Trans>
         </Admonition>
       )}
-
       <Toggle.Group
         values={interests}
         onChange={onChangeInterests}
-        label={_(msg`Select your interests from the options below`)}>
+        label={l`Select your interests from the options below`}>
         <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
           {allInterests.map(interest => {
             const name = interestsDisplayNames[interest]

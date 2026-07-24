@@ -1,8 +1,7 @@
 import {memo} from 'react'
 import {type Insets} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
@@ -30,7 +29,7 @@ export const BookmarkButton = memo(function BookmarkButton({
 }): React.ReactNode {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {mutateAsync: bookmark} = useBookmarkMutation()
   const cleanError = useCleanError()
   const requireAuth = useRequireAuth()
@@ -39,12 +38,10 @@ export const BookmarkButton = memo(function BookmarkButton({
   const {viewer} = post
   const isBookmarked = !!viewer?.bookmarked
 
-  const undoLabel = _(
-    msg({
-      message: `Undo`,
-      context: `Button label to undo saving/removing a post from saved posts.`,
-    }),
-  )
+  const undoLabel = l({
+    message: `Undo`,
+    context: `Button label to undo saving/removing a post from saved posts.`,
+  })
 
   const save = async () => {
     try {
@@ -115,11 +112,7 @@ export const BookmarkButton = memo(function BookmarkButton({
       big={big}
       active={isBookmarked}
       activeColor={t.palette.primary_500}
-      label={
-        isBookmarked
-          ? _(msg`Remove from saved posts`)
-          : _(msg`Add to saved posts`)
-      }
+      label={isBookmarked ? l`Remove from saved posts` : l`Add to saved posts`}
       onPress={onHandlePress}
       hitSlop={hitSlop}>
       <PostControlButtonIcon icon={isBookmarked ? BookmarkFilled : Bookmark} />

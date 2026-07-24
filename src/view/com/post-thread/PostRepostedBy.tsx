@@ -1,7 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {cleanError} from '#/lib/strings/errors'
@@ -33,7 +32,7 @@ function keyExtractor(item: ActorDefs.ProfileView) {
 }
 
 export function PostRepostedBy({uri}: {uri: string}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const initialNumToRender = useInitialNumToRender()
 
   const [isPTRing, setIsPTRing] = useState(false)
@@ -87,10 +86,8 @@ export function PostRepostedBy({uri}: {uri: string}) {
         isLoading={isLoadingUri || isLoadingRepostedBy}
         isError={isError}
         emptyType="results"
-        emptyTitle={_(msg`No reposts yet`)}
-        emptyMessage={_(
-          msg`Nobody has reposted this yet. Maybe you should be the first!`,
-        )}
+        emptyTitle={l`No reposts yet`}
+        emptyMessage={l`Nobody has reposted this yet. Maybe you should be the first!`}
         errorMessage={cleanError(resolveError || error)}
         sideBorders={false}
       />

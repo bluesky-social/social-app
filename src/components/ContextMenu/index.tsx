@@ -45,8 +45,7 @@ import {
 } from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
 import {Image, type ImageErrorEventData} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
@@ -453,7 +452,7 @@ function TriggerClone({
   onDisplay: () => void
   label: string
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const animatedStyles = useAnimatedStyle(() => {
     const anim = animation.get()
@@ -504,7 +503,7 @@ function TriggerClone({
           height: measurement.height,
         }}
         accessibilityLabel={label}
-        accessibilityHint={_(msg`The subject of the context menu`)}
+        accessibilityHint={l`The subject of the context menu`}
         accessibilityIgnoresInvertColors={false}
         cachePolicy="none"
       />

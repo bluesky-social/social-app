@@ -12,8 +12,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -64,7 +63,7 @@ export function ProfileLists({
   testID,
   setScrollViewTag,
 }: ProfileListsProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const [isPTRing, setIsPTRing] = useState(false)
   const {height} = useWindowDimensions()
@@ -155,16 +154,14 @@ export function ProfileLists({
           <EmptyState
             icon={ListIcon}
             message={
-              isSelf
-                ? _(msg`You haven't created any lists yet.`)
-                : _(msg`No lists`)
+              isSelf ? l`You haven't created any lists yet.` : l`No lists`
             }
             textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
             button={
               isSelf
                 ? {
-                    label: _(msg`Create a list`),
-                    text: _(msg`Create a list`),
+                    label: l`Create a list`,
+                    text: l`Create a list`,
                     onPress: () => navigation.navigate('Lists' as never),
                     size: 'small',
                     color: 'primary',
@@ -180,9 +177,7 @@ export function ProfileLists({
       } else if (item === LOAD_MORE_ERROR_ITEM) {
         return (
           <LoadMoreRetryBtn
-            label={_(
-              msg`There was an issue fetching your lists. Tap here to try again.`,
-            )}
+            label={l`There was an issue fetching your lists. Tap here to try again.`}
             onPress={onPressRetryLoadMore}
           />
         )
@@ -205,7 +200,7 @@ export function ProfileLists({
       return null
     },
     [
-      _,
+      l,
       t,
       error,
       refetch,

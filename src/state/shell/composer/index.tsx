@@ -5,8 +5,7 @@ import {
   type AppBskyUnspeccedGetPostThreadV2,
   type ModerationDecision,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -74,7 +73,7 @@ const controlsContext = createContext<ControlsContext>({
 controlsContext.displayName = 'ComposerControlsContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [state, setState] = useState<StateContext>()
   const queryClient = useQueryClient()
 
@@ -102,7 +101,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         author.viewer?.blockingByList),
     )
     if (isBlocked) {
-      Toast.show(_(msg`Cannot interact with a blocked user`), {
+      Toast.show(l`Cannot interact with a blocked user`, {
         type: 'warning',
       })
     } else {

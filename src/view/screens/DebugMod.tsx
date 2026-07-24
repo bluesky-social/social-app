@@ -17,8 +17,7 @@ import {
   type ModerationOpts,
   RichText,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
 import {
@@ -948,12 +947,12 @@ function MockAccountScreen({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
     <View style={[t.atoms.border_contrast_medium, a.border, a.mb_md]}>
       <ScreenHider
         style={{}}
-        screenDescription={_(msg`profile`)}
+        screenDescription={l`profile`}
         modui={moderation.ui('profileView')}>
         <ProfileHeaderStandard
           // @ts-ignore ProfileViewBasic is close enough -prf

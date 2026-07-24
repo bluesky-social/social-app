@@ -8,8 +8,7 @@ import {
   type ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -97,7 +96,7 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
 }
 
 export function StarterPackScreenShort({route}: StarterPackScreenShortProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {
     data: resolvedStarterPack,
     isLoading,
@@ -112,8 +111,8 @@ export function StarterPackScreenShort({route}: StarterPackScreenShortProps) {
         <ListMaybePlaceholder
           isLoading={isLoading}
           isError={isError}
-          errorMessage={_(msg`That starter pack could not be found.`)}
-          emptyMessage={_(msg`That starter pack could not be found.`)}
+          errorMessage={l`That starter pack could not be found.`}
+          emptyMessage={l`That starter pack could not be found.`}
         />
       </Layout.Screen>
     )
@@ -131,7 +130,7 @@ export function StarterPackScreenInner({
   routeParams: StarterPackScreeProps['route']['params']
 }) {
   const {name, rkey} = routeParams
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
 
   const moderationOpts = useModerationOpts()
@@ -157,8 +156,8 @@ export function StarterPackScreenInner({
       <ListMaybePlaceholder
         isLoading={isLoadingDid || isLoadingStarterPack || !moderationOpts}
         isError={isErrorDid || isErrorStarterPack || !isValid}
-        errorMessage={_(msg`That starter pack could not be found.`)}
-        emptyMessage={_(msg`That starter pack could not be found.`)}
+        errorMessage={l`That starter pack could not be found.`}
+        emptyMessage={l`That starter pack could not be found.`}
       />
     )
   }
@@ -188,13 +187,13 @@ function StarterPackScreenLoaded({
   const showPeopleTab = Boolean(starterPack.list)
   const showFeedsTab = Boolean(starterPack.feeds?.length)
   const showPostsTab = Boolean(starterPack.list)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
 
   const tabs = [
-    ...(showPeopleTab ? [_(msg`People`)] : []),
-    ...(showFeedsTab ? [_(msg`Feeds`)] : []),
-    ...(showPostsTab ? [_(msg`Posts`)] : []),
+    ...(showPeopleTab ? [l`People`] : []),
+    ...(showFeedsTab ? [l`Feeds`] : []),
+    ...(showPostsTab ? [l`Posts`] : []),
   ]
 
   const qrCodeDialogControl = useDialogControl()
@@ -307,7 +306,7 @@ function Header({
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {currentAccount, hasSession} = useSession()
   const agent = useAgent()
@@ -356,7 +355,7 @@ function Header({
       listItems = await getAllListMembers(agent, starterPack.list.uri)
     } catch (e) {
       setIsProcessing(false)
-      Toast.show(_(msg`An error occurred while trying to follow all`), {
+      Toast.show(l`An error occurred while trying to follow all`, {
         type: 'error',
       })
       logger.error('Failed to get list members for starter pack', {
@@ -383,7 +382,7 @@ function Header({
       })
     } catch (e) {
       setIsProcessing(false)
-      Toast.show(_(msg`An error occurred while trying to follow all`), {
+      Toast.show(l`An error occurred while trying to follow all`, {
         type: 'error',
       })
       logger.error('Failed to follow all accounts', {safeMessage: e})
@@ -397,7 +396,7 @@ function Header({
         })
       }
     })
-    Toast.show(_(msg`All accounts have been followed!`))
+    Toast.show(l`All accounts have been followed!`)
     captureAction(ProgressGuideAction.Follow, dids.length)
     ax.metric('starterPack:followAll', {
       logContext: 'StarterPackProfilesList',
@@ -437,7 +436,7 @@ function Header({
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>
             {isOwn ? (
               <Button
-                label={_(msg`Share this starter pack`)}
+                label={l`Share this starter pack`}
                 hitSlop={HITSLOP_20}
                 variant="solid"
                 color="primary"
@@ -449,7 +448,7 @@ function Header({
               </Button>
             ) : (
               <Button
-                label={_(msg`Follow all`)}
+                label={l`Follow all`}
                 variant="solid"
                 color="primary"
                 size="small"
@@ -475,7 +474,7 @@ function Header({
           {richText ? <RichText value={richText} style={[a.text_md]} /> : null}
           {!hasSession ? (
             <Button
-              label={_(msg`Join Bluesky`)}
+              label={l`Join Bluesky`}
               onPress={() => {
                 setActiveStarterPack({
                   uri: starterPack.uri,
@@ -527,7 +526,7 @@ function OverflowMenu({
   onOpenShareDialog: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
@@ -574,12 +573,12 @@ function OverflowMenu({
   return (
     <>
       <Menu.Root>
-        <Menu.Trigger label={_(msg`Repost or quote post`)}>
+        <Menu.Trigger label={l`Repost or quote post`}>
           {({props}) => (
             <Button
               {...props}
               testID="headerDropdownBtn"
-              label={_(msg`Open starter pack menu`)}
+              label={l`Open starter pack menu`}
               hitSlop={HITSLOP_20}
               variant="solid"
               color="secondary"
@@ -593,7 +592,7 @@ function OverflowMenu({
           {isOwn ? (
             <>
               <Menu.Item
-                label={_(msg`Edit starter pack`)}
+                label={l`Edit starter pack`}
                 testID="editStarterPackLinkBtn"
                 onPress={() => {
                   navigation.navigate('StarterPackEdit', {
@@ -606,7 +605,7 @@ function OverflowMenu({
                 <Menu.ItemIcon icon={Pencil} position="right" />
               </Menu.Item>
               <Menu.Item
-                label={_(msg`Delete starter pack`)}
+                label={l`Delete starter pack`}
                 testID="deleteStarterPackBtn"
                 onPress={() => {
                   deleteDialogControl.open()
@@ -617,7 +616,7 @@ function OverflowMenu({
                 <Menu.ItemIcon icon={Trash} position="right" />
               </Menu.Item>
               <Menu.Item
-                label={_(msg`Create a list from this starter pack`)}
+                label={l`Create a list from this starter pack`}
                 testID="convertToListBtn"
                 onPress={() => {
                   convertToListDialogControl.open()
@@ -633,9 +632,7 @@ function OverflowMenu({
               <Menu.Group>
                 <Menu.Item
                   label={
-                    IS_WEB
-                      ? _(msg`Copy link to starter pack`)
-                      : _(msg`Share via...`)
+                    IS_WEB ? l`Copy link to starter pack` : l`Share via...`
                   }
                   testID="shareStarterPackLinkBtn"
                   onPress={onOpenShareDialog}>
@@ -654,7 +651,7 @@ function OverflowMenu({
               </Menu.Group>
 
               <Menu.Item
-                label={_(msg`Report starter pack`)}
+                label={l`Report starter pack`}
                 onPress={() => reportDialogControl.open()}>
                 <Menu.ItemText>
                   <Trans>Report starter pack</Trans>
@@ -665,7 +662,6 @@ function OverflowMenu({
           )}
         </Menu.Outer>
       </Menu.Root>
-
       {starterPack.list && (
         <ReportDialog
           control={reportDialogControl}
@@ -675,7 +671,6 @@ function OverflowMenu({
           }}
         />
       )}
-
       <Prompt.Outer control={deleteDialogControl}>
         <Prompt.TitleText>
           <Trans>Delete starter pack?</Trans>
@@ -709,7 +704,7 @@ function OverflowMenu({
             variant="solid"
             color="negative"
             size={gtMobile ? 'small' : 'large'}
-            label={_(msg`Yes, delete this starter pack`)}
+            label={l`Yes, delete this starter pack`}
             onPress={onDeleteStarterPack}>
             <ButtonText>
               <Trans>Delete</Trans>
@@ -719,7 +714,6 @@ function OverflowMenu({
           <Prompt.Cancel />
         </Prompt.Actions>
       </Prompt.Outer>
-
       <CreateListFromStarterPackDialog
         control={convertToListDialogControl}
         starterPack={starterPack}
@@ -729,7 +723,7 @@ function OverflowMenu({
 }
 
 function InvalidStarterPack({rkey}: {rkey: string}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
@@ -751,7 +745,7 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
     onError: e => {
       setIsProcessing(false)
       logger.error('Failed to delete invalid starter pack', {safeMessage: e})
-      Toast.show(_(msg`Failed to delete starter pack`), {
+      Toast.show(l`Failed to delete starter pack`, {
         type: 'error',
       })
     },
@@ -782,7 +776,7 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
           <Button
             variant="solid"
             color="primary"
-            label={_(msg`Delete starter pack`)}
+            label={l`Delete starter pack`}
             size="large"
             style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}
             disabled={isProcessing}
@@ -798,7 +792,7 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
           <Button
             variant="solid"
             color="secondary"
-            label={_(msg`Return to previous page`)}
+            label={l`Return to previous page`}
             size="large"
             style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}
             disabled={isProcessing}

@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
@@ -21,7 +20,7 @@ import {Text} from '#/components/Typography'
 
 export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const setSelectedFeed = useSetSelectedFeed()
   const {data: preferences} = usePreferencesQuery()
   const {mutateAsync: removeFeed, isPending: isRemovePending} =
@@ -42,23 +41,21 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
     try {
       if (feedConfig) {
         await removeFeed(feedConfig)
-        Toast.show(_(msg`Removed from your feeds`))
+        Toast.show(l`Removed from your feeds`)
       }
       if (hasDiscoverPinned) {
         setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`)
       }
     } catch (err: any) {
       Toast.show(
-        _(
-          msg`There was an issue updating your feeds, please check your internet connection and try again.`,
-        ),
+        l`There was an issue updating your feeds, please check your internet connection and try again.`,
         {
           type: 'warning',
         },
       )
       logger.error('Failed to update feeds', {message: err})
     }
-  }, [removeFeed, feedConfig, _, hasDiscoverPinned, setSelectedFeed])
+  }, [removeFeed, feedConfig, l, hasDiscoverPinned, setSelectedFeed])
 
   const onReplaceFeed = useCallback(async () => {
     try {
@@ -67,12 +64,10 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         discoverFeedConfig,
       })
       setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`)
-      Toast.show(_(msg`The feed has been replaced with Discover.`))
+      Toast.show(l`The feed has been replaced with Discover.`)
     } catch (err: any) {
       Toast.show(
-        _(
-          msg`There was an issue updating your feeds, please check your internet connection and try again.`,
-        ),
+        l`There was an issue updating your feeds, please check your internet connection and try again.`,
         {
           type: 'warning',
         },
@@ -84,7 +79,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
     discoverFeedConfig,
     feedConfig,
     setSelectedFeed,
-    _,
+    l,
   ])
 
   const isProcessing = isReplacePending || isRemovePending
@@ -104,7 +99,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         <Trans>
           This feed is no longer online. We are showing{' '}
           <InlineLinkText
-            label={_(msg`The Discover feed`)}
+            label={l`The Discover feed`}
             to="/profile/bsky.app/feed/whats-hot"
             style={[a.text_md]}>
             Discover
@@ -118,7 +113,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
             variant="outline"
             color="primary"
             size="small"
-            label={_(msg`Remove feed`)}
+            label={l`Remove feed`}
             disabled={isProcessing}
             onPress={onRemoveFeed}>
             <ButtonText>
@@ -131,7 +126,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
               variant="solid"
               color="primary"
               size="small"
-              label={_(msg`Replace with Discover`)}
+              label={l`Replace with Discover`}
               disabled={isProcessing}
               onPress={onReplaceFeed}>
               <ButtonText>

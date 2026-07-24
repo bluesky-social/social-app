@@ -7,8 +7,7 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -170,7 +169,7 @@ function ContentInner<T>({
   valueExtractor,
   ...context
 }: ContentProps<T> & ContextType) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [headerHeight, setHeaderHeight] = useState(61)
 
   const render = useCallback(
@@ -196,7 +195,7 @@ function ContentInner<T>({
         ]}>
         <Dialog.HeaderText
           style={[a.flex_1, a.px_xl, a.text_left, a.font_bold, a.text_2xl]}>
-          {label ?? _(msg`Select an option`)}
+          {label ?? l`Select an option`}
         </Dialog.HeaderText>
       </Dialog.Header>
       <Dialog.Handle />

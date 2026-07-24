@@ -1,7 +1,6 @@
 import {type JSX} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useSession} from '#/state/session'
@@ -38,7 +37,7 @@ function HomeHeaderLayoutDesktopAndTablet({
   const t = useTheme()
   const {headerHeight} = useShellLayout()
   const {hasSession} = useSession()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const logoVariant = useLogoVariant()
   const gutters = useGutters([0, 'base'])
@@ -64,7 +63,7 @@ function HomeHeaderLayoutDesktopAndTablet({
             <Link
               to="/feeds"
               hitSlop={HITSLOP_10}
-              label={_(msg`View your feeds and explore more`)}
+              label={l`View your feeds and explore more`}
               size="small"
               variant="ghost"
               color="secondary"

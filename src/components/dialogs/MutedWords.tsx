@@ -1,8 +1,7 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
@@ -50,7 +49,7 @@ export function MutedWordsDialog() {
 
 function MutedWordsInner() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {
     isLoading: isPreferencesLoading,
@@ -86,7 +85,7 @@ function MutedWordsInner() {
 
     if (!sanitizedValue || !surfaces.length) {
       setField('')
-      setError(_(msg`Please enter a valid word, tag, or phrase to mute`))
+      setError(l`Please enter a valid word, tag, or phrase to mute`)
       return
     }
 
@@ -105,10 +104,10 @@ function MutedWordsInner() {
       logger.error(`Failed to save muted word`, {message: e.message})
       setError(e.message)
     }
-  }, [_, field, targets, addMutedWord, setField, durations, excludeFollowing])
+  }, [l, field, targets, addMutedWord, setField, durations, excludeFollowing])
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Manage your muted words and tags`)}>
+    <Dialog.ScrollableInner label={l`Manage your muted words and tags`}>
       <View>
         <Text
           style={[
@@ -133,8 +132,8 @@ function MutedWordsInner() {
             autoCapitalize="none"
             autoComplete="off"
             returnKeyType="done"
-            label={_(msg`Enter a word or tag`)}
-            placeholder={_(msg`Enter a word or tag`)}
+            label={l`Enter a word or tag`}
+            placeholder={l`Enter a word or tag`}
             value={field}
             onChangeText={value => {
               if (error) {
@@ -148,7 +147,7 @@ function MutedWordsInner() {
 
         <View style={[a.pb_xl, a.gap_sm]}>
           <Toggle.Group
-            label={_(msg`Select how long to mute this word for.`)}
+            label={l`Select how long to mute this word for.`}
             type="radio"
             values={durations}
             onChange={setDurations}>
@@ -176,7 +175,7 @@ function MutedWordsInner() {
                   a.gap_sm,
                 ]}>
                 <Toggle.Item
-                  label={_(msg`Mute this word until you unmute it`)}
+                  label={l`Mute this word until you unmute it`}
                   name="forever"
                   style={[a.flex_1]}>
                   <TargetToggle>
@@ -191,7 +190,7 @@ function MutedWordsInner() {
                 </Toggle.Item>
 
                 <Toggle.Item
-                  label={_(msg`Mute this word for 24 hours`)}
+                  label={l`Mute this word for 24 hours`}
                   name="24_hours"
                   style={[a.flex_1]}>
                   <TargetToggle>
@@ -215,7 +214,7 @@ function MutedWordsInner() {
                   a.gap_sm,
                 ]}>
                 <Toggle.Item
-                  label={_(msg`Mute this word for 7 days`)}
+                  label={l`Mute this word for 7 days`}
                   name="7_days"
                   style={[a.flex_1]}>
                   <TargetToggle>
@@ -230,7 +229,7 @@ function MutedWordsInner() {
                 </Toggle.Item>
 
                 <Toggle.Item
-                  label={_(msg`Mute this word for 30 days`)}
+                  label={l`Mute this word for 30 days`}
                   name="30_days"
                   style={[a.flex_1]}>
                   <TargetToggle>
@@ -248,7 +247,7 @@ function MutedWordsInner() {
           </Toggle.Group>
 
           <Toggle.Group
-            label={_(msg`Select what content this mute word should apply to.`)}
+            label={l`Select what content this mute word should apply to.`}
             type="radio"
             values={targets}
             onChange={setTargets}>
@@ -264,7 +263,7 @@ function MutedWordsInner() {
 
             <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}>
               <Toggle.Item
-                label={_(msg`Mute this word in post text and tags`)}
+                label={l`Mute this word in post text and tags`}
                 name="content"
                 style={[a.flex_1]}>
                 <TargetToggle>
@@ -280,7 +279,7 @@ function MutedWordsInner() {
               </Toggle.Item>
 
               <Toggle.Item
-                label={_(msg`Mute this word in tags only`)}
+                label={l`Mute this word in tags only`}
                 name="tag"
                 style={[a.flex_1]}>
                 <TargetToggle>
@@ -308,7 +307,7 @@ function MutedWordsInner() {
               <Trans>Options:</Trans>
             </Text>
             <Toggle.Item
-              label={_(msg`Do not apply this mute word to users you follow`)}
+              label={l`Do not apply this mute word to users you follow`}
               name="exclude_following"
               style={[a.flex_row, a.justify_between]}
               value={excludeFollowing}
@@ -327,7 +326,7 @@ function MutedWordsInner() {
           <View style={[a.pt_xs]}>
             <Button
               disabled={isPending || !field}
-              label={_(msg`Add mute word with chosen settings`)}
+              label={l`Add mute word with chosen settings`}
               size="large"
               color="primary"
               variant="solid"
@@ -412,7 +411,6 @@ function MutedWordsInner() {
 
         {IS_NATIVE && <View style={{height: 20}} />}
       </View>
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )
@@ -423,7 +421,7 @@ function MutedWordRow({
   word,
 }: ViewStyleProp & {word: AppBskyActorDefs.MutedWord}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {isPending, mutateAsync: removeMutedWord} = useRemoveMutedWordMutation()
   const {mutateAsync: updateMutedWord} = useUpdateMutedWordMutation()
   const control = Prompt.usePromptControl()
@@ -449,15 +447,12 @@ function MutedWordRow({
     <>
       <Prompt.Basic
         control={control}
-        title={_(msg`Are you sure?`)}
-        description={_(
-          msg`This will delete "${word.value}" from your muted words. You can always add it back later.`,
-        )}
+        title={l`Are you sure?`}
+        description={l`This will delete "${word.value}" from your muted words. You can always add it back later.`}
         onConfirm={remove}
-        confirmButtonCta={_(msg`Remove`)}
+        confirmButtonCta={l`Remove`}
         confirmButtonColor="negative"
       />
-
       <View
         style={[
           a.flex_row,
@@ -528,7 +523,7 @@ function MutedWordRow({
                       {' · '}
                     </Text>
                     <Menu.Root>
-                      <Menu.Trigger label={_(msg`Renew mute word`)}>
+                      <Menu.Trigger label={l`Renew mute word`}>
                         {({props}) => (
                           <Text
                             {...props}
@@ -548,29 +543,25 @@ function MutedWordRow({
                         </Menu.LabelText>
                         <Menu.Group>
                           <Menu.Item
-                            label={_(msg`24 hours`)}
+                            label={l`24 hours`}
                             onPress={() => renew(1)}>
                             <Menu.ItemText>
                               <Trans>24 hours</Trans>
                             </Menu.ItemText>
                           </Menu.Item>
-                          <Menu.Item
-                            label={_(msg`7 days`)}
-                            onPress={() => renew(7)}>
+                          <Menu.Item label={l`7 days`} onPress={() => renew(7)}>
                             <Menu.ItemText>
                               <Trans>7 days</Trans>
                             </Menu.ItemText>
                           </Menu.Item>
                           <Menu.Item
-                            label={_(msg`30 days`)}
+                            label={l`30 days`}
                             onPress={() => renew(30)}>
                             <Menu.ItemText>
                               <Trans>30 days</Trans>
                             </Menu.ItemText>
                           </Menu.Item>
-                          <Menu.Item
-                            label={_(msg`Forever`)}
-                            onPress={() => renew()}>
+                          <Menu.Item label={l`Forever`} onPress={() => renew()}>
                             <Menu.ItemText>
                               <Trans>Forever</Trans>
                             </Menu.ItemText>
@@ -610,7 +601,7 @@ function MutedWordRow({
         </View>
 
         <Button
-          label={_(msg`Remove mute word from your list`)}
+          label={l`Remove mute word from your list`}
           size="tiny"
           shape="round"
           variant="outline"

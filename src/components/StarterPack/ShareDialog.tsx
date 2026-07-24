@@ -1,8 +1,7 @@
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
@@ -46,7 +45,7 @@ function ShareDialogInner({
   qrDialogControl,
   control,
 }: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -71,7 +70,7 @@ function ShareDialogInner({
 
   return (
     <>
-      <Dialog.ScrollableInner label={_(msg`Share link dialog`)}>
+      <Dialog.ScrollableInner label={l`Share link dialog`}>
         {!imageLoaded || !link ? (
           <View style={[a.align_center, a.justify_center, {minHeight: 350}]}>
             <Loader size="xl" />
@@ -112,7 +111,7 @@ function ShareDialogInner({
                 ],
               ]}>
               <Button
-                label={IS_WEB ? _(msg`Copy link`) : _(msg`Share link`)}
+                label={IS_WEB ? l`Copy link` : l`Share link`}
                 color="primary_subtle"
                 size="large"
                 onPress={onShareLink}>
@@ -126,7 +125,7 @@ function ShareDialogInner({
                 </ButtonText>
               </Button>
               <Button
-                label={_(msg`Share QR code`)}
+                label={l`Share QR code`}
                 color="primary_subtle"
                 size="large"
                 onPress={() => {
@@ -141,7 +140,7 @@ function ShareDialogInner({
               </Button>
               {IS_NATIVE && (
                 <Button
-                  label={_(msg`Save image`)}
+                  label={l`Save image`}
                   color="secondary"
                   size="large"
                   onPress={onSave}>

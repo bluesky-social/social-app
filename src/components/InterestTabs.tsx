@@ -5,8 +5,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
@@ -46,7 +45,7 @@ export function InterestTabs({
   gutterWidth?: number
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const listRef = useRef<ScrollView>(null)
   const [totalWidth, setTotalWidth] = useState(0)
   const [scrollX, setScrollX] = useState(0)
@@ -255,7 +254,7 @@ export function InterestTabs({
             }),
           ]}>
           <Button
-            label={_(msg`Scroll left`)}
+            label={l`Scroll left`}
             onPress={scrollLeft}
             onPressIn={() => startContinuousScroll('left')}
             onPressOut={stopContinuousScroll}
@@ -289,7 +288,7 @@ export function InterestTabs({
             }),
           ]}>
           <Button
-            label={_(msg`Scroll right`)}
+            label={l`Scroll right`}
             onPress={scrollRight}
             onPressIn={() => startContinuousScroll('right')}
             onPressOut={stopContinuousScroll}
@@ -327,22 +326,18 @@ function Tab({
   onLayout: (index: number, x: number, width: number) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const label = active
-    ? _(
-        msg({
-          message: `"${interestsDisplayName}" category (active)`,
-          comment:
-            'Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.',
-        }),
-      )
-    : _(
-        msg({
-          message: `Select "${interestsDisplayName}" category`,
-          comment:
-            'Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is not currently active and can be selected.',
-        }),
-      )
+    ? l({
+        message: `"${interestsDisplayName}" category (active)`,
+        comment:
+          'Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.',
+      })
+    : l({
+        message: `Select "${interestsDisplayName}" category`,
+        comment:
+          'Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is not currently active and can be selected.',
+      })
 
   return (
     <View

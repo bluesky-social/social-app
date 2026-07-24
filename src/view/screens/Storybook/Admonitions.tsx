@@ -1,6 +1,5 @@
 import {Text as RNText, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -20,13 +19,12 @@ import {InlineLinkText} from '#/components/Link'
 import {H1} from '#/components/Typography'
 
 export function Admonitions() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   return (
     <View style={[a.gap_md]}>
       <H1>Admonitions</H1>
-
       <Admonition>The quick brown fox jumps over the lazy dog.</Admonition>
       <Admonition type="info">
         How happy the blameless vestal's lot, the world forgetting by the world
@@ -47,7 +45,6 @@ export function Admonitions() {
       <Admonition type="error">
         The quick brown fox jumps over the lazy dog.
       </Admonition>
-
       <AdmonitionOuter type="error">
         <AdmonitionRow>
           <AdmonitionIcon />
@@ -58,7 +55,7 @@ export function Admonitions() {
           </AdmonitionContent>
           <AdmonitionButton
             color="negative_subtle"
-            label={_(msg`Retry loading report options`)}
+            label={l`Retry loading report options`}
             onPress={() => {}}>
             <ButtonText>
               <Trans>Retry</Trans>
@@ -67,7 +64,6 @@ export function Admonitions() {
           </AdmonitionButton>
         </AdmonitionRow>
       </AdmonitionOuter>
-
       <AdmonitionOuter type="tip">
         <AdmonitionRow>
           <AdmonitionIcon />
@@ -91,7 +87,7 @@ export function Admonitions() {
                 If you want to restrict who can receive notifications for your
                 account's activity, you can change this in{' '}
                 <InlineLinkText
-                  label={_(msg`Privacy and Security settings`)}
+                  label={l`Privacy and Security settings`}
                   to={{screen: 'ActivityPrivacySettings'}}
                   style={[a.font_bold]}>
                   Settings &rarr; Privacy and Security

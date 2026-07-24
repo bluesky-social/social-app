@@ -1,7 +1,6 @@
 import {useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {useAutoplayDisabled} from '#/state/preferences'
@@ -27,7 +26,7 @@ export function GifEmbed({
   hideAlt?: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const autoplayDisabled = useAutoplayDisabled()
 
   const playerRef = useRef<GifView>(null)
@@ -82,7 +81,7 @@ export function GifEmbed({
             autoplay={!autoplayDisabled}
             onPlayerStateChange={onPlayerStateChange}
             ref={playerRef}
-            accessibilityHint={_(msg`Animated GIF`)}
+            accessibilityHint={l`Animated GIF`}
             accessibilityLabel={altText}
           />
           {!playerState.isPlaying && (

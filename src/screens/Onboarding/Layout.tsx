@@ -1,8 +1,7 @@
 import {useEffect, useRef, useState} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useOnboardingDispatch} from '#/state/shell'
@@ -29,7 +28,7 @@ export const OnboardingControls = createPortalGroup()
 export const OnboardingHeaderSlot = createPortalGroup()
 
 export function Layout({children}: React.PropsWithChildren<{}>) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
@@ -45,7 +44,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
     }
   }, [state])
 
-  const dialogLabel = _(msg`Set up your account`)
+  const dialogLabel = l`Set up your account`
 
   const [headerHeight, setHeaderHeight] = useState(0)
   const [footerHeight, setFooterHeight] = useState(0)
@@ -57,7 +56,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       aria-role="dialog"
       aria-label={dialogLabel}
       accessibilityLabel={dialogLabel}
-      accessibilityHint={_(msg`Customizes your Bluesky experience`)}
+      accessibilityHint={l`Customizes your Bluesky experience`}
       style={[IS_WEB ? a.fixed : a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
       {!gtMobile ? (
         <View
@@ -94,7 +93,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
                   variant="ghost"
                   shape="round"
                   size="small"
-                  label={_(msg`Go back to previous step`)}
+                  label={l`Go back to previous step`}
                   onPress={() => dispatch({type: 'prev'})}>
                   <ButtonIcon icon={ArrowLeft} size="lg" />
                 </Button>
@@ -141,7 +140,6 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
           )}
         </>
       )}
-
       <ScrollView
         ref={scrollview}
         style={[a.h_full, a.w_full]}
@@ -163,7 +161,6 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
           </View>
         </View>
       </ScrollView>
-
       <View
         onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}
         style={[
@@ -195,7 +192,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
                 variant="ghost"
                 shape="square"
                 size="small"
-                label={_(msg`Go back to previous step`)}
+                label={l`Go back to previous step`}
                 onPress={() => dispatch({type: 'prev'})}>
                 <ButtonIcon icon={ArrowLeft} size="lg" />
               </Button>

@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
@@ -42,7 +41,7 @@ export function ChangePasswordDialog({
 }
 
 function Inner() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const control = Dialog.useDialogContext()
@@ -55,22 +54,16 @@ function Inner() {
 
   const uiStrings = {
     RequestCode: {
-      title: _(msg`Change your password`),
-      message: _(
-        msg`If you want to change your password, we will send you a code to verify that this is your account.`,
-      ),
+      title: l`Change your password`,
+      message: l`If you want to change your password, we will send you a code to verify that this is your account.`,
     },
     ChangePassword: {
-      title: _(msg`Enter code`),
-      message: _(
-        msg`Please enter the code you received and the new password you would like to use.`,
-      ),
+      title: l`Enter code`,
+      message: l`Please enter the code you received and the new password you would like to use.`,
     },
     Done: {
-      title: _(msg`Password changed`),
-      message: _(
-        msg`Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on.`,
-      ),
+      title: l`Password changed`,
+      message: l`Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on.`,
     },
   }
 
@@ -79,7 +72,7 @@ function Inner() {
       !currentAccount?.email ||
       !EmailValidator.validate(currentAccount.email)
     ) {
-      return setError(_(msg`Your email appears to be invalid.`))
+      return setError(l`Your email appears to be invalid.`)
     }
 
     setError('')
@@ -92,9 +85,7 @@ function Inner() {
     } catch (e: any) {
       if (isNetworkError(e)) {
         setError(
-          _(
-            msg`Unable to contact your service. Please check your internet connection and try again.`,
-          ),
+          l`Unable to contact your service. Please check your internet connection and try again.`,
         )
       } else {
         logger.error('Failed to request password reset', {safeMessage: e})
@@ -109,20 +100,18 @@ function Inner() {
     const formattedCode = checkAndFormatResetCode(resetCode)
     if (!formattedCode) {
       setError(
-        _(
-          msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
-        ),
+        l`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
       )
       return
     }
     if (!newPassword) {
       setError(
-        _(msg`Please enter a password. It must be at least 8 characters long.`),
+        l`Please enter a password. It must be at least 8 characters long.`,
       )
       return
     }
     if (newPassword.length < 8) {
-      setError(_(msg`Password must be at least 8 characters long.`))
+      setError(l`Password must be at least 8 characters long.`)
       return
     }
 
@@ -137,12 +126,10 @@ function Inner() {
     } catch (e: any) {
       if (isNetworkError(e)) {
         setError(
-          _(
-            msg`Unable to contact your service. Please check your internet connection and try again.`,
-          ),
+          l`Unable to contact your service. Please check your internet connection and try again.`,
         )
       } else if (e?.toString().includes('Token is invalid')) {
-        setError(_(msg`This confirmation code is not valid. Please try again.`))
+        setError(l`This confirmation code is not valid. Please try again.`)
       } else {
         logger.error('Failed to set new password', {safeMessage: e})
         setError(cleanError(e))
@@ -162,7 +149,7 @@ function Inner() {
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Change password dialog`)}
+      label={l`Change password dialog`}
       style={web({maxWidth: 400})}>
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
@@ -188,7 +175,7 @@ function Inner() {
               </TextField.LabelText>
               <TextField.Root>
                 <TextField.Input
-                  label={_(msg`Confirmation code`)}
+                  label={l`Confirmation code`}
                   placeholder="XXXXX-XXXXX"
                   value={resetCode}
                   onChangeText={setResetCode}
@@ -205,8 +192,8 @@ function Inner() {
               </TextField.LabelText>
               <TextField.Root>
                 <TextField.Input
-                  label={_(msg`New password`)}
-                  placeholder={_(msg`At least 8 characters`)}
+                  label={l`New password`}
+                  placeholder={l`At least 8 characters`}
                   value={newPassword}
                   onChangeText={setNewPassword}
                   secureTextEntry
@@ -223,7 +210,7 @@ function Inner() {
           {stage === Stages.RequestCode ? (
             <>
               <Button
-                label={_(msg`Request code`)}
+                label={l`Request code`}
                 color="primary"
                 size="large"
                 disabled={isProcessing}
@@ -234,7 +221,7 @@ function Inner() {
                 {isProcessing && <ButtonIcon icon={Loader} />}
               </Button>
               <Button
-                label={_(msg`Already have a code?`)}
+                label={l`Already have a code?`}
                 onPress={() => setStage(Stages.ChangePassword)}
                 size="large"
                 color="primary_subtle"
@@ -245,7 +232,7 @@ function Inner() {
               </Button>
               {IS_NATIVE && (
                 <Button
-                  label={_(msg`Cancel`)}
+                  label={l`Cancel`}
                   color="secondary"
                   size="large"
                   disabled={isProcessing}
@@ -259,7 +246,7 @@ function Inner() {
           ) : stage === Stages.ChangePassword ? (
             <>
               <Button
-                label={_(msg`Change password`)}
+                label={l`Change password`}
                 color="primary"
                 size="large"
                 disabled={isProcessing}
@@ -270,7 +257,7 @@ function Inner() {
                 {isProcessing && <ButtonIcon icon={Loader} />}
               </Button>
               <Button
-                label={_(msg`Back`)}
+                label={l`Back`}
                 color="secondary"
                 size="large"
                 disabled={isProcessing}
@@ -285,7 +272,7 @@ function Inner() {
             </>
           ) : stage === Stages.Done ? (
             <Button
-              label={_(msg`Close`)}
+              label={l`Close`}
               color="primary"
               size="large"
               onPress={() => control.close()}>

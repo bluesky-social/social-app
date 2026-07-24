@@ -5,8 +5,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
@@ -46,7 +45,7 @@ export function NotificationFeed({
 }) {
   const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = useState(false)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
   const trackPostView = usePostViewTracking('Notifications')
   const {
@@ -122,16 +121,14 @@ export function NotificationFeed({
         return (
           <EmptyState
             icon={BellIcon}
-            message={_(msg`No notifications yet!`)}
+            message={l`No notifications yet!`}
             style={styles.emptyState}
           />
         )
       } else if (item === LOAD_MORE_ERROR_ITEM) {
         return (
           <LoadMoreRetryBtn
-            label={_(
-              msg`There was an issue fetching notifications. Tap here to try again.`,
-            )}
+            label={l`There was an issue fetching notifications. Tap here to try again.`}
             onPress={onPressRetryLoadMore}
           />
         )
@@ -147,7 +144,7 @@ export function NotificationFeed({
         />
       )
     },
-    [moderationOpts, _, onPressRetryLoadMore, filter],
+    [moderationOpts, l, onPressRetryLoadMore, filter],
   )
 
   const FeedFooter = useCallback(

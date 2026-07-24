@@ -1,5 +1,4 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {
   type CommonNavigatorParams,
@@ -15,11 +14,11 @@ export function ProfileLabelerLikedByScreen({
 }: NativeStackScreenProps<CommonNavigatorParams, 'ProfileLabelerLikedBy'>) {
   const {name: handleOrDid} = route.params
   const uri = makeRecordUri(handleOrDid, 'app.bsky.labeler.service', 'self')
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Layout.Screen>
-      <ViewHeader title={_(msg`Liked By`)} />
+      <ViewHeader title={l`Liked By`} />
       <LikedByList uri={uri} />
     </Layout.Screen>
   )

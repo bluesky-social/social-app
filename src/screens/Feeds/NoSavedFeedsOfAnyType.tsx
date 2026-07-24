@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {TID} from '@atproto/common-web'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {RECOMMENDED_SAVED_FEEDS} from '#/lib/constants'
@@ -22,7 +21,7 @@ export function NoSavedFeedsOfAnyType({
   onAddRecommendedFeeds?: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {isPending, mutateAsync: overwriteSavedFeeds} =
     useOverwriteSavedFeedsMutation()
 
@@ -46,15 +45,14 @@ export function NoSavedFeedsOfAnyType({
           browse more below.
         </Trans>
       </Text>
-
       <Button
         disabled={isPending}
-        label={_(msg`Apply default recommended feeds`)}
+        label={l`Apply default recommended feeds`}
         size="small"
         color="primary_subtle"
         onPress={addRecommendedFeeds}>
         <ButtonIcon icon={Plus} />
-        <ButtonText>{_(msg`Use recommended`)}</ButtonText>
+        <ButtonText>{l`Use recommended`}</ButtonText>
       </Button>
     </View>
   )

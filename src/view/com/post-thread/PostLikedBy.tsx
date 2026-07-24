@@ -1,7 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {cleanError} from '#/lib/strings/errors'
@@ -27,7 +26,7 @@ function keyExtractor(item: GetLikes.Like) {
 }
 
 export function PostLikedBy({uri}: {uri: string}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const initialNumToRender = useInitialNumToRender()
 
   const [isPTRing, setIsPTRing] = useState(false)
@@ -81,10 +80,8 @@ export function PostLikedBy({uri}: {uri: string}) {
         isLoading={isLoadingUri || isLoadingLikes}
         isError={isError}
         emptyType="results"
-        emptyTitle={_(msg`No likes yet`)}
-        emptyMessage={_(
-          msg`Nobody has liked this yet. Maybe you should be the first!`,
-        )}
+        emptyTitle={l`No likes yet`}
+        emptyMessage={l`Nobody has liked this yet. Maybe you should be the first!`}
         errorMessage={cleanError(resolveError || error)}
         sideBorders={false}
         topBorder={false}

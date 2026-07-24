@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -44,7 +43,7 @@ function useWebQueryParams() {
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {hasSession, currentAccount} = useSession()
   const logoVariant = useLogoVariant()
   const gutters = useGutters(['base', 0, 'base', 'wide'])
@@ -86,17 +85,14 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         }),
       ]}>
       {!isSearchScreen && <DesktopSearch />}
-
       {hasSession && (
         <>
           <DesktopFeeds />
           <ProgressGuideList />
         </>
       )}
-
       {showExploreScreenDuplicatedContent && <SidebarLiveEventFeedsBanner />}
       {showExploreScreenDuplicatedContent && <SidebarTrendingTopics />}
-
       <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
         {hasSession && (
           <>
@@ -106,8 +102,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
                 handle: currentAccount?.handle,
               })}
               style={[t.atoms.text_contrast_medium]}
-              label={_(msg`Feedback`)}>
-              {_(msg`Feedback`)}
+              label={l`Feedback`}>
+              {l`Feedback`}
             </InlineLinkText>
             <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
           </>
@@ -115,38 +111,36 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         <InlineLinkText
           to="https://bsky.social/about/support/privacy-policy"
           style={[t.atoms.text_contrast_medium]}
-          label={_(msg`Privacy`)}>
-          {_(msg`Privacy`)}
+          label={l`Privacy`}>
+          {l`Privacy`}
         </InlineLinkText>
         <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
         <InlineLinkText
           to="https://bsky.social/about/support/tos"
           style={[t.atoms.text_contrast_medium]}
-          label={_(msg`Terms`)}>
-          {_(msg`Terms`)}
+          label={l`Terms`}>
+          {l`Terms`}
         </InlineLinkText>
         <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
         <InlineLinkText
-          label={_(msg`Help`)}
+          label={l`Help`}
           to={HELP_DESK_URL}
           style={[t.atoms.text_contrast_medium]}>
-          {_(msg`Help`)}
+          {l`Help`}
         </InlineLinkText>
       </Text>
-
       {logoVariant === 'kawaii' && (
         <Text style={[t.atoms.text_contrast_medium, {marginTop: 12}]}>
           <Trans>
             Logo by{' '}
             <InlineLinkText
-              label={_(msg`Logo by @sawaratsuki.bsky.social`)}
+              label={l`Logo by @sawaratsuki.bsky.social`}
               to="/profile/sawaratsuki.bsky.social">
               @sawaratsuki.bsky.social
             </InlineLinkText>
           </Trans>
         </Text>
       )}
-
       {!hasSession && leftNavMinimal && (
         <View style={[a.w_full, {height: 32}]}>
           <AppLanguageDropdown />

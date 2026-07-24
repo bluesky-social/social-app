@@ -1,8 +1,7 @@
 import {useMemo, useState} from 'react'
 import {type ImageStyle, useWindowDimensions, View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
@@ -65,7 +64,7 @@ const ImageAltTextInner = ({
   control: DialogControlProps
   image: Props['image']
 }): React.ReactNode => {
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
   const {width: screenWidth} = useWindowDimensions()
 
@@ -92,9 +91,8 @@ const ImageAltTextInner = ({
   }, [image, screenWidth])
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
+    <Dialog.ScrollableInner label={l`Add alt text`}>
       <Dialog.Close />
-
       <View>
         {/* vertical space is too precious - gets scrolled out of the way anyway */}
         {IS_WEB && (
@@ -116,7 +114,6 @@ const ImageAltTextInner = ({
           />
         </View>
       </View>
-
       <View style={[a.mt_md, a.gap_md]}>
         <View style={[a.gap_sm]}>
           <View style={[a.relative, {width: '100%'}]}>
@@ -125,7 +122,7 @@ const ImageAltTextInner = ({
             </TextField.LabelText>
             <TextField.Root>
               <Dialog.Input
-                label={_(msg`Alt text`)}
+                label={l`Alt text`}
                 onChangeText={text => {
                   setAltText(text)
                 }}
@@ -160,7 +157,7 @@ const ImageAltTextInner = ({
 
         <AltTextCounterWrapper altText={altText}>
           <Button
-            label={_(msg`Save`)}
+            label={l`Save`}
             disabled={altText === image.alt}
             size="large"
             color="primary"

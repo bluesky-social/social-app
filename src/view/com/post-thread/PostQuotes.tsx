@@ -5,8 +5,7 @@ import {
   moderatePost,
   type ModerationDecision,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
@@ -43,7 +42,7 @@ function keyExtractor(item: {
 }
 
 export function PostQuotes({uri}: {uri: string}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = useState(false)
   const trackPostView = usePostViewTracking('PostQuotes')
@@ -111,10 +110,8 @@ export function PostQuotes({uri}: {uri: string}) {
         isLoading={isLoadingUri || isLoadingQuotes}
         isError={isError}
         emptyType="results"
-        emptyTitle={_(msg`No quotes yet`)}
-        emptyMessage={_(
-          msg`Nobody has quoted this yet. Maybe you should be the first!`,
-        )}
+        emptyTitle={l`No quotes yet`}
+        emptyMessage={l`Nobody has quoted this yet. Maybe you should be the first!`}
         errorMessage={cleanError(resolveError || error)}
         sideBorders={false}
       />
@@ -139,7 +136,7 @@ export function PostQuotes({uri}: {uri: string}) {
           error={cleanError(error)}
           onRetry={fetchNextPage}
           showEndMessage
-          endMessageText={_(msg`That's all, folks!`)}
+          endMessageText={l`That's all, folks!`}
         />
       }
       // @ts-ignore our .web version only -prf
