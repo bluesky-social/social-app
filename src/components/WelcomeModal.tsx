@@ -188,6 +188,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     ]}>
                     <Trans>Already have an account?</Trans>{' '}
                     <Pressable
+                      onPress={onPressSignIn}
                       onPointerEnter={() => setSignInLinkHovered(true)}
                       onPointerLeave={() => setSignInLinkHovered(false)}
                       accessibilityRole="button"
@@ -201,8 +202,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                             fontSize: undefined,
                           },
                           signInLinkHovered && a.underline,
-                        ]}
-                        onPress={onPressSignIn}>
+                        ]}>
                         <Trans>Sign in</Trans>
                       </Text>
                     </Pressable>
