@@ -165,6 +165,9 @@ export function Outer({
   )
 }
 
+/**
+ * @deprecated use `Dialog.ScrollableInner` instead
+ */
 export function Inner({
   children,
   style,
