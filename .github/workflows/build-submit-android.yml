@@ -132,6 +132,16 @@ jobs:
           if-no-files-found: error
           path: build.aab
 
+      - name: 📝 Write build summary
+        env:
+          REMOTE_VERSION_CODE: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+        run: |
+          {
+            echo "### Android build number"
+            echo
+            echo "\`$REMOTE_VERSION_CODE\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
   submit:
     name: Submit to Google Play
     runs-on: ubuntu-latest
