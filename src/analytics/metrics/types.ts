@@ -1276,6 +1276,8 @@ export type Events = {
   'profile:associated:germ:self-disconnect': {}
   'profile:associated:germ:self-reconnect': {}
 
+  'profile:associated:bluvy:click-to-chat': {}
+
   // Post photo embed events
   'post:photoEmbed:impression': {
     layout: 'single' | 'grid' | 'carousel'
