@@ -3,6 +3,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 
 import {MAX_LABELERS} from '#/lib/constants'
+import {isAppLabeler} from '#/lib/moderation'
 import {GCTIME, STALE} from '#/state/queries'
 import {
   preferencesQueryKey,
@@ -140,7 +141,9 @@ export function useLabelerSubscriptionMutation() {
       }
 
       if (subscribe) {
-        const labelerCount = labelerDids.length - invalidLabelers.length
+        const labelerCount = labelerDids.filter(
+          d => !invalidLabelers.includes(d) && !isAppLabeler(d),
+        ).length
         if (labelerCount >= MAX_LABELERS) {
           throw new Error('MAX_LABELERS')
         }
