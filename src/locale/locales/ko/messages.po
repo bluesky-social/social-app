@@ -691,7 +691,7 @@ msgstr "{following} 팔로우 중"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:218
+#: src/components/interstitials/FeedTrendingTopics.tsx:204
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr ""
@@ -799,7 +799,7 @@ msgstr "{profileName} 님은 {timeAgoString} 전에 스타터 팩을 사용하�
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:203
+#: src/components/interstitials/FeedTrendingTopics.tsx:189
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:123
 msgid "{rank}."
 msgstr "{rank}."
@@ -2437,7 +2437,7 @@ msgid "Browse starter pack {displayName}"
 msgstr "스타터 팩 {displayName} 탐색하기"
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:170
+#: src/components/interstitials/FeedTrendingTopics.tsx:156
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:104
 msgid "Browse topic {0}"
 msgstr "주제 {0} 탐색하기"
@@ -10698,7 +10698,7 @@ msgstr "Bluesky에 지원하기"
 
 #: src/components/FeedInterstitials.tsx:491
 #: src/components/FeedInterstitials.tsx:549
-#: src/components/interstitials/FeedTrendingTopics.tsx:111
+#: src/components/interstitials/FeedTrendingTopics.tsx:96
 msgid "See more"
 msgstr "더 보기"
 
@@ -10706,7 +10706,7 @@ msgstr "더 보기"
 msgid "See more suggested profiles"
 msgstr "더 많은 추천 프로필 보기"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:102
+#: src/components/interstitials/FeedTrendingTopics.tsx:82
 msgid "See more trending topics"
 msgstr "인기 주제 더 보기"
 
@@ -12887,7 +12887,7 @@ msgstr "현재 사용하는 기기에서는 같은 언어로 번역할 수 없�
 msgid "Tree view"
 msgstr "트리 뷰"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:99
+#: src/components/interstitials/FeedTrendingTopics.tsx:79
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:50
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:54
 msgid "Trending"

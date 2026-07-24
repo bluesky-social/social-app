@@ -691,7 +691,7 @@ msgstr "{following} a seguir"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:218
+#: src/components/interstitials/FeedTrendingTopics.tsx:204
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr "{formattedPostCount} {postCount, plural, one {publicação} other {publicações}}"
@@ -799,7 +799,7 @@ msgstr "{profileName} aderiu ao Bluesky utilizando um pacote de iniciante há {t
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:203
+#: src/components/interstitials/FeedTrendingTopics.tsx:189
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:123
 msgid "{rank}."
 msgstr "{rank}."
@@ -2437,7 +2437,7 @@ msgid "Browse starter pack {displayName}"
 msgstr "Procurar pacote de iniciante {displayName}"
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:170
+#: src/components/interstitials/FeedTrendingTopics.tsx:156
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:104
 msgid "Browse topic {0}"
 msgstr "Navegar tópico {0}"
@@ -10698,7 +10698,7 @@ msgstr "Ver empregos no Bluesky"
 
 #: src/components/FeedInterstitials.tsx:491
 #: src/components/FeedInterstitials.tsx:549
-#: src/components/interstitials/FeedTrendingTopics.tsx:111
+#: src/components/interstitials/FeedTrendingTopics.tsx:96
 msgid "See more"
 msgstr "Ver mais"
 
@@ -10706,7 +10706,7 @@ msgstr "Ver mais"
 msgid "See more suggested profiles"
 msgstr "Ver mais perfis sugeridos"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:102
+#: src/components/interstitials/FeedTrendingTopics.tsx:82
 msgid "See more trending topics"
 msgstr "Ver mais assuntos do momento"
 
@@ -12887,7 +12887,7 @@ msgstr "A tradução para o mesmo idioma não está disponível no seu dispositi
 msgid "Tree view"
 msgstr "Vista em árvore"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:99
+#: src/components/interstitials/FeedTrendingTopics.tsx:79
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:50
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:54
 msgid "Trending"

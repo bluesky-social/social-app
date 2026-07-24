@@ -691,7 +691,7 @@ msgstr "{following} følger"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:218
+#: src/components/interstitials/FeedTrendingTopics.tsx:204
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr ""
@@ -799,7 +799,7 @@ msgstr "{profileName} oprettede sig på Bluesky via en startpakke for {timeAgoSt
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:203
+#: src/components/interstitials/FeedTrendingTopics.tsx:189
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:123
 msgid "{rank}."
 msgstr "{rank}."
@@ -2437,7 +2437,7 @@ msgid "Browse starter pack {displayName}"
 msgstr "Se startpakken {displayName}"
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:170
+#: src/components/interstitials/FeedTrendingTopics.tsx:156
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:104
 msgid "Browse topic {0}"
 msgstr "Se emnet {0}"
@@ -10698,7 +10698,7 @@ msgstr "Se jobs hos Bluesky"
 
 #: src/components/FeedInterstitials.tsx:491
 #: src/components/FeedInterstitials.tsx:549
-#: src/components/interstitials/FeedTrendingTopics.tsx:111
+#: src/components/interstitials/FeedTrendingTopics.tsx:96
 msgid "See more"
 msgstr "Se flere"
 
@@ -10706,7 +10706,7 @@ msgstr "Se flere"
 msgid "See more suggested profiles"
 msgstr "Se flere foreslåede profiler"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:102
+#: src/components/interstitials/FeedTrendingTopics.tsx:82
 msgid "See more trending topics"
 msgstr ""
 
@@ -12887,7 +12887,7 @@ msgstr "Oversættelse til det samme sprog er ikke tilgængelig på din enhed."
 msgid "Tree view"
 msgstr "Trævisning"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:99
+#: src/components/interstitials/FeedTrendingTopics.tsx:79
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:50
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:54
 msgid "Trending"
