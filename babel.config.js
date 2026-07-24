@@ -1,6 +1,8 @@
+/**
+ * @param {import("@babel/core").ConfigAPI} api
+ * @returns {import("@babel/core").InputOptions}
+ */
 module.exports = function (api) {
-  api.cache(true)
-  const isTestEnv = process.env.NODE_ENV === 'test'
   return {
     presets: [
       [
@@ -10,7 +12,7 @@ module.exports = function (api) {
           native: {
             // Disable ESM -> CJS compilation because Metro takes care of it.
             // However, we need it in Jest tests since those run without Metro.
-            disableImportExportTransform: !isTestEnv,
+            disableImportExportTransform: !api.env('test'),
           },
         },
       ],
@@ -29,15 +31,15 @@ module.exports = function (api) {
           },
         },
       ],
+
+      // cannot use `env` field because it will put them after
+      // the `react-native-worklets/plugin` plugin
+      ...(api.env('test')
+        ? ['@babel/plugin-transform-class-static-block']
+        : []),
+      ...(api.env('production') ? ['transform-remove-console'] : []),
+
       'react-native-worklets/plugin', // NOTE: this plugin MUST be last
     ],
-    env: {
-      production: {
-        plugins: ['transform-remove-console'],
-      },
-      test: {
-        plugins: ['@babel/plugin-transform-class-static-block'],
-      },
-    },
   }
 }

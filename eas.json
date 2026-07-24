@@ -28,7 +28,7 @@
       },
       "env": {
         "EXPO_PUBLIC_ENV": "e2e",
-        "NODE_ENV": "test",
+        "NODE_ENV": "development",
         "RN_SRC_EXT": "e2e.ts,e2e.tsx"
       }
     },
