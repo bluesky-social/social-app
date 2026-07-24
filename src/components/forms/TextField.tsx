@@ -96,6 +96,8 @@ export function Root({children, isInvalid = false, style}: RootProps) {
           a.relative,
           a.w_full,
           a.px_md,
+          // Contain the input's z-index so it cannot paint over nearby overlays.
+          {zIndex: 0},
           style,
         ]}
         {...web({
