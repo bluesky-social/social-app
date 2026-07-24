@@ -390,7 +390,7 @@ function DialogInner({
                 a.mb_sm,
               ]}>
               <Trans comment="Include search results with or without replies">
-                Include
+                Post type
               </Trans>
             </Text>
             <View style={[a.flex_row]}>
@@ -406,7 +406,7 @@ function DialogInner({
                 a.mb_sm,
               ]}>
               <Trans comment="Filter search results by a specific post author">
-                From
+                Author
               </Trans>
             </Text>
             <View style={[a.flex_row]}>
