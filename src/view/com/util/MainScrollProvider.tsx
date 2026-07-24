@@ -10,9 +10,11 @@ import {
   withSpring,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {useFocusEffect} from '@react-navigation/native'
 import {EventEmitter} from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
+import {useMinimalShellMode} from '#/state/shell/minimal-mode'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
@@ -95,6 +97,10 @@ export function useHomeHeaderTransform() {
 export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
   const headerMode = useHomeHeaderMode()
+  // The footer (bottom tab bar) follows the same scroll motion as the home
+  // header. It lives in the app-wide shell, outside this provider, so we drive
+  // it through the shared minimal-shell value rather than headerMode.
+  const {footerScrollMode} = useMinimalShellMode()
   const {top: topInset} = useSafeAreaInsets()
   const headerPinnedHeight = IS_LIQUID_GLASS ? topInset : 0
   const startDragOffset = useSharedValue<number | null>(null)
@@ -110,8 +116,27 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
           overshootClamping: true,
         }),
       )
+      footerScrollMode.set(() =>
+        withSpring(v ? 1 : 0, {
+          overshootClamping: true,
+        }),
+      )
     },
-    [headerMode],
+    [headerMode, footerScrollMode],
+  )
+
+  // The footer is shared across all tabs, so make sure leaving this feed never
+  // leaves the bar hidden on another tab.
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        footerScrollMode.set(() =>
+          withSpring(0, {
+            overshootClamping: true,
+          }),
+        )
+      }
+    }, [footerScrollMode]),
   )
 
   useEffect(() => {
@@ -216,6 +241,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
         if (newValue !== headerMode.get()) {
           // Manually adjust the value. This won't be (and shouldn't be) animated.
           headerMode.set(newValue)
+          footerScrollMode.set(newValue)
         }
       } else {
         if (didJustRestoreScroll.get()) {
@@ -239,6 +265,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
       headerHeight,
       headerPinnedHeight,
       headerMode,
+      footerScrollMode,
       setMode,
       startDragOffset,
       startMode,
