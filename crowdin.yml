@@ -11,7 +11,9 @@
           "two_letters_code": {
             "pt": "pt-PT",
             "pt-BR": "pt-BR",
+            "en-CA": "en-CA",
             "en-GB": "en-GB",
+            "fr-CA": "fr-CA",
             "zh-CN": "zh-CN",
             "zh-TW": "zh-TW",
             "zh-HK": "zh-HK"

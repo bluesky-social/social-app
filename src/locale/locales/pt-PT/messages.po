@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-23 17:09\n"
+"PO-Revision-Date: 2026-07-24 19:58\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -119,7 +119,6 @@ msgstr "{0, plural, one {# gosto} other {# gostos}}"
 
 #. placeholder {0}: convo.details.memberCount
 #: src/components/dialogs/SearchablePeopleList.tsx:555
-#: src/components/dms/InitiateChatFlow.tsx:1038
 msgid "{0, plural, one {# member} other {# members}}"
 msgstr "{0, plural, one {# membro} other {# membros}}"
 
@@ -197,10 +196,7 @@ msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {a seguir} other {a seguir}}"
 
 #. placeholder {0}: profile.postsCount || 0
-#. placeholder {0}: trend.postCount
-#: src/components/interstitials/FeedTrendingTopics.tsx:223
 #: src/screens/Profile/Header/Metrics.tsx:58
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:153
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {publicação} other {publicações}}"
 
@@ -232,16 +228,6 @@ msgstr "{0} · {1}"
 msgid "{0} (Account)"
 msgstr "{0} (Conta)"
 
-#. '{postCount} {posts}', e.g., '1.2K posts'
-#. '{postCount} {posts}', e.g., '1.2K posts'
-#. placeholder {0}: formatCount(i18n, trend.postCount)
-#. placeholder {1}: import {useMemo} from 'react' import {Pressable, View} from 'react-native' import {Image} from 'expo-image' import { type AppBskyUnspeccedDefs, moderateProfile, RichText as RichTextApi, } from '@atproto/api' import {plural} from '@lingui/core/macro' import {Trans, useLingui} from '@lingui/react/macro' import {useModerationOpts} from '#/state/preferences/moderation-opts' import {useTrendingSettings} from '#/state/preferences/trending' import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery' import {useTrendingConfig} from '#/state/service-config' import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder' import {formatCount} from '#/view/com/util/numeric/format' import {atoms as a, useGutters, useTheme, type ViewStyleProp} from '#/alf' import {AvatarStack} from '#/components/AvatarStack' import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending' import {Link} from '#/components/Link' import {RichText} from '#/components/RichText' import {SubtleHover} from '#/components/SubtleHover' import {Text} from '#/components/Typography' import {useAnalytics} from '#/analytics' import * as ModuleHeader from '../components/ModuleHeader' const TOPIC_COUNT = 5 const IMAGE_SIZE = 56 export function ExploreTrendingTopics() { const {enabled} = useTrendingConfig() const {trendingDisabled} = useTrendingSettings() return enabled && !trendingDisabled ? <Inner /> : null } function Inner() { const ax = useAnalytics() const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery() const noTopics = !isLoading && !error && !trending?.trends?.length const showLoading = isLoading || isRefetching if (!showLoading && (error || !trending?.trends || noTopics)) return null return ( <View style={[a.pb_md]}> <ModuleHeader.Container bottomBorder> <ModuleHeader.Icon icon={TrendingIcon} size="md" /> <ModuleHeader.TitleText> <Trans>Trending</Trans> </ModuleHeader.TitleText> </ModuleHeader.Container> {showLoading ? Array.from({length: TOPIC_COUNT}).map((__, i) => ( <TrendingTopicRowSkeleton key={i} /> )) : trending?.trends.map((trend, index) => ( <TrendRow key={trend.link} trend={trend} rank={index + 1} onPress={() => { ax.metric('trendingTopic:click', { context: 'explore', recId: trending.recId, }) }} /> ))} </View> ) } export function TrendRow({ trend, rank, children, onPress, }: ViewStyleProp & { trend: AppBskyUnspeccedDefs.TrendView rank: number children?: React.ReactNode onPress?: () => void }) { const t = useTheme() const {t: l, i18n} = useLingui() const gutters = useGutters([0, 'base']) const actors = useModerateTrendingActors(trend.actors) const description = useMemo(() => { if (!trend.description) return const rt = new RichTextApi({text: trend.description}) rt.detectFacetsWithoutResolution() return rt }, [trend.description]) let imageUrl = null // TODO Image URL goes here when available. -dsb return ( <Link testID={trend.link} label={l`Browse topic ${trend.displayName}`} to={trend.link} onPress={onPress} style={[a.border_b, t.atoms.border_contrast_low]} PressableComponent={Pressable}> {({hovered, pressed}) => ( <> <SubtleHover hover={hovered || pressed} native /> <View style={[gutters, a.w_full, a.flex_row, a.py_md, a.gap_sm]}> <Text style={[ a.text_sm, a.font_medium, t.atoms.text_contrast_low, { fontVariant: ['tabular-nums'], }, ]}> <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'> {rank}. </Trans> </Text> <View style={[a.flex_1, a.gap_2xs]}> <Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]} numberOfLines={1}> {trend.displayName} </Text> {description ? ( <RichText value={description} disableLinks style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={2} /> ) : null} <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}> {actors.length > 0 ? ( <AvatarStack size={24} profiles={actors} /> ) : null} <Text style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}> {trend.postCount >= 1000 ? ( <Trans comment="Over 1,000 posts">1K+ posts</Trans> ) : ( <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'"> {formatCount(i18n, trend.postCount)}{' '} {plural(trend.postCount, {one: 'post', other: 'posts'})} </Trans> )} </Text> </View> </View> {imageUrl ? ( <Image source={{ uri: imageUrl, }} alt={trend.topic} style={[ a.flex_0, a.rounded_md, t.atoms.bg_contrast_25, { width: IMAGE_SIZE, height: IMAGE_SIZE, }, ]} contentFit="cover" accessible={true} accessibilityIgnoresInvertColors useAppleWebpCodec /> ) : null} </View> {children} </> )} </Link> ) } // Unused atm, but leaving here so we don't lose localization. -dsb export function useCategoryDisplayName( category: AppBskyUnspeccedDefs.TrendView['category'], ) { const {t: l} = useLingui() switch (category) { case 'sports': return l`Sports` case 'politics': return l`Politics` case 'video-games': return l`Video Games` case 'pop-culture': return l`Entertainment` case 'news': return l`News` case 'other': default: return null } } export function TrendingTopicRowSkeleton() { const t = useTheme() const gutters = useGutters([0, 'base']) return ( <View style={[ gutters, a.w_full, a.py_md, a.flex_row, a.gap_sm, a.border_b, t.atoms.border_contrast_low, ]}> <View style={[{width: 20}]}> <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} /> </View> <View style={[a.flex_1, a.gap_2xs]}> <LoadingPlaceholder width={90} height={17} /> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={70} height={16} /> <LoadingPlaceholder width={40} height={16} /> <LoadingPlaceholder width={60} height={16} /> </View> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={50} height={16} /> <LoadingPlaceholder width={70} height={16} /> <LoadingPlaceholder width={30} height={16} /> </View> <View style={[a.flex_1, a.gap_sm]}> <View style={[a.mt_xs, a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={24} height={24} style={[a.rounded_full]} /> <LoadingPlaceholder width={60} height={16} /> </View> </View> </View> {/* TODO Image placeholder goes here when images are available. -dsb */} </View> ) } function useModerateTrendingActors( actors: AppBskyUnspeccedDefs.TrendView['actors'], ) { const moderationOpts = useModerationOpts() return useMemo(() => { if (!moderationOpts) return [] return actors .filter(actor => { const decision = moderateProfile(actor, moderationOpts) return !decision.ui('avatar').filter && !decision.ui('avatar').blur }) .slice(0, 3) }, [actors, moderationOpts]) } 
-#. placeholder {1}: import {useMemo} from 'react' import {Pressable, View} from 'react-native' import {LinearGradient} from 'expo-linear-gradient' import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api' import {plural} from '@lingui/core/macro' import {Trans, useLingui} from '@lingui/react/macro' import {useModerationOpts} from '#/state/preferences/moderation-opts' import {useTrendingSettings} from '#/state/preferences/trending' import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery' import {useTrendingConfig} from '#/state/service-config' import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder' import {formatCount} from '#/view/com/util/numeric/format' import { atoms as a, useGutters, useLayoutBreakpoints, useTheme, type ViewStyleProp, } from '#/alf' import {alpha} from '#/alf/utils' import {AvatarStack} from '#/components/AvatarStack' import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending' import {Link} from '#/components/Link' import {SubtleHover} from '#/components/SubtleHover' import {Text} from '#/components/Typography' import {useAnalytics} from '#/analytics' const TOPIC_COUNT = 3 export function FeedTrendingTopicsInterstitial() { const {enabled} = useTrendingConfig() const {trendingDisabled} = useTrendingSettings() const {rightNavVisible} = useLayoutBreakpoints() return enabled && !trendingDisabled && !rightNavVisible ? <Inner /> : null } function Inner() { const t = useTheme() const {t: l} = useLingui() const gutters = useGutters([0, 'base']) const ax = useAnalytics() const { data: trending, error, isLoading, isRefetching, } = useGetTrendsQuery({limit: TOPIC_COUNT}) const noTopics = !isLoading && !error && !trending?.trends?.length const shadowColor = alpha(t.palette.primary_100, 0.5) const gradient = { values: [ [0, t.atoms.bg.backgroundColor], [0.1, t.palette.primary_25], [0.9, t.palette.primary_25], [1, t.atoms.bg.backgroundColor], ], hover_value: t.palette.white, } if (error || noTopics) { return null } return ( <View style={[ gutters, a.pt_lg, a.pb_xl, a.gap_sm, a.border_t, t.atoms.border_contrast_low, ]}> <LinearGradient colors={gradient.values.map(c => c[1]) as [string, string, ...string[]]} locations={ gradient.values.map(c => c[0]) as [number, number, ...number[]] } style={[a.absolute, a.inset_0]} /> <View style={[ a.relative, a.z_20, a.px_xs, a.flex_row, a.align_center, a.justify_between, a.gap_sm, ]}> <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_xs]}> <TrendingIcon width={18} /> <Text style={[a.text_md, a.font_medium, a.leading_snug]} numberOfLines={1}> <Trans>Trending</Trans> </Text> </View> <Link label={l`See more trending topics`} to="/search"> <Text style={[ a.text_sm, a.font_medium, a.leading_snug, t.atoms.text_contrast_high, ]} numberOfLines={1}> <Trans>See more</Trans> </Text> </Link> </View> <View style={[ a.relative, a.z_10, a.border, a.rounded_xl, t.atoms.bg, { borderColor: t.palette.primary_100, boxShadow: `0 0 16px 0 ${shadowColor}`, elevation: 8, shadowColor: shadowColor, shadowOffset: {width: 0, height: 0}, shadowOpacity: 1, shadowRadius: 16, }, ]}> {isLoading || isRefetching ? Array.from({length: TOPIC_COUNT}).map((_, i) => ( <TrendingTopicRowSkeleton key={i} rank={i + 1} /> )) : trending?.trends?.map((trend, index) => ( <TrendRow key={trend.link} trend={trend} rank={index + 1} onPress={() => { ax.metric('trendingTopic:click', {context: 'interstitial'}) }} /> ))} </View> </View> ) } function TrendRow({ trend, rank, onPress, }: ViewStyleProp & { trend: AppBskyUnspeccedDefs.TrendView rank: number children?: React.ReactNode onPress?: () => void }) { const t = useTheme() const {t: l, i18n} = useLingui() const actors = useModerateTrendingActors(trend.actors) return ( <Link testID={trend.link} label={l`Browse topic ${trend.displayName}`} to={trend.link} onPress={onPress} style={[ rank < TOPIC_COUNT && a.border_b, { borderColor: t.palette.primary_100, }, ]} PressableComponent={Pressable}> {({hovered, pressed}) => ( <> <SubtleHover hover={hovered || pressed} native /> <View style={[ a.w_full, a.flex_row, a.flex_row, { gap: 6, padding: 14, paddingLeft: 16, }, ]}> <Text style={[ a.text_md, a.font_semi_bold, t.atoms.text_contrast_low, { fontVariant: ['tabular-nums'], }, ]}> <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'> {rank}. </Trans> </Text> <View style={[a.flex_1, a.gap_xs]}> <Text style={[a.text_md, a.font_medium]} numberOfLines={1}> {trend.displayName} </Text> <View style={[a.flex_row, a.gap_sm, a.align_center]}> {actors.length > 0 ? ( <AvatarStack size={24} profiles={actors} /> ) : null} <Text style={[a.text_sm, t.atoms.text_contrast_medium]} numberOfLines={1}> {trend.postCount >= 1000 ? ( <Trans comment="Over 1,000 posts">1K+ posts</Trans> ) : ( <Trans comment="'{postCount} {posts}', e.g., '1.2K posts'"> {formatCount(i18n, trend.postCount)}{' '} {plural(trend.postCount, {one: 'post', other: 'posts'})} </Trans> )} </Text> </View> </View> </View> </> )} </Link> ) } function TrendingTopicRowSkeleton({rank}: {rank: number}) { const t = useTheme() return ( <View style={[ a.w_full, a.flex_row, a.px_lg, a.py_lg, a.flex_row, rank < TOPIC_COUNT && a.border_b, t.atoms.border_contrast_low, { gap: 6, }, ]}> <LoadingPlaceholder width={17} height={17} style={[a.rounded_full]} /> <View style={[a.flex_1, a.gap_xs]}> <View style={[a.flex_row, a.gap_sm, a.align_center]}> <LoadingPlaceholder width={70} height={17} /> <LoadingPlaceholder width={40} height={17} /> <LoadingPlaceholder width={60} height={17} /> </View> <LoadingPlaceholder width={24} height={24} style={[a.rounded_full]} /> </View> </View> ) } function useModerateTrendingActors( actors: AppBskyUnspeccedDefs.TrendView['actors'], ) { const moderationOpts = useModerationOpts() return useMemo(() => { if (!moderationOpts) return [] return actors .filter(actor => { const decision = moderateProfile(actor, moderationOpts) return !decision.ui('avatar').filter && !decision.ui('avatar').blur }) .slice(0, 3) }, [actors, moderationOpts]) } 
-#: src/components/interstitials/FeedTrendingTopics.tsx:221
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:151
-msgid "{0} {1}"
-msgstr ""
-
 #. Pattern: {wordValue} in tags
 #. placeholder {0}: word.value
 #: src/components/dialogs/MutedWords.tsx:495
@@ -264,6 +250,29 @@ msgstr "{0} foi adicionado/a à conversa"
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:46
 msgid "{0} and {1} added to chat"
 msgstr "{0} e {1} adicionados à conversa"
+
+#. Social proof on the likes stat; the bolded names are people the viewer follows who liked the post and are its only likes
+#. placeholder {0}: nameLink(names[0])
+#. placeholder {0}: names[0].displayName
+#. placeholder {1}: nameLink(names[1])
+#. placeholder {1}: names[1].displayName
+#: src/screens/PostThread/components/LikesStat.tsx:135
+#: src/screens/PostThread/components/LikesStat.tsx:191
+msgid "{0} and {1} like this"
+msgstr ""
+
+#. Social proof on the likes stat; the bolded name is a person the viewer follows who liked the post, and the count is the remaining number of likes
+#. placeholder {0}: nameLink(names[0])
+#. placeholder {1}: formatPostStatCount(others)
+#. placeholder {2}: formatPostStatCount(others)
+#: src/screens/PostThread/components/LikesStat.tsx:196
+msgid "{0} and {others, plural, one {{1} other} other {{2} others}} like this"
+msgstr ""
+
+#. placeholder {0}: names[0].displayName
+#: src/screens/PostThread/components/LikesStat.tsx:137
+msgid "{0} and {othersLabel} like this"
+msgstr ""
 
 #. placeholder {0}: profile.followsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:49
@@ -314,6 +323,14 @@ msgstr "{0} saiu"
 #: src/components/dms/getSystemMessageInfo.ts:97
 msgid "{0} left the group"
 msgstr "{0} saiu do grupo"
+
+#. Social proof on the likes stat; the bolded name is a person the viewer follows who liked the post and is its only like
+#. placeholder {0}: nameLink(names[0])
+#. placeholder {0}: names[0].displayName
+#: src/screens/PostThread/components/LikesStat.tsx:138
+#: src/screens/PostThread/components/LikesStat.tsx:206
+msgid "{0} likes this"
+msgstr ""
 
 #. placeholder {0}: formatTime(currentTime)
 #. placeholder {1}: formatTime(duration)
@@ -370,6 +387,21 @@ msgstr "{0}, "
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:49
 msgid "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added to chat"
 msgstr "{0}, {1} e {memberCount, plural, one {# outro} other {# outros}} adicionados à conversa"
+
+#. Social proof on the likes stat; the bolded names are people the viewer follows who liked the post, and the count is the remaining number of likes
+#. placeholder {0}: nameLink(names[0])
+#. placeholder {1}: nameLink(names[1])
+#. placeholder {2}: formatPostStatCount(others)
+#. placeholder {3}: formatPostStatCount(others)
+#: src/screens/PostThread/components/LikesStat.tsx:181
+msgid "{0}, {1}, and {others, plural, one {{2} other} other {{3} others}} like this"
+msgstr ""
+
+#. placeholder {0}: names[0].displayName
+#. placeholder {1}: names[1].displayName
+#: src/screens/PostThread/components/LikesStat.tsx:134
+msgid "{0}, {1}, and {othersLabel} like this"
+msgstr ""
 
 #. placeholder {0}: feed.displayName
 #. placeholder {1}: sanitizeHandle(feed.creatorHandle, '@')
@@ -657,8 +689,15 @@ msgstr "{firstAuthorName} verificou-te"
 msgid "{following} following"
 msgstr "{following} a seguir"
 
+#. '{postCount} {posts}', e.g., '1.2K posts'
+#. '{postCount} {posts}', e.g., '1.2K posts'
+#: src/components/interstitials/FeedTrendingTopics.tsx:218
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
+msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
+msgstr "{formattedPostCount} {postCount, plural, one {publicação} other {publicações}}"
+
 #: src/components/dms/components/GroupChatProfileCard.tsx:62
-#: src/components/dms/InitiateChatFlow.tsx:1158
+#: src/components/dms/InitiateChatFlow.tsx:945
 msgid "{handle} can’t be added"
 msgstr "{handle} não pode ser adicionado/a"
 
@@ -666,7 +705,7 @@ msgstr "{handle} não pode ser adicionado/a"
 msgid "{handle} can't be messaged"
 msgstr "Não pode enviar mensagens a {handle}"
 
-#: src/components/dms/InitiateChatFlow.tsx:1119
+#: src/components/dms/InitiateChatFlow.tsx:906
 msgid "{handle} can’t be messaged"
 msgstr "Não é possível enviar mensagens a {handle}"
 
@@ -744,6 +783,12 @@ msgstr "{notificationCount, plural, one {# item não lido} other {# itens não l
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
 msgstr "{numMatches, plural, one {# contacto encontrado} other {# contactos encontrados}}"
 
+#. placeholder {0}: formatPostStatCount(others)
+#. placeholder {1}: formatPostStatCount(others)
+#: src/screens/PostThread/components/LikesStat.tsx:127
+msgid "{others, plural, one {{0} other} other {{1} others}}"
+msgstr ""
+
 #: src/components/NewskieDialog.tsx:115
 msgid "{profileName} joined Bluesky {timeAgoString} ago"
 msgstr "{profileName} aderiu ao Bluesky há {timeAgoString}"
@@ -807,7 +852,7 @@ msgid "+{0}"
 msgstr "+{0}"
 
 #. Indicates the number of additional profiles are in the Starter Pack e.g. +12
-#: src/screens/Search/components/StarterPackCard.tsx:258
+#: src/screens/Search/components/StarterPackCard.tsx:250
 msgid "+{computedTotal}"
 msgstr "+{computedTotal}"
 
@@ -842,14 +887,14 @@ msgstr "<0>{0}</0> {1, plural, one {a seguir} other {a seguir}}"
 #. Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.quoteCount)
 #. placeholder {1}: post.quoteCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:469
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:470
 msgid "<0>{0}</0> {1, plural, one {quote} other {quotes}}"
 msgstr "<0>{0}</0> {1, plural, one {citação} other {citações}}"
 
 #. Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.repostCount)
 #. placeholder {1}: post.repostCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:448
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:449
 msgid "<0>{0}</0> {1, plural, one {repost} other {reposts}}"
 msgstr "<0>{0}</0> {1, plural, one {republicação} other {republicações}}"
 
@@ -862,7 +907,7 @@ msgstr "<0>{0}</0> {1, plural, one {guardado} other {guardados}}"
 
 #. Like count display, the <0> tags enclose the number of likes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(likeCount)
-#: src/screens/PostThread/components/LikesStat.tsx:44
+#: src/screens/PostThread/components/LikesStat.tsx:90
 msgid "<0>{0}</0> {likeCount, plural, one {like} other {likes}}"
 msgstr "<0>{0}</0> {likeCount, plural, one {gosto} other {gostos}}"
 
@@ -890,7 +935,7 @@ msgid "<0>{displayName}</0><1/><2> added you</2>"
 msgstr "<0>{displayName}</0><1/><2> adicionou-te</2>"
 
 #: src/screens/Hashtag.tsx:230
-#: src/screens/Search/SearchResults.tsx:412
+#: src/screens/Search/SearchResults.tsx:387
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr "<0>Inicie sessão</0><1> ou </1><2>crie uma conta</2><3> </3><4>para procurar por notícias, desporto, política e tudo resto que acontece no Bluesky.</4>"
 
@@ -907,13 +952,6 @@ msgstr "<0>Tu</0> e<1> </1><2>{0} </2>estão incluídos no seu pacote de inician
 #: src/screens/Profile/Header/Handle.tsx:58
 msgid "⚠Invalid Handle"
 msgstr "⚠️Nome de utilizador inválido"
-
-#. Over 1,000 posts
-#. Over 1,000 posts
-#: src/components/interstitials/FeedTrendingTopics.tsx:219
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:149
-msgid "1K+ posts"
-msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:202
 #: src/components/dialogs/MutedWords.tsx:551
@@ -937,7 +975,7 @@ msgstr "30 dias"
 msgid "7 days"
 msgstr "7 dias"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:27
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:17
 msgid "A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens"
 msgstr "Uma coleção de feeds populares que pode encontrar no Bluesky, incluindo News, Booksky, Game Dev, Blacksky, e Fountain Pens"
 
@@ -954,8 +992,6 @@ msgstr "Ocorreu um erro de rede. Por favor, verifique a sua conexão à internet
 #: src/components/contacts/screens/VerifyNumber.tsx:155
 #: src/components/dms/dialogs/NewChatDialog.tsx:56
 #: src/components/dms/dialogs/NewChatDialog.tsx:94
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:71
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:110
 #: src/components/dms/LeaveConvoPrompt.tsx:38
 #: src/components/moderation/BlockDialog.tsx:284
 #: src/components/moderation/BlockDialog.tsx:310
@@ -996,11 +1032,10 @@ msgid "A screenshot of the post composer with a new button next to the post butt
 msgstr "Uma captura de ecrã do compositor de publicações com um novo botão ao lado do botão post que diz \"Rascunhos\", com um efeito de fogo de artifício de arco-íris. Abaixo, o texto no compositor diz \"Oi, ouviu a notícia? O Bluesky agora tem rascunhos!!!\"."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:109
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:125
 msgid "A selected recipient is not followed by the sender."
 msgstr "Um destinatário selecionado não é seguido pelo remetente."
 
-#: src/Navigation.tsx:483
+#: src/Navigation.tsx:474
 #: src/screens/Settings/AboutSettings.tsx:85
 #: src/screens/Settings/Settings.tsx:264
 #: src/screens/Settings/Settings.tsx:267
@@ -1049,11 +1084,11 @@ msgstr "Acesso solicitado! O proprietário do grupo irá rever o seu pedido."
 msgid "Accessibility"
 msgstr "Acessibilidade"
 
-#: src/Navigation.tsx:390
+#: src/Navigation.tsx:389
 msgid "Accessibility Settings"
 msgstr "Definições de acessibilidade"
 
-#: src/Navigation.tsx:406
+#: src/Navigation.tsx:405
 #: src/screens/Settings/AccountSettings.tsx:54
 #: src/screens/Settings/Settings.tsx:174
 #: src/screens/Settings/Settings.tsx:177
@@ -1128,14 +1163,10 @@ msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. 
 msgstr "Contas com um selo de verificação azul recortado <0><1/></0> podem verificar outras. Estes verificadores confiáveis são selecionados pelo Bluesky."
 
 #: src/lib/hooks/useNotificationHandler.ts:214
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:105
-#: src/screens/Settings/NotificationSettings/index.tsx:225
+#: src/screens/Settings/NotificationSettings/index.tsx:226
+#: src/screens/Settings/NotificationSettings/index.tsx:365
 msgid "Activity from others"
 msgstr "Atividade de outros"
-
-#: src/Navigation.tsx:459
-msgid "Activity notifications"
-msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:191
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:319
@@ -1429,7 +1460,6 @@ msgstr "alice@exemplo.com"
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:26
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "Tudo"
@@ -1450,9 +1480,6 @@ msgid "All friends followed!"
 msgstr "Todos os amigos foram seguidos!"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:255
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:94
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:96
 msgid "All languages"
 msgstr "Todos os idiomas"
 
@@ -1463,11 +1490,6 @@ msgstr "Todos os idiomas serão exibidos nos seus feeds."
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:245
 msgid "All of these words"
 msgstr "Todas estas palavras"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
-msgid "All posts"
-msgstr "Todas as publicações"
 
 #: src/view/screens/Feeds.tsx:700
 msgid "All the feeds you've saved, right in one place."
@@ -1533,7 +1555,7 @@ msgstr "Permite acesso às mensagens em direto"
 msgid "Already have a code?"
 msgstr "Já tem um código?"
 
-#: src/components/WelcomeModal.tsx:189
+#: src/components/WelcomeModal.tsx:192
 msgid "Already have an account?"
 msgstr "Já possui uma conta?"
 
@@ -1587,7 +1609,7 @@ msgstr "Um e-mail foi enviado para {0}. Ele inclui um código de confirmação q
 msgid "An error has occurred"
 msgstr "Ocorreu um erro"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:434
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:448
 msgid "An error occurred"
 msgstr "Ocorreu um erro"
 
@@ -1604,7 +1626,7 @@ msgstr "Ocorreu um erro ao obter as contas sugeridas."
 msgid "An error occurred while fetching the feed."
 msgstr "Ocorreu um erro ao obter o feed."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:377
+#: src/components/StarterPack/ProfileStarterPacks.tsx:374
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "Ocorreu um erro enquanto gerava o seu pacote de iniciante. Deseja tentar novamente?"
 
@@ -1613,11 +1635,11 @@ msgstr "Ocorreu um erro enquanto gerava o seu pacote de iniciante. Deseja tentar
 msgid "An error occurred while hiding suggestion. {0}"
 msgstr "Ocorreu um erro ao ocultar a sugestão. {0}"
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:197
+#: src/components/Post/Embed/VideoEmbed/index.tsx:188
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "Ocorreu um erro enquanto carregava o vídeo. Tente novamente mais tarde."
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:308
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:239
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Ocorreu um erro enquanto carregava o vídeo. Tente novamente."
 
@@ -1657,7 +1679,7 @@ msgstr "Ocorreu um erro. {0}"
 msgid "An illustration depicting user avatars flowing from a contact book into the Bluesky app"
 msgstr "Uma ilustração que retrata avatares de utilizadores a fluir de um livro de contactos para a aplicação do Bluesky"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:45
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:35
 msgid "An illustration of several Bluesky posts alongside repost, like, and comment icons"
 msgstr "Uma ilustração de várias publicações do Bluesky ao lado dos ícones de republicar, gostar e comentar"
 
@@ -1678,14 +1700,16 @@ msgstr "Um link de convite permite que pessoas entrem nesta conversa de grupo se
 msgid "An issue not included in these options"
 msgstr "Um problema não incluído nestas opções"
 
+#: src/components/dms/dialogs/NewChatDialog.tsx:92
+msgid "An issue occurred creating the group chat, please try again."
+msgstr ""
+
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:69
 msgid "An issue occurred starting the chat, please try again."
 msgstr "Ocorreu um problema ao iniciar a conversa. Por favor, tente novamente."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:92
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:108
-msgid "An issue occurred starting the group chat, please try again."
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:50
+msgid "An issue occurred while trying to open the chat"
 msgstr ""
 
 #: src/components/hooks/useFollowMethods.ts:35
@@ -1740,8 +1764,6 @@ msgid "Any date"
 msgstr "Qualquer data"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:457
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:26
 msgid "Anyone"
 msgstr "Todos"
 
@@ -1773,7 +1795,7 @@ msgstr "Qualquer um que me segue"
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 msgstr "Qualquer pessoa que o tenha deixará de poder entrar ou pedir para entrar. Pode sempre criar um novo."
 
-#: src/Navigation.tsx:491
+#: src/Navigation.tsx:482
 #: src/screens/Settings/AppIconSettings/index.tsx:65
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:19
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:24
@@ -1811,7 +1833,7 @@ msgstr "A palavra-passe da aplicação deve conter pelo menos 4 caracteres"
 msgid "App passwords"
 msgstr "Palavras-passe da Aplicação"
 
-#: src/Navigation.tsx:358
+#: src/Navigation.tsx:357
 #: src/screens/Settings/AppPasswords.tsx:51
 msgid "App Passwords"
 msgstr "Palavras-passe da Aplicação"
@@ -1862,7 +1884,7 @@ msgstr "Recorrer desta decisão"
 msgid "Appeal this label"
 msgstr "Recorrer deste rótulo"
 
-#: src/Navigation.tsx:398
+#: src/Navigation.tsx:397
 #: src/screens/Settings/AppearanceSettings.tsx:73
 #: src/screens/Settings/Settings.tsx:226
 #: src/screens/Settings/Settings.tsx:229
@@ -1880,12 +1902,12 @@ msgid "Apply Pull Request"
 msgstr "Aplicar Pull Request"
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:611
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:610
 msgid "Archived from {0}"
 msgstr "Arquivado desde {0}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:582
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:620
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:581
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:619
 msgid "Archived post"
 msgstr "Publicação arquivada"
 
@@ -1989,8 +2011,13 @@ msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Aurora"
 
+#. Filter search results by a specific post author
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
+msgid "Author"
+msgstr "Autor"
+
 #: src/components/BotAccountAlert.tsx:32
-#: src/components/BotBadge.tsx:65
+#: src/components/BotBadge.tsx:63
 msgid "Automated account"
 msgstr "Conta automatizada"
 
@@ -2004,7 +2031,7 @@ msgstr "Automático"
 msgid "Automation label"
 msgstr "Rótulo de automação"
 
-#: src/Navigation.tsx:422
+#: src/Navigation.tsx:421
 #: src/screens/Settings/AutomationLabelSettings.tsx:103
 msgid "Automation Label"
 msgstr "Rótulo de Automação"
@@ -2024,9 +2051,9 @@ msgstr "Disponível"
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
 #: src/components/dms/AddMembersFlow.tsx:533
-#: src/components/dms/InitiateChatFlow.tsx:645
-#: src/components/dms/InitiateChatFlow.tsx:863
-#: src/components/dms/InitiateChatFlow.tsx:870
+#: src/components/dms/InitiateChatFlow.tsx:540
+#: src/components/dms/InitiateChatFlow.tsx:758
+#: src/components/dms/InitiateChatFlow.tsx:765
 #: src/components/moderation/AppealForm.tsx:145
 #: src/components/moderation/AppealForm.tsx:146
 #: src/screens/Login/ChooseAccountForm.tsx:96
@@ -2090,8 +2117,8 @@ msgid "Before creating a post or replying, you must first verify your email."
 msgstr "Antes de criar uma publicação ou responder, deve verificar o seu e-mail."
 
 #: src/components/dialogs/StarterPackDialog.tsx:72
-#: src/components/StarterPack/ProfileStarterPacks.tsx:267
-#: src/components/StarterPack/ProfileStarterPacks.tsx:277
+#: src/components/StarterPack/ProfileStarterPacks.tsx:264
+#: src/components/StarterPack/ProfileStarterPacks.tsx:274
 #: src/view/screens/Profile.tsx:350
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr "Antes de criar um pacote de iniciante, deve verificar o seu e-mail."
@@ -2106,10 +2133,10 @@ msgstr "Antes de poder receber notificações de publicações de {name}, primei
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:155
 #: src/components/dms/MessageProfileButton.tsx:60
-#: src/screens/Messages/ChatList.tsx:168
-#: src/screens/Messages/ChatList.tsx:186
-#: src/screens/Messages/ChatList.tsx:287
-#: src/screens/Messages/ChatList.tsx:543
+#: src/screens/Messages/ChatList.tsx:169
+#: src/screens/Messages/ChatList.tsx:187
+#: src/screens/Messages/ChatList.tsx:288
+#: src/screens/Messages/ChatList.tsx:544
 #: src/screens/Messages/Conversation.tsx:203
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
 msgid "Before you can message another user, you must first verify your email."
@@ -2131,18 +2158,12 @@ msgstr "Comece o processo de verificação de idade, preenchendo os campos abaix
 msgid "Beta Feature"
 msgstr "Funcionalidade Beta"
 
-#: src/Navigation.tsx:414
+#: src/Navigation.tsx:413
 #: src/screens/Settings/BetaFeaturesSettings.tsx:108
 #: src/screens/Settings/Settings.tsx:248
 #: src/screens/Settings/Settings.tsx:251
 msgid "Beta features"
 msgstr "Funcionalidades beta"
-
-#: src/components/BetaBadge.tsx:79
-#: src/components/BetaBadge.tsx:99
-#: src/components/BetaBadge.tsx:100
-msgid "Beta features enabled"
-msgstr ""
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:144
 msgctxt "web"
@@ -2246,7 +2267,7 @@ msgstr "Bloqueado"
 msgid "Blocked accounts"
 msgstr "Contas bloqueadas"
 
-#: src/Navigation.tsx:194
+#: src/Navigation.tsx:193
 #: src/view/screens/ModerationBlockedAccounts.tsx:95
 msgid "Blocked Accounts"
 msgstr "Contas Bloqueadas"
@@ -2259,7 +2280,7 @@ msgstr "Contas bloqueadas não conseguem responder aos seus fios, mencionar ou i
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Contas bloqueadas não conseguem responder aos seus fios, mencionar ou interagir de qualquer outra forma consigo. Não irá ver o conteúdo delas e elas serão impedidas de verem o seu."
 
-#: src/screens/Profile/Sections/Labels.tsx:204
+#: src/screens/Profile/Sections/Labels.tsx:203
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "Bloquear não impede o rotulador de aplicar rótulos na sua conta."
 
@@ -2286,7 +2307,7 @@ msgstr "bloomscrolling booksky"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:636
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:635
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "O Bluesky não pode confirmar a veracidade da data aplicada."
 
@@ -2336,7 +2357,7 @@ msgstr "Termos de Serviço de Bluesky Social"
 msgid "Bluesky stores your contacts as encoded data. Removing your contacts will immediately delete this data."
 msgstr "O Bluesky guarda os seus contactos como dados codificados. Ao remover os seus contactos, esses dados são eliminados imediatamente."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:343
+#: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "O Bluesky escolherá um conjunto de contas recomendadas de pessoas na sua rede."
 
@@ -2440,7 +2461,7 @@ msgstr "Botão para voltar à cronologia do início"
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:847
 #: src/screens/Messages/JoinRequest.tsx:177
-#: src/screens/Search/components/StarterPackCard.tsx:112
+#: src/screens/Search/components/StarterPackCard.tsx:107
 #: src/screens/Search/Explore.tsx:960
 msgid "By {0}"
 msgstr "Por {0}"
@@ -2483,11 +2504,11 @@ msgstr "Ao criar uma conta, concorda com os <0>Termos de Aplicação</0> e a <1>
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "Ao criar uma conta, concorda com os <0>Termos de Aplicação</0>."
 
-#: src/screens/Search/components/StarterPackCard.tsx:111
+#: src/screens/Search/components/StarterPackCard.tsx:106
 msgid "By you"
 msgstr "Por si"
 
-#: src/view/com/composer/photos/OpenCameraBtn.tsx:65
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:69
 msgid "Camera"
 msgstr "Câmara"
 
@@ -2677,7 +2698,7 @@ msgid "Changes to the starter pack will not be reflected in the list after creat
 msgstr "Alterações ao pacote de iniciante não se irão refletir na lista após a sua criação. A lista será uma cópia independente."
 
 #: src/lib/hooks/useNotificationHandler.ts:133
-#: src/Navigation.tsx:509
+#: src/Navigation.tsx:500
 #: src/view/shell/bottom-bar/BottomBar.tsx:242
 #: src/view/shell/desktop/LeftNav.tsx:698
 #: src/view/shell/Drawer.tsx:525
@@ -2722,9 +2743,9 @@ msgstr "Conversa silenciada"
 msgid "Chat not found."
 msgstr "Conversa não encontrada."
 
-#: src/screens/Messages/ChatList.tsx:569
-#: src/screens/Messages/ChatList.tsx:604
-#: src/screens/Messages/ChatList.tsx:651
+#: src/screens/Messages/ChatList.tsx:570
+#: src/screens/Messages/ChatList.tsx:605
+#: src/screens/Messages/ChatList.tsx:652
 msgid "Chat options"
 msgstr "Opções de conversa"
 
@@ -2733,11 +2754,10 @@ msgid "Chat owners cannot leave a group chat."
 msgstr "Os proprietários da conversa não podem sair de uma conversa de grupo."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:73
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:88
 msgid "Chat recipient is not followed by the sender."
 msgstr "O destinatário da conversa não é seguido pelo remetente."
 
-#: src/Navigation.tsx:529
+#: src/Navigation.tsx:520
 msgid "Chat request inbox"
 msgstr "Caixa de pedidos de conversa"
 
@@ -2747,11 +2767,11 @@ msgid "Chat requests"
 msgstr "Pedidos de conversa"
 
 #: src/components/dms/ConvoMenu.tsx:88
-#: src/Navigation.tsx:524
-#: src/screens/Messages/ChatList.tsx:97
-#: src/screens/Messages/ChatList.tsx:101
-#: src/screens/Messages/ChatList.tsx:671
-#: src/screens/Messages/ChatList.tsx:681
+#: src/Navigation.tsx:515
+#: src/screens/Messages/ChatList.tsx:98
+#: src/screens/Messages/ChatList.tsx:102
+#: src/screens/Messages/ChatList.tsx:672
+#: src/screens/Messages/ChatList.tsx:682
 #: src/screens/Messages/Settings.tsx:48
 msgid "Chat settings"
 msgstr "Definições das conversas"
@@ -2778,9 +2798,9 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr "Removeu o silenciamento da conversa"
 
-#: src/screens/Messages/ChatList.tsx:91
-#: src/screens/Messages/ChatList.tsx:555
-#: src/screens/Messages/ChatList.tsx:595
+#: src/screens/Messages/ChatList.tsx:92
+#: src/screens/Messages/ChatList.tsx:556
+#: src/screens/Messages/ChatList.tsx:596
 msgid "Chats"
 msgstr "Conversas"
 
@@ -2817,7 +2837,7 @@ msgstr "Escolher método de verificação de domínio"
 msgid "Choose Feeds"
 msgstr "Escolher feeds"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:352
+#: src/components/StarterPack/ProfileStarterPacks.tsx:349
 msgid "Choose for me"
 msgstr "Escolha por mim"
 
@@ -2983,7 +3003,7 @@ msgstr "Clique para reenviar a mensagem falha"
 #: src/components/dms/AfterReportDialog.tsx:212
 #: src/components/dms/AfterReportDialog.tsx:217
 #: src/components/dms/EmojiPopup.android.tsx:59
-#: src/components/dms/InitiateChatFlow.tsx:670
+#: src/components/dms/InitiateChatFlow.tsx:565
 #: src/components/intents/GroupChatJoinDialog.tsx:246
 #: src/components/intents/GroupChatJoinDialog.tsx:281
 #: src/components/NewskieDialog.tsx:169
@@ -3007,8 +3027,8 @@ msgstr "Clique para reenviar a mensagem falha"
 msgid "Close"
 msgstr "Fechar"
 
-#: src/components/Dialog/index.web.tsx:129
-#: src/components/Dialog/index.web.tsx:339
+#: src/components/Dialog/index.web.tsx:127
+#: src/components/Dialog/index.web.tsx:317
 msgid "Close active dialog"
 msgstr "Fechar janela de diálogo em execução"
 
@@ -3050,7 +3070,7 @@ msgstr "Fechar visualizador de imagens"
 #: src/components/ContextMenu/Backdrop.ios.tsx:53
 #: src/components/ContextMenu/Backdrop.ios.tsx:79
 #: src/components/ContextMenu/Backdrop.tsx:45
-#: src/components/Lightbox/chrome/ImageMenu.tsx:85
+#: src/components/Lightbox/chrome/ImageMenu.tsx:84
 msgid "Close menu"
 msgstr "Fechar menu"
 
@@ -3070,7 +3090,7 @@ msgstr "Fechar o banner de pedidos de adesão"
 msgid "Close this dialog"
 msgstr "Fechar esta janela de diálogo"
 
-#: src/components/WelcomeModal.tsx:214
+#: src/components/WelcomeModal.tsx:217
 msgid "Close welcome modal"
 msgstr "Fechar modal de boas-vindas"
 
@@ -3112,7 +3132,7 @@ msgid "Comics"
 msgstr "Banda Desenhada"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:46
-#: src/Navigation.tsx:348
+#: src/Navigation.tsx:347
 #: src/view/screens/CommunityGuidelines.tsx:28
 msgid "Community Guidelines"
 msgstr "Diretrizes da Comunidade"
@@ -3233,7 +3253,7 @@ msgstr "Conteúdo e Multimédia"
 msgid "Content and media"
 msgstr "Conteúdo e multimédia"
 
-#: src/Navigation.tsx:467
+#: src/Navigation.tsx:458
 msgid "Content and Media"
 msgstr "Conteúdo e Multimédia"
 
@@ -3269,7 +3289,7 @@ msgstr "Alerta de Conteúdo"
 msgid "Content warnings"
 msgstr "Alertas de conteúdo"
 
-#: src/components/Menu/index.web.tsx:93
+#: src/components/Menu/index.web.tsx:91
 msgid "Context menu backdrop, click to close the menu."
 msgstr "Backdrop do menu de contexto, toque para fechar o ecrã."
 
@@ -3302,7 +3322,7 @@ msgid "Continue thread..."
 msgstr "Continuar fio..."
 
 #: src/components/dms/AddMembersFlow.tsx:324
-#: src/components/dms/InitiateChatFlow.tsx:598
+#: src/components/dms/InitiateChatFlow.tsx:493
 msgid "Continue to group name"
 msgstr "Continuar para o nome do grupo"
 
@@ -3352,7 +3372,7 @@ msgstr "Link copiado para a área de transferência"
 #: src/components/dms/MessageContextMenu.tsx:97
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:273
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:75
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:77
 #: src/lib/sharing.ts:24
 #: src/lib/sharing.ts:42
 msgid "Copied to clipboard"
@@ -3386,8 +3406,8 @@ msgstr "Copiar Palavra-passe da Aplicação"
 msgid "Copy at:// URI"
 msgstr "Copiar at:// URI"
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:152
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:155
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:154
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:157
 msgid "Copy author DID"
 msgstr "Copiar DID do autor"
 
@@ -3425,10 +3445,10 @@ msgstr "Copiar Link"
 msgid "Copy link to list"
 msgstr "Copiar Link para a Lista"
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:140
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:143
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:86
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:89
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:142
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:145
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:88
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:91
 msgid "Copy link to post"
 msgstr "Copiar Link para a Publicação"
 
@@ -3446,8 +3466,8 @@ msgstr "Copiar link para pacote de iniciante"
 msgid "Copy message text"
 msgstr "Copiar texto da mensagem"
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:143
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:146
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:145
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:148
 msgid "Copy post at:// URI"
 msgstr "Copiar at:// URI da publicação"
 
@@ -3466,7 +3486,7 @@ msgstr "Copiar valor de registo TXT"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:41
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:108
-#: src/Navigation.tsx:353
+#: src/Navigation.tsx:352
 #: src/view/screens/CopyrightPolicy.tsx:25
 msgid "Copyright Policy"
 msgstr "Política de Direitos de Autor"
@@ -3582,8 +3602,8 @@ msgstr "vacas porcos"
 #. Text on button to create a new starter pack
 #: src/components/dialogs/StarterPackDialog.tsx:113
 #: src/components/dialogs/StarterPackDialog.tsx:210
-#: src/components/dms/InitiateChatFlow.tsx:607
-#: src/components/StarterPack/ProfileStarterPacks.tsx:332
+#: src/components/dms/InitiateChatFlow.tsx:502
+#: src/components/StarterPack/ProfileStarterPacks.tsx:329
 msgid "Create"
 msgstr "Criar"
 
@@ -3600,9 +3620,9 @@ msgstr "Criar uma lista a partir deste pacote de iniciante"
 msgid "Create a QR code for a starter pack"
 msgstr "Criar um código QR para um pacote de iniciante"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:210
-#: src/components/StarterPack/ProfileStarterPacks.tsx:319
-#: src/Navigation.tsx:560
+#: src/components/StarterPack/ProfileStarterPacks.tsx:207
+#: src/components/StarterPack/ProfileStarterPacks.tsx:316
+#: src/Navigation.tsx:551
 msgid "Create a starter pack"
 msgstr "Criar um pacote de iniciante"
 
@@ -3611,12 +3631,12 @@ msgstr "Criar um pacote de iniciante"
 msgid "Create a Starter Pack"
 msgstr "Criar um Pacote de Iniciante"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:306
+#: src/components/StarterPack/ProfileStarterPacks.tsx:303
 msgid "Create a starter pack for me"
 msgstr "Criar um pacote de iniciante para mim"
 
-#: src/components/WelcomeModal.tsx:155
-#: src/components/WelcomeModal.tsx:163
+#: src/components/WelcomeModal.tsx:158
+#: src/components/WelcomeModal.tsx:166
 #: src/screens/Messages/JoinRequest.tsx:310
 #: src/screens/Signup/index.tsx:141
 #: src/view/com/auth/SplashScreen.tsx:106
@@ -3633,7 +3653,7 @@ msgstr "Criar conta"
 #: src/components/dialogs/Signin.tsx:87
 #: src/components/dialogs/Signin.tsx:89
 #: src/screens/Hashtag.tsx:236
-#: src/screens/Search/SearchResults.tsx:418
+#: src/screens/Search/SearchResults.tsx:393
 msgid "Create an account"
 msgstr "Criar uma conta"
 
@@ -3646,11 +3666,11 @@ msgstr "Criar uma conta sem usar este pacote de iniciante"
 msgid "Create an avatar instead"
 msgstr "Criar uma foto de perfil"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:217
+#: src/components/StarterPack/ProfileStarterPacks.tsx:214
 msgid "Create another"
 msgstr "Criar outra"
 
-#: src/components/dms/InitiateChatFlow.tsx:606
+#: src/components/dms/InitiateChatFlow.tsx:501
 msgid "Create group chat"
 msgstr "Criar conversa de grupo"
 
@@ -3978,7 +3998,7 @@ msgstr "Desativar"
 msgid "Disable 2FA"
 msgstr "Desativar 2FA"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:400
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:414
 msgid "Disable captions"
 msgstr "Desativar legendas"
 
@@ -4057,7 +4077,7 @@ msgstr "Impedir que aplicações exibam o meu perfil para utilizadores sem sess�
 
 #: src/screens/Search/Explore.tsx:448
 msgid "Discover feeds"
-msgstr ""
+msgstr "Descobrir feeds"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:64
 #: src/view/com/posts/FollowingEmptyState.tsx:69
@@ -4118,7 +4138,7 @@ msgstr "Exibir insígnias de texto alternativo maiores"
 msgid "Display name"
 msgstr "Nome de exibição"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:33
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:23
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
 msgstr "Abandone os trolls e o clickbait. Encontre pessoas reais e conversas que são importantes para si."
 
@@ -4200,7 +4220,7 @@ msgstr "Toque duplo ou toque prolongadamente a mensagem para adicionar uma reaç
 msgid "Double tap to close the dialog"
 msgstr "Toque duplo para fechar janela de diálogo"
 
-#: src/screens/VideoFeed/index.tsx:1178
+#: src/screens/VideoFeed/index.tsx:1161
 msgid "Double tap to like"
 msgstr "Toque duplo para dar um gosto"
 
@@ -4304,7 +4324,6 @@ msgstr "Desordens alimentares"
 
 #: src/screens/Messages/components/EditTextButton.tsx:52
 #: src/screens/Settings/AccountSettings.tsx:148
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:250
 #: src/screens/StarterPack/StarterPackScreen.tsx:604
 #: src/screens/StarterPack/Wizard/index.tsx:331
 #: src/screens/StarterPack/Wizard/index.tsx:336
@@ -4374,7 +4393,7 @@ msgstr "Editar estado \"em direto\""
 msgid "Edit moderation list"
 msgstr "Editar lista de moderação"
 
-#: src/Navigation.tsx:363
+#: src/Navigation.tsx:362
 #: src/view/screens/Feeds.tsx:511
 msgid "Edit My Feeds"
 msgstr "Editar os Meus Feeds"
@@ -4382,11 +4401,6 @@ msgstr "Editar os Meus Feeds"
 #: src/screens/Messages/ConversationSettings/index.tsx:544
 msgid "Edit name"
 msgstr "Editar nome"
-
-#. placeholder {0}: createSanitizedDisplayName( profile, )
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:242
-msgid "Edit notifications from {0}"
-msgstr ""
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:114
 msgid "Edit People"
@@ -4426,7 +4440,7 @@ msgstr "Editar lista de utilizadores"
 msgid "Edit who can reply"
 msgstr "Editar quem pode responder"
 
-#: src/Navigation.tsx:565
+#: src/Navigation.tsx:556
 msgid "Edit your starter pack"
 msgstr "Editar o seu pacote de iniciante"
 
@@ -4482,8 +4496,8 @@ msgstr "Código HTML incorporado"
 
 #: src/components/dialogs/Embed.tsx:105
 #: src/components/dialogs/Embed.tsx:109
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:118
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:123
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:120
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:125
 msgid "Embed post"
 msgstr "Incorporar publicação"
 
@@ -4491,7 +4505,7 @@ msgstr "Incorporar publicação"
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr "Incorpore esta publicação no seu site. Simplesmente copie o seguinte excerto e cole-o no código HTML do seu site."
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:66
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:61
 msgid "Embedded video player"
 msgstr "Reprodutor de vídeos incorporado"
 
@@ -4515,7 +4529,7 @@ msgstr "Permitir conteúdo adulto"
 msgid "Enable beta features"
 msgstr "Ativar funcionalidades beta"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:401
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:415
 msgid "Enable captions"
 msgstr "Ativar legendas"
 
@@ -4532,13 +4546,12 @@ msgstr "Permitir conteúdo multimédia externo"
 msgid "Enable media players for"
 msgstr "Permitir reprodutores de multimédia para"
 
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:139
 #: src/view/screens/Storybook/Admonitions.tsx:76
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
 msgstr "Ative as notificações de uma conta visitando o perfil desta e pressionando o <0>ícone de sino</0> <1/>."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:135
-#: src/screens/Settings/NotificationSettings/index.tsx:139
+#: src/screens/Settings/NotificationSettings/index.tsx:136
+#: src/screens/Settings/NotificationSettings/index.tsx:140
 msgid "Enable push notifications"
 msgstr "Ativar notificações push"
 
@@ -4564,7 +4577,7 @@ msgstr "Permitir vídeos do momento no seu feed Descobrir"
 msgid "Enabled"
 msgstr "Permitido"
 
-#: src/screens/Profile/Sections/Feed.tsx:132
+#: src/screens/Profile/Sections/Feed.tsx:131
 msgid "End of feed"
 msgstr "Fim do feed"
 
@@ -4591,7 +4604,7 @@ msgstr "Insira uma palavra ou tag"
 msgid "Enter code"
 msgstr "Insira o código"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:419
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:433
 msgid "Enter fullscreen"
 msgstr "Entrar em ecrã cheio"
 
@@ -4667,7 +4680,7 @@ msgstr "Ocorreu um erro ao guardar o ficheiro"
 msgid "Error receiving captcha response."
 msgstr "Ocorreu um erro ao obter a resposta do captcha."
 
-#: src/screens/Search/SearchResults.tsx:206
+#: src/screens/Search/SearchResults.tsx:181
 msgid "Error: {error}"
 msgstr "Erro: {error}"
 
@@ -4694,8 +4707,8 @@ msgctxt "allow messages from"
 msgid "Everyone"
 msgstr "Todos"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:298
-#: src/screens/Settings/NotificationSettings/index.tsx:387
+#: src/screens/Settings/NotificationSettings/index.tsx:299
+#: src/screens/Settings/NotificationSettings/index.tsx:401
 msgid "Everything else"
 msgstr "Tudo o resto"
 
@@ -4721,7 +4734,7 @@ msgstr "Excluir utilizadores que eu sigo"
 msgid "Excludes users you follow"
 msgstr "Exclui utilizadores que sigo"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:418
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:432
 msgid "Exit fullscreen"
 msgstr "Sair do ecrã cheio"
 
@@ -4742,7 +4755,7 @@ msgstr "Expandir ou colapsar a publicação completa a que está a responder"
 msgid "Expand post text"
 msgstr "Expandir texto da publicação"
 
-#: src/screens/VideoFeed/index.tsx:1054
+#: src/screens/VideoFeed/index.tsx:1037
 msgid "Expands or collapses post text"
 msgstr "Expande ou colapsa o texto da publicação"
 
@@ -4785,15 +4798,15 @@ msgstr "Conteúdo multimédia explícito ou perturbador."
 msgid "Explicit sexual images."
 msgstr "Imagens sexuais explícitas."
 
-#: src/Navigation.tsx:769
+#: src/Navigation.tsx:760
 #: src/screens/Search/Shell.tsx:549
 #: src/view/shell/desktop/LeftNav.tsx:677
 #: src/view/shell/Drawer.tsx:473
 msgid "Explore"
 msgstr "Explorar"
 
-#: src/components/WelcomeModal.tsx:168
-#: src/components/WelcomeModal.tsx:177
+#: src/components/WelcomeModal.tsx:171
+#: src/components/WelcomeModal.tsx:180
 msgid "Explore the app"
 msgstr "Explorar a aplicação"
 
@@ -4827,7 +4840,7 @@ msgstr "Conteúdo Multimédia Externo"
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr "O conteúdo multimédia externo pode permitir que sites recolham informações sobre si ou o seu dispositivo. Nenhuma informação é enviada ou solicitada até pressionar o botão \"Reproduzir\"."
 
-#: src/Navigation.tsx:382
+#: src/Navigation.tsx:381
 #: src/screens/Settings/ExternalMediaPreferences.tsx:35
 msgid "External Media Preferences"
 msgstr "Preferências de Conteúdo Multimédia Externo"
@@ -4957,7 +4970,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Falha ao sair da conversa de grupo"
 
-#: src/screens/Messages/ChatList.tsx:420
+#: src/screens/Messages/ChatList.tsx:421
 #: src/screens/Messages/Inbox.tsx:202
 msgid "Failed to load conversations"
 msgstr "Falha ao carregar as conversas"
@@ -4977,10 +4990,9 @@ msgstr "Falha ao carregar preferências de feeds"
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:85
 #: src/screens/Messages/Settings.tsx:369
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:112
-#: src/screens/Settings/NotificationSettings/index.tsx:148
-#: src/screens/Settings/NotificationSettings/index.tsx:267
-#: src/screens/Settings/NotificationSettings/index.tsx:284
+#: src/screens/Settings/NotificationSettings/index.tsx:149
+#: src/screens/Settings/NotificationSettings/index.tsx:268
+#: src/screens/Settings/NotificationSettings/index.tsx:285
 msgid "Failed to load notification settings."
 msgstr "Falha ao carregar definições de notificações."
 
@@ -5011,12 +5023,12 @@ msgstr "Falha ao carregar contas sugeridas"
 msgid "Failed to lock group chat"
 msgstr "Falha ao trancar a conversa de grupo"
 
-#: src/screens/Messages/ChatList.tsx:636
+#: src/screens/Messages/ChatList.tsx:637
 #: src/view/shell/bottom-bar/BottomBar.tsx:447
 msgid "Failed to mark all chats as read"
 msgstr "Falha ao marcar todas as conversas como lidas"
 
-#: src/screens/Messages/ChatList.tsx:645
+#: src/screens/Messages/ChatList.tsx:646
 #: src/screens/Messages/Inbox.tsx:304
 #: src/view/shell/bottom-bar/BottomBar.tsx:456
 msgid "Failed to mark all requests as read"
@@ -5175,7 +5187,7 @@ msgstr "Conta falsa ou bot"
 msgid "False information about elections"
 msgstr "Informação falsa sobre eleições"
 
-#: src/Navigation.tsx:293
+#: src/Navigation.tsx:292
 msgid "Feed"
 msgstr "Feed"
 
@@ -5220,10 +5232,10 @@ msgctxt "toast"
 msgid "Feedback sent to feed operator"
 msgstr "Feedback enviado ao operador do feed"
 
-#: src/Navigation.tsx:545
+#: src/Navigation.tsx:536
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
-#: src/screens/Search/SearchResults.tsx:113
+#: src/screens/Search/SearchResults.tsx:106
 #: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:239
@@ -5253,33 +5265,21 @@ msgstr "Obter atualização"
 msgid "File saved successfully!"
 msgstr "Ficheiro guardado com sucesso!"
 
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:49
-msgid "Filter by author"
-msgstr "Filtrar por autor"
-
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:30
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:31
 msgid "Filter by author (currently: {currentLabel})"
 msgstr "Filtrar por autor (atualmente: {currentLabel})"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:50
-msgid "Filter by media"
-msgstr "Filtrar por multimédia"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:31
-msgid "Filter by media (currently: {currentLabel})"
-msgstr "Filtrar por multimédia (atualmente: {currentLabel})"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:69
 msgid "Filter from feeds"
 msgstr "Filtrar de feeds"
 
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:92
-msgid "Filter search by language"
-msgstr "Filtrar pesquisa por idioma"
-
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr "Filtrar pesquisa por idioma (atualmente: {currentLanguageLabel})"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:32
+msgid "Filter search by media (currently: {currentLabel})"
+msgstr "Filtrar pesquisa por multimédia (atualmente: {currentLabel})"
 
 #. placeholder {0}: lang.name
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:88
@@ -5332,8 +5332,8 @@ msgstr "Encontrar contas para seguir"
 msgid "Find and invite friends"
 msgstr "Encontrar e convidar amigos"
 
-#: src/Navigation.tsx:446
-#: src/Navigation.tsx:587
+#: src/Navigation.tsx:445
+#: src/Navigation.tsx:578
 msgid "Find Contacts"
 msgstr "Encontrar Contactos"
 
@@ -5367,7 +5367,7 @@ msgstr "Encontre os seus amigos"
 msgid "Find your friends on Bluesky by verifying your phone number and matching with your contacts. We protect your information and you control what happens next. <0>Learn more</0>"
 msgstr "Encontre os seus amigos no Bluesky verificando o seu número de telefone e estabelecendo correspondências com o dos seus contactos. Nós protegemos a sua informação e o que acontece a seguir é controlado por si. <0>Saiba mais</0>"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:31
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:21
 msgid "Find your people"
 msgstr "Encontre o seu povo"
 
@@ -5409,7 +5409,7 @@ msgstr "Focar o campo de pesquisa"
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:409
-#: src/screens/VideoFeed/index.tsx:937
+#: src/screens/VideoFeed/index.tsx:920
 #: src/view/com/notifications/NotificationFeedItem.tsx:864
 #: src/view/com/notifications/NotificationFeedItem.tsx:871
 msgid "Follow"
@@ -5425,7 +5425,7 @@ msgstr "Seguir {0}"
 msgid "Follow {displayName}"
 msgstr "Seguir {displayName}"
 
-#: src/screens/VideoFeed/index.tsx:916
+#: src/screens/VideoFeed/index.tsx:899
 msgid "Follow {handle}"
 msgstr "Seguir {handle}"
 
@@ -5508,7 +5508,7 @@ msgid "Followers can join"
 msgstr "Seguidores podem aderir"
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:247
+#: src/Navigation.tsx:246
 msgid "Followers of @{0} that you know"
 msgstr "Seguidores de @{0} que conhece"
 
@@ -5524,7 +5524,7 @@ msgstr "Seguidores que conhece"
 #: src/components/ProfileHoverCard/index.web.tsx:505
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:405
-#: src/screens/VideoFeed/index.tsx:935
+#: src/screens/VideoFeed/index.tsx:918
 #: src/view/com/notifications/NotificationFeedItem.tsx:842
 #: src/view/com/notifications/NotificationFeedItem.tsx:859
 msgid "Following"
@@ -5549,7 +5549,7 @@ msgstr "A seguir {0}"
 msgid "Following {displayName}"
 msgstr "A seguir {displayName}"
 
-#: src/screens/VideoFeed/index.tsx:915
+#: src/screens/VideoFeed/index.tsx:898
 msgid "Following {handle}"
 msgstr "A seguir {handle}"
 
@@ -5558,7 +5558,7 @@ msgstr "A seguir {handle}"
 msgid "Following feed preferences"
 msgstr "Preferências do feed A seguir"
 
-#: src/Navigation.tsx:369
+#: src/Navigation.tsx:368
 #: src/screens/Settings/FollowingFeedPreferences.tsx:57
 msgid "Following Feed Preferences"
 msgstr "Preferências do feed A seguir"
@@ -5608,7 +5608,7 @@ msgstr "Para si"
 msgid "Forever"
 msgstr "Para sempre"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:40
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:30
 msgid "Forget the noise"
 msgstr "Esqueça o ruído"
 
@@ -5627,13 +5627,11 @@ msgstr "Esqueceu-se da palavra-passe?"
 msgid "Four message bubbles representing a group chat. First message: \"Did you hear the news? Bluesky has group chats now!\" Second message: \"omg, no way\" Third message: \"Wow, 50 people in one chat!\" Fourth message: \"You can send invite links too!\""
 msgstr "Quatro balões de mensagem a representar uma conversa de grupo. Primeira mensagem: \"Soubeste da novidade? O Bluesky agora tem conversas de grupo!\" Segunda mensagem: \"omg, não acredito\" Terceira mensagem: \"Uau, 50 pessoas numa só conversa!\" Quarta mensagem: \"Também podes enviar links de convite!\""
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:22
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:12
 msgid "Free your feed"
 msgstr "Liberte o seu feed"
 
-#. Filter search results by a specific post author
 #. Filter who you receive notifications from
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:159
 msgid "From"
 msgstr "De"
@@ -5656,7 +5654,7 @@ msgstr "De <0/>"
 msgid "From these people"
 msgstr "Destas pessoas"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:340
+#: src/components/StarterPack/ProfileStarterPacks.tsx:337
 msgid "Generate a starter pack"
 msgstr "Gerar um pacote de iniciante"
 
@@ -5700,39 +5698,39 @@ msgstr "Receba acesso antecipado a funcionalidades experimentais que estamos a t
 msgid "Get help"
 msgstr "Obter ajuda"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:389
+#: src/screens/Settings/NotificationSettings/index.tsx:403
 msgid "Get notifications for starter pack joins, verification, and other activity."
 msgstr "Receber notificações de adesões através de pacotes de iniciante, verificação e outra atividade."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:324
+#: src/screens/Settings/NotificationSettings/index.tsx:325
 msgid "Get notifications when people follow you."
 msgstr "Receber notificações quando pessoas te seguirem."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:316
+#: src/screens/Settings/NotificationSettings/index.tsx:317
 msgid "Get notifications when people like your posts."
 msgstr "Receber notificações quando pessoas gostarem das suas publicações."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:366
+#: src/screens/Settings/NotificationSettings/index.tsx:380
 msgid "Get notifications when people like your reposts."
 msgstr "Receber notificações quando as pessoas gostarem das suas republicações."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:340
+#: src/screens/Settings/NotificationSettings/index.tsx:341
 msgid "Get notifications when people mention you."
 msgstr "Receber notificações quando pessoas te mencionarem."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:348
+#: src/screens/Settings/NotificationSettings/index.tsx:349
 msgid "Get notifications when people quote your posts."
 msgstr "Receber notificações quando pessoas citarem suas publicações."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:332
+#: src/screens/Settings/NotificationSettings/index.tsx:333
 msgid "Get notifications when people reply to your posts."
 msgstr "Receber notificações quando pessoas responderem às suas publicações."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:357
+#: src/screens/Settings/NotificationSettings/index.tsx:358
 msgid "Get notifications when people repost your posts."
 msgstr "Receber notificações quando pessoas republicarem as suas publicações."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:375
+#: src/screens/Settings/NotificationSettings/index.tsx:389
 msgid "Get notifications when people repost your reposts."
 msgstr "Receber notificações quando as pessoas republicarem as suas republicações."
 
@@ -5744,14 +5742,14 @@ msgstr "Receba notificações quando alguém lhe enviar pedidos de mensagem."
 msgid "Get notifications when people send you messages."
 msgstr "Receba notificações quando as pessoas lhe enviarem mensagens."
 
+#: src/screens/Settings/NotificationSettings/index.tsx:367
+msgid "Get notifications when there's activity on posts you're subscribed to."
+msgstr ""
+
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:89
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:90
 msgid "Get notified about new posts"
 msgstr "Receber notificações de novas publicações"
-
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:106
-msgid "Get notified about posts and replies from accounts you choose."
-msgstr ""
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:226
 msgid "Get notified of new posts from {name}"
@@ -5804,8 +5802,8 @@ msgstr "Glorificação de violência"
 #: src/screens/ProfileList/components/ErrorScreen.tsx:35
 #: src/screens/ProfileList/components/ErrorScreen.tsx:41
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1239
-#: src/screens/VideoFeed/index.tsx:1243
+#: src/screens/VideoFeed/index.tsx:1222
+#: src/screens/VideoFeed/index.tsx:1226
 #: src/view/com/auth/LoggedOut.tsx:127
 #: src/view/com/profile/ProfileFollowers.tsx:211
 #: src/view/com/profile/ProfileFollowers.tsx:212
@@ -5858,7 +5856,7 @@ msgid "Go live for"
 msgstr "Entrar em direto por"
 
 #. placeholder {0}: name.displayName
-#: src/screens/PostThread/components/LikesStat.tsx:146
+#: src/screens/PostThread/components/LikesStat.tsx:152
 msgid "Go to {0}'s profile"
 msgstr "Ir para o perfil de {0}"
 
@@ -5962,7 +5960,7 @@ msgctxt "toast"
 msgid "Group chat name updated"
 msgstr "Nome da conversa de grupo atualizado"
 
-#: src/Navigation.tsx:514
+#: src/Navigation.tsx:505
 #: src/screens/Messages/ConversationSettings/index.tsx:113
 msgid "Group chat settings"
 msgstr "Definições de conversa de grupo"
@@ -5992,17 +5990,16 @@ msgid "Group chats can only have a maximum of {0, plural, other {# people}}."
 msgstr "As conversas de grupo podem ter no máximo {0, plural, one {}other {# pessoas}}."
 
 #: src/components/dialogs/SearchablePeopleList.tsx:565
-#: src/components/dms/InitiateChatFlow.tsx:1048
 msgid "Group is locked"
 msgstr "O grupo está trancado"
 
-#: src/components/dms/InitiateChatFlow.tsx:292
-#: src/components/dms/InitiateChatFlow.tsx:705
+#: src/components/dms/InitiateChatFlow.tsx:264
+#: src/components/dms/InitiateChatFlow.tsx:600
 #: src/screens/Messages/ConversationSettings/prompts.tsx:50
 msgid "Group name"
 msgstr "Nome do grupo"
 
-#: src/components/dms/InitiateChatFlow.tsx:730
+#: src/components/dms/InitiateChatFlow.tsx:625
 #: src/screens/Messages/ConversationSettings/prompts.tsx:69
 msgid "Group name is too long. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, other {The maximum number of characters is #.}}"
 msgstr "O nome do grupo é demasiado longo {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, one {}other {O número máximo de caracteres é #.}}"
@@ -6060,7 +6057,7 @@ msgstr "Atividades perigosas ou de alto risco"
 msgid "Harming or endangering minors"
 msgstr "Prejudicar ou colocar menores em perigo"
 
-#: src/Navigation.tsx:498
+#: src/Navigation.tsx:489
 msgid "Hashtag"
 msgstr "Hashtag"
 
@@ -6123,7 +6120,7 @@ msgstr "Olá!"
 msgid "Hidden"
 msgstr "Oculto"
 
-#: src/screens/VideoFeed/index.tsx:714
+#: src/screens/VideoFeed/index.tsx:697
 msgid "Hidden by your moderation settings."
 msgstr "Oculto pelas suas definições de moderação."
 
@@ -6276,8 +6273,8 @@ msgstr "Hmmmm, não foi possível carregar esse serviço de moderação."
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Aguarde! Estamos a dar acesso a vídeo gradualmente e ainda está em fila de espera. Volte mais tarde!"
 
-#: src/Navigation.tsx:764
-#: src/Navigation.tsx:785
+#: src/Navigation.tsx:755
+#: src/Navigation.tsx:776
 #: src/view/shell/bottom-bar/BottomBar.tsx:196
 #: src/view/shell/desktop/LeftNav.tsx:667
 #: src/view/shell/Drawer.tsx:499
@@ -6388,7 +6385,6 @@ msgstr "Se atualizar o seu endereço de e-mail, a 2FA por e-mail será desativad
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
 msgstr "Se pretende alterar a sua palavra-passe, vamos enviar-lhe um código para verificar que esta é a sua conta."
 
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:157
 #: src/view/screens/Storybook/Admonitions.tsx:90
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Privacy and Security</0>."
 msgstr "Se quer restringir quem pode receber notificações da atividade da sua conta, pode alterar isso em <0>Definições → Privacidade e Segurança</0>."
@@ -6528,7 +6524,7 @@ msgstr "Na aplicação, push, de todos"
 msgid "In-app, push, people you follow"
 msgstr "Na aplicação, push, de pessoas que sigo"
 
-#: src/screens/Messages/ChatList.tsx:437
+#: src/screens/Messages/ChatList.tsx:438
 msgid "Inbox empty"
 msgstr "Caixa de entrada vazia"
 
@@ -6540,12 +6536,10 @@ msgstr "Caixa de entrada vazia!"
 #. Advanced search filter
 #. Advanced search filter
 #. Advanced search filter
-#. Include search results with or without replies
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:47
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:58
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:75
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:81
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
 msgid "Include"
 msgstr "Incluir"
 
@@ -6554,7 +6548,7 @@ msgstr "Incluir"
 msgid "Include or exclude matching posts (currently: {0})"
 msgstr "Incluir ou excluir publicações correspondentes (atualmente: {0})"
 
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:31
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:32
 msgid "Include posts and/or replies (currently: {currentLabel})"
 msgstr "Incluir publicações e/ou respostas (atualmente: {currentLabel})"
 
@@ -6567,10 +6561,6 @@ msgstr "Incluir publicações feitas a partir desta data"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:329
 msgid "Include posts made until this date"
 msgstr "Incluir publicações feitas até esta data"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:50
-msgid "Include these results"
-msgstr "Incluir estes resultados"
 
 #: src/screens/Login/LoginForm.tsx:165
 msgid "Incorrect username or password"
@@ -6833,7 +6823,7 @@ msgstr "Rótulos adicionados"
 msgid "Labels applied to this post"
 msgstr "Rótulos aplicados a esta publicação"
 
-#: src/screens/Profile/Sections/Labels.tsx:195
+#: src/screens/Profile/Sections/Labels.tsx:194
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr "Rótulos são anotações em utilizadores e conteúdo. Eles podem ser usados para ocultar, avisar e categorizar a rede."
 
@@ -6845,7 +6835,7 @@ msgstr "Rótulos na sua conta"
 msgid "Language"
 msgstr "Idioma"
 
-#: src/Navigation.tsx:220
+#: src/Navigation.tsx:219
 msgid "Language Settings"
 msgstr "Definições de Idioma"
 
@@ -6870,7 +6860,7 @@ msgid "Last initiated just now"
 msgstr "Iniciado pela última vez agora mesmo"
 
 #: src/screens/Hashtag.tsx:97
-#: src/screens/Search/SearchResults.tsx:95
+#: src/screens/Search/SearchResults.tsx:88
 #: src/screens/Topic.tsx:64
 msgid "Latest"
 msgstr "Mais recentes"
@@ -6889,7 +6879,7 @@ msgstr "Saber mais (em inglês)"
 msgid "Learn More"
 msgstr "Saber mais"
 
-#: src/screens/Search/SearchResults.tsx:273
+#: src/screens/Search/SearchResults.tsx:248
 msgctxt "english-only-resource"
 msgid "Learn more about <0>how to use advanced search</0>."
 msgstr "Saiba mais sobre <0>como utilizar a pesquisa avançada</0>."
@@ -7023,7 +7013,7 @@ msgstr "Saiu da conversa de grupo."
 msgid "left to go."
 msgstr "à sua frente na fila."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:357
+#: src/components/StarterPack/ProfileStarterPacks.tsx:354
 msgid "Let me choose"
 msgstr "Deixe-me escolher"
 
@@ -7074,8 +7064,8 @@ msgstr "Gostar deste feed"
 msgid "Like this labeler"
 msgstr "Gostar deste rotulador"
 
-#: src/Navigation.tsx:298
-#: src/Navigation.tsx:303
+#: src/Navigation.tsx:297
+#: src/Navigation.tsx:302
 msgid "Liked by"
 msgstr "Gostado por"
 
@@ -7092,24 +7082,6 @@ msgstr "Gostado por"
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr "Gostado por {0, plural, one {# utilizador} other {# utilizadores}}"
 
-#. Social proof below the post stats; the bolded name is a person the viewer follows who liked the post
-#. placeholder {0}: nameLink(names[0])
-#. placeholder {0}: names[0].displayName
-#: src/screens/PostThread/components/LikesStat.tsx:132
-#: src/screens/PostThread/components/LikesStat.tsx:173
-msgid "Liked by {0}"
-msgstr ""
-
-#. Social proof below the post stats; the bolded names are people the viewer follows who liked the post
-#. placeholder {0}: nameLink(names[0])
-#. placeholder {0}: names[0].displayName
-#. placeholder {1}: nameLink(names[1])
-#. placeholder {1}: names[1].displayName
-#: src/screens/PostThread/components/LikesStat.tsx:131
-#: src/screens/PostThread/components/LikesStat.tsx:169
-msgid "Liked by {0} and {1}"
-msgstr ""
-
 #: src/components/LabelingServiceCard/index.tsx:96
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:540
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:169
@@ -7118,19 +7090,19 @@ msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr "Gostado por {likeCount, plural, one {# utilizador} other {# utilizadores}}"
 
 #: src/lib/hooks/useNotificationHandler.ts:158
-#: src/screens/Settings/NotificationSettings/index.tsx:159
-#: src/screens/Settings/NotificationSettings/index.tsx:314
+#: src/screens/Settings/NotificationSettings/index.tsx:160
+#: src/screens/Settings/NotificationSettings/index.tsx:315
 #: src/view/screens/Profile.tsx:238
 msgid "Likes"
 msgstr "Gostos"
 
 #: src/lib/hooks/useNotificationHandler.ts:200
-#: src/screens/Settings/NotificationSettings/index.tsx:238
-#: src/screens/Settings/NotificationSettings/index.tsx:364
+#: src/screens/Settings/NotificationSettings/index.tsx:239
+#: src/screens/Settings/NotificationSettings/index.tsx:378
 msgid "Likes of your reposts"
 msgstr "Gostos das suas republicações"
 
-#: src/screens/PostThread/components/LikesStat.tsx:39
+#: src/screens/PostThread/components/LikesStat.tsx:85
 msgid "Likes on this post"
 msgstr "Gostos nesta publicação"
 
@@ -7143,7 +7115,7 @@ msgstr "Linear"
 msgid "Link copied to clipboard"
 msgstr "Link copiado para área de transferência"
 
-#: src/Navigation.tsx:253
+#: src/Navigation.tsx:252
 msgid "List"
 msgstr "Lista"
 
@@ -7229,7 +7201,7 @@ msgctxt "toast"
 msgid "List unmuted"
 msgstr "Silenciamento da lista removido "
 
-#: src/Navigation.tsx:174
+#: src/Navigation.tsx:173
 #: src/view/screens/Lists.tsx:60
 #: src/view/screens/Profile.tsx:233
 #: src/view/screens/Profile.tsx:241
@@ -7292,7 +7264,7 @@ msgid "Load new notifications"
 msgstr "Carregar novas notificações"
 
 #: src/screens/Profile/ProfileFeed/index.tsx:208
-#: src/screens/Profile/Sections/Feed.tsx:118
+#: src/screens/Profile/Sections/Feed.tsx:117
 #: src/screens/ProfileList/FeedSection.tsx:113
 #: src/view/com/feeds/FeedPage.tsx:168
 msgid "Load new posts"
@@ -7335,7 +7307,7 @@ msgstr "Trancar esta conversa de grupo"
 msgid "Locked"
 msgstr "Trancada"
 
-#: src/Navigation.tsx:328
+#: src/Navigation.tsx:327
 msgid "Log"
 msgstr "Registo"
 
@@ -7386,7 +7358,7 @@ msgstr "GIFs de amor"
 msgid "Make adjustments to email settings for your account"
 msgstr "Ajustar as definições de e-mail para a sua conta"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:314
+#: src/components/StarterPack/ProfileStarterPacks.tsx:311
 msgid "Make one for me"
 msgstr "Faça um para mim"
 
@@ -7417,15 +7389,15 @@ msgstr "Manual"
 msgid "Mark all as read"
 msgstr "Marcar tudo como lido"
 
-#: src/screens/Messages/ChatList.tsx:655
-#: src/screens/Messages/ChatList.tsx:659
+#: src/screens/Messages/ChatList.tsx:656
+#: src/screens/Messages/ChatList.tsx:660
 #: src/view/shell/bottom-bar/BottomBar.tsx:465
 #: src/view/shell/bottom-bar/BottomBar.tsx:469
 msgid "Mark all chats as read"
 msgstr "Marcar todas as conversas como lidas"
 
-#: src/screens/Messages/ChatList.tsx:663
-#: src/screens/Messages/ChatList.tsx:667
+#: src/screens/Messages/ChatList.tsx:664
+#: src/screens/Messages/ChatList.tsx:668
 #: src/view/shell/bottom-bar/BottomBar.tsx:473
 #: src/view/shell/bottom-bar/BottomBar.tsx:477
 msgid "Mark all requests as read"
@@ -7440,12 +7412,12 @@ msgstr "Marcar como lido"
 msgid "Marked all as read"
 msgstr "Tudo marcado como lido"
 
-#: src/screens/Messages/ChatList.tsx:633
+#: src/screens/Messages/ChatList.tsx:634
 #: src/view/shell/bottom-bar/BottomBar.tsx:444
 msgid "Marked all chats as read"
 msgstr "Todas as conversas foram marcadas como lidas"
 
-#: src/screens/Messages/ChatList.tsx:642
+#: src/screens/Messages/ChatList.tsx:643
 #: src/view/shell/bottom-bar/BottomBar.tsx:453
 msgid "Marked all requests as read"
 msgstr "Todos os pedidos foram marcados como lidos"
@@ -7457,7 +7429,7 @@ msgstr "Talvez mais tarde"
 
 #: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:24
 msgid "Me"
-msgstr ""
+msgstr "Eu"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:375
 #: src/view/screens/Profile.tsx:236
@@ -7496,8 +7468,8 @@ msgid "mentioned users"
 msgstr "utilizadores mencionados"
 
 #: src/lib/hooks/useNotificationHandler.ts:179
-#: src/screens/Settings/NotificationSettings/index.tsx:192
-#: src/screens/Settings/NotificationSettings/index.tsx:339
+#: src/screens/Settings/NotificationSettings/index.tsx:193
+#: src/screens/Settings/NotificationSettings/index.tsx:340
 #: src/view/screens/Notifications.tsx:99
 msgid "Mentions"
 msgstr "Menções"
@@ -7566,7 +7538,7 @@ msgstr "A mensagem é demasiado longa ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})
 msgid "Message options"
 msgstr "Opções de mensagem"
 
-#: src/Navigation.tsx:779
+#: src/Navigation.tsx:770
 msgid "Messages"
 msgstr "Mensagens"
 
@@ -7595,7 +7567,7 @@ msgstr "Enganador"
 msgid "Missing media"
 msgstr "Conteúdo multimédia em falta"
 
-#: src/Navigation.tsx:179
+#: src/Navigation.tsx:178
 #: src/screens/Moderation/index.tsx:100
 msgid "Moderation"
 msgstr "Moderação"
@@ -7639,7 +7611,7 @@ msgstr "Lista de moderação atualizada"
 msgid "Moderation lists"
 msgstr "Listas de moderação"
 
-#: src/Navigation.tsx:184
+#: src/Navigation.tsx:183
 #: src/view/screens/ModerationModlists.tsx:60
 msgid "Moderation Lists"
 msgstr "Listas de Moderação"
@@ -7648,7 +7620,7 @@ msgstr "Listas de Moderação"
 msgid "moderation settings"
 msgstr "definições de moderação"
 
-#: src/Navigation.tsx:313
+#: src/Navigation.tsx:312
 msgid "Moderation states"
 msgstr "Estados de moderação"
 
@@ -7789,7 +7761,7 @@ msgstr "Silenciado"
 msgid "Muted accounts"
 msgstr "Contas silenciadas"
 
-#: src/Navigation.tsx:189
+#: src/Navigation.tsx:188
 #: src/view/screens/ModerationMutedAccounts.tsx:107
 msgid "Muted Accounts"
 msgstr "Contas Silenciadas"
@@ -7895,11 +7867,11 @@ msgstr "{postsCount, plural, one {Nova publicação} other {Novas publicações}
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:169
 #: src/components/dms/dialogs/NewChatDialog.tsx:184
-#: src/screens/Messages/ChatList.tsx:231
 #: src/screens/Messages/ChatList.tsx:232
-#: src/screens/Messages/ChatList.tsx:455
+#: src/screens/Messages/ChatList.tsx:233
 #: src/screens/Messages/ChatList.tsx:456
-#: src/screens/Messages/ChatList.tsx:580
+#: src/screens/Messages/ChatList.tsx:457
+#: src/screens/Messages/ChatList.tsx:581
 msgid "New chat"
 msgstr "Nova conversa"
 
@@ -7933,25 +7905,25 @@ msgid "New Feature"
 msgstr "Nova Funcionalidade"
 
 #: src/lib/hooks/useNotificationHandler.ts:193
-#: src/screens/Settings/NotificationSettings/index.tsx:170
-#: src/screens/Settings/NotificationSettings/index.tsx:323
+#: src/screens/Settings/NotificationSettings/index.tsx:171
+#: src/screens/Settings/NotificationSettings/index.tsx:324
 msgid "New followers"
 msgstr "Novos seguidores"
 
-#: src/components/dms/InitiateChatFlow.tsx:277
-#: src/components/dms/InitiateChatFlow.tsx:291
+#: src/components/dms/InitiateChatFlow.tsx:249
+#: src/components/dms/InitiateChatFlow.tsx:263
 msgid "New group chat"
 msgstr "Nova conversa de grupo"
 
 #. Button used to create a new group chat.
 #. Button used to create a new group chat.
-#: src/components/dms/InitiateChatFlow.tsx:905
-#: src/components/dms/InitiateChatFlow.tsx:939
+#: src/components/dms/InitiateChatFlow.tsx:800
+#: src/components/dms/InitiateChatFlow.tsx:834
 msgctxt "action"
 msgid "New group chat"
 msgstr "Nova conversa de grupo"
 
-#: src/components/dms/InitiateChatFlow.tsx:332
+#: src/components/dms/InitiateChatFlow.tsx:300
 msgid "New group chat with:"
 msgstr "Nova conversa de grupo com:"
 
@@ -7968,13 +7940,13 @@ msgstr "Nova lista"
 
 #: src/screens/Messages/Settings.tsx:289
 #: src/screens/Settings/NotificationSettings/components/ChatNotificationDialogs.tsx:31
-#: src/screens/Settings/NotificationSettings/index.tsx:281
+#: src/screens/Settings/NotificationSettings/index.tsx:282
 msgid "New message requests"
 msgstr "Novos pedidos de mensagem"
 
 #: src/screens/Messages/Settings.tsx:268
 #: src/screens/Settings/NotificationSettings/components/ChatNotificationDialogs.tsx:21
-#: src/screens/Settings/NotificationSettings/index.tsx:264
+#: src/screens/Settings/NotificationSettings/index.tsx:265
 msgid "New messages"
 msgstr "Novas mensagens"
 
@@ -8034,7 +8006,7 @@ msgstr "Notícias"
 #: src/components/contacts/screens/ViewMatches.tsx:395
 #: src/components/contacts/screens/ViewMatches.tsx:410
 #: src/components/dms/AddMembersFlow.tsx:325
-#: src/components/dms/InitiateChatFlow.tsx:599
+#: src/components/dms/InitiateChatFlow.tsx:494
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/ForgotPasswordForm.tsx:150
 #: src/screens/Login/SetNewPasswordForm.tsx:171
@@ -8059,13 +8031,18 @@ msgstr "Imagem seguinte"
 msgid "Night"
 msgstr "Noite"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:42
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:32
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
 msgstr "Sem anúncios, sem rastreamento invasivo, sem armadilhas de engajamento. O Bluesky respeita o seu tempo e atenção."
 
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
 msgstr "Sem palavras-passe de aplicação ainda"
+
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:27
+msgid "No author filter"
+msgstr "Sem filtro de autor"
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:177
 msgid "No beta features at the moment."
@@ -8118,6 +8095,12 @@ msgstr "Sem GIFs para mostrar de momento. Tente novamente daqui a pouco."
 msgid "No image"
 msgstr "Sem imagem"
 
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:91
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:93
+msgid "No language filter"
+msgstr "Sem filtro de idioma"
+
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
 #: src/view/screens/Profile.tsx:525
@@ -8137,6 +8120,11 @@ msgstr "Nenhuma lista"
 msgid "No longer following {0}"
 msgstr "Já não segue {0}"
 
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
+msgid "No media filter"
+msgstr "Sem filtro de conteúdo multimédia"
+
 #: src/view/screens/Profile.tsx:471
 msgid "No media yet"
 msgstr "Sem conteúdo multimédia ainda"
@@ -8145,7 +8133,7 @@ msgstr "Sem conteúdo multimédia ainda"
 msgid "No messages yet"
 msgstr "Sem mensagens ainda"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:24
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:14
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
 msgstr "Chega de \"doomscrolling\" em algoritmos cheios de lixo. Encontre feeds que funcionam para si, não contra si."
 
@@ -8182,16 +8170,21 @@ msgstr "Ninguém, para além do autor, pode citar esta publicação."
 msgid "No one can send messages"
 msgstr "Ninguém pode enviar mensagens"
 
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:27
+msgid "No post filter"
+msgstr "Sem filtro de publicações"
+
 #: src/screens/Notifications/ActivityList.tsx:43
 msgid "No posts here"
 msgstr "Sem publicações aqui"
 
-#: src/screens/Profile/Sections/Feed.tsx:82
+#: src/screens/Profile/Sections/Feed.tsx:81
 #: src/view/screens/Profile.tsx:430
 msgid "No posts yet"
 msgstr "Sem publicações ainda"
 
-#: src/view/com/post-thread/PostQuotes.tsx:114
+#: src/view/com/post-thread/PostQuotes.tsx:107
 msgid "No quotes yet"
 msgstr "Ainda sem citações"
 
@@ -8199,10 +8192,6 @@ msgstr "Ainda sem citações"
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:31
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "Sem GIFs recentes ainda. Escolha um para vê-lo aqui."
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
-msgid "No replies"
-msgstr "Sem respostas"
 
 #: src/view/screens/Profile.tsx:456
 msgid "No replies yet"
@@ -8219,7 +8208,7 @@ msgstr "Nenhum resultado"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:250
 #: src/components/dms/AddMembersFlow.tsx:257
-#: src/components/dms/InitiateChatFlow.tsx:469
+#: src/components/dms/InitiateChatFlow.tsx:376
 #: src/components/ProgressGuide/FollowDialog.tsx:221
 msgid "No results"
 msgstr "Sem resultados"
@@ -8238,15 +8227,15 @@ msgstr "Nenhum resultado encontrado"
 msgid "No results found for \"{query}\""
 msgstr "Não foram encontrados resultados para \"{query}\""
 
-#: src/screens/Search/SearchResults.tsx:233
+#: src/screens/Search/SearchResults.tsx:208
 msgid "No results found for “<0>{query}</0>” with advanced search filters applied."
 msgstr "Nenhum resultado encontrado para \"<0>{query}</0>\" com os filtros de pesquisa avançada aplicados."
 
-#: src/screens/Search/SearchResults.tsx:245
+#: src/screens/Search/SearchResults.tsx:220
 msgid "No results found for “<0>{query}</0>”."
 msgstr "Nenhum resultado encontrado para “<0>{query}</0>”."
 
-#: src/screens/Search/SearchResults.tsx:239
+#: src/screens/Search/SearchResults.tsx:214
 msgid "No results found for your query with advanced search filters applied."
 msgstr "Nenhum resultado encontrado para a sua pesquisa com os filtros de pesquisa avançada aplicados."
 
@@ -8280,7 +8269,7 @@ msgstr "Ninguém"
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr "Ainda ninguém gostou disto. Talvez deva ser o primeiro!"
 
-#: src/view/com/post-thread/PostQuotes.tsx:116
+#: src/view/com/post-thread/PostQuotes.tsx:109
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
 msgstr "Ainda ninguém citou isto. Talvez deva ser o primeiro!"
 
@@ -8300,10 +8289,6 @@ msgstr "Imagens íntimas não consensuais"
 msgid "Non-sexual Nudity"
 msgstr "Nudez não sexual"
 
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:220
-msgid "None"
-msgstr ""
-
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:263
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:266
 msgid "None of these words"
@@ -8322,7 +8307,7 @@ msgstr "Indisponível nesta plataforma."
 msgid "Not followed by anyone you’re following"
 msgstr "Não é seguido por ninguém seguido por si"
 
-#: src/Navigation.tsx:169
+#: src/Navigation.tsx:168
 #: src/view/screens/Profile.tsx:132
 msgid "Not Found"
 msgstr "Não Encontrado"
@@ -8339,7 +8324,7 @@ msgstr "Nota sobre partilhar"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Nota: o Bluesky é uma rede aberta e pública. Esta definição limita somente a visibilidade do seu conteúdo no site e aplicação do Bluesky, e outras aplicações podem não respeitar essa definição. O seu conteúdo pode ainda ser exibido para utilizadores sem sessão iniciada através de outras aplicações e sites."
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:133
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:135
 msgid "Note: This post is only visible to logged-in users."
 msgstr "Nota: Esta publicação é apenas visível para utilizadores com sessão iniciada."
 
@@ -8348,8 +8333,8 @@ msgid "Nothing saved yet"
 msgstr "Nada foi guardado ainda"
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
-#: src/Navigation.tsx:453
-#: src/Navigation.tsx:540
+#: src/Navigation.tsx:452
+#: src/Navigation.tsx:531
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr "Definições de notificações"
@@ -8359,12 +8344,11 @@ msgstr "Definições de notificações"
 msgid "Notification sounds"
 msgstr "Sons de notificações"
 
-#: src/Navigation.tsx:535
-#: src/Navigation.tsx:774
+#: src/Navigation.tsx:526
+#: src/Navigation.tsx:765
 #: src/screens/Messages/Settings.tsx:255
 #: src/screens/Notifications/ActivityList.tsx:31
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
-#: src/screens/Settings/NotificationSettings/index.tsx:125
+#: src/screens/Settings/NotificationSettings/index.tsx:126
 #: src/screens/Settings/Settings.tsx:198
 #: src/screens/Settings/Settings.tsx:201
 #: src/view/screens/Notifications.tsx:128
@@ -8411,10 +8395,10 @@ msgstr "OK"
 
 #: src/components/BotAccountAlert.tsx:52
 #: src/components/BotAccountAlert.tsx:57
-#: src/components/dms/InitiateChatFlow.tsx:838
+#: src/components/dms/InitiateChatFlow.tsx:733
 #: src/components/dms/MessageItem.tsx:742
 #: src/screens/Login/PasswordUpdatedForm.tsx:35
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:642
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:641
 msgid "Okay"
 msgstr "OK"
 
@@ -8438,12 +8422,10 @@ msgid "Onboarding reset"
 msgstr "Reiniciar a introdução"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:117
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:133
 msgid "One of the selected recipients does not allow group chats."
 msgstr "Um dos destinatários selecionados não permite conversas de grupo."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:100
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:116
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "Foi bloqueado por um dos destinatários selecionados e não o pode contactar."
 
@@ -8516,6 +8498,10 @@ msgstr "Apenas pessoas seguidas por {0} podem aderir."
 msgid "Only people the chat owner follows can join"
 msgstr "Apenas pessoas seguidas pelo proprietário da conversa podem aderir"
 
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
+msgid "Only posts"
+msgstr "Apenas publicações"
+
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:23
 msgid "Only posts with media"
 msgstr "Apenas publicações com conteúdo multimédia"
@@ -8528,7 +8514,7 @@ msgstr "Apenas publicações com vídeos"
 msgid "Only replies"
 msgstr "Apenas respostas"
 
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:39
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:41
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr "Apenas ficheiros WebVTT (.vtt) são suportados"
 
@@ -8541,8 +8527,8 @@ msgid "Oops, this profile doesn't exist. Try scanning another one."
 msgstr "Ups, este perfil não existe. Tente ler outro."
 
 #: src/components/Lists.tsx:184
-#: src/components/StarterPack/ProfileStarterPacks.tsx:366
-#: src/components/StarterPack/ProfileStarterPacks.tsx:375
+#: src/components/StarterPack/ProfileStarterPacks.tsx:363
+#: src/components/StarterPack/ProfileStarterPacks.tsx:372
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:108
 #: src/view/screens/Profile.tsx:132
@@ -8637,7 +8623,7 @@ msgstr "Abrir página de debug da moderação"
 msgid "Open muted words and tags settings"
 msgstr "Abrir definições de palavras e tags silenciadas"
 
-#: src/screens/Search/components/StarterPackCard.tsx:128
+#: src/screens/Search/components/StarterPackCard.tsx:120
 msgid "Open pack"
 msgstr "Abrir pacote"
 
@@ -8709,7 +8695,7 @@ msgstr "Abre detalhes adicionais para uma entrada de debug"
 msgid "Opens alt text dialog"
 msgstr "Abre janela de diálogo de texto alternativo"
 
-#: src/view/com/composer/photos/OpenCameraBtn.tsx:66
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:70
 msgid "Opens camera on device"
 msgstr "Abre câmara no dispositivo"
 
@@ -8927,7 +8913,7 @@ msgid "Password updated!"
 msgstr "Palavra-passe atualizada!"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:395
 msgid "Pause"
 msgstr "Pausa"
 
@@ -8935,12 +8921,12 @@ msgstr "Pausa"
 msgid "Pause GIF"
 msgstr "Meter GIF em pausa"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:332
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:346
 msgid "Pause video"
 msgstr "Pausar vídeo"
 
 #: src/screens/ProfileList/index.tsx:167
-#: src/screens/Search/SearchResults.tsx:107
+#: src/screens/Search/SearchResults.tsx:100
 #: src/screens/StarterPack/StarterPackScreen.tsx:195
 msgid "People"
 msgstr "Pessoas"
@@ -8954,12 +8940,12 @@ msgid "People {ownerName} follows can request to join"
 msgstr "Pessoas seguidas por {ownerName} podem pedir para se juntar"
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:240
+#: src/Navigation.tsx:239
 msgid "People followed by @{0}"
 msgstr "Pessoas seguidas por @{0}"
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:233
+#: src/Navigation.tsx:232
 msgid "People following @{0}"
 msgstr "Pessoas a seguir @{0}"
 
@@ -9073,7 +9059,7 @@ msgid "Pinned to your feeds"
 msgstr "Afixado aos seus feeds"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:396
 msgid "Play"
 msgstr "Reproduzir"
 
@@ -9086,8 +9072,8 @@ msgstr "Reproduzir {0}"
 msgid "Play GIF"
 msgstr "Reproduzir GIF"
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:178
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:333
+#: src/components/Post/Embed/VideoEmbed/index.tsx:169
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:347
 msgid "Play video"
 msgstr "Reproduzir vídeo"
 
@@ -9313,10 +9299,10 @@ msgid "Post blocked"
 msgstr "Publicação bloqueada"
 
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:266
-#: src/Navigation.tsx:273
-#: src/Navigation.tsx:280
-#: src/Navigation.tsx:287
+#: src/Navigation.tsx:265
+#: src/Navigation.tsx:272
+#: src/Navigation.tsx:279
+#: src/Navigation.tsx:286
 msgid "Post by @{0}"
 msgstr "Publicação por @{0}"
 
@@ -9350,7 +9336,7 @@ msgstr "Publicação ocultada por si"
 msgid "Post interaction settings"
 msgstr "Definições de interação com publicação"
 
-#: src/Navigation.tsx:200
+#: src/Navigation.tsx:199
 #: src/screens/ModerationInteractionSettings/index.tsx:35
 msgid "Post Interaction Settings"
 msgstr "Definições de Interação com Publicação"
@@ -9379,6 +9365,11 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Publicação afixada"
 
+#. Include search results with or without replies
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
+msgid "Post type"
+msgstr "Tipo de publicação"
+
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9387,15 +9378,10 @@ msgstr "Publicação desafixada"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:257
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:269
 #: src/screens/ProfileList/index.tsx:167
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:197
 #: src/view/screens/Profile.tsx:234
 msgid "Posts"
 msgstr "Publicações"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
-msgid "Posts and replies"
-msgstr "Publicações e respostas"
 
 #: src/components/dialogs/MutedWords.tsx:123
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -9404,10 +9390,6 @@ msgstr "As publicações podem ser silenciadas com base no seu texto, nas suas t
 #: src/view/com/posts/PostFeedErrorMessage.tsx:76
 msgid "Posts hidden"
 msgstr "Publicações ocultas"
-
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:214
-msgid "Posts, Replies"
-msgstr ""
 
 #: src/components/dialogs/LinkWarning.tsx:89
 msgid "Potentially misleading link"
@@ -9460,21 +9442,20 @@ msgstr "Privacidade"
 msgid "Privacy and security"
 msgstr "Privacidade e segurança"
 
-#: src/Navigation.tsx:430
-#: src/Navigation.tsx:438
+#: src/Navigation.tsx:429
+#: src/Navigation.tsx:437
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:45
 msgid "Privacy and Security"
 msgstr "Privacidade e Segurança"
 
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:161
 #: src/view/screens/Storybook/Admonitions.tsx:94
 msgid "Privacy and Security settings"
 msgstr "Definições de privacidade e segurança"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:36
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:103
-#: src/Navigation.tsx:338
+#: src/Navigation.tsx:337
 #: src/screens/Settings/AboutSettings.tsx:102
 #: src/screens/Settings/AboutSettings.tsx:105
 #: src/view/screens/PrivacyPolicy.tsx:25
@@ -9611,12 +9592,12 @@ msgstr "Citações desativadas"
 
 #: src/lib/hooks/useNotificationHandler.ts:186
 #: src/screens/Post/PostQuotes.tsx:31
-#: src/screens/Settings/NotificationSettings/index.tsx:203
-#: src/screens/Settings/NotificationSettings/index.tsx:346
+#: src/screens/Settings/NotificationSettings/index.tsx:204
+#: src/screens/Settings/NotificationSettings/index.tsx:347
 msgid "Quotes"
 msgstr "Citações"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:465
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:466
 msgid "Quotes of this post"
 msgstr "Citações desta publicação"
 
@@ -9659,7 +9640,7 @@ msgstr "Reative a sua conta"
 msgid "Read {0, plural, one {# more reply} other {# more replies}}"
 msgstr "Ler mais {0, plural, one {# resposta} other {# respostas}}"
 
-#: src/screens/Search/SearchResults.tsx:276
+#: src/screens/Search/SearchResults.tsx:251
 msgctxt "english-only-resource"
 msgid "Read about how to use advanced search filters"
 msgstr "Leia sobre como usar os filtros de pesquisa avançada"
@@ -9669,11 +9650,11 @@ msgstr "Leia sobre como usar os filtros de pesquisa avançada"
 msgid "Read blog post"
 msgstr "Ler a publicação do blog (em inglês)"
 
-#: src/screens/VideoFeed/index.tsx:1055
+#: src/screens/VideoFeed/index.tsx:1038
 msgid "Read less"
 msgstr "Ler menos"
 
-#: src/screens/VideoFeed/index.tsx:1055
+#: src/screens/VideoFeed/index.tsx:1038
 msgid "Read more"
 msgstr "Ler mais"
 
@@ -9699,11 +9680,11 @@ msgstr "Leia a Política de Privacidade do Bluesky"
 msgid "Read the Bluesky Terms of Service"
 msgstr "Leia os Termos de Serviço do Bluesky"
 
-#: src/components/WelcomeModal.tsx:146
+#: src/components/WelcomeModal.tsx:149
 msgid "Real conversations."
 msgstr "Conversas reais."
 
-#: src/components/WelcomeModal.tsx:144
+#: src/components/WelcomeModal.tsx:147
 msgid "Real people."
 msgstr "Pessoas reais."
 
@@ -9756,7 +9737,7 @@ msgstr "Rejeitar solicitação de conversa"
 msgid "Reject join request"
 msgstr "Rejeitar pedido de adesão"
 
-#: src/screens/Messages/ChatList.tsx:424
+#: src/screens/Messages/ChatList.tsx:425
 #: src/screens/Messages/Inbox.tsx:206
 msgid "Reload conversations"
 msgstr "Recarregar conversas"
@@ -10026,9 +10007,8 @@ msgstr "Mensagem a que respondeu, toque para ir até ela"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:274
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:286
 #: src/lib/hooks/useNotificationHandler.ts:172
-#: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:218
-#: src/screens/Settings/NotificationSettings/index.tsx:181
-#: src/screens/Settings/NotificationSettings/index.tsx:330
+#: src/screens/Settings/NotificationSettings/index.tsx:182
+#: src/screens/Settings/NotificationSettings/index.tsx:331
 #: src/view/screens/Profile.tsx:235
 msgid "Replies"
 msgstr "Respostas"
@@ -10216,18 +10196,18 @@ msgid "Reposted by you"
 msgstr "Republicado por si"
 
 #: src/lib/hooks/useNotificationHandler.ts:165
-#: src/screens/Settings/NotificationSettings/index.tsx:214
-#: src/screens/Settings/NotificationSettings/index.tsx:355
+#: src/screens/Settings/NotificationSettings/index.tsx:215
+#: src/screens/Settings/NotificationSettings/index.tsx:356
 msgid "Reposts"
 msgstr "Republicações"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:444
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:445
 msgid "Reposts of this post"
 msgstr "Republicações desta publicação"
 
 #: src/lib/hooks/useNotificationHandler.ts:207
-#: src/screens/Settings/NotificationSettings/index.tsx:251
-#: src/screens/Settings/NotificationSettings/index.tsx:373
+#: src/screens/Settings/NotificationSettings/index.tsx:252
+#: src/screens/Settings/NotificationSettings/index.tsx:387
 msgid "Reposts of your reposts"
 msgstr "Republicações das suas republicações"
 
@@ -10262,7 +10242,7 @@ msgstr "Solicitado"
 msgid "Requests"
 msgstr "Pedidos"
 
-#: src/Navigation.tsx:519
+#: src/Navigation.tsx:510
 #: src/screens/Messages/JoinRequests.tsx:59
 #: src/screens/Messages/JoinRequests.tsx:425
 msgid "Requests to join"
@@ -10367,10 +10347,10 @@ msgstr "Repete a última ação, que resultou em erro"
 #: src/components/moderation/ReportDialog/index.tsx:297
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:56
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:59
-#: src/components/StarterPack/ProfileStarterPacks.tsx:380
+#: src/components/StarterPack/ProfileStarterPacks.tsx:377
 #: src/screens/Login/LoginForm.tsx:531
 #: src/screens/Login/LoginForm.tsx:537
-#: src/screens/Messages/ChatList.tsx:429
+#: src/screens/Messages/ChatList.tsx:430
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:211
 #: src/screens/Messages/JoinRequests.tsx:361
@@ -10404,7 +10384,7 @@ msgstr "Voltar à página de início"
 
 #: src/screens/ProfileList/components/ErrorScreen.tsx:36
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:577
-#: src/screens/VideoFeed/index.tsx:1240
+#: src/screens/VideoFeed/index.tsx:1223
 #: src/view/screens/NotFound.tsx:54
 msgid "Returns to previous page"
 msgstr "Volta à página anterior"
@@ -10475,7 +10455,7 @@ msgstr "Guardar rascunho"
 msgid "Save draft?"
 msgstr "Guardar rascunho?"
 
-#: src/components/Lightbox/chrome/ImageMenu.tsx:99
+#: src/components/Lightbox/chrome/ImageMenu.tsx:98
 #: src/components/MediaPreview.tsx:231
 #: src/components/Post/Embed/ImageContextMenu.tsx:70
 #: src/components/StarterPack/ShareDialog.tsx:144
@@ -10513,7 +10493,7 @@ msgid "Saved Feeds"
 msgstr "Feeds Guardados"
 
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:145
-#: src/Navigation.tsx:579
+#: src/Navigation.tsx:570
 #: src/screens/Bookmarks.tsx:59
 msgid "Saved Posts"
 msgstr "Publicações Guardadas"
@@ -10529,8 +10509,8 @@ msgstr "Guardado nos seus feeds"
 msgid "Say hello!"
 msgstr "Diga olá!"
 
-#: src/screens/Messages/ChatList.tsx:222
-#: src/screens/Messages/ChatList.tsx:446
+#: src/screens/Messages/ChatList.tsx:223
+#: src/screens/Messages/ChatList.tsx:447
 msgid "Say hi to someone"
 msgstr "Diga olá a alguém"
 
@@ -10544,7 +10524,7 @@ msgstr "Ler"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:82
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:23
-#: src/Navigation.tsx:318
+#: src/Navigation.tsx:317
 msgid "Scan QR code"
 msgstr "Ler código QR"
 
@@ -10582,7 +10562,7 @@ msgstr "Procurar"
 
 #. placeholder {0}: profile.handle
 #. placeholder {0}: route.params.name
-#: src/Navigation.tsx:259
+#: src/Navigation.tsx:258
 #: src/screens/Profile/ProfileSearch.tsx:37
 msgid "Search @{0}'s posts"
 msgstr "Pesquisar nas publicações de @{0}"
@@ -10639,7 +10619,7 @@ msgid "Search GIFs"
 msgstr "Procurar GIFs"
 
 #: src/screens/Hashtag.tsx:228
-#: src/screens/Search/SearchResults.tsx:410
+#: src/screens/Search/SearchResults.tsx:385
 msgid "Search is currently unavailable when logged out"
 msgstr "A pesquisa está indisponível quando não tiver sessão iniciada"
 
@@ -10718,7 +10698,7 @@ msgstr "Ver empregos no Bluesky"
 
 #: src/components/FeedInterstitials.tsx:491
 #: src/components/FeedInterstitials.tsx:549
-#: src/components/interstitials/FeedTrendingTopics.tsx:112
+#: src/components/interstitials/FeedTrendingTopics.tsx:111
 msgid "See more"
 msgstr "Ver mais"
 
@@ -10726,9 +10706,9 @@ msgstr "Ver mais"
 msgid "See more suggested profiles"
 msgstr "Ver mais perfis sugeridos"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:103
+#: src/components/interstitials/FeedTrendingTopics.tsx:102
 msgid "See more trending topics"
-msgstr ""
+msgstr "Ver mais assuntos do momento"
 
 #: src/view/com/profile/ProfileFollows.tsx:190
 #: src/view/com/profile/ProfileFollows.tsx:191
@@ -10794,13 +10774,12 @@ msgstr "Selecione uma opção"
 msgid "Select app language"
 msgstr "Selecione o idioma da aplicação"
 
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:58
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:65
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:60
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:67
 msgid "Select caption file (.vtt)"
 msgstr "Selecionar ficheiro de legendas (.vtt)"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:501
-#: src/components/dms/InitiateChatFlow.tsx:984
 msgid "Select chat \"{name}\""
 msgstr "Selecionar conversa \"{name}\""
 
@@ -10841,7 +10820,7 @@ msgstr "Selecionar GIF"
 msgid "Select GIF \"{0}\""
 msgstr "Selecionar GIF \"{0}\""
 
-#: src/components/dms/InitiateChatFlow.tsx:830
+#: src/components/dms/InitiateChatFlow.tsx:725
 msgid "Select group chat members"
 msgstr "Selecionar membros da conversa de grupo"
 
@@ -10960,8 +10939,7 @@ msgstr "Enviar mensagem"
 msgid "Send post to {name}"
 msgstr "Enviar publicação para {name}"
 
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:167
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:176
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:72
 msgid "Send post to..."
 msgstr "Enviar publicação para..."
 
@@ -10979,11 +10957,11 @@ msgstr "Enviar mensagem a partir do seu telefone"
 msgid "Send verification email"
 msgstr "Enviar e-mail de verificação"
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:114
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:120
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:103
-#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:109
-msgid "Send via chat"
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:116
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:122
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:105
+#: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:111
+msgid "Send via direct message"
 msgstr ""
 
 #. placeholder {0}: i18n.date(new Date(message.sentAt), { timeStyle: 'short', })
@@ -11037,14 +11015,14 @@ msgstr "Definir o seu provedor de hospedagem manualmente"
 msgid "Sets email for password reset"
 msgstr "Define o e-mail para recuperação de senha"
 
-#: src/Navigation.tsx:215
+#: src/Navigation.tsx:214
 #: src/screens/Settings/Settings.tsx:99
 #: src/view/shell/desktop/LeftNav.tsx:755
 #: src/view/shell/Drawer.tsx:668
 msgid "Settings"
 msgstr "Definições"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:220
+#: src/screens/Settings/NotificationSettings/index.tsx:221
 msgid "Settings for activity from others"
 msgstr "Definições de atividade de outros"
 
@@ -11052,49 +11030,49 @@ msgstr "Definições de atividade de outros"
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "Definições para permitir que outros sejam notificados sobre as suas publicações"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:154
+#: src/screens/Settings/NotificationSettings/index.tsx:155
 msgid "Settings for like notifications"
 msgstr "Definições para notificações de gostos"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:187
+#: src/screens/Settings/NotificationSettings/index.tsx:188
 msgid "Settings for mention notifications"
 msgstr "Definições para notificações de menções"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:165
+#: src/screens/Settings/NotificationSettings/index.tsx:166
 msgid "Settings for new follower notifications"
 msgstr "Definições para notificações de novo seguidor"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:293
+#: src/screens/Settings/NotificationSettings/index.tsx:294
 msgid "Settings for notifications for everything else"
 msgstr "Definições para notificações de tudo o resto"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:233
+#: src/screens/Settings/NotificationSettings/index.tsx:234
 msgid "Settings for notifications for likes of your reposts"
 msgstr "Definições para notificações de gostos nas suas republicações"
 
 #: src/screens/Messages/Settings.tsx:280
-#: src/screens/Settings/NotificationSettings/index.tsx:276
+#: src/screens/Settings/NotificationSettings/index.tsx:277
 msgid "Settings for notifications for new message requests"
 msgstr "Definições para notificações de novos pedidos de mensagem"
 
 #: src/screens/Messages/Settings.tsx:259
-#: src/screens/Settings/NotificationSettings/index.tsx:259
+#: src/screens/Settings/NotificationSettings/index.tsx:260
 msgid "Settings for notifications for new messages"
 msgstr "Definições para notificações de novas mensagens"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:246
+#: src/screens/Settings/NotificationSettings/index.tsx:247
 msgid "Settings for notifications for reposts of your reposts"
 msgstr "Definições para notificações de republicações das suas republicações"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:198
+#: src/screens/Settings/NotificationSettings/index.tsx:199
 msgid "Settings for quote notifications"
 msgstr "Definições para notificações de citações"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:176
+#: src/screens/Settings/NotificationSettings/index.tsx:177
 msgid "Settings for reply notifications"
 msgstr "Definições para notificações de respostas"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:209
+#: src/screens/Settings/NotificationSettings/index.tsx:210
 msgid "Settings for repost notifications"
 msgstr "Definições para notificações de republicações"
 
@@ -11131,8 +11109,8 @@ msgstr "Partilhar intervalo etário"
 msgid "Share anyway"
 msgstr "Partilhar mesmo assim"
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:174
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:177
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:176
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:179
 msgid "Share author DID"
 msgstr "Partilhar DID do autor"
 
@@ -11143,7 +11121,7 @@ msgstr "Partilhar DID do autor"
 msgid "Share feedback"
 msgstr "Partilhar feedback"
 
-#: src/components/Lightbox/chrome/ImageMenu.tsx:94
+#: src/components/Lightbox/chrome/ImageMenu.tsx:93
 #: src/components/Lightbox/Lightbox.web.tsx:281
 #: src/components/Lightbox/Lightbox.web.tsx:307
 msgid "Share image"
@@ -11170,8 +11148,8 @@ msgstr "Janela de diálogo para partilha de link"
 msgid "Share my profile"
 msgstr "Partilhar o meu perfil"
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:165
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:168
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:167
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:170
 msgid "Share post at:// URI"
 msgstr "Partilhar publicação em:// URI"
 
@@ -11202,8 +11180,8 @@ msgstr "Partilhar este pacote de iniciante"
 msgid "Share this starter pack and help people join your community on Bluesky."
 msgstr "Partilhe este pacote de iniciante e ajude pessoas a juntarem-se à sua comunidade no Bluesky."
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:132
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:135
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:160
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:166
 #: src/screens/StarterPack/StarterPackScreen.tsx:638
@@ -11221,7 +11199,7 @@ msgstr "Partilhe os seus contactos para encontrar amigos"
 msgid "Share your thoughts…"
 msgstr "Partilhe o que achou…"
 
-#: src/Navigation.tsx:323
+#: src/Navigation.tsx:322
 msgid "Shared Preferences Tester"
 msgstr "Testador de Preferências Partilhadas"
 
@@ -11250,8 +11228,8 @@ msgstr "Mostrar texto alternativo"
 #: src/features/liveNow/components/LiveStatusDialog.tsx:318
 #: src/features/liveNow/components/LiveStatusDialog.tsx:322
 #: src/screens/List/ListHiddenScreen.tsx:194
-#: src/screens/VideoFeed/index.tsx:717
-#: src/screens/VideoFeed/index.tsx:723
+#: src/screens/VideoFeed/index.tsx:700
+#: src/screens/VideoFeed/index.tsx:706
 msgid "Show anyway"
 msgstr "Mostrar mesmo assim"
 
@@ -11349,7 +11327,7 @@ msgstr "Mostrar aviso e filtrar de feeds"
 msgid "Show when you’re live"
 msgstr "Mostre quando você estiver ao vivo"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:583
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:582
 msgid "Shows information about when this post was created"
 msgstr "Mostra informação sobre quando esta publicação foi criada"
 
@@ -11364,8 +11342,8 @@ msgstr "Mostra o conteúdo"
 
 #: src/components/dialogs/Signin.tsx:98
 #: src/components/dialogs/Signin.tsx:100
-#: src/components/WelcomeModal.tsx:194
-#: src/components/WelcomeModal.tsx:206
+#: src/components/WelcomeModal.tsx:197
+#: src/components/WelcomeModal.tsx:209
 #: src/screens/Hashtag.tsx:231
 #: src/screens/Login/index.tsx:143
 #: src/screens/Login/index.tsx:165
@@ -11374,7 +11352,7 @@ msgstr "Mostra o conteúdo"
 #: src/screens/Login/LoginForm.tsx:560
 #: src/screens/Messages/JoinRequest.tsx:290
 #: src/screens/Messages/JoinRequest.tsx:296
-#: src/screens/Search/SearchResults.tsx:413
+#: src/screens/Search/SearchResults.tsx:388
 #: src/view/com/auth/SplashScreen.tsx:116
 #: src/view/com/auth/SplashScreen.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:124
@@ -11515,7 +11493,7 @@ msgstr "Adia o lembrete"
 msgid "So many thoughts, you should post one"
 msgstr "Tantos pensamentos, deveria publicar um"
 
-#: src/components/WelcomeModal.tsx:148
+#: src/components/WelcomeModal.tsx:151
 msgid "Social media you control."
 msgstr "A rede social que você controla."
 
@@ -11609,7 +11587,7 @@ msgid "Something went wrong, please try again"
 msgstr "Aconteceu algo de errado, por favor tente novamente"
 
 #: src/screens/Moderation/index.tsx:112
-#: src/screens/Profile/Sections/Labels.tsx:185
+#: src/screens/Profile/Sections/Labels.tsx:184
 #: src/screens/Settings/BetaFeaturesSettings.tsx:80
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:84
 msgid "Something went wrong, please try again."
@@ -11684,7 +11662,7 @@ msgstr "Inicie uma conversa, e ela aparecerá aqui."
 msgid "Start a group chat"
 msgstr "Iniciar uma conversa de grupo"
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:192
+#: src/components/dms/dialogs/NewChatDialog.tsx:191
 msgid "Start a new chat"
 msgstr "Iniciar uma nova conversa"
 
@@ -11698,17 +11676,17 @@ msgstr "Comece a adicionar pessoas"
 msgid "Start adding people!"
 msgstr "Comece a adicionar pessoas!"
 
-#: src/components/dms/InitiateChatFlow.tsx:831
+#: src/components/dms/InitiateChatFlow.tsx:726
 msgid "Start chat"
 msgstr "Iniciar conversa"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:428
-#: src/components/dms/InitiateChatFlow.tsx:1087
+#: src/components/dms/InitiateChatFlow.tsx:874
 msgid "Start chat with {displayName}"
 msgstr "Iniciar conversa com {displayName}"
 
-#: src/Navigation.tsx:550
-#: src/Navigation.tsx:555
+#: src/Navigation.tsx:541
+#: src/Navigation.tsx:546
 #: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Starter Pack"
 msgstr "Pacote de Iniciante"
@@ -11731,16 +11709,12 @@ msgstr "Pacote de iniciante por si"
 msgid "Starter pack is invalid"
 msgstr "Pacote de iniciante é inválido"
 
-#: src/screens/Search/SearchResults.tsx:120
-msgid "Starter packs"
-msgstr ""
-
 #: src/screens/Search/Explore.tsx:661
 #: src/view/screens/Profile.tsx:240
 msgid "Starter Packs"
 msgstr "Pacotes de Iniciante"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:298
+#: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr "Pacotes de iniciante permitem-lhe compartilhar facilmente os seus feeds e pessoas favoritos com os seus amigos."
 
@@ -11774,7 +11748,7 @@ msgstr "Armazenamento limpo, precisa de reiniciar a aplicação agora."
 msgid "Stored as part of a secure code for matching with others"
 msgstr "Armazenado como parte de um código seguro para correspondência com outros"
 
-#: src/Navigation.tsx:308
+#: src/Navigation.tsx:307
 #: src/screens/Settings/Settings.tsx:465
 msgid "Storybook"
 msgstr "Storybook"
@@ -11831,7 +11805,7 @@ msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Subscrever a {publicationTitle} no {0}"
 
 #. placeholder {0}: labelerInfo.creator.handle
-#: src/screens/Profile/Sections/Labels.tsx:232
+#: src/screens/Profile/Sections/Labels.tsx:231
 msgid "Subscribe to @{0} to use these labels:"
 msgstr "Subscrever @{0} para usar estes rótulos:"
 
@@ -11870,7 +11844,7 @@ msgid "Successfully verified"
 msgstr "Verificado com sucesso"
 
 #: src/components/dms/AddMembersFlow.tsx:243
-#: src/components/dms/InitiateChatFlow.tsx:432
+#: src/components/dms/InitiateChatFlow.tsx:350
 msgid "Suggested"
 msgstr "Sugeridos"
 
@@ -11903,7 +11877,7 @@ msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr "Pôr do sol"
 
-#: src/Navigation.tsx:333
+#: src/Navigation.tsx:332
 #: src/view/screens/Support.tsx:25
 #: src/view/screens/Support.tsx:28
 msgid "Support"
@@ -11914,12 +11888,10 @@ msgid "Support for this feature in your country has not been enabled yet! Please
 msgstr "Esta funcionalidade ainda não está disponível no seu país! Por favor, volte mais tarde."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:98
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:114
 msgid "Suspended accounts cannot participate in a group chat."
 msgstr "Contas suspensas não podem participar na conversa de grupo."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:60
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:75
 msgid "Suspended accounts cannot participate in chat."
 msgstr "Contas suspensas não podem participar na conversa."
 
@@ -12082,7 +12054,7 @@ msgstr "Termos"
 #: src/components/dialogs/BirthDateSettings.tsx:181
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:31
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:98
-#: src/Navigation.tsx:343
+#: src/Navigation.tsx:342
 #: src/screens/Settings/AboutSettings.tsx:94
 #: src/screens/Settings/AboutSettings.tsx:97
 #: src/view/screens/TermsOfService.tsx:25
@@ -12135,11 +12107,11 @@ msgstr "Não foi possível encontrar esse pacote de iniciante."
 msgid "That username is already taken"
 msgstr "Este nome de utilizador já está em uso"
 
-#: src/view/com/post-thread/PostQuotes.tsx:142
+#: src/view/com/post-thread/PostQuotes.tsx:135
 msgid "That's all, folks!"
 msgstr "É tudo!"
 
-#: src/screens/VideoFeed/index.tsx:1212
+#: src/screens/VideoFeed/index.tsx:1195
 msgid "That's everything!"
 msgstr "É tudo!"
 
@@ -12618,7 +12590,7 @@ msgstr "Este rótulo foi aplicado por si."
 msgid "This label was applied to the entire user account and will appear on all posts."
 msgstr "Este rótulo foi aplicado a toda a conta do utilizador e aparecerá em todas as publicações da mesma."
 
-#: src/screens/Profile/Sections/Labels.tsx:219
+#: src/screens/Profile/Sections/Labels.tsx:218
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "Este rotulador não declarou que rótulos utiliza e pode não estar ativo."
 
@@ -12663,7 +12635,7 @@ msgstr "Está bloqueado por esta pessoa"
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:623
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:622
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Este post afirma ter sido criado em <0>{0}</0>, mas foi primeiro visto por Bluesky em <1>{1}</1>."
 
@@ -12671,7 +12643,7 @@ msgstr "Este post afirma ter sido criado em <0>{0}</0>, mas foi primeiro visto p
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr "Esta publicação tem um tipo de \"threadgate\" desconhecido. É possível que a sua aplicação esteja desatualizada."
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:155
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:157
 msgid "This post is only visible to logged-in users."
 msgstr "Esta publicação é apenas visível para utilizadores com sessão iniciada."
 
@@ -12725,7 +12697,6 @@ msgid "This user doesn't have any followers."
 msgstr "Este utilizador não tem seguidores."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:64
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:79
 msgid "This user has blocked you and cannot be messaged."
 msgstr "Foi bloqueado por este utilizador e não o pode contactar."
 
@@ -12735,7 +12706,6 @@ msgid "This user has blocked you. You cannot view their content."
 msgstr "Foi bloqueado por este utilizador. Não pode ver o conteúdo dele."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:68
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:83
 msgid "This user has disabled chat and cannot be messaged."
 msgstr "Este utilizador desativou as conversas e não o pode contactar."
 
@@ -12761,7 +12731,7 @@ msgstr "Este utilizador é novo aqui. Toque para mais informações acerca do mo
 msgid "This user isn't following anyone."
 msgstr "Este utilizador não segue ninguém."
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:304
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:236
 msgid "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 msgstr "Este vídeo não pode ser reproduzido no seu dispositivo. O seu navegador ou sistema podem estar sem os codecs de vídeo necessários (H.264/AAC)."
 
@@ -12810,7 +12780,7 @@ msgstr "Preferências de Resposta"
 msgid "Threaded"
 msgstr "Em fio"
 
-#: src/Navigation.tsx:376
+#: src/Navigation.tsx:375
 msgid "Threads Preferences"
 msgstr "Preferências de Fios"
 
@@ -12870,7 +12840,7 @@ msgid "Too many contacts - you've exceeded the number of contacts you can import
 msgstr "Demasiados contactos - excedeu o número de contactos que pode importar para encontrar os seus amigos"
 
 #: src/screens/Hashtag.tsx:86
-#: src/screens/Search/SearchResults.tsx:83
+#: src/screens/Search/SearchResults.tsx:76
 #: src/screens/Topic.tsx:58
 msgid "Top"
 msgstr "Melhor"
@@ -12882,7 +12852,7 @@ msgstr "Melhor"
 msgid "Top replies first"
 msgstr "Respostas principais primeiro"
 
-#: src/Navigation.tsx:503
+#: src/Navigation.tsx:494
 msgid "Topic"
 msgstr "Tópico"
 
@@ -12917,8 +12887,8 @@ msgstr "A tradução para o mesmo idioma não está disponível no seu dispositi
 msgid "Tree view"
 msgstr "Vista em árvore"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:100
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:51
+#: src/components/interstitials/FeedTrendingTopics.tsx:99
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:50
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:54
 msgid "Trending"
 msgstr "Tendências"
@@ -12944,11 +12914,11 @@ msgstr "Trolling"
 msgid "Trust emerges from relationships, communities, and shared context, so we’re also enabling <0>trusted verifiers</0>: organizations that can directly issue verification."
 msgstr "A confiança surge de relações, comunidades e contexto compartilhado, por isso também estamos a permitir <0>verificadores de confiança</0>: organizações que podem fornecer verificações diretamente."
 
-#: src/screens/Search/SearchResults.tsx:260
+#: src/screens/Search/SearchResults.tsx:235
 msgid "Try a different search term or remove some filters."
 msgstr "Tente um termo de pesquisa diferente ou remova alguns filtros."
 
-#: src/screens/Search/SearchResults.tsx:262
+#: src/screens/Search/SearchResults.tsx:237
 msgid "Try a different search term."
 msgstr "Tente um termo de pesquisa diferente."
 
@@ -13023,12 +12993,10 @@ msgid "Unable to fetch join requests."
 msgstr "Não foi possível obter pedidos de adesão."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:113
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:129
 msgid "Unable to find a selected recipient."
 msgstr "Não foi possível encontrar um destinatário selecionado."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:77
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:92
 msgid "Unable to find the selected recipient."
 msgstr "Não foi possível encontrar o destinatário selecionado."
 
@@ -13132,7 +13100,7 @@ msgstr "Deixar de seguir {0}"
 msgid "Unfollow account"
 msgstr "Deixar de seguir conta"
 
-#: src/screens/VideoFeed/index.tsx:919
+#: src/screens/VideoFeed/index.tsx:902
 msgid "Unfollows the user"
 msgstr "Deixa de seguir o utilizador"
 
@@ -13220,7 +13188,7 @@ msgstr "Remover silenciamento desta conversa de grupo"
 msgid "Unmute thread"
 msgstr "Deixar de silenciar fio"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:330
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:344
 msgid "Unmute video"
 msgstr "Remover silenciamento do vídeo"
 
@@ -13538,7 +13506,7 @@ msgstr "Falha na verificação. Por favor, tente novamente."
 msgid "Verification settings"
 msgstr "Definições de verificação"
 
-#: src/Navigation.tsx:208
+#: src/Navigation.tsx:207
 #: src/screens/Moderation/VerificationSettings.tsx:34
 msgid "Verification Settings"
 msgstr "Definições de Verificação"
@@ -13646,7 +13614,7 @@ msgstr "Vídeo"
 msgid "Video failed to process"
 msgstr "Falha ao processar o vídeo"
 
-#: src/Navigation.tsx:571
+#: src/Navigation.tsx:562
 msgid "Video Feed"
 msgstr "Feed de Vídeo"
 
@@ -13656,7 +13624,7 @@ msgid "Video from {0}: {text}"
 msgstr "Vídeo de {0}: {text}"
 
 #. placeholder {0}: sanitizeHandle( post.author.handle, '@', )
-#: src/screens/VideoFeed/index.tsx:1174
+#: src/screens/VideoFeed/index.tsx:1157
 msgid "Video from {0}. Tap to play or pause the video"
 msgstr "Vídeo de {0}. Toque para reproduzir ou meter em pausa o vídeo"
 
@@ -13665,15 +13633,15 @@ msgstr "Vídeo de {0}. Toque para reproduzir ou meter em pausa o vídeo"
 msgid "Video Games"
 msgstr "Videojogos"
 
-#: src/screens/VideoFeed/index.tsx:1173
+#: src/screens/VideoFeed/index.tsx:1156
 msgid "Video is paused"
 msgstr "Vídeo em pausa"
 
-#: src/screens/VideoFeed/index.tsx:1173
+#: src/screens/VideoFeed/index.tsx:1156
 msgid "Video is playing"
 msgstr "Vídeo em reprodução"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:299
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:232
 msgid "Video not found."
 msgstr "Vídeo não encontrado."
 
@@ -13721,7 +13689,7 @@ msgstr "Ver foto de perfil de {0}"
 #. placeholder {0}: profile.handle
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:505
 #: src/screens/Search/components/SearchProfileCard.tsx:37
-#: src/screens/VideoFeed/index.tsx:880
+#: src/screens/VideoFeed/index.tsx:863
 #: src/view/com/notifications/NotificationFeedItem.tsx:619
 msgid "View {0}'s profile"
 msgstr "Ver perfil de {0}"
@@ -13752,8 +13720,8 @@ msgstr "Veja a publicação no blog para mais detalhes"
 msgid "View debug entry"
 msgstr "Ver entrada de debug"
 
-#: src/screens/VideoFeed/index.tsx:745
-#: src/screens/VideoFeed/index.tsx:763
+#: src/screens/VideoFeed/index.tsx:728
+#: src/screens/VideoFeed/index.tsx:746
 msgid "View details"
 msgstr "Ver detalhes"
 
@@ -13826,7 +13794,7 @@ msgstr "Ver o link de convite para esta conversa de grupo"
 msgid "View the labeling service provided by @{0}"
 msgstr "Ver o serviço de rotulação fornecido por @{0}"
 
-#: src/components/verification/VerificationCheckButton.tsx:103
+#: src/components/verification/VerificationCheckButton.tsx:93
 msgid "View this user's verifications"
 msgstr "Ver as verificações deste utilizador"
 
@@ -13859,7 +13827,7 @@ msgstr "Ver as suas listas de moderação"
 msgid "View your muted accounts"
 msgstr "Ver as contas que silenciou"
 
-#: src/components/verification/VerificationCheckButton.tsx:102
+#: src/components/verification/VerificationCheckButton.tsx:92
 msgid "View your verifications"
 msgstr "Ver as suas verificações"
 
@@ -14063,7 +14031,7 @@ msgid "We're having network issues, try again"
 msgstr "Estamos com problemas de rede, tente novamente"
 
 #: src/components/dms/AddMembersFlow.tsx:197
-#: src/components/dms/InitiateChatFlow.tsx:321
+#: src/components/dms/InitiateChatFlow.tsx:289
 msgid "We’re having network issues, try again"
 msgstr "Estamos a ter problemas de rede, tente novamente"
 
@@ -14092,15 +14060,13 @@ msgstr "Lamentamos, mas não conseguimos resolver esta lista. Se isto persistir,
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "Pedimos desculpa, mas não conseguimos carregar as suas palavras silenciadas neste momento. Por favor, tente novamente."
 
-#: src/screens/Search/SearchResults.tsx:439
-#: src/screens/Search/SearchResults.tsx:580
-#: src/screens/Search/SearchResults.tsx:777
+#: src/screens/Search/SearchResults.tsx:414
+#: src/screens/Search/SearchResults.tsx:555
 msgid "We’re sorry, but your search could not be completed."
 msgstr "Lamentamos, mas a sua pesquisa não pôde ser concluída."
 
-#: src/screens/Search/SearchResults.tsx:438
-#: src/screens/Search/SearchResults.tsx:579
-#: src/screens/Search/SearchResults.tsx:776
+#: src/screens/Search/SearchResults.tsx:413
+#: src/screens/Search/SearchResults.tsx:554
 msgid "We’re sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Lamentamos, mas não foi possível concluir a sua pesquisa. Por favor, tente novamente dentro de alguns minutos."
 
@@ -14191,7 +14157,7 @@ msgid "Who can verify?"
 msgstr "Quem pode verificar?"
 
 #: src/screens/Home/NoFeedsPinned.tsx:80
-#: src/screens/Messages/ChatList.tsx:409
+#: src/screens/Messages/ChatList.tsx:410
 #: src/screens/Messages/Inbox.tsx:191
 msgid "Whoops!"
 msgstr "Ups!"
@@ -14481,7 +14447,6 @@ msgid "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reac
 msgstr "Não pode adicionar mais de {EMOJI_REACTION_LIMIT, plural, one {# reação de emoji} other {# reações de emoji}}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:105
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:121
 msgid "You cannot create a group chat yet."
 msgstr "Ainda não pode criar uma conversa de grupo."
 
@@ -14594,7 +14559,7 @@ msgstr "Tem alterações não guardadas a este rascunho. Gostaria de guardá-las
 msgid "You have unsaved changes. Would you like to save them before viewing your drafts?"
 msgstr "Tem alterações não guardadas. Gostaria de guardá-las antes de ver os seus rascunhos?"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:295
+#: src/components/StarterPack/ProfileStarterPacks.tsx:292
 msgid "You haven't created a starter pack yet!"
 msgstr "Ainda não criou um pacote de iniciante!"
 
@@ -14653,7 +14618,7 @@ msgstr "Tem de ser proprietário da conversa para remover um membro."
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
 msgstr "Tem de ter pelo menos 13 anos para usar o Bluesky. Leia os nossos <0>Termos de Serviço</0> para mais informação."
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:368
+#: src/components/StarterPack/ProfileStarterPacks.tsx:365
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr "Deve seguir pelo menos sete outras pessoas para gerar um pacote de iniciante."
 
@@ -14846,7 +14811,7 @@ msgstr "Atingiu o seu limite diário de carregamento de vídeos (demasiados byte
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Atingiu o seu limite diário de carregamento de vídeos (demasiados vídeos)"
 
-#: src/screens/VideoFeed/index.tsx:1221
+#: src/screens/VideoFeed/index.tsx:1204
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr "Esgotou os vídeos disponíveis para assistir. Que tal uma pausa?"
 
@@ -14866,11 +14831,11 @@ msgstr "A sua conta foi suspensa"
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "A sua conta não tem antiguidade suficiente para carregar vídeos. Por favor, tente novamente mais tarde."
 
-#: src/components/dms/InitiateChatFlow.tsx:836
+#: src/components/dms/InitiateChatFlow.tsx:731
 msgid "Your account is too new"
 msgstr "A sua conta é demasiado recente"
 
-#: src/components/dms/InitiateChatFlow.tsx:837
+#: src/components/dms/InitiateChatFlow.tsx:732
 msgid "Your account must be at least 7 days old to create a new group chat."
 msgstr "A sua conta precisa de ter pelo menos 7 dias antes de poder criar uma nova conversa de grupo."
 
@@ -14961,7 +14926,7 @@ msgstr "O seu fornecedor de hospedagem não pode ser detetado a partir de um end
 msgid "Your hosting provider is detected automatically from the username you enter."
 msgstr "O seu fornecedor de hospedagem é detetado automaticamente a partir do nome de utilizador que inserir."
 
-#: src/Navigation.tsx:475
+#: src/Navigation.tsx:466
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:62
 #: src/screens/Settings/ContentAndMediaSettings.tsx:94
 #: src/screens/Settings/ContentAndMediaSettings.tsx:97
@@ -15011,11 +14976,11 @@ msgid "Your preferred language"
 msgstr "O seu idioma preferido"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.tsx:102
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.web.tsx:54
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.web.tsx:53
 msgid "Your profile picture"
 msgstr "A sua foto de perfil"
 
-#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:36
+#: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:26
 msgid "Your profile picture surrounded by concentric circles of other users' profile pictures"
 msgstr "A sua foto de perfil cercada por círculos concêntricos com as fotos de perfil de outros utilizadores"
 
@@ -15047,4 +15012,3 @@ msgstr "O seu nome de utilizador e palavra-passe serão partilhados com <0>{host
 #: src/components/verification/VerificationsDialog.tsx:67
 msgid "Your verifications"
 msgstr "As suas verificações"
-
