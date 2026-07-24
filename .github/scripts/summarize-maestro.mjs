@@ -101,6 +101,20 @@ function readPhase(root) {
   return phaseFile ? fs.readFileSync(phaseFile, 'utf8').trim() : ''
 }
 
+function maestroScreenshot(file) {
+  const match = path
+    .basename(file)
+    .match(/^screenshot-.*?-(\d+)-\((.+)\)\.(jpe?g|png)$/i)
+  return match
+    ? {
+        file,
+        timestamp: Number(match[1]),
+        flow: match[2],
+        extension: match[3].toLowerCase(),
+      }
+    : null
+}
+
 function platformResult({name, status, root, artifactUrl}) {
   const files = walk(root)
   const reports = files.filter(file => /(?:report|junit).*\.xml$/i.test(file))
@@ -116,6 +130,24 @@ function platformResult({name, status, root, artifactUrl}) {
   // A cancelled or timed-out Maestro run may never flush JUnit. Its CLI log is
   // streamed continuously, so use those failure lines when JUnit has no detail.
   const failures = junitFailures.length > 0 ? junitFailures : cliFailures
+  const screenshots = files
+    .map(maestroScreenshot)
+    .filter(Boolean)
+    .sort((a, b) => b.timestamp - a.timestamp)
+  const failureScreenshots = failures
+    .flatMap(failure => {
+      const screenshot = screenshots.find(item => item.flow === failure.name)
+      return screenshot
+        ? [
+            {
+              flow: failure.name,
+              file: screenshot.file,
+              extension: screenshot.extension,
+            },
+          ]
+        : []
+    })
+    .slice(0, 5)
   // A skipped platform (e.g. iOS while temporarily disabled) is not a failure
   // as long as it produced no flow failures.
   const failed =
@@ -125,6 +157,7 @@ function platformResult({name, status, root, artifactUrl}) {
     status,
     failed,
     failures,
+    screenshots: failureScreenshots,
     phase: readPhase(root),
     hasJUnit: reports.length > 0,
     artifactUrl,
@@ -308,6 +341,14 @@ export function buildSummary({
       ...(index < platforms.length - 1 ? [{type: 'divider'}] : []),
     ]),
   ]
+  const screenshotUploads = platforms.flatMap(platform =>
+    platform.screenshots.map(screenshot => ({
+      file: path.relative(process.cwd(), screenshot.file),
+      filename: `${platform.name.toLowerCase()}-${screenshot.flow}.${screenshot.extension}`,
+      title: `${platform.name} — ${screenshot.flow}`,
+      alt_text: `${platform.name} failure screenshot for ${screenshot.flow}`,
+    })),
+  )
   return {
     notify,
     platforms,
@@ -319,6 +360,7 @@ export function buildSummary({
       commitUrl,
     }),
     payload: {text, blocks},
+    screenshotUploads,
   }
 }
 
