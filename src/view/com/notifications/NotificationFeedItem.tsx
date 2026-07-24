@@ -13,15 +13,14 @@ import {
   type AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyGraphFollow,
+  AtUri,
   moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
 } from '@atproto/api'
-import {AtUri} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import {plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 

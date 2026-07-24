@@ -1,7 +1,6 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type ComAtprotoLabelDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Plural} from '@lingui/react/macro'
+import {Plural, useLingui} from '@lingui/react/macro'
 
 import {filterUserFacingLabels} from '#/lib/moderation'
 import {useSession} from '#/state/session'

@@ -1,7 +1,6 @@
 import {StyleSheet, View} from 'react-native'
 import {AppBskyFeedDefs, type ModerationDecision} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {isReasonFeedSource, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'

@@ -3,8 +3,7 @@ import {
   type InterpretedLabelValueDefinition,
   type LabelPreference,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
 import {useLabelBehaviorDescription} from '#/lib/moderation/useLabelBehaviorDescription'

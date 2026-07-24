@@ -5,8 +5,7 @@ import {
   type AppBskyBookmarkDefs,
   AppBskyFeedDefs,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {
   type NavigationProp,
   useFocusEffect,

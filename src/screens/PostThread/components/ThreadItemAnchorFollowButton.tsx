@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {logger} from '#/logger'

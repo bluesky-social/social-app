@@ -1,7 +1,6 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'

@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {logger} from '#/logger'

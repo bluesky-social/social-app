@@ -4,10 +4,10 @@ import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {useTranslate} from '#/lib/translation'
 import {
   type TranslationFunction,
   type TranslationFunctionParams,
+  useTranslate,
 } from '#/lib/translation'
 import {
   codeToLanguageName,

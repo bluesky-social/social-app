@@ -6,8 +6,7 @@ import {
   type AppBskyContactGetSyncStatus,
   type ModerationOpts,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 

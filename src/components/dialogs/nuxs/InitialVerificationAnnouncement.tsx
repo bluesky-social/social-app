@@ -1,8 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'

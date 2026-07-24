@@ -1,8 +1,7 @@
 import {useMemo, useState} from 'react'
 import {type ImageStyle, useWindowDimensions, View} from 'react-native'
 import {Image} from 'expo-image'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {enforceLen} from '#/lib/strings/helpers'

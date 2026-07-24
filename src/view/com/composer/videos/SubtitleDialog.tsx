@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, type StyleProp, View, type ViewStyle} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'

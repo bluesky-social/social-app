@@ -8,8 +8,7 @@ import {
   type RichText as RichTextAPI,
 } from '@atproto/api'
 import {plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {MAX_LABELERS} from '#/lib/constants'

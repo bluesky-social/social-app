@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {Keyboard, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {atoms as a, tokens, useTheme} from '#/alf'

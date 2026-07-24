@@ -2,8 +2,7 @@ import {useCallback, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
 import {type ModerationUI} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {

@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'

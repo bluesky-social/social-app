@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {

@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {TID} from '@atproto/common-web'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {RECOMMENDED_SAVED_FEEDS} from '#/lib/constants'
 import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'

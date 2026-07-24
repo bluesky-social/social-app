@@ -1,6 +1,5 @@
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useListBlockMutation, useListMuteMutation} from '#/state/queries/list'
 import {atoms as a} from '#/alf'

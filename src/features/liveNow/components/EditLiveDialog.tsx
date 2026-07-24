@@ -1,8 +1,7 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, type AppBskyEmbedExternal} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {differenceInMinutes} from 'date-fns'
 
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'

@@ -1,7 +1,6 @@
 import {useRef} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
 import {atoms as a} from '#/alf'

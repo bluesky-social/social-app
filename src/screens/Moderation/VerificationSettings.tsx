@@ -1,13 +1,12 @@
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
 import {
   usePreferencesQuery,
   type UsePreferencesQueryResponse,
+  useSetVerificationPrefsMutation,
 } from '#/state/queries/preferences'
-import {useSetVerificationPrefsMutation} from '#/state/queries/preferences'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useGutters} from '#/alf'
 import {Admonition} from '#/components/Admonition'

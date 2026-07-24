@@ -1,5 +1,4 @@
-import {forwardRef, memo, useCallback, useState} from 'react'
-import {type JSX} from 'react'
+import {forwardRef, type JSX, memo, useCallback, useState} from 'react'
 import {type ScrollView, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 

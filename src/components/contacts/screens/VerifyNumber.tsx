@@ -4,8 +4,7 @@ import {
   AppBskyContactStartPhoneVerification,
   AppBskyContactVerifyPhone,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import {clamp} from '#/lib/numbers'

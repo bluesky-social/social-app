@@ -9,8 +9,7 @@ import {
   type Un$Typed,
 } from '@atproto/api'
 import {t} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'

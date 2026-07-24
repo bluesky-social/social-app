@@ -7,8 +7,7 @@ import Animated, {
   LinearTransition,
 } from 'react-native-reanimated'
 import {useSift} from '@bsky.app/sift'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {
   createFullHandle,

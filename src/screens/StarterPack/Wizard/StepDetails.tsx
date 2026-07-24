@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'

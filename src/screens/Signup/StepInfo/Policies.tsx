@@ -1,8 +1,7 @@
 import {type ReactElement} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'

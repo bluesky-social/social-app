@@ -1,8 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {type AppBskyGraphDefs, type ModerationOpts} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'

@@ -1,5 +1,4 @@
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'

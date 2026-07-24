@@ -1,6 +1,5 @@
 import * as Updates from 'expo-updates'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation, useQuery} from '@tanstack/react-query'
 
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'

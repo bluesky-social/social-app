@@ -1,8 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {ToolsOzoneReportDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import {BLUESKY_MOD_SERVICE_HEADERS} from '#/lib/constants'

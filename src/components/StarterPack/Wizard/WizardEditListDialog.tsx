@@ -1,13 +1,11 @@
 import {useRef} from 'react'
-import {type ListRenderItemInfo} from 'react-native'
-import {View} from 'react-native'
+import {type ListRenderItemInfo, View} from 'react-native'
 import {
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
   type ModerationOpts,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {type ListMethods} from '#/view/com/util/List'

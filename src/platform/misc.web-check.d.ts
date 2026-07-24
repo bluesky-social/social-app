@@ -23,8 +23,8 @@ declare module '*.css'
  */
 declare module 'expo-file-system' {
   import {
-    Directory as ExpoFileSystemDirectory,
-    File as ExpoFileSystemFile,
+    type Directory as ExpoFileSystemDirectory,
+    type File as ExpoFileSystemFile,
   } from 'expo-file-system/build/ExpoFileSystem.types'
   export {
     type DirectoryCreateOptions,
@@ -39,7 +39,7 @@ declare module 'expo-file-system' {
     type PathInfo,
   } from 'expo-file-system/build/ExpoFileSystem.types'
   import {type PathInfo as ExpoPathInfo} from 'expo-file-system/build/ExpoFileSystem.types'
-  import {PathUtilities} from 'expo-file-system/build/pathUtilities'
+  import {type PathUtilities} from 'expo-file-system/build/pathUtilities'
 
   export class Paths extends PathUtilities {
     static get cache(): Directory

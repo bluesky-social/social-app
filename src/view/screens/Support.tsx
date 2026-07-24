@@ -1,5 +1,4 @@
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HELP_DESK_URL} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'

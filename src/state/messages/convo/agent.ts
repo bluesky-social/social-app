@@ -8,8 +8,8 @@ import {
   type ChatBskyConvoSendMessage,
   type ChatBskyEmbedJoinLink,
   type ChatBskyGroupDefs,
+  XRPCError,
 } from '@atproto/api'
-import {XRPCError} from '@atproto/api'
 import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 

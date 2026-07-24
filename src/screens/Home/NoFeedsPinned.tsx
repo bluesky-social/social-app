@@ -1,12 +1,13 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {TID} from '@atproto/common-web'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED} from '#/lib/constants'
-import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
-import {type UsePreferencesQueryResponse} from '#/state/queries/preferences'
+import {
+  useOverwriteSavedFeedsMutation,
+  type UsePreferencesQueryResponse,
+} from '#/state/queries/preferences'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'

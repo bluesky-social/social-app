@@ -6,8 +6,7 @@ import {
   interpretLabelValueDefinitions,
   type ModerationOpts,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
 import {List, type ListRef} from '#/view/com/util/List'

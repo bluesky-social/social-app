@@ -1,6 +1,5 @@
 import {type GestureResponderEvent, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {TIMELINE_SAVED_FEED} from '#/lib/constants'
 import {useAddSavedFeedsMutation} from '#/state/queries/preferences'

@@ -1,8 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {XRPCError} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {validate as validateEmail} from 'email-validator'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
