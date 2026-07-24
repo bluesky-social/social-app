@@ -40,11 +40,18 @@ import {useSubmitReportMutation} from './action'
 import {
   BSKY_LABELER_ONLY_REPORT_REASONS,
   BSKY_LABELER_ONLY_SUBJECT_TYPES,
+  NCII_FORM,
   NEW_TO_OLD_REASONS_MAP,
   SUPPORT_PAGE,
 } from './const'
 import {useCopyForSubject} from './copy'
-import {initialState, reducer} from './state'
+import {
+  getNciiQualificationOutcome,
+  initialState,
+  type NciiQualification as NciiQualificationState,
+  reducer,
+  type ReportAction,
+} from './state'
 import {type ReportDialogProps, type ReportSubject} from './types'
 import {parseReportSubject} from './utils/parseReportSubject'
 import {
@@ -381,23 +388,28 @@ function Inner(props: ReportDialogProps) {
             activeIndex1={state.activeStepIndex1}
           />
           {state.selectedOption ? (
-            <View style={[a.flex_row, a.align_center, a.gap_md]}>
-              <View style={[a.flex_1]}>
-                <OptionCard option={state.selectedOption} />
+            <>
+              <View style={[a.flex_row, a.align_center, a.gap_md]}>
+                <View style={[a.flex_1]}>
+                  <OptionCard option={state.selectedOption} />
+                </View>
+                <Button
+                  testID="report:clearReportOption"
+                  label={l`Change report reason`}
+                  size="tiny"
+                  variant="solid"
+                  color="secondary"
+                  shape="round"
+                  onPress={() => {
+                    dispatch({type: 'clearOption'})
+                  }}>
+                  <ButtonIcon icon={X} />
+                </Button>
               </View>
-              <Button
-                testID="report:clearReportOption"
-                label={l`Change report reason`}
-                size="tiny"
-                variant="solid"
-                color="secondary"
-                shape="round"
-                onPress={() => {
-                  dispatch({type: 'clearOption'})
-                }}>
-                <ButtonIcon icon={X} />
-              </Button>
-            </View>
+              {state.ncii && (
+                <NciiQualification ncii={state.ncii} dispatch={dispatch} />
+              )}
+            </>
           ) : state.selectedCategory ? (
             <View style={[a.gap_sm]}>
               {getCategory(state.selectedCategory.key).options.map(o => (
@@ -777,6 +789,124 @@ function OptionCard({
         </View>
       )}
     </Button>
+  )
+}
+
+/**
+ * Qualifying question shown when the NCII reason is selected. The depicted
+ * person (or their authorized representative) is directed to the external
+ * NCII report form; everyone else continues with the normal in-app
+ * submission.
+ */
+function NciiQualification({
+  ncii,
+  dispatch,
+}: {
+  ncii: NciiQualificationState
+  dispatch: React.Dispatch<ReportAction>
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const outcome = getNciiQualificationOutcome(ncii)
+  return (
+    <View style={[a.gap_md]}>
+      <YesNoQuestion
+        testID="report:ncii:isDepicted"
+        question={l`Are you the person depicted, or an authorized representative acting on behalf of the person depicted?`}
+        value={ncii.isDepicted}
+        onAnswer={answer => {
+          dispatch({
+            type: 'answerNciiQuestion',
+            question: 'isDepicted',
+            answer,
+          })
+        }}
+      />
+      {outcome === 'externalForm' && (
+        <Link
+          to={NCII_FORM}
+          label={l`Submit your report through the Report non-consensual intimate imagery (NCII) form`}>
+          {({hovered, pressed}) => (
+            <View
+              style={[
+                a.flex_row,
+                a.align_center,
+                a.w_full,
+                a.px_md,
+                a.py_sm,
+                a.rounded_sm,
+                a.border,
+                hovered || pressed
+                  ? [t.atoms.border_contrast_high]
+                  : [t.atoms.border_contrast_low],
+              ]}>
+              <Text style={[a.flex_1, a.italic, a.leading_snug]}>
+                <Trans>
+                  Please submit your report through the Report non-consensual
+                  intimate imagery (NCII) form.
+                </Trans>
+              </Text>
+              <SquareArrowTopRight size="sm" fill={t.atoms.text.color} />
+            </View>
+          )}
+        </Link>
+      )}
+    </View>
+  )
+}
+
+function YesNoQuestion({
+  question,
+  value,
+  onAnswer,
+  testID,
+}: {
+  question: string
+  value?: boolean
+  onAnswer: (answer: boolean) => void
+  testID?: string
+}) {
+  const {t: l} = useLingui()
+  return (
+    <View style={[a.gap_sm]}>
+      <Text style={[a.text_md, a.leading_snug]}>{question}</Text>
+      <View style={[a.flex_row, a.gap_sm]}>
+        <View style={[a.flex_1]}>
+          <Button
+            testID={testID ? `${testID}:yes` : undefined}
+            label={l({
+              message: 'Yes',
+              context: 'Answer to a yes/no question',
+            })}
+            accessibilityHint={question}
+            size="small"
+            variant="solid"
+            color={value === true ? 'primary' : 'secondary'}
+            onPress={() => onAnswer(true)}>
+            <ButtonText>
+              <Trans context="Answer to a yes/no question">Yes</Trans>
+            </ButtonText>
+          </Button>
+        </View>
+        <View style={[a.flex_1]}>
+          <Button
+            testID={testID ? `${testID}:no` : undefined}
+            label={l({
+              message: 'No',
+              context: 'Answer to a yes/no question',
+            })}
+            accessibilityHint={question}
+            size="small"
+            variant="solid"
+            color={value === false ? 'primary' : 'secondary'}
+            onPress={() => onAnswer(false)}>
+            <ButtonText>
+              <Trans context="Answer to a yes/no question">No</Trans>
+            </ButtonText>
+          </Button>
+        </View>
+      </View>
+    </View>
   )
 }
 
