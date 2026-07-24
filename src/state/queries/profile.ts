@@ -38,6 +38,7 @@ import * as userActionHistory from '#/state/userActionHistory'
 import {useAnalytics} from '#/analytics'
 import {type Metrics, toClout} from '#/analytics/metrics'
 import type * as bsky from '#/types/bsky'
+import {getMuteState, type MuteKind} from '#/types/bsky/mute'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
@@ -421,48 +422,67 @@ export function useProfileMuteMutationQueue(
   const ax = useAnalytics()
   const queryClient = useQueryClient()
   const did = profile.did
-  const initialMuted = profile.viewer?.muted
+  const viewer = profile.viewer
   const muteMutation = useProfileMuteMutation()
   const unmuteMutation = useProfileUnmuteMutation()
 
-  const queueToggle = useToggleMutationQueue({
-    initialState: initialMuted,
-    runMutation: async (_prevMuted, shouldMute) => {
-      if (shouldMute) {
+  /*
+   * Unlike follows/blocks, mutes are not queued through
+   * useToggleMutationQueue: its boolean dedup would silently drop a change of
+   * mute kinds (e.g. "mute reposts" then "mute all"), and every mute action
+   * is now gated behind a confirmation dialog, so rapid-toggle coalescing is
+   * not needed.
+   */
+  const queueMute = useCallback(
+    async (kinds?: MuteKind[]) => {
+      const prev = getMuteState(viewer)
+      const isFullMute = !kinds || kinds.length === 0
+      // optimistically update
+      updateProfileShadow(queryClient, did, {
+        muted: isFullMute,
+        mutedReposts: !isFullMute && kinds.includes('reposts'),
+        mutedQuoteposts: !isFullMute && kinds.includes('quoteposts'),
+      })
+      try {
         await muteMutation.mutateAsync({
           did,
+          kinds: isFullMute ? undefined : kinds,
         })
         ax.metric('profile:mute', {})
-        return true
-      } else {
-        await unmuteMutation.mutateAsync({
-          did,
+      } catch (e) {
+        // rollback
+        updateProfileShadow(queryClient, did, {
+          muted: prev.muted,
+          mutedReposts: prev.mutedReposts,
+          mutedQuoteposts: prev.mutedQuoteposts,
         })
-        ax.metric('profile:unmute', {})
-        return false
+        throw e
       }
     },
-    onSuccess(finalMuted) {
-      // finalize
-      updateProfileShadow(queryClient, did, {muted: finalMuted})
-    },
-  })
+    [queryClient, did, viewer, muteMutation, ax],
+  )
 
-  const queueMute = useCallback(() => {
-    // optimistically update
-    updateProfileShadow(queryClient, did, {
-      muted: true,
-    })
-    return queueToggle(true)
-  }, [queryClient, did, queueToggle])
-
-  const queueUnmute = useCallback(() => {
+  const queueUnmute = useCallback(async () => {
+    const prev = getMuteState(viewer)
     // optimistically update
     updateProfileShadow(queryClient, did, {
       muted: false,
+      mutedReposts: false,
+      mutedQuoteposts: false,
     })
-    return queueToggle(false)
-  }, [queryClient, did, queueToggle])
+    try {
+      await unmuteMutation.mutateAsync({did})
+      ax.metric('profile:unmute', {})
+    } catch (e) {
+      // rollback
+      updateProfileShadow(queryClient, did, {
+        muted: prev.muted,
+        mutedReposts: prev.mutedReposts,
+        mutedQuoteposts: prev.mutedQuoteposts,
+      })
+      throw e
+    }
+  }, [queryClient, did, viewer, unmuteMutation, ax])
 
   return [queueMute, queueUnmute] as const
 }
@@ -470,9 +490,17 @@ export function useProfileMuteMutationQueue(
 function useProfileMuteMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
-  return useMutation<void, Error, {did: string}>({
-    mutationFn: async ({did}) => {
-      await agent.mute(did)
+  return useMutation<void, Error, {did: string; kinds?: MuteKind[]}>({
+    mutationFn: async ({did, kinds}) => {
+      /*
+       * TODO: switch to agent.mute(did, {kinds}) once @atproto/api ships
+       * scoped mutes (https://github.com/bluesky-social/atproto/pull/5118).
+       * The generated client does no runtime input validation, so the extra
+       * property is sent through as-is.
+       */
+      await agent.app.bsky.graph.muteActor({actor: did, kinds} as {
+        actor: string
+      })
     },
     onSuccess() {
       void queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})

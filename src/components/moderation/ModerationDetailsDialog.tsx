@@ -119,9 +119,20 @@ function ModerationDetailsDialogInner({
           list which you have muted.
         </Trans>
       )
+    } else if ('kinds' in modcause) {
+      // scoped mute, see the synthetic cause in AppModerationCause
+      const reposts = modcause.kinds.includes('reposts')
+      const quoteposts = modcause.kinds.includes('quoteposts')
+      name = _(msg`Account Muted`)
+      description =
+        reposts && quoteposts
+          ? _(msg`You have muted reposts and quote posts from this account.`)
+          : reposts
+            ? _(msg`You have muted reposts from this account.`)
+            : _(msg`You have muted quote posts from this account.`)
     } else {
       name = _(msg`Account Muted`)
-      description = _(msg`You have muted this account.`)
+      description = _(msg`You have muted all activity from this account.`)
     }
   } else if (modcause.type === 'mute-word') {
     name = _(msg`Post Hidden by Muted Word`)

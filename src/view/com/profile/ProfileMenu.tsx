@@ -40,10 +40,10 @@ import {
   PersonX_Stroke2_Corner0_Rounded as PersonX,
 } from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {StarterPack} from '#/components/icons/StarterPack'
 import * as Menu from '#/components/Menu'
 import {BlockDialog} from '#/components/moderation/BlockDialog'
+import {MuteDialog} from '#/components/moderation/MuteDialog'
 import {
   ReportDialog,
   useReportDialogControl,
@@ -62,6 +62,7 @@ import {GoLiveDisabledDialog} from '#/features/liveNow/components/GoLiveDisabled
 import {Dot} from '#/features/nuxs/components/Dot'
 import {Gradient} from '#/features/nuxs/components/Gradient'
 import {useDevMode} from '#/storage/hooks/dev-mode'
+import {getMuteState, type MuteKind} from '#/types/bsky/mute'
 
 let ProfileMenu = ({
   profile,
@@ -99,6 +100,7 @@ let ProfileMenu = ({
     'ProfileMenu',
   )
 
+  const muteDialogControl = useDialogControl()
   const blockPromptControl = Prompt.usePromptControl()
   const loggedOutWarningPromptControl = Prompt.usePromptControl()
   const goLiveDialogControl = useDialogControl()
@@ -132,23 +134,10 @@ let ProfileMenu = ({
     addToListsDialogControl.open()
   }, [addToListsDialogControl])
 
-  const onPressMuteAccount = useCallback(async () => {
-    if (profile.viewer?.muted) {
+  const muteAccount = useCallback(
+    async (kinds?: MuteKind[]) => {
       try {
-        await queueUnmute()
-        Toast.show(l({message: 'Account unmuted', context: 'toast'}))
-      } catch (err) {
-        const e = err as Error
-        if (e?.name !== 'AbortError') {
-          ax.logger.error('Failed to unmute account', {message: e})
-          Toast.show(l`There was an issue! ${e.toString()}`, {
-            type: 'error',
-          })
-        }
-      }
-    } else {
-      try {
-        await queueMute()
+        await queueMute(kinds)
         Toast.show(l({message: 'Account muted', context: 'toast'}))
       } catch (err) {
         const e = err as Error
@@ -159,8 +148,24 @@ let ProfileMenu = ({
           })
         }
       }
+    },
+    [ax, l, queueMute],
+  )
+
+  const unmuteAccount = useCallback(async () => {
+    try {
+      await queueUnmute()
+      Toast.show(l({message: 'Account unmuted', context: 'toast'}))
+    } catch (err) {
+      const e = err as Error
+      if (e?.name !== 'AbortError') {
+        ax.logger.error('Failed to unmute account', {message: e})
+        Toast.show(l`There was an issue! ${e.toString()}`, {
+          type: 'error',
+        })
+      }
     }
-  }, [ax, profile.viewer?.muted, queueUnmute, l, queueMute])
+  }, [ax, l, queueUnmute])
 
   const blockAccount = useCallback(async () => {
     if (profile.viewer?.blocking) {
@@ -438,21 +443,19 @@ let ProfileMenu = ({
                         <Menu.Item
                           testID="profileHeaderDropdownMuteBtn"
                           label={
-                            profile.viewer?.muted
-                              ? l`Unmute account`
+                            getMuteState(profile.viewer).isMutedAny
+                              ? l`Edit muting`
                               : l`Mute account`
                           }
-                          onPress={() => void onPressMuteAccount()}>
+                          onPress={() => muteDialogControl.open()}>
                           <Menu.ItemText>
-                            {profile.viewer?.muted ? (
-                              <Trans>Unmute account</Trans>
+                            {getMuteState(profile.viewer).isMutedAny ? (
+                              <Trans>Edit muting</Trans>
                             ) : (
                               <Trans>Mute account</Trans>
                             )}
                           </Menu.ItemText>
-                          <Menu.ItemIcon
-                            icon={profile.viewer?.muted ? Unmute : Mute}
-                          />
+                          <Menu.ItemIcon icon={Mute} />
                         </Menu.Item>
                       )}
                     {!profile.viewer?.blockingByList && (
@@ -535,6 +538,12 @@ let ProfileMenu = ({
           ...profile,
           $type: 'app.bsky.actor.defs#profileViewDetailed',
         }}
+      />
+      <MuteDialog
+        control={muteDialogControl}
+        profile={profile}
+        onMute={kinds => void muteAccount(kinds)}
+        onUnmute={() => void unmuteAccount()}
       />
       <BlockDialog
         control={blockPromptControl}

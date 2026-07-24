@@ -93,11 +93,27 @@ export function useModerationCauseDescription(
           name: _(msg`Muted by "${cause.source.list.name}"`),
           description: _(msg`You have muted this user`),
         }
+      } else if ('kinds' in cause) {
+        // scoped mute, see the synthetic cause in AppModerationCause
+        const reposts = cause.kinds.includes('reposts')
+        const quoteposts = cause.kinds.includes('quoteposts')
+        return {
+          icon: EyeSlash,
+          name: _(msg`Account Muted`),
+          description:
+            reposts && quoteposts
+              ? _(
+                  msg`You have muted reposts and quote posts from this account.`,
+                )
+              : reposts
+                ? _(msg`You have muted reposts from this account.`)
+                : _(msg`You have muted quote posts from this account.`),
+        }
       } else {
         return {
           icon: EyeSlash,
           name: _(msg`Account Muted`),
-          description: _(msg`You have muted this account.`),
+          description: _(msg`You have muted all activity from this account.`),
         }
       }
     }

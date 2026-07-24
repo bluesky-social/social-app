@@ -239,6 +239,7 @@ let ProfileHeaderShell = ({
         ) : (
           <ProfileHeaderAlerts
             moderation={moderation}
+            profile={profile}
             style={[
               a.px_lg,
               a.pt_xs,

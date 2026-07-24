@@ -80,15 +80,13 @@ import {
 import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Person'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
-import {
-  SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute,
-  SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon,
-} from '#/components/icons/Speaker'
+import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {BlockDialog} from '#/components/moderation/BlockDialog'
+import {MuteDialog} from '#/components/moderation/MuteDialog'
 import {
   ReportDialog,
   useReportDialogControl,
@@ -97,6 +95,7 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
+import {getMuteState, type MuteKind} from '#/types/bsky/mute'
 
 let PostMenuItems = ({
   post,
@@ -142,6 +141,7 @@ let PostMenuItems = ({
   })
   const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
+  const muteDialogControl = useDialogControl()
   const blockPromptControl = useDialogControl()
   const reportDialogControl = useReportDialogControl()
   const deletePromptControl = useDialogControl()
@@ -443,47 +443,47 @@ let PostMenuItems = ({
     }
   }
 
-  const onMuteAuthor = async () => {
-    if (postAuthor.viewer?.muted) {
-      try {
-        await queueUnmute()
-        Toast.show(l({message: 'Account unmuted', context: 'toast'}))
-      } catch (err) {
-        const e = err as Error
-        if (e?.name !== 'AbortError') {
-          logger.error('Failed to unmute account', {message: e})
-          Toast.show(l`There was an issue! ${e.toString()}`, {
-            type: 'error',
-          })
-        }
-      } finally {
-        ax.metric('postMenu:unmuteAccount', {
-          uri: postUri,
-          authorDid: postAuthor.did,
-          logContext,
-          feedDescriptor: feedFeedback.feedDescriptor,
+  const onMuteAuthor = async (kinds?: MuteKind[]) => {
+    try {
+      await queueMute(kinds)
+      Toast.show(l({message: 'Account muted', context: 'toast'}))
+    } catch (err) {
+      const e = err as Error
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to mute account', {message: e})
+        Toast.show(l`There was an issue! ${e.toString()}`, {
+          type: 'error',
         })
       }
-    } else {
-      try {
-        await queueMute()
-        Toast.show(l({message: 'Account muted', context: 'toast'}))
-      } catch (err) {
-        const e = err as Error
-        if (e?.name !== 'AbortError') {
-          logger.error('Failed to mute account', {message: e})
-          Toast.show(l`There was an issue! ${e.toString()}`, {
-            type: 'error',
-          })
-        }
-      } finally {
-        ax.metric('postMenu:muteAccount', {
-          uri: postUri,
-          authorDid: postAuthor.did,
-          logContext,
-          feedDescriptor: feedFeedback.feedDescriptor,
+    } finally {
+      ax.metric('postMenu:muteAccount', {
+        uri: postUri,
+        authorDid: postAuthor.did,
+        logContext,
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
+    }
+  }
+
+  const onUnmuteAuthor = async () => {
+    try {
+      await queueUnmute()
+      Toast.show(l({message: 'Account unmuted', context: 'toast'}))
+    } catch (err) {
+      const e = err as Error
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to unmute account', {message: e})
+        Toast.show(l`There was an issue! ${e.toString()}`, {
+          type: 'error',
         })
       }
+    } finally {
+      ax.metric('postMenu:unmuteAccount', {
+        uri: postUri,
+        authorDid: postAuthor.did,
+        logContext,
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
     }
   }
 
@@ -734,20 +734,17 @@ let PostMenuItems = ({
                   <Menu.Item
                     testID="postDropdownMuteBtn"
                     label={
-                      postAuthor.viewer?.muted
-                        ? l`Unmute account`
+                      getMuteState(postAuthor.viewer).isMutedAny
+                        ? l`Edit muting`
                         : l`Mute account`
                     }
-                    onPress={() => void onMuteAuthor()}>
+                    onPress={() => muteDialogControl.open()}>
                     <Menu.ItemText>
-                      {postAuthor.viewer?.muted
-                        ? l`Unmute account`
+                      {getMuteState(postAuthor.viewer).isMutedAny
+                        ? l`Edit muting`
                         : l`Mute account`}
                     </Menu.ItemText>
-                    <Menu.ItemIcon
-                      icon={postAuthor.viewer?.muted ? UnmuteIcon : MuteIcon}
-                      position="right"
-                    />
+                    <Menu.ItemIcon icon={MuteIcon} position="right" />
                   </Menu.Item>
 
                   {!postAuthor.viewer?.blocking && (
@@ -853,6 +850,12 @@ let PostMenuItems = ({
         description={l`This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others.`}
         onConfirm={() => void onToggleReplyVisibility()}
         confirmButtonCta={l`Yes, hide`}
+      />
+      <MuteDialog
+        control={muteDialogControl}
+        profile={postAuthor}
+        onMute={kinds => void onMuteAuthor(kinds)}
+        onUnmute={() => void onUnmuteAuthor()}
       />
       <BlockDialog
         control={blockPromptControl}

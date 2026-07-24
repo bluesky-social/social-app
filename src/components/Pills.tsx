@@ -12,6 +12,7 @@ import {
   useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog'
 import {Text} from '#/components/Typography'
+import {type MuteKind} from '#/types/bsky/mute'
 
 export type AppModerationCause =
   | ModerationCause
@@ -20,6 +21,19 @@ export type AppModerationCause =
       source: {type: 'user'; did: string}
       priority: 6
       downgraded?: boolean
+    }
+  | {
+      /*
+       * Synthetic cause for scoped mutes (reposts and/or quote posts), which
+       * the SDK's moderation decisions do not yet know about. TODO: remove
+       * once @atproto/api ships scoped mutes
+       * (https://github.com/bluesky-social/atproto/pull/5118).
+       */
+      type: 'muted'
+      source: {type: 'user'}
+      priority: 6
+      downgraded?: boolean
+      kinds: MuteKind[]
     }
 
 export type CommonProps = {
