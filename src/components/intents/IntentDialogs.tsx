@@ -11,6 +11,7 @@ import {usePrefetchJoinLinkPreviews} from '#/state/queries/join-links'
 import {useSession} from '#/state/session'
 import {
   useActiveGroupChatJoinRequest,
+  useActiveVerifyEmail,
   useSetActiveLanding,
 } from '#/state/shell/landing'
 import * as Dialog from '#/components/Dialog'
@@ -43,9 +44,17 @@ export function Provider({children}: {children: React.ReactNode}) {
 
   const {hasSession} = useSession()
   const groupChatLanding = useActiveGroupChatJoinRequest()
+  const verifyEmailLanding = useActiveVerifyEmail()
   const setActiveLanding = useSetActiveLanding()
   const prefetchJoinLinkPreviews = usePrefetchJoinLinkPreviews()
   const landingHandledRef = useRef(false)
+
+  useEffect(() => {
+    if (!hasSession || !verifyEmailLanding) return
+    const code = verifyEmailLanding.code
+    setActiveLanding(undefined)
+    setVerifyEmailState({code})
+  }, [hasSession, verifyEmailLanding, setActiveLanding, setVerifyEmailState])
 
   useEffect(() => {
     if (hasSession && groupChatLanding && !landingHandledRef.current) {

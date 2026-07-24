@@ -44,3 +44,20 @@ export function useCloseAllActiveElements() {
     setDrawerOpen(false)
   }, [closeLightbox, closeComposer, closeAlfDialogs, setDrawerOpen])
 }
+
+/**
+ * Close all active elements and resolve once dialogs that were open have
+ * finished dismissing.
+ */
+export function useCloseAllActiveElementsAndWait() {
+  const {closeLightbox} = useLightboxControls()
+  const {closeComposer} = useComposerControls()
+  const {closeAllDialogsAndWait} = useDialogStateControlContext()
+  const setDrawerOpen = useSetDrawerOpen()
+  return useCallback(async () => {
+    closeLightbox()
+    closeComposer()
+    setDrawerOpen(false)
+    await closeAllDialogsAndWait()
+  }, [closeLightbox, closeComposer, closeAllDialogsAndWait, setDrawerOpen])
+}

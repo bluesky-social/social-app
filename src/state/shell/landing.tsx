@@ -20,7 +20,16 @@ type GroupChatJoinRequestLanding = {
   code: string
 }
 
-type LandingType = StarterPackLanding | GroupChatJoinRequestLanding | undefined
+type VerifyEmailLanding = {
+  type: 'verify-email'
+  code: string
+}
+
+type LandingType =
+  | StarterPackLanding
+  | GroupChatJoinRequestLanding
+  | VerifyEmailLanding
+  | undefined
 
 type SetContext = Dispatch<SetStateAction<LandingType>>
 
@@ -70,4 +79,9 @@ export const useSetActiveStarterPack = () => {
 export const useActiveGroupChatJoinRequest = () => {
   const landing = useActiveLanding()
   return landing?.type === 'groupchat' ? landing : undefined
+}
+
+export const useActiveVerifyEmail = () => {
+  const landing = useActiveLanding()
+  return landing?.type === 'verify-email' ? landing : undefined
 }

@@ -11,6 +11,11 @@ type State = {
    * shown.
    */
   requestedAccountSwitchTo?: string
+  /**
+   * Incremented for every account-switch request so an already-mounted logged
+   * out view can respond even when the requested account has not changed.
+   */
+  requestedAccountSwitchId: number
 }
 
 type Controls = {
@@ -43,6 +48,7 @@ type Controls = {
 const StateContext = createContext<State>({
   showLoggedOut: false,
   requestedAccountSwitchTo: undefined,
+  requestedAccountSwitchId: 0,
 })
 StateContext.displayName = 'LoggedOutStateContext'
 
@@ -64,6 +70,8 @@ function getRequestedAccountFromLanding(
       return IS_WEB ? 'starterpack' : 'new'
     case 'groupchat':
       return 'groupchat'
+    case 'verify-email':
+      return 'none'
     default:
       return undefined
   }
@@ -81,6 +89,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = useState<State>({
     showLoggedOut: Boolean(requestedAccount),
     requestedAccountSwitchTo: requestedAccount,
+    requestedAccountSwitchId: 0,
   })
 
   const controls = useMemo<Controls>(
@@ -96,6 +105,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           ...s,
           showLoggedOut: true,
           requestedAccountSwitchTo: requestedAccount,
+          requestedAccountSwitchId: s.requestedAccountSwitchId + 1,
         }))
       },
       clearRequestedAccount() {

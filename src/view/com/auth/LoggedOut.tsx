@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
@@ -56,16 +56,25 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const t = useTheme()
   const insets = useSafeAreaInsets()
   useEnableMinimalShellMode()
-  const {requestedAccountSwitchTo} = useLoggedOutView()
+  const {requestedAccountSwitchTo, requestedAccountSwitchId} =
+    useLoggedOutView()
   const initialScreenState = getInitialScreenState(requestedAccountSwitchTo)
   const [screenState, setScreenState] =
     useState<ScreenState>(initialScreenState)
+  const handledAccountSwitchId = useRef(requestedAccountSwitchId)
   const {clearRequestedAccount} = useLoggedOutViewControls()
   const setActiveLanding = useSetActiveLanding()
 
   const queryClient = useQueryClient()
   const {accounts} = useSession()
   const agent = useAgent()
+  useEffect(() => {
+    if (handledAccountSwitchId.current === requestedAccountSwitchId) return
+
+    handledAccountSwitchId.current = requestedAccountSwitchId
+    setScreenState(getInitialScreenState(requestedAccountSwitchTo))
+  }, [requestedAccountSwitchId, requestedAccountSwitchTo])
+
   useEffect(() => {
     const actors = accounts.map(acc => acc.did)
     if (actors.length === 0) return

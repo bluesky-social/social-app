@@ -10,7 +10,10 @@ import {usePrefetchJoinLinkPreviews} from '#/state/queries/join-links'
 import {useSession} from '#/state/session'
 import {useSetActiveLanding} from '#/state/shell/landing'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useCloseAllActiveElements} from '#/state/util'
+import {
+  useCloseAllActiveElements,
+  useCloseAllActiveElementsAndWait,
+} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
@@ -87,7 +90,7 @@ export function useIntentHandler() {
           if (!channel) {
             Alert.alert('Error', 'No channel provided to look for.')
           } else {
-            tryApplyUpdate(channel)
+            void tryApplyUpdate(channel)
           }
           return
         }
@@ -101,7 +104,7 @@ export function useIntentHandler() {
       if (previousIntentUrl === incomingUrl) {
         return
       }
-      handleIncomingURL(incomingUrl)
+      void handleIncomingURL(incomingUrl)
       previousIntentUrl = incomingUrl
     }
   }, [
@@ -213,20 +216,41 @@ export function useGroupChatJoinIntent() {
   )
 }
 
-function useVerifyEmailIntent() {
+export function useVerifyEmailIntent() {
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {verifyEmailDialogControl: control, setVerifyEmailState: setState} =
-    useIntentDialogs()
+  const closeAllActiveElementsAndWait = useCloseAllActiveElementsAndWait()
+  const {hasSession} = useSession()
+  const {setVerifyEmailState: setState} = useIntentDialogs()
+  const setActiveLanding = useSetActiveLanding()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
+
+  const openDialog = useCallback(
+    async (code: string) => {
+      await closeAllActiveElementsAndWait()
+      setState({code})
+    },
+    [closeAllActiveElementsAndWait, setState],
+  )
+
   return useCallback(
     (code: string) => {
-      closeAllActiveElements()
-      setState({
-        code,
-      })
-      setTimeout(() => {
-        control.open()
-      }, 1000)
+      if (!hasSession) {
+        closeAllActiveElements()
+        // Landing state lives above the account-keyed app tree, so this code
+        // survives the remount that occurs when login completes.
+        setActiveLanding({type: 'verify-email', code})
+        requestSwitchToAccount({requestedAccount: 'none'})
+        return
+      }
+
+      void openDialog(code)
     },
-    [closeAllActiveElements, control, setState],
+    [
+      hasSession,
+      openDialog,
+      closeAllActiveElements,
+      requestSwitchToAccount,
+      setActiveLanding,
+    ],
   )
 }

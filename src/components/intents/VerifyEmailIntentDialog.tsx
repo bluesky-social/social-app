@@ -1,8 +1,6 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useAgent, useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -18,10 +16,22 @@ import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 
 export function VerifyEmailIntentDialog() {
-  const {verifyEmailDialogControl: control} = useIntentDialogs()
+  const {
+    verifyEmailDialogControl: control,
+    verifyEmailState: state,
+    setVerifyEmailState,
+  } = useIntentDialogs()
+
+  useEffect(() => {
+    if (state?.code) {
+      control.open()
+    }
+  }, [state?.code, control])
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer
+      control={control}
+      onClose={() => setVerifyEmailState(undefined)}>
       <Dialog.Handle />
       <Inner control={control} />
     </Dialog.Outer>
@@ -31,7 +41,7 @@ export function VerifyEmailIntentDialog() {
 function Inner({}: {control: DialogControlProps}) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {verifyEmailState: state} = useIntentDialogs()
   const [status, setStatus] = useState<
     'loading' | 'success' | 'failure' | 'resent'
@@ -39,15 +49,26 @@ function Inner({}: {control: DialogControlProps}) {
   const [sending, setSending] = useState(false)
   const agent = useAgent()
   const {currentAccount} = useSession()
+  const attemptedCode = useRef<string | undefined>(undefined)
   const {mutate: confirmEmail} = useConfirmEmail({
     onSuccess: () => setStatus('success'),
     onError: () => setStatus('failure'),
   })
 
   useEffect(() => {
-    if (state?.code) {
-      confirmEmail({token: state.code})
+    if (!state?.code) {
+      // The queued code was cleared (dialog closed). Reset the guard so that
+      // re-tapping the same verification link re-attempts confirmation instead
+      // of showing the previous result.
+      attemptedCode.current = undefined
+      return
     }
+
+    if (attemptedCode.current === state.code) return
+
+    attemptedCode.current = state.code
+    setStatus('loading')
+    confirmEmail({token: state.code})
   }, [state?.code, confirmEmail])
 
   const onPressResendEmail = async () => {
@@ -59,7 +80,7 @@ function Inner({}: {control: DialogControlProps}) {
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Verify email dialog`)}
+      label={l`Verify email dialog`}
       style={[
         gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
       ]}>
@@ -114,8 +135,8 @@ function Inner({}: {control: DialogControlProps}) {
           <>
             <Divider />
             <Button
-              label={_(msg`Resend Verification Email`)}
-              onPress={onPressResendEmail}
+              label={l`Resend Verification Email`}
+              onPress={() => void onPressResendEmail()}
               color="secondary_inverted"
               size="large"
               disabled={sending}>
@@ -127,7 +148,6 @@ function Inner({}: {control: DialogControlProps}) {
           </>
         )}
       </View>
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )

@@ -29,8 +29,14 @@ interface IDialogContext {
 
 interface IDialogControlContext {
   closeAllDialogs(): boolean
+  closeAllDialogsAndWait(): Promise<void>
   setDialogIsOpen(id: string, isOpen: boolean): void
   setFullyExpandedCount: React.Dispatch<React.SetStateAction<number>>
+}
+
+type DialogDismissalWaiter = {
+  dialogIds: Set<string>
+  resolve: () => void
 }
 
 const DialogContext = createContext<IDialogContext>({} as IDialogContext)
@@ -69,6 +75,19 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     Map<string, React.MutableRefObject<DialogControlRefProps>>
   >(new Map())
   const openDialogs = useRef<Set<string>>(new Set())
+  const dismissalWaiters = useRef<Set<DialogDismissalWaiter>>(new Set())
+
+  const resolveDismissalWaiters = useCallback(() => {
+    dismissalWaiters.current.forEach(waiter => {
+      const allDismissed = [...waiter.dialogIds].every(
+        id => !openDialogs.current.has(id),
+      )
+      if (allDismissed) {
+        dismissalWaiters.current.delete(waiter)
+        waiter.resolve()
+      }
+    })
+  }, [])
 
   const closeAllDialogs = useCallback(() => {
     if (IS_WEB) {
@@ -84,12 +103,31 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }
   }, [])
 
+  const closeAllDialogsAndWait = useCallback(() => {
+    const dialogIds = new Set(openDialogs.current)
+    if (dialogIds.size === 0) return Promise.resolve()
+
+    return new Promise<void>(resolve => {
+      dismissalWaiters.current.add({dialogIds, resolve})
+
+      if (IS_WEB) {
+        dialogIds.forEach(id => {
+          const dialog = activeDialogs.current.get(id)
+          if (dialog) dialog.current.close()
+        })
+      } else {
+        void BottomSheetNativeComponent.dismissAll()
+      }
+    })
+  }, [])
+
   const setDialogIsOpen = useCallback(
     (id: string, isOpen: boolean) => {
       if (isOpen) {
         openDialogs.current.add(id)
       } else {
         openDialogs.current.delete(id)
+        resolveDismissalWaiters()
       }
       if (openDialogs.current.size > 0) {
         disableScope('global')
@@ -97,7 +135,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         enableScope('global')
       }
     },
-    [disableScope, enableScope],
+    [disableScope, enableScope, resolveDismissalWaiters],
   )
 
   const context = useMemo<IDialogContext>(
@@ -110,10 +148,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const controls = useMemo(
     () => ({
       closeAllDialogs,
+      closeAllDialogsAndWait,
       setDialogIsOpen,
       setFullyExpandedCount,
     }),
-    [closeAllDialogs, setDialogIsOpen, setFullyExpandedCount],
+    [
+      closeAllDialogs,
+      closeAllDialogsAndWait,
+      setDialogIsOpen,
+      setFullyExpandedCount,
+    ],
   )
 
   return (
