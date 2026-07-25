@@ -36,6 +36,7 @@ export class LinkService {
   }
 
   async start() {
+    this.ctx.metrics.start()
     this.server = this.app.listen(this.ctx.cfg.service.port)
     this.server.keepAliveTimeout = 90000
     this.terminator = createHttpTerminator({server: this.server})
@@ -46,5 +47,6 @@ export class LinkService {
     this.ctx.abortController.abort()
     await this.terminator?.terminate()
     await this.ctx.db.close()
+    this.ctx.metrics.stop()
   }
 }

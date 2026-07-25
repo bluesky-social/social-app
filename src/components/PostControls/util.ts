@@ -15,7 +15,6 @@ export function useFormatPostStatCount() {
       return i18n.number(postStatCount, {
         notation: 'compact',
         maximumFractionDigits: isOver10k ? 0 : 1,
-        // @ts-expect-error - roundingMode not in the types
         roundingMode: 'trunc',
       })
     },

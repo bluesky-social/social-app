@@ -1,14 +1,13 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {ScrollView, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
-import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
+import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/service-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
@@ -19,6 +18,9 @@ import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Tre
 import * as Prompt from '#/components/Prompt'
 import {TrendingTopicLink} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+
+const TRENDING_LIMIT = 14
 
 export function TrendingInterstitial() {
   const {enabled} = useTrendingConfig()
@@ -29,19 +31,27 @@ export function TrendingInterstitial() {
 export function Inner() {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const gutters = useGutters([0, 'base', 0, 'base'])
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
-  const {data: trending, error, isLoading} = useTrendingTopics()
-  const noTopics = !isLoading && !error && !trending?.topics?.length
+  const {
+    data: trending,
+    error,
+    isLoading,
+  } = useGetTrendsQuery({
+    limit: TRENDING_LIMIT,
+    refetchOnWindowFocus: true,
+  })
+  const noTopics = !isLoading && !error && !trending?.trends?.length
 
-  const onConfirmHide = React.useCallback(() => {
-    logEvent('trendingTopics:hide', {context: 'interstitial'})
+  const onConfirmHide = useCallback(() => {
+    ax.metric('trendingTopics:hide', {context: 'interstitial'})
     setTrendingDisabled(true)
-  }, [setTrendingDisabled])
+  }, [ax, setTrendingDisabled])
 
   return error || noTopics ? null : (
-    <View style={[t.atoms.border_contrast_low, a.border_t]}>
+    <View style={[t.atoms.border_contrast_low, a.border_t, a.border_b]}>
       <BlockDrawerGesture>
         <ScrollView
           horizontal
@@ -87,22 +97,24 @@ export function Inner() {
                   {' '}
                 </Text>
               </View>
-            ) : !trending?.topics ? null : (
+            ) : !trending?.trends ? null : (
               <>
-                {trending.topics.map(topic => (
+                {trending.trends.map(topic => (
                   <TrendingTopicLink
                     key={topic.link}
                     topic={topic}
                     onPress={() => {
-                      logEvent('trendingTopic:click', {context: 'interstitial'})
+                      ax.metric('trendingTopic:click', {
+                        context: 'interstitial',
+                        recId: trending.recId,
+                      })
                     }}>
                     <View style={[a.py_lg]}>
                       <Text
                         style={[
-                          t.atoms.text,
+                          t.atoms.text_contrast_medium,
                           a.text_sm,
                           a.font_semi_bold,
-                          {opacity: 0.7}, // NOTE: we use opacity 0.7 instead of a color to match the color of the home pager tab bar
                         ]}>
                         {topic.topic}
                       </Text>

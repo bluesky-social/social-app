@@ -1,10 +1,23 @@
 import {type ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
+import {type Gif} from '#/features/gifPicker/types'
+import {type InviteThemeKey} from '#/features/inviteFriends/themes'
 import {type Geolocation} from '#/geolocation/types'
 
 /**
- * Device data that's specific to the device and does not vary based account
+ * Data that's specific to the device and does not vary based account
  */
 export type Device = {
+  /**
+   * Formerly managed by StatSig, this is the migrated stable ID for the
+   * device, used with our logging and metrics tracking.
+   */
+  deviceId?: string
+  /**
+   * Session ID storage for _native only_. On web, use we `sessionStorage`
+   */
+  nativeSessionId?: string
+  nativeSessionIdLastEventAt?: number
+
   fontScale: '-2' | '-1' | '0' | '1' | '2'
   fontFamily: 'system' | 'theme'
   lastNuxDialog: string | undefined
@@ -49,6 +62,11 @@ export type Device = {
   demoMode: boolean
   activitySubscriptionsNudged?: boolean
   threadgateNudged?: boolean
+  inviteFriendsFollowersPromoDismissed?: boolean
+  /**
+   * Selected color theme for the Invite Friends QR card.
+   */
+  inviteFriendsThemeKey?: InviteThemeKey
 
   /**
    * Policy update overlays. New IDs are required for each new announcement.
@@ -66,4 +84,23 @@ export type Account = {
    * this device.
    */
   birthdateLastUpdatedAt?: string
+
+  lastSelectedHomeFeed?: string
+
+  /**
+   * Recently selected GIFs in the GIF picker. Most recent first, capped at 20.
+   */
+  recentGifs?: Gif[]
+
+  /**
+   * Cached from preferences (`bskyAppState.isBetaUser`) so the GrowthBook
+   * `isBetaUser` attribute can be set synchronously at analytics init, before
+   * beta-gated features (e.g. SearchV2Enable) are first evaluated. Written back
+   * when preferences load.
+   *
+   * Scoped per account, since `isBetaUser` is account-specific preference data.
+   * Reading it globally would let a beta account's value leak into a non-beta
+   * account after a switch, until that account's preferences loaded.
+   */
+  isBetaUser?: boolean
 }

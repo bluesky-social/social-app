@@ -1,19 +1,20 @@
 import {memo} from 'react'
 import {type Insets} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
+import {Trans} from '@lingui/react/macro'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
-import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useRequireAuth} from '#/state/session'
 import {useTheme} from '#/alf'
 import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
 import {PostControlButton, PostControlButtonIcon} from './PostControlButton'
 
 export const BookmarkButton = memo(function BookmarkButton({
@@ -28,10 +29,12 @@ export const BookmarkButton = memo(function BookmarkButton({
   hitSlop?: Insets
 }): React.ReactNode {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {mutateAsync: bookmark} = useBookmarkMutation()
   const cleanError = useCleanError()
   const requireAuth = useRequireAuth()
+  const {feedDescriptor} = useFeedFeedbackContext()
 
   const {viewer} = post
   const isBookmarked = !!viewer?.bookmarked
@@ -43,33 +46,19 @@ export const BookmarkButton = memo(function BookmarkButton({
     }),
   )
 
-  const save = async ({disableUndo}: {disableUndo?: boolean} = {}) => {
+  const save = async () => {
     try {
       await bookmark({
         action: 'create',
         post,
       })
 
-      logger.metric('post:bookmark', {logContext})
-
-      toast.show(
-        <toast.Outer>
-          <toast.Icon />
-          <toast.Text>
-            <Trans>Post saved</Trans>
-          </toast.Text>
-          {!disableUndo && (
-            <toast.Action
-              label={undoLabel}
-              onPress={() => remove({disableUndo: true})}>
-              {undoLabel}
-            </toast.Action>
-          )}
-        </toast.Outer>,
-        {
-          type: 'success',
-        },
-      )
+      ax.metric('post:bookmark', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        logContext,
+        feedDescriptor,
+      })
     } catch (e: any) {
       const {raw, clean} = cleanError(e)
       toast.show(clean || raw || e, {
@@ -78,14 +67,19 @@ export const BookmarkButton = memo(function BookmarkButton({
     }
   }
 
-  const remove = async ({disableUndo}: {disableUndo?: boolean} = {}) => {
+  const remove = async () => {
     try {
       await bookmark({
         action: 'delete',
         uri: post.uri,
       })
 
-      logger.metric('post:unbookmark', {logContext})
+      ax.metric('post:unbookmark', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        logContext,
+        feedDescriptor,
+      })
 
       toast.show(
         <toast.Outer>
@@ -93,13 +87,9 @@ export const BookmarkButton = memo(function BookmarkButton({
           <toast.Text>
             <Trans>Removed from saved posts</Trans>
           </toast.Text>
-          {!disableUndo && (
-            <toast.Action
-              label={undoLabel}
-              onPress={() => save({disableUndo: true})}>
-              {undoLabel}
-            </toast.Action>
-          )}
+          <toast.Action label={undoLabel} onPress={() => save()}>
+            {undoLabel}
+          </toast.Action>
         </toast.Outer>,
       )
     } catch (e: any) {
@@ -123,6 +113,8 @@ export const BookmarkButton = memo(function BookmarkButton({
     <PostControlButton
       testID="postBookmarkBtn"
       big={big}
+      active={isBookmarked}
+      activeColor={t.palette.primary_500}
       label={
         isBookmarked
           ? _(msg`Remove from saved posts`)
@@ -130,10 +122,7 @@ export const BookmarkButton = memo(function BookmarkButton({
       }
       onPress={onHandlePress}
       hitSlop={hitSlop}>
-      <PostControlButtonIcon
-        fill={isBookmarked ? t.palette.primary_500 : undefined}
-        icon={isBookmarked ? BookmarkFilled : Bookmark}
-      />
+      <PostControlButtonIcon icon={isBookmarked ? BookmarkFilled : Bookmark} />
     </PostControlButton>
   )
 })

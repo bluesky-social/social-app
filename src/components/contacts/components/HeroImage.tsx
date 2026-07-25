@@ -1,6 +1,6 @@
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -27,6 +27,7 @@ export function ContactsHeroImage() {
         alt={_(
           msg`An illustration depicting user avatars flowing from a contact book into the Bluesky app`,
         )}
+        useAppleWebpCodec
       />
     </View>
   )

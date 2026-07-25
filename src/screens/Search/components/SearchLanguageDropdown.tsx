@@ -1,11 +1,10 @@
 import {useMemo} from 'react'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {languageName} from '#/locale/helpers'
 import {APP_LANGUAGES, LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, native, platform, tokens} from '#/alf'
+import {atoms as a, native, platform} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
@@ -15,14 +14,16 @@ import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Glo
 import * as Menu from '#/components/Menu'
 
 export function SearchLanguageDropdown({
+  showIcon = true,
   value,
   onChange,
 }: {
+  showIcon?: boolean
   value: string
   onChange(value: string): void
 }) {
-  const {_} = useLingui()
-  const {appLanguage, contentLanguages} = useLanguagePrefs()
+  const {t: l} = useLingui()
+  const {appLanguage, contentLanguages, primaryLanguage} = useLanguagePrefs()
 
   const languages = useMemo(() => {
     return LANGUAGES.filter(
@@ -46,42 +47,36 @@ export function SearchLanguageDropdown({
           al =>
             // skip `ast`, because it uses a 3-letter code which conflicts with `as`
             // it begins with `a` anyway so still is top of the list
-            al.code2 !== 'ast' && al.code2.startsWith(a.value),
+            (al.code2 as string) !== 'ast' && al.code2.startsWith(a.value),
         )
         const bIsCommon = !!APP_LANGUAGES.find(
           al =>
             // ditto
-            al.code2 !== 'ast' && al.code2.startsWith(b.value),
+            (al.code2 as string) !== 'ast' && al.code2.startsWith(b.value),
         )
         if (aIsCommon && !bIsCommon) return -1
         if (bIsCommon && !aIsCommon) return 1
         // fall back to alphabetical
-        return a.label.localeCompare(b.label)
+        return a.label.localeCompare(b.label, primaryLanguage)
       })
-  }, [appLanguage, contentLanguages])
+  }, [appLanguage, contentLanguages, primaryLanguage])
 
   const currentLanguageLabel =
-    languages.find(lang => lang.value === value)?.label ?? _(msg`All languages`)
+    languages.find(lang => lang.value === value)?.label ?? l`No language filter`
 
   return (
     <Menu.Root>
       <Menu.Trigger
-        label={_(
-          msg`Filter search by language (currently: ${currentLanguageLabel})`,
-        )}>
+        label={l`Filter search by language (currently: ${currentLanguageLabel})`}>
         {({props}) => (
           <Button
             {...props}
             label={props.accessibilityLabel}
             size="small"
-            color={platform({native: 'primary', default: 'secondary'})}
-            variant={platform({native: 'ghost', default: 'solid'})}
-            style={native([
-              a.py_sm,
-              a.px_sm,
-              {marginRight: tokens.space.sm * -1},
-            ])}>
-            <ButtonIcon icon={EarthIcon} />
+            color="secondary"
+            variant="solid"
+            style={showIcon ? native([a.py_sm, a.px_sm]) : null}>
+            {showIcon ? <ButtonIcon icon={EarthIcon} /> : null}
             <ButtonText>{currentLanguageLabel}</ButtonText>
             <ButtonIcon
               icon={platform({
@@ -93,12 +88,9 @@ export function SearchLanguageDropdown({
         )}
       </Menu.Trigger>
       <Menu.Outer>
-        <Menu.LabelText>
-          <Trans>Filter search by language</Trans>
-        </Menu.LabelText>
-        <Menu.Item label={_(msg`All languages`)} onPress={() => onChange('')}>
+        <Menu.Item label={l`No language filter`} onPress={() => onChange('')}>
           <Menu.ItemText>
-            <Trans>All languages</Trans>
+            <Trans>No language filter</Trans>
           </Menu.ItemText>
           <Menu.ItemRadio selected={value === ''} />
         </Menu.Item>

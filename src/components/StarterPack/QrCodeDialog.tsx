@@ -1,15 +1,14 @@
 import {Suspense, useRef, useState} from 'react'
 import {View} from 'react-native'
 import type ViewShot from 'react-native-view-shot'
-import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
-import {createAssetAsync} from 'expo-media-library'
+import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -20,6 +19,8 @@ import {FloppyDisk_Stroke2_Corner0_Rounded as FloppyDiskIcon} from '#/components
 import {Loader} from '#/components/Loader'
 import {QrCode} from '#/components/StarterPack/QrCode'
 import * as Toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
 export function QrCodeDialog({
@@ -32,6 +33,7 @@ export function QrCodeDialog({
   control: DialogControlProps
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const [isSaveProcessing, setIsSaveProcessing] = useState(false)
   const [isCopyProcessing, setIsCopyProcessing] = useState(false)
@@ -56,8 +58,10 @@ export function QrCodeDialog({
 
   const onSavePress = async () => {
     ref.current?.capture?.().then(async (uri: string) => {
-      if (isNative) {
-        const res = await requestMediaLibraryPermissionsAsync()
+      if (IS_NATIVE) {
+        // Write-only permission - saving the QR image does not require read
+        // access to the user's photo library.
+        const res = await requestPermissionsAsync(true)
 
         if (!res.granted) {
           Toast.show(
@@ -70,7 +74,9 @@ export function QrCodeDialog({
 
         // Incase of a FS failure, don't crash the app
         try {
-          await createAssetAsync(`file://${uri}`)
+          // saveToLibraryAsync writes without reading the asset back, so it
+          // works with the add-only permission on iOS (APP-2374)
+          await saveToLibraryAsync(`file://${uri}`)
         } catch (e: unknown) {
           Toast.show(_(msg`An error occurred while saving the QR code!`), {
             type: 'error',
@@ -104,14 +110,14 @@ export function QrCodeDialog({
         link.click()
       }
 
-      logger.metric('starterPack:share', {
+      ax.metric('starterPack:share', {
         starterPack: starterPack.uri,
         shareType: 'qrcode',
         qrShareType: 'save',
       })
       setIsSaveProcessing(false)
       Toast.show(
-        isWeb
+        IS_WEB
           ? _(msg`QR code has been downloaded!`)
           : _(msg`QR code saved to your camera roll!`),
       )
@@ -129,7 +135,7 @@ export function QrCodeDialog({
         navigator.clipboard.write([item])
       })
 
-      logger.metric('starterPack:share', {
+      ax.metric('starterPack:share', {
         starterPack: starterPack.uri,
         shareType: 'qrcode',
         qrShareType: 'copy',
@@ -145,7 +151,7 @@ export function QrCodeDialog({
       control.close(() => {
         Sharing.shareAsync(uri, {mimeType: 'image/png', UTI: 'image/png'}).then(
           () => {
-            logger.metric('starterPack:share', {
+            ax.metric('starterPack:share', {
               starterPack: starterPack.uri,
               shareType: 'qrcode',
               qrShareType: 'share',
@@ -178,18 +184,18 @@ export function QrCodeDialog({
                     label={_(msg`Copy QR code`)}
                     color="primary_subtle"
                     size="large"
-                    onPress={isWeb ? onCopyPress : onSharePress}>
+                    onPress={IS_WEB ? onCopyPress : onSharePress}>
                     <ButtonIcon
                       icon={
                         isCopyProcessing
                           ? Loader
-                          : isWeb
+                          : IS_WEB
                             ? ChainLinkIcon
                             : ShareIcon
                       }
                     />
                     <ButtonText>
-                      {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
+                      {IS_WEB ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
                     </ButtonText>
                   </Button>
                   <Button

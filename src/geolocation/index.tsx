@@ -12,13 +12,18 @@ import {type Geolocation} from '#/geolocation/types'
 import {mergeGeolocations} from '#/geolocation/util'
 import {device, useStorage} from '#/storage'
 
-export {useRequestDeviceGeolocation} from '#/geolocation/device'
+export {
+  useIsDeviceGeolocationGranted,
+  useRequestDeviceGeolocation,
+} from '#/geolocation/device'
 export {resolve} from '#/geolocation/service'
 export * from '#/geolocation/types'
 
 const GeolocationContext = createContext<Geolocation>({
   countryCode: undefined,
   regionCode: undefined,
+  serviceGeolocation: undefined,
+  deviceGeolocation: undefined,
 })
 
 const DeviceGeolocationAPIContext = createContext<{
@@ -41,7 +46,17 @@ export function Provider({children}: {children: ReactNode}) {
     'deviceGeolocation',
   ])
   const geolocation = useMemo(() => {
-    return mergeGeolocations(deviceGeolocation, geolocationService)
+    const geo = mergeGeolocations(deviceGeolocation, geolocationService)
+    // create new objects to avoid cyclical references
+    geo.serviceGeolocation = {
+      countryCode: geolocationService?.countryCode,
+      regionCode: geolocationService?.regionCode,
+    }
+    geo.deviceGeolocation = {
+      countryCode: deviceGeolocation?.countryCode,
+      regionCode: deviceGeolocation?.regionCode,
+    }
+    return geo
   }, [deviceGeolocation, geolocationService])
 
   useEffect(() => {

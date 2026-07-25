@@ -1,26 +1,28 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
-import {findNodeHandle, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {View} from 'react-native'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {isIOS, isNative} from '#/platform/detection'
 import {
   type FeedDescriptor,
   RQKEY as FEED_RQKEY,
 } from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {PostFeed} from '#/view/com/posts/PostFeed'
+import {PostFeed, type PostFeedRef} from '#/view/com/posts/PostFeed'
 import {
   EmptyState,
   type EmptyStateButtonProps,
 } from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
+import {findListNativeTag} from '#/view/com/util/listNativeTag'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Text} from '#/components/Typography'
+import {IS_IOS, IS_NATIVE} from '#/env'
 import {type SectionRef} from './types'
 
 interface FeedSectionProps {
@@ -34,6 +36,7 @@ interface FeedSectionProps {
   emptyStateMessage?: string
   emptyStateButton?: EmptyStateButtonProps
   emptyStateIcon?: React.ComponentType<any> | React.ReactElement
+  postFeedRef?: React.Ref<PostFeedRef>
 }
 
 export function ProfileFeedSection({
@@ -47,19 +50,20 @@ export function ProfileFeedSection({
   emptyStateMessage,
   emptyStateButton,
   emptyStateIcon,
+  postFeedRef,
 }: FeedSectionProps) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const [hasNew, setHasNew] = useState(false)
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const shouldUseAdjustedNumToRender = feed.endsWith('posts_and_author_threads')
-  const isVideoFeed = isNative && feed.endsWith('posts_with_video')
+  const isVideoFeed = IS_NATIVE && feed.endsWith('posts_with_video')
   const adjustedInitialNumToRender = useInitialNumToRender({
     screenHeightOffset: headerHeight,
   })
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: isNative,
+      animated: IS_NATIVE,
       offset: -headerHeight,
     })
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
@@ -85,8 +89,8 @@ export function ProfileFeedSection({
   }, [_, emptyStateButton, emptyStateIcon, emptyStateMessage])
 
   useEffect(() => {
-    if (isIOS && isFocused && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
+    if (IS_IOS && isFocused && scrollElRef.current) {
+      const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
   }, [isFocused, scrollElRef, setScrollViewTag])
@@ -109,6 +113,7 @@ export function ProfileFeedSection({
           shouldUseAdjustedNumToRender ? adjustedInitialNumToRender : undefined
         }
         isVideoFeed={isVideoFeed}
+        ref={postFeedRef}
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
@@ -125,8 +130,7 @@ function ProfileEndOfFeed() {
   const t = useTheme()
 
   return (
-    <View
-      style={[a.w_full, a.py_5xl, a.border_t, t.atoms.border_contrast_medium]}>
+    <View style={[a.w_full, a.py_5xl, a.border_t, t.atoms.border_contrast_low]}>
       <Text style={[t.atoms.text_contrast_medium, a.text_center]}>
         <Trans>End of feed</Trans>
       </Text>

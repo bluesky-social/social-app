@@ -1,17 +1,18 @@
 import {useCallback, useEffect, useImperativeHandle, useMemo} from 'react'
-import {findNodeHandle, type ListRenderItemInfo, View} from 'react-native'
+import {type ListRenderItemInfo, View} from 'react-native'
 import {
   type AppBskyLabelerDefs,
   type InterpretedLabelValueDefinition,
   interpretLabelValueDefinitions,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
-import {isIOS, isNative} from '#/platform/detection'
 import {List, type ListRef} from '#/view/com/util/List'
+import {findListNativeTag} from '#/view/com/util/listNativeTag'
 import {atoms as a, ios, tokens, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -19,6 +20,7 @@ import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {LabelerLabelPreference} from '#/components/moderation/LabelPreference'
 import {Text} from '#/components/Typography'
+import {IS_IOS, IS_NATIVE} from '#/env'
 import {ErrorState} from '../ErrorState'
 import {type SectionRef} from './types'
 
@@ -49,7 +51,7 @@ export function ProfileLabelsSection({
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: isNative,
+      animated: IS_NATIVE,
       offset: -headerHeight,
     })
   }, [scrollElRef, headerHeight])
@@ -59,8 +61,8 @@ export function ProfileLabelsSection({
   }))
 
   useEffect(() => {
-    if (isIOS && isFocused && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
+    if (IS_IOS && isFocused && scrollElRef.current) {
+      const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
   }, [isFocused, scrollElRef, setScrollViewTag])

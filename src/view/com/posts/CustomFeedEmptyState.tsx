@@ -1,10 +1,6 @@
-import React, {useEffect} from 'react'
+import {useCallback, useEffect, useRef} from 'react'
 import {StyleSheet, View} from 'react-native'
-import {
-  FontAwesomeIcon,
-  type FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {Trans} from '@lingui/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {DISCOVER_FEED_URI} from '#/lib/constants'
@@ -12,17 +8,20 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useSession} from '#/state/session'
-import {Button} from '../util/forms/Button'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import {Text} from '../util/text/Text'
 
 export function CustomFeedEmptyState() {
+  const ax = useAnalytics()
   const feedFeedback = useFeedFeedbackContext()
   const {currentAccount} = useSession()
-  const hasLoggedDiscoverEmptyErrorRef = React.useRef(false)
+  const hasLoggedDiscoverEmptyErrorRef = useRef(false)
 
   useEffect(() => {
     // Log the empty feed error event
@@ -33,18 +32,18 @@ export function CustomFeedEmptyState() {
         !hasLoggedDiscoverEmptyErrorRef.current
       ) {
         hasLoggedDiscoverEmptyErrorRef.current = true
-        logger.metric('feed:discover:emptyError', {
+        ax.metric('feed:discover:emptyError', {
           userDid: currentAccount.did,
         })
       }
     }
   }, [feedFeedback.feedSourceInfo, currentAccount?.did])
+  const {t: l} = useLingui()
   const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
   const navigation = useNavigation<NavigationProp>()
 
-  const onPressFindAccounts = React.useCallback(() => {
-    if (isWeb) {
+  const onPressFindAccounts = useCallback(() => {
+    if (IS_WEB) {
       navigation.navigate('Search', {})
     } else {
       navigation.navigate('SearchTab')
@@ -63,19 +62,18 @@ export function CustomFeedEmptyState() {
           language settings.
         </Trans>
       </Text>
-      <Button
-        type="inverted"
-        style={styles.emptyBtn}
-        onPress={onPressFindAccounts}>
-        <Text type="lg-medium" style={palInverted.text}>
-          <Trans>Find accounts to follow</Trans>
-        </Text>
-        <FontAwesomeIcon
-          icon="angle-right"
-          style={palInverted.text as FontAwesomeIconStyle}
-          size={14}
-        />
-      </Button>
+      <View style={[a.mt_xl, a.align_center]}>
+        <Button
+          label={l`Find accounts to follow`}
+          onPress={onPressFindAccounts}
+          color="secondary_inverted"
+          size="large">
+          <ButtonText>
+            <Trans>Find accounts to follow</Trans>
+          </ButtonText>
+          <ButtonIcon icon={ChevronRightIcon} />
+        </Button>
+      </View>
     </View>
   )
 }
@@ -91,23 +89,5 @@ const styles = StyleSheet.create({
   emptyIcon: {
     marginLeft: 'auto',
     marginRight: 'auto',
-  },
-  emptyBtn: {
-    marginVertical: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 18,
-    paddingHorizontal: 24,
-    borderRadius: 30,
-  },
-
-  feedsTip: {
-    position: 'absolute',
-    left: 22,
-  },
-  feedsTipArrow: {
-    marginLeft: 32,
-    marginTop: 8,
   },
 })

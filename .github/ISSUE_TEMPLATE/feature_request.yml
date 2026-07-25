@@ -15,7 +15,7 @@ body:
         implement it in a timely manner.
     validations:
       required: true
-  - type: textarea
+  - type: upload
     attributes:
       label: Attachments
       description: |
@@ -24,6 +24,7 @@ body:
         in or is missing from.
     validations:
       required: false
+      accept: ".png,.jpg,.jpeg,.gif,.webp,.mp4,.mov,.webm"
   - type: textarea
     attributes:
       label: Describe Alternatives

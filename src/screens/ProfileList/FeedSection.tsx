@@ -1,11 +1,11 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {
   type FeedDescriptor,
@@ -19,6 +19,7 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
+import {IS_NATIVE} from '#/env'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -51,7 +52,7 @@ export function FeedSection({
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: isNative,
+      animated: IS_NATIVE,
       offset: -headerHeight,
     })
     queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 
 import {type Breakpoint, useBreakpoints} from '#/alf/breakpoints'
 import * as tokens from '#/alf/tokens'
@@ -52,7 +52,7 @@ export function useGutters([top, right, bottom, left]: Gutter[]) {
     bottom = top
     left = right
   }
-  return React.useMemo(() => {
+  return useMemo(() => {
     return {
       paddingTop: top === 0 ? 0 : gutters[top][activeBreakpoint || 'default'],
       paddingRight:

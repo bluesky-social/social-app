@@ -2,6 +2,7 @@ import {memo, useCallback, useEffect, useMemo, useState} from 'react'
 import {
   Animated,
   type GestureResponderEvent,
+  type LayoutChangeEvent,
   Pressable,
   StyleSheet,
   TouchableOpacity,
@@ -18,20 +19,18 @@ import {
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {msg, Plural, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {MAX_POST_LINES} from '#/lib/constants'
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
+import {DM_SERVICE_HEADERS, MAX_POST_LINES} from '#/lib/constants'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {forceLTR} from '#/lib/strings/bidi'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -44,9 +43,8 @@ import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {Post} from '#/view/com/post/Post'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import * as Toast from '#/view/com/util/Toast'
-import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, platform, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
@@ -63,17 +61,18 @@ import {StarterPack} from '#/components/icons/StarterPack'
 import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {InlineLinkText, Link} from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
+import {ProfileBadges} from '#/components/ProfileBadges'
+import * as ProfileCard from '#/components/ProfileCard'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
 const MAX_AUTHORS = 5
-
-const EXPANDED_AUTHOR_EL_HEIGHT = 35
 
 interface Author {
   profile: AppBskyActorDefs.ProfileView
@@ -93,10 +92,11 @@ let NotificationFeedItem = ({
   hideTopBorder?: boolean
 }): React.ReactNode => {
   const queryClient = useQueryClient()
-  const pal = usePalette('default')
   const t = useTheme()
   const {_, i18n} = useLingui()
-  const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
+  const ax = useAnalytics()
+  const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false)
+  const [isHoveringAuthorsList, setIsHoveringAuthorsList] = useState(false)
   const itemHref = useMemo(() => {
     switch (item.type) {
       case 'post-like':
@@ -141,14 +141,6 @@ let NotificationFeedItem = ({
     return ''
   }, [item])
 
-  const onToggleAuthorsExpanded = (e?: GestureResponderEvent) => {
-    if (e) {
-      e.preventDefault()
-      e.stopPropagation()
-    }
-    setAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
-  }
-
   const onBeforePress = useCallback(() => {
     unstableCacheProfileView(queryClient, item.notification.author)
   }, [queryClient, item.notification.author])
@@ -171,11 +163,22 @@ let NotificationFeedItem = ({
     )
   }, [item, moderationOpts])
 
+  const onToggleAuthorsExpanded = (e?: GestureResponderEvent) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    if (!isAuthorsExpanded) {
+      ax.metric('notifications:bundleExpand', {
+        notificationType: item.type,
+        authorCount: authors.length,
+      })
+    }
+    setIsAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
+  }
+
   const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
   const firstAuthor = authors[0]
-  const firstAuthorVerification = useSimpleVerificationState({
-    profile: firstAuthor.profile,
-  })
   const firstAuthorName = sanitizeDisplayName(
     firstAuthor.profile.displayName || firstAuthor.profile.handle,
   )
@@ -226,8 +229,8 @@ let NotificationFeedItem = ({
           post={item.subject}
           style={
             isHighlighted && {
-              backgroundColor: pal.colors.unreadNotifBg,
-              borderColor: pal.colors.unreadNotifBorder,
+              backgroundColor: t.palette.primary_25,
+              borderColor: t.palette.primary_100,
             }
           }
           hideTopBorder={hideTopBorder}
@@ -240,30 +243,33 @@ let NotificationFeedItem = ({
     <ProfileHoverCard did={firstAuthor.profile.did} inline>
       <InlineLinkText
         key={firstAuthor.href}
-        style={[t.atoms.text, a.font_semi_bold, a.text_md, a.leading_tight]}
+        style={[
+          t.atoms.text,
+          a.font_semi_bold,
+          a.text_md,
+          a.leading_tight,
+          web({direction: 'ltr', unicodeBidi: 'isolate'}),
+        ]}
         to={firstAuthor.href}
         disableMismatchWarning
         emoji
         label={_(msg`Go to ${firstAuthorName}'s profile`)}>
         {forceLTR(firstAuthorName)}
-        {firstAuthorVerification.showBadge && (
-          <View
-            style={[
-              a.relative,
-              {
-                paddingTop: platform({android: 2}),
-                marginBottom: platform({ios: -7}),
-                top: platform({web: 1}),
-                paddingLeft: 3,
-                paddingRight: 2,
-              },
-            ]}>
-            <VerificationCheck
-              width={14}
-              verifier={firstAuthorVerification.role === 'verifier'}
-            />
-          </View>
-        )}
+        <ProfileBadges
+          profile={firstAuthor.profile}
+          size="md"
+          style={[
+            a.relative,
+            {
+              // weird stuff here
+              paddingTop: platform({android: 2}),
+              marginBottom: platform({ios: -6}),
+              top: platform({web: 2}),
+              paddingLeft: 3,
+              paddingRight: 2,
+            },
+          ]}
+        />
       </InlineLinkText>
     </ProfileHoverCard>
   )
@@ -279,7 +285,7 @@ let NotificationFeedItem = ({
     <HeartIconFilled
       size="xl"
       style={[
-        s.likeColor,
+        {color: t.palette.pink},
         // {position: 'relative', top: -4}
       ]}
     />
@@ -584,11 +590,15 @@ let NotificationFeedItem = ({
         item.notification.isRead
           ? undefined
           : {
-              backgroundColor: pal.colors.unreadNotifBg,
-              borderColor: pal.colors.unreadNotifBorder,
+              backgroundColor: t.palette.primary_25,
+              borderColor: t.palette.primary_100,
             },
         !hideTopBorder && a.border_t,
-        a.overflow_hidden,
+        // Clip horizontal overflow (in case of long handles) but let the timestamp overflow the bottom of the cell.
+        platform({
+          web: {overflowX: 'clip', overflowY: 'visible'},
+          native: {overflow: 'hidden'},
+        }),
       ]}
       to={itemHref}
       accessible={!isAuthorsExpanded}
@@ -623,7 +633,7 @@ let NotificationFeedItem = ({
       }}>
       {({hovered}) => (
         <>
-          <SubtleHover hover={hovered} />
+          <SubtleHover hover={hovered && !isHoveringAuthorsList} />
           <View style={[styles.layoutIcon, a.pr_sm]}>
             {/* TODO: Prevent conditional rendering and move toward composable
           notifications for clearer accessibility labeling */}
@@ -632,7 +642,9 @@ let NotificationFeedItem = ({
           <View style={[a.flex_1]}>
             <ExpandListPressable
               hasMultipleAuthors={hasMultipleAuthors}
-              onToggleAuthorsExpanded={onToggleAuthorsExpanded}>
+              onToggleAuthorsExpanded={onToggleAuthorsExpanded}
+              onHoverIn={() => setIsHoveringAuthorsList(true)}
+              onHoverOut={() => setIsHoveringAuthorsList(false)}>
               <CondensedAuthorsList
                 visible={!isAuthorsExpanded}
                 authors={authors}
@@ -642,6 +654,7 @@ let NotificationFeedItem = ({
               <ExpandedAuthorsList
                 visible={isAuthorsExpanded}
                 authors={authors}
+                moderationOpts={moderationOpts}
               />
               <Text
                 style={[
@@ -728,15 +741,21 @@ function ExpandListPressable({
   hasMultipleAuthors,
   children,
   onToggleAuthorsExpanded,
+  onHoverIn,
+  onHoverOut,
 }: {
   hasMultipleAuthors: boolean
   children: React.ReactNode
   onToggleAuthorsExpanded: (e: GestureResponderEvent) => void
+  onHoverIn?: () => void
+  onHoverOut?: () => void
 }) {
   if (hasMultipleAuthors) {
     return (
       <Pressable
         onPress={onToggleAuthorsExpanded}
+        onHoverIn={onHoverIn}
+        onHoverOut={onHoverOut}
         style={[styles.expandedAuthorsTrigger]}
         accessible={false}>
         {children}
@@ -776,7 +795,9 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
       )
     } catch (err: any) {
       if (err?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
+        Toast.show(_(msg`An issue occurred, please try again.`), {
+          type: 'error',
+        })
       }
     }
   }
@@ -796,7 +817,9 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
       )
     } catch (err: any) {
       if (err?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
+        Toast.show(_(msg`An issue occurred, please try again.`), {
+          type: 'error',
+        })
       }
     }
   }
@@ -880,7 +903,7 @@ function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
           setIsLoading(true)
           const res = await agent.api.chat.bsky.convo.getConvoForMembers(
             {
-              members: [profile.did, agent.session!.did!],
+              members: [profile.did, agent.session!.did],
             },
             {headers: DM_SERVICE_HEADERS},
           )
@@ -986,97 +1009,104 @@ function CondensedAuthorsList({
 function ExpandedAuthorsList({
   visible,
   authors,
+  moderationOpts,
 }: {
   visible: boolean
   authors: Author[]
+  moderationOpts: ModerationOpts
 }) {
   const heightInterp = useAnimatedValue(visible ? 1 : 0)
-  const targetHeight =
-    authors.length * (EXPANDED_AUTHOR_EL_HEIGHT + 10) /*10=margin*/
-  const heightStyle = {
-    height: Animated.multiply(heightInterp, targetHeight),
-  }
+  const opacityInterp = useAnimatedValue(visible ? 1 : 0)
+  const [measuredHeight, setMeasuredHeight] = useState(0)
   useEffect(() => {
-    Animated.timing(heightInterp, {
+    Animated.timing(IS_WEB ? heightInterp : opacityInterp, {
       toValue: visible ? 1 : 0,
       duration: 200,
-      useNativeDriver: false,
+      useNativeDriver: !IS_WEB,
     }).start()
-  }, [heightInterp, visible])
+  }, [heightInterp, opacityInterp, visible])
+  const onInnerLayout = (e: LayoutChangeEvent) => {
+    if (measuredHeight === 0) {
+      setMeasuredHeight(e.nativeEvent.layout.height)
+    }
+  }
 
+  if (!IS_WEB) {
+    return (
+      <Animated.View style={{opacity: opacityInterp}}>
+        {visible && (
+          <View style={[a.pt_sm, a.pb_md]}>
+            {authors.map((author, i) => (
+              <ExpandedAuthorProfileCard
+                key={author.profile.did}
+                author={author}
+                moderationOpts={moderationOpts}
+                isLast={i === authors.length - 1}
+              />
+            ))}
+          </View>
+        )}
+      </Animated.View>
+    )
+  }
+
+  const heightStyle = {
+    height: Animated.multiply(heightInterp, measuredHeight),
+    opacity: Animated.divide(heightInterp, 1),
+  }
   return (
     <Animated.View style={[a.overflow_hidden, heightStyle]}>
-      {visible &&
-        authors.map(author => (
-          <ExpandedAuthorCard key={author.profile.did} author={author} />
+      <View onLayout={onInnerLayout} style={[a.pt_sm, a.pb_md]}>
+        {authors.map((author, i) => (
+          <ExpandedAuthorProfileCard
+            key={author.profile.did}
+            author={author}
+            moderationOpts={moderationOpts}
+            isLast={i === authors.length - 1}
+          />
         ))}
+      </View>
     </Animated.View>
   )
 }
 
-function ExpandedAuthorCard({author}: {author: Author}) {
-  const t = useTheme()
-  const {_} = useLingui()
-  const verification = useSimpleVerificationState({
-    profile: author.profile,
-  })
+function ExpandedAuthorProfileCard({
+  author,
+  moderationOpts,
+  isLast,
+}: {
+  author: Author
+  moderationOpts: ModerationOpts
+  isLast: boolean
+}) {
+  const profile = useProfileShadow(author.profile)
+  const isFollowing = !!profile.viewer?.following
   return (
-    <Link
-      key={author.profile.did}
-      label={author.profile.displayName || author.profile.handle}
-      accessibilityHint={_(msg`Opens this profile`)}
-      to={makeProfileLink({
-        did: author.profile.did,
-        handle: author.profile.handle,
-      })}
-      style={styles.expandedAuthor}>
-      <View style={[a.mr_sm]}>
-        <ProfileHoverCard did={author.profile.did}>
-          <UserAvatar
-            size={35}
-            avatar={author.profile.avatar}
-            moderation={author.moderation.ui('avatar')}
-            type={author.profile.associated?.labeler ? 'labeler' : 'user'}
+    <ProfileCard.Link
+      profile={author.profile}
+      style={isLast ? undefined : a.pb_md}>
+      <ProfileCard.Outer>
+        <ProfileCard.Header>
+          <ProfileCard.Avatar
+            profile={author.profile}
+            moderationOpts={moderationOpts}
           />
-        </ProfileHoverCard>
-      </View>
-      <View style={[a.flex_1]}>
-        <View style={[a.flex_row, a.align_end]}>
-          <Text
-            numberOfLines={1}
-            emoji
-            style={[
-              a.text_md,
-              a.font_semi_bold,
-              a.leading_tight,
-              {maxWidth: '70%'},
-            ]}>
-            {sanitizeDisplayName(
-              author.profile.displayName || author.profile.handle,
-            )}
-          </Text>
-          {verification.showBadge && (
-            <View style={[a.pl_xs, a.self_center]}>
-              <VerificationCheck
-                width={14}
-                verifier={verification.role === 'verifier'}
-              />
-            </View>
-          )}
-          <Text
-            numberOfLines={1}
-            style={[
-              a.pl_xs,
-              a.text_md,
-              a.leading_tight,
-              a.flex_shrink,
-              t.atoms.text_contrast_medium,
-            ]}>
-            {sanitizeHandle(author.profile.handle, '@')}
-          </Text>
-        </View>
-      </View>
-    </Link>
+          <ProfileCard.NameAndHandle
+            profile={author.profile}
+            moderationOpts={moderationOpts}
+          />
+          <ProfileCard.FollowButton
+            profile={author.profile}
+            moderationOpts={moderationOpts}
+            logContext="NotificationExpandedProfileCard"
+            size="tiny"
+            variant={isFollowing ? 'ghost' : 'solid'}
+            color={isFollowing ? 'secondary' : 'primary_subtle'}
+            withIcon={isFollowing}
+          />
+        </ProfileCard.Header>
+      </ProfileCard.Outer>
+    </ProfileCard.Link>
   )
 }
 
@@ -1104,6 +1134,7 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
         <MediaPreview.Embed
           embed={post.embed}
           style={styles.additionalPostImages}
+          peekable
         />
       </>
     )
@@ -1141,11 +1172,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
     paddingBottom: 6,
-  },
-  expandedAuthor: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-    height: EXPANDED_AUTHOR_EL_HEIGHT,
   },
 })

@@ -1,5 +1,5 @@
 import {AtUri} from '@atproto/api'
-import psl from 'psl'
+import {parse} from 'psl'
 import TLDs from 'tlds'
 
 import {BSKY_SERVICE} from '#/lib/constants'
@@ -8,6 +8,7 @@ import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
+export const BSKY_HOSTING_ENDSWITH = '.host.bsky.network'
 const BSKY_TRUSTED_HOSTS = [
   'bsky\\.app',
   'bsky\\.social',
@@ -89,6 +90,35 @@ export function toShareUrl(url: string): string {
 
 export function toBskyAppUrl(url: string): string {
   return new URL(url, BSKY_APP_HOST).toString()
+}
+
+export function toNiceHostingUrl(url: string): string {
+  try {
+    const urlp = new URL(url)
+    if (urlp.host.endsWith(BSKY_HOSTING_ENDSWITH)) {
+      return 'Bluesky'
+    }
+    return urlp.host
+  } catch {
+    return url
+  }
+}
+
+/**
+ * Whether the given service URL points at a Bluesky-operated PDS. True when the
+ * host is `bsky.social` (the {@link BSKY_SERVICE} host) or ends with
+ * `.host.bsky.network`. Returns false if the URL can't be parsed.
+ */
+export function isBlueskyHostedUrl(url: string): boolean {
+  try {
+    const {host} = new URL(url)
+    return (
+      host === new URL(BSKY_SERVICE).host ||
+      host.endsWith(BSKY_HOSTING_ENDSWITH)
+    )
+  } catch {
+    return false
+  }
 }
 
 export function isBskyAppUrl(url: string): boolean {
@@ -178,6 +208,29 @@ export function isBskyStarterPackUrl(url: string): boolean {
   return false
 }
 
+// Invite codes are 7 alphanumeric characters long, supporting up to 10 here to future-proof.
+export const CHAT_INVITE_CODE_REGEX = /^\/chat\/([a-zA-Z0-9]{7,10})$/
+
+export function getChatInviteCodeFromUrl(url: string): string | undefined {
+  let pathname: string
+  if (isBskyAppUrl(url)) {
+    try {
+      pathname = new URL(url).pathname
+    } catch {
+      return undefined
+    }
+  } else if (url.startsWith('/')) {
+    pathname = url.split('?')[0].split('#')[0]
+  } else {
+    return undefined
+  }
+  return pathname.match(CHAT_INVITE_CODE_REGEX)?.[1]
+}
+
+export function isBskyChatInviteUrl(url: string): boolean {
+  return getChatInviteCodeFromUrl(url) !== undefined
+}
+
 export function isBskyDownloadUrl(url: string): boolean {
   if (isExternalUrl(url)) {
     return false
@@ -194,12 +247,7 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
         return startUriToStarterPackUri(urlp.pathname)
       }
 
-      // special-case search links
-      if (urlp.pathname === '/search') {
-        return `/search?q=${urlp.searchParams.get('q')}`
-      }
-
-      return urlp.pathname
+      return urlp.pathname + urlp.search
     } catch (e) {
       console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
     }
@@ -311,7 +359,7 @@ export function isPossiblyAUrl(str: string): boolean {
 }
 
 export function splitApexDomain(hostname: string): [string, string] {
-  const hostnamep = psl.parse(hostname)
+  const hostnamep = parse(hostname)
   if (hostnamep.error || !hostnamep.listed || !hostnamep.domain) {
     return ['', hostname]
   }

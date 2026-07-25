@@ -42,21 +42,20 @@ Install the [Crowdin CLI](https://crowdin.github.io/crowdin-cli/). You will need
 
 ### English source-file sync with Crowdin
 
-Every night, a GitHub action will run `yarn intl:extract` to update the english `messages.po` file. This will be automatically synced with Crowdin. Crowdin should notify all subscribed users of new translations.
+Every night, a GitHub action will run `pnpm intl:extract` to update the english `messages.po` file. This will be automatically synced with Crowdin. Crowdin should notify all subscribed users of new translations.
 
 ### Release process
 
 1. Pull main and create a branch.
-1. Run `yarn intl:pull` to fetch all translation updates from Crowdin. Commit.
-1. Run `yarn intl:extract:all` to ensure all `.po` files are synced with the current state of the code. Commit.
+1. Run `pnpm intl:release` to fetch all translation updates from Crowdin and extract all `.po` files so that they're synced with the latest code. Commit that.
 1. Create a PR, ensure the translations all look correct, and merge.
 1. If needed:
   1. Merge all approved translation PRs (contributions from outside crowdin).
-  1. Run `yarn intl:push` to sync Crowdin with the state of the repo.
+  1. Run `pnpm intl:push` to sync Crowdin with the state of the repo.
 
 ### Testing the translations in Crowdin
 
-You can run `yarn intl:pull` to pull the currently-approved translations from Crowdin.
+You can run `pnpm intl:pull` to pull the currently-approved translations from Crowdin.
 
 ## Developers
 
@@ -73,7 +72,7 @@ import { Text } from "react-native";
 ```jsx
 // After
 import { Text } from "react-native";
-import { Trans } from "@lingui/macro";
+import { Trans } from "@lingui/react/macro";
 
 <Text><Trans>Hello World</Trans></Text>
 ```
@@ -90,29 +89,44 @@ const text = "Hello World";
 ```
 In this case, you can use the `useLingui()` hook:
 ```jsx
-import { msg } from "@lingui/macro";
+import { msg } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react";
 
 const { _ } = useLingui();
 return <Text accessibilityLabel={_(msg`Label is here`)}>{text}</Text>
 ```
 
-If you want to do this outside of a React component, you can use the `t` macro instead (note: this won't react to changes if the locale is switched dynamically within the app):
-```jsx
-import { t } from "@lingui/macro";
+NEW: the latest Lingui version introduced a new macro version of the `useLingui` hook which lets you do this:
 
-const text = t`Hello World`;
+```jsx
+import { useLingui } from "@lingui/react/macro";
+
+const { t } = useLingui();
+return <Text accessibilityLabel={t`Label is here`}>{text}</Text>
 ```
 
-We can then run `yarn intl:extract` to update the catalog in `src/locale/locales/{locale}/messages.po`. This will add the new string to the catalog.
-We can then run `yarn intl:compile` to update the translation files in `src/locale/locales/{locale}/messages.js`. This will add the new string to the translation files. 
+If you want to do this outside of a React component, you can use the global `t` macro instead (note: this won't react to changes if the locale is switched dynamically within the app):
+```jsx
+import { t } from "@lingui/core/macro";
+
+// not ideal - t only gets called once at module evaluation time
+const text = t`Hello World`;
+
+// however, this is suitable for strings that are ephemeral:
+function sayHello() {
+  Toast.show(t`Hello World`); // Each time the toast shows, the current locale at that moment is used
+}
+```
+
+We can then run `pnpm intl:extract` to update the catalog in `src/locale/locales/{locale}/messages.po`. This will add the new string to the catalog.
+We can then run `pnpm intl:compile` to update the translation files in `src/locale/locales/{locale}/messages.js`. This will add the new string to the translation files. 
 The configuration for translations is defined in `lingui.config.js`
 
 So the workflow is as follows:
 1. Wrap messages in Trans macro
-2. Run `yarn intl:extract` command to generate message catalogs
+2. Run `pnpm intl:extract` command to generate message catalogs
 3. Translate message catalogs (send them to translators usually)
-4. Run `yarn intl:compile` to create runtime catalogs
+4. Run `pnpm intl:compile` to create runtime catalogs
 5. Load runtime catalog
 6. Enjoy translated app!
 
@@ -121,7 +135,7 @@ So the workflow is as follows:
 These pitfalls are memoization pitfalls that will cause the components to not re-render when the locale is changed -- causing stale translations to be shown.
 
 ```jsx
-import { msg } from "@lingui/macro";
+import { msg } from "@lingui/core/macro";
 import { i18n } from "@lingui/core";
 
 const welcomeMessage = msg`Welcome!`;

@@ -14,6 +14,10 @@
     "sourceMap": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist"],
+  "ts-node": {
+    "logError": true,
+    "pretty": true /* <= technically not required */
+  }
 }
 

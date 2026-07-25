@@ -8,31 +8,29 @@ import {
   EncodingType,
   getInfoAsync,
   makeDirectoryAsync,
+  moveAsync,
   StorageAccessFramework,
   writeAsStringAsync,
 } from 'expo-file-system/legacy'
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
-import {Buffer} from 'buffer'
 
-import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
-import {isAndroid, isIOS} from '#/platform/detection'
+import {IS_ANDROID, IS_IOS} from '#/env'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
+import {convertCdnPreset, getResizedDimensions} from './util'
 
 export async function compressIfNeeded(
   img: PickerImage,
-  maxSize: number = POST_IMG_MAX.size,
+  {maxDimension, maxSize}: {maxDimension: number; maxSize: number},
 ): Promise<PickerImage> {
   if (img.size < maxSize) {
     return img
   }
   const resizedImage = await doResize(normalizePath(img.path), {
-    width: img.width,
-    height: img.height,
-    mode: 'stretch',
+    maxDimension,
     maxSize,
   })
   const finalImageMovedPath = await moveToPermanentPath(
@@ -48,33 +46,28 @@ export async function compressIfNeeded(
 
 export interface DownloadAndResizeOpts {
   uri: string
-  width: number
-  height: number
-  mode: 'contain' | 'cover' | 'stretch'
+  maxDimension: number
   maxSize: number
   timeout: number
 }
 
 export async function downloadAndResize(opts: DownloadAndResizeOpts) {
-  let appendExt = 'jpeg'
   try {
-    const urip = new URL(opts.uri)
-    const ext = urip.pathname.split('.').pop()
-    if (ext === 'png') {
-      appendExt = 'png'
-    }
+    new URL(opts.uri)
   } catch (e: any) {
     console.error('Invalid URI', opts.uri, e)
     return
   }
 
-  const path = createPath(appendExt)
+  const path = await downloadImage(opts.uri, String(uuid.v4()), opts.timeout)
 
   try {
-    await downloadImage(opts.uri, path, opts.timeout)
-    return await doResize(path, opts)
+    return await doResize(path, {
+      maxDimension: opts.maxDimension,
+      maxSize: opts.maxSize,
+    })
   } finally {
-    safeDeleteAsync(path)
+    void safeDeleteAsync(path)
   }
 }
 
@@ -84,11 +77,13 @@ export async function shareImageModal({uri}: {uri: string}) {
     return
   }
 
-  // we're currently relying on the fact our CDN only serves jpegs
-  // -prf
-  const imageUri = await downloadImage(uri, createPath('jpg'), 15e3)
-  const imagePath = await moveToPermanentPath(imageUri, '.jpg')
-  safeDeleteAsync(imageUri)
+  const downloadedPath = await downloadImage(uri, String(uuid.v4()), 15e3)
+  const {uri: jpegUri} = await manipulateAsync(downloadedPath, [], {
+    format: SaveFormat.JPEG,
+    compress: 1.0,
+  })
+  void safeDeleteAsync(downloadedPath)
+  const imagePath = await moveToPermanentPath(jpegUri, '.jpg')
   await Sharing.shareAsync(imagePath, {
     mimeType: 'image/jpeg',
     UTI: 'image/jpeg',
@@ -97,18 +92,24 @@ export async function shareImageModal({uri}: {uri: string}) {
 
 const ALBUM_NAME = 'Bluesky'
 
+/**
+ * Saves an image to the user's device. Uses the CDN's `download` preset
+ * which uses the JPEG version with the Content-Disposition header set to
+ * `attachment; filename=<filename>`. On native this saves to the media library;
+ * on web it triggers a browser download.
+ */
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
-  // download the file to cache
-  // NOTE
-  // assuming JPEG
-  // we're currently relying on the fact our CDN only serves jpegs
-  // -prf
-  const imageUri = await downloadImage(uri, createPath('jpg'), 15e3)
-  const imagePath = await moveToPermanentPath(imageUri, '.jpg')
+  const downloadUri = convertCdnPreset(uri, 'download')
+  const downloadedPath = await downloadImage(
+    downloadUri,
+    String(uuid.v4()),
+    20e3,
+  )
+  const imagePath = await moveToPermanentPath(downloadedPath, '.jpg')
 
   // save
   try {
-    if (isAndroid) {
+    if (IS_ANDROID) {
       // android triggers an annoying permission prompt if you try and move an image
       // between albums. therefore, we need to either create the album with the image
       // as the starting image, or put it directly into the album
@@ -185,9 +186,7 @@ export function getImageDim(path: string): Promise<Dimensions> {
 // =
 
 interface DoResizeOpts {
-  width: number
-  height: number
-  mode: 'contain' | 'cover' | 'stretch'
+  maxDimension: number
   maxSize: number
 }
 
@@ -201,10 +200,13 @@ async function doResize(
   // Performing an "empty" manipulation lets us get the dimensions of the original image. React Native's Image.getSize()
   // does not work for local files...
   const imageRes = await manipulateAsync(localUri, [], {})
-  const newDimensions = getResizedDimensions({
-    width: imageRes.width,
-    height: imageRes.height,
-  })
+  const newDimensions = getResizedDimensions(
+    {
+      width: imageRes.width,
+      height: imageRes.height,
+    },
+    opts.maxDimension,
+  )
 
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive
@@ -305,7 +307,7 @@ function joinPath(a: string, b: string) {
 }
 
 function normalizePath(str: string, allPlatforms = false): string {
-  if (isAndroid || allPlatforms) {
+  if (IS_ANDROID || allPlatforms) {
     if (!str.startsWith('file://')) {
       return `file://${str}`
     }
@@ -318,7 +320,12 @@ export async function saveBytesToDisk(
   bytes: Uint8Array,
   type: string,
 ) {
-  const encoded = Buffer.from(bytes).toString('base64')
+  // ideally we'd use `bytes.toBase64()`, but that's only baseline newly available
+  let binary = ''
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte)
+  }
+  const encoded = btoa(binary)
   return await saveToDevice(filename, encoded, type)
 }
 
@@ -328,7 +335,7 @@ export async function saveToDevice(
   type: string,
 ) {
   try {
-    if (isIOS) {
+    if (IS_IOS) {
       await withTempFile(filename, encoded, async tmpFileUrl => {
         await Sharing.shareAsync(tmpFileUrl, {UTI: type})
       })
@@ -380,40 +387,15 @@ async function withTempFile<T>(
   }
 }
 
-export function getResizedDimensions(originalDims: {
-  width: number
-  height: number
-}) {
-  if (
-    originalDims.width <= POST_IMG_MAX.width &&
-    originalDims.height <= POST_IMG_MAX.height
-  ) {
-    return originalDims
-  }
-
-  const ratio = Math.min(
-    POST_IMG_MAX.width / originalDims.width,
-    POST_IMG_MAX.height / originalDims.height,
-  )
-
-  return {
-    width: Math.round(originalDims.width * ratio),
-    height: Math.round(originalDims.height * ratio),
-  }
-}
-
-function createPath(ext: string) {
-  // cacheDirectory will never be null on native, so the null check here is not necessary except for typescript.
-  // we use a web-only function for downloadAndResize on web
-  return `${cacheDirectory ?? ''}/${uuid.v4()}.${ext}`
-}
-
-async function downloadImage(uri: string, path: string, timeout: number) {
-  const dlResumable = createDownloadResumable(uri, path, {cache: true})
+async function downloadImage(uri: string, destName: string, timeout: number) {
+  // Download to a temp path first, then rename with the correct extension
+  // based on the response's mimeType.
+  const tempPath = `${cacheDirectory ?? ''}/${destName}.bin`
+  const dlResumable = createDownloadResumable(uri, tempPath, {cache: true})
   let timedOut = false
   const to1 = setTimeout(() => {
     timedOut = true
-    dlResumable.cancelAsync()
+    void dlResumable.cancelAsync()
   }, timeout)
 
   const dlRes = await dlResumable.downloadAsync()
@@ -427,5 +409,20 @@ async function downloadImage(uri: string, path: string, timeout: number) {
     }
   }
 
-  return normalizePath(dlRes.uri)
+  const ext = extFromMime(dlRes.mimeType)
+  const finalPath = `${cacheDirectory ?? ''}/${destName}.${ext}`
+  await moveAsync({from: dlRes.uri, to: finalPath})
+
+  return normalizePath(finalPath)
+}
+
+const MIME_TO_EXT: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/webp': 'webp',
+  'image/png': 'png',
+  'image/gif': 'gif',
+}
+
+function extFromMime(mimeType?: string | null): string {
+  return (mimeType && MIME_TO_EXT[mimeType]) || 'jpg'
 }

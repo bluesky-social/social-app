@@ -2,8 +2,9 @@ import 'react-image-crop/dist/ReactCrop.css'
 
 import {useCallback, useImperativeHandle, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import ReactCrop, {type PercentCrop} from 'react-image-crop'
 
 import {
@@ -15,7 +16,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
-import {type EditImageDialogProps} from './EditImageDialog'
+import {type EditImageDialogProps} from './EditImageDialog.shared'
 
 export function EditImageDialog(props: EditImageDialogProps) {
   return (

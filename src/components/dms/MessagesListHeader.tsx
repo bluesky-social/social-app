@@ -1,65 +1,49 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  type ModerationCause,
-  type ModerationDecision,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {useLingui} from '@lingui/react/macro'
 
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {isWeb} from '#/platform/detection'
-import {type Shadow} from '#/state/cache/profile-shadow'
-import {isConvoActive, useConvo} from '#/state/messages/convo'
-import {type ConvoItem} from '#/state/messages/convo/types'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
 import {atoms as a, useTheme, web} from '#/alf'
+import {AvatarBubbles} from '#/components/AvatarBubbles'
+import {ButtonIcon} from '#/components/Button'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
-import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
+import {Bell2Off_Filled_Corner0_Rounded as BellOffIcon} from '#/components/icons/Bell2'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
-import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {IS_LIQUID_GLASS} from '#/env'
+import {type ConvoWithDetails} from './util'
 
-const PFP_SIZE = isWeb ? 40 : Layout.HEADER_SLOT_SIZE
+const PFP_SIZE = 40
 
-export function MessagesListHeader({
-  profile,
-  moderation,
-}: {
-  profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  moderation?: ModerationDecision
-}) {
+export function MessagesListHeader({convo}: {convo?: ConvoWithDetails | null}) {
   const t = useTheme()
-
-  const blockInfo = useMemo(() => {
-    if (!moderation) return
-    const modui = moderation.ui('profileView')
-    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
-    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
-    const userBlock = blocks.find(alert => alert.source.type === 'user')
-    return {
-      listBlocks,
-      userBlock,
-    }
-  }, [moderation])
+  const moderationOpts = useModerationOpts()
+  const {isWithinSplitView} = useIsWithinSplitView()
 
   return (
-    <Layout.Header.Outer>
+    <Layout.Header.Outer noBottomBorder={IS_LIQUID_GLASS}>
       <View style={[a.w_full, a.flex_row, a.gap_xs, a.align_start]}>
-        <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
-          <Layout.Header.BackButton />
-        </View>
-        {profile && moderation && blockInfo ? (
-          <HeaderReady
-            profile={profile}
-            moderation={moderation}
-            blockInfo={blockInfo}
-          />
+        {!isWithinSplitView && (
+          <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
+            <Layout.Header.BackButton />
+          </View>
+        )}
+        {convo && moderationOpts ? (
+          convo.kind === 'direct' ? (
+            <ProfileHeaderReady convo={convo} moderationOpts={moderationOpts} />
+          ) : (
+            <GroupHeaderReady convo={convo} />
+          )
         ) : (
           <>
             <View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1]}>
@@ -73,17 +57,10 @@ export function MessagesListHeader({
               <View style={a.gap_xs}>
                 <View
                   style={[
-                    {width: 120, height: 16},
+                    {width: 150, height: 16},
                     a.rounded_xs,
                     t.atoms.bg_contrast_25,
                     a.mt_xs,
-                  ]}
-                />
-                <View
-                  style={[
-                    {width: 175, height: 12},
-                    a.rounded_xs,
-                    t.atoms.bg_contrast_25,
                   ]}
                 />
               </View>
@@ -97,50 +74,42 @@ export function MessagesListHeader({
   )
 }
 
-function HeaderReady({
-  profile,
-  moderation,
-  blockInfo,
+function ProfileHeaderReady({
+  convo,
+  moderationOpts,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  moderation: ModerationDecision
-  blockInfo: {
-    listBlocks: ModerationCause[]
-    userBlock?: ModerationCause
-  }
+  convo: Extract<ConvoWithDetails, {kind: 'direct'}>
+  moderationOpts: ModerationOpts
 }) {
-  const {_} = useLingui()
   const t = useTheme()
-  const convoState = useConvo()
-  const verification = useSimpleVerificationState({
-    profile,
-  })
+  const {t: l} = useLingui()
+  const profile = useProfileShadow(convo.primaryMember)
+
+  const moderation = moderateProfile(profile, moderationOpts)
+
+  const blockInfo = useMemo(() => {
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
 
   const isDeletedAccount = profile?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
-    ? _(msg`Deleted Account`)
-    : sanitizeDisplayName(
-        profile.displayName || profile.handle,
-        moderation.ui('displayName'),
-      )
-
-  // @ts-ignore findLast is polyfilled - esb
-  const latestMessageFromOther = convoState.items.findLast(
-    (item: ConvoItem) =>
-      item.type === 'message' && item.message.sender.did === profile.did,
-  )
-
-  const latestReportableMessage =
-    latestMessageFromOther?.type === 'message'
-      ? latestMessageFromOther.message
-      : undefined
+    ? l`Deleted Account`
+    : createSanitizedDisplayName(profile, true, moderation.ui('displayName'))
+  const handle = isDeletedAccount ? null : sanitizeHandle(profile.handle, '@')
 
   return (
-    <View style={[a.flex_1]}>
-      <View style={[a.w_full, a.flex_row, a.align_center, a.justify_between]}>
+    <Wrapper
+      heading={
         <Link
-          label={_(msg`View ${displayName}'s profile`)}
-          style={[a.flex_row, a.align_start, a.gap_md, a.flex_1, a.pr_md]}
+          label={l`View ${displayName}’s profile`}
+          style={[a.flex_row, a.gap_md, a.flex_1]}
           to={makeProfileLink(profile)}>
           <PreviewableUserAvatar
             size={PFP_SIZE}
@@ -149,78 +118,139 @@ function HeaderReady({
             disableHoverCard={moderation.blocked}
           />
           <View style={[a.flex_1]}>
-            <View style={[a.flex_row, a.align_center]}>
+            <View style={[a.flex_row, a.align_center, a.flex_1, web(a.mb_2xs)]}>
               <Text
-                emoji
-                style={[
-                  a.text_md,
-                  a.font_semi_bold,
-                  a.self_start,
-                  web(a.leading_normal),
-                ]}
-                numberOfLines={1}>
+                style={[a.text_lg, a.font_semi_bold, a.flex_shrink]}
+                numberOfLines={1}
+                emoji>
                 {displayName}
               </Text>
-              {verification.showBadge && (
-                <View style={[a.pl_xs]}>
-                  <VerificationCheck
-                    width={14}
-                    verifier={verification.role === 'verifier'}
-                  />
-                </View>
-              )}
+              <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
+              <MuteStatus muted={convo.view.muted} />
             </View>
-            {!isDeletedAccount && (
+            {handle ? (
               <Text
-                style={[
-                  t.atoms.text_contrast_medium,
-                  a.text_xs,
-                  web([a.leading_normal, {marginTop: -2}]),
-                ]}
+                style={[a.text_xs, t.atoms.text_contrast_high]}
                 numberOfLines={1}>
-                @{profile.handle}
-                {convoState.convo?.muted && (
-                  <>
-                    {' '}
-                    &middot;{' '}
-                    <BellStroke
-                      size="xs"
-                      style={t.atoms.text_contrast_medium}
-                    />
-                  </>
-                )}
+                {handle}
               </Text>
-            )}
+            ) : null}
           </View>
         </Link>
+      }
+      settings={
+        <ConvoMenu
+          convo={convo}
+          profile={profile}
+          currentScreen="conversation"
+          blockInfo={blockInfo}
+        />
+      }
+    />
+  )
+}
 
-        <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
-          <Layout.Header.Slot>
-            {isConvoActive(convoState) && (
-              <ConvoMenu
-                convo={convoState.convo}
-                profile={profile}
-                currentScreen="conversation"
-                blockInfo={blockInfo}
-                latestReportableMessage={latestReportableMessage}
-              />
-            )}
-          </Layout.Header.Slot>
-        </View>
-      </View>
+function GroupHeaderReady({
+  convo,
+}: {
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
+}) {
+  const {t: l} = useLingui()
 
+  const disabled = convo.details.lockStatus === 'locked-permanently'
+
+  return (
+    <Wrapper
+      heading={
+        <Link
+          label={convo.details.name}
+          accessibilityHint={l`Open group chat settings`}
+          style={[a.flex_row, a.gap_md, a.flex_1, a.justify_start]}
+          to={
+            disabled
+              ? '#'
+              : {
+                  screen: 'MessagesConversationSettings',
+                  params: {
+                    conversation: convo.view.id,
+                  },
+                }
+          }>
+          <AvatarBubbles size={PFP_SIZE} profiles={convo.members} />
+          <View style={[a.flex_row, a.flex_1, a.align_center]}>
+            <Text
+              style={[a.text_lg, a.font_semi_bold, a.flex_shrink]}
+              numberOfLines={1}
+              emoji>
+              {convo.details.name}
+            </Text>
+            <MuteStatus muted={convo.view.muted} />
+          </View>
+        </Link>
+      }
+      settings={
+        <Link
+          to={
+            disabled
+              ? '#'
+              : {
+                  screen: 'MessagesConversationSettings',
+                  params: {
+                    conversation: convo.view.id,
+                  },
+                }
+          }
+          label={l`Open group chat settings`}
+          size="small"
+          color="secondary"
+          shape="round"
+          variant="ghost"
+          style={[a.bg_transparent, a.justify_center]}>
+          <ButtonIcon icon={DotsHorizontalIcon} size="md" />
+        </Link>
+      }
+    />
+  )
+}
+
+function Wrapper({
+  heading,
+
+  settings,
+}: {
+  heading: React.ReactNode
+  settings: React.ReactNode
+}) {
+  return (
+    <View style={[a.flex_1]}>
       <View
         style={[
-          {
-            paddingLeft: PFP_SIZE + a.gap_md.gap,
-          },
+          a.w_full,
+          a.flex_row,
+          a.align_center,
+          a.justify_between,
+          a.gap_sm,
         ]}>
-        <PostAlerts
-          modui={moderation.ui('contentList')}
-          size="lg"
-          style={[a.pt_xs]}
-        />
+        <View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1]}>
+          {heading}
+        </View>
+
+        <View
+          style={[{minHeight: PFP_SIZE}, a.justify_center, a.flex_shrink_0]}>
+          <Layout.Header.Slot>{settings}</Layout.Header.Slot>
+        </View>
       </View>
     </View>
   )
+}
+
+function MuteStatus({muted}: {muted: boolean}) {
+  const t = useTheme()
+
+  return muted ? (
+    <>
+      <Text style={[a.text_md, t.atoms.text_contrast_medium]}> &middot; </Text>
+      <BellOffIcon size="sm" style={t.atoms.text_contrast_medium} />
+    </>
+  ) : undefined
 }

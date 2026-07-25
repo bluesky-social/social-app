@@ -1,7 +1,6 @@
 import {useCallback, useMemo} from 'react'
 import {LayoutAnimation, type TextStyle} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {atoms as a, flatten, type TextStyleProp, useTheme} from '#/alf'
@@ -13,7 +12,7 @@ export function ShowMoreTextButton({
   style,
 }: TextStyleProp & {onPress: () => void}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const onPress = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -29,7 +28,7 @@ export function ShowMoreTextButton({
 
   return (
     <Button
-      label={_(msg`Expand post text`)}
+      label={l`Expand post text`}
       onPress={onPress}
       style={[
         a.self_start,
@@ -42,13 +41,13 @@ export function ShowMoreTextButton({
         <Text
           style={[
             textStyle,
+            t.atoms.text_link,
             {
-              color: t.palette.primary_500,
               opacity: pressed ? 0.6 : 1,
               textDecorationLine: hovered ? 'underline' : undefined,
             },
           ]}>
-          <Trans>Show More</Trans>
+          <Trans>Show more</Trans>
         </Text>
       )}
     </Button>

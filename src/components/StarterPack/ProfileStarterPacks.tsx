@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {
-  findNodeHandle,
   type ListRenderItemInfo,
   type StyleProp,
   useWindowDimensions,
@@ -8,8 +7,9 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
@@ -19,13 +19,13 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
 import {
   EmptyState,
   type EmptyStateButtonProps,
 } from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
+import {findListNativeTag} from '#/view/com/util/listNativeTag'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -36,6 +36,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
+import {IS_IOS} from '#/env'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -56,7 +57,7 @@ interface ProfileFeedgensProps {
   emptyStateIcon?: React.ComponentType<any> | React.ReactElement
 }
 
-function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
+function keyExtractor(item: AppBskyGraphDefs.StarterPackViewBasic) {
   return item.uri
 }
 
@@ -101,7 +102,7 @@ export function ProfileStarterPacks({
             message={
               emptyStateMessage ??
               _(
-                'Starter packs let you share your favorite feeds and people with your friends.',
+                msg`Starter packs let you share your favorite feeds and people with your friends.`,
               )
             }
             button={emptyStateButton}
@@ -136,14 +137,17 @@ export function ProfileStarterPacks({
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   useEffect(() => {
-    if (isIOS && enabled && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
+    if (IS_IOS && enabled && scrollElRef.current) {
+      const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
   }, [enabled, scrollElRef, setScrollViewTag])
 
   const renderItem = useCallback(
-    ({item, index}: ListRenderItemInfo<AppBskyGraphDefs.StarterPackView>) => {
+    ({
+      item,
+      index,
+    }: ListRenderItemInfo<AppBskyGraphDefs.StarterPackViewBasic>) => {
       return (
         <View
           style={[
@@ -331,15 +335,17 @@ function Empty() {
       </View>
 
       <Prompt.Outer control={confirmDialogControl}>
-        <Prompt.TitleText>
-          <Trans>Generate a starter pack</Trans>
-        </Prompt.TitleText>
-        <Prompt.DescriptionText>
-          <Trans>
-            Bluesky will choose a set of recommended accounts from people in
-            your network.
-          </Trans>
-        </Prompt.DescriptionText>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            <Trans>Generate a starter pack</Trans>
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            <Trans>
+              Bluesky will choose a set of recommended accounts from people in
+              your network.
+            </Trans>
+          </Prompt.DescriptionText>
+        </Prompt.Content>
         <Prompt.Actions>
           <Prompt.Action
             color="primary"

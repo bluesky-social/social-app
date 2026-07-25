@@ -1,4 +1,4 @@
-import cluster, {Worker} from 'node:cluster'
+import cluster, {type Worker} from 'node:cluster'
 
 import {envInt} from '@atproto/common'
 

@@ -1,5 +1,5 @@
-import {type LogEvents} from '#/lib/statsig/statsig'
 import {type PersistedAccount} from '#/state/persisted'
+import {type Metrics} from '#/analytics/metrics'
 
 export type SessionAccount = PersistedAccount
 
@@ -21,7 +21,7 @@ export type SessionApiContext = {
       verificationPhone?: string
       verificationCode?: string
     },
-    metrics: LogEvents['account:create:success'],
+    metrics: Metrics['account:create:success'],
   ) => Promise<void>
   login: (
     props: {
@@ -30,13 +30,13 @@ export type SessionApiContext = {
       password: string
       authFactorToken?: string | undefined
     },
-    logContext: LogEvents['account:loggedIn']['logContext'],
+    logContext: Metrics['account:loggedIn']['logContext'],
   ) => Promise<void>
   logoutCurrentAccount: (
-    logContext: LogEvents['account:loggedOut']['logContext'],
+    logContext: Metrics['account:loggedOut']['logContext'],
   ) => void
   logoutEveryAccount: (
-    logContext: LogEvents['account:loggedOut']['logContext'],
+    logContext: Metrics['account:loggedOut']['logContext'],
   ) => void
   resumeSession: (
     account: SessionAccount,

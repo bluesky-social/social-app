@@ -9,7 +9,7 @@ export const RQKEY = 'video-thumbnail'
 
 export function clearThumbnailCache(queryClient: QueryClient) {
   clearCache().catch(() => {})
-  queryClient.resetQueries({queryKey: [RQKEY]})
+  void queryClient.resetQueries({queryKey: [RQKEY]})
 }
 
 export function VideoTranscodeBackdrop({uri}: {uri: string}) {

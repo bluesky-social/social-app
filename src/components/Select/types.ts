@@ -1,5 +1,6 @@
 import {
   type AccessibilityProps,
+  type Insets,
   type StyleProp,
   type TextStyle,
   type ViewStyle,
@@ -60,12 +61,13 @@ export type RadixPassThroughTriggerProps = {
 
 export type TriggerProps = {
   children: React.ReactNode | ((props: TriggerChildProps) => React.ReactNode)
+  hitSlop?: number | Insets | null
   label: string
 }
 
 export type TriggerChildProps =
   | {
-      isNative: true
+      IS_NATIVE: true
       control: DialogControlProps
       state: {
         /**
@@ -92,7 +94,7 @@ export type TriggerChildProps =
       }
     }
   | {
-      isNative: false
+      IS_NATIVE: false
       state: {
         hovered: boolean
         focused: boolean

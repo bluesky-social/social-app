@@ -1,29 +1,28 @@
-/// <reference lib="dom" />
-
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
-import {blobToDataUri, getDataUriSize} from './util'
+import {
+  blobToDataUri,
+  convertCdnPreset,
+  getDataUriSize,
+  getResizedDimensions,
+} from './util'
 
 export async function compressIfNeeded(
   img: PickerImage,
-  maxSize: number,
+  {maxDimension, maxSize}: {maxDimension: number; maxSize: number},
 ): Promise<PickerImage> {
   if (img.size < maxSize) {
     return img
   }
   return await doResize(img.path, {
-    width: img.width,
-    height: img.height,
-    mode: 'stretch',
+    maxDimension,
     maxSize,
   })
 }
 
 export interface DownloadAndResizeOpts {
   uri: string
-  width: number
-  height: number
-  mode: 'contain' | 'cover' | 'stretch'
+  maxDimension: number
   maxSize: number
   timeout: number
 }
@@ -36,7 +35,10 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
   clearTimeout(to)
 
   const dataUri = await blobToDataUri(resBody)
-  return await doResize(dataUri, opts)
+  return await doResize(dataUri, {
+    maxDimension: opts.maxDimension,
+    maxSize: opts.maxSize,
+  })
 }
 
 export async function shareImageModal(_opts: {uri: string}) {
@@ -44,9 +46,17 @@ export async function shareImageModal(_opts: {uri: string}) {
   throw new Error('TODO')
 }
 
-export async function saveImageToMediaLibrary(_opts: {uri: string}) {
-  // TODO
-  throw new Error('TODO')
+/**
+ * Saves an image to the user's device. Uses the CDN's `download` preset
+ * which uses the JPEG version with the Content-Disposition header set to
+ * `attachment; filename=<filename>`. On native this saves to the media library;
+ * on web it triggers a browser download.
+ */
+export async function saveImageToMediaLibrary({uri}: {uri: string}) {
+  const downloadUri = convertCdnPreset(uri, 'download')
+  const segments = downloadUri.split('/')
+  const filename = `bluesky-${segments.at(-1)}.jpg`
+  downloadUrl(downloadUri, filename)
 }
 
 export async function getImageDim(path: string): Promise<Dimensions> {
@@ -64,9 +74,7 @@ export async function getImageDim(path: string): Promise<Dimensions> {
 // =
 
 interface DoResizeOpts {
-  width: number
-  height: number
-  mode: 'contain' | 'cover' | 'stretch'
+  maxDimension: number
   maxSize: number
 }
 
@@ -74,6 +82,9 @@ async function doResize(
   dataUri: string,
   opts: DoResizeOpts,
 ): Promise<PickerImage> {
+  const sourceDims = await getImageDim(dataUri)
+  const newDimensions = getResizedDimensions(sourceDims, opts.maxDimension)
+
   let newDataUri
 
   let minQualityPercentage = 0
@@ -84,10 +95,10 @@ async function doResize(
       (maxQualityPercentage + minQualityPercentage) / 2,
     )
     const tempDataUri = await createResizedImage(dataUri, {
-      width: opts.width,
-      height: opts.height,
+      width: newDimensions.width,
+      height: newDimensions.height,
       quality: qualityPercentage / 100,
-      mode: opts.mode,
+      mode: 'contain',
     })
 
     if (getDataUriSize(tempDataUri) < opts.maxSize) {
@@ -105,8 +116,8 @@ async function doResize(
     path: newDataUri,
     mime: 'image/jpeg',
     size: getDataUriSize(newDataUri),
-    width: opts.width,
-    height: opts.height,
+    width: newDimensions.width,
+    height: newDimensions.height,
   }
 }
 
@@ -157,22 +168,29 @@ function createResizedImage(
 
 export async function saveBytesToDisk(
   filename: string,
-  bytes: Uint8Array<ArrayBuffer>,
+  bytes: Uint8Array,
   type: string,
 ) {
-  const blob = new Blob([bytes], {type})
+  /*
+   * Bytes handed to us are never SharedArrayBuffer-backed, but the broader
+   * Uint8Array parameter type matches the native variant.
+   */
+  const blob = new Blob([bytes as Uint8Array<ArrayBuffer>], {type})
   const url = URL.createObjectURL(blob)
-  await downloadUrl(url, filename)
+  downloadUrl(url, filename)
   // Firefox requires a small delay
   setTimeout(() => URL.revokeObjectURL(url), 100)
   return true
 }
 
-async function downloadUrl(href: string, filename: string) {
+function downloadUrl(href: string, filename: string) {
   const a = document.createElement('a')
   a.href = href
   a.download = filename
+  a.style.display = 'none'
+  document.body.appendChild(a)
   a.click()
+  document.body.removeChild(a)
 }
 
 export async function safeDeleteAsync() {

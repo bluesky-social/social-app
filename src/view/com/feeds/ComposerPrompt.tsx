@@ -1,7 +1,8 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
@@ -10,10 +11,8 @@ import {
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
 import {openCamera, openUnifiedPicker} from '#/lib/media/picker'
-import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
-import {MAX_IMAGES} from '#/view/com/composer/state/composer'
+import {MAX_GALLERY_IMAGES} from '#/view/com/composer/state/composer'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
@@ -22,10 +21,13 @@ import {Camera_Stroke2_Corner0_Rounded as CameraIcon} from '#/components/icons/C
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 
 export function ComposerPrompt() {
-  const {_} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
+  const {_} = useLingui()
   const {openComposer} = useOpenComposer()
   const profile = useCurrentAccountProfile()
   const [hover, setHover] = useState(false)
@@ -35,16 +37,16 @@ export function ComposerPrompt() {
   const sheetWrapper = useSheetWrapper()
 
   const onPress = useCallback(() => {
-    logger.metric('composerPrompt:press', {})
-    openComposer({})
-  }, [openComposer])
+    ax.metric('composerPrompt:press', {})
+    openComposer({logContext: 'Fab'})
+  }, [ax, openComposer])
 
   const onPressImage = useCallback(async () => {
-    logger.metric('composerPrompt:gallery:press', {})
+    ax.metric('composerPrompt:gallery:press', {})
 
     // On web, open the composer with the gallery picker auto-opening
-    if (!isNative) {
-      openComposer({openGallery: true})
+    if (!IS_NATIVE) {
+      openComposer({openGallery: true, logContext: 'Fab'})
       return
     }
 
@@ -62,7 +64,7 @@ export function ComposerPrompt() {
         Keyboard.dismiss()
       }
 
-      const selectionCountRemaining = MAX_IMAGES
+      const selectionCountRemaining = MAX_GALLERY_IMAGES
       const {assets, canceled} = await sheetWrapper(
         openUnifiedPicker({selectionCountRemaining}),
       )
@@ -74,7 +76,7 @@ export function ComposerPrompt() {
       if (assets.length > 0) {
         const imageUris = assets
           .filter(asset => asset.mimeType?.startsWith('image/'))
-          .slice(0, MAX_IMAGES)
+          .slice(0, MAX_GALLERY_IMAGES)
           .map(asset => ({
             uri: asset.uri,
             width: asset.width,
@@ -82,15 +84,16 @@ export function ComposerPrompt() {
           }))
 
         if (imageUris.length > 0) {
-          openComposer({imageUris})
+          openComposer({imageUris, logContext: 'Fab'})
         }
       }
     } catch (err: any) {
       if (!String(err).toLowerCase().includes('cancel')) {
-        logger.warn('Error opening image picker', {error: err})
+        ax.logger.error('Error opening image picker', {error: err})
       }
     }
   }, [
+    ax,
     openComposer,
     requestPhotoAccessIfNeeded,
     requestVideoAccessIfNeeded,
@@ -98,14 +101,14 @@ export function ComposerPrompt() {
   ])
 
   const onPressCamera = useCallback(async () => {
-    logger.metric('composerPrompt:camera:press', {})
+    ax.metric('composerPrompt:camera:press', {})
 
     try {
       if (!(await requestCameraAccessIfNeeded())) {
         return
       }
 
-      if (isNative && Keyboard.isVisible()) {
+      if (IS_NATIVE && Keyboard.isVisible()) {
         Keyboard.dismiss()
       }
 
@@ -122,14 +125,15 @@ export function ComposerPrompt() {
       ]
 
       openComposer({
-        imageUris: isNative ? imageUris : undefined,
+        imageUris: IS_NATIVE ? imageUris : undefined,
+        logContext: 'Fab',
       })
     } catch (err: any) {
       if (!String(err).toLowerCase().includes('cancel')) {
-        logger.warn('Error opening camera', {error: err})
+        ax.logger.error('Error opening camera', {error: err})
       }
     }
-  }, [openComposer, requestCameraAccessIfNeeded])
+  }, [ax, openComposer, requestCameraAccessIfNeeded])
 
   if (!profile) {
     return null
@@ -148,8 +152,6 @@ export function ComposerPrompt() {
         a.relative,
         a.flex_row,
         a.align_start,
-        a.border_t,
-        t.atoms.border_contrast_low,
         {
           paddingLeft: 18,
           paddingRight: 15,
@@ -161,7 +163,6 @@ export function ComposerPrompt() {
         }),
         web({
           cursor: 'pointer',
-          outline: 'none',
         }),
         pressed && web({outline: 'none'}),
       ]}>
@@ -191,7 +192,7 @@ export function ComposerPrompt() {
           <Trans>What's up?</Trans>
         </Text>
         <View style={[a.flex_row, a.gap_md]}>
-          {isNative && (
+          {IS_NATIVE && (
             <Button
               onPress={e => {
                 e.stopPropagation()

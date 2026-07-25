@@ -6,8 +6,9 @@ import {
   type ModerationOpts,
   type Un$Typed,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {
   type InfiniteData,
   useMutation,
@@ -17,14 +18,10 @@ import {
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {RQKEY_getActivitySubscriptions} from '#/state/queries/activity-subscriptions'
 import {useAgent} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
-import {platform, useTheme, web} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, platform, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {
   Button,
@@ -36,7 +33,10 @@ import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 
 export function SubscribeProfileDialog({
@@ -71,6 +71,7 @@ function DialogInner({
   moderationOpts: ModerationOpts
   includeProfile?: boolean
 }) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
   const agent = useAgent()
@@ -133,12 +134,14 @@ function DialogInner({
         })
 
         if (!activitySubscription.post && !activitySubscription.reply) {
-          logger.metric('activitySubscription:disable', {})
+          ax.metric('activitySubscription:disable', {})
           Toast.show(
             _(
               msg`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`,
             ),
-            'check',
+            {
+              type: 'success',
+            },
           )
 
           // filter out the subscription
@@ -160,7 +163,7 @@ function DialogInner({
             },
           )
         } else {
-          logger.metric('activitySubscription:enable', {
+          ax.metric('activitySubscription:enable', {
             setting: activitySubscription.reply ? 'posts_and_replies' : 'posts',
           })
           if (!initialState.post && !initialState.reply) {
@@ -168,16 +171,20 @@ function DialogInner({
               _(
                 msg`You'll start receiving notifications for ${sanitizeHandle(profile.handle, '@')}!`,
               ),
-              'check',
+              {
+                type: 'success',
+              },
             )
           } else {
-            Toast.show(_(msg`Changes saved`), 'check')
+            Toast.show(_(msg`Changes saved`), {
+              type: 'success',
+            })
           }
         }
       })
     },
     onError: err => {
-      logger.error('Could not save activity subscription', {message: err})
+      ax.logger.error('Could not save activity subscription', {message: err})
     },
   })
 
@@ -195,7 +202,7 @@ function DialogInner({
       }
     } else {
       // on web, a disabled save button feels more natural than a massive close button
-      if (isWeb) {
+      if (IS_WEB) {
         return {
           label: _(msg`Save changes`),
           color: 'secondary',

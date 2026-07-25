@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import type React from 'react'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'

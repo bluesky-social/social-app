@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {
@@ -22,7 +22,7 @@ export const ProfileSearchScreen = ({route}: Props) => {
 
   const fixedParams = useMemo(
     () => ({
-      from: profile?.handle ?? name,
+      author: profile?.handle ?? name,
     }),
     [profile?.handle, name],
   )

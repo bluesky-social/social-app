@@ -7,15 +7,14 @@ import {
   type ModerationOpts,
   type RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, Plural, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {MAX_LABELERS} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
-import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
@@ -26,6 +25,7 @@ import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {type DialogOuterProps, useDialogControl} from '#/components/Dialog'
+import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -35,6 +35,8 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS} from '#/env'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
@@ -61,6 +63,7 @@ let ProfileHeaderLabeler = ({
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const playHaptic = useHaptics()
@@ -99,9 +102,9 @@ let ProfileHeaderLabeler = ({
         ),
         {type: 'error'},
       )
-      logger.error(`Failed to toggle labeler like`, {message: e.message})
+      ax.logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [labeler, playHaptic, likeUri, unlikeMod, likeMod, _])
+  }, [ax, labeler, playHaptic, likeUri, unlikeMod, likeMod, _])
 
   return (
     <ProfileHeaderShell
@@ -111,10 +114,10 @@ let ProfileHeaderLabeler = ({
       isPlaceholderProfile={isPlaceholderProfile}>
       <View
         style={[a.px_lg, a.pt_md, a.pb_sm]}
-        pointerEvents={isIOS ? 'auto' : 'box-none'}>
+        pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
         <View
           style={[a.flex_row, a.justify_end, a.align_center, a.gap_xs, a.pb_lg]}
-          pointerEvents={isIOS ? 'auto' : 'box-none'}>
+          pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
           <HeaderLabelerButtons profile={profile} />
         </View>
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_md]}>
@@ -211,13 +214,15 @@ function CantSubscribePrompt({
   const {_} = useLingui()
   return (
     <Prompt.Outer control={control}>
-      <Prompt.TitleText>Unable to subscribe</Prompt.TitleText>
-      <Prompt.DescriptionText>
-        <Trans>
-          We're sorry! You can only subscribe to twenty labelers, and you've
-          reached your limit of twenty.
-        </Trans>
-      </Prompt.DescriptionText>
+      <Prompt.Content>
+        <Prompt.TitleText>Unable to subscribe</Prompt.TitleText>
+        <Prompt.DescriptionText>
+          <Trans>
+            We're sorry! You can only subscribe to twenty labelers, and you've
+            reached your limit of twenty.
+          </Trans>
+        </Prompt.DescriptionText>
+      </Prompt.Content>
       <Prompt.Actions>
         <Prompt.Action onPress={() => control.close()} cta={_(msg`OK`)} />
       </Prompt.Actions>
@@ -233,9 +238,10 @@ export function HeaderLabelerButtons({
   /** disable the subscribe button */
   minimal?: boolean
 }) {
-  const {_} = useLingui()
   const t = useTheme()
-  const {currentAccount} = useSession()
+  const ax = useAnalytics()
+  const {_} = useLingui()
+  const {currentAccount, hasSession} = useSession()
   const requireAuth = useRequireAuth()
   const playHaptic = useHaptics()
   const editProfileControl = useDialogControl()
@@ -264,12 +270,11 @@ export function HeaderLabelerButtons({
           subscribe,
         })
 
-        logger.metric(
+        ax.metric(
           subscribe
             ? 'moderation:subscribedToLabeler'
             : 'moderation:unsubscribedFromLabeler',
           {},
-          {statsig: true},
         )
       } catch (e: any) {
         reset()
@@ -277,18 +282,26 @@ export function HeaderLabelerButtons({
           cantSubscribePrompt.open()
           return
         }
-        logger.error(`Failed to subscribe to labeler`, {message: e.message})
+        ax.logger.error(`Failed to subscribe to labeler`, {message: e.message})
       }
     })
   return (
     <>
+      {hasSession &&
+        !isMe &&
+        !profile.viewer?.blockedBy &&
+        !profile.viewer?.blocking && <MessageProfileButton profile={profile} />}
+
       {isMe ? (
         <>
           <Button
             testID="profileHeaderEditProfileButton"
             size="small"
             color="secondary"
-            onPress={editProfileControl.open}
+            onPress={() => {
+              playHaptic('Light')
+              editProfileControl.open()
+            }}
             label={_(msg`Edit profile`)}
             style={a.rounded_full}>
             <ButtonText>
@@ -348,7 +361,6 @@ export function HeaderLabelerButtons({
         </Button>
       ) : null}
       <ProfileMenu profile={profile} />
-
       <CantSubscribePrompt control={cantSubscribePrompt} />
     </>
   )

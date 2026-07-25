@@ -6,7 +6,7 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -32,12 +32,13 @@ import {atoms as a, useTheme} from '#/alf'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
+import {GalleryBleed} from '#/components/images/Gallery'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
+import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
@@ -128,33 +129,35 @@ const ThreadItemTreePostOuterWrapper = memo(
     const indents = Math.max(0, item.ui.indent - 1)
 
     return (
-      <View
-        style={[
-          a.flex_row,
-          item.ui.indent === 1 &&
-            !item.ui.showParentReplyLine && [
-              a.border_t,
-              t.atoms.border_contrast_low,
-            ],
-        ]}>
-        {Array.from(Array(indents)).map((_, n: number) => {
-          const isSkipped = item.ui.skippedIndentIndices.has(n)
-          return (
-            <View
-              key={`${item.value.post.uri}-padding-${n}`}
-              style={[
+      <GalleryBleed>
+        <View
+          style={[
+            a.flex_row,
+            item.ui.indent === 1 &&
+              !item.ui.showParentReplyLine && [
+                a.border_t,
                 t.atoms.border_contrast_low,
-                {
-                  borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
-                  width: TREE_INDENT + TREE_AVI_WIDTH / 2,
-                  left: 1,
-                },
-              ]}
-            />
-          )
-        })}
-        {children}
-      </View>
+              ],
+          ]}>
+          {Array.from(Array(indents)).map((_, n: number) => {
+            const isSkipped = item.ui.skippedIndentIndices.has(n)
+            return (
+              <View
+                key={`${item.value.post.uri}-padding-${n}`}
+                style={[
+                  t.atoms.border_contrast_low,
+                  {
+                    borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
+                    width: TREE_INDENT + TREE_AVI_WIDTH / 2,
+                    left: 1,
+                  },
+                ]}
+              />
+            )
+          })}
+          {children}
+        </View>
+      </GalleryBleed>
     )
   },
 )
@@ -302,6 +305,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
         langs: post.record.langs,
       },
       onPostSuccess: onPostSuccess,
+      logContext: 'PostReply',
     })
   }, [openComposer, post, record, onPostSuccess, moderation])
 
@@ -335,14 +339,14 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
               <View style={[a.flex_row]}>
                 <ThreadItemTreeReplyChildReplyLine item={item} />
                 <View style={[a.flex_1, a.pl_2xs]}>
-                  <LabelsOnMyPost post={post} style={[a.pb_2xs]} />
                   <PostAlerts
+                    post={post}
                     modui={moderation.ui('contentList')}
                     style={[a.pb_2xs]}
                     additionalCauses={additionalPostAlerts}
                   />
                   {richText?.text ? (
-                    <>
+                    <View style={[a.mb_2xs]}>
                       <RichText
                         enableTags
                         value={richText}
@@ -357,14 +361,16 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                           onPress={onPressShowMore}
                         />
                       )}
-                    </>
+                    </View>
                   ) : null}
+                  <TranslatedPost hideTranslateLink post={post} />
                   {post.embed && (
                     <View style={[a.pb_xs]}>
                       <Embed
                         embed={post.embed}
                         moderation={moderation}
                         viewContext={PostEmbedViewContext.Feed}
+                        post={post}
                       />
                     </View>
                   )}

@@ -1,9 +1,11 @@
-import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
+import {createContext, useCallback, useContext, useMemo} from 'react'
 
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
 import {Provider as RedirectOverlayProvider} from '#/ageAssurance/components/RedirectOverlay'
-import {AgeAssuranceDataProvider} from '#/ageAssurance/data'
-import {useAgeAssuranceDataContext} from '#/ageAssurance/data'
+import {
+  AgeAssuranceServerDataProvider,
+  useAgeAssuranceServerDataContext,
+} from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'
 import {
   useAgeAssuranceState,
@@ -11,14 +13,18 @@ import {
 } from '#/ageAssurance/state'
 import {
   AgeAssuranceAccess,
+  type AgeAssuranceFlags,
   type AgeAssuranceState,
   AgeAssuranceStatus,
 } from '#/ageAssurance/types'
-import {isUserUnderAdultAge} from '#/ageAssurance/util'
+import {
+  computeAgeAssuranceFlags,
+  useAgeAssuranceRegionConfigWithFallback,
+} from '#/ageAssurance/util'
 
 export {
   prefetchConfig as prefetchAgeAssuranceConfig,
-  prefetchAgeAssuranceData,
+  prefetchAgeAssuranceServerData,
   refetchServerState as refetchAgeAssuranceServerState,
   usePatchOtherRequiredData as usePatchAgeAssuranceOtherRequiredData,
   usePatchServerState as usePatchAgeAssuranceServerState,
@@ -29,10 +35,7 @@ const AgeAssuranceStateContext = createContext<{
   Access: typeof AgeAssuranceAccess
   Status: typeof AgeAssuranceStatus
   state: AgeAssuranceState
-  flags: {
-    adultContentDisabled: boolean
-    chatDisabled: boolean
-  }
+  flags: AgeAssuranceFlags
 }>({
   Access: AgeAssuranceAccess,
   Status: AgeAssuranceStatus,
@@ -42,8 +45,16 @@ const AgeAssuranceStateContext = createContext<{
     access: AgeAssuranceAccess.Full,
   },
   flags: {
+    isAgeRestricted: false,
     adultContentDisabled: false,
     chatDisabled: false,
+    groupChatDisabled: false,
+    hasDeclaredAge: false,
+    isDeclaredUnderAdultAge: false,
+    isOverRegionMinAccessAge: false,
+    isOverAppMinAccessAge: false,
+    allowsDeviceVerification: false,
+    hasSharedDeviceSignals: false,
   },
 })
 
@@ -58,52 +69,55 @@ export function useAgeAssurance() {
 
 export function Provider({children}: {children: React.ReactNode}) {
   return (
-    <AgeAssuranceDataProvider>
+    <AgeAssuranceServerDataProvider>
       <InnerProvider>
         <RedirectOverlayProvider>{children}</RedirectOverlayProvider>
       </InnerProvider>
-    </AgeAssuranceDataProvider>
+    </AgeAssuranceServerDataProvider>
   )
 }
 
 function InnerProvider({children}: {children: React.ReactNode}) {
   const state = useAgeAssuranceState()
-  const {data} = useAgeAssuranceDataContext()
+  const {metadata, deviceSignals} = useAgeAssuranceServerDataContext()
+  const regionConfig = useAgeAssuranceRegionConfigWithFallback()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
 
   const handleAccessUpdate = useCallback(
     (s: AgeAssuranceState) => {
-      getAndRegisterPushToken({
-        isAgeRestricted: s.access !== AgeAssuranceAccess.Full,
+      const flags = computeAgeAssuranceFlags({
+        state: s,
+        regionConfig,
+        metadata,
+        deviceSignals,
       })
+      if (flags.isAgeRestricted) {
+        void getAndRegisterPushToken({
+          isAgeRestricted: true,
+        })
+      }
     },
-    [getAndRegisterPushToken],
+    [getAndRegisterPushToken, regionConfig, metadata, deviceSignals],
   )
   useOnAgeAssuranceAccessUpdate(handleAccessUpdate)
-
-  useEffect(() => {
-    logger.debug(`useAgeAssuranceState`, {state})
-  }, [state])
 
   return (
     <AgeAssuranceStateContext.Provider
       value={useMemo(() => {
-        const chatDisabled = state.access !== AgeAssuranceAccess.Full
-        const isUnderage = data?.birthdate
-          ? isUserUnderAdultAge(data.birthdate)
-          : true
-        const adultContentDisabled =
-          state.access !== AgeAssuranceAccess.Full || isUnderage
-        return {
+        const res = {
           Access: AgeAssuranceAccess,
           Status: AgeAssuranceStatus,
           state,
-          flags: {
-            adultContentDisabled,
-            chatDisabled,
-          },
+          flags: computeAgeAssuranceFlags({
+            state,
+            regionConfig,
+            metadata,
+            deviceSignals,
+          }),
         }
-      }, [state, data])}>
+        logger.debug(`useAgeAssurance`, res)
+        return res
+      }, [state, metadata, regionConfig, deviceSignals])}>
       {children}
     </AgeAssuranceStateContext.Provider>
   )

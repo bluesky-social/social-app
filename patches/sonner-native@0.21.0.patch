@@ -1,0 +1,39 @@
+diff --git a/lib/module/toast.js b/lib/module/toast.js
+index be089f3ff23017a6844e2010cedc547729e198aa..c2dd0fa2df93f929c33bf2bcc3e6f921941fa006 100644
+--- a/lib/module/toast.js
++++ b/lib/module/toast.js
+@@ -1,8 +1,8 @@
+ "use strict";
+ 
+ import * as React from 'react';
+-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+-import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
++import { ActivityIndicator, Pressable, Text, View, Platform } from 'react-native';
++import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming, FadeOut } from 'react-native-reanimated';
+ import { ANIMATION_DURATION, useToastLayoutAnimations } from "./animations.js";
+ import { toastDefaultValues } from "./constants.js";
+ import { useToastContext } from "./context.js";
+@@ -258,7 +258,10 @@ export const Toast = /*#__PURE__*/React.forwardRef(({
+       ...toastSwipeHandlerProps,
+       children: /*#__PURE__*/_jsx(Animated.View, {
+         entering: entering,
+-        exiting: exiting,
++        exiting: Platform.select({
++          android: undefined,
++          default: exiting
++        }),
+         children: jsx
+       })
+     });
+@@ -268,7 +271,10 @@ export const Toast = /*#__PURE__*/React.forwardRef(({
+     children: /*#__PURE__*/_jsx(Animated.View, {
+       style: [unstyled ? undefined : elevationStyle, defaultStyles.toast, toastStyleCtx, styles?.toast, style, wiggleAnimationStyle],
+       entering: entering,
+-      exiting: exiting,
++      exiting: Platform.select({
++        android: undefined,
++        default: exiting
++      }),
+       children: /*#__PURE__*/_jsxs(View, {
+         style: [defaultStyles.toastContent, toastContentStyleCtx, styles?.toastContent],
+         children: [promiseOptions || variant === 'loading' ? 'loading' in icons ? icons.loading : /*#__PURE__*/_jsx(ActivityIndicator, {}) : icon ? /*#__PURE__*/_jsx(View, {

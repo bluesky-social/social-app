@@ -1,10 +1,10 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {AtUri} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
-import {isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getFeedTypeFromUri} from '#/state/queries/feed'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -15,6 +15,7 @@ import {Divider} from '#/components/Divider'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 export function MissingFeed({
   style,
@@ -83,7 +84,7 @@ export function MissingFeed({
                 a.italic,
               ]}
               numberOfLines={1}>
-              {isWeb ? (
+              {IS_WEB ? (
                 <Trans>Click for information</Trans>
               ) : (
                 <Trans>Tap for information</Trans>
@@ -139,8 +140,8 @@ function DialogInner({
           {type === 'feed' ? (
             <Trans>
               We could not connect to the service that provides this custom
-              feed. It may be temporarily unavailable and experiencing issues,
-              or permanently unavailable.
+              feed. It may be temporarily experiencing issues, or permanently
+              unavailable.
             </Trans>
           ) : (
             <Trans>We could not find this list. It was probably deleted.</Trans>
@@ -205,7 +206,7 @@ function DialogInner({
           </>
         )}
       </View>
-      {isNative && (
+      {IS_NATIVE && (
         <Button
           label={_(msg`Close`)}
           onPress={() => control.close()}

@@ -1,10 +1,12 @@
-import React from 'react'
+import {useRef, useState} from 'react'
 import {type TextInput, View} from 'react-native'
 
 import {APP_LANGUAGES} from '#/lib/../locale/languages'
-import {atoms as a} from '#/alf'
+import {type CountryCode} from '#/lib/international-telephone-codes'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {DateField, LabelText} from '#/components/forms/DateField'
+import {AutosizedTextarea} from '#/components/forms/AutosizedTextarea'
+import {DateField, LabelText, utils} from '#/components/forms/DateField'
 import * as SegmentedControl from '#/components/forms/SegmentedControl'
 import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
@@ -15,25 +17,66 @@ import * as Select from '#/components/Select'
 import {H1, H3} from '#/components/Typography'
 
 export function Forms() {
-  const [toggleGroupAValues, setToggleGroupAValues] = React.useState(['a'])
-  const [toggleGroupBValues, setToggleGroupBValues] = React.useState(['a', 'b'])
-  const [toggleGroupCValues, setToggleGroupCValues] = React.useState(['a', 'b'])
-  const [toggleGroupDValues, setToggleGroupDValues] = React.useState(['warn'])
-  const [segmentedControlValue, setSegmentedControlValue] = React.useState<
+  const t = useTheme()
+  const [toggleGroupAValues, setToggleGroupAValues] = useState(['a'])
+  const [toggleGroupBValues, setToggleGroupBValues] = useState(['a', 'b'])
+  const [toggleGroupCValues, setToggleGroupCValues] = useState(['a', 'b'])
+  const [toggleGroupDValues, setToggleGroupDValues] = useState(['warn'])
+  const [segmentedControlValue, setSegmentedControlValue] = useState<
     'hide' | 'warn' | 'show'
   >('warn')
 
-  const [value, setValue] = React.useState('')
-  const [date, setDate] = React.useState('2001-01-01')
-  const [countryCode, setCountryCode] = React.useState('US')
-  const [phoneNumber, setPhoneNumber] = React.useState('')
-  const [lang, setLang] = React.useState('en')
+  const [value, setValue] = useState('')
+  const [date, setDate] = useState('2001-01-01')
+  const [emptyDate, setEmptyDate] = useState('')
+  const [confirmDate, setConfirmDate] = useState('2001-01-01')
+  const [countryCode, setCountryCode] = useState<CountryCode>('US')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [lang, setLang] = useState('en')
 
-  const inputRef = React.useRef<TextInput>(null)
+  const inputRef = useRef<TextInput>(null)
 
   return (
     <View style={[a.gap_4xl, a.align_start]}>
       <H1>Forms</H1>
+
+      <View style={[a.gap_md, a.align_start, a.w_full]}>
+        <AutosizedTextarea
+          label="minRows=1 maxRows=5"
+          style={[
+            a.w_full,
+            a.p_md,
+            a.rounded_sm,
+            a.border,
+            t.atoms.border_contrast_medium,
+          ]}
+          maxRows={5}
+        />
+        <AutosizedTextarea
+          label="defaultValue minRows=1 maxRows=2"
+          style={[
+            a.w_full,
+            a.p_md,
+            a.rounded_sm,
+            a.border,
+            t.atoms.border_contrast_medium,
+          ]}
+          maxRows={2}
+          defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies lacinia, nunc nisl aliquam nisl, eget aliquam nunc nisl eget nunc."
+        />
+        <AutosizedTextarea
+          label="minRows=3 maxRows=10"
+          style={[
+            a.w_full,
+            a.p_md,
+            a.rounded_sm,
+            a.border,
+            t.atoms.border_contrast_medium,
+          ]}
+          minRows={3}
+          maxRows={10}
+        />
+      </View>
 
       <Select.Root value={lang} onValueChange={setLang}>
         <Select.Trigger label="Select app language">
@@ -54,24 +97,6 @@ export function Forms() {
           }))}
         />
       </Select.Root>
-
-      <View style={[a.flex_row, a.gap_sm, a.align_center]}>
-        <View>
-          <InternationalPhoneCodeSelect
-            // @ts-ignore
-            value={countryCode}
-            onChange={value => setCountryCode(value)}
-          />
-        </View>
-
-        <View style={[a.flex_1]}>
-          <TextField.Input
-            label="Phone number"
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-          />
-        </View>
-      </View>
 
       <View style={[a.gap_md, a.align_start, a.w_full]}>
         <H3>InputText</H3>
@@ -152,32 +177,80 @@ export function Forms() {
         <H3>DateField</H3>
 
         <View style={[a.w_full]}>
-          <LabelText>Date</LabelText>
+          <LabelText>1. Date</LabelText>
           <DateField
             testID="date"
             value={date}
             onChangeDate={date => {
-              console.log(date)
+              console.log('[1] changed', date)
               setDate(date)
             }}
             label="Input"
           />
         </View>
 
-        {/* commented out so it's not in the web bundle */}
-        {/*<H3>InternationalPhoneCodeSelect</H3>
+        <View style={[a.w_full]}>
+          <LabelText>2. Empty value with placeholder</LabelText>
+          <DateField
+            testID="dateEmpty"
+            value={emptyDate}
+            onChangeDate={date => {
+              console.log('[2] changed', date)
+              setEmptyDate(date)
+            }}
+            placeholder="Select a date"
+            label="Birthday"
+          />
+        </View>
+
+        <View style={[a.w_full]}>
+          <LabelText>3. Empty value with placeholder and maximumDate</LabelText>
+          <DateField
+            testID="dateEmptyMax"
+            value={emptyDate}
+            onChangeDate={date => {
+              console.log('[3] changed', date)
+              setEmptyDate(date)
+            }}
+            placeholder="Select a date"
+            maximumDate={utils.toSimpleDateString(new Date())}
+            label="Date of birth"
+          />
+        </View>
+
+        <View style={[a.w_full]}>
+          <LabelText>
+            4. onConfirm vs onChangeDate (check the console)
+          </LabelText>
+          <DateField
+            testID="dateConfirm"
+            value={confirmDate}
+            onChangeDate={date => {
+              console.log('[4] changed', date)
+              setConfirmDate(date)
+            }}
+            onConfirm={date => console.log('[4] confirmed', date)}
+            label="Input"
+          />
+        </View>
+
+        <H3>InternationalPhoneCodeSelect</H3>
 
         <View style={[a.flex_row, a.gap_sm, a.align_center]}>
           <View>
             <InternationalPhoneCodeSelect
-              value={telCode}
-              onChange={setTelCode}
+              value={countryCode}
+              onChange={value => setCountryCode(value)}
             />
           </View>
           <View style={[a.flex_1]}>
-            <TextField.Input label="Phone number" />
+            <TextField.Input
+              label="Phone number"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+            />
           </View>
-        </View>*/}
+        </View>
       </View>
 
       <View style={[a.gap_md, a.align_start, a.w_full]}>

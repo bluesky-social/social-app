@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo, useState} from 'react'
 import {type ColorValue, Dimensions, StyleSheet, View} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
@@ -16,20 +16,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import {useHaptics} from '#/lib/haptics'
-
-interface GestureAction {
-  color: ColorValue
-  action: () => void
-  threshold: number
-  icon: React.ElementType
-}
-
-interface GestureActions {
-  leftFirst?: GestureAction
-  leftSecond?: GestureAction
-  rightFirst?: GestureAction
-  rightSecond?: GestureAction
-}
+import {type GestureActions} from './GestureActionView.shared'
 
 const MAX_WIDTH = Dimensions.get('screen').width
 const ICON_SIZE = 32
@@ -50,7 +37,7 @@ export function GestureActionView({
     )
   }
 
-  const [activeAction, setActiveAction] = React.useState<
+  const [activeAction, setActiveAction] = useState<
     'leftFirst' | 'leftSecond' | 'rightFirst' | 'rightSecond' | null
   >(null)
 
@@ -231,7 +218,7 @@ export function GestureActionView({
     }
   })
 
-  const leftSideInterpolation = React.useMemo(() => {
+  const leftSideInterpolation = useMemo(() => {
     return createInterpolation({
       firstColor: actions.leftFirst?.color,
       secondColor: actions.leftSecond?.color,
@@ -241,7 +228,7 @@ export function GestureActionView({
     })
   }, [actions.leftFirst, actions.leftSecond])
 
-  const rightSideInterpolation = React.useMemo(() => {
+  const rightSideInterpolation = useMemo(() => {
     return createInterpolation({
       firstColor: actions.rightFirst?.color,
       secondColor: actions.rightSecond?.color,
@@ -251,14 +238,14 @@ export function GestureActionView({
     })
   }, [actions.rightFirst, actions.rightSecond])
 
-  const interpolation = React.useMemo<{
+  const interpolation = useMemo<{
     inputRange: number[]
     outputRange: ColorValue[]
   }>(() => {
     if (!actions.leftFirst) {
-      return rightSideInterpolation!
+      return rightSideInterpolation
     } else if (!actions.rightFirst) {
-      return leftSideInterpolation!
+      return leftSideInterpolation
     } else {
       return {
         inputRange: [

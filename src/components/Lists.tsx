@@ -1,7 +1,8 @@
 import {memo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {
@@ -184,7 +185,6 @@ let ListMaybePlaceholder = ({
         message={errorMessage ?? _(msg`Something went wrong!`)}
         onRetry={onRetry}
         onGoBack={onGoBack}
-        sideBorders={sideBorders}
         hideBackButton={hideBackButton}
       />
     )
@@ -225,7 +225,6 @@ let ListMaybePlaceholder = ({
         onRetry={onRetry}
         onGoBack={onGoBack}
         hideBackButton={hideBackButton}
-        sideBorders={sideBorders}
       />
     )
   }

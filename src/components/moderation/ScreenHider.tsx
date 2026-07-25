@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {
   type StyleProp,
   TouchableWithoutFeedback,
@@ -6,8 +6,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type ModerationUI} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -37,8 +36,8 @@ export function ScreenHider({
   containerStyle?: StyleProp<ViewStyle>
 }>) {
   const t = useTheme()
-  const {_} = useLingui()
-  const [override, setOverride] = React.useState(false)
+  const {t: l} = useLingui()
+  const [override, setOverride] = useState(false)
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
   const control = useModerationDetailsDialogControl()
@@ -130,15 +129,13 @@ export function ScreenHider({
                 control.open()
               }}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Learn more about this warning`)}
+              accessibilityLabel={l`Learn more about this warning`}
               accessibilityHint="">
               <Text
                 style={[
                   a.text_lg,
                   a.leading_snug,
-                  {
-                    color: t.palette.primary_500,
-                  },
+                  t.atoms.text_link,
                   web({
                     cursor: 'pointer',
                   }),
@@ -157,7 +154,7 @@ export function ScreenHider({
           color="primary"
           size="large"
           style={[a.rounded_full]}
-          label={_(msg`Go back`)}
+          label={l`Go back`}
           onPress={() => {
             if (navigation.canGoBack()) {
               navigation.goBack()
@@ -175,7 +172,7 @@ export function ScreenHider({
             color="secondary"
             size="large"
             style={[a.rounded_full]}
-            label={_(msg`Show anyway`)}
+            label={l`Show anyway`}
             onPress={() => setOverride(v => !v)}>
             <ButtonText>
               <Trans>Show anyway</Trans>

@@ -1,6 +1,8 @@
-import ExpoImageCropTool, {type OpenCropperOptions} from 'expo-image-crop-tool'
 import {type ImagePickerOptions, launchCameraAsync} from 'expo-image-picker'
-import {t} from '@lingui/macro'
+import ExpoImageCropTool, {
+  type OpenCropperOptions,
+} from '@bsky.app/expo-image-crop-tool'
+import {t} from '@lingui/core/macro'
 
 export {
   openPicker,

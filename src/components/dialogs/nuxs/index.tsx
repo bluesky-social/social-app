@@ -8,7 +8,6 @@ import {
 } from 'react'
 import {type AppBskyActorDefs} from '@atproto/api'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
@@ -20,11 +19,16 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
 import {
-  enabled as isFindContactsAnnouncementEnabled,
-  FindContactsAnnouncement,
-} from '#/components/dialogs/nuxs/FindContactsAnnouncement'
+  enabled as isGroupChatsAnnouncementEnabled,
+  GroupChatsAnnouncement,
+} from '#/components/dialogs/nuxs/GroupChatsAnnouncement'
+import {
+  enabled as isInviteFriendsAnnouncementEnabled,
+  InviteFriendsAnnouncement,
+} from '#/components/dialogs/nuxs/InviteFriendsAnnouncement'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
+import {useAnalytics} from '#/analytics'
 import {useGeolocation} from '#/geolocation'
 
 type Context = {
@@ -37,8 +41,12 @@ const queuedNuxs: {
   enabled?: (props: EnabledCheckProps) => boolean
 }[] = [
   {
-    id: Nux.FindContactsAnnouncement,
-    enabled: isFindContactsAnnouncementEnabled,
+    id: Nux.GroupChatsAnnouncement,
+    enabled: isGroupChatsAnnouncementEnabled,
+  },
+  {
+    id: Nux.InviteFriendsAnnouncement,
+    enabled: isInviteFriendsAnnouncementEnabled,
   },
 ]
 
@@ -88,7 +96,7 @@ function Inner({
   currentProfile: AppBskyActorDefs.ProfileViewDetailed
   preferences: UsePreferencesQueryResponse
 }) {
-  const gate = useGate()
+  const ax = useAnalytics()
   const geolocation = useGeolocation()
   const {nuxs} = useNuxs()
   const [snoozed, setSnoozed] = useState(() => {
@@ -133,7 +141,7 @@ function Inner({
       if (
         enabled &&
         !enabled({
-          gate,
+          features: ax.features,
           currentAccount,
           currentProfile,
           preferences,
@@ -165,11 +173,11 @@ function Inner({
       break
     }
   }, [
+    ax.features,
     nuxs,
     snoozed,
     snoozeNuxDialog,
     saveNux,
-    gate,
     currentAccount,
     currentProfile,
     preferences,
@@ -186,9 +194,13 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
-      {activeNux === Nux.FindContactsAnnouncement && (
-        <FindContactsAnnouncement />
-      )}
+      {activeNux === Nux.GroupChatsAnnouncement && <GroupChatsAnnouncement />}
+      {/*
+        Mounted unconditionally: it gates the announcement on `activeNux`
+        internally, so it can keep the invite-friends dialog mounted across
+        the announcement's dismissal during the "Try it" handoff.
+      */}
+      <InviteFriendsAnnouncement />
     </Context.Provider>
   )
 }

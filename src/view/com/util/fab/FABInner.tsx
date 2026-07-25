@@ -1,5 +1,6 @@
 import {type ComponentProps, type JSX} from 'react'
 import {
+  type GestureResponderEvent,
   type Pressable,
   type StyleProp,
   StyleSheet,
@@ -12,9 +13,8 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {clamp} from '#/lib/numbers'
-import {isWeb} from '#/platform/detection'
-import {ios, useBreakpoints, useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
+import {IS_WEB} from '#/env'
 
 export interface FABProps extends ComponentProps<typeof Pressable> {
   testID?: string
@@ -50,7 +50,7 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
           onPress?.(evt)
           playHaptic('Light')
         }}
-        onLongPress={ios((evt: any) => {
+        onLongPress={ios((evt: GestureResponderEvent) => {
           onPress?.(evt)
           playHaptic('Heavy')
         })}
@@ -61,7 +61,6 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
           {backgroundColor: t.palette.primary_500},
           a.align_center,
           a.justify_center,
-          a.shadow_sm,
           style,
         ]}
         {...props}>
@@ -84,7 +83,7 @@ const styles = StyleSheet.create({
   },
   outer: {
     // @ts-ignore web-only
-    position: isWeb ? 'fixed' : 'absolute',
+    position: IS_WEB ? 'fixed' : 'absolute',
     zIndex: 1,
     cursor: 'pointer',
   },

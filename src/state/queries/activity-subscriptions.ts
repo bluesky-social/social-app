@@ -3,7 +3,7 @@ import {
   type AppBskyNotificationDeclaration,
   type AppBskyNotificationListActivitySubscriptions,
 } from '@atproto/api'
-import {t} from '@lingui/macro'
+import {t} from '@lingui/core/macro'
 import {
   type InfiniteData,
   type QueryClient,
@@ -14,7 +14,7 @@ import {
 } from '@tanstack/react-query'
 
 import {useAgent, useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from '#/components/Toast'
 
 export const RQKEY_getActivitySubscriptions = ['activity-subscriptions']
 export const RQKEY_getNotificationDeclaration = ['notification-declaration']

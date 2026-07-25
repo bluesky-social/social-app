@@ -1,27 +1,31 @@
-import React from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyGraphDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useGoBack} from '#/lib/hooks/useGoBack'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {RQKEY_ROOT as listQueryRoot} from '#/state/queries/list'
-import {useListBlockMutation, useListMuteMutation} from '#/state/queries/list'
+import {
+  RQKEY_ROOT as listQueryRoot,
+  useListBlockMutation,
+  useListMuteMutation,
+} from '#/state/queries/list'
 import {
   type UsePreferencesQueryResponse,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Loader} from '#/components/Loader'
 import {useHider} from '#/components/moderation/Hider'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
 export function ListHiddenScreen({
@@ -41,7 +45,7 @@ export function ListHiddenScreen({
 
   const isModList = list.purpose === AppBskyGraphDefs.MODLIST
 
-  const [isProcessing, setIsProcessing] = React.useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
   const listBlockMutation = useListBlockMutation()
   const listMuteMutation = useListMuteMutation()
   const {mutateAsync: removeSavedFeed} = useRemoveFeedMutation()

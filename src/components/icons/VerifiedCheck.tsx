@@ -1,9 +1,9 @@
-import React from 'react'
+import {forwardRef} from 'react'
 import Svg, {Circle, Path} from 'react-native-svg'
 
 import {type Props, useCommonSVGProps} from '#/components/icons/common'
 
-export const VerifiedCheck = React.forwardRef<Svg, Props>(
+export const VerifiedCheck = forwardRef<Svg, Props>(
   function LogoImpl(props, ref) {
     const {fill, size, style, ...rest} = useCommonSVGProps(props)
 

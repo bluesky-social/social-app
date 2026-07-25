@@ -1,5 +1,5 @@
-import React from 'react'
-import {type Theme, type ThemeName} from '@bsky.app/alf'
+import {createContext, useCallback, useContext, useMemo, useState} from 'react'
+import {type Theme, type ThemeName, utils as baseUtils} from '@bsky.app/alf'
 
 import {
   computeFontScaleMultiplier,
@@ -9,6 +9,12 @@ import {
   setFontScale as persistFontScale,
 } from '#/alf/fonts'
 import {themes} from '#/alf/themes'
+import {
+  contrastRatio,
+  darken,
+  lighten,
+  rgbToHex,
+} from '#/alf/util/colorGeneration'
 import {type Device} from '#/storage'
 
 export {type TextStyleProp, type Theme, type ViewStyleProp} from '@bsky.app/alf'
@@ -20,6 +26,13 @@ export * from '#/alf/util/flatten'
 export * from '#/alf/util/platform'
 export * from '#/alf/util/themeSelector'
 export * from '#/alf/util/useGutters'
+export const utils = {
+  ...baseUtils,
+  rgbToHex,
+  lighten,
+  darken,
+  contrastRatio,
+}
 
 export type Alf = {
   themeName: ThemeName
@@ -41,7 +54,7 @@ export type Alf = {
 /*
  * Context
  */
-export const Context = React.createContext<Alf>({
+export const Context = createContext<Alf>({
   themeName: 'light',
   theme: themes.light,
   themes,
@@ -59,16 +72,18 @@ Context.displayName = 'AlfContext'
 export function ThemeProvider({
   children,
   theme: themeName,
-}: React.PropsWithChildren<{theme: ThemeName}>) {
-  const [fontScale, setFontScale] = React.useState<Alf['fonts']['scale']>(() =>
+  themesOverride,
+}: React.PropsWithChildren<{
+  theme: ThemeName
+  themesOverride?: Partial<typeof themes>
+}>) {
+  const [fontScale, setFontScale] = useState<Alf['fonts']['scale']>(() =>
     getFontScale(),
   )
-  const [fontScaleMultiplier, setFontScaleMultiplier] = React.useState(() =>
+  const [fontScaleMultiplier, setFontScaleMultiplier] = useState(() =>
     computeFontScaleMultiplier(fontScale),
   )
-  const setFontScaleAndPersist = React.useCallback<
-    Alf['fonts']['setFontScale']
-  >(
+  const setFontScaleAndPersist = useCallback<Alf['fonts']['setFontScale']>(
     fs => {
       setFontScale(fs)
       persistFontScale(fs)
@@ -76,12 +91,10 @@ export function ThemeProvider({
     },
     [setFontScale],
   )
-  const [fontFamily, setFontFamily] = React.useState<Alf['fonts']['family']>(
-    () => getFontFamily(),
+  const [fontFamily, setFontFamily] = useState<Alf['fonts']['family']>(() =>
+    getFontFamily(),
   )
-  const setFontFamilyAndPersist = React.useCallback<
-    Alf['fonts']['setFontFamily']
-  >(
+  const setFontFamilyAndPersist = useCallback<Alf['fonts']['setFontFamily']>(
     ff => {
       setFontFamily(ff)
       persistFontFamily(ff)
@@ -89,11 +102,15 @@ export function ThemeProvider({
     [setFontFamily],
   )
 
-  const value = React.useMemo<Alf>(
-    () => ({
-      themes,
+  const value = useMemo<Alf>(() => {
+    const t = {
+      ...themes,
+      ...themesOverride,
+    }
+    return {
+      themes: t,
       themeName: themeName,
-      theme: themes[themeName],
+      theme: t[themeName],
       fonts: {
         scale: fontScale,
         scaleMultiplier: fontScaleMultiplier,
@@ -102,27 +119,27 @@ export function ThemeProvider({
         setFontFamily: setFontFamilyAndPersist,
       },
       flags: {},
-    }),
-    [
-      themeName,
-      fontScale,
-      setFontScaleAndPersist,
-      fontFamily,
-      setFontFamilyAndPersist,
-      fontScaleMultiplier,
-    ],
-  )
+    }
+  }, [
+    themeName,
+    fontScale,
+    setFontScaleAndPersist,
+    fontFamily,
+    setFontFamilyAndPersist,
+    fontScaleMultiplier,
+    themesOverride,
+  ])
 
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
 
 export function useAlf() {
-  return React.useContext(Context)
+  return useContext(Context)
 }
 
 export function useTheme(theme?: ThemeName) {
   const alf = useAlf()
-  return React.useMemo(() => {
+  return useMemo(() => {
     return theme ? alf.themes[theme] : alf.theme
   }, [theme, alf])
 }

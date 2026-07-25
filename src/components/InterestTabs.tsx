@@ -5,12 +5,12 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {isWeb} from '#/platform/detection'
 import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
+import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -19,6 +19,7 @@ import {
   ArrowRight_Stroke2_Corner0_Rounded as ArrowRight,
 } from '#/components/icons/Arrow'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 /**
  * Tab component that automatically scrolls the selected tab into view - used for interests
@@ -200,43 +201,45 @@ export function InterestTabs({
 
   return (
     <View style={[a.relative, a.flex_row]}>
-      <DraggableScrollView
-        ref={listRef}
-        contentContainerStyle={[
-          a.gap_sm,
-          {paddingHorizontal: gutterWidth},
-          contentContainerStyle,
-        ]}
-        showsHorizontalScrollIndicator={false}
-        decelerationRate="fast"
-        snapToOffsets={
-          tabOffsets.filter(o => !!o).length === interests.length
-            ? tabOffsets.map(o => o.x - tokens.space.xl)
-            : undefined
-        }
-        onLayout={evt => setTotalWidth(evt.nativeEvent.layout.width)}
-        onContentSizeChange={width => setContentWidth(width)}
-        onScroll={evt => {
-          const newScrollX = evt.nativeEvent.contentOffset.x
-          setScrollX(newScrollX)
-        }}
-        scrollEventThrottle={16}>
-        {interests.map((interest, i) => {
-          const active = interest === selectedInterest && !disabled
-          return (
-            <TabComponent
-              key={interest}
-              onSelectTab={handleSelectTab}
-              active={active}
-              index={i}
-              interest={interest}
-              interestsDisplayName={interestsDisplayNames[interest]}
-              onLayout={handleTabLayout}
-            />
-          )
-        })}
-      </DraggableScrollView>
-      {isWeb && canScrollLeft && (
+      <BlockDrawerGesture>
+        <DraggableScrollView
+          ref={listRef}
+          contentContainerStyle={[
+            a.gap_sm,
+            {paddingHorizontal: gutterWidth},
+            contentContainerStyle,
+          ]}
+          showsHorizontalScrollIndicator={false}
+          decelerationRate="fast"
+          snapToOffsets={
+            tabOffsets.filter(o => !!o).length === interests.length
+              ? tabOffsets.map(o => o.x - tokens.space.xl)
+              : undefined
+          }
+          onLayout={evt => setTotalWidth(evt.nativeEvent.layout.width)}
+          onContentSizeChange={width => setContentWidth(width)}
+          onScroll={evt => {
+            const newScrollX = evt.nativeEvent.contentOffset.x
+            setScrollX(newScrollX)
+          }}
+          scrollEventThrottle={16}>
+          {interests.map((interest, i) => {
+            const active = interest === selectedInterest && !disabled
+            return (
+              <TabComponent
+                key={interest}
+                onSelectTab={handleSelectTab}
+                active={active}
+                index={i}
+                interest={interest}
+                interestsDisplayName={interestsDisplayNames[interest]}
+                onLayout={handleTabLayout}
+              />
+            )
+          })}
+        </DraggableScrollView>
+      </BlockDrawerGesture>
+      {IS_WEB && canScrollLeft && (
         <View
           style={[
             a.absolute,
@@ -270,7 +273,7 @@ export function InterestTabs({
           </Button>
         </View>
       )}
-      {isWeb && canScrollRight && (
+      {IS_WEB && canScrollRight && (
         <View
           style={[
             a.absolute,

@@ -1,7 +1,7 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {type AppBskyActorDefs, type ModerationOpts} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 import {ReactRenderer} from '@tiptap/react'
 import {
   type SuggestionKeyDownProps,

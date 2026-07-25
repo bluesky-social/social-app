@@ -1,15 +1,19 @@
-import React from 'react'
+import {useCallback, useEffect} from 'react'
 import {Alert} from 'react-native'
 import * as Linking from 'expo-linking'
 import * as WebBrowser from 'expo-web-browser'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
-import {logger} from '#/logger'
-import {isIOS, isNative} from '#/platform/detection'
+import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
+import {usePrefetchJoinLinkPreviews} from '#/state/queries/join-links'
 import {useSession} from '#/state/session'
+import {useSetActiveLanding} from '#/state/shell/landing'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS, IS_NATIVE} from '#/env'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
@@ -22,27 +26,34 @@ let previousIntentUrl = ''
 
 export function useIntentHandler() {
   const incomingUrl = Linking.useLinkingURL()
+  const ax = useAnalytics()
   const composeIntent = useComposeIntent()
   const verifyEmailIntent = useVerifyEmailIntent()
+  const groupChatJoinIntent = useGroupChatJoinIntent()
   const {currentAccount} = useSession()
   const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleIncomingURL = async (url: string) => {
-      if (isIOS) {
+      if (IS_IOS) {
         // Close in-app browser if it's open (iOS only)
         await WebBrowser.dismissBrowser().catch(() => {})
       }
 
-      const referrerInfo = Referrer.getReferrerInfo()
+      const referrerInfo = await Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-        logger.metric('deepLink:referrerReceived', {
+        ax.metric('deepLink:referrerReceived', {
           to: url,
           referrer: referrerInfo?.referrer,
           hostname: referrerInfo?.hostname,
         })
       }
       const urlp = parseLinkingUrl(url)
+      const chatInviteMatch = urlp.pathname.match(CHAT_INVITE_CODE_REGEX)
+      if (chatInviteMatch) {
+        groupChatJoinIntent(chatInviteMatch[1], url)
+        return
+      }
       const [, intent, intentType] = urlp.pathname.split('/')
 
       // On native, our links look like bluesky://intent/SomeIntent, so we have to check the hostname for the
@@ -95,8 +106,10 @@ export function useIntentHandler() {
     }
   }, [
     incomingUrl,
+    ax,
     composeIntent,
     verifyEmailIntent,
+    groupChatJoinIntent,
     currentAccount,
     tryApplyUpdate,
   ])
@@ -107,7 +120,7 @@ export function useComposeIntent() {
   const {openComposer} = useOpenComposer()
   const {hasSession} = useSession()
 
-  return React.useCallback(
+  return useCallback(
     ({
       text,
       imageUrisStr,
@@ -126,6 +139,7 @@ export function useComposeIntent() {
         openComposer({
           text: text ?? undefined,
           videoUri: {uri, width: Number(width), height: Number(height)},
+          logContext: 'Deeplink',
         })
         return
       }
@@ -150,7 +164,8 @@ export function useComposeIntent() {
       setTimeout(() => {
         openComposer({
           text: text ?? undefined,
-          imageUris: isNative ? imageUris : undefined,
+          imageUris: IS_NATIVE ? imageUris : undefined,
+          logContext: 'Deeplink',
         })
       }, 500)
     },
@@ -158,11 +173,51 @@ export function useComposeIntent() {
   )
 }
 
+export function useGroupChatJoinIntent() {
+  const closeAllActiveElements = useCloseAllActiveElements()
+  const {hasSession} = useSession()
+  const {groupChatJoinDialogControl: control, setGroupChatJoinState: setState} =
+    useIntentDialogs()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const setActiveLanding = useSetActiveLanding()
+  const prefetchJoinLinkPreviews = usePrefetchJoinLinkPreviews()
+  return useCallback(
+    (code: string, uri?: string) => {
+      closeAllActiveElements()
+      if (hasSession) {
+        setState({code})
+        const prefetch = prefetchJoinLinkPreviews({
+          codes: [code],
+          hasSession: true,
+        })
+        void Promise.race([
+          prefetch,
+          new Promise(res => setTimeout(res, 200)),
+        ]).finally(() => {
+          control.open()
+        })
+      } else {
+        setActiveLanding({type: 'groupchat', uri: uri ?? '', code})
+        requestSwitchToAccount({requestedAccount: 'groupchat'})
+      }
+    },
+    [
+      closeAllActiveElements,
+      hasSession,
+      control,
+      setState,
+      prefetchJoinLinkPreviews,
+      requestSwitchToAccount,
+      setActiveLanding,
+    ],
+  )
+}
+
 function useVerifyEmailIntent() {
   const closeAllActiveElements = useCloseAllActiveElements()
   const {verifyEmailDialogControl: control, setVerifyEmailState: setState} =
     useIntentDialogs()
-  return React.useCallback(
+  return useCallback(
     (code: string) => {
       closeAllActiveElements()
       setState({

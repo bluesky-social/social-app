@@ -2,11 +2,11 @@ import {
   type $Typed,
   type AppBskyActorDefs,
   type AppBskyGraphGetStarterPack,
-  type BskyAgent,
+  type AtpAgent,
   type ComAtprotoRepoApplyWrites,
   type Facet,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
@@ -28,7 +28,7 @@ export const createStarterPackList = async ({
   description?: string
   descriptionFacets?: Facet[]
   profiles: bsky.profile.AnyProfileView[]
-  agent: BskyAgent
+  agent: AtpAgent
 }): Promise<{uri: string; cid: string}> => {
   if (profiles.length === 0) throw new Error('No profiles given')
 
@@ -152,7 +152,7 @@ function createListItem({
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  agent: AtpAgent,
   uri: string,
   fn: (res?: AppBskyGraphGetStarterPack.Response) => boolean,
 ) {

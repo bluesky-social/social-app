@@ -5,9 +5,13 @@
 !**/*.jsx
 !**/*.ts
 !**/*.tsx
+!**/*.mjs
+!**/*.cjs
 !*/
 
 !**/*.css
+
+!**/pnpm-workspace.yaml
 
 # More specific ignores go below.
 .expo

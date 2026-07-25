@@ -1,5 +1,6 @@
-import React, {type ComponentProps} from 'react'
+import {useCallback, useState} from 'react'
 import {
+  LayoutAnimation,
   Pressable,
   type StyleProp,
   StyleSheet,
@@ -11,13 +12,14 @@ import {
   type ModerationCause,
   type ModerationUI,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {addStyle} from '#/lib/styles'
-import {precacheProfile} from '#/state/queries/profile'
+import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 // import {Link} from '#/components/Link' TODO this imposes some styles that screw things up
 import {Link} from '#/view/com/util/Link'
 import {atoms as a, useTheme} from '#/alf'
@@ -27,7 +29,7 @@ import {
 } from '#/components/moderation/ModerationDetailsDialog'
 import {Text} from '#/components/Typography'
 
-interface Props extends ComponentProps<typeof Link> {
+interface Props extends React.ComponentProps<typeof Link> {
   disabled: boolean
   iconSize: number
   iconStyles: StyleProp<ViewStyle>
@@ -54,15 +56,15 @@ export function PostHider({
   const queryClient = useQueryClient()
   const t = useTheme()
   const {_} = useLingui()
-  const [override, setOverride] = React.useState(false)
+  const [override, setOverride] = useState(false)
   const control = useModerationDetailsDialogControl()
   const blur =
     modui.blurs[0] ||
     (interpretFilterAsBlur ? getBlurrableFilter(modui) : undefined)
   const desc = useModerationCauseDescription(blur)
 
-  const onBeforePress = React.useCallback(() => {
-    precacheProfile(queryClient, profile)
+  const onBeforePress = useCallback(() => {
+    unstableCacheProfileView(queryClient, profile)
   }, [queryClient, profile])
 
   if (!blur || (disabled && !modui.noOverride)) {
@@ -83,14 +85,15 @@ export function PostHider({
     <Pressable
       onPress={() => {
         if (!modui.noOverride) {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
           setOverride(v => !v)
         }
       }}
       accessibilityRole="button"
-      accessibilityHint={
+      accessibilityLabel={
         override ? _(msg`Hides the content`) : _(msg`Shows the content`)
       }
-      accessibilityLabel=""
+      accessibilityHint=""
       style={[
         a.flex_row,
         a.align_center,

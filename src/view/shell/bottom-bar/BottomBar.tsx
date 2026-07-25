@@ -2,12 +2,11 @@ import {type JSX, useCallback} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {type BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {BOTTOM_BAR_AVI} from '#/lib/demo'
 import {useHaptics} from '#/lib/haptics'
@@ -15,13 +14,12 @@ import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
-import {useGate} from '#/lib/statsig/statsig'
+import {type SharedNavTab, TAB_TO_NAV_ITEM} from '#/lib/routes/tab-to-nav-item'
 import {emitSoftReset} from '#/state/events'
-import {useHomeBadge} from '#/state/home-badge'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
+import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -39,41 +37,49 @@ import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
 } from '#/components/icons/HomeOpen'
-import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
-import {MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass'
+import {Inbox_Stroke2_Corner2_Rounded as InboxIcon} from '#/components/icons/Inbox'
+import {
+  MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled,
+  MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass,
+} from '#/components/icons/MagnifyingGlass'
 import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
+import * as Menu from '#/components/Menu'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
+import {useActorStatus} from '#/features/liveNow'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
 
-type TabOptions = 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile'
-
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
-  const pal = usePalette('default')
-  const {_} = useLingui()
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const ax = useAnalytics()
   const safeAreaInsets = useSafeAreaInsets()
   const {footerHeight} = useShellLayout()
   const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile, isAtMessages} =
     useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
   const numUnreadMessages = useUnreadMessageCount()
+  const aa = useAgeAssurance()
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const dedupe = useDedupe()
   const accountSwitchControl = useDialogControl()
+  const messagesMenuControl = Menu.useMenuControl()
   const playHaptic = useHaptics()
-  const hasHomeBadge = useHomeBadge()
-  const gate = useGate()
   const hideBorder = useHideBottomBarBorder()
   const iconWidth = 28
 
@@ -89,7 +95,11 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   }, [requestSwitchToAccount, closeAllActiveElements])
 
   const onPressTab = useCallback(
-    (tab: TabOptions) => {
+    (tab: SharedNavTab) => {
+      ax.metric('nav:click', {
+        item: TAB_TO_NAV_ITEM[tab],
+        surface: 'bottomBar',
+      })
       const state = navigation.getState()
       const tabState = getTabState(state, tab)
       if (tabState === TabState.InsideAtRoot) {
@@ -117,7 +127,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
         dedupe(() => navigation.navigate(`${tab}Tab`))
       }
     },
-    [navigation, dedupe],
+    [navigation, dedupe, ax],
   )
   const onPressHome = useCallback(() => onPressTab('Home'), [onPressTab])
   const onPressSearch = useCallback(() => onPressTab('Search'), [onPressTab])
@@ -137,18 +147,27 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     accountSwitchControl.open()
   }, [accountSwitchControl, playHaptic])
 
+  const onLongPressMessages = useCallback(() => {
+    if (aa.flags.chatDisabled) return
+    playHaptic()
+    messagesMenuControl.open()
+  }, [aa.flags.chatDisabled, messagesMenuControl, playHaptic])
+
   const [demoMode] = useDemoMode()
   const {isActive: live} = useActorStatus(profile)
+  const isLabeler = profile?.associated?.labeler
 
   return (
     <>
       <SwitchAccountDialog control={accountSwitchControl} />
-
+      <MessagesTabMenu control={messagesMenuControl} />
       <Animated.View
         style={[
           styles.bottomBar,
-          pal.view,
-          hideBorder ? {borderColor: pal.view.backgroundColor} : pal.border,
+          t.atoms.bg,
+          hideBorder
+            ? {borderColor: t.atoms.bg.backgroundColor}
+            : t.atoms.border_contrast_low,
           {paddingBottom: clamp(safeAreaInsets.bottom, 15, 60)},
           footerMinimalShellTransform,
         ]}
@@ -163,19 +182,18 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 isAtHome ? (
                   <HomeFilled
                     width={iconWidth + 1}
-                    style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.homeIcon]}
                   />
                 ) : (
                   <Home
                     width={iconWidth + 1}
-                    style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.homeIcon]}
                   />
                 )
               }
-              hasNew={hasHomeBadge && gate('remove_show_latest_button')}
               onPress={onPressHome}
               accessibilityRole="tab"
-              accessibilityLabel={_(msg`Home`)}
+              accessibilityLabel={l`Home`}
               accessibilityHint=""
             />
             <Btn
@@ -183,19 +201,19 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 isAtSearch ? (
                   <MagnifyingGlassFilled
                     width={iconWidth + 2}
-                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.searchIcon]}
                   />
                 ) : (
                   <MagnifyingGlass
                     testID="bottomBarSearchBtn"
                     width={iconWidth + 2}
-                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.searchIcon]}
                   />
                 )
               }
               onPress={onPressSearch}
               accessibilityRole="search"
-              accessibilityLabel={_(msg`Search`)}
+              accessibilityLabel={l`Search`}
               accessibilityHint=""
             />
             <Btn
@@ -204,29 +222,38 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 isAtMessages ? (
                   <MessageFilled
                     width={iconWidth - 1}
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.feedsIcon]}
                   />
                 ) : (
                   <Message
                     width={iconWidth - 1}
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.feedsIcon]}
                   />
                 )
               }
               onPress={onPressMessages}
-              notificationCount={numUnreadMessages.numUnread}
-              hasNew={numUnreadMessages.hasNew}
+              onLongPress={onLongPressMessages}
+              notificationCount={
+                aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread
+              }
+              hasNew={aa.flags.chatDisabled ? false : numUnreadMessages.hasNew}
               accessible={true}
               accessibilityRole="tab"
-              accessibilityLabel={_(msg`Chat`)}
+              accessibilityLabel={l`Chat`}
               accessibilityHint={
-                numUnreadMessages.count > 0
-                  ? _(
-                      msg`${plural(numUnreadMessages.numUnread ?? 0, {
-                        one: '# unread item',
-                        other: '# unread items',
-                      })}` || '',
-                    )
+                !aa.flags.chatDisabled && numUnreadMessages.count > 0
+                  ? numUnreadMessages.numUnread?.includes('+')
+                    ? l({
+                        message: `${numUnreadMessages.numUnread} unread items`,
+                        comment:
+                          'Accessibility hint for the bottom bar chat icon when the number of unread messages exceeds the cap, with the + symbol already included – for example, 99+ unread items',
+                      })
+                    : l({
+                        message: plural(numUnreadMessages.numUnread ?? 0, {
+                          one: '# unread item',
+                          other: '# unread items',
+                        }),
+                      })
                   : ''
               }
             />
@@ -236,12 +263,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 isAtNotifications ? (
                   <BellFilled
                     width={iconWidth}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.bellIcon]}
                   />
                 ) : (
                   <Bell
                     width={iconWidth}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                    style={[styles.ctrlIcon, t.atoms.text, styles.bellIcon]}
                   />
                 )
               }
@@ -249,71 +276,50 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               notificationCount={numUnreadNotifications}
               accessible={true}
               accessibilityRole="tab"
-              accessibilityLabel={_(msg`Notifications`)}
+              accessibilityLabel={l`Notifications`}
               accessibilityHint={
                 numUnreadNotifications === ''
                   ? ''
-                  : _(
-                      msg`${plural(numUnreadNotifications ?? 0, {
+                  : l({
+                      message: plural(numUnreadNotifications ?? 0, {
                         one: '# unread item',
                         other: '# unread items',
-                      })}` || '',
-                    )
+                      }),
+                    })
               }
             />
             <Btn
               testID="bottomBarProfileBtn"
               icon={
                 <View style={styles.ctrlIconSizingWrapper}>
-                  {isAtMyProfile ? (
-                    <View
-                      style={[
-                        styles.ctrlIcon,
-                        pal.text,
-                        styles.profileIcon,
-                        styles.onProfile,
+                  <View
+                    style={[
+                      styles.ctrlIcon,
+                      isLabeler ? styles.profileIconSquare : styles.profileIcon,
+                      isAtMyProfile && [
+                        isLabeler ? styles.onProfileSquare : styles.onProfile,
                         {
-                          borderColor: pal.text.color,
+                          borderColor: t.atoms.text.color,
                           borderWidth: live ? 0 : 1,
                         },
-                      ]}>
-                      <UserAvatar
-                        avatar={demoMode ? BOTTOM_BAR_AVI : profile?.avatar}
-                        size={iconWidth - 2}
-                        // See https://github.com/bluesky-social/social-app/pull/1801:
-                        usePlainRNImage={true}
-                        type={profile?.associated?.labeler ? 'labeler' : 'user'}
-                        live={live}
-                        hideLiveBadge
-                      />
-                    </View>
-                  ) : (
-                    <View
-                      style={[
-                        styles.ctrlIcon,
-                        pal.text,
-                        styles.profileIcon,
-                        {
-                          borderWidth: live ? 0 : 1,
-                        },
-                      ]}>
-                      <UserAvatar
-                        avatar={demoMode ? BOTTOM_BAR_AVI : profile?.avatar}
-                        size={iconWidth - 2}
-                        // See https://github.com/bluesky-social/social-app/pull/1801:
-                        usePlainRNImage={true}
-                        type={profile?.associated?.labeler ? 'labeler' : 'user'}
-                        live={live}
-                        hideLiveBadge
-                      />
-                    </View>
-                  )}
+                      ],
+                    ]}>
+                    <UserAvatar
+                      avatar={demoMode ? BOTTOM_BAR_AVI : profile?.avatar}
+                      size={iconWidth - (isAtMyProfile ? 3 : 2)}
+                      // See https://github.com/bluesky-social/social-app/pull/1801:
+                      usePlainRNImage={true}
+                      type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                      live={live}
+                      hideLiveBadge
+                    />
+                  </View>
                 </View>
               }
               onPress={onPressProfile}
               onLongPress={onLongPressProfile}
               accessibilityRole="tab"
-              accessibilityLabel={_(msg`Profile`)}
+              accessibilityLabel={l`Profile`}
               accessibilityHint=""
             />
           </>
@@ -333,18 +339,17 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               }}>
               <View
                 style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
-                <Logo width={28} />
+                <Logo allowVariants={false} width={28} />
                 <View style={{paddingTop: 4}}>
-                  <Logotype width={80} fill={pal.text.color} />
+                  <Logotype width={80} fill={t.atoms.text.color} />
                 </View>
               </View>
 
               <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
                 <Button
                   onPress={showCreateAccount}
-                  label={_(msg`Create account`)}
+                  label={l`Create account`}
                   size="small"
-                  variant="solid"
                   color="primary">
                   <ButtonText>
                     <Trans>Create account</Trans>
@@ -352,9 +357,8 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 </Button>
                 <Button
                   onPress={showSignIn}
-                  label={_(msg`Sign in`)}
+                  label={l`Sign in`}
                   size="small"
-                  variant="solid"
                   color="secondary">
                   <ButtonText>
                     <Trans>Sign in</Trans>
@@ -369,14 +373,13 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   )
 }
 
-interface BtnProps
-  extends Pick<
-    React.ComponentProps<typeof PressableScale>,
-    | 'accessible'
-    | 'accessibilityRole'
-    | 'accessibilityHint'
-    | 'accessibilityLabel'
-  > {
+interface BtnProps extends Pick<
+  React.ComponentProps<typeof PressableScale>,
+  | 'accessible'
+  | 'accessibilityRole'
+  | 'accessibilityHint'
+  | 'accessibilityLabel'
+> {
   testID?: string
   icon: JSX.Element
   notificationCount?: string
@@ -418,11 +421,64 @@ function Btn({
             a.rounded_full,
             {backgroundColor: t.palette.primary_500},
           ]}>
-          <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
+          <Text
+            style={styles.notificationCountLabel}
+            maxFontSizeMultiplier={1.5}>
+            {notificationCount}
+          </Text>
         </View>
       ) : hasNew ? (
-        <View style={[styles.hasNewBadge, a.rounded_full]} />
+        <View
+          style={[styles.hasNewBadge, {backgroundColor: t.palette.primary_500}]}
+        />
       ) : null}
     </PressableScale>
+  )
+}
+
+function MessagesTabMenu({control}: {control: Menu.MenuControlProps}) {
+  const {t: l} = useLingui()
+
+  const {mutate: markAllChatsRead} = useUpdateAllRead('accepted', {
+    onMutate: () => {
+      Toast.show(l`Marked all chats as read`, {type: 'success'})
+    },
+    onError: () => {
+      Toast.show(l`Failed to mark all chats as read`, {type: 'error'})
+    },
+  })
+
+  const {mutate: markAllRequestsRead} = useUpdateAllRead('request', {
+    onMutate: () => {
+      Toast.show(l`Marked all requests as read`, {type: 'success'})
+    },
+    onError: () => {
+      Toast.show(l`Failed to mark all requests as read`, {type: 'error'})
+    },
+  })
+
+  return (
+    <Menu.Root control={control}>
+      <Menu.Outer showCancel>
+        <Menu.Group>
+          <Menu.Item
+            label={l`Mark all chats as read`}
+            onPress={() => markAllChatsRead()}>
+            <Menu.ItemIcon icon={CircleCheckIcon} />
+            <Menu.ItemText>
+              <Trans>Mark all chats as read</Trans>
+            </Menu.ItemText>
+          </Menu.Item>
+          <Menu.Item
+            label={l`Mark all requests as read`}
+            onPress={() => markAllRequestsRead()}>
+            <Menu.ItemIcon icon={InboxIcon} />
+            <Menu.ItemText>
+              <Trans>Mark all requests as read</Trans>
+            </Menu.ItemText>
+          </Menu.Item>
+        </Menu.Group>
+      </Menu.Outer>
+    </Menu.Root>
   )
 }

@@ -1,14 +1,23 @@
-import React, {useImperativeHandle} from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useContext,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react'
 import {
   FlatList,
   type FlatListProps,
   type GestureResponderEvent,
+  type LayoutChangeEvent,
+  Pressable,
+  type ScrollView,
   type StyleProp,
-  TouchableWithoutFeedback,
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
@@ -16,6 +25,7 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
+import {type ListMethods} from '#/view/com/util/List'
 import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Context} from '#/components/Dialog/context'
@@ -47,15 +57,15 @@ export function Outer({
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const {setDialogIsOpen} = useDialogStateControlContext()
 
-  const open = React.useCallback(() => {
+  const open = useCallback(() => {
     setDialogIsOpen(control.id, true)
     setIsOpen(true)
   }, [setIsOpen, setDialogIsOpen, control.id])
 
-  const close = React.useCallback<DialogControlProps['close']>(
+  const close = useCallback<DialogControlProps['close']>(
     cb => {
       setDialogIsOpen(control.id, false)
       setIsOpen(false)
@@ -79,7 +89,7 @@ export function Outer({
     [control.id, onClose, setDialogIsOpen],
   )
 
-  const handleBackgroundPress = React.useCallback(
+  const handleBackgroundPress = useCallback(
     async (e: GestureResponderEvent) => {
       webOptions?.onBackgroundPress ? webOptions.onBackgroundPress(e) : close()
     },
@@ -95,7 +105,7 @@ export function Outer({
     [close, open],
   )
 
-  const context = React.useMemo(
+  const context = useMemo(
     () => ({
       close,
       isNativeDialog: false,
@@ -103,6 +113,7 @@ export function Outer({
       disableDrag: false,
       setDisableDrag: () => {},
       isWithinDialog: true,
+      isHeightConstrained: false,
     }),
     [close],
   )
@@ -113,7 +124,7 @@ export function Outer({
         <Portal>
           <Context.Provider value={context}>
             <RemoveScrollBar />
-            <TouchableWithoutFeedback
+            <Pressable
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
               onPress={handleBackgroundPress}>
@@ -146,7 +157,7 @@ export function Outer({
                   {children}
                 </View>
               </View>
-            </TouchableWithoutFeedback>
+            </Pressable>
           </Context.Provider>
         </Portal>
       )}
@@ -154,6 +165,9 @@ export function Outer({
   )
 }
 
+/**
+ * @deprecated use `Dialog.ScrollableInner` instead
+ */
 export function Inner({
   children,
   style,
@@ -161,10 +175,11 @@ export function Inner({
   accessibilityLabelledBy,
   accessibilityDescribedBy,
   header,
+  footer,
   contentContainerStyle,
 }: DialogInnerProps) {
   const t = useTheme()
-  const {close} = React.useContext(Context)
+  const {close} = useContext(Context)
   const {gtMobile} = useBreakpoints()
   const {reduceMotionEnabled} = useA11y()
   FocusGuards.useFocusGuards()
@@ -188,6 +203,7 @@ export function Inner({
           a.border,
           t.atoms.bg,
           {
+            cursor: 'default', // The overlay applies `cursor: 'pointer'` to all children.
             maxWidth: 600,
             borderColor: t.palette.contrast_200,
             shadowColor: t.palette.black,
@@ -206,17 +222,28 @@ export function Inner({
           <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
             {children}
           </View>
+          {footer}
         </DismissableLayer.DismissableLayer>
       </View>
     </FocusScope.FocusScope>
   )
 }
 
-export const ScrollableInner = Inner
+/*
+ * There is no inner ScrollView on web - the ref is accepted for parity with
+ * the native variant and never attached, so native-only scrolling code in
+ * shared callers stays a no-op here.
+ */
+export function ScrollableInner({
+  ref: _ref,
+  ...props
+}: DialogInnerProps & {ref?: React.Ref<ScrollView>}) {
+  return <Inner {...props} />
+}
 
-export const InnerFlatList = React.forwardRef<
-  FlatList,
-  FlatListProps<any> & {label: string} & {
+export const InnerFlatList = forwardRef<
+  ListMethods,
+  FlatListProps<any> & {label?: string} & {
     webInnerStyle?: StyleProp<ViewStyle>
     webInnerContentContainerStyle?: StyleProp<ViewStyle>
     footer?: React.ReactNode
@@ -235,7 +262,11 @@ export const InnerFlatList = React.forwardRef<
   const {gtMobile} = useBreakpoints()
   return (
     <Inner
-      label={label}
+      /*
+       * Most shared callers cannot pass a label since the native variant has
+       * no such prop; aria-label is simply absent for them, as before.
+       */
+      label={label as string}
       style={[
         a.overflow_hidden,
         a.px_0,
@@ -244,7 +275,13 @@ export const InnerFlatList = React.forwardRef<
       ]}
       contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>
       <FlatList
-        ref={ref}
+        /*
+         * The FlatList instance satisfies the (web) ListMethods interface
+         * shared callers hold their refs as, except scrollToTop, which no
+         * platform-agnostic caller can use since the native ListMethods
+         * (FlatList) lacks it too.
+         */
+        ref={ref as React.Ref<FlatList>}
         style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, style]}
         {...props}
       />
@@ -253,18 +290,27 @@ export const InnerFlatList = React.forwardRef<
   )
 })
 
-export function FlatListFooter({children}: {children: React.ReactNode}) {
+export function FlatListFooter({
+  children,
+  onLayout,
+  border = true,
+}: {
+  children: React.ReactNode
+  onLayout?: (event: LayoutChangeEvent) => void
+  border?: boolean
+}) {
   const t = useTheme()
 
   return (
     <View
+      onLayout={onLayout}
       style={[
         a.absolute,
         a.bottom_0,
         a.w_full,
         a.z_10,
         t.atoms.bg,
-        a.border_t,
+        border && a.border_t,
         t.atoms.border_contrast_low,
         a.px_lg,
         a.py_md,
@@ -276,7 +322,7 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
 
 export function Close() {
   const {_} = useLingui()
-  const {close} = React.useContext(Context)
+  const {close} = useContext(Context)
   return (
     <View
       style={[
@@ -300,11 +346,15 @@ export function Close() {
   )
 }
 
-export function Handle() {
+/*
+ * The drag handle only exists on the native bottom sheet; props are accepted
+ * for parity with the native variant.
+ */
+export function Handle(_props: {difference?: boolean; fill?: string}) {
   return null
 }
 
-function Backdrop() {
+export function Backdrop() {
   const t = useTheme()
   const {reduceMotionEnabled} = useA11y()
   return (

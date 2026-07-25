@@ -1,11 +1,10 @@
-const {withAppDelegate} = require('@expo/config-plugins')
-const {mergeContents} = require('@expo/config-plugins/build/utils/generateCode')
+const {withAppDelegate, CodeGenerator} = require('expo/config-plugins')
 
 module.exports = config =>
   withAppDelegate(config, config => {
     let contents = config.modResults.contents
 
-    contents = mergeContents({
+    contents = CodeGenerator.mergeContents({
       src: contents,
       anchor: '// Linking API',
       newSrc: `
@@ -22,7 +21,7 @@ module.exports = config =>
       comment: '//',
     }).contents
 
-    contents = mergeContents({
+    contents = CodeGenerator.mergeContents({
       src: contents,
       anchor: '// Universal Links',
       newSrc: `

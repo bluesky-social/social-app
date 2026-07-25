@@ -1,12 +1,12 @@
-import React, {useMemo} from 'react'
-import {msg} from '@lingui/macro'
+import {createContext, useContext, useMemo, useRef, useState} from 'react'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {
   ProgressGuideToast,
   type ProgressGuideToastRef,
 } from '#/components/ProgressGuide/Toast'
+import {useAnalytics} from '#/analytics'
 import {
   usePreferencesQuery,
   useSetActiveProgressGuideMutation,
@@ -44,10 +44,10 @@ export type ProgressGuide =
   | Follow10ProgressGuide
   | undefined
 
-const ProgressGuideContext = React.createContext<ProgressGuide>(undefined)
+const ProgressGuideContext = createContext<ProgressGuide>(undefined)
 ProgressGuideContext.displayName = 'ProgressGuideContext'
 
-const ProgressGuideControlContext = React.createContext<{
+const ProgressGuideControlContext = createContext<{
   startProgressGuide(guide: ProgressGuideName): void
   endProgressGuide(): void
   captureAction(action: ProgressGuideAction, count?: number): void
@@ -59,7 +59,7 @@ const ProgressGuideControlContext = React.createContext<{
 ProgressGuideControlContext.displayName = 'ProgressGuideControlContext'
 
 export function useProgressGuide(guide: ProgressGuideName) {
-  const ctx = React.useContext(ProgressGuideContext)
+  const ctx = useContext(ProgressGuideContext)
   if (ctx?.guide === guide) {
     return ctx
   }
@@ -67,10 +67,11 @@ export function useProgressGuide(guide: ProgressGuideName) {
 }
 
 export function useProgressGuideControls() {
-  return React.useContext(ProgressGuideControlContext)
+  return useContext(ProgressGuideControlContext)
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {mutateAsync, variables, isPending} =
@@ -100,21 +101,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   }, [isPending, variables, preferences])
 
   const [localGuideState, setLocalGuideState] =
-    React.useState<ProgressGuide>(undefined)
+    useState<ProgressGuide>(undefined)
 
   if (activeProgressGuide && !localGuideState) {
     // hydrate from the server if needed
     setLocalGuideState(activeProgressGuide)
   }
 
-  const firstLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
-  const fifthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
-  const tenthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
+  const firstLikeToastRef = useRef<ProgressGuideToastRef | null>(null)
+  const fifthLikeToastRef = useRef<ProgressGuideToastRef | null>(null)
+  const tenthLikeToastRef = useRef<ProgressGuideToastRef | null>(null)
 
-  const fifthFollowToastRef = React.useRef<ProgressGuideToastRef | null>(null)
-  const tenthFollowToastRef = React.useRef<ProgressGuideToastRef | null>(null)
+  const fifthFollowToastRef = useRef<ProgressGuideToastRef | null>(null)
+  const tenthFollowToastRef = useRef<ProgressGuideToastRef | null>(null)
 
-  const controls = React.useMemo(() => {
+  const controls = useMemo(() => {
     return {
       startProgressGuide(guide: ProgressGuideName) {
         if (guide === 'like-10-and-follow-7') {
@@ -140,7 +141,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       endProgressGuide() {
         setLocalGuideState(undefined)
         mutateAsync(undefined)
-        logEvent('progressGuide:hide', {})
+        ax.metric('progressGuide:hide', {})
       },
 
       captureAction(action: ProgressGuideAction, count = 1) {
@@ -202,7 +203,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         mutateAsync(guide?.isComplete ? undefined : guide)
       },
     }
-  }, [activeProgressGuide, mutateAsync, setLocalGuideState])
+  }, [ax, activeProgressGuide, mutateAsync, setLocalGuideState])
 
   return (
     <ProgressGuideContext.Provider value={localGuideState}>

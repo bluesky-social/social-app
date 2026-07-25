@@ -8,11 +8,11 @@ import {
   moderateFeedGenerator,
   RichText,
 } from '@atproto/api'
+import {t} from '@lingui/core/macro'
 import {
   type InfiniteData,
   keepPreviousData,
   type QueryClient,
-  type QueryKey,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -22,9 +22,10 @@ import {
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {STALE} from '#/state/queries'
+import {GCTIME, STALE} from '#/state/queries'
 import {RQKEY as listQueryKey} from '#/state/queries/list'
 import {usePreferencesQuery} from '#/state/queries/preferences'
+import {createQueryKey} from '#/state/queries/util'
 import {useAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
 import {useModerationOpts} from '../preferences/moderation-opts'
@@ -100,6 +101,15 @@ export function hydrateFeedGenerator(
   const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
   const route = router.matchPath(href)
 
+  const description = new RichText({
+    text: view.description || '',
+    facets: (view.descriptionFacets || [])?.slice(),
+  })
+
+  if (!view.descriptionFacets) {
+    description.detectFacetsWithoutResolution()
+  }
+
   return {
     type: 'feed',
     view,
@@ -114,11 +124,8 @@ export function hydrateFeedGenerator(
     avatar: view.avatar,
     displayName: view.displayName
       ? sanitizeDisplayName(view.displayName)
-      : `Feed by ${sanitizeHandle(view.creator.handle, '@')}`,
-    description: new RichText({
-      text: view.description || '',
-      facets: (view.descriptionFacets || [])?.slice(),
-    }),
+      : t`Feed by ${sanitizeHandle(view.creator.handle, '@')}`,
+    description,
     creatorDid: view.creator.did,
     creatorHandle: view.creator.handle,
     likeCount: view.likeCount,
@@ -135,6 +142,15 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
   const route = router.matchPath(href)
 
+  const description = new RichText({
+    text: view.description || '',
+    facets: (view.descriptionFacets || [])?.slice(),
+  })
+
+  if (!view.descriptionFacets) {
+    description.detectFacetsWithoutResolution()
+  }
+
   return {
     type: 'list',
     view,
@@ -147,15 +163,12 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
     },
     cid: view.cid,
     avatar: view.avatar,
-    description: new RichText({
-      text: view.description || '',
-      facets: (view.descriptionFacets || [])?.slice(),
-    }),
+    description,
     creatorDid: view.creator.did,
     creatorHandle: view.creator.handle,
     displayName: view.name
       ? sanitizeDisplayName(view.name)
-      : `User List by ${sanitizeHandle(view.creator.handle, '@')}`,
+      : t`User List by ${sanitizeHandle(view.creator.handle, '@')}`,
     contentMode: undefined,
   }
 }
@@ -238,13 +251,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
   )
   const lastPageCountRef = useRef(0)
 
-  const query = useInfiniteQuery<
-    AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema,
-    Error,
-    InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema>,
-    QueryKey,
-    string | undefined
-  >({
+  const query = useInfiniteQuery({
     enabled: Boolean(moderationOpts) && options?.enabled !== false,
     queryKey: createGetPopularFeedsQueryKey(options),
     queryFn: async ({pageParam}) => {
@@ -261,7 +268,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 
       return res.data
     },
-    initialPageParam: undefined,
+    initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     select: useCallback(
       (
@@ -320,7 +327,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
       count += page.feeds.length
     }
     if (count < limit && (data?.pages.length || 0) < 6) {
-      query.fetchNextPage()
+      void query.fetchNextPage()
       lastPageCountRef.current = data?.pages?.length || 0
     }
   }, [query, limit])
@@ -418,7 +425,22 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
   contentMode: undefined,
 }
 
-const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
+export const FEED_INFO_RQKEY_ROOT = 'feed-info'
+
+const createPinnedFeedInfosQueryKey = (
+  kind: 'pinned' | 'saved',
+  feedUris: string[],
+) =>
+  createQueryKey(
+    FEED_INFO_RQKEY_ROOT,
+    {
+      kind,
+      feedUris,
+    },
+    {
+      persistedVersion: 1,
+    },
+  )
 
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
@@ -427,13 +449,13 @@ export function usePinnedFeedsInfos() {
   const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
 
   return useQuery({
-    staleTime: STALE.INFINITY,
+    queryKey: createPinnedFeedInfosQueryKey(
+      'pinned',
+      pinnedItems.map(f => f.value),
+    ),
+    gcTime: GCTIME.INFINITY,
+    staleTime: STALE.MINUTES.FIFTEEN,
     enabled: !isLoadingPrefs,
-    queryKey: [
-      pinnedFeedInfosQueryKeyRoot,
-      (hasSession ? 'authed:' : 'unauthed:') +
-        pinnedItems.map(f => f.value).join(','),
-    ],
     queryFn: async () => {
       if (!hasSession) {
         return [PWI_DISCOVER_FEED_STUB]
@@ -535,9 +557,13 @@ export function useSavedFeeds() {
   const queryClient = useQueryClient()
 
   return useQuery({
+    queryKey: createPinnedFeedInfosQueryKey(
+      'saved',
+      savedItems.map(f => f.value),
+    ),
+    gcTime: GCTIME.INFINITY,
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
-    queryKey: [pinnedFeedInfosQueryKeyRoot, ...savedItems],
     placeholderData: previousData => {
       return (
         previousData || {

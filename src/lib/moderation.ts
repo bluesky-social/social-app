@@ -1,7 +1,7 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {
   type AppBskyLabelerDefs,
-  BskyAgent,
+  AtpAgent,
   type ComAtprotoLabelDefs,
   type InterpretedLabelValueDefinition,
   LABELS,
@@ -14,9 +14,12 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {type AppModerationCause} from '#/components/Pills'
 
-export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn']
-export const OTHER_SELF_LABELS = ['graphic-media']
-export const SELF_LABELS = [...ADULT_CONTENT_LABELS, ...OTHER_SELF_LABELS]
+export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const
+export const OTHER_SELF_LABELS = ['graphic-media'] as const
+export const SELF_LABELS = [
+  ...ADULT_CONTENT_LABELS,
+  ...OTHER_SELF_LABELS,
+] as const
 
 export type AdultSelfLabel = (typeof ADULT_CONTENT_LABELS)[number]
 export type OtherSelfLabel = (typeof OTHER_SELF_LABELS)[number]
@@ -55,6 +58,21 @@ export function labelIsHideableOffense(
   return ['!hide', '!takedown'].includes(label.val)
 }
 
+/**
+ * Filters out labels that are not user-facing: system labels (val prefixed
+ * with `!`) and the user's own "bot" self-label.
+ */
+export function filterUserFacingLabels(
+  labels: ComAtprotoLabelDefs.Label[],
+  currentAccountDid: string | undefined,
+): ComAtprotoLabelDefs.Label[] {
+  return labels.filter(
+    label =>
+      !label.val.startsWith('!') &&
+      !(label.val === 'bot' && label.src === currentAccountDid),
+  )
+}
+
 export function getLabelingServiceTitle({
   displayName,
   handle,
@@ -88,9 +106,9 @@ export function isAppLabeler(
     | AppBskyLabelerDefs.LabelerViewDetailed,
 ): boolean {
   if (typeof labeler === 'string') {
-    return BskyAgent.appLabelers.includes(labeler)
+    return AtpAgent.appLabelers.includes(labeler)
   }
-  return BskyAgent.appLabelers.includes(labeler.creator.did)
+  return AtpAgent.appLabelers.includes(labeler.creator.did)
 }
 
 export function isLabelerSubscribed(
@@ -119,7 +137,7 @@ export type Subject =
 export function useLabelSubject({label}: {label: ComAtprotoLabelDefs.Label}): {
   subject: Subject
 } {
-  return React.useMemo(() => {
+  return useMemo(() => {
     const {cid, uri} = label
     if (cid) {
       return {

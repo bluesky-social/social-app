@@ -57,7 +57,9 @@ export function useProfileFeedgensQuery(
               // filter by labels
               .filter(list => {
                 const decision = moderateFeedGenerator(list, moderationOpts!)
-                return !decision.ui('contentList').filter
+                return !decision
+                  .ui('contentList')
+                  .filters.some(cause => cause.type !== 'muted')
               }),
           }
         }),

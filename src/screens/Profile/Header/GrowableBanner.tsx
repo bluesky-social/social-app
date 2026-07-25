@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
-import {View} from 'react-native'
-import {ActivityIndicator} from 'react-native'
+import {ActivityIndicator, Pressable, View} from 'react-native'
 import Animated, {
+  type AnimatedRef,
   Extrapolation,
   interpolate,
   runOnJS,
@@ -13,41 +13,62 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BlurView} from 'expo-blur'
 import {useIsFetching} from '@tanstack/react-query'
-import type React from 'react'
 
-import {isIOS} from '#/platform/detection'
 import {RQKEY_ROOT as STARTERPACK_RQKEY_ROOT} from '#/state/queries/actor-starter-packs'
 import {RQKEY_ROOT as FEED_RQKEY_ROOT} from '#/state/queries/post-feed'
 import {RQKEY_ROOT as FEEDGEN_RQKEY_ROOT} from '#/state/queries/profile-feedgens'
 import {RQKEY_ROOT as LIST_RQKEY_ROOT} from '#/state/queries/profile-lists'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
+import {IS_IOS} from '#/env'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
 export function GrowableBanner({
   backButton,
   children,
+  onPress,
+  bannerRef,
+  testID,
+  label,
 }: {
   backButton?: React.ReactNode
   children: React.ReactNode
+  onPress?: () => void
+  bannerRef?: AnimatedRef<Animated.View>
+  testID?: string
+  label?: string
 }) {
   const pagerContext = usePagerHeaderContext()
 
   // plain non-growable mode for Android/Web
-  if (!pagerContext || !isIOS) {
+  if (!pagerContext || !IS_IOS) {
     return (
-      <View style={[a.w_full, a.h_full]}>
-        {children}
+      <Pressable
+        testID={testID}
+        onPress={onPress}
+        accessibilityRole="image"
+        accessibilityLabel={label}
+        accessibilityHint=""
+        style={[a.w_full, a.h_full]}>
+        <Animated.View ref={bannerRef} style={[a.w_full, a.h_full]}>
+          {children}
+        </Animated.View>
         {backButton}
-      </View>
+      </Pressable>
     )
   }
 
   const {scrollY} = pagerContext
 
   return (
-    <GrowableBannerInner scrollY={scrollY} backButton={backButton}>
+    <GrowableBannerInner
+      scrollY={scrollY}
+      backButton={backButton}
+      onPress={onPress}
+      bannerRef={bannerRef}
+      testID={testID}
+      label={label}>
       {children}
     </GrowableBannerInner>
   )
@@ -57,10 +78,18 @@ function GrowableBannerInner({
   scrollY,
   backButton,
   children,
+  onPress,
+  bannerRef,
+  testID,
+  label,
 }: {
   scrollY: SharedValue<number>
   backButton?: React.ReactNode
   children: React.ReactNode
+  onPress?: () => void
+  bannerRef?: AnimatedRef<Animated.View>
+  testID?: string
+  label?: string
 }) {
   const {top: topInset} = useSafeAreaInsets()
   const isFetching = useIsProfileFetching()
@@ -124,18 +153,33 @@ function GrowableBannerInner({
           {transformOrigin: 'bottom'},
           animatedStyle,
         ]}>
-        {children}
+        <Pressable
+          testID={testID}
+          onPress={onPress}
+          accessibilityRole="image"
+          accessibilityLabel={label}
+          accessibilityHint=""
+          style={[a.w_full, a.h_full]}>
+          <Animated.View
+            ref={bannerRef}
+            collapsable={false}
+            style={[a.w_full, a.h_full]}>
+            {children}
+          </Animated.View>
+        </Pressable>
         <AnimatedBlurView
+          pointerEvents="none"
           style={[a.absolute, a.inset_0]}
           tint="dark"
           animatedProps={animatedBlurViewProps}
         />
       </Animated.View>
       <View
+        pointerEvents="none"
         style={[
           a.absolute,
           a.inset_0,
-          {top: topInset - (isIOS ? 15 : 0)},
+          {top: topInset - (IS_IOS ? 15 : 0)},
           a.justify_center,
           a.align_center,
         ]}>

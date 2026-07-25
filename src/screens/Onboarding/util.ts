@@ -2,15 +2,20 @@ import {
   type $Typed,
   type AppBskyGraphFollow,
   type AppBskyGraphGetFollows,
-  type BskyAgent,
+  type AtpAgent,
   type ComAtprotoRepoApplyWrites,
+  type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import chunk from 'lodash.chunk'
 
 import {until} from '#/lib/async/until'
 
-export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
+export async function bulkWriteFollows(
+  agent: AtpAgent,
+  dids: string[],
+  via?: ComAtprotoRepoStrongRef.Main,
+) {
   const session = agent.session
 
   if (!session) {
@@ -22,6 +27,7 @@ export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
       $type: 'app.bsky.graph.follow',
       subject: did,
       createdAt: new Date().toISOString(),
+      via,
     }
   })
 
@@ -53,7 +59,7 @@ export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
 }
 
 async function whenFollowsIndexed(
-  agent: BskyAgent,
+  agent: AtpAgent,
   actor: string,
   fn: (res: AppBskyGraphGetFollows.Response) => boolean,
 ) {

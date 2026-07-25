@@ -1,7 +1,6 @@
 import {useReducer} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
 import {useCleanError} from '#/lib/hooks/useCleanError'
@@ -10,6 +9,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogContext} from '#/components/Dialog/context'
 import {ResendEmailText} from '#/components/dialogs/EmailDialog/components/ResendEmailText'
 import {
   isValidCode,
@@ -90,7 +90,8 @@ function reducer(state: State, action: Action): State {
 
 export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
+  const control = useDialogContext()
   const cleanError = useCleanError()
   const {currentAccount} = useSession()
   const [state, dispatch] = useReducer(reducer, {
@@ -133,7 +134,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
       const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: clean || _(msg`Failed to send email, please try again.`),
+        error: clean || l`Failed to send email, please try again.`,
       })
     }
   }
@@ -142,7 +143,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
     if (!isValidCode(state.token)) {
       dispatch({
         type: 'setError',
-        error: _(msg`Please enter a valid code.`),
+        error: l`Please enter a valid code.`,
       })
       return
     }
@@ -165,7 +166,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
       const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: clean || _(msg`Failed to verify email, please try again.`),
+        error: clean || l`Failed to verify email, please try again.`,
       })
     }
   }
@@ -190,6 +191,15 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
             </Trans>
           </Text>
         </View>
+        <Button
+          label={l`Done`}
+          size="large"
+          color="primary"
+          onPress={() => control.close()}>
+          <ButtonText>
+            <Trans>Done</Trans>
+          </ButtonText>
+        </Button>
       </View>
     )
   }
@@ -272,7 +282,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
             <Trans>
               If you need to update your email,{' '}
               <InlineLinkText
-                label={_(msg`Click here to update your email`)}
+                label={l`Click here to update your email`}
                 {...createStaticClick(() => {
                   showScreen({id: ScreenID.Update})
                 })}>
@@ -287,12 +297,11 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
           <ResendEmailText onPress={requestEmailVerification} />
         )}
       </View>
-
       {state.step === 'email' && state.mutationStatus !== 'success' ? (
         <>
           {state.error && <Admonition type="error">{state.error}</Admonition>}
           <Button
-            label={_(msg`Send verification email`)}
+            label={l`Send verification email`}
             size="large"
             variant="solid"
             color="primary"
@@ -307,7 +316,6 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
           </Button>
         </>
       ) : null}
-
       {state.step === 'email' && (
         <>
           <Divider />
@@ -317,7 +325,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
             <Trans>
               Have a code?{' '}
               <InlineLinkText
-                label={_(msg`Enter code`)}
+                label={l`Enter code`}
                 {...createStaticClick(() => {
                   dispatch({
                     type: 'setStep',
@@ -330,7 +338,6 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
           </Text>
         </>
       )}
-
       {state.step === 'token' ? (
         <>
           <TokenField
@@ -347,13 +354,11 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
           {state.error && <Admonition type="error">{state.error}</Admonition>}
 
           <Button
-            label={_(
-              msg({
-                message: `Verify code`,
-                context: `action`,
-                comment: `Button text and accessibility label for action to verify the user's email address using the code entered`,
-              }),
-            )}
+            label={l({
+              message: `Verify code`,
+              context: `action`,
+              comment: `Button text and accessibility label for action to verify the user's email address using the code entered`,
+            })}
             size="large"
             variant="solid"
             color="primary"
@@ -380,7 +385,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
             <Trans>
               Don't have a code or need a new one?{' '}
               <InlineLinkText
-                label={_(msg`Click here to restart the verification process.`)}
+                label={l`Click here to restart the verification process.`}
                 {...createStaticClick(() => {
                   dispatch({
                     type: 'setStep',

@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useLayoutEffect, useState} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
@@ -9,10 +9,7 @@ import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useSession} from '#/state/session'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
-import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
 import {useCloseAllActiveElements} from '#/state/util'
-import {Lightbox} from '#/view/com/lightbox/Lightbox'
-import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
 import {Takendown} from '#/screens/Takendown'
@@ -24,6 +21,8 @@ import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {useWelcomeModal} from '#/components/hooks/useWelcomeModal'
+import {Lightbox} from '#/components/Lightbox'
+import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {
   Outlet as PolicyUpdateOverlayPortalOutlet,
   usePolicyUpdateContext,
@@ -33,8 +32,9 @@ import {WelcomeModal} from '#/components/WelcomeModal'
 import {useAgeAssurance} from '#/ageAssurance'
 import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
+import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {FlatNavigator, RoutesContainer} from '#/Navigation'
-import {Composer} from './Composer.web'
+import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
 
 function ShellInner() {
@@ -43,7 +43,6 @@ function ShellInner() {
   const {state: policyUpdateState} = usePolicyUpdateContext()
   const welcomeModalControl = useWelcomeModal()
 
-  useComposerKeyboardShortcut()
   useIntentHandler()
 
   useEffect(() => {
@@ -64,8 +63,7 @@ function ShellInner() {
       <ErrorBoundary>
         <FlatNavigator layout={drawerLayout} />
       </ErrorBoundary>
-      <Composer winHeight={0} />
-      <ModalsContainer />
+      <Composer />
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />
@@ -73,6 +71,7 @@ function ShellInner() {
       <LinkWarningDialog />
       <Lightbox />
       <NuxDialogs />
+      <GlobalReportDialog />
 
       {welcomeModalControl.isOpen && (
         <WelcomeModal control={welcomeModalControl} />
@@ -179,6 +178,8 @@ export function Shell() {
           <RedirectOverlay />
         </>
       )}
+
+      <PassiveAnalytics />
     </View>
   )
 }

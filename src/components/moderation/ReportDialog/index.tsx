@@ -1,14 +1,19 @@
-import React from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react'
 import {Pressable, type ScrollView, View} from 'react-native'
 import {type AppBskyLabelerDefs, BSKY_LABELER_DID} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
 import {getLabelingServiceTitle} from '#/lib/moderation'
+import {useCallOnce} from '#/lib/once'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {Logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {useMyLabelersQuery} from '#/state/queries/preferences'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -16,6 +21,7 @@ import {atoms as a, useGutters, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotate'
 import {
@@ -28,9 +34,12 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 import {useSubmitReportMutation} from './action'
 import {
   BSKY_LABELER_ONLY_REPORT_REASONS,
+  BSKY_LABELER_ONLY_SUBJECT_TYPES,
   NEW_TO_OLD_REASONS_MAP,
   SUPPORT_PAGE,
 } from './const'
@@ -44,22 +53,33 @@ import {
   useReportOptions,
 } from './utils/useReportOptions'
 
+export {type ReportSubject} from './types'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
-const logger = Logger.create(Logger.Context.ReportDialog)
+export function useGlobalReportDialogControl() {
+  return useGlobalDialogsControlContext().reportDialogControl
+}
+
+export function GlobalReportDialog() {
+  const {value, control} = useGlobalReportDialogControl()
+  return <ReportDialog control={control} subject={value?.subject} />
+}
 
 export function ReportDialog(
   props: Omit<ReportDialogProps, 'subject'> & {
-    subject: ReportSubject
+    subject?: ReportSubject
   },
 ) {
-  const subject = React.useMemo(
-    () => parseReportSubject(props.subject),
+  const ax = useAnalytics()
+  const subject = useMemo(
+    () => (props.subject ? parseReportSubject(props.subject) : undefined),
     [props.subject],
   )
-  const onClose = React.useCallback(() => {
-    logger.metric('reportDialog:close', {}, {statsig: false})
-  }, [])
+  const propsOnClose = props.onClose
+  const onClose = useCallback(() => {
+    ax.metric('reportDialog:close', {})
+    propsOnClose?.()
+  }, [ax, propsOnClose])
   return (
     <Dialog.Outer control={props.control} onClose={onClose}>
       <Dialog.Handle />
@@ -73,9 +93,9 @@ export function ReportDialog(
  * developer, but nevertheless we should have a graceful fallback.
  */
 function Invalid() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
-    <Dialog.ScrollableInner label={_(msg`Report dialog`)}>
+    <Dialog.ScrollableInner label={l`Report dialog`}>
       <Text style={[a.font_bold, a.text_xl, a.leading_snug, a.pb_xs]}>
         <Trans>Invalid report subject</Trans>
       </Text>
@@ -91,9 +111,11 @@ function Invalid() {
 }
 
 function Inner(props: ReportDialogProps) {
+  const ax = useAnalytics()
+  const logger = ax.logger.useChild(ax.logger.Context.ReportDialog)
   const t = useTheme()
-  const {_} = useLingui()
-  const ref = React.useRef<ScrollView>(null)
+  const {t: l} = useLingui()
+  const ref = useRef<ScrollView>(null)
   const {
     data: allLabelers,
     isLoading: isLabelerLoading,
@@ -103,26 +125,28 @@ function Inner(props: ReportDialogProps) {
   const isLoading = useDelayedLoading(500, isLabelerLoading)
   const copy = useCopyForSubject(props.subject)
   const {categories, getCategory} = useReportOptions()
-  const [state, dispatch] = React.useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   /**
    * Submission handling
    */
   const {mutateAsync: submitReport} = useSubmitReportMutation()
-  const [isPending, setPending] = React.useState(false)
-  const [isSuccess, setSuccess] = React.useState(false)
+  const [isPending, setIsPending] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
 
   // some reasons ONLY go to Bluesky
   const isBskyOnlyReason = state?.selectedOption?.reason
     ? BSKY_LABELER_ONLY_REPORT_REASONS.has(state.selectedOption.reason)
     : false
-  // some subjects (chats) only go to Bluesky
-  const isBskyOnlySubject = props.subject.type === 'convoMessage'
+  // some subjects ONLY go to Bluesky
+  const isBskyOnlySubject = BSKY_LABELER_ONLY_SUBJECT_TYPES.has(
+    props.subject.type,
+  )
 
   /**
    * Labelers that support this `subject` and its NSID collection
    */
-  const supportedLabelers = React.useMemo(() => {
+  const supportedLabelers = useMemo(() => {
     if (!allLabelers) return []
     return allLabelers
       .filter(l => {
@@ -130,7 +154,10 @@ function Inner(props: ReportDialogProps) {
         if (subjectTypes === undefined) return true
         if (props.subject.type === 'account') {
           return subjectTypes.includes('account')
-        } else if (props.subject.type === 'convoMessage') {
+        } else if (
+          props.subject.type === 'convoMessage' ||
+          props.subject.type === 'convo'
+        ) {
           return subjectTypes.includes('chat')
         } else {
           return subjectTypes.includes('record')
@@ -140,7 +167,11 @@ function Inner(props: ReportDialogProps) {
         const collections: string[] | undefined = l.subjectCollections
         if (collections === undefined) return true
         // all chat collections accepted, since only Bluesky handles chats
-        if (props.subject.type === 'convoMessage') return true
+        if (
+          props.subject.type === 'convoMessage' ||
+          props.subject.type === 'convo'
+        )
+          return true
         return collections.includes(props.subject.nsid)
       })
       .filter(l => {
@@ -152,15 +183,15 @@ function Inner(props: ReportDialogProps) {
         if (supportedReasonTypes === undefined) return true
         return (
           // supports new reason type
-          supportedReasonTypes.includes(state.selectedOption.reason) ||
           // supports old reason type (backwards compat)
+          supportedReasonTypes.includes(state.selectedOption.reason) ||
           supportedReasonTypes.includes(
             NEW_TO_OLD_REASONS_MAP[state.selectedOption.reason],
           )
         )
       })
   }, [
-    props,
+    props.subject,
     allLabelers,
     state.selectedOption,
     isBskyOnlyReason,
@@ -178,13 +209,13 @@ function Inner(props: ReportDialogProps) {
   const isAlwaysBskyLabeler =
     hasSingleSupportedLabeler && (isBskyOnlyReason || isBskyOnlySubject)
 
-  const onSubmit = React.useCallback(async () => {
+  const onSubmit = useCallback(async () => {
     dispatch({type: 'clearError'})
 
     logger.info('submitting')
 
     try {
-      setPending(true)
+      setIsPending(true)
       // wait at least 1s, make it feel substantial
       await wait(
         1e3,
@@ -193,53 +224,46 @@ function Inner(props: ReportDialogProps) {
           state,
         }),
       )
-      setSuccess(true)
-      logger.metric(
-        'reportDialog:success',
-        {
-          reason: state.selectedOption?.reason!,
-          labeler: state.selectedLabeler?.creator.handle!,
-          details: !!state.details,
-        },
-        {statsig: false},
-      )
+      setIsSuccess(true)
+      ax.metric('reportDialog:success', {
+        reason: state.selectedOption?.reason ?? '',
+        labeler: state.selectedLabeler?.creator.handle ?? '',
+        details: !!state.details,
+      })
       // give time for user feedback
       setTimeout(() => {
         props.control.close(() => {
           props.onAfterSubmit?.()
         })
       }, 1e3)
-    } catch (e: any) {
-      logger.metric('reportDialog:failure', {}, {statsig: false})
+    } catch (err) {
+      const e = err as Error
+      ax.metric('reportDialog:failure', {})
       logger.error(e, {
         source: 'ReportDialog',
       })
       dispatch({
         type: 'setError',
-        error: _(msg`Something went wrong. Please try again.`),
+        error: l`Something went wrong. Please try again.`,
       })
     } finally {
-      setPending(false)
+      setIsPending(false)
     }
-  }, [_, submitReport, state, dispatch, props, setPending, setSuccess])
+  }, [logger, submitReport, props, state, ax, l])
 
-  React.useEffect(() => {
-    logger.metric(
-      'reportDialog:open',
-      {
-        subjectType: props.subject.type,
-      },
-      {statsig: false},
-    )
-  }, [props.subject])
+  useCallOnce(() => {
+    ax.metric('reportDialog:open', {
+      subjectType: props.subject.type,
+    })
+  })()
 
   return (
     <Dialog.ScrollableInner
       testID="report:dialog"
-      label={_(msg`Report dialog`)}
+      label={l`Report dialog`}
       ref={ref}
       style={[a.w_full, {maxWidth: 500}]}>
-      <View style={[a.gap_2xl, isNative && a.pt_md]}>
+      <View style={[a.gap_2xl, IS_NATIVE && a.pt_md]}>
         <StepOuter>
           <StepTitle
             index={1}
@@ -267,8 +291,8 @@ function Inner(props: ReportDialogProps) {
                 </Admonition.Content>
                 <Admonition.Button
                   color="negative_subtle"
-                  label={_(msg`Retry loading report options`)}
-                  onPress={() => refetchLabelers()}>
+                  label={l`Retry loading report options`}
+                  onPress={() => void refetchLabelers()}>
                   <ButtonText>
                     <Trans>Retry</Trans>
                   </ButtonText>
@@ -285,7 +309,7 @@ function Inner(props: ReportDialogProps) {
                   </View>
                   <Button
                     testID="report:clearCategory"
-                    label={_(msg`Change report category`)}
+                    label={l`Change report category`}
                     size="tiny"
                     variant="solid"
                     color="secondary"
@@ -315,9 +339,7 @@ function Inner(props: ReportDialogProps) {
                   {['post', 'account'].includes(props.subject.type) && (
                     <Link
                       to={SUPPORT_PAGE}
-                      label={_(
-                        msg`Need to report a copyright violation, legal request, or regulatory compliance issue?`,
-                      )}>
+                      label={l`Need to report a copyright violation, legal request, or regulatory compliance issue?`}>
                       {({hovered, pressed}) => (
                         <View
                           style={[
@@ -355,7 +377,7 @@ function Inner(props: ReportDialogProps) {
         <StepOuter>
           <StepTitle
             index={2}
-            title={_(msg`Select a reason`)}
+            title={l`Select a reason`}
             activeIndex1={state.activeStepIndex1}
           />
           {state.selectedOption ? (
@@ -365,7 +387,7 @@ function Inner(props: ReportDialogProps) {
               </View>
               <Button
                 testID="report:clearReportOption"
-                label={_(msg`Change report reason`)}
+                label={l`Change report reason`}
                 size="tiny"
                 variant="solid"
                 color="secondary"
@@ -405,7 +427,7 @@ function Inner(props: ReportDialogProps) {
           <StepOuter>
             <StepTitle
               index={3}
-              title={_(msg`Select moderation service`)}
+              title={l`Select moderation service`}
               activeIndex1={state.activeStepIndex1}
             />
             {state.activeStepIndex1 >= 3 && (
@@ -420,7 +442,7 @@ function Inner(props: ReportDialogProps) {
                           <LabelerCard labeler={state.selectedLabeler} />
                         </View>
                         <Button
-                          label={_(msg`Change moderation service`)}
+                          label={l`Change moderation service`}
                           size="tiny"
                           variant="solid"
                           color="secondary"
@@ -483,7 +505,7 @@ function Inner(props: ReportDialogProps) {
         <StepOuter>
           <StepTitle
             index={isAlwaysBskyLabeler ? 3 : 4}
-            title={_(msg`Submit report`)}
+            title={l`Submit report`}
             activeIndex1={
               isAlwaysBskyLabeler
                 ? state.activeStepIndex1 - 1
@@ -503,7 +525,7 @@ function Inner(props: ReportDialogProps) {
                   </Trans>{' '}
                   {!state.detailsOpen ? (
                     <InlineLinkText
-                      label={_(msg`Add more details (optional)`)}
+                      label={l`Add more details (optional)`}
                       {...createStaticClick(() => {
                         dispatch({type: 'showDetails'})
                       })}>
@@ -521,7 +543,7 @@ function Inner(props: ReportDialogProps) {
                       onChangeText={details => {
                         dispatch({type: 'setDetails', details})
                       }}
-                      label={_(msg`Additional details (limit 300 characters)`)}
+                      label={l`Additional details (limit 300 characters)`}
                       style={{paddingRight: 60}}
                       numberOfLines={4}
                     />
@@ -544,12 +566,12 @@ function Inner(props: ReportDialogProps) {
               </View>
               <Button
                 testID="report:submit"
-                label={_(msg`Submit report`)}
+                label={l`Submit report`}
                 size="large"
                 variant="solid"
                 color="primary"
                 disabled={isPending || isSuccess}
-                onPress={onSubmit}>
+                onPress={() => void onSubmit()}>
                 <ButtonText>
                   <Trans>Submit report</Trans>
                 </ButtonText>
@@ -567,7 +589,6 @@ function Inner(props: ReportDialogProps) {
           )}
         </StepOuter>
       </View>
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )
@@ -580,7 +601,7 @@ function ActionOnce({
   check: () => boolean
   callback: () => void
 }) {
-  React.useEffect(() => {
+  useEffect(() => {
     if (check()) {
       callback()
     }
@@ -677,15 +698,15 @@ function CategoryCard({
   onSelect?: (option: ReportCategoryConfig) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const gutters = useGutters(['compact'])
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     onSelect?.(option)
   }, [onSelect, option])
   return (
     <Button
       testID={`report:category:${option.title}`}
-      label={_(msg`Create report for ${option.title}`)}
+      label={l`Create report for ${option.title}`}
       onPress={onPress}
       disabled={!onSelect}>
       {({hovered, pressed}) => (
@@ -722,21 +743,19 @@ function OptionCard({
   onSelect?: (option: ReportOption) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const gutters = useGutters(['compact'])
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     onSelect?.(option)
   }, [onSelect, option])
   return (
     <Button
       testID={`report:option:${option.title}`}
-      label={_(
-        msg({
-          message: `Create report for ${option.title}`,
-          comment:
-            'Accessibility label for button to create a moderation report for the selected option',
-        }),
-      )}
+      label={l({
+        message: `Create report for ${option.title}`,
+        comment:
+          'Accessibility label for button to create a moderation report for the selected option',
+      })}
       onPress={onPress}
       disabled={!onSelect}>
       {({hovered, pressed}) => (
@@ -785,8 +804,8 @@ function LabelerCard({
   onSelect?: (option: AppBskyLabelerDefs.LabelerViewDetailed) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
-  const onPress = React.useCallback(() => {
+  const {t: l} = useLingui()
+  const onPress = useCallback(() => {
     onSelect?.(labeler)
   }, [onSelect, labeler])
   const title = getLabelingServiceTitle({
@@ -796,7 +815,7 @@ function LabelerCard({
   return (
     <Button
       testID={`report:labeler:${labeler.creator.handle}`}
-      label={_(msg`Send report to ${title}`)}
+      label={l`Send report to ${title}`}
       onPress={onPress}
       disabled={!onSelect}>
       {({hovered, pressed}) => (
@@ -824,12 +843,7 @@ function LabelerCard({
               {title}
             </Text>
             <Text
-              style={[
-                a.text_sm,
-                ,
-                a.leading_snug,
-                t.atoms.text_contrast_medium,
-              ]}>
+              style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
               <Trans>By {sanitizeHandle(labeler.creator.handle, '@')}</Trans>
             </Text>
           </View>

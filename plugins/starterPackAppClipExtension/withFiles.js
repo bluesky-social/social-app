@@ -1,11 +1,10 @@
-const {withXcodeProject} = require('@expo/config-plugins')
+const {withXcodeProject} = require('expo/config-plugins')
 const path = require('path')
 const fs = require('fs')
 
 const FILES = ['AppDelegate.swift', 'ViewController.swift']
 
 const withFiles = (config, {targetName}) => {
-  // eslint-disable-next-line no-shadow
   return withXcodeProject(config, config => {
     const basePath = path.join(
       config.modRequest.projectRoot,

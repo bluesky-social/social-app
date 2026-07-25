@@ -16,15 +16,14 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {isIOS} from '#/platform/detection'
 import {
   Pager,
   type PagerRef,
   type RenderTabBarFnProps,
 } from '#/view/com/pager/Pager'
 import {useTheme} from '#/alf'
+import {IS_IOS} from '#/env'
 import {type ListMethods} from '../util/List'
 import {PagerHeaderProvider} from './PagerHeaderContext'
 import {TabBar} from './TabBar'
@@ -72,19 +71,19 @@ export function PagerWithHeader({
   const headerHeight = headerOnlyHeight + tabBarHeight
 
   // capture the header bar sizing
-  const onTabBarLayout = useNonReactiveCallback((evt: LayoutChangeEvent) => {
+  const onTabBarLayout = useCallback((evt: LayoutChangeEvent) => {
     const height = evt.nativeEvent.layout.height
     if (height > 0) {
       // The rounding is necessary to prevent jumps on iOS
       setTabBarHeight(Math.round(height * 2) / 2)
     }
-  })
-  const onHeaderOnlyLayout = useNonReactiveCallback((height: number) => {
+  }, [])
+  const onHeaderOnlyLayout = useCallback((height: number) => {
     if (height > 0) {
       // The rounding is necessary to prevent jumps on iOS
       setHeaderOnlyHeight(Math.round(height * 2) / 2)
     }
-  })
+  }, [])
 
   const renderTabBar = useCallback(
     (props: RenderTabBarFnProps) => {
@@ -270,15 +269,28 @@ let PagerTabBar = ({
       ],
     }
   })
-  const headerRef = useRef(null)
+  const headerRef = useRef<View>(null)
+  const fallbackHeaderOnlyHeight = useRef(0)
   return (
     <Animated.View
-      pointerEvents={isIOS ? 'auto' : 'box-none'}
+      pointerEvents={IS_IOS ? 'auto' : 'box-none'}
       style={[styles.tabBarMobile, headerTransform, t.atoms.bg]}>
       <View
         ref={headerRef}
-        pointerEvents={isIOS ? 'auto' : 'box-none'}
-        collapsable={false}>
+        pointerEvents={IS_IOS ? 'auto' : 'box-none'}
+        collapsable={false}
+        onLayout={(e: LayoutChangeEvent) => {
+          // Fallback measurement using onLayout directly on the header wrapper.
+          // This is more reliable than .measure() on Android after certain
+          // navigation transitions (e.g. returning from the logged-out view)
+          // where .measure() can fail to return a height. in general though,
+          // we should prefer using .measure() when possible as this can
+          // fire too early and cause layout thrashing.
+          // ref: https://github.com/bluesky-social/social-app/pull/9964 -sfp
+          if (isHeaderReady) {
+            fallbackHeaderOnlyHeight.current = e.nativeEvent.layout.height
+          }
+        }}>
         {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
         {
           // It wouldn't be enough to place `onLayout` on the parent node because
@@ -286,14 +298,20 @@ let PagerTabBar = ({
           // Instead, we'll render a brand node conditionally and get fresh layout.
           isHeaderReady && (
             <View
+              collapsable={false}
               // It wouldn't be enough to do this in a `ref` of an effect because,
               // even if `isHeaderReady` might have turned `true`, the associated
               // layout might not have been performed yet on the native side.
               onLayout={() => {
-                // @ts-ignore
                 headerRef.current?.measure(
                   (_x: number, _y: number, _width: number, height: number) => {
-                    onHeaderOnlyLayout(height)
+                    // sometimes height is `undefined` on Android, see above
+                    if (height !== undefined) {
+                      onHeaderOnlyLayout(height)
+                    } else {
+                      // if measure fails, use the value we got from `onLayout`
+                      onHeaderOnlyLayout(fallbackHeaderOnlyHeight.current)
+                    }
                   },
                 )
               }}

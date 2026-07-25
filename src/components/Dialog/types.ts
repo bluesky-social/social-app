@@ -45,6 +45,7 @@ export type DialogContextProps = {
   setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>
   // in the event that the hook is used outside of a dialog
   isWithinDialog: boolean
+  isHeightConstrained: boolean
 }
 
 export type DialogControlOpenOptions = {
@@ -78,14 +79,18 @@ export type DialogInnerProps =
       accessibilityLabelledBy: A11yProps['aria-labelledby']
       accessibilityDescribedBy: string
       keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
+      showsVerticalScrollIndicator?: ScrollViewProps['showsVerticalScrollIndicator']
       contentContainerStyle?: StyleProp<ViewStyle>
       header?: React.ReactNode
+      footer?: React.ReactNode
     }>
   | DialogInnerPropsBase<{
       label: string
       accessibilityLabelledBy?: undefined
       accessibilityDescribedBy?: undefined
       keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
+      showsVerticalScrollIndicator?: ScrollViewProps['showsVerticalScrollIndicator']
       contentContainerStyle?: StyleProp<ViewStyle>
       header?: React.ReactNode
+      footer?: React.ReactNode
     }>

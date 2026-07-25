@@ -21,8 +21,7 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
-import {useEvent} from 'expo'
-import {useEventListener} from 'expo'
+import {useEvent, useEventListener} from 'expo'
 import {Image, type ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
@@ -34,8 +33,7 @@ import {
   type ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {
   type RouteProp,
   useFocusEffect,
@@ -50,6 +48,10 @@ import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
+  createPlaybackTelemetry,
+  type PlaybackTelemetry,
+} from '#/lib/media/video/playbackTelemetry'
+import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
@@ -57,7 +59,6 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isAndroid} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {
   POST_TOMBSTONE,
@@ -67,19 +68,17 @@ import {
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   FeedFeedbackProvider,
+  useFeedFeedback,
   useFeedFeedbackContext,
 } from '#/state/feed-feedback'
-import {useFeedFeedback} from '#/state/feed-feedback'
 import {useFeedInfo} from '#/state/queries/feed'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
-  type AuthorFilter,
   type FeedPostSliceItem,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {List} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -101,6 +100,8 @@ import * as Hider from '#/components/moderation/Hider'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
 
@@ -133,16 +134,13 @@ export function VideoFeed({}: NativeStackScreenProps<
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
 
   const t = useTheme()
-  const setMinShellMode = useSetMinimalShellMode()
   useFocusEffect(
     useCallback(() => {
-      setMinShellMode(true)
       setSystemUITheme('lightbox', t)
       return () => {
-        setMinShellMode(false)
         setSystemUITheme('theme', t)
       }
-    }, [setMinShellMode, t]),
+    }, [t]),
   )
 
   const isFocused = useIsFocused()
@@ -150,7 +148,7 @@ export function VideoFeed({}: NativeStackScreenProps<
 
   return (
     <ThemeProvider theme="dark">
-      <Layout.Screen noInsetTop style={{backgroundColor: 'black'}}>
+      <Layout.Screen minimalShell noInsetTop style={{backgroundColor: 'black'}}>
         <KeepAwake />
         <View
           style={[
@@ -192,11 +190,9 @@ function Feed() {
   const feedDesc = useMemo(() => {
     switch (params.type) {
       case 'feedgen':
-        return `feedgen|${params.uri as string}` as const
+        return `feedgen|${params.uri}` as const
       case 'author':
-        return `author|${params.did as string}|${
-          params.filter as AuthorFilter
-        }` as const
+        return `author|${params.did}|${params.filter}` as const
       default:
         throw new Error(`Invalid video feed params ${JSON.stringify(params)}`)
     }
@@ -453,7 +449,7 @@ function Feed() {
           }
           onEndReached={() => {
             if (hasNextPage && !isFetchingNextPage) {
-              fetchNextPage()
+              void fetchNextPage()
             }
           }}
           showsVerticalScrollIndicator={false}
@@ -490,6 +486,7 @@ let VideoItem = ({
   feedContext: string | undefined
   reqId: string | undefined
 }): React.ReactNode => {
+  const ax = useAnalytics()
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
   const {sendInteraction, feedDescriptor} = useFeedFeedbackContext()
@@ -507,19 +504,16 @@ let VideoItem = ({
       // Track post:view event
       if (!hasTrackedView.current) {
         hasTrackedView.current = true
-        logger.metric(
-          'post:view',
-          {
-            uri: post.uri,
-            authorDid: post.author.did,
-            logContext: 'ImmersiveVideo',
-            feedDescriptor,
-          },
-          {statsig: false},
-        )
+        ax.metric('post:view', {
+          uri: post.uri,
+          authorDid: post.author.did,
+          logContext: 'ImmersiveVideo',
+          feedDescriptor,
+        })
       }
     }
   }, [
+    ax,
     active,
     post.uri,
     post.author.did,
@@ -561,7 +555,7 @@ let VideoItem = ({
         <>
           <VideoItemPlaceholder embed={embed} />
           {shouldRenderVideo && player && (
-            <VideoItemInner player={player} embed={embed} />
+            <VideoItemInner player={player} embed={embed} active={active} />
           )}
           {moderation && (
             <Overlay
@@ -585,15 +579,19 @@ VideoItem = memo(VideoItem)
 function VideoItemInner({
   player,
   embed,
+  active,
 }: {
   player: VideoPlayer
   embed: AppBskyEmbedVideo.View
+  active: boolean
 }) {
   const {bottom} = useSafeAreaInsets()
-  const [isReady, setIsReady] = useState(!isAndroid)
+  const [isReady, setIsReady] = useState(!IS_ANDROID)
+
+  usePlaybackTelemetry({player, active, playlist: embed.playlist})
 
   useEventListener(player, 'timeUpdate', evt => {
-    if (isAndroid && !isReady && evt.currentTime >= 0.05) {
+    if (IS_ANDROID && !isReady && evt.currentTime >= 0.05) {
       setIsReady(true)
     }
   })
@@ -619,6 +617,69 @@ function VideoItemInner({
   )
 }
 
+/**
+ * Opens a Sentry playback span while this item is the active video. Adjacent
+ * players are preloaded by updateVideoState, so record whether the player was
+ * already ready at activation to separate load time from swipe latency.
+ */
+function usePlaybackTelemetry({
+  player,
+  active,
+  playlist,
+}: {
+  player: VideoPlayer
+  active: boolean
+  playlist: string
+}) {
+  const ax = useAnalytics()
+  const telemetryRef = useRef<PlaybackTelemetry | null>(null)
+
+  useEffect(() => {
+    if (!active) return
+    telemetryRef.current ??= createPlaybackTelemetry({
+      surface: 'immersiveFeed',
+      presentation: 'video',
+    })
+    const telemetry = telemetryRef.current
+    const preloaded = player.status === 'readyToPlay'
+    telemetry.activated({preloaded})
+    if (preloaded) {
+      telemetry.ready()
+    }
+    return () => {
+      telemetry.deactivated()
+    }
+  }, [active, player])
+
+  useEventListener(player, 'statusChange', evt => {
+    if (evt.status === 'readyToPlay') {
+      telemetryRef.current?.ready()
+    } else if (evt.status === 'error') {
+      const message = evt.error?.message ?? 'unknown'
+      telemetryRef.current?.error(message)
+      /*
+       * Adjacent players are preloaded and can error before the user ever
+       * swipes to them - only count failures the user actually sees.
+       */
+      if (active) {
+        ax.metric('video:playback:failed', {
+          surface: 'immersiveFeed',
+          presentation: 'video',
+          errorClass: 'PlayerError',
+          errorMessage: message.slice(0, 256),
+          playlist,
+        })
+      }
+    }
+  })
+
+  useEventListener(player, 'playingChange', evt => {
+    if (evt.isPlaying) {
+      telemetryRef.current?.playing()
+    }
+  })
+}
+
 function ModerationOverlay({
   embed,
   onPressShow,
@@ -626,7 +687,7 @@ function ModerationOverlay({
   embed: AppBskyEmbedVideo.View
   onPressShow: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const hider = Hider.useHider()
   const {bottom} = useSafeAreaInsets()
 
@@ -653,7 +714,7 @@ function ModerationOverlay({
             <Trans>Hidden by your moderation settings.</Trans>
           </Text>
           <Button
-            label={_(msg`Show anyway`)}
+            label={l`Show anyway`}
             size="small"
             variant="solid"
             color="secondary_inverted"
@@ -681,7 +742,7 @@ function ModerationOverlay({
           <Divider style={{borderColor: 'white'}} />
           <View>
             <Button
-              label={_(msg`View details`)}
+              label={l`View details`}
               onPress={() => {
                 hider.showInfoDialog()
               }}
@@ -729,7 +790,7 @@ function Overlay({
   feedContext: string | undefined
   reqId: string | undefined
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
@@ -783,6 +844,7 @@ function Overlay({
         embed: post.embed,
         langs: record?.langs,
       },
+      logContext: 'PostReply',
     })
   }, [openComposer, post, record])
 
@@ -815,11 +877,9 @@ function Overlay({
             <Animated.View style={[a.px_md, animatedStyle]}>
               <View style={[a.w_full, a.flex_row, a.align_center, a.gap_md]}>
                 <Link
-                  label={_(
-                    msg`View ${sanitizeDisplayName(
-                      post.author.displayName || post.author.handle,
-                    )}'s profile`,
-                  )}
+                  label={l`View ${sanitizeDisplayName(
+                    post.author.displayName || post.author.handle,
+                  )}'s profile`}
                   to={{
                     screen: 'Profile',
                     params: {name: post.author.did},
@@ -852,13 +912,11 @@ function Overlay({
                     <Button
                       label={
                         profile.viewer?.following
-                          ? _(msg`Following ${handle}`)
-                          : _(msg`Follow ${handle}`)
+                          ? l`Following ${handle}`
+                          : l`Follow ${handle}`
                       }
                       accessibilityHint={
-                        profile.viewer?.following
-                          ? _(msg`Unfollows the user`)
-                          : ''
+                        profile.viewer?.following ? l`Unfollows the user` : ''
                       }
                       size="small"
                       variant="solid"
@@ -866,8 +924,8 @@ function Overlay({
                       style={[a.mb_xs]}
                       onPress={() =>
                         profile.viewer?.following
-                          ? queueUnfollow()
-                          : queueFollow()
+                          ? void queueUnfollow()
+                          : void queueFollow()
                       }>
                       {!!profile.viewer?.following && (
                         <ButtonIcon icon={CheckIcon} />
@@ -896,6 +954,7 @@ function Overlay({
                     record={record}
                     feedContext={feedContext}
                     logContext="FeedItem"
+                    forceGoogleTranslate={true}
                     onPressReply={() =>
                       navigation.navigate('PostThread', {
                         name: post.author.did,
@@ -920,7 +979,7 @@ function Overlay({
           </LinearGradient>
         </View>
         {/*
-        {isAndroid && status === 'loading' && (
+        {IS_ANDROID && status === 'loading' && (
           <View
             style={[
               a.absolute,
@@ -951,7 +1010,7 @@ function ExpandableRichTextView({
   const [hasBeenExpanded, setHasBeenExpanded] = useState(false)
   const [constrained, setConstrained] = useState(false)
   const [contentHeight, setContentHeight] = useState(0)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {screenReaderEnabled} = useA11y()
 
   if (expanded && !hasBeenExpanded) {
@@ -992,8 +1051,8 @@ function ExpandableRichTextView({
       />
       {constrained && !screenReaderEnabled && (
         <Pressable
-          accessibilityHint={_(msg`Expands or collapses post text`)}
-          accessibilityLabel={expanded ? _(msg`Read less`) : _(msg`Read more`)}
+          accessibilityHint={l`Expands or collapses post text`}
+          accessibilityLabel={expanded ? l`Read less` : l`Read more`}
           hitSlop={HITSLOP_20}
           onPress={() => setExpanded(prev => !prev)}
           style={[a.absolute, a.inset_0]}
@@ -1053,7 +1112,7 @@ function PlayPauseTapArea({
   feedContext: string | undefined
   reqId: string | undefined
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const playHaptic = useHaptics()
   // TODO: implement viaRepost -sfn
@@ -1096,7 +1155,7 @@ function PlayPauseTapArea({
       clearTimeout(doubleTapRef.current)
       doubleTapRef.current = null
       playHaptic('Light')
-      queueLike()
+      void queueLike()
       sendInteraction({
         item: post.uri,
         event: 'app.bsky.feed.defs#interactionLike',
@@ -1111,16 +1170,12 @@ function PlayPauseTapArea({
   return (
     <Button
       disabled={!player}
-      aria-valuetext={
-        isPlaying ? _(msg`Video is playing`) : _(msg`Video is paused`)
-      }
-      label={_(
-        `Video from ${sanitizeHandle(
-          post.author.handle,
-          '@',
-        )}. Tap to play or pause the video`,
-      )}
-      accessibilityHint={_(msg`Double tap to like`)}
+      aria-valuetext={isPlaying ? l`Video is playing` : l`Video is paused`}
+      label={l`Video from ${sanitizeHandle(
+        post.author.handle,
+        '@',
+      )}. Tap to play or pause the video`}
+      accessibilityHint={l`Double tap to like`}
       onPress={onPress}
       style={[a.absolute, a.inset_0, a.z_10]}>
       <View />
@@ -1130,7 +1185,7 @@ function PlayPauseTapArea({
 
 function EndMessage() {
   const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   return (
     <View
@@ -1181,8 +1236,8 @@ function EndMessage() {
         variant="solid"
         color="secondary_inverted"
         size="small"
-        label={_(msg`Go back`)}
-        accessibilityHint={_(msg`Returns to previous page`)}>
+        label={l`Go back`}
+        accessibilityHint={l`Returns to previous page`}>
         <ButtonIcon icon={ArrowLeftIcon} />
         <ButtonText>
           <Trans>Go back</Trans>

@@ -3,7 +3,7 @@ import {
   type ChatBskyConvoDefs,
   type ComAtprotoModerationCreateReport,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
@@ -55,7 +55,9 @@ export function useSubmitReportMutation() {
       let report:
         | ComAtprotoModerationCreateReport.InputSchema
         | (Omit<ComAtprotoModerationCreateReport.InputSchema, 'subject'> & {
-            subject: $Typed<ChatBskyConvoDefs.MessageRef>
+            subject:
+              | $Typed<ChatBskyConvoDefs.MessageRef>
+              | $Typed<ChatBskyConvoDefs.ConvoRef>
           })
 
       switch (subject.type) {
@@ -70,6 +72,7 @@ export function useSubmitReportMutation() {
           }
           break
         }
+        case 'status':
         case 'post':
         case 'list':
         case 'feed':
@@ -98,10 +101,22 @@ export function useSubmitReportMutation() {
           }
           break
         }
+        case 'convo': {
+          report = {
+            reasonType,
+            reason: state.details,
+            subject: {
+              $type: 'chat.bsky.convo.defs#convoRef',
+              convoId: subject.convoId,
+              did: subject.did,
+            },
+          }
+          break
+        }
       }
 
       if (__DEV__) {
-        logger.info('Submitting report', {
+        logger.info('Submitting report (dry run)', {
           labeler: {
             handle: labeler.creator.handle,
           },

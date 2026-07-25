@@ -6,7 +6,7 @@ import {
   type AppBskyGraphDefs,
   AppBskyGraphStarterpack,
   type AppBskyNotificationListNotifications,
-  type BskyAgent,
+  type AtpAgent,
   hasMutedWord,
   moderateNotification,
   type ModerationOpts,
@@ -46,7 +46,7 @@ export async function fetchPage({
   fetchAdditionalData,
   reasons,
 }: {
-  agent: BskyAgent
+  agent: AtpAgent
   cursor: string | undefined
   limit: number
   queryClient: QueryClient
@@ -204,7 +204,7 @@ export function groupNotifications(
 }
 
 async function fetchSubjects(
-  agent: BskyAgent,
+  agent: AtpAgent,
   groupedNotifs: FeedNotification[],
 ): Promise<{
   posts: Map<string, AppBskyFeedDefs.PostView>

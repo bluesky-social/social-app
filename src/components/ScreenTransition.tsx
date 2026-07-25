@@ -6,9 +6,8 @@ import Animated, {
   SlideInLeft,
   SlideInRight,
 } from 'react-native-reanimated'
-import type React from 'react'
 
-import {isWeb} from '#/platform/detection'
+import {IS_WEB} from '#/env'
 
 export function ScreenTransition({
   direction,
@@ -31,8 +30,8 @@ export function ScreenTransition({
 
   return (
     <Animated.View
-      entering={isWeb ? webEntering : entering}
-      exiting={isWeb ? webExiting : exiting}
+      entering={IS_WEB ? webEntering : entering}
+      exiting={IS_WEB ? webExiting : exiting}
       style={style}>
       {children}
     </Animated.View>

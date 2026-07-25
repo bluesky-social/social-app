@@ -1,11 +1,11 @@
-import React, {useCallback, useEffect, useRef} from 'react'
+import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {AppState} from 'react-native'
 import {
   type AppBskyActorDefs,
   AppBskyFeedDefs,
   type AppBskyFeedPost,
+  type AtpAgent,
   AtUri,
-  type BskyAgent,
   moderatePost,
   type ModerationDecision,
   type ModerationPrefs,
@@ -164,7 +164,7 @@ export function usePostFeedQuery(
   const fetchLimit = MIN_POSTS
 
   // Make sure this doesn't invalidate unless really needed.
-  const selectArgs = React.useMemo(
+  const selectArgs = useMemo(
     () => ({
       feedTuners,
       moderationOpts,
@@ -450,7 +450,7 @@ function createApi({
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
   userInterests?: string
-  agent: BskyAgent
+  agent: AtpAgent
   enableFollowingToDiscoverFallback: boolean
 }) {
   if (feedDesc === 'following') {

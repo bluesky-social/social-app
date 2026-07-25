@@ -16,15 +16,31 @@ export function DateField({
   value,
   inputRef,
   onChangeDate,
+  onConfirm,
+  placeholder,
   label,
   isInvalid,
   testID,
   accessibilityHint,
   maximumDate,
+  minimumDate,
 }: DateFieldProps) {
   const {i18n} = useLingui()
   const t = useTheme()
   const [open, setOpen] = useState(false)
+
+  /*
+   * The picker requires a valid date, so when value is empty we open at
+   * maximumDate (if set) or today. Normalize through toSimpleDateString so a
+   * date-only value is parsed as UTC midnight, consistent with the picker's
+   * timeZoneOffsetInMinutes={0} and the maximumDate below.
+   */
+  const initialDate =
+    value === ''
+      ? maximumDate
+        ? new Date(toSimpleDateString(maximumDate))
+        : new Date()
+      : new Date(toSimpleDateString(value))
 
   const onChangeInternal = useCallback(
     (date: Date) => {
@@ -32,8 +48,9 @@ export function DateField({
 
       const formatted = toSimpleDateString(date)
       onChangeDate(formatted)
+      onConfirm?.(formatted)
     },
-    [onChangeDate, setOpen],
+    [onChangeDate, onConfirm, setOpen],
   )
 
   useImperativeHandle(
@@ -63,11 +80,11 @@ export function DateField({
       <DateFieldButton
         label={label}
         value={value}
+        placeholder={placeholder}
         onPress={onPress}
         isInvalid={isInvalid}
         accessibilityHint={accessibilityHint}
       />
-
       {open && (
         // Android implementation of DatePicker currently does not change default button colors according to theme and only takes hex values for buttonColor
         // Can remove the buttonColor setting if/when this PR is merged: https://github.com/henninghall/react-native-date-picker/pull/871
@@ -78,7 +95,7 @@ export function DateField({
           theme={t.scheme}
           // @ts-ignore TODO
           buttonColor={t.name === 'light' ? '#000000' : '#ffffff'}
-          date={new Date(value)}
+          date={initialDate}
           onConfirm={onChangeInternal}
           onCancel={onCancel}
           mode="date"
@@ -90,6 +107,9 @@ export function DateField({
           accessibilityHint={accessibilityHint}
           maximumDate={
             maximumDate ? new Date(toSimpleDateString(maximumDate)) : undefined
+          }
+          minimumDate={
+            minimumDate ? new Date(toSimpleDateString(minimumDate)) : undefined
           }
         />
       )}

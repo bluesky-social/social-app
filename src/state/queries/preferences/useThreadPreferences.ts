@@ -1,14 +1,15 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {type AppBskyUnspeccedGetPostThreadV2} from '@atproto/api'
+import {useFocusEffect} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
-import {OnceKey, useCallOnce} from '#/lib/hooks/useCallOnce'
-import {logger} from '#/logger'
+import {useCallOnce} from '#/lib/once'
 import {
   usePreferencesQuery,
   useSetThreadViewPreferencesMutation,
 } from '#/state/queries/preferences'
 import {type ThreadViewPreferences} from '#/state/queries/preferences/types'
+import {useAnalytics} from '#/analytics'
 import {type Literal} from '#/types/utils'
 
 export type ThreadSortOption = Literal<
@@ -28,9 +29,10 @@ export type ThreadPreferences = {
 export function useThreadPreferences({
   save,
 }: {save?: boolean} = {}): ThreadPreferences {
+  const ax = useAnalytics()
   const {data: preferences} = usePreferencesQuery()
   const serverPrefs = preferences?.threadViewPrefs
-  const once = useCallOnce(OnceKey.PreferencesThread)
+  const once = useCallOnce()
 
   /*
    * Create local state representations of server state
@@ -61,7 +63,7 @@ export function useThreadPreferences({
     )
 
     once(() => {
-      logger.metric('thread:preferences:load', {
+      ax.metric('thread:preferences:load', {
         sort: serverPrefs.sort,
         view: serverPrefs.lab_treeViewEnabled ? 'tree' : 'linear',
       })
@@ -69,26 +71,37 @@ export function useThreadPreferences({
   }
 
   const userUpdatedPrefs = useRef(false)
-  const [isSaving, setIsSaving] = useState(false)
-  const {mutateAsync} = useSetThreadViewPreferencesMutation()
+  const {mutate, isPending: isSaving} = useSetThreadViewPreferencesMutation({
+    onSuccess: (_data, prefs) => {
+      ax.metric('thread:preferences:update', {
+        sort: prefs.sort,
+        view: prefs.lab_treeViewEnabled ? 'tree' : 'linear',
+      })
+    },
+    onError: err => {
+      ax.logger.error('useThreadPreferences failed to save', {
+        safeMessage: err,
+      })
+    },
+  })
   const savePrefs = useMemo(() => {
-    return debounce(async (prefs: ThreadViewPreferences) => {
-      try {
-        setIsSaving(true)
-        await mutateAsync(prefs)
-        logger.metric('thread:preferences:update', {
-          sort: prefs.sort,
-          view: prefs.lab_treeViewEnabled ? 'tree' : 'linear',
-        })
-      } catch (e) {
-        logger.error('useThreadPreferences failed to save', {
-          safeMessage: e,
-        })
-      } finally {
-        setIsSaving(false)
+    return debounce(
+      (prefs: ThreadViewPreferences) => {
+        mutate(prefs)
+      },
+      2e3,
+      {leading: true, trailing: true},
+    )
+  }, [mutate])
+
+  // flush on leave screen
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        void savePrefs.flush()
       }
-    }, 4e3)
-  }, [mutateAsync])
+    }, [savePrefs]),
+  )
 
   if (save && userUpdatedPrefs.current) {
     savePrefs({

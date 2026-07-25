@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -6,15 +6,18 @@ import {
   useResolveGifQuery,
   useResolveLinkQuery,
 } from '#/state/queries/resolve-link'
-import {type Gif} from '#/state/queries/tenor'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
 import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
+import {JoinRequestEmbed} from '#/components/Post/Embed/JoinRequestEmbed'
 import {ModeratedListEmbed} from '#/components/Post/Embed/ListEmbed'
+import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
+import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
+import {type Gif} from '#/features/gifPicker/types'
 
 export const ExternalEmbedGif = ({
   onRemove,
@@ -25,7 +28,7 @@ export const ExternalEmbedGif = ({
 }) => {
   const t = useTheme()
   const {data, error} = useResolveGifQuery(gif)
-  const linkInfo = React.useMemo(
+  const linkInfo = useMemo(
     () =>
       data && {
         title: data.title ?? data.uri,
@@ -37,7 +40,13 @@ export const ExternalEmbedGif = ({
   )
 
   const loadingStyle: ViewStyle = {
-    aspectRatio: gif.media_formats.gif.dims[0] / gif.media_formats.gif.dims[1],
+    aspectRatio: (() => {
+      const dims = gif.media_formats.gif?.dims
+      if (dims && dims[0] > 0 && dims[1] > 0) {
+        return dims[0] / dims[1]
+      }
+      return 16 / 9 // Default aspect ratio
+    })(),
     width: '100%',
   }
 
@@ -77,9 +86,25 @@ export const ExternalEmbedLink = ({
 }) => {
   const t = useTheme()
   const {data, error} = useResolveLinkQuery(uri)
-  const linkComponent = React.useMemo(() => {
+  const linkComponent = useMemo(() => {
     if (data) {
       if (data.type === 'external') {
+        if (data.view && isStandardSiteEmbed(data.view.external)) {
+          return (
+            <StandardSiteEmbed
+              preview
+              view={{
+                ...data.view?.external,
+                title: data.view?.external?.title || data.title || uri,
+                uri,
+                description:
+                  data.view?.external?.description || data.description,
+                // prefer opengraph data to atproto record-derived image
+                thumb: data.thumb?.source.path || data.view?.external?.thumb,
+              }}
+            />
+          )
+        }
         return (
           <ExternalEmbed
             link={{
@@ -91,6 +116,8 @@ export const ExternalEmbedLink = ({
             hideAlt
           />
         )
+      } else if (data.type === 'chat-invite') {
+        return <JoinRequestEmbed code={data.code} preview={data.view} />
       } else if (data.kind === 'feed') {
         return (
           <ModeratedFeedEmbed

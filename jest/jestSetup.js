@@ -1,7 +1,5 @@
 /* global jest */
 import 'react-native-gesture-handler/jestSetup'
-// IMPORTANT: this is what's used in the native runtime
-import 'react-native-url-polyfill/auto'
 
 import {configure} from '@testing-library/react-native'
 
@@ -11,16 +9,13 @@ jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 )
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
+  // eslint-disable-next-line import-x/no-nodejs-modules
   const {EventEmitter} = require('events')
   return {
     __esModule: true,
     default: EventEmitter,
   }
 })
-
-jest.mock('@fortawesome/react-native-fontawesome', () => ({
-  FontAwesomeIcon: '',
-}))
 
 jest.mock('react-native-safe-area-context', () => {
   const inset = {top: 0, right: 0, bottom: 0, left: 0}
@@ -36,6 +31,7 @@ jest.mock('react-native-safe-area-context', () => {
 jest.mock('expo-file-system/legacy', () => ({
   getInfoAsync: jest.fn().mockResolvedValue({exists: true, size: 100}),
   deleteAsync: jest.fn(),
+  moveAsync: jest.fn().mockResolvedValue(undefined),
   createDownloadResumable: jest.fn(),
 }))
 
@@ -45,6 +41,7 @@ jest.mock('expo-image-manipulator', () => ({
   }),
   SaveFormat: {
     JPEG: 'jpeg',
+    WEBP: 'webp',
   },
 }))
 
@@ -60,9 +57,13 @@ jest.mock('expo-media-library', () => ({
   usePermissions: jest.fn(() => [true]),
 }))
 
-jest.mock('lande', () => ({
-  __esModule: true, // this property makes it work
-  default: jest.fn().mockReturnValue([['eng']]),
+jest.mock('@bsky.app/expo-guess-language', () => ({
+  guessLanguageSync: jest
+    .fn()
+    .mockReturnValue([{language: 'en', confidence: 1}]),
+  guessLanguageAsync: jest
+    .fn()
+    .mockResolvedValue([{language: 'en', confidence: 1}]),
 }))
 
 jest.mock('sentry-expo', () => ({
@@ -99,20 +100,9 @@ jest.mock('expo-modules-core', () => ({
   requireNativeViewManager: jest.fn().mockImplementation(_ => {
     return () => null
   }),
+  createPermissionHook: () => () => [true],
 }))
 
 jest.mock('expo-localization', () => ({
   getLocales: () => [],
 }))
-
-jest.mock('statsig-react-native-expo', () => ({
-  Statsig: {
-    initialize() {},
-    initializeCalled() {
-      return false
-    },
-  },
-}))
-
-jest.mock('../src/logger/bitdrift/lib', () => ({}))
-jest.mock('../src/lib/statsig/statsig', () => ({}))

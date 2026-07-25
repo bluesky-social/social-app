@@ -9,7 +9,11 @@ export function applyTheme(theme: 'light' | 'dark') {
   document.documentElement.classList.add(theme)
 }
 
-export function initSystemColorMode() {
+export function initSystemColorMode({additionalBodyClasses = ''} = {}) {
+  if (additionalBodyClasses) {
+    document.body.classList.add(additionalBodyClasses)
+  }
+
   applyTheme(
     window.matchMedia('(prefers-color-scheme: dark)').matches
       ? 'dark'

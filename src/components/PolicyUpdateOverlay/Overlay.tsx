@@ -7,11 +7,11 @@ import {
 import {LinearGradient} from 'expo-linear-gradient'
 import {utils} from '@bsky.app/alf'
 
-import {isAndroid, isNative} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {FocusScope} from '#/components/FocusScope'
 import {LockScroll} from '#/components/LockScroll'
+import {IS_ANDROID, IS_NATIVE} from '#/env'
 
 const GUTTER = 24
 
@@ -80,7 +80,7 @@ export function Overlay({
             a.z_20,
             a.align_center,
             !gtPhone && [a.justify_end, {minHeight: frame.height}],
-            isNative && [
+            IS_NATIVE && [
               {
                 paddingBottom: Math.max(insets.bottom, a.p_2xl.padding),
               },
@@ -109,7 +109,7 @@ export function Overlay({
 
           <FocusScope>
             <View
-              accessible={isAndroid}
+              accessible={IS_ANDROID}
               role="dialog"
               aria-role="dialog"
               aria-label={label}

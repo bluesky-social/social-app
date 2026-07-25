@@ -7,7 +7,10 @@ import {STALE} from '..'
 const RQKEY_ROOT = 'convo-availability'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
-export function useGetConvoAvailabilityQuery(did: string) {
+export function useGetConvoAvailabilityQuery(
+  did: string,
+  {enabled = true}: {enabled?: boolean} = {},
+) {
   const agent = useAgent()
 
   return useQuery({
@@ -21,5 +24,6 @@ export function useGetConvoAvailabilityQuery(did: string) {
       return data
     },
     staleTime: STALE.INFINITY,
+    enabled,
   })
 }

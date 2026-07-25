@@ -2,23 +2,23 @@ import {useRef, useState} from 'react'
 import {View} from 'react-native'
 import PagerView from 'react-native-pager-view'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {PROP_1, PROP_2, PROP_3} from './images'
-import {Dot, useValuePropText} from './ValuePropositionPager.shared'
+import {
+  Dot,
+  useValuePropText,
+  type ValuePropositionPagerProps,
+} from './ValuePropositionPager.shared'
 
 export function ValuePropositionPager({
   step,
   setStep,
   avatarUri,
-}: {
-  step: 0 | 1 | 2
-  setStep: (step: 0 | 1 | 2) => void
-  avatarUri?: string
-}) {
+}: ValuePropositionPagerProps) {
   const t = useTheme()
   const [activePage, setActivePage] = useState(step)
   const ref = useRef<PagerView>(null)
@@ -83,6 +83,7 @@ function Page({
           style={[a.w_full, a.aspect_square]}
           alt={alt}
           accessibilityIgnoresInvertColors={false} // I guess we do need it to blend into the background
+          useAppleWebpCodec
         />
         {page === 1 && (
           <Image
@@ -97,6 +98,7 @@ function Page({
               },
             ]}
             accessibilityIgnoresInvertColors
+            useAppleWebpCodec
             alt={_(msg`Your profile picture`)}
           />
         )}

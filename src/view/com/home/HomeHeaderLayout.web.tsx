@@ -1,19 +1,20 @@
 import {type JSX} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
-import {useKawaiiMode} from '#/state/preferences/kawaii'
+import {HITSLOP_10} from '#/lib/constants'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
 import {Logo} from '#/view/icons/Logo'
+import {useLogoVariant} from '#/view/icons/useLogoVariant'
 import {atoms as a, useBreakpoints, useGutters, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
+import {useAnalytics} from '#/analytics'
 
 export function HomeHeaderLayout(props: {
   children: React.ReactNode
@@ -38,7 +39,8 @@ function HomeHeaderLayoutDesktopAndTablet({
   const {headerHeight} = useShellLayout()
   const {hasSession} = useSession()
   const {_} = useLingui()
-  const kawaii = useKawaiiMode()
+  const ax = useAnalytics()
+  const logoVariant = useLogoVariant()
   const gutters = useGutters([0, 'base'])
 
   return (
@@ -49,16 +51,27 @@ function HomeHeaderLayoutDesktopAndTablet({
             style={[a.flex_row, a.align_center, gutters, a.pt_md, t.atoms.bg]}>
             <View style={{width: 34}} />
             <View style={[a.flex_1, a.align_center, a.justify_center]}>
-              <Logo width={kawaii ? 60 : 28} />
+              <Logo
+                width={
+                  logoVariant === 'kawaii'
+                    ? 60
+                    : logoVariant === 'japan'
+                      ? 34
+                      : 28
+                }
+              />
             </View>
             <Link
               to="/feeds"
-              hitSlop={10}
+              hitSlop={HITSLOP_10}
               label={_(msg`View your feeds and explore more`)}
               size="small"
               variant="ghost"
               color="secondary"
               shape="square"
+              onPress={() => {
+                ax.metric('nav:click', {item: 'feeds', surface: 'topBar'})
+              }}
               style={[a.justify_center]}>
               <ButtonIcon icon={FeedsIcon} size="lg" />
             </Link>

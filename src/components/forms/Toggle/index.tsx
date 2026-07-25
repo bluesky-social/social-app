@@ -10,7 +10,6 @@ import Animated, {Easing, LinearTransition} from 'react-native-reanimated'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
-import {isNative} from '#/platform/detection'
 import {
   atoms as a,
   native,
@@ -22,6 +21,7 @@ import {
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 
 export * from './Panel'
 
@@ -81,6 +81,7 @@ export type ItemProps = ViewStyleProp & {
   isInvalid?: boolean
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
   hitSlop?: PressableProps['hitSlop']
+  highlightRow?: boolean
 }
 
 export function useItemContext() {
@@ -160,8 +161,11 @@ export function Item({
   style,
   type = 'checkbox',
   label,
+  highlightRow,
   ...rest
 }: ItemProps) {
+  const t = useTheme()
+
   const {
     values: selectedValues,
     type: groupType,
@@ -207,6 +211,15 @@ export function Item({
     [name, selected, disabled, hovered, pressed, focused, isInvalid],
   )
 
+  const highlightStyle = highlightRow
+    ? [
+        a.rounded_full,
+        a.p_md,
+        hovered && t.atoms.bg_contrast_25,
+        selected && {backgroundColor: t.palette.primary_50},
+      ]
+    : null
+
   return (
     <ItemContext.Provider value={state}>
       <Pressable
@@ -232,7 +245,7 @@ export function Item({
         onPressOut={onPressOut}
         onFocus={onFocus}
         onBlur={onBlur}
-        style={[a.flex_row, a.align_center, a.gap_sm, style]}>
+        style={[a.flex_row, a.align_center, a.gap_sm, highlightStyle, style]}>
         {typeof children === 'function' ? children(state) : children}
       </Pressable>
     </ItemContext.Provider>
@@ -562,4 +575,30 @@ export function BaseRadio({
   )
 }
 
-export const Platform = isNative ? Switch : Checkbox
+export function RadioWithLabel({
+  label,
+  selected,
+}: {
+  label: string
+  selected: boolean
+}) {
+  const t = useTheme()
+
+  return (
+    <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+      <Radio />
+      <LabelText
+        style={[
+          a.font_medium,
+          a.flex_1,
+          a.text_md,
+          a.leading_tight,
+          selected ? t.atoms.text : t.atoms.text_contrast_high,
+        ]}>
+        {label}
+      </LabelText>
+    </View>
+  )
+}
+
+export const Platform = IS_NATIVE ? Switch : Checkbox

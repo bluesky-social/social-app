@@ -54,7 +54,7 @@ func NewRenderer(prefix string, fs *embed.FS, debug bool) *Renderer {
 	}
 }
 
-func (r Renderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+func (r Renderer) Render(w io.Writer, name string, data any, c echo.Context) error {
 	var ctx pongo2.Context
 
 	if data != nil {

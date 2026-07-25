@@ -4,6 +4,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
+import {type GestureType} from 'react-native-gesture-handler'
 import {type SharedValue} from 'react-native-reanimated'
 
 import type * as Dialog from '#/components/Dialog'
@@ -21,6 +22,7 @@ export type {
 export type AuxiliaryViewProps = {
   children?: React.ReactNode
   align?: 'left' | 'right'
+  style?: StyleProp<ViewStyle>
 }
 
 export type ItemProps = Omit<MenuItemProps, 'onPress' | 'children'> & {
@@ -49,6 +51,7 @@ export type ContextType = {
   translationSV: SharedValue<number>
   mode: 'full' | 'auxiliary-only'
   open: (evt: Measurement, mode: 'full' | 'auxiliary-only') => void
+  returnLocationSV: SharedValue<{x: number; y: number} | null>
   close: () => void
   registerHoverable: (
     id: string,
@@ -63,10 +66,12 @@ export type ContextType = {
 
 export type MenuContextType = {
   align: 'left' | 'right'
+  xOffset: number
 }
 
 export type ItemContextType = {
   disabled: boolean
+  destructive: boolean
 }
 
 export type TriggerProps = {
@@ -82,10 +87,26 @@ export type TriggerProps = {
   hint?: string
   role?: AccessibilityRole
   style?: StyleProp<ViewStyle>
+  /**
+   * Callback for single taps. Composed with the double-tap and
+   * press-and-hold gestures via `Gesture.Exclusive`, so a double tap
+   * does not also fire this handler.
+   *
+   * @platform ios, android
+   */
+  onTap?: () => void
+  /**
+   * An optional gesture (e.g. swipe-to-reply) composed into the same
+   * arbitration group as the tap and press-and-hold gestures via `Gesture.Race`,
+   * making it mutually exclusive with them - only one can win a given touch.
+   *
+   * @platform ios, android
+   */
+  swipeGesture?: GestureType
 }
 export type TriggerChildProps =
   | {
-      isNative: true
+      IS_NATIVE: true
       control: {
         isOpen: boolean
         open: (mode: 'full' | 'auxiliary-only') => void
@@ -115,7 +136,7 @@ export type TriggerChildProps =
       }
     }
   | {
-      isNative: false
+      IS_NATIVE: false
       control: Dialog.DialogOuterProps['control']
       state: {
         hovered: false

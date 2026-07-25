@@ -47,11 +47,24 @@ func run(args []string) {
 					EnvVars:  []string{"OGCARD_HOST"},
 				},
 				&cli.StringFlag{
+					Name:     "chat-host",
+					Usage:    "scheme, hostname, and port of chat appview",
+					Required: false,
+					EnvVars:  []string{"CHAT_HOST"},
+				},
+				&cli.StringFlag{
 					Name:     "http-address",
 					Usage:    "Specify the local IP/port to bind to",
 					Required: false,
 					Value:    ":8100",
 					EnvVars:  []string{"HTTP_ADDRESS"},
+				},
+				&cli.StringFlag{
+					Name:     "metrics-address",
+					Usage:    "Specify the local IP/port to bind the metrics server to",
+					Required: false,
+					Value:    ":9090",
+					EnvVars:  []string{"METRICS_HTTP_ADDRESS"},
 				},
 				&cli.StringFlag{
 					Name:     "link-host",

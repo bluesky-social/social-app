@@ -1,13 +1,12 @@
-import {XRPCError} from '@atproto/xrpc'
-import {t} from '@lingui/macro'
+import {XRPCError} from '@atproto/api'
+import {t} from '@lingui/core/macro'
 
-export function cleanError(str: any): string {
-  if (!str) {
+export function cleanError(e: unknown): string {
+  if (!e) {
     return ''
   }
-  if (typeof str !== 'string') {
-    str = str.toString()
-  }
+  // oxlint-disable-next-line typescript/no-base-to-string
+  const str = typeof e === 'string' ? e : e.toString()
   if (isNetworkError(str)) {
     return t`Unable to connect. Please check your internet connection and try again.`
   }
@@ -30,6 +29,18 @@ export function cleanError(str: any): string {
   if (str.includes('Bad token scope') || str.includes('Bad token method')) {
     return t`This feature is not available while using an App Password. Please sign in with your main password.`
   }
+  if (str.includes('Account has been suspended')) {
+    return t`Account has been suspended`
+  }
+  if (str.includes('Account is deactivated')) {
+    return t`Account is deactivated`
+  }
+  if (str.includes('Profile not found')) {
+    return t`Profile not found`
+  }
+  if (str.includes('Unable to resolve handle')) {
+    return t`Unable to resolve handle`
+  }
   if (str.startsWith('Error: ')) {
     return str.slice('Error: '.length)
   }
@@ -42,6 +53,7 @@ const NETWORK_ERRORS = [
   'Failed to fetch',
   'Load failed',
   'Upstream service unreachable',
+  'NetworkError when attempting to fetch resource',
 ]
 
 export function isNetworkError(e: unknown) {
@@ -64,7 +76,7 @@ export function isErrorMaybeAppPasswordPermissions(e: unknown) {
 
 /**
  * Intended to capture "User cancelled" or "Crop cancelled" errors
- * that we often get from expo modules such expo-image-crop-tool
+ * that we often get from expo modules such @bsky.app/expo-image-crop-tool
  *
  * The exact name has changed in the past so let's just see if the string
  * contains "cancel"
@@ -72,4 +84,10 @@ export function isErrorMaybeAppPasswordPermissions(e: unknown) {
 export function isCancelledError(e: unknown) {
   const str = String(e).toLowerCase()
   return str.includes('cancel')
+}
+
+// TODO Replace this with error.shouldRetry() when available. -dsb
+const RETRYABLE_ERRORS = [408, 425, 429, 500, 502, 503, 504, 522, 524]
+export function shouldRetryError(e: unknown) {
+  return e instanceof XRPCError && RETRYABLE_ERRORS.includes(e.status)
 }

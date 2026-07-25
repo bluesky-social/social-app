@@ -23,8 +23,7 @@ import {
 import {useEventListener} from 'expo'
 import {type VideoPlayer} from 'expo-video'
 
-import {tokens} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, tokens} from '#/alf'
 import {formatTime} from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils'
 import {Text} from '#/components/Typography'
 

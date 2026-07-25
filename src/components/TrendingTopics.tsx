@@ -1,142 +1,20 @@
-import React from 'react'
-import {View} from 'react-native'
-import {type AtUri} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {useMemo} from 'react'
+import {type AppBskyUnspeccedDefs, type AtUri} from '@atproto/api'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 // import {makeProfileLink} from '#/lib/routes/links'
 // import {feedUriToHref} from '#/lib/strings/url-helpers'
-// import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
-// import {CloseQuote_Filled_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
-// import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {type TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
-import {atoms as a, native, useTheme, type ViewStyleProp} from '#/alf'
-import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
+import {native} from '#/alf'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
-import {Text} from '#/components/Typography'
-
-export function TrendingTopic({
-  topic: raw,
-  size,
-  style,
-}: {topic: TrendingTopic; size?: 'large' | 'small'} & ViewStyleProp) {
-  const t = useTheme()
-  const topic = useTopic(raw)
-
-  const isSmall = size === 'small'
-  const hasIcon = topic.type === 'starter-pack' && !isSmall
-  const iconSize = 20
-
-  return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.rounded_full,
-        a.border,
-        t.atoms.border_contrast_medium,
-        t.atoms.bg,
-        isSmall
-          ? [
-              {
-                paddingVertical: 5,
-                paddingHorizontal: 10,
-              },
-            ]
-          : [a.py_sm, a.px_md],
-        hasIcon && {gap: 6},
-        style,
-      ]}>
-      {hasIcon && topic.type === 'starter-pack' && (
-        <StarterPackIcon
-          gradient="sky"
-          width={iconSize}
-          style={{marginLeft: -3, marginVertical: -1}}
-        />
-      )}
-
-      {/*
-        <View
-          style={[
-            a.align_center,
-            a.justify_center,
-            a.rounded_full,
-            a.overflow_hidden,
-            {
-              width: iconSize,
-              height: iconSize,
-            },
-          ]}>
-          {topic.type === 'tag' ? (
-            <Hashtag width={iconSize} />
-          ) : topic.type === 'topic' ? (
-            <Quote width={iconSize - 2} />
-          ) : topic.type === 'feed' ? (
-            <UserAvatar
-              type="user"
-              size={aviSize}
-              avatar=""
-            />
-          ) : (
-            <UserAvatar
-              type="user"
-              size={aviSize}
-              avatar=""
-            />
-          )}
-        </View>
-        */}
-
-      <Text
-        style={[
-          a.font_semi_bold,
-          a.leading_tight,
-          isSmall ? [a.text_sm] : [a.text_md, {paddingBottom: 1}],
-        ]}
-        numberOfLines={1}>
-        {topic.displayName}
-      </Text>
-    </View>
-  )
-}
-
-export function TrendingTopicSkeleton({
-  size = 'large',
-  index = 0,
-}: {
-  size?: 'large' | 'small'
-  index?: number
-}) {
-  const t = useTheme()
-  const isSmall = size === 'small'
-  return (
-    <View
-      style={[
-        a.rounded_full,
-        a.border,
-        t.atoms.border_contrast_medium,
-        t.atoms.bg_contrast_25,
-        isSmall
-          ? {
-              width: index % 2 === 0 ? 75 : 90,
-              height: 27,
-            }
-          : {
-              width: index % 2 === 0 ? 90 : 110,
-              height: 36,
-            },
-      ]}
-    />
-  )
-}
 
 export function TrendingTopicLink({
   topic: raw,
   children,
   ...rest
 }: {
-  topic: TrendingTopic
+  topic: AppBskyUnspeccedDefs.TrendView
 } & Omit<LinkProps, 'to' | 'label'>) {
   const topic = useTopic(raw)
 
@@ -167,9 +45,11 @@ type ParsedTrendingTopic =
       uri: AtUri
     }
 
-export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
+export function useTopic(
+  raw: AppBskyUnspeccedDefs.TrendView,
+): ParsedTrendingTopic {
   const {_} = useLingui()
-  return React.useMemo(() => {
+  return useMemo(() => {
     const {topic: displayName, link} = raw
 
     if (link.startsWith('/search')) {

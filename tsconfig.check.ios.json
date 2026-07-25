@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.check.json",
+  "compilerOptions": {
+    /*
+     * Mirrors Metro's resolution order for platform=ios.
+     */
+    "moduleSuffixes": [".ios", ".native", ""]
+  }
+}

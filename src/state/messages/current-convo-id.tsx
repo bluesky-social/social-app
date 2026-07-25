@@ -1,6 +1,6 @@
-import React from 'react'
+import {createContext, useContext, useMemo, useState} from 'react'
 
-const CurrentConvoIdContext = React.createContext<{
+const CurrentConvoIdContext = createContext<{
   currentConvoId: string | undefined
   setCurrentConvoId: (convoId: string | undefined) => void
 }>({
@@ -10,7 +10,7 @@ const CurrentConvoIdContext = React.createContext<{
 CurrentConvoIdContext.displayName = 'CurrentConvoIdContext'
 
 export function useCurrentConvoId() {
-  const ctx = React.useContext(CurrentConvoIdContext)
+  const ctx = useContext(CurrentConvoIdContext)
   if (!ctx) {
     throw new Error(
       'useCurrentConvoId must be used within a CurrentConvoIdProvider',
@@ -24,10 +24,8 @@ export function CurrentConvoIdProvider({
 }: {
   children: React.ReactNode
 }) {
-  const [currentConvoId, setCurrentConvoId] = React.useState<
-    string | undefined
-  >()
-  const ctx = React.useMemo(
+  const [currentConvoId, setCurrentConvoId] = useState<string | undefined>()
+  const ctx = useMemo(
     () => ({currentConvoId, setCurrentConvoId}),
     [currentConvoId],
   )

@@ -1,20 +1,21 @@
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {PROP_1, PROP_2, PROP_3} from './images'
-import {Dot, useValuePropText} from './ValuePropositionPager.shared'
+import {
+  Dot,
+  useValuePropText,
+  type ValuePropositionPagerProps,
+} from './ValuePropositionPager.shared'
 
 export function ValuePropositionPager({
   step,
   avatarUri,
-}: {
-  step: 0 | 1 | 2
-  avatarUri?: string
-}) {
+}: ValuePropositionPagerProps) {
   const t = useTheme()
   const {_} = useLingui()
 

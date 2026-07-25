@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  createContext,
+  forwardRef,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
 import {
   type AccessibilityProps,
   type GestureResponderEvent,
@@ -38,7 +45,7 @@ export type ButtonColor =
   | 'negative'
   | 'primary_subtle'
   | 'negative_subtle'
-export type ButtonSize = 'tiny' | 'small' | 'large'
+export type ButtonSize = 'tiny' | 'small' | 'medium' | 'large'
 export type ButtonShape = 'round' | 'square' | 'rectangular' | 'default'
 export type VariantProps = {
   /**
@@ -70,13 +77,17 @@ export type ButtonState = {
   focused: boolean
   pressed: boolean
   disabled: boolean
+  /**
+   * Alias for hovered || focused || pressed
+   */
+  interacting: boolean
 }
 
 export type ButtonContext = VariantProps & ButtonState
 
 type NonTextElements =
-  | React.ReactElement<any>
-  | Iterable<React.ReactElement<any> | null | undefined | boolean>
+  | React.ReactElement
+  | Iterable<React.ReactElement | null | undefined | boolean>
 
 export type ButtonProps = Pick<
   PressableProps,
@@ -108,23 +119,24 @@ export type ButtonProps = Pick<
 export type ButtonTextProps = TextProps &
   VariantProps & {disabled?: boolean; emoji?: boolean}
 
-const Context = React.createContext<VariantProps & ButtonState>({
+const Context = createContext<VariantProps & ButtonState>({
   hovered: false,
   focused: false,
   pressed: false,
   disabled: false,
+  interacting: false,
 })
 Context.displayName = 'ButtonContext'
 
 export function useButtonContext() {
-  return React.useContext(Context)
+  return useContext(Context)
 }
 
-export const Button = React.forwardRef<View, ButtonProps>(
+export const Button = forwardRef<View, ButtonProps>(
   (
     {
       children,
-      variant,
+      variant: variantProp,
       color,
       size,
       shape = 'default',
@@ -148,18 +160,19 @@ export const Button = React.forwardRef<View, ButtonProps>(
      * If a `color` is set, then we want to use the existing codepaths for
      * "solid" buttons. This is to maintain backwards compatibility.
      */
-    if (!variant && color) {
+    let variant: VariantProps['variant'] = variantProp
+    if (!variantProp && color) {
       variant = 'solid'
     }
 
     const t = useTheme()
-    const [state, setState] = React.useState({
+    const [state, setState] = useState({
       pressed: false,
       hovered: false,
       focused: false,
     })
 
-    const onPressIn = React.useCallback(
+    const onPressIn = useCallback(
       (e: GestureResponderEvent) => {
         setState(s => ({
           ...s,
@@ -169,7 +182,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onPressInOuter],
     )
-    const onPressOut = React.useCallback(
+    const onPressOut = useCallback(
       (e: GestureResponderEvent) => {
         setState(s => ({
           ...s,
@@ -179,7 +192,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onPressOutOuter],
     )
-    const onHoverIn = React.useCallback(
+    const onHoverIn = useCallback(
       (e: MouseEvent) => {
         setState(s => ({
           ...s,
@@ -189,7 +202,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onHoverInOuter],
     )
-    const onHoverOut = React.useCallback(
+    const onHoverOut = useCallback(
       (e: MouseEvent) => {
         setState(s => ({
           ...s,
@@ -199,7 +212,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onHoverOutOuter],
     )
-    const onFocus = React.useCallback(
+    const onFocus = useCallback(
       (e: NativeSyntheticEvent<TargetedEvent>) => {
         setState(s => ({
           ...s,
@@ -209,7 +222,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onFocusOuter],
     )
-    const onBlur = React.useCallback(
+    const onBlur = useCallback(
       (e: NativeSyntheticEvent<TargetedEvent>) => {
         setState(s => ({
           ...s,
@@ -220,7 +233,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       [setState, onBlurOuter],
     )
 
-    const {baseStyles, hoverStyles} = React.useMemo(() => {
+    const {baseStyles, hoverStyles} = useMemo(() => {
       const baseStyles: ViewStyle[] = []
       const hoverStyles: ViewStyle[] = []
 
@@ -446,6 +459,12 @@ export const Button = React.forwardRef<View, ButtonProps>(
             paddingHorizontal: 24,
             gap: 6,
           })
+        } else if (size === 'medium') {
+          baseStyles.push(a.rounded_full, {
+            paddingVertical: 9,
+            paddingHorizontal: 28,
+            gap: 5,
+          })
         } else if (size === 'small') {
           baseStyles.push(a.rounded_full, {
             paddingVertical: 8,
@@ -465,6 +484,13 @@ export const Button = React.forwardRef<View, ButtonProps>(
             paddingVertical: 12,
             paddingHorizontal: 25,
             borderRadius: 10,
+            gap: 3,
+          })
+        } else if (size === 'medium') {
+          baseStyles.push({
+            paddingVertical: 9,
+            paddingHorizontal: 16,
+            borderRadius: 8,
             gap: 3,
           })
         } else if (size === 'small') {
@@ -492,6 +518,12 @@ export const Button = React.forwardRef<View, ButtonProps>(
             baseStyles.push({height: 44, width: 44})
           } else {
             baseStyles.push({height: 44, width: 44})
+          }
+        } else if (size === 'medium') {
+          if (shape === 'round') {
+            baseStyles.push({height: 33, width: 33})
+          } else {
+            baseStyles.push({height: 33, width: 33})
           }
         } else if (size === 'small') {
           if (shape === 'round') {
@@ -526,9 +558,10 @@ export const Button = React.forwardRef<View, ButtonProps>(
       }
     }, [t, variant, color, size, shape, disabled])
 
-    const context = React.useMemo<ButtonContext>(
+    const context = useMemo<ButtonContext>(
       () => ({
         ...state,
+        interacting: state.hovered || state.focused || state.pressed,
         variant,
         color,
         size,
@@ -581,7 +614,7 @@ Button.displayName = 'Button'
 export function useSharedButtonTextStyles() {
   const t = useTheme()
   const {color, variant, disabled, size} = useButtonContext()
-  return React.useMemo(() => {
+  return useMemo(() => {
     const baseStyles: TextStyle[] = []
 
     /*
@@ -744,11 +777,13 @@ export function useSharedButtonTextStyles() {
     }
 
     if (size === 'large') {
-      baseStyles.push(a.text_md, a.leading_snug, a.font_medium)
+      baseStyles.push(a.text_md, a.font_medium)
+    } else if (size === 'medium') {
+      baseStyles.push(a.text_sm, a.font_medium)
     } else if (size === 'small') {
-      baseStyles.push(a.text_sm, a.leading_snug, a.font_medium)
+      baseStyles.push(a.text_sm, a.font_medium)
     } else if (size === 'tiny') {
-      baseStyles.push(a.text_xs, a.leading_snug, a.font_semi_bold)
+      baseStyles.push(a.text_xs, a.font_semi_bold)
     }
 
     return flatten(baseStyles)
@@ -778,67 +813,70 @@ export function ButtonIcon({
 }) {
   const {size: buttonSize, shape: buttonShape} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
-  const {iconSize, iconContainerSize, iconNegativeMargin} =
-    React.useMemo(() => {
-      /**
-       * Pre-set icon sizes for different button sizes
-       */
-      const iconSizeShorthand =
-        size ??
-        (({
-          large: 'md',
-          small: 'sm',
-          tiny: 'xs',
-        }[buttonSize || 'small'] || 'sm') as Exclude<
-          SVGIconProps['size'],
-          undefined
-        >)
+  const {iconSize, iconContainerSize, iconNegativeMargin} = useMemo(() => {
+    /**
+     * Pre-set icon sizes for different button sizes
+     */
+    const iconSizeShorthand =
+      size ??
+      (({
+        large: 'md',
+        medium: 'sm',
+        small: 'sm',
+        tiny: 'xs',
+      }[buttonSize || 'small'] || 'sm') as Exclude<
+        SVGIconProps['size'],
+        undefined
+      >)
 
-      /*
-       * Copied here from icons/common.tsx so we can tweak if we need to, but
-       * also so that we can calculate transforms.
-       */
-      const iconSize = {
-        xs: 12,
-        sm: 16,
-        md: 18,
-        lg: 24,
-        xl: 28,
-        '2xs': 8,
-        '2xl': 32,
-        '3xl': 40,
-      }[iconSizeShorthand]
+    /*
+     * Copied here from icons/common.tsx so we can tweak if we need to, but
+     * also so that we can calculate transforms.
+     */
+    const iconSize = {
+      '2xs': 8,
+      xs: 12,
+      sm: 16,
+      md: 18,
+      lg: 24,
+      xl: 28,
+      '2xl': 32,
+      '3xl': 40,
+      '4xl': 48,
+    }[iconSizeShorthand]
 
-      /*
-       * Goal here is to match rendered text size so that different size icons
-       * don't increase button size
-       */
-      const iconContainerSize = {
-        large: 20,
-        small: 17,
-        tiny: 15,
+    /*
+     * Goal here is to match rendered text size so that different size icons
+     * don't increase button size
+     */
+    const iconContainerSize = {
+      large: 20,
+      medium: 17,
+      small: 17,
+      tiny: 15,
+    }[buttonSize || 'small']
+
+    /*
+     * The icon needs to be closer to the edge of the button than the text. Therefore
+     * we make the gap slightly too large, and then pull in the sides using negative margins.
+     */
+    let iconNegativeMargin = 0
+
+    if (buttonShape === 'default') {
+      iconNegativeMargin = {
+        large: -2,
+        medium: -2,
+        small: -2,
+        tiny: -1,
       }[buttonSize || 'small']
+    }
 
-      /*
-       * The icon needs to be closer to the edge of the button than the text. Therefore
-       * we make the gap slightly too large, and then pull in the sides using negative margins.
-       */
-      let iconNegativeMargin = 0
-
-      if (buttonShape === 'default') {
-        iconNegativeMargin = {
-          large: -2,
-          small: -2,
-          tiny: -1,
-        }[buttonSize || 'small']
-      }
-
-      return {
-        iconSize,
-        iconContainerSize,
-        iconNegativeMargin,
-      }
-    }, [buttonSize, buttonShape, size])
+    return {
+      iconSize,
+      iconContainerSize,
+      iconNegativeMargin,
+    }
+  }, [buttonSize, buttonShape, size])
 
   return (
     <View
