@@ -247,7 +247,13 @@ let NotificationFeedItem = ({
           t.atoms.text,
           a.font_semi_bold,
           a.text_md,
-          a.leading_tight,
+          /*
+           * Must match the leading of the surrounding text. On iOS the whole
+           * paragraph takes its line metrics from the first character, so a
+           * tighter leading here silently compressed every line of the
+           * notification.
+           */
+          a.leading_snug,
           web({direction: 'ltr', unicodeBidi: 'isolate'}),
         ]}
         to={firstAuthor.href}

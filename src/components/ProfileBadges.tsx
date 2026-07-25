@@ -113,7 +113,9 @@ export function ProfileBadges({
    * The box height is the only lever left, so constrain it to the cap height of
    * the surrounding text. That lands the box exactly over the capital letters,
    * and `align_center` then centers the badges on them - independent of which
-   * badges are visible and how tall they are.
+   * badges are visible and how tall they are. Keeping the box this short also
+   * keeps it inside the line's ascent, so TextKit never has to shift it to make
+   * it fit, which is what the badges' full height used to force.
    */
   const inlineHeight =
     IS_IOS && inlineFontSize
