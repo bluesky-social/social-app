@@ -234,12 +234,19 @@ jobs:
   # This matches the fork-guard gate the other jobs in this workflow use;
   # author_association is deliberately NOT checked (it can't identify a private
   # org member and would skip their PRs).
+  #
+  # Bot authors are excluded: Dependabot pushes in-repo branches, so it passes
+  # the fork guard, but GitHub withholds repo secrets from Dependabot-triggered
+  # runs. EXPO_TOKEN is then empty and the job fails at setup — a red check on
+  # every dependabot PR. There is no OTA preview worth publishing for a
+  # dependency bump anyway.
   publish-pr-ota:
     name: Publish PR OTA to denis
     runs-on: ubuntu-latest
     if: >-
       github.event_name == 'pull_request' &&
-      github.event.pull_request.head.repo.full_name == github.repository
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.type != 'Bot'
     concurrency:
       group: pr-ota-${{ github.event.pull_request.number }}
       cancel-in-progress: true
