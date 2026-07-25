@@ -25,7 +25,7 @@
     "eslint-plugin-import-x": "^4.16.2",
     "eslint-plugin-simple-import-sort": "^13.0.0",
     "globals": "^15.14.0",
-    "postcss": "^8.4.38",
+    "postcss": "^8.5.18",
     "prettier": "^3.8.3",
     "serve": "^14.2.5",
     "tailwindcss": "^3.4.3",
