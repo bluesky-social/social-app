@@ -35,6 +35,10 @@ import {
 import {extractFromMe} from '#/state/queries/search-posts-params'
 import {useSession} from '#/state/session'
 import {
+  completeActorSearchOperator,
+  getActorAutocompleteState,
+} from '#/screens/Search/actorAutocomplete'
+import {
   countActiveFilters,
   definedFilterParams,
   filtersToRouteParams,
@@ -142,16 +146,22 @@ export function SearchScreenShell({
     setSearchText(text)
   }, [])
 
+  /*
+   * On web the dropdown (SearchAutocompleteInput) owns its own autocomplete
+   * query; only the native inline list consumes this one, so pass an empty
+   * query on web to keep the hook a no-op instead of doing wasted work.
+   */
+  const profileAutocompleteQuery = IS_NATIVE
+    ? getActorAutocompleteState(searchText).query
+    : ''
   const {items: autocompleteItems, isFetching: isAutocompleteFetching} =
     useAutocomplete({
       type: 'profile',
-      /*
-       * On web the dropdown (SearchAutocompleteInput) owns its own autocomplete
-       * query; only the native inline list consumes this one, so pass an empty
-       * query on web to keep the hook a no-op instead of doing wasted work.
-       */
-      query: IS_NATIVE ? searchText : '',
+      query: profileAutocompleteQuery,
     })
+  const visibleAutocompleteItems = profileAutocompleteQuery
+    ? autocompleteItems
+    : []
 
   const [showAutocomplete, setShowAutocomplete] = useState(false)
 
@@ -425,6 +435,25 @@ export function SearchScreenShell({
     [ax, handleProfileClick, navigation],
   )
 
+  const onSelectSearchOperator = useCallback(
+    (profile: bsky.profile.AnyProfileView, position: number) => {
+      const currentValue = searchTextRef.current
+      const context = getActorAutocompleteState(currentValue).context
+      if (!context) return
+
+      ax.metric('search:autocomplete:press', {
+        profileDid: profile.did,
+        position,
+      })
+      updateSearchText(
+        completeActorSearchOperator(currentValue, context, profile.handle),
+      )
+      setShowAutocomplete(false)
+      requestAnimationFrame(() => textInput.current?.focus())
+    },
+    [ax, updateSearchText],
+  )
+
   /**
    * Web only. Selecting the "Search for X" row from the anchored autocomplete
    * dropdown. This runs the typed query as-is (not a suggested profile), so it
@@ -614,6 +643,7 @@ export function SearchScreenShell({
                       hotkey={true}
                       fixedParams={Boolean(fixedParams)}
                       onSelectProfile={onSelectProfile}
+                      onSelectSearchOperator={onSelectSearchOperator}
                       onSelectSearch={onSelectSearch}
                     />
                   </View>
@@ -670,12 +700,15 @@ export function SearchScreenShell({
             accessibilityRole="list">
             {searchText.length > 0 && IS_NATIVE ? (
               <AutocompleteResults
-                items={autocompleteItems}
-                isFetching={isAutocompleteFetching}
+                items={visibleAutocompleteItems}
+                isFetching={
+                  Boolean(profileAutocompleteQuery) && isAutocompleteFetching
+                }
                 searchText={searchText}
                 onSubmit={onSubmit('autocomplete')}
                 onResultPress={onAutocompleteResultPress}
                 onProfileClick={handleProfileClick}
+                onSelectSearchOperator={onSelectSearchOperator}
               />
             ) : (
               <SearchHistory

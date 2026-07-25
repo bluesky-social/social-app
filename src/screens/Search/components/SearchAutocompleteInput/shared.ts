@@ -17,6 +17,13 @@ export type SearchAutocompleteInputProps = SearchInputProps & {
     position: number,
   ) => void
   /**
+   * Called when a profile completes an actor-valued search operator.
+   */
+  onSelectSearchOperator: (
+    profile: bsky.profile.AnyProfileView,
+    position: number,
+  ) => void
+  /**
    * Web only. Called when the "Search for X" row in the dropdown is selected.
    */
   onSelectSearch?: (value: string) => void
