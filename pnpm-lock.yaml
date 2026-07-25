@@ -227,7 +227,7 @@ patchedDependencies:
   expo-updates@29.0.17: 04f28cb005b770e9ae8f0065eab96e43cbb1e58107f5f6ad1bdd18f6deb66487
   react-native-compressor@1.13.0: 58379dfaace6ced8590cb341c77f2ca8099dfa8f7df6297032ec51de767a9925
   react-native-date-picker@5.0.13: 92943fb79d17d7342a29bbb12b0d8ee3cf6f7bca12ed322dc8d124a3e9fb75bd
-  react-native-drawer-layout@4.2.3: 74f2c043cc22ab87054f219e7c7373a509b779b18bfa79d27e7d051d73355130
+  react-native-drawer-layout@4.2.3: 73a2391c30d0178794590bd13139f10983c465d3a3e648004d494cd91c5f89c6
   react-native-gesture-handler: 39b9e51b3977fae8ff61764b8c32934fe3fbddaf21587b4661fd73b7c6dd325b
   react-native-keyboard-controller@1.21.8: ac52bf7502ff3ad34a8594b5e1a916b96bf87a2523b6abc87c31f03607d52271
   react-native-pager-view@6.8.0: c8316acd33c9aef6531e8c272c2bfab7bd02af1255969eeaab2bad5ab48531cc
@@ -630,7 +630,7 @@ importers:
         version: 0.1.6(expo@54.0.35(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react-native-drawer-layout:
         specifier: ^4.2.3
-        version: 4.2.3(patch_hash=74f2c043cc22ab87054f219e7c7373a509b779b18bfa79d27e7d051d73355130)(e24fb32bf68bffe2eac7bf9484330e37)
+        version: 4.2.3(patch_hash=73a2391c30d0178794590bd13139f10983c465d3a3e648004d494cd91c5f89c6)(e24fb32bf68bffe2eac7bf9484330e37)
       react-native-edge-to-edge:
         specifier: ^1.8.1
         version: 1.8.1(react-native@0.81.5(patch_hash=0a4b515f22d157816048e3181dd18fb83b1679a90fca50f715c55483aabdced4)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -17689,7 +17689,7 @@ snapshots:
       '@babel/runtime': 7.29.2
       dotenv: 16.6.1
 
-  react-native-drawer-layout@4.2.3(patch_hash=74f2c043cc22ab87054f219e7c7373a509b779b18bfa79d27e7d051d73355130)(e24fb32bf68bffe2eac7bf9484330e37):
+  react-native-drawer-layout@4.2.3(patch_hash=73a2391c30d0178794590bd13139f10983c465d3a3e648004d494cd91c5f89c6)(e24fb32bf68bffe2eac7bf9484330e37):
     dependencies:
       color: 4.2.3
       react: 19.1.0
