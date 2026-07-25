@@ -103,6 +103,10 @@ export type Events = {
   }
   'signup:captchaSuccess': {}
   'signup:captchaFailure': {}
+  'signup:captchaBackPress': {}
+  'signup:createAccountFailure': {
+    reason: string
+  }
   'signup:fieldError': {
     field: string
     errorCount: number
