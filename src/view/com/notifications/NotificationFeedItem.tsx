@@ -258,12 +258,15 @@ let NotificationFeedItem = ({
         <ProfileBadges
           profile={firstAuthor.profile}
           size="md"
+          inlineFontSize={a.text_md.fontSize}
           style={[
             a.relative,
             {
-              // weird stuff here
+              /*
+               * Empirical nudges to line the badges up with the text on
+               * Android and web. iOS is handled by `inlineFontSize` above.
+               */
               paddingTop: platform({android: 2}),
-              marginBottom: platform({ios: -6}),
               top: platform({web: 2}),
               paddingLeft: 3,
               paddingRight: 2,
