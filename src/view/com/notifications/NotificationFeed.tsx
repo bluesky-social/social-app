@@ -79,6 +79,12 @@ export function NotificationFeed({
         for (const page of data?.pages) {
           arr = arr.concat(page.items)
         }
+        // fixed zero-data edge case: when isFetching=true isEmpty stays false,
+        // so we fall into this branch even with no items (e.g. mentions tab with
+        // no mentions). without this check arr would be [] causing a blank flash.
+        if (arr.length === 0) {
+          arr = arr.concat([EMPTY_FEED_ITEM])
+        }
       }
       if (isError && !isEmpty) {
         arr = arr.concat([LOAD_MORE_ERROR_ITEM])
