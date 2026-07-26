@@ -111,7 +111,7 @@ export function dateDiff(
 }
 
 /**
- * Accepts a `DateDiff` and teturns the difference between `earlier` and
+ * Accepts a `DateDiff` and returns the difference between `earlier` and
  * `later` dates, formatted as a natural language string.
  *
  * - All month are considered exactly 30 days.
