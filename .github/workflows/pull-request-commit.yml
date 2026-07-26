@@ -83,7 +83,7 @@ jobs:
           node-version-file: package.json
           cache: pnpm
 
-      - name: Ensure tracking relevant branches and checkout base
+      - name: 🌿 Ensure tracking relevant branches and checkout base
         env:
           HEAD_REF: ${{ github.head_ref }}
           BASE_REF: ${{ github.base_ref }}
@@ -91,13 +91,13 @@ jobs:
           git checkout $HEAD_REF
           git checkout $BASE_REF
 
-      - name: Get the base commit
+      - name: 🔍 Get the base commit
         id: base-commit
         env:
           BASE_REF: ${{ github.base_ref }}
         run: echo base-commit=$(git log -n 1 $BASE_REF --pretty=format:'%H') >> "$GITHUB_OUTPUT"
 
-      - name: Merge PR commit
+      - name: 🔀 Merge PR commit
         env:
           HEAD_REF: ${{ github.head_ref }}
         run: |
@@ -121,7 +121,7 @@ jobs:
           path: stats.json
           key: stats-base-main-${{ steps.base-commit.outputs.base-commit }}
 
-      - name: Restore to base commit
+      - name: ⏪ Restore to base commit
         if: ${{ !steps.get-base-stats.outputs.cache-hit }}
         env:
           BASE_COMMIT: ${{ steps.base-commit.outputs.base-commit }}

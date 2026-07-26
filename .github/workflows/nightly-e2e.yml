@@ -28,41 +28,41 @@ jobs:
     runs-on: macos-26-xlarge
     timeout-minutes: 120
     steps:
-      - name: Checkout
+      - name: ⬇️ Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
 
-      - name: Select Xcode 26.4
+      - name: 🛠️ Select Xcode 26.4
         uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
           xcode-version: "26.4"
 
-      - name: Prepare E2E configuration
+      - name: 🧰 Prepare E2E configuration
         run: |
           mkdir -p artifacts/ios
           echo "Installing dependencies" > artifacts/ios/phase.txt
           cp .env.example .env.development
           cp google-services.json.example google-services.json
 
-      - name: Set up Expo project
+      - name: 🔧 Set up Expo project
         uses: ./.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Set up Java 17
+      - name: ☕️ Set up Java 17
         uses: actions/setup-java@0f481fcb613427c0f801b606911222b5b6f3083a # v5.5.0
         with:
           distribution: temurin
           java-version: "17"
 
-      - name: Install dev-env dependencies
+      - name: 📦 Install dev-env dependencies
         run: pnpm --dir dev-env install --frozen-lockfile 2>&1 | tee artifacts/ios/dependencies.log
 
-      - name: Compile translations
+      - name: 🔤 Compile translations
         uses: ./.github/actions/compile-i18n
 
-      - name: Install Maestro 2.6.1
+      - name: 📥 Install Maestro 2.6.1
         run: |
           echo "Installing Maestro" > artifacts/ios/phase.txt
           curl -fsSL -o "$RUNNER_TEMP/maestro.zip" \
@@ -74,7 +74,7 @@ jobs:
           "$RUNNER_TEMP/maestro/bin/maestro" --version | tee artifacts/ios/maestro-version.log
           test "$("$RUNNER_TEMP/maestro/bin/maestro" --version)" = "$MAESTRO_VERSION"
 
-      - name: Boot one iOS simulator
+      - name: 📱 Boot one iOS simulator
         run: |
           echo "Booting iOS simulator" > artifacts/ios/phase.txt
           device_name="iPhone 17"
@@ -112,10 +112,10 @@ jobs:
           xcrun simctl bootstatus "$udid" -b
           echo "Using $device_name on $runtime_name ($udid)"
 
-      - name: Mark iOS development client build phase
+      - name: 🏷️ Mark iOS development client build phase
         run: echo "Building the iOS development client" > artifacts/ios/phase.txt
 
-      - name: Build iOS development client
+      - name: 🏗️ Build iOS development client
         uses: ./.github/actions/eas-local-build
         with:
           platform: ios
@@ -123,7 +123,7 @@ jobs:
           output: ${{ runner.temp }}/nightly-e2e-ios.tar.gz
           log-path: artifacts/ios/build.log
 
-      - name: Install iOS development client
+      - name: 📲 Install iOS development client
         run: |
           build_contents="$RUNNER_TEMP/nightly-e2e-ios-build"
           mkdir -p "$build_contents"
@@ -135,14 +135,14 @@ jobs:
           fi
           xcrun simctl install "$IOS_UDID" "$app_path" 2>&1 | tee -a artifacts/ios/build.log
 
-      - name: Run iOS Maestro suite
+      - name: 🧪 Run iOS Maestro suite
         run: .github/scripts/run-nightly-e2e.sh ios "$IOS_UDID"
 
-      - name: Clean up iOS services and simulator
+      - name: 🧹 Clean up iOS services and simulator
         if: always()
         run: .github/scripts/cleanup-nightly-e2e.sh ios "${IOS_UDID:-}"
 
-      - name: Upload iOS E2E artifacts
+      - name: 🚀 Upload iOS E2E artifacts
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -158,36 +158,36 @@ jobs:
     runs-on: Linux-x64-32core
     timeout-minutes: 120
     steps:
-      - name: Checkout
+      - name: ⬇️ Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
 
-      - name: Prepare E2E configuration
+      - name: 🧰 Prepare E2E configuration
         run: |
           mkdir -p artifacts/android
           echo "Installing dependencies" > artifacts/android/phase.txt
           cp .env.example .env.development
           cp google-services.json.example google-services.json
 
-      - name: Set up Expo project
+      - name: 🔧 Set up Expo project
         uses: ./.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Set up Java 17
+      - name: ☕️ Set up Java 17
         uses: actions/setup-java@0f481fcb613427c0f801b606911222b5b6f3083a # v5.5.0
         with:
           distribution: temurin
           java-version: "17"
 
-      - name: Install dev-env dependencies
+      - name: 📦 Install dev-env dependencies
         run: pnpm --dir dev-env install --frozen-lockfile 2>&1 | tee artifacts/android/dependencies.log
 
-      - name: Compile translations
+      - name: 🔤 Compile translations
         uses: ./.github/actions/compile-i18n
 
-      - name: Install Maestro 2.6.1
+      - name: 📥 Install Maestro 2.6.1
         run: |
           echo "Installing Maestro" > artifacts/android/phase.txt
           curl -fsSL -o "$RUNNER_TEMP/maestro.zip" \
@@ -199,7 +199,7 @@ jobs:
           "$RUNNER_TEMP/maestro/bin/maestro" --version | tee artifacts/android/maestro-version.log
           test "$("$RUNNER_TEMP/maestro/bin/maestro" --version)" = "$MAESTRO_VERSION"
 
-      - name: Install and boot one Android emulator
+      - name: 📱 Install and boot one Android emulator
         run: |
           echo "Booting Android emulator" > artifacts/android/phase.txt
           android_sdk="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
@@ -299,10 +299,10 @@ jobs:
           adb -s emulator-5554 shell settings put global transition_animation_scale 0
           adb -s emulator-5554 shell settings put global animator_duration_scale 0
 
-      - name: Mark Android development client build phase
+      - name: 🏷️ Mark Android development client build phase
         run: echo "Building the Android development client" > artifacts/android/phase.txt
 
-      - name: Build Android development client
+      - name: 🏗️ Build Android development client
         uses: ./.github/actions/eas-local-build
         with:
           platform: android
@@ -310,15 +310,15 @@ jobs:
           output: ${{ runner.temp }}/nightly-e2e-android.apk
           log-path: artifacts/android/build.log
 
-      - name: Install Android development client
+      - name: 📲 Install Android development client
         run: |
           adb -s emulator-5554 install -r "$RUNNER_TEMP/nightly-e2e-android.apk" \
             2>&1 | tee -a artifacts/android/build.log
 
-      - name: Run Android Maestro suite
+      - name: 🧪 Run Android Maestro suite
         run: .github/scripts/run-nightly-e2e.sh android emulator-5554
 
-      - name: Capture emulator crash diagnostics
+      - name: 🩺 Capture emulator crash diagnostics
         if: always()
         run: |
           {
@@ -338,11 +338,11 @@ jobs:
             ls -la /tmp/android-runner/emu-crash-*.db 2>/dev/null || echo "No crash database found"
           } > artifacts/android/emulator-diagnostics.log 2>&1
 
-      - name: Clean up Android services and emulator
+      - name: 🧹 Clean up Android services and emulator
         if: always()
         run: .github/scripts/cleanup-nightly-e2e.sh android emulator-5554
 
-      - name: Upload Android E2E artifacts
+      - name: 🚀 Upload Android E2E artifacts
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -360,26 +360,26 @@ jobs:
       actions: read
       contents: read
     steps:
-      - name: Checkout
+      - name: ⬇️ Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
 
-      - name: Download iOS artifacts
+      - name: ⬇️ Download iOS artifacts
         continue-on-error: true
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: nightly-e2e-ios-${{ github.run_id }}
           path: downloaded-artifacts/ios
 
-      - name: Download Android artifacts
+      - name: ⬇️ Download Android artifacts
         continue-on-error: true
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: nightly-e2e-android-${{ github.run_id }}
           path: downloaded-artifacts/android
 
-      - name: Resolve artifact links
+      - name: 🔗 Resolve artifact links
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -395,7 +395,7 @@ jobs:
               }' artifact-response.json > artifact-links.json
           fi
 
-      - name: Summarize platform results
+      - name: 📊 Summarize platform results
         id: summary
         env:
           IOS_STATUS: ${{ needs.ios.result }}
@@ -415,7 +415,7 @@ jobs:
           echo "payload=$(jq -c .payload e2e-summary.json)" >> "$GITHUB_OUTPUT"
           jq -r .githubSummary e2e-summary.json >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Notify Slack of E2E failures
+      - name: 🔔 Notify Slack of E2E failures
         if: steps.summary.outputs.notify == 'true'
         uses: slackapi/slack-github-action@0d95c9a7becc1e6e297d76df9bc735c44f4cbcbc # v3.0.5
         with:
