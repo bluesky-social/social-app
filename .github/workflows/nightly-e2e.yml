@@ -412,13 +412,51 @@ jobs:
             --commit-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}" \
             > e2e-summary.json
           echo "notify=$(jq -r .notify e2e-summary.json)" >> "$GITHUB_OUTPUT"
-          echo "payload=$(jq -c .payload e2e-summary.json)" >> "$GITHUB_OUTPUT"
           jq -r .githubSummary e2e-summary.json >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Build Slack message payload
+        if: steps.summary.outputs.notify == 'true'
+        env:
+          SLACK_CHANNEL_ID: ${{ secrets.E2E_FAILURES_SLACK_CHANNEL_ID }}
+        run: |
+          jq --arg channel "$SLACK_CHANNEL_ID" \
+            '.payload + {channel: $channel}' \
+            e2e-summary.json > slack-message.json
+
       - name: Notify Slack of E2E failures
+        id: slack_message
         if: steps.summary.outputs.notify == 'true'
         uses: slackapi/slack-github-action@0d95c9a7becc1e6e297d76df9bc735c44f4cbcbc # v3.0.5
         with:
-          webhook: ${{ secrets.E2E_FAILURES_SLACK_WEBHOOK }}
-          webhook-type: incoming-webhook
-          payload: ${{ steps.summary.outputs.payload }}
+          method: chat.postMessage
+          errors: true
+          token: ${{ secrets.E2E_FAILURES_SLACK_BOT_TOKEN }}
+          payload-file-path: slack-message.json
+
+      - name: Build Slack screenshot payload
+        id: screenshots
+        if: steps.summary.outputs.notify == 'true'
+        env:
+          SLACK_CHANNEL_ID: ${{ secrets.E2E_FAILURES_SLACK_CHANNEL_ID }}
+          SLACK_THREAD_TS: ${{ steps.slack_message.outputs.ts }}
+        run: |
+          count=$(jq '.screenshotUploads | length' e2e-summary.json)
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          jq \
+            --arg channel_id "$SLACK_CHANNEL_ID" \
+            --arg thread_ts "$SLACK_THREAD_TS" \
+            '{
+              channel_id: $channel_id,
+              thread_ts: $thread_ts,
+              initial_comment: "Failure screenshots (up to five per platform)",
+              file_uploads: .screenshotUploads
+            }' e2e-summary.json > slack-screenshots.json
+
+      - name: Upload E2E failure screenshots to Slack
+        if: steps.summary.outputs.notify == 'true' && steps.screenshots.outputs.count != '0'
+        uses: slackapi/slack-github-action@0d95c9a7becc1e6e297d76df9bc735c44f4cbcbc # v3.0.5
+        with:
+          method: files.uploadV2
+          errors: true
+          token: ${{ secrets.E2E_FAILURES_SLACK_BOT_TOKEN }}
+          payload-file-path: slack-screenshots.json
