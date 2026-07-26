@@ -204,20 +204,19 @@ jobs:
           SENTRY_DIST=${{ steps.env.outputs.bundle-identifier }}
           pnpm export
 
-      - name: 📦 Package Bundle and 🚀 Deploy
-        if: ${{ !steps.fingerprint.outputs.includes-changes &&
-          !steps.version.outputs.version-changed }}
-        run: pnpm use-build-number bash scripts/bundleUpdate.sh
-        env:
-          DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}
-          RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
-          CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
-
-      # The three steps below dual-write the same exported bundle to the new
-      # denis/S3 service alongside the legacy ota1 upload above. This is a
-      # deliberate temporary dual-write during the ota1 -> denis migration:
-      # both paths run and both must succeed. The legacy step above and this
-      # block are removed together once denis is the sole origin (Phase 5).
+      # denis on EKS has been the sole origin for updates.bsky.app since
+      # 2026-07-26, so it publishes FIRST: it is the path that actually serves
+      # clients. The legacy ota1 upload runs after it, and exists only so that
+      # rolling the Bunny origin back to ota1 would find current bundles there.
+      #
+      # The ordering is load-bearing, not cosmetic. While the legacy step ran
+      # first, its failure skipped these steps and nothing reached EITHER origin
+      # -- the dual-write took down the working path with it. Both steps are
+      # still required to pass, so a stale ota1 remains a loud failure, but the
+      # publish that serves users has already landed before the legacy one can
+      # fail.
+      #
+      # Both halves are removed together when ota1 is decommissioned (Phase 5).
       - name: ☁️ Configure AWS credentials (denis)
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
@@ -240,6 +239,15 @@ jobs:
           !steps.version.outputs.version-changed }}
         run: pnpm use-build-number bash scripts/denisPublish.sh
         env:
+          RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
+          CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
+
+      - name: 📦 Package Bundle and 🚀 Deploy (legacy ota1)
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed }}
+        run: pnpm use-build-number bash scripts/bundleUpdate.sh
+        env:
+          DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}
           RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
           CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
 
