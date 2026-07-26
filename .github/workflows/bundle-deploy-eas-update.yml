@@ -204,6 +204,18 @@ jobs:
           SENTRY_DIST=${{ steps.env.outputs.bundle-identifier }}
           pnpm export
 
+      # Pin ONE bundle version for both publishes below. Each script used to call
+      # `date +%s` itself, so the same bytes reached denis and ota1 under versions
+      # seconds apart (observed: 1785102575 vs 1785102614). The version is part of
+      # the asset URL path, so each origin then served a manifest referencing a
+      # path only it had -- meaning a manifest fetched from one origin and assets
+      # fetched from the other 404. Both scripts fall back to `date +%s` when this
+      # is unset, so single-publisher callers are unaffected.
+      - name: 🔢 Pin bundle version
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed }}
+        run: echo "BUNDLE_VERSION=$(date +%s)" >> "$GITHUB_ENV"
+
       # denis on EKS has been the sole origin for updates.bsky.app since
       # 2026-07-26, so it publishes FIRST: it is the path that actually serves
       # clients. The legacy ota1 upload runs after it, and exists only so that
