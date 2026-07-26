@@ -48,7 +48,7 @@ jobs:
         steps.version.outputs.version-changed }}
 
     steps:
-      - name: Check for EXPO_TOKEN
+      - name: 🔑 Check for EXPO_TOKEN
         run: >
           if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
             echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
@@ -159,13 +159,13 @@ jobs:
       - name: 🔤 Compile translations
         uses: ./.github/actions/compile-i18n
 
-      - name: Lint check
+      - name: 🧹 Lint check
         run: pnpm lint
 
-      - name: Prettier check
+      - name: 💅 Prettier check
         run: pnpm prettier --check .
 
-      - name: Type check
+      - name: 🔎 Type check
         run: pnpm typecheck
 
       - name: 🔨 Setup EAS
