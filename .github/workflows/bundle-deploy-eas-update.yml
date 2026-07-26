@@ -17,6 +17,14 @@ on:
         type: string
         description: Runtime version (in x.x.x format) that this update is for
         required: true
+      iosBuildNumber:
+        type: string
+        description: iOS build number of the native build this update targets
+          (required for production)
+      androidVersionCode:
+        type: string
+        description: Android version code of the native build this update
+          targets (required for production)
 
 # Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
 permissions:
@@ -61,9 +69,22 @@ jobs:
           RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
         if: ${{ inputs.runtimeVersion }}
         run: |
-          if [ -z "$RUNTIME_VERSION" ]; then
-            [[ "$RUNTIME_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "Version is valid" || exit 1
-          fi
+          [[ "$RUNTIME_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "Version is valid" || exit 1
+
+      # Production OTAs are bound to the specific native build they target, so
+      # the build numbers must be entered manually rather than read from the
+      # global EAS counters, which advance with every testflight build and so
+      # point past older production releases
+      - name: 🧐 Validate build numbers
+        if: ${{ inputs.channel == 'production' }}
+        env:
+          IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber }}
+          ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode }}
+        run: |
+          [[ "$IOS_BUILD_NUMBER" =~ ^[0-9]+$ ]] ||
+            (echo "A numeric iosBuildNumber is required for production updates" && exit 1)
+          [[ "$ANDROID_VERSION_CODE" =~ ^[0-9]+$ ]] ||
+            (echo "A numeric androidVersionCode is required for production updates" && exit 1)
 
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -253,6 +274,10 @@ jobs:
         env:
           RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
           CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
+          # When set (required for production), these take precedence over the
+          # global EAS counters inside the use-build-number wrapper
+          BSKY_IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber }}
+          BSKY_ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode }}
 
       - name: 📦 Package Bundle and 🚀 Deploy (legacy ota1)
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
@@ -262,6 +287,10 @@ jobs:
           DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}
           RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
           CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
+          # When set (required for production), these take precedence over the
+          # global EAS counters inside the use-build-number wrapper
+          BSKY_IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber }}
+          BSKY_ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode }}
 
   buildIfNecessaryIOS:
     name: Build and Submit iOS
