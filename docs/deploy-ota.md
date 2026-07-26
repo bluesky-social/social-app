@@ -63,30 +63,7 @@ Run this and commit the result as the last commit on the OTA branch.
 pnpm intl:release
 ```
 
-### 6. Manually set build numbers
-
-Log in to the EAS CLI with `eas login` and manually set the build numbers to the
-values you found in **Step 1**.
-
-> [!NOTE]
-> If you don’t already have the EAS CLI, you can install it with `pnpm add -g eas-cli`.
-
-```sh
-> npx eas build:version:set -p ios
->
-> Project @blueskysocial/bluesky with bundle identifier "xyz.blueskyweb.app" is configured with buildNumber 1011.
-> ✔ What version would you like to set? … 1009
->
-> npx eas build:version:set -p android
->
-> Project @blueskysocial/bluesky with application ID "xyz.blueskyweb.app" is configured with versionCode 641.
-> ✔ What version would you like to set? … 639  
-```
-
-👉 **Save the previous values,** in this case `1011` and `641`, so you can reset
-them after the OTA completes.
-
-### 7. Run the GitHub actions
+### 6. Run the GitHub actions
 You'll need to run two separate actions: one to deploy the iOS/Android OTA
 itself, and one to build the web Docker container.
 
@@ -96,14 +73,20 @@ and run the action.
 
 | Steps |     |
 | ----- | --- |
-| Select your OTA branch `1.x.0-ota-x`, select `production` in the dropdown, enter the git tag of the latest release `1.x.0`, and click "Run workflow"  | ![workflow](./img/ota_action.png) |
+| Select your OTA branch `1.x.0-ota-x`, select `production` in the dropdown, enter the git tag of the latest release `1.x.0`, enter the iOS build number and Android version code you found in **Step 1**, and click "Run workflow"  | ![workflow](./img/ota_action.png) |
+
+> [!NOTE]
+> Production OTAs are bound to the specific native build they target, so the
+> workflow requires the build numbers to be entered manually. There is no need
+> to change the global EAS build counters (and doing so is no longer necessary
+> for OTAs - they are only used when producing new native builds).
 
 > [!NOTE]
 > If you do enter an incorrect version here, the deployment will either:
 > - Fail, because the action cannot find a commit with your misentered version
-> - Succeed, but with no users receiving the update. This is because the version
->   you entered will not properly correlate to a _build number_ as well, so no
->   clients in the wild will be able to receive the update.
+> - Succeed, but with no users receiving the update. This is because the
+>   version and build numbers you entered will not match any clients in the
+>   wild, so none will be able to receive the update.
 
 **For web,** head to [Actions >
 build-and-push-bskyweb-aws](https://github.com/bluesky-social/social-app/actions/workflows/build-and-push-bskyweb-aws.yaml)
@@ -113,13 +96,13 @@ and run the action.
 | ----- | --- |
 | Select your OTA branch `1.x.0-ota-x` and click "Run workflow" | ![workflow](./img/web_action.png) |
 
-### 8. Deploy web
+### 7. Deploy web
 
 Once the web Docker container build finishes, go to your `1.x.0-ota-x` branch,
 copy the most recent commit hash. Post this hash in `#ops-deploys` and request
 someone with web deploy access deploy the built container.
 
-### 9. Confirm successful deployment
+### 8. Confirm successful deployment
 
 In about five minutes, the new deployment should be deployed and devices will
 begin downloading and installing in the background.
@@ -129,23 +112,6 @@ build from your device and re-install from the App Store. Then, you'll need to:
 - Launch the app (or quit and reopen) and wait ~15s for the download to complete
 - Quit and reopen the app
 - Check the `Settings > About` page and confirm the hash matches the most recent hash on your OTA branch
-
-### 10. Reset build numbers
-
-Grab the build numbers you saved in **Step 5** and reverse the EAS CLI commands
-to reset the build numbers.
-
-```sh
-> npx eas build:version:set -p ios
->
-> Project @blueskysocial/bluesky with bundle identifier "xyz.blueskyweb.app" is configured with buildNumber 1009.
-> ✔ What version would you like to set? … 1011
->
-> npx eas build:version:set -p android
->
-> Project @blueskysocial/bluesky with application ID "xyz.blueskyweb.app" is configured with versionCode 639.
-> ✔ What version would you like to set? … 641
-```
 
 ## Overview diagram
 
