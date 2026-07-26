@@ -13,7 +13,6 @@ import {
   KeyboardGestureArea,
 } from 'react-native-keyboard-controller'
 import Animated, {
-  runOnJS,
   type ScrollEvent,
   type SharedValue,
   useAnimatedStyle,
@@ -22,6 +21,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {
   type $Typed,
   type AppBskyEmbedRecord,
@@ -502,7 +502,7 @@ export function MessagesList({
         (e.contentOffset.y > newMessagesPill.startContentOffset + 200 ||
           isAtBottom.get())
       ) {
-        runOnJS(setNewMessagesPill)({
+        scheduleOnRN(setNewMessagesPill, {
           show: false,
           startContentOffset: 0,
         })

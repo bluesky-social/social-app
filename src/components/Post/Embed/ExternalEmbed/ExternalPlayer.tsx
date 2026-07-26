@@ -8,12 +8,12 @@ import {
 } from 'react-native'
 import Animated, {
   measure,
-  runOnJS,
   useAnimatedRef,
   useFrameCallback,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
+import {scheduleOnRN} from 'react-native-worklets'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
@@ -164,7 +164,7 @@ export function ExternalPlayer({
     const isVisible = top <= realWinHeight - insets.bottom && bot >= insets.top
 
     if (!isVisible) {
-      runOnJS(setIsPlayerActive)(false)
+      scheduleOnRN(setIsPlayerActive, false)
     }
   }, false) // False here disables autostarting the callback
 
