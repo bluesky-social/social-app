@@ -14,7 +14,11 @@ if [ -z "$RUNTIME_VERSION" ]; then
 fi
 
 cd bundleTempDir || exit
-BUNDLE_VERSION=$(date +%s)
+
+# Shared with denisPublish.sh when both run in one job -- see the note there.
+# Both origins must receive the same bundle version for the same bytes, because
+# the version is part of the asset URL path.
+BUNDLE_VERSION="${BUNDLE_VERSION:-$(date +%s)}"
 
 # This MUST address ota1's own origin hostname, never updates.bsky.app.
 #
