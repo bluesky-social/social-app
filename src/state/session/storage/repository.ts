@@ -39,12 +39,17 @@ export class NativeSessionRepository implements SessionRepository {
   private persistedSnapshot: SessionSnapshot = EMPTY_SNAPSHOT
   private hasPersistedIndex = false
   private pendingSnapshot: SessionSnapshot | undefined
+  private pendingClearDids: string[] | undefined
+  private possiblyWrittenDids = new Set<string>()
   private retryTimer: ReturnType<typeof setTimeout> | undefined
   private listeners = new Set<(snapshot: SessionSnapshot) => void>()
 
   constructor() {
     onAppStateChange(state => {
-      if (state === 'active' && this.pendingSnapshot) {
+      if (
+        state === 'active' &&
+        (this.pendingSnapshot || this.pendingClearDids)
+      ) {
         this.retryPending()
       }
     })
@@ -101,12 +106,18 @@ export class NativeSessionRepository implements SessionRepository {
     _previous: SessionSnapshot,
     next: SessionSnapshot,
   ): SessionStorageCommitResult {
+    if (this.pendingClearDids) {
+      this.snapshot = EMPTY_SNAPSHOT
+      return this.retryPending()
+    }
     this.snapshot = next
+    this.trackPossiblyWrittenAccounts(next)
     try {
       this.writeSnapshot(this.persistedSnapshot, next)
       this.persistedSnapshot = next
       this.hasPersistedIndex = true
       this.pendingSnapshot = undefined
+      this.possiblyWrittenDids.clear()
       this.cancelRetry()
       return {status: 'committed'}
     } catch (cause) {
@@ -119,15 +130,24 @@ export class NativeSessionRepository implements SessionRepository {
   }
 
   retryPending(): SessionStorageCommitResult {
-    if (!this.pendingSnapshot) {
+    if (!this.pendingSnapshot && !this.pendingClearDids) {
       return {status: 'committed'}
     }
-    const next = this.pendingSnapshot
     try {
-      this.writeSnapshot(this.persistedSnapshot, next)
-      this.persistedSnapshot = next
+      if (this.pendingClearDids) {
+        this.writeClear(this.pendingClearDids)
+        this.snapshot = EMPTY_SNAPSHOT
+        this.persistedSnapshot = EMPTY_SNAPSHOT
+        this.pendingClearDids = undefined
+      } else {
+        const next = this.pendingSnapshot!
+        this.trackPossiblyWrittenAccounts(next)
+        this.writeSnapshot(this.persistedSnapshot, next)
+        this.persistedSnapshot = next
+      }
       this.hasPersistedIndex = true
       this.pendingSnapshot = undefined
+      this.possiblyWrittenDids.clear()
       this.cancelRetry()
       return {status: 'committed'}
     } catch (cause) {
@@ -151,26 +171,24 @@ export class NativeSessionRepository implements SessionRepository {
       ...new Set([
         ...this.persistedSnapshot.accounts.map(account => account.did),
         ...this.snapshot.accounts.map(account => account.did),
+        ...this.possiblyWrittenDids,
       ]),
     ]
+    this.snapshot = EMPTY_SNAPSHOT
+    this.pendingSnapshot = undefined
+    this.pendingClearDids = dids
+    this.cancelRetry()
     try {
-      SecureStore.setItem(
-        SESSION_INDEX_KEY,
-        JSON.stringify(toStoredIndex(EMPTY_SNAPSHOT, dids)),
-      )
-      dids.forEach(tombstoneAccount)
-      SecureStore.setItem(
-        SESSION_INDEX_KEY,
-        JSON.stringify(toStoredIndex(EMPTY_SNAPSHOT)),
-      )
-      this.snapshot = EMPTY_SNAPSHOT
+      this.writeClear(dids)
       this.persistedSnapshot = EMPTY_SNAPSHOT
       this.hasPersistedIndex = true
-      this.pendingSnapshot = undefined
+      this.pendingClearDids = undefined
+      this.possiblyWrittenDids.clear()
       this.cancelRetry()
     } catch (cause) {
       const error = storageError('clear', cause)
       logStorageError(error)
+      this.scheduleRetry()
       throw cause
     }
   }
@@ -233,9 +251,14 @@ export class NativeSessionRepository implements SessionRepository {
   private writeSnapshot(previous: SessionSnapshot, next: SessionSnapshot) {
     const previousByDid = new Map(previous.accounts.map(a => [a.did, a]))
     const nextDids = new Set(next.accounts.map(a => a.did))
-    const retiredDids = previous.accounts
-      .filter(account => !nextDids.has(account.did))
-      .map(account => account.did)
+    const retiredDids = [
+      ...new Set([
+        ...previous.accounts
+          .filter(account => !nextDids.has(account.did))
+          .map(account => account.did),
+        ...[...this.possiblyWrittenDids].filter(did => !nextDids.has(did)),
+      ]),
+    ]
     const revokedDids = next.accounts
       .filter(account => {
         const prior = previousByDid.get(account.did)
@@ -274,6 +297,7 @@ export class NativeSessionRepository implements SessionRepository {
 
     if (
       !this.hasPersistedIndex ||
+      retiredDids.length > 0 ||
       JSON.stringify(previous) !== JSON.stringify(next)
     ) {
       // Publishing the index is the commit point. `retiredDids` makes token
@@ -290,6 +314,29 @@ export class NativeSessionRepository implements SessionRepository {
         SESSION_INDEX_KEY,
         JSON.stringify(toStoredIndex(next)),
       )
+    }
+  }
+
+  private writeClear(dids: string[]) {
+    SecureStore.setItem(
+      SESSION_INDEX_KEY,
+      JSON.stringify(toStoredIndex(EMPTY_SNAPSHOT, dids)),
+    )
+    dids.forEach(tombstoneAccount)
+    SecureStore.setItem(
+      SESSION_INDEX_KEY,
+      JSON.stringify(toStoredIndex(EMPTY_SNAPSHOT)),
+    )
+  }
+
+  private trackPossiblyWrittenAccounts(next: SessionSnapshot) {
+    const persistedDids = new Set(
+      this.persistedSnapshot.accounts.map(account => account.did),
+    )
+    for (const account of next.accounts) {
+      if (!persistedDids.has(account.did)) {
+        this.possiblyWrittenDids.add(account.did)
+      }
     }
   }
 

@@ -26,14 +26,19 @@ export type SessionStorageCommitResult =
   | {status: 'committed'}
   | {status: 'pending'; error: SessionStorageError}
 
+export type MaybePromise<T> = T | Promise<T>
+
 export interface SessionRepository {
-  open(legacy?: SessionSnapshot): Promise<SessionStorageLoadResult>
+  open(
+    legacy?: SessionSnapshot,
+    onLegacyMigrationComplete?: () => void,
+  ): Promise<SessionStorageLoadResult>
   getSnapshot(): SessionSnapshot
   commit(
     previous: SessionSnapshot,
     next: SessionSnapshot,
-  ): SessionStorageCommitResult
-  retryPending(): SessionStorageCommitResult
+  ): MaybePromise<SessionStorageCommitResult>
+  retryPending(): MaybePromise<SessionStorageCommitResult>
   subscribe(listener: (snapshot: SessionSnapshot) => void): () => void
   clear(): Promise<void>
 }

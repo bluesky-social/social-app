@@ -18,7 +18,14 @@ export async function initSessionRepository() {
       ? legacyCurrentDid
       : undefined,
   }
-  const result = await repository.open(legacySnapshot)
+  const scrubLegacy = () =>
+    persisted.write('session', {
+      accounts: [],
+      currentAccount: undefined,
+    })
+  const result = await repository.open(legacySnapshot, () => {
+    void scrubLegacy()
+  })
   if (result.status === 'unavailable') {
     throw new Error(`session storage unavailable: ${result.error.kind}`)
   }
@@ -26,10 +33,7 @@ export async function initSessionRepository() {
   if (result.shouldScrubLegacy) {
     // The new repository has been read back successfully. Scrub the old blob
     // so future preference writes cannot keep rewriting bearer credentials.
-    await persisted.write('session', {
-      accounts: [],
-      currentAccount: undefined,
-    })
+    await scrubLegacy()
   }
   initialized = true
   return repository

@@ -106,11 +106,13 @@ class SessionStore {
       this.repository.getSnapshot(),
       nextSnapshot,
     )
-    if (result.status === 'pending') {
-      this.storageErrorListeners.forEach(listener =>
-        listener(result.error.kind),
-      )
-    }
+    void Promise.resolve(result).then(commitResult => {
+      if (commitResult.status === 'pending') {
+        this.storageErrorListeners.forEach(listener =>
+          listener(commitResult.error.kind),
+        )
+      }
+    })
     this.listeners.forEach(listener => listener())
   }
 

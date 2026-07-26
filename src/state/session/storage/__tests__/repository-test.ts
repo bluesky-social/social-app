@@ -275,4 +275,69 @@ describe('NativeSessionRepository', () => {
       dids: [],
     })
   })
+
+  it('cancels an older pending credential write when clear fails', async () => {
+    const repository = new NativeSessionRepository()
+    const active = {accounts: [alice], currentDid: alice.did}
+    await repository.open(active)
+    const keys = accountKeys(alice.did)
+
+    mockFailKey = keys.access
+    expect(
+      repository.commit(active, {
+        accounts: [{...alice, accessJwt: 'new-access'}],
+        currentDid: alice.did,
+      }).status,
+    ).toBe('pending')
+
+    mockFailKey = SESSION_INDEX_KEY
+    await expect(repository.clear()).rejects.toThrow('disk full')
+    expect(repository.getSnapshot()).toEqual({
+      accounts: [],
+      currentDid: undefined,
+    })
+
+    expect(repository.commit(active, active).status).toBe('pending')
+    expect(repository.getSnapshot()).toEqual({
+      accounts: [],
+      currentDid: undefined,
+    })
+
+    mockFailKey = undefined
+    expect(repository.retryPending()).toEqual({status: 'committed'})
+    expect(mockValues.get(keys.refresh)).toBe('')
+    expect(mockValues.get(keys.access)).toBe('')
+    expect(mockValues.get(keys.descriptor)).toBe('')
+    expect(JSON.parse(mockValues.get(SESSION_INDEX_KEY)!)).toEqual({
+      version: 1,
+      dids: [],
+    })
+  })
+
+  it('tombstones credentials from a superseded partial account write', async () => {
+    const repository = new NativeSessionRepository()
+    await repository.open()
+    const keys = accountKeys(alice.did)
+
+    mockFailKey = SESSION_INDEX_KEY
+    expect(
+      repository.commit(
+        {accounts: []},
+        {accounts: [alice], currentDid: alice.did},
+      ).status,
+    ).toBe('pending')
+    expect(mockValues.get(keys.refresh)).toBe(alice.refreshJwt)
+    expect(mockValues.get(keys.access)).toBe(alice.accessJwt)
+
+    mockFailKey = undefined
+    expect(
+      repository.commit(
+        {accounts: [alice], currentDid: alice.did},
+        {accounts: [], currentDid: undefined},
+      ),
+    ).toEqual({status: 'committed'})
+    expect(mockValues.get(keys.refresh)).toBe('')
+    expect(mockValues.get(keys.access)).toBe('')
+    expect(mockValues.get(keys.descriptor)).toBe('')
+  })
 })
