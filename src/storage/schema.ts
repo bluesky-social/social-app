@@ -73,6 +73,22 @@ export type Device = {
    */
   policyUpdateDebugOverride?: boolean
   [PolicyUpdate202508]?: boolean
+
+  /**
+   * Timestamp of the last JS runtime reload we performed to apply an OTA
+   * update. Read and cleared once per runtime, see `consumeOTAReloadMarker`.
+   */
+  otaReloadedAt?: number
+  /**
+   * The pull request OTA deployment last applied on this device, along with the
+   * id of the update it installed. Used to tell whether the update we're
+   * running came from a pull request channel, see
+   * `useApplyPullRequestOTAUpdate`.
+   */
+  appliedOTADeployment?: {
+    channel: string
+    updateId: string
+  }
 }
 
 export type Account = {

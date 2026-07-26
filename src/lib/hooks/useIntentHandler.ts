@@ -15,14 +15,29 @@ import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
-import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
+import {
+  consumeOTAReloadMarker,
+  useApplyPullRequestOTAUpdate,
+} from './useOTAUpdates'
 
 type IntentType = 'compose' | 'verify-email' | 'age-assurance' | 'apply-ota'
 
 const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 
-// This needs to stay outside of react to persist between account switches
-let previousIntentUrl = ''
+/*
+ * This needs to stay outside of react to persist between account switches.
+ *
+ * Reloading the app to apply an OTA update restarts the JS runtime but not the
+ * native process, and `expo-linking` keeps reporting the URL the app was opened
+ * with, so the launch URL is handed to us again in the new runtime. Left alone,
+ * an `intent/apply-ota` link would fire again on the reload it just caused -
+ * prompting to apply the deployment, reloading, and looping. So when the runtime
+ * we're starting in is one we reloaded into, seed the guard with the launch URL
+ * to mark it as already handled.
+ */
+let previousIntentUrl = consumeOTAReloadMarker()
+  ? (Linking.getLinkingURL() ?? '')
+  : ''
 
 export function useIntentHandler() {
   const incomingUrl = Linking.useLinkingURL()

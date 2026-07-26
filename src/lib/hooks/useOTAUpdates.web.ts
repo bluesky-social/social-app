@@ -8,3 +8,9 @@ export function useApplyPullRequestOTAUpdate() {
     pending: false,
   }
 }
+/**
+ * There are no OTA updates on web, so the runtime is never one we reloaded into.
+ */
+export function consumeOTAReloadMarker() {
+  return false
+}
