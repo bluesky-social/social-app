@@ -62,6 +62,13 @@ export function TestCtrls() {
     setShowLoggedOut(false)
   }
   const [proxyHeader, setProxyHeader] = useState('')
+  const onConfigureProxy = () => {
+    const header = `${proxyHeader}#bsky_appview`
+    BLUESKY_PROXY_HEADER.set(header)
+    agent.configureProxy(header as any)
+    hasConfiguredProxy = true
+    setIsProxyConfigured(true)
+  }
   return (
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
       <TextInput
@@ -72,13 +79,13 @@ export function TestCtrls() {
         autoComplete="off"
         autoCorrect={false}
         autoCapitalize="none"
-        onSubmitEditing={() => {
-          const header = `${proxyHeader}#bsky_appview`
-          BLUESKY_PROXY_HEADER.set(header)
-          agent.configureProxy(header as any)
-          hasConfiguredProxy = true
-          setIsProxyConfigured(true)
-        }}
+        onSubmitEditing={onConfigureProxy}
+        style={BTN}
+      />
+      <Pressable
+        testID="e2eConfigureProxy"
+        onPress={onConfigureProxy}
+        accessibilityRole="button"
         style={BTN}
       />
       {isProxyConfigured && (

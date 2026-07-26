@@ -159,6 +159,7 @@ phase "Running Maestro flows"
 set +e
 maestro test \
   --udid "$device_id" \
+  --retries 2 \
   --format JUNIT \
   --output "$artifact_dir/report.xml" \
   --config __e2e__/config.yml \

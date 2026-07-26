@@ -33,4 +33,9 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: e2eProxyHeaderInput
 - inputText: ${output.result}
-- pressKey: Enter
+- tapOn:
+    id: e2eConfigureProxy
+- extendedWaitUntil:
+    visible:
+      id: e2eSignInAlice
+    timeout: 60000
