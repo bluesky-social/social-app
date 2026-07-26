@@ -3,6 +3,7 @@ import {z} from 'zod'
 import {deviceLanguageCodes, deviceLocales} from '#/locale/deviceLocales'
 import {findSupportedAppLanguage} from '#/locale/helpers'
 import {logger} from '#/logger'
+import {sessionAccountSchema} from '#/state/session/storage/schema'
 import {PlatformInfo} from '../../../modules/expo-bluesky-swiss-army'
 
 const externalEmbedOptions = ['show', 'hide'] as const
@@ -11,26 +12,8 @@ const externalEmbedOptions = ['show', 'hide'] as const
  * A account persisted to storage. Stored in the `accounts[]` array. Contains
  * base account info and access tokens.
  */
-const accountSchema = z.object({
-  service: z.string(),
-  did: z.string(),
-  handle: z.string(),
-  email: z.string().optional(),
-  emailConfirmed: z.boolean().optional(),
-  emailAuthFactor: z.boolean().optional(),
-  refreshJwt: z.string().optional(), // optional because it can expire
-  accessJwt: z.string().optional(), // optional because it can expire
-  signupQueued: z.boolean().optional(),
-  active: z.boolean().optional(), // optional for backwards compat
-  /**
-   * Known values: takendown, suspended, deactivated
-   * @see https://github.com/bluesky-social/atproto/blob/5441fbde9ed3b22463e91481ec80cb095643e141/lexicons/com/atproto/server/getSession.json
-   */
-  status: z.string().optional(),
-  pdsUrl: z.string().optional(),
-  isSelfHosted: z.boolean().optional(),
-})
-export type PersistedAccount = z.infer<typeof accountSchema>
+const accountSchema = sessionAccountSchema
+export type PersistedAccount = z.infer<typeof sessionAccountSchema>
 
 /**
  * The current account. Stored in the `currentAccount` field.

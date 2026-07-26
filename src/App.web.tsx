@@ -37,6 +37,10 @@ import {
   useSession,
   useSessionApi,
 } from '#/state/session'
+import {
+  getSessionRepository,
+  initSessionRepository,
+} from '#/state/session/storage'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
@@ -109,7 +113,7 @@ function InnerApp() {
         setIsReady(true)
       }
     }
-    const account = readLastActiveAccount()
+    const account = readLastActiveAccount(getSessionRepository().getSnapshot())
     void onLaunch(account)
   }, [resumeSession])
 
@@ -197,9 +201,36 @@ function App() {
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
-    void Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(
-      () => setIsReady(true),
+    let cancelled = false
+    let retryTimer: ReturnType<typeof setTimeout> | undefined
+    let persistedInitialized = false
+    const ancillaryReady = Promise.all([Geo.resolve(), setupDeviceId]).catch(
+      error => {
+        // setupDeviceId is a module-level promise and cannot be restarted.
+        // Session storage is more important than blocking forever here.
+        logger.error('ancillary app initialization failed', {error})
+      },
     )
+
+    async function initialize() {
+      try {
+        if (!persistedInitialized) {
+          await initPersistedState()
+          persistedInitialized = true
+        }
+        await initSessionRepository()
+        await ancillaryReady
+        if (!cancelled) setIsReady(true)
+      } catch (error) {
+        logger.error('app initialization failed', {error})
+        if (!cancelled) retryTimer = setTimeout(() => void initialize(), 5_000)
+      }
+    }
+    void initialize()
+    return () => {
+      cancelled = true
+      if (retryTimer) clearTimeout(retryTimer)
+    }
   }, [])
 
   if (!isReady) {

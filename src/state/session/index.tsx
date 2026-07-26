@@ -9,10 +9,11 @@ import {
   useSyncExternalStore,
 } from 'react'
 import {type AtpAgent, type AtpSessionEvent} from '@atproto/api'
+import {useLingui} from '@lingui/react/macro'
 
-import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import * as Toast from '#/components/Toast'
 import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {emitSessionDropped} from '../events'
@@ -25,6 +26,12 @@ import {
   sessionAccountToSession,
 } from './agent'
 import {type Action, getInitialState, reducer, type State} from './reducer'
+import {
+  getSessionRepository,
+  type SessionRepository,
+  type SessionSnapshot,
+} from './storage'
+import {type SessionStorageErrorKind} from './storage/types'
 export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
@@ -64,10 +71,12 @@ ApiContext.displayName = 'SessionApiContext'
 class SessionStore {
   private state: State
   private listeners = new Set<() => void>()
+  private storageErrorListeners = new Set<
+    (kind: SessionStorageErrorKind) => void
+  >()
 
-  constructor() {
-    // Careful: By the time this runs, `persisted` needs to already be filled.
-    const initialState = getInitialState(persisted.get('session').accounts)
+  constructor(private repository: SessionRepository) {
+    const initialState = getInitialState(repository.getSnapshot().accounts)
     addSessionDebugLog({type: 'reducer:init', state: initialState})
     this.state = initialState
   }
@@ -84,31 +93,69 @@ class SessionStore {
   }
 
   dispatch = (action: Action) => {
-    const nextState = reducer(this.state, action)
+    const previousState = this.state
+    const nextState = reducer(previousState, action)
+    if (nextState === previousState) return
     this.state = nextState
-    // Persist synchronously without waiting for the React render cycle.
-    if (nextState.needsPersist) {
-      nextState.needsPersist = false
-      const persistedData = {
-        accounts: nextState.accounts,
-        currentAccount: nextState.accounts.find(
-          a => a.did === nextState.currentAgentState.did,
-        ),
-      }
-      addSessionDebugLog({type: 'persisted:broadcast', data: persistedData})
-      void persisted.write('session', persistedData)
+    const nextSnapshot: SessionSnapshot = {
+      accounts: nextState.accounts,
+      currentDid: nextState.currentAgentState.did,
+    }
+    addSessionDebugLog({type: 'persisted:broadcast', data: nextSnapshot})
+    const result = this.repository.commit(
+      this.repository.getSnapshot(),
+      nextSnapshot,
+    )
+    if (result.status === 'pending') {
+      this.storageErrorListeners.forEach(listener =>
+        listener(result.error.kind),
+      )
     }
     this.listeners.forEach(listener => listener())
+  }
+
+  sync = (snapshot: SessionSnapshot) => {
+    this.state = reducer(this.state, {
+      type: 'synced-accounts',
+      syncedAccounts: snapshot.accounts,
+      syncedCurrentDid: snapshot.currentDid,
+    })
+    this.listeners.forEach(listener => listener())
+  }
+
+  subscribeStorageErrors = (
+    listener: (kind: SessionStorageErrorKind) => void,
+  ) => {
+    this.storageErrorListeners.add(listener)
+    return () => {
+      this.storageErrorListeners.delete(listener)
+    }
   }
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const {t: l} = useLingui()
   const ax = useAnalyticsBase()
   const cancelPendingTask = useOneTaskAtATime()
   // eslint-disable-next-line react/hook-use-state
-  const [store] = useState(() => new SessionStore())
+  const [repository] = useState(getSessionRepository)
+  // eslint-disable-next-line react/hook-use-state
+  const [store] = useState(() => new SessionStore(repository))
   const state = useSyncExternalStore(store.subscribe, store.getState)
   const onboardingDispatch = useOnboardingDispatch()
+  const showedStorageFullWarning = useRef(false)
+
+  useEffect(() => {
+    return store.subscribeStorageErrors(kind => {
+      if (kind === 'storage-full' && !showedStorageFullWarning.current) {
+        showedStorageFullWarning.current = true
+        Toast.show(
+          l`We couldn't save your login. Free up some device storage and keep the app open while we retry.`,
+          {type: 'error'},
+        )
+      }
+    })
+  }, [l, store])
 
   const onAgentSessionChange = useCallback(
     (agent: AtpAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
@@ -311,16 +358,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [store, cancelPendingTask],
   )
   useEffect(() => {
-    return persisted.onUpdate('session', nextSession => {
-      const synced = nextSession
+    return repository.subscribe(synced => {
       addSessionDebugLog({type: 'persisted:receive', data: synced})
-      store.dispatch({
-        type: 'synced-accounts',
-        syncedAccounts: synced.accounts,
-        syncedCurrentDid: synced.currentAccount?.did,
-      })
+      store.sync(synced)
       const syncedAccount = synced.accounts.find(
-        a => a.did === synced.currentAccount?.did,
+        a => a.did === synced.currentDid,
       )
       if (syncedAccount && syncedAccount.refreshJwt) {
         if (syncedAccount.did !== state.currentAgentState.did) {
@@ -345,7 +387,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
     })
-  }, [store, state, resumeSession])
+  }, [repository, store, state, resumeSession])
 
   const stateContext = useMemo(
     () => ({

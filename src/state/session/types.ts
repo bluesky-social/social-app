@@ -1,7 +1,7 @@
-import {type PersistedAccount} from '#/state/persisted'
 import {type Metrics} from '#/analytics/metrics'
+import {type SessionAccount} from './storage/schema'
 
-export type SessionAccount = PersistedAccount
+export type {SessionAccount} from './storage/schema'
 
 export type SessionStateContext = {
   accounts: SessionAccount[]
