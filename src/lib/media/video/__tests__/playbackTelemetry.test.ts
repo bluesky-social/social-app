@@ -5,14 +5,12 @@ const mockSpan = {
   end: jest.fn(),
 }
 
-jest.mock('#/logger/sentry/lib', () => ({
-  Sentry: {
-    startInactiveSpan: jest.fn(() => mockSpan),
-  },
+jest.mock('@sentry/react-native', () => ({
+  startInactiveSpan: jest.fn(() => mockSpan),
 }))
 
-const {Sentry}: {Sentry: {startInactiveSpan: jest.Mock}} = jest.requireMock(
-  '#/logger/sentry/lib',
+const Sentry: {startInactiveSpan: jest.Mock} = jest.requireMock(
+  '@sentry/react-native',
 )
 
 describe('createPlaybackTelemetry', () => {

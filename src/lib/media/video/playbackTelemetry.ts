@@ -1,4 +1,4 @@
-import {Sentry} from '#/logger/sentry/lib'
+import * as Sentry from '@sentry/react-native'
 
 /**
  * Where the video is being played.

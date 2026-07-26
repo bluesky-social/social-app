@@ -1,12 +1,12 @@
 import {Platform} from 'react-native'
 import {type ImagePickerAsset} from 'expo-image-picker'
+import * as Sentry from '@sentry/react-native'
 import {nanoid} from 'nanoid/non-secure'
 
 import {
   type ProbedMetadata,
   type VideoCompressSkipReason,
 } from '#/lib/media/video/types'
-import {Sentry} from '#/logger/sentry/lib'
 import {type Metrics} from '#/analytics/metrics'
 
 type MetricFn = <E extends keyof Metrics>(event: E, payload: Metrics[E]) => void

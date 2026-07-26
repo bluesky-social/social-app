@@ -1,5 +1,6 @@
+import * as Sentry from '@sentry/react-native'
+
 import {isNetworkError} from '#/lib/strings/errors'
-import {Sentry} from '#/logger/sentry/lib'
 import {LogLevel, type Transport} from '#/logger/types'
 import {prepareMetadata} from '#/logger/util'
 

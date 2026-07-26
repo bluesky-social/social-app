@@ -1,8 +1,8 @@
-import {getGlobalScope, init} from '@sentry/react-native'
+import * as Sentry from '@sentry/react-native'
 
 import * as env from '#/env'
 
-init({
+Sentry.init({
   enabled: !env.IS_DEV && !!env.SENTRY_DSN,
   enableAutoSessionTracking: false,
   dsn: env.SENTRY_DSN,
@@ -42,7 +42,7 @@ init({
  * Events already carry react_native_context.fabric, but a tag is easier to
  * filter and dashboard on. Detection matches the SDK's own isFabricEnabled.
  */
-getGlobalScope().setTag(
+Sentry.getGlobalScope().setTag(
   'new_arch',
   (global as {nativeFabricUIManager?: unknown}).nativeFabricUIManager != null,
 )
