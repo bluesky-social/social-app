@@ -13,6 +13,17 @@ import {
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}/
 
+/**
+ * Strips a leading `@` from a handle so `from:@alice.bsky.social` and
+ * `from:alice.bsky.social` both resolve to the same author. Mirrors the marker
+ * stripping the advanced-search dialog applies to handles entered in its
+ * filter fields (see `serializeAdvancedSearch`), which otherwise 400s the
+ * appview.
+ */
+function stripHandleMarker(value: string): string {
+  return value.startsWith('@') ? value.slice(1) : value
+}
+
 export type ExtractedSearchParams = {
   q: string
   author?: string
@@ -73,6 +84,30 @@ export function tokenizeQuery(raw: string): string[] {
 }
 
 /**
+ * Splits a bare `from:me` token out of a query. The "Me" author filter always
+ * travels inside `q` as a `from:me` token (the backend resolves `me` to the
+ * viewer), but the UI never shows it as text: the search input strips it for
+ * display and the advanced-search dialog represents it in the From dropdown.
+ * Tokenization keeps quoted phrases intact, so a `from:me` inside quotes stays
+ * in the query text.
+ */
+export function extractFromMe(query: string): {q: string; fromMe: boolean} {
+  const tokens = tokenizeQuery(query)
+  const kept = tokens.filter(token => token !== 'from:me')
+  return {q: kept.join(' '), fromMe: kept.length !== tokens.length}
+}
+
+/**
+ * Re-appends the `from:me` token when the "Me" author filter is active.
+ * Idempotent: a query that already carries a bare `from:me` is returned as-is.
+ */
+export function appendFromMe(query: string, fromMe: boolean): string {
+  if (!fromMe) return query
+  if (tokenizeQuery(query).includes('from:me')) return query
+  return query ? `${query} from:me` : 'from:me'
+}
+
+/**
  * Lifts the operators that `app.bsky.feed.searchPosts` accepts as structured
  * params out of the free-text query, so the backend filters on them directly.
  * Recognized operators are stripped from `q`; everything else (free text,
@@ -111,12 +146,12 @@ export function extractSearchPostsParams(query: string): ExtractedSearchParams {
          * query text verbatim rather than lifting it into a structured param.
          */
         if (value === 'me') remaining.push(token)
-        else result.author ??= value
+        else result.author ??= stripHandleMarker(value)
         break
       case 'mentions':
       case 'to':
         if (value === 'me') remaining.push(token)
-        else result.mentions ??= value
+        else result.mentions ??= stripHandleMarker(value)
         break
       case 'domain':
         result.domain ??= value

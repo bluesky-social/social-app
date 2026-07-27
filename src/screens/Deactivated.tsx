@@ -109,7 +109,7 @@ export function Deactivated() {
         <View
           style={[a.w_full, {marginHorizontal: 'auto', maxWidth: COL_WIDTH}]}>
           <View style={[a.w_full, a.justify_center, a.align_center, a.pb_5xl]}>
-            <Logo width={40} />
+            <Logo allowVariants={false} width={40} />
           </View>
 
           <View style={[a.gap_xs, a.pb_3xl]}>

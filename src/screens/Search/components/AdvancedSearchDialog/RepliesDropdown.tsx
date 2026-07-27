@@ -1,4 +1,4 @@
-import {Trans, useLingui} from '@lingui/react/macro'
+import {useLingui} from '@lingui/react/macro'
 
 import {platform} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -19,11 +19,12 @@ export function RepliesDropdown({
   const {t: l} = useLingui()
 
   const options: {value: RepliesFilter; label: string}[] = [
-    {value: 'all', label: l`Posts and replies`},
-    {value: 'none', label: l`No replies`},
+    {value: 'all', label: l`No post filter`},
+    {value: 'none', label: l`Only posts`},
     {value: 'only', label: l`Only replies`},
   ]
-  const currentLabel = options.find(o => o.value === value)?.label ?? l`All`
+  const currentLabel =
+    options.find(o => o.value === value)?.label ?? l`No post filter`
 
   return (
     <Menu.Root>
@@ -46,19 +47,25 @@ export function RepliesDropdown({
         )}
       </Menu.Trigger>
       <Menu.Outer>
-        <Menu.LabelText>
-          <Trans>Include these results</Trans>
-        </Menu.LabelText>
+        <Menu.Item
+          label={options[0].label}
+          onPress={() => onChange(options[0].value)}>
+          <Menu.ItemText>{options[0].label}</Menu.ItemText>
+          <Menu.ItemRadio selected={value === options[0].value} />
+        </Menu.Item>
+        <Menu.Divider />
         <Menu.Group>
-          {options.map(option => (
-            <Menu.Item
-              key={option.value}
-              label={option.label}
-              onPress={() => onChange(option.value)}>
-              <Menu.ItemText>{option.label}</Menu.ItemText>
-              <Menu.ItemRadio selected={value === option.value} />
-            </Menu.Item>
-          ))}
+          {options.map((option, index) =>
+            index === 0 ? null : (
+              <Menu.Item
+                key={option.value}
+                label={option.label}
+                onPress={() => onChange(option.value)}>
+                <Menu.ItemText>{option.label}</Menu.ItemText>
+                <Menu.ItemRadio selected={value === option.value} />
+              </Menu.Item>
+            ),
+          )}
         </Menu.Group>
       </Menu.Outer>
     </Menu.Root>

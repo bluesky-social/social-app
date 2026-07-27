@@ -7,7 +7,7 @@ import {
 } from 'react-native-gesture-handler'
 import Animated, {
   type AnimatableValue,
-  runOnJS,
+  Reanimated3DefaultSpringConfig,
   type SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
@@ -15,6 +15,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
+import {scheduleOnRN} from 'react-native-worklets'
 import {Image} from 'expo-image'
 
 import {
@@ -94,7 +95,7 @@ const ImageItem = ({
     },
     (nextIsScaled, prevIsScaled) => {
       if (nextIsScaled !== prevIsScaled) {
-        runOnJS(handleZoom)(nextIsScaled)
+        scheduleOnRN(handleZoom, nextIsScaled)
       }
     },
   )
@@ -244,7 +245,7 @@ const ImageItem = ({
 
   const singleTap = Gesture.Tap().onEnd(() => {
     'worklet'
-    runOnJS(onTap)()
+    scheduleOnRN(onTap)
   })
 
   const doubleTap = Gesture.Tap()
@@ -358,9 +359,9 @@ const ImageItem = ({
     },
     (show, prevShow) => {
       if (!prevShow && show) {
-        runOnJS(setShowLoader)(true)
+        scheduleOnRN(setShowLoader, true)
       } else if (prevShow && !show) {
-        runOnJS(setShowLoader)(false)
+        scheduleOnRN(setShowLoader, false)
       }
     },
   )
@@ -463,7 +464,10 @@ function clampTranslation(
 
 function withClampedSpring<T extends AnimatableValue>(value: T): T {
   'worklet'
-  return withSpring(value, {overshootClamping: true})
+  return withSpring(value, {
+    ...Reanimated3DefaultSpringConfig,
+    overshootClamping: true,
+  })
 }
 
 export default memo(ImageItem)

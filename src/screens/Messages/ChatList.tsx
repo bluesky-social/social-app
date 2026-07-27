@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {useAnimatedRef} from 'react-native-reanimated'
 import {type ChatBskyActorGetStatus, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {
@@ -41,7 +40,10 @@ import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '
 import {BubbleSmile_Stroke2_Corner2_Rounded_Large as BubbleSmileIcon} from '#/components/icons/Bubble'
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
-import {Inbox_Stroke2_Corner2_Rounded_Large as InboxLargeIcon} from '#/components/icons/Inbox'
+import {
+  Inbox_Stroke2_Corner2_Rounded as InboxIcon,
+  Inbox_Stroke2_Corner2_Rounded_Large as InboxLargeIcon,
+} from '#/components/icons/Inbox'
 import {
   MessagePlus_Stroke2_Corner0_Rounded as MessagePlusIcon,
   MessagePlus_Stroke2_Corner0_Rounded as NewChatIcon,
@@ -272,7 +274,7 @@ export function ChatList({
   const t = useTheme()
   const {t: l} = useLingui()
   const aa = useAgeAssurance()
-  const scrollElRef: ListRef = useAnimatedRef()
+  const scrollElRef: ListRef = useRef(null)
   const {isWithinSplitView} = useIsWithinSplitView()
 
   const openChatControl = useCallback(() => {
@@ -635,6 +637,15 @@ function ChatSettingsMenu({
     },
   })
 
+  const {mutate: markAllRequestsRead} = useUpdateAllRead('request', {
+    onMutate: () => {
+      Toast.show(l`Marked all requests as read`, {type: 'success'})
+    },
+    onError: () => {
+      Toast.show(l`Failed to mark all requests as read`, {type: 'error'})
+    },
+  })
+
   return (
     <Menu.Root>
       <Menu.Trigger label={l`Chat options`}>{children}</Menu.Trigger>
@@ -646,6 +657,14 @@ function ChatSettingsMenu({
             <Menu.ItemIcon icon={CircleCheckIcon} />
             <Menu.ItemText>
               <Trans>Mark all chats as read</Trans>
+            </Menu.ItemText>
+          </Menu.Item>
+          <Menu.Item
+            label={l`Mark all requests as read`}
+            onPress={() => markAllRequestsRead()}>
+            <Menu.ItemIcon icon={InboxIcon} />
+            <Menu.ItemText>
+              <Trans>Mark all requests as read</Trans>
             </Menu.ItemText>
           </Menu.Item>
           <Menu.Item

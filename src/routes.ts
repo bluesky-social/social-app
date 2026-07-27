@@ -50,6 +50,7 @@ export const router = new Router<AllNavigatableRoutes>({
   PreferencesExternalEmbeds: '/settings/external-embeds',
   AccessibilitySettings: '/settings/accessibility',
   AppearanceSettings: '/settings/appearance',
+  BetaFeaturesSettings: '/settings/beta-features',
   SavedFeeds: '/settings/saved-feeds',
   AccountSettings: '/settings/account',
   AutomationLabelSettings: '/settings/automation-label',
@@ -60,6 +61,7 @@ export const router = new Router<AllNavigatableRoutes>({
   AboutSettings: '/settings/about',
   AppIconSettings: '/settings/app-icon',
   NotificationSettings: '/settings/notifications',
+  ActivityNotificationSettings: '/settings/notifications/activity',
   FindContactsSettings: '/settings/find-contacts',
   // support
   Support: '/support',

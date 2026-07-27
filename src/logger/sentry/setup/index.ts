@@ -1,4 +1,4 @@
-import {init} from '@sentry/react-native'
+import {getGlobalScope, init} from '@sentry/react-native'
 
 import * as env from '#/env'
 
@@ -30,4 +30,19 @@ init({
    */
   attachStacktrace: false,
   sampleRate: env.IS_INTERNAL ? 1.0 : 0.1,
+  /**
+   * Sample rate for performance spans (video playback, video upload). Setting
+   * this also enables the SDK's default stall and slow/frozen frame tracking,
+   * whose measurements attach to every root span.
+   */
+  tracesSampleRate: env.IS_INTERNAL ? 1.0 : 0.01,
 })
+
+/*
+ * Events already carry react_native_context.fabric, but a tag is easier to
+ * filter and dashboard on. Detection matches the SDK's own isFabricEnabled.
+ */
+getGlobalScope().setTag(
+  'new_arch',
+  (global as {nativeFabricUIManager?: unknown}).nativeFabricUIManager != null,
+)

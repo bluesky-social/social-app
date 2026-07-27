@@ -1,4 +1,4 @@
-import {UITextView} from 'react-native-uitextview'
+import {UITextView} from '@bsky.app/react-native-uitextview'
 
 import {logger} from '#/logger'
 import {atoms as a, type TextStyleProp, useAlf, useTheme, web} from '#/alf'

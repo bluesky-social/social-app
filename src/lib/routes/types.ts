@@ -63,12 +63,14 @@ export type CommonNavigatorParams = {
   PreferencesExternalEmbeds: undefined
   AccessibilitySettings: undefined
   AppearanceSettings: undefined
+  BetaFeaturesSettings: undefined
   AccountSettings: undefined
   AutomationLabelSettings: undefined
   PrivacyAndSecuritySettings: undefined
   ActivityPrivacySettings: undefined
   ContentAndMediaSettings: undefined
   NotificationSettings: undefined
+  ActivityNotificationSettings: undefined
   InterestsSettings: undefined
   AboutSettings: undefined
   AppIconSettings: undefined

@@ -7,7 +7,7 @@ import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
-import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
+import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/service-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
@@ -19,6 +19,8 @@ import * as Prompt from '#/components/Prompt'
 import {TrendingTopicLink} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+
+const TRENDING_LIMIT = 14
 
 export function TrendingInterstitial() {
   const {enabled} = useTrendingConfig()
@@ -33,8 +35,15 @@ export function Inner() {
   const gutters = useGutters([0, 'base', 0, 'base'])
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
-  const {data: trending, error, isLoading} = useTrendingTopics()
-  const noTopics = !isLoading && !error && !trending?.topics?.length
+  const {
+    data: trending,
+    error,
+    isLoading,
+  } = useGetTrendsQuery({
+    limit: TRENDING_LIMIT,
+    refetchOnWindowFocus: true,
+  })
+  const noTopics = !isLoading && !error && !trending?.trends?.length
 
   const onConfirmHide = useCallback(() => {
     ax.metric('trendingTopics:hide', {context: 'interstitial'})
@@ -88,15 +97,16 @@ export function Inner() {
                   {' '}
                 </Text>
               </View>
-            ) : !trending?.topics ? null : (
+            ) : !trending?.trends ? null : (
               <>
-                {trending.topics.map(topic => (
+                {trending.trends.map(topic => (
                   <TrendingTopicLink
                     key={topic.link}
                     topic={topic}
                     onPress={() => {
                       ax.metric('trendingTopic:click', {
                         context: 'interstitial',
+                        recId: trending.recId,
                       })
                     }}>
                     <View style={[a.py_lg]}>

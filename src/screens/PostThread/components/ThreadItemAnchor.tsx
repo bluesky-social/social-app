@@ -28,7 +28,7 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {type PostSource} from '#/state/unstable-post-source'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {LikesStat} from '#/screens/PostThread/components/LikesStat'
+import {KnownLikers, LikesStat} from '#/screens/PostThread/components/LikesStat'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
   LINEAR_AVI_WIDTH,
@@ -440,7 +440,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   a.py_md,
                   t.atoms.border_contrast_low,
                 ]}>
-                <LikesStat post={post} />
                 {post.repostCount != null && post.repostCount !== 0 ? (
                   <Link to={repostsHref} label={l`Reposts of this post`}>
                     <Text
@@ -481,6 +480,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     </Text>
                   </Link>
                 ) : null}
+                <LikesStat post={post} />
                 {post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
                   <Text
                     testID="bookmarkCount-expanded"
@@ -497,6 +497,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     </Trans>
                   </Text>
                 ) : null}
+                <KnownLikers post={post} />
               </View>
             ) : null}
             <View

@@ -3,11 +3,9 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {useTrendingSettings} from '#/state/preferences/trending'
 import {atoms as a, useLayoutBreakpoints} from '#/alf'
 import {Button} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as CloseIcon} from '#/components/icons/Times'
-import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import * as Toast from '#/components/Toast'
 import {LiveEventFeedCardWide} from '#/features/liveEvents/components/LiveEventFeedCardWide'
 import {useUserPreferencedLiveEvents} from '#/features/liveEvents/context'
@@ -17,16 +15,10 @@ import {type LiveEventFeed} from '#/features/liveEvents/types'
 export function DiscoverFeedLiveEventFeedsAndTrendingBanner() {
   const events = useUserPreferencedLiveEvents()
   const {rightNavVisible} = useLayoutBreakpoints()
-  const {trendingDisabled} = useTrendingSettings()
 
   if (!events.feeds.length) {
-    if (!rightNavVisible && !trendingDisabled) {
-      // only show trending on mobile when live event banner is not shown
-      return <TrendingInterstitial />
-    } else {
-      // no feed, no trending
-      return null
-    }
+    // no feed
+    return null
   }
 
   // On desktop, we show in the sidebar

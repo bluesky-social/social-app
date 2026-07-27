@@ -286,7 +286,7 @@ export function Composer({
                 ref={IS_WEB ? sift.refs.setAnchor : undefined}
                 style={
                   node.type === 'facet' && {
-                    color: t.palette.primary_500,
+                    color: t.atoms.text_link.color,
                   }
                 }>
                 {node.raw}
