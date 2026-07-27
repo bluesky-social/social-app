@@ -94,6 +94,8 @@ function Inner() {
                 <TrendingTopicLink
                   key={topic.link}
                   topic={topic}
+                  metricContext="sidebar"
+                  recId={trending.recId}
                   onPress={() => {
                     ax.metric('trendingTopic:click', {
                       context: 'sidebar',

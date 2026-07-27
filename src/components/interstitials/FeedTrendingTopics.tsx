@@ -26,6 +26,7 @@ import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/ic
 import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {SubtleHover} from '#/components/SubtleHover'
+import {useTrendingTopicSeen} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
@@ -136,9 +137,11 @@ function Inner() {
                     key={trend.link}
                     trend={trend}
                     rank={index + 1}
+                    recId={trending.recId}
                     onPress={() => {
                       ax.metric('trendingTopic:click', {
                         context: 'interstitial',
+                        recId: trending.recId,
                       })
                     }}
                   />
@@ -163,10 +166,12 @@ function Inner() {
 function TrendRow({
   trend,
   rank,
+  recId,
   onPress,
 }: ViewStyleProp & {
   trend: AppBskyUnspeccedDefs.TrendView
   rank: number
+  recId?: string
   children?: React.ReactNode
   onPress?: () => void
 }) {
@@ -175,6 +180,7 @@ function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
+  useTrendingTopicSeen('interstitial', recId)
 
   return (
     <Link

@@ -750,6 +750,10 @@ export type Events = {
   'trendingTopics:hide': {
     context: 'settings' | 'sidebar' | 'interstitial' | 'explore:trending'
   }
+  'trendingTopic:seen': {
+    context: 'sidebar' | 'interstitial' | 'explore'
+    recId?: string
+  }
   'trendingTopic:click': {
     context: 'sidebar' | 'interstitial' | 'explore'
     recId?: string
