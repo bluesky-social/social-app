@@ -250,7 +250,7 @@
     "setimmediate": "^1.0.5",
     "slugify": "^1.6.9",
     "sonner": "^2.0.7",
-    "sonner-native": "0.21.0",
+    "sonner-native": "0.26.4",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
     "tldts": "^6.1.46",
