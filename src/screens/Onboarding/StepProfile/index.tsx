@@ -107,6 +107,7 @@ export function StepProfile() {
       const response = await sheetWrapper(
         launchImageLibraryAsync({
           exif: false,
+          shouldDownloadFromNetwork: true,
           mediaTypes: ['images'],
           quality: 1,
           ...opts,
