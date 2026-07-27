@@ -160,6 +160,10 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+    outputs:
+      # Empty when the native surface is unchanged, 'true' when it changed.
+      # publish-pr-ota gates on this.
+      includes-changes: ${{ steps.fingerprint.outputs.includes-changes }}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -210,6 +214,16 @@ jobs:
           header: fingerprint-diff
           delete: true
 
+      # publish-pr-ota is skipped once the fingerprint changes, so any install
+      # link left over from an earlier fingerprint-clean commit on this PR now
+      # points at a bundle that no longer matches the PR. Drop it.
+      - name: 💬 Delete stale OTA install comment
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        if: ${{ steps.fingerprint.outputs.includes-changes }}
+        with:
+          header: pull-request-ota
+          delete: true
+
       - name: 🏷️ Label as fingerprint changed
         if: ${{ steps.fingerprint.outputs.includes-changes }}
         env:
@@ -240,13 +254,21 @@ jobs:
   # runs. EXPO_TOKEN is then empty and the job fails at setup — a red check on
   # every dependabot PR. There is no OTA preview worth publishing for a
   # dependency bump anyway.
+  #
+  # Gated on a clean fingerprint-native run: an OTA can only carry JS, so once
+  # the native surface changes the published bundle no longer represents the PR
+  # and installing it on a store/TestFlight client is misleading at best. Those
+  # PRs need a native build instead. A skipped or failed fingerprint job also
+  # skips this one - without a verdict we can't say the OTA is representative.
   publish-pr-ota:
     name: Publish PR OTA to denis
+    needs: fingerprint-native
     runs-on: ubuntu-latest
     if: >-
       github.event_name == 'pull_request' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.pull_request.user.type != 'Bot'
+      github.event.pull_request.user.type != 'Bot' &&
+      needs.fingerprint-native.outputs.includes-changes != 'true'
     concurrency:
       group: pr-ota-${{ github.event.pull_request.number }}
       cancel-in-progress: true
