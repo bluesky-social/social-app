@@ -114,7 +114,7 @@ function Inner() {
               label={l`Trending options`}
               onPress={() => trendingPrompt.open()}
               style={[a.bg_transparent]}>
-              <ButtonIcon icon={EllipsisIcon} />
+              <ButtonIcon icon={EllipsisIcon} size="md" />
             </Button>
           </View>
         </View>
