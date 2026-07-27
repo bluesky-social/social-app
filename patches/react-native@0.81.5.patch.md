@@ -84,12 +84,13 @@ Not fixed upstream as of July 2026 (identical `checkNotNull` on `main`); the sib
 attempt facebook/react-native#57365 for the same bookkeeping corruption (different stack)
 was abandoned. Re-check when bumping React Native.
 
-**Caveat: this hunk has no effect on the shipped app today.** The Android build consumes the
-prebuilt `com.facebook.react:react-android` artifact from Maven Central, not the Kotlin
-sources in node_modules (unlike the iOS hunks above, which CocoaPods compiles from source).
-It only takes effect if we enable building React Native Android from source
-(`includeBuild` + dependency substitution in `android/settings.gradle`), or once an
-equivalent fix ships upstream. Kept so the fix is ready and documented either way.
+Note on build modes: production Android builds compile react-android from source
+(`buildReactNativeFromSource: IS_PRODUCTION` via expo-build-properties in app.config.js
+injects the includeBuild/dependency-substitution block at prebuild), so this hunk IS
+active in production releases. Local dev builds prebuilt in a non-production env consume
+the prebuilt AAR from Maven Central instead, where this hunk (like any ReactAndroid
+source change) has no effect - do not expect to see the fix in a local debug build unless
+you prebuild with EXPO_PUBLIC_ENV=production or add the substitution block manually.
 
 ## RCTTextLayoutManager.mm Patch - Text overflows instead of wrapping on the last line
 
