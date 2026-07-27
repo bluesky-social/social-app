@@ -6,18 +6,11 @@ Patching `RCTRefreshControl.mm` temporarily to play an impact haptic on refresh 
 17.4, there has been a regression somewhere causing haptics to not play on iOS on refresh. Should monitor for an update
 in the RN repo: https://github.com/facebook/react-native/issues/43388
 
-## RCTPullToRefreshViewComponentView.mm Patch - RefreshControl initial props dropped on New Arch
+## RefreshControl Path - ScrollForwarder
 
-**TODO: Remove after bumping React Native to 0.82+** (fixed upstream by facebook/react-native#52615, #52584
-and #53231).
-
-On Fabric, `updateProps` diffs against `_props`, but the initial-layout replay in `layoutSubviews` passes
-`_props` as the new props too, so the diff is a no-op and `tintColor`/`progressViewOffset`/`title` are never
-applied on mount. This hides the pull-to-refresh spinner behind the floating home header (it stays at offset
-0 instead of `headerOffset`). We diff against the `oldProps` argument instead, null-guarded with default
-props for the create-mutation path.
-
-Issue: https://github.com/facebook/react-native/issues/56343
+Patching `RCTRefreshControl.m` and `RCTRefreshControl.h` to add a new `forwarderBeginRefreshing` method to the class.
+This method is used by `ExpoScrollForwarder` to initiate a refresh of the underlying `UIScrollView` from inside that
+module.
 
 ## RCTEnhancedScrollView.mm / RCTScrollViewComponentView.mm Patch - centerContent insets stale after content resize on New Arch
 
