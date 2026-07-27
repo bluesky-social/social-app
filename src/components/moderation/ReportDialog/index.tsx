@@ -825,7 +825,11 @@ function NciiQualification({
       {outcome === 'externalForm' && (
         <Link
           to={NCII_FORM}
-          label={l`Submit your report through the Report non-consensual intimate imagery (NCII) form`}>
+          label={l({
+            message:
+              'Submit your report through the Report non-consensual intimate imagery (NCII) form',
+            context: 'english-only-resource',
+          })}>
           {({hovered, pressed}) => (
             <View
               style={[
@@ -841,7 +845,7 @@ function NciiQualification({
                   : [t.atoms.border_contrast_low],
               ]}>
               <Text style={[a.flex_1, a.italic, a.leading_snug]}>
-                <Trans>
+                <Trans context="english-only-resource">
                   Please submit your report through the Report non-consensual
                   intimate imagery (NCII) form.
                 </Trans>
@@ -869,7 +873,7 @@ function YesNoQuestion({
   const {t: l} = useLingui()
   return (
     <View style={[a.gap_sm]}>
-      <Text style={[a.text_md, a.leading_snug]}>{question}</Text>
+      <Text style={[a.text_sm, a.leading_snug]}>{question}</Text>
       <View style={[a.flex_row, a.gap_sm]}>
         <View style={[a.flex_1]}>
           <Button
@@ -880,7 +884,6 @@ function YesNoQuestion({
             })}
             accessibilityHint={question}
             size="small"
-            variant="solid"
             color={value === true ? 'primary' : 'secondary'}
             onPress={() => onAnswer(true)}>
             <ButtonText>
@@ -897,7 +900,6 @@ function YesNoQuestion({
             })}
             accessibilityHint={question}
             size="small"
-            variant="solid"
             color={value === false ? 'primary' : 'secondary'}
             onPress={() => onAnswer(false)}>
             <ButtonText>
