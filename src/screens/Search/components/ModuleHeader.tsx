@@ -9,6 +9,7 @@ import {atoms as a, native, useTheme, type ViewStyleProp} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {sizes as iconSizes} from '#/components/icons/common'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
 import {Link} from '#/components/Link'
 import {Text, type TextProps} from '#/components/Typography'
@@ -147,6 +148,32 @@ export function SearchButton({
         },
       ]}>
       <ButtonIcon icon={SearchIcon} size="lg" />
+    </Button>
+  )
+}
+
+export function EllipsisButton({
+  label,
+  onPress,
+}: {
+  label: string
+  onPress?: () => void
+}) {
+  return (
+    <Button
+      label={label}
+      size="small"
+      variant="ghost"
+      color="secondary"
+      shape="round"
+      PressableComponent={native(PressableScale)}
+      onPress={onPress}
+      style={[
+        {
+          right: -4,
+        },
+      ]}>
+      <ButtonIcon icon={EllipsisIcon} size="md" />
     </Button>
   )
 }

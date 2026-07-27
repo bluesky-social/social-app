@@ -211,6 +211,10 @@ export type PostFeedRef = {
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
 
+const TRENDING_TOPICS_INDEX = 5
+const TRENDING_VIDEO_INDEX = 30
+const SUGGESTED_FOR_YOU_INDEX = 15
+
 let PostFeed = ({
   feed,
   description,
@@ -570,19 +574,19 @@ let PostFeed = ({
                         key: 'composerPrompt-' + sliceIndex,
                       })
                     }
-                  } else if (sliceIndex === 1) {
+                  } else if (sliceIndex === TRENDING_TOPICS_INDEX) {
                     arr.push({
                       type: 'interstitialFeedTrendingTopics',
                       key: 'interstitialFeedTrendingTopics-' + sliceIndex,
                     })
-                  } else if (sliceIndex === 15) {
+                  } else if (sliceIndex === TRENDING_VIDEO_INDEX) {
                     if (areVideoFeedsEnabled && !trendingVideoDisabled) {
                       arr.push({
                         type: 'interstitialTrendingVideos',
                         key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                       })
                     }
-                  } else if (sliceIndex === 30) {
+                  } else if (sliceIndex === SUGGESTED_FOR_YOU_INDEX) {
                     arr.push({
                       type: 'interstitialFollows',
                       key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
