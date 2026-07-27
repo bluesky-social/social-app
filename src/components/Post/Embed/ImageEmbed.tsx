@@ -2,7 +2,13 @@ import {useRef} from 'react'
 import {InteractionManager, View} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {AppBskyEmbedGallery, type AppBskyEmbedImages} from '@atproto/api'
+import {
+  AppBskyEmbedGallery,
+  type AppBskyEmbedImages,
+  AppBskyFeedPost,
+  AtUri,
+} from '@atproto/api'
+import {format, parseISO} from 'date-fns'
 
 import {atoms as a, tokens} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
@@ -16,6 +22,7 @@ import {type Dimensions} from '#/components/Lightbox/types'
 import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {useAnalytics} from '#/analytics'
+import * as bsky from '#/types/bsky'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
 
@@ -42,6 +49,22 @@ export function ImageEmbed({
     embed.type === 'gallery'
       ? images.length > MAX_GRID_IMAGES
       : ax.features.enabled(ax.features.PostGalleryEmbedEnable)
+  // Derive a stable base filename from the owning post so saved images can be
+  // traced back to their post. Falls back to a UUID downstream when absent.
+  const postRkey = rest.post ? new AtUri(rest.post.uri).rkey : undefined
+  const handle = rest.post?.author.handle
+  const postCreatedAt =
+    rest.post &&
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      rest.post.record,
+      AppBskyFeedPost.isRecord,
+    )
+      ? rest.post.record.createdAt
+      : undefined
+  const timestamp = postCreatedAt
+    ? format(parseISO(postCreatedAt), "yyyy-MM-dd'T'HHmmss")
+    : undefined
+  const canName = !!(handle && postRkey)
 
   const layout: 'single' | 'grid' | 'carousel' =
     images.length === 1 ? 'single' : useExpandedLayout ? 'carousel' : 'grid'
@@ -63,11 +86,17 @@ export function ImageEmbed({
   const singleDimsRef = useRef<Dimensions | null>(null)
 
   if (images.length > 0) {
-    const items = images.map(img => ({
+    const items = images.map((img, idx) => ({
       uri: img.fullsize,
       thumbUri: img.thumb,
       alt: img.alt,
       dimensions: img.aspectRatio ?? null,
+      baseSaveName: canName
+        ? (() => {
+            const base = `${handle}_${postRkey}_img${idx + 1}`
+            return timestamp ? `${base}_${timestamp}` : base
+          })()
+        : undefined,
     }))
     const onPress = (
       index: number,
