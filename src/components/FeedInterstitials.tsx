@@ -467,7 +467,7 @@ export function ProfileGrid({
           a.justify_between,
         ]}
         pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
-        <View style={[a.pl_xs, a.flex_row, a.align_center]}>
+        <View style={[a.w_full, a.pl_xs, a.flex_row, a.align_center]}>
           <Text style={[a.flex_1, a.text_md, a.font_semi_bold]}>
             <Trans>Suggested for you</Trans>
           </Text>

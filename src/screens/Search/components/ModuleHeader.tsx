@@ -173,7 +173,7 @@ export function EllipsisButton({
           right: -4,
         },
       ]}>
-      <ButtonIcon icon={EllipsisIcon} size="lg" />
+      <ButtonIcon icon={EllipsisIcon} size="md" />
     </Button>
   )
 }
