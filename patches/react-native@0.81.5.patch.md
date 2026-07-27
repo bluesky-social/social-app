@@ -65,6 +65,32 @@ content-less area are attributed to the `UIScrollView`.
 Issue: https://github.com/facebook/react-native/issues/54123
 PR: https://github.com/react/react-native/pull/56747
 
+## ReactViewGroup.kt Patch - Fatal "Required value was null" during subview clipping on Android
+
+Fixes Sentry issue APP-T20Q: `IllegalStateException: Required value was null` thrown by
+`checkNotNull(allChildren?.get(idx))` in `updateSubviewClipStatus`, reached from
+`ReactScrollView.onScrollChanged -> updateClippingRect` during an animated smooth scroll
+(New Architecture, `removeClippedSubviews`).
+
+The clipping loop in `updateClippingToRect` captures its bound once, but clipping a view
+(`removeViewsInLayout`) can synchronously trigger reentrant child removal (layout-change
+listeners, animation-end callbacks, Fabric mounting on the UI thread), which compacts
+`allChildren` and nulls the tail mid-loop. Upstream already catches the
+`IndexOutOfBoundsException` variant of this corruption with diagnostics, but the null-child
+variant throws `IllegalStateException` and escapes as a fatal crash. A null entry means the
+view is already detached, so we skip it and count it as clipped to keep index math aligned.
+
+Not fixed upstream as of July 2026 (identical `checkNotNull` on `main`); the sibling fix
+attempt facebook/react-native#57365 for the same bookkeeping corruption (different stack)
+was abandoned. Re-check when bumping React Native.
+
+**Caveat: this hunk has no effect on the shipped app today.** The Android build consumes the
+prebuilt `com.facebook.react:react-android` artifact from Maven Central, not the Kotlin
+sources in node_modules (unlike the iOS hunks above, which CocoaPods compiles from source).
+It only takes effect if we enable building React Native Android from source
+(`includeBuild` + dependency substitution in `android/settings.gradle`), or once an
+equivalent fix ships upstream. Kept so the fix is ready and documented either way.
+
 ## RCTTextLayoutManager.mm Patch - Text overflows instead of wrapping on the last line
 
 Issue: https://github.com/react/react-native/issues/53450#issuecomment-3298157830 
