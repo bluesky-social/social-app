@@ -225,16 +225,16 @@ index 8b6571698fc5dd091a0d8980a33bb40295faf305..27c97bfeb6f13907c89f1d85f2bb8b8a
      }
    }
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
-index 89b666dcf0258df0702c812600b685463128294c..54e70abca9e2f35de740cfc4fb2f83e9f5af11e1 100644
+index 89b666dcf0258df0702c812600b685463128294c..2b1c3971f0c31a0d7a592b90170e4cc53a8a69dd 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
 +++ b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
 @@ -431,6 +431,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
      inSubviewClippingLoop = true
      var clippedSoFar = 0
      for (i in 0..<allChildrenCount) {
-+      // Bluesky patch: reentrant child removal during this loop can compact allChildren and
-+      // leave a null at an index below allChildrenCount. A null entry means the view is already
-+      // detached, so treat it as clipped instead of crashing (Sentry APP-T20Q).
++      // Reentrant child removal during this loop can compact allChildren and leave a null at
++      // an index below allChildrenCount. A null entry means the view is already detached, so
++      // treat it as clipped instead of crashing.
 +      if (childArray[i] == null) {
 +        clippedSoFar++
 +        continue
@@ -247,8 +247,8 @@ index 89b666dcf0258df0702c812600b685463128294c..54e70abca9e2f35de740cfc4fb2f83e9
      assertOnUiThread()
  
 -    val child = checkNotNull(allChildren?.get(idx))
-+    // Bluesky patch: allChildren can be mutated reentrantly while a clipping pass is running,
-+    // so a stale index can point at a null slot. Skip it instead of crashing (Sentry APP-T20Q).
++    // allChildren can be mutated reentrantly while a clipping pass is running, so a stale
++    // index can point at a null slot. Skip it instead of crashing.
 +    val child = allChildren?.get(idx) ?: return
      val intersects = clippingRect.intersects(child.left, child.top, child.right, child.bottom)
      var needUpdateClippingRecursive = false
