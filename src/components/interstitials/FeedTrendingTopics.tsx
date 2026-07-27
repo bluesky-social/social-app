@@ -118,31 +118,32 @@ function Inner() {
             </Button>
           </View>
         </View>
-        <View
-          style={[
-            a.relative,
-            a.overflow_hidden,
-            a.z_10,
-            a.border,
-            a.rounded_xl,
-            t.atoms.bg,
-            t.atoms.border_contrast_low,
-            t.atoms.shadow_md,
-          ]}>
-          {isLoading || isRefetching
-            ? Array.from({length: TOPIC_COUNT}).map((_, i) => (
-                <TrendingTopicRowSkeleton key={i} rank={i + 1} />
-              ))
-            : trending?.trends?.map((trend, index) => (
-                <TrendRow
-                  key={trend.link}
-                  trend={trend}
-                  rank={index + 1}
-                  onPress={() => {
-                    ax.metric('trendingTopic:click', {context: 'interstitial'})
-                  }}
-                />
-              ))}
+        <View style={[a.relative, a.z_10, a.rounded_xl, t.atoms.shadow_md]}>
+          <View
+            style={[
+              a.overflow_hidden,
+              a.border,
+              a.rounded_xl,
+              t.atoms.bg,
+              t.atoms.border_contrast_low,
+            ]}>
+            {isLoading || isRefetching
+              ? Array.from({length: TOPIC_COUNT}).map((_, i) => (
+                  <TrendingTopicRowSkeleton key={i} rank={i + 1} />
+                ))
+              : trending?.trends?.map((trend, index) => (
+                  <TrendRow
+                    key={trend.link}
+                    trend={trend}
+                    rank={index + 1}
+                    onPress={() => {
+                      ax.metric('trendingTopic:click', {
+                        context: 'interstitial',
+                      })
+                    }}
+                  />
+                ))}
+          </View>
         </View>
       </View>
       <Prompt.Basic
