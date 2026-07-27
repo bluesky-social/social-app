@@ -81,7 +81,7 @@ export function TrendingVideos() {
           a.align_center,
           a.justify_between,
         ]}>
-        <View style={[a.pl_xs, a.flex_row, a.align_center, a.justify_between]}>
+        <View style={[a.pl_xs, a.flex_row, a.align_center]}>
           <Text style={[a.flex_1, a.text_md, a.font_semi_bold]}>
             <Trans>Trending videos</Trans>
           </Text>
