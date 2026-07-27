@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: ⬇️ Check out Git repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ssh-key: ${{secrets.GH_ACTION_DEPLOY_KEY}}
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
@@ -35,7 +35,7 @@ jobs:
           commit_message: Nightly source-language update
           file_pattern: ./src/locale/locales/en/messages.po
       - name: 🚀 Push source lang to Crowdin
-        uses: crowdin/github-action@52aa776766211d83d975df51f3b9c53c2f8ba35f # v2.16.3
+        uses: crowdin/github-action@e0c8f73cdc0fafde9396e056c5038217000a32d1 # v2.16.4
         with:
           upload_sources: true
           upload_sources_args: "-b main"
