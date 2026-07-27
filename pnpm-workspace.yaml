@@ -24,7 +24,7 @@ patchedDependencies:
   'expo-age-range@0.2.18': patches/expo-age-range@0.2.18.patch
   'expo-haptics@57.0.1': patches/expo-haptics@57.0.1.patch
   'expo-media-library@57.0.3': patches/expo-media-library@57.0.3.patch
-  'expo-modules-core@3.0.30': patches/expo-modules-core@3.0.30.patch
+  'expo-modules-core@57.0.7': patches/expo-modules-core@57.0.7.patch
   'expo-notifications@57.0.7': patches/expo-notifications@57.0.7.patch
   'expo-updates@57.0.10': patches/expo-updates@57.0.10.patch
   'react-native-compressor@1.13.0': patches/react-native-compressor@1.13.0.patch
@@ -37,11 +37,11 @@ patchedDependencies:
   'react-native-svg@15.15.4': patches/react-native-svg@15.15.4.patch
   'react-native-view-shot@4.0.3': patches/react-native-view-shot@4.0.3.patch
   react-native-worklets@0.8.3: patches/react-native-worklets@0.8.3.patch
-  'react-native@0.81.5': patches/react-native@0.81.5.patch
+  'react-native@0.86.0': patches/react-native@0.86.0.patch
 minimumReleaseAgeExclude:
   - '@atproto/*'
-  - '@bsky.app/*'
   # todo: remove when old enough
+  - '@bsky.app/*'
   - '@oxlint-tsgolint/darwin-arm64@7.0.2001'
   - '@oxlint-tsgolint/darwin-x64@7.0.2001'
   - '@oxlint-tsgolint/linux-arm64@7.0.2001'
