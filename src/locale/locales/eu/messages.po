@@ -5,10 +5,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: eu_ES\n"
+"Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-24 15:42\n"
+"PO-Revision-Date: 2026-07-27 18:42\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -649,7 +649,7 @@ msgstr "{following} jarraitzen"
 #: src/components/interstitials/FeedTrendingTopics.tsx:204
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "{formattedPostCount} {postCount, plural, one {post} other {post}}"
 
 #: src/components/dms/components/GroupChatProfileCard.tsx:62
 #: src/components/dms/InitiateChatFlow.tsx:1158
@@ -1416,7 +1416,6 @@ msgstr "ane@adibidea.com"
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:26
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "Guztiak"
@@ -1437,9 +1436,6 @@ msgid "All friends followed!"
 msgstr "Lagun guztiak jarraituta!"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:255
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:94
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:96
 msgid "All languages"
 msgstr "Hizkuntza guztiak"
 
@@ -1450,11 +1446,6 @@ msgstr "Hizkuntza guztiak erakutsiko dira zure feedetan."
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:245
 msgid "All of these words"
 msgstr "Hitz hauek guztiak"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
-msgid "All posts"
-msgstr "Post guztiak"
 
 #: src/view/screens/Feeds.tsx:700
 msgid "All the feeds you've saved, right in one place."
@@ -1727,8 +1718,6 @@ msgid "Any date"
 msgstr "Edozein data"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:457
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:26
 msgid "Anyone"
 msgstr "Edonor"
 
@@ -1976,6 +1965,11 @@ msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Aurora"
 
+#. Filter search results by a specific post author
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
+msgid "Author"
+msgstr "Egilea"
+
 #: src/components/BotAccountAlert.tsx:32
 #: src/components/BotBadge.tsx:65
 msgid "Automated account"
@@ -2010,7 +2004,7 @@ msgstr "Eskuragarri"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:326
 msgid "Avatar creator"
-msgstr ""
+msgstr "Abatar sortzailea"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -5244,33 +5238,21 @@ msgstr "Eskuratu eguneraketa"
 msgid "File saved successfully!"
 msgstr "Fitxategia ongi gorde da!"
 
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:49
-msgid "Filter by author"
-msgstr "Iragazi egilearen arabera"
-
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:30
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:31
 msgid "Filter by author (currently: {currentLabel})"
 msgstr "Iragazi egilearen arabera (oraingoa: {currentLabel})"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:50
-msgid "Filter by media"
-msgstr "Iragazi multimediaren arabera"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:31
-msgid "Filter by media (currently: {currentLabel})"
-msgstr "Iragazi multimediaren arabera (oraingoa: {currentLabel})"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:69
 msgid "Filter from feeds"
 msgstr "Feedetatik iragazi"
 
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:92
-msgid "Filter search by language"
-msgstr "Iragazi bilaketa hizkuntzaren arabera"
-
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr "Iragazi bilaketa hizkuntzaren arabera (oraingoa: {currentLanguageLabel})"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:32
+msgid "Filter search by media (currently: {currentLabel})"
+msgstr "Iragazi bilaketa multimediaren arabera (oraingoa: {currentLabel})"
 
 #. placeholder {0}: lang.name
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:88
@@ -5622,9 +5604,7 @@ msgstr "Txat talde bat irudikatzen duten lau mezu-burbuila. Lehen mezua: \"Albis
 msgid "Free your feed"
 msgstr "Askatu zure feeda"
 
-#. Filter search results by a specific post author
 #. Filter who you receive notifications from
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:159
 msgid "From"
 msgstr "Nondik"
@@ -6531,12 +6511,10 @@ msgstr "Sarrera-ontzia hutsik!"
 #. Advanced search filter
 #. Advanced search filter
 #. Advanced search filter
-#. Include search results with or without replies
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:47
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:58
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:75
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:81
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
 msgid "Include"
 msgstr "Sartu"
 
@@ -6545,7 +6523,7 @@ msgstr "Sartu"
 msgid "Include or exclude matching posts (currently: {0})"
 msgstr "Sartu edo baztertu bat datozen postak (orain: {0})"
 
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:31
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:32
 msgid "Include posts and/or replies (currently: {currentLabel})"
 msgstr "Sartu postak edota erantzunak (oraingoa: {currentLabel})"
 
@@ -6558,10 +6536,6 @@ msgstr "Sartu data honetatik aurrera egindako postak"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:329
 msgid "Include posts made until this date"
 msgstr "Sartu data honetara arte egindako postak"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:50
-msgid "Include these results"
-msgstr "Sartu emaitza hauek"
 
 #: src/screens/Login/LoginForm.tsx:165
 msgid "Incorrect username or password"
@@ -6655,7 +6629,7 @@ msgstr "Gonbidatu {name} Bluesky-rekin bat egitera"
 msgid "Invite code"
 msgstr "Gonbidapen kodea"
 
-#: src/screens/Signup/state.ts:347
+#: src/screens/Signup/state.ts:363
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "Ez da gonbidapen kodea onartu. Egiaztatu behar bezala idatzi duzula eta saiatu berriro."
 
@@ -8058,6 +8032,11 @@ msgstr "Iragarkirik ez, jarraipen inbaditzailerik ez, parte-hartze tranparik ez.
 msgid "No app passwords yet"
 msgstr "Oraindik ez dago aplikazioen pasahitzik"
 
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:27
+msgid "No author filter"
+msgstr "Egilearen iragazkirik ez"
+
 #: src/screens/Settings/BetaFeaturesSettings.tsx:177
 msgid "No beta features at the moment."
 msgstr "Momentuz ez dago beta ezaugarririk."
@@ -8109,6 +8088,12 @@ msgstr "Ez dago GIFik erakusteko une honetan. Saiatu berriro une batean."
 msgid "No image"
 msgstr "Irudirik ez"
 
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:91
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:93
+msgid "No language filter"
+msgstr "Hizkuntza-iragazkirik ez"
+
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
 #: src/view/screens/Profile.tsx:539
@@ -8127,6 +8112,11 @@ msgstr "Ez dago zerrendarik"
 #: src/view/com/notifications/NotificationFeedItem.tsx:813
 msgid "No longer following {0}"
 msgstr "Jada ez da {0} jarraitzen"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
+msgid "No media filter"
+msgstr "Multimedia iragazkirik ez"
 
 #: src/view/screens/Profile.tsx:485
 msgid "No media yet"
@@ -8173,6 +8163,11 @@ msgstr "Egileak beste inork ezin du mezu hau aipatu."
 msgid "No one can send messages"
 msgstr "Inork ezin ditu mezuak bidali"
 
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:27
+msgid "No post filter"
+msgstr "Post-iragazkirik ez"
+
 #: src/screens/Notifications/ActivityList.tsx:43
 msgid "No posts here"
 msgstr "Ez dago postik hemen"
@@ -8190,10 +8185,6 @@ msgstr "Oraindik ez dago aipamenik"
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:31
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "Ez dago GIF berririk oraindik. Aukeratu bat hemen ikusteko."
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
-msgid "No replies"
-msgstr "Erantzunik ez"
 
 #: src/view/screens/Profile.tsx:470
 msgid "No replies yet"
@@ -8506,6 +8497,10 @@ msgstr "{0}-k jarraitzen duen jendea bakarrik sar daiteke."
 #: src/components/intents/GroupChatJoinDialog.tsx:306
 msgid "Only people the chat owner follows can join"
 msgstr "Txataren jabeak jarraitzen duen jendea bakarrik sar daiteke"
+
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
+msgid "Only posts"
+msgstr "Postak soilik"
 
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:23
 msgid "Only posts with media"
@@ -9110,11 +9105,11 @@ msgstr "Gehitu posteatzen ari zaren multimediari dagozkion eduki-abisuak."
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr "Mesedez, begiratu zure posta elektronikoaren sarrera-ontzia argibide gehiago lortzeko. Minutu bat edo bi behar izan daitezke iristeko."
 
-#: src/screens/Signup/state.ts:294
+#: src/screens/Signup/state.ts:313
 msgid "Please choose your handle."
 msgstr "Mesedez, zure handle-a aukeratu"
 
-#: src/screens/Signup/state.ts:286
+#: src/screens/Signup/state.ts:305
 #: src/screens/Signup/StepInfo/index.tsx:149
 msgid "Please choose your password."
 msgstr "Mesedez, zure pasahitza aukeratu"
@@ -9123,7 +9118,7 @@ msgstr "Mesedez, zure pasahitza aukeratu"
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr "Mesedez, egin klik bidali dizugun mezu elektronikoan dagoen estekan zure helbide elektroniko berria egiaztatzeko. Urrats garrantzitsua da hau Bluesky-ren funtzio guztiez gozatzen jarrai dezazun."
 
-#: src/screens/Signup/state.ts:309
+#: src/screens/Signup/state.ts:325
 msgid "Please complete the verification captcha."
 msgstr "Mesedez, bete egiaztapen-captcha."
 
@@ -9180,7 +9175,7 @@ msgstr "Mesedez, sartu jaso duzun kodea eta erabili nahi duzun pasahitz berria."
 msgid "Please enter the security code we sent to your previous email address."
 msgstr "Mesedez, sartu zure aurreko helbide elektronikora bidali dizugun segurtasun-kodea."
 
-#: src/screens/Signup/state.ts:270
+#: src/screens/Signup/state.ts:289
 #: src/screens/Signup/StepInfo/index.tsx:122
 msgid "Please enter your email."
 msgstr "Mesedez, sartu zure helbide elektronikoa."
@@ -9370,6 +9365,11 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Posta ainguratuta"
 
+#. Include search results with or without replies
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
+msgid "Post type"
+msgstr "Post mota"
+
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9383,10 +9383,6 @@ msgstr "Postaren aingura kendu da"
 #: src/view/screens/Profile.tsx:236
 msgid "Posts"
 msgstr "Postak"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
-msgid "Posts and replies"
-msgstr "Postak eta erantzunak"
 
 #: src/components/dialogs/MutedWords.tsx:123
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -14918,7 +14914,7 @@ msgstr "Zure helbide elektronikoa"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:82
-#: src/screens/Signup/state.ts:278
+#: src/screens/Signup/state.ts:297
 #: src/screens/Signup/StepInfo/index.tsx:129
 msgid "Your email appears to be invalid."
 msgstr "Zure helbide elektronikoa ez dirudi zuzena denik."

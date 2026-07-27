@@ -5,10 +5,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: ca_ES\n"
+"Language: ca\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-24 15:42\n"
+"PO-Revision-Date: 2026-07-27 18:42\n"
 "Last-Translator: \n"
 "Language-Team: Catalan\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -649,7 +649,7 @@ msgstr "{following} seguint"
 #: src/components/interstitials/FeedTrendingTopics.tsx:204
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "{formattedPostCount} {postCount, plural, one {publicació} other {publicacions}}"
 
 #: src/components/dms/components/GroupChatProfileCard.tsx:62
 #: src/components/dms/InitiateChatFlow.tsx:1158
@@ -1416,7 +1416,6 @@ msgstr "josepmaria@exemple.cat"
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:26
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "Totes"
@@ -1437,9 +1436,6 @@ msgid "All friends followed!"
 msgstr "Segueixes a tots els amics!"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:255
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:94
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:96
 msgid "All languages"
 msgstr "Tots els idiomes"
 
@@ -1450,11 +1446,6 @@ msgstr "Tots els idiomes es mostraran als teus canals."
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:245
 msgid "All of these words"
 msgstr "Totes aquestes paraules"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
-msgid "All posts"
-msgstr "Totes les publicacions"
 
 #: src/view/screens/Feeds.tsx:700
 msgid "All the feeds you've saved, right in one place."
@@ -1727,8 +1718,6 @@ msgid "Any date"
 msgstr "Qualsevol data"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:457
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:26
 msgid "Anyone"
 msgstr "Qualsevol"
 
@@ -1976,6 +1965,11 @@ msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Aurora"
 
+#. Filter search results by a specific post author
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
+msgid "Author"
+msgstr "Autor"
+
 #: src/components/BotAccountAlert.tsx:32
 #: src/components/BotBadge.tsx:65
 msgid "Automated account"
@@ -2010,7 +2004,7 @@ msgstr "Disponible"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:326
 msgid "Avatar creator"
-msgstr ""
+msgstr "Creador d'avatars"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -5244,33 +5238,21 @@ msgstr "Cerca actualitzacions"
 msgid "File saved successfully!"
 msgstr "Fitxer desat amb èxit"
 
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:49
-msgid "Filter by author"
-msgstr "Filtra per autor"
-
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:30
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:31
 msgid "Filter by author (currently: {currentLabel})"
 msgstr "Filtra per autor (actualment: {currentLabel})"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:50
-msgid "Filter by media"
-msgstr "Filtra per contingut multimèdia"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:31
-msgid "Filter by media (currently: {currentLabel})"
-msgstr "Filtra per mèdia (actualment: {currentLabel})"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:69
 msgid "Filter from feeds"
 msgstr "Filtra-ho dels canals"
 
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:92
-msgid "Filter search by language"
-msgstr "Filtra la cerca per idioma"
-
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr "Filtra la cerca per idioma (actualment: {currentLanguageLabel})"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:32
+msgid "Filter search by media (currently: {currentLabel})"
+msgstr "Filtra la cerca per multimèdia (actualment: {currentLabel})"
 
 #. placeholder {0}: lang.name
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:88
@@ -5622,9 +5604,7 @@ msgstr "Quatre bombolles de missatge que representen un xat de grup. Primer miss
 msgid "Free your feed"
 msgstr "Allibera el teu canal"
 
-#. Filter search results by a specific post author
 #. Filter who you receive notifications from
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:159
 msgid "From"
 msgstr "De"
@@ -6531,12 +6511,10 @@ msgstr "La safata està buida"
 #. Advanced search filter
 #. Advanced search filter
 #. Advanced search filter
-#. Include search results with or without replies
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:47
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:58
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:75
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:81
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
 msgid "Include"
 msgstr "Inclou"
 
@@ -6545,7 +6523,7 @@ msgstr "Inclou"
 msgid "Include or exclude matching posts (currently: {0})"
 msgstr "Inclou o exclou les publicacions coincidents (actualment: {0})"
 
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:31
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:32
 msgid "Include posts and/or replies (currently: {currentLabel})"
 msgstr "Inclou publicacions o respostes (actualment: {currentLabel})"
 
@@ -6558,10 +6536,6 @@ msgstr "Inclou les publicacions fetes des d'aquesta data"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:329
 msgid "Include posts made until this date"
 msgstr "Inclou publicacions fetes fins a aquesta data"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:50
-msgid "Include these results"
-msgstr "Inclou aquests resultats"
 
 #: src/screens/Login/LoginForm.tsx:165
 msgid "Incorrect username or password"
@@ -6655,7 +6629,7 @@ msgstr "Convida {name} a unir-se a Bluesky"
 msgid "Invite code"
 msgstr "Codi d'invitació"
 
-#: src/screens/Signup/state.ts:347
+#: src/screens/Signup/state.ts:363
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "Codi d'invitació rebutjat. Comprova que l'has entrat correctament i torna-ho a provar."
 
@@ -8058,6 +8032,11 @@ msgstr "Sense anuncis, sense seguiment invasiu, sense trampes d'interacció. Blu
 msgid "No app passwords yet"
 msgstr "Encara no hi ha contrasenyes d'aplicació"
 
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:27
+msgid "No author filter"
+msgstr "Sense filtre d'autor"
+
 #: src/screens/Settings/BetaFeaturesSettings.tsx:177
 msgid "No beta features at the moment."
 msgstr "De moment no hi ha funcions beta."
@@ -8109,6 +8088,12 @@ msgstr "No hi ha GIFs per mostrar ara, prova-ho més tard."
 msgid "No image"
 msgstr "Sense imatge"
 
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:91
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:93
+msgid "No language filter"
+msgstr "Sense filtre d'idioma"
+
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
 #: src/view/screens/Profile.tsx:539
@@ -8127,6 +8112,11 @@ msgstr "No hi ha llistes"
 #: src/view/com/notifications/NotificationFeedItem.tsx:813
 msgid "No longer following {0}"
 msgstr "Ja no segueixes a {0}"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
+msgid "No media filter"
+msgstr "Sense filtre multimèdia"
 
 #: src/view/screens/Profile.tsx:485
 msgid "No media yet"
@@ -8173,6 +8163,11 @@ msgstr "Ningú més que l'autor pot citar aquesta publicació."
 msgid "No one can send messages"
 msgstr "Ningú pot enviar missatges"
 
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:27
+msgid "No post filter"
+msgstr "Sense filtre de publicacions"
+
 #: src/screens/Notifications/ActivityList.tsx:43
 msgid "No posts here"
 msgstr "No hi ha publicacions aquí"
@@ -8190,10 +8185,6 @@ msgstr "Encara no té cap citació"
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:31
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "No hi ha GIFs recents encara. Tria'n un per veure'l aquí."
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
-msgid "No replies"
-msgstr "Sense respostes"
 
 #: src/view/screens/Profile.tsx:470
 msgid "No replies yet"
@@ -8506,6 +8497,10 @@ msgstr "Només s'hi pot unir gent a qui {0} segueix."
 #: src/components/intents/GroupChatJoinDialog.tsx:306
 msgid "Only people the chat owner follows can join"
 msgstr "Només les persones que segueix el propietari del xat poden unir-s'hi"
+
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
+msgid "Only posts"
+msgstr "Només publicacions"
 
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:23
 msgid "Only posts with media"
@@ -9110,11 +9105,11 @@ msgstr "Afegeix les etiquetes d'advertència de contingut aplicables als conting
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr "Consulta la safata d'entrada del teu correu electrònic per obtenir més instruccions. Pot trigar un minut o dos a arribar."
 
-#: src/screens/Signup/state.ts:294
+#: src/screens/Signup/state.ts:313
 msgid "Please choose your handle."
 msgstr "Tria el teu identificador."
 
-#: src/screens/Signup/state.ts:286
+#: src/screens/Signup/state.ts:305
 #: src/screens/Signup/StepInfo/index.tsx:149
 msgid "Please choose your password."
 msgstr "Tria la teva contrasenya."
@@ -9123,7 +9118,7 @@ msgstr "Tria la teva contrasenya."
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr "Fes clic a l'enllaç del correu que us acabem d'enviar per verificar la teva nova adreça electrònica. Aquest és un pas important per permetre't continuar gaudint de totes les funcions de Bluesky."
 
-#: src/screens/Signup/state.ts:309
+#: src/screens/Signup/state.ts:325
 msgid "Please complete the verification captcha."
 msgstr "Completa el captcha de verificació."
 
@@ -9180,7 +9175,7 @@ msgstr "Introdueix el codi que has rebut i la nova contrasenya que vols utilitza
 msgid "Please enter the security code we sent to your previous email address."
 msgstr "Introdueix el codi de seguretat que et vam enviar a la teva adreça de correu anterior."
 
-#: src/screens/Signup/state.ts:270
+#: src/screens/Signup/state.ts:289
 #: src/screens/Signup/StepInfo/index.tsx:122
 msgid "Please enter your email."
 msgstr "Introdueix el teu correu."
@@ -9370,6 +9365,11 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Publicació fixada"
 
+#. Include search results with or without replies
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
+msgid "Post type"
+msgstr "Tipus de publicació"
+
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9383,10 +9383,6 @@ msgstr "Publicació sense fixar"
 #: src/view/screens/Profile.tsx:236
 msgid "Posts"
 msgstr "Publicacions"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
-msgid "Posts and replies"
-msgstr "Publicacions i respostes"
 
 #: src/components/dialogs/MutedWords.tsx:123
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -14918,7 +14914,7 @@ msgstr "El teu correu"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:82
-#: src/screens/Signup/state.ts:278
+#: src/screens/Signup/state.ts:297
 #: src/screens/Signup/StepInfo/index.tsx:129
 msgid "Your email appears to be invalid."
 msgstr "El teu correu no sembla vàlid."

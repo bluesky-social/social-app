@@ -5,10 +5,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: hu_HU\n"
+"Language: hu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-24 15:42\n"
+"PO-Revision-Date: 2026-07-27 18:42\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -649,7 +649,7 @@ msgstr "{following} követett"
 #: src/components/interstitials/FeedTrendingTopics.tsx:204
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "{formattedPostCount} bejegyzés"
 
 #: src/components/dms/components/GroupChatProfileCard.tsx:62
 #: src/components/dms/InitiateChatFlow.tsx:1158
@@ -1416,7 +1416,6 @@ msgstr "janos@pelda.hu"
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:26
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "Mind"
@@ -1437,9 +1436,6 @@ msgid "All friends followed!"
 msgstr "Mostantól minden megtalált ismerősödet követed!"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:255
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:94
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:96
 msgid "All languages"
 msgstr "Minden nyelv"
 
@@ -1450,11 +1446,6 @@ msgstr "Jelenleg bármilyen nyelv megjelenhet a hírfolyamaidban."
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:245
 msgid "All of these words"
 msgstr "Kulcsszavak"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
-msgid "All posts"
-msgstr "Nincs szűrés"
 
 #: src/view/screens/Feeds.tsx:700
 msgid "All the feeds you've saved, right in one place."
@@ -1727,8 +1718,6 @@ msgid "Any date"
 msgstr "Bármikor"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:457
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:26
 msgid "Anyone"
 msgstr "Bárki"
 
@@ -1976,6 +1965,11 @@ msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Sarki Fény"
 
+#. Filter search results by a specific post author
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
+msgid "Author"
+msgstr "Szerző"
+
 #: src/components/BotAccountAlert.tsx:32
 #: src/components/BotBadge.tsx:65
 msgid "Automated account"
@@ -2010,7 +2004,7 @@ msgstr "Elérhető"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:326
 msgid "Avatar creator"
-msgstr ""
+msgstr "Profilkép létrehozása"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -3757,7 +3751,7 @@ msgstr "Születési dátum"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:28
 msgid "Dawn"
-msgstr "Alkonyat"
+msgstr "Hajnal"
 
 #: src/features/inviteFriends/components/ThemePicker.tsx:30
 msgid "Day"
@@ -5244,33 +5238,21 @@ msgstr "Frissítések keresése"
 msgid "File saved successfully!"
 msgstr "A fájl mentése sikeresen megtörtént"
 
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:49
-msgid "Filter by author"
-msgstr "Szűrés szerző szerint"
-
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:30
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:31
 msgid "Filter by author (currently: {currentLabel})"
 msgstr "Szűrés szerző szerint (jelenleg: {currentLabel})"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:50
-msgid "Filter by media"
-msgstr "Szűrés mellékletek alapján"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:31
-msgid "Filter by media (currently: {currentLabel})"
-msgstr "Szűrés mellékletek alapján (jelenleg: {currentLabel})"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:69
 msgid "Filter from feeds"
 msgstr "Kiszűrés a hírfolyamokból"
 
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:92
-msgid "Filter search by language"
-msgstr "Szűrés nyelv alapján"
-
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr "Szűrés nyelv alapján (Jelenlegi: {currentLanguageLabel})"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:32
+msgid "Filter search by media (currently: {currentLabel})"
+msgstr "Szűrés mellékletek alapján (jelenleg: {currentLabel})"
 
 #. placeholder {0}: lang.name
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:88
@@ -5622,9 +5604,7 @@ msgstr "Négy szövegbuborék, amelyek egy csoportbeszélgetést szimbolizálnak
 msgid "Free your feed"
 msgstr "Szabadítsd fel a hírfolyamodat!"
 
-#. Filter search results by a specific post author
 #. Filter who you receive notifications from
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:159
 msgid "From"
 msgstr "Szerző"
@@ -6531,12 +6511,10 @@ msgstr "Elfogytak a beérkező üzenetek."
 #. Advanced search filter
 #. Advanced search filter
 #. Advanced search filter
-#. Include search results with or without replies
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:47
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:58
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:75
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:81
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
 msgid "Include"
 msgstr "Megtartás"
 
@@ -6545,7 +6523,7 @@ msgstr "Megtartás"
 msgid "Include or exclude matching posts (currently: {0})"
 msgstr "Találatok megtartása vagy eldobása a végleges listából (jelenleg: {0})"
 
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:31
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:32
 msgid "Include posts and/or replies (currently: {currentLabel})"
 msgstr "Bejegyzések/válaszok megtartása (jelenleg: {currentLabel})"
 
@@ -6558,10 +6536,6 @@ msgstr "Az alábbi dátum után közzétett bejegyzések megtartása"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:329
 msgid "Include posts made until this date"
 msgstr "Az alábbi dátumig közzétett bejegyzések megtartása"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:50
-msgid "Include these results"
-msgstr "Szűrés bejegyzéstípus alapján"
 
 #: src/screens/Login/LoginForm.tsx:165
 msgid "Incorrect username or password"
@@ -6655,7 +6629,7 @@ msgstr "{name} meghívása a Blueskyra"
 msgid "Invite code"
 msgstr "Meghívókód"
 
-#: src/screens/Signup/state.ts:347
+#: src/screens/Signup/state.ts:363
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "Érvénytelen meghívókód. Ellenőrizd a helyességét, majd próbáld újra."
 
@@ -8058,6 +8032,11 @@ msgstr "Ilyen egy közösségi oldal hirdetések, magánéletsértő nyomonköve
 msgid "No app passwords yet"
 msgstr "Még nem hoztál létre alkalmazásjelszavakat"
 
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:27
+msgid "No author filter"
+msgstr "Nincs szerzőszűrés"
+
 #: src/screens/Settings/BetaFeaturesSettings.tsx:177
 msgid "No beta features at the moment."
 msgstr "Jelenleg nincsenek elérhető kísérletek."
@@ -8109,6 +8088,12 @@ msgstr "A GIF-ek megjelenítése meghiúsult. Próbáld újra később."
 msgid "No image"
 msgstr "Nincs előnézet"
 
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:91
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:93
+msgid "No language filter"
+msgstr "Nincs nyelvszűrés"
+
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
 #: src/view/screens/Profile.tsx:539
@@ -8127,6 +8112,11 @@ msgstr "Még nincsenek listák"
 #: src/view/com/notifications/NotificationFeedItem.tsx:813
 msgid "No longer following {0}"
 msgstr "Abbahagytad {0} követését"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
+msgid "No media filter"
+msgstr "Nincs mellékletszűrés"
 
 #: src/view/screens/Profile.tsx:485
 msgid "No media yet"
@@ -8173,6 +8163,11 @@ msgstr "Ezt a bejegyzést csak a szerző idézheti."
 msgid "No one can send messages"
 msgstr "Jelenleg senki sem küldhet üzeneteket"
 
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:27
+msgid "No post filter"
+msgstr "Nincs bejegyzéstípus-szűrés"
+
 #: src/screens/Notifications/ActivityList.tsx:43
 msgid "No posts here"
 msgstr "Még nincsenek bejegyzések"
@@ -8190,10 +8185,6 @@ msgstr "Még nincsenek idézések"
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:31
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "Még nincsenek előzmények. Ha kiválasztasz egy GIF-et, akkor a jövőben itt megtalálhatod."
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
-msgid "No replies"
-msgstr "Válaszok nélküli bejegyzések"
 
 #: src/view/screens/Profile.tsx:470
 msgid "No replies yet"
@@ -8507,6 +8498,10 @@ msgstr "Csak a(z) {0} által követett személyek csatlakozhatnak."
 msgid "Only people the chat owner follows can join"
 msgstr "Csak a csoportbeszélgetés tulajdonosa által követett személyek csatlakozhatnak"
 
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
+msgid "Only posts"
+msgstr "Csak bejegyzések megjelenítése"
+
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:23
 msgid "Only posts with media"
 msgstr "Csak a mellékletekkel rendelkező bejegyzések megjelenítése"
@@ -8517,7 +8512,7 @@ msgstr "Csak a videós mellékletekkel rendelkező bejegyzések megjelenítése"
 
 #: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:24
 msgid "Only replies"
-msgstr "Csak válaszok"
+msgstr "Csak válaszok megjelenítése"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:39
 msgid "Only WebVTT (.vtt) files are supported"
@@ -9110,11 +9105,11 @@ msgstr "Jelöld ki a releváns tartalomfigyelmeztetési kategóriákat."
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr "A következő lépéseket e-mailben fogod megkapni. Lehetséges, hogy csak egy–két perc múlva érkezik meg."
 
-#: src/screens/Signup/state.ts:294
+#: src/screens/Signup/state.ts:313
 msgid "Please choose your handle."
 msgstr "Válassz egy felhasználónevet."
 
-#: src/screens/Signup/state.ts:286
+#: src/screens/Signup/state.ts:305
 #: src/screens/Signup/StepInfo/index.tsx:149
 msgid "Please choose your password."
 msgstr "Válassz egy jelszót."
@@ -9123,7 +9118,7 @@ msgstr "Válassz egy jelszót."
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr "Kérjük, kattints a tőlünk kapott e-mailben található hivatkozásra a címed visszaigazolásához. Ez fontos, ha továbbra is használni kívánod a Bluesky összes funkcióját."
 
-#: src/screens/Signup/state.ts:309
+#: src/screens/Signup/state.ts:325
 msgid "Please complete the verification captcha."
 msgstr "Végezd el a captchás ellenőrzést."
 
@@ -9180,7 +9175,7 @@ msgstr "Add meg a megerősítőkódot és az új jelszót."
 msgid "Please enter the security code we sent to your previous email address."
 msgstr "Add meg a korábbi e-mail-címedre küldött kódot."
 
-#: src/screens/Signup/state.ts:270
+#: src/screens/Signup/state.ts:289
 #: src/screens/Signup/StepInfo/index.tsx:122
 msgid "Please enter your email."
 msgstr "Add meg az e-mail-címedet."
@@ -9370,6 +9365,11 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Bejegyzés kitűzve"
 
+#. Include search results with or without replies
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
+msgid "Post type"
+msgstr "Bejegyzéstípus"
+
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9383,10 +9383,6 @@ msgstr "Bejegyzés kitűzése felolva"
 #: src/view/screens/Profile.tsx:236
 msgid "Posts"
 msgstr "Bejegyzések"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
-msgid "Posts and replies"
-msgstr "Nincs szűrés"
 
 #: src/components/dialogs/MutedWords.tsx:123
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -14920,7 +14916,7 @@ msgstr "Saját e-mail-cím"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:82
-#: src/screens/Signup/state.ts:278
+#: src/screens/Signup/state.ts:297
 #: src/screens/Signup/StepInfo/index.tsx:129
 msgid "Your email appears to be invalid."
 msgstr "Az e-mail-címed érvénytelen."

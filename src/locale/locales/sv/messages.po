@@ -5,10 +5,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: sv_SE\n"
+"Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-24 16:27\n"
+"PO-Revision-Date: 2026-07-27 18:42\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1416,7 +1416,6 @@ msgstr "alice@exempel.com"
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:26
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "Alla"
@@ -1437,9 +1436,6 @@ msgid "All friends followed!"
 msgstr "Alla vänner följda!"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:255
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:94
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:96
 msgid "All languages"
 msgstr "Alla språk"
 
@@ -1450,11 +1446,6 @@ msgstr "Alla språk kommer visas i dina flöden."
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:245
 msgid "All of these words"
 msgstr "Alla dessa ord"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
-msgid "All posts"
-msgstr "Alla inlägg"
 
 #: src/view/screens/Feeds.tsx:700
 msgid "All the feeds you've saved, right in one place."
@@ -1727,8 +1718,6 @@ msgid "Any date"
 msgstr "Valfritt datum"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:457
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:26
 msgid "Anyone"
 msgstr "Alla"
 
@@ -1878,7 +1867,7 @@ msgstr "Arkiverat inlägg"
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:327
 msgid "Are you really, really sure?"
-msgstr "Är du verkligen, verkligen säker?"
+msgstr "Är du helt, helt säker?"
 
 #. placeholder {0}: link(languages[0])
 #. placeholder {1}: link(languages[1])
@@ -1975,6 +1964,11 @@ msgstr "Vanliga frågor om AT-protokollet"
 msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Norrsken"
+
+#. Filter search results by a specific post author
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
+msgid "Author"
+msgstr "Författare"
 
 #: src/components/BotAccountAlert.tsx:32
 #: src/components/BotBadge.tsx:65
@@ -5244,33 +5238,21 @@ msgstr "Sök efter uppdatering"
 msgid "File saved successfully!"
 msgstr "Filen sparades utan problem!"
 
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:49
-msgid "Filter by author"
-msgstr "Filtrera efter författare"
-
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:30
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:31
 msgid "Filter by author (currently: {currentLabel})"
 msgstr "Filtrera efter författare (nuvarande: {currentLabel})"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:50
-msgid "Filter by media"
-msgstr "Filtrera efter media"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:31
-msgid "Filter by media (currently: {currentLabel})"
-msgstr "Filtrera efter media (nuvarande: {currentLabel})"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:69
 msgid "Filter from feeds"
 msgstr "Filtrera i flöden"
 
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:92
-msgid "Filter search by language"
-msgstr "Filtrera sökning efter språk"
-
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr "Filtrera sökning efter språk (nuvarande: {currentLanguageLabel})"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:32
+msgid "Filter search by media (currently: {currentLabel})"
+msgstr "Filtrera sökning efter media (nuvarande: {currentLabel})"
 
 #. placeholder {0}: lang.name
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:88
@@ -5622,9 +5604,7 @@ msgstr "Fyra meddelandebubblor i en gruppchatt. I bilden är meddelandena på en
 msgid "Free your feed"
 msgstr "Befria ditt flöde"
 
-#. Filter search results by a specific post author
 #. Filter who you receive notifications from
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:159
 msgid "From"
 msgstr "Från"
@@ -6531,12 +6511,10 @@ msgstr "Inkorgen är tom!"
 #. Advanced search filter
 #. Advanced search filter
 #. Advanced search filter
-#. Include search results with or without replies
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:47
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:58
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:75
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:81
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
 msgid "Include"
 msgstr "Inkludera"
 
@@ -6545,7 +6523,7 @@ msgstr "Inkludera"
 msgid "Include or exclude matching posts (currently: {0})"
 msgstr "Inkludera eller exkludera matchande inlägg (nuvarande: {0})"
 
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:31
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:32
 msgid "Include posts and/or replies (currently: {currentLabel})"
 msgstr "Inkludera inlägg och/eller svar (nuvarande: {currentLabel})"
 
@@ -6558,10 +6536,6 @@ msgstr "Inkludera inlägg gjorda från och med detta datum"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:329
 msgid "Include posts made until this date"
 msgstr "Inkludera inlägg gjorda till och med detta datum"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:50
-msgid "Include these results"
-msgstr "Inkludera dessa resultat"
 
 #: src/screens/Login/LoginForm.tsx:165
 msgid "Incorrect username or password"
@@ -6655,7 +6629,7 @@ msgstr "Bjud in {name} att gå med i Bluesky"
 msgid "Invite code"
 msgstr "Inbjudningskod"
 
-#: src/screens/Signup/state.ts:347
+#: src/screens/Signup/state.ts:363
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "Inbjudningskoden godkändes inte. Kontrollera att du har angett den korrekt och försök igen."
 
@@ -7448,7 +7422,7 @@ msgstr "Kanske senare"
 
 #: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:24
 msgid "Me"
-msgstr "Mig"
+msgstr "Jag"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:375
 #: src/view/screens/Profile.tsx:238
@@ -8058,6 +8032,11 @@ msgstr "Inga annonser, ingen påträngande spårning, inga engagemangsfällor. B
 msgid "No app passwords yet"
 msgstr "Du har inga applösenord ännu"
 
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:27
+msgid "No author filter"
+msgstr "Inget författarfilter"
+
 #: src/screens/Settings/BetaFeaturesSettings.tsx:177
 msgid "No beta features at the moment."
 msgstr "Inga betafunktioner för tillfället."
@@ -8109,6 +8088,12 @@ msgstr "Det finns inga gif-bilder att visa just nu. Försök igen om en stund."
 msgid "No image"
 msgstr "Ingen bild"
 
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:91
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:93
+msgid "No language filter"
+msgstr "Inget språkfilter"
+
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
 #: src/view/screens/Profile.tsx:539
@@ -8127,6 +8112,11 @@ msgstr "Inga listor"
 #: src/view/com/notifications/NotificationFeedItem.tsx:813
 msgid "No longer following {0}"
 msgstr "{0} följs inte längre"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
+msgid "No media filter"
+msgstr "Inget mediafilter"
 
 #: src/view/screens/Profile.tsx:485
 msgid "No media yet"
@@ -8173,6 +8163,11 @@ msgstr "Ingen annan än författaren kan citera det här inlägget."
 msgid "No one can send messages"
 msgstr "Ingen kan skicka meddelanden"
 
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:27
+msgid "No post filter"
+msgstr "Inget inläggsfilter"
+
 #: src/screens/Notifications/ActivityList.tsx:43
 msgid "No posts here"
 msgstr "Här finns inga inlägg"
@@ -8190,10 +8185,6 @@ msgstr "Inga citat ännu"
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:31
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "Inga senaste gif-bilder ännu. Välj en för att se den här."
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
-msgid "No replies"
-msgstr "Inga svar"
 
 #: src/view/screens/Profile.tsx:470
 msgid "No replies yet"
@@ -8506,6 +8497,10 @@ msgstr "Endast personer som {0} följer kan gå med."
 #: src/components/intents/GroupChatJoinDialog.tsx:306
 msgid "Only people the chat owner follows can join"
 msgstr "Endast personer som chattägaren följer kan gå med"
+
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
+msgid "Only posts"
+msgstr "Endast inlägg"
 
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:23
 msgid "Only posts with media"
@@ -9110,11 +9105,11 @@ msgstr "Lägg till de varningsetiketter som är relevanta för den media du publ
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr "Titta i din e-postinkorg efter vidare instruktioner. Det kan ta en minut eller två innan de kommer."
 
-#: src/screens/Signup/state.ts:294
+#: src/screens/Signup/state.ts:313
 msgid "Please choose your handle."
 msgstr "Välj ditt användarnamn."
 
-#: src/screens/Signup/state.ts:286
+#: src/screens/Signup/state.ts:305
 #: src/screens/Signup/StepInfo/index.tsx:149
 msgid "Please choose your password."
 msgstr "Välj ditt lösenord."
@@ -9123,7 +9118,7 @@ msgstr "Välj ditt lösenord."
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr "Klicka på länken i e-postmeddelandet vi just skickade till dig för att bekräfta din nya e-postadress. Det här är ett viktigt steg för att du ska kunna fortsätta använda alla funktioner på Bluesky."
 
-#: src/screens/Signup/state.ts:309
+#: src/screens/Signup/state.ts:325
 msgid "Please complete the verification captcha."
 msgstr "Slutför captcha-verifieringen."
 
@@ -9180,7 +9175,7 @@ msgstr "Ange koden du fick och det nya lösenordet du vill använda."
 msgid "Please enter the security code we sent to your previous email address."
 msgstr "Ange den säkerhetskod vi skickade till din tidigare e-postadress."
 
-#: src/screens/Signup/state.ts:270
+#: src/screens/Signup/state.ts:289
 #: src/screens/Signup/StepInfo/index.tsx:122
 msgid "Please enter your email."
 msgstr "Ange din e-postadress."
@@ -9370,6 +9365,11 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Inlägget fästes"
 
+#. Include search results with or without replies
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
+msgid "Post type"
+msgstr "Inläggstyp"
+
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9383,10 +9383,6 @@ msgstr "Inlägget lossades"
 #: src/view/screens/Profile.tsx:236
 msgid "Posts"
 msgstr "Inlägg"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
-msgid "Posts and replies"
-msgstr "Inlägg och svar"
 
 #: src/components/dialogs/MutedWords.tsx:123
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -12912,7 +12908,7 @@ msgstr "Trädvy"
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:50
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:54
 msgid "Trending"
-msgstr "Trendar"
+msgstr "Trendande ämnen"
 
 #. Accessibility label for the icon-only pill that shows currently trending/featured GIFs in the GIF picker.
 #: src/features/gifPicker/components/GifCategoryPills.tsx:45
@@ -14918,7 +14914,7 @@ msgstr "Din e-post"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:82
-#: src/screens/Signup/state.ts:278
+#: src/screens/Signup/state.ts:297
 #: src/screens/Signup/StepInfo/index.tsx:129
 msgid "Your email appears to be invalid."
 msgstr "Din e-postadress verkar vara ogiltig."

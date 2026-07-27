@@ -5,10 +5,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: ro_RO\n"
+"Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-24 15:42\n"
+"PO-Revision-Date: 2026-07-24 19:58\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -649,7 +649,7 @@ msgstr "{following} urmăriți"
 #: src/components/interstitials/FeedTrendingTopics.tsx:204
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "{formattedPostCount} {postCount, plural, one {postare} few {postări} other {de postări}}"
 
 #: src/components/dms/components/GroupChatProfileCard.tsx:62
 #: src/components/dms/InitiateChatFlow.tsx:1158
@@ -1416,7 +1416,6 @@ msgstr "andreea@exemplu.ro"
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:26
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "Toate"
@@ -1437,9 +1436,6 @@ msgid "All friends followed!"
 msgstr "Toți prietenii au fost urmăriți!"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:255
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:94
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:96
 msgid "All languages"
 msgstr "Toate limbile"
 
@@ -1450,11 +1446,6 @@ msgstr "Toate limbile vor fi afișate în fluxurile dvs."
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:245
 msgid "All of these words"
 msgstr "Toate aceste cuvinte"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
-msgid "All posts"
-msgstr "Toate postările"
 
 #: src/view/screens/Feeds.tsx:700
 msgid "All the feeds you've saved, right in one place."
@@ -1727,8 +1718,6 @@ msgid "Any date"
 msgstr "Orice dată"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:457
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:26
 msgid "Anyone"
 msgstr "Oricine"
 
@@ -1976,6 +1965,11 @@ msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Aurora"
 
+#. Filter search results by a specific post author
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
+msgid "Author"
+msgstr "Autor"
+
 #: src/components/BotAccountAlert.tsx:32
 #: src/components/BotBadge.tsx:65
 msgid "Automated account"
@@ -2010,7 +2004,7 @@ msgstr "Disponibil"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:326
 msgid "Avatar creator"
-msgstr ""
+msgstr "Creator de avatar"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -4678,12 +4672,12 @@ msgstr "Toți"
 #: src/screens/Messages/Settings.tsx:93
 msgctxt "allow group chat invites from"
 msgid "Everyone"
-msgstr "Toți"
+msgstr "Toată lumea"
 
 #: src/screens/Messages/Settings.tsx:78
 msgctxt "allow messages from"
 msgid "Everyone"
-msgstr "Toți"
+msgstr "Toată lumea"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:298
 #: src/screens/Settings/NotificationSettings/index.tsx:387
@@ -5244,33 +5238,21 @@ msgstr "Preluare actualizare"
 msgid "File saved successfully!"
 msgstr "Fișier salvat cu succes!"
 
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:49
-msgid "Filter by author"
-msgstr "Filtrare după autor"
-
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:30
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:31
 msgid "Filter by author (currently: {currentLabel})"
 msgstr "Filtrare după autor (în prezent: {currentLabel})"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:50
-msgid "Filter by media"
-msgstr "Filtrare după conținutul media"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:31
-msgid "Filter by media (currently: {currentLabel})"
-msgstr "Filtrare după conținutul media (în prezent: {currentLabel})"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:69
 msgid "Filter from feeds"
 msgstr "Filtrare din fluxuri"
 
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:92
-msgid "Filter search by language"
-msgstr "Filtrați căutarea după limbă"
-
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr "Filtrați căutarea după limbă (în prezent: {currentLanguageLabel})"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:32
+msgid "Filter search by media (currently: {currentLabel})"
+msgstr "Filtrare căutare după conținutul media (în prezent: {currentLabel})"
 
 #. placeholder {0}: lang.name
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:88
@@ -5622,9 +5604,7 @@ msgstr "Patru bule de mesaj care reprezintă o conversație de grup. Primul mesa
 msgid "Free your feed"
 msgstr "Eliberați-vă fluxul"
 
-#. Filter search results by a specific post author
 #. Filter who you receive notifications from
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:159
 msgid "From"
 msgstr "De la"
@@ -6531,12 +6511,10 @@ msgstr "Inbox zero!"
 #. Advanced search filter
 #. Advanced search filter
 #. Advanced search filter
-#. Include search results with or without replies
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:47
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:58
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:75
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:81
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
 msgid "Include"
 msgstr "Includere"
 
@@ -6545,7 +6523,7 @@ msgstr "Includere"
 msgid "Include or exclude matching posts (currently: {0})"
 msgstr "Includeți sau excludeți postările care se potrivesc (în prezent: {0})"
 
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:31
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:32
 msgid "Include posts and/or replies (currently: {currentLabel})"
 msgstr "Includeți postări și/sau răspunsuri (în prezent: {currentLabel})"
 
@@ -6558,10 +6536,6 @@ msgstr "Includeți postările create începând cu această dată"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:329
 msgid "Include posts made until this date"
 msgstr "Includeți postările create până la această dată"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:50
-msgid "Include these results"
-msgstr "Include aceste rezultate"
 
 #: src/screens/Login/LoginForm.tsx:165
 msgid "Incorrect username or password"
@@ -6655,7 +6629,7 @@ msgstr "Invitați pe {name} să se alăture la Bluesky"
 msgid "Invite code"
 msgstr "Cod de invitație"
 
-#: src/screens/Signup/state.ts:347
+#: src/screens/Signup/state.ts:363
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "Codul de invitație nu este acceptat. Verificați dacă l-ați introdus corect și încercați din nou."
 
@@ -7687,7 +7661,7 @@ msgstr "Muzică"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:536
 msgid "Mute"
-msgstr "Dezactivare sunet"
+msgstr "Amuțire"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:184
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:97
@@ -8058,6 +8032,11 @@ msgstr "Fără reclame, fără urmărire invazivă, fără capcane de implicare.
 msgid "No app passwords yet"
 msgstr "Încă nu există parole de aplicație"
 
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:27
+msgid "No author filter"
+msgstr "Niciun filtru de autor"
+
 #: src/screens/Settings/BetaFeaturesSettings.tsx:177
 msgid "No beta features at the moment."
 msgstr "Nu există caracteristici beta în acest moment."
@@ -8109,6 +8088,12 @@ msgstr "Nu există GIF-uri de afișat momentan. Încercați din nou imediat."
 msgid "No image"
 msgstr "Nici o imagine"
 
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:91
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:93
+msgid "No language filter"
+msgstr "Niciun filtru de limbă"
+
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
 #: src/view/screens/Profile.tsx:539
@@ -8127,6 +8112,11 @@ msgstr "Nicio listă"
 #: src/view/com/notifications/NotificationFeedItem.tsx:813
 msgid "No longer following {0}"
 msgstr "Nu mai urmăriți pe {0}"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
+msgid "No media filter"
+msgstr "Niciun filtru de conținut media"
 
 #: src/view/screens/Profile.tsx:485
 msgid "No media yet"
@@ -8173,6 +8163,11 @@ msgstr "Nimeni în afară de autor nu poate cita această postare."
 msgid "No one can send messages"
 msgstr "Nimeni nu poate trimite mesaje"
 
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:27
+msgid "No post filter"
+msgstr "Niciun filtru de postare"
+
 #: src/screens/Notifications/ActivityList.tsx:43
 msgid "No posts here"
 msgstr "Nici o postare aici"
@@ -8190,10 +8185,6 @@ msgstr "Încă nu există citate"
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:31
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "Încă nu există GIF-uri recente. Alegeți unul pentru a-l vedea aici."
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
-msgid "No replies"
-msgstr "Fără răspunsuri"
 
 #: src/view/screens/Profile.tsx:470
 msgid "No replies yet"
@@ -8506,6 +8497,10 @@ msgstr "Doar persoanele urmărite de {0} se pot alătura."
 #: src/components/intents/GroupChatJoinDialog.tsx:306
 msgid "Only people the chat owner follows can join"
 msgstr "Doar persoanele pe care proprietarul conversației le urmărește se pot alătura"
+
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
+msgid "Only posts"
+msgstr "Doar postări"
 
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:23
 msgid "Only posts with media"
@@ -9110,11 +9105,11 @@ msgstr "Vă rugăm să adăugați orice etichete de avertizare de conținut care
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr "Vă rugăm să verificați inbox-ul de e-mail pentru instrucțiuni suplimentare. Este posibil să dureze un minut sau două până ajunge."
 
-#: src/screens/Signup/state.ts:294
+#: src/screens/Signup/state.ts:313
 msgid "Please choose your handle."
 msgstr "Vă rugăm să vă alegeți identificatorul."
 
-#: src/screens/Signup/state.ts:286
+#: src/screens/Signup/state.ts:305
 #: src/screens/Signup/StepInfo/index.tsx:149
 msgid "Please choose your password."
 msgstr "Vă rugăm să vă alegeți parola."
@@ -9123,7 +9118,7 @@ msgstr "Vă rugăm să vă alegeți parola."
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr "Vă rugăm faceți clic pe linkul din e-mailul pe care tocmai vi l-am trimis pentru a vă verifica noua adresă de e-mail. Acesta este un pas important pentru a vă permite să vă bucurați în continuare de toate caracteristicile Bluesky."
 
-#: src/screens/Signup/state.ts:309
+#: src/screens/Signup/state.ts:325
 msgid "Please complete the verification captcha."
 msgstr "Vă rugăm să completați verificarea captcha."
 
@@ -9180,7 +9175,7 @@ msgstr "Vă rugăm să introduceți codul primit și noua parolă pe care doriț
 msgid "Please enter the security code we sent to your previous email address."
 msgstr "Vă rugăm să introduceți codul de securitate pe care l-am trimis la adresa dvs. de e-mail anterioară."
 
-#: src/screens/Signup/state.ts:270
+#: src/screens/Signup/state.ts:289
 #: src/screens/Signup/StepInfo/index.tsx:122
 msgid "Please enter your email."
 msgstr "Vă rugăm să introduceți adresa dvs. de e-mail."
@@ -9370,6 +9365,11 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Postare fixată"
 
+#. Include search results with or without replies
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
+msgid "Post type"
+msgstr "Tip de postare"
+
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9383,10 +9383,6 @@ msgstr "Fixarea postării a fost anulată"
 #: src/view/screens/Profile.tsx:236
 msgid "Posts"
 msgstr "Postări"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
-msgid "Posts and replies"
-msgstr "Postări și răspunsuri"
 
 #: src/components/dialogs/MutedWords.tsx:123
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -14918,7 +14914,7 @@ msgstr "E-mailul dvs."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:82
-#: src/screens/Signup/state.ts:278
+#: src/screens/Signup/state.ts:297
 #: src/screens/Signup/StepInfo/index.tsx:129
 msgid "Your email appears to be invalid."
 msgstr "E-mailul dvs. pare a fi nevalid."
