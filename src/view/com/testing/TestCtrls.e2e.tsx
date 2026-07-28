@@ -16,9 +16,12 @@ LogBox.ignoreAllLogs()
  * of the tests dramatically.
  */
 
-const BTN = Platform.select({
-  ios: {height: 8, width: 8, backgroundColor: 'red'},
-  default: {height: 1, width: 1, backgroundColor: 'red'},
+const BTN = {height: 1, width: 1, backgroundColor: 'red'}
+// The iOS dev client reports these accessibility frames ~16pt right and 34pt
+// above their hit-test frames. At 80pt, either frame's center hits the control.
+const SIGN_IN_BTN = Platform.select({
+  ios: {height: 80, width: 80, backgroundColor: 'red'},
+  default: BTN,
 })
 
 /*
@@ -72,91 +75,93 @@ export function TestCtrls() {
     setShowLoggedOut(false)
   }
   return (
-    <View
-      style={{
-        position: 'absolute',
-        top: 100,
-        right: Platform.OS === 'ios' ? 24 : 0,
-        zIndex: 100,
-      }}>
+    <>
       {isProxyConfigured && (
-        <>
+        <View
+          style={[
+            {position: 'absolute', top: 100, zIndex: 100},
+            Platform.OS === 'ios' ? {left: 0} : {right: 0},
+          ]}>
           <Pressable
             testID="e2eSignInAlice"
             onPress={onPressSignInAlice}
             accessibilityRole="button"
-            style={BTN}
+            style={SIGN_IN_BTN}
           />
           <Pressable
             testID="e2eSignInBob"
             onPress={onPressSignInBob}
             accessibilityRole="button"
-            style={BTN}
+            style={SIGN_IN_BTN}
           />
-        </>
+        </View>
       )}
-      <Pressable
-        testID="e2eSignOut"
-        onPress={() => logoutEveryAccount('Settings')}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
-        testID="e2eGotoHome"
-        onPress={() => navigate('Home')}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
-        testID="e2eGotoSettings"
-        onPress={() => navigate('Settings')}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
-        testID="e2eGotoModeration"
-        onPress={() => navigate('Moderation')}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
-        testID="e2eGotoLists"
-        onPress={() => navigate('Lists')}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
-        testID="e2eGotoFeeds"
-        onPress={() => navigate('Feeds')}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
-        testID="storybookBtn"
-        onPress={() => navigate('Debug')}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
-        testID="e2eRefreshHome"
-        onPress={() => queryClient.invalidateQueries({queryKey: ['post-feed']})}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
-        testID="e2eOpenLoggedOutView"
-        onPress={() => setShowLoggedOut(true)}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
-        testID="e2eStartOnboarding"
-        onPress={() => {
-          onboardingDispatch({type: 'start'})
-        }}
-        accessibilityRole="button"
-        style={BTN}
-      />
-    </View>
+      <View style={{position: 'absolute', top: 102, right: 0, zIndex: 100}}>
+        <Pressable
+          testID="e2eSignOut"
+          onPress={() => logoutEveryAccount('Settings')}
+          accessibilityRole="button"
+          style={BTN}
+        />
+        <Pressable
+          testID="e2eGotoHome"
+          onPress={() => navigate('Home')}
+          accessibilityRole="button"
+          style={BTN}
+        />
+        <Pressable
+          testID="e2eGotoSettings"
+          onPress={() => navigate('Settings')}
+          accessibilityRole="button"
+          style={BTN}
+        />
+        <Pressable
+          testID="e2eGotoModeration"
+          onPress={() => navigate('Moderation')}
+          accessibilityRole="button"
+          style={BTN}
+        />
+        <Pressable
+          testID="e2eGotoLists"
+          onPress={() => navigate('Lists')}
+          accessibilityRole="button"
+          style={BTN}
+        />
+        <Pressable
+          testID="e2eGotoFeeds"
+          onPress={() => navigate('Feeds')}
+          accessibilityRole="button"
+          style={BTN}
+        />
+        <Pressable
+          testID="storybookBtn"
+          onPress={() => navigate('Debug')}
+          accessibilityRole="button"
+          style={BTN}
+        />
+        <Pressable
+          testID="e2eRefreshHome"
+          onPress={() =>
+            queryClient.invalidateQueries({queryKey: ['post-feed']})
+          }
+          accessibilityRole="button"
+          style={BTN}
+        />
+        <Pressable
+          testID="e2eOpenLoggedOutView"
+          onPress={() => setShowLoggedOut(true)}
+          accessibilityRole="button"
+          style={BTN}
+        />
+        <Pressable
+          testID="e2eStartOnboarding"
+          onPress={() => {
+            onboardingDispatch({type: 'start'})
+          }}
+          accessibilityRole="button"
+          style={BTN}
+        />
+      </View>
+    </>
   )
 }
