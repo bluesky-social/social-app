@@ -5,10 +5,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: zh_HK\n"
+"Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-24 15:42\n"
+"PO-Revision-Date: 2026-07-28 06:05\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -646,8 +646,8 @@ msgstr "{following} 個跟緊"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:204
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
+#: src/components/interstitials/FeedTrendingTopics.tsx:231
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:177
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr ""
 
@@ -748,8 +748,8 @@ msgstr "「{profileName}」喺 {timeAgoString}前使用新手包加入咗 Bluesk
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:189
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:123
+#: src/components/interstitials/FeedTrendingTopics.tsx:216
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:152
 msgid "{rank}."
 msgstr "{rank}."
 
@@ -1416,7 +1416,6 @@ msgstr "alice@example.com"
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:26
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "所有"
@@ -1437,9 +1436,6 @@ msgid "All friends followed!"
 msgstr "成功跟晒所有朋友！"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:255
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:94
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:96
 msgid "All languages"
 msgstr "所有語言"
 
@@ -1450,11 +1446,6 @@ msgstr "你嘅動態源將顯示所有語言嘅內容。"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:245
 msgid "All of these words"
 msgstr "所有包含呢啲字詞"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
-msgid "All posts"
-msgstr "所有帖文"
 
 #: src/view/screens/Feeds.tsx:700
 msgid "All the feeds you've saved, right in one place."
@@ -1520,7 +1511,7 @@ msgstr "允許取用你嘅私訊"
 msgid "Already have a code?"
 msgstr "有咗重設碼？"
 
-#: src/components/WelcomeModal.tsx:189
+#: src/components/WelcomeModal.tsx:187
 msgid "Already have an account?"
 msgstr "有咗帳號？"
 
@@ -1727,8 +1718,6 @@ msgid "Any date"
 msgstr "任何日期"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:457
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:26
 msgid "Anyone"
 msgstr "任何人"
 
@@ -1975,6 +1964,11 @@ msgstr "AT 協定 (AT Protocol) 常見問題"
 msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "極光"
+
+#. Filter search results by a specific post author
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
+msgid "Author"
+msgstr ""
 
 #: src/components/BotAccountAlert.tsx:32
 #: src/components/BotBadge.tsx:65
@@ -2372,20 +2366,20 @@ msgstr "最多可以同 50 位朋友一齊傾偈。"
 msgid "Browse custom feeds"
 msgstr "瀏覽自訂動態源"
 
-#: src/components/FeedInterstitials.tsx:535
+#: src/components/FeedInterstitials.tsx:540
 msgid "Browse more accounts"
 msgstr "瀏覽更多帳號"
 
-#: src/components/FeedInterstitials.tsx:665
+#: src/components/FeedInterstitials.tsx:670
 msgid "Browse more feeds on the Explore page"
 msgstr "喺探索頁面瀏覽更多動態源"
 
-#: src/components/FeedInterstitials.tsx:646
-#: src/components/FeedInterstitials.tsx:649
+#: src/components/FeedInterstitials.tsx:651
+#: src/components/FeedInterstitials.tsx:654
 msgid "Browse more suggestions"
 msgstr "瀏覽更多建議"
 
-#: src/components/FeedInterstitials.tsx:674
+#: src/components/FeedInterstitials.tsx:679
 msgid "Browse more suggestions on the Explore page"
 msgstr "喺探索頁面瀏覽更多建議"
 
@@ -2394,25 +2388,25 @@ msgstr "喺探索頁面瀏覽更多建議"
 msgid "Browse other feeds"
 msgstr "瀏覽其他動態源"
 
-#: src/components/TrendingTopics.tsx:58
+#: src/components/TrendingTopics.tsx:78
 msgid "Browse posts about {displayName}"
 msgstr "睇吓同 {displayName} 有挐掕嘅貼文"
 
-#: src/components/TrendingTopics.tsx:66
+#: src/components/TrendingTopics.tsx:86
 msgid "Browse posts tagged with {displayName}"
 msgstr "睇吓用咗 {displayName} 標籤嘅貼文"
 
-#: src/components/TrendingTopics.tsx:75
+#: src/components/TrendingTopics.tsx:95
 msgid "Browse starter pack {displayName}"
 msgstr "瀏覽新手包 {displayName}"
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:156
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:104
+#: src/components/interstitials/FeedTrendingTopics.tsx:188
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:133
 msgid "Browse topic {0}"
 msgstr "瀏覽話題 {0}"
 
-#: src/components/TrendingTopics.tsx:112
+#: src/components/TrendingTopics.tsx:132
 msgid "Browse topic {displayName}"
 msgstr "瀏覽話題 {displayName}"
 
@@ -3061,7 +3055,7 @@ msgstr "閂咗加入申請通知橫額"
 msgid "Close this dialog"
 msgstr "閂呢個對話框"
 
-#: src/components/WelcomeModal.tsx:214
+#: src/components/WelcomeModal.tsx:212
 msgid "Close welcome modal"
 msgstr "刪咗歡迎介面"
 
@@ -3606,8 +3600,8 @@ msgstr "建立新手包"
 msgid "Create a starter pack for me"
 msgstr "幫我建立一個新手包"
 
-#: src/components/WelcomeModal.tsx:155
-#: src/components/WelcomeModal.tsx:163
+#: src/components/WelcomeModal.tsx:153
+#: src/components/WelcomeModal.tsx:161
 #: src/screens/Messages/JoinRequest.tsx:310
 #: src/screens/Signup/index.tsx:139
 #: src/view/com/auth/SplashScreen.tsx:108
@@ -4087,11 +4081,11 @@ msgstr "唔啱心水"
 msgid "Dismiss live event banner"
 msgstr "閂咗直播活動橫幅"
 
-#: src/components/interstitials/TrendingVideos.tsx:90
+#: src/components/interstitials/TrendingVideos.tsx:89
 msgid "Dismiss this section"
 msgstr "忽略此部分"
 
-#: src/components/FeedInterstitials.tsx:349
+#: src/components/FeedInterstitials.tsx:351
 msgid "Dismiss this suggestion"
 msgstr "忽略此建議"
 
@@ -4624,7 +4618,7 @@ msgstr "輸入你嘅用戶名稱同密碼"
 msgid "Enters full screen"
 msgstr "進入全螢幕"
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:202
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:231
 msgid "Entertainment"
 msgstr "娛樂"
 
@@ -4783,8 +4777,8 @@ msgstr "打大赤肋嘅鹹溼相。"
 msgid "Explore"
 msgstr "探索"
 
-#: src/components/WelcomeModal.tsx:168
-#: src/components/WelcomeModal.tsx:177
+#: src/components/WelcomeModal.tsx:166
+#: src/components/WelcomeModal.tsx:175
 msgid "Explore the app"
 msgstr "探索應用程式"
 
@@ -5244,33 +5238,21 @@ msgstr "取得更新"
 msgid "File saved successfully!"
 msgstr "檔案儲存成功！"
 
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:49
-msgid "Filter by author"
-msgstr "按發布者篩選"
-
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:30
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:31
 msgid "Filter by author (currently: {currentLabel})"
 msgstr "按發布者篩選（目前：{currentLabel}）"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:50
-msgid "Filter by media"
-msgstr "按媒體篩選"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:31
-msgid "Filter by media (currently: {currentLabel})"
-msgstr "按媒體篩選（目前：{currentLabel}）"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:69
 msgid "Filter from feeds"
 msgstr "喺動態源度篩選"
 
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:92
-msgid "Filter search by language"
-msgstr "按語言篩選去搵"
-
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr "按語言篩選去搵（目前：{currentLanguageLabel}）"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:32
+msgid "Filter search by media (currently: {currentLabel})"
+msgstr ""
 
 #. placeholder {0}: lang.name
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:88
@@ -5622,9 +5604,7 @@ msgstr "四個代表羣組傾偈嘅訊息氣泡。第一條訊息：「收到風
 msgid "Free your feed"
 msgstr "光復 Timeline"
 
-#. Filter search results by a specific post author
 #. Filter who you receive notifications from
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:159
 msgid "From"
 msgstr "嚟自"
@@ -6109,8 +6089,8 @@ msgstr "哈佬！"
 msgid "Hi there!"
 msgstr "哈佬！"
 
-#: src/components/VideoPostCard.tsx:178
-#: src/components/VideoPostCard.tsx:462
+#: src/components/VideoPostCard.tsx:176
+#: src/components/VideoPostCard.tsx:459
 msgid "Hidden"
 msgstr "隱藏"
 
@@ -6122,8 +6102,9 @@ msgstr "俾你嘅內容審覈設定所隱藏。"
 msgid "Hidden list"
 msgstr "隱藏清單"
 
-#: src/components/interstitials/Trending.tsx:143
-#: src/components/interstitials/TrendingVideos.tsx:139
+#: src/components/interstitials/FeedTrendingTopics.tsx:156
+#: src/components/interstitials/Trending.tsx:144
+#: src/components/interstitials/TrendingVideos.tsx:138
 #: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:141
 #: src/components/moderation/PostHider.tsx:140
@@ -6132,7 +6113,8 @@ msgstr "隱藏清單"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:23
 #: src/lib/moderation/useLabelBehaviorDescription.ts:28
 #: src/lib/moderation/useLabelBehaviorDescription.ts:33
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:137
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:90
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:139
 msgid "Hide"
 msgstr "隱藏"
 
@@ -6192,16 +6174,18 @@ msgstr "係咪要隱藏呢個回覆？"
 msgid "Hide translation"
 msgstr "隱藏翻譯"
 
-#: src/components/interstitials/Trending.tsx:125
+#: src/components/interstitials/Trending.tsx:126
 msgid "Hide trending topics"
 msgstr "隱藏時興話題"
 
-#: src/components/interstitials/Trending.tsx:141
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:135
+#: src/components/interstitials/FeedTrendingTopics.tsx:154
+#: src/components/interstitials/Trending.tsx:142
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:88
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:137
 msgid "Hide trending topics?"
 msgstr "係咪要隱藏時興話題？"
 
-#: src/components/interstitials/TrendingVideos.tsx:137
+#: src/components/interstitials/TrendingVideos.tsx:136
 msgid "Hide trending videos?"
 msgstr "係咪要隱藏時興影片？"
 
@@ -6531,12 +6515,10 @@ msgstr "收件箱乾淨晒！"
 #. Advanced search filter
 #. Advanced search filter
 #. Advanced search filter
-#. Include search results with or without replies
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:47
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:58
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:75
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:81
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
 msgid "Include"
 msgstr "包含"
 
@@ -6545,7 +6527,7 @@ msgstr "包含"
 msgid "Include or exclude matching posts (currently: {0})"
 msgstr "包含或排除符合嘅帖文（目前：{0}）"
 
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:31
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:32
 msgid "Include posts and/or replies (currently: {currentLabel})"
 msgstr "包含帖文同／或回覆（目前：{currentLabel}）"
 
@@ -6558,10 +6540,6 @@ msgstr "包含此日期之後發布嘅帖文"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:329
 msgid "Include posts made until this date"
 msgstr "包含此日期之前發佈嘅帖文"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:50
-msgid "Include these results"
-msgstr "包含呢啲結果"
 
 #: src/screens/Login/LoginForm.tsx:165
 msgid "Incorrect username or password"
@@ -6655,7 +6633,7 @@ msgstr "邀請 {name} 加入 Bluesky"
 msgid "Invite code"
 msgstr "邀請碼"
 
-#: src/screens/Signup/state.ts:347
+#: src/screens/Signup/state.ts:363
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "邀請碼無效。請檢查你輸入嘅驗證碼啱定唔啱，跟住試多次。"
 
@@ -8018,7 +7996,7 @@ msgid "Newest replies first"
 msgstr "最新回覆行先"
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:204
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:233
 msgid "News"
 msgstr "新聞"
 
@@ -8057,6 +8035,11 @@ msgstr "冇廣告，冇侵入式追踪，當然亦冇成癮性設計。 Bluesky 
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
 msgstr "而家仲未有 App 專用密碼"
+
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:27
+msgid "No author filter"
+msgstr ""
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:177
 msgid "No beta features at the moment."
@@ -8109,6 +8092,12 @@ msgstr "暫時未有任何 GIF 可以顯示。請稍後再試。"
 msgid "No image"
 msgstr "冇圖片"
 
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:91
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:93
+msgid "No language filter"
+msgstr ""
+
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
 #: src/view/screens/Profile.tsx:539
@@ -8127,6 +8116,11 @@ msgstr "仲未有清單"
 #: src/view/com/notifications/NotificationFeedItem.tsx:813
 msgid "No longer following {0}"
 msgstr "已唔再跟随 {0}"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
+msgid "No media filter"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:485
 msgid "No media yet"
@@ -8173,6 +8167,11 @@ msgstr "凈係得作者可以引用呢篇帖文。"
 msgid "No one can send messages"
 msgstr "冇人可以傳送訊息"
 
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:27
+msgid "No post filter"
+msgstr ""
+
 #: src/screens/Notifications/ActivityList.tsx:43
 msgid "No posts here"
 msgstr "呢度未有任何帖文"
@@ -8190,10 +8189,6 @@ msgstr "而家仲未有人引用"
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:31
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "未有近排使用嘅 GIF，試住帖文加入 GIF 再返嚟睇吓啦。"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
-msgid "No replies"
-msgstr "冇回覆"
 
 #: src/view/screens/Profile.tsx:470
 msgid "No replies yet"
@@ -8506,6 +8501,10 @@ msgstr "只有 {0} 跟嘅人先可以加入。"
 #: src/components/intents/GroupChatJoinDialog.tsx:306
 msgid "Only people the chat owner follows can join"
 msgstr "只有羣組擁有者跟嘅人先可以加入"
+
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
+msgid "Only posts"
+msgstr ""
 
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:23
 msgid "Only posts with media"
@@ -9110,11 +9109,11 @@ msgstr "請喺你發布媒體內容度加入適當嘅內容警告標記。"
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr "請去到你嘅電郵信箱以取得後續指示。電郵可能需要一兩分鐘先會送達。"
 
-#: src/screens/Signup/state.ts:294
+#: src/screens/Signup/state.ts:313
 msgid "Please choose your handle."
 msgstr "請設定你嘅帳號代碼。"
 
-#: src/screens/Signup/state.ts:286
+#: src/screens/Signup/state.ts:305
 #: src/screens/Signup/StepInfo/index.tsx:149
 msgid "Please choose your password."
 msgstr "請設定你嘅密碼。"
@@ -9123,7 +9122,7 @@ msgstr "請設定你嘅密碼。"
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr "請打開我哋正話送咗去你新電郵入邊嗰條連結嚟驗證新電郵。呢個步驟關乎你可以繼續享用所有 Bluesky 嘅功能。"
 
-#: src/screens/Signup/state.ts:309
+#: src/screens/Signup/state.ts:325
 msgid "Please complete the verification captcha."
 msgstr "請完成 Captcha 驗證（人機驗證）。"
 
@@ -9180,7 +9179,7 @@ msgstr "請輸入你收到嘅代碼同埋你想用嘅新密碼。"
 msgid "Please enter the security code we sent to your previous email address."
 msgstr "請輸入我哋正話送咗去你電郵地址嗰個保安編碼。"
 
-#: src/screens/Signup/state.ts:270
+#: src/screens/Signup/state.ts:289
 #: src/screens/Signup/StepInfo/index.tsx:122
 msgid "Please enter your email."
 msgstr "請輸入你嘅電郵地址。"
@@ -9262,7 +9261,7 @@ msgid "Please write your message below:"
 msgstr "請喺下低寫低你嘅訊息："
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:198
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:227
 msgid "Politics"
 msgstr "政治"
 
@@ -9370,6 +9369,11 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "已固定帖文"
 
+#. Include search results with or without replies
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
+msgid "Post type"
+msgstr ""
+
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9383,10 +9387,6 @@ msgstr "已唔再固定帖文"
 #: src/view/screens/Profile.tsx:236
 msgid "Posts"
 msgstr "帖文"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
-msgid "Posts and replies"
-msgstr "帖文同回覆"
 
 #: src/components/dialogs/MutedWords.tsx:123
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -9690,11 +9690,11 @@ msgstr "睇吓 Bluesky 私隱政策"
 msgid "Read the Bluesky Terms of Service"
 msgstr "睇吓 Bluesky 服務條款"
 
-#: src/components/WelcomeModal.tsx:146
+#: src/components/WelcomeModal.tsx:144
 msgid "Real conversations."
 msgstr "眞實對話。"
 
-#: src/components/WelcomeModal.tsx:144
+#: src/components/WelcomeModal.tsx:142
 msgid "Real people."
 msgstr "眞實用戶。"
 
@@ -10707,17 +10707,17 @@ msgstr "睇吓呢位用戶包含 #{tag} 嘅帖文"
 msgid "See jobs at Bluesky"
 msgstr "喺 Bluesky 度搵工"
 
-#: src/components/FeedInterstitials.tsx:491
-#: src/components/FeedInterstitials.tsx:549
-#: src/components/interstitials/FeedTrendingTopics.tsx:96
+#: src/components/FeedInterstitials.tsx:495
+#: src/components/FeedInterstitials.tsx:554
+#: src/components/interstitials/FeedTrendingTopics.tsx:106
 msgid "See more"
 msgstr "睇多啲"
 
-#: src/components/FeedInterstitials.tsx:472
+#: src/components/FeedInterstitials.tsx:475
 msgid "See more suggested profiles"
 msgstr "睇多啲建議個人檔案"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:82
+#: src/components/interstitials/FeedTrendingTopics.tsx:92
 msgid "See more trending topics"
 msgstr ""
 
@@ -11355,8 +11355,8 @@ msgstr "顯示內容"
 
 #: src/components/dialogs/Signin.tsx:98
 #: src/components/dialogs/Signin.tsx:100
-#: src/components/WelcomeModal.tsx:194
-#: src/components/WelcomeModal.tsx:206
+#: src/components/WelcomeModal.tsx:193
+#: src/components/WelcomeModal.tsx:204
 #: src/screens/Hashtag.tsx:231
 #: src/screens/Login/index.tsx:143
 #: src/screens/Login/index.tsx:165
@@ -11506,7 +11506,7 @@ msgstr "暫停提醒"
 msgid "So many thoughts, you should post one"
 msgstr "咁多諗頭，不如出 Post 講吓"
 
-#: src/components/WelcomeModal.tsx:148
+#: src/components/WelcomeModal.tsx:146
 msgid "Social media you control."
 msgstr "由你話事嘅社交平臺。"
 
@@ -11527,7 +11527,7 @@ msgstr "清單度有部分內容審核服務唔再用到。"
 msgid "Some of your verifications are invalid."
 msgstr "你目前被授予嘅部分驗證無效。"
 
-#: src/components/FeedInterstitials.tsx:628
+#: src/components/FeedInterstitials.tsx:633
 msgid "Some other feeds you might like"
 msgstr "其他可能都會啱你心水嘅動態源"
 
@@ -11657,7 +11657,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr "垃圾訊息或其他虛假欺騙行爲"
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:225
 msgid "Sports"
 msgstr "運動"
 
@@ -11870,7 +11870,7 @@ msgid "Suggested accounts"
 msgstr "建議帳號"
 
 #. Accounts suggested to the user for them to follow
-#: src/components/FeedInterstitials.tsx:469
+#: src/components/FeedInterstitials.tsx:472
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 msgid "Suggested for you"
 msgstr "估你心水"
@@ -12297,7 +12297,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "攞緊通知嗰陣出咗問題，撳呢度試多次。"
 
 #: src/screens/Search/Explore.tsx:1015
-#: src/view/com/posts/PostFeed.tsx:822
+#: src/view/com/posts/PostFeed.tsx:826
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "攞緊帖文嗰陣出咗問題，撳呢度試多次。"
 
@@ -12908,8 +12908,8 @@ msgstr "你嘅裝置唔支援將原文翻譯成目標語言。"
 msgid "Tree view"
 msgstr "樹狀介面"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:79
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:50
+#: src/components/interstitials/FeedTrendingTopics.tsx:88
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:59
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:54
 msgid "Trending"
 msgstr "時興話題"
@@ -12919,13 +12919,15 @@ msgstr "時興話題"
 msgid "Trending GIFs"
 msgstr "熱門 GIF"
 
+#: src/components/interstitials/FeedTrendingTopics.tsx:115
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:62
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:61
 msgid "Trending options"
 msgstr "時興選項"
 
-#: src/components/interstitials/TrendingVideos.tsx:87
-msgid "Trending Videos"
-msgstr "時興影片"
+#: src/components/interstitials/TrendingVideos.tsx:86
+msgid "Trending videos"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:103
 msgid "Trolling"
@@ -13642,7 +13644,7 @@ msgid "Video Feed"
 msgstr "影片動態源"
 
 #. placeholder {0}: author.handle
-#: src/components/VideoPostCard.tsx:122
+#: src/components/VideoPostCard.tsx:121
 msgid "Video from {0}: {text}"
 msgstr "影片嚟自 {0}：{text}"
 
@@ -13652,7 +13654,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr "影片嚟自{0}。撳一吓去播放或暫停影片"
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:200
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:229
 msgid "Video Games"
 msgstr "電子遊戲"
 
@@ -13769,14 +13771,14 @@ msgstr "睇吓此羣組傾偈嘅收到嘅加入申請"
 msgid "View information about these labels"
 msgstr "睇吓同呢啲標記有挐掕嘅詳細資訊"
 
-#: src/components/interstitials/TrendingVideos.tsx:200
-#: src/components/interstitials/TrendingVideos.tsx:222
+#: src/components/interstitials/TrendingVideos.tsx:199
+#: src/components/interstitials/TrendingVideos.tsx:221
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:191
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:210
 msgid "View more"
 msgstr "睇晒佢哋"
 
-#: src/components/interstitials/TrendingVideos.tsx:228
+#: src/components/interstitials/TrendingVideos.tsx:227
 msgid "View more trending videos"
 msgstr "睇多啲時興影片"
 
@@ -13825,7 +13827,7 @@ msgstr "睇吓呢個用戶嘅認證"
 msgid "View users who like this feed"
 msgstr "睇吓邊啲人讚過呢個動態源"
 
-#: src/components/VideoPostCard.tsx:401
+#: src/components/VideoPostCard.tsx:398
 msgid "View video"
 msgstr "睇片"
 
@@ -13859,7 +13861,7 @@ msgstr "睇吓你嘅認證"
 msgid "Views full image"
 msgstr "睇吓完整圖片"
 
-#: src/components/VideoPostCard.tsx:121
+#: src/components/VideoPostCard.tsx:120
 msgid "Views video in immersive mode"
 msgstr "進入沉浸模式睇片"
 
@@ -14460,9 +14462,11 @@ msgstr "你仍然可以睇到傾偈記錄，但係傳送唔到新訊息。"
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "你最多可以揀 {MAX_GALLERY_IMAGES, plural, other {# 張圖片}}。"
 
-#: src/components/interstitials/Trending.tsx:142
-#: src/components/interstitials/TrendingVideos.tsx:138
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:136
+#: src/components/interstitials/FeedTrendingTopics.tsx:155
+#: src/components/interstitials/Trending.tsx:143
+#: src/components/interstitials/TrendingVideos.tsx:137
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:89
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:138
 msgid "You can update this later from your settings."
 msgstr "你可以遲啲喺設定度改返。"
 
@@ -14918,7 +14922,7 @@ msgstr "你嘅電郵"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:82
-#: src/screens/Signup/state.ts:278
+#: src/screens/Signup/state.ts:297
 #: src/screens/Signup/StepInfo/index.tsx:129
 msgid "Your email appears to be invalid."
 msgstr "你嘅電郵似乎無效。"

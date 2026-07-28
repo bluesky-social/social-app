@@ -5,10 +5,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: pt_BR\n"
+"Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-24 15:42\n"
+"PO-Revision-Date: 2026-07-28 06:05\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -646,8 +646,8 @@ msgstr "{following} seguindo"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:204
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:148
+#: src/components/interstitials/FeedTrendingTopics.tsx:231
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:177
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr ""
 
@@ -748,8 +748,8 @@ msgstr "{profileName} se juntou ao Bluesky através de um pacote inicial {timeAg
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:189
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:123
+#: src/components/interstitials/FeedTrendingTopics.tsx:216
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:152
 msgid "{rank}."
 msgstr "{rank}."
 
@@ -1416,7 +1416,6 @@ msgstr "alice@exemplo.com"
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:201
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:26
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
 msgstr "Tudo"
@@ -1437,9 +1436,6 @@ msgid "All friends followed!"
 msgstr "Todos os amigos foram seguidos!"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:255
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:94
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:96
 msgid "All languages"
 msgstr "Todos os idiomas"
 
@@ -1450,11 +1446,6 @@ msgstr "Todos os idiomas serão mostrados em seus feeds."
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:245
 msgid "All of these words"
 msgstr "Todas estas palavras"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
-msgid "All posts"
-msgstr "Todas as postagens"
 
 #: src/view/screens/Feeds.tsx:700
 msgid "All the feeds you've saved, right in one place."
@@ -1520,7 +1511,7 @@ msgstr "Permite acesso a mensagens diretas"
 msgid "Already have a code?"
 msgstr "Já tem um código?"
 
-#: src/components/WelcomeModal.tsx:189
+#: src/components/WelcomeModal.tsx:187
 msgid "Already have an account?"
 msgstr "Já tem uma conta?"
 
@@ -1727,8 +1718,6 @@ msgid "Any date"
 msgstr "Qualquer data"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:457
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:26
 msgid "Anyone"
 msgstr "Todos"
 
@@ -1975,6 +1964,11 @@ msgstr "FAQ do Protocolo AT"
 msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr "Aurora"
+
+#. Filter search results by a specific post author
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
+msgid "Author"
+msgstr ""
 
 #: src/components/BotAccountAlert.tsx:32
 #: src/components/BotBadge.tsx:65
@@ -2372,20 +2366,20 @@ msgstr "Reúna até 50 amigos em uma só conversa."
 msgid "Browse custom feeds"
 msgstr "Navegar por feeds personalizados"
 
-#: src/components/FeedInterstitials.tsx:535
+#: src/components/FeedInterstitials.tsx:540
 msgid "Browse more accounts"
 msgstr "Pesquisar mais contas"
 
-#: src/components/FeedInterstitials.tsx:665
+#: src/components/FeedInterstitials.tsx:670
 msgid "Browse more feeds on the Explore page"
 msgstr "Navegue por mais feeds na página Explorar"
 
-#: src/components/FeedInterstitials.tsx:646
-#: src/components/FeedInterstitials.tsx:649
+#: src/components/FeedInterstitials.tsx:651
+#: src/components/FeedInterstitials.tsx:654
 msgid "Browse more suggestions"
 msgstr "Navegar por mais sugestões"
 
-#: src/components/FeedInterstitials.tsx:674
+#: src/components/FeedInterstitials.tsx:679
 msgid "Browse more suggestions on the Explore page"
 msgstr "Navegue por mais sugestões na página Explorar"
 
@@ -2394,25 +2388,25 @@ msgstr "Navegue por mais sugestões na página Explorar"
 msgid "Browse other feeds"
 msgstr "Navegar por mais feeds"
 
-#: src/components/TrendingTopics.tsx:58
+#: src/components/TrendingTopics.tsx:78
 msgid "Browse posts about {displayName}"
 msgstr "Navegar por mais postagens sobre {displayName}"
 
-#: src/components/TrendingTopics.tsx:66
+#: src/components/TrendingTopics.tsx:86
 msgid "Browse posts tagged with {displayName}"
 msgstr "Navegar por mais postagens marcadas com {displayName}"
 
-#: src/components/TrendingTopics.tsx:75
+#: src/components/TrendingTopics.tsx:95
 msgid "Browse starter pack {displayName}"
 msgstr "Buscar pacote inicial {displayName}"
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:156
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:104
+#: src/components/interstitials/FeedTrendingTopics.tsx:188
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:133
 msgid "Browse topic {0}"
 msgstr "Navegar pelo assunto {0}"
 
-#: src/components/TrendingTopics.tsx:112
+#: src/components/TrendingTopics.tsx:132
 msgid "Browse topic {displayName}"
 msgstr "Navegar tópico {displayName}"
 
@@ -3061,7 +3055,7 @@ msgstr "Fechar o banner de solicitações recebidas"
 msgid "Close this dialog"
 msgstr "Fechar esta janela"
 
-#: src/components/WelcomeModal.tsx:214
+#: src/components/WelcomeModal.tsx:212
 msgid "Close welcome modal"
 msgstr "Fechar janela de boas-vindas"
 
@@ -3606,8 +3600,8 @@ msgstr "Criar um pacote inicial"
 msgid "Create a starter pack for me"
 msgstr "Crie um pacote inicial para mim"
 
-#: src/components/WelcomeModal.tsx:155
-#: src/components/WelcomeModal.tsx:163
+#: src/components/WelcomeModal.tsx:153
+#: src/components/WelcomeModal.tsx:161
 #: src/screens/Messages/JoinRequest.tsx:310
 #: src/screens/Signup/index.tsx:139
 #: src/view/com/auth/SplashScreen.tsx:108
@@ -4087,11 +4081,11 @@ msgstr "Dispensar interesses"
 msgid "Dismiss live event banner"
 msgstr "Dispensar banner de evento ao vivo"
 
-#: src/components/interstitials/TrendingVideos.tsx:90
+#: src/components/interstitials/TrendingVideos.tsx:89
 msgid "Dismiss this section"
 msgstr "Dispensar esta seção"
 
-#: src/components/FeedInterstitials.tsx:349
+#: src/components/FeedInterstitials.tsx:351
 msgid "Dismiss this suggestion"
 msgstr "Dispensar esta sugestão"
 
@@ -4624,7 +4618,7 @@ msgstr "Insira seu nome de usuário e senha"
 msgid "Enters full screen"
 msgstr "Entra em tela cheia"
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:202
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:231
 msgid "Entertainment"
 msgstr "Entretenimento"
 
@@ -4783,8 +4777,8 @@ msgstr "Imagens sexualmente explícitas."
 msgid "Explore"
 msgstr "Explorar"
 
-#: src/components/WelcomeModal.tsx:168
-#: src/components/WelcomeModal.tsx:177
+#: src/components/WelcomeModal.tsx:166
+#: src/components/WelcomeModal.tsx:175
 msgid "Explore the app"
 msgstr "Explorar o aplicativo"
 
@@ -5244,33 +5238,21 @@ msgstr "Buscar atualização"
 msgid "File saved successfully!"
 msgstr "Arquivo salvo com sucesso!"
 
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:49
-msgid "Filter by author"
-msgstr "Filtrar por autor"
-
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:30
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:31
 msgid "Filter by author (currently: {currentLabel})"
 msgstr "Filtrar por autor (atual: {currentLabel})"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:50
-msgid "Filter by media"
-msgstr "Filtrar por mídia"
-
-#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:31
-msgid "Filter by media (currently: {currentLabel})"
-msgstr "Filtrar por mídia (atual: {currentLabel})"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:69
 msgid "Filter from feeds"
 msgstr "Filtrar dos feeds"
 
-#: src/screens/Search/components/SearchLanguageDropdown.tsx:92
-msgid "Filter search by language"
-msgstr "Filtrar pesquisa por idioma"
-
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr "Filtrar pesquisa por idioma (atual: {currentLanguageLabel})"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:32
+msgid "Filter search by media (currently: {currentLabel})"
+msgstr ""
 
 #. placeholder {0}: lang.name
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:88
@@ -5622,9 +5604,7 @@ msgstr "Quatro balões de mensagem representando uma conversa em grupo. Primeira
 msgid "Free your feed"
 msgstr "Libere o seu feed"
 
-#. Filter search results by a specific post author
 #. Filter who you receive notifications from
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:159
 msgid "From"
 msgstr "De"
@@ -6109,8 +6089,8 @@ msgstr "Olá!"
 msgid "Hi there!"
 msgstr "Olá!"
 
-#: src/components/VideoPostCard.tsx:178
-#: src/components/VideoPostCard.tsx:462
+#: src/components/VideoPostCard.tsx:176
+#: src/components/VideoPostCard.tsx:459
 msgid "Hidden"
 msgstr "Oculto"
 
@@ -6122,8 +6102,9 @@ msgstr "Oculto por suas opções de moderação."
 msgid "Hidden list"
 msgstr "Lista oculta"
 
-#: src/components/interstitials/Trending.tsx:143
-#: src/components/interstitials/TrendingVideos.tsx:139
+#: src/components/interstitials/FeedTrendingTopics.tsx:156
+#: src/components/interstitials/Trending.tsx:144
+#: src/components/interstitials/TrendingVideos.tsx:138
 #: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:141
 #: src/components/moderation/PostHider.tsx:140
@@ -6132,7 +6113,8 @@ msgstr "Lista oculta"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:23
 #: src/lib/moderation/useLabelBehaviorDescription.ts:28
 #: src/lib/moderation/useLabelBehaviorDescription.ts:33
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:137
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:90
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:139
 msgid "Hide"
 msgstr "Ocultar"
 
@@ -6192,16 +6174,18 @@ msgstr "Ocultar esta resposta?"
 msgid "Hide translation"
 msgstr "Ocultar tradução"
 
-#: src/components/interstitials/Trending.tsx:125
+#: src/components/interstitials/Trending.tsx:126
 msgid "Hide trending topics"
 msgstr "Ocultar assuntos em alta"
 
-#: src/components/interstitials/Trending.tsx:141
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:135
+#: src/components/interstitials/FeedTrendingTopics.tsx:154
+#: src/components/interstitials/Trending.tsx:142
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:88
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:137
 msgid "Hide trending topics?"
 msgstr "Ocultar assuntos em alta?"
 
-#: src/components/interstitials/TrendingVideos.tsx:137
+#: src/components/interstitials/TrendingVideos.tsx:136
 msgid "Hide trending videos?"
 msgstr "Ocultar vídeos em alta?"
 
@@ -6531,12 +6515,10 @@ msgstr "Caixa de entrada vazia!"
 #. Advanced search filter
 #. Advanced search filter
 #. Advanced search filter
-#. Include search results with or without replies
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:47
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:58
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:75
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:81
-#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
 msgid "Include"
 msgstr "Incluir"
 
@@ -6545,7 +6527,7 @@ msgstr "Incluir"
 msgid "Include or exclude matching posts (currently: {0})"
 msgstr "Incluir ou excluir postagens correspondentes (atual: {0})"
 
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:31
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:32
 msgid "Include posts and/or replies (currently: {currentLabel})"
 msgstr "Incluir postagens e/ou respostas (atual: {currentLabel})"
 
@@ -6558,10 +6540,6 @@ msgstr "Incluir postagens feitas desde esta data"
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:329
 msgid "Include posts made until this date"
 msgstr "Incluir postagens feitas até esta data"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:50
-msgid "Include these results"
-msgstr "Incluir estes resultados"
 
 #: src/screens/Login/LoginForm.tsx:165
 msgid "Incorrect username or password"
@@ -6655,7 +6633,7 @@ msgstr "Convidar {name} para se juntar ao Bluesky"
 msgid "Invite code"
 msgstr "Convite"
 
-#: src/screens/Signup/state.ts:347
+#: src/screens/Signup/state.ts:363
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "Convite inválido. Verifique se você o inseriu corretamente e tente novamente."
 
@@ -8018,7 +7996,7 @@ msgid "Newest replies first"
 msgstr "Respostas mais recentes primeiro"
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:204
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:233
 msgid "News"
 msgstr "Notícias"
 
@@ -8057,6 +8035,11 @@ msgstr "Sem anúncios, sem rastreamento invasivo, sem armadilhas de engajamento.
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
 msgstr "Sem senhas de aplicativo no momento"
+
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:27
+msgid "No author filter"
+msgstr ""
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:177
 msgid "No beta features at the moment."
@@ -8109,6 +8092,12 @@ msgstr "Sem GIFs para mostrar agora. Tente novamente mais tarde."
 msgid "No image"
 msgstr "Sem imagem"
 
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:65
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:91
+#: src/screens/Search/components/SearchLanguageDropdown.tsx:93
+msgid "No language filter"
+msgstr ""
+
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
 #: src/view/screens/Profile.tsx:539
@@ -8127,6 +8116,11 @@ msgstr "Sem listas"
 #: src/view/com/notifications/NotificationFeedItem.tsx:813
 msgid "No longer following {0}"
 msgstr "Você não está mais seguindo {0}"
+
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
+msgid "No media filter"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:485
 msgid "No media yet"
@@ -8173,6 +8167,11 @@ msgstr "Ninguém além do autor pode citar esta postagem."
 msgid "No one can send messages"
 msgstr "Ninguém pode enviar mensagens"
 
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:27
+msgid "No post filter"
+msgstr ""
+
 #: src/screens/Notifications/ActivityList.tsx:43
 msgid "No posts here"
 msgstr "Não há postagens aqui"
@@ -8190,10 +8189,6 @@ msgstr "Sem citações ainda"
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:31
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "Ainda não há GIFs recentes. Escolha um para vê-lo aqui."
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
-msgid "No replies"
-msgstr "Sem respostas"
 
 #: src/view/screens/Profile.tsx:470
 msgid "No replies yet"
@@ -8506,6 +8501,10 @@ msgstr "Apenas pessoas que {0} segue podem entrar."
 #: src/components/intents/GroupChatJoinDialog.tsx:306
 msgid "Only people the chat owner follows can join"
 msgstr "Apenas pessoas que o dono da conversa segue podem entrar"
+
+#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
+msgid "Only posts"
+msgstr ""
 
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:23
 msgid "Only posts with media"
@@ -9110,11 +9109,11 @@ msgstr "Por favor, adicione os rótulos de aviso de conteúdo que sejam aplicáv
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr "Verifique sua caixa de entrada para mais instruções. Pode demorar um ou dois minutos para chegar."
 
-#: src/screens/Signup/state.ts:294
+#: src/screens/Signup/state.ts:313
 msgid "Please choose your handle."
 msgstr "Por favor, escolha seu nome de usuário."
 
-#: src/screens/Signup/state.ts:286
+#: src/screens/Signup/state.ts:305
 #: src/screens/Signup/StepInfo/index.tsx:149
 msgid "Please choose your password."
 msgstr "Por favor, escolha sua senha."
@@ -9123,7 +9122,7 @@ msgstr "Por favor, escolha sua senha."
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr "Por favor, clique no link do email que acabamos de enviar para verificar seu novo endereço de email. Este é um passo importante para permitir que você continue desfrutando de todos os recursos do Bluesky."
 
-#: src/screens/Signup/state.ts:309
+#: src/screens/Signup/state.ts:325
 msgid "Please complete the verification captcha."
 msgstr "Por favor, complete o captcha de verificação."
 
@@ -9180,7 +9179,7 @@ msgstr "Por favor insira o código que você recebeu e a nova senha que gostaria
 msgid "Please enter the security code we sent to your previous email address."
 msgstr "Digite o código de segurança que enviamos para o seu endereço de email anterior."
 
-#: src/screens/Signup/state.ts:270
+#: src/screens/Signup/state.ts:289
 #: src/screens/Signup/StepInfo/index.tsx:122
 msgid "Please enter your email."
 msgstr "Por favor, digite o seu e-mail."
@@ -9262,7 +9261,7 @@ msgid "Please write your message below:"
 msgstr "Escreva sua mensagem abaixo:"
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:198
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:227
 msgid "Politics"
 msgstr "Política"
 
@@ -9370,6 +9369,11 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr "Postagem fixada"
 
+#. Include search results with or without replies
+#: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
+msgid "Post type"
+msgstr ""
+
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
 msgid "Post unpinned"
@@ -9383,10 +9387,6 @@ msgstr "Postagem desafixada"
 #: src/view/screens/Profile.tsx:236
 msgid "Posts"
 msgstr "Postagens"
-
-#: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
-msgid "Posts and replies"
-msgstr "Postagens e respostas"
 
 #: src/components/dialogs/MutedWords.tsx:123
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -9690,11 +9690,11 @@ msgstr "Leia a Política de Privacidade do Bluesky"
 msgid "Read the Bluesky Terms of Service"
 msgstr "Leia os Termos de Serviço do Bluesky"
 
-#: src/components/WelcomeModal.tsx:146
+#: src/components/WelcomeModal.tsx:144
 msgid "Real conversations."
 msgstr "Conversas reais."
 
-#: src/components/WelcomeModal.tsx:144
+#: src/components/WelcomeModal.tsx:142
 msgid "Real people."
 msgstr "Pessoas reais."
 
@@ -10707,17 +10707,17 @@ msgstr "Ver postagens com #{tag} deste usuário"
 msgid "See jobs at Bluesky"
 msgstr "Veja empregos na Bluesky"
 
-#: src/components/FeedInterstitials.tsx:491
-#: src/components/FeedInterstitials.tsx:549
-#: src/components/interstitials/FeedTrendingTopics.tsx:96
+#: src/components/FeedInterstitials.tsx:495
+#: src/components/FeedInterstitials.tsx:554
+#: src/components/interstitials/FeedTrendingTopics.tsx:106
 msgid "See more"
 msgstr "Ver mais"
 
-#: src/components/FeedInterstitials.tsx:472
+#: src/components/FeedInterstitials.tsx:475
 msgid "See more suggested profiles"
 msgstr "Ver mais perfis sugeridos"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:82
+#: src/components/interstitials/FeedTrendingTopics.tsx:92
 msgid "See more trending topics"
 msgstr ""
 
@@ -11355,8 +11355,8 @@ msgstr "Exibe o conteúdo"
 
 #: src/components/dialogs/Signin.tsx:98
 #: src/components/dialogs/Signin.tsx:100
-#: src/components/WelcomeModal.tsx:194
-#: src/components/WelcomeModal.tsx:206
+#: src/components/WelcomeModal.tsx:193
+#: src/components/WelcomeModal.tsx:204
 #: src/screens/Hashtag.tsx:231
 #: src/screens/Login/index.tsx:143
 #: src/screens/Login/index.tsx:165
@@ -11506,7 +11506,7 @@ msgstr "Adiar o lembrete"
 msgid "So many thoughts, you should post one"
 msgstr "Tantos pensamentos, você deveria postar um deles"
 
-#: src/components/WelcomeModal.tsx:148
+#: src/components/WelcomeModal.tsx:146
 msgid "Social media you control."
 msgstr "A rede social que você controla."
 
@@ -11527,7 +11527,7 @@ msgstr "Alguns serviços de moderação na sua lista não estão mais disponíve
 msgid "Some of your verifications are invalid."
 msgstr "Algumas de suas verificações são inválidas."
 
-#: src/components/FeedInterstitials.tsx:628
+#: src/components/FeedInterstitials.tsx:633
 msgid "Some other feeds you might like"
 msgstr "Alguns outros feeds que você pode gostar"
 
@@ -11657,7 +11657,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr "Spam ou outros comportamentos inautênticos ou enganosos"
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:225
 msgid "Sports"
 msgstr "Esportes"
 
@@ -11870,7 +11870,7 @@ msgid "Suggested accounts"
 msgstr "Contas sugeridas"
 
 #. Accounts suggested to the user for them to follow
-#: src/components/FeedInterstitials.tsx:469
+#: src/components/FeedInterstitials.tsx:472
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 msgid "Suggested for you"
 msgstr "Sugeridos para você"
@@ -12297,7 +12297,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Tivemos um problema ao carregar notificações. Toque aqui para tentar de novo."
 
 #: src/screens/Search/Explore.tsx:1015
-#: src/view/com/posts/PostFeed.tsx:822
+#: src/view/com/posts/PostFeed.tsx:826
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Tivemos um problema ao carregar as postagens. Toque aqui para tentar de novo."
 
@@ -12908,8 +12908,8 @@ msgstr "Tradução para o mesmo idioma não está disponível no seu dispositivo
 msgid "Tree view"
 msgstr "Visualização em árvore"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:79
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:50
+#: src/components/interstitials/FeedTrendingTopics.tsx:88
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:59
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:54
 msgid "Trending"
 msgstr "Em alta"
@@ -12919,13 +12919,15 @@ msgstr "Em alta"
 msgid "Trending GIFs"
 msgstr "GIFs em alta"
 
+#: src/components/interstitials/FeedTrendingTopics.tsx:115
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:62
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:61
 msgid "Trending options"
 msgstr "Opções dos assuntos em alta"
 
-#: src/components/interstitials/TrendingVideos.tsx:87
-msgid "Trending Videos"
-msgstr "Vídeos em alta"
+#: src/components/interstitials/TrendingVideos.tsx:86
+msgid "Trending videos"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:103
 msgid "Trolling"
@@ -13642,7 +13644,7 @@ msgid "Video Feed"
 msgstr "Feed de vídeos"
 
 #. placeholder {0}: author.handle
-#: src/components/VideoPostCard.tsx:122
+#: src/components/VideoPostCard.tsx:121
 msgid "Video from {0}: {text}"
 msgstr "Vídeo de {0}: {text}"
 
@@ -13652,7 +13654,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr "Vídeo de {0}. Toque para reproduzir ou pausar o vídeo"
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:200
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:229
 msgid "Video Games"
 msgstr "Videogames"
 
@@ -13769,14 +13771,14 @@ msgstr "Ver solicitações recebidas para entrar nesta conversa em grupo"
 msgid "View information about these labels"
 msgstr "Ver informações sobre estes rótulos"
 
-#: src/components/interstitials/TrendingVideos.tsx:200
-#: src/components/interstitials/TrendingVideos.tsx:222
+#: src/components/interstitials/TrendingVideos.tsx:199
+#: src/components/interstitials/TrendingVideos.tsx:221
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:191
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:210
 msgid "View more"
 msgstr "Ver mais"
 
-#: src/components/interstitials/TrendingVideos.tsx:228
+#: src/components/interstitials/TrendingVideos.tsx:227
 msgid "View more trending videos"
 msgstr "Ver mais vídeos em alta"
 
@@ -13825,7 +13827,7 @@ msgstr "Ver as verificações deste usuário"
 msgid "View users who like this feed"
 msgstr "Ver usuários que curtiram este feed"
 
-#: src/components/VideoPostCard.tsx:401
+#: src/components/VideoPostCard.tsx:398
 msgid "View video"
 msgstr "Ver vídeo"
 
@@ -13859,7 +13861,7 @@ msgstr "Ver suas verificações"
 msgid "Views full image"
 msgstr "Ver imagem completa"
 
-#: src/components/VideoPostCard.tsx:121
+#: src/components/VideoPostCard.tsx:120
 msgid "Views video in immersive mode"
 msgstr "Abre o vídeo no modo paisagem"
 
@@ -14460,9 +14462,11 @@ msgstr "Você pode ler o histórico da conversa, mas não pode enviar novas mens
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "Você pode selecionar até {MAX_GALLERY_IMAGES, plural, other {# imagens}} no total."
 
-#: src/components/interstitials/Trending.tsx:142
-#: src/components/interstitials/TrendingVideos.tsx:138
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:136
+#: src/components/interstitials/FeedTrendingTopics.tsx:155
+#: src/components/interstitials/Trending.tsx:143
+#: src/components/interstitials/TrendingVideos.tsx:137
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:89
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:138
 msgid "You can update this later from your settings."
 msgstr "Você pode alterar esta opção depois nas suas configurações."
 
@@ -14918,7 +14922,7 @@ msgstr "Seu email"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:82
-#: src/screens/Signup/state.ts:278
+#: src/screens/Signup/state.ts:297
 #: src/screens/Signup/StepInfo/index.tsx:129
 msgid "Your email appears to be invalid."
 msgstr "Seu e-mail parece ser inválido."
