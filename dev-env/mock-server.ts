@@ -7,8 +7,23 @@ let server: TestPDS
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 createHTTPServer(async (req, res) => {
   const url = parse(req.url || '/', true)
+  if (req.method === 'GET') {
+    if (!server) {
+      return res.writeHead(503).end()
+    }
+    return res
+      .writeHead(200, {
+        'content-type': 'application/json',
+      })
+      .end(
+        JSON.stringify({
+          pdsUrl: server.pdsUrl,
+          appviewDid: server.appviewDid,
+        }),
+      )
+  }
   if (req.method !== 'POST') {
-    return res.writeHead(200).end()
+    return res.writeHead(405).end()
   }
   try {
     console.log('Closing old server')

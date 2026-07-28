@@ -1,5 +1,5 @@
-import {useRef, useState} from 'react'
-import {Keyboard, LogBox, Pressable, TextInput, View} from 'react-native'
+import {useState} from 'react'
+import {LogBox, Pressable, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {BLUESKY_PROXY_HEADER} from '#/lib/constants'
@@ -61,33 +61,23 @@ export function TestCtrls() {
     )
     setShowLoggedOut(false)
   }
-  const proxyHeader = useRef('')
-  const configureProxy = () => {
-    const header = `${proxyHeader.current}#bsky_appview`
+  const configureProxy = async () => {
+    const res = await fetch('http://localhost:1986')
+    if (!res.ok) {
+      throw new Error(`Failed to load the E2E proxy DID: ${res.status}`)
+    }
+    const {appviewDid} = (await res.json()) as {appviewDid: string}
+    const header = `${appviewDid}#bsky_appview`
     BLUESKY_PROXY_HEADER.set(header)
     agent.configureProxy(header as any)
     hasConfiguredProxy = true
     setIsProxyConfigured(true)
-    Keyboard.dismiss()
   }
   return (
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
-      <TextInput
-        accessibilityLabel="Text input field"
-        accessibilityHint="Enter proxy header"
-        testID="e2eProxyHeaderInput"
-        onChangeText={val => {
-          proxyHeader.current = val
-        }}
-        autoComplete="off"
-        autoCorrect={false}
-        autoCapitalize="none"
-        onSubmitEditing={configureProxy}
-        style={BTN}
-      />
       <Pressable
         testID="e2eConfigureProxy"
-        onPress={configureProxy}
+        onPress={() => void configureProxy()}
         accessibilityRole="button"
         style={BTN}
       />

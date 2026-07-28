@@ -152,6 +152,7 @@ echo "Metro bundle pre-warmed for $bundle_platform"
 if [[ "$platform" == "android" ]]; then
   phase "Configuring Android localhost routing"
   adb -s "$device_id" reverse tcp:3000 tcp:3000
+  adb -s "$device_id" reverse tcp:1986 tcp:1986
   adb -s "$device_id" reverse tcp:8081 tcp:8081
 fi
 

@@ -28,10 +28,11 @@ appId: xyz.blueskyweb.app
       - back
 - extendedWaitUntil:
     visible:
-      id: e2eProxyHeaderInput
+      id: e2eConfigureProxy
     timeout: 180000
 - tapOn:
-    id: e2eProxyHeaderInput
-- inputText: ${output.result}
-- tapOn:
     id: e2eConfigureProxy
+- extendedWaitUntil:
+    visible:
+      id: e2eSignInAlice
+    timeout: 30000
