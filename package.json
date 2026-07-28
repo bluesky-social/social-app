@@ -366,7 +366,7 @@
   },
   "lint-staged": {
     "*{.js,.jsx,.ts,.tsx}": [
-      "oxlint --fix"
+      "oxlint --fix --no-error-on-unmatched-pattern"
     ],
     "*{.js,.jsx,.ts,.tsx,.css}": [
       "prettier --cache --write --ignore-unknown"
