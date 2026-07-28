@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useRef, useState} from 'react'
 import {Keyboard, LogBox, Pressable, TextInput, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -61,9 +61,9 @@ export function TestCtrls() {
     )
     setShowLoggedOut(false)
   }
-  const [proxyHeader, setProxyHeader] = useState('')
+  const proxyHeader = useRef('')
   const configureProxy = () => {
-    const header = `${proxyHeader}#bsky_appview`
+    const header = `${proxyHeader.current}#bsky_appview`
     BLUESKY_PROXY_HEADER.set(header)
     agent.configureProxy(header as any)
     hasConfiguredProxy = true
@@ -76,7 +76,9 @@ export function TestCtrls() {
         accessibilityLabel="Text input field"
         accessibilityHint="Enter proxy header"
         testID="e2eProxyHeaderInput"
-        onChangeText={val => setProxyHeader(val)}
+        onChangeText={val => {
+          proxyHeader.current = val
+        }}
         autoComplete="off"
         autoCorrect={false}
         autoCapitalize="none"
