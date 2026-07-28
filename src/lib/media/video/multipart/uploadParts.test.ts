@@ -1,3 +1,4 @@
+import {AbortError} from '#/lib/async/cancelable'
 import {type ChunkReader, type UploadPartFn} from './types'
 import {uploadParts} from './uploadParts'
 
@@ -101,6 +102,32 @@ describe('uploadParts', () => {
         maxAttempts: 2,
       }),
     ).rejects.toThrow('always fails')
+  })
+
+  it('preserves the originating error when sibling workers abort', async () => {
+    const uploadPart: UploadPartFn = ({part, signal}) => {
+      if (part.partNumber === 1) {
+        return new Promise((_resolve, reject) => {
+          signal.addEventListener('abort', () => reject(new AbortError()), {
+            once: true,
+          })
+        })
+      }
+      return Promise.reject(new Error('part upload failed'))
+    }
+
+    await expect(
+      uploadParts({
+        parts: parts.slice(0, 2),
+        reader: fakeReader(),
+        uploadPart,
+        totalBytes: 20,
+        setProgress: () => {},
+        signal: new AbortController().signal,
+        concurrency: 2,
+        maxAttempts: 1,
+      }),
+    ).rejects.toThrow('part upload failed')
   })
 
   it('reports progress that reaches 1 when all parts complete', async () => {

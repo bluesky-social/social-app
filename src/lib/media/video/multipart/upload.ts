@@ -3,6 +3,7 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {type CompressedVideo} from '#/lib/media/video/types'
+import {shouldRetryError} from '#/lib/strings/errors'
 import {getServiceAuthToken} from '../upload.shared'
 import {mimeToExt} from '../util'
 import {
@@ -35,7 +36,7 @@ export async function uploadVideoMultipart({
   onStarted?: () => void
 }): Promise<AppBskyVideoDefs.JobStatus> {
   throwIfAborted(signal)
-  const tokenProvider = createTokenProvider(agent)
+  const tokenProvider = createTokenProvider(agent, signal)
   const token = await tokenProvider.get()
   const name = `${nanoid(12)}.${mimeToExt(video.mimeType)}`
   let session
@@ -60,6 +61,7 @@ export async function uploadVideoMultipart({
   }
   signal.addEventListener('abort', abortOnCancel, {once: true})
   let reader: ReturnType<typeof createChunkReader> | undefined
+  // Kept outside the upload try block for finish-time missing-part recovery.
   let parts: ReturnType<typeof planParts> = []
   try {
     try {
@@ -85,9 +87,6 @@ export async function uploadVideoMultipart({
       )
     }
 
-    // Finish stores this credential for the later PDS blob upload, so use a
-    // fresh token rather than the one that may have aged during transfer.
-    await tokenProvider.get(true)
     const activeReader = reader
     if (!activeReader) throw new Error('Video chunk reader is unavailable')
     return await finishAndRecover({
@@ -126,14 +125,18 @@ async function finishAndRecover({
   resendMissingParts,
 }: {
   jobId: string
-  getToken: () => Promise<string>
+  getToken: (forceRefresh?: boolean) => Promise<string>
   signal: AbortSignal
   resendMissingParts: (receivedPartNumbers: number[]) => Promise<boolean>
 }): Promise<AppBskyVideoDefs.JobStatus> {
   let createdFailures = 0
+  let forceTokenRefresh = true
   while (true) {
     throwIfAborted(signal)
-    const token = await getToken()
+    // Finish stores this credential for the later PDS blob upload. Refresh it
+    // once after part transfer, then reuse it while polling/recovering.
+    const token = await getToken(forceTokenRefresh)
+    forceTokenRefresh = false
     try {
       const result = await finishUpload(jobId, token, signal)
       return result.jobStatus
@@ -176,6 +179,11 @@ async function finishAndRecover({
           throw new MultipartUploadError(
             `Multipart upload ${status.state}`,
             status.state === 'aborted' ? 'UploadAborted' : 'UploadExpired',
+          )
+        case 'completed':
+          throw new MultipartUploadError(
+            'Multipart upload completed without a job status',
+            'InvalidUploadStatus',
           )
       }
     }
@@ -233,7 +241,7 @@ async function abortThenFallbackOrResolve(
   )
 }
 
-function createTokenProvider(agent: AtpAgent) {
+function createTokenProvider(agent: AtpAgent, signal: AbortSignal) {
   let token: string | undefined
   let expiresAt = 0
   let refresh: Promise<string> | undefined
@@ -242,11 +250,7 @@ function createTokenProvider(agent: AtpAgent) {
     if (!forceRefresh && token && Date.now() < expiresAt - 60_000) return token
     if (!refresh) {
       const exp = Math.floor(Date.now() / 1000) + 60 * 30
-      refresh = getServiceAuthToken({
-        agent,
-        lxm: 'com.atproto.repo.uploadBlob',
-        exp,
-      })
+      refresh = getServiceAuthTokenWithRetry(agent, exp, signal)
         .then(nextToken => {
           token = nextToken
           expiresAt = exp * 1000
@@ -260,6 +264,30 @@ function createTokenProvider(agent: AtpAgent) {
   }
 
   return {get}
+}
+
+async function getServiceAuthTokenWithRetry(
+  agent: AtpAgent,
+  exp: number,
+  signal: AbortSignal,
+) {
+  let lastError: unknown
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    throwIfAborted(signal)
+    try {
+      return await getServiceAuthToken({
+        agent,
+        lxm: 'com.atproto.repo.uploadBlob',
+        exp,
+      })
+    } catch (err) {
+      throwIfAborted(signal)
+      if (!(err instanceof TypeError) && !shouldRetryError(err)) throw err
+      lastError = err
+      if (attempt < 3) await delay(500 * 2 ** (attempt - 1), signal)
+    }
+  }
+  throw lastError
 }
 
 function throwIfAborted(signal: AbortSignal) {

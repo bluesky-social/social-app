@@ -78,10 +78,15 @@ export async function uploadParts({
     }),
   )
   signal.removeEventListener('abort', abortWorkers)
-  const failure = settled.find(
+  const failures = settled.filter(
     (result): result is PromiseRejectedResult => result.status === 'rejected',
   )
   if (signal.aborted) throw new AbortError()
+  // A sibling worker aborted after the first failure can settle earlier in
+  // array order. Preserve the originating error for fallback and telemetry.
+  const failure =
+    failures.find(result => !(result.reason instanceof AbortError)) ??
+    failures[0]
   if (failure) throw failure.reason
   return results
 }
