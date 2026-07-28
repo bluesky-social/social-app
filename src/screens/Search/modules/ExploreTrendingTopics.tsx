@@ -29,7 +29,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import * as ModuleHeader from '../components/ModuleHeader'
 
-const TOPIC_COUNT = 5
+const TOPIC_COUNT = 10
 
 const IMAGE_SIZE = 56
 
@@ -44,7 +44,12 @@ function Inner() {
   const {t: l} = useLingui()
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
-  const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery()
+  const {
+    data: trending,
+    error,
+    isLoading,
+    isRefetching,
+  } = useGetTrendsQuery({limit: TOPIC_COUNT})
   const noTopics = !isLoading && !error && !trending?.trends?.length
   const showLoading = isLoading || isRefetching
 
@@ -143,7 +148,6 @@ export function TrendRow({
               style={[
                 a.text_md,
                 a.font_medium,
-
                 t.atoms.text_contrast_low,
                 {
                   fontVariant: ['tabular-nums'],

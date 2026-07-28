@@ -11,6 +11,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
+import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {TrendingTopicLink} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
@@ -35,6 +36,7 @@ function Inner() {
     error,
     isLoading,
   } = useGetTrendsQuery({
+    limit: TRENDING_LIMIT,
     refetchOnWindowFocus: true,
   })
   const noTopics = !isLoading && !error && !trending?.trends?.length
@@ -53,6 +55,24 @@ function Inner() {
           <Text style={[a.flex_1, a.text_md, a.font_semi_bold]}>
             <Trans>Trending</Trans>
           </Text>
+          <Link label={l`See more trending topics`} to="/search">
+            {({hovered, pressed}) => (
+              <Text
+                style={[
+                  a.text_sm,
+                  a.font_medium,
+                  {
+                    color:
+                      hovered || pressed
+                        ? t.palette.contrast_800
+                        : t.palette.contrast_500,
+                  },
+                ]}
+                numberOfLines={1}>
+                <Trans>See more</Trans>
+              </Text>
+            )}
+          </Link>
           <Button
             variant="ghost"
             size="tiny"
