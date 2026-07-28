@@ -22,5 +22,8 @@ export enum Features {
   SearchStarterPacksV2Enable = 'search_starter_packs_v2:enable',
   FollowSortEnable = 'follow_sort:enable',
 
+  // values
+  TrendingDiscoverValues = 'trending_discover:values',
+
   AATest = 'aa-test',
 }
