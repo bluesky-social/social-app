@@ -278,6 +278,14 @@ describe('general functionality', () => {
       timestamp,
     )
 
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      'Network request timed out',
+      {},
+      timestamp,
+    )
+
     // network error in metadata, message is something else
     sentryTransport(
       LogLevel.Error,
