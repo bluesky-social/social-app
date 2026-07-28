@@ -746,7 +746,7 @@ function FollowedViaStarterPack({
   }
 
   return (
-    <Text style={[a.pt_xs, t.atoms.text_contrast_medium]}>
+    <Text style={[native(a.pt_xs), t.atoms.text_contrast_medium]}>
       <Trans comment="When the source of a follow is a starter pack, i.e., 'via starter pack {starterPackName}'.">
         via starter pack{' '}
         <StarterPack
