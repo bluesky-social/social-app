@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {LogBox, Pressable, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {BLUESKY_PROXY_HEADER} from '#/lib/constants'
+import {BLUESKY_PROXY_HEADER, DEV_ENV_APPVIEW_DID} from '#/lib/constants'
 import {useAgent, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useOnboardingDispatch} from '#/state/shell/onboarding'
@@ -61,13 +61,8 @@ export function TestCtrls() {
     )
     setShowLoggedOut(false)
   }
-  const configureProxy = async () => {
-    const res = await fetch('http://localhost:1986')
-    if (!res.ok) {
-      throw new Error(`Failed to load the E2E proxy DID: ${res.status}`)
-    }
-    const {appviewDid} = (await res.json()) as {appviewDid: string}
-    const header = `${appviewDid}#bsky_appview`
+  const configureProxy = () => {
+    const header = `${DEV_ENV_APPVIEW_DID}#bsky_appview`
     BLUESKY_PROXY_HEADER.set(header)
     agent.configureProxy(header as any)
     hasConfiguredProxy = true
@@ -77,7 +72,7 @@ export function TestCtrls() {
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
       <Pressable
         testID="e2eConfigureProxy"
-        onPress={() => void configureProxy()}
+        onPress={configureProxy}
         accessibilityRole="button"
         style={BTN}
       />
