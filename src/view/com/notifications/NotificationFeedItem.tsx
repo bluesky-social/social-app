@@ -747,7 +747,7 @@ function FollowedViaStarterPack({
         <StarterPack
           size="sm"
           gradient="sky"
-          style={[native(a.mr_2xs), {transform: [{translateY: 3}]}]}
+          style={[native(a.mr_2xs), {transform: [{translateY: 4}]}]}
         />
         <InlineLinkText
           to={link.to}
