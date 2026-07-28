@@ -278,6 +278,13 @@ let NotificationFeedItem = ({
   )
   const additionalAuthorsCount = authors.length - 1
   const hasMultipleAuthors = additionalAuthorsCount > 0
+  const starterPack = item.notification.starterPack
+  const allFollowedViaSameStarterPack =
+    item.type === 'follow' &&
+    starterPack !== undefined &&
+    (item.additional ?? []).every(
+      notification => notification.starterPack?.uri === starterPack.uri,
+    )
   const formattedAuthorsCount = hasMultipleAuthors
     ? formatCount(i18n, additionalAuthorsCount)
     : ''
@@ -665,12 +672,8 @@ let NotificationFeedItem = ({
                 </TimeElapsed>
               </Text>
             </ExpandListPressable>
-            {item.type === 'follow' &&
-            !hasMultipleAuthors &&
-            item.notification.starterPack ? (
-              <FollowedViaStarterPack
-                starterPack={item.notification.starterPack}
-              />
+            {allFollowedViaSameStarterPack && starterPack ? (
+              <FollowedViaStarterPack starterPack={starterPack} />
             ) : null}
             {(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
             (item.type === 'contact-match' &&
