@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {LogBox, Pressable, View} from 'react-native'
+import {LogBox, Platform, Pressable, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {BLUESKY_PROXY_HEADER, DEV_ENV_APPVIEW_DID} from '#/lib/constants'
@@ -16,7 +16,10 @@ LogBox.ignoreAllLogs()
  * of the tests dramatically.
  */
 
-const BTN = {height: 16, width: 16}
+const BTN = Platform.select({
+  ios: {height: 8, width: 8, backgroundColor: 'red'},
+  default: {height: 1, width: 1, backgroundColor: 'red'},
+})
 
 /*
  * This component is mounted inside <Fragment key={currentAccount?.did}> in
@@ -69,7 +72,13 @@ export function TestCtrls() {
     setShowLoggedOut(false)
   }
   return (
-    <View style={{position: 'absolute', top: 100, right: 8, zIndex: 100}}>
+    <View
+      style={{
+        position: 'absolute',
+        top: 100,
+        right: Platform.OS === 'ios' ? 24 : 0,
+        zIndex: 100,
+      }}>
       {isProxyConfigured && (
         <>
           <Pressable
