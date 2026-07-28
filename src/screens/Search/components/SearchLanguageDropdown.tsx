@@ -62,7 +62,7 @@ export function SearchLanguageDropdown({
   }, [appLanguage, contentLanguages, primaryLanguage])
 
   const currentLanguageLabel =
-    languages.find(lang => lang.value === value)?.label ?? l`All languages`
+    languages.find(lang => lang.value === value)?.label ?? l`No language filter`
 
   return (
     <Menu.Root>
@@ -88,12 +88,9 @@ export function SearchLanguageDropdown({
         )}
       </Menu.Trigger>
       <Menu.Outer>
-        <Menu.LabelText>
-          <Trans>Filter search by language</Trans>
-        </Menu.LabelText>
-        <Menu.Item label={l`All languages`} onPress={() => onChange('')}>
+        <Menu.Item label={l`No language filter`} onPress={() => onChange('')}>
           <Menu.ItemText>
-            <Trans>All languages</Trans>
+            <Trans>No language filter</Trans>
           </Menu.ItemText>
           <Menu.ItemRadio selected={value === ''} />
         </Menu.Item>

@@ -601,7 +601,7 @@ export function FollowButtonPlaceholder({style}: ViewStyleProp) {
   return (
     <View
       style={[
-        a.rounded_sm,
+        a.rounded_full,
         t.atoms.bg_contrast_50,
         a.w_full,
         {

@@ -8,7 +8,7 @@ import {useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
-import {cleanError} from '#/lib/strings/errors'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
 import {useSessionApi} from '#/state/session'
@@ -255,6 +255,25 @@ export const SignupContext = createContext<IContext>({} as IContext)
 SignupContext.displayName = 'SignupContext'
 export const useSignupContext = () => useContext(SignupContext)
 
+/**
+ * Returns a PII-free name for expected signup failures, or undefined if the
+ * failure is unexpected and should be reported to Sentry.
+ */
+function classifyExpectedSignupError(e: unknown): string | undefined {
+  if (e instanceof ComAtprotoServerCreateAccount.InvalidHandleError)
+    return 'InvalidHandle'
+  if (e instanceof ComAtprotoServerCreateAccount.HandleNotAvailableError)
+    return 'HandleNotAvailable'
+  if (e instanceof ComAtprotoServerCreateAccount.InvalidPasswordError)
+    return 'InvalidPassword'
+  if (e instanceof ComAtprotoServerCreateAccount.UnsupportedDomainError)
+    return 'UnsupportedDomain'
+  /* the server sends no typed error for this case */
+  if (String(e).includes('Email already taken')) return 'EmailTaken'
+  if (isNetworkError(e)) return 'NetworkError'
+  return undefined
+}
+
 export function useSubmitSignup() {
   const ax = useAnalytics()
   const {t: l} = useLingui()
@@ -300,10 +319,7 @@ export function useSubmitSignup() {
         !state.pendingSubmit?.verificationCode
       ) {
         dispatch({type: 'setStep', value: SignupStep.CAPTCHA})
-        ax.logger.error('Signup Flow Error', {
-          errorMessage: 'Verification captcha code was not set.',
-          registrationHandle: state.handle,
-        })
+        ax.logger.error('Signup: captcha code missing at submit', {})
         return dispatch({
           type: 'setError',
           value: l`Please complete the verification captcha.`,
@@ -362,14 +378,18 @@ export function useSubmitSignup() {
         })
         dispatch({type: 'setStep', value: isHandleError ? 2 : 1})
 
-        ax.logger.error('Signup Flow Error', {
-          errorMessage: error,
-          registrationHandle: state.handle,
-        })
+        const expected = classifyExpectedSignupError(e)
+        if (expected) {
+          ax.metric('signup:createAccountFailure', {reason: expected})
+        } else {
+          ax.logger.error('Signup: unexpected createAccount failure', {
+            safeMessage: e,
+          })
+        }
       } finally {
         dispatch({type: 'setIsLoading', value: false})
       }
     },
-    [l, ax.logger, createAccount, onboardingDispatch],
+    [l, ax, createAccount, onboardingDispatch],
   )
 }

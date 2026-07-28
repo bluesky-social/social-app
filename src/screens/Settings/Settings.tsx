@@ -6,7 +6,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {HELP_DESK_URL} from '#/lib/constants'
+import {HELP_DESK_URL, HITSLOP_10} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useApplyPullRequestOTAUpdate} from '#/lib/hooks/useOTAUpdates'
 import {
@@ -393,7 +393,7 @@ function DevOptions() {
   const {mutate: deleteChatDeclarationRecord} = useDeleteActorDeclaration()
   const {
     tryApplyUpdate,
-    revertToEmbedded,
+    restoreDefaultChannel,
     isCurrentlyRunningPullRequestDeployment,
     currentChannel,
   } = useApplyPullRequestOTAUpdate()
@@ -520,7 +520,7 @@ function DevOptions() {
       ) : null}
       {IS_NATIVE && isCurrentlyRunningPullRequestDeployment ? (
         <SettingsList.PressableItem
-          onPress={() => void revertToEmbedded()}
+          onPress={() => void restoreDefaultChannel()}
           label={l`Unapply Pull Request`}>
           <SettingsList.ItemText>
             <Trans>Unapply Pull Request {currentChannel}</Trans>
@@ -647,6 +647,7 @@ function AccountRow({
             {({props, state}) => (
               <Pressable
                 {...props}
+                hitSlop={HITSLOP_10}
                 style={[
                   a.absolute,
                   {top: 10, right: tokens.space.lg},

@@ -21,6 +21,7 @@ export enum Features {
   CustomLogoJapanEnable = 'custom_logo:japan:enable',
   VideoMultipartUploadEnable = 'video:multipart_upload:enable',
   SearchStarterPacksV2Enable = 'search_starter_packs_v2:enable',
+  FollowSortEnable = 'follow_sort:enable',
 
   AATest = 'aa-test',
 }

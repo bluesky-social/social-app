@@ -52,7 +52,18 @@ have already been deployed for this release, incremement the branch name e.g.
 Cherry pick in the commits that need to be deployed on top of the most recent
 release or OTA.
 
-### 5. Manually set build numbers
+### 5. Pull translations
+
+Since translators may have added new strings, and positions within the code may
+have shifted, it's typically best to pull the latest translations.
+
+Run this and commit the result as the last commit on the OTA branch.
+
+```sh
+pnpm intl:release
+```
+
+### 6. Manually set build numbers
 
 Log in to the EAS CLI with `eas login` and manually set the build numbers to the
 values you found in **Step 1**.
@@ -75,7 +86,7 @@ values you found in **Step 1**.
 👉 **Save the previous values,** in this case `1011` and `641`, so you can reset
 them after the OTA completes.
 
-### 6. Run the GitHub actions
+### 7. Run the GitHub actions
 You'll need to run two separate actions: one to deploy the iOS/Android OTA
 itself, and one to build the web Docker container.
 
@@ -102,13 +113,13 @@ and run the action.
 | ----- | --- |
 | Select your OTA branch `1.x.0-ota-x` and click "Run workflow" | ![workflow](./img/web_action.png) |
 
-### 7. Deploy web
+### 8. Deploy web
 
 Once the web Docker container build finishes, go to your `1.x.0-ota-x` branch,
 copy the most recent commit hash. Post this hash in `#ops-deploys` and request
 someone with web deploy access deploy the built container.
 
-### 8. Confirm successful deployment
+### 9. Confirm successful deployment
 
 In about five minutes, the new deployment should be deployed and devices will
 begin downloading and installing in the background.
@@ -119,7 +130,7 @@ build from your device and re-install from the App Store. Then, you'll need to:
 - Quit and reopen the app
 - Check the `Settings > About` page and confirm the hash matches the most recent hash on your OTA branch
 
-### 9. Reset build numbers
+### 10. Reset build numbers
 
 Grab the build numbers you saved in **Step 5** and reverse the EAS CLI commands
 to reset the build numbers.

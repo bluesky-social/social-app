@@ -3,7 +3,7 @@ import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   type AnimatedRef,
   measure,
-  runOnJS,
+  Reanimated3DefaultSpringConfig,
   scrollTo,
   type SharedValue,
   useAnimatedRef,
@@ -13,6 +13,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated'
+import {scheduleOnRN} from 'react-native-worklets'
 
 import {useHaptics} from '#/lib/haptics'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -25,7 +26,7 @@ import {IS_IOS} from '#/env'
  *
  * All positioning is driven by a `slots` map (key → index) and translateY
  * (no discrete `top` changes). On drag end the new slot assignment is
- * computed on the UI thread first, then React state is updated via runOnJS.
+ * computed on the UI thread first, then React state is updated via scheduleOnRN.
  *
  * See SortableList.web.tsx for the web implementation using pointer events.
  */
@@ -41,7 +42,7 @@ interface SortableListProps<T> {
   itemHeight: number
   /** Ref to the parent Animated.ScrollView for auto-scroll. */
   scrollRef?: AnimatedRef<Animated.ScrollView>
-  /** Scroll offset shared value from useScrollViewOffset. */
+  /** Scroll offset shared value from useScrollOffset. */
   scrollOffset?: SharedValue<number>
 }
 
@@ -237,8 +238,8 @@ function SortableItem<T>({
   itemKey: string
   itemCount: number
   itemHeight: number
-  state: Animated.SharedValue<DragState>
-  dragY: Animated.SharedValue<number>
+  state: SharedValue<DragState>
+  dragY: SharedValue<number>
   scrollCompensation: SharedValue<number>
   isGestureActive: SharedValue<boolean>
   measureDone: SharedValue<boolean>
@@ -264,9 +265,9 @@ function SortableItem<T>({
       measureDone.set(false)
       lastHapticSlot.set(mySlot)
       if (onDragStart) {
-        runOnJS(onDragStart)()
+        scheduleOnRN(onDragStart)
       }
-      runOnJS(playHaptic)()
+      scheduleOnRN(playHaptic)
     })
     .onChange(e => {
       'worklet'
@@ -284,7 +285,7 @@ function SortableItem<T>({
       const clampedSlot = Math.max(0, Math.min(currentSlot, itemCount - 1))
       if (IS_IOS && clampedSlot !== lastHapticSlot.get()) {
         lastHapticSlot.set(clampedSlot)
-        runOnJS(playHaptic)('Light')
+        scheduleOnRN(playHaptic, 'Light')
       }
     })
     .onEnd(() => {
@@ -325,13 +326,13 @@ function SortableItem<T>({
                 dragStartSlot: -1,
               })
               dragY.set(0)
-              runOnJS(onCommitReorder)(sorted)
+              scheduleOnRN(onCommitReorder, sorted)
             } else {
               const s = state.get()
               state.set({...s, activeKey: '', dragStartSlot: -1})
               dragY.set(0)
               if (onDragEnd) {
-                runOnJS(onDragEnd)()
+                scheduleOnRN(onDragEnd)
               }
             }
           }
@@ -346,7 +347,7 @@ function SortableItem<T>({
         const s = state.get()
         state.set({...s, activeKey: '', dragStartSlot: -1})
         if (onDragEnd) {
-          runOnJS(onDragEnd)()
+          scheduleOnRN(onDragEnd)
         }
       }
     })
@@ -370,18 +371,18 @@ function SortableItem<T>({
       return {
         transform: [
           {translateY: s.dragStartSlot * itemHeight + dragY.get()},
-          {scale: withSpring(1.03)},
+          {scale: withSpring(1.03, Reanimated3DefaultSpringConfig)},
         ],
         zIndex: 999,
         ...(IS_IOS
           ? {
               shadowColor: '#000',
               shadowOffset: {width: 0, height: 1},
-              shadowOpacity: withSpring(0.08),
-              shadowRadius: withSpring(4),
+              shadowOpacity: withSpring(0.08, Reanimated3DefaultSpringConfig),
+              shadowRadius: withSpring(4, Reanimated3DefaultSpringConfig),
             }
           : {
-              elevation: withSpring(3),
+              elevation: withSpring(3, Reanimated3DefaultSpringConfig),
             }),
       }
     }
@@ -391,11 +392,11 @@ function SortableItem<T>({
     const inactive = {
       ...(IS_IOS
         ? {
-            shadowOpacity: withSpring(0),
-            shadowRadius: withSpring(0),
+            shadowOpacity: withSpring(0, Reanimated3DefaultSpringConfig),
+            shadowRadius: withSpring(0, Reanimated3DefaultSpringConfig),
           }
         : {
-            elevation: withSpring(0),
+            elevation: withSpring(0, Reanimated3DefaultSpringConfig),
           }),
     }
 
@@ -425,7 +426,7 @@ function SortableItem<T>({
       return {
         transform: [
           {translateY: withTiming(baseY + offset, {duration: 200})},
-          {scale: withSpring(1)},
+          {scale: withSpring(1, Reanimated3DefaultSpringConfig)},
         ],
         zIndex: 0,
         ...inactive,

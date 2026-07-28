@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -48,11 +47,13 @@ function keyExtractor(item: ActorDefs.ProfileView) {
 }
 
 export function ProfileFollowers({name}: {name: string}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const navigation = useNavigation<NavigationProp>()
   const initialNumToRender = useInitialNumToRender()
   const {currentAccount} = useSession()
+
+  const isSortEnabled = ax.features.enabled(ax.features.FollowSortEnable)
 
   const [isPTRing, setIsPTRing] = useState(false)
   const {
@@ -60,6 +61,8 @@ export function ProfileFollowers({name}: {name: string}) {
     isLoading: isDidLoading,
     error: resolveError,
   } = useResolveDidQuery(name)
+  const isMe = resolvedDid === currentAccount?.did
+  const sort = isMe ? 'latest' : 'top'
   const {
     data,
     isLoading: isFollowersLoading,
@@ -68,10 +71,11 @@ export function ProfileFollowers({name}: {name: string}) {
     fetchNextPage,
     error,
     refetch,
-  } = useProfileFollowersQuery(resolvedDid)
+  } = useProfileFollowersQuery(resolvedDid, {
+    sort,
+  })
 
   const isError = !!resolveError || !!error
-  const isMe = resolvedDid === currentAccount?.did
 
   const followers = useMemo(() => {
     if (data?.pages) {
@@ -101,10 +105,18 @@ export function ProfileFollowers({name}: {name: string}) {
         contextProfileDid: resolvedDid,
         itemCount: followers.length,
         page: currentPageCount,
+        sort: isSortEnabled ? sort : undefined,
       })
     }
     paginationTrackingRef.current.page = currentPageCount
-  }, [ax, data?.pages?.length, resolvedDid, followers.length])
+  }, [
+    ax,
+    data?.pages?.length,
+    resolvedDid,
+    followers.length,
+    sort,
+    isSortEnabled,
+  ])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -137,9 +149,10 @@ export function ProfileFollowers({name}: {name: string}) {
       ax.metric('profile:followers:view', {
         contextProfileDid: resolvedDid,
         isOwnProfile: isMe,
+        sort: isSortEnabled ? sort : undefined,
       })
     }
-  }, [ax, resolvedDid, isMe])
+  }, [ax, resolvedDid, isMe, sort, isSortEnabled])
 
   // track seen items
   const seenItemsRef = useRef<Set<string>>(new Set())
@@ -160,9 +173,10 @@ export function ProfileFollowers({name}: {name: string}) {
         profileDid: item.did,
         position,
         ...(resolvedDid !== undefined && {contextProfileDid: resolvedDid}),
+        sort: isSortEnabled ? sort : undefined,
       })
     },
-    [ax, followers, resolvedDid],
+    [ax, followers, resolvedDid, sort, isSortEnabled],
   )
 
   const [followersPromoDismissed, setFollowersPromoDismissed] =
@@ -199,8 +213,8 @@ export function ProfileFollowers({name}: {name: string}) {
           emptyType="results"
           emptyMessage={
             isMe
-              ? _(msg`No followers yet`)
-              : _(msg`This user doesn't have any followers.`)
+              ? l`No followers yet`
+              : l`This user doesn't have any followers.`
           }
           errorMessage={cleanError(resolveError || error)}
           onRetry={isError ? refetch : undefined}
@@ -208,8 +222,8 @@ export function ProfileFollowers({name}: {name: string}) {
           useEmptyState={true}
           emptyStateIcon={PeopleRemoveIcon}
           emptyStateButton={{
-            label: _(msg`Go back`),
-            text: _(msg`Go back`),
+            label: l`Go back`,
+            text: l`Go back`,
             color: 'secondary',
             size: 'small',
             onPress: () => navigation.goBack(),
@@ -221,8 +235,8 @@ export function ProfileFollowers({name}: {name: string}) {
           renderItem={renderItemWithContext}
           keyExtractor={keyExtractor}
           refreshing={isPTRing}
-          onRefresh={onRefresh}
-          onEndReached={onEndReached}
+          onRefresh={() => void onRefresh()}
+          onEndReached={() => void onEndReached()}
           onEndReachedThreshold={4}
           onItemSeen={onItemSeen}
           ListFooterComponent={

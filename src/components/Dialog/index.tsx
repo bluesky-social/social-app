@@ -21,11 +21,11 @@ import {
 } from 'react-native'
 import {useReanimatedKeyboardAnimation} from 'react-native-keyboard-controller'
 import Animated, {
-  runOnJS,
   type ScrollEvent,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -197,24 +197,8 @@ export function Outer({
 /**
  * @deprecated use `Dialog.ScrollableInner` instead
  */
-export function Inner({children, style, header}: DialogInnerProps) {
-  const insets = useSafeAreaInsets()
-  return (
-    <>
-      {header}
-      <View
-        style={[
-          a.pt_2xl,
-          a.px_xl,
-          IS_LIQUID_GLASS
-            ? a.pb_2xl
-            : {paddingBottom: insets.bottom + insets.top},
-          style,
-        ]}>
-        {children}
-      </View>
-    </>
-  )
+export function Inner(props: DialogInnerProps) {
+  return <ScrollableInner {...props} />
 }
 
 export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
@@ -315,9 +299,9 @@ export const InnerFlatList = forwardRef<
     }
     const {contentOffset} = e
     if (contentOffset.y > 0 && !disableDrag) {
-      runOnJS(setDisableDrag)(true)
+      scheduleOnRN(setDisableDrag, true)
     } else if (contentOffset.y <= 1 && disableDrag) {
-      runOnJS(setDisableDrag)(false)
+      scheduleOnRN(setDisableDrag, false)
     }
   }
 
