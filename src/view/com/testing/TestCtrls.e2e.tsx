@@ -16,7 +16,7 @@ LogBox.ignoreAllLogs()
  * of the tests dramatically.
  */
 
-const BTN = {height: 1, width: 1, backgroundColor: 'red'}
+const BTN = {height: 16, width: 16}
 
 /*
  * This component is mounted inside <Fragment key={currentAccount?.did}> in
@@ -69,7 +69,7 @@ export function TestCtrls() {
     setShowLoggedOut(false)
   }
   return (
-    <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
+    <View style={{position: 'absolute', top: 100, right: 8, zIndex: 100}}>
       {isProxyConfigured && (
         <>
           <Pressable
