@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {LogBox, Pressable, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -37,6 +37,13 @@ export function TestCtrls() {
   const onboardingDispatch = useOnboardingDispatch()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const [isProxyConfigured, setIsProxyConfigured] = useState(hasConfiguredProxy)
+  useEffect(() => {
+    const header = `${DEV_ENV_APPVIEW_DID}#bsky_appview`
+    BLUESKY_PROXY_HEADER.set(header)
+    agent.configureProxy(header as any)
+    hasConfiguredProxy = true
+    setIsProxyConfigured(true)
+  }, [agent])
   const onPressSignInAlice = async () => {
     console.info('[E2E] Signing in as Alice')
     await login(
@@ -61,21 +68,8 @@ export function TestCtrls() {
     )
     setShowLoggedOut(false)
   }
-  const configureProxy = () => {
-    const header = `${DEV_ENV_APPVIEW_DID}#bsky_appview`
-    BLUESKY_PROXY_HEADER.set(header)
-    agent.configureProxy(header as any)
-    hasConfiguredProxy = true
-    setIsProxyConfigured(true)
-  }
   return (
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
-      <Pressable
-        testID="e2eConfigureProxy"
-        onPress={configureProxy}
-        accessibilityRole="button"
-        style={BTN}
-      />
       {isProxyConfigured && (
         <>
           <Pressable

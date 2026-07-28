@@ -28,11 +28,5 @@ appId: xyz.blueskyweb.app
       - back
 - extendedWaitUntil:
     visible:
-      id: e2eConfigureProxy
-    timeout: 180000
-- tapOn:
-    id: e2eConfigureProxy
-- extendedWaitUntil:
-    visible:
       id: e2eSignInAlice
-    timeout: 30000
+    timeout: 180000
