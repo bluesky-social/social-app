@@ -647,8 +647,8 @@ importers:
         specifier: 6.8.0
         version: 6.8.0(patch_hash=c8316acd33c9aef6531e8c272c2bfab7bd02af1255969eeaab2bad5ab48531cc)(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react-native-progress:
-        specifier: bluesky-social/react-native-progress
-        version: https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4(react-native-svg@15.12.1(patch_hash=ae309e9542214f5ae54935e253dedd236765feedac7be343f81d532d7fe09310)(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))
+        specifier: ^5.0.1
+        version: 5.0.1(react-native-svg@15.12.1(patch_hash=ae309e9542214f5ae54935e253dedd236765feedac7be343f81d532d7fe09310)(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))
       react-native-qrcode-styled:
         specifier: ^0.3.3
         version: 0.3.3(react-native-svg@15.12.1(patch_hash=ae309e9542214f5ae54935e253dedd236765feedac7be343f81d532d7fe09310)(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -7998,9 +7998,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-progress@https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4:
-    resolution: {gitHosted: true, integrity: sha512-gDJJirvdhK5uUuI2OkiuleTbmeCyjkf1G6kPd4HAMc1pW8pUUeA0wKyPxZaI+s9htw8IDH6mFlmBB1ob8QMB4g==, tarball: https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4}
-    version: 5.0.0
+  react-native-progress@5.0.1:
+    resolution: {integrity: sha512-TYfJ4auAe5vubDma2yfFvt7ktSI+UCfysqJnkdHEcLXqAitRFOozgF/cLgN5VNi/iLdaf3ga1ETi2RF4jVZ/+g==}
     peerDependencies:
       react-native-svg: '*'
 
@@ -17734,7 +17733,7 @@ snapshots:
       react: 19.1.0
       react-native: 0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0)
 
-  react-native-progress@https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4(react-native-svg@15.12.1(patch_hash=ae309e9542214f5ae54935e253dedd236765feedac7be343f81d532d7fe09310)(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)):
+  react-native-progress@5.0.1(react-native-svg@15.12.1(patch_hash=ae309e9542214f5ae54935e253dedd236765feedac7be343f81d532d7fe09310)(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)):
     dependencies:
       prop-types: 15.8.1
       react-native-svg: 15.12.1(patch_hash=ae309e9542214f5ae54935e253dedd236765feedac7be343f81d532d7fe09310)(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)

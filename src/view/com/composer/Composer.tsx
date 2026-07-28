@@ -21,8 +21,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
-// @ts-expect-error no type definition
-import ProgressCircle from 'react-native-progress/Circle'
+import {Circle as ProgressCircle} from 'react-native-progress'
 import Animated, {
   type AnimatedRef,
   type AnimatedStyle,

@@ -231,7 +231,7 @@
     "react-native-keyboard-controller": "^1.21.8",
     "react-native-mmkv": "^3.3.3",
     "react-native-pager-view": "6.8.0",
-    "react-native-progress": "bluesky-social/react-native-progress",
+    "react-native-progress": "^5.0.1",
     "react-native-qrcode-styled": "^0.3.3",
     "react-native-reanimated": "~4.3.2",
     "react-native-safe-area-context": "~5.6.0",
