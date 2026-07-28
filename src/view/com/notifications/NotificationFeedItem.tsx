@@ -665,7 +665,9 @@ let NotificationFeedItem = ({
                 </TimeElapsed>
               </Text>
             </ExpandListPressable>
-            {item.type === 'follow' && item.notification.starterPack ? (
+            {item.type === 'follow' &&
+            !hasMultipleAuthors &&
+            item.notification.starterPack ? (
               <FollowedViaStarterPack
                 starterPack={item.notification.starterPack}
               />
