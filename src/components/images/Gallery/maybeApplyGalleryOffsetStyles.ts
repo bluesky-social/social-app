@@ -88,6 +88,7 @@ export function maybeApplyGalleryOffsetStyles(
       if (!isPostGalleryEmbedEnabled) return
       // one image, not a gallery
       if (embed.media.images.length === 1) return
+      hasImages = true
     }
     if (
       bsky.dangerousIsType<AppBskyEmbedGallery.Main>(
@@ -97,8 +98,8 @@ export function maybeApplyGalleryOffsetStyles(
     ) {
       // single (or empty) gallery - no offset needed
       if (embed.media.items.length <= 1) return
+      hasImages = true
     }
-    hasImages = true
   }
   if (!hasImages) return
 
