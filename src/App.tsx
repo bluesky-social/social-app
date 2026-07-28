@@ -13,6 +13,7 @@ import * as SystemUI from 'expo-system-ui'
 import {useLingui} from '@lingui/react/macro'
 import * as Sentry from '@sentry/react-native'
 
+import {useAppBootstrap} from '#/lib/hooks/useAppBootstrap'
 import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottomBarBorder'
 import {QueryProvider} from '#/lib/react-query'
 import {ThemeProvider} from '#/lib/ThemeContext'
@@ -31,7 +32,6 @@ import {listenSessionDropped} from '#/state/events'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {MessagesProvider} from '#/state/messages'
-import {init as initPersistedState} from '#/state/persisted'
 import {Provider as PrefsStateProvider} from '#/state/preferences'
 import {BetaUserStorageSync} from '#/state/preferences/beta-user-sync'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
@@ -44,10 +44,7 @@ import {
   useSession,
   useSessionApi,
 } from '#/state/session'
-import {
-  getSessionRepository,
-  initSessionRepository,
-} from '#/state/session/storage'
+import {getSessionRepository} from '#/state/session/storage'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
@@ -74,12 +71,7 @@ import {
   prefetchAgeAssuranceConfig,
   Provider as AgeAssuranceV2Provider,
 } from '#/ageAssurance'
-import {
-  AnalyticsContext,
-  AnalyticsFeaturesContext,
-  features,
-  setupDeviceId,
-} from '#/analytics'
+import {AnalyticsContext, AnalyticsFeaturesContext, features} from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {
   prefetchLiveEvents,
@@ -219,40 +211,7 @@ function InnerApp() {
 }
 
 function App() {
-  const [isReady, setIsReady] = useState(false)
-
-  useEffect(() => {
-    let cancelled = false
-    let retryTimer: ReturnType<typeof setTimeout> | undefined
-    let persistedInitialized = false
-    const ancillaryReady = Promise.all([Geo.resolve(), setupDeviceId]).catch(
-      error => {
-        // setupDeviceId is a module-level promise and cannot be restarted.
-        // Session storage is more important than blocking forever here.
-        logger.error('ancillary app initialization failed', {error})
-      },
-    )
-
-    async function initialize() {
-      try {
-        if (!persistedInitialized) {
-          await initPersistedState()
-          persistedInitialized = true
-        }
-        await initSessionRepository()
-        await ancillaryReady
-        if (!cancelled) setIsReady(true)
-      } catch (error) {
-        logger.error('app initialization failed', {error})
-        if (!cancelled) retryTimer = setTimeout(() => void initialize(), 5_000)
-      }
-    }
-    void initialize()
-    return () => {
-      cancelled = true
-      if (retryTimer) clearTimeout(retryTimer)
-    }
-  }, [])
+  const isReady = useAppBootstrap()
 
   if (!isReady) {
     return null

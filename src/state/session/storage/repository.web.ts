@@ -1,19 +1,14 @@
 import {createStore, update} from 'idb-keyval'
 
 import BroadcastChannel from '#/lib/broadcast'
-import {logger} from '#/logger'
 import {
-  type SessionAccount,
-  sessionAccountSchema,
-  type SessionSnapshot,
-  sessionSnapshotSchema,
-} from './schema'
-import {
-  type SessionRepository,
-  type SessionStorageCommitResult,
-  type SessionStorageError,
-  type SessionStorageLoadResult,
-} from './types'
+  InvalidSessionStorageDataError,
+  logStorageError,
+  storageError,
+} from './errors'
+import {mergeSnapshots} from './merge'
+import {type SessionSnapshot, sessionSnapshotSchema} from './schema'
+import {type SessionRepository, type SessionStorageError} from './types'
 
 const STORAGE_KEY = 'BSKY_SESSION_STORAGE_V1'
 const STORAGE_LOCK_NAME = `bsky-session:${STORAGE_KEY}`
@@ -23,108 +18,208 @@ const UPDATE_EVENT = 'session-update-v1'
 const EMPTY_SNAPSHOT: SessionSnapshot = {accounts: [], currentDid: undefined}
 const RETRY_DELAY = 5_000
 
-type PendingCommit = {
-  previous: SessionSnapshot
-  next: SessionSnapshot
-  replace?: boolean
-}
+/**
+ * A unit of pending work. A write carries its merge base so a retry rebases
+ * against the same base even after other tabs have moved storage. A clear is a
+ * replacement that unconditionally writes the empty snapshot.
+ */
+type PendingWork =
+  | {type: 'write'; base: SessionSnapshot; next: SessionSnapshot}
+  | {type: 'clear'}
 
+/**
+ * Web session repository. Persists to a dedicated localStorage key, serializes
+ * writes across tabs under navigator.locks (falling back to an idb-keyval
+ * mutex), and folds concurrent changes together with a three-way merge. Other
+ * tabs are notified over a BroadcastChannel and the native storage event.
+ */
 export class WebSessionRepository implements SessionRepository {
   private snapshot: SessionSnapshot = EMPTY_SNAPSHOT
-  private pendingCommit: PendingCommit | undefined
-  private activeOperations = new Map<
-    PendingCommit,
-    Promise<SessionStorageCommitResult>
+  private base: SessionSnapshot = EMPTY_SNAPSHOT
+  private pending: PendingWork | undefined
+  private active = new Map<
+    PendingWork,
+    Promise<SessionStorageError | undefined>
   >()
-  private listeners = new Set<(snapshot: SessionSnapshot) => void>()
+  private subscribers = new Set<(snapshot: SessionSnapshot) => void>()
+  private writeFailureListeners = new Set<
+    (error: SessionStorageError) => void
+  >()
   private retryTimer: ReturnType<typeof setTimeout> | undefined
-  private opened = false
-  private legacyMigrationPending = false
-  private onLegacyMigrationComplete: (() => void) | undefined
+  private listenersAttached = false
+  private onDurable: (() => void) | undefined
+  private durableSignaled = false
   private broadcast = new BroadcastChannel(CHANNEL_NAME)
 
-  async open(
-    legacy?: SessionSnapshot,
-    onLegacyMigrationComplete?: () => void,
-  ): Promise<SessionStorageLoadResult> {
-    this.onLegacyMigrationComplete = onLegacyMigrationComplete
-    let shouldScrubLegacy = false
+  async init(
+    legacy: SessionSnapshot,
+    onDurable: () => void,
+  ): Promise<SessionSnapshot> {
+    this.onDurable = onDurable
+    let stored: SessionSnapshot | undefined
+    let corrupt = false
     try {
-      const stored = readFromStorage()
-      if (stored) {
-        this.snapshot = stored
-        shouldScrubLegacy = Boolean(legacy?.accounts.length)
-      } else {
-        this.snapshot = legacy ?? EMPTY_SNAPSHOT
-        shouldScrubLegacy =
-          (await this.persistInitialSnapshot(this.snapshot)) &&
-          Boolean(legacy?.accounts.length)
-        this.legacyMigrationPending =
-          !shouldScrubLegacy && Boolean(legacy?.accounts.length)
-      }
+      stored = readFromStorage()
     } catch (cause) {
-      logStorageError(storageError('open', cause))
-      // A corrupt dedicated session key proves migration already committed;
+      logStorageError(storageError('init', cause))
+      // A corrupt dedicated session key proves migration already committed, so
       // do not resurrect legacy credentials. If localStorage itself is
       // unavailable, keep the legacy snapshot alive in memory for this tab.
-      this.snapshot =
-        cause instanceof InvalidWebSessionStorageDataError
-          ? EMPTY_SNAPSHOT
-          : (legacy ?? EMPTY_SNAPSHOT)
-      shouldScrubLegacy =
-        (await this.persistInitialSnapshot(this.snapshot)) &&
-        Boolean(legacy?.accounts.length)
-      this.legacyMigrationPending =
-        !shouldScrubLegacy && Boolean(legacy?.accounts.length)
+      corrupt = cause instanceof InvalidSessionStorageDataError
+      stored = undefined
+    }
+    if (stored) {
+      this.snapshot = stored
+      this.base = stored
+      this.signalDurable()
+    } else {
+      this.snapshot = corrupt ? EMPTY_SNAPSHOT : legacy
+      this.base = this.snapshot
+      // Persist the initial snapshot and only signal durability once it lands.
+      // On an unavailable store this fails and keeps retrying in the background.
+      await this.beginInitialPersist()
     }
     this.attachListeners()
-    return {status: 'ready', snapshot: this.snapshot, shouldScrubLegacy}
+    return this.snapshot
   }
 
   getSnapshot(): SessionSnapshot {
     return this.snapshot
   }
 
-  async commit(
-    previous: SessionSnapshot,
-    next: SessionSnapshot,
-  ): Promise<SessionStorageCommitResult> {
-    if (this.pendingCommit?.replace) {
-      this.snapshot = this.pendingCommit.next
-      return this.retryPending()
+  write(next: SessionSnapshot): void {
+    if (this.pending?.type === 'clear') {
+      // A requested wipe is still settling. Drop writes so we never resurrect a
+      // session; retry the clear instead.
+      this.snapshot = EMPTY_SNAPSHOT
+      void this.retry()
+      return
     }
     this.snapshot = next
-    const base = this.pendingCommit?.previous ?? previous
-    const operation = {previous: base, next}
-    this.pendingCommit = operation
+    // Keep the original base across a superseded pending write (latest-wins).
+    const base = this.pending ? this.pending.base : this.base
+    const op: PendingWork = {type: 'write', base, next}
+    this.pending = op
     this.cancelRetry()
-    return this.persistOperation(operation, 'commit')
-  }
-
-  async retryPending(): Promise<SessionStorageCommitResult> {
-    if (!this.pendingCommit) return {status: 'committed'}
-    return this.persistOperation(this.pendingCommit, 'retry')
+    void this.persistOperation(op, 'write')
   }
 
   subscribe(listener: (snapshot: SessionSnapshot) => void): () => void {
-    this.listeners.add(listener)
+    this.subscribers.add(listener)
     return () => {
-      this.listeners.delete(listener)
+      this.subscribers.delete(listener)
+    }
+  }
+
+  onWriteFailure(listener: (error: SessionStorageError) => void): () => void {
+    this.writeFailureListeners.add(listener)
+    return () => {
+      this.writeFailureListeners.delete(listener)
     }
   }
 
   async clear(): Promise<void> {
     this.snapshot = EMPTY_SNAPSHOT
-    this.pendingCommit = {
-      previous: EMPTY_SNAPSHOT,
-      next: EMPTY_SNAPSHOT,
-      replace: true,
-    }
+    this.pending = {type: 'clear'}
     this.cancelRetry()
-    const result = await this.persistOperation(this.pendingCommit, 'clear')
-    if (result.status === 'pending') {
-      throw new Error(`session storage clear failed: ${result.error.kind}`)
+    const error = await this.persistOperation(this.pending, 'clear')
+    if (error) {
+      throw new Error(`session storage clear failed: ${error.kind}`)
     }
+  }
+
+  /**
+   * Await the settling of all in-flight persist operations. Test-only helper;
+   * the SessionRepository contract is fire-and-forget.
+   */
+  async whenSettled(): Promise<void> {
+    while (this.active.size) {
+      await Promise.allSettled([...this.active.values()])
+    }
+  }
+
+  private async beginInitialPersist(): Promise<void> {
+    const op: PendingWork = {
+      type: 'write',
+      base: this.snapshot,
+      next: this.snapshot,
+    }
+    this.pending = op
+    await this.persistOperation(op, 'init')
+  }
+
+  private persistOperation(
+    op: PendingWork,
+    operation: SessionStorageError['operation'],
+  ): Promise<SessionStorageError | undefined> {
+    const active = this.active.get(op)
+    if (active) return active
+
+    const promise = (async (): Promise<SessionStorageError | undefined> => {
+      try {
+        const committed =
+          op.type === 'clear'
+            ? await this.persistReplacement()
+            : await this.persistCommit(op, operation)
+        this.broadcast.postMessage({event: UPDATE_EVENT})
+        if (this.pending === op) {
+          this.snapshot = committed
+          this.base = committed
+          this.pending = undefined
+          this.cancelRetry()
+          if (
+            op.type === 'write' &&
+            JSON.stringify(committed) !== JSON.stringify(op.next)
+          ) {
+            // The merge changed what we asked to write; converge the caller.
+            this.notify(committed)
+          }
+          this.signalDurable()
+        }
+        return undefined
+      } catch (cause) {
+        const error = storageError(operation, cause)
+        logStorageError(error)
+        this.emitFailure(error)
+        if (this.pending === op) this.scheduleRetry()
+        return error
+      } finally {
+        this.active.delete(op)
+      }
+    })()
+    this.active.set(op, promise)
+    return promise
+  }
+
+  private persistCommit(
+    op: {base: SessionSnapshot; next: SessionSnapshot},
+    operation: SessionStorageError['operation'],
+  ): Promise<SessionSnapshot> {
+    return withStorageLock(() => {
+      let theirs: SessionSnapshot
+      try {
+        theirs = readFromStorage() ?? op.base
+      } catch (cause) {
+        if (!(cause instanceof InvalidSessionStorageDataError)) throw cause
+        logStorageError(storageError(operation, cause))
+        theirs = op.base
+      }
+      const committed = mergeSnapshots(op.base, op.next, theirs)
+      writeToStorage(committed)
+      return committed
+    })
+  }
+
+  private persistReplacement(): Promise<SessionSnapshot> {
+    return withStorageLock(() => {
+      writeToStorage(EMPTY_SNAPSHOT)
+      return EMPTY_SNAPSHOT
+    })
+  }
+
+  private async retry(): Promise<void> {
+    if (!this.pending) return
+    await this.persistOperation(this.pending, 'retry')
   }
 
   private onStorage = (event: StorageEvent) => {
@@ -144,121 +239,56 @@ export class WebSessionRepository implements SessionRepository {
 
   private receiveExternalUpdate() {
     try {
-      const next = readFromStorage()
-      if (this.pendingCommit) {
-        if (!this.activeOperations.has(this.pendingCommit)) {
-          void this.retryPending()
-        }
+      const theirs = readFromStorage()
+      if (this.pending) {
+        // Fold the external change into our pending write via a retry.
+        if (!this.active.has(this.pending)) void this.retry()
         return
       }
-      if (!next || JSON.stringify(next) === JSON.stringify(this.snapshot)) {
+      if (!theirs || JSON.stringify(theirs) === JSON.stringify(this.snapshot)) {
         return
       }
-      this.snapshot = next
+      this.snapshot = theirs
+      this.base = theirs
       this.cancelRetry()
-      this.listeners.forEach(listener => listener(next))
+      this.notify(theirs)
     } catch (cause) {
-      logStorageError(storageError('open', cause))
+      logStorageError(storageError('init', cause))
     }
+  }
+
+  private notify(snapshot: SessionSnapshot) {
+    this.subscribers.forEach(listener => listener(snapshot))
+  }
+
+  private emitFailure(error: SessionStorageError) {
+    this.writeFailureListeners.forEach(listener => listener(error))
+  }
+
+  private signalDurable() {
+    if (this.durableSignaled) return
+    this.durableSignaled = true
+    this.onDurable?.()
+  }
+
+  private attachListeners() {
+    if (this.listenersAttached) return
+    this.listenersAttached = true
+    this.broadcast.onmessage = this.onBroadcastMessage
+    window.addEventListener('storage', this.onStorage)
   }
 
   private scheduleRetry() {
     if (this.retryTimer) return
     this.retryTimer = setTimeout(() => {
       this.retryTimer = undefined
-      void this.retryPending()
+      void this.retry()
     }, RETRY_DELAY)
   }
 
   private cancelRetry() {
     if (this.retryTimer) clearTimeout(this.retryTimer)
     this.retryTimer = undefined
-  }
-
-  private attachListeners() {
-    if (this.opened) return
-    this.opened = true
-    this.broadcast.onmessage = this.onBroadcastMessage
-    window.addEventListener('storage', this.onStorage)
-  }
-
-  private async persistInitialSnapshot(
-    snapshot: SessionSnapshot,
-  ): Promise<boolean> {
-    const operation = {previous: snapshot, next: snapshot}
-    this.pendingCommit = operation
-    const result = await this.persistOperation(operation, 'open')
-    return result.status === 'committed'
-  }
-
-  private async persistOperation(
-    operation: PendingCommit,
-    errorOperation: SessionStorageError['operation'],
-  ): Promise<SessionStorageCommitResult> {
-    const active = this.activeOperations.get(operation)
-    if (active) return active
-
-    const promise = (async (): Promise<SessionStorageCommitResult> => {
-      try {
-        const committed = operation.replace
-          ? await this.persistReplacement(operation.next)
-          : await this.persistCommit(
-              operation.previous,
-              operation.next,
-              errorOperation,
-            )
-        this.broadcast.postMessage({event: UPDATE_EVENT})
-        if (this.pendingCommit === operation) {
-          this.snapshot = committed
-          this.pendingCommit = undefined
-          this.cancelRetry()
-          if (JSON.stringify(committed) !== JSON.stringify(operation.next)) {
-            this.listeners.forEach(listener => listener(committed))
-          }
-          if (this.legacyMigrationPending) {
-            this.legacyMigrationPending = false
-            this.onLegacyMigrationComplete?.()
-          }
-        }
-        return {status: 'committed'}
-      } catch (cause) {
-        const error = storageError(errorOperation, cause)
-        logStorageError(error)
-        if (this.pendingCommit === operation) this.scheduleRetry()
-        return {status: 'pending', error}
-      } finally {
-        this.activeOperations.delete(operation)
-      }
-    })()
-    this.activeOperations.set(operation, promise)
-    return promise
-  }
-
-  private persistCommit(
-    previous: SessionSnapshot,
-    next: SessionSnapshot,
-    errorOperation: SessionStorageError['operation'],
-  ): Promise<SessionSnapshot> {
-    return withStorageLock(() => {
-      let latest: SessionSnapshot
-      try {
-        latest = readFromStorage() ?? previous
-      } catch (cause) {
-        if (!(cause instanceof InvalidWebSessionStorageDataError)) throw cause
-        logStorageError(storageError(errorOperation, cause))
-        latest = previous
-      }
-      const committed = rebaseSessionSnapshot(previous, next, latest)
-      writeToStorage(committed)
-      return committed
-    })
-  }
-
-  private persistReplacement(next: SessionSnapshot): Promise<SessionSnapshot> {
-    return withStorageLock(() => {
-      writeToStorage(next)
-      return next
-    })
   }
 }
 
@@ -283,140 +313,12 @@ function readFromStorage(): SessionSnapshot | undefined {
   try {
     return sessionSnapshotSchema.parse(JSON.parse(raw))
   } catch {
-    throw new InvalidWebSessionStorageDataError()
+    throw new InvalidSessionStorageDataError()
   }
 }
 
 function writeToStorage(snapshot: SessionSnapshot) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot))
-}
-
-class InvalidWebSessionStorageDataError extends Error {}
-
-const ACCOUNT_KEYS = [
-  'service',
-  'did',
-  'handle',
-  'email',
-  'emailConfirmed',
-  'emailAuthFactor',
-  'refreshJwt',
-  'accessJwt',
-  'signupQueued',
-  'active',
-  'status',
-  'pdsUrl',
-  'isSelfHosted',
-] as const satisfies readonly (keyof SessionAccount)[]
-
-export function rebaseSessionSnapshot(
-  previous: SessionSnapshot,
-  next: SessionSnapshot,
-  latest: SessionSnapshot,
-): SessionSnapshot {
-  const previousByDid = new Map(
-    previous.accounts.map(account => [account.did, account]),
-  )
-  const nextByDid = new Map(
-    next.accounts.map(account => [account.did, account]),
-  )
-  const resultByDid = new Map(
-    latest.accounts.map(account => [account.did, account]),
-  )
-
-  for (const did of previousByDid.keys()) {
-    if (!nextByDid.has(did)) resultByDid.delete(did)
-  }
-  for (const account of next.accounts) {
-    const prior = previousByDid.get(account.did)
-    if (!prior) {
-      const latestAccount = resultByDid.get(account.did)
-      const mergedAccount = latestAccount
-        ? {
-            ...latestAccount,
-            ...account,
-            refreshJwt:
-              latestAccount.refreshJwt && account.refreshJwt
-                ? account.refreshJwt
-                : undefined,
-            accessJwt:
-              latestAccount.accessJwt && account.accessJwt
-                ? account.accessJwt
-                : undefined,
-          }
-        : account
-      resultByDid.set(account.did, sessionAccountSchema.parse(mergedAccount))
-      continue
-    }
-    if (JSON.stringify(prior) === JSON.stringify(account)) continue
-    const latestAccount = resultByDid.get(account.did)
-    if (!latestAccount) {
-      // A concurrent removal wins over an edit based on the removed account.
-      continue
-    }
-    let rebasedAccount = latestAccount
-    for (const key of ACCOUNT_KEYS) {
-      if (prior[key] !== account[key]) {
-        const isCredential = key === 'refreshJwt' || key === 'accessJwt'
-        const remotelyRevoked =
-          isCredential &&
-          prior[key] !== latestAccount[key] &&
-          !latestAccount[key]
-        if (!remotelyRevoked) {
-          rebasedAccount = {...rebasedAccount, [key]: account[key]}
-        }
-      }
-    }
-    resultByDid.set(account.did, sessionAccountSchema.parse(rebasedAccount))
-  }
-
-  const previousOrder = previous.accounts.map(account => account.did)
-  const nextOrder = next.accounts.map(account => account.did)
-  const latestOrder = latest.accounts.map(account => account.did)
-  const latestDids = new Set(latestOrder)
-  const orderChanged =
-    JSON.stringify(previousOrder) !== JSON.stringify(nextOrder)
-  const order = orderChanged
-    ? [...nextOrder, ...latestOrder.filter(did => !nextByDid.has(did))]
-    : [...latestOrder, ...nextOrder.filter(did => !latestDids.has(did))]
-  const accounts = order.flatMap(did => {
-    const account = resultByDid.get(did)
-    return account ? [account] : []
-  })
-
-  let currentDid =
-    previous.currentDid === next.currentDid
-      ? latest.currentDid
-      : next.currentDid
-  if (currentDid && !resultByDid.has(currentDid)) currentDid = undefined
-  return sessionSnapshotSchema.parse({accounts, currentDid})
-}
-
-function storageError(
-  operation: SessionStorageError['operation'],
-  cause: unknown,
-): SessionStorageError {
-  const message = cause instanceof Error ? cause.message : String(cause)
-  const kind =
-    cause instanceof InvalidWebSessionStorageDataError
-      ? 'invalid-data'
-      : /quota|disk.*full|storage.*full|no space/i.test(message)
-        ? 'storage-full'
-        : operation === 'open'
-          ? 'unavailable'
-          : 'write-failed'
-  return {kind, operation}
-}
-
-function logStorageError(error: SessionStorageError) {
-  logger.error('session storage operation failed', {
-    kind: error.kind,
-    operation: error.operation,
-    tags: {
-      session_storage_kind: error.kind,
-      session_storage_operation: error.operation,
-    },
-  })
 }
 
 export function createSessionRepository(): SessionRepository {

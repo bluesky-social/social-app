@@ -4,6 +4,7 @@ import {WebSessionRepository} from '../repository.web'
 import {type SessionAccount, type SessionSnapshot} from '../schema'
 
 const STORAGE_KEY = 'BSKY_SESSION_STORAGE_V1'
+const RETRY_DELAY = 5_000
 const values = new Map<string, string>()
 let failRead = false
 let failWrite = false
@@ -54,6 +55,8 @@ const charlie: SessionAccount = {
   accessJwt: 'charlie-access',
 }
 
+const EMPTY: SessionSnapshot = {accounts: [], currentDid: undefined}
+
 beforeEach(() => {
   jest.useFakeTimers()
   values.clear()
@@ -92,15 +95,14 @@ describe('WebSessionRepository', () => {
   it('repairs corrupt storage and starts logged out', async () => {
     values.set(STORAGE_KEY, '{invalid json')
     const repository = new WebSessionRepository()
+    const onDurable = jest.fn()
 
     await expect(
-      repository.open({accounts: [alice], currentDid: alice.did}),
-    ).resolves.toEqual({
-      status: 'ready',
-      snapshot: {accounts: [], currentDid: undefined},
-      shouldScrubLegacy: true,
-    })
-    expect(readStoredSnapshot()).toEqual({accounts: []})
+      repository.init({accounts: [alice], currentDid: alice.did}, onDurable),
+    ).resolves.toEqual(EMPTY)
+    await repository.whenSettled()
+    expect(onDurable).toHaveBeenCalledTimes(1)
+    expect(readStoredSnapshot()).toEqual(EMPTY)
   })
 
   it('keeps a legacy session in memory when localStorage is unavailable', async () => {
@@ -108,12 +110,11 @@ describe('WebSessionRepository', () => {
     failWrite = true
     const repository = new WebSessionRepository()
     const legacy = {accounts: [alice], currentDid: alice.did}
+    const onDurable = jest.fn()
 
-    await expect(repository.open(legacy)).resolves.toEqual({
-      status: 'ready',
-      snapshot: legacy,
-      shouldScrubLegacy: false,
-    })
+    await expect(repository.init(legacy, onDurable)).resolves.toEqual(legacy)
+    await repository.whenSettled()
+    expect(onDurable).not.toHaveBeenCalled()
     expect(repository.getSnapshot()).toEqual(legacy)
   })
 
@@ -123,7 +124,7 @@ describe('WebSessionRepository', () => {
       currentDid: alice.did,
     }
     const repository = new WebSessionRepository()
-    await repository.open(previous)
+    await repository.init(previous, jest.fn())
 
     const latest: SessionSnapshot = {
       accounts: [
@@ -135,13 +136,11 @@ describe('WebSessionRepository', () => {
     }
     values.set(STORAGE_KEY, JSON.stringify(latest))
 
-    const next: SessionSnapshot = {
+    repository.write({
       accounts: [{...alice, emailConfirmed: true}],
       currentDid: alice.did,
-    }
-    await expect(repository.commit(previous, next)).resolves.toEqual({
-      status: 'committed',
     })
+    await repository.whenSettled()
 
     expect(readStoredSnapshot()).toEqual({
       accounts: [
@@ -164,19 +163,18 @@ describe('WebSessionRepository', () => {
     }
     const firstTab = new WebSessionRepository()
     const secondTab = new WebSessionRepository()
-    await firstTab.open(previous)
-    await secondTab.open(previous)
+    await firstTab.init(previous, jest.fn())
+    await secondTab.init(previous, jest.fn())
 
-    await Promise.all([
-      firstTab.commit(previous, {
-        accounts: [{...alice, emailConfirmed: true}, bob],
-        currentDid: alice.did,
-      }),
-      secondTab.commit(previous, {
-        accounts: [alice, {...bob, handle: 'new-bob.test'}],
-        currentDid: alice.did,
-      }),
-    ])
+    firstTab.write({
+      accounts: [{...alice, emailConfirmed: true}, bob],
+      currentDid: alice.did,
+    })
+    secondTab.write({
+      accounts: [alice, {...bob, handle: 'new-bob.test'}],
+      currentDid: alice.did,
+    })
+    await Promise.all([firstTab.whenSettled(), secondTab.whenSettled()])
 
     expect(readStoredSnapshot()).toEqual({
       accounts: [
@@ -197,7 +195,7 @@ describe('WebSessionRepository', () => {
       currentDid: alice.did,
     }
     const repository = new WebSessionRepository()
-    await repository.open(previous)
+    await repository.init(previous, jest.fn())
 
     values.set(
       STORAGE_KEY,
@@ -206,12 +204,13 @@ describe('WebSessionRepository', () => {
         currentDid: undefined,
       }),
     )
-    await repository.commit(previous, {
+    repository.write({
       accounts: [
         {...alice, refreshJwt: 'fresh-refresh', accessJwt: 'fresh-access'},
       ],
       currentDid: alice.did,
     })
+    await repository.whenSettled()
 
     const {
       refreshJwt: _refreshJwt,
@@ -225,8 +224,7 @@ describe('WebSessionRepository', () => {
 
   it('preserves credential revocation during concurrent account adds', async () => {
     const repository = new WebSessionRepository()
-    const previous: SessionSnapshot = {accounts: [], currentDid: undefined}
-    await repository.open(previous)
+    await repository.init(EMPTY, jest.fn())
 
     const {
       refreshJwt: _refreshJwt,
@@ -238,10 +236,11 @@ describe('WebSessionRepository', () => {
       JSON.stringify({accounts: [loggedOutAlice], currentDid: undefined}),
     )
 
-    await repository.commit(previous, {
+    repository.write({
       accounts: [alice],
       currentDid: alice.did,
     })
+    await repository.whenSettled()
     expect(readStoredSnapshot()).toEqual({
       accounts: [loggedOutAlice],
       currentDid: alice.did,
@@ -254,74 +253,96 @@ describe('WebSessionRepository', () => {
       currentDid: alice.did,
     }
     const repository = new WebSessionRepository()
-    await repository.open(previous)
+    await repository.init(previous, jest.fn())
 
     values.set(
       STORAGE_KEY,
       JSON.stringify({accounts: [bob], currentDid: bob.did}),
     )
-    const editedAlice = {...alice, emailConfirmed: true}
-    const next: SessionSnapshot = {
-      accounts: [editedAlice, bob],
+    repository.write({
+      accounts: [{...alice, emailConfirmed: true}, bob],
       currentDid: alice.did,
-    }
-
-    await expect(repository.commit(previous, next)).resolves.toEqual({
-      status: 'committed',
     })
+    await repository.whenSettled()
+
     expect(readStoredSnapshot()).toEqual({
       accounts: [bob],
       currentDid: bob.did,
     })
   })
 
-  it('replaces an older pending commit with a failed clear', async () => {
+  it('notifies subscribers when a merge changes the committed snapshot', async () => {
     const previous: SessionSnapshot = {
       accounts: [alice],
       currentDid: alice.did,
     }
     const repository = new WebSessionRepository()
-    await repository.open(previous)
+    await repository.init(previous, jest.fn())
+
+    const committed: SessionSnapshot[] = []
+    repository.subscribe(snapshot => committed.push(snapshot))
+
+    // Another tab logged alice out; our unrelated edit must not resurrect her.
+    values.set(
+      STORAGE_KEY,
+      JSON.stringify({
+        accounts: [{...alice, refreshJwt: undefined, accessJwt: undefined}],
+        currentDid: undefined,
+      }),
+    )
+    repository.write({
+      accounts: [{...alice, refreshJwt: 'fresh', accessJwt: 'fresh'}],
+      currentDid: alice.did,
+    })
+    await repository.whenSettled()
+
+    const {
+      refreshJwt: _refreshJwt,
+      accessJwt: _accessJwt,
+      ...loggedOutAlice
+    } = alice
+    expect(committed).toEqual([{accounts: [loggedOutAlice]}])
+  })
+
+  it('drops writes after a failed clear until the clear succeeds', async () => {
+    const previous: SessionSnapshot = {
+      accounts: [alice],
+      currentDid: alice.did,
+    }
+    const repository = new WebSessionRepository()
+    await repository.init(previous, jest.fn())
 
     failWrite = true
-    await expect(
-      repository.commit(previous, {
-        accounts: [{...alice, accessJwt: 'new-access'}],
-        currentDid: alice.did,
-      }),
-    ).resolves.toMatchObject({status: 'pending'})
+    repository.write({
+      accounts: [{...alice, accessJwt: 'new-access'}],
+      currentDid: alice.did,
+    })
+    await repository.whenSettled()
 
     await expect(repository.clear()).rejects.toThrow(
       'session storage clear failed: write-failed',
     )
-    expect(repository.getSnapshot()).toEqual({
-      accounts: [],
-      currentDid: undefined,
-    })
+    expect(repository.getSnapshot()).toEqual(EMPTY)
 
-    await expect(repository.commit(previous, previous)).resolves.toMatchObject({
-      status: 'pending',
-    })
-    expect(repository.getSnapshot()).toEqual({
-      accounts: [],
-      currentDid: undefined,
-    })
+    repository.write(previous)
+    await repository.whenSettled()
+    expect(repository.getSnapshot()).toEqual(EMPTY)
 
     failWrite = false
-    await expect(repository.retryPending()).resolves.toEqual({
-      status: 'committed',
-    })
-    expect(readStoredSnapshot()).toEqual({accounts: []})
-    expect(repository.getSnapshot()).toEqual({accounts: []})
+    jest.advanceTimersByTime(RETRY_DELAY)
+    await repository.whenSettled()
+    expect(readStoredSnapshot()).toEqual(EMPTY)
+    expect(repository.getSnapshot()).toEqual(EMPTY)
   })
 
-  it('does not overwrite newer storage when initial persistence retries', async () => {
+  it('does not overwrite newer storage when the initial persist retries', async () => {
     failWrite = true
     const repository = new WebSessionRepository()
     const legacy = {accounts: [alice], currentDid: alice.did}
-    const onLegacyMigrationComplete = jest.fn()
-    await repository.open(legacy, onLegacyMigrationComplete)
-    expect(onLegacyMigrationComplete).not.toHaveBeenCalled()
+    const onDurable = jest.fn()
+    await repository.init(legacy, onDurable)
+    await repository.whenSettled()
+    expect(onDurable).not.toHaveBeenCalled()
 
     const refreshed = {
       accounts: [{...alice, accessJwt: 'fresh-access'}],
@@ -330,12 +351,11 @@ describe('WebSessionRepository', () => {
     failWrite = false
     values.set(STORAGE_KEY, JSON.stringify(refreshed))
 
-    await expect(repository.retryPending()).resolves.toEqual({
-      status: 'committed',
-    })
+    jest.advanceTimersByTime(RETRY_DELAY)
+    await repository.whenSettled()
     expect(readStoredSnapshot()).toEqual(refreshed)
     expect(repository.getSnapshot()).toEqual(refreshed)
-    expect(onLegacyMigrationComplete).toHaveBeenCalledTimes(1)
+    expect(onDurable).toHaveBeenCalledTimes(1)
   })
 })
 

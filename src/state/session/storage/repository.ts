@@ -1,167 +1,109 @@
-import * as SecureStore from 'expo-secure-store'
-import {z} from 'zod'
-
 import {onAppStateChange} from '#/lib/appState'
-import {logger} from '#/logger'
-import {accountKeys, SESSION_INDEX_KEY} from './keys'
 import {
-  type SessionAccount,
-  sessionAccountSchema,
-  type SessionSnapshot,
-} from './schema'
+  InvalidSessionStorageDataError,
+  logStorageError,
+  storageError,
+} from './errors'
+import {type SessionSnapshot} from './schema'
 import {
-  type SessionRepository,
-  type SessionStorageCommitResult,
-  type SessionStorageError,
-  type SessionStorageLoadResult,
-} from './types'
-
-const indexSchema = z.object({
-  version: z.literal(1),
-  currentDid: z.string().optional(),
-  dids: z.array(z.string()),
-  retiredDids: z.array(z.string()).optional(),
-  revokedDids: z.array(z.string()).optional(),
-})
-const descriptorSchema = sessionAccountSchema.omit({
-  accessJwt: true,
-  refreshJwt: true,
-})
-
-type StoredIndex = z.infer<typeof indexSchema>
-type AccountDescriptor = Omit<SessionAccount, 'accessJwt' | 'refreshJwt'>
+  eraseSessions,
+  indexExists,
+  readSessions,
+  writeSessions,
+} from './secureStore'
+import {type SessionRepository, type SessionStorageError} from './types'
 
 const EMPTY_SNAPSHOT: SessionSnapshot = {accounts: [], currentDid: undefined}
 const RETRY_DELAY = 5_000
 
+/**
+ * Native session repository. Owns only the in-memory lifecycle - the current
+ * snapshot, the last durable snapshot, the pending work, the maybe-orphaned
+ * did set, and the retry timer. All keychain layout and crash recovery live in
+ * secureStore.ts.
+ *
+ * Pending work is a union so the sticky-clear rule reads as one guard: while a
+ * clear is pending, write() drops its input rather than risk resurrecting a
+ * session after a requested wipe.
+ */
+type PendingWork =
+  | {type: 'write'; snapshot: SessionSnapshot}
+  | {type: 'clear'; dids: string[]}
+
 export class NativeSessionRepository implements SessionRepository {
   private snapshot: SessionSnapshot = EMPTY_SNAPSHOT
-  private persistedSnapshot: SessionSnapshot = EMPTY_SNAPSHOT
-  private hasPersistedIndex = false
-  private pendingSnapshot: SessionSnapshot | undefined
-  private pendingClearDids: string[] | undefined
-  private possiblyWrittenDids = new Set<string>()
+  private durableSnapshot: SessionSnapshot = EMPTY_SNAPSHOT
+  private pending: PendingWork | undefined
+  private maybeOrphanedDids = new Set<string>()
   private retryTimer: ReturnType<typeof setTimeout> | undefined
-  private listeners = new Set<(snapshot: SessionSnapshot) => void>()
-
-  constructor() {
-    onAppStateChange(state => {
-      if (
-        state === 'active' &&
-        (this.pendingSnapshot || this.pendingClearDids)
-      ) {
-        this.retryPending()
-      }
-    })
-  }
+  private subscribers = new Set<(snapshot: SessionSnapshot) => void>()
+  private writeFailureListeners = new Set<
+    (error: SessionStorageError) => void
+  >()
+  private retryTriggersAttached = false
 
   // async to keep one repository contract across native and web.
   // eslint-disable-next-line @typescript-eslint/require-await
-  async open(legacy?: SessionSnapshot): Promise<SessionStorageLoadResult> {
+  async init(
+    legacy: SessionSnapshot,
+    onDurable: () => void,
+  ): Promise<SessionSnapshot> {
     try {
-      const rawIndex = SecureStore.getItem(SESSION_INDEX_KEY)
-      if (rawIndex !== null) {
-        let snapshot: SessionSnapshot
+      if (indexExists()) {
         try {
-          snapshot = this.readSnapshot(rawIndex)
+          this.setDurable(readSessions())
         } catch (cause) {
           if (!(cause instanceof InvalidSessionStorageDataError)) throw cause
-          logStorageError({kind: 'invalid-data', operation: 'open'})
-          this.hasPersistedIndex = false
-          this.snapshot = EMPTY_SNAPSHOT
-          this.persistedSnapshot = EMPTY_SNAPSHOT
-          // Index presence proves migration previously reached its commit
-          // point. Never resurrect possibly stale credentials from the legacy
-          // blob when repairing corrupt new-format data.
-          return this.initializeSnapshot(
-            EMPTY_SNAPSHOT,
-            Boolean(legacy?.accounts.length),
-          )
+          logStorageError({kind: 'invalid-data', operation: 'init'})
+          // The index proves migration previously reached its commit point.
+          // Repair to a clean empty state rather than resurrect possibly stale
+          // credentials from the legacy blob.
+          this.setDurable(this.migrate(EMPTY_SNAPSHOT))
         }
-        this.hasPersistedIndex = true
-        this.snapshot = snapshot
-        this.persistedSnapshot = snapshot
-        this.pendingSnapshot = undefined
-        this.cancelRetry()
-        return {
-          status: 'ready',
-          snapshot,
-          shouldScrubLegacy: Boolean(legacy?.accounts.length),
-        }
+      } else {
+        this.setDurable(this.migrate(legacy))
       }
-
-      return this.initializeSnapshot(legacy ?? EMPTY_SNAPSHOT)
     } catch (cause) {
-      const error = storageError('open', cause)
+      const error = storageError('init', cause)
       logStorageError(error)
-      return {status: 'unavailable', error}
+      throw new Error(`session storage unavailable: ${error.kind}`)
     }
+
+    // Attach retry triggers only after a successful init, so a failed init
+    // that the app-level bootstrap retries never leaves a live listener.
+    this.attachRetryTriggers()
+    // The store is durable now: either an index already existed or the
+    // migration was written and read back successfully.
+    onDurable()
+    return this.snapshot
   }
 
   getSnapshot(): SessionSnapshot {
     return this.snapshot
   }
 
-  commit(
-    _previous: SessionSnapshot,
-    next: SessionSnapshot,
-  ): SessionStorageCommitResult {
-    if (this.pendingClearDids) {
+  write(next: SessionSnapshot): void {
+    if (this.pending?.type === 'clear') {
+      // A requested wipe is still settling. Drop writes so we never resurrect
+      // a session after clear(); the pending clear stays authoritative.
       this.snapshot = EMPTY_SNAPSHOT
-      return this.retryPending()
+      return
     }
     this.snapshot = next
-    this.trackPossiblyWrittenAccounts(next)
-    try {
-      this.writeSnapshot(this.persistedSnapshot, next)
-      this.persistedSnapshot = next
-      this.hasPersistedIndex = true
-      this.pendingSnapshot = undefined
-      this.possiblyWrittenDids.clear()
-      this.cancelRetry()
-      return {status: 'committed'}
-    } catch (cause) {
-      this.pendingSnapshot = next
-      const error = storageError('commit', cause)
-      logStorageError(error)
-      this.scheduleRetry()
-      return {status: 'pending', error}
-    }
-  }
-
-  retryPending(): SessionStorageCommitResult {
-    if (!this.pendingSnapshot && !this.pendingClearDids) {
-      return {status: 'committed'}
-    }
-    try {
-      if (this.pendingClearDids) {
-        this.writeClear(this.pendingClearDids)
-        this.snapshot = EMPTY_SNAPSHOT
-        this.persistedSnapshot = EMPTY_SNAPSHOT
-        this.pendingClearDids = undefined
-      } else {
-        const next = this.pendingSnapshot!
-        this.trackPossiblyWrittenAccounts(next)
-        this.writeSnapshot(this.persistedSnapshot, next)
-        this.persistedSnapshot = next
-      }
-      this.hasPersistedIndex = true
-      this.pendingSnapshot = undefined
-      this.possiblyWrittenDids.clear()
-      this.cancelRetry()
-      return {status: 'committed'}
-    } catch (cause) {
-      const error = storageError('retry', cause)
-      logStorageError(error)
-      this.scheduleRetry()
-      return {status: 'pending', error}
-    }
+    this.persist(next, 'write')
   }
 
   subscribe(listener: (snapshot: SessionSnapshot) => void): () => void {
-    this.listeners.add(listener)
+    this.subscribers.add(listener)
     return () => {
-      this.listeners.delete(listener)
+      this.subscribers.delete(listener)
+    }
+  }
+
+  onWriteFailure(listener: (error: SessionStorageError) => void): () => void {
+    this.writeFailureListeners.add(listener)
+    return () => {
+      this.writeFailureListeners.delete(listener)
     }
   }
 
@@ -169,182 +111,123 @@ export class NativeSessionRepository implements SessionRepository {
   async clear(): Promise<void> {
     const dids = [
       ...new Set([
-        ...this.persistedSnapshot.accounts.map(account => account.did),
+        ...this.durableSnapshot.accounts.map(account => account.did),
         ...this.snapshot.accounts.map(account => account.did),
-        ...this.possiblyWrittenDids,
+        ...this.maybeOrphanedDids,
       ]),
     ]
     this.snapshot = EMPTY_SNAPSHOT
-    this.pendingSnapshot = undefined
-    this.pendingClearDids = dids
+    this.pending = {type: 'clear', dids}
     this.cancelRetry()
     try {
-      this.writeClear(dids)
-      this.persistedSnapshot = EMPTY_SNAPSHOT
-      this.hasPersistedIndex = true
-      this.pendingClearDids = undefined
-      this.possiblyWrittenDids.clear()
-      this.cancelRetry()
+      eraseSessions(dids)
+      this.durableSnapshot = EMPTY_SNAPSHOT
+      this.maybeOrphanedDids.clear()
+      this.pending = undefined
     } catch (cause) {
       const error = storageError('clear', cause)
       logStorageError(error)
+      this.emitFailure(error)
       this.scheduleRetry()
       throw cause
     }
   }
 
-  private readSnapshot(rawIndex: string): SessionSnapshot {
-    let index: StoredIndex
+  /**
+   * Write the legacy snapshot to the new store and read it back so migration
+   * is only considered durable once every item validates. `forceIndex`
+   * guarantees the first-ever write publishes an index even when empty.
+   */
+  private migrate(legacy: SessionSnapshot): SessionSnapshot {
+    writeSessions(EMPTY_SNAPSHOT, legacy, {forceIndex: true})
+    return readSessions()
+  }
+
+  private persist(
+    next: SessionSnapshot,
+    operation: SessionStorageError['operation'],
+  ) {
+    this.trackMaybeOrphaned(next)
     try {
-      index = indexSchema.parse(JSON.parse(rawIndex))
-    } catch {
-      throw new InvalidSessionStorageDataError()
-    }
-    if (index.revokedDids?.length) {
-      const activeDids = new Set(index.dids)
-      index.revokedDids
-        .filter(did => activeDids.has(did))
-        .forEach(tombstoneCredentials)
-    }
-    if (index.retiredDids?.length) {
-      const activeDids = new Set(index.dids)
-      index.retiredDids
-        .filter(did => !activeDids.has(did))
-        .forEach(tombstoneAccount)
-    }
-    if (index.revokedDids?.length || index.retiredDids?.length) {
-      const cleanedIndex = {
-        version: index.version,
-        currentDid: index.currentDid,
-        dids: index.dids,
-      } satisfies StoredIndex
-      SecureStore.setItem(SESSION_INDEX_KEY, JSON.stringify(cleanedIndex))
-      index = cleanedIndex
-    }
-    if (index.currentDid && !index.dids.includes(index.currentDid)) {
-      throw new InvalidSessionStorageDataError()
-    }
-    const accounts = index.dids.map(did => {
-      const keys = accountKeys(did)
-      const rawDescriptor = SecureStore.getItem(keys.descriptor)
-      if (rawDescriptor === null) {
-        throw new InvalidSessionStorageDataError()
-      }
-      let descriptor: AccountDescriptor
-      try {
-        descriptor = descriptorSchema.parse(JSON.parse(rawDescriptor))
-      } catch {
-        throw new InvalidSessionStorageDataError()
-      }
-      if (descriptor.did !== did) {
-        throw new InvalidSessionStorageDataError()
-      }
-      return {
-        ...descriptor,
-        refreshJwt: SecureStore.getItem(keys.refresh) || undefined,
-        accessJwt: SecureStore.getItem(keys.access) || undefined,
-      }
-    })
-    return {accounts, currentDid: index.currentDid}
-  }
-
-  private writeSnapshot(previous: SessionSnapshot, next: SessionSnapshot) {
-    const previousByDid = new Map(previous.accounts.map(a => [a.did, a]))
-    const nextDids = new Set(next.accounts.map(a => a.did))
-    const retiredDids = [
-      ...new Set([
-        ...previous.accounts
-          .filter(account => !nextDids.has(account.did))
-          .map(account => account.did),
-        ...[...this.possiblyWrittenDids].filter(did => !nextDids.has(did)),
-      ]),
-    ]
-    const revokedDids = next.accounts
-      .filter(account => {
-        const prior = previousByDid.get(account.did)
-        return (
-          (Boolean(prior?.refreshJwt) && !account.refreshJwt) ||
-          (Boolean(prior?.accessJwt) && !account.accessJwt)
-        )
+      writeSessions(this.durableSnapshot, next, {
+        alsoRetire: [...this.maybeOrphanedDids],
       })
-      .map(account => account.did)
-
-    if (revokedDids.length) {
-      // Journal retained-account logout before clearing either credential.
-      // On interruption, open() finishes the tombstoning before loading.
-      SecureStore.setItem(
-        SESSION_INDEX_KEY,
-        JSON.stringify(toStoredIndex(next, retiredDids, revokedDids)),
-      )
-    }
-
-    // Credentials go first. AtpAgent does not await its persistence callback,
-    // so these must complete synchronously before the app can be suspended.
-    for (const account of next.accounts) {
-      const prior = previousByDid.get(account.did)
-      const keys = accountKeys(account.did)
-      if (prior?.refreshJwt !== account.refreshJwt) {
-        SecureStore.setItem(keys.refresh, account.refreshJwt ?? '')
-      }
-      if (prior?.accessJwt !== account.accessJwt) {
-        SecureStore.setItem(keys.access, account.accessJwt ?? '')
-      }
-      const descriptor = toDescriptor(account)
-      if (JSON.stringify(toDescriptor(prior)) !== JSON.stringify(descriptor)) {
-        SecureStore.setItem(keys.descriptor, JSON.stringify(descriptor))
-      }
-    }
-
-    if (
-      !this.hasPersistedIndex ||
-      retiredDids.length > 0 ||
-      JSON.stringify(previous) !== JSON.stringify(next)
-    ) {
-      // Publishing the index is the commit point. `retiredDids` makes token
-      // cleanup recoverable if the process stops between these sync writes.
-      SecureStore.setItem(
-        SESSION_INDEX_KEY,
-        JSON.stringify(toStoredIndex(next, retiredDids)),
-      )
-    }
-
-    if (retiredDids.length) {
-      retiredDids.forEach(tombstoneAccount)
-      SecureStore.setItem(
-        SESSION_INDEX_KEY,
-        JSON.stringify(toStoredIndex(next)),
-      )
+      this.durableSnapshot = next
+      this.maybeOrphanedDids.clear()
+      this.pending = undefined
+      this.cancelRetry()
+    } catch (cause) {
+      this.pending = {type: 'write', snapshot: next}
+      const error = storageError(operation, cause)
+      logStorageError(error)
+      this.emitFailure(error)
+      this.scheduleRetry()
     }
   }
 
-  private writeClear(dids: string[]) {
-    SecureStore.setItem(
-      SESSION_INDEX_KEY,
-      JSON.stringify(toStoredIndex(EMPTY_SNAPSHOT, dids)),
-    )
-    dids.forEach(tombstoneAccount)
-    SecureStore.setItem(
-      SESSION_INDEX_KEY,
-      JSON.stringify(toStoredIndex(EMPTY_SNAPSHOT)),
-    )
+  private retry() {
+    if (!this.pending) return
+    if (this.pending.type === 'clear') {
+      const {dids} = this.pending
+      try {
+        eraseSessions(dids)
+        this.durableSnapshot = EMPTY_SNAPSHOT
+        this.snapshot = EMPTY_SNAPSHOT
+        this.maybeOrphanedDids.clear()
+        this.pending = undefined
+        this.cancelRetry()
+      } catch (cause) {
+        const error = storageError('retry', cause)
+        logStorageError(error)
+        this.emitFailure(error)
+        this.scheduleRetry()
+      }
+    } else {
+      this.persist(this.pending.snapshot, 'retry')
+    }
   }
 
-  private trackPossiblyWrittenAccounts(next: SessionSnapshot) {
-    const persistedDids = new Set(
-      this.persistedSnapshot.accounts.map(account => account.did),
+  /**
+   * Remember dids we may have partially written under a did the durable index
+   * never named, so a later retire or clear still tombstones their keys even
+   * if the failing commit never reached its index.
+   */
+  private trackMaybeOrphaned(next: SessionSnapshot) {
+    const durableDids = new Set(
+      this.durableSnapshot.accounts.map(account => account.did),
     )
     for (const account of next.accounts) {
-      if (!persistedDids.has(account.did)) {
-        this.possiblyWrittenDids.add(account.did)
+      if (!durableDids.has(account.did)) {
+        this.maybeOrphanedDids.add(account.did)
       }
     }
+  }
+
+  private setDurable(snapshot: SessionSnapshot) {
+    this.snapshot = snapshot
+    this.durableSnapshot = snapshot
+    this.maybeOrphanedDids.clear()
+    this.pending = undefined
+    this.cancelRetry()
+  }
+
+  private emitFailure(error: SessionStorageError) {
+    this.writeFailureListeners.forEach(listener => listener(error))
+  }
+
+  private attachRetryTriggers() {
+    if (this.retryTriggersAttached) return
+    this.retryTriggersAttached = true
+    onAppStateChange(state => {
+      if (state === 'active' && this.pending) this.retry()
+    })
   }
 
   private scheduleRetry() {
     if (this.retryTimer) return
     this.retryTimer = setTimeout(() => {
       this.retryTimer = undefined
-      this.retryPending()
+      this.retry()
     }, RETRY_DELAY)
   }
 
@@ -352,104 +235,6 @@ export class NativeSessionRepository implements SessionRepository {
     if (this.retryTimer) clearTimeout(this.retryTimer)
     this.retryTimer = undefined
   }
-
-  private initializeSnapshot(
-    snapshot: SessionSnapshot,
-    shouldScrubLegacy = Boolean(snapshot.accounts.length),
-  ): SessionStorageLoadResult {
-    const result = this.commit(EMPTY_SNAPSHOT, snapshot)
-    if (result.status === 'pending') {
-      return {status: 'unavailable', error: result.error}
-    }
-
-    // Migration/recovery is complete only after every item reads back and
-    // validates. The index also marks an intentionally empty session.
-    const storedIndex = SecureStore.getItem(SESSION_INDEX_KEY)
-    if (storedIndex === null) {
-      return {
-        status: 'unavailable',
-        error: {kind: 'unavailable', operation: 'open'},
-      }
-    }
-    const verified = this.readSnapshot(storedIndex)
-    this.snapshot = verified
-    this.persistedSnapshot = verified
-    this.hasPersistedIndex = true
-    return {
-      status: 'ready',
-      snapshot: verified,
-      shouldScrubLegacy,
-    }
-  }
-}
-
-class InvalidSessionStorageDataError extends Error {}
-
-function toDescriptor(
-  account: SessionAccount | undefined,
-): AccountDescriptor | undefined {
-  if (!account) return undefined
-  const {
-    accessJwt: _accessJwt,
-    refreshJwt: _refreshJwt,
-    ...descriptor
-  } = account
-  return descriptor
-}
-
-function toStoredIndex(
-  snapshot: SessionSnapshot,
-  retiredDids: string[] = [],
-  revokedDids: string[] = [],
-): StoredIndex {
-  return {
-    version: 1,
-    currentDid: snapshot.currentDid,
-    dids: snapshot.accounts.map(account => account.did),
-    ...(retiredDids.length ? {retiredDids} : {}),
-    ...(revokedDids.length ? {revokedDids} : {}),
-  }
-}
-
-function tombstoneAccount(did: string) {
-  tombstoneCredentials(did)
-  const keys = accountKeys(did)
-  SecureStore.setItem(keys.descriptor, '')
-}
-
-function tombstoneCredentials(did: string) {
-  const keys = accountKeys(did)
-  SecureStore.setItem(keys.refresh, '')
-  SecureStore.setItem(keys.access, '')
-}
-
-function storageError(
-  operation: SessionStorageError['operation'],
-  cause: unknown,
-): SessionStorageError {
-  const message = cause instanceof Error ? cause.message : String(cause)
-  const kind =
-    cause instanceof InvalidSessionStorageDataError
-      ? 'invalid-data'
-      : /quota|disk.*full|storage.*full|no space/i.test(message)
-        ? 'storage-full'
-        : operation === 'open'
-          ? 'unavailable'
-          : 'write-failed'
-  return {kind, operation}
-}
-
-function logStorageError(error: SessionStorageError) {
-  // Never attach the underlying native error: some platforms include the key
-  // in it. Keys are hashed, but keeping telemetry credential-agnostic is safer.
-  logger.error('session storage operation failed', {
-    kind: error.kind,
-    operation: error.operation,
-    tags: {
-      session_storage_kind: error.kind,
-      session_storage_operation: error.operation,
-    },
-  })
 }
 
 export function createSessionRepository(): SessionRepository {

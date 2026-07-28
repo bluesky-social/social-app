@@ -5,6 +5,11 @@ import {type SessionSnapshot} from './schema'
 const repository = createSessionRepository()
 let initialized = false
 
+/**
+ * Initialize the session repository, migrating from the legacy persisted blob
+ * and scrubbing it once the new store is durable. Rejects if storage is
+ * unavailable; the app-level bootstrap retries, and this is safe to call again.
+ */
 export async function initSessionRepository() {
   if (initialized) return repository
 
@@ -18,23 +23,19 @@ export async function initSessionRepository() {
       ? legacyCurrentDid
       : undefined,
   }
-  const scrubLegacy = () =>
-    persisted.write('session', {
-      accounts: [],
-      currentAccount: undefined,
-    })
-  const result = await repository.open(legacySnapshot, () => {
-    void scrubLegacy()
-  })
-  if (result.status === 'unavailable') {
-    throw new Error(`session storage unavailable: ${result.error.kind}`)
-  }
 
-  if (result.shouldScrubLegacy) {
-    // The new repository has been read back successfully. Scrub the old blob
-    // so future preference writes cannot keep rewriting bearer credentials.
-    await scrubLegacy()
-  }
+  await repository.init(legacySnapshot, () => {
+    // Fires once the new store is known durable. Scrub the old blob so future
+    // preference writes cannot keep rewriting bearer credentials. Only needed
+    // when the legacy location actually held accounts.
+    if (legacySnapshot.accounts.length > 0) {
+      void persisted.write('session', {
+        accounts: [],
+        currentAccount: undefined,
+      })
+    }
+  })
+
   initialized = true
   return repository
 }

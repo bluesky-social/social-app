@@ -31,7 +31,6 @@ import {
   type SessionRepository,
   type SessionSnapshot,
 } from './storage'
-import {type SessionStorageErrorKind} from './storage/types'
 export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
@@ -71,9 +70,6 @@ ApiContext.displayName = 'SessionApiContext'
 class SessionStore {
   private state: State
   private listeners = new Set<() => void>()
-  private storageErrorListeners = new Set<
-    (kind: SessionStorageErrorKind) => void
-  >()
 
   constructor(private repository: SessionRepository) {
     const initialState = getInitialState(repository.getSnapshot().accounts)
@@ -102,17 +98,7 @@ class SessionStore {
       currentDid: nextState.currentAgentState.did,
     }
     addSessionDebugLog({type: 'persisted:broadcast', data: nextSnapshot})
-    const result = this.repository.commit(
-      this.repository.getSnapshot(),
-      nextSnapshot,
-    )
-    void Promise.resolve(result).then(commitResult => {
-      if (commitResult.status === 'pending') {
-        this.storageErrorListeners.forEach(listener =>
-          listener(commitResult.error.kind),
-        )
-      }
-    })
+    this.repository.write(nextSnapshot)
     this.listeners.forEach(listener => listener())
   }
 
@@ -123,15 +109,6 @@ class SessionStore {
       syncedCurrentDid: snapshot.currentDid,
     })
     this.listeners.forEach(listener => listener())
-  }
-
-  subscribeStorageErrors = (
-    listener: (kind: SessionStorageErrorKind) => void,
-  ) => {
-    this.storageErrorListeners.add(listener)
-    return () => {
-      this.storageErrorListeners.delete(listener)
-    }
   }
 }
 
@@ -148,8 +125,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const showedStorageFullWarning = useRef(false)
 
   useEffect(() => {
-    return store.subscribeStorageErrors(kind => {
-      if (kind === 'storage-full' && !showedStorageFullWarning.current) {
+    return repository.onWriteFailure(error => {
+      if (error.kind === 'storage-full' && !showedStorageFullWarning.current) {
         showedStorageFullWarning.current = true
         Toast.show(
           l`We couldn't save your login. Free up some device storage and keep the app open while we retry.`,
@@ -157,7 +134,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         )
       }
     })
-  }, [l, store])
+  }, [l, repository])
 
   const onAgentSessionChange = useCallback(
     (agent: AtpAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
