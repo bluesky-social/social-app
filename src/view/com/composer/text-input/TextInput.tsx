@@ -26,7 +26,7 @@ import {
 } from '#/view/com/composer/text-input/text-input-util'
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
-import {IS_ANDROID, IS_NATIVE} from '#/env'
+import {IS_ANDROID} from '#/env'
 import {Autocomplete} from './mobile/Autocomplete'
 import {type TextInputProps} from './TextInput.types'
 
@@ -170,13 +170,6 @@ export function TextInput({
         flags: {},
       },
     )
-
-    /**
-     * PasteInput doesn't like `lineHeight`, results in jumpiness
-     */
-    if (IS_NATIVE) {
-      style.lineHeight = undefined
-    }
 
     /*
      * Android impl of `PasteInput` doesn't support the array syntax for `fontVariant`
