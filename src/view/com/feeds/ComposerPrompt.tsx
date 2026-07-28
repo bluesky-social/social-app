@@ -115,6 +115,9 @@ export function ComposerPrompt() {
       const image = await openCamera({
         mediaTypes: 'images',
       })
+      if (!image) {
+        return
+      }
 
       const imageUris = [
         {
