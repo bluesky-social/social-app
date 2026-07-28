@@ -67,7 +67,7 @@ When a new language is added to Crowdin, it gets synced down the next time `pnpm
 
 Importantly, we use a two-letter language code (e.g. `en`, `fr`). Crowdin uses a full locale (e.g. `pt-BR`) and maps them to the two-letter code. This can become ambiguous if we have multiple languages that share a two-letter code (e.g. `fr-FR` and `fr-CA`), so we need to manually override the two-letter code into an unambiguous locale. This is done in the Crowdin language settings (*not* the `crowdin.yml` file!). When a new ambiguous language is added, go to https://bluesky.crowdin.com/u/projects/1/languages and map the language's two-letter code to it's locale. If not, the two languages may silently overwrite each other.
 
-![crowdin language mapping config](./img/language_mapping.png)
+![crowdin language mapping config](./img/language-mapping.png)
 
 ## Developers
 
