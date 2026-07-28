@@ -24,6 +24,7 @@ import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
+import {useTrendingTopicSeen} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import * as ModuleHeader from '../components/ModuleHeader'
@@ -71,6 +72,7 @@ function Inner() {
                 key={trend.link}
                 trend={trend}
                 rank={index + 1}
+                recId={trending.recId}
                 onPress={() => {
                   ax.metric('trendingTopic:click', {
                     context: 'explore',
@@ -98,11 +100,13 @@ function Inner() {
 export function TrendRow({
   trend,
   rank,
+  recId,
   children,
   onPress,
 }: ViewStyleProp & {
   trend: AppBskyUnspeccedDefs.TrendView
   rank: number
+  recId?: string
   children?: React.ReactNode
   onPress?: () => void
 }) {
@@ -112,6 +116,7 @@ export function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
+  useTrendingTopicSeen('explore', recId)
 
   const description = useMemo(() => {
     if (!trend.description) return
