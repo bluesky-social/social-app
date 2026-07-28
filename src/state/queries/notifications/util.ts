@@ -163,6 +163,9 @@ export function groupNotifications(
           Math.abs(ts2 - ts) < MS_2DAY &&
           notif.reason === groupedNotif.notification.reason &&
           notif.reasonSubject === groupedNotif.notification.reasonSubject &&
+          (notif.reason !== 'follow' ||
+            notif.starterPack?.uri ===
+              groupedNotif.notification.starterPack?.uri) &&
           (notif.author.did !== groupedNotif.notification.author.did ||
             notif.reason === 'subscribed-post')
         ) {
