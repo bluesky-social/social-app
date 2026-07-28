@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {LogBox, Pressable, TextInput, View} from 'react-native'
+import {Keyboard, LogBox, Pressable, TextInput, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {BLUESKY_PROXY_HEADER} from '#/lib/constants'
@@ -62,6 +62,14 @@ export function TestCtrls() {
     setShowLoggedOut(false)
   }
   const [proxyHeader, setProxyHeader] = useState('')
+  const configureProxy = () => {
+    const header = `${proxyHeader}#bsky_appview`
+    BLUESKY_PROXY_HEADER.set(header)
+    agent.configureProxy(header as any)
+    hasConfiguredProxy = true
+    setIsProxyConfigured(true)
+    Keyboard.dismiss()
+  }
   return (
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
       <TextInput
@@ -72,13 +80,13 @@ export function TestCtrls() {
         autoComplete="off"
         autoCorrect={false}
         autoCapitalize="none"
-        onSubmitEditing={() => {
-          const header = `${proxyHeader}#bsky_appview`
-          BLUESKY_PROXY_HEADER.set(header)
-          agent.configureProxy(header as any)
-          hasConfiguredProxy = true
-          setIsProxyConfigured(true)
-        }}
+        onSubmitEditing={configureProxy}
+        style={BTN}
+      />
+      <Pressable
+        testID="e2eConfigureProxy"
+        onPress={configureProxy}
+        accessibilityRole="button"
         style={BTN}
       />
       {isProxyConfigured && (
