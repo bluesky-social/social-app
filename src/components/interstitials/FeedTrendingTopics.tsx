@@ -218,7 +218,7 @@ function TrendRow({
               </Trans>
             </Text>
             <View style={[a.flex_1, a.gap_xs]}>
-              <Text style={[a.text_md, a.font_medium]} numberOfLines={1}>
+              <Text style={[a.text_md, a.font_medium]} numberOfLines={2}>
                 {trend.displayName}
               </Text>
               <View style={[a.flex_row, a.gap_sm, a.align_center]}>
