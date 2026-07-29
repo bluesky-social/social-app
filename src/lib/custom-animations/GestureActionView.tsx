@@ -1,5 +1,5 @@
 import {useMemo, useState} from 'react'
-import {type ColorValue, Dimensions, StyleSheet, View} from 'react-native'
+import {type ColorValue, Dimensions, View} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   clamp,
@@ -16,6 +16,7 @@ import Animated, {
 import {scheduleOnRN} from 'react-native-worklets'
 
 import {useHaptics} from '#/lib/haptics'
+import {atoms as a} from '#/alf'
 import {type GestureActions} from './GestureActionView.shared'
 
 const MAX_WIDTH = Dimensions.get('screen').width
@@ -287,8 +288,7 @@ export function GestureActionView({
   return (
     <GestureDetector gesture={composedGesture}>
       <View>
-        <Animated.View
-          style={[StyleSheet.absoluteFill, animatedBackgroundStyle]}>
+        <Animated.View style={[a.absolute, a.inset_0, animatedBackgroundStyle]}>
           <View
             style={{
               flex: 1,
