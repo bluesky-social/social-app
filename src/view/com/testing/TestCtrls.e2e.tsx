@@ -3,7 +3,7 @@ import {LogBox, Platform, Pressable, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {BLUESKY_PROXY_HEADER, DEV_ENV_APPVIEW_DID} from '#/lib/constants'
-import {useAgent, useSessionApi} from '#/state/session'
+import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useOnboardingDispatch} from '#/state/shell/onboarding'
 import {navigate} from '../../../Navigation'
@@ -23,6 +23,10 @@ const SIGN_IN_BTN = Platform.select({
   ios: {height: 80, width: 80, backgroundColor: 'red'},
   default: BTN,
 })
+const STORYBOOK_BTN = Platform.select({
+  android: {height: 10, width: 10, backgroundColor: 'red'},
+  default: BTN,
+})
 
 /*
  * This component is mounted inside <Fragment key={currentAccount?.did}> in
@@ -38,6 +42,7 @@ let hasConfiguredProxy = false
 
 export function TestCtrls() {
   const agent = useAgent()
+  const {hasSession} = useSession()
   const queryClient = useQueryClient()
   const {logoutEveryAccount, login} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
@@ -76,7 +81,7 @@ export function TestCtrls() {
   }
   return (
     <>
-      {isProxyConfigured && (
+      {isProxyConfigured && !hasSession && (
         <View
           style={[
             {position: 'absolute', top: 100, zIndex: 100},
@@ -96,7 +101,14 @@ export function TestCtrls() {
           />
         </View>
       )}
-      <View style={{position: 'absolute', top: 102, right: 0, zIndex: 100}}>
+      <View
+        style={{
+          position: 'absolute',
+          top: 102,
+          right: 0,
+          zIndex: 100,
+          alignItems: 'flex-end',
+        }}>
         <Pressable
           testID="e2eSignOut"
           onPress={() => logoutEveryAccount('Settings')}
@@ -137,7 +149,7 @@ export function TestCtrls() {
           testID="storybookBtn"
           onPress={() => navigate('Debug')}
           accessibilityRole="button"
-          style={BTN}
+          style={STORYBOOK_BTN}
         />
         <Pressable
           testID="e2eRefreshHome"
