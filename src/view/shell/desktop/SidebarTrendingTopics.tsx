@@ -5,7 +5,10 @@ import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
-import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
+import {
+  DEFAULT_LIMIT,
+  useGetTrendsQuery,
+} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/service-config'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -17,8 +20,6 @@ import {TrendingTopicLink} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
-const TRENDING_LIMIT = 5
-
 export function SidebarTrendingTopics() {
   const {enabled} = useTrendingConfig()
   const {trendingDisabled} = useTrendingSettings()
@@ -29,6 +30,12 @@ function Inner() {
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
+
+  const exploreTopicCount = ax.features.getValue(
+    ax.features.TrendingDiscoverValues,
+    DEFAULT_LIMIT,
+  )
+
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
   const {
@@ -36,7 +43,7 @@ function Inner() {
     error,
     isLoading,
   } = useGetTrendsQuery({
-    limit: TRENDING_LIMIT,
+    limit: DEFAULT_LIMIT,
     refetchOnWindowFocus: true,
   })
   const noTopics = !isLoading && !error && !trending?.trends?.length
@@ -55,24 +62,26 @@ function Inner() {
           <Text style={[a.flex_1, a.text_md, a.font_semi_bold]}>
             <Trans>Trending</Trans>
           </Text>
-          <Link label={l`See more trending topics`} to="/search">
-            {({hovered, pressed}) => (
-              <Text
-                style={[
-                  a.text_sm,
-                  a.font_medium,
-                  {
-                    color:
-                      hovered || pressed
-                        ? t.palette.contrast_800
-                        : t.palette.contrast_500,
-                  },
-                ]}
-                numberOfLines={1}>
-                <Trans>See more</Trans>
-              </Text>
-            )}
-          </Link>
+          {exploreTopicCount > DEFAULT_LIMIT ? (
+            <Link label={l`See more trending topics`} to="/search">
+              {({hovered, pressed}) => (
+                <Text
+                  style={[
+                    a.text_sm,
+                    a.font_medium,
+                    {
+                      color:
+                        hovered || pressed
+                          ? t.palette.contrast_800
+                          : t.palette.contrast_500,
+                    },
+                  ]}
+                  numberOfLines={1}>
+                  <Trans>See more</Trans>
+                </Text>
+              )}
+            </Link>
+          ) : null}
           <Button
             variant="ghost"
             size="tiny"
@@ -87,7 +96,7 @@ function Inner() {
 
         <View style={[a.gap_xs]}>
           {isLoading ? (
-            Array(TRENDING_LIMIT)
+            Array(DEFAULT_LIMIT)
               .fill(0)
               .map((_n, i) => (
                 <View key={i} style={[a.flex_row, a.align_center, a.gap_sm]}>
@@ -110,7 +119,7 @@ function Inner() {
               ))
           ) : !trending?.trends ? null : (
             <>
-              {trending.trends.slice(0, TRENDING_LIMIT).map((topic, i) => (
+              {trending.trends.slice(0, DEFAULT_LIMIT).map((topic, i) => (
                 <TrendingTopicLink
                   key={topic.link}
                   topic={topic}

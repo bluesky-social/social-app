@@ -25,6 +25,7 @@ export enum Features {
 
   // values
   TrendingDiscoverValues = 'trending_discover:values',
+  TrendingExploreTopicsCountValue = 'trending_explore_topics_count:value',
 
   AATest = 'aa-test',
 }

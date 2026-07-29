@@ -13,7 +13,10 @@ import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
-import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
+import {
+  DEFAULT_LIMIT,
+  useGetTrendsQuery,
+} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/service-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {formatCount} from '#/view/com/util/numeric/format'
@@ -29,8 +32,6 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import * as ModuleHeader from '../components/ModuleHeader'
 
-const TOPIC_COUNT = 10
-
 const IMAGE_SIZE = 56
 
 export function ExploreTrendingTopics() {
@@ -42,6 +43,12 @@ export function ExploreTrendingTopics() {
 function Inner() {
   const ax = useAnalytics()
   const {t: l} = useLingui()
+
+  const topicCount = ax.features.getValue(
+    ax.features.TrendingDiscoverValues,
+    DEFAULT_LIMIT,
+  )
+
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
   const {
@@ -49,7 +56,7 @@ function Inner() {
     error,
     isLoading,
     isRefetching,
-  } = useGetTrendsQuery({limit: TOPIC_COUNT})
+  } = useGetTrendsQuery({limit: topicCount})
   const noTopics = !isLoading && !error && !trending?.trends?.length
   const showLoading = isLoading || isRefetching
 
@@ -69,7 +76,7 @@ function Inner() {
           />
         </ModuleHeader.Container>
         {showLoading
-          ? Array.from({length: TOPIC_COUNT}).map((__, i) => (
+          ? Array.from({length: topicCount}).map((__, i) => (
               <TrendingTopicRowSkeleton key={i} />
             ))
           : trending?.trends.map((trend, index) => (
