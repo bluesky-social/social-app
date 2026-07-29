@@ -159,7 +159,7 @@ type FeedRow =
   | {
       type: 'interstitialFeedTrendingTopics'
       key: string
-      sectionIndex: number
+      feedSliceIndex: number
     }
   | {
       type: 'interstitialTrendingVideos'
@@ -584,7 +584,7 @@ let PostFeed = ({
                     arr.push({
                       type: 'interstitialFeedTrendingTopics',
                       key: 'interstitialFeedTrendingTopics-' + sliceIndex,
-                      sectionIndex: sliceIndex,
+                      feedSliceIndex: sliceIndex,
                     })
                   } else if (sliceIndex === trendingIndices.videos) {
                     if (areVideoFeedsEnabled && !trendingVideoDisabled) {
@@ -861,7 +861,7 @@ let PostFeed = ({
         return <TrendingInterstitial />
       } else if (row.type === 'interstitialFeedTrendingTopics') {
         return (
-          <FeedTrendingTopicsInterstitial sectionIndex={row.sectionIndex} />
+          <FeedTrendingTopicsInterstitial feedSliceIndex={row.feedSliceIndex} />
         )
       } else if (row.type === 'liveEventFeedsAndTrendingBanner') {
         return <DiscoverFeedLiveEventFeedsAndTrendingBanner />

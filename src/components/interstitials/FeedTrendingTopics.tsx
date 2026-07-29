@@ -33,20 +33,20 @@ import {useAnalytics} from '#/analytics'
 const TOPIC_COUNT = 3
 
 export function FeedTrendingTopicsInterstitial({
-  sectionIndex,
+  feedSliceIndex,
 }: {
-  sectionIndex: number
+  feedSliceIndex: number
 }) {
   const {enabled} = useTrendingConfig()
   const {trendingDisabled} = useTrendingSettings()
   const {rightNavVisible} = useLayoutBreakpoints()
 
   return enabled && !trendingDisabled && !rightNavVisible ? (
-    <Inner sectionIndex={sectionIndex} />
+    <Inner feedSliceIndex={feedSliceIndex} />
   ) : null
 }
 
-function Inner({sectionIndex}: {sectionIndex: number}) {
+function Inner({feedSliceIndex}: {feedSliceIndex: number}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const gutters = useGutters([0, 'base'])
@@ -145,13 +145,13 @@ function Inner({sectionIndex}: {sectionIndex: number}) {
                       key={trend.link}
                       trend={trend}
                       rank={rank}
-                      sectionIndex={sectionIndex}
+                      feedSliceIndex={feedSliceIndex}
                       recId={trending.recId}
                       onPress={() => {
                         ax.metric('trendingTopic:click', {
                           context: 'interstitial',
                           rank,
-                          sectionIndex,
+                          feedSliceIndex,
                           recId: trending.recId,
                         })
                       }}
@@ -178,13 +178,13 @@ function Inner({sectionIndex}: {sectionIndex: number}) {
 function TrendRow({
   trend,
   rank,
-  sectionIndex,
+  feedSliceIndex,
   recId,
   onPress,
 }: ViewStyleProp & {
   trend: AppBskyUnspeccedDefs.TrendView
   rank: number
-  sectionIndex: number
+  feedSliceIndex: number
   recId?: string
   children?: React.ReactNode
   onPress?: () => void
@@ -194,7 +194,7 @@ function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
-  useTrendingTopicSeen('interstitial', rank, recId, sectionIndex)
+  useTrendingTopicSeen('interstitial', rank, recId, feedSliceIndex)
 
   return (
     <Link

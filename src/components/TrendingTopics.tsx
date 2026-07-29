@@ -41,14 +41,14 @@ export function useTrendingTopicSeen(
   context: Metrics['trendingTopic:seen']['context'],
   rank: number,
   recId?: string,
-  sectionIndex?: number,
+  feedSliceIndex?: number,
 ) {
   const ax = useAnalytics()
   const trackSeen = useCallOnce(() => {
     ax.metric('trendingTopic:seen', {
       context,
       rank,
-      sectionIndex,
+      feedSliceIndex,
       recId,
     })
   })
