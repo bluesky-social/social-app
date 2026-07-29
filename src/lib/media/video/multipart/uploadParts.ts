@@ -7,6 +7,7 @@ import {
   type PartUploadResult,
   type UploadPartFn,
 } from './types'
+import {delay, isRetryableMultipartError} from './utils'
 
 /**
  * Uploads every part with a concurrency cap and per-part retry, aggregating
@@ -78,10 +79,15 @@ export async function uploadParts({
     }),
   )
   signal.removeEventListener('abort', abortWorkers)
-  const failure = settled.find(
+  const failures = settled.filter(
     (result): result is PromiseRejectedResult => result.status === 'rejected',
   )
   if (signal.aborted) throw new AbortError()
+  // A sibling worker aborted after the first failure can settle earlier in
+  // array order. Preserve the originating error for fallback and telemetry.
+  const failure =
+    failures.find(result => !(result.reason instanceof AbortError)) ??
+    failures[0]
   if (failure) throw failure.reason
   return results
 }
@@ -113,24 +119,11 @@ async function uploadPartWithRetry({
         throw new AbortError()
       }
       lastError = err
+      if (!isRetryableMultipartError(err)) throw err
       if (attempt < maxAttempts) {
         await delay(500 * 2 ** (attempt - 1), signal)
       }
     }
   }
   throw lastError
-}
-
-function delay(ms: number, signal: AbortSignal) {
-  return new Promise<void>((resolve, reject) => {
-    const timer = setTimeout(() => {
-      signal.removeEventListener('abort', onAbort)
-      resolve()
-    }, ms)
-    function onAbort() {
-      clearTimeout(timer)
-      reject(new AbortError())
-    }
-    signal.addEventListener('abort', onAbort, {once: true})
-  })
 }

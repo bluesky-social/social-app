@@ -15,27 +15,27 @@ jobs:
       contents: write
 
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: ⬇️ Check out Git repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ssh-key: ${{secrets.GH_ACTION_DEPLOY_KEY}}
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-      - name: Install node
+      - name: 🔧 Install node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: package.json
           cache: pnpm
-      - name: pnpm install
+      - name: 📦 pnpm install
         run: pnpm install --frozen-lockfile
-      - name: Extract language strings
+      - name: 🔤 Extract language strings
         run: pnpm intl:extract
-      - name: Create commit
+      - name: 📝 Create commit
         uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7.2.0
         with:
           commit_message: Nightly source-language update
           file_pattern: ./src/locale/locales/en/messages.po
-      - name: Push source lang to Crowdin
-        uses: crowdin/github-action@52aa776766211d83d975df51f3b9c53c2f8ba35f # v2.16.3
+      - name: 🚀 Push source lang to Crowdin
+        uses: crowdin/github-action@e0c8f73cdc0fafde9396e056c5038217000a32d1 # v2.16.4
         with:
           upload_sources: true
           upload_sources_args: "-b main"

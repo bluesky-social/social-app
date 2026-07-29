@@ -12,9 +12,21 @@ import {
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {IS_ANDROID, IS_IOS, IS_TESTFLIGHT} from '#/env'
+import {IS_IOS, IS_TESTFLIGHT} from '#/env'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
+
+/**
+ * The channel this native build is expected to receive updates from. Anything
+ * else is only reachable through the dev tooling in settings.
+ */
+const DEFAULT_CHANNEL = IS_TESTFLIGHT ? 'testflight' : 'production'
+
+/**
+ * Channels that our native builds are configured with, see `eas.json`. An
+ * update running on any other channel was applied manually.
+ */
+const STANDARD_CHANNELS = ['production', 'testflight', 'development']
 
 async function setExtraParams() {
   await setExtraParamAsync(
@@ -23,10 +35,7 @@ async function setExtraParams() {
     // This just ensures it gets passed as a string
     `${nativeBuildVersion}`,
   )
-  await setExtraParamAsync(
-    'channel',
-    IS_TESTFLIGHT ? 'testflight' : 'production',
-  )
+  await setExtraParamAsync('channel', DEFAULT_CHANNEL)
 }
 
 async function setExtraParamsPullRequest(channel: string) {
@@ -71,6 +80,14 @@ export function useApplyPullRequestOTAUpdate() {
   const currentChannel = currentlyRunning?.channel
   const isCurrentlyRunningPullRequestDeployment =
     currentChannel?.startsWith('pull-request')
+  /*
+   * Covers pull request deployments as well as any other channel we manually
+   * applied an update from. Note that `channel` is null when updates are
+   * disabled (e.g. in dev), in which case there's nothing to restore.
+   */
+  const isCurrentlyRunningNonStandardChannel = Boolean(
+    currentChannel && !STANDARD_CHANNELS.includes(currentChannel),
+  )
 
   const tryApplyUpdate = async (channel: string) => {
     setPending(true)
@@ -104,19 +121,42 @@ export function useApplyPullRequestOTAUpdate() {
     setPending(false)
   }
 
-  const revertToEmbedded = async () => {
+  /**
+   * Pulls the newest update from the channel this build ships with and relaunches
+   * into it, undoing a manually applied deployment.
+   */
+  const restoreDefaultChannel = async () => {
+    setPending(true)
     try {
-      await updateTestflight()
+      await setExtraParams()
+      const res = await checkForUpdateAsync()
+      if (res.isAvailable) {
+        await fetchUpdateAsync()
+        await reloadAsync()
+      } else {
+        Alert.alert(
+          'Nothing to Restore',
+          `No deployment of ${DEFAULT_CHANNEL} is currently available for your native build. Reinstall the app to get back to a standard build.`,
+        )
+      }
     } catch (e: any) {
       logger.error('Internal OTA Update Error', {error: `${e}`})
+      Alert.alert(
+        'Restore Failed',
+        `Could not restore the ${DEFAULT_CHANNEL} deployment: ${e}`,
+      )
+    } finally {
+      setPending(false)
     }
   }
 
   return {
     tryApplyUpdate,
-    revertToEmbedded,
+    restoreDefaultChannel,
     isCurrentlyRunningPullRequestDeployment,
+    isCurrentlyRunningNonStandardChannel,
     currentChannel,
+    defaultChannel: DEFAULT_CHANNEL,
     pending,
   }
 }
@@ -191,13 +231,6 @@ export function useOTAUpdates() {
     if (!isEnabled || currentChannel?.startsWith('pull-request')) {
       return
     }
-
-    // TEMP: disable wake-from-background OTA loading on Android.
-    // This is causing a crash when the thread view is open due to
-    // `maintainVisibleContentPosition`. See repro repo for more details:
-    // https://github.com/mozzius/ota-crash-repro
-    // Old Arch only - re-enable once we're on the New Archictecture! -sfn
-    if (IS_ANDROID) return
 
     const subscription = AppState.addEventListener(
       'change',

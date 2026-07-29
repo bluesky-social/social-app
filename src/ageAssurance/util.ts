@@ -11,6 +11,7 @@ import {getAge} from '#/lib/strings/time'
 import {regionName} from '#/locale/helpers'
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/const'
 import {
+  AGE_ASSURANCE_PLATFORM,
   DEVICE_SIGNALS_SUPPORTED,
   FALLBACK_REGION_CONFIG,
   MIN_ACCESS_AGE,
@@ -29,6 +30,10 @@ import {USRegionNameToRegionCode} from '#/geolocation/util'
  * Resolves a geolocation to its matched age assurance region config, or
  * undefined when the geolocation matches no AA region.
  *
+ * Regions scoped to other platforms via `platforms` are passed over entirely,
+ * as if they weren't in the config - a later region matching the same
+ * geolocation can still apply.
+ *
  * This is the single source of truth for geolocation -> region resolution.
  * Device signals are written and read back under a key derived from the
  * matched region (see `createRegionKey`), so every site that resolves a region
@@ -42,6 +47,7 @@ export function getAgeAssuranceRegionConfigForGeolocation(
   return getAgeAssuranceRegionConfig(config, {
     countryCode: geolocation.countryCode ?? '',
     regionCode: geolocation.regionCode,
+    platform: AGE_ASSURANCE_PLATFORM,
   })
 }
 

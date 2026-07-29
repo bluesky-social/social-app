@@ -1,6 +1,6 @@
 import {beforeEach, describe, expect, it, jest} from '@jest/globals'
 
-jest.mock('@bsky.app/react-native-mmkv', () => ({
+jest.mock('react-native-mmkv', () => ({
   MMKV: class MMKVMock {
     _store = new Map<string, string>()
 

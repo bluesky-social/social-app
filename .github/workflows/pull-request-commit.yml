@@ -15,8 +15,13 @@ concurrency:
 
 # Permissions are granted per-job below; anything unlisted defaults to none.
 # pull-requests: write is needed by sticky-pull-request-comment to post the
-# bundle-size and fingerprint diffs
+# bundle-size and fingerprint diffs and the PR OTA install link
 permissions: {}
+
+# denis release tag in bluesky-social/tango whose linux-amd64 binary the PR OTA
+# job downloads. Bump this one line to roll denis.
+env:
+  DENIS_RELEASE_TAG: denis-v0.1.1
 
 jobs:
   # Populate this from main so every PR can restore the same trusted baseline.
@@ -27,7 +32,7 @@ jobs:
       contents: read
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
 
@@ -66,7 +71,7 @@ jobs:
       pull-requests: write
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -78,7 +83,7 @@ jobs:
           node-version-file: package.json
           cache: pnpm
 
-      - name: Ensure tracking relevant branches and checkout base
+      - name: 🌿 Ensure tracking relevant branches and checkout base
         env:
           HEAD_REF: ${{ github.head_ref }}
           BASE_REF: ${{ github.base_ref }}
@@ -86,13 +91,13 @@ jobs:
           git checkout $HEAD_REF
           git checkout $BASE_REF
 
-      - name: Get the base commit
+      - name: 🔍 Get the base commit
         id: base-commit
         env:
           BASE_REF: ${{ github.base_ref }}
         run: echo base-commit=$(git log -n 1 $BASE_REF --pretty=format:'%H') >> "$GITHUB_OUTPUT"
 
-      - name: Merge PR commit
+      - name: 🔀 Merge PR commit
         env:
           HEAD_REF: ${{ github.head_ref }}
         run: |
@@ -116,7 +121,7 @@ jobs:
           path: stats.json
           key: stats-base-main-${{ steps.base-commit.outputs.base-commit }}
 
-      - name: Restore to base commit
+      - name: ⏪ Restore to base commit
         if: ${{ !steps.get-base-stats.outputs.cache-hit }}
         env:
           BASE_COMMIT: ${{ steps.base-commit.outputs.base-commit }}
@@ -155,9 +160,13 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+    outputs:
+      # Empty when the native surface is unchanged, 'true' when it changed.
+      # publish-pr-ota gates on this.
+      includes-changes: ${{ steps.fingerprint.outputs.includes-changes }}
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 100
 
@@ -205,6 +214,16 @@ jobs:
           header: fingerprint-diff
           delete: true
 
+      # publish-pr-ota is skipped once the fingerprint changes, so any install
+      # link left over from an earlier fingerprint-clean commit on this PR now
+      # points at a bundle that no longer matches the PR. Drop it.
+      - name: 💬 Delete stale OTA install comment
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        if: ${{ steps.fingerprint.outputs.includes-changes }}
+        with:
+          header: pull-request-ota
+          delete: true
+
       - name: 🏷️ Label as fingerprint changed
         if: ${{ steps.fingerprint.outputs.includes-changes }}
         env:
@@ -220,3 +239,129 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           gh pr edit "$PR_NUMBER" --remove-label "bot: fingerprint changed" || true
+
+  # Automatic per-PR OTA preview, published to the pull-request-<N> channel on
+  # denis. Replaces the old `@github-actions ota` comment trigger. Gated to
+  # same-repo PRs (fork guard): a branch can only exist in this repo if someone
+  # with write access pushed it, so an outside contributor (who can only open a
+  # PR from a fork) never runs this job with the denis publish role in scope.
+  # This matches the fork-guard gate the other jobs in this workflow use;
+  # author_association is deliberately NOT checked (it can't identify a private
+  # org member and would skip their PRs).
+  #
+  # Bot authors are excluded: Dependabot pushes in-repo branches, so it passes
+  # the fork guard, but GitHub withholds repo secrets from Dependabot-triggered
+  # runs. EXPO_TOKEN is then empty and the job fails at setup — a red check on
+  # every dependabot PR. There is no OTA preview worth publishing for a
+  # dependency bump anyway.
+  #
+  # Gated on a clean fingerprint-native run: an OTA can only carry JS, so once
+  # the native surface changes the published bundle no longer represents the PR
+  # and installing it on a store/TestFlight client is misleading at best. Those
+  # PRs need a native build instead. A skipped or failed fingerprint job also
+  # skips this one - without a verdict we can't say the OTA is representative.
+  publish-pr-ota:
+    name: Publish PR OTA to denis
+    needs: fingerprint-native
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.type != 'Bot' &&
+      needs.fingerprint-native.outputs.includes-changes != 'true'
+    concurrency:
+      group: pr-ota-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: 🛠️ Setup Expo project
+        uses: ./.github/actions/setup-expo-project
+        with:
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 🔤 Compile translations
+        uses: ./.github/actions/compile-i18n
+
+      - name: ✏️ Write environment variables
+        id: env
+        uses: ./.github/actions/write-env
+        with:
+          env-token: ${{ secrets.ENV_TOKEN }}
+          sentry-dsn: ${{ secrets.SENTRY_DSN }}
+          bitdrift-api-key: ${{ secrets.BITDRIFT_API_KEY }}
+          gcp-project-id: ${{ secrets.EXPO_PUBLIC_GCP_PROJECT_ID }}
+          google-services-token: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
+          expo-public-env: testflight
+
+      - name: 🏗️ Create Bundle
+        run: >
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_RELEASE=${{ steps.env.outputs.release-version }}
+          SENTRY_DIST=${{ steps.env.outputs.bundle-identifier }}
+          pnpm export
+
+      - name: ☁️ Configure AWS credentials (denis, PR-scoped)
+        uses: aws-actions/configure-aws-credentials@517a711dbcd0e402f90c77e7e2f81e849156e31d # v6.2.2
+        with:
+          role-to-assume: arn:aws:iam::007404326489:role/denis-ci-publish-pr
+          aws-region: us-east-2
+          # Defense-in-depth: the base role is already scoped to pr/*, but narrow
+          # this session further to just THIS PR's prefix so a bug can't write to
+          # another PR's objects or the prod tree.
+          inline-session-policy: |-
+            {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": ["s3:PutObject", "s3:DeleteObject"],
+                  "Resource": "arn:aws:s3:::bsky-denis-ota-prod/pr/${{ github.event.pull_request.number }}/*"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": "s3:ListBucket",
+                  "Resource": "arn:aws:s3:::bsky-denis-ota-prod",
+                  "Condition": {
+                    "StringLike": { "s3:prefix": "pr/${{ github.event.pull_request.number }}/*" }
+                  }
+                }
+              ]
+            }
+
+      - name: ⬇️ Setup denis CLI
+        uses: ./.github/actions/setup-denis
+        with:
+          release-tag: ${{ env.DENIS_RELEASE_TAG }}
+          app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
+          private-key: ${{ secrets.SYNC_INTERNAL_PK }}
+
+      - name: 🚀 Publish OTA to denis (S3)
+        run: pnpm use-build-number bash scripts/denisPublish.sh
+        env:
+          RUNTIME_VERSION: ''
+          CHANNEL_NAME: pull-request-${{ github.event.pull_request.number }}
+
+  comment-pr-ota:
+    name: Comment PR OTA install link
+    needs: publish-pr-ota
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: 💬 Drop OTA install comment
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        with:
+          header: pull-request-ota
+          message: |
+            The OTA deployment for this PR was successful! You may now apply it by either scanning the QR code or opening the deep link below in your browser:
+
+            <img src="https://bsky-qr.vercel.app?channel=pull-request-${{ github.event.pull_request.number }}" width="300" height="300" alt="QR code for the PR OTA deployment">
+
+            `bluesky://intent/apply-ota?channel=pull-request-${{ github.event.pull_request.number }}`

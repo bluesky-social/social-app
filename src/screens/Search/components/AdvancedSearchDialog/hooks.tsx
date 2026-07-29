@@ -59,7 +59,7 @@ export function useFilterFieldLabels(): Record<
         message: 'These URLs',
         comment: 'Advanced search filter',
       }),
-      label: 'bsky.app atproto.com',
+      label: 'https://bsky.app https://atproto.com',
     },
   }
 }

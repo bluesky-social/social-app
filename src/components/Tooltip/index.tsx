@@ -425,9 +425,10 @@ function Bubble({
             },
           ]}
           onLayout={e => {
-            setBubbleMeasurements({
-              width: e.nativeEvent.layout.width,
-              height: e.nativeEvent.layout.height,
+            const {width, height} = e.nativeEvent.layout
+            setBubbleMeasurements(prev => {
+              if (prev?.width === width && prev.height === height) return prev
+              return {width, height}
             })
           }}>
           {children}

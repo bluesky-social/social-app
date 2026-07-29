@@ -24,9 +24,9 @@ jobs:
         job:
           [lint, prettier, 'typecheck:ios', 'typecheck:android', 'typecheck:web']
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - name: Verify Node version pins match package.json
+      - name: ⬇️ Check out Git repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: 🔍 Verify Node version pins match package.json
         run: |
           set -euo pipefail
           expected=$(node -p "require('./package.json').engines.node.replace(/[^0-9.]/g, '')")
@@ -52,16 +52,16 @@ jobs:
           check "eas.json" "$v"
           exit $rc
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-      - name: Install node
+      - name: 🔧 Install node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: package.json
           cache: pnpm
-      - name: pnpm install
+      - name: 📦 pnpm install
         run: pnpm install --frozen-lockfile
-      - name: Check & compile i18n
+      - name: 🔤 Check & compile i18n
         run: pnpm intl:build
-      - name: Lint checks
+      - name: 🧹 Lint checks
         run: pnpm ${{ matrix.job }}
   # Aggregates the matrix results into a single stable check name so branch
   # protection can require "Run linters" regardless of how many matrix jobs run.
@@ -73,7 +73,7 @@ jobs:
     needs: [linting]
     runs-on: ubuntu-latest
     steps:
-      - name: Require linting to have succeeded
+      - name: ✅ Require linting to have succeeded
         env:
           RESULT: ${{ needs.linting.result }}
         run: |
@@ -87,19 +87,19 @@ jobs:
       matrix:
         shard: [1, 2, 3, 4]
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: ⬇️ Check out Git repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-      - name: Install node
+      - name: 🔧 Install node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: package.json
           cache: pnpm
-      - name: pnpm install
+      - name: 📦 pnpm install
         run: pnpm install --frozen-lockfile
-      - name: Check & compile i18n
+      - name: 🔤 Check & compile i18n
         run: pnpm intl:build
-      - name: Run tests
+      - name: 🧪 Run tests
         run: |
           NODE_ENV=test pnpm test --forceExit --shard=${{ matrix.shard }}/${{ strategy.job-total }}
   # Aggregates the sharded test results into a single stable check name so branch
@@ -112,7 +112,7 @@ jobs:
     needs: [testing]
     runs-on: ubuntu-latest
     steps:
-      - name: Require testing to have succeeded
+      - name: ✅ Require testing to have succeeded
         env:
           RESULT: ${{ needs.testing.result }}
         run: |

@@ -8,7 +8,6 @@ import {type InfiniteData} from '@tanstack/react-query'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {logger} from '#/logger'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useTheme} from '#/alf'
 import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -71,26 +70,24 @@ export function SuggestedAccountsTabBar({
     .sort(boostInterests(personalizedInterests))
 
   return (
-    <BlockDrawerGesture>
-      <InterestTabs
-        interests={hideDefaultTab ? interests : ['all', ...interests]}
-        selectedInterest={
-          selectedInterest || (hideDefaultTab ? interests[0] : 'all')
-        }
-        onSelectTab={tab => {
-          ax.metric('explore:suggestedAccounts:tabPressed', {tab: tab})
-          onSelectInterest(tab === 'all' ? null : tab)
-        }}
-        interestsDisplayNames={
-          hideDefaultTab
-            ? interestsDisplayNames
-            : {
-                all: defaultTabLabel || _(msg`For You`),
-                ...interestsDisplayNames,
-              }
-        }
-      />
-    </BlockDrawerGesture>
+    <InterestTabs
+      interests={hideDefaultTab ? interests : ['all', ...interests]}
+      selectedInterest={
+        selectedInterest || (hideDefaultTab ? interests[0] : 'all')
+      }
+      onSelectTab={tab => {
+        ax.metric('explore:suggestedAccounts:tabPressed', {tab: tab})
+        onSelectInterest(tab === 'all' ? null : tab)
+      }}
+      interestsDisplayNames={
+        hideDefaultTab
+          ? interestsDisplayNames
+          : {
+              all: defaultTabLabel || _(msg`For You`),
+              ...interestsDisplayNames,
+            }
+      }
+    />
   )
 }
 

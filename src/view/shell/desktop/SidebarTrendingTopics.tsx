@@ -9,7 +9,7 @@ import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/service-config'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
-import {DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import * as Prompt from '#/components/Prompt'
 import {TrendingTopicLink} from '#/components/TrendingTopics'
@@ -50,7 +50,7 @@ function Inner() {
         style={[a.p_lg, a.rounded_md, a.border, t.atoms.border_contrast_low]}>
         <View style={[a.flex_row, a.align_center, a.gap_xs, a.pb_md]}>
           <TrendingIcon width={16} height={16} fill={t.atoms.text.color} />
-          <Text style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
+          <Text style={[a.flex_1, a.text_md, a.font_semi_bold]}>
             <Trans>Trending</Trans>
           </Text>
           <Button
@@ -60,8 +60,8 @@ function Inner() {
             shape="round"
             label={l`Trending options`}
             onPress={() => trendingPrompt.open()}
-            style={[a.bg_transparent, {marginTop: -6, marginRight: -6}]}>
-            <ButtonIcon icon={Ellipsis} size="xs" />
+            style={[a.bg_transparent]}>
+            <ButtonIcon icon={EllipsisIcon} size="xs" />
           </Button>
         </View>
 
@@ -94,6 +94,8 @@ function Inner() {
                 <TrendingTopicLink
                   key={topic.link}
                   topic={topic}
+                  metricContext="sidebar"
+                  recId={trending.recId}
                   onPress={() => {
                     ax.metric('trendingTopic:click', {
                       context: 'sidebar',
