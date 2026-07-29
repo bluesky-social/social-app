@@ -79,20 +79,24 @@ function Inner() {
           ? Array.from({length: topicCount}).map((__, i) => (
               <TrendingTopicRowSkeleton key={i} />
             ))
-          : trending?.trends.map((trend, index) => (
-              <TrendRow
-                key={trend.link}
-                trend={trend}
-                rank={index + 1}
-                recId={trending.recId}
-                onPress={() => {
-                  ax.metric('trendingTopic:click', {
-                    context: 'explore',
-                    recId: trending.recId,
-                  })
-                }}
-              />
-            ))}
+          : trending?.trends.map((trend, index) => {
+              const rank = index + 1
+              return (
+                <TrendRow
+                  key={trend.link}
+                  trend={trend}
+                  rank={rank}
+                  recId={trending.recId}
+                  onPress={() => {
+                    ax.metric('trendingTopic:click', {
+                      context: 'explore',
+                      rank,
+                      recId: trending.recId,
+                    })
+                  }}
+                />
+              )
+            })}
       </View>
 
       <Prompt.Basic
@@ -128,7 +132,7 @@ export function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
-  useTrendingTopicSeen('explore', recId)
+  useTrendingTopicSeen('explore', rank, recId)
 
   const description = useMemo(() => {
     if (!trend.description) return
