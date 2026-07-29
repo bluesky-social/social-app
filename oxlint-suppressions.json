@@ -707,7 +707,7 @@
       "count": 1
     },
     "typescript/no-misused-promises": {
-      "count": 4
+      "count": 3
     }
   },
   "src/lib/hooks/usePermissions.ts": {

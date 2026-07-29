@@ -63,6 +63,11 @@ export type Device = {
   activitySubscriptionsNudged?: boolean
   threadgateNudged?: boolean
   inviteFriendsFollowersPromoDismissed?: boolean
+  pendingOTAUpdate?: {
+    attemptedAt: number
+    channel: string
+    updateId: string
+  }
   /**
    * Selected color theme for the Invite Friends QR card.
    */
