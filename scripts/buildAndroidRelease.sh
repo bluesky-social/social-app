@@ -14,7 +14,7 @@ SETTINGS_GRADLE="$ANDROID_DIR/settings.gradle"
 # Guard against building with the wrong app identity. The New Arch build must
 # use a distinct rootProject.name so it installs alongside the store app rather
 # than overwriting it.
-EXPECTED_APP_NAME="rootProject.name = 'Bluesky (New Arch)'"
+EXPECTED_APP_NAME="rootProject.name = 'Bluesky'"
 if ! grep -qF "$EXPECTED_APP_NAME" "$SETTINGS_GRADLE"; then
   echo "Error: expected \"$EXPECTED_APP_NAME\" in $SETTINGS_GRADLE" >&2
   echo "(Set the app name in settings.gradle before building the New Arch release.)" >&2

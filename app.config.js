@@ -261,7 +261,7 @@ module.exports = function (_config) {
           'expo-build-properties',
           {
             ios: {
-              deploymentTarget: '15.1',
+              deploymentTarget: '16.4',
               buildReactNativeFromSource: true,
               ccacheEnabled: IS_DEV,
               cxxLanguageStandard: 'c++23',

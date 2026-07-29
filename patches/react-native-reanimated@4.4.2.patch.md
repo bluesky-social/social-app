@@ -1,4 +1,4 @@
-# react-native-reanimated@4.3.2.patch
+# react-native-reanimated@4.4.2.patch
 
 Backports of two merged upstream PRs:
 
