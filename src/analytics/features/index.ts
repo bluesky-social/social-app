@@ -60,8 +60,7 @@ export const init = features.init({timeout: TIMEOUT_INIT}).then(res => {
 })
 
 /**
- * Refresh feature gates from GrowthBook. Updates attributes based on the
- * provided account, if any.
+ * Refresh feature gates from GrowthBook.
  */
 export async function refresh({strategy}: {strategy: FeatureFetchStrategy}) {
   await features.refreshFeatures({
