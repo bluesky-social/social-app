@@ -185,11 +185,11 @@ describe('useOTAUpdateRecovery', () => {
     )
   })
 
-  it('silently clears the marker when the attempted OTA launched', () => {
+  it('recognizes a launched OTA when the update ID casing differs', () => {
     jest.mocked(device.get).mockReturnValue({
       attemptedAt: Date.now(),
       channel: 'pull-request-123',
-      updateId: currentUpdate.updateId,
+      updateId: currentUpdate.updateId.toUpperCase(),
     })
 
     renderHook(() => useOTAUpdateRecovery())

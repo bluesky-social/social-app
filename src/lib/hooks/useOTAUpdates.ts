@@ -262,7 +262,12 @@ export function useOTAUpdateRecovery() {
     if (!pendingUpdate || !currentlyRunning) return
 
     device.remove(['pendingOTAUpdate'])
-    if (pendingUpdate.updateId === currentlyRunning.updateId) return
+    if (
+      pendingUpdate.updateId.toLowerCase() ===
+      currentlyRunning.updateId?.toLowerCase()
+    ) {
+      return
+    }
 
     // A fallback relaunch is immediate. A stale marker can be left by a
     // successful runtime-compatible bundle that predates this hook.
