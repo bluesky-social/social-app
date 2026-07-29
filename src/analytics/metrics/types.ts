@@ -757,13 +757,13 @@ export type Events = {
     context: 'sidebar' | 'interstitial' | 'explore'
     recId?: string
     position: number
-    parentPosition?: number
+    sectionIndex?: number
   }
   'trendingTopic:click': {
     context: 'sidebar' | 'interstitial' | 'explore'
     recId?: string
     position: number
-    parentPosition?: number
+    sectionIndex?: number
   }
   'trendingVideos:show': {
     context: 'settings'

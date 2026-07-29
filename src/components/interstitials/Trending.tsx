@@ -103,12 +103,12 @@ export function Inner() {
                     key={topic.link}
                     topic={topic}
                     metricContext="interstitial"
-                    position={index}
+                    position={index + 1}
                     recId={trending.recId}
                     onPress={() => {
                       ax.metric('trendingTopic:click', {
                         context: 'interstitial',
-                        position: index,
+                        position: index + 1,
                         recId: trending.recId,
                       })
                     }}>

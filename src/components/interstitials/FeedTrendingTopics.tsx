@@ -33,20 +33,20 @@ import {useAnalytics} from '#/analytics'
 const TOPIC_COUNT = 3
 
 export function FeedTrendingTopicsInterstitial({
-  parentPosition,
+  sectionIndex,
 }: {
-  parentPosition: number
+  sectionIndex: number
 }) {
   const {enabled} = useTrendingConfig()
   const {trendingDisabled} = useTrendingSettings()
   const {rightNavVisible} = useLayoutBreakpoints()
 
   return enabled && !trendingDisabled && !rightNavVisible ? (
-    <Inner parentPosition={parentPosition} />
+    <Inner sectionIndex={sectionIndex} />
   ) : null
 }
 
-function Inner({parentPosition}: {parentPosition: number}) {
+function Inner({sectionIndex}: {sectionIndex: number}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const gutters = useGutters([0, 'base'])
@@ -143,14 +143,14 @@ function Inner({parentPosition}: {parentPosition: number}) {
                     key={trend.link}
                     trend={trend}
                     rank={index + 1}
-                    position={index}
-                    parentPosition={parentPosition}
+                    position={index + 1}
+                    sectionIndex={sectionIndex}
                     recId={trending.recId}
                     onPress={() => {
                       ax.metric('trendingTopic:click', {
                         context: 'interstitial',
-                        position: index,
-                        parentPosition,
+                        position: index + 1,
+                        sectionIndex,
                         recId: trending.recId,
                       })
                     }}
@@ -177,14 +177,14 @@ function TrendRow({
   trend,
   rank,
   position,
-  parentPosition,
+  sectionIndex,
   recId,
   onPress,
 }: ViewStyleProp & {
   trend: AppBskyUnspeccedDefs.TrendView
   rank: number
   position: number
-  parentPosition: number
+  sectionIndex: number
   recId?: string
   children?: React.ReactNode
   onPress?: () => void
@@ -194,7 +194,7 @@ function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
-  useTrendingTopicSeen('interstitial', position, recId, parentPosition)
+  useTrendingTopicSeen('interstitial', position, recId, sectionIndex)
 
   return (
     <Link

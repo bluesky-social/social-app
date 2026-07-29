@@ -84,12 +84,12 @@ function Inner() {
                 key={trend.link}
                 trend={trend}
                 rank={index + 1}
-                position={index}
+                position={index + 1}
                 recId={trending.recId}
                 onPress={() => {
                   ax.metric('trendingTopic:click', {
                     context: 'explore',
-                    position: index,
+                    position: index + 1,
                     recId: trending.recId,
                   })
                 }}
