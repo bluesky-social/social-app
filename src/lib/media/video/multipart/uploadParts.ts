@@ -1,7 +1,5 @@
 import {AbortError} from '#/lib/async/cancelable'
-import {isRetryableHttpStatus} from '#/lib/strings/errors'
 import {createProgressAggregator} from './aggregateProgress'
-import {MultipartUploadError} from './api'
 import {MULTIPART_CONCURRENCY, MULTIPART_MAX_ATTEMPTS} from './constants'
 import {
   type ChunkReader,
@@ -9,7 +7,7 @@ import {
   type PartUploadResult,
   type UploadPartFn,
 } from './types'
-import {delay} from './utils'
+import {delay, isRetryableMultipartError} from './utils'
 
 /**
  * Uploads every part with a concurrency cap and per-part retry, aggregating
@@ -121,21 +119,11 @@ async function uploadPartWithRetry({
         throw new AbortError()
       }
       lastError = err
-      if (!isRetryablePartError(err)) throw err
+      if (!isRetryableMultipartError(err)) throw err
       if (attempt < maxAttempts) {
         await delay(500 * 2 ** (attempt - 1), signal)
       }
     }
   }
   throw lastError
-}
-
-function isRetryablePartError(err: unknown) {
-  return (
-    err instanceof TypeError ||
-    (err instanceof MultipartUploadError &&
-      (err.error === 'ServiceOverloaded' ||
-        err.status === undefined ||
-        isRetryableHttpStatus(err.status)))
-  )
 }

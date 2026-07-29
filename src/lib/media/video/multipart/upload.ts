@@ -3,7 +3,7 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {type CompressedVideo} from '#/lib/media/video/types'
-import {isRetryableHttpStatus, shouldRetryError} from '#/lib/strings/errors'
+import {shouldRetryError} from '#/lib/strings/errors'
 import {getServiceAuthToken} from '../upload.shared'
 import {mimeToExt} from '../util'
 import {
@@ -19,7 +19,7 @@ import {getMissingParts, planParts} from './planParts'
 import {createChunkReader} from './readChunk'
 import {createUploadPart} from './uploadPart'
 import {uploadParts} from './uploadParts'
-import {delay} from './utils'
+import {delay, isRetryableMultipartError} from './utils'
 
 export class MultipartFallbackError extends Error {}
 
@@ -208,22 +208,12 @@ async function getUploadStatusWithRetry(
       return await getUploadStatus(jobId, token, signal)
     } catch (err) {
       throwIfAborted(signal)
-      if (!isRetryableStatusError(err)) throw err
+      if (!isRetryableMultipartError(err)) throw err
       lastError = err
       if (attempt < 3) await delay(500 * 2 ** (attempt - 1), signal)
     }
   }
   throw lastError
-}
-
-function isRetryableStatusError(err: unknown) {
-  return (
-    err instanceof TypeError ||
-    (err instanceof MultipartUploadError &&
-      (err.error === 'ServiceOverloaded' ||
-        err.status === undefined ||
-        isRetryableHttpStatus(err.status)))
-  )
 }
 
 async function abortThenFallbackOrResolve(
