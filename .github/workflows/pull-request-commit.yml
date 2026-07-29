@@ -275,6 +275,11 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    outputs:
+      # Runtime version the bundle is published under (package.json version, via
+      # denisPublish.sh's empty-RUNTIME_VERSION fallback). comment-pr-ota shows it
+      # so a reader knows which app build can actually apply this OTA.
+      app-version: ${{ steps.env.outputs.release-version }}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -365,3 +370,5 @@ jobs:
             <img src="https://bsky-qr.vercel.app?channel=pull-request-${{ github.event.pull_request.number }}" width="300" height="300" alt="QR code for the PR OTA deployment">
 
             `bluesky://intent/apply-ota?channel=pull-request-${{ github.event.pull_request.number }}`
+
+            App version: **${{ needs.publish-pr-ota.outputs.app-version }}**.
