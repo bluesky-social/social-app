@@ -35,10 +35,10 @@ function GrowthbookDialogInner() {
 
   return (
     <Dialog.ScrollableInner
-      label="Growthbook features"
+      label="GrowthBook features"
       header={
         <Dialog.Header>
-          <Dialog.HeaderText>Growthbook</Dialog.HeaderText>
+          <Dialog.HeaderText>GrowthBook</Dialog.HeaderText>
           <Dialog.Close />
         </Dialog.Header>
       }>

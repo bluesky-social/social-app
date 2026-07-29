@@ -462,9 +462,9 @@ function DevOptions() {
       </SettingsList.PressableItem>
       <SettingsList.PressableItem
         onPress={() => growthbookControl.open()}
-        label={l`View Growthbook information`}>
+        label={l`View GrowthBook information`}>
         <SettingsList.ItemText>
-          <Trans>Growthbook</Trans>
+          <Trans>GrowthBook</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       <GrowthbookDialog control={growthbookControl} />
