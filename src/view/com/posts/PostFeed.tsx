@@ -744,6 +744,7 @@ let PostFeed = ({
     ageAssuranceBannerState,
     isCurrentFeedAtStartupSelected,
     blockedOrMutedAuthors,
+    trendingIndices,
   ])
 
   // events
