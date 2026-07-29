@@ -84,10 +84,12 @@ function Inner() {
                 key={trend.link}
                 trend={trend}
                 rank={index + 1}
+                position={index}
                 recId={trending.recId}
                 onPress={() => {
                   ax.metric('trendingTopic:click', {
                     context: 'explore',
+                    position: index,
                     recId: trending.recId,
                   })
                 }}
@@ -112,12 +114,14 @@ function Inner() {
 export function TrendRow({
   trend,
   rank,
+  position,
   recId,
   children,
   onPress,
 }: ViewStyleProp & {
   trend: AppBskyUnspeccedDefs.TrendView
   rank: number
+  position: number
   recId?: string
   children?: React.ReactNode
   onPress?: () => void
@@ -128,7 +132,7 @@ export function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
-  useTrendingTopicSeen('explore', recId)
+  useTrendingTopicSeen('explore', position, recId)
 
   const description = useMemo(() => {
     if (!trend.description) return

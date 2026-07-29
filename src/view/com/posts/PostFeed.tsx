@@ -159,6 +159,7 @@ type FeedRow =
   | {
       type: 'interstitialFeedTrendingTopics'
       key: string
+      parentPosition: number
     }
   | {
       type: 'interstitialTrendingVideos'
@@ -583,6 +584,7 @@ let PostFeed = ({
                     arr.push({
                       type: 'interstitialFeedTrendingTopics',
                       key: 'interstitialFeedTrendingTopics-' + sliceIndex,
+                      parentPosition: sliceIndex,
                     })
                   } else if (sliceIndex === trendingIndices.videos) {
                     if (areVideoFeedsEnabled && !trendingVideoDisabled) {
@@ -858,7 +860,9 @@ let PostFeed = ({
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
       } else if (row.type === 'interstitialFeedTrendingTopics') {
-        return <FeedTrendingTopicsInterstitial />
+        return (
+          <FeedTrendingTopicsInterstitial parentPosition={row.parentPosition} />
+        )
       } else if (row.type === 'liveEventFeedsAndTrendingBanner') {
         return <DiscoverFeedLiveEventFeedsAndTrendingBanner />
       } else if (row.type === 'composerPrompt') {

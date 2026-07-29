@@ -98,15 +98,17 @@ export function Inner() {
               </View>
             ) : !trending?.trends ? null : (
               <>
-                {trending.trends.map(topic => (
+                {trending.trends.map((topic, index) => (
                   <TrendingTopicLink
                     key={topic.link}
                     topic={topic}
                     metricContext="interstitial"
+                    position={index}
                     recId={trending.recId}
                     onPress={() => {
                       ax.metric('trendingTopic:click', {
                         context: 'interstitial',
+                        position: index,
                         recId: trending.recId,
                       })
                     }}>

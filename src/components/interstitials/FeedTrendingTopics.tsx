@@ -32,15 +32,21 @@ import {useAnalytics} from '#/analytics'
 
 const TOPIC_COUNT = 3
 
-export function FeedTrendingTopicsInterstitial() {
+export function FeedTrendingTopicsInterstitial({
+  parentPosition,
+}: {
+  parentPosition: number
+}) {
   const {enabled} = useTrendingConfig()
   const {trendingDisabled} = useTrendingSettings()
   const {rightNavVisible} = useLayoutBreakpoints()
 
-  return enabled && !trendingDisabled && !rightNavVisible ? <Inner /> : null
+  return enabled && !trendingDisabled && !rightNavVisible ? (
+    <Inner parentPosition={parentPosition} />
+  ) : null
 }
 
-function Inner() {
+function Inner({parentPosition}: {parentPosition: number}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const gutters = useGutters([0, 'base'])
@@ -137,10 +143,14 @@ function Inner() {
                     key={trend.link}
                     trend={trend}
                     rank={index + 1}
+                    position={index}
+                    parentPosition={parentPosition}
                     recId={trending.recId}
                     onPress={() => {
                       ax.metric('trendingTopic:click', {
                         context: 'interstitial',
+                        position: index,
+                        parentPosition,
                         recId: trending.recId,
                       })
                     }}
@@ -166,11 +176,15 @@ function Inner() {
 function TrendRow({
   trend,
   rank,
+  position,
+  parentPosition,
   recId,
   onPress,
 }: ViewStyleProp & {
   trend: AppBskyUnspeccedDefs.TrendView
   rank: number
+  position: number
+  parentPosition: number
   recId?: string
   children?: React.ReactNode
   onPress?: () => void
@@ -180,7 +194,7 @@ function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
-  useTrendingTopicSeen('interstitial', recId)
+  useTrendingTopicSeen('interstitial', position, recId, parentPosition)
 
   return (
     <Link
