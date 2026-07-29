@@ -45,7 +45,7 @@ function Inner() {
   const {t: l} = useLingui()
 
   const topicCount = ax.features.getValue(
-    ax.features.TrendingDiscoverValues,
+    ax.features.TrendingExploreTopicsCountValue,
     DEFAULT_LIMIT,
   )
 

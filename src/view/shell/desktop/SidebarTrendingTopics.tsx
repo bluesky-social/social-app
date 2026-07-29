@@ -32,7 +32,7 @@ function Inner() {
   const ax = useAnalytics()
 
   const exploreTopicCount = ax.features.getValue(
-    ax.features.TrendingDiscoverValues,
+    ax.features.TrendingExploreTopicsCountValue,
     DEFAULT_LIMIT,
   )
 
