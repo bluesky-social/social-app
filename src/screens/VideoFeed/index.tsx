@@ -9,9 +9,9 @@ import {
   type ViewToken,
 } from 'react-native'
 import {
-  Gesture,
   GestureDetector,
   type NativeGesture,
+  useNativeGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
   useAnimatedStyle,
@@ -255,7 +255,7 @@ function Feed() {
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  const scrollGesture = useMemo(() => Gesture.Native(), [])
+  const scrollGesture = useNativeGesture()
 
   const renderItem: ListRenderItem<VideoItem> = useCallback(
     ({item, index}) => {

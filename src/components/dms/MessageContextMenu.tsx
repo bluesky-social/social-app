@@ -1,6 +1,6 @@
 import {memo, useCallback} from 'react'
 import {Platform} from 'react-native'
-import {type GestureType} from 'react-native-gesture-handler'
+import {type PanGesture} from 'react-native-gesture-handler'
 import * as Clipboard from 'expo-clipboard'
 import {
   type ChatBskyConvoDefs,
@@ -49,7 +49,7 @@ export let MessageContextMenu = ({
    * Native only. A swipe gesture (swipe-to-reply) composed into the trigger's
    * gesture group so it's mutually exclusive with the tap and long-press.
    */
-  swipeGesture?: GestureType
+  swipeGesture?: PanGesture
 }): React.ReactNode => {
   const {t: l, i18n} = useLingui()
   const ax = useAnalytics()

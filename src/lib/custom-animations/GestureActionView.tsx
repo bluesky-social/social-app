@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react'
 import {type ColorValue, Dimensions, StyleSheet, View} from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import {GestureDetector, usePanGesture} from 'react-native-gesture-handler'
 import Animated, {
   clamp,
   interpolate,
@@ -105,17 +105,17 @@ export function GestureActionView({
   // Absurdly high value so it doesn't interfere with the pan gestures above (i.e., scroll)
   // reanimated doesn't offer great support for disabling y/x axes :/
   const effectivelyDisabledOffset = 200
-  const panGesture = Gesture.Pan()
-    .activeOffsetX([
+  const panGesture = usePanGesture({
+    activeOffsetX: [
       actions.leftFirst ? -10 : -effectivelyDisabledOffset,
       actions.rightFirst ? 10 : effectivelyDisabledOffset,
-    ])
-    .activeOffsetY([-effectivelyDisabledOffset, effectivelyDisabledOffset])
-    .onStart(() => {
+    ],
+    activeOffsetY: [-effectivelyDisabledOffset, effectivelyDisabledOffset],
+    onActivate: () => {
       'worklet'
       isActive.set(true)
-    })
-    .onChange(e => {
+    },
+    onUpdate: e => {
       'worklet'
       transX.set(e.translationX)
 
@@ -188,8 +188,8 @@ export function GestureActionView({
           }
         }
       }
-    })
-    .onEnd(e => {
+    },
+    onDeactivate: e => {
       'worklet'
       if (e.translationX < 0) {
         if (hitSecond.get() && actions.leftSecond) {
@@ -208,9 +208,8 @@ export function GestureActionView({
       hitFirst.set(false)
       hitSecond.set(false)
       isActive.set(false)
-    })
-
-  const composedGesture = Gesture.Simultaneous(panGesture)
+    },
+  })
 
   const animatedSliderStyle = useAnimatedStyle(() => {
     return {
@@ -285,7 +284,7 @@ export function GestureActionView({
   })
 
   return (
-    <GestureDetector gesture={composedGesture}>
+    <GestureDetector gesture={panGesture}>
       <View>
         <Animated.View
           style={[StyleSheet.absoluteFill, animatedBackgroundStyle]}>

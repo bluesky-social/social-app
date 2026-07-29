@@ -36,3 +36,12 @@ index 38470a658878a63919186257041098747ec55473..b9d25798c9be229efeb676166f89bfbc
      if (open) {
        runOnJS(onOpen)();
      } else {
+diff --git a/lib/typescript/src/types.d.ts b/lib/typescript/src/types.d.ts
+--- a/lib/typescript/src/types.d.ts
++++ b/lib/typescript/src/types.d.ts
+@@ -1,4 +1,4 @@
+ import * as React from 'react';
+ import type { StyleProp, View, ViewStyle } from 'react-native';
+-import type { PanGesture } from 'react-native-gesture-handler';
++import type { LegacyPanGesture as PanGesture } from 'react-native-gesture-handler';
+ import type { SharedValue } from 'react-native-reanimated';

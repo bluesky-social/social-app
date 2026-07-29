@@ -20,11 +20,12 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {
-  Gesture,
   GestureDetector,
-  type GestureStateChangeEvent,
-  type GestureUpdateEvent,
-  type PanGestureHandlerEventPayload,
+  type PanGestureActiveEvent,
+  useCompetingGestures,
+  useExclusiveGestures,
+  usePanGesture,
+  useTapGesture,
 } from 'react-native-gesture-handler'
 import {KeyboardEvents} from 'react-native-keyboard-controller'
 import Animated, {
@@ -299,24 +300,19 @@ export function Trigger({
     }
   }, [context, insets])
 
-  const tapGesture = useMemo(() => {
-    const gesture = Gesture.Tap()
-      .numberOfTaps(1)
-      .cancelsTouchesInView(false)
-      .runOnJS(true)
-    if (onTap) {
-      gesture.onEnd(() => void onTap())
-    }
-    return gesture
-  }, [onTap])
+  const tapGesture = useTapGesture({
+    numberOfTaps: 1,
+    cancelsTouchesInView: false,
+    runOnJS: true,
+    onDeactivate: onTap ? () => void onTap() : undefined,
+  })
 
-  const doubleTapGesture = useMemo(() => {
-    return Gesture.Tap()
-      .numberOfTaps(2)
-      .hitSlop(HITSLOP_10)
-      .onEnd(() => void open('auxiliary-only'))
-      .runOnJS(true)
-  }, [open])
+  const doubleTapGesture = useTapGesture({
+    numberOfTaps: 2,
+    hitSlop: HITSLOP_10,
+    runOnJS: true,
+    onDeactivate: () => void open('auxiliary-only'),
+  })
 
   const {
     hoverablesSV,
@@ -336,34 +332,33 @@ export function Trigger({
     },
   )
 
-  const pressAndHoldGesture = useMemo(() => {
-    return Gesture.Pan()
-      .activateAfterLongPress(500)
-      .cancelsTouchesInView(false)
-      .averageTouches(true)
-      .onStart(() => {
-        'worklet'
-        scheduleOnRN(open, 'full')
-      })
-      .onUpdate(evt => {
-        'worklet'
-        const item = getHoveredHoverable(evt, hoverablesSV, translationSV)
-        hoveredItemSV.set(item)
-      })
-      .onEnd(() => {
-        'worklet'
-        // don't recalculate hovered item - if they haven't moved their finger from
-        // the initial press, it's jarring to then select the item underneath
-        // as the menu may have slid into place beneath their finger
-        const item = hoveredItemSV.get()
-        if (item) {
-          scheduleOnRN(onTouchUpMenuItem, item)
-        }
-      })
-  }, [open, hoverablesSV, onTouchUpMenuItem, hoveredItemSV, translationSV])
+  const pressAndHoldGesture = usePanGesture({
+    activateAfterLongPress: 500,
+    cancelsTouchesInView: false,
+    averageTouches: true,
+    onActivate: () => {
+      'worklet'
+      scheduleOnRN(open, 'full')
+    },
+    onUpdate: evt => {
+      'worklet'
+      const item = getHoveredHoverable(evt, hoverablesSV, translationSV)
+      hoveredItemSV.set(item)
+    },
+    onDeactivate: () => {
+      'worklet'
+      // don't recalculate hovered item - if they haven't moved their finger from
+      // the initial press, it's jarring to then select the item underneath
+      // as the menu may have slid into place beneath their finger
+      const item = hoveredItemSV.get()
+      if (item) {
+        scheduleOnRN(onTouchUpMenuItem, item)
+      }
+    },
+  })
 
   // Order matters here: doubleTapGesture must come before tapGesture.
-  const tapAndHoldGestures = Gesture.Exclusive(
+  const tapAndHoldGestures = useExclusiveGestures(
     doubleTapGesture,
     tapGesture,
     pressAndHoldGesture,
@@ -371,11 +366,13 @@ export function Trigger({
 
   // An optional swipe gesture (e.g. swipe-to-reply) races against the tap/hold
   // group: whichever activates first wins and cancels the rest, so they're
-  // mutually exclusive. Race (not Exclusive) avoids a held-but-not-yet-moved
+  // mutually exclusive. Competing (not Exclusive) avoids a held-but-not-yet-moved
   // swipe Pan blocking the long-press from firing.
-  const composedGestures = swipeGesture
-    ? Gesture.Race(swipeGesture, tapAndHoldGestures)
-    : tapAndHoldGestures
+  const composedGestures = useCompetingGestures(
+    ...(swipeGesture
+      ? [swipeGesture, tapAndHoldGestures]
+      : [tapAndHoldGestures]),
+  )
 
   const measurement = context.measurement || pendingMeasurement?.measurement
 
@@ -991,9 +988,7 @@ function measureView(view: View | null, insets: EdgeInsets) {
 }
 
 function getHoveredHoverable(
-  evt:
-    | GestureStateChangeEvent<PanGestureHandlerEventPayload>
-    | GestureUpdateEvent<PanGestureHandlerEventPayload>,
+  evt: PanGestureActiveEvent,
   hoverables: SharedValue<Record<string, {id: string; rect: Measurement}>>,
   translation: SharedValue<number>,
 ) {

@@ -1,6 +1,5 @@
-import {useMemo} from 'react'
 import {View} from 'react-native'
-import {Gesture, type GestureType} from 'react-native-gesture-handler'
+import {type PanGesture, usePanGesture} from 'react-native-gesture-handler'
 import Animated, {
   clamp,
   interpolate,
@@ -52,8 +51,9 @@ function applyResistance(value: number) {
  *
  * The pan gesture is built here but handed to `children` via a render prop so
  * the consumer can compose it into the message's context-menu gestures with
- * `Gesture.Exclusive`. Sharing one arbitration group is what makes the swipe
- * and the long-press mutually exclusive - only one can ever win the touch.
+ * `useCompetingGestures`. Sharing one arbitration group is what makes the
+ * swipe and the long-press mutually exclusive - only one can ever win the
+ * touch.
  */
 export function SwipeToReply({
   isFromSelf,
@@ -64,7 +64,7 @@ export function SwipeToReply({
   isFromSelf: boolean
   onReply: () => void
   enabled?: boolean
-  children: (swipeGesture: GestureType) => React.ReactNode
+  children: (swipeGesture: PanGesture) => React.ReactNode
 }) {
   const t = useTheme()
   const playHaptic = useHaptics()
@@ -74,73 +74,56 @@ export function SwipeToReply({
   const hit = useSharedValue(false)
   const iconScale = useSharedValue(1)
 
-  const swipeGesture = useMemo(() => {
-    const runPop = () => {
-      'worklet'
-      if (isReducedMotion) return
-      iconScale.set(() =>
-        withSequence(
-          withTiming(1.2, {duration: 175}),
-          withTiming(1, {duration: 100}),
-        ),
-      )
-    }
-
-    return (
-      Gesture.Pan()
-        .enabled(enabled)
-        // Arm only on the inward axis; the outward direction is effectively
-        // disabled so the bubble can't be dragged off its own edge.
-        .activeOffsetX(
-          isFromSelf
-            ? [-10, EFFECTIVELY_DISABLED_OFFSET]
-            : [-EFFECTIVELY_DISABLED_OFFSET, 10],
-        )
-        .activeOffsetY([
-          -EFFECTIVELY_DISABLED_OFFSET,
-          EFFECTIVELY_DISABLED_OFFSET,
-        ])
-        .onChange(e => {
-          'worklet'
-          const dir = isFromSelf
-            ? Math.min(e.translationX, 0)
-            : Math.max(e.translationX, 0)
-          transX.set(applyResistance(dir))
-
-          const pastThreshold = Math.abs(transX.get()) >= ACTIVATION_THRESHOLD
-          if (pastThreshold && !hit.get()) {
-            hit.set(true)
-            runPop()
-            scheduleOnRN(playHaptic, 'Medium')
-          } else if (!pastThreshold && hit.get()) {
-            hit.set(false)
-          }
-        })
-        .onEnd(() => {
-          'worklet'
-          // Only a clean end (finger lifted past threshold) triggers the reply.
-          if (hit.get()) {
-            scheduleOnRN(onReply)
-          }
-        })
-        .onFinalize(() => {
-          'worklet'
-          // Runs on both end and cancellation, so the bubble always animates
-          // home even if the gesture is interrupted mid-swipe.
-          transX.set(withTiming(0, {duration: 200}))
-          hit.set(false)
-        })
+  const runPop = () => {
+    'worklet'
+    if (isReducedMotion) return
+    iconScale.set(() =>
+      withSequence(
+        withTiming(1.2, {duration: 175}),
+        withTiming(1, {duration: 100}),
+      ),
     )
-  }, [
-    isFromSelf,
+  }
+
+  const swipeGesture = usePanGesture({
     enabled,
-    onReply,
-    playHaptic,
-    isReducedMotion,
-    transX,
-    hit,
-    iconScale,
-  ])
+    // Arm only on the inward axis; the outward direction is effectively
+    // disabled so the bubble can't be dragged off its own edge.
+    activeOffsetX: isFromSelf
+      ? [-10, EFFECTIVELY_DISABLED_OFFSET]
+      : [-EFFECTIVELY_DISABLED_OFFSET, 10],
+    activeOffsetY: [-EFFECTIVELY_DISABLED_OFFSET, EFFECTIVELY_DISABLED_OFFSET],
+    onUpdate: e => {
+      'worklet'
+      const dir = isFromSelf
+        ? Math.min(e.translationX, 0)
+        : Math.max(e.translationX, 0)
+      transX.set(applyResistance(dir))
+
+      const pastThreshold = Math.abs(transX.get()) >= ACTIVATION_THRESHOLD
+      if (pastThreshold && !hit.get()) {
+        hit.set(true)
+        runPop()
+        scheduleOnRN(playHaptic, 'Medium')
+      } else if (!pastThreshold && hit.get()) {
+        hit.set(false)
+      }
+    },
+    onDeactivate: () => {
+      'worklet'
+      // Only a clean end (finger lifted past threshold) triggers the reply.
+      if (hit.get()) {
+        scheduleOnRN(onReply)
+      }
+    },
+    onFinalize: () => {
+      'worklet'
+      // Runs on both end and cancellation, so the bubble always animates
+      // home even if the gesture is interrupted mid-swipe.
+      transX.set(withTiming(0, {duration: 200}))
+      hit.set(false)
+    },
+  })
 
   const contentStyle = useAnimatedStyle(() => ({
     transform: [{translateX: transX.get()}],

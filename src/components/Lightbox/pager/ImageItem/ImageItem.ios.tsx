@@ -9,9 +9,10 @@
 import {memo, useState} from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
 import {
-  Gesture,
   GestureDetector,
   type PanGesture,
+  useExclusiveGestures,
+  useTapGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
   type SharedValue,
@@ -116,14 +117,16 @@ const ImageItem = ({
     })
   }
 
-  const singleTap = Gesture.Tap().onEnd(() => {
-    'worklet'
-    scheduleOnRN(onTap)
+  const singleTap = useTapGesture({
+    onDeactivate: () => {
+      'worklet'
+      scheduleOnRN(onTap)
+    },
   })
 
-  const doubleTap = Gesture.Tap()
-    .numberOfTaps(2)
-    .onEnd(e => {
+  const doubleTap = useTapGesture({
+    numberOfTaps: 2,
+    onDeactivate: e => {
       'worklet'
       const screenSize = measureSafeArea()
       const {absoluteX, absoluteY} = e
@@ -143,9 +146,10 @@ const ImageItem = ({
         )
       }
       scheduleOnRN(zoomTo, nextZoomRect)
-    })
+    },
+  })
 
-  const composedGesture = Gesture.Exclusive(
+  const composedGesture = useExclusiveGestures(
     dismissSwipePan,
     doubleTap,
     singleTap,
