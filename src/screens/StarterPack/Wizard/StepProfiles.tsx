@@ -39,6 +39,7 @@ export function StepProfiles({
   } = useActorSearch({
     query: encodeURIComponent('*'),
   })
+
   const topFollowers = topPages?.pages
     .flatMap(p => p.actors)
     .filter(p => !p.associated?.labeler)
