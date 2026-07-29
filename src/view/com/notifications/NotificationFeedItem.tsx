@@ -12,16 +12,17 @@ import {
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
   AppBskyFeedPost,
+  type AppBskyGraphDefs,
   AppBskyGraphFollow,
+  AppBskyGraphStarterpack,
+  AtUri,
   moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
 } from '@atproto/api'
-import {AtUri} from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {plural} from '@lingui/core/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -32,7 +33,6 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {forceLTR} from '#/lib/strings/bidi'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {niceDate} from '#/lib/strings/time'
-import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type FeedNotification} from '#/state/queries/notifications/feed'
@@ -44,7 +44,7 @@ import {Post} from '#/view/com/post/Post'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, platform, useTheme, web} from '#/alf'
+import {atoms as a, native, platform, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
@@ -64,7 +64,10 @@ import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import * as ProfileCard from '#/components/ProfileCard'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
+import {
+  Notification as StarterPackCard,
+  useStarterPackLink,
+} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -93,9 +96,9 @@ let NotificationFeedItem = ({
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const ax = useAnalytics()
-  const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false)
+  const [isAuthorsExpanded, setIsAuthorsExpanded] = useState(false)
   const [isHoveringAuthorsList, setIsHoveringAuthorsList] = useState(false)
   const itemHref = useMemo(() => {
     switch (item.type) {
@@ -253,7 +256,7 @@ let NotificationFeedItem = ({
         to={firstAuthor.href}
         disableMismatchWarning
         emoji
-        label={_(msg`Go to ${firstAuthorName}'s profile`)}>
+        label={l`Go to ${firstAuthorName}'s profile`}>
         {forceLTR(firstAuthorName)}
         <ProfileBadges
           profile={firstAuthor.profile}
@@ -275,12 +278,23 @@ let NotificationFeedItem = ({
   )
   const additionalAuthorsCount = authors.length - 1
   const hasMultipleAuthors = additionalAuthorsCount > 0
+  const starterPack = item.notification.starterPack
+  const allFollowedViaSameStarterPack =
+    item.type === 'follow' &&
+    starterPack !== undefined &&
+    (item.additional ?? []).every(
+      notification => notification.starterPack?.uri === starterPack.uri,
+    )
+  const starterPackName =
+    allFollowedViaSameStarterPack && starterPack
+      ? getStarterPackName(starterPack)
+      : undefined
   const formattedAuthorsCount = hasMultipleAuthors
     ? formatCount(i18n, additionalAuthorsCount)
     : ''
 
   let a11yLabel = ''
-  let notificationContent: React.ReactElement<any>
+  let notificationContent: React.ReactElement
   let icon = (
     <HeartIconFilled
       size="xl"
@@ -293,13 +307,11 @@ let NotificationFeedItem = ({
 
   if (item.type === 'post-like') {
     a11yLabel = hasMultipleAuthors
-      ? _(
-          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-            one: `${formattedAuthorsCount} other`,
-            other: `${formattedAuthorsCount} others`,
-          })} liked your post`,
-        )
-      : _(msg`${firstAuthorName} liked your post`)
+      ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+          one: `${formattedAuthorsCount} other`,
+          other: `${formattedAuthorsCount} others`,
+        })} liked your post`
+      : l`${firstAuthorName} liked your post`
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
@@ -317,13 +329,11 @@ let NotificationFeedItem = ({
     )
   } else if (item.type === 'repost') {
     a11yLabel = hasMultipleAuthors
-      ? _(
-          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-            one: `${formattedAuthorsCount} other`,
-            other: `${formattedAuthorsCount} others`,
-          })} reposted your post`,
-        )
-      : _(msg`${firstAuthorName} reposted your post`)
+      ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+          one: `${formattedAuthorsCount} other`,
+          other: `${formattedAuthorsCount} others`,
+        })} reposted your post`
+      : l`${firstAuthorName} reposted your post`
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
@@ -346,17 +356,24 @@ let NotificationFeedItem = ({
        * Follow-backs are ungrouped, grouped follow-backs not supported atm,
        * see `src/state/queries/notifications/util.ts`
        */
-      a11yLabel = _(msg`${firstAuthorName} followed you back`)
+      a11yLabel = starterPackName
+        ? l`${firstAuthorName} followed you back via starter pack ${starterPackName}`
+        : l`${firstAuthorName} followed you back`
       notificationContent = <Trans>{firstAuthorLink} followed you back</Trans>
     } else {
-      a11yLabel = hasMultipleAuthors
-        ? _(
-            msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+      a11yLabel = starterPackName
+        ? hasMultipleAuthors
+          ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
               one: `${formattedAuthorsCount} other`,
               other: `${formattedAuthorsCount} others`,
-            })} followed you`,
-          )
-        : _(msg`${firstAuthorName} followed you`)
+            })} followed you via starter pack ${starterPackName}`
+          : l`${firstAuthorName} followed you via starter pack ${starterPackName}`
+        : hasMultipleAuthors
+          ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+              one: `${formattedAuthorsCount} other`,
+              other: `${formattedAuthorsCount} others`,
+            })} followed you`
+          : l`${firstAuthorName} followed you`
       notificationContent = hasMultipleAuthors ? (
         <Trans>
           {firstAuthorLink} and{' '}
@@ -375,7 +392,7 @@ let NotificationFeedItem = ({
     }
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'contact-match') {
-    a11yLabel = _(msg`Your contact ${firstAuthorName} is on Bluesky`)
+    a11yLabel = l`Your contact ${firstAuthorName} is on Bluesky`
     notificationContent = (
       <Trans>Your contact {firstAuthorLink} is on Bluesky</Trans>
     )
@@ -384,13 +401,11 @@ let NotificationFeedItem = ({
     )
   } else if (item.type === 'feedgen-like') {
     a11yLabel = hasMultipleAuthors
-      ? _(
-          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-            one: `${formattedAuthorsCount} other`,
-            other: `${formattedAuthorsCount} others`,
-          })} liked your custom feed`,
-        )
-      : _(msg`${firstAuthorName} liked your custom feed`)
+      ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+          one: `${formattedAuthorsCount} other`,
+          other: `${formattedAuthorsCount} others`,
+        })} liked your custom feed`
+      : l`${firstAuthorName} liked your custom feed`
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
@@ -408,13 +423,11 @@ let NotificationFeedItem = ({
     )
   } else if (item.type === 'starterpack-joined') {
     a11yLabel = hasMultipleAuthors
-      ? _(
-          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-            one: `${formattedAuthorsCount} other`,
-            other: `${formattedAuthorsCount} others`,
-          })} signed up with your starter pack`,
-        )
-      : _(msg`${firstAuthorName} signed up with your starter pack`)
+      ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+          one: `${formattedAuthorsCount} other`,
+          other: `${formattedAuthorsCount} others`,
+        })} signed up with your starter pack`
+      : l`${firstAuthorName} signed up with your starter pack`
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
@@ -437,13 +450,11 @@ let NotificationFeedItem = ({
     )
   } else if (item.type === 'verified') {
     a11yLabel = hasMultipleAuthors
-      ? _(
-          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-            one: `${formattedAuthorsCount} other`,
-            other: `${formattedAuthorsCount} others`,
-          })} verified you`,
-        )
-      : _(msg`${firstAuthorName} verified you`)
+      ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+          one: `${formattedAuthorsCount} other`,
+          other: `${formattedAuthorsCount} others`,
+        })} verified you`
+      : l`${firstAuthorName} verified you`
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
@@ -462,13 +473,11 @@ let NotificationFeedItem = ({
     icon = <VerifiedCheck size="xl" />
   } else if (item.type === 'unverified') {
     a11yLabel = hasMultipleAuthors
-      ? _(
-          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-            one: `${formattedAuthorsCount} other`,
-            other: `${formattedAuthorsCount} others`,
-          })} removed their verifications from your account`,
-        )
-      : _(msg`${firstAuthorName} removed their verification from your account`)
+      ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+          one: `${formattedAuthorsCount} other`,
+          other: `${formattedAuthorsCount} others`,
+        })} removed their verifications from your account`
+      : l`${firstAuthorName} removed their verification from your account`
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
@@ -489,13 +498,11 @@ let NotificationFeedItem = ({
     icon = <VerifiedCheck size="xl" fill={t.palette.contrast_500} />
   } else if (item.type === 'like-via-repost') {
     a11yLabel = hasMultipleAuthors
-      ? _(
-          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-            one: `${formattedAuthorsCount} other`,
-            other: `${formattedAuthorsCount} others`,
-          })} liked your repost`,
-        )
-      : _(msg`${firstAuthorName} liked your repost`)
+      ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+          one: `${formattedAuthorsCount} other`,
+          other: `${formattedAuthorsCount} others`,
+        })} liked your repost`
+      : l`${firstAuthorName} liked your repost`
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
@@ -513,13 +520,11 @@ let NotificationFeedItem = ({
     )
   } else if (item.type === 'repost-via-repost') {
     a11yLabel = hasMultipleAuthors
-      ? _(
-          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-            one: `${formattedAuthorsCount} other`,
-            other: `${formattedAuthorsCount} others`,
-          })} reposted your repost`,
-        )
-      : _(msg`${firstAuthorName} reposted your repost`)
+      ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+          one: `${formattedAuthorsCount} other`,
+          other: `${formattedAuthorsCount} others`,
+        })} reposted your repost`
+      : l`${firstAuthorName} reposted your repost`
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
@@ -539,21 +544,17 @@ let NotificationFeedItem = ({
   } else if (item.type === 'subscribed-post') {
     const postsCount = 1 + (item.additional?.length || 0)
     a11yLabel = hasMultipleAuthors
-      ? _(
-          msg`New posts from ${firstAuthorName} and ${plural(
-            additionalAuthorsCount,
-            {
-              one: `${formattedAuthorsCount} other`,
-              other: `${formattedAuthorsCount} others`,
-            },
-          )}`,
-        )
-      : _(
-          msg`New ${plural(postsCount, {
-            one: 'post',
-            other: 'posts',
-          })} from ${firstAuthorName}`,
-        )
+      ? l`New posts from ${firstAuthorName} and ${plural(
+          additionalAuthorsCount,
+          {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          },
+        )}`
+      : l`New ${plural(postsCount, {
+          one: 'post',
+          other: 'posts',
+        })} from ${firstAuthorName}`
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         New posts from {firstAuthorLink} and{' '}
@@ -608,18 +609,16 @@ let NotificationFeedItem = ({
               {
                 name: 'toggleAuthorsExpanded',
                 label: isAuthorsExpanded
-                  ? _(msg`Collapse list of users`)
-                  : _(msg`Expand list of users`),
+                  ? l`Collapse list of users`
+                  : l`Expand list of users`,
               },
             ]
           : [
               {
                 name: 'viewProfile',
-                label: _(
-                  msg`View ${
-                    authors[0].profile.displayName || authors[0].profile.handle
-                  }'s profile`,
-                ),
+                label: l`View ${
+                  authors[0].profile.displayName || authors[0].profile.handle
+                }'s profile`,
               },
             ]
       }
@@ -686,6 +685,9 @@ let NotificationFeedItem = ({
                 </TimeElapsed>
               </Text>
             </ExpandListPressable>
+            {allFollowedViaSameStarterPack && starterPack ? (
+              <FollowedViaStarterPack starterPack={starterPack} />
+            ) : null}
             {(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
             (item.type === 'contact-match' &&
               !item.notification.author.viewer?.following) ? (
@@ -737,6 +739,53 @@ let NotificationFeedItem = ({
 NotificationFeedItem = memo(NotificationFeedItem)
 export {NotificationFeedItem}
 
+function FollowedViaStarterPack({
+  starterPack,
+}: {
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic
+}) {
+  const t = useTheme()
+  const link = useStarterPackLink({view: starterPack})
+
+  const starterPackName = getStarterPackName(starterPack)
+
+  if (!starterPackName) {
+    return null
+  }
+
+  return (
+    <Text style={[native(a.pt_xs), t.atoms.text_contrast_medium]}>
+      <Trans comment="When the source of a follow is a starter pack, i.e., 'via starter pack {starterPackName}'.">
+        via starter pack{' '}
+        <StarterPack
+          size="sm"
+          gradient="sky"
+          style={[native(a.mr_2xs), {transform: [{translateY: 4}]}]}
+        />
+        <InlineLinkText
+          to={link.to}
+          label={link.label}
+          onPress={link.precache}
+          onMouseEnter={link.precache}
+          style={[a.font_semi_bold, t.atoms.text]}>
+          {starterPackName}
+        </InlineLinkText>
+      </Trans>
+    </Text>
+  )
+}
+
+function getStarterPackName(
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic,
+) {
+  return bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+    starterPack.record,
+    AppBskyGraphStarterpack.isRecord,
+  )
+    ? starterPack.record.name
+    : undefined
+}
+
 function ExpandListPressable({
   hasMultipleAuthors,
   children,
@@ -767,7 +816,7 @@ function ExpandListPressable({
 }
 
 function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const profileShadow = useProfileShadow(profile)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
@@ -787,15 +836,14 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
     try {
       await queueFollow()
       Toast.show(
-        _(
-          msg`Following ${sanitizeDisplayName(
-            profile.displayName || profile.handle,
-          )}`,
-        ),
+        l`Following ${sanitizeDisplayName(
+          profile.displayName || profile.handle,
+        )}`,
       )
-    } catch (err: any) {
+    } catch (error) {
+      const err = error as Error
       if (err?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`), {
+        Toast.show(l`An issue occurred, please try again.`, {
           type: 'error',
         })
       }
@@ -809,15 +857,14 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
     try {
       await queueUnfollow()
       Toast.show(
-        _(
-          msg`No longer following ${sanitizeDisplayName(
-            profile.displayName || profile.handle,
-          )}`,
-        ),
+        l`No longer following ${sanitizeDisplayName(
+          profile.displayName || profile.handle,
+        )}`,
       )
-    } catch (err: any) {
+    } catch (error) {
+      const err = error as Error
       if (err?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`), {
+        Toast.show(l`An issue occurred, please try again.`, {
           type: 'error',
         })
       }
@@ -838,12 +885,10 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
 
   const isFollowing = profileShadow.viewer.following
   const isFollowedBy = profileShadow.viewer.followedBy
-  const followingLabel = _(
-    msg({
-      message: 'Following',
-      comment: 'User is following this account, click to unfollow',
-    }),
-  )
+  const followingLabel = l({
+    message: 'Following',
+    comment: 'User is following this account, click to unfollow',
+  })
 
   return (
     <View style={[a.pt_sm]}>
@@ -853,7 +898,7 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
           color="secondary"
           size="small"
           style={[a.self_start]}
-          onPress={onPressUnfollow}>
+          onPress={(e: GestureResponderEvent) => void onPressUnfollow(e)}>
           <ButtonIcon icon={CheckIcon} />
           <ButtonText>
             <Trans>Following</Trans>
@@ -861,11 +906,11 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
         </Button>
       ) : (
         <Button
-          label={isFollowedBy ? _(msg`Follow back`) : _(msg`Follow`)}
+          label={isFollowedBy ? l`Follow back` : l`Follow`}
           color="primary"
           size="small"
           style={[a.self_start]}
-          onPress={onPressFollow}>
+          onPress={(e: GestureResponderEvent) => void onPressFollow(e)}>
           <ButtonIcon icon={PlusIcon} />
           <ButtonText>
             {isFollowedBy ? <Trans>Follow back</Trans> : <Trans>Follow</Trans>}
@@ -877,10 +922,29 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
 }
 
 function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const agent = useAgent()
   const navigation = useNavigation<NavigationProp>()
   const [isLoading, setIsLoading] = useState(false)
+
+  const onPress = async () => {
+    try {
+      setIsLoading(true)
+      const res = await agent.api.chat.bsky.convo.getConvoForMembers(
+        {
+          members: [profile.did, agent.session!.did],
+        },
+        {headers: DM_SERVICE_HEADERS},
+      )
+      navigation.navigate('MessagesConversation', {
+        conversation: res.data.convo.id,
+      })
+    } catch (e) {
+      logger.error('Failed to get conversation', {safeMessage: e})
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   if (
     profile.associated?.chat?.allowIncoming === 'none' ||
@@ -892,30 +956,13 @@ function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
 
   return (
     <Button
-      label={_(msg`Say hello!`)}
+      label={l`Say hello!`}
       variant="ghost"
       color="primary"
       size="small"
       style={[a.self_center, {marginLeft: 'auto'}]}
       disabled={isLoading}
-      onPress={async () => {
-        try {
-          setIsLoading(true)
-          const res = await agent.api.chat.bsky.convo.getConvoForMembers(
-            {
-              members: [profile.did, agent.session!.did],
-            },
-            {headers: DM_SERVICE_HEADERS},
-          )
-          navigation.navigate('MessagesConversation', {
-            conversation: res.data.convo.id,
-          })
-        } catch (e) {
-          logger.error('Failed to get conversation', {safeMessage: e})
-        } finally {
-          setIsLoading(false)
-        }
-      }}>
+      onPress={() => void onPress()}>
       <ButtonText>
         <Trans>Say hello!</Trans>
       </ButtonText>
@@ -935,7 +982,7 @@ function CondensedAuthorsList({
   showDmButton?: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   if (!visible) {
     return (
@@ -944,10 +991,8 @@ function CondensedAuthorsList({
           style={styles.expandedAuthorsCloseBtn}
           onPress={onToggleAuthorsExpanded}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Hide user list`)}
-          accessibilityHint={_(
-            msg`Collapses list of users for a given notification`,
-          )}>
+          accessibilityLabel={l`Hide user list`}
+          accessibilityHint={l`Collapses list of users for a given notification`}>
           <ChevronUpIcon
             size="md"
             style={[a.ml_xs, a.mr_md, t.atoms.text_contrast_high]}
@@ -978,7 +1023,7 @@ function CondensedAuthorsList({
       onPress={onToggleAuthorsExpanded}>
       <View style={[a.flex_row, a.align_center]}>
         {authors.slice(0, MAX_AUTHORS).map(author => (
-          <View key={author.href} style={s.mr5}>
+          <View key={author.href} style={{marginRight: 5}}>
             <PreviewableUserAvatar
               size={35}
               profile={author.profile}

@@ -1638,31 +1638,6 @@
       "count": 2
     }
   },
-  "src/view/com/notifications/NotificationFeed.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 2
-    },
-    "typescript/no-floating-promises": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 6
-    }
-  },
-  "src/view/com/notifications/NotificationFeedItem.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 3
-    },
-    "typescript/no-misused-promises": {
-      "count": 3
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 2
-    }
-  },
   "src/view/com/pager/Pager.tsx": {
     "typescript/no-explicit-any": {
       "count": 4
