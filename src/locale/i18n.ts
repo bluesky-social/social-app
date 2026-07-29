@@ -69,7 +69,7 @@ export async function dynamicActivate(locale: AppLanguage) {
         import('date-fns/locale/es').then(m => m.es),
         import('@formatjs/intl-pluralrules/locale-data/an.js'),
         import('@formatjs/intl-numberformat/locale-data/an.js'),
-        import('@formatjs/intl-displaynames/locale-data/an.js'),
+        import('@formatjs/intl-displaynames/locale-data/es.js'),
       ])
       return dateLocale
     }
