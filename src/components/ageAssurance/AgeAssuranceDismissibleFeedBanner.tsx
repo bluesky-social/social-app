@@ -1,7 +1,6 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {atoms as a, select, useTheme} from '#/alf'
@@ -43,7 +42,7 @@ export function useInternalState() {
 export function AgeAssuranceDismissibleFeedBanner() {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {visible, close} = useInternalState()
   const copy = useAgeAssuranceCopy()
 
@@ -63,7 +62,7 @@ export function AgeAssuranceDismissibleFeedBanner() {
         },
       ]}>
       <Link
-        label={_(msg`Learn more about age assurance`)}
+        label={l`Learn more about age assurance`}
         to="/settings/account"
         onPress={() => {
           close()
@@ -100,9 +99,8 @@ export function AgeAssuranceDismissibleFeedBanner() {
           </View>
         </View>
       </Link>
-
       <Button
-        label={_(msg`Don't show again`)}
+        label={l`Don't show again`}
         size="small"
         onPress={() => {
           close()

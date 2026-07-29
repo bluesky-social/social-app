@@ -3,9 +3,7 @@ import {View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ComAtprotoAdminDefs, ToolsOzoneReportDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
@@ -28,7 +26,7 @@ import {IS_WEB} from '#/env'
 const COL_WIDTH = 400
 
 export function Takendown() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
@@ -73,7 +71,7 @@ export function Takendown() {
       <Button
         color="primary"
         size="large"
-        label={_(msg`Submit appeal`)}
+        label={l`Submit appeal`}
         onPress={() => submitAppeal(reason)}
         disabled={isPending || isOverMaxLength}>
         <ButtonText>
@@ -85,7 +83,7 @@ export function Takendown() {
       <Button
         size="large"
         color="secondary_inverted"
-        label={_(msg`Sign out`)}
+        label={l`Sign out`}
         onPress={() => logoutCurrentAccount('Takendown')}>
         <ButtonText>
           <Trans>Sign Out</Trans>
@@ -99,7 +97,7 @@ export function Takendown() {
         variant="ghost"
         size="large"
         color="secondary"
-        label={_(msg`Cancel`)}
+        label={l`Cancel`}
         onPress={() => setIsAppealling(false)}>
         <ButtonText>
           <Trans>Cancel</Trans>
@@ -111,7 +109,7 @@ export function Takendown() {
       variant="ghost"
       size="large"
       color="secondary"
-      label={_(msg`Appeal suspension`)}
+      label={l`Appeal suspension`}
       onPress={() => setIsAppealling(true)}>
       <ButtonText>
         <Trans>Appeal Suspension</Trans>
@@ -163,10 +161,10 @@ export function Takendown() {
                           MAX_REPORT_REASON_GRAPHEME_LENGTH || !!error
                       }>
                       <TextField.Input
-                        label={_(msg`Reason for appeal`)}
+                        label={l`Reason for appeal`}
                         defaultValue={reason}
                         onChangeText={setReason}
-                        placeholder={_(msg`Why are you appealing?`)}
+                        placeholder={l`Why are you appealing?`}
                         multiline
                         numberOfLines={5}
                         autoFocus
@@ -210,7 +208,7 @@ export function Takendown() {
                 <Trans>
                   Your account was found to be in violation of the{' '}
                   <SimpleInlineLinkText
-                    label={_(msg`Bluesky Social Terms of Service`)}
+                    label={l`Bluesky Social Terms of Service`}
                     to="https://bsky.social/about/support/tos"
                     style={[a.text_md, a.leading_snug]}>
                     Bluesky Social Terms of Service
@@ -238,7 +236,6 @@ export function Takendown() {
           </View>
         </View>
       </KeyboardAwareScrollView>
-
       {!webLayout && (
         <View
           style={[

@@ -1,7 +1,7 @@
 import {useCallback, useImperativeHandle, useState} from 'react'
 import {Keyboard} from 'react-native'
 import DatePicker from 'react-native-date-picker'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useTheme} from '#/alf'
 import {type DateFieldProps} from '#/components/forms/DateField/types'

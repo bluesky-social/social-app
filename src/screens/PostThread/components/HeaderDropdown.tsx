@@ -1,6 +1,4 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {type ThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
@@ -19,13 +17,13 @@ export function HeaderDropdown({
   'sort' | 'setSort' | 'view' | 'setView'
 >): React.ReactNode {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
     <Menu.Root>
-      <Menu.Trigger label={_(msg`Thread options`)}>
+      <Menu.Trigger label={l`Thread options`}>
         {({props: {onPress, ...props}}) => (
           <Button
-            label={_(msg`Thread options`)}
+            label={l`Thread options`}
             size="small"
             variant="ghost"
             color="secondary"
@@ -46,7 +44,7 @@ export function HeaderDropdown({
         </Menu.LabelText>
         <Menu.Group>
           <Menu.Item
-            label={_(msg`Linear`)}
+            label={l`Linear`}
             onPress={() => {
               setView('linear')
             }}>
@@ -56,7 +54,7 @@ export function HeaderDropdown({
             <Menu.ItemRadio selected={view === 'linear'} />
           </Menu.Item>
           <Menu.Item
-            label={_(msg`Threaded`)}
+            label={l`Threaded`}
             onPress={() => {
               setView('tree')
             }}>
@@ -72,7 +70,7 @@ export function HeaderDropdown({
         </Menu.LabelText>
         <Menu.Group>
           <Menu.Item
-            label={_(msg`Top replies first`)}
+            label={l`Top replies first`}
             onPress={() => {
               setSort('top')
             }}>
@@ -82,7 +80,7 @@ export function HeaderDropdown({
             <Menu.ItemRadio selected={sort === 'top'} />
           </Menu.Item>
           <Menu.Item
-            label={_(msg`Oldest replies first`)}
+            label={l`Oldest replies first`}
             onPress={() => {
               setSort('oldest')
             }}>
@@ -92,7 +90,7 @@ export function HeaderDropdown({
             <Menu.ItemRadio selected={sort === 'oldest'} />
           </Menu.Item>
           <Menu.Item
-            label={_(msg`Newest replies first`)}
+            label={l`Newest replies first`}
             onPress={() => {
               setSort('newest')
             }}>

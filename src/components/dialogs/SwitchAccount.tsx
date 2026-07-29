@@ -1,8 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {type SessionAccount, useSession} from '#/state/session'
@@ -17,7 +15,7 @@ export function SwitchAccountDialog({
 }: {
   control: Dialog.DialogControlProps
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
@@ -44,7 +42,7 @@ export function SwitchAccountDialog({
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner label={_(msg`Switch account`)}>
+      <Dialog.ScrollableInner label={l`Switch account`}>
         <View style={[a.gap_lg]}>
           <Text style={[a.text_2xl, a.font_semi_bold]}>
             <Trans>Switch account</Trans>
@@ -53,7 +51,7 @@ export function SwitchAccountDialog({
           <AccountList
             onSelectAccount={onSelectAccount}
             onSelectOther={onPressAddAccount}
-            otherLabel={_(msg`Add account`)}
+            otherLabel={l`Add account`}
             pendingDid={pendingDid}
           />
         </View>

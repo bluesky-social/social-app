@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/types'
@@ -18,7 +17,7 @@ export function useFollowMethods({
   logContext: Metrics['profile:follow']['logContext'] &
     Metrics['profile:unfollow']['logContext']
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const requireAuth = useRequireAuth()
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
@@ -32,13 +31,13 @@ export function useFollowMethods({
       } catch (e: any) {
         logger.error(`useFollowMethods: failed to follow`, {message: String(e)})
         if (e?.name !== 'AbortError') {
-          Toast.show(_(msg`An issue occurred, please try again.`), {
+          Toast.show(l`An issue occurred, please try again.`, {
             type: 'error',
           })
         }
       }
     })
-  }, [_, queueFollow, requireAuth])
+  }, [l, queueFollow, requireAuth])
 
   const unfollow = useCallback(() => {
     requireAuth(async () => {
@@ -49,13 +48,13 @@ export function useFollowMethods({
           message: String(e),
         })
         if (e?.name !== 'AbortError') {
-          Toast.show(_(msg`An issue occurred, please try again.`), {
+          Toast.show(l`An issue occurred, please try again.`, {
             type: 'error',
           })
         }
       }
     })
-  }, [_, queueUnfollow, requireAuth])
+  }, [l, queueUnfollow, requireAuth])
 
   return {
     follow,

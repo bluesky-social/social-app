@@ -1,5 +1,4 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES} from '#/locale/languages'
@@ -21,7 +20,7 @@ export function LanguageSelect({
   label?: string
   disabledBlueskySupportedLanguageSanitization?: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const selectValue =
     value && !disabledBlueskySupportedLanguageSanitization
       ? sanitizeAppLanguageSetting(value)
@@ -38,8 +37,8 @@ export function LanguageSelect({
 
   return (
     <Select.Root value={selectValue} onValueChange={handleOnChange}>
-      <Select.Trigger label={_(msg`Select language`)}>
-        <Select.ValueText placeholder={_(msg`Select language`)} />
+      <Select.Trigger label={l`Select language`}>
+        <Select.ValueText placeholder={l`Select language`} />
         <Select.Icon />
       </Select.Trigger>
       <Select.Content

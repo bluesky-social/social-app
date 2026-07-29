@@ -1,8 +1,6 @@
 import {memo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {
@@ -75,7 +73,7 @@ function ListFooterMaybeError({
   onRetry?: () => Promise<unknown>
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   if (!error) return null
 
@@ -101,7 +99,7 @@ function ListFooterMaybeError({
         </Text>
         <Button
           variant="solid"
-          label={_(msg`Press to retry`)}
+          label={l`Press to retry`}
           style={[
             a.align_center,
             a.justify_center,
@@ -156,7 +154,7 @@ let ListMaybePlaceholder = ({
   useEmptyState?: boolean
 }): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile, gtTablet} = useBreakpoints()
 
   if (isLoading) {
@@ -181,8 +179,8 @@ let ListMaybePlaceholder = ({
   if (isError) {
     return (
       <Error
-        title={errorTitle ?? _(msg`Oops!`)}
-        message={errorMessage ?? _(msg`Something went wrong!`)}
+        title={errorTitle ?? l`Oops!`}
+        message={errorMessage ?? l`Something went wrong!`}
         onRetry={onRetry}
         onGoBack={onGoBack}
         hideBackButton={hideBackButton}
@@ -199,9 +197,7 @@ let ListMaybePlaceholder = ({
           icon={emptyStateIcon}
           message={
             emptyMessage ??
-            (emptyType === 'results'
-              ? _(msg`No results found`)
-              : _(msg`Page not found`))
+            (emptyType === 'results' ? l`No results found` : l`Page not found`)
           }
           button={emptyStateButton}
         />
@@ -214,13 +210,11 @@ let ListMaybePlaceholder = ({
       <Error
         title={
           emptyTitle ??
-          (emptyType === 'results'
-            ? _(msg`No results found`)
-            : _(msg`Page not found`))
+          (emptyType === 'results' ? l`No results found` : l`Page not found`)
         }
         message={
           emptyMessage ??
-          _(msg`We're sorry! We can't find the page you were looking for.`)
+          l`We're sorry! We can't find the page you were looking for.`
         }
         onRetry={onRetry}
         onGoBack={onGoBack}

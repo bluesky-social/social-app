@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 /**
  * This matches `formatCount` from `view/com/util/numeric/format.ts`, but has

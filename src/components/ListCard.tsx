@@ -6,9 +6,7 @@ import {
   moderateUserList,
   type ModerationUI,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -115,7 +113,7 @@ export function TitleAndByline({
   modUi?: ModerationUI
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
 
   return (
@@ -142,15 +140,14 @@ export function TitleAndByline({
           </Text>
         </Hider.Content>
       </Hider.Outer>
-
       {creator && (
         <Text
           emoji
           style={[a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
           {purpose === MODLIST
-            ? _(msg`Moderation list by ${sanitizeHandle(creator.handle, '@')}`)
-            : _(msg`List by ${sanitizeHandle(creator.handle, '@')}`)}
+            ? l`Moderation list by ${sanitizeHandle(creator.handle, '@')}`
+            : l`List by ${sanitizeHandle(creator.handle, '@')}`}
         </Text>
       )}
     </View>

@@ -1,6 +1,4 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {
   type CommonNavigatorParams,
@@ -25,7 +23,7 @@ type Props = NativeStackScreenProps<
   'PreferencesFollowingFeed'
 >
 export function FollowingFeedPreferencesScreen({}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setFeedViewPref, variables} =
@@ -69,7 +67,7 @@ export function FollowingFeedPreferencesScreen({}: Props) {
           <Toggle.Item
             type="checkbox"
             name="show-replies"
-            label={_(msg`Show replies`)}
+            label={l`Show replies`}
             value={showReplies}
             onChange={value =>
               setFeedViewPref({
@@ -87,7 +85,7 @@ export function FollowingFeedPreferencesScreen({}: Props) {
           <Toggle.Item
             type="checkbox"
             name="show-reposts"
-            label={_(msg`Show reposts`)}
+            label={l`Show reposts`}
             value={showReposts}
             onChange={value =>
               setFeedViewPref({
@@ -105,7 +103,7 @@ export function FollowingFeedPreferencesScreen({}: Props) {
           <Toggle.Item
             type="checkbox"
             name="show-quotes"
-            label={_(msg`Show quote posts`)}
+            label={l`Show quote posts`}
             value={showQuotePosts}
             onChange={value =>
               setFeedViewPref({
@@ -129,9 +127,7 @@ export function FollowingFeedPreferencesScreen({}: Props) {
             <Toggle.Item
               type="checkbox"
               name="merge-feed"
-              label={_(
-                msg`Show samples of your saved feeds in your Following feed`,
-              )}
+              label={l`Show samples of your saved feeds in your Following feed`}
               value={mergeFeedEnabled}
               onChange={value =>
                 setFeedViewPref({

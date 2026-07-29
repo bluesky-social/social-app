@@ -8,9 +8,7 @@ import {
   type Un$Typed,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
@@ -260,7 +258,7 @@ function ValueProposition({
   state: OnboardingState
 }) {
   const [subStep, setSubStep] = useState<0 | 1 | 2>(0)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
 
@@ -285,7 +283,7 @@ function ValueProposition({
             variant="ghost"
             color="secondary"
             size="small"
-            label={_(msg`Skip introduction and start using your account`)}
+            label={l`Skip introduction and start using your account`}
             onPress={() => {
               ax.metric('onboarding:valueProp:skipPressed', {})
               finishOnboarding()
@@ -297,13 +295,11 @@ function ValueProposition({
           </Button>
         </OnboardingHeaderSlot.Portal>
       )}
-
       <ValuePropositionPager
         step={subStep}
         setStep={ss => setSubStep(ss)}
         avatarUri={state.profileStepResults.imageUri}
       />
-
       <OnboardingControls.Portal>
         <View style={gtMobile && [a.gap_md, a.flex_row]}>
           {gtMobile && (IS_WEB ? subStep !== 2 : true) && (
@@ -311,7 +307,7 @@ function ValueProposition({
               disabled={saving}
               color="secondary"
               size="large"
-              label={_(msg`Skip introduction and start using your account`)}
+              label={l`Skip introduction and start using your account`}
               onPress={() => finishOnboarding()}>
               <ButtonText>
                 <Trans>Skip</Trans>
@@ -326,8 +322,8 @@ function ValueProposition({
             size="large"
             label={
               subStep === 2
-                ? _(msg`Complete onboarding and start using your account`)
-                : _(msg`Next`)
+                ? l`Complete onboarding and start using your account`
+                : l`Next`
             }
             onPress={onPress}>
             <ButtonText>

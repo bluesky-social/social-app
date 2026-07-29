@@ -1,8 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -47,7 +45,7 @@ type Props = NativeStackScreenProps<
   'Notifications'
 >
 export function NotificationsScreen({}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {openComposer} = useOpenComposer()
   const unreadNotifs = useUnreadNotifications()
@@ -83,7 +81,7 @@ export function NotificationsScreen({}: Props) {
   const sections = useMemo(() => {
     return [
       {
-        title: _(msg`All`),
+        title: l`All`,
         component: (
           <NotificationsTab
             filter="all"
@@ -96,7 +94,7 @@ export function NotificationsScreen({}: Props) {
         ),
       },
       {
-        title: _(msg`Mentions`),
+        title: l`Mentions`,
         component: (
           <NotificationsTab
             filter="mentions"
@@ -110,7 +108,7 @@ export function NotificationsScreen({}: Props) {
       },
     ]
   }, [
-    _,
+    l,
     hasNew,
     checkUnreadAll,
     checkUnreadMentions,
@@ -131,7 +129,7 @@ export function NotificationsScreen({}: Props) {
         <Layout.Header.Slot>
           <Link
             to={{screen: 'NotificationSettings'}}
-            label={_(msg`Notification settings`)}
+            label={l`Notification settings`}
             size="small"
             variant="ghost"
             color="secondary"
@@ -162,7 +160,7 @@ export function NotificationsScreen({}: Props) {
         onPress={() => openComposer({logContext: 'Fab'})}
         icon={<EditBigIcon size="lg" fill={t.palette.white} />}
         accessibilityRole="button"
-        accessibilityLabel={_(msg`New post`)}
+        accessibilityLabel={l`New post`}
         accessibilityHint=""
       />
     </Layout.Screen>
@@ -184,7 +182,7 @@ function NotificationsTab({
   checkUnread: ({invalidate}: {invalidate: boolean}) => Promise<void>
   setIsLoadingLatest: (v: boolean) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const scrollElRef = useRef<ListMethods>(null)
   const queryClient = useQueryClient()
@@ -268,7 +266,7 @@ function NotificationsTab({
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}
-          label={_(msg`Load new notifications`)}
+          label={l`Load new notifications`}
           showIndicator={hasNew}
         />
       )}
@@ -278,7 +276,7 @@ function NotificationsTab({
 
 function DisabledNotificationsWarning({active}: {active: boolean}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data} = useNotificationSettingsQuery({enabled: active})
 
   if (!data) return null
@@ -293,7 +291,7 @@ function DisabledNotificationsWarning({active}: {active: boolean}) {
             notifications, so this tab will no longer update. To adjust this,
             visit your{' '}
             <InlineLinkText
-              label={_(msg`Visit your notification settings`)}
+              label={l`Visit your notification settings`}
               to={{screen: 'NotificationSettings'}}>
               notification settings
             </InlineLinkText>

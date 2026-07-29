@@ -1,6 +1,11 @@
 import {StyleSheet, type TextProps} from 'react-native'
-import {type PathProps, type SvgProps} from 'react-native-svg'
-import {Defs, LinearGradient, Stop} from 'react-native-svg'
+import {
+  Defs,
+  LinearGradient,
+  type PathProps,
+  Stop,
+  type SvgProps,
+} from 'react-native-svg'
 import {nanoid} from 'nanoid/non-secure'
 
 import {tokens, useTheme} from '#/alf'

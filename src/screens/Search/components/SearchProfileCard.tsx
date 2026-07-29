@@ -1,8 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -22,7 +21,7 @@ export function SearchProfileCard({
   onPress?: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const qc = useQueryClient()
 
   const onPress = useCallback(() => {
@@ -34,7 +33,7 @@ export function SearchProfileCard({
     <Link
       testID={`searchAutoCompleteResult-${profile.handle}`}
       to={makeProfileLink(profile)}
-      label={_(msg`View ${profile.handle}'s profile`)}
+      label={l`View ${profile.handle}'s profile`}
       onPress={onPress}>
       {({hovered, pressed}) => (
         <View

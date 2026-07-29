@@ -7,9 +7,7 @@ import Animated, {
   LinearTransition,
 } from 'react-native-reanimated'
 import {type ComAtprotoServerListAppPasswords} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
@@ -38,7 +36,7 @@ import * as SettingsList from './components/SettingsList'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export function AppPasswordsScreen({}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data: appPasswords, error} = useAppPasswordsQuery()
   const createAppPasswordControl = useDialogControl()
 
@@ -56,8 +54,8 @@ export function AppPasswordsScreen({}: Props) {
       <Layout.Content>
         {error ? (
           <ErrorScreen
-            title={_(msg`Oops!`)}
-            message={_(msg`There was an issue fetching your app passwords`)}
+            title={l`Oops!`}
+            message={l`There was an issue fetching your app passwords`}
             details={cleanError(error)}
           />
         ) : (
@@ -72,7 +70,7 @@ export function AppPasswordsScreen({}: Props) {
             </SettingsList.Item>
             <SettingsList.Item>
               <Button
-                label={_(msg`Add App Password`)}
+                label={l`Add App Password`}
                 size="large"
                 color="primary"
                 variant="solid"
@@ -103,10 +101,7 @@ export function AppPasswordsScreen({}: Props) {
                     ))}
                   </View>
                 ) : (
-                  <EmptyState
-                    icon={Growth}
-                    message={_(msg`No app passwords yet`)}
-                  />
+                  <EmptyState icon={Growth} message={l`No app passwords yet`} />
                 )
               ) : (
                 <View
@@ -123,7 +118,6 @@ export function AppPasswordsScreen({}: Props) {
           </SettingsList.Container>
         )}
       </Layout.Content>
-
       <AddAppPasswordDialog
         control={createAppPasswordControl}
         passwords={appPasswords?.map(p => p.name) || []}
@@ -138,14 +132,14 @@ function AppPasswordCard({
   appPassword: ComAtprotoServerListAppPasswords.AppPassword
 }) {
   const t = useTheme()
-  const {i18n, _} = useLingui()
+  const {i18n, t: l} = useLingui()
   const deleteControl = Prompt.usePromptControl()
   const {mutateAsync: deleteMutation} = useAppPasswordDeleteMutation()
 
   const onDelete = useCallback(async () => {
     await deleteMutation({name: appPassword.name})
-    Toast.show(_(msg({message: 'App password deleted', context: 'toast'})))
-  }, [deleteMutation, appPassword.name, _])
+    Toast.show(l({message: 'App password deleted', context: 'toast'}))
+  }, [deleteMutation, appPassword.name, l])
 
   return (
     <View
@@ -184,7 +178,7 @@ function AppPasswordCard({
           </Text>
         </View>
         <Button
-          label={_(msg`Delete app password`)}
+          label={l`Delete app password`}
           variant="ghost"
           color="negative"
           size="small"
@@ -202,15 +196,12 @@ function AppPasswordCard({
           </Text>
         </View>
       )}
-
       <Prompt.Basic
         control={deleteControl}
-        title={_(msg`Delete app password?`)}
-        description={_(
-          msg`Are you sure you want to delete the app password "${appPassword.name}"?`,
-        )}
+        title={l`Delete app password?`}
+        description={l`Are you sure you want to delete the app password "${appPassword.name}"?`}
         onConfirm={onDelete}
-        confirmButtonCta={_(msg`Delete`)}
+        confirmButtonCta={l`Delete`}
         confirmButtonColor="negative"
       />
     </View>

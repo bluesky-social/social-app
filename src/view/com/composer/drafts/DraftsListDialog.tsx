@@ -1,8 +1,6 @@
 import {useCallback, useEffect, useMemo} from 'react'
 import {Keyboard, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useCallOnce} from '#/lib/once'
 import {EmptyState} from '#/view/com/util/EmptyState'
@@ -26,7 +24,7 @@ export function DraftsListDialog({
   control: Dialog.DialogControlProps
   onSelectDraft: (draft: DraftSummary) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {gtPhone} = useBreakpoints()
   const ax = useAnalytics()
@@ -84,7 +82,7 @@ export function DraftsListDialog({
   const backButton = useCallback(
     () => (
       <Button
-        label={_(msg`Back`)}
+        label={l`Back`}
         onPress={() => control.close()}
         size="small"
         color="primary"
@@ -94,7 +92,7 @@ export function DraftsListDialog({
         </ButtonText>
       </Button>
     ),
-    [control, _],
+    [control, l],
   )
 
   const renderItem = useCallback(
@@ -140,11 +138,11 @@ export function DraftsListDialog({
     return (
       <EmptyState
         icon={PageXIcon}
-        message={_(msg`No drafts yet`)}
+        message={l`No drafts yet`}
         style={[a.justify_center, {minHeight: 500}]}
       />
     )
-  }, [isLoading, _])
+  }, [isLoading, l])
 
   const footerComponent = useMemo(
     () => (

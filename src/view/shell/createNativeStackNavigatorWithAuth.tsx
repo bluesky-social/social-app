@@ -17,12 +17,12 @@ import {
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native'
-import {NativeStackView} from '@react-navigation/native-stack'
 import {
   type NativeStackNavigationEventMap,
   type NativeStackNavigationOptions,
   type NativeStackNavigationProp,
   type NativeStackNavigatorProps,
+  NativeStackView,
 } from '@react-navigation/native-stack'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'

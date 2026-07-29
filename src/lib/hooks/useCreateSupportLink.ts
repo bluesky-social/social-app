@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useSession} from '#/state/session'
 
@@ -16,7 +15,7 @@ export enum SupportCode {
  * {@link https://support.zendesk.com/hc/en-us/articles/4408839114522-Creating-pre-filled-ticket-forms}
  */
 export function useCreateSupportLink() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
 
   return useCallback(
@@ -26,7 +25,7 @@ export function useCreateSupportLink() {
         url.search = new URLSearchParams({
           tf_anonymous_requester_email: email || currentAccount.email || '', // email will be defined
           tf_description:
-            `[Code: ${code}] — ` + _(msg`Please write your message below:`),
+            `[Code: ${code}] — ` + l`Please write your message below:`,
           /**
            * Custom field specific to {@link ZENDESK_SUPPORT_URL} form
            */
@@ -35,6 +34,6 @@ export function useCreateSupportLink() {
       }
       return url.toString()
     },
-    [_, currentAccount],
+    [l, currentAccount],
   )
 }

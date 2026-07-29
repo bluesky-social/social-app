@@ -6,8 +6,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {DropdownMenu} from 'radix-ui'
 
 import {useA11y} from '#/state/a11y'
@@ -62,7 +61,7 @@ export function Root({
 }: React.PropsWithChildren<{
   control?: Dialog.DialogControlProps
 }>) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const defaultControl = useMenuControl()
   const context = useMemo<ContextType>(
     () => ({
@@ -89,9 +88,7 @@ export function Root({
             style={[a.fixed, a.inset_0, a.z_50]}
             onPress={() => context.control.close()}
             accessibilityHint=""
-            accessibilityLabel={_(
-              msg`Context menu backdrop, click to close the menu.`,
-            )}
+            accessibilityLabel={l`Context menu backdrop, click to close the menu.`}
           />
         </Portal>
       )}

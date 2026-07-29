@@ -1,8 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import deepEqual from 'fast-deep-equal'
 
 import {logger} from '#/logger'
@@ -60,7 +58,7 @@ export function Screen() {
 }
 
 function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {mutateAsync: setPostInteractionSettings, isPending} =
     usePostInteractionSettingsMutation()
   const [error, setError] = useState<string | undefined>(undefined)
@@ -100,15 +98,15 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
           threadgateAllowUISettingToAllowRecordValue(maybeEditedAllowUI),
         postgateEmbeddingRules: maybeEditedPostgate.embeddingRules ?? [],
       })
-      Toast.show(_(msg({message: 'Settings saved', context: 'toast'})))
+      Toast.show(l({message: 'Settings saved', context: 'toast'}))
     } catch (e: any) {
       logger.error(`Failed to save post interaction settings`, {
         source: 'ModerationInteractionSettingsScreen',
         safeMessage: e.message,
       })
-      setError(_(msg`Failed to save settings. Please try again.`))
+      setError(l`Failed to save settings. Please try again.`)
     }
-  }, [_, maybeEditedPostgate, maybeEditedAllowUI, setPostInteractionSettings])
+  }, [l, maybeEditedPostgate, maybeEditedAllowUI, setPostInteractionSettings])
 
   return (
     <>

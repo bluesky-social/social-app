@@ -1,8 +1,6 @@
 import {View} from 'react-native'
 import * as Contacts from 'expo-contacts'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useQuery} from '@tanstack/react-query'
 
 import {urls} from '#/lib/constants'
@@ -23,7 +21,7 @@ import {useOnboardingInternalState} from '../state'
 
 export function StepFindContactsIntro() {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {dispatch} = useOnboardingInternalState()
 
   useCallOnce(() => {
@@ -49,12 +47,10 @@ export function StepFindContactsIntro() {
           control what happens next.{' '}
           <InlineLinkText
             to={urls.website.blog.findFriendsAnnouncement}
-            label={_(
-              msg({
-                message: `Learn more about importing contacts`,
-                context: `english-only-resource`,
-              }),
-            )}
+            label={l({
+              message: `Learn more about importing contacts`,
+              context: `english-only-resource`,
+            })}
             style={[a.text_md, a.leading_snug]}>
             <Trans context="english-only-resource">Learn more</Trans>
           </InlineLinkText>
@@ -68,12 +64,11 @@ export function StepFindContactsIntro() {
           </Trans>
         </Admonition>
       )}
-
       <OnboardingControls.Portal>
         <View style={[a.gap_md]}>
           <Button
             onPress={() => dispatch({type: 'next'})}
-            label={_(msg`Import contacts`)}
+            label={l`Import contacts`}
             size="large"
             color="primary"
             disabled={!isAvailable}>
@@ -83,7 +78,7 @@ export function StepFindContactsIntro() {
           </Button>
           <Button
             onPress={() => dispatch({type: 'skip-contacts'})}
-            label={_(msg`Skip`)}
+            label={l`Skip`}
             size="large"
             color="secondary">
             <ButtonText>

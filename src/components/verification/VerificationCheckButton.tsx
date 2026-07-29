@@ -5,8 +5,10 @@ import {type Shadow} from '#/state/cache/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {useFullVerificationState} from '#/components/verification'
-import {type FullVerificationState} from '#/components/verification'
+import {
+  type FullVerificationState,
+  useFullVerificationState,
+} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationsDialog} from '#/components/verification/VerificationsDialog'
 import {VerifierDialog} from '#/components/verification/VerifierDialog'

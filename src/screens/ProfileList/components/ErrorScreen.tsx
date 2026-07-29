@@ -1,7 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -12,7 +10,7 @@ import {Text} from '#/components/Typography'
 export function ErrorScreen({error}: {error: React.ReactNode}) {
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const onPressBack = () => {
     if (navigation.canGoBack()) {
       navigation.goBack()
@@ -29,11 +27,10 @@ export function ErrorScreen({error}: {error: React.ReactNode}) {
       <Text style={[a.text_md, t.atoms.text_contrast_high, a.leading_snug]}>
         {error}
       </Text>
-
       <View style={[a.flex_row, a.mt_lg]}>
         <Button
-          label={_(msg`Go back`)}
-          accessibilityHint={_(msg`Returns to previous page`)}
+          label={l`Go back`}
+          accessibilityHint={l`Returns to previous page`}
           onPress={onPressBack}
           size="small"
           color="secondary">

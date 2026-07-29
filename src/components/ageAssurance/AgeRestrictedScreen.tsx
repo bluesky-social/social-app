@@ -1,7 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -27,7 +25,7 @@ export function AgeRestrictedScreen({
   infoText?: string
   rightHeaderSlot?: React.ReactNode
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const copy = useAgeAssuranceCopy()
   const aa = useAgeAssurance()
@@ -70,7 +68,7 @@ export function AgeRestrictedScreen({
           <View
             style={[a.flex_row, a.justify_between, a.align_center, a.pb_xl]}>
             <Link
-              label={_(msg`Go to account settings`)}
+              label={l`Go to account settings`}
               to="/settings/account"
               size="small"
               variant="solid"

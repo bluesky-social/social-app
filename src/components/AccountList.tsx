@@ -1,9 +1,7 @@
 import {Fragment, useCallback} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {isJwtExpired} from '#/lib/jwt'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -33,7 +31,7 @@ export function AccountList({
 }) {
   const {currentAccount, accounts} = useSession()
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data: profiles} = useProfilesQuery({
     handles: accounts.map(acc => acc.did),
   })
@@ -67,7 +65,7 @@ export function AccountList({
         testID="chooseAddAccountBtn"
         style={[a.flex_1]}
         onPress={pendingDid ? undefined : onPressAddAccount}
-        label={_(msg`Sign in to account that is not listed`)}>
+        label={l`Sign in to account that is not listed`}>
         {({hovered, pressed}) => (
           <View
             style={[
@@ -114,7 +112,7 @@ function AccountItem({
   isPendingAccount: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {isActive: live} = useActorStatus(profile)
 
   const onPress = useCallback(() => {
@@ -131,8 +129,8 @@ function AccountItem({
       onPress={onPress}
       label={
         isCurrentAccount
-          ? _(msg`Continue as ${account.handle} (currently signed in)`)
-          : _(msg`Sign in as ${account.handle}`)
+          ? l`Continue as ${account.handle} (currently signed in)`
+          : l`Sign in as ${account.handle}`
       }>
       {({hovered, pressed}) => (
         <View

@@ -1,6 +1,4 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HELP_DESK_URL} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -18,11 +16,11 @@ import * as Layout from '#/components/Layout'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Support'>
 export const SupportScreen = (_props: Props) => {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Layout.Screen>
-      <ViewHeader title={_(msg`Support`)} />
+      <ViewHeader title={l`Support`} />
       <CenteredView>
         <Text type="title-xl" style={[pal.text, s.p20, s.pb5]}>
           <Trans>Support</Trans>
@@ -32,7 +30,7 @@ export const SupportScreen = (_props: Props) => {
             The support form has been moved. If you need help, please{' '}
             <TextLink
               href={HELP_DESK_URL}
-              text={_(msg`click here`)}
+              text={l`click here`}
               style={pal.link}
             />{' '}
             or visit {HELP_DESK_URL} to get in touch with us.

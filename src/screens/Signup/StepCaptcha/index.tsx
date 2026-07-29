@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {ActivityIndicator, Platform, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {nanoid} from 'nanoid/non-secure'
 
 import {createFullHandle} from '#/lib/strings/handles'
@@ -71,7 +70,7 @@ function StepCaptchaInner({
   token?: string
   payload?: string
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const theme = useTheme()
   const {state, dispatch} = useSignupContext()
@@ -124,14 +123,14 @@ function StepCaptchaInner({
     (error?: unknown) => {
       dispatch({
         type: 'setError',
-        value: _(msg`Error receiving captcha response.`),
+        value: l`Error receiving captcha response.`,
       })
       ax.metric('signup:captchaFailure', {})
       logger.error('Signup: captcha response error', {
         safeMessage: error,
       })
     },
-    [_, ax, dispatch],
+    [l, ax, dispatch],
   )
 
   const onBackPress = useCallback(() => {

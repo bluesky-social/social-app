@@ -7,9 +7,8 @@ import {
   type ModerationOpts,
   type RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {plural} from '@lingui/core/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {MAX_LABELERS} from '#/lib/constants'
@@ -64,7 +63,7 @@ let ProfileHeaderLabeler = ({
     useProfileShadow(profileUnshadowed)
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const playHaptic = useHaptics()
   const isSelf = currentAccount?.did === profile.did
@@ -97,14 +96,12 @@ let ProfileHeaderLabeler = ({
       }
     } catch (e: any) {
       Toast.show(
-        _(
-          msg`There was an issue contacting the server, please check your internet connection and try again.`,
-        ),
+        l`There was an issue contacting the server, please check your internet connection and try again.`,
         {type: 'error'},
       )
       ax.logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [ax, labeler, playHaptic, likeUri, unlikeMod, likeMod, _])
+  }, [ax, labeler, playHaptic, likeUri, unlikeMod, likeMod, l])
 
   return (
     <ProfileHeaderShell
@@ -146,7 +143,7 @@ let ProfileHeaderLabeler = ({
                   size="small"
                   color="secondary"
                   shape="round"
-                  label={_(msg`Like this labeler`)}
+                  label={l`Like this labeler`}
                   disabled={!hasSession || isLikePending || isUnlikePending}
                   onPress={onToggleLiked}>
                   {likeUri ? (
@@ -165,12 +162,10 @@ let ProfileHeaderLabeler = ({
                       },
                     }}
                     size="tiny"
-                    label={_(
-                      msg`Liked by ${plural(likeCount, {
-                        one: '# user',
-                        other: '# users',
-                      })}`,
-                    )}>
+                    label={l`Liked by ${plural(likeCount, {
+                      one: '# user',
+                      other: '# users',
+                    })}`}>
                     {({hovered, focused, pressed}) => (
                       <Text
                         style={[
@@ -211,7 +206,7 @@ function CantSubscribePrompt({
 }: {
   control: DialogOuterProps['control']
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
     <Prompt.Outer control={control}>
       <Prompt.Content>
@@ -224,7 +219,7 @@ function CantSubscribePrompt({
         </Prompt.DescriptionText>
       </Prompt.Content>
       <Prompt.Actions>
-        <Prompt.Action onPress={() => control.close()} cta={_(msg`OK`)} />
+        <Prompt.Action onPress={() => control.close()} cta={l`OK`} />
       </Prompt.Actions>
     </Prompt.Outer>
   )
@@ -240,7 +235,7 @@ export function HeaderLabelerButtons({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const requireAuth = useRequireAuth()
   const playHaptic = useHaptics()
@@ -291,7 +286,6 @@ export function HeaderLabelerButtons({
         !isMe &&
         !profile.viewer?.blockedBy &&
         !profile.viewer?.blocking && <MessageProfileButton profile={profile} />}
-
       {isMe ? (
         <>
           <Button
@@ -302,7 +296,7 @@ export function HeaderLabelerButtons({
               playHaptic('Light')
               editProfileControl.open()
             }}
-            label={_(msg`Edit profile`)}
+            label={l`Edit profile`}
             style={a.rounded_full}>
             <ButtonText>
               <Trans>Edit Profile</Trans>
@@ -318,8 +312,8 @@ export function HeaderLabelerButtons({
           testID="toggleSubscribeBtn"
           label={
             isSubscribed
-              ? _(msg`Unsubscribe from this labeler`)
-              : _(msg`Subscribe to this labeler`)
+              ? l`Unsubscribe from this labeler`
+              : l`Subscribe to this labeler`
           }
           onPress={onPressSubscribe}>
           {state => (

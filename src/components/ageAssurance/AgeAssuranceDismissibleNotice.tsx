@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {atoms as a, type ViewStyleProp} from '#/alf'
@@ -13,7 +12,7 @@ import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 
 export function AgeAssuranceDismissibleNotice({style}: ViewStyleProp & {}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const aa = useAgeAssurance()
   const {nux} = useNux(Nux.AgeAssuranceDismissibleNotice)
@@ -35,7 +34,7 @@ export function AgeAssuranceDismissibleNotice({style}: ViewStyleProp & {}) {
           <AgeAssuranceAdmonition>{copy.notice}</AgeAssuranceAdmonition>
 
           <Button
-            label={_(msg`Don't show again`)}
+            label={l`Don't show again`}
             size="tiny"
             variant="solid"
             color="secondary_inverted"

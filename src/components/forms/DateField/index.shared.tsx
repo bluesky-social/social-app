@@ -1,5 +1,5 @@
 import {Pressable, View} from 'react-native'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, native, useTheme, web} from '#/alf'
 import * as TextField from '#/components/forms/TextField'

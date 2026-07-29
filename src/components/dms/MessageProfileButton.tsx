@@ -1,9 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
@@ -22,7 +20,7 @@ export function MessageProfileButton({
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const ax = useAnalytics()
   const navigation = useNavigation<NavigationProp>()
@@ -35,7 +33,7 @@ export function MessageProfileButton({
       navigation.navigate('MessagesConversation', {conversation: convo.id})
     },
     onError: () => {
-      Toast.show(_(msg`Failed to create conversation`))
+      Toast.show(l`Failed to create conversation`)
     },
   })
 
@@ -96,7 +94,7 @@ export function MessageProfileButton({
           color="secondary"
           variant="solid"
           shape="round"
-          label={_(msg`Message ${profile.handle}`)}
+          label={l`Message ${profile.handle}`}
           style={[a.justify_center]}
           onPress={wrappedOnPress}>
           <ButtonIcon icon={Message} size="md" />

@@ -1,14 +1,11 @@
 import {useRef} from 'react'
-import {type ListRenderItemInfo} from 'react-native'
-import {View} from 'react-native'
+import {type ListRenderItemInfo, View} from 'react-native'
 import {
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {type ListMethods} from '#/view/com/util/List'
@@ -46,7 +43,7 @@ export function WizardEditListDialog({
   moderationOpts: ModerationOpts
   profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const initialNumToRender = useInitialNumToRender()
 
@@ -119,7 +116,7 @@ export function WizardEditListDialog({
             <View style={{width: 60}}>
               {IS_WEB && (
                 <Button
-                  label={_(msg`Close`)}
+                  label={l`Close`}
                   variant="ghost"
                   color="primary"
                   size="small"

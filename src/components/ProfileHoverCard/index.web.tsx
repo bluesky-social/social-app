@@ -6,8 +6,8 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {getModerationCauseKey} from '#/lib/moderation'
@@ -423,7 +423,7 @@ function Inner({
   hide: () => void
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const {currentAccount} = useSession()
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
@@ -462,7 +462,7 @@ function Inner({
   return (
     <View>
       <View style={[a.flex_row, a.justify_between, a.align_start]}>
-        <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
+        <Link to={profileURL} label={l`View profile`} onPress={hide}>
           <UserAvatar
             size={64}
             avatar={profile.avatar}
@@ -476,24 +476,20 @@ function Inner({
           (isBlockedUser ? (
             <Link
               to={profileURL}
-              label={_(msg`View blocked user's profile`)}
+              label={l`View blocked user's profile`}
               onPress={hide}
               size="small"
               color="secondary"
               variant="solid"
               style={[a.rounded_full]}>
-              <ButtonText>{_(msg`View profile`)}</ButtonText>
+              <ButtonText>{l`View profile`}</ButtonText>
             </Link>
           ) : (
             <Button
               size="small"
               color={profileShadow.viewer?.following ? 'secondary' : 'primary'}
               variant="solid"
-              label={
-                profileShadow.viewer?.following
-                  ? _(msg`Following`)
-                  : _(msg`Follow`)
-              }
+              label={profileShadow.viewer?.following ? l`Following` : l`Follow`}
               style={[a.rounded_full]}
               onPress={profileShadow.viewer?.following ? unfollow : follow}>
               <ButtonIcon
@@ -501,15 +497,12 @@ function Inner({
                 icon={profileShadow.viewer?.following ? Check : Plus}
               />
               <ButtonText>
-                {profileShadow.viewer?.following
-                  ? _(msg`Following`)
-                  : _(msg`Follow`)}
+                {profileShadow.viewer?.following ? l`Following` : l`Follow`}
               </ButtonText>
             </Button>
           ))}
       </View>
-
-      <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
+      <Link to={profileURL} label={l`View profile`} onPress={hide}>
         <View style={[a.pb_sm, a.flex_1]}>
           <View style={[a.flex_row, a.align_center, a.pt_md, a.pb_xs]}>
             <Text
@@ -540,7 +533,6 @@ function Inner({
           <ProfileHeaderHandle profile={profileShadow} disableTaps />
         </View>
       </Link>
-
       {isBlockedUser && (
         <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
           {moderation.ui('profileView').alerts.map(cause => (
@@ -553,7 +545,6 @@ function Inner({
           ))}
         </View>
       )}
-
       {!isBlockedUser && (
         <>
           <View style={[a.flex_row, a.flex_wrap, a.gap_md, a.pt_xs]}>
@@ -569,7 +560,7 @@ function Inner({
             </InlineLinkText>
             <InlineLinkText
               to={makeProfileLink(profile, 'follows')}
-              label={_(msg`${following} following`)}
+              label={l`${following} following`}
               style={[t.atoms.text]}
               onPress={hide}>
               <Text style={[a.text_md, a.font_semi_bold]}>{following} </Text>

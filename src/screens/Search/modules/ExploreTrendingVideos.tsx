@@ -1,9 +1,7 @@
 import {useMemo} from 'react'
 import {ScrollView, View} from 'react-native'
 import {AppBskyEmbedVideo, AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -151,7 +149,7 @@ function VideoCards({
   data: Exclude<ReturnType<typeof usePostFeedQuery>['data'], undefined>
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const items = useMemo(() => {
     return data.pages
@@ -184,11 +182,10 @@ function VideoCards({
           />
         </View>
       ))}
-
       <View style={[{width: CARD_WIDTH * 2}]}>
         <Link
           to={href}
-          label={_(msg`View more`)}
+          label={l`View more`}
           style={[
             a.justify_center,
             a.align_center,

@@ -1,8 +1,6 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
@@ -24,7 +22,7 @@ export function ThreadComposePrompt({
 }) {
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
   const playHaptic = useHaptics()
@@ -60,8 +58,8 @@ export function ThreadComposePrompt({
       )}
       <PressableScale
         accessibilityRole="button"
-        accessibilityLabel={_(msg`Compose reply`)}
-        accessibilityHint={_(msg`Opens composer`)}
+        accessibilityLabel={l`Compose reply`}
+        accessibilityHint={l`Opens composer`}
         onPress={() => {
           onPressCompose()
           playHaptic('Light')

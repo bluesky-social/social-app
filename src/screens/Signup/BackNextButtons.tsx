@@ -1,7 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -28,12 +26,12 @@ export function BackNextButtons({
   onRetryPress,
   overrideNextText,
 }: BackNextButtonsProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <View style={[a.flex_row, a.justify_between, a.pb_lg, a.pt_3xl]}>
       <Button
-        label={_(msg`Go back to previous step`)}
+        label={l`Go back to previous step`}
         variant="solid"
         color="secondary"
         size="large"
@@ -45,7 +43,7 @@ export function BackNextButtons({
       {!hideNext &&
         (showRetry ? (
           <Button
-            label={_(msg`Press to retry`)}
+            label={l`Press to retry`}
             variant="solid"
             color="primary"
             size="large"
@@ -58,7 +56,7 @@ export function BackNextButtons({
         ) : (
           <Button
             testID="nextBtn"
-            label={_(msg`Continue to next step`)}
+            label={l`Continue to next step`}
             variant="solid"
             color="primary"
             size="large"

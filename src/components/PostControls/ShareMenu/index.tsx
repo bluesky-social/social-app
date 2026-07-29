@@ -7,8 +7,7 @@ import {
   AtUri,
   type RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
@@ -48,7 +47,7 @@ let ShareMenuButton = ({
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
 }): React.ReactNode => {
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {feedDescriptor} = useFeedFeedbackContext()
 
   const menuControl = useMenuControl()
@@ -95,7 +94,7 @@ let ShareMenuButton = ({
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root control={lazyMenuControl}>
-        <Menu.Trigger label={_(msg`Open share menu`)}>
+        <Menu.Trigger label={l`Open share menu`}>
           {({props}) => {
             return (
               <PostControlButton

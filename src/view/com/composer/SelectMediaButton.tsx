@@ -2,8 +2,8 @@ import {useCallback, useEffect, useRef} from 'react'
 import {Keyboard} from 'react-native'
 import {File} from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 
 import {
   VIDEO_MAX_DURATION_MS,
@@ -392,7 +392,7 @@ export function SelectMediaButton({
   onSelectAssets,
   autoOpen,
 }: SelectMediaButtonProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
   const sheetWrapper = useSheetWrapper()
@@ -419,32 +419,18 @@ export function SelectMediaButton({
        */
       const errors = Array.from(errorCodes).map(error => {
         return {
-          [SelectedAssetError.Unsupported]: _(
-            msg`One or more of your selected files are not supported.`,
-          ),
-          [SelectedAssetError.MixedTypes]: _(
-            msg`Selecting multiple media types is not supported.`,
-          ),
-          [SelectedAssetError.MaxImages]: _(
-            msg({
-              message: `You can select up to ${plural(MAX_GALLERY_IMAGES, {
-                other: '# images',
-              })} in total.`,
-              comment: `Error message for maximum number of images that can be selected to add to a post.`,
-            }),
-          ),
-          [SelectedAssetError.MaxVideos]: _(
-            msg`You can only select one video at a time.`,
-          ),
-          [SelectedAssetError.VideoTooLong]: _(
-            msg`Videos must be less than 3 minutes long.`,
-          ),
-          [SelectedAssetError.MaxGIFs]: _(
-            msg`You can only select one GIF at a time.`,
-          ),
-          [SelectedAssetError.FileTooBig]: _(
-            msg`One or more of your selected files are too large. Maximum size is ${VIDEO_MAX_SIZE_MB} MB.`,
-          ),
+          [SelectedAssetError.Unsupported]: l`One or more of your selected files are not supported.`,
+          [SelectedAssetError.MixedTypes]: l`Selecting multiple media types is not supported.`,
+          [SelectedAssetError.MaxImages]: l({
+            message: `You can select up to ${plural(MAX_GALLERY_IMAGES, {
+              other: '# images',
+            })} in total.`,
+            comment: `Error message for maximum number of images that can be selected to add to a post.`,
+          }),
+          [SelectedAssetError.MaxVideos]: l`You can only select one video at a time.`,
+          [SelectedAssetError.VideoTooLong]: l`Videos must be less than 3 minutes long.`,
+          [SelectedAssetError.MaxGIFs]: l`You can only select one GIF at a time.`,
+          [SelectedAssetError.FileTooBig]: l`One or more of your selected files are too large. Maximum size is ${VIDEO_MAX_SIZE_MB} MB.`,
         }[error]
       })
 
@@ -458,7 +444,7 @@ export function SelectMediaButton({
         errors,
       })
     },
-    [_, onSelectAssets, selectionCountRemaining, allowedAssetTypes],
+    [l, onSelectAssets, selectionCountRemaining, allowedAssetTypes],
   )
 
   const onPressSelectMedia = useCallback(async () => {
@@ -469,7 +455,7 @@ export function SelectMediaButton({
       ])
 
       if (!photoAccess && !videoAccess) {
-        toast.show(_(msg`You need to allow access to your media library.`), {
+        toast.show(l`You need to allow access to your media library.`, {
           type: 'error',
         })
         return
@@ -488,7 +474,7 @@ export function SelectMediaButton({
 
     await processSelectedAssets(assets)
   }, [
-    _,
+    l,
     requestPhotoAccessIfNeeded,
     requestVideoAccessIfNeeded,
     sheetWrapper,
@@ -507,21 +493,17 @@ export function SelectMediaButton({
     <Button
       testID="openMediaBtn"
       onPress={onPressSelectMedia}
-      label={_(
-        msg({
-          message: `Add media to post`,
-          comment: `Accessibility label for button in composer to add images, a video, or a GIF to a post`,
-        }),
-      )}
-      accessibilityHint={_(
-        msg({
-          message: `Opens device gallery to select up to ${plural(
-            MAX_GALLERY_IMAGES,
-            {other: '# images'},
-          )}, or a single video or GIF.`,
-          comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post.`,
-        }),
-      )}
+      label={l({
+        message: `Add media to post`,
+        comment: `Accessibility label for button in composer to add images, a video, or a GIF to a post`,
+      })}
+      accessibilityHint={l({
+        message: `Opens device gallery to select up to ${plural(
+          MAX_GALLERY_IMAGES,
+          {other: '# images'},
+        )}, or a single video or GIF.`,
+        comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post.`,
+      })}
       style={a.p_sm}
       variant="ghost"
       shape="round"

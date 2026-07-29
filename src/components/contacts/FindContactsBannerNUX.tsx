@@ -2,9 +2,7 @@ import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
@@ -19,7 +17,7 @@ import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from './country-allow
 
 export function FindContactsBannerNUX() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {visible, close} = useInternalState()
 
@@ -30,7 +28,7 @@ export function FindContactsBannerNUX() {
       <View style={a.w_full}>
         <Link
           to={{screen: 'FindContactsFlow'}}
-          label={_(msg`Import contacts to find your friends`)}
+          label={l`Import contacts to find your friends`}
           onPress={() => {
             ax.metric('contacts:nux:bannerPressed', {})
           }}
@@ -75,7 +73,7 @@ export function FindContactsBannerNUX() {
           </LinearGradient>
         </Link>
         <Button
-          label={_(msg`Dismiss banner`)}
+          label={l`Dismiss banner`}
           hitSlop={HITSLOP_10}
           onPress={close}
           style={[a.absolute, {top: 14, right: 14}]}

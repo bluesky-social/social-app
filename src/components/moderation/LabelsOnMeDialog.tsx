@@ -1,9 +1,7 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoLabelDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
@@ -44,7 +42,7 @@ export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
 }
 
 function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const [appealingLabel, setAppealingLabel] = useState<
     ComAtprotoLabelDefs.Label | undefined
@@ -60,8 +58,8 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
     <Dialog.ScrollableInner
       label={
         isAccount
-          ? _(msg`The following labels were applied to your account.`)
-          : _(msg`The following labels were applied to this post.`)
+          ? l`The following labels were applied to your account.`
+          : l`The following labels were applied to this post.`
       }>
       {appealingLabel ? (
         <AppealForm
@@ -129,7 +127,7 @@ function Label({
   onPressAppeal: (label: ComAtprotoLabelDefs.Label) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {labeler, strings} = useLabelInfo(label)
   const sourceName = labeler
     ? sanitizeHandle(labeler.creator.handle, '@')
@@ -166,7 +164,7 @@ function Label({
               variant="solid"
               color="primary_subtle"
               size="small"
-              label={_(msg`Appeal`)}
+              label={l`Appeal`}
               onPress={() => onPressAppeal(label)}>
               <ButtonText>
                 <Trans>Appeal</Trans>
@@ -175,9 +173,7 @@ function Label({
           </View>
         )}
       </View>
-
       <Divider />
-
       <View style={[a.px_md, a.py_sm, t.atoms.bg_contrast_25]}>
         {isSelfLabel ? (
           <Text style={[t.atoms.text_contrast_medium]}>

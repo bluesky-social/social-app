@@ -7,9 +7,8 @@ import {
   View,
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {plural} from '@lingui/core/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
@@ -81,7 +80,7 @@ let DrawerProfileCard = ({
   onPressProfile: () => void
   onPressShare?: () => void
 }): React.ReactNode => {
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
   const {data: profile} = useProfileQuery({did: account.did})
   const {isActive: live} = useActorStatus(profile)
@@ -89,8 +88,8 @@ let DrawerProfileCard = ({
   return (
     <TouchableOpacity
       testID="profileCardButton"
-      accessibilityLabel={_(msg`Profile`)}
-      accessibilityHint={_(msg`Navigates to your profile`)}
+      accessibilityLabel={l`Profile`}
+      accessibilityHint={l`Navigates to your profile`}
       onPress={onPressProfile}
       style={[a.gap_sm, a.pr_lg]}>
       <UserAvatar
@@ -119,10 +118,8 @@ let DrawerProfileCard = ({
           {onPressShare && (
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Invite friends`)}
-              accessibilityHint={_(
-                msg`Opens the invite friends sheet to share your profile`,
-              )}
+              accessibilityLabel={l`Invite friends`}
+              accessibilityHint={l`Opens the invite friends sheet to share your profile`}
               onPress={onPressShare}
               hitSlop={8}
               style={({pressed}) => [
@@ -402,7 +399,7 @@ let DrawerFooter = ({
   onPressFeedback: () => void
   onPressHelp: () => void
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const insets = useSafeAreaInsets()
   return (
     <View
@@ -420,7 +417,7 @@ let DrawerFooter = ({
         },
       ]}>
       <Button
-        label={_(msg`Send feedback`)}
+        label={l`Send feedback`}
         size="small"
         variant="solid"
         color="secondary"
@@ -431,7 +428,7 @@ let DrawerFooter = ({
         </ButtonText>
       </Button>
       <Button
-        label={_(msg`Get help`)}
+        label={l`Get help`}
         size="small"
         variant="outline"
         color="secondary"
@@ -462,7 +459,7 @@ let SearchMenuItem = ({
   isActive: boolean
   onPress: () => void
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   return (
     <MenuItem
@@ -473,7 +470,7 @@ let SearchMenuItem = ({
           <MagnifyingGlass style={[t.atoms.text]} width={iconWidth} />
         )
       }
-      label={_(msg`Explore`)}
+      label={l`Explore`}
       bold={isActive}
       onPress={onPress}
     />
@@ -488,7 +485,7 @@ let HomeMenuItem = ({
   isActive: boolean
   onPress: () => void
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   return (
     <MenuItem
@@ -499,7 +496,7 @@ let HomeMenuItem = ({
           <Home style={[t.atoms.text]} width={iconWidth} />
         )
       }
-      label={_(msg`Home`)}
+      label={l`Home`}
       bold={isActive}
       onPress={onPress}
     />
@@ -514,7 +511,7 @@ let ChatMenuItem = ({
   isActive: boolean
   onPress: () => void
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   return (
     <MenuItem
@@ -525,7 +522,7 @@ let ChatMenuItem = ({
           <Message style={[t.atoms.text]} width={iconWidth} />
         )
       }
-      label={_(msg`Chat`)}
+      label={l`Chat`}
       bold={isActive}
       onPress={onPress}
     />
@@ -540,7 +537,7 @@ let NotificationsMenuItem = ({
   isActive: boolean
   onPress: () => void
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const numUnreadNotifications = useUnreadNotifications()
   return (
@@ -552,16 +549,14 @@ let NotificationsMenuItem = ({
           <Bell style={[t.atoms.text]} width={iconWidth} />
         )
       }
-      label={_(msg`Notifications`)}
+      label={l`Notifications`}
       accessibilityHint={
         numUnreadNotifications === ''
           ? ''
-          : _(
-              plural(numUnreadNotifications ?? 0, {
-                one: '# unread item',
-                other: '# unread items',
-              }),
-            )
+          : plural(numUnreadNotifications ?? 0, {
+              one: '# unread item',
+              other: '# unread items',
+            })
       }
       count={numUnreadNotifications}
       bold={isActive}
@@ -578,7 +573,7 @@ let FeedsMenuItem = ({
   isActive: boolean
   onPress: () => void
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   return (
     <MenuItem
@@ -589,7 +584,7 @@ let FeedsMenuItem = ({
           <Hashtag width={iconWidth} style={[t.atoms.text]} />
         )
       }
-      label={_(msg`Feeds`)}
+      label={l`Feeds`}
       bold={isActive}
       onPress={onPress}
     />
@@ -598,13 +593,13 @@ let FeedsMenuItem = ({
 FeedsMenuItem = memo(FeedsMenuItem)
 
 let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   return (
     <MenuItem
       icon={<List style={[t.atoms.text]} width={iconWidth} />}
-      label={_(msg`Lists`)}
+      label={l`Lists`}
       onPress={onPress}
     />
   )
@@ -618,7 +613,7 @@ let BookmarksMenuItem = ({
   isActive: boolean
   onPress: () => void
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   return (
@@ -630,7 +625,7 @@ let BookmarksMenuItem = ({
           <Bookmark style={[t.atoms.text]} width={iconWidth} />
         )
       }
-      label={_(msg({message: 'Saved', context: 'link to bookmarks screen'}))}
+      label={l({message: 'Saved', context: 'link to bookmarks screen'})}
       onPress={onPress}
     />
   )
@@ -644,7 +639,7 @@ let ProfileMenuItem = ({
   isActive: boolean
   onPress: () => void
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   return (
     <MenuItem
@@ -655,7 +650,7 @@ let ProfileMenuItem = ({
           <UserCircle style={[t.atoms.text]} width={iconWidth} />
         )
       }
-      label={_(msg`Profile`)}
+      label={l`Profile`}
       onPress={onPress}
     />
   )
@@ -663,12 +658,12 @@ let ProfileMenuItem = ({
 ProfileMenuItem = memo(ProfileMenuItem)
 
 let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   return (
     <MenuItem
       icon={<Settings style={[t.atoms.text]} width={iconWidth} />}
-      label={_(msg`Settings`)}
+      label={l`Settings`}
       onPress={onPress}
     />
   )
@@ -748,7 +743,7 @@ function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
 }
 
 function ExtraLinks() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const logoVariant = useLogoVariant()
 
@@ -756,14 +751,14 @@ function ExtraLinks() {
     <View style={[a.flex_col, a.gap_md, a.flex_wrap]}>
       <InlineLinkText
         style={[a.text_md]}
-        label={_(msg`Terms of Service`)}
+        label={l`Terms of Service`}
         to="https://bsky.social/about/support/tos">
         <Trans>Terms of Service</Trans>
       </InlineLinkText>
       <InlineLinkText
         style={[a.text_md]}
         to="https://bsky.social/about/support/privacy-policy"
-        label={_(msg`Privacy Policy`)}>
+        label={l`Privacy Policy`}>
         <Trans>Privacy Policy</Trans>
       </InlineLinkText>
       {logoVariant === 'kawaii' && (

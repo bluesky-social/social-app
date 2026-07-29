@@ -6,8 +6,7 @@ import {
 } from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
@@ -27,7 +26,7 @@ export function ExternalGif({
 }) {
   const t = useTheme()
   const externalEmbedsPrefs = useExternalEmbedsPrefs()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const consentDialogControl = useDialogControl()
 
   // Tracking if the placer has been activated
@@ -106,8 +105,8 @@ export function ExternalGif({
         ]}
         onPress={onPlayPress}
         accessibilityRole="button"
-        accessibilityHint={_(msg`Plays the GIF`)}
-        accessibilityLabel={_(msg`Play ${link.title}`)}>
+        accessibilityHint={l`Plays the GIF`}
+        accessibilityLabel={l`Play ${link.title}`}>
         <Image
           source={{
             uri:

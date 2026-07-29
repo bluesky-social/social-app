@@ -3,8 +3,10 @@ import {useLingui} from '@lingui/react/macro'
 
 import {web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
-import {type StatefulControl} from '#/components/dialogs/Context'
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {
+  type StatefulControl,
+  useGlobalDialogsControlContext,
+} from '#/components/dialogs/Context'
 import {useAccountEmailState} from '#/components/dialogs/EmailDialog/data/useAccountEmailState'
 import {Manage2FA} from '#/components/dialogs/EmailDialog/screens/Manage2FA'
 import {Update} from '#/components/dialogs/EmailDialog/screens/Update'

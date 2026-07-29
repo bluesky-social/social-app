@@ -1,8 +1,7 @@
 import {Fragment, useMemo} from 'react'
 import {Text as RNText} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {
   type CountryCode,
@@ -28,7 +27,7 @@ export function InternationalPhoneCodeSelect({
   value?: CountryCode
   onChange: (value: CountryCode) => void
 }) {
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const location = useGeolocation()
 
   const defaultCountry = useMemo(() => {
@@ -65,7 +64,7 @@ export function InternationalPhoneCodeSelect({
 
   return (
     <Select.Root value={value} onValueChange={onChange as (v: string) => void}>
-      <Select.Trigger label={_(msg`Select telephone code`)}>
+      <Select.Trigger label={l`Select telephone code`}>
         <Select.ValueText placeholder="+..." webOverrideValue={selected}>
           {selected => (
             <>
@@ -77,7 +76,7 @@ export function InternationalPhoneCodeSelect({
         <Select.Icon />
       </Select.Trigger>
       <Select.Content
-        label={_(msg`Country code`)}
+        label={l`Country code`}
         items={items}
         renderItem={item => (
           <Fragment key={item.value}>

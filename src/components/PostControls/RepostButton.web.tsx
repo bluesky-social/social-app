@@ -1,5 +1,4 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {useRequireAuth, useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
@@ -32,7 +31,7 @@ export const RepostButton = ({
   embeddingDisabled,
 }: Props) => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {hasSession} = useSession()
   const requireAuth = useRequireAuth()
   const formatPostStatCount = useFormatPostStatCount()
@@ -40,7 +39,7 @@ export const RepostButton = ({
   return hasSession ? (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
-        <Menu.Trigger label={_(msg`Repost or quote post`)}>
+        <Menu.Trigger label={l`Repost or quote post`}>
           {({props}) => {
             return (
               <PostControlButton
@@ -64,31 +63,25 @@ export const RepostButton = ({
           <Menu.Item
             label={
               isReposted
-                ? _(msg`Undo repost`)
-                : _(msg({message: `Repost`, context: `action`}))
+                ? l`Undo repost`
+                : l({message: `Repost`, context: `action`})
             }
             testID="repostDropdownRepostBtn"
             onPress={onRepost}>
             <Menu.ItemText>
               {isReposted
-                ? _(msg`Undo repost`)
-                : _(msg({message: `Repost`, context: `action`}))}
+                ? l`Undo repost`
+                : l({message: `Repost`, context: `action`})}
             </Menu.ItemText>
             <Menu.ItemIcon icon={Repost} position="right" />
           </Menu.Item>
           <Menu.Item
             disabled={embeddingDisabled}
-            label={
-              embeddingDisabled
-                ? _(msg`Quote posts disabled`)
-                : _(msg`Quote post`)
-            }
+            label={embeddingDisabled ? l`Quote posts disabled` : l`Quote post`}
             testID="repostDropdownQuoteBtn"
             onPress={onQuote}>
             <Menu.ItemText>
-              {embeddingDisabled
-                ? _(msg`Quote posts disabled`)
-                : _(msg`Quote post`)}
+              {embeddingDisabled ? l`Quote posts disabled` : l`Quote post`}
             </Menu.ItemText>
             <Menu.ItemIcon icon={Quote} position="right" />
           </Menu.Item>
@@ -100,7 +93,7 @@ export const RepostButton = ({
       onPress={() => requireAuth(() => {})}
       active={isReposted}
       activeColor={t.palette.positive_500}
-      label={_(msg`Repost or quote post`)}
+      label={l`Repost or quote post`}
       big={big}>
       <PostControlButtonIcon icon={Repost} />
       {typeof repostCount !== 'undefined' && repostCount > 0 && (

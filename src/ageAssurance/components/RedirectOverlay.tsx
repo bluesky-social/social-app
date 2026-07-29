@@ -9,9 +9,7 @@ import {
 } from 'react'
 import {Dimensions, View} from 'react-native'
 import * as Linking from 'expo-linking'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {retry} from '#/lib/async/retry'
 import {wait} from '#/lib/async/wait'
@@ -132,7 +130,7 @@ export function Provider({children}: {children?: React.ReactNode}) {
 
 export function RedirectOverlay() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {isOpen} = useRedirectOverlayContext()
   const {gtMobile} = useBreakpoints()
 
@@ -162,7 +160,7 @@ export function RedirectOverlay() {
         <View
           role="dialog"
           aria-role="dialog"
-          aria-label={_(msg`Verifying your age assurance status`)}>
+          aria-label={l`Verifying your age assurance status`}>
           <View style={[a.pb_3xl, {width: 300}]}>
             <Inner />
           </View>
@@ -175,7 +173,7 @@ export function RedirectOverlay() {
 function Inner() {
   const t = useTheme()
   const ax = useAnalytics()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const agent = useAgent()
   const polling = useRef(false)
   const unmounted = useRef(false)
@@ -262,7 +260,7 @@ function Inner() {
 
           <View style={[a.w_full, a.pt_lg]}>
             <Button
-              label={_(msg`Close`)}
+              label={l`Close`}
               size="large"
               variant="solid"
               color="secondary"
@@ -318,7 +316,7 @@ function Inner() {
         {error && (
           <View style={[a.w_full, a.pt_lg]}>
             <Button
-              label={_(msg`Close`)}
+              label={l`Close`}
               size="large"
               variant="solid"
               color="secondary"

@@ -18,8 +18,11 @@ import {
   type FeedSourceFeedInfo,
   useFeedSourceInfoQuery,
 } from '#/state/queries/feed'
-import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
-import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
+import {
+  type FeedDescriptor,
+  type FeedParams,
+  RQKEY as FEED_RQKEY,
+} from '#/state/queries/post-feed'
 import {
   usePreferencesQuery,
   type UsePreferencesQueryResponse,

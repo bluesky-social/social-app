@@ -1,8 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {useSetInAppBrowser} from '#/state/preferences/in-app-browser'
@@ -32,7 +30,7 @@ export function InAppBrowserConsentDialog() {
 
 function InAppBrowserConsentInner({href}: {href?: string}) {
   const control = Dialog.useDialogContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const setInAppBrowser = useSetInAppBrowser()
   const openLink = useOpenLink()
@@ -60,7 +58,7 @@ function InAppBrowserConsentInner({href}: {href?: string}) {
   }, [control])
 
   return (
-    <Dialog.ScrollableInner label={_(msg`How should we open this link?`)}>
+    <Dialog.ScrollableInner label={l`How should we open this link?`}>
       <View style={[a.gap_2xl]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_bold, a.text_2xl]}>
@@ -75,7 +73,7 @@ function InAppBrowserConsentInner({href}: {href?: string}) {
         </View>
         <View style={[a.gap_sm]}>
           <Button
-            label={_(msg`Use in-app browser`)}
+            label={l`Use in-app browser`}
             onPress={onUseIAB}
             size="large"
             variant="solid"
@@ -85,7 +83,7 @@ function InAppBrowserConsentInner({href}: {href?: string}) {
             </ButtonText>
           </Button>
           <Button
-            label={_(msg`Use my default browser`)}
+            label={l`Use my default browser`}
             onPress={onUseLinking}
             size="large"
             variant="solid"
@@ -96,7 +94,7 @@ function InAppBrowserConsentInner({href}: {href?: string}) {
             <ButtonIcon position="right" icon={External} />
           </Button>
           <Button
-            label={_(msg`Cancel`)}
+            label={l`Cancel`}
             onPress={onCancel}
             size="large"
             variant="ghost"
