@@ -187,6 +187,11 @@ async function finishAndRecover({
             'Multipart upload completed without a job status',
             'InvalidUploadStatus',
           )
+        default:
+          throw new MultipartUploadError(
+            'Multipart upload returned an unknown status',
+            'InvalidUploadStatus',
+          )
       }
     }
   }
