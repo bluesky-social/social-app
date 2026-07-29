@@ -35,6 +35,23 @@ function makeFollowNotification(
 }
 
 describe('groupNotifications', () => {
+  it('does not group a starter pack follow with an organic follow', () => {
+    const pack = 'at://did:plc:alice/app.bsky.graph.starterpack/a'
+
+    const grouped = groupNotifications([
+      makeFollowNotification('did:plc:a'),
+      makeFollowNotification('did:plc:b', pack),
+    ])
+
+    expect(grouped).toHaveLength(2)
+    expect(grouped[0].notification.author.did).toBe('did:plc:a')
+    expect(grouped[0].notification.starterPack).toBeUndefined()
+    expect(grouped[0].additional).toBeUndefined()
+    expect(grouped[1].notification.author.did).toBe('did:plc:b')
+    expect(grouped[1].notification.starterPack?.uri).toBe(pack)
+    expect(grouped[1].additional).toBeUndefined()
+  })
+
   it('groups follows by starter pack', () => {
     const packA = 'at://did:plc:alice/app.bsky.graph.starterpack/a'
     const packB = 'at://did:plc:bob/app.bsky.graph.starterpack/b'
