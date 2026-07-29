@@ -244,7 +244,7 @@
     "react-native-web": "^0.21.0",
     "react-native-web-webview": "^1.0.2",
     "react-native-webview": "^13.16.1",
-    "react-native-worklets": "0.10.0",
+    "react-native-worklets": "0.10.3",
     "react-remove-scroll-bar": "^2.3.8",
     "react-responsive": "^10.0.1",
     "react-textarea-autosize": "^8.5.3",
