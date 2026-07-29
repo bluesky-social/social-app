@@ -387,7 +387,10 @@ export async function processVideo(
       telemetry.processingFailed(e)
       dispatch({
         type: 'to_error',
-        error: i18n._(msg`Video failed to process`),
+        error:
+          status?.state === 'JOB_STATE_FAILED' && status.message
+            ? status.message
+            : i18n._(msg`Video failed to process`),
         signal,
       })
       return // Exit async loop
