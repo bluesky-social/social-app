@@ -3,6 +3,16 @@
  * @returns {import("@babel/core").InputOptions}
  */
 module.exports = function (api) {
+  /*
+   * react-native-dotenv inlines every `process.env.*` reference (in
+   * node_modules too) from the transform worker's environment. Metro workers
+   * run under jest-worker, which sets JEST_WORKER_ID, so keeping the plugin in
+   * Metro builds bakes JEST_WORKER_ID into the app bundle and flips
+   * react-native-reanimated into its Jest/web mode on device. Only the webpack
+   * web build needs it.
+   */
+  const isWebpack = api.caller(caller => caller?.name === 'babel-loader')
+
   return {
     presets: [
       [
@@ -20,7 +30,7 @@ module.exports = function (api) {
     plugins: [
       '@lingui/babel-plugin-lingui-macro',
       ['babel-plugin-react-compiler', {target: '19'}],
-      'module:react-native-dotenv', // used by web build! can remove when we drop webpack
+      ...(isWebpack ? ['module:react-native-dotenv'] : []), // used by web build! can remove when we drop webpack
       [
         'module-resolver',
         {
