@@ -137,9 +137,11 @@ export function getTranslatorLink(
   targetLangCode: string,
   sourceLanguage?: string,
 ): string {
-  return `https://translate.google.com/?sl=${sourceLanguage ?? 'auto'}&tl=${targetLangCode}&text=${encodeURIComponent(
+  return `https://libretranslate.com/?source=${sourceLanguage ?? 'auto'}&target=${targetLangCode}&q=${encodeURIComponent(
     text,
   )}`
+
+  
 }
 
 /**
