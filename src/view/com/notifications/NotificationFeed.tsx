@@ -62,13 +62,7 @@ export function NotificationFeed({
     enabled: enabled && !!moderationOpts,
     filter,
   })
-  // previously, this was `!isFetching && !data?.pages[0]?.items.length`
-  // however, if the first page had no items (can happen in the mentions tab!)
-  // it would flicker the empty state whenever it was loading.
-  // therefore, we need to find if *any* page has items. in 99.9% of cases,
-  // the `.find()` won't need to go any further than the first page -sfn
-  const isEmpty =
-    !isFetching && !data?.pages.find(page => page.items.length > 0)
+  const isEmpty = !data?.pages.find(page => page.items.length > 0)
 
   const items = useMemo(() => {
     let arr: any[] = []
@@ -78,12 +72,6 @@ export function NotificationFeed({
       } else if (data) {
         for (const page of data?.pages) {
           arr = arr.concat(page.items)
-        }
-        // fixed zero-data edge case: when isFetching=true isEmpty stays false,
-        // so we fall into this branch even with no items (e.g. mentions tab with
-        // no mentions). without this check arr would be [] causing a blank flash.
-        if (arr.length === 0) {
-          arr = arr.concat([EMPTY_FEED_ITEM])
         }
       }
       if (isError && !isEmpty) {
