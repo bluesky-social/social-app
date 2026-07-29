@@ -119,46 +119,49 @@ function Inner() {
               ))
           ) : !trending?.trends ? null : (
             <>
-              {trending.trends.slice(0, DEFAULT_LIMIT).map((topic, i) => (
-                <TrendingTopicLink
-                  key={topic.link}
-                  topic={topic}
-                  metricContext="sidebar"
-                  position={i + 1}
-                  recId={trending.recId}
-                  onPress={() => {
-                    ax.metric('trendingTopic:click', {
-                      context: 'sidebar',
-                      position: i + 1,
-                      recId: trending.recId,
-                    })
-                  }}>
-                  {({hovered}) => (
-                    <View style={[a.flex_1, a.flex_row, a.gap_xs]}>
-                      <Text
-                        style={[
-                          a.text_sm,
-                          a.leading_snug,
-                          t.atoms.text_contrast_low,
-                          {minWidth: 16},
-                        ]}>
-                        {i + 1}.
-                      </Text>
-                      <Text
-                        style={[
-                          a.flex_1,
-                          a.text_sm,
-                          a.leading_snug,
-                          hovered
-                            ? [t.atoms.text, a.underline]
-                            : t.atoms.text_contrast_medium,
-                        ]}>
-                        {topic.displayName ?? topic.topic}
-                      </Text>
-                    </View>
-                  )}
-                </TrendingTopicLink>
-              ))}
+              {trending.trends.slice(0, DEFAULT_LIMIT).map((topic, i) => {
+                const rank = i + 1
+                return (
+                  <TrendingTopicLink
+                    key={topic.link}
+                    topic={topic}
+                    metricContext="sidebar"
+                    rank={rank}
+                    recId={trending.recId}
+                    onPress={() => {
+                      ax.metric('trendingTopic:click', {
+                        context: 'sidebar',
+                        rank,
+                        recId: trending.recId,
+                      })
+                    }}>
+                    {({hovered}) => (
+                      <View style={[a.flex_1, a.flex_row, a.gap_xs]}>
+                        <Text
+                          style={[
+                            a.text_sm,
+                            a.leading_snug,
+                            t.atoms.text_contrast_low,
+                            {minWidth: 16},
+                          ]}>
+                          {rank}.
+                        </Text>
+                        <Text
+                          style={[
+                            a.flex_1,
+                            a.text_sm,
+                            a.leading_snug,
+                            hovered
+                              ? [t.atoms.text, a.underline]
+                              : t.atoms.text_contrast_medium,
+                          ]}>
+                          {topic.displayName ?? topic.topic}
+                        </Text>
+                      </View>
+                    )}
+                  </TrendingTopicLink>
+                )
+              })}
             </>
           )}
         </View>

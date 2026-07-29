@@ -138,24 +138,26 @@ function Inner({sectionIndex}: {sectionIndex: number}) {
               ? Array.from({length: TOPIC_COUNT}).map((_, i) => (
                   <TrendingTopicRowSkeleton key={i} rank={i + 1} />
                 ))
-              : trending?.trends?.map((trend, index) => (
-                  <TrendRow
-                    key={trend.link}
-                    trend={trend}
-                    rank={index + 1}
-                    position={index + 1}
-                    sectionIndex={sectionIndex}
-                    recId={trending.recId}
-                    onPress={() => {
-                      ax.metric('trendingTopic:click', {
-                        context: 'interstitial',
-                        position: index + 1,
-                        sectionIndex,
-                        recId: trending.recId,
-                      })
-                    }}
-                  />
-                ))}
+              : trending?.trends?.map((trend, index) => {
+                  const rank = index + 1
+                  return (
+                    <TrendRow
+                      key={trend.link}
+                      trend={trend}
+                      rank={rank}
+                      sectionIndex={sectionIndex}
+                      recId={trending.recId}
+                      onPress={() => {
+                        ax.metric('trendingTopic:click', {
+                          context: 'interstitial',
+                          rank,
+                          sectionIndex,
+                          recId: trending.recId,
+                        })
+                      }}
+                    />
+                  )
+                })}
           </View>
         </View>
       </View>
@@ -176,14 +178,12 @@ function Inner({sectionIndex}: {sectionIndex: number}) {
 function TrendRow({
   trend,
   rank,
-  position,
   sectionIndex,
   recId,
   onPress,
 }: ViewStyleProp & {
   trend: AppBskyUnspeccedDefs.TrendView
   rank: number
-  position: number
   sectionIndex: number
   recId?: string
   children?: React.ReactNode
@@ -194,7 +194,7 @@ function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
-  useTrendingTopicSeen('interstitial', position, recId, sectionIndex)
+  useTrendingTopicSeen('interstitial', rank, recId, sectionIndex)
 
   return (
     <Link

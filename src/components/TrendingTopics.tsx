@@ -13,18 +13,18 @@ import {type Metrics, useAnalytics} from '#/analytics'
 export function TrendingTopicLink({
   topic: raw,
   metricContext,
-  position,
+  rank,
   recId,
   children,
   ...rest
 }: {
   topic: AppBskyUnspeccedDefs.TrendView
   metricContext: Metrics['trendingTopic:seen']['context']
-  position: number
+  rank: number
   recId?: string
 } & Omit<LinkProps, 'to' | 'label'>) {
   const topic = useTopic(raw)
-  useTrendingTopicSeen(metricContext, position, recId)
+  useTrendingTopicSeen(metricContext, rank, recId)
 
   return (
     <InternalLink
@@ -39,7 +39,7 @@ export function TrendingTopicLink({
 
 export function useTrendingTopicSeen(
   context: Metrics['trendingTopic:seen']['context'],
-  position: number,
+  rank: number,
   recId?: string,
   sectionIndex?: number,
 ) {
@@ -47,7 +47,7 @@ export function useTrendingTopicSeen(
   const trackSeen = useCallOnce(() => {
     ax.metric('trendingTopic:seen', {
       context,
-      position,
+      rank,
       sectionIndex,
       recId,
     })

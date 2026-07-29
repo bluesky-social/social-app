@@ -756,13 +756,13 @@ export type Events = {
   'trendingTopic:seen': {
     context: 'sidebar' | 'interstitial' | 'explore'
     recId?: string
-    position: number
+    rank: number
     sectionIndex?: number
   }
   'trendingTopic:click': {
     context: 'sidebar' | 'interstitial' | 'explore'
     recId?: string
-    position: number
+    rank: number
     sectionIndex?: number
   }
   'trendingVideos:show': {

@@ -79,22 +79,24 @@ function Inner() {
           ? Array.from({length: topicCount}).map((__, i) => (
               <TrendingTopicRowSkeleton key={i} />
             ))
-          : trending?.trends.map((trend, index) => (
-              <TrendRow
-                key={trend.link}
-                trend={trend}
-                rank={index + 1}
-                position={index + 1}
-                recId={trending.recId}
-                onPress={() => {
-                  ax.metric('trendingTopic:click', {
-                    context: 'explore',
-                    position: index + 1,
-                    recId: trending.recId,
-                  })
-                }}
-              />
-            ))}
+          : trending?.trends.map((trend, index) => {
+              const rank = index + 1
+              return (
+                <TrendRow
+                  key={trend.link}
+                  trend={trend}
+                  rank={rank}
+                  recId={trending.recId}
+                  onPress={() => {
+                    ax.metric('trendingTopic:click', {
+                      context: 'explore',
+                      rank,
+                      recId: trending.recId,
+                    })
+                  }}
+                />
+              )
+            })}
       </View>
 
       <Prompt.Basic
@@ -114,14 +116,12 @@ function Inner() {
 export function TrendRow({
   trend,
   rank,
-  position,
   recId,
   children,
   onPress,
 }: ViewStyleProp & {
   trend: AppBskyUnspeccedDefs.TrendView
   rank: number
-  position: number
   recId?: string
   children?: React.ReactNode
   onPress?: () => void
@@ -132,7 +132,7 @@ export function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
-  useTrendingTopicSeen('explore', position, recId)
+  useTrendingTopicSeen('explore', rank, recId)
 
   const description = useMemo(() => {
     if (!trend.description) return
