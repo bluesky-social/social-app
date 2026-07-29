@@ -3,7 +3,7 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {type CompressedVideo} from '#/lib/media/video/types'
-import {shouldRetryError} from '#/lib/strings/errors'
+import {isRetryableHttpStatus, shouldRetryError} from '#/lib/strings/errors'
 import {getServiceAuthToken} from '../upload.shared'
 import {mimeToExt} from '../util'
 import {
@@ -19,6 +19,7 @@ import {getMissingParts, planParts} from './planParts'
 import {createChunkReader} from './readChunk'
 import {createUploadPart} from './uploadPart'
 import {uploadParts} from './uploadParts'
+import {delay} from './utils'
 
 export class MultipartFallbackError extends Error {}
 
@@ -87,6 +88,7 @@ export async function uploadVideoMultipart({
       )
     }
 
+    // Preserve TypeScript's narrowing inside the recovery callback.
     const activeReader = reader
     if (!activeReader) throw new Error('Video chunk reader is unavailable')
     return await finishAndRecover({
@@ -165,8 +167,8 @@ async function finishAndRecover({
           }
           return await abortThenFallbackOrResolve(jobId, token, finishError)
         case 'finishing':
-          // Finalization owns the reservation and may already have assembled
-          // the object. Retrying is idempotent; legacy fallback is unsafe.
+          // The service may have assembled the upload even though the finish
+          // request failed. Poll and retry instead of starting a second upload.
           await delay(1000, signal)
           continue
         case 'failed':
@@ -215,7 +217,7 @@ function isRetryableStatusError(err: unknown) {
     (err instanceof MultipartUploadError &&
       (err.error === 'ServiceOverloaded' ||
         err.status === undefined ||
-        err.status >= 500))
+        isRetryableHttpStatus(err.status)))
   )
 }
 
@@ -292,18 +294,4 @@ async function getServiceAuthTokenWithRetry(
 
 function throwIfAborted(signal: AbortSignal) {
   if (signal.aborted) throw new AbortError()
-}
-
-function delay(ms: number, signal: AbortSignal) {
-  return new Promise<void>((resolve, reject) => {
-    const timer = setTimeout(() => {
-      signal.removeEventListener('abort', onAbort)
-      resolve()
-    }, ms)
-    function onAbort() {
-      clearTimeout(timer)
-      reject(new AbortError())
-    }
-    signal.addEventListener('abort', onAbort, {once: true})
-  })
 }

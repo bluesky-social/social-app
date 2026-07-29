@@ -88,6 +88,10 @@ export function isCancelledError(e: unknown) {
 
 // TODO Replace this with error.shouldRetry() when available. -dsb
 const RETRYABLE_ERRORS = [408, 425, 429, 500, 502, 503, 504, 522, 524]
+export function isRetryableHttpStatus(status: number) {
+  return RETRYABLE_ERRORS.includes(status)
+}
+
 export function shouldRetryError(e: unknown) {
-  return e instanceof XRPCError && RETRYABLE_ERRORS.includes(e.status)
+  return e instanceof XRPCError && isRetryableHttpStatus(e.status)
 }
