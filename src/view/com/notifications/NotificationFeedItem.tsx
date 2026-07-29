@@ -285,6 +285,10 @@ let NotificationFeedItem = ({
     (item.additional ?? []).every(
       notification => notification.starterPack?.uri === starterPack.uri,
     )
+  const starterPackName =
+    allFollowedViaSameStarterPack && starterPack
+      ? getStarterPackName(starterPack)
+      : undefined
   const formattedAuthorsCount = hasMultipleAuthors
     ? formatCount(i18n, additionalAuthorsCount)
     : ''
@@ -352,15 +356,24 @@ let NotificationFeedItem = ({
        * Follow-backs are ungrouped, grouped follow-backs not supported atm,
        * see `src/state/queries/notifications/util.ts`
        */
-      a11yLabel = l`${firstAuthorName} followed you back`
+      a11yLabel = starterPackName
+        ? l`${firstAuthorName} followed you back via starter pack ${starterPackName}`
+        : l`${firstAuthorName} followed you back`
       notificationContent = <Trans>{firstAuthorLink} followed you back</Trans>
     } else {
-      a11yLabel = hasMultipleAuthors
-        ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
-            one: `${formattedAuthorsCount} other`,
-            other: `${formattedAuthorsCount} others`,
-          })} followed you`
-        : l`${firstAuthorName} followed you`
+      a11yLabel = starterPackName
+        ? hasMultipleAuthors
+          ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+              one: `${formattedAuthorsCount} other`,
+              other: `${formattedAuthorsCount} others`,
+            })} followed you via starter pack ${starterPackName}`
+          : l`${firstAuthorName} followed you via starter pack ${starterPackName}`
+        : hasMultipleAuthors
+          ? l`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+              one: `${formattedAuthorsCount} other`,
+              other: `${formattedAuthorsCount} others`,
+            })} followed you`
+          : l`${firstAuthorName} followed you`
       notificationContent = hasMultipleAuthors ? (
         <Trans>
           {firstAuthorLink} and{' '}
@@ -734,12 +747,7 @@ function FollowedViaStarterPack({
   const t = useTheme()
   const link = useStarterPackLink({view: starterPack})
 
-  const starterPackName = bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-    starterPack.record,
-    AppBskyGraphStarterpack.isRecord,
-  )
-    ? starterPack.record.name
-    : undefined
+  const starterPackName = getStarterPackName(starterPack)
 
   if (!starterPackName) {
     return null
@@ -765,6 +773,17 @@ function FollowedViaStarterPack({
       </Trans>
     </Text>
   )
+}
+
+function getStarterPackName(
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic,
+) {
+  return bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+    starterPack.record,
+    AppBskyGraphStarterpack.isRecord,
+  )
+    ? starterPack.record.name
+    : undefined
 }
 
 function ExpandListPressable({
