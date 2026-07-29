@@ -13,16 +13,16 @@ packageExtensions:
 trustPolicy: 'no-downgrade' # default: off
 trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
 overrides:
-  '@react-native/babel-preset': '0.81.5'
-  '@react-native/normalize-colors': '0.81.5'
+  '@react-native/babel-preset': '0.86.0'
+  '@react-native/normalize-colors': '0.86.0'
   '@expo/image-utils': '0.8.12'
   '@types/estree': '1.0.6'
   'react-native-compressor': '1.13.0'
-  'react-native-reanimated': '4.3.2'
-  'react-native-worklets': '0.8.3'
+  'react-native-reanimated': '4.4.2'
+  'react-native-worklets': '0.10.0'
   'psl': '1.9.0'
   '@types/psl': '1.1.1'
-  'react-native-screens': '4.24.0'
+  'react-native-screens': '4.26.2'
 allowBuilds:
   '@sentry/cli': true
   'core-js': false
@@ -31,7 +31,7 @@ allowBuilds:
   'unrs-resolver': true
 patchedDependencies:
   '@sentry/expo-upload-sourcemaps@8.18.0': patches/@sentry__expo-upload-sourcemaps@8.18.0.patch
-  'expo-age-range@0.2.18': patches/expo-age-range@0.2.18.patch
+  'expo-age-range@57.0.2': patches/expo-age-range@57.0.2.patch
   'expo-haptics@57.0.1': patches/expo-haptics@57.0.1.patch
   'expo-media-library@57.0.3': patches/expo-media-library@57.0.3.patch
   'expo-modules-core@57.0.7': patches/expo-modules-core@57.0.7.patch
@@ -42,7 +42,7 @@ patchedDependencies:
   'react-native-drawer-layout@4.2.3': patches/react-native-drawer-layout@4.2.3.patch
   'react-native-keyboard-controller@1.21.9': patches/react-native-keyboard-controller@1.21.9.patch
   'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
-  'react-native-reanimated@4.3.2': patches/react-native-reanimated@4.3.2.patch
+  'react-native-reanimated@4.4.2': patches/react-native-reanimated@4.4.2.patch
   react-native-screens@4.24.0: patches/react-native-screens@4.24.0.patch
   'react-native-svg@15.15.4': patches/react-native-svg@15.15.4.patch
   'react-native-view-shot@4.0.3': patches/react-native-view-shot@4.0.3.patch

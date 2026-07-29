@@ -1,10 +1,10 @@
 diff --git a/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.cpp b/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.cpp
-index 531f0dc7b4eeb9b29cb2255d8444da02a74c35b7..534f419fce55c39a09a7eebfb7ab3c53f8a16637 100644
+index 2db064c..2f8c187 100644
 --- a/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.cpp
 +++ b/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.cpp
-@@ -1,8 +1,10 @@
- #include <reanimated/Fabric/updates/AnimatedPropsRegistry.h>
- #include <reanimated/Tools/FeatureFlags.h>
+@@ -5,8 +5,10 @@
+ 
+ #include <react/debug/react_native_assert.h>
  
 +#include <functional>
  #include <memory>
@@ -13,8 +13,8 @@ index 531f0dc7b4eeb9b29cb2255d8444da02a74c35b7..534f419fce55c39a09a7eebfb7ab3c53
  
  namespace reanimated {
  
-@@ -25,25 +27,59 @@ void AnimatedPropsRegistry::update(jsi::Runtime &rt, const jsi::Value &operation
-     addUpdatesToBatch(shadowNode, jsi::dynamicFromValue(rt, updates));
+@@ -36,25 +38,59 @@ void AnimatedPropsRegistry::update(jsi::Runtime &rt, const jsi::Value &operation
+     }
  
      if constexpr (StaticFeatureFlags::getFlag("FORCE_REACT_RENDER_FOR_SETTLED_ANIMATIONS")) {
 -      timestampMap_[shadowNode->getTag()] = timestamp;
@@ -34,7 +34,7 @@ index 531f0dc7b4eeb9b29cb2255d8444da02a74c35b7..534f419fce55c39a09a7eebfb7ab3c53
 -    const double timestamp,
 -    const double cleanupTimestamp) {
 +jsi::Value AnimatedPropsRegistry::collectSettledUpdates(jsi::Runtime &rt, const double settledTimestamp) {
-   std::lock_guard<std::mutex> lock{mutex_};
+   react_native_assert(UpdatesRegistryManager::isLockedByCurrentThread());
 -  removeUpdatesOlderThanTimestamp(cleanupTimestamp);
  
    std::vector<std::pair<Tag, std::reference_wrapper<const folly::dynamic>>> updates;
@@ -83,7 +83,7 @@ index 531f0dc7b4eeb9b29cb2255d8444da02a74c35b7..534f419fce55c39a09a7eebfb7ab3c53
    }
  
    const jsi::Array array(rt, updates.size());
-@@ -58,22 +94,11 @@ jsi::Value AnimatedPropsRegistry::getUpdatesOlderThanTimestamp(
+@@ -69,22 +105,11 @@ jsi::Value AnimatedPropsRegistry::getUpdatesOlderThanTimestamp(
    return jsi::Value(rt, array);
  }
  
@@ -109,7 +109,7 @@ index 531f0dc7b4eeb9b29cb2255d8444da02a74c35b7..534f419fce55c39a09a7eebfb7ab3c53
  
  } // namespace reanimated
 diff --git a/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.h b/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.h
-index 2c6c0e13604c9421e147d7eea7f4a4752288011c..8cd67f118501c2786b94d76541aea29a14ba8c16 100644
+index 2197eec..a9cb24c 100644
 --- a/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.h
 +++ b/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.h
 @@ -4,10 +4,8 @@
@@ -138,7 +138,7 @@ index 2c6c0e13604c9421e147d7eea7f4a4752288011c..8cd67f118501c2786b94d76541aea29a
 +  jsi::Value collectSettledUpdates(jsi::Runtime &rt, double settledTimestamp);
  
   private:
-   std::unordered_map<Tag, double> timestampMap_; // viewTag -> timestamp, protected by `mutex_`
+   std::unordered_map<Tag, double> timestampMap_;
 +  // Tags whose latest values have already been pushed to React `settledProps`.
 +  // Intentionally retained after eviction to detect re-animation staleness.
 +  std::unordered_set<Tag> syncedTags_;
@@ -151,10 +151,10 @@ index 2c6c0e13604c9421e147d7eea7f4a4752288011c..8cd67f118501c2786b94d76541aea29a
  };
  
 diff --git a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxyCommon.h b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxyCommon.h
-index 096218ab9659955cd6272c97181bce3c893ed591..1a8e25fc8295b3ac943130709bf063ea41a50585 100644
+index 8603591..20d042b 100644
 --- a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxyCommon.h
 +++ b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxyCommon.h
-@@ -57,11 +57,11 @@ class LayoutAnimationsProxyCommon : public facebook::react::MountingOverrideDele
+@@ -62,11 +62,11 @@ class LayoutAnimationsProxyCommon : public facebook::react::MountingOverrideDele
        const SharedComponentDescriptorRegistry &componentDescriptorRegistry,
        const std::shared_ptr<const ContextContainer> &contextContainer,
        jsi::Runtime &uiRuntime,
@@ -168,7 +168,7 @@ index 096218ab9659955cd6272c97181bce3c893ed591..1a8e25fc8295b3ac943130709bf063ea
        const std::shared_ptr<facebook::react::CallInvoker> &jsInvoker
  #endif
        )
-@@ -69,11 +69,11 @@ class LayoutAnimationsProxyCommon : public facebook::react::MountingOverrideDele
+@@ -74,11 +74,11 @@ class LayoutAnimationsProxyCommon : public facebook::react::MountingOverrideDele
          contextContainer_(contextContainer),
          componentDescriptorRegistry_(componentDescriptorRegistry),
          uiRuntime_(uiRuntime),
@@ -182,7 +182,7 @@ index 096218ab9659955cd6272c97181bce3c893ed591..1a8e25fc8295b3ac943130709bf063ea
          jsInvoker_(jsInvoker)
  #endif
    {
-@@ -93,10 +93,10 @@ class LayoutAnimationsProxyCommon : public facebook::react::MountingOverrideDele
+@@ -98,10 +98,10 @@ class LayoutAnimationsProxyCommon : public facebook::react::MountingOverrideDele
    SharedComponentDescriptorRegistry componentDescriptorRegistry_;
    jsi::Runtime &uiRuntime_;
    const std::shared_ptr<UIScheduler> uiScheduler_;
@@ -195,7 +195,7 @@ index 096218ab9659955cd6272c97181bce3c893ed591..1a8e25fc8295b3ac943130709bf063ea
  
    void restoreOpacityInCaseOfFlakyEnteringAnimation(SurfaceId surfaceId) const;
 diff --git a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Experimental.h b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Experimental.h
-index eca44e4cf651d16e9741806004ce9119c85d07d6..e39c79a5d7b52659106ed6fe6fbcbbc048bf4787 100644
+index eca44e4..e39c79a 100644
 --- a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Experimental.h
 +++ b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Experimental.h
 @@ -66,11 +66,11 @@ struct LayoutAnimationsProxy_Experimental : public LayoutAnimationsProxyCommon,
@@ -227,18 +227,18 @@ index eca44e4cf651d16e9741806004ce9119c85d07d6..e39c79a5d7b52659106ed6fe6fbcbbc0
  #endif
              ),
 diff --git a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.cpp b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.cpp
-index 83ef7430b923b6b3b99368ee8072168769110cd0..2affd12822ab19bdc90963d3ce8ca1e6bb0d43b7 100644
+index a3927af..13833b7 100644
 --- a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.cpp
 +++ b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.cpp
-@@ -2,6 +2,7 @@
- #include <reanimated/NativeModules/ReanimatedModuleProxy.h>
+@@ -1,6 +1,7 @@
+ #include <reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.h>
  
- #include <react/renderer/animations/utils.h>
+ #include <react/debug/react_native_assert.h>
 +#include <react/renderer/mounting/ShadowTree.h>
  #include <react/renderer/mounting/ShadowViewMutation.h>
  
  #include <memory>
-@@ -53,14 +54,37 @@ std::optional<MountingTransaction> LayoutAnimationsProxy_Legacy::pullTransaction
+@@ -58,14 +59,37 @@ std::optional<MountingTransaction> LayoutAnimationsProxy_Legacy::pullTransaction
  
    parseRemoveMutations(movedViews, mutations, roots);
  
@@ -278,7 +278,7 @@ index 83ef7430b923b6b3b99368ee8072168769110cd0..2affd12822ab19bdc90963d3ce8ca1e6
    return MountingTransaction{surfaceId, transactionNumber, std::move(filteredMutations), telemetry};
  }
  
-@@ -947,23 +971,22 @@ inline bool MutationNode::isMutationNode() {
+@@ -959,23 +983,22 @@ inline bool MutationNode::isMutationNode() {
    return true;
  }
  
@@ -318,7 +318,7 @@ index 83ef7430b923b6b3b99368ee8072168769110cd0..2affd12822ab19bdc90963d3ce8ca1e6
  
  } // namespace reanimated
 diff --git a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.h b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.h
-index e9a5e9959e89ec33cee179ddb907c17f6dfbd3de..a2c89041518cd71e8ba5ac62ef89c0022d197c9b 100644
+index e9a5e99..a2c8904 100644
 --- a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.h
 +++ b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.h
 @@ -3,8 +3,8 @@
@@ -404,10 +404,10 @@ index e9a5e9959e89ec33cee179ddb907c17f6dfbd3de..a2c89041518cd71e8ba5ac62ef89c002
  
  } // namespace reanimated
 diff --git a/Common/cpp/reanimated/NativeModules/ReanimatedModuleProxy.cpp b/Common/cpp/reanimated/NativeModules/ReanimatedModuleProxy.cpp
-index 9ade22bf773005613048a00c47b35767628e86c6..f3415e824da1a8da5c83762415ca54646bd6429f 100644
+index 60c88ec..a23545a 100644
 --- a/Common/cpp/reanimated/NativeModules/ReanimatedModuleProxy.cpp
 +++ b/Common/cpp/reanimated/NativeModules/ReanimatedModuleProxy.cpp
-@@ -524,15 +524,13 @@ jsi::Value ReanimatedModuleProxy::getSettledUpdates(jsi::Runtime &rt) {
+@@ -641,16 +641,14 @@ jsi::Value ReanimatedModuleProxy::getSettledUpdates(jsi::Runtime &rt) {
        StaticFeatureFlags::getFlag("FORCE_REACT_RENDER_FOR_SETTLED_ANIMATIONS") &&
        "getSettledUpdates requires FORCE_REACT_RENDER_FOR_SETTLED_ANIMATIONS static feature flag to be enabled");
  
@@ -420,27 +420,14 @@ index 9ade22bf773005613048a00c47b35767628e86c6..f3415e824da1a8da5c83762415ca5464
    // TODO(future): flush updates from CSS animations and CSS transitions registries
 -  // TODO(future): find a better way to obtain timestamp for removing updates
 -  // TODO(future): move removing old updates to separate method
+   auto lock = updatesRegistryManager_->lock();
 -  return animatedPropsRegistry_->getUpdatesOlderThanTimestamp(
 -      rt, currentTimestamp - 1000 /* 1 second */, currentTimestamp - 2000 /* 2 seconds */);
 +  return animatedPropsRegistry_->collectSettledUpdates(rt, currentTimestamp - SETTLED_ANIMATION_THRESHOLD_MS);
  }
  
  bool ReanimatedModuleProxy::handleEvent(
-@@ -1306,11 +1304,11 @@ void ReanimatedModuleProxy::initializeLayoutAnimationsProxy() {
-           componentDescriptorRegistry,
-           scheduler->getContextContainer(),
-           getJSIRuntimeFromWorkletRuntime(uiRuntime_),
--          uiScheduler_
-+          uiScheduler_,
-+          uiManager_
- #ifdef ANDROID
-           ,
-           filterUnmountedTagsFunction_,
--          uiManager_,
-           jsInvoker_
- #endif
-       );
-@@ -1319,22 +1317,19 @@ void ReanimatedModuleProxy::initializeLayoutAnimationsProxy() {
+@@ -1227,22 +1225,19 @@ void ReanimatedModuleProxy::initializeLayoutAnimationsProxy() {
  #endif
        layoutAnimationsProxy_ = std::move(layoutAnimationsProxyExperimental);
      } else {
@@ -467,7 +454,7 @@ index 9ade22bf773005613048a00c47b35767628e86c6..f3415e824da1a8da5c83762415ca5464
    }
  }
 diff --git a/src/PropsRegistryGarbageCollector.ts b/src/PropsRegistryGarbageCollector.ts
-index f917ce5a8586c02855f1d8d9ae73154592d22510..32148fbac8a9224ffec6edc784b48938da9585fb 100644
+index f917ce5..32148fb 100644
 --- a/src/PropsRegistryGarbageCollector.ts
 +++ b/src/PropsRegistryGarbageCollector.ts
 @@ -11,7 +11,6 @@ import { ReanimatedModule } from './ReanimatedModule';
