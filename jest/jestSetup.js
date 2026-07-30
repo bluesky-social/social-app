@@ -21,9 +21,10 @@ jest.mock('react-native-safe-area-context', () => {
   const inset = {top: 0, right: 0, bottom: 0, left: 0}
   return {
     SafeAreaProvider: jest.fn().mockImplementation(({children}) => children),
-    SafeAreaConsumer: jest
-      .fn()
-      .mockImplementation(({children}) => children(inset)),
+    SafeAreaConsumer: jest.fn().mockImplementation(
+      /** @param {{children: (i: typeof inset) => unknown}} props */
+      ({children}) => children(inset),
+    ),
     useSafeAreaInsets: jest.fn().mockImplementation(() => inset),
   }
 })
@@ -85,18 +86,26 @@ jest.mock('expo-application', () => ({
 }))
 
 jest.mock('expo-modules-core', () => ({
-  requireNativeModule: jest.fn().mockImplementation(moduleName => {
-    if (moduleName === 'ExpoPlatformInfo') {
-      return {
-        getIsReducedMotionEnabled: () => false,
+  requireNativeModule: jest.fn().mockImplementation(
+    /** @param {string} moduleName */
+    moduleName => {
+      if (moduleName === 'ExpoPlatformInfo') {
+        return {
+          getIsReducedMotionEnabled: () => false,
+        }
       }
-    }
-    if (moduleName === 'BottomSheet') {
-      return {
-        dismissAll: () => {},
+      if (moduleName === 'BottomSheet') {
+        return {
+          dismissAll: () => {},
+        }
       }
-    }
-  }),
+
+      const expoModules = /** @type {Record<string, unknown> | undefined} */ (
+        globalThis.expo?.modules
+      )
+      return expoModules?.[moduleName]
+    },
+  ),
   requireNativeViewManager: jest.fn().mockImplementation(_ => {
     return () => null
   }),
