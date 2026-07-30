@@ -64,6 +64,22 @@ describe('ReportDialogMetadataContext', () => {
     expect(first!).not.toBe(second!)
   })
 
+  it('uses the nearest provider for nested subjects', () => {
+    let outer: MetadataRef
+    let inner: MetadataRef
+
+    render(
+      <Provider>
+        <CaptureContext capture={context => (outer = context)} />
+        <Provider>
+          <CaptureContext capture={context => (inner = context)} />
+        </Provider>
+      </Provider>,
+    )
+
+    expect(outer!).not.toBe(inner!)
+  })
+
   it('returns null outside a provider', () => {
     let captured: MetadataRef
     render(<CaptureContext capture={context => (captured = context)} />)
