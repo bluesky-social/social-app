@@ -62,6 +62,7 @@ export const Input = createInput(TextInput)
 export function Outer({
   children,
   control,
+  onOpen,
   onClose,
   nativeOptions,
   testID,
@@ -97,9 +98,10 @@ export function Outer({
   const open = useCallback<DialogControlProps['open']>(() => {
     // Run any leftover callbacks that might have been queued up before calling `.open()`
     callQueuedCallbacks()
+    onOpen?.()
     setDialogIsOpen(control.id, true)
     ref.current?.present()
-  }, [setDialogIsOpen, control.id, callQueuedCallbacks])
+  }, [setDialogIsOpen, control.id, callQueuedCallbacks, onOpen])
 
   // This is the function that we call when we want to dismiss the dialog.
   const close = useCallback<DialogControlProps['close']>(cb => {

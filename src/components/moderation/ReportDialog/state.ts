@@ -22,6 +22,11 @@ export type ReportState = {
   activeStepIndex1: number
   error?: string
   /**
+   * Whether to attach how far the viewer had watched to the report. Only
+   * offered for posts with a video.
+   */
+  includeVideoTimestamp: boolean
+  /**
    * Present while the selected reason is NCII. Tracks the answer to the
    * qualifying question that determines whether the report should go through
    * the external NCII report form instead of in-app submission.
@@ -85,6 +90,10 @@ export type ReportAction =
   | {
       type: 'showDetails'
     }
+  | {
+      type: 'setIncludeVideoTimestamp'
+      include: boolean
+    }
 
 export const initialState: ReportState = {
   selectedCategory: undefined,
@@ -93,6 +102,7 @@ export const initialState: ReportState = {
   details: undefined,
   detailsOpen: false,
   activeStepIndex1: 1,
+  includeVideoTimestamp: false,
 }
 
 export function reducer(state: ReportState, action: ReportAction): ReportState {
@@ -114,6 +124,7 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         activeStepIndex1: 1,
         detailsOpen: false,
         ncii: undefined,
+        includeVideoTimestamp: false,
       }
     case 'selectOption': {
       const isNcii = action.option.reason === OzoneReportDefs.REASONSEXUALNCII
@@ -134,6 +145,7 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         activeStepIndex1: 2,
         detailsOpen: false,
         ncii: undefined,
+        includeVideoTimestamp: false,
       }
     case 'answerNciiQuestion': {
       const ncii = {...state.ncii, [action.question]: action.answer}
@@ -163,12 +175,18 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         detailsOpen: state.selectedOption
           ? OTHER_REPORT_REASONS.has(state.selectedOption?.reason)
           : false,
+        /*
+         * Picking a service is a fresh consent decision - the opt-in is scoped
+         * to Bluesky, so it must not survive a switch to another labeler.
+         */
+        includeVideoTimestamp: false,
       }
     case 'clearLabeler':
       return {
         ...state,
         selectedLabeler: undefined,
         activeStepIndex1: 3,
+        includeVideoTimestamp: false,
       }
     case 'setDetails':
       return {
@@ -189,6 +207,11 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
       return {
         ...state,
         detailsOpen: true,
+      }
+    case 'setIncludeVideoTimestamp':
+      return {
+        ...state,
+        includeVideoTimestamp: action.include,
       }
   }
 }

@@ -1,13 +1,13 @@
 import {useCallback, useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
 import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
+import {useReportDialogMetadataContext} from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import * as BandwidthEstimate from './bandwidth-estimate'
 import {
   HLSFatalError,
@@ -36,9 +36,10 @@ export function VideoEmbedInnerWeb({
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
   const [hlsLoading, setHlsLoading] = useState(false)
   const figId = useId()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [isFullscreen] = useFullscreen(containerRef)
   const isGif = embed.presentation === 'gif'
+  const reportDialogMetadata = useReportDialogMetadataContext()
 
   // send error up to error boundary
   const [error, setError] = useState<Error | null>(null)
@@ -63,7 +64,7 @@ export function VideoEmbedInnerWeb({
   return (
     <View
       style={[a.flex_1, a.rounded_md, a.overflow_hidden]}
-      accessibilityLabel={_(msg`Embedded video player`)}
+      accessibilityLabel={l`Embedded video player`}
       accessibilityHint="">
       <div ref={containerRef} style={{height: '100%', width: '100%'}}>
         <figure style={{margin: 0, position: 'absolute', inset: 0}}>
@@ -76,7 +77,16 @@ export function VideoEmbedInnerWeb({
             muted={embed.presentation === 'gif' || !focused}
             aria-labelledby={embed.alt ? figId : undefined}
             onTimeUpdate={e => {
-              lastKnownTime.current = e.currentTarget.currentTime
+              const currentTime = e.currentTarget.currentTime
+              lastKnownTime.current = currentTime
+              if (
+                !isGif &&
+                reportDialogMetadata &&
+                Number.isFinite(currentTime) &&
+                currentTime >= 0
+              ) {
+                reportDialogMetadata.current.videoTimestampSeconds = currentTime
+              }
             }}
             loop={loop}
           />
@@ -141,9 +151,10 @@ type CachedPromise<T> = Promise<T> & {value: undefined | T}
 const promiseForHls = import(
   // @ts-ignore
   'hls.js/dist/hls.min'
+  // oxlint-disable-next-line typescript/no-unsafe-member-access
 ).then(mod => mod.default) as CachedPromise<typeof HlsTypes.default>
 promiseForHls.value = undefined
-promiseForHls.then(Hls => {
+void promiseForHls.then(Hls => {
   promiseForHls.value = Hls
 })
 
@@ -166,7 +177,7 @@ function useHLS({
   useEffect(() => {
     if (!Hls) {
       setHlsLoading(true)
-      promiseForHls.then(loadedHls => {
+      void promiseForHls.then(loadedHls => {
         setHls(() => loadedHls)
         setHlsLoading(false)
       })
@@ -303,7 +314,7 @@ function useHLS({
     hls.on(Hls.Events.ERROR, (_event, data) => {
       if (data.fatal) {
         if (
-          data.details === 'manifestLoadError' &&
+          (data.details as string) === 'manifestLoadError' &&
           data.response?.code === 404
         ) {
           setError(new VideoNotFoundError())

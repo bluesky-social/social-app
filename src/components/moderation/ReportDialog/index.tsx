@@ -22,6 +22,7 @@ import * as Admonition from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import * as Toggle from '#/components/forms/Toggle'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotate'
 import {
@@ -33,6 +34,7 @@ import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import {formatTime} from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
@@ -46,6 +48,10 @@ import {
 } from './const'
 import {useCopyForSubject} from './copy'
 import {classifyReportError} from './errors'
+import {
+  type ReportDialogMetadataRef,
+  useReportDialogMetadataContext,
+} from './ReportDialogMetadataContext'
 import {
   getNciiQualificationOutcome,
   initialState,
@@ -79,6 +85,8 @@ export function ReportDialog(
   },
 ) {
   const ax = useAnalytics()
+  const [openCount, onOpen] = useReducer(count => count + 1, 0)
+  const reportDialogMetadata = useReportDialogMetadataContext()
   const subject = useMemo(
     () => (props.subject ? parseReportSubject(props.subject) : undefined),
     [props.subject],
@@ -89,9 +97,19 @@ export function ReportDialog(
     propsOnClose?.()
   }, [ax, propsOnClose])
   return (
-    <Dialog.Outer control={props.control} onClose={onClose}>
+    <Dialog.Outer control={props.control} onOpen={onOpen} onClose={onClose}>
       <Dialog.Handle />
-      {subject ? <Inner {...props} subject={subject} /> : <Invalid />}
+      {subject ? (
+        <Inner
+          key={openCount}
+          {...props}
+          subject={subject}
+          dialogHasOpened={openCount > 0}
+          reportDialogMetadata={reportDialogMetadata}
+        />
+      ) : (
+        <Invalid />
+      )}
     </Dialog.Outer>
   )
 }
@@ -118,7 +136,12 @@ function Invalid() {
   )
 }
 
-function Inner(props: ReportDialogProps) {
+function Inner(
+  props: ReportDialogProps & {
+    dialogHasOpened: boolean
+    reportDialogMetadata: ReportDialogMetadataRef | null
+  },
+) {
   const ax = useAnalytics()
   const logger = ax.logger.useChild(ax.logger.Context.ReportDialog)
   const t = useTheme()
@@ -141,6 +164,28 @@ function Inner(props: ReportDialogProps) {
   const {mutateAsync: submitReport} = useSubmitReportMutation()
   const [isPending, setIsPending] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+
+  /*
+   * The video may keep playing while the user works through the steps, so
+   * snapshot the position once on open. Native dialogs keep their children
+   * mounted while hidden, so `ReportDialog` remounts this component on every
+   * presentation. Floor here rather than at the point of use so the label and
+   * the value we send can't disagree: `formatTime` rounds, and the wire format
+   * wants an integer.
+   */
+  // oxlint-disable-next-line react/hook-use-state
+  const [videoTimestampSeconds] = useState(() => {
+    if (!props.dialogHasOpened) return
+    if (props.subject.type !== 'post' || !props.subject.attributes.video) return
+    const seconds = props.reportDialogMetadata?.current.videoTimestampSeconds
+    /*
+     * The native player reports a position as soon as a video is on screen, so
+     * anything under a second means the user never really watched it - offering
+     * to attach "0:00" to every video report would be noise.
+     */
+    if (seconds === undefined || seconds < 1) return
+    return Math.floor(seconds)
+  })
 
   // some reasons ONLY go to Bluesky
   const isBskyOnlyReason = state?.selectedOption?.reason
@@ -230,6 +275,7 @@ function Inner(props: ReportDialogProps) {
         submitReport({
           subject: props.subject,
           state,
+          videoTimestampSeconds,
         }),
       )
       setIsSuccess(true)
@@ -237,6 +283,7 @@ function Inner(props: ReportDialogProps) {
         reason: state.selectedOption?.reason ?? '',
         labeler: state.selectedLabeler?.creator.handle ?? '',
         details: !!state.details,
+        videoTimestamp: state.includeVideoTimestamp,
       })
       // give time for user feedback
       setTimeout(() => {
@@ -282,7 +329,7 @@ function Inner(props: ReportDialogProps) {
     } finally {
       setIsPending(false)
     }
-  }, [logger, submitReport, props, state, ax, l])
+  }, [logger, submitReport, props, state, ax, l, videoTimestampSeconds])
 
   useCallOnce(() => {
     ax.metric('reportDialog:open', {
@@ -602,6 +649,18 @@ function Inner(props: ReportDialogProps) {
                   </View>
                 )}
               </View>
+
+              {videoTimestampSeconds !== undefined &&
+                state.selectedLabeler?.creator.did === BSKY_LABELER_DID && (
+                  <IncludeVideoTimestampToggle
+                    seconds={videoTimestampSeconds}
+                    selected={state.includeVideoTimestamp}
+                    onChange={include => {
+                      dispatch({type: 'setIncludeVideoTimestamp', include})
+                    }}
+                  />
+                )}
+
               <Button
                 testID="report:submit"
                 label={l`Submit report`}
@@ -629,6 +688,42 @@ function Inner(props: ReportDialogProps) {
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
+  )
+}
+
+/**
+ * Opt-in for attaching how far the viewer had watched to a video report. Only
+ * rendered once we have a position and the report is going to Bluesky.
+ */
+function IncludeVideoTimestampToggle({
+  seconds,
+  selected,
+  onChange,
+}: {
+  seconds: number
+  selected: boolean
+  onChange: (selected: boolean) => void
+}) {
+  const {t: l} = useLingui()
+  const videoTimestamp = formatTime(seconds)
+  const label = l({
+    message: `Include video timestamp (${videoTimestamp})`,
+    comment:
+      'Checkbox shown when reporting a video. The value is the current playback position, formatted as minutes:seconds.',
+  })
+  return (
+    <Toggle.Item
+      testID="report:includeVideoTimestamp"
+      name="includeVideoTimestamp"
+      type="checkbox"
+      label={label}
+      value={selected}
+      onChange={onChange}>
+      <Toggle.Checkbox />
+      <Toggle.LabelText style={[a.flex_1, a.font_normal, a.leading_snug]}>
+        {label}
+      </Toggle.LabelText>
+    </Toggle.Item>
   )
 }
 

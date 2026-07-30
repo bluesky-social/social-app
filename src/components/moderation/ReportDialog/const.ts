@@ -4,10 +4,20 @@ import {
 } from '@atproto/api'
 
 import {type ParsedReportSubject} from '#/components/moderation/ReportDialog/types'
+import {IS_ANDROID, IS_IOS} from '#/env'
 
 export const DMCA_LINK = 'https://bsky.social/about/support/copyright'
 export const SUPPORT_PAGE = 'https://bsky.social/about/support'
 export const NCII_FORM = 'https://forms.bsky.app/f/ncii'
+
+/**
+ * Identifies this client as the source of a report.
+ */
+export const REPORT_MOD_TOOL_NAME = IS_IOS
+  ? 'bsky-app/ios'
+  : IS_ANDROID
+    ? 'bsky-app/android'
+    : 'bsky-web'
 
 export const NEW_TO_OLD_REASON_MAPPING: Record<string, string> = {}
 
