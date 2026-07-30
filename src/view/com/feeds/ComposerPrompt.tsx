@@ -173,12 +173,12 @@ export function ComposerPrompt() {
       <View
         style={[
           a.flex_1,
-          a.ml_md,
           a.flex_row,
           a.align_center,
           a.justify_between,
           {
             height: 40,
+            marginLeft: 10,
           },
         ]}>
         <Text
@@ -189,7 +189,7 @@ export function ComposerPrompt() {
           ]}>
           <Trans>What's up?</Trans>
         </Text>
-        <View style={[a.flex_row, a.gap_md]}>
+        <View style={[a.flex_row, a.gap_md, a.pr_xs]}>
           {IS_NATIVE && (
             <Button
               onPress={e => {
