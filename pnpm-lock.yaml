@@ -888,24 +888,16 @@ packages:
     resolution: {integrity: sha512-iDFZEoNqfL17EVKE+uNzdUD7YF8LWhEhxeBtP6x+PNuAxoXv3ip9vLmB8nNzNxFwVn++FipfDtSiPqmziv1bdA==}
     engines: {node: '>=22'}
 
-  '@atproto-labs/handle-resolver@0.4.6':
-    resolution: {integrity: sha512-a3ZoQ0xpIowFuIhvjXwaloJwT3He6NJ02FfrKaRW0tdT2GvEH6nLaVHr46ps8A4ddCz+Q4oUha9atfr4O+0P2g==}
+  '@atproto-labs/handle-resolver@0.4.7':
+    resolution: {integrity: sha512-wDVPKWEqC1ERlPrFskZnxl3PCWjpvtcAiuyAeykzfy3ORgOt1sDAcgjmc0ljKBvA6Vbg8Ow9tPNf9G+7XqE6sw==}
     engines: {node: '>=22'}
 
   '@atproto-labs/pipe@0.2.4':
     resolution: {integrity: sha512-n67jCcrC+ouAeO10cWkpPzzLMlDi/lDCU30Us+LGqhOPhT6c4t5ASdBLQi9W3jUQtRzQBt3G9zipF+xKWNvVbw==}
     engines: {node: '>=22'}
 
-  '@atproto-labs/simple-store-memory@0.2.4':
-    resolution: {integrity: sha512-xAAUlOP9etqP9GGmJPq9gY1bRuJlZFdsC6wtAJSwUwMTwLRdenR7s8Qg5nxhbth5XL1XOtGABoD59NW3p+sl4A==}
-    engines: {node: '>=22'}
-
   '@atproto-labs/simple-store-memory@0.2.5':
     resolution: {integrity: sha512-Qme5VqkHKZA0w218/3pncvT+KYQzVdtP4aF72eCswh53SLrdGCG6F/NtllmJuYmp9uPGnHdql/Yt0BY1slAKjQ==}
-    engines: {node: '>=22'}
-
-  '@atproto-labs/simple-store@0.4.4':
-    resolution: {integrity: sha512-3YH03xg99ZUS6Fq/6jcKRiZwUbzDb58xmS7ibg0y4+dukwrHa92cV/md76RpQJkAo9KYBvwLETdvF6fNtwIoGw==}
     engines: {node: '>=22'}
 
   '@atproto-labs/simple-store@0.5.0':
@@ -9590,26 +9582,19 @@ snapshots:
     dependencies:
       '@atproto-labs/pipe': 0.2.4
 
-  '@atproto-labs/handle-resolver@0.4.6':
+  '@atproto-labs/handle-resolver@0.4.7':
     dependencies:
-      '@atproto-labs/simple-store': 0.4.4
-      '@atproto-labs/simple-store-memory': 0.2.4
+      '@atproto-labs/simple-store': 0.5.0
+      '@atproto-labs/simple-store-memory': 0.2.5
       '@atproto/did': 0.5.4
       zod: 3.25.76
 
   '@atproto-labs/pipe@0.2.4': {}
 
-  '@atproto-labs/simple-store-memory@0.2.4':
-    dependencies:
-      '@atproto-labs/simple-store': 0.4.4
-      lru-cache: 10.4.3
-
   '@atproto-labs/simple-store-memory@0.2.5':
     dependencies:
       '@atproto-labs/simple-store': 0.5.0
       lru-cache: 10.4.3
-
-  '@atproto-labs/simple-store@0.4.4': {}
 
   '@atproto-labs/simple-store@0.5.0': {}
 
@@ -13878,7 +13863,7 @@ snapshots:
 
   bsky-sdk-preview@0.0.1-preview.2(@atproto/lex@0.3.0):
     dependencies:
-      '@atproto-labs/handle-resolver': 0.4.6
+      '@atproto-labs/handle-resolver': 0.4.7
       '@atproto/lex': 0.3.0
       '@atproto/syntax': 0.7.2
       tlds: 1.261.0
