@@ -179,7 +179,7 @@ export function createInput(Component: typeof TextInput) {
     isInvalid,
     inputRef,
     style,
-    minRows = 3,
+    minRows,
     maxRows = 15,
     ...rest
   }: InputProps) {
@@ -191,7 +191,10 @@ export function createInput(Component: typeof TextInput) {
     const {chromeHover, chromeFocus, chromeError, chromeErrorHover} =
       useSharedInputStyles()
 
-    const {multiline, ...inputRest} = rest
+    const {multiline, numberOfLines, ...inputRest} = rest
+
+    const resolvedMinRows = minRows ?? numberOfLines ?? 3
+    const resolvedMaxRows = Math.max(maxRows, resolvedMinRows)
 
     if (!withinRoot) {
       return (
@@ -202,8 +205,8 @@ export function createInput(Component: typeof TextInput) {
             value={value}
             onChangeText={onChangeText}
             isInvalid={isInvalid}
-            minRows={minRows}
-            maxRows={maxRows}
+            minRows={resolvedMinRows}
+            maxRows={resolvedMaxRows}
             {...rest}
           />
         </Root>
