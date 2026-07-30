@@ -4,7 +4,6 @@ import {type AppBskyFeedDefs, type ModerationDecision} from '@atproto/api'
 export enum PostEmbedViewContext {
   ThreadHighlighted = 'ThreadHighlighted',
   Feed = 'Feed',
-  FeedEmbedRecordWithMedia = 'FeedEmbedRecordWithMedia',
   ChatMessage = 'ChatMessage',
 }
 

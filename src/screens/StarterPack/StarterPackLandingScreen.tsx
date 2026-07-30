@@ -179,7 +179,7 @@ function LandingScreenLoaded({
             },
           ]}>
           <View style={[a.flex_row, a.gap_md, a.pb_sm]}>
-            <Logo width={76} fill="white" />
+            <Logo allowVariants={false} width={76} fill="white" />
           </View>
           <Text
             style={[

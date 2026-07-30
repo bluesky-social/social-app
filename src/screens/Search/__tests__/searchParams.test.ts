@@ -4,7 +4,7 @@ import {
   countActiveFilters,
   definedFilterParams,
   filtersToApiParams,
-  filtersToLegacyParams,
+  hasActiveFilters,
   hasPostOnlyFilters,
   parseHistoryEntry,
   readSearchFilters,
@@ -56,6 +56,14 @@ describe(`searchParams`, () => {
     })
   })
 
+  describe(`hasActiveFilters`, () => {
+    it(`includes the structured Me author filter`, () => {
+      expect(hasActiveFilters({})).toBe(false)
+      expect(hasActiveFilters({from: 'me'})).toBe(true)
+      expect(hasActiveFilters({author: 'alice'})).toBe(true)
+    })
+  })
+
   describe(`definedFilterParams`, () => {
     it(`omits absent keys entirely`, () => {
       expect(definedFilterParams({author: 'alice'})).toEqual({author: 'alice'})
@@ -73,34 +81,6 @@ describe(`searchParams`, () => {
           domain: 'undefined',
         }),
       ).toEqual({q: 'cats', tab: 'latest', name: 'alice'})
-    })
-  })
-
-  describe(`filtersToLegacyParams`, () => {
-    it(`maps structured filters back to legacy query operators`, () => {
-      expect(
-        filtersToLegacyParams({
-          author: 'alice',
-          mentions: 'bob',
-          domain: 'bsky.app',
-          url: 'bsky.app/x',
-          tag: 'atproto',
-          lang: 'en',
-          since: '2024-01-01',
-          until: '2024-02-01',
-          media: 'true',
-          replies: 'none',
-        }),
-      ).toEqual({
-        from: 'alice',
-        mentions: 'bob',
-        domain: 'bsky.app',
-        url: 'bsky.app/x',
-        tag: 'atproto',
-        lang: 'en',
-        since: '2024-01-01',
-        until: '2024-02-01',
-      })
     })
   })
 
@@ -159,8 +139,9 @@ describe(`searchParams`, () => {
   })
 
   describe(`countActiveFilters`, () => {
-    it(`counts each set filter key once`, () => {
+    it(`counts each structured filter key once`, () => {
       expect(countActiveFilters({})).toBe(0)
+      expect(countActiveFilters({from: 'me'})).toBe(1)
       expect(
         countActiveFilters({author: 'alice bob', domain: 'bsky.app'}),
       ).toBe(2)
@@ -178,6 +159,14 @@ describe(`searchParams`, () => {
       expect(parseHistoryEntry(stored)).toEqual({
         q: 'cats',
         filters: {author: 'alice'},
+      })
+    })
+
+    it(`round-trips a promoted Me-only search`, () => {
+      const stored = serializeHistoryEntry('', {from: 'me'})
+      expect(parseHistoryEntry(stored)).toEqual({
+        q: '',
+        filters: {from: 'me'},
       })
     })
 

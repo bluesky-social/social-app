@@ -18,12 +18,25 @@ LogBox.ignoreAllLogs()
 
 const BTN = {height: 1, width: 1, backgroundColor: 'red'}
 
+/*
+ * This component is mounted inside <Fragment key={currentAccount?.did}> in
+ * App.tsx, so it fully remounts whenever the account changes (sign-in /
+ * sign-out). If the "proxy configured" flag lived only in React state it would
+ * reset to false on every remount, hiding the sign-in buttons. Keeping it at
+ * module level lets it survive remounts so the sign-in buttons stay visible
+ * across sign-out during multi-account flows. Module state still resets when
+ * the app relaunches with cleared state at the start of each flow, which is the
+ * desired gating behavior.
+ */
+let hasConfiguredProxy = false
+
 export function TestCtrls() {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const {logoutEveryAccount, login} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
   const {setShowLoggedOut} = useLoggedOutViewControls()
+  const [isProxyConfigured, setIsProxyConfigured] = useState(hasConfiguredProxy)
   const onPressSignInAlice = async () => {
     console.info('[E2E] Signing in as Alice')
     await login(
@@ -63,21 +76,27 @@ export function TestCtrls() {
           const header = `${proxyHeader}#bsky_appview`
           BLUESKY_PROXY_HEADER.set(header)
           agent.configureProxy(header as any)
+          hasConfiguredProxy = true
+          setIsProxyConfigured(true)
         }}
         style={BTN}
       />
-      <Pressable
-        testID="e2eSignInAlice"
-        onPress={onPressSignInAlice}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
-        testID="e2eSignInBob"
-        onPress={onPressSignInBob}
-        accessibilityRole="button"
-        style={BTN}
-      />
+      {isProxyConfigured && (
+        <>
+          <Pressable
+            testID="e2eSignInAlice"
+            onPress={onPressSignInAlice}
+            accessibilityRole="button"
+            style={BTN}
+          />
+          <Pressable
+            testID="e2eSignInBob"
+            onPress={onPressSignInBob}
+            accessibilityRole="button"
+            style={BTN}
+          />
+        </>
+      )}
       <Pressable
         testID="e2eSignOut"
         onPress={() => logoutEveryAccount('Settings')}

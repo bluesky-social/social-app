@@ -99,6 +99,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 a.leading_tight,
                 a.flex_shrink_0,
                 {maxWidth: '70%'},
+                web({direction: 'ltr', unicodeBidi: 'isolate'}),
               ]}>
               {forceLTR(
                 sanitizeDisplayName(

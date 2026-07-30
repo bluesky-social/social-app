@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useRef} from 'react'
 import {type ScrollView, StyleSheet, View} from 'react-native'
+import {type SharedValue} from 'react-native-reanimated'
 
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -15,6 +16,14 @@ export interface TabBarProps {
 
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
+
+  /**
+   * The drag-following indicator and transparent background only exist in
+   * the native tab bar - accepted here so shared callers typecheck.
+   */
+  dragProgress?: SharedValue<number> // Ignored on web.
+  dragState?: SharedValue<'idle' | 'dragging' | 'settling'> // Ignored on web.
+  transparent?: boolean // Ignored on web.
 }
 
 // How much of the previous/next item we're showing

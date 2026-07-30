@@ -13,6 +13,11 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import Animated, {
+  Easing,
+  FadeInDown,
+  FadeOutDown,
+} from 'react-native-reanimated'
 import {setStringAsync} from 'expo-clipboard'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
@@ -27,11 +32,11 @@ import {
   unstableCacheProfileView,
   useProfilesQuery,
 } from '#/state/queries/profile'
+import {extractFromMe} from '#/state/queries/search-posts-params'
 import {useSession} from '#/state/session'
 import {
   countActiveFilters,
   definedFilterParams,
-  filtersToLegacyParams,
   filtersToRouteParams,
   hasActiveFilters,
   parseHistoryEntry,
@@ -40,8 +45,15 @@ import {
   serializeHistoryEntry,
   withoutFilterParams,
 } from '#/screens/Search/searchParams'
-import {makeSearchQuery} from '#/screens/Search/utils'
-import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
+import {
+  atoms as a,
+  native,
+  platform,
+  tokens,
+  useBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
 import {useAutocomplete} from '#/components/Autocomplete'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -58,7 +70,6 @@ import {AutocompleteResults} from './components/AutocompleteResults'
 import {DetectedLanguagesAdmonition} from './components/DetectedLanguagesAdmonition'
 import {SearchAutocompleteInput} from './components/SearchAutocompleteInput'
 import {SearchHistory} from './components/SearchHistory'
-import {SearchLanguageDropdown} from './components/SearchLanguageDropdown'
 import {Explore} from './Explore'
 import {SearchResults} from './SearchResults'
 
@@ -109,16 +120,22 @@ export function SearchScreenShell({
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
 
-  const searchV2Enabled = ax.features.enabled(ax.features.SearchV2Enable)
-  const advancedSearchV2Enabled =
-    searchV2Enabled && ax.features.enabled(ax.features.AdvancedSearchV2Enable)
-
   // Get tab parameter from route params
   const tabParam = (route.params as {q?: string; tab?: TabParam})?.tab
   const [activeTab, setActiveTab] = useState(() => getTabIndex(tabParam))
 
+  /*
+   * A raw `from:me` operator stays visible in the search input. Submitting the
+   * advanced dialog promotes it to a structured `from=me` filter and removes
+   * it from `q`; the API layer reconstructs the operator for post search.
+   */
+  const {query, fromMe, filters, setFilters, hasFilters} = useQueryManager({
+    initialQuery: queryParam,
+    fixedParams,
+  })
+
   // Query terms
-  const [searchText, setSearchText] = useState<string>(queryParam)
+  const [searchText, setSearchText] = useState<string>(query)
   const searchTextRef = useRef(searchText)
   const updateSearchText = useCallback((text: string) => {
     searchTextRef.current = text
@@ -194,11 +211,6 @@ export function SearchScreenShell({
     [accountHistory, setAccountHistory],
   )
 
-  const {query, queryWithParams, filters, setFilters, hasFilters} =
-    useQueryManager({
-      initialQuery: queryParam,
-      fixedParams,
-    })
   const showFilters = Boolean((query || hasFilters) && !showAutocomplete)
 
   const onChangeLang = useCallback(
@@ -228,13 +240,13 @@ export function SearchScreenShell({
   useEffect(() => {
     if (IS_NATIVE) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      updateSearchText(queryParam)
+      updateSearchText(query)
     }
-  }, [queryParam, updateSearchText])
+  }, [query, updateSearchText])
   useFocusEffect(
     useNonReactiveCallback(() => {
       if (IS_WEB) {
-        updateSearchText(queryParam)
+        updateSearchText(query)
       }
     }),
   )
@@ -324,11 +336,12 @@ export function SearchScreenShell({
   ])
 
   const onSubmit = (source: 'typed' | 'autocomplete') => () => {
+    const nextQuery = searchTextRef.current
     ax.metric('search:query', {
       source,
       filterCount: countActiveFilters(filters),
     })
-    navigateToItem(searchTextRef.current)
+    navigateToItem(nextQuery)
   }
 
   const onSubmitAdvanced = useCallback(
@@ -387,13 +400,14 @@ export function SearchScreenShell({
 
   const handleProfileClick = useCallback(
     (profile: bsky.profile.AnyProfileView) => {
+      updateSearchText('')
       unstableCacheProfileView(queryClient, profile)
       // Slight delay to avoid updating during push nav animation.
       setTimeout(() => {
         updateProfileHistory(profile)
       }, 400)
     },
-    [updateProfileHistory, queryClient],
+    [updateProfileHistory, queryClient, updateSearchText],
   )
 
   /**
@@ -535,11 +549,24 @@ export function SearchScreenShell({
                     {isExplore ? <Trans>Explore</Trans> : <Trans>Search</Trans>}
                   </Layout.Header.TitleText>
                 </Layout.Header.Content>
-                {showFilters && !advancedSearchV2Enabled ? (
-                  <SearchLanguageDropdown
-                    value={filters.lang ?? ''}
-                    onChange={onChangeLang}
-                  />
+                {showFilters ? (
+                  <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                    <AdvancedSearchDialog
+                      disabled={activeTab > 1}
+                      q={searchText}
+                      filters={filters}
+                      onSubmit={onSubmitAdvanced}
+                    />
+                    <Button
+                      accessibilityRole="button"
+                      size="small"
+                      color="secondary"
+                      shape="round"
+                      label={l`Share this search`}
+                      onPress={onShareSearch}>
+                      <ButtonIcon icon={ShareIcon} />
+                    </Button>
+                  </View>
                 ) : (
                   <Layout.Header.Slot />
                 )}
@@ -548,7 +575,7 @@ export function SearchScreenShell({
           )}
           <View style={[a.px_lg, a.pt_sm, a.pb_sm, a.overflow_hidden]}>
             <View style={[a.gap_sm]}>
-              {searchV2Enabled && query && !showAutocomplete && (
+              {query && !showAutocomplete && (
                 <DetectedLanguagesAdmonition
                   query={query}
                   filters={filters}
@@ -558,19 +585,19 @@ export function SearchScreenShell({
                 />
               )}
 
-              <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs]}>
+              <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_sm]}>
                 <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
                   {showAutocomplete && (
                     <Button
                       label={l`Cancel search`}
-                      size="large"
+                      size="small"
                       variant="ghost"
                       color="secondary"
                       shape="round"
                       style={[a.px_sm]}
                       onPress={onPressCancelSearch}
                       hitSlop={HITSLOP_10}>
-                      <ButtonIcon icon={ArrowLeftIcon} />
+                      <ButtonIcon icon={ArrowLeftIcon} size="lg" />
                     </Button>
                   )}
                   <View style={[a.flex_1]}>
@@ -591,85 +618,81 @@ export function SearchScreenShell({
                     />
                   </View>
                 </View>
+                {showFilters && !showHeader ? (
+                  <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                    <AdvancedSearchDialog
+                      disabled={activeTab > 1}
+                      q={searchText}
+                      filters={filters}
+                      onSubmit={onSubmitAdvanced}
+                    />
+                    <Button
+                      accessibilityRole="button"
+                      size="small"
+                      color="secondary"
+                      shape="round"
+                      label={l`Share this search`}
+                      onPress={onShareSearch}>
+                      <ButtonIcon icon={ShareIcon} />
+                    </Button>
+                  </View>
+                ) : null}
               </View>
-
-              {showFilters && !showHeader && !advancedSearchV2Enabled && (
-                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                  <SearchLanguageDropdown
-                    value={filters.lang ?? ''}
-                    onChange={onChangeLang}
-                  />
-                </View>
-              )}
-
-              {showFilters && advancedSearchV2Enabled ? (
-                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                  <AdvancedSearchDialog
-                    q={searchText}
-                    filters={filters}
-                    onSubmit={onSubmitAdvanced}
-                  />
-                  <Button
-                    accessibilityRole="button"
-                    size="small"
-                    color="secondary"
-                    shape="round"
-                    label={l`Share this search`}
-                    onPress={onShareSearch}>
-                    <ButtonIcon icon={ShareIcon} />
-                  </Button>
-                </View>
-              ) : null}
             </View>
           </View>
         </Layout.Center>
       </View>
 
-      <View
-        style={{
-          display: showAutocomplete && !fixedParams ? 'flex' : 'none',
-          flex: 1,
-        }}>
-        {searchText.length > 0 && IS_NATIVE ? (
-          <AutocompleteResults
-            items={autocompleteItems}
-            isFetching={isAutocompleteFetching}
-            searchText={searchText}
-            onSubmit={onSubmit('autocomplete')}
-            onResultPress={onAutocompleteResultPress}
-            onProfileClick={handleProfileClick}
+      <View style={[a.flex_1, a.relative]}>
+        <View style={[a.flex_1, web(showAutocomplete && a.hidden)]}>
+          <SearchScreenInner
+            key={filters.lang ?? ''}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            query={query}
+            filters={filters}
+            hasFilters={hasFilters}
+            fromMe={fromMe}
+            headerHeight={headerHeight}
+            focusSearchInput={focusSearchInput}
           />
-        ) : (
-          <SearchHistory
-            searchHistory={termHistory}
-            selectedProfiles={
-              accountHistoryProfiles?.profiles.filter(p =>
-                accountHistory.includes(p.did),
-              ) ?? []
-            }
-            onItemClick={handleHistoryItemClick}
-            onProfileClick={handleProfileClick}
-            onRemoveItemClick={deleteSearchHistoryItem}
-            onRemoveProfileClick={deleteProfileHistoryItem}
-          />
+        </View>
+
+        {showAutocomplete && !fixedParams && (
+          <Animated.View
+            entering={native(FadeInDown.easing(Easing.out(Easing.cubic)))}
+            exiting={native(FadeOutDown.easing(Easing.out(Easing.cubic)))}
+            style={platform({
+              web: [a.flex_1],
+              native: [t.atoms.bg, a.absolute, a.inset_0],
+            })}
+            accessibilityViewIsModal
+            accessibilityRole="list">
+            {searchText.length > 0 && IS_NATIVE ? (
+              <AutocompleteResults
+                items={autocompleteItems}
+                isFetching={isAutocompleteFetching}
+                searchText={searchText}
+                onSubmit={onSubmit('autocomplete')}
+                onResultPress={onAutocompleteResultPress}
+                onProfileClick={handleProfileClick}
+              />
+            ) : (
+              <SearchHistory
+                searchHistory={termHistory}
+                selectedProfiles={
+                  accountHistoryProfiles?.profiles.filter(p =>
+                    accountHistory.includes(p.did),
+                  ) ?? []
+                }
+                onItemClick={handleHistoryItemClick}
+                onProfileClick={handleProfileClick}
+                onRemoveItemClick={deleteSearchHistoryItem}
+                onRemoveProfileClick={deleteProfileHistoryItem}
+              />
+            )}
+          </Animated.View>
         )}
-      </View>
-      <View
-        style={{
-          display: showAutocomplete ? 'none' : 'flex',
-          flex: 1,
-        }}>
-        <SearchScreenInner
-          key={filters.lang ?? ''}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          query={query}
-          queryWithParams={queryWithParams}
-          filters={filters}
-          hasFilters={hasFilters}
-          headerHeight={headerHeight}
-          focusSearchInput={focusSearchInput}
-        />
       </View>
     </Layout.Screen>
   )
@@ -679,18 +702,18 @@ let SearchScreenInner = ({
   activeTab,
   setActiveTab,
   query,
-  queryWithParams,
   filters,
   hasFilters,
+  fromMe,
   headerHeight,
   focusSearchInput,
 }: {
   activeTab: number
   setActiveTab: React.Dispatch<React.SetStateAction<number>>
   query: string
-  queryWithParams: string
   filters: SearchFilters
   hasFilters: boolean
+  fromMe: boolean
   headerHeight: number
   focusSearchInput: (tab?: TabParam) => void
 }): React.ReactNode => {
@@ -705,9 +728,9 @@ let SearchScreenInner = ({
   return query || hasFilters ? (
     <SearchResults
       query={query}
-      queryWithParams={queryWithParams}
       filters={filters}
       hasFilters={hasFilters}
+      fromMe={fromMe}
       activeTab={activeTab}
       headerHeight={headerHeight}
       onPageSelected={onPageSelected}
@@ -758,8 +781,13 @@ function useQueryManager({
   const navigation = useNavigation<NavigationProp>()
   const route = useRoute()
 
-  // Free text only - structured filters live in sibling route params now.
+  // A raw Me operator remains part of the query until the advanced dialog
+  // promotes it to the structured `from` filter.
   const query = initialQuery
+  const fromMe = useMemo(
+    () => extractFromMe(initialQuery).fromMe,
+    [initialQuery],
+  )
 
   const filters = useMemo(() => {
     const fromRoute = readSearchFilters(route.params as Record<string, unknown>)
@@ -791,12 +819,12 @@ function useQueryManager({
   return useMemo(
     () => ({
       query,
-      queryWithParams: makeSearchQuery(query, filtersToLegacyParams(filters)),
+      fromMe,
       filters,
       setFilters,
       hasFilters: hasActiveFilters(filters),
     }),
-    [query, filters, setFilters],
+    [query, fromMe, filters, setFilters],
   )
 }
 

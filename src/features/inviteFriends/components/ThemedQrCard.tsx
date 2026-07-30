@@ -177,7 +177,11 @@ export function ThemedQrCard({
                   />
                 ) : (
                   <View style={[a.flex_1, a.align_center, a.justify_center]}>
-                    <Logo width={40} fill={variant.qrPrimary} />
+                    <Logo
+                      allowVariants={false}
+                      width={40}
+                      fill={variant.qrPrimary}
+                    />
                   </View>
                 )}
               </View>

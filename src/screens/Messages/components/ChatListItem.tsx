@@ -164,7 +164,6 @@ function DirectChatItem({
         isWithinLeftPanel ? null : (
           <PostAlerts
             modui={moderation.ui('contentList')}
-            size="sm"
             style={[a.pb_2xs, a.max_w_full, a.overflow_hidden]}
           />
         )

@@ -8,10 +8,3 @@ export interface PickerOpts {
   multiple?: boolean
   maxFiles?: number
 }
-
-export interface CameraOpts {
-  width: number
-  height: number
-  freeStyleCropEnabled?: boolean
-  cropperCircleOverlay?: boolean
-}

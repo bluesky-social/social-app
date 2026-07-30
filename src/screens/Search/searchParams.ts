@@ -31,6 +31,8 @@ export type SearchFilters = {
   video?: string
   /** 'true' */
   following?: string
+  /** 'me' */
+  from?: string
 }
 
 export const FILTER_PARAM_KEYS = [
@@ -51,6 +53,7 @@ export const FILTER_PARAM_KEYS = [
   'media',
   'video',
   'following',
+  'from',
 ] as const
 
 /**
@@ -76,13 +79,14 @@ export function readSearchFilters(
 }
 
 export function hasActiveFilters(filters: SearchFilters): boolean {
-  return FILTER_PARAM_KEYS.some(key => filters[key])
+  return countActiveFilters(filters) > 0
 }
 
 /**
  * Number of active filter params, used for the "[+N filters]" pill in search
  * history. Each set key counts once (a multi-value field like author counts as
- * one filter regardless of how many handles it holds).
+ * one filter regardless of how many handles it holds). Raw query operators do
+ * not count until the advanced dialog promotes them to structured params.
  */
 export function countActiveFilters(filters: SearchFilters): number {
   return FILTER_PARAM_KEYS.filter(key => filters[key]).length
@@ -188,27 +192,6 @@ export function withoutFilterParams(
   }
   return base
 }
-
-/**
- * Converts structured filters back into the legacy free-text operators used by
- * search v1. UI-only filters are intentionally dropped because the old path
- * could not apply them.
- */
-export function filtersToLegacyParams(
-  filters: SearchFilters,
-): Record<string, string> {
-  const params: Record<string, string> = {}
-  if (filters.author) params.from = filters.author
-  if (filters.mentions) params.mentions = filters.mentions
-  if (filters.domain) params.domain = filters.domain
-  if (filters.url) params.url = filters.url
-  if (filters.tag) params.tag = filters.tag
-  if (filters.lang) params.lang = filters.lang
-  if (filters.since) params.since = filters.since
-  if (filters.until) params.until = filters.until
-  return params
-}
-
 /**
  * Maps each multi-value SearchFilters key to its `app.bsky.feed.searchPostsV2`
  * param name. Search v1 only honored the first value for the singular lexicon

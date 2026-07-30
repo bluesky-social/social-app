@@ -1,3 +1,7 @@
+/**
+ * If a feature is in the beta program, be sure to add a localized description
+ * for it via getFeatureDescription().
+ */
 export enum Features {
   // core flags
   IsBskyTeam = 'is_bsky_team',
@@ -12,9 +16,16 @@ export enum Features {
   GroupChatsDisable = 'group_chats:disable',
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
-  NotificationsExpandedProfileCardEnable = 'notifications:expanded_profile_card:enable',
-  SearchV2Enable = 'search_v2:enable',
-  AdvancedSearchV2Enable = 'advanced_search_v2:enable',
+  PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
+  PostThreadKnownLikersFetchEnable = 'post_thread:known_likers:fetch:enable',
+  CustomLogoJapanEnable = 'custom_logo:japan:enable',
+  VideoMultipartUploadEnable = 'video:multipart_upload:enable',
+  SearchStarterPacksV2Enable = 'search_starter_packs_v2:enable',
+  FollowSortEnable = 'follow_sort:enable',
+
+  // values
+  TrendingDiscoverValues = 'trending_discover:values',
+  TrendingExploreTopicsCountValue = 'trending_explore_topics_count:value',
 
   AATest = 'aa-test',
 }

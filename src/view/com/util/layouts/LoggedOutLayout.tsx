@@ -1,7 +1,6 @@
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
-import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {atoms as a} from '#/alf'
@@ -29,8 +28,6 @@ export const LoggedOutLayout = ({
     borderLeftWidth: 1,
   })
 
-  const [isKeyboardVisible] = useIsKeyboardVisible()
-
   if (isMobile) {
     if (scrollable) {
       return (
@@ -38,10 +35,8 @@ export const LoggedOutLayout = ({
           style={a.flex_1}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="none"
-          contentContainerStyle={[
-            {paddingBottom: isKeyboardVisible ? 300 : 0},
-          ]}>
-          <View style={a.pt_lg}>{children}</View>
+          contentContainerStyle={[a.flex_grow]}>
+          <View style={[a.flex_1, a.pt_lg]}>{children}</View>
         </ScrollView>
       )
     } else {
@@ -77,7 +72,15 @@ export const LoggedOutLayout = ({
             style={a.flex_1}
             contentContainerStyle={styles.scrollViewContentContainer}
             keyboardShouldPersistTaps="handled"
-            keyboardDismissMode="on-drag">
+            /*
+             * RNW implements `on-drag` by blurring the focused element on ANY
+             * scroll event - including the one Firefox fires when swapping
+             * splash -> login content resizes the scroller - which kills the
+             * login form's autofocus. It doesn't appear to do anything anyways
+             * on web (judging by iOS safari, which keeps the keyboard open
+             * regardless of scrolling) -sfn
+             */
+            keyboardDismissMode={IS_WEB ? 'none' : 'on-drag'}>
             <View style={[styles.contentWrapper, IS_WEB && a.my_auto]}>
               {children}
             </View>

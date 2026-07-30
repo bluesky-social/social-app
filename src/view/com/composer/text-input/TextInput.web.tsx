@@ -10,6 +10,7 @@ import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
+import {getSchema} from '@tiptap/core'
 import {Document} from '@tiptap/extension-document'
 import Hardbreak from '@tiptap/extension-hard-break'
 import History from '@tiptap/extension-history'
@@ -17,8 +18,12 @@ import {Mention} from '@tiptap/extension-mention'
 import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
-import {generateJSON} from '@tiptap/html'
-import {Fragment, Node, Slice} from '@tiptap/pm/model'
+import {
+  DOMParser as ProseMirrorDOMParser,
+  Fragment,
+  Node,
+  Slice,
+} from '@tiptap/pm/model'
 import {EditorContent, type JSONContent, useEditor} from '@tiptap/react'
 import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
@@ -242,9 +247,7 @@ export function TextInput({
           }
         },
       },
-      content: generateJSON(richTextToHTML(richtext), extensions, {
-        preserveWhitespace: 'full',
-      }),
+      content: richTextToEditorJson(richtext, extensions),
       autofocus: autoFocus ? 'end' : null,
       editable: true,
       injectCSS: true,
@@ -381,6 +384,26 @@ export function TextInput({
  *
  * It also escapes HTML characters
  */
+/*
+ * Equivalent of @tiptap/html's generateJSON, but using the browser's native
+ * DOMParser. The @tiptap/html version supports SSR via zeed-dom, which pulls
+ * ~250KB of parser dependencies into the bundle - we are always in a browser
+ * here, so we don't need it.
+ */
+function richTextToEditorJson(
+  richtext: RichText,
+  extensions: Parameters<typeof getSchema>[0],
+): JSONContent {
+  const schema = getSchema(extensions)
+  const dom = new DOMParser().parseFromString(
+    richTextToHTML(richtext),
+    'text/html',
+  ).body
+  return ProseMirrorDOMParser.fromSchema(schema)
+    .parse(dom, {preserveWhitespace: 'full'})
+    .toJSON()
+}
+
 function richTextToHTML(richtext: RichText): string {
   let html = ''
 
@@ -392,7 +415,9 @@ function richTextToHTML(richtext: RichText): string {
     }
   }
 
-  return html
+  // the body wrapper preserves leading whitespace, which the parser
+  // otherwise strips
+  return `<body>${html}</body>`
 }
 
 function escapeHTML(str: string): string {

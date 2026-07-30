@@ -59,7 +59,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
     () =>
       new DisplayableError(
         _(
-          msg`App password names can only contain letters, numbers, spaces, dashes, and underscores`,
+          msg`App password names can only contain letters, numbers, spaces, hyphens, and underscores`,
         ),
       ),
     [_],

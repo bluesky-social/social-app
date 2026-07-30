@@ -47,16 +47,24 @@ export const sentryTransport: Transport = (
       timestamp: timestamp / 1000, // Sentry expects seconds
     })
 
-    // We don't want to send any network errors to sentry
-    if (isNetworkError(message)) {
+    // We don't want to send any network errors to sentry. The underlying
+    // cause is often passed via metadata rather than the message itself, so
+    // check the common metadata keys too.
+    if (
+      isNetworkError(message) ||
+      isNetworkError(metadata.safeMessage) ||
+      isNetworkError(metadata.message) ||
+      isNetworkError(metadata.error)
+    ) {
       return
     }
 
     /**
-     * Send all higher levels with `captureMessage`, with appropriate severity
-     * level
+     * Only error-level strings are reported to Sentry as events. Lower levels
+     * are captured as breadcrumbs above and attached to the next event, if
+     * any.
      */
-    if (level === 'error' || level === 'warn' || level === 'log') {
+    if (level === LogLevel.Error) {
       // Defer non-critical messages so they're sent in a batch
       queueMessageForSentry(message, {
         level: severity,
@@ -65,6 +73,11 @@ export const sentryTransport: Transport = (
       })
     }
   } else {
+    // We don't want to send any network errors to sentry
+    if (isNetworkError(message)) {
+      return
+    }
+
     /**
      * It's otherwise an Error and should be reported with captureException
      */

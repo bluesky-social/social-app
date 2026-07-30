@@ -287,7 +287,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
         }))
       } catch (err) {
         const e = err as Error
-        logger.error('Failed to translate text on device', {safeMessage: e})
+        logger.warn('Failed to translate text on device', {safeMessage: e})
         // On-device translation failed (language pack missing or user
         // dismissed the download prompt).
         ax.metric('translate:result', {

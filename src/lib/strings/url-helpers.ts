@@ -8,6 +8,7 @@ import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
+export const BSKY_HOSTING_ENDSWITH = '.host.bsky.network'
 const BSKY_TRUSTED_HOSTS = [
   'bsky\\.app',
   'bsky\\.social',
@@ -89,6 +90,35 @@ export function toShareUrl(url: string): string {
 
 export function toBskyAppUrl(url: string): string {
   return new URL(url, BSKY_APP_HOST).toString()
+}
+
+export function toNiceHostingUrl(url: string): string {
+  try {
+    const urlp = new URL(url)
+    if (urlp.host.endsWith(BSKY_HOSTING_ENDSWITH)) {
+      return 'Bluesky'
+    }
+    return urlp.host
+  } catch {
+    return url
+  }
+}
+
+/**
+ * Whether the given service URL points at a Bluesky-operated PDS. True when the
+ * host is `bsky.social` (the {@link BSKY_SERVICE} host) or ends with
+ * `.host.bsky.network`. Returns false if the URL can't be parsed.
+ */
+export function isBlueskyHostedUrl(url: string): boolean {
+  try {
+    const {host} = new URL(url)
+    return (
+      host === new URL(BSKY_SERVICE).host ||
+      host.endsWith(BSKY_HOSTING_ENDSWITH)
+    )
+  } catch {
+    return false
+  }
 }
 
 export function isBskyAppUrl(url: string): boolean {

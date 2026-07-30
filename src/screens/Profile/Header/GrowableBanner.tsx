@@ -4,13 +4,13 @@ import Animated, {
   type AnimatedRef,
   Extrapolation,
   interpolate,
-  runOnJS,
   type SharedValue,
   useAnimatedProps,
   useAnimatedReaction,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {BlurView} from 'expo-blur'
 import {useIsFetching} from '@tanstack/react-query'
 
@@ -226,7 +226,7 @@ function useShouldAnimateSpinner({
     () => scrollY.get() < -5,
     (value, prevValue) => {
       if (value !== prevValue) {
-        runOnJS(setIsOverscrolled)(value)
+        scheduleOnRN(setIsOverscrolled, value)
       }
     },
     [scrollY],

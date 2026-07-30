@@ -33,7 +33,6 @@ import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {GalleryBleed} from '#/components/images/Gallery'
-import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
 import {type AppModerationCause} from '#/components/Pills'
@@ -340,8 +339,8 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
               <View style={[a.flex_row]}>
                 <ThreadItemTreeReplyChildReplyLine item={item} />
                 <View style={[a.flex_1, a.pl_2xs]}>
-                  <LabelsOnMyPost post={post} style={[a.pb_2xs]} />
                   <PostAlerts
+                    post={post}
                     modui={moderation.ui('contentList')}
                     style={[a.pb_2xs]}
                     additionalCauses={additionalPostAlerts}

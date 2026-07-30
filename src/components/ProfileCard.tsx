@@ -29,6 +29,7 @@ import {
   type TextStyleProp,
   useTheme,
   type ViewStyleProp,
+  web,
 } from '#/alf'
 import {
   Button,
@@ -257,6 +258,7 @@ function InlineNameAndHandle({
           a.leading_tight,
           a.flex_shrink_0,
           {maxWidth: '70%'},
+          web({direction: 'ltr', unicodeBidi: 'isolate'}),
         ]}
         numberOfLines={1}>
         {forceLTR(name)}
@@ -599,7 +601,7 @@ export function FollowButtonPlaceholder({style}: ViewStyleProp) {
   return (
     <View
       style={[
-        a.rounded_sm,
+        a.rounded_full,
         t.atoms.bg_contrast_50,
         a.w_full,
         {

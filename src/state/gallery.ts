@@ -358,14 +358,37 @@ function blobToDataUri(blob: Blob): Promise<string> {
   })
 }
 
+/**
+ * Caches that the OS image picker and manipulator write into when attaching
+ * media to a post. They live alongside our own `bsky-composer` dir under the OS
+ * cache directory. expo-image-picker copies every originally selected photo and
+ * video here, and expo-image-manipulator leaves intermediate full-resolution
+ * outputs here (compressImage makes several manipulateAsync passes, only the
+ * last of which gets moved into `bsky-composer`). Nothing else cleans these up,
+ * so on iOS - where the OS exposes no "clear cache" - they accumulate
+ * indefinitely, one full-resolution copy per attached item.
+ */
+const SYSTEM_MEDIA_CACHE_DIRS = ['ImagePicker', 'ImageManipulator']
+
 /** Purge files that were created to accomodate image manipulation */
 export async function purgeTemporaryImageFiles() {
-  const cacheDir = IS_NATIVE && getImageCacheDirectory()
+  if (!IS_NATIVE) {
+    return
+  }
 
+  const cacheDir = getImageCacheDirectory()
   if (cacheDir) {
     await deleteAsync(cacheDir, {idempotent: true})
     await makeDirectoryAsync(cacheDir)
   }
+
+  // We don't recreate these - the respective expo modules recreate them on
+  // demand the next time they run.
+  await Promise.all(
+    SYSTEM_MEDIA_CACHE_DIRS.map(dir =>
+      deleteAsync(joinPath(cacheDirectory!, dir), {idempotent: true}),
+    ),
+  )
 }
 
 function joinPath(a: string, b: string) {

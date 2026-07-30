@@ -12,7 +12,6 @@ import {
 import {HITSLOP_20} from '#/lib/constants'
 import {mergeRefs} from '#/lib/merge-refs'
 import {
-  android,
   applyFonts,
   atoms as a,
   platform,
@@ -47,6 +46,10 @@ const Context = createContext<{
   onBlur: () => {},
 })
 Context.displayName = 'TextFieldContext'
+
+export function useTextFieldContext() {
+  return useContext(Context)
+}
 
 export type RootProps = React.PropsWithChildren<
   {isInvalid?: boolean} & TextStyleProp
@@ -93,6 +96,8 @@ export function Root({children, isInvalid = false, style}: RootProps) {
           a.relative,
           a.w_full,
           a.px_md,
+          // Contain the input's z-index so it cannot paint over nearby overlays.
+          {zIndex: 0},
           style,
         ]}
         {...web({
@@ -215,7 +220,7 @@ export function createInput(Component: typeof TextInput) {
 
     const refs = mergeRefs([ctx.inputRef, inputRef!].filter(Boolean))
 
-    const flattened = StyleSheet.flatten([
+    const flattened = StyleSheet.flatten<TextStyle>([
       a.relative,
       a.z_20,
       a.flex_1,
@@ -231,10 +236,6 @@ export function createInput(Component: typeof TextInput) {
         paddingTop: 13,
         paddingBottom: 13,
       },
-      android({
-        paddingTop: 8,
-        paddingBottom: 9,
-      }),
       /*
        * Margins are needed here to avoid autofill background overlapping the
        * top and bottom borders - esb

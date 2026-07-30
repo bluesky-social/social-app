@@ -20,7 +20,9 @@ import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import {
   displayDuration,
+  getLiveLinkFromStatusRecord,
   getLiveServiceNames,
+  useActorStatus,
   useLiveLinkMetaQuery,
   useLiveNowConfig,
   useUpsertLiveStatusMutation,
@@ -50,14 +52,18 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const control = Dialog.useDialogContext()
   const {_, i18n} = useLingui()
   const t = useTheme()
-  const [liveLink, setLiveLink] = useState('')
   const [liveLinkError, setLiveLinkError] = useState('')
   const [duration, setDuration] = useState(60)
   const moderationOpts = useModerationOpts()
   const tick = useTickEveryMinute()
   const liveNowConfig = useLiveNowConfig()
+  const status = useActorStatus(profile)
   const {formatted: allowedServices} = getLiveServiceNames(
     liveNowConfig.currentAccountAllowedHosts,
+  )
+
+  const [liveLink, setLiveLink] = useState(() =>
+    getLiveLinkFromStatusRecord(status.record),
   )
 
   const time = useCallback(

@@ -1,6 +1,8 @@
 import {useCallback, useEffect} from 'react'
 import {StyleSheet} from 'react-native'
 
+import {type CaptchaWebViewProps} from './CaptchaWebView.shared'
+
 // @ts-ignore web only, we will always redirect to the app on web (CORS)
 const REDIRECT_HOST = new URL(window.location.href).host
 
@@ -9,12 +11,7 @@ export function CaptchaWebView({
   stateParam,
   onSuccess,
   onError,
-}: {
-  url: string
-  stateParam: string
-  onSuccess: (code: string) => void
-  onError: (error: unknown) => void
-}) {
+}: CaptchaWebViewProps) {
   useEffect(() => {
     const timeout = setTimeout(() => {
       onError({

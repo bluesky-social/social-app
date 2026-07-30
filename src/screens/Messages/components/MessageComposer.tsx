@@ -7,10 +7,10 @@ import {
 import Animated, {
   Extrapolation,
   interpolate,
-  runOnJS,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {GlassContainer} from 'expo-glass-effect'
 import {LinearGradient} from 'expo-linear-gradient'
 import {type $Typed, type ChatBskyConvoDefs} from '@atproto/api'
@@ -95,7 +95,7 @@ export function MessageComposer({
     onEnd: evt => {
       'worklet'
       if (IS_ANDROID && evt.progress === 0) {
-        runOnJS(blur)()
+        scheduleOnRN(blur)
       }
     },
   })

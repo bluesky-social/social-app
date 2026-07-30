@@ -1,7 +1,13 @@
 import {useCallback, useMemo, useRef} from 'react'
-import {type AppBskyFeedSearchPostsV2, moderatePost} from '@atproto/api'
+import {
+  type AppBskyFeedDefs,
+  type AppBskyFeedSearchPostsV2,
+  AtUri,
+  moderatePost,
+} from '@atproto/api'
 import {
   type InfiniteData,
+  type QueryClient,
   type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
@@ -10,17 +16,16 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAgent} from '#/state/session'
 import {type SearchFilters} from '#/screens/Search/searchParams'
 import {
+  appendFromMe,
   buildSearchPostsV2Filters,
   extractSearchPostsParams,
 } from './search-posts-params'
+import {
+  didOrHandleUriMatches,
+  embedViewRecordToPostView,
+  getEmbeddedPost,
+} from './util'
 
-/**
- * V2 search shares the `'search-posts'` query-key root with the original hook
- * (src/state/queries/search-posts.ts) so the shadow-cache generators there -
- * findAllPostsInQueryData / findAllProfilesInQueryData - discover V2 results
- * too. This module is only used behind the AdvancedSearchV2Enable gate; the
- * original hook is unchanged.
- */
 const searchPostsQueryKeyRoot = 'search-posts'
 const searchPostsV2QueryKey = ({
   query,
@@ -47,10 +52,11 @@ export function useSearchPostsV2Query({
   const moderationOpts = useModerationOpts()
   const selectArgs = useMemo(
     () => ({
-      isSearchingSpecificUser: /from:(\w+)/.test(query) || !!filters?.author,
+      isSearchingSpecificUser:
+        /from:(\w+)/.test(query) || !!filters?.author || filters?.from === 'me',
       moderationOpts,
     }),
-    [query, filters?.author, moderationOpts],
+    [query, filters?.author, filters?.from, moderationOpts],
   )
   const lastRun = useRef<{
     data: InfiniteData<AppBskyFeedSearchPostsV2.OutputSchema>
@@ -74,9 +80,10 @@ export function useSearchPostsV2Query({
        */
       const {q, ...embedded} = extractSearchPostsParams(query)
       const builtFilters = buildSearchPostsV2Filters(embedded, filters)
+      const finalQuery = appendFromMe(q, filters?.from === 'me')
       const res = await agent.app.bsky.feed.searchPostsV2({
         ...builtFilters,
-        query: q,
+        query: finalQuery,
         limit: 25,
         cursor: pageParam,
         /*
@@ -163,4 +170,34 @@ export function useSearchPostsV2Query({
       [selectArgs],
     ),
   })
+}
+
+export function* findAllPostsInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): Generator<AppBskyFeedDefs.PostView, undefined> {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<AppBskyFeedSearchPostsV2.OutputSchema>
+  >({
+    queryKey: [searchPostsQueryKeyRoot],
+  })
+  const atUri = new AtUri(uri)
+
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const post of page.posts) {
+        if (didOrHandleUriMatches(atUri, post)) {
+          yield post
+        }
+
+        const quotedPost = getEmbeddedPost(post.embed)
+        if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
+          yield embedViewRecordToPostView(quotedPost)
+        }
+      }
+    }
+  }
 }

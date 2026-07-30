@@ -22,12 +22,12 @@ import {SearchLanguageDropdown} from '../SearchLanguageDropdown'
 import {ClearableDateField, DEFAULT_DATE} from './ClearableDateField'
 import {ClearableInput} from './ClearableInput'
 import {FilterBlock} from './FilterBlock'
-import {FollowingDropdown} from './FollowingDropdown'
+import {FromDropdown} from './FromDropdown'
 import {MediaDropdown} from './MediaDropdown'
 import {RepliesDropdown} from './RepliesDropdown'
 import {
   type AdvancedFilter,
-  type FollowingFilter,
+  type FromFilter,
   makeFilter,
   type MediaFilter,
   parseAdvancedSearch,
@@ -38,17 +38,18 @@ import {
 const MAX_FILTERS = 20
 
 export function AdvancedSearchDialog({
+  disabled,
   q,
   filters,
   onSubmit,
 }: {
+  disabled: boolean
   q: string
   filters: SearchFilters
   onSubmit: (q: string, filters: SearchFilters) => void
 }) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
-  const t = useTheme()
   const control = Dialog.useDialogControl()
   const filtersActive = hasActiveFilters(filters)
   const stateKey = useMemo(
@@ -61,9 +62,10 @@ export function AdvancedSearchDialog({
     <>
       <View style={[a.relative]}>
         <Button
+          disabled={disabled}
           label={l`Open advanced search options`}
           size="small"
-          color="secondary"
+          color={filtersActive ? 'primary_subtle' : 'secondary'}
           style={native([a.py_sm, a.px_sm])}
           onPress={() => {
             ax.metric('search:advanced:press', {
@@ -73,25 +75,9 @@ export function AdvancedSearchDialog({
           }}>
           <ButtonIcon icon={SettingsSliderIcon} />
           <ButtonText>
-            <Trans>Advanced search</Trans>
+            <Trans context="search">Filters</Trans>
           </ButtonText>
         </Button>
-        {filtersActive && (
-          <View
-            accessible={false}
-            style={[
-              a.absolute,
-              a.rounded_full,
-              {
-                top: -2,
-                right: -2,
-                width: 10,
-                height: 10,
-                backgroundColor: t.palette.primary_500,
-              },
-            ]}
-          />
-        )}
       </View>
 
       <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -138,7 +124,7 @@ function DialogInner({
 
   const [media, setMedia] = useState<MediaFilter>(parsed.media)
   const [replies, setReplies] = useState<RepliesFilter>(parsed.replies)
-  const [following, setFollowing] = useState<FollowingFilter>(parsed.following)
+  const [following, setFollowing] = useState<FromFilter>(parsed.following)
 
   /*
    * The date picker requires a valid date, so these always hold one. The
@@ -244,12 +230,12 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       ref={scrollRef}
-      label={l`Dialog: Set advanced search options`}
+      label={l`Dialog: Set search filters`}
       contentContainerStyle={[a.px_0, a.pt_0]}
       header={
         <Dialog.Header renderLeft={cancelButton} renderRight={searchButton}>
           <Dialog.HeaderText>
-            <Trans>Advanced search</Trans>
+            <Trans context="search">Filters</Trans>
           </Dialog.HeaderText>
         </Dialog.Header>
       }>
@@ -262,9 +248,9 @@ function DialogInner({
             label={l`Search query`}
             defaultValue={query}
             placeholder={l({
-              message: 'bluesky atproto',
+              message: 'cats dogs',
               comment:
-                'Advanced search: Example of an “all of these words” search',
+                'Advanced search: Example of an “all of these words” search. Paired with “cows pigs”.',
             })}
             onChangeText={setQuery}
             onSubmitEditing={handlePressSearch}
@@ -272,6 +258,23 @@ function DialogInner({
         </View>
 
         <View style={[twoColumn ? a.flex_row : a.flex_col, a.gap_xl]}>
+          <View style={[a.flex_1]}>
+            <TextField.LabelText>
+              <Trans>None of these words</Trans>
+            </TextField.LabelText>
+            <ClearableInput
+              label={l`None of these words`}
+              defaultValue={negatedWords}
+              placeholder={l({
+                message: 'cows pigs',
+                comment:
+                  'Advanced search: Example of a “none of these words” search. Paired with “cats dogs”.',
+              })}
+              onChangeText={setNegatedWords}
+              onSubmitEditing={handlePressSearch}
+            />
+          </View>
+
           <View style={[a.flex_1]}>
             <TextField.LabelText>
               <Trans>This exact phrase</Trans>
@@ -284,23 +287,6 @@ function DialogInner({
                 comment: 'Advanced search: Example of an “exact phrase” search',
               })}
               onChangeText={setExactPhrase}
-              onSubmitEditing={handlePressSearch}
-            />
-          </View>
-
-          <View style={[a.flex_1]}>
-            <TextField.LabelText>
-              <Trans>None of these words</Trans>
-            </TextField.LabelText>
-            <ClearableInput
-              label={l`None of these words`}
-              defaultValue={negatedWords}
-              placeholder={l({
-                message: 'cows pigs',
-                comment:
-                  'Advanced search: Example of an “none of these words” search',
-              })}
-              onChangeText={setNegatedWords}
               onSubmitEditing={handlePressSearch}
             />
           </View>
@@ -403,7 +389,9 @@ function DialogInner({
                 t.atoms.text_contrast_medium,
                 a.mb_sm,
               ]}>
-              <Trans>Include</Trans>
+              <Trans comment="Include search results with or without replies">
+                Post type
+              </Trans>
             </Text>
             <View style={[a.flex_row]}>
               <RepliesDropdown value={replies} onChange={setReplies} />
@@ -417,10 +405,12 @@ function DialogInner({
                 t.atoms.text_contrast_medium,
                 a.mb_sm,
               ]}>
-              <Trans>From</Trans>
+              <Trans comment="Filter search results by a specific post author">
+                Author
+              </Trans>
             </Text>
             <View style={[a.flex_row]}>
-              <FollowingDropdown value={following} onChange={setFollowing} />
+              <FromDropdown value={following} onChange={setFollowing} />
             </View>
           </View>
         </View>
@@ -446,7 +436,7 @@ function DialogInner({
             </Admonition>
           )}
           <Button
-            label={l`Add an additional search filter`}
+            label={l`Add another search filter`}
             size="small"
             color="secondary"
             disabled={filters.length >= MAX_FILTERS}

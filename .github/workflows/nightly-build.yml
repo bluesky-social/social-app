@@ -25,7 +25,7 @@ jobs:
       notes: ${{ steps.notes.outputs.notes }}
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -78,7 +78,20 @@ jobs:
     with:
       profile: testflight
       testFlightGroup: "QA Team"
-    secrets: inherit
+    # Pass only the secrets the reusable workflow declares, rather than `secrets: inherit`,
+    # so the nightly build never hands the reusable workflow the entire repo secret store.
+    secrets:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      ENV_TOKEN: ${{ secrets.ENV_TOKEN }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      BITDRIFT_API_KEY: ${{ secrets.BITDRIFT_API_KEY }}
+      EXPO_PUBLIC_GCP_PROJECT_ID: ${{ secrets.EXPO_PUBLIC_GCP_PROJECT_ID }}
+      GOOGLE_SERVICES_TOKEN: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
+      SLACK_CLIENT_ALERT_WEBHOOK: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
 
   android:
     name: Nightly Android Build
@@ -91,7 +104,21 @@ jobs:
     uses: ./.github/workflows/build-submit-android.yml
     with:
       profile: testflight-android
-    secrets: inherit
+    # Pass only the secrets the reusable workflow declares, rather than `secrets: inherit`,
+    # so the nightly build never hands the reusable workflow the entire repo secret store.
+    secrets:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      ENV_TOKEN: ${{ secrets.ENV_TOKEN }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      BITDRIFT_API_KEY: ${{ secrets.BITDRIFT_API_KEY }}
+      EXPO_PUBLIC_GCP_PROJECT_ID: ${{ secrets.EXPO_PUBLIC_GCP_PROJECT_ID }}
+      GOOGLE_SERVICES_TOKEN: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SLACK_CLIENT_ALERT_WEBHOOK: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
   notify-ios:
     name: Notify Slack of iOS nightly
@@ -117,7 +144,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: 🔔 Notify Slack
-        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
+        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
         with:
           webhook: ${{ secrets.NIGHTLY_BUILDS_SLACK_WEBHOOK }}
           webhook-type: incoming-webhook
@@ -147,7 +174,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: 🔔 Notify Slack
-        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
+        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
         with:
           webhook: ${{ secrets.NIGHTLY_BUILDS_SLACK_WEBHOOK }}
           webhook-type: incoming-webhook

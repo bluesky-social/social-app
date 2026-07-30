@@ -370,7 +370,7 @@ function SuggestedProfileCard({
   category: string | null
   onSeen: (did: string, position: number) => void
   recSource?: 'Search'
-  recId?: number | string
+  recId?: string
 }) {
   const t = useTheme()
   const ax = useAnalytics()

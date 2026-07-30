@@ -2,7 +2,6 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {regionName} from '#/locale/helpers'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
@@ -13,49 +12,23 @@ import {
   useDialogControl,
 } from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {DeviceLocationRequestDialog} from '#/components/dialogs/DeviceLocationRequestDialog'
 import {Divider} from '#/components/Divider'
+import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
+import {DeviceSignalsNotice} from '#/ageAssurance/components/DeviceSignalsNotice'
 import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
+import {useAgeAssuranceVerificationFlow} from '#/ageAssurance/useVerificationFlow'
+import {createGeolocationString} from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-import {
-  type Geolocation,
-  useDeviceGeolocationApi,
-  useGeolocation,
-} from '#/geolocation'
-import {USRegionNameToRegionCode} from '#/geolocation/util'
-import {device, useStorage} from '#/storage'
-
-const USRegionCodeToRegionName: {[regionCode: string]: string} =
-  Object.fromEntries(
-    Object.entries(USRegionNameToRegionCode).map(([name, code]) => [
-      code,
-      name,
-    ]),
-  )
-
-function formatRegion(
-  geolocation: Geolocation,
-  appLang: string,
-): string | undefined {
-  const {countryCode, regionCode} = geolocation
-  if (!countryCode) return undefined
-  const country = regionName(countryCode, appLang)
-  // If `regionName` couldn't resolve a real name and fell through to the raw
-  // code, we'd rather show nothing than a bare ISO code in the prose.
-  if (country === countryCode) return undefined
-  if (regionCode && countryCode === 'US') {
-    const state = USRegionCodeToRegionName[regionCode]
-    if (state) return `${state}, ${country}`
-  }
-  return country
-}
+import {useDeviceGeolocationApi, useGeolocation} from '#/geolocation'
 
 export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
   const aa = useAgeAssurance()
@@ -91,6 +64,15 @@ function Inner({style}: ViewStyleProp & {}) {
   const diff = lastInitiatedAt
     ? dateDiff(lastInitiatedAt, new Date(), 'down')
     : null
+  const {
+    onPressVerify,
+    openInitDialog,
+    isVerifying,
+    verifyCta,
+    deviceSignalsFailed,
+  } = useAgeAssuranceVerificationFlow({initDialogControl: control})
+  const useDeviceSignals =
+    aa.flags.allowsDeviceVerification && !deviceSignalsFailed
 
   return (
     <>
@@ -169,26 +151,22 @@ function Inner({style}: ViewStyleProp & {}) {
                     : [a.gap_md],
                 ]}>
                 <Button
-                  label={l`Verify now`}
+                  label={verifyCta}
                   size="small"
-                  variant="solid"
-                  color={hasInitiated ? 'secondary' : 'primary'}
-                  onPress={() => {
-                    control.open()
-                    ax.metric('ageAssurance:initDialogOpen', {
-                      hasInitiatedPreviously: hasInitiated,
-                    })
-                  }}>
-                  <ButtonText>
-                    {hasInitiated ? (
-                      <Trans>Verify again</Trans>
-                    ) : (
-                      <Trans>Verify now</Trans>
-                    )}
-                  </ButtonText>
+                  color={
+                    hasInitiated || aa.flags.hasSharedDeviceSignals
+                      ? 'secondary'
+                      : 'primary'
+                  }
+                  disabled={isVerifying}
+                  onPress={() => void onPressVerify()}>
+                  <ButtonIcon icon={isVerifying ? Loader : ShieldIcon} />
+                  <ButtonText>{verifyCta}</ButtonText>
                 </Button>
 
-                {lastInitiatedAt && timeAgo && diff ? (
+                {useDeviceSignals ? (
+                  <DeviceSignalsNotice onPressKws={openInitDialog} />
+                ) : lastInitiatedAt && timeAgo && diff ? (
                   <Text
                     style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}
                     title={i18n.date(lastInitiatedAt, {
@@ -220,13 +198,12 @@ function RegionNotice() {
   const {t: l, i18n} = useLingui()
   const aa = useAgeAssurance()
   const geolocation = useGeolocation()
-  const [deviceGeolocation] = useStorage(device, ['deviceGeolocation'])
   const {setDeviceGeolocation} = useDeviceGeolocationApi()
   const computeAgeAssuranceRegionAccess = useComputeAgeAssuranceRegionAccess()
   const locationControl = Dialog.useDialogControl()
 
-  const region = formatRegion(geolocation, i18n.locale)
-  const isGPS = !!deviceGeolocation?.countryCode && IS_NATIVE
+  const region = createGeolocationString(geolocation, i18n.locale)
+  const isGPS = !!geolocation.deviceGeolocation?.countryCode && IS_NATIVE
 
   return (
     <>
@@ -258,8 +235,7 @@ function RegionNotice() {
           {isGPS ? (
             <Trans>
               Based on your device's location, we think you're in{' '}
-              <Text style={[a.text_sm, a.font_bold]}>{region}</Text>. This
-              estimate may be inaccurate if you're using a VPN.
+              <Text style={[a.text_sm, a.font_bold]}>{region}</Text>.
             </Trans>
           ) : (
             <Trans>
@@ -268,20 +244,20 @@ function RegionNotice() {
               estimate may be inaccurate if you're using a VPN.
             </Trans>
           )}
-        </Text>
-      )}
-
-      {IS_NATIVE && (
-        <Text style={[a.text_sm, a.leading_snug]}>
-          <Trans>
-            <InlineLinkText
-              label={l`Update your location`}
-              {...createStaticClick(() => {
-                locationControl.open()
-              })}>
-              Tap here to update your location with GPS.
-            </InlineLinkText>
-          </Trans>
+          {IS_NATIVE && (
+            <Text style={[a.text_sm, a.leading_snug]}>
+              {' '}
+              <Trans>
+                <InlineLinkText
+                  label={l`Update your location`}
+                  {...createStaticClick(() => {
+                    locationControl.open()
+                  })}>
+                  Tap here to update your location with GPS.
+                </InlineLinkText>
+              </Trans>
+            </Text>
+          )}
         </Text>
       )}
     </>

@@ -1,3 +1,4 @@
+import type * as AgeRange from 'expo-age-range'
 import {
   ageAssuranceRuleIDs as ids,
   type AppBskyAgeassuranceDefs,
@@ -17,17 +18,16 @@ export const geolocation: Geolocation | undefined = enabled
     }
   : undefined
 
-const deviceGeolocationEnabled = false || IS_E2E
-export const deviceGeolocation: Geolocation | undefined =
-  enabled && deviceGeolocationEnabled
-    ? {
-        countryCode: 'AA',
-        regionCode: undefined,
-      }
-    : undefined
+export const deviceGeolocation: Geolocation | undefined = enabled
+  ? {
+      countryCode: 'AA',
+      regionCode: undefined,
+      ...geolocation,
+    }
+  : undefined
 
 export const otherRequiredData: OtherRequiredData = {
-  birthdate: new Date(2010, 12, 1).toISOString(),
+  birthdate: new Date(2000, 12, 1).toISOString(),
 }
 
 const serverStateEnabled = false || IS_E2E
@@ -35,9 +35,9 @@ export const serverState: AppBskyAgeassuranceGetState.OutputSchema | undefined =
   serverStateEnabled
     ? {
         state: {
-          lastInitiatedAt: new Date(2025, 1, 1).toISOString(),
-          status: 'assured',
-          access: 'full',
+          lastInitiatedAt: undefined, // new Date(2025, 1, 1).toISOString(),
+          status: 'unknown',
+          access: 'unknown',
         },
         metadata: {
           accountCreatedAt: new Date(2023, 1, 1).toISOString(),
@@ -55,6 +55,27 @@ export const config: AppBskyAgeassuranceDefs.Config = {
         {
           $type: ids.Default,
           access: 'full',
+        },
+      ],
+    },
+    {
+      // On-device verification region, native-only (web users in TX are not
+      // age assured). KWS is included as a fallback for when the device
+      // result is insufficient.
+      platforms: ['ios', 'android'],
+      countryCode: 'US',
+      regionCode: 'TX',
+      minAccessAge: 18,
+      additionalVerificationMethods: ['device'],
+      rules: [
+        {
+          age: 18,
+          access: 'full',
+          $type: ids.IfAssuredOverAge,
+        },
+        {
+          access: 'none',
+          $type: ids.Default,
         },
       ],
     },
@@ -256,6 +277,23 @@ export const config: AppBskyAgeassuranceDefs.Config = {
     },
   ],
 }
+
+/**
+ * When debug is enabled we mock the `deviceSignals` response by default. Set
+ * this to `false` to hit the real native age API (`expo-age-range`) so the OS
+ * age prompt actually shows — useful for testing the device flow on a physical
+ * device.
+ */
+export const useMockDeviceSignalsAPIResponse = true
+export const deviceSignals: AgeRange.AgeRangeResponse | undefined =
+  useMockDeviceSignalsAPIResponse
+    ? {
+        // Simulates the OS reporting the user is at least 18. Lower this below
+        // a region's IfAssuredOverAge threshold to exercise the KWS fallback.
+        lowerBound: 16,
+        upperBound: null,
+      }
+    : undefined
 
 export async function resolve<T>(data: T) {
   await new Promise(y => setTimeout(y, 500)) // simulate network

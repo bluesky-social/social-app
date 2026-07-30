@@ -58,7 +58,8 @@ export function ViewFullThread({uri}: {uri: string}) {
           <Text
             style={[
               a.text_md,
-              {color: t.palette.primary_500, paddingTop: 18, paddingBottom: 4},
+              t.atoms.text_link,
+              {paddingTop: 18, paddingBottom: 4},
             ]}>
             {/* HACKFIX: Trans isn't working after SDK 53 upgrade -sfn */}
             {l`View full thread`}

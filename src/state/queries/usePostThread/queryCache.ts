@@ -19,7 +19,7 @@ import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} f
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/queries/notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
-import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts'
+import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts-v2'
 import {usePostThreadContext} from '#/state/queries/usePostThread'
 import {getBranch} from '#/state/queries/usePostThread/traversal'
 import {

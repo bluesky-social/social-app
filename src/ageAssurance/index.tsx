@@ -1,8 +1,6 @@
 import {createContext, useCallback, useContext, useMemo} from 'react'
 
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
-import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
-import {useAgent} from '#/state/session'
 import {Provider as RedirectOverlayProvider} from '#/ageAssurance/components/RedirectOverlay'
 import {
   AgeAssuranceServerDataProvider,
@@ -51,9 +49,12 @@ const AgeAssuranceStateContext = createContext<{
     adultContentDisabled: false,
     chatDisabled: false,
     groupChatDisabled: false,
+    hasDeclaredAge: false,
     isDeclaredUnderAdultAge: false,
     isOverRegionMinAccessAge: false,
     isOverAppMinAccessAge: false,
+    allowsDeviceVerification: false,
+    hasSharedDeviceSignals: false,
   },
 })
 
@@ -77,9 +78,8 @@ export function Provider({children}: {children: React.ReactNode}) {
 }
 
 function InnerProvider({children}: {children: React.ReactNode}) {
-  const agent = useAgent()
   const state = useAgeAssuranceState()
-  const {metadata} = useAgeAssuranceServerDataContext()
+  const {metadata, deviceSignals} = useAgeAssuranceServerDataContext()
   const regionConfig = useAgeAssuranceRegionConfigWithFallback()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
 
@@ -89,21 +89,15 @@ function InnerProvider({children}: {children: React.ReactNode}) {
         state: s,
         regionConfig,
         metadata,
+        deviceSignals,
       })
       if (flags.isAgeRestricted) {
         void getAndRegisterPushToken({
           isAgeRestricted: true,
         })
       }
-      if (flags.chatDisabled || flags.groupChatDisabled) {
-        void restrictChatSettings({
-          agent,
-          restrictIncoming: flags.chatDisabled,
-          restrictGroupInvites: flags.groupChatDisabled,
-        })
-      }
     },
-    [agent, getAndRegisterPushToken, regionConfig, metadata],
+    [getAndRegisterPushToken, regionConfig, metadata, deviceSignals],
   )
   useOnAgeAssuranceAccessUpdate(handleAccessUpdate)
 
@@ -118,11 +112,12 @@ function InnerProvider({children}: {children: React.ReactNode}) {
             state,
             regionConfig,
             metadata,
+            deviceSignals,
           }),
         }
         logger.debug(`useAgeAssurance`, res)
         return res
-      }, [state, metadata, regionConfig])}>
+      }, [state, metadata, regionConfig, deviceSignals])}>
       {children}
     </AgeAssuranceStateContext.Provider>
   )
