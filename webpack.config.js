@@ -87,9 +87,12 @@ module.exports = async function (env, argv) {
    * the builtin out with an empty module.
    */
   config.plugins.push(
-    new webpack.NormalModuleReplacementPlugin(/^node:async_hooks$/, resource => {
-      resource.request = 'async_hooks'
-    }),
+    new webpack.NormalModuleReplacementPlugin(
+      /^node:async_hooks$/,
+      resource => {
+        resource.request = 'async_hooks'
+      },
+    ),
   )
   config.resolve.fallback = {...config.resolve.fallback, async_hooks: false}
 
