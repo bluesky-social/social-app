@@ -275,6 +275,10 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    outputs:
+      release-version: ${{ steps.env.outputs.release-version }}
+      ios-build-number: ${{ steps.build-info.outputs.BSKY_IOS_BUILD_NUMBER }}
+      android-build-number: ${{ steps.build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -342,11 +346,18 @@ jobs:
           app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
           private-key: ${{ secrets.SYNC_INTERNAL_PK }}
 
+      - name: 🔢 Get native build numbers
+        id: build-info
+        run: bash scripts/setGitHubOutput.sh
+
       - name: 🚀 Publish OTA to denis (S3)
         run: pnpm use-build-number bash scripts/denisPublish.sh
         env:
           RUNTIME_VERSION: ''
           CHANNEL_NAME: pull-request-${{ github.event.pull_request.number }}
+          # Pin the publish to the same values exposed in the install link.
+          BSKY_IOS_BUILD_NUMBER: ${{ steps.build-info.outputs.BSKY_IOS_BUILD_NUMBER }}
+          BSKY_ANDROID_VERSION_CODE: ${{ steps.build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
 
   comment-pr-ota:
     name: Comment PR OTA install link
@@ -362,6 +373,6 @@ jobs:
           message: |
             The OTA deployment for this PR was successful! You may now apply it by either scanning the QR code or opening the deep link below in your browser:
 
-            <img src="https://bsky-qr.vercel.app?channel=pull-request-${{ github.event.pull_request.number }}" width="300" height="300" alt="QR code for the PR OTA deployment">
+            <img src="https://bsky-qr.vercel.app?channel=pull-request-${{ github.event.pull_request.number }}&releaseVersion=${{ needs.publish-pr-ota.outputs.release-version }}&iosBuildNumber=${{ needs.publish-pr-ota.outputs.ios-build-number }}&androidBuildNumber=${{ needs.publish-pr-ota.outputs.android-build-number }}" width="300" height="300" alt="QR code for the PR OTA deployment">
 
-            `bluesky://intent/apply-ota?channel=pull-request-${{ github.event.pull_request.number }}`
+            `bluesky://intent/apply-ota?channel=pull-request-${{ github.event.pull_request.number }}&releaseVersion=${{ needs.publish-pr-ota.outputs.release-version }}&iosBuildNumber=${{ needs.publish-pr-ota.outputs.ios-build-number }}&androidBuildNumber=${{ needs.publish-pr-ota.outputs.android-build-number }}`
