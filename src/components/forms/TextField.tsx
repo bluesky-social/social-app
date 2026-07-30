@@ -276,7 +276,6 @@ export function createInput(Component: typeof TextInput) {
       onChangeText,
       onFocus: handleFocus,
       onBlur: handleBlur,
-      placeholder: placeholder === null ? undefined : placeholder || label,
       placeholderTextColor: t.palette.contrast_500,
       keyboardAppearance:
         t.name === 'light' ? ('light' as const) : ('dark' as const),
@@ -289,6 +288,9 @@ export function createInput(Component: typeof TextInput) {
           <AutosizedTextarea
             {...inputRest}
             {...sharedProps}
+            placeholder={
+              placeholder === null ? undefined : placeholder || label
+            }
             label={label}
             minRows={minRows}
             maxRows={maxRows}
@@ -300,6 +302,17 @@ export function createInput(Component: typeof TextInput) {
             hitSlop={HITSLOP_20}
             {...rest}
             {...sharedProps}
+            /*
+             * Android sizes an empty input from the font's bounding box instead
+             * of `lineHeight`, so a field with no placeholder shrinks on the
+             * first keystroke. AutosizedTextarea drives its height explicitly
+             * and isn't affected, so this only applies here.
+             */
+            placeholder={
+              placeholder === null
+                ? platform({android: ' '})
+                : placeholder || label
+            }
             ref={refs}
           />
         )}

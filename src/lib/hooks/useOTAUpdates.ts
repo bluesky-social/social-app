@@ -7,14 +7,17 @@ import {
   isEnabled,
   reloadAsync,
   setExtraParamAsync,
+  UpdateCheckResultNotAvailableReason,
   useUpdates,
 } from 'expo-updates'
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {IS_IOS, IS_TESTFLIGHT} from '#/env'
+import {APP_VERSION, IS_IOS, IS_TESTFLIGHT} from '#/env'
+import {device} from '#/storage'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
+const OTA_RECOVERY_WINDOW = 5 * 60e3
 
 /**
  * The channel this native build is expected to receive updates from. Anything
@@ -27,6 +30,11 @@ const DEFAULT_CHANNEL = IS_TESTFLIGHT ? 'testflight' : 'production'
  * update running on any other channel was applied manually.
  */
 const STANDARD_CHANNELS = ['production', 'testflight', 'development']
+
+function getDeploymentName(channel: string) {
+  const pullRequestNumber = channel.match(/^pull-request-(\d+)$/)?.[1]
+  return pullRequestNumber ? `PR #${pullRequestNumber}` : channel
+}
 
 async function setExtraParams() {
   await setExtraParamAsync(
@@ -89,36 +97,116 @@ export function useApplyPullRequestOTAUpdate() {
     currentChannel && !STANDARD_CHANNELS.includes(currentChannel),
   )
 
-  const tryApplyUpdate = async (channel: string) => {
-    setPending(true)
-    await setExtraParamsPullRequest(channel)
-    const res = await checkForUpdateAsync()
-    if (res.isAvailable) {
+  const tryApplyUpdate = async (
+    channel: string,
+    declaredAppVersion?: string | null,
+  ) => {
+    const deploymentName = getDeploymentName(channel)
+
+    const checkForDeployment = async () => {
+      await setExtraParamsPullRequest(channel)
+      const res = await checkForUpdateAsync()
+      if (!res.isAvailable) {
+        if (
+          res.reason ===
+          UpdateCheckResultNotAvailableReason.UPDATE_PREVIOUSLY_FAILED
+        ) {
+          Alert.alert(
+            'Deployment Blocked',
+            `The ${deploymentName} deployment previously failed to start on this device, so the app will not try to apply it again.`,
+          )
+        } else if (currentChannel !== channel) {
+          Alert.alert(
+            'No Deployment Available',
+            `No new deployments of ${channel} are currently available for your current native build.`,
+          )
+        }
+      }
+      return res.isAvailable
+    }
+
+    const applyUpdate = () => {
+      setPending(true)
+      void (async () => {
+        try {
+          if (!(await checkForDeployment())) return
+          const fetchedUpdate = await fetchUpdateAsync()
+          if (!fetchedUpdate.isNew) {
+            throw new Error('Expo did not download a new update.')
+          }
+
+          device.set(['pendingOTAUpdate'], {
+            attemptedAt: Date.now(),
+            channel,
+            updateId: fetchedUpdate.manifest.id,
+          })
+          try {
+            await reloadAsync()
+          } catch (e) {
+            device.remove(['pendingOTAUpdate'])
+            throw e
+          }
+        } catch (e: unknown) {
+          const error = String(e)
+          logger.error('Internal OTA Update Error', {error})
+          Alert.alert(
+            'Update Failed',
+            `Could not apply the ${deploymentName} deployment: ${error}`,
+          )
+        } finally {
+          setPending(false)
+        }
+      })()
+    }
+
+    if (declaredAppVersion && declaredAppVersion !== APP_VERSION) {
       Alert.alert(
-        'Deployment Available',
-        `A deployment of ${channel} is availalble. Applying this deployment may result in a bricked installation, in which case you will need to reinstall the app and may lose local data. Are you sure you want to proceed?`,
+        'App Version Mismatch',
+        `This OTA update was built for a different version of the app.\n\nCurrent app version: ${APP_VERSION}\nOTA app version: ${declaredAppVersion}\n\nApplying it anyway may cause the app to stop working and require a reinstall.`,
         [
           {
-            text: 'No',
+            text: 'Cancel',
             style: 'cancel',
           },
           {
-            text: 'Relaunch',
-            style: 'default',
-            onPress: async () => {
-              await fetchUpdateAsync()
-              await reloadAsync()
-            },
+            text: 'Apply Anyway',
+            style: 'destructive',
+            onPress: applyUpdate,
           },
         ],
       )
-    } else {
-      Alert.alert(
-        'No Deployment Available',
-        `No new deployments of ${channel} are currently available for your current native build.`,
-      )
+      return
     }
-    setPending(false)
+
+    setPending(true)
+    try {
+      if (!(await checkForDeployment())) return
+
+      Alert.alert(
+        `Apply update from ${deploymentName}?`,
+        'The app will relaunch after the update is applied.',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Apply',
+            style: 'default',
+            onPress: applyUpdate,
+          },
+        ],
+      )
+    } catch (e: unknown) {
+      const error = String(e)
+      logger.error('Internal OTA Update Error', {error})
+      Alert.alert(
+        'Update Check Failed',
+        `Could not check the ${deploymentName} deployment: ${error}`,
+      )
+    } finally {
+      setPending(false)
+    }
   }
 
   /**
@@ -159,6 +247,50 @@ export function useApplyPullRequestOTAUpdate() {
     defaultChannel: DEFAULT_CHANNEL,
     pending,
   }
+}
+
+/**
+ * Reports when expo-updates recovered from a custom OTA that failed to launch.
+ * The attempted update ID is persisted before reload so the previous bundle can
+ * distinguish a successful relaunch from an automatic fallback.
+ */
+export function useOTAUpdateRecovery() {
+  const {currentlyRunning} = useUpdates()
+
+  useEffect(() => {
+    const pendingUpdate = device.get(['pendingOTAUpdate'])
+    if (!pendingUpdate || !currentlyRunning) return
+
+    device.remove(['pendingOTAUpdate'])
+    if (
+      pendingUpdate.updateId.toLowerCase() ===
+      currentlyRunning.updateId?.toLowerCase()
+    ) {
+      return
+    }
+
+    // A fallback relaunch is immediate. A stale marker can be left by a
+    // successful runtime-compatible bundle that predates this hook.
+    if (
+      typeof pendingUpdate.attemptedAt !== 'number' ||
+      Date.now() - pendingUpdate.attemptedAt >= OTA_RECOVERY_WINDOW
+    ) {
+      return
+    }
+
+    const deploymentName = getDeploymentName(pendingUpdate.channel)
+    logger.error('Custom OTA Update Failed to Launch', {
+      channel: pendingUpdate.channel,
+      attemptedUpdateId: pendingUpdate.updateId,
+      currentUpdateId: currentlyRunning.updateId,
+      isEmergencyLaunch: currentlyRunning.isEmergencyLaunch,
+      emergencyLaunchReason: currentlyRunning.emergencyLaunchReason,
+    })
+    Alert.alert(
+      'Update Failed',
+      `The ${deploymentName} deployment could not start. The app recovered by loading a working version instead.`,
+    )
+  }, [currentlyRunning])
 }
 
 export function useOTAUpdates() {
