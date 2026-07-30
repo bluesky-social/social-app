@@ -1,6 +1,6 @@
 import {Suspense, useRef, useState} from 'react'
 import {View} from 'react-native'
-import type ViewShot from 'react-native-view-shot'
+import {type ViewShotRef} from 'react-native-view-shot'
 import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import {msg} from '@lingui/core/macro'
@@ -38,7 +38,7 @@ export function QrCodeDialog({
   const [isSaveProcessing, setIsSaveProcessing] = useState(false)
   const [isCopyProcessing, setIsCopyProcessing] = useState(false)
 
-  const ref = useRef<ViewShot>(null)
+  const ref = useRef<ViewShotRef>(null)
 
   const getCanvas = (base64: string): Promise<HTMLCanvasElement> => {
     return new Promise(resolve => {

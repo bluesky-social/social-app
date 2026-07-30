@@ -1,0 +1,8 @@
+diff --git a/build/winter/runtime.native.d.ts b/build/winter/runtime.native.d.ts
+index 85c4227e4e37003dd3769a590e73a69874de5fac..27bd245675d09b906c2474d4da9efd073dd4f72c 100644
+--- a/build/winter/runtime.native.d.ts
++++ b/build/winter/runtime.native.d.ts
+@@ -1,3 +1,2 @@
+ import 'react-native/Libraries/Core/InitializeCore';
+-import '../../types';
+ //# sourceMappingURL=runtime.native.d.ts.map
