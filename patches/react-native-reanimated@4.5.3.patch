@@ -1,155 +1,3 @@
-diff --git a/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.cpp b/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.cpp
-index 2db064c..2f8c187 100644
---- a/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.cpp
-+++ b/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.cpp
-@@ -5,8 +5,10 @@
- 
- #include <react/debug/react_native_assert.h>
- 
-+#include <functional>
- #include <memory>
- #include <utility>
-+#include <vector>
- 
- namespace reanimated {
- 
-@@ -36,25 +38,59 @@ void AnimatedPropsRegistry::update(jsi::Runtime &rt, const jsi::Value &operation
-     }
- 
-     if constexpr (StaticFeatureFlags::getFlag("FORCE_REACT_RENDER_FOR_SETTLED_ANIMATIONS")) {
--      timestampMap_[shadowNode->getTag()] = timestamp;
-+      const auto tag = shadowNode->getTag();
-+      timestampMap_[tag] = timestamp;
-+      // If JS already has a `settledProps` snapshot for this tag, it is now
-+      // stale — schedule a refresh on the next `collectSettledUpdates`.
-+      if (syncedTags_.erase(tag) > 0) {
-+        invalidatedTags_.insert(tag);
-+      }
-     }
-   }
- }
- 
--jsi::Value AnimatedPropsRegistry::getUpdatesOlderThanTimestamp(
--    jsi::Runtime &rt,
--    const double timestamp,
--    const double cleanupTimestamp) {
-+jsi::Value AnimatedPropsRegistry::collectSettledUpdates(jsi::Runtime &rt, const double settledTimestamp) {
-   react_native_assert(UpdatesRegistryManager::isLockedByCurrentThread());
--  removeUpdatesOlderThanTimestamp(cleanupTimestamp);
- 
-   std::vector<std::pair<Tag, std::reference_wrapper<const folly::dynamic>>> updates;
- 
--  for (const auto &[viewTag, pair] : updatesRegistry_) {
--    auto it = timestampMap_.find(viewTag);
--    if (it != timestampMap_.end() && it->second < timestamp) {
--      updates.emplace_back(viewTag, std::cref(pair.second));
-+  for (auto it = updatesRegistry_.begin(); it != updatesRegistry_.end();) {
-+    const auto viewTag = it->first;
-+
-+    if (syncedTags_.contains(viewTag)) {
-+      // React already has the latest value for this tag (synced on a previous
-+      // call, so the `settledProps` state is committed by now) — the registry
-+      // entry is redundant. `syncedTags_` is intentionally retained to detect
-+      // re-animation staleness. Note that `syncedTags_` and `invalidatedTags_`
-+      // are disjoint — `update()` moves tags from the former to the latter.
-+      timestampMap_.erase(viewTag);
-+      it = updatesRegistry_.erase(it);
-+      continue;
-+    }
-+
-+    const auto timestampIt = timestampMap_.find(viewTag);
-+    if (timestampIt == timestampMap_.end()) {
-+      ++it;
-+      continue;
-+    }
-+    const bool isSettled = timestampIt->second < settledTimestamp;
-+    const auto invalidatedIt = invalidatedTags_.find(viewTag);
-+    const bool isInvalidated = invalidatedIt != invalidatedTags_.end();
-+    if (isSettled || isInvalidated) {
-+      updates.emplace_back(viewTag, std::cref(it->second.second));
-+      if (isSettled) {
-+        // Only settled-path tags are tracked as "synced" so that an ongoing
-+        // animation doesn't re-trigger an invalidation/sync on every GC tick.
-+        syncedTags_.insert(viewTag);
-+      }
-+      if (isInvalidated) {
-+        // Only erase serviced invalidations; if a tag was invalidated but the
-+        // matching update batch hasn't been flushed into updatesRegistry_ yet,
-+        // we leave the entry so the next sync picks it up.
-+        invalidatedTags_.erase(invalidatedIt);
-+      }
-     }
-+    ++it;
-   }
- 
-   const jsi::Array array(rt, updates.size());
-@@ -69,22 +105,11 @@ jsi::Value AnimatedPropsRegistry::getUpdatesOlderThanTimestamp(
-   return jsi::Value(rt, array);
- }
- 
--void AnimatedPropsRegistry::removeUpdatesOlderThanTimestamp(const double timestamp) {
--  for (auto it = timestampMap_.begin(); it != timestampMap_.end();) {
--    const auto viewTag = it->first;
--    const auto viewTimestamp = it->second;
--    if (viewTimestamp < timestamp) {
--      it = timestampMap_.erase(it);
--      updatesRegistry_.erase(viewTag);
--    } else {
--      it++;
--    }
--  }
--}
--
- void AnimatedPropsRegistry::removeTag(const Tag tag) {
-   updatesRegistry_.erase(tag);
-   timestampMap_.erase(tag);
-+  syncedTags_.erase(tag);
-+  invalidatedTags_.erase(tag);
- }
- 
- } // namespace reanimated
-diff --git a/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.h b/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.h
-index 2197eec..a9cb24c 100644
---- a/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.h
-+++ b/Common/cpp/reanimated/Fabric/updates/AnimatedPropsRegistry.h
-@@ -4,10 +4,8 @@
- 
- #include <react/renderer/uimanager/UIManager.h>
- 
--#include <memory>
--#include <string>
- #include <unordered_map>
--#include <vector>
-+#include <unordered_set>
- 
- namespace reanimated {
- 
-@@ -15,13 +13,22 @@ class AnimatedPropsRegistry : public UpdatesRegistry {
-  public:
-   void update(jsi::Runtime &rt, const jsi::Value &operations, double timestamp);
- 
--  /// Also removes updates older than `cleanupTimestamp` from the registry.
--  jsi::Value getUpdatesOlderThanTimestamp(jsi::Runtime &rt, double timestamp, double cleanupTimestamp);
-+  /// Returns updates that settled (received no update since `settledTimestamp`)
-+  /// or whose synced `settledProps` snapshot was invalidated by a fresh update.
-+  /// Also evicts entries that have already been synced to React — by the time
-+  /// of the next call, the corresponding `settledProps` state is guaranteed to
-+  /// be committed, so the registry entries are redundant.
-+  jsi::Value collectSettledUpdates(jsi::Runtime &rt, double settledTimestamp);
- 
-  private:
-   std::unordered_map<Tag, double> timestampMap_;
-+  // Tags whose latest values have already been pushed to React `settledProps`.
-+  // Intentionally retained after eviction to detect re-animation staleness.
-+  std::unordered_set<Tag> syncedTags_;
-+  // Tags that were synced to React but received a fresh worklet update since;
-+  // their `settledProps` are stale and need to be refreshed on the next sync.
-+  std::unordered_set<Tag> invalidatedTags_;
- 
--  void removeUpdatesOlderThanTimestamp(double timestamp);
-   void removeTag(Tag tag) override;
- };
- 
 diff --git a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxyCommon.h b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxyCommon.h
 index 8603591..20d042b 100644
 --- a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxyCommon.h
@@ -195,10 +43,10 @@ index 8603591..20d042b 100644
  
    void restoreOpacityInCaseOfFlakyEnteringAnimation(SurfaceId surfaceId) const;
 diff --git a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Experimental.h b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Experimental.h
-index eca44e4..e39c79a 100644
+index fcc677f..115971a 100644
 --- a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Experimental.h
 +++ b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Experimental.h
-@@ -66,11 +66,11 @@ struct LayoutAnimationsProxy_Experimental : public LayoutAnimationsProxyCommon,
+@@ -67,11 +67,11 @@ struct LayoutAnimationsProxy_Experimental : public LayoutAnimationsProxyCommon,
        const SharedComponentDescriptorRegistry &componentDescriptorRegistry,
        const std::shared_ptr<const ContextContainer> &contextContainer,
        jsi::Runtime &uiRuntime,
@@ -212,7 +60,7 @@ index eca44e4..e39c79a 100644
        const std::shared_ptr<CallInvoker> &jsInvoker
  #endif
        )
-@@ -79,11 +79,11 @@ struct LayoutAnimationsProxy_Experimental : public LayoutAnimationsProxyCommon,
+@@ -80,11 +80,11 @@ struct LayoutAnimationsProxy_Experimental : public LayoutAnimationsProxyCommon,
              componentDescriptorRegistry,
              contextContainer,
              uiRuntime,
@@ -227,7 +75,7 @@ index eca44e4..e39c79a 100644
  #endif
              ),
 diff --git a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.cpp b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.cpp
-index a3927af..13833b7 100644
+index df53d8d..735f138 100644
 --- a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.cpp
 +++ b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.cpp
 @@ -1,6 +1,7 @@
@@ -238,7 +86,7 @@ index a3927af..13833b7 100644
  #include <react/renderer/mounting/ShadowViewMutation.h>
  
  #include <memory>
-@@ -58,14 +59,37 @@ std::optional<MountingTransaction> LayoutAnimationsProxy_Legacy::pullTransaction
+@@ -60,14 +61,37 @@ std::optional<MountingTransaction> LayoutAnimationsProxy_Legacy::pullTransaction
  
    parseRemoveMutations(movedViews, mutations, roots);
  
@@ -278,7 +126,7 @@ index a3927af..13833b7 100644
    return MountingTransaction{surfaceId, transactionNumber, std::move(filteredMutations), telemetry};
  }
  
-@@ -959,23 +983,22 @@ inline bool MutationNode::isMutationNode() {
+@@ -998,23 +1022,22 @@ inline bool MutationNode::isMutationNode() {
    return true;
  }
  
@@ -318,7 +166,7 @@ index a3927af..13833b7 100644
  
  } // namespace reanimated
 diff --git a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.h b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.h
-index e9a5e99..a2c8904 100644
+index 57cc134..1a2966c 100644
 --- a/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.h
 +++ b/Common/cpp/reanimated/LayoutAnimations/LayoutAnimationsProxy_Legacy.h
 @@ -3,8 +3,8 @@
@@ -376,7 +224,7 @@ index e9a5e99..a2c8904 100644
    }
  
    void startEnteringAnimation(const int tag, ShadowViewMutation &mutation) const;
-@@ -202,19 +207,15 @@ struct LayoutAnimationsProxy_Legacy : public LayoutAnimationsProxyCommon,
+@@ -206,19 +211,15 @@ struct LayoutAnimationsProxy_Legacy : public LayoutAnimationsProxyCommon,
        const TransactionTelemetry &telemetry,
        ShadowViewMutationList mutations) const override;
  
@@ -404,30 +252,10 @@ index e9a5e99..a2c8904 100644
  
  } // namespace reanimated
 diff --git a/Common/cpp/reanimated/NativeModules/ReanimatedModuleProxy.cpp b/Common/cpp/reanimated/NativeModules/ReanimatedModuleProxy.cpp
-index 60c88ec..a23545a 100644
+index 2b68ff7..d08b1ae 100644
 --- a/Common/cpp/reanimated/NativeModules/ReanimatedModuleProxy.cpp
 +++ b/Common/cpp/reanimated/NativeModules/ReanimatedModuleProxy.cpp
-@@ -641,16 +641,14 @@ jsi::Value ReanimatedModuleProxy::getSettledUpdates(jsi::Runtime &rt) {
-       StaticFeatureFlags::getFlag("FORCE_REACT_RENDER_FOR_SETTLED_ANIMATIONS") &&
-       "getSettledUpdates requires FORCE_REACT_RENDER_FOR_SETTLED_ANIMATIONS static feature flag to be enabled");
- 
-+  constexpr double SETTLED_ANIMATION_THRESHOLD_MS = 1000;
-+
-   // TODO(future): use unified timestamp
-   const auto currentTimestamp = getAnimationTimestamp_();
- 
--  // TODO: fix bug when threshold difference is smaller than 1 second
-   // TODO(future): flush updates from CSS animations and CSS transitions registries
--  // TODO(future): find a better way to obtain timestamp for removing updates
--  // TODO(future): move removing old updates to separate method
-   auto lock = updatesRegistryManager_->lock();
--  return animatedPropsRegistry_->getUpdatesOlderThanTimestamp(
--      rt, currentTimestamp - 1000 /* 1 second */, currentTimestamp - 2000 /* 2 seconds */);
-+  return animatedPropsRegistry_->collectSettledUpdates(rt, currentTimestamp - SETTLED_ANIMATION_THRESHOLD_MS);
- }
- 
- bool ReanimatedModuleProxy::handleEvent(
-@@ -1227,22 +1225,19 @@ void ReanimatedModuleProxy::initializeLayoutAnimationsProxy() {
+@@ -1235,22 +1235,19 @@ void ReanimatedModuleProxy::initializeLayoutAnimationsProxy() {
  #endif
        layoutAnimationsProxy_ = std::move(layoutAnimationsProxyExperimental);
      } else {
@@ -453,35 +281,3 @@ index 60c88ec..a23545a 100644
      }
    }
  }
-diff --git a/src/PropsRegistryGarbageCollector.ts b/src/PropsRegistryGarbageCollector.ts
-index f917ce5..32148fb 100644
---- a/src/PropsRegistryGarbageCollector.ts
-+++ b/src/PropsRegistryGarbageCollector.ts
-@@ -11,7 +11,6 @@ import { ReanimatedModule } from './ReanimatedModule';
- const FLUSH_INTERVAL_MS = 500;
- 
- export const PropsRegistryGarbageCollector = {
--  viewsCount: 0,
-   viewsMap: new Map<number, IAnimatedComponentInternal>(),
-   intervalId: null as NodeJS.Timeout | null,
- 
-@@ -25,16 +24,14 @@ export const PropsRegistryGarbageCollector = {
-       return;
-     }
-     this.viewsMap.set(viewTag, component);
--    this.viewsCount++;
--    if (this.viewsCount === 1) {
-+    if (this.viewsMap.size === 1) {
-       this.registerInterval();
-     }
-   },
- 
-   unregisterView(viewTag: number) {
--    this.viewsMap.delete(viewTag);
--    this.viewsCount--;
--    if (this.viewsCount === 0) {
-+    const deleted = this.viewsMap.delete(viewTag);
-+    if (deleted && this.viewsMap.size === 0) {
-       this.unregisterInterval();
-     }
-   },
