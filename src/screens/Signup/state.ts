@@ -258,13 +258,13 @@ export const useSignupContext = () => useContext(SignupContext)
  * failure is unexpected and should be reported to Sentry.
  */
 function classifyExpectedSignupError(e: unknown): string | undefined {
-  if (e instanceof ComAtprotoServerCreateAccount.InvalidHandleError)
+  if (isXrpcErrorOf(com.atproto.server.createAccount, e, 'InvalidHandle'))
     return 'InvalidHandle'
-  if (e instanceof ComAtprotoServerCreateAccount.HandleNotAvailableError)
+  if (isXrpcErrorOf(com.atproto.server.createAccount, e, 'HandleNotAvailable'))
     return 'HandleNotAvailable'
-  if (e instanceof ComAtprotoServerCreateAccount.InvalidPasswordError)
+  if (isXrpcErrorOf(com.atproto.server.createAccount, e, 'InvalidPassword'))
     return 'InvalidPassword'
-  if (e instanceof ComAtprotoServerCreateAccount.UnsupportedDomainError)
+  if (isXrpcErrorOf(com.atproto.server.createAccount, e, 'UnsupportedDomain'))
     return 'UnsupportedDomain'
   /* the server sends no typed error for this case */
   if (String(e).includes('Email already taken')) return 'EmailTaken'

@@ -67,6 +67,9 @@
         "displayName": {
           "type": "string"
         },
+        "description": {
+          "type": "string"
+        },
         "link": {
           "type": "string"
         },
@@ -108,6 +111,9 @@
           "type": "string"
         },
         "displayName": {
+          "type": "string"
+        },
+        "description": {
           "type": "string"
         },
         "link": {

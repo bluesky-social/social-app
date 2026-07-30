@@ -1,30 +1,26 @@
 {
   "lexicon": 1,
-  "id": "app.bsky.graph.getFollowers",
+  "id": "app.bsky.graph.searchStarterPacksV2",
   "defs": {
     "main": {
       "type": "query",
-      "description": "Enumerates accounts which follow a specified account (actor).",
+      "description": "Find starter packs matching search criteria. Does not require auth.",
       "parameters": {
         "type": "params",
-        "required": ["actor"],
+        "required": ["q"],
         "properties": {
-          "actor": {
+          "q": {
             "type": "string",
-            "format": "at-identifier"
+            "description": "Search query string. Syntax, phrase, boolean, and faceting is unspecified, but Lucene query syntax is recommended."
           },
           "limit": {
             "type": "integer",
             "minimum": 1,
             "maximum": 100,
-            "default": 50
+            "default": 25
           },
           "cursor": {
             "type": "string"
-          },
-          "sort": {
-            "type": "string",
-            "knownValues": ["latest", "top"]
           }
         }
       },
@@ -32,20 +28,20 @@
         "encoding": "application/json",
         "schema": {
           "type": "object",
-          "required": ["subject", "followers"],
+          "required": ["starterPacks"],
           "properties": {
-            "subject": {
-              "type": "ref",
-              "ref": "app.bsky.actor.defs#profileView"
-            },
             "cursor": {
               "type": "string"
             },
-            "followers": {
+            "hitsTotal": {
+              "type": "integer",
+              "description": "Estimated total number of matching hits. May be rounded or truncated."
+            },
+            "starterPacks": {
               "type": "array",
               "items": {
                 "type": "ref",
-                "ref": "app.bsky.actor.defs#profileView"
+                "ref": "app.bsky.graph.defs#starterPackView"
               }
             }
           }

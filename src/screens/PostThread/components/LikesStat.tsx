@@ -63,7 +63,7 @@ export function LikesStat({post}: {post: app.bsky.feed.defs.PostView}) {
  * likes, the API max per page), so they are a sample of the most recent
  * likers, not an exhaustive list.
  */
-export function KnownLikers({post}: {post: AppBskyFeedDefs.PostView}) {
+export function KnownLikers({post}: {post: app.bsky.feed.defs.PostView}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const {hasSession, currentAccount} = useSession()

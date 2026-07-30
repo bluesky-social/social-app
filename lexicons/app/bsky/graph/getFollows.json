@@ -21,6 +21,10 @@
           },
           "cursor": {
             "type": "string"
+          },
+          "sort": {
+            "type": "string",
+            "knownValues": ["latest", "top"]
           }
         }
       },

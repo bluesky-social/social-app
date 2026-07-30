@@ -6,8 +6,8 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {useAnalytics} from '#/analytics'
 import {useAppviewClient} from '#/state/session'
+import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
 
 const DEFAULT_SORT = 'latest'

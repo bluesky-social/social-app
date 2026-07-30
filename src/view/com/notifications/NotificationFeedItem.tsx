@@ -923,12 +923,9 @@ function SayHelloBtn({profile}: {profile: app.bsky.actor.defs.ProfileView}) {
   const onPress = async () => {
     try {
       setIsLoading(true)
-      const res = await chatClient.call(
-        chat.bsky.convo.getConvoForMembers,
-        {
-          members: [profile.did as DidString, chatClient.assertDid],
-        },
-      )
+      const res = await chatClient.call(chat.bsky.convo.getConvoForMembers, {
+        members: [profile.did, chatClient.assertDid],
+      })
       navigation.navigate('MessagesConversation', {
         conversation: res.convo.id,
       })

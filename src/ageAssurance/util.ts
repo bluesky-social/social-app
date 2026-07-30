@@ -1,10 +1,7 @@
 import {useMemo} from 'react'
 import type * as AgeRange from 'expo-age-range'
 import {type ModerationPrefs} from '@bsky.app/sdk/moderation'
-import {
-  computeAgeAssuranceRegionAccess,
-  getAgeAssuranceRegionConfig,
-} from '@bsky.app/sdk/utils'
+import {computeAgeAssuranceRegionAccess} from '@bsky.app/sdk/utils'
 
 import {getAge} from '#/lib/strings/time'
 import {regionName} from '#/locale/helpers'
@@ -44,10 +41,13 @@ export function getAgeAssuranceRegionConfigForGeolocation(
   config: app.bsky.ageassurance.defs.Config,
   geolocation: Geolocation,
 ): app.bsky.ageassurance.defs.ConfigRegion | undefined {
-  return getAgeAssuranceRegionConfig(config, {
-    countryCode: geolocation.countryCode ?? '',
-    regionCode: geolocation.regionCode,
-    platform: AGE_ASSURANCE_PLATFORM,
+  return config.regions.find(({countryCode, regionCode, platforms}) => {
+    if (platforms?.length && !platforms.includes(AGE_ASSURANCE_PLATFORM)) {
+      return false
+    }
+    if (countryCode === geolocation.countryCode) {
+      return !regionCode || regionCode === geolocation.regionCode
+    }
   })
 }
 

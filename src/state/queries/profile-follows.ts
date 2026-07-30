@@ -7,8 +7,8 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAnalytics} from '#/analytics'
 import {useAppviewClient} from '#/state/session'
+import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
 
 const DEFAULT_SORT = 'latest'

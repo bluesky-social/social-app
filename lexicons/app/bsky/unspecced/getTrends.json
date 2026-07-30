@@ -28,6 +28,10 @@
                 "type": "ref",
                 "ref": "app.bsky.unspecced.defs#trendView"
               }
+            },
+            "recIdStr": {
+              "type": "string",
+              "description": "Snowflake for this recommendation, use when submitting recommendation events."
             }
           }
         }

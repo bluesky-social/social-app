@@ -26,7 +26,7 @@ import {
 } from '#/view/com/composer/text-input/text-input-util'
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
-import {IS_ANDROID, IS_NATIVE} from '#/env'
+import {IS_ANDROID} from '#/env'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {Autocomplete} from './mobile/Autocomplete'

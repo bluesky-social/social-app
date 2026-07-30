@@ -254,12 +254,7 @@ function createTokenProvider(
     if (!forceRefresh && token && Date.now() < expiresAt - 60_000) return token
     if (!refresh) {
       const exp = Math.floor(Date.now() / 1000) + 60 * 30
-      refresh = getServiceAuthTokenWithRetry(
-        client,
-        dispatchUrl,
-        exp,
-        signal,
-      )
+      refresh = getServiceAuthTokenWithRetry(client, dispatchUrl, exp, signal)
         .then(nextToken => {
           token = nextToken
           expiresAt = exp * 1000

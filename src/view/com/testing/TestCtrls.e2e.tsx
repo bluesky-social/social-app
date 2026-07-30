@@ -77,7 +77,7 @@ export function TestCtrls() {
            * The appview lex client reads BLUESKY_PROXY_HEADER.get() at build
            * time (see clients.ts), so setting it here retargets the proxy for
            * subsequent sign-ins without an explicit client reconfigure.
-          */
+           */
           BLUESKY_PROXY_HEADER.set(header)
           hasConfiguredProxy = true
           setIsProxyConfigured(true)
