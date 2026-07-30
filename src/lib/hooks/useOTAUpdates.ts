@@ -168,6 +168,12 @@ export function useApplyPullRequestOTAUpdate() {
             updateId: fetchedUpdate.manifest.id,
           })
           try {
+            /*
+             * TODO: once expo-linking is upgraded to >= 57, enable this so the
+             * re-delivered initial URL doesn't trigger a redundant silent check
+             * after the reload.
+             */
+            // Linking.clearInitialURL()
             await reloadAsync()
           } catch (e) {
             device.remove(['pendingOTAUpdate'])
@@ -186,28 +192,34 @@ export function useApplyPullRequestOTAUpdate() {
       })()
     }
 
-    if (declaredAppVersion && declaredAppVersion !== APP_VERSION) {
-      Alert.alert(
-        'App Version Mismatch',
-        `This OTA update was built for a different version of the app.\n\nCurrent app version: ${APP_VERSION}\nOTA app version: ${declaredAppVersion}\n\nApplying it anyway may cause the app to stop working and require a reinstall.`,
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'Apply Anyway',
-            style: 'destructive',
-            onPress: applyUpdate,
-          },
-        ],
-      )
-      return
-    }
-
+    /*
+     * Check before prompting about anything, so that re-running this while
+     * already on the newest update of `channel` stays silent. Reloading into an
+     * update re-delivers the deep link that triggered it, and the same link may
+     * also just be tapped again.
+     */
     setPending(true)
     try {
       if (!(await checkForDeployment())) return
+
+      if (declaredAppVersion && declaredAppVersion !== APP_VERSION) {
+        Alert.alert(
+          'App Version Mismatch',
+          `This OTA update was built for a different version of the app.\n\nCurrent app version: ${APP_VERSION}\nOTA app version: ${declaredAppVersion}\n\nApplying it anyway may cause the app to stop working and require a reinstall.`,
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Apply Anyway',
+              style: 'destructive',
+              onPress: applyUpdate,
+            },
+          ],
+        )
+        return
+      }
 
       Alert.alert(
         `Apply update from ${deploymentName}?`,
