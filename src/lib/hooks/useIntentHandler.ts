@@ -94,9 +94,9 @@ export function useIntentHandler() {
               : null
           if (!channel) {
             Alert.alert('Error', 'No channel provided to look for.')
-          } else {
-            tryApplyUpdate(channel, appVersion)
+            return
           }
+          tryApplyUpdate(channel, appVersion)
           return
         }
         default: {

@@ -3,6 +3,7 @@ import {Alert, AppState, type AppStateStatus} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
 import {
   checkForUpdateAsync,
+  type CurrentlyRunningInfo,
   fetchUpdateAsync,
   isEnabled,
   reloadAsync,
@@ -34,6 +35,32 @@ const STANDARD_CHANNELS = ['production', 'testflight', 'development']
 function getDeploymentName(channel: string) {
   const pullRequestNumber = channel.match(/^pull-request-(\d+)$/)?.[1]
   return pullRequestNumber ? `PR #${pullRequestNumber}` : channel
+}
+
+/**
+ * The channel of the update bundle that is actually running. The
+ * `currentlyRunning.channel` constant only reflects the channel baked into the
+ * native build config, so a manually applied deployment (e.g. a pull request
+ * channel) must be detected from the manifest metadata our update server stamps
+ * into every published update. Embedded launches have no server manifest and
+ * fall back to the build constant.
+ */
+function getRunningChannel(
+  currentlyRunning: CurrentlyRunningInfo | undefined,
+): string | undefined {
+  /*
+   * `metadata` is typed as a bare `object` by expo-manifests, and is absent
+   * entirely from embedded manifests, so narrow it ourselves.
+   */
+  const manifest = currentlyRunning?.manifest as
+    | {metadata?: {channel?: unknown}}
+    | undefined
+  const channel = manifest?.metadata?.channel
+  if (typeof channel === 'string' && channel) {
+    return channel
+  }
+  // The build constant is an empty string rather than null when unconfigured.
+  return currentlyRunning?.channel || undefined
 }
 
 async function setExtraParams() {
@@ -85,12 +112,12 @@ async function updateTestflight() {
 export function useApplyPullRequestOTAUpdate() {
   const {currentlyRunning} = useUpdates()
   const [pending, setPending] = useState(false)
-  const currentChannel = currentlyRunning?.channel
+  const currentChannel = getRunningChannel(currentlyRunning)
   const isCurrentlyRunningPullRequestDeployment =
     currentChannel?.startsWith('pull-request')
   /*
    * Covers pull request deployments as well as any other channel we manually
-   * applied an update from. Note that `channel` is null when updates are
+   * applied an update from. Note that the channel is undefined when updates are
    * disabled (e.g. in dev), in which case there's nothing to restore.
    */
   const isCurrentlyRunningNonStandardChannel = Boolean(
@@ -141,6 +168,12 @@ export function useApplyPullRequestOTAUpdate() {
             updateId: fetchedUpdate.manifest.id,
           })
           try {
+            /*
+             * TODO: once expo-linking is upgraded to >= 57, enable this so the
+             * re-delivered initial URL doesn't trigger a redundant silent check
+             * after the reload.
+             */
+            // Linking.clearInitialURL()
             await reloadAsync()
           } catch (e) {
             device.remove(['pendingOTAUpdate'])
@@ -159,28 +192,34 @@ export function useApplyPullRequestOTAUpdate() {
       })()
     }
 
-    if (declaredAppVersion && declaredAppVersion !== APP_VERSION) {
-      Alert.alert(
-        'App Version Mismatch',
-        `This OTA update was built for a different version of the app.\n\nCurrent app version: ${APP_VERSION}\nOTA app version: ${declaredAppVersion}\n\nApplying it anyway may cause the app to stop working and require a reinstall.`,
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'Apply Anyway',
-            style: 'destructive',
-            onPress: applyUpdate,
-          },
-        ],
-      )
-      return
-    }
-
+    /*
+     * Check before prompting about anything, so that re-running this while
+     * already on the newest update of `channel` stays silent. Reloading into an
+     * update re-delivers the deep link that triggered it, and the same link may
+     * also just be tapped again.
+     */
     setPending(true)
     try {
       if (!(await checkForDeployment())) return
+
+      if (declaredAppVersion && declaredAppVersion !== APP_VERSION) {
+        Alert.alert(
+          'App Version Mismatch',
+          `This OTA update was built for a different version of the app.\n\nCurrent app version: ${APP_VERSION}\nOTA app version: ${declaredAppVersion}\n\nApplying it anyway may cause the app to stop working and require a reinstall.`,
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Apply Anyway',
+              style: 'destructive',
+              onPress: applyUpdate,
+            },
+          ],
+        )
+        return
+      }
 
       Alert.alert(
         `Apply update from ${deploymentName}?`,
@@ -301,7 +340,7 @@ export function useOTAUpdates() {
   const ranInitialCheck = useRef(false)
   const timeout = useRef<NodeJS.Timeout>(undefined)
   const {currentlyRunning, isUpdatePending} = useUpdates()
-  const currentChannel = currentlyRunning?.channel
+  const currentChannel = getRunningChannel(currentlyRunning)
 
   const setCheckTimeout = useCallback(() => {
     timeout.current = setTimeout(async () => {
