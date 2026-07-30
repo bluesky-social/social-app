@@ -178,6 +178,19 @@ index 89b666dcf0258df0702c812600b685463128294c..2b1c3971f0c31a0d7a592b90170e4cc5
      val intersects = clippingRect.intersects(child.left, child.top, child.right, child.bottom)
      var needUpdateClippingRecursive = false
  
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
+index 9b04cad..b2b2762 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
+@@ -361,7 +361,7 @@ UIFont *RCTFontWithFontProperties(RCTFontProperties fontProperties)
+       font = [UIFont fontWithName:fontProperties.family size:effectiveFontSize];
+       if (font != nullptr) {
+         fontNames = [UIFont fontNamesForFamilyName:font.familyName];
+-        fontWeight = (fontWeight != 0.0) ?: RCTGetFontWeight(font);
++        fontWeight = (fontWeight != 0.0) ? fontWeight : RCTGetFontWeight(font);
+       } else {
+         // Failback to system font.
+         font = RCTDefaultFontWithFontProperties(fontProperties);
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
 index ac55304..d99c8f4 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
