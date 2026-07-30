@@ -43,6 +43,7 @@ patchedDependencies:
   'react-native@0.81.5': patches/react-native@0.81.5.patch
 minimumReleaseAgeExclude:
   - '@atproto/*'
+  - '@atproto-labs/*'
   - '@bsky.app/*'
   # todo: remove when old enough
   - '@oxlint-tsgolint/darwin-arm64@7.0.2001'
