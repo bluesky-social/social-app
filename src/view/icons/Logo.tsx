@@ -11,7 +11,7 @@ import Svg, {
 import {Image} from 'expo-image'
 
 import {useLogoVariant} from '#/view/icons/useLogoVariant'
-import {flatten, useTheme} from '#/alf'
+import {flatten} from '#/alf'
 
 const ratio = 57 / 64
 
@@ -22,13 +22,14 @@ type Props = {
 } & Omit<SvgProps, 'style'>
 
 export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
-  const t = useTheme()
   const {allowVariants = true, fill, ...rest} = props
   const gradient = fill === 'sky'
   const styles = flatten(props.style)
-  const _fill = gradient
-    ? 'url(#sky)'
-    : fill || styles?.color || t.palette.primary_500
+  /*
+   * Temporary override for an OTA update test - forces the logo red regardless
+   * of the requested fill. Not for merge.
+   */
+  const _fill = gradient ? 'url(#sky)' : 'red'
   // @ts-ignore it's fiiiiine
   const size = parseInt(rest.width || 32, 10)
 
@@ -64,8 +65,8 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
       {gradient && (
         <Defs>
           <LinearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#0A7AFF" stopOpacity="1" />
-            <Stop offset="1" stopColor="#59B9FF" stopOpacity="1" />
+            <Stop offset="0" stopColor="#FF0A0A" stopOpacity="1" />
+            <Stop offset="1" stopColor="#FF5959" stopOpacity="1" />
           </LinearGradient>
         </Defs>
       )}
