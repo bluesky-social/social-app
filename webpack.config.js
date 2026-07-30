@@ -1,6 +1,7 @@
 const path = require('path')
 
 const createExpoWebpackConfigAsync = require('@expo/webpack-config')
+const webpack = require('webpack')
 const {withAlias} = require('@expo/webpack-config/addons')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer')
@@ -77,6 +78,20 @@ module.exports = async function (env, argv) {
       'node_modules/react-native-svg/lib/module/utils/fetchData',
     )]: false,
   })
+
+  /*
+   * expo-font's serverContext.web.js imports `node:async_hooks` for SSR-only
+   * font collection, but webpack can't resolve `node:` URIs for web targets.
+   * Every call site is guarded by `typeof window === 'undefined'`, so in the
+   * browser bundle the module is dead code - strip the scheme prefix and stub
+   * the builtin out with an empty module.
+   */
+  config.plugins.push(
+    new webpack.NormalModuleReplacementPlugin(/^node:async_hooks$/, resource => {
+      resource.request = 'async_hooks'
+    }),
+  )
+  config.resolve.fallback = {...config.resolve.fallback, async_hooks: false}
 
   // react-native-uuid ships sourceMappingURL comments but no .map files.
   patchSourceMapFilter(config.module.rules, /react-native-uuid/)
