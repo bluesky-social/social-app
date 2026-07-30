@@ -15,6 +15,7 @@ import {
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
   useProfileMuteMutationQueue,
+  useProfileMuteRepostsMutationQueue,
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
@@ -40,6 +41,7 @@ import {
   PersonX_Stroke2_Corner0_Rounded as PersonX,
 } from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {Repost_Stroke2_Corner0_Rounded as Repost} from '#/components/icons/Repost'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {StarterPack} from '#/components/icons/StarterPack'
 import * as Menu from '#/components/Menu'
@@ -62,6 +64,7 @@ import {GoLiveDisabledDialog} from '#/features/liveNow/components/GoLiveDisabled
 import {Dot} from '#/features/nuxs/components/Dot'
 import {Gradient} from '#/features/nuxs/components/Gradient'
 import {useDevMode} from '#/storage/hooks/dev-mode'
+import {getMutedOnlyReposts} from '#/types/bsky/mute'
 
 let ProfileMenu = ({
   profile,
@@ -93,6 +96,8 @@ let ProfileMenu = ({
   const {mutate: saveNux} = useSaveNux()
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
+  const [queueMuteReposts, queueUnmuteReposts] =
+    useProfileMuteRepostsMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
@@ -161,6 +166,36 @@ let ProfileMenu = ({
       }
     }
   }, [ax, profile.viewer?.muted, queueUnmute, l, queueMute])
+
+  const onPressMuteReposts = useCallback(async () => {
+    if (getMutedOnlyReposts(profile.viewer)) {
+      try {
+        await queueUnmuteReposts()
+        Toast.show(l({message: 'Reposts turned on', context: 'toast'}))
+      } catch (err) {
+        const e = err as Error
+        if (e?.name !== 'AbortError') {
+          ax.logger.error('Failed to unmute reposts', {message: e})
+          Toast.show(l`There was an issue! ${e.toString()}`, {
+            type: 'error',
+          })
+        }
+      }
+    } else {
+      try {
+        await queueMuteReposts()
+        Toast.show(l({message: 'Reposts turned off', context: 'toast'}))
+      } catch (err) {
+        const e = err as Error
+        if (e?.name !== 'AbortError') {
+          ax.logger.error('Failed to mute reposts', {message: e})
+          Toast.show(l`There was an issue! ${e.toString()}`, {
+            type: 'error',
+          })
+        }
+      }
+    }
+  }, [ax, profile.viewer, queueUnmuteReposts, l, queueMuteReposts])
 
   const blockAccount = useCallback(async () => {
     if (profile.viewer?.blocking) {
@@ -435,25 +470,46 @@ let ProfileMenu = ({
                   <>
                     {!profile.viewer?.blocking &&
                       !profile.viewer?.mutedByList && (
-                        <Menu.Item
-                          testID="profileHeaderDropdownMuteBtn"
-                          label={
-                            profile.viewer?.muted
-                              ? l`Unmute account`
-                              : l`Mute account`
-                          }
-                          onPress={() => void onPressMuteAccount()}>
-                          <Menu.ItemText>
-                            {profile.viewer?.muted ? (
-                              <Trans>Unmute account</Trans>
-                            ) : (
-                              <Trans>Mute account</Trans>
-                            )}
-                          </Menu.ItemText>
-                          <Menu.ItemIcon
-                            icon={profile.viewer?.muted ? Unmute : Mute}
-                          />
-                        </Menu.Item>
+                        <>
+                          <Menu.Item
+                            testID="profileHeaderDropdownMuteBtn"
+                            label={
+                              profile.viewer?.muted
+                                ? l`Unmute account`
+                                : l`Mute account`
+                            }
+                            onPress={() => void onPressMuteAccount()}>
+                            <Menu.ItemText>
+                              {profile.viewer?.muted ? (
+                                <Trans>Unmute account</Trans>
+                              ) : (
+                                <Trans>Mute account</Trans>
+                              )}
+                            </Menu.ItemText>
+                            <Menu.ItemIcon
+                              icon={profile.viewer?.muted ? Unmute : Mute}
+                            />
+                          </Menu.Item>
+                          {!profile.viewer?.muted && (
+                            <Menu.Item
+                              testID="profileHeaderDropdownMuteRepostsBtn"
+                              label={
+                                getMutedOnlyReposts(profile.viewer)
+                                  ? l`Turn on reposts`
+                                  : l`Turn off reposts`
+                              }
+                              onPress={() => void onPressMuteReposts()}>
+                              <Menu.ItemText>
+                                {getMutedOnlyReposts(profile.viewer) ? (
+                                  <Trans>Turn on reposts</Trans>
+                                ) : (
+                                  <Trans>Turn off reposts</Trans>
+                                )}
+                              </Menu.ItemText>
+                              <Menu.ItemIcon icon={Repost} />
+                            </Menu.Item>
+                          )}
+                        </>
                       )}
                     {!profile.viewer?.blockingByList && (
                       <Menu.Item
