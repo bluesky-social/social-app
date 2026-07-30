@@ -1,8 +1,8 @@
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
-index c593d9ee2155a826352ebca34845aa5792b2eec3..3c26cd737f21116ff0aa48190e97e6c0649b5fac 100644
+index 1b02e8b2d39672063551411d5c403a69b671a869..b3481c1b98b45dea769035140dc2fd8d9b088b24 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
-@@ -101,6 +101,20 @@ - (void)setContentOffset:(CGPoint)contentOffset
+@@ -102,6 +102,20 @@ - (void)setContentOffset:(CGPoint)contentOffset
        RCTSanitizeNaNValue(contentOffset.y, @"scrollView.contentOffset.y"));
  }
  
@@ -37,10 +37,10 @@ index 914a2494a57923fbf185644b7e2bb8aca8848e56..0deac55f22350f5e8377d8963fb1c243
  
  NS_ASSUME_NONNULL_END
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-index 1494fd225aff1fa0429e917404d6b4ca5fc961c5..d0cce700090245444f8ce51e517d5ceca09526f6 100644
+index a087536f3af0d33b13fe38d8abd1bc6d7935def2..01f5c884ea4772350c0ebe6263723d97632f2b74 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-@@ -380,7 +380,15 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+@@ -396,7 +396,15 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
  
    MAP_SCROLL_VIEW_PROP(zoomScale);
  
@@ -57,7 +57,7 @@ index 1494fd225aff1fa0429e917404d6b4ca5fc961c5..d0cce700090245444f8ce51e517d5cec
      _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
    }
  
-@@ -507,7 +515,7 @@ - (UIView *)betterHitTest:(CGPoint)point withEvent:(UIEvent *)event
+@@ -523,7 +531,7 @@ - (UIView *)betterHitTest:(CGPoint)point withEvent:(UIEvent *)event
      }
    }
  
@@ -66,7 +66,7 @@ index 1494fd225aff1fa0429e917404d6b4ca5fc961c5..d0cce700090245444f8ce51e517d5cec
  }
  
  /*
-@@ -1133,6 +1133,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
+@@ -1133,6 +1141,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
    return _virtualViewContainerState;
  }
  
@@ -79,21 +79,22 @@ index 1494fd225aff1fa0429e917404d6b4ca5fc961c5..d0cce700090245444f8ce51e517d5cec
  
  Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
 diff --git a/React/Views/RefreshControl/RCTRefreshControl.h b/React/Views/RefreshControl/RCTRefreshControl.h
-index e9b330fa7c29c42653a3b0191d0f8a1b13b2d3de..5fbb2e05cadfc06fd7a18bf52b81bc399e92f3ca 100644
+index ed306d7cadbf36a2fed79be8bd9d68b5dca135bd..d447dad534fefa9fcbdbbde6dcbbdcddadd5a824 100644
 --- a/React/Views/RefreshControl/RCTRefreshControl.h
 +++ b/React/Views/RefreshControl/RCTRefreshControl.h
-@@ -15,5 +15,6 @@
+@@ -18,6 +18,7 @@ __attribute__((deprecated("This API will be removed along with the legacy archit
  @property (nonatomic, copy) NSString *title;
  @property (nonatomic, copy) RCTDirectEventBlock onRefresh;
  @property (nonatomic, weak) UIScrollView *scrollView;
 +@property (nonatomic, copy) UIColor *customTintColor;
  
  @end
+ 
 diff --git a/React/Views/RefreshControl/RCTRefreshControl.m b/React/Views/RefreshControl/RCTRefreshControl.m
-index 53bfd04703502d5b8e932c47a528bb03cd79d330..e2e0c9f4e5d1a3a3b178a7ec69aa63e3039b6dec 100644
+index 2dc86e464264c9450eef18d7b153d35bf6a5cc55..6661dc69a04766afa0284d6e83839b219e98cf57 100644
 --- a/React/Views/RefreshControl/RCTRefreshControl.m
 +++ b/React/Views/RefreshControl/RCTRefreshControl.m
-@@ -23,6 +23,7 @@ @implementation RCTRefreshControl {
+@@ -25,6 +25,7 @@ @implementation RCTRefreshControl {
    UIColor *_titleColor;
    CGFloat _progressViewOffset;
    BOOL _hasMovedToWindow;
@@ -101,7 +102,7 @@ index 53bfd04703502d5b8e932c47a528bb03cd79d330..e2e0c9f4e5d1a3a3b178a7ec69aa63e3
  }
  
  - (instancetype)init
-@@ -58,6 +59,12 @@ - (void)layoutSubviews
+@@ -60,6 +61,12 @@ - (void)layoutSubviews
    _isInitialRender = false;
  }
  
@@ -114,7 +115,7 @@ index 53bfd04703502d5b8e932c47a528bb03cd79d330..e2e0c9f4e5d1a3a3b178a7ec69aa63e3
  - (void)didMoveToWindow
  {
    [super didMoveToWindow];
-@@ -221,4 +228,16 @@ - (void)refreshControlValueChanged
+@@ -225,6 +232,18 @@ - (void)refreshControlValueChanged
    }
  }
  
@@ -131,11 +132,13 @@ index 53bfd04703502d5b8e932c47a528bb03cd79d330..e2e0c9f4e5d1a3a3b178a7ec69aa63e3
 +}
 +
  @end
+ 
+ #endif // RCT_REMOVE_LEGACY_ARCH
 diff --git a/React/Views/RefreshControl/RCTRefreshControlManager.m b/React/Views/RefreshControl/RCTRefreshControlManager.m
-index 40aaf9c51ebda9fedb1d1db2e9aacec84b4c39c8..1c60164b69762997b3369b46609a07768a06bad3 100644
+index 1e9ff527f4e6691d716da624031113a397876981..44329c5422c6f24d8a437fa35c6f2bad6bf8622b 100644
 --- a/React/Views/RefreshControl/RCTRefreshControlManager.m
 +++ b/React/Views/RefreshControl/RCTRefreshControlManager.m
-@@ -22,11 +22,12 @@ - (UIView *)view
+@@ -24,11 +24,12 @@ - (UIView *)view
  
  RCT_EXPORT_VIEW_PROPERTY(onRefresh, RCTDirectEventBlock)
  RCT_EXPORT_VIEW_PROPERTY(refreshing, BOOL)
@@ -150,10 +153,10 @@ index 40aaf9c51ebda9fedb1d1db2e9aacec84b4c39c8..1c60164b69762997b3369b46609a0776
  {
    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
-index 89b666dcf0258df0702c812600b685463128294c..2b1c3971f0c31a0d7a592b90170e4cc53a8a69dd 100644
+index 59775241c80bec99ad3ec080f2425aacc8900c24..426de3aa77cda2032d7b0991e2ca3f8482a438d3 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
 +++ b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
-@@ -431,6 +431,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
+@@ -459,6 +459,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
      inSubviewClippingLoop = true
      var clippedSoFar = 0
      for (i in 0..<allChildrenCount) {
@@ -167,7 +170,7 @@ index 89b666dcf0258df0702c812600b685463128294c..2b1c3971f0c31a0d7a592b90170e4cc5
        try {
          updateSubviewClipStatus(clippingRect, i, clippedSoFar, excludedViewsSet)
        } catch (ex: IndexOutOfBoundsException) {
-@@ -466,7 +473,9 @@ public open class ReactViewGroup public constructor(context: Context?) :
+@@ -496,7 +503,9 @@ public open class ReactViewGroup public constructor(context: Context?) :
    ) {
      assertOnUiThread()
  
@@ -179,10 +182,10 @@ index 89b666dcf0258df0702c812600b685463128294c..2b1c3971f0c31a0d7a592b90170e4cc5
      var needUpdateClippingRecursive = false
  
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
-index 9b04cad..b2b2762 100644
+index 9b04cadc22f5ae7b105f9f9875a242b53188cf03..b2b27626edc46625ac2372a13977d700948835b6 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
 +++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
-@@ -361,7 +361,7 @@ UIFont *RCTFontWithFontProperties(RCTFontProperties fontProperties)
+@@ -361,7 +361,7 @@ static UIFontDescriptorSystemDesign RCTGetFontDescriptorSystemDesign(NSString *f
        font = [UIFont fontWithName:fontProperties.family size:effectiveFontSize];
        if (font != nullptr) {
          fontNames = [UIFont fontNamesForFamilyName:font.familyName];
@@ -192,7 +195,7 @@ index 9b04cad..b2b2762 100644
          // Failback to system font.
          font = RCTDefaultFontWithFontProperties(fontProperties);
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
-index ac55304..d99c8f4 100644
+index ac553045a9c0ce77e288277912538d9e131ebc01..d99c8f4db5a07f1e4ffe7e03ff23adce9c63137b 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
 +++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
 @@ -389,8 +389,9 @@ - (TextMeasurement)_measureTextStorage:(NSTextStorage *)textStorage

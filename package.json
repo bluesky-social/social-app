@@ -235,7 +235,7 @@
     "react-native-drawer-layout": "^4.2.3",
     "react-native-edge-to-edge": "^1.8.1",
     "react-native-gesture-handler": "~2.32.0",
-    "react-native-keyboard-controller": "^1.21.9",
+    "react-native-keyboard-controller": "1.21.9",
     "react-native-mmkv": "^3.3.3",
     "react-native-pager-view": "6.8.0",
     "react-native-progress": "^5.0.1",

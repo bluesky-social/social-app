@@ -1,4 +1,4 @@
-# react-native-screens+4.24.0.patch
+# react-native-screens+4.26.2.patch
 
 ## Android: do not transition RecyclerView children individually
 
