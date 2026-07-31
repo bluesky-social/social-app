@@ -457,11 +457,11 @@ function getProcessingErrorMessage(
       )
     case 'pds_upload_failure':
       return i18n._(
-        msg`The video could not be uploaded to your service provider. Please try again.`,
+        msg`The video could not be uploaded to your PDS. Please try again.`,
       )
     case 'pds_upload_unsupported_blob_size':
       return i18n._(
-        msg`Your service provider does not support videos this large. Please try again with a smaller file.`,
+        msg`Your PDS does not support videos this large. Please try again with a smaller file.`,
       )
     case 'generic_failure':
     default:
