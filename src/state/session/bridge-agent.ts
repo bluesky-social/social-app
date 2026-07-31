@@ -44,9 +44,6 @@ function toAtpSessionData(d: SessionData): AtpSessionData {
 
 /**
  * Parse a URL without throwing.
- *
- * `URL.canParse` exists on Expo 54's Hermes, but a try/catch needs no feature
- * detection and behaves identically, so we avoid the branch entirely.
  */
 function parseUrl(input: string): URL | undefined {
   try {
