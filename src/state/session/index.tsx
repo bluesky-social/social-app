@@ -130,21 +130,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const state = useSyncExternalStore(store.subscribe, store.getState)
   const onboardingDispatch = useOnboardingDispatch()
 
-  /*
-   * Failed-token loop guard for the expiry rescue below. Maps a did to the set
-   * of refreshJwts that have already produced an 'expired'. Before rescuing
-   * from a candidate we require its refreshJwt not be in this set, and every
-   * expiry records its dying token here; a successful 'update' clears the set.
-   * See the rescue docblock in onSessionChange for why this is a set (not a
-   * single-shot flag) and why it stays bounded.
-   */
+  // Refresh-token generations that have already failed during expiry rescue.
   const failedExpiryTokensRef = useRef<Map<string, Set<string>>>(new Map())
   /*
-   * Self-reference shim. The rescue path rebuilds a bundle and must wire it to
-   * this same onSessionChange (so the rescued bundle's own future events flow
-   * back here). Referencing onSessionChange inside its own useCallback body
-   * would be an unsatisfiable exhaustive-deps cycle, so we thread it through a
-   * ref kept current right after the callback is defined.
+   * Rescued bundles need this callback for their own events. A ref avoids a
+   * self-reference in the callback's dependency list.
    */
   const onSessionChangeRef = useRef<
     | ((
@@ -163,26 +153,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       sessionEvent: AtpSessionEvent,
       sessionData?: SessionData,
     ) => {
-      /*
-       * A successful refresh means this did's world is healthy again, so reset
-       * its failed-token guard set (a later expiry starts a fresh rescue
-       * budget).
-       */
       if (sessionEvent === 'update' && sessionData) {
         failedExpiryTokensRef.current.get(accountDid)?.clear()
       }
 
       /*
-       * Build the refreshed account from the payload the hook delivers, NOT the
-       * live session getter. `PasswordSession` fires onUpdated/onDeleted BEFORE
-       * it commits its internal `#sessionData` (see password-session.js), so at
-       * hook time `bundle.session.session` still holds the OLD tokens (and, on
-       * the expiry path, `destroyed` is still false). Reading the live getter
-       * here would (a) persist stale tokens on 'update' -> eventual forced
-       * logout once the real refresh token expires, and (b) keep the user
-       * signed in on 'expired'. On 'update' the payload carries the new session;
-       * on 'expired'/'create-failed' we force it undefined so the reducer clears
-       * tokens and logs out (it treats undefined as "session gone").
+       * PasswordSession invokes its hooks before updating its live getter. Use
+       * the delivered payload so a refresh persists the newly rotated tokens.
        */
       const refreshedAccount =
         sessionEvent === 'update' && sessionData
@@ -190,40 +167,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           : undefined
 
       /*
-       * Expiry rescue (compare-and-clear + resume-from-newer). THE BUG: a stale
-       * tab (frozen by Chrome, a failed localStorage write, or a native app
-       * killed before its async persist landed) can wake holding a >2h-old
-       * refresh token. Its refresh gets ExpiredToken, and the naive 'expired'
-       * handling clears the tokens in storage and logs out EVERY tab - even
-       * though another tab already rotated to a healthy generation (PDS refresh
-       * tokens keep a 2h grace window after rotation).
-       *
-       * Fix: before letting an expiry become a logout, check whether a NEWER
-       * generation for this did is known, and if so rebuild the current bundle
-       * from it instead of dropping the session. The compare lives here at the
-       * dispatch site (not in the reducer) because the reducer is pure and has
-       * no access to persisted storage.
-       *
-       * Two freshness sources, tried in order:
-       *  - persisted.readLatest('session'): on web this re-reads localStorage
-       *    directly, covering the frozen-tab case where queued cross-tab
-       *    broadcasts have not been processed yet (so both the reducer state and
-       *    persisted's in-memory cache are stale). On native it equals `get`.
-       *  - the reducer's accounts: on native this IS the truth; on web it is
-       *    kept fresh by 'synced-accounts' broadcasts.
-       * On native the two always agree, so the rescue effectively never fires
-       * (the dying bundle is the only generation) and expiry falls straight
-       * through to logout. On web, readLatest is what sees the healthy tokens.
-       *
-       * Termination: a rescued bundle that expires AGAIN now matches persisted
-       * (this tab wrote nothing newer), so no newer candidate exists and it
-       * falls through to a real logout. The failed-token set is the belt-and-
-       * suspenders bound - each rescue consumes a strictly newer generation, so
-       * the set grows by at most one per expiry and is hard-capped
-       * (MAX_EXPIRY_RESCUE_GENERATIONS). A set rather than a single-shot flag is
-       * required: with a flag, a second expiry would fall through to logout and
-       * clobber a healthy THIRD generation another tab just wrote, recreating
-       * the exact bug.
+       * A stale tab may expire a token after another tab has already rotated it.
+       * Prefer a newer persisted or reducer generation over logging every tab
+       * out. Failed generations are recorded and bounded to guarantee that a
+       * repeatedly expiring session eventually falls through to logout.
        */
       if (sessionEvent === 'expired') {
         const current = store.getState()
@@ -231,21 +178,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           | SessionBundle
           | PublicSessionBundle
         const dyingRefreshJwt = sessionData?.refreshJwt
-        /*
-         * The rescue only applies when the expiring bundle IS the current one.
-         * Otherwise fall through: the reducer's identity guard drops a stale
-         * bundle's expiry anyway.
-         */
+        // Stale bundle events are handled by the reducer's identity guard.
         if (
           currentAgent === bundle &&
           current.currentAgentState.did === accountDid &&
           dyingRefreshJwt
         ) {
-          /*
-           * Record the dying token FIRST (at the start of handling), so a
-           * rescued-then-failed generation is remembered and never rescued back
-           * into.
-           */
           let failedSet = failedExpiryTokensRef.current.get(accountDid)
           if (!failedSet) {
             failedSet = new Set()
@@ -253,10 +191,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           }
           failedSet.add(dyingRefreshJwt)
 
-          /*
-           * Prefer the persisted re-read over the reducer state: storage is the
-           * cross-tab source of truth on web (on native they are identical).
-           */
           const persistedCandidate = persisted
             .readLatest('session')
             .accounts.find(a => a.did === accountDid)
@@ -270,12 +204,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           })
 
           if (candidate) {
-            /*
-             * Rebuild a bundle from the newer tokens synchronously, modeled on
-             * the same-did rebuild in the persisted.onUpdate handler below. No
-             * expiry is dispatched and no emitSessionDropped fires - the session
-             * is not dropped, it is healed.
-             */
             let newBundle!: SessionBundle
             const hooks = makeSessionHooks(
               onSessionChangeRef.current!,
@@ -289,11 +217,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             newBundle = buildBundle(newSession)
             registerBundleKillSwitch(newBundle, hooks.kill)
             configureModerationForAccount(newBundle, candidate)
-            /*
-             * Re-snapshot through the freshly built session (fallback covers
-             * the destroyed case, which cannot happen for a just-built,
-             * never-armed session).
-             */
             const newAccount = newBundle.session.destroyed
               ? candidate
               : (sessionDataToSessionAccount(
@@ -311,32 +234,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
 
-      /*
-       * Fall-through-to-logout path (no rescue was taken). emitSessionDropped
-       * fires here - never on the rescue path, where the session survives.
-       * 'create-failed' never fires in production but is kept for parity.
-       *
-       * Gate on the expiring bundle still being current: the reducer drops
-       * events from non-current bundles, and disposal of a replaced bundle
-       * happens in a deferred useEffect. A stale-but-still-armed bundle expiring
-       * in that window must not show a spurious "session expired" toast while
-       * the current session is healthy - only emit when a CURRENT bundle truly
-       * expires with no rescue.
-       */
+      // Only the current bundle may report that its session was dropped.
       if (
         (sessionEvent === 'expired' || sessionEvent === 'create-failed') &&
         store.getState().currentAgentState.agent === bundle
       ) {
         emitSessionDropped()
       }
-      /*
-       * The bundle is the reducer's identity token: it stores the whole bundle
-       * as `currentAgentState.agent` and compares `action.agent` by identity to
-       * decide whether an event belongs to the active account. A same-bundle
-       * event acts on the active account; a stale (background) bundle does not
-       * match, so its events are ignored (background accounts must not be able
-       * to log the current user out or resurrect tokens).
-       */
+      // Bundle identity prevents stale sessions from changing the active account.
       store.dispatch({
         type: 'received-agent-event',
         agent: bundle,
@@ -482,24 +387,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
 
       if (signal.aborted) {
-        /*
-         * A newer task superseded this resume. The bundle is fully built and
-         * armed, so its session can still consume refresh tokens - dispose it
-         * before bailing (fixes a leak where an aborted resume left an armed,
-         * undisposed bundle behind).
-         */
+        // The factory returns an armed bundle, so a superseded resume must dispose it.
         disposeBundle(bundle)
         return
       }
       /*
-       * Completion bail: re-read state and drop out if this account's entry is
-       * gone, or its tokens were cleared by a cross-tab logout that raced this
-       * resume (the residual hole where the leader logged in X then out while
-       * this follower's current did was still undefined, so the onUpdate cancel
-       * in 2a did not fire). The check is on the ACCOUNTS entry, not on
-       * "persisted current did": a persisted-current-did check would break
-       * normal user-initiated account switching, where the target account is
-       * deliberately not current yet.
+       * A cross-tab logout may clear or remove the account while resume is in
+       * flight. Check the account entry rather than the current did so ordinary
+       * account switching remains valid.
        */
       const latest = store.getState()
       const latestEntry = latest.accounts.find(a => a.did === account.did)
@@ -526,14 +421,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   >(async () => {
     const bundle = state.currentAgentState.agent as unknown as SessionBundle
     const signal = cancelPendingTask()
-    /*
-     * Fetch through the merged Bluesky client and dispatch the patch. getSession
-     * must hit the user's PDS, not the appview proxy, so this raw call passes
-     * `{service: null}` to strip the instance's appview `atproto-proxy` header.
-     * We do NOT mutate the session object (PasswordSession's data is immutable to
-     * us); the reducer patches only the `accounts` entry, and the email-state
-     * hook reads from the account rather than the session.
-     */
+    /* getSession targets the PDS; only the persisted account fields are patched. */
     const data = await bundle.bskyClient.call(
       com.atproto.server.getSession,
       {},
@@ -557,13 +445,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       | SessionBundle
       | PublicSessionBundle
     if (!bundle.session) return undefined // logged out: nothing to refresh
-    /*
-     * refresh() fires the session's onUpdated hook on success, which the armed
-     * hooks map to an 'update' event; the reducer snapshots the refreshed
-     * account, so no explicit dispatch is needed here. The returned snapshot
-     * lets callers read post-refresh fields without waiting on the (async)
-     * reducer update.
-     */
+    // The hook updates state; the return value exposes fresh fields immediately.
     await bundle.session.refresh()
     return sessionDataToSessionAccount(
       bundle.session.session,
@@ -601,15 +483,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         a => a.did === synced.currentAccount?.did,
       )
       /*
-       * The leader tab's current account, but only if it still has tokens -
-       * a tokenless entry means the leader logged out. When the leader logged
-       * out (`syncedDid === undefined`) while THIS tab thinks it is logged in,
-       * cancel any pending task so a resume racing this logout does not win and
-       * dispatch a switch over the top of the synced logout. We do NOT cancel
-       * unconditionally on every no-current broadcast: a logged-out tab may be
-       * mid-login, and another logged-out tab removing a stored account must not
-       * abort that unrelated in-flight login. resumeSession already cancels at
-       * its start, so the different-did case is covered elsewhere.
+       * Cancel pending work when another tab logs out the account this tab
+       * considers current. Do not cancel unrelated work between logged-out tabs.
        */
       const syncedDid = syncedAccount?.refreshJwt
         ? syncedAccount.did
@@ -622,35 +497,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
       if (syncedAccount && syncedAccount.refreshJwt) {
         if (syncedAccount.did !== state.currentAgentState.did) {
-          /*
-           * Web handling: if leader tab has switched to a diff account that is
-           * stale, it will refresh the session before triggering the update to
-           * follower tabs. Follower tabs will therefore receive the fresh
-           * session. See APP-1960, or ask Eric.
-           */
+          // The leader refreshes before broadcasting, so followers receive fresh tokens.
           void resumeSession(syncedAccount)
         } else {
           /*
-           * Same account, new tokens synced from the leader tab. PasswordSession
-           * is immutable (no in-place session patch), so rebuild a fresh bundle
-           * from the synced tokens WITHOUT a network call (the leader already
-           * refreshed) and swap it in via `replaced-current-bundle`. The
-           * bundle-identity effect disposes the previous session once it swaps,
-           * which strengthens the single-refresher guarantee (the stale-token
-           * session can no longer refresh).
+           * PasswordSession cannot be patched in place. Rebuild from the tokens
+           * the leader already refreshed, then dispose the previous bundle.
            */
           const prevBundle = state.currentAgentState.agent as unknown as
             | SessionBundle
             | PublicSessionBundle
-          /*
-           * Any change to ANY saved account fires persisted.onUpdate, and the
-           * 'synced-accounts' dispatch above already keeps the accounts list
-           * fresh. So if the CURRENT account's tokens are unchanged, a change to
-           * a non-current account landed here: bail out before rebuilding, since
-           * rebuild+swap would kill the live bundle (client-identity churn,
-           * in-flight request kills) for no reason. Fall through to rebuild only
-           * when we have no usable live session.
-           */
+          // Avoid replacing the live bundle for an unrelated account update.
           const live =
             prevBundle.session && !prevBundle.session.destroyed
               ? prevBundle.session.session
@@ -674,31 +531,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           )
           newBundle = buildBundle(newSession)
           registerBundleKillSwitch(newBundle, hooks.kill)
-          /*
-           * Reapply this account's subscribed labelers to the freshly built
-           * merged Bluesky client: buildBundle starts with an empty per-instance
-           * labeler set, and this rebuild path never runs
-           * configureModerationForAccount on its own. It is fully synchronous
-           * (the labeler cache is a local MMKV read), so the whole prep + arm +
-           * dispatch sequence below runs in one tick from the onUpdate
-           * broadcast - the new bundle enters the reducer with its labelers
-           * already applied, with no window where the new session is armed but
-           * the reducer still holds the old bundle.
-           */
+          // Apply cached labelers before the new session is armed and installed.
           configureModerationForAccount(newBundle, syncedAccount)
           /*
-           * Defensive race guard. With the whole path synchronous, nothing can
-           * have dispatched between the 'synced-accounts' dispatch above and
-           * here, so these conditions are trivially satisfied today. They are
-           * kept as a cheap invariant check against a future edit reintroducing
-           * an await into this path: a competing rebuild, an account switch, a
-           * logout, or a newer token generation would each show up as a
-           * bundle-identity or token mismatch, and the stale completion must
-           * drop out (self-disposing the never-installed bundle) rather than
-           * clobber the newer bundle or resurrect an authenticated bundle into a
-           * logged-out/other-account slot (the reducer's
-           * 'replaced-current-bundle' keeps the current did and does no identity
-           * check on the outgoing agent).
+           * If this path becomes asynchronous, do not let a stale rebuild
+           * replace a newer bundle or token generation.
            */
           const current = store.getState()
           const latestAccount = current.accounts.find(
@@ -709,11 +546,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             latestAccount?.accessJwt !== syncedAccount.accessJwt ||
             latestAccount?.refreshJwt !== syncedAccount.refreshJwt
           ) {
-            /*
-             * This bundle was never armed and never installed, so dispose it
-             * here (the install path's normal disposal in the bundle-identity
-             * effect will never run for it).
-             */
+            // This bundle was never installed, so the normal disposal effect cannot run.
             disposeBundle(newBundle)
             return
           }
@@ -726,11 +559,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
                 : undefined,
             nextSession: newBundle.session.session,
           })
-          /*
-           * Re-read syncedAccount's data through the freshly built session (the
-           * fallbacks cover the destroyed case, which cannot happen here since
-           * the session was just built synchronously and never armed).
-           */
           const newAccount = newBundle.session.destroyed
             ? syncedAccount
             : (sessionDataToSessionAccount(
@@ -793,7 +621,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const currentBundleRef = useRef(bundle)
   useEffect(() => {
     if (currentBundleRef.current !== bundle) {
-      // Read the previous value and immediately advance the pointer.
       const prevBundle = currentBundleRef.current
       currentBundleRef.current = bundle
       addSessionDebugLog({
@@ -801,8 +628,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         prevAgent: prevBundle,
         nextAgent: bundle,
       })
-      // We never reuse bundles so let's fully neutralize the previous one.
-      // This ensures its session won't try to consume any refresh tokens.
+      // Replaced bundles must never consume another refresh token.
       disposeBundle(prevBundle)
     }
   }, [bundle])

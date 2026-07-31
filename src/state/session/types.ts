@@ -43,22 +43,8 @@ export type SessionApiContext = {
     isSwitchingAccounts?: boolean,
   ) => Promise<void>
   removeAccount: (account: SessionAccount) => void
-  /**
-   * Fetches `com.atproto.server.getSession` through the active account's PDS
-   * client and patches the reducer's stored account entry with the returned
-   * `emailConfirmed`/`emailAuthFactor` fields. Unlike `refreshSession`, this
-   * does not rotate tokens, touch the `PasswordSession`, or fire session-change
-   * hooks - it only refreshes those email-state fields on the current account.
-   */
+  /** Refresh email state without rotating tokens. */
   partialRefreshSession: () => Promise<void>
-  /**
-   * Force a full session refresh (re-runs `com.atproto.server.refreshSession`
-   * plus `getSession`) and return the refreshed account snapshot, or `undefined`
-   * when logged out.
-   *
-   * The session's success hook propagates the updated account into state; the
-   * returned snapshot lets callers read post-refresh fields synchronously
-   * without waiting on the (async) reducer update. Rejections propagate.
-   */
+  /** Refresh tokens and return the new account snapshot immediately. */
   refreshSession: () => Promise<SessionAccount | undefined>
 }

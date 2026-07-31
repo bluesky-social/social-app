@@ -65,10 +65,6 @@ export type AtpSessionEvent =
 /**
  * Whether an access token was issued for a queued (waitlisted) signup rather
  * than a full session.
- *
- * Canonical implementation - util.ts re-exports it. It lives here (rather than
- * util.ts) so this module stays dependency-light: util.ts transitively pulls in
- * a large chunk of the app.
  */
 export function isSignupQueued(accessJwt: string | undefined) {
   if (accessJwt) {
@@ -245,10 +241,6 @@ export function sessionAccountToSessionData(
   }
 }
 
-/**
- * The service (entryway) URL for a session, or the public appview URL when
- * logged out / destroyed. Backs the {@link SessionBundle.service} getter.
- */
 function deriveServiceUrl(session: PasswordSession | null): URL {
   return new URL(
     session && !session.destroyed
@@ -257,48 +249,23 @@ function deriveServiceUrl(session: PasswordSession | null): URL {
   )
 }
 
-/**
- * The full set of read-through views over ONE `PasswordSession`. The
- * `session` is the sole auth core (single refresher); the clients never refresh
- * independently.
- */
+/** Clients backed by one `PasswordSession`, the bundle's sole auth core. */
 export type SessionBundle = {
-  /** The single auth core. Never exposed to the reducer. */
   session: PasswordSession
-  /**
-   * The single authed Bluesky client (merged account + appview). Proxied to
-   * the Bluesky appview and carrying this account's labelers; record helpers
-   * on it auto-target the user's PDS. See {@link buildBskyClient}.
-   */
+  /** Authed appview client whose record helpers target the account's PDS. */
   bskyClient: Client
-  /** Chat client (proxied to `did:web:api.bsky.chat#bsky_chat`). */
   chatClient: Client
-  /**
-   * The service (entryway) URL. Exposed so the reducer can read `.service` for
-   * its opaque snapshot/logging view (`OpaqueSessionBundle = {readonly service:
-   * URL}`) without reaching into the (never-exposed) session.
-   */
   readonly service: URL
 }
 
 /**
- * Kill-switches for live bundles, keyed by bundle identity.
- *
  * `PasswordSession` exposes no local (logout-free) destroy, so disposal is
- * implemented via a closure flag inside the session's injected `fetch` (see
- * {@link makeSessionHooks}). The `kill()` that trips that flag is produced next
- * to the hooks - before the bundle exists - so we stash it here once the bundle
- * is built and look it up in {@link disposeBundle}. A `WeakMap` keeps this off
- * the {@link SessionBundle} type (the reducer's opaque view must not see it) and
- * lets the entry be GC'd with the bundle.
+ * implemented by disabling its injected fetch and hooks. Keep that lifecycle
+ * state private and tied to bundle identity.
  */
 const bundleKillSwitches = new WeakMap<SessionBundle, () => void>()
 
-/**
- * Associate a bundle with the `kill()` from its {@link makeSessionHooks}, so
- * {@link disposeBundle} can neutralize the underlying session. Call once, right
- * after the bundle is built, at every session-construction site.
- */
+/** Register the lifecycle closure used by {@link disposeBundle}. */
 export function registerBundleKillSwitch(
   bundle: SessionBundle,
   kill: () => void,
@@ -306,20 +273,11 @@ export function registerBundleKillSwitch(
   bundleKillSwitches.set(bundle, kill)
 }
 
-/**
- * Assemble a {@link SessionBundle} from a live session: the merged Bluesky
- * client and the chat client, both read-through views over the one session.
- */
 export function buildBundle(session: PasswordSession): SessionBundle {
   return {
     session,
-    /*
-     * Starts with an empty per-account labeler set; configureModerationForAccount
-     * applies this account's labelers afterwards.
-     */
     bskyClient: buildBskyClient(session, []),
     chatClient: buildChatClient(session),
-    /* A getter keeps `.service` live with the session's state (destroyed -> public). */
     get service() {
       return deriveServiceUrl(session)
     },
@@ -327,21 +285,8 @@ export function buildBundle(session: PasswordSession): SessionBundle {
 }
 
 /**
- * The session-change callback the provider passes into the hooks.
- *
- * The whole {@link SessionBundle} is handed through so the provider can snapshot
- * the live session and use the bundle itself as the reducer's identity token.
- *
- * `sessionData` is the payload the library hands the hook. It is present on
- * BOTH the `'update'` path (the fresh, rotated session) and the `'expired'`
- * path (the DYING session's data, which `refresh()` passes to `onDeleted`
- * BEFORE it nulls its internal `#sessionData`). It matters because
- * `PasswordSession` fires `onUpdated`/`onDeleted` BEFORE committing
- * `#sessionData` (see `refresh()`/`logout()` in password-session.js), so the
- * live getter (`bundle.session.session`) still returns the OLD tokens at hook
- * time. On `'update'` the provider builds the refreshed account from this
- * argument; on `'expired'` it reads the dying refreshJwt from it to drive the
- * compare-and-rescue at the dispatch site.
+ * PasswordSession delivers `sessionData` before updating its live getter. The
+ * provider uses that payload for rotated tokens and expiry rescue.
  */
 type OnSessionChange = (
   bundle: SessionBundle,
@@ -351,22 +296,9 @@ type OnSessionChange = (
 ) => void
 
 /**
- * Build the `PasswordSession` hooks with an arm latch.
- *
- * `PasswordSession` fires `onUpdated` once during login/resume/createAccount
- * before the factory returns. We must NOT dispatch that initial event, so hooks
- * stay inert until `arm()` is called after the prepare tail resolves.
- *
- * `getBundle` is deferred because the bundle does not exist yet when the hooks
- * are constructed (session first, then bundle built over it).
- *
- * The `fetch` option is wrapped in a kill-switch: `kill()` sets a closure flag
- * so every subsequent request through this session - direct fetches AND the
- * internal auto-refresh, which `PasswordSession` routes through the same
- * captured `options.fetch` - throws instead of hitting the network. `kill()`
- * also disarms the hooks so a disposed session can never dispatch into the
- * reducer. This is the disposal mechanism {@link disposeBundle} relies on
- * (`PasswordSession` exposes no local destroy).
+ * Hooks stay inert during initial session preparation. `kill()` disarms them
+ * and disables the injected fetch so a disposed session cannot refresh or
+ * dispatch. The bundle getters are deferred because hooks are created first.
  */
 export function makeSessionHooks(
   onSessionChange: OnSessionChange,
@@ -414,50 +346,21 @@ export function makeSessionHooks(
   })
 }
 
-/**
- * The public (logged-out) bundle. Its `bskyClient` is the public appview client
- * (reads work logged out); the chat client is the throwing unauthenticated
- * client.
- */
+/** Clients exposed while logged out. */
 export type PublicSessionBundle = {
   session: null
-  /**
-   * The public appview client (reads work logged out). Logged-out WRITE
-   * protection is NOT a property of this client - it lives in the
-   * `usePdsClient` hook's fallback (which returns the throwing unauthenticated
-   * client when there is no session; see index.tsx).
-   */
   bskyClient: Client
-  /**
-   * The throwing unauthenticated client (NOT the public client): chat is
-   * meaningless logged out, and `useChatClient()` must fail loudly rather than
-   * silently target the public appview. See {@link getUnauthenticatedClient}.
-   */
   chatClient: Client
-  /** The public appview URL. See {@link SessionBundle.service}. */
   readonly service: URL
 }
 
-/**
- * Build the logged-out bundle used before/without a session. Configures guest
- * moderation as a side effect.
- */
+/** Build the logged-out bundle and configure guest moderation. */
 export function createPublicSessionBundle(): PublicSessionBundle {
   configureModerationForGuest() // Side effect but only relevant for tests
   const publicClient = getPublicLexClient()
   return {
     session: null,
-    /*
-     * The public client reads public data without auth. Logged-out write
-     * protection is enforced by the usePdsClient hook (which falls back to the
-     * throwing unauthenticated client when there is no session), NOT here - see
-     * index.tsx.
-     */
     bskyClient: publicClient,
-    /*
-     * The chat client throws on use when logged out, so an unauthenticated chat
-     * call fails loudly instead of silently targeting the public appview.
-     */
     chatClient: getUnauthenticatedClient(),
     service: new URL(PUBLIC_BSKY_SERVICE),
   }
@@ -483,10 +386,7 @@ export async function createSessionBundleAndResume(
   let session: PasswordSession
   const sessionData = sessionAccountToSessionData(storedAccount)
   if (isSessionExpired(storedAccount)) {
-    /*
-     * Network resume (1 retry). resume() always refreshes; the initial
-     * onUpdated it fires is swallowed by the arm latch.
-     */
+    // The arm latch swallows resume's initial onUpdated event.
     session = await networkRetry(1, () =>
       PasswordSession.resume(sessionData, hooks),
     )
@@ -497,11 +397,7 @@ export async function createSessionBundleAndResume(
 
   bundle = buildBundle(session)
   registerBundleKillSwitch(bundle, hooks.kill)
-  /*
-   * Early snapshot: only used to configure moderation below (its handle/did are
-   * refresh-stable). The RETURNED account is re-snapshotted after the prep
-   * awaits (see below).
-   */
+  // The returned account is captured again after asynchronous preparation.
   const earlyAccount =
     sessionDataToSessionAccount(session.session, session.session.service) ??
     storedAccount
@@ -509,13 +405,7 @@ export async function createSessionBundleAndResume(
   configureModerationForAccount(bundle, earlyAccount)
   const aa = prefetchAgeAssuranceServerData({client: bundle.bskyClient})
   await Promise.all([gates, aa])
-  /*
-   * Re-snapshot AFTER prep, right before arm(). A 401 during a prep request
-   * (e.g. the AA prefetch) triggers PasswordSession's internal auto-refresh,
-   * which rotates both tokens; its onUpdated is dropped by the still-disarmed
-   * latch. Snapshotting here (not before prep) persists the fresh refreshJwt
-   * rather than a stale one that is dead on the next cold start.
-   */
+  // Preparation may auto-refresh the session while hooks are still disarmed.
   const account =
     sessionDataToSessionAccount(session.session, session.session.service) ??
     storedAccount
@@ -559,7 +449,7 @@ export async function createSessionBundleAndLogin(
 
   bundle = buildBundle(session)
   registerBundleKillSwitch(bundle, hooks.kill)
-  // Early snapshot: needed now to seed `accountDid` (the getDid closure).
+  // Seed the hook's did before it is armed.
   const earlyAccount = sessionDataToSessionAccountOrThrow(session)
   accountDid = earlyAccount.did
 
@@ -567,13 +457,7 @@ export async function createSessionBundleAndLogin(
   configureModerationForAccount(bundle, earlyAccount)
   const aa = prefetchAgeAssuranceServerData({client: bundle.bskyClient})
   await Promise.all([gates, aa])
-  /*
-   * Re-snapshot AFTER prep, right before arm(): a 401 during a prep request
-   * triggers PasswordSession's internal auto-refresh, which rotates both tokens
-   * and fires an onUpdated the disarmed latch drops, so this persists the fresh
-   * refreshJwt. If the session was destroyed mid-prep, OrThrow throws (login
-   * effectively failed).
-   */
+  // Preparation may auto-refresh the session while hooks are still disarmed.
   const account = sessionDataToSessionAccountOrThrow(session)
   hooks.arm()
   return {account, bundle}
@@ -630,10 +514,7 @@ export async function createSessionBundleAndCreateAccount(
 
   bundle = buildBundle(session)
   registerBundleKillSwitch(bundle, hooks.kill)
-  /*
-   * Early snapshot: needed now to seed `accountDid` and for the DID/handle used
-   * across the local and deferred server writes below (all refresh-stable).
-   */
+  // Seed the hook and the deferred writes with refresh-stable account fields.
   const earlyAccount = sessionDataToSessionAccountOrThrow(session)
   accountDid = earlyAccount.did
 
@@ -762,21 +643,12 @@ export async function createSessionBundleAndCreateAccount(
   }
 
   await Promise.all([gates, aa])
-  /*
-   * Re-snapshot AFTER prep, right before arm(): a 401 during a prep request
-   * triggers PasswordSession's internal auto-refresh, which rotates both tokens
-   * and fires an onUpdated the disarmed latch drops, so this persists the fresh
-   * refreshJwt. If the session was destroyed mid-prep, OrThrow throws.
-   */
+  // Preparation may auto-refresh the session while hooks are still disarmed.
   const account = sessionDataToSessionAccountOrThrow(session)
   hooks.arm()
   return {account, bundle}
 }
 
-/**
- * Snapshot a live session as a `SessionAccount`, throwing if there is no active
- * session.
- */
 function sessionDataToSessionAccountOrThrow(
   session: PasswordSession,
 ): SessionAccount {
@@ -791,21 +663,9 @@ function sessionDataToSessionAccountOrThrow(
 }
 
 /**
- * Neutralize a bundle's session so it can never refresh again.
- *
- * Called when switching away from / disposing an account. `PasswordSession`
- * exposes no synchronous, hook-free way to mark itself destroyed without a
- * network logout (and `logout()`/`delete()` would revoke on the server, which
- * we do NOT want for a local switch - revocation is handled separately via the
- * push-token unregister temporary sessions). So we trip the kill-switch
- * installed in the session's injected `fetch` (see {@link makeSessionHooks} /
- * {@link registerBundleKillSwitch}): every subsequent request through this
- * session - direct fetch AND the internal auto-refresh, which shares the same
- * captured `options.fetch` - throws before touching the network. A tripped
- * refresh routes into the `onUpdateFailure` path (session preserved locally,
- * refresh token NOT consumed server-side). `kill()` also disarms the hooks so
- * the stale bundle can no longer dispatch into the reducer. The guarantee: this
- * session's tokens are no longer reachable by any live network path.
+ * Disable a replaced bundle without revoking its server session. PasswordSession
+ * has no local destroy operation, so the registered lifecycle closure disables
+ * its fetch and hooks instead.
  */
 export function disposeBundle(bundle: SessionBundle | PublicSessionBundle) {
   const session = bundle.session
@@ -815,33 +675,10 @@ export function disposeBundle(bundle: SessionBundle | PublicSessionBundle) {
   bundleKillSwitches.get(bundle)?.()
 }
 
-/**
- * Hard bound on how many distinct refresh-token generations the expiry rescue
- * will burn through for a single did before giving up and logging out. Each
- * rescue consumes a strictly newer generation (a token that differs from every
- * one already recorded as failed), so this set can only grow one entry per
- * expiry and this cap guarantees termination even under a pathological storm
- * of expiries against ever-newer tokens.
- */
+/** Maximum failed token generations considered during one expiry rescue. */
 export const MAX_EXPIRY_RESCUE_GENERATIONS = 5
 
-/**
- * Pure decision for the cross-tab expiry rescue (side-effecting rebuild stays
- * in the provider). Given the dying session's refreshJwt and the "latest known"
- * candidate accounts for that did (in preference order), pick the first
- * candidate that carries a usable, strictly-newer generation:
- *
- * - has a non-empty `refreshJwt`,
- * - whose `refreshJwt` DIFFERS from the dying one (a same-token candidate is
- *   just as dead), and
- * - whose `refreshJwt` is NOT already recorded as failed (loop guard).
- *
- * Returns `undefined` (fall through to logout) when nothing qualifies or the
- * failed-generation set has hit {@link MAX_EXPIRY_RESCUE_GENERATIONS}.
- *
- * `candidates` are tried in order, so the caller passes its most-authoritative
- * source first (on web, the fresh persisted re-read before the reducer state).
- */
+/** Pick the first unfailed token generation newer than the one that expired. */
 export function pickExpiryRescueCandidate({
   dyingRefreshJwt,
   candidates,

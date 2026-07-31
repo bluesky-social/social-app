@@ -5,12 +5,7 @@ import {type AtpSessionEvent, createPublicSessionBundle} from './session-core'
 import {type SessionAccount} from './types'
 import {createTemporaryClientsAndResume} from './util'
 
-/*
- * A hack so the reducer can't read anything from the session bundle. The
- * provider stores the full `SessionBundle` here, but the reducer's static type
- * only sees `service` (a URL, used for logging/snapshots) - structurally the
- * bundle has more, the reducer sees less.
- */
+// Keep session internals outside the reducer's static view of a bundle.
 type OpaqueSessionBundle = {
   readonly service: URL
 }
@@ -23,7 +18,7 @@ type AgentState = {
 export type State = {
   readonly accounts: SessionAccount[]
   readonly currentAgentState: AgentState
-  needsPersist: boolean // Mutated in an effect.
+  needsPersist: boolean // Cleared after persistence is scheduled.
 }
 
 export type Action =
@@ -40,19 +35,7 @@ export type Action =
       newAccount: SessionAccount
     }
   | {
-      /*
-       * Swap the current bundle in place, keeping the current did and replacing
-       * the matching account entry, without persisting (avoid write cycles).
-       * `PasswordSession` cannot be patched in place, so the provider rebuilds a
-       * fresh bundle from a set of tokens and swaps it in. Two producers:
-       *
-       * - Same-did cross-tab sync: the leader tab refreshed and broadcast the
-       *   new tokens; this tab rebuilds from them (no network).
-       * - Expiry rescue: the current bundle's refresh token expired, but a
-       *   newer generation for the same did is known (from reducer state or a
-       *   fresh persisted re-read), so the provider rebuilds from that newer
-       *   generation instead of logging out (see onSessionChange in index.tsx).
-       */
+      // Replace an immutable session from synced or rescued tokens without rebroadcasting.
       type: 'replaced-current-bundle'
       newAgent: OpaqueSessionBundle
       newAccount: SessionAccount
@@ -99,21 +82,8 @@ let reducer = (state: State, action: Action): State => {
       const {agent, accountDid, refreshedAccount, sessionEvent} = action
       if (agent !== state.currentAgentState.agent) {
         /*
-         * Any event from a bundle that is not the current one is dropped
-         * entirely, in BOTH directions:
-         *
-         * - A clear (expiry/network-error, refreshedAccount === undefined) from
-         *   a stale background bundle must not log the current user out. If the
-         *   problem is transient, it works on the next resume.
-         * - An update (refreshedAccount present) from a stale bundle must not
-         *   resurrect tokens: a refresh that completes after this bundle was
-         *   logged out / switched away from would otherwise write fresh tokens
-         *   back into a soft-logged-out (or switched-away) account entry.
-         *
-         * Trade-off: a background bundle's in-flight refresh that lands inside
-         * the disposal window now has its (already server-side-rotated) tokens
-         * discarded. The stored generation stays valid within the PDS 2h grace
-         * window, so this is strictly better than the resurrection bug.
+         * Stale bundles must neither log out the current account nor restore
+         * tokens after logout or an account switch.
          */
         return state
       }
@@ -126,7 +96,6 @@ let reducer = (state: State, action: Action): State => {
         !existingAccount ||
         JSON.stringify(existingAccount) === JSON.stringify(refreshedAccount)
       ) {
-        // Fast path without a state update.
         return state
       }
       return {
@@ -183,7 +152,6 @@ let reducer = (state: State, action: Action): State => {
     case 'removed-account': {
       const {accountDid} = action
 
-      // side effect
       const account = state.accounts.find(a => a.did === accountDid)
       if (account) {
         createTemporaryClientsAndResume([account])
@@ -211,7 +179,6 @@ let reducer = (state: State, action: Action): State => {
     case 'logged-out-current-account': {
       const {currentAgentState} = state
       const accountDid = currentAgentState.did
-      // side effect
       const account = state.accounts.find(a => a.did === accountDid)
       if (account && accountDid) {
         createTemporaryClientsAndResume([account])
@@ -276,11 +243,7 @@ let reducer = (state: State, action: Action): State => {
     case 'partial-refresh-session': {
       const {accountDid, patch} = action
 
-      /*
-       * Patch only the account entry: `PasswordSession` has no public session
-       * setter, and consumers that read these fields (useAccountEmailState)
-       * read from `currentAccount` rather than the session.
-       */
+      // PasswordSession has no setter; consumers read these fields from the account.
       return {
         ...state,
         accounts: state.accounts.map(a => {
