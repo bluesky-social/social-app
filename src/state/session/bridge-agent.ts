@@ -358,13 +358,8 @@ export class BskyAppAgent extends AtpAgent {
   }
 }
 
-/**
- * Build the logged-out agent used for public/guest browsing.
- *
- * Temporary name: it exists alongside `createPublicAgent` in `./agent` until
- * the provider is switched over to the bridge.
- */
-export function createPublicBridgeAgent() {
+/** Build the logged-out agent used for public/guest browsing. */
+export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
 
   const agent = new BskyAppAgent(
