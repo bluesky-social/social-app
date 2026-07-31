@@ -19,6 +19,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon} from '#/components/icons/Arrow'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {SubtleHover} from '#/components/SubtleHover'
+import {IS_NATIVE} from '#/env'
 
 export function LoadLatestBtn({
   onPress,
@@ -46,7 +47,7 @@ export function LoadLatestBtn({
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
-  const showBottomBar = hasSession ? !gtMobile : !gtTablet
+  const showBottomBar = IS_NATIVE || (hasSession ? !gtMobile : !gtTablet)
 
   const bottomInset = gtMobile ? a.pb_lg.paddingBottom : a.pb_md.paddingBottom
   const bottomPosition = gtMobile
