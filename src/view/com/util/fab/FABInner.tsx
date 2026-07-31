@@ -1,4 +1,4 @@
-import {type ComponentProps, type JSX, useRef} from 'react'
+import {type ComponentProps, useRef} from 'react'
 import {
   type GestureResponderEvent,
   type Pressable,
@@ -24,7 +24,7 @@ const MIN_HAPTIC_GAP_MS = 50
 
 export interface FABProps extends ComponentProps<typeof Pressable> {
   testID?: string
-  icon: JSX.Element
+  icon: React.JSX.Element
   style?: StyleProp<ViewStyle>
 }
 
