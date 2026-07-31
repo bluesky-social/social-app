@@ -239,6 +239,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
 
       if (signal.aborted) {
+        // The factory returns an armed bundle, so a superseded signup must dispose it.
+        disposeBundle(bundle)
         return
       }
       store.dispatch({
@@ -264,6 +266,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
 
       if (signal.aborted) {
+        // The factory returns an armed bundle, so a superseded login must dispose it.
+        disposeBundle(bundle)
         return
       }
       store.dispatch({
@@ -560,6 +564,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   if (__DEV__ && IS_WEB) window.agent = bundle.agent
 
   const currentBundleRef = useRef(bundle)
+  /*
+   * Disposal is deferred to this post-commit effect deliberately: components may
+   * still render against the outgoing bundle during the commit that swaps it, so
+   * tearing its agent down inline would pull the agent out from under them. The
+   * reducer's bundle-identity guard drops any events the not-yet-disposed session
+   * emits in that window.
+   */
   useEffect(() => {
     if (currentBundleRef.current !== bundle) {
       const prevBundle = currentBundleRef.current
