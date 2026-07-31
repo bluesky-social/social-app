@@ -261,8 +261,22 @@ function classifyExpectedSignupError(e: unknown): string | undefined {
   /*
    * TODO: `XrpcResponseError.error` is the open `LexErrorCode` union, so these
    * codes are compared as plain strings and a typo silently never matches.
-   * Narrowing to the errors `com.atproto.server.createAccount` declares needs
-   * the generated lexicons.
+   * Once the generated lexicons land, replace this (and every multi-code error
+   * site) with a shared helper that narrows against the method schema:
+   *
+   *   function matchXrpcError<M extends Procedure | Query>(
+   *     e: unknown,
+   *     method: Main<M>,
+   *   ): InferMethodError<M> | undefined
+   *
+   *   switch (matchXrpcError(e, com.atproto.server.createAccount)) {
+   *     case 'InvalidHandle': ...
+   *   }
+   *
+   * The return type is the method's declared-errors union, so a typo'd case is
+   * a compile error, and undeclared codes fall through to `undefined`. The
+   * helper should also match `e.method.nsid` so a declared code from a
+   * different call cannot match, mirroring the old per-method error classes.
    */
   if (e instanceof XrpcResponseError) {
     switch (e.error) {
