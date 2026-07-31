@@ -452,9 +452,7 @@ function getProcessingErrorMessage(
 
   switch (failureCode) {
     case 'encoding_failure':
-      return i18n._(
-        msg`An error occurred while processing the video. Please try again.`,
-      )
+      return i18n._(msg`The selected video could not be encoded.`)
     case 'pds_upload_failure':
       return i18n._(
         msg`The video could not be uploaded to your PDS. Please try again.`,
