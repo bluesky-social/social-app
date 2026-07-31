@@ -1,13 +1,11 @@
 import {createContext, useCallback, useContext} from 'react'
 import {LayoutAnimation} from 'react-native'
-import {
-  ComAtprotoServerCreateAccount,
-  type ComAtprotoServerDescribeServer,
-} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
+import {getErrorName} from '#/lib/lex-error'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
@@ -260,14 +258,22 @@ export const useSignupContext = () => useContext(SignupContext)
  * failure is unexpected and should be reported to Sentry.
  */
 function classifyExpectedSignupError(e: unknown): string | undefined {
-  if (e instanceof ComAtprotoServerCreateAccount.InvalidHandleError)
-    return 'InvalidHandle'
-  if (e instanceof ComAtprotoServerCreateAccount.HandleNotAvailableError)
-    return 'HandleNotAvailable'
-  if (e instanceof ComAtprotoServerCreateAccount.InvalidPasswordError)
-    return 'InvalidPassword'
-  if (e instanceof ComAtprotoServerCreateAccount.UnsupportedDomainError)
-    return 'UnsupportedDomain'
+  /*
+   * `createAccount` now goes through `PasswordSession`, so these arrive as lex
+   * error codes rather than the generated `@atproto/api` error classes.
+   * Comparing the code as a plain string means a typo silently never matches; a
+   * typed variant constrained to the errors the lexicon declares arrives with
+   * the lexicon codegen in a later PR.
+   */
+  const name = getErrorName(e)
+  if (
+    name === 'InvalidHandle' ||
+    name === 'HandleNotAvailable' ||
+    name === 'InvalidPassword' ||
+    name === 'UnsupportedDomain'
+  ) {
+    return name
+  }
   /* the server sends no typed error for this case */
   if (String(e).includes('Email already taken')) return 'EmailTaken'
   if (isNetworkError(e)) return 'NetworkError'
@@ -357,7 +363,7 @@ export function useSubmitSignup() {
       } catch (err) {
         const e = err as Error
         let errMsg = e.toString()
-        if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
+        if (getErrorName(e) === 'InvalidInviteCode') {
           dispatch({
             type: 'setError',
             value: l`Invite code not accepted. Check that you input it correctly and try again.`,
