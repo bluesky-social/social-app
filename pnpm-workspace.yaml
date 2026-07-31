@@ -34,7 +34,7 @@ patchedDependencies:
   'expo-age-range@57.0.2': patches/expo-age-range@57.0.2.patch
   'expo-haptics@57.0.1': patches/expo-haptics@57.0.1.patch
   'expo-media-library@57.0.3': patches/expo-media-library@57.0.3.patch
-  'expo-modules-core@57.0.7': patches/expo-modules-core@57.0.7.patch
+  'expo-modules-core@57.0.8': patches/expo-modules-core@57.0.8.patch
   'expo-notifications@57.0.7': patches/expo-notifications@57.0.7.patch
   'expo-updates@57.0.10': patches/expo-updates@57.0.10.patch
   expo@57.0.8: patches/expo@57.0.8.patch
