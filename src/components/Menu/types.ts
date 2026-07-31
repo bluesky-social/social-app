@@ -15,6 +15,7 @@ export type ContextType = {
 
 export type ItemContextType = {
   disabled: boolean
+  destructive: boolean
 }
 
 export type RadixPassThroughTriggerProps = {
@@ -99,6 +100,7 @@ export type ItemProps = React.PropsWithChildren<
     ViewStyleProp & {
       label: string
       onPress: (e: GestureResponderEvent) => void
+      destructive?: boolean
     }
 >
 

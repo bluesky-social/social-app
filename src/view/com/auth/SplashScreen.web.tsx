@@ -1,15 +1,14 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {useLogoVariant} from '#/view/icons/useLogoVariant'
 import {
   AppClipOverlay,
   postAppClipMessage,
@@ -17,6 +16,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
+import {TimesLarge_Stroke2_Corner0_Rounded as TimesIcon} from '#/components/icons/Times'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -46,7 +46,9 @@ export const SplashScreen = ({
     }
   }, [])
 
-  const kawaii = useKawaiiMode()
+  const logoVariant = useLogoVariant()
+  const kawaii = logoVariant === 'kawaii'
+  const japanLogo = logoVariant === 'japan'
 
   return (
     <>
@@ -61,13 +63,7 @@ export const SplashScreen = ({
             zIndex: 100,
           }}
           onPress={onDismiss}>
-          <FontAwesomeIcon
-            icon="x"
-            size={24}
-            style={{
-              color: String(t.atoms.text.color),
-            }}
-          />
+          <TimesIcon width={24} style={t.atoms.text} />
         </Pressable>
       )}
 
@@ -87,7 +83,7 @@ export const SplashScreen = ({
           ]}>
           <ErrorBoundary>
             <View style={[a.justify_center, a.align_center]}>
-              <Logo width={kawaii ? 300 : 92} fill="sky" />
+              <Logo width={kawaii ? 300 : japanLogo ? 120 : 92} fill="sky" />
 
               {!kawaii && (
                 <View style={[a.pb_sm, a.pt_5xl]}>

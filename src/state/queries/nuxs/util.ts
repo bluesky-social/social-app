@@ -34,7 +34,7 @@ export function parseAppNux(nux: AppBskyActorDefs.Nux): AppNux | undefined {
 
 export function serializeAppNux(nux: AppNux): AppBskyActorDefs.Nux {
   const {data, ...rest} = nux
-  const schema = NuxSchemas[nux.id as Nux]
+  const schema = NuxSchemas[nux.id]
 
   const result: AppBskyActorDefs.Nux = {
     ...rest,

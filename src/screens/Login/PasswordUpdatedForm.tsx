@@ -1,7 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useBreakpoints, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -13,7 +11,7 @@ export const PasswordUpdatedForm = ({
 }: {
   onPressNext: () => void
 }) => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
 
   return (
@@ -29,8 +27,8 @@ export const PasswordUpdatedForm = ({
       <View style={web([a.flex_row, a.justify_center])}>
         <Button
           onPress={onPressNext}
-          label={_(msg`Close alert`)}
-          accessibilityHint={_(msg`Closes password update alert`)}
+          label={l`Close alert`}
+          accessibilityHint={l`Closes password update alert`}
           color="primary"
           size="large">
           <ButtonText>

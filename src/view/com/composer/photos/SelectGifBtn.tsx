@@ -1,14 +1,15 @@
-import {useCallback, useRef} from 'react'
+import {useCallback} from 'react'
 import {Keyboard} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {type Gif} from '#/state/queries/tenor'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
-import {GifSelectDialog} from '#/components/dialogs/GifSelect'
+import * as Dialog from '#/components/Dialog'
 import {GifSquare_Stroke2_Corner0_Rounded as GifIcon} from '#/components/icons/Gif'
 import {useAnalytics} from '#/analytics'
+import {GifPickerDialog} from '#/features/gifPicker/GifPickerDialog'
+import {type Gif} from '#/features/gifPicker/types'
 
 type Props = {
   onClose?: () => void
@@ -19,22 +20,34 @@ type Props = {
 export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
   const ax = useAnalytics()
   const {_} = useLingui()
-  const ref = useRef<{open: () => void}>(null)
+  const control = Dialog.useDialogControl()
   const t = useTheme()
 
-  const onPressSelectGif = useCallback(async () => {
+  const onPressSelectGif = useCallback(() => {
     ax.metric('composer:gif:open', {})
     Keyboard.dismiss()
-    ref.current?.open()
-  }, [ax])
+    control.open()
+  }, [ax, control])
 
   return (
     <>
       <Button
         testID="openGifBtn"
         onPress={onPressSelectGif}
-        label={_(msg`Select GIF`)}
-        accessibilityHint={_(msg`Opens GIF select dialog`)}
+        label={_(
+          msg({
+            message: 'Select GIF',
+            comment:
+              'Accessibility label for the button in the post composer that opens the GIF picker dialog.',
+          }),
+        )}
+        accessibilityHint={_(
+          msg({
+            message: 'Opens the GIF picker dialog',
+            comment:
+              'Accessibility hint announced after the GIF picker button label, describing what activating it will do.',
+          }),
+        )}
         style={a.p_sm}
         variant="ghost"
         shape="round"
@@ -43,8 +56,8 @@ export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
         <GifIcon size="lg" style={disabled && t.atoms.text_contrast_low} />
       </Button>
 
-      <GifSelectDialog
-        controlRef={ref}
+      <GifPickerDialog
+        control={control}
         onClose={onClose}
         onSelectGif={onSelectGif}
       />

@@ -10,33 +10,33 @@ help: ## Print info about all commands
 
 .PHONY: build-web
 build-web: ## Compile web bundle, copy to bskyweb directory
-	yarn intl:build
-	yarn build-web
+	pnpm intl:build
+	pnpm build-web
 
 .PHONY: build-web-embed
 build-web-embed: ## Compile web embed bundle, copy to bskyweb/embedr* directories
-	yarn intl:build
-	yarn build-embed
+	pnpm intl:build
+	pnpm build-embed
 
 .PHONY: test
 test: ## Run all tests
-	NODE_ENV=test yarn test
+	NODE_ENV=test pnpm test
 
 .PHONY: lint
 lint: ## Run style checks and verify syntax
-	yarn run lint
+	pnpm run lint
 
 #.PHONY: fmt
 #fmt: ## Run syntax re-formatting
-#	yarn prettier
+#	pnpm prettier
 
 .PHONY: deps
-deps: ## Installs dependent libs using 'yarn install'
-	yarn install --frozen-lockfile
+deps: ## Installs dependent libs using 'pnpm install'
+	pnpm install --frozen-lockfile
 	cd bskyembed && yarn install --frozen-lockfile
 
 .PHONY: nvm-setup
-nvm-setup: ## Use NVM to install and activate node+yarn
+nvm-setup: ## Use NVM to install and activate node+pnpm
 	nvm install 20
 	nvm use 20
-	npm install --global yarn
+	npm install --global pnpm

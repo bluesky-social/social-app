@@ -48,6 +48,10 @@ import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
+  createPlaybackTelemetry,
+  type PlaybackTelemetry,
+} from '#/lib/media/video/playbackTelemetry'
+import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
@@ -75,7 +79,6 @@ import {
 } from '#/state/queries/post-feed'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {List} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -131,16 +134,13 @@ export function VideoFeed({}: NativeStackScreenProps<
   const {params} = useRoute<RouteProp<CommonNavigatorParams, 'VideoFeed'>>()
 
   const t = useTheme()
-  const setMinShellMode = useSetMinimalShellMode()
   useFocusEffect(
     useCallback(() => {
-      setMinShellMode(true)
       setSystemUITheme('lightbox', t)
       return () => {
-        setMinShellMode(false)
         setSystemUITheme('theme', t)
       }
-    }, [setMinShellMode, t]),
+    }, [t]),
   )
 
   const isFocused = useIsFocused()
@@ -148,7 +148,7 @@ export function VideoFeed({}: NativeStackScreenProps<
 
   return (
     <ThemeProvider theme="dark">
-      <Layout.Screen noInsetTop style={{backgroundColor: 'black'}}>
+      <Layout.Screen minimalShell noInsetTop style={{backgroundColor: 'black'}}>
         <KeepAwake />
         <View
           style={[
@@ -555,7 +555,7 @@ let VideoItem = ({
         <>
           <VideoItemPlaceholder embed={embed} />
           {shouldRenderVideo && player && (
-            <VideoItemInner player={player} embed={embed} />
+            <VideoItemInner player={player} embed={embed} active={active} />
           )}
           {moderation && (
             <Overlay
@@ -579,12 +579,16 @@ VideoItem = memo(VideoItem)
 function VideoItemInner({
   player,
   embed,
+  active,
 }: {
   player: VideoPlayer
   embed: AppBskyEmbedVideo.View
+  active: boolean
 }) {
   const {bottom} = useSafeAreaInsets()
   const [isReady, setIsReady] = useState(!IS_ANDROID)
+
+  usePlaybackTelemetry({player, active, playlist: embed.playlist})
 
   useEventListener(player, 'timeUpdate', evt => {
     if (IS_ANDROID && !isReady && evt.currentTime >= 0.05) {
@@ -611,6 +615,69 @@ function VideoItemInner({
       accessibilityIgnoresInvertColors
     />
   )
+}
+
+/**
+ * Opens a Sentry playback span while this item is the active video. Adjacent
+ * players are preloaded by updateVideoState, so record whether the player was
+ * already ready at activation to separate load time from swipe latency.
+ */
+function usePlaybackTelemetry({
+  player,
+  active,
+  playlist,
+}: {
+  player: VideoPlayer
+  active: boolean
+  playlist: string
+}) {
+  const ax = useAnalytics()
+  const telemetryRef = useRef<PlaybackTelemetry | null>(null)
+
+  useEffect(() => {
+    if (!active) return
+    telemetryRef.current ??= createPlaybackTelemetry({
+      surface: 'immersiveFeed',
+      presentation: 'video',
+    })
+    const telemetry = telemetryRef.current
+    const preloaded = player.status === 'readyToPlay'
+    telemetry.activated({preloaded})
+    if (preloaded) {
+      telemetry.ready()
+    }
+    return () => {
+      telemetry.deactivated()
+    }
+  }, [active, player])
+
+  useEventListener(player, 'statusChange', evt => {
+    if (evt.status === 'readyToPlay') {
+      telemetryRef.current?.ready()
+    } else if (evt.status === 'error') {
+      const message = evt.error?.message ?? 'unknown'
+      telemetryRef.current?.error(message)
+      /*
+       * Adjacent players are preloaded and can error before the user ever
+       * swipes to them - only count failures the user actually sees.
+       */
+      if (active) {
+        ax.metric('video:playback:failed', {
+          surface: 'immersiveFeed',
+          presentation: 'video',
+          errorClass: 'PlayerError',
+          errorMessage: message.slice(0, 256),
+          playlist,
+        })
+      }
+    }
+  })
+
+  useEventListener(player, 'playingChange', evt => {
+    if (evt.isPlaying) {
+      telemetryRef.current?.playing()
+    }
+  })
 }
 
 function ModerationOverlay({

@@ -5,9 +5,7 @@ import {
   moderateProfile,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -93,7 +91,7 @@ function KnownFollowersInner({
   showIfEmpty?: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const textStyle = [a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]
 
@@ -124,9 +122,7 @@ function KnownFollowersInner({
 
   return (
     <Link
-      label={_(
-        msg`Press to view followers of this account that you also follow`,
-      )}
+      label={l`Press to view followers of this account that you also follow`}
       onPress={onLinkPress}
       to={makeProfileLink(profile, 'known-followers')}
       style={[
@@ -188,7 +184,8 @@ function KnownFollowersInner({
             numberOfLines={2}>
             {slice.length >= 2 ? (
               // 2-n followers, including blocks
-              serverCount > 2 ? ( // only 2
+              // only 2
+              serverCount > 2 ? (
                 <Trans>
                   Followed by{' '}
                   <Text emoji key={slice[0].profile.did} style={textStyle}>
@@ -254,7 +251,7 @@ function EmptyFallback({show}: {show?: boolean}) {
 
   return (
     <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
-      <Trans>Not followed by anyone you're following</Trans>
+      <Trans>Not followed by anyone you’re following</Trans>
     </Text>
   )
 }

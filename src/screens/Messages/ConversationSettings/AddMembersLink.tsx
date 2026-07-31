@@ -1,0 +1,133 @@
+import {View} from 'react-native'
+import {plural} from '@lingui/core/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
+
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {logger} from '#/logger'
+import {useAddGroupMembers} from '#/state/queries/messages/add-group-members'
+import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {AddMembersFlow} from '#/components/dms/AddMembersFlow'
+import {type ConvoWithDetails} from '#/components/dms/util'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon} from '#/components/icons/Chevron'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
+import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+
+export function AddMembersLink({
+  convo,
+  disabled,
+}: {
+  convo: Extract<ConvoWithDetails, {kind: 'group'}>
+  disabled?: boolean
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const ax = useAnalytics()
+
+  const addMembersControl = Dialog.useDialogControl()
+
+  const convoId = convo.view.id
+  const {mutate: addGroupMembers, isPending: isAddPending} = useAddGroupMembers(
+    convoId,
+    {
+      onSuccess: data => {
+        ax.metric('groupchat:owner:inviteMember', {convoId})
+        addMembersControl.close(() => {
+          const members = data.addedMembers ?? []
+
+          let names = null
+          if (members.length === 1) {
+            names = l`${createSanitizedDisplayName(members[0])} added to chat`
+          } else if (members.length === 2) {
+            names = l`${createSanitizedDisplayName(members[0])} and ${createSanitizedDisplayName(members[1])} added to chat`
+          } else if (members.length > 2) {
+            const memberCount = convo.details.memberCount - 2
+            names = l`${createSanitizedDisplayName(members[0])}, ${createSanitizedDisplayName(members[1])} and ${plural(
+              memberCount,
+              {
+                one: '# other',
+                other: '# others',
+              },
+            )} added to chat`
+          }
+
+          if (names) Toast.show(names)
+        })
+      },
+      onError: e => {
+        logger.error('Failed to add group chat members', {message: e})
+        Toast.show(l`Failed to add members`, {type: 'error'})
+      },
+    },
+  )
+
+  return (
+    <>
+      <Button
+        disabled={disabled || isAddPending}
+        label={l`Add members`}
+        onPress={addMembersControl.open}>
+        {({interacting}) => (
+          <View
+            style={[
+              a.w_full,
+              a.flex_row,
+              a.align_center,
+              a.justify_between,
+              a.px_xl,
+              a.py_sm,
+              interacting ? [t.atoms.bg_contrast_25] : [],
+            ]}>
+            <View style={[a.flex_row, a.align_center]}>
+              <View
+                style={[
+                  a.flex_row,
+                  a.align_center,
+                  a.justify_center,
+                  a.p_lg,
+                  a.rounded_full,
+                  interacting
+                    ? t.atoms.bg_contrast_100
+                    : t.atoms.bg_contrast_50,
+                  {
+                    height: 48,
+                    width: 48,
+                  },
+                ]}>
+                <PlusIcon style={[t.atoms.text_contrast_high]} size="sm" />
+              </View>
+              <Text
+                numberOfLines={1}
+                style={[a.text_md, a.font_semi_bold, a.mx_sm, t.atoms.text]}>
+                <Trans>Add members</Trans>
+              </Text>
+            </View>
+            {isAddPending ? (
+              <Loader size="md" />
+            ) : (
+              <ChevronIcon style={[t.atoms.text_contrast_medium]} size="md" />
+            )}
+          </View>
+        )}
+      </Button>
+
+      <Dialog.Outer
+        control={addMembersControl}
+        testID="addChatMembersDialog"
+        nativeOptions={{fullHeight: true}}>
+        <Dialog.Handle />
+        <AddMembersFlow
+          convo={convo}
+          title={l`Add members`}
+          onAddMembers={(members, profiles) => {
+            addGroupMembers({members, profiles})
+          }}
+        />
+      </Dialog.Outer>
+    </>
+  )
+}

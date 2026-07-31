@@ -1,12 +1,6 @@
 import {useCallback} from 'react'
 import {Pressable, View} from 'react-native'
-import Animated, {
-  measure,
-  type MeasuredDimensions,
-  runOnJS,
-  runOnUI,
-  useAnimatedRef,
-} from 'react-native-reanimated'
+import Animated, {useAnimatedRef} from 'react-native-reanimated'
 import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -19,13 +13,13 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
-import {useLightboxControls} from '#/state/lightbox'
 import {TextLink} from '#/view/com/util/Link'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar, type UserAvatarType} from '#/view/com/util/UserAvatar'
 import {StarterPack} from '#/components/icons/StarterPack'
 import * as Layout from '#/components/Layout'
+import {useLightboxControls} from '#/components/Lightbox/state'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -60,14 +54,17 @@ export function ProfileSubpageHeader({
   const canGoBack = navigation.canGoBack()
   const aviRef = useAnimatedRef()
 
-  const _openLightbox = useCallback(
-    (uri: string, thumbRect: MeasuredDimensions | null) => {
+  const onPressAvi = useCallback(() => {
+    if (
+      avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
+    ) {
       openLightbox({
         images: [
           {
-            uri,
-            thumbUri: uri,
-            thumbRect,
+            uri: avatar,
+            thumbUri: avatar,
+            thumbRect: null,
+            thumbRef: aviRef,
             dimensions: {
               // It's fine if it's actually smaller but we know it's 1:1.
               height: 1000,
@@ -79,21 +76,8 @@ export function ProfileSubpageHeader({
         ],
         index: 0,
       })
-    },
-    [openLightbox],
-  )
-
-  const onPressAvi = useCallback(() => {
-    if (
-      avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
-    ) {
-      runOnUI(() => {
-        'worklet'
-        const rect = measure(aviRef)
-        runOnJS(_openLightbox)(avatar, rect)
-      })()
     }
-  }, [_openLightbox, avatar, aviRef])
+  }, [openLightbox, avatar, aviRef])
 
   return (
     <>

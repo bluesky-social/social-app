@@ -6,7 +6,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   // Views
   private var sheetVc: SheetViewController?
   private var innerView: UIView?
-  private var touchHandler: RCTTouchHandler?
+  private var touchHandler: RCTSurfaceTouchHandler?
 
   // Native content height observation (eliminates JS bridge round-trip)
   private var contentHeightObservation: NSKeyValueObservation?
@@ -32,9 +32,12 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
   var cornerRadius: CGFloat?
   var sourceViewTag: Int?
   var minHeight = 0.0
-  var maxHeight: CGFloat! {
+  // getScreenHeight() is nil when no window scene is connected yet (e.g. during
+  // prewarming or a background launch). A nil here previously trapped in
+  // clampHeight, so fall back to the full screen bounds instead.
+  var maxHeight: CGFloat = UIScreen.main.bounds.height {
     didSet {
-      let screenHeight = Util.getScreenHeight() ?? 0
+      let screenHeight = Util.getScreenHeight() ?? UIScreen.main.bounds.height
       if maxHeight > screenHeight {
         maxHeight = screenHeight
       }
@@ -77,34 +80,38 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
   required init (appContext: AppContext? = nil) {
     super.init(appContext: appContext)
-    self.maxHeight = Util.getScreenHeight()
-    self.touchHandler = RCTTouchHandler(bridge: appContext?.reactBridge)
+    self.maxHeight = Util.getScreenHeight() ?? UIScreen.main.bounds.height
+    self.touchHandler = RCTSurfaceTouchHandler()
     SheetManager.shared.add(self)
   }
 
   deinit {
     self.destroy()
   }
+  
+  override func mountChildComponentView(
+    _ childComponentView: UIView,
+    index: Int
+  ) {
+    self.innerView = childComponentView
+    touchHandler?.attach(to: childComponentView)
+  }
+  
+  override func unmountChildComponentView(
+    _ childComponentView: UIView,
+    index: Int
+  ) {
+    touchHandler?.detach(from: childComponentView)
 
-  // We don't want this view to actually get added to the tree, so we'll simply store it for adding
-  // to the SheetViewController
-  override func insertReactSubview(_ subview: UIView!, at atIndex: Int) {
-    self.touchHandler?.attach(to: subview)
-    self.innerView = subview
+    childComponentView.removeFromSuperview()
+    if self.innerView === childComponentView {
+      self.innerView = nil
+    }
   }
 
   // We'll grab the content height from here so we know the initial detent to set
   override func layoutSubviews() {
     super.layoutSubviews()
-
-    guard let innerView = self.innerView else {
-      return
-    }
-
-    if innerView.subviews.count != 1 {
-      return
-    }
-
     self.present()
   }
 
@@ -114,7 +121,10 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
     self.isClosing = false
     self.isOpen = false
     self.sheetVc = nil
-    self.touchHandler?.detach(from: self.innerView)
+
+    if let innerView = self.innerView {
+      self.touchHandler?.detach(from: innerView)
+    }
     self.touchHandler = nil
     self.innerView = nil
     SheetManager.shared.remove(self)
@@ -143,8 +153,7 @@ class SheetView: ExpoView, UISheetPresentationControllerDelegate {
 
     if #available(iOS 26.0, *),
        let tag = self.sourceViewTag,
-       let bridge = self.appContext?.reactBridge,
-       let sourceView = bridge.uiManager.view(forReactTag: NSNumber(value: tag)) {
+       let sourceView = self.appContext?.findView(withTag: tag, ofType: UIView.self) {
       sheetVc.preferredTransition = .zoom { _ in
         return sourceView
       }

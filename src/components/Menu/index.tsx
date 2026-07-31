@@ -6,9 +6,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -31,6 +29,11 @@ import {
 } from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
+
+// iOS 26's floaty sheet presentation subtracts the bottom safe-area inset from
+// the requested detent, which eats the visible bottom padding of short (e.g.
+// single-item) menus. Flooring the native sheet height restores that padding.
+const IOS_MENU_MIN_HEIGHT = 128
 
 export {
   type DialogControlProps as MenuControlProps,
@@ -98,18 +101,22 @@ export function Outer({
 }: React.PropsWithChildren<{
   showCancel?: boolean
   style?: StyleProp<ViewStyle>
+  onCloseAutoFocus?: (event: Event) => void
 }>) {
   const context = useMenuContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Dialog.Outer
       control={context.control}
-      nativeOptions={{preventExpansion: true}}>
+      nativeOptions={{
+        preventExpansion: true,
+        minHeight: IS_IOS ? IOS_MENU_MIN_HEIGHT : undefined,
+      }}>
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
-        <Dialog.ScrollableInner label={_(msg`Menu`)}>
+        <Dialog.ScrollableInner label={l`Menu`}>
           <View style={[a.gap_lg]}>
             {children}
             {IS_NATIVE && showCancel && <Cancel />}
@@ -120,7 +127,14 @@ export function Outer({
   )
 }
 
-export function Item({children, label, style, onPress, ...rest}: ItemProps) {
+export function Item({
+  children,
+  label,
+  style,
+  onPress,
+  destructive = false,
+  ...rest
+}: ItemProps) {
   const t = useTheme()
   const context = useMenuContext()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
@@ -137,7 +151,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       accessibilityLabel={label}
       onFocus={onFocus}
       onBlur={onBlur}
-      onPress={async e => {
+      onPress={e => {
         if (IS_ANDROID) {
           /**
            * Below fix for iOS doesn't work for Android, this does.
@@ -176,7 +190,8 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
         style,
         (focused || pressed) && !rest.disabled && [t.atoms.bg_contrast_50],
       ]}>
-      <ItemContext.Provider value={{disabled: Boolean(rest.disabled)}}>
+      <ItemContext.Provider
+        value={{disabled: Boolean(rest.disabled), destructive}}>
         {children}
       </ItemContext.Provider>
     </Pressable>
@@ -185,7 +200,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
-  const {disabled} = useMenuItemContext()
+  const {disabled, destructive} = useMenuItemContext()
   return (
     <Text
       numberOfLines={1}
@@ -196,6 +211,7 @@ export function ItemText({children, style}: ItemTextProps) {
         a.font_semi_bold,
         t.atoms.text_contrast_high,
         style,
+        destructive && {color: t.palette.negative_500},
         disabled && t.atoms.text_contrast_low,
       ]}>
       {children}
@@ -205,7 +221,7 @@ export function ItemText({children, style}: ItemTextProps) {
 
 export function ItemIcon({icon: Comp, fill}: ItemIconProps) {
   const t = useTheme()
-  const {disabled} = useMenuItemContext()
+  const {disabled, destructive} = useMenuItemContext()
   return (
     <Comp
       size="lg"
@@ -214,7 +230,9 @@ export function ItemIcon({icon: Comp, fill}: ItemIconProps) {
           ? fill({disabled})
           : disabled
             ? t.atoms.text_contrast_low.color
-            : t.atoms.text_contrast_medium.color
+            : destructive
+              ? t.palette.negative_500
+              : t.atoms.text_contrast_medium.color
       }
     />
   )
@@ -341,12 +359,12 @@ export function Group({children, style}: GroupProps) {
 }
 
 function Cancel() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const context = useMenuContext()
 
   return (
     <Button
-      label={_(msg`Close this dialog`)}
+      label={l`Close this dialog`}
       size="small"
       variant="ghost"
       color="secondary"

@@ -99,6 +99,7 @@ export function useProfilesQuery({
 }) {
   const agent = useAgent()
   return useQuery({
+    enabled: handles.length > 0,
     staleTime: STALE.MINUTES.FIVE,
     queryKey: profilesQueryKey(handles),
     queryFn: async () => {
@@ -176,8 +177,8 @@ export function useProfileUpdateMutation() {
         if (typeof updates === 'function') {
           next = updates(next)
         } else {
-          next.displayName = updates.displayName
-          next.description = updates.description
+          next.displayName = updates.displayName || undefined
+          next.description = updates.description || undefined
           if ('pinnedPost' in updates) {
             next.pinnedPost = updates.pinnedPost
           }
@@ -527,6 +528,10 @@ export function useProfileBlockMutationQueue(
       updateProfileShadow(queryClient, did, {
         blockingUri: finalBlockingUri,
       })
+      // The shadow only reaches components that read profiles through shadow
+      // hooks. The convo list is also read raw (e.g. the unread badge's
+      // calculateCount, getMessageInfo), and blocks emit no chat log event,
+      // so without a refetch that data stays stale indefinitely.
       void queryClient.invalidateQueries({queryKey: [RQKEY_LIST_CONVOS]})
     },
   })

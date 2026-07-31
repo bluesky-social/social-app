@@ -1,0 +1,44 @@
+version: 2
+# Dependabot auto-update config.
+#
+# Cooldown (7 days) is the point of this config: it delays version-update
+# PRs until a newly-published version has aged. Supply-chain attacks like
+# the tanstack Shai-Hulud compromise (2026-05-11) live minutes-to-hours
+# before the registry yanks them; a 7-day cooldown keeps poisoned
+# versions out of our lockfiles.
+#
+# Security updates bypass cooldown and continue to flow immediately. See:
+# https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference#cooldown
+#
+# Auto-merge is deliberately NOT enabled. Every dependabot PR gets human
+# review.
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    groups:
+      production:
+        dependency-type: production
+        update-types: [minor, patch]
+      development:
+        dependency-type: development
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 3
+    groups:
+      actions:
+        patterns: ["*"]
+        update-types: [minor, patch]

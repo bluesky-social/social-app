@@ -1,6 +1,5 @@
 import {type TextInputProps, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import * as TextField from '#/components/forms/TextField'
 import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
@@ -20,7 +19,7 @@ export function TokenField({
   onChangeText,
   onSubmitEditing,
 }: Pick<TextInputProps, 'value' | 'onChangeText' | 'onSubmitEditing'>) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const isInvalid = Boolean(value && value.length > 10 && !isValidCode(value))
 
   const handleOnChangeText = (v: string) => {
@@ -35,7 +34,7 @@ export function TokenField({
           autoComplete="off"
           autoCorrect={false}
           isInvalid={isInvalid}
-          label={_(msg`Confirmation code`)}
+          label={l`Confirmation code`}
           maxLength={11}
           placeholder="XXXXX-XXXXX"
           value={value}

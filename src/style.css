@@ -114,6 +114,11 @@ input:focus {
   white-space: nowrap;
   font-size: 12px;
   z-index: 10;
+  /* HACK: promote to its own layer so Safari's compositor doesn't latch the
+     bubble's `display: block` state when SubtleHover (also promoted) sits in
+     the same stacking context. Without this, hovering certain notification
+     items can leave the bubble visible permanently until a relayout. -sfn */
+  will-change: transform;
 }
 [data-tooltip]::before {
   content: '';

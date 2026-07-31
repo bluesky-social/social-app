@@ -1,18 +1,20 @@
 import {useImperativeHandle, useRef, useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
-import {BlueskyVideoView} from '@haileyok/bluesky-video'
+import {BlueskyVideoView} from '@bsky.app/video'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useAutoplayDisabledPref} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
+import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Pause'
 import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
+import {KeepAwake} from '#/components/KeepAwake'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useVideoMuteState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {GifPresentationControls} from '../GifPresentationControls'
@@ -24,12 +26,18 @@ export function VideoEmbedInnerNative({
   setStatus,
   setIsLoading,
   setIsActive,
+  onError,
 }: {
   ref: React.Ref<{togglePlayback: () => void}>
   embed: AppBskyEmbedVideo.View
   setStatus: (status: 'playing' | 'paused') => void
   setIsLoading: (isLoading: boolean) => void
   setIsActive: (isActive: boolean) => void
+  /**
+   * Called with the native error message before the component throws to the
+   * surrounding error boundary.
+   */
+  onError?: (error: string) => void
 }) {
   const {_} = useLingui()
   const videoRef = useRef<BlueskyVideoView>(null)
@@ -79,6 +87,7 @@ export function VideoEmbedInnerNative({
           setTimeRemaining(e.nativeEvent.timeRemaining)
         }}
         onError={e => {
+          onError?.(e.nativeEvent.error)
           setError(e.nativeEvent.error)
         }}
         ref={videoRef}
@@ -97,21 +106,27 @@ export function VideoEmbedInnerNative({
           altText={embed.alt}
         />
       ) : (
-        <VideoPresentationControls
-          enterFullscreen={() => {
-            videoRef.current?.enterFullscreen(true)
-          }}
-          toggleMuted={() => {
-            videoRef.current?.toggleMuted()
-          }}
-          togglePlayback={() => {
-            videoRef.current?.togglePlayback()
-          }}
-          isPlaying={isPlaying}
-          timeRemaining={timeRemaining}
-        />
+        <>
+          <VideoPresentationControls
+            enterFullscreen={() => {
+              videoRef.current?.enterFullscreen(true)
+            }}
+            toggleMuted={() => {
+              videoRef.current?.toggleMuted()
+            }}
+            togglePlayback={() => {
+              videoRef.current?.togglePlayback()
+            }}
+            isPlaying={isPlaying}
+            timeRemaining={timeRemaining}
+          />
+          {embed.alt && (
+            <AltBadgeWithDialog text={embed.alt} position="top-right" />
+          )}
+        </>
       )}
       <MediaInsetBorder />
+      <KeepAwake enabled={isPlaying} />
     </View>
   )
 }

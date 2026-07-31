@@ -182,11 +182,7 @@ describe('general functionality', () => {
       timestamp: sentryTimestamp,
     })
     jest.runAllTimers()
-    expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
-      level: 'log',
-      tags: {category: 'logger'},
-      extra: {__context__: 'logger'},
-    })
+    expect(Sentry.captureMessage).not.toHaveBeenCalled()
 
     sentryTransport(
       LogLevel.Warn,
@@ -204,8 +200,18 @@ describe('general functionality', () => {
       timestamp: sentryTimestamp,
     })
     jest.runAllTimers()
+    expect(Sentry.captureMessage).not.toHaveBeenCalled()
+
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      message,
+      {},
+      timestamp,
+    )
+    jest.runAllTimers()
     expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
-      level: 'warning',
+      level: 'error',
       tags: {category: 'logger'},
       extra: {__context__: 'logger'},
     })
@@ -257,6 +263,42 @@ describe('general functionality', () => {
       level: LogLevel.Info,
       timestamp: sentryTimestamp,
     })
+  })
+
+  test('sentryTransport filters network errors', () => {
+    jest.clearAllMocks()
+    const timestamp = Date.now()
+
+    // network error in the message itself
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      'Network request failed',
+      {},
+      timestamp,
+    )
+
+    // network error in metadata, message is something else
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      'poll failed',
+      {safeMessage: new Error('Network request failed')},
+      timestamp,
+    )
+
+    jest.runAllTimers()
+    expect(Sentry.captureMessage).not.toHaveBeenCalled()
+
+    // network Error object
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      new Error('Network request failed'),
+      {},
+      timestamp,
+    )
+    expect(Sentry.captureException).not.toHaveBeenCalled()
   })
 
   test('add/remove transport', () => {

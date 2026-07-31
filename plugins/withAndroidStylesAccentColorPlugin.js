@@ -3,7 +3,7 @@
  * This way we get a sane default color for spinners, text inputs, etc.
  */
 
-const {withAndroidStyles, AndroidConfig} = require('@expo/config-plugins')
+const {withAndroidStyles, AndroidConfig} = require('expo/config-plugins')
 
 module.exports = function withAndroidStylesAccentColorPlugin(appConfig) {
   return withAndroidStyles(appConfig, function (decoratedAppConfig) {

@@ -3,14 +3,12 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "module": "esnext",
+    "moduleSuffixes": [".ios", ".android", ".native", ""],
     "lib": ["dom", "esnext"],
     "types": ["node", "jest"],
-    "baseUrl": ".",
     "paths": {
       "#/*": ["./src/*"],
       "crypto": ["./src/platform/crypto.ts"],
-      "multiformats/cid": ["node_modules/multiformats/types/src/cid.d.ts"],
-      "multiformats/hashes/hasher": ["node_modules/multiformats/types/src/hashes/hasher.d.ts"]
     },
     "plugins": [
       {

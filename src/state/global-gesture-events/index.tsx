@@ -7,7 +7,7 @@ import {
   type GestureUpdateEvent,
   type PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler'
-import EventEmitter from 'eventemitter3'
+import {EventEmitter} from 'eventemitter3'
 
 export type GlobalGestureEvents = {
   begin: GestureStateChangeEvent<PanGestureHandlerEventPayload>

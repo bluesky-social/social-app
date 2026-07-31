@@ -4,7 +4,6 @@ import {LABELS} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useFocusEffect} from '@react-navigation/native'
 
 import {getLabelingServiceTitle, isAppLabeler} from '#/lib/moderation'
 import {
@@ -21,7 +20,6 @@ import {
   usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences'
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
@@ -34,7 +32,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/icons/CircleCheck'
 import {type Props as SVGIconProps} from '#/components/icons/common'
-import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
+import {EditBig_Stroke2_Corner2_Rounded as EditBig} from '#/components/icons/EditBig'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
@@ -161,7 +159,6 @@ export function ModerationScreenInner({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const {
@@ -197,12 +194,6 @@ export function ModerationScreenInner({
     }
   }
 
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
-
   const {mutateAsync: setAdultContentPref, variables: optimisticAdultContent} =
     usePreferencesSetAdultContentMutation()
   let adultContentEnabled = !!(
@@ -234,7 +225,7 @@ export function ModerationScreenInner({
 
   return (
     <View style={[a.pt_2xl, a.px_lg, gtMobile && a.px_2xl]}>
-      {aa.flags.adultContentDisabled && isBirthdateUpdateAllowed && (
+      {aa.flags.isDeclaredUnderAdultAge && isBirthdateUpdateAllowed && (
         <View style={[a.pb_2xl]}>
           <Admonition.Admonition type="tip" style={[a.pb_md]}>
             <Trans>

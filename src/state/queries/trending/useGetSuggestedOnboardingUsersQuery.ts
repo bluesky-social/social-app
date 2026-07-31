@@ -54,27 +54,11 @@ export function useGetSuggestedOnboardingUsersQuery(props: QueryProps) {
           },
         },
       )
-      // FALLBACK: if no results for 'all', try again with no interests specified
-      if (!props.category && data.actors.length === 0) {
-        logger.error(
-          `Did not get any suggested onboarding users, falling back - interests: ${overrideInterests}`,
-        )
-        const {data: fallbackData} =
-          await agent.app.bsky.unspecced.getSuggestedOnboardingUsers(
-            {
-              category: props.category ?? undefined,
-              limit: props.limit || 10,
-            },
-            {
-              headers: {
-                'Accept-Language': contentLangs,
-              },
-            },
-          )
-        return fallbackData
-      }
 
-      return data
+      if (!data.recIdStr) {
+        logger.debug('getSuggestedOnboardingUsers response missing recIdStr')
+      }
+      return {...data, recId: data.recIdStr}
     },
   })
 }

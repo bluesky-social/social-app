@@ -1,4 +1,4 @@
-import * as React from 'react'
+import {Component, createRef} from 'react'
 import {
   Dimensions,
   type LayoutChangeEvent,
@@ -39,14 +39,14 @@ const IS_IOS15 =
 const IS_NON_E2E_ANDROID =
   Platform.OS === 'android' && Number(Platform.Version) < 35
 
-export class BottomSheetNativeComponent extends React.Component<
+export class BottomSheetNativeComponent extends Component<
   BottomSheetViewProps,
   {
     open: boolean
     viewHeight?: number
   }
 > {
-  ref = React.createRef<any>()
+  ref = createRef<any>()
 
   static contextType = PortalContext
 
@@ -129,6 +129,7 @@ export class BottomSheetNativeComponent extends React.Component<
 function BottomSheetNativeComponentInner({
   children,
   backgroundColor,
+  maxHeight,
   onLayout,
   onStateChange,
   nativeViewRef,
@@ -145,6 +146,7 @@ function BottomSheetNativeComponentInner({
   const insets = useSafeAreaInsets()
   const cornerRadius = rest.cornerRadius ?? 0
   const {height: screenHeight} = useWindowDimensions()
+  const isHeightConstrained = maxHeight != null || rest.fullHeight === true
 
   // sigh... on older Android versions, screenHeight does not include safe area insets
   // on newer Androids + iOS, it does. we need to find the inner bit + the bottom inset
@@ -156,6 +158,7 @@ function BottomSheetNativeComponentInner({
   return (
     <NativeView
       {...rest}
+      maxHeight={maxHeight}
       onStateChange={onStateChange}
       ref={nativeViewRef}
       style={{
@@ -170,6 +173,7 @@ function BottomSheetNativeComponentInner({
             flex: 1,
             backgroundColor,
           },
+          maxHeight != null && {maxHeight},
           Platform.OS === 'android' && {
             borderTopLeftRadius: cornerRadius,
             borderTopRightRadius: cornerRadius,
@@ -177,7 +181,9 @@ function BottomSheetNativeComponentInner({
           },
           extraStyles,
         ]}>
-        <View onLayout={onLayout}>
+        <View
+          onLayout={onLayout}
+          style={isHeightConstrained ? {flex: 1} : undefined}>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>
       </View>

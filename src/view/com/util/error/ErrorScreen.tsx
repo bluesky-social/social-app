@@ -1,8 +1,4 @@
 import {View} from 'react-native'
-import {
-  FontAwesomeIcon,
-  type FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -11,6 +7,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotate'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 
@@ -56,11 +53,7 @@ export function ErrorScreen({
               a.justify_center,
               {backgroundColor: t.palette.contrast_950},
             ]}>
-            <FontAwesomeIcon
-              icon="exclamation"
-              style={pal.textInverted as FontAwesomeIconStyle}
-              size={24}
-            />
+            <WarningIcon width={24} style={pal.textInverted} />
           </View>
         </View>
         <Text style={[a.text_center, a.font_bold, a.text_2xl, a.mb_md]}>

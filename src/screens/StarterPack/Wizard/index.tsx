@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react'
+import {useEffect} from 'react'
 import {Keyboard, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -13,7 +13,7 @@ import {
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
@@ -39,7 +39,6 @@ import {
   useStarterPackQuery,
 } from '#/state/queries/starter-packs'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {
   useWizardState,
@@ -132,6 +131,7 @@ export function Wizard({
 
   return (
     <Layout.Screen
+      minimalShell
       testID="starterPackWizardScreen"
       style={web([{minHeight: 0}, a.flex_1])}>
       <Provider
@@ -169,7 +169,6 @@ function WizardInner({
   const navigation = useNavigation<NavigationProp>()
   const ax = useAnalytics()
   const {_} = useLingui()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const [state, dispatch] = useWizardState()
   const {currentAccount} = useSession()
 
@@ -184,16 +183,6 @@ function WizardInner({
       gestureEnabled: false,
     })
   }, [navigation])
-
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(true)
-
-      return () => {
-        setMinimalShellMode(false)
-      }
-    }, [setMinimalShellMode]),
-  )
 
   const getDefaultName = () => {
     const displayName = createSanitizedDisplayName(currentProfile!, true)

@@ -1,13 +1,13 @@
 import '#/logger/sentry/setup' // must be near top
-import '#/view/icons'
 import './style.css'
 
 import {Fragment, useEffect, useState} from 'react'
+import {KeyboardProvider as KeyboardControllerProvider} from 'react-native-keyboard-controller'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import * as Sentry from '@sentry/react-native'
 
+import {Provider as HotkeysProvider} from '#/lib/hotkeys'
 import {QueryProvider} from '#/lib/react-query'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
@@ -23,11 +23,10 @@ import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
-import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
-import {Provider as ModalStateProvider} from '#/state/modals'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as PrefsStateProvider} from '#/state/preferences'
+import {BetaUserStorageSync} from '#/state/preferences/beta-user-sync'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
 import {Provider as UnreadNotifsProvider} from '#/state/queries/notifications/unread'
@@ -41,18 +40,19 @@ import {
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
+import {Provider as LandingProvider} from '#/state/shell/landing'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as OnboardingProvider} from '#/state/shell/onboarding'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
-import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
-import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
+import {useLandingEntry} from '#/components/hooks/useLandingEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
+import {Provider as LightboxStateProvider} from '#/components/Lightbox/state'
 import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
@@ -81,18 +81,18 @@ import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottom
 /**
  * Begin geolocation ASAP
  */
-Geo.resolve()
-prefetchAgeAssuranceConfig()
-prefetchLiveEvents()
-prefetchAppConfig()
+void Geo.resolve()
+void prefetchAgeAssuranceConfig()
+void prefetchLiveEvents()
+void prefetchAppConfig()
 
 function InnerApp() {
   const [isReady, setIsReady] = useState(false)
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
-  const {_} = useLingui()
-  const hasCheckedReferrer = useStarterPackEntry()
+  const {t: l} = useLingui()
+  const hasCheckedLanding = useLandingEntry()
 
   // init
   useEffect(() => {
@@ -104,28 +104,28 @@ function InnerApp() {
           await features.init
         }
       } catch (e) {
-        logger.error(`session: resumeSession failed`, {message: e})
+        logger.warn('session: resumeSession failed', {message: e})
       } finally {
         setIsReady(true)
       }
     }
     const account = readLastActiveAccount()
-    onLaunch(account)
+    void onLaunch(account)
   }, [resumeSession])
 
   useEffect(() => {
     return listenSessionDropped(() => {
-      Toast.show(_(msg`Sorry! Your session expired. Please sign in again.`), {
+      Toast.show(l`Sorry! Your session expired. Please sign in again.`, {
         type: 'info',
       })
     })
-  }, [_])
+  }, [l])
 
   return (
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
-          <Splash isReady={isReady && hasCheckedReferrer}>
+          <Splash isReady={isReady && hasCheckedLanding}>
             <VideoVolumeProvider>
               <ActiveVideoProvider>
                 <Fragment
@@ -133,6 +133,7 @@ function InnerApp() {
                   key={currentAccount?.did}>
                   <AnalyticsFeaturesContext>
                     <QueryProvider currentDid={currentAccount?.did}>
+                      <BetaUserStorageSync />
                       <PolicyUpdateOverlayProvider>
                         <LiveEventsProvider>
                           <AgeAssuranceV2Provider>
@@ -155,8 +156,10 @@ function InnerApp() {
                                                           <HideBottomBarBorderProvider>
                                                             <IntentDialogProvider>
                                                               <TranslateOnDeviceProvider>
-                                                                <Shell />
-                                                                <ToastOutlet />
+                                                                <HotkeysProvider>
+                                                                  <Shell />
+                                                                  <ToastOutlet />
+                                                                </HotkeysProvider>
                                                               </TranslateOnDeviceProvider>
                                                             </IntentDialogProvider>
                                                           </HideBottomBarBorderProvider>
@@ -191,11 +194,11 @@ function InnerApp() {
 }
 
 function App() {
-  const [isReady, setReady] = useState(false)
+  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
-    Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(() =>
-      setReady(true),
+    void Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(
+      () => setIsReady(true),
     )
   }, [])
 
@@ -211,29 +214,29 @@ function App() {
     <Geo.Provider>
       <AppConfigProvider>
         <A11yProvider>
-          <OnboardingProvider>
-            <AnalyticsContext>
-              <SessionProvider>
-                <PrefsStateProvider>
-                  <I18nProvider>
-                    <ShellStateProvider>
-                      <ModalStateProvider>
+          <KeyboardControllerProvider>
+            <OnboardingProvider>
+              <AnalyticsContext>
+                <SessionProvider>
+                  <PrefsStateProvider>
+                    <I18nProvider>
+                      <ShellStateProvider>
                         <DialogStateProvider>
                           <LightboxStateProvider>
                             <PortalProvider>
-                              <StarterPackProvider>
+                              <LandingProvider>
                                 <InnerApp />
-                              </StarterPackProvider>
+                              </LandingProvider>
                             </PortalProvider>
                           </LightboxStateProvider>
                         </DialogStateProvider>
-                      </ModalStateProvider>
-                    </ShellStateProvider>
-                  </I18nProvider>
-                </PrefsStateProvider>
-              </SessionProvider>
-            </AnalyticsContext>
-          </OnboardingProvider>
+                      </ShellStateProvider>
+                    </I18nProvider>
+                  </PrefsStateProvider>
+                </SessionProvider>
+              </AnalyticsContext>
+            </OnboardingProvider>
+          </KeyboardControllerProvider>
         </A11yProvider>
       </AppConfigProvider>
     </Geo.Provider>

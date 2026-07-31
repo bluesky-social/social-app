@@ -54,6 +54,7 @@ export function LinkPreview({
             contentFit="cover"
             onLoad={() => setImageLoadError(false)}
             onError={() => setImageLoadError(true)}
+            useAppleWebpCodec
           />
         )}
         {linkMeta && (!linkMeta.image || imageLoadError) && (

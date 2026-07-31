@@ -4,8 +4,8 @@ import {
   type AppBskyActorDefs,
   AppBskyFeedDefs,
   type AppBskyFeedPost,
+  type AtpAgent,
   AtUri,
-  type BskyAgent,
   moderatePost,
   type ModerationDecision,
   type ModerationPrefs,
@@ -450,7 +450,7 @@ function createApi({
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
   userInterests?: string
-  agent: BskyAgent
+  agent: AtpAgent
   enableFollowingToDiscoverFallback: boolean
 }) {
   if (feedDesc === 'following') {

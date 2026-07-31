@@ -1,8 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
@@ -24,7 +22,7 @@ export const ChooseAccountForm = ({
   onPressBack: () => void
 }) => {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
@@ -43,7 +41,7 @@ export const ChooseAccountForm = ({
       }
       if (account.did === currentAccount?.did) {
         setShowLoggedOut(false)
-        Toast.show(_(msg`Already signed in as @${account.handle}`))
+        Toast.show(l`Already signed in as @${account.handle}`)
         return
       }
       try {
@@ -53,10 +51,10 @@ export const ChooseAccountForm = ({
           logContext: 'ChooseAccountForm',
           withPassword: false,
         })
-        Toast.show(_(msg`Signed in as @${account.handle}`))
-      } catch (e: any) {
-        logger.error('choose account: initSession failed', {
-          message: e instanceof Error ? e.message : 'Unknown error',
+        Toast.show(l`Signed in as @${account.handle}`)
+      } catch (err) {
+        logger.warn('choose account: initSession failed', {
+          message: err instanceof Error ? err.message : String(err),
         })
         // Move to login form.
         onSelectAccount(account)
@@ -70,7 +68,7 @@ export const ChooseAccountForm = ({
       pendingDid,
       onSelectAccount,
       setShowLoggedOut,
-      _,
+      l,
       ax,
     ],
   )
@@ -83,11 +81,11 @@ export const ChooseAccountForm = ({
       <View>
         {IS_WEB && (
           <TextField.LabelText>
-            <Trans>Sign in as...</Trans>
+            <Trans>Sign in as…</Trans>
           </TextField.LabelText>
         )}
         <AccountList
-          onSelectAccount={onSelect}
+          onSelectAccount={account => void onSelect(account)}
           onSelectOther={() => onSelectAccount()}
           pendingDid={pendingDid}
         />
@@ -95,11 +93,11 @@ export const ChooseAccountForm = ({
       {IS_WEB && (
         <View style={[a.flex_row]}>
           <Button
-            label={_(msg`Back`)}
+            label={l`Back`}
             color="secondary"
             size="large"
             onPress={onPressBack}>
-            <ButtonText>{_(msg`Back`)}</ButtonText>
+            <ButtonText>{l`Back`}</ButtonText>
           </Button>
           <View style={[a.flex_1]} />
         </View>

@@ -1,4 +1,4 @@
-const {withPlugins} = require('@expo/config-plugins')
+const {withPlugins} = require('expo/config-plugins')
 const {withAppEntitlements} = require('./withAppEntitlements')
 const {withClipEntitlements} = require('./withClipEntitlements')
 const {withClipInfoPlist} = require('./withClipInfoPlist')

@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -11,12 +10,12 @@ export function ExternalEmbedRemoveBtn({
   style,
 }: {onRemove: () => void} & ViewStyleProp) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <View style={[a.absolute, {top: 8, right: 8}, a.z_50, style]}>
       <Button
-        label={_(msg`Remove attachment`)}
+        label={l`Remove attachment`}
         onPress={onRemove}
         size="small"
         variant="solid"

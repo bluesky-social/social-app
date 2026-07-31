@@ -1,4 +1,4 @@
-import * as React from 'react'
+import {useEffect, useRef} from 'react'
 import {View} from 'react-native'
 // Based on @react-navigation/native-stack/src/navigators/createNativeStackNavigator.ts
 // MIT License
@@ -42,9 +42,14 @@ import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
 
-type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
-  requireAuth?: boolean
-}
+// On web, only this many screens (beyond Home + focused) stay mounted.
+// Older screens are unmounted to prevent memory growth during long sessions.
+const WEB_MAX_CACHED_SCREENS = 5
+
+export type NativeStackNavigationOptionsWithAuth =
+  NativeStackNavigationOptions & {
+    requireAuth?: boolean
+  }
 
 function NativeStackNavigator({
   id,
@@ -78,7 +83,7 @@ function NativeStackNavigator({
       UNSTABLE_router,
     })
 
-  React.useEffect(
+  useEffect(
     () =>
       // @ts-expect-error: there may not be a tab navigator in parent
       navigation?.addListener?.('tabPress', (e: any) => {
@@ -105,6 +110,8 @@ function NativeStackNavigator({
   )
 
   // --- our custom logic starts here ---
+  // Web LRU: tracks route keys in most-recently-focused order
+  const lruKeysRef = useRef<string[]>([])
   const {hasSession, currentAccount} = useSession()
   const activeRoute = state.routes[state.index]
   const activeDescriptor = descriptors[activeRoute.key]
@@ -126,19 +133,54 @@ function NativeStackNavigator({
   if (onboardingState.isActive) {
     return <Onboarding />
   }
-  const newDescriptors: typeof descriptors = {}
-  for (let key in descriptors) {
-    const descriptor = descriptors[key]
-    const requireAuth = descriptor.options.requireAuth ?? false
-    newDescriptors[key] = {
-      ...descriptor,
-      render() {
-        if (requireAuth && !hasSession) {
-          return <View />
-        } else {
-          return descriptor.render()
+  // On web, limit how many screens stay mounted to prevent memory growth.
+  // Home is always pinned, the focused screen is always mounted, and the
+  // most recently visited screens are kept up to WEB_MAX_CACHED_SCREENS.
+  // Evicted screens render a lightweight placeholder — the route stays in
+  // state so browser back/forward still works; the component just re-mounts.
+  let finalDescriptors = descriptors
+  if (IS_WEB) {
+    const focusedKey = activeRoute.key
+
+    // Update LRU: move focused key to front
+    const lru = lruKeysRef.current
+    const idx = lru.indexOf(focusedKey)
+    if (idx > 0) {
+      lru.splice(idx, 1)
+      lru.unshift(focusedKey)
+    } else if (idx === -1) {
+      lru.unshift(focusedKey)
+    }
+
+    // Remove keys for routes no longer in the stack
+    const routeKeySet = new Set(state.routes.map(r => r.key))
+    lruKeysRef.current = lruKeysRef.current.filter(k => routeKeySet.has(k))
+
+    // Build mount set: Home (pinned) + focused + N most recent
+    const mountSet = new Set<string>()
+    mountSet.add(focusedKey)
+    const homeKey = state.routes.find(r => r.name === 'Home')?.key
+    if (homeKey) mountSet.add(homeKey)
+    let cached = 0
+    for (const key of lruKeysRef.current) {
+      if (cached >= WEB_MAX_CACHED_SCREENS) break
+      if (!mountSet.has(key)) {
+        mountSet.add(key)
+        cached++
+      }
+    }
+
+    // Evicted screens get a lightweight placeholder instead of their full tree
+    finalDescriptors = {}
+    for (const key in descriptors) {
+      if (mountSet.has(key)) {
+        finalDescriptors[key] = descriptors[key]
+      } else {
+        finalDescriptors[key] = {
+          ...descriptors[key],
+          render: () => <View />,
         }
-      },
+      }
     }
   }
 
@@ -153,13 +195,17 @@ function NativeStackNavigator({
           {...rest}
           state={state}
           navigation={navigation}
-          descriptors={descriptors}
+          descriptors={finalDescriptors}
           describe={describe}
         />
       </View>
       {IS_WEB && (
         <>
-          {showBottomBar ? <BottomBarWeb /> : <DesktopLeftNav />}
+          {showBottomBar ? (
+            <BottomBarWeb />
+          ) : (
+            <DesktopLeftNav routeName={activeRoute.name} />
+          )}
           {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
         </>
       )}

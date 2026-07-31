@@ -12,7 +12,7 @@ import {
 } from '#/lib/hooks/usePermissions'
 import {openCamera, openUnifiedPicker} from '#/lib/media/picker'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
-import {MAX_IMAGES} from '#/view/com/composer/state/composer'
+import {MAX_GALLERY_IMAGES} from '#/view/com/composer/state/composer'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
@@ -64,7 +64,7 @@ export function ComposerPrompt() {
         Keyboard.dismiss()
       }
 
-      const selectionCountRemaining = MAX_IMAGES
+      const selectionCountRemaining = MAX_GALLERY_IMAGES
       const {assets, canceled} = await sheetWrapper(
         openUnifiedPicker({selectionCountRemaining}),
       )
@@ -76,7 +76,7 @@ export function ComposerPrompt() {
       if (assets.length > 0) {
         const imageUris = assets
           .filter(asset => asset.mimeType?.startsWith('image/'))
-          .slice(0, MAX_IMAGES)
+          .slice(0, MAX_GALLERY_IMAGES)
           .map(asset => ({
             uri: asset.uri,
             width: asset.width,
@@ -163,7 +163,6 @@ export function ComposerPrompt() {
         }),
         web({
           cursor: 'pointer',
-          outline: 'none',
         }),
         pressed && web({outline: 'none'}),
       ]}>

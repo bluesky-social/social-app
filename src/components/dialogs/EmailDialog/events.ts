@@ -1,5 +1,5 @@
 import {useEffect} from 'react'
-import EventEmitter from 'eventemitter3'
+import {EventEmitter} from 'eventemitter3'
 
 const events = new EventEmitter<{
   emailVerified: void

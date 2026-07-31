@@ -55,7 +55,7 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
             a.gap_sm,
             a.pb_lg,
           ]}>
-          <Logo width={36} />
+          <Logo allowVariants={false} width={36} />
           <View style={{paddingTop: 6}}>
             <Logotype width={120} fill={t.atoms.text.color} />
           </View>

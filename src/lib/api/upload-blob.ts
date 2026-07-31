@@ -1,5 +1,5 @@
 import {copyAsync} from 'expo-file-system/legacy'
-import {type BskyAgent, type ComAtprotoRepoUploadBlob} from '@atproto/api'
+import {type AtpAgent, type ComAtprotoRepoUploadBlob} from '@atproto/api'
 
 import {safeDeleteAsync} from '#/lib/media/manip'
 
@@ -7,7 +7,7 @@ import {safeDeleteAsync} from '#/lib/media/manip'
  * @param encoding Allows overriding the blob's type
  */
 export async function uploadBlob(
-  agent: BskyAgent,
+  agent: AtpAgent,
   input: string | Blob,
   encoding?: string,
 ): Promise<ComAtprotoRepoUploadBlob.Response> {

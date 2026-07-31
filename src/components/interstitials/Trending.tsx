@@ -1,13 +1,12 @@
 import {useCallback} from 'react'
 import {ScrollView, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
-import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
+import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/service-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
@@ -20,6 +19,8 @@ import {TrendingTopicLink} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
+const TRENDING_LIMIT = 14
+
 export function TrendingInterstitial() {
   const {enabled} = useTrendingConfig()
   const {trendingDisabled} = useTrendingSettings()
@@ -28,13 +29,20 @@ export function TrendingInterstitial() {
 
 export function Inner() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const gutters = useGutters([0, 'base', 0, 'base'])
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
-  const {data: trending, error, isLoading} = useTrendingTopics()
-  const noTopics = !isLoading && !error && !trending?.topics?.length
+  const {
+    data: trending,
+    error,
+    isLoading,
+  } = useGetTrendsQuery({
+    limit: TRENDING_LIMIT,
+    refetchOnWindowFocus: true,
+  })
+  const noTopics = !isLoading && !error && !trending?.trends?.length
 
   const onConfirmHide = useCallback(() => {
     ax.metric('trendingTopics:hide', {context: 'interstitial'})
@@ -88,31 +96,39 @@ export function Inner() {
                   {' '}
                 </Text>
               </View>
-            ) : !trending?.topics ? null : (
+            ) : !trending?.trends ? null : (
               <>
-                {trending.topics.map(topic => (
-                  <TrendingTopicLink
-                    key={topic.link}
-                    topic={topic}
-                    onPress={() => {
-                      ax.metric('trendingTopic:click', {
-                        context: 'interstitial',
-                      })
-                    }}>
-                    <View style={[a.py_lg]}>
-                      <Text
-                        style={[
-                          t.atoms.text_contrast_medium,
-                          a.text_sm,
-                          a.font_semi_bold,
-                        ]}>
-                        {topic.topic}
-                      </Text>
-                    </View>
-                  </TrendingTopicLink>
-                ))}
+                {trending.trends.map((topic, index) => {
+                  const rank = index + 1
+                  return (
+                    <TrendingTopicLink
+                      key={topic.link}
+                      topic={topic}
+                      metricContext="interstitial"
+                      rank={rank}
+                      recId={trending.recId}
+                      onPress={() => {
+                        ax.metric('trendingTopic:click', {
+                          context: 'interstitial',
+                          rank,
+                          recId: trending.recId,
+                        })
+                      }}>
+                      <View style={[a.py_lg]}>
+                        <Text
+                          style={[
+                            t.atoms.text_contrast_medium,
+                            a.text_sm,
+                            a.font_semi_bold,
+                          ]}>
+                          {topic.topic}
+                        </Text>
+                      </View>
+                    </TrendingTopicLink>
+                  )
+                })}
                 <Button
-                  label={_(msg`Hide trending topics`)}
+                  label={l`Hide trending topics`}
                   size="tiny"
                   variant="ghost"
                   color="secondary"
@@ -128,9 +144,9 @@ export function Inner() {
 
       <Prompt.Basic
         control={trendingPrompt}
-        title={_(msg`Hide trending topics?`)}
-        description={_(msg`You can update this later from your settings.`)}
-        confirmButtonCta={_(msg`Hide`)}
+        title={l`Hide trending topics?`}
+        description={l`You can update this later from your settings.`}
+        confirmButtonCta={l`Hide`}
         onConfirm={onConfirmHide}
       />
     </View>

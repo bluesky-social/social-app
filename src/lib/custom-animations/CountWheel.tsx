@@ -8,10 +8,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import {decideShouldRoll} from '#/lib/custom-animations/util'
-import {s} from '#/lib/styles'
-import {Text} from '#/view/com/util/text/Text'
-import {atoms as a, useTheme} from '#/alf'
-import {useFormatPostStatCount} from '#/components/PostControls/util'
+import {atoms as a} from '#/alf'
 
 const animationConfig = {
   duration: 400,
@@ -87,89 +84,66 @@ function ExitingDown() {
 }
 
 export function CountWheel({
-  likeCount,
-  big,
-  isLiked,
+  count,
+  isToggled,
   hasBeenToggled,
+  renderCount,
 }: {
-  likeCount: number
-  big?: boolean
-  isLiked: boolean
+  count: number
+  isToggled: boolean
   hasBeenToggled: boolean
+  renderCount: (props: {count: number}) => React.ReactNode
 }) {
-  const t = useTheme()
   const shouldAnimate = !useReducedMotion() && hasBeenToggled
-  const shouldRoll = decideShouldRoll(isLiked, likeCount)
+  const shouldRoll = decideShouldRoll(isToggled, count)
 
   // Incrementing the key will cause the `Animated.View` to re-render, with the newly selected entering/exiting
   // animation
   // The initial entering/exiting animations will get skipped, since these will happen on screen mounts and would
   // be unnecessary
   const [key, setKey] = useState(0)
-  const [prevCount, setPrevCount] = useState(likeCount)
-  const prevIsLiked = useRef(isLiked)
-  const formatPostStatCount = useFormatPostStatCount()
-  const formattedCount = formatPostStatCount(likeCount)
-  const formattedPrevCount = formatPostStatCount(prevCount)
+  const [prevCount, setPrevCount] = useState(count)
+  const prevIsToggled = useRef(isToggled)
 
   useEffect(() => {
-    if (isLiked === prevIsLiked.current) {
+    if (isToggled === prevIsToggled.current) {
       return
     }
 
-    const newPrevCount = isLiked ? likeCount - 1 : likeCount + 1
+    const newPrevCount = isToggled ? count - 1 : count + 1
     setKey(prev => prev + 1)
     setPrevCount(newPrevCount)
-    prevIsLiked.current = isLiked
-  }, [isLiked, likeCount])
+    prevIsToggled.current = isToggled
+  }, [isToggled, count])
 
   const enteringAnimation =
     shouldAnimate && shouldRoll
-      ? isLiked
+      ? isToggled
         ? EnteringUp
         : EnteringDown
       : undefined
   const exitingAnimation =
     shouldAnimate && shouldRoll
-      ? isLiked
+      ? isToggled
         ? ExitingUp
         : ExitingDown
       : undefined
 
   return (
     <LayoutAnimationConfig skipEntering skipExiting>
-      {likeCount > 0 ? (
+      {count > 0 ? (
         <View style={[a.justify_center]}>
           <Animated.View entering={enteringAnimation} key={key}>
-            <Text
-              testID="likeCount"
-              style={[
-                big ? a.text_md : a.text_sm,
-                a.user_select_none,
-                isLiked
-                  ? [a.font_semi_bold, s.likeColor]
-                  : {color: t.palette.contrast_500},
-              ]}>
-              {formattedCount}
-            </Text>
+            {renderCount({count})}
           </Animated.View>
-          {shouldAnimate && (likeCount > 1 || !isLiked) ? (
+          {shouldAnimate && (count > 1 || !isToggled) ? (
             <Animated.View
               entering={exitingAnimation}
               // Add 2 to the key so there are never duplicates
               key={key + 2}
               style={[a.absolute, {width: 50, opacity: 0}]}
               aria-disabled={true}>
-              <Text
-                style={[
-                  big ? a.text_md : a.text_sm,
-                  a.user_select_none,
-                  isLiked
-                    ? [a.font_semi_bold, s.likeColor]
-                    : {color: t.palette.contrast_500},
-                ]}>
-                {formattedPrevCount}
-              </Text>
+              {renderCount({count: prevCount})}
             </Animated.View>
           ) : null}
         </View>

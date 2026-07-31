@@ -1,8 +1,6 @@
 import {useReducer, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
 import {useCleanError} from '#/lib/hooks/useCleanError'
@@ -90,7 +88,7 @@ function reducer(state: State, action: Action): State {
 
 export function Disable() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const cleanError = useCleanError()
   const {currentAccount} = useSession()
   const {mutateAsync: requestEmailUpdate} = useRequestEmailUpdate()
@@ -120,7 +118,7 @@ export function Disable() {
       const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: clean || _(msg`Failed to send email, please try again.`),
+        error: clean || l`Failed to send email, please try again.`,
       })
     }
   }
@@ -129,7 +127,7 @@ export function Disable() {
     if (!isValidCode(token)) {
       dispatch({
         type: 'setError',
-        error: _(msg`Please enter a valid code.`),
+        error: l`Please enter a valid code.`,
       })
       return
     }
@@ -147,7 +145,7 @@ export function Disable() {
       const {clean} = cleanError(e)
       dispatch({
         type: 'setError',
-        error: clean || _(msg`Failed to update email 2FA settings`),
+        error: clean || l`Failed to update email 2FA settings`,
       })
     }
   }
@@ -157,7 +155,6 @@ export function Disable() {
       <Text style={[a.text_xl, a.font_bold, a.leading_snug]}>
         <Trans>Disable email 2FA</Trans>
       </Text>
-
       {state.step === 'email' ? (
         <>
           <Text
@@ -172,7 +169,7 @@ export function Disable() {
             {state.error && <Admonition type="error">{state.error}</Admonition>}
 
             <Button
-              label={_(msg`Send email`)}
+              label={l`Send email`}
               size="large"
               variant="solid"
               color="primary"
@@ -199,7 +196,7 @@ export function Disable() {
               <Trans>
                 Have a code?{' '}
                 <InlineLinkText
-                  label={_(msg`Enter code`)}
+                  label={l`Enter code`}
                   {...createStaticClick(() => {
                     dispatch({type: 'setStep', step: 'token'})
                   })}>
@@ -231,7 +228,7 @@ export function Disable() {
           {state.error && <Admonition type="error">{state.error}</Admonition>}
 
           <Button
-            label={_(msg`Disable 2FA`)}
+            label={l`Disable 2FA`}
             size="large"
             variant="solid"
             color="primary"

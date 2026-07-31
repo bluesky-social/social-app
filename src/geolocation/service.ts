@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import EventEmitter from 'eventemitter3'
+import {EventEmitter} from 'eventemitter3'
 
 import {networkRetry} from '#/lib/async/retry'
 import {

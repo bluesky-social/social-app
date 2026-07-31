@@ -1,6 +1,4 @@
-import {useCallback} from 'react'
 import {Plural} from '@lingui/react/macro'
-import {useFocusEffect} from '@react-navigation/native'
 
 import {
   type CommonNavigatorParams,
@@ -9,25 +7,17 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {ProfileFollowers as ProfileFollowersComponent} from '#/view/com/profile/ProfileFollowers'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollowers'>
 export const ProfileFollowersScreen = ({route}: Props) => {
   const {name} = route.params
-  const setMinimalShellMode = useSetMinimalShellMode()
 
   const {data: resolvedDid} = useResolveDidQuery(name)
   const {data: profile} = useProfileQuery({
     did: resolvedDid,
   })
-
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   return (
     <Layout.Screen testID="profileFollowersScreen">

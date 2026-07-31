@@ -2,22 +2,24 @@ import {forwardRef, memo, useDeferredValue, useMemo} from 'react'
 import {RefreshControl, type ViewToken} from 'react-native'
 import {
   type FlatListPropsWithLayout,
-  runOnJS,
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated'
-import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
+import {scheduleOnRN} from 'react-native-worklets'
+import {updateActiveVideoViewAsync} from '@bsky.app/video'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
-import {useLightbox} from '#/state/lightbox'
 import {useTheme} from '#/alf'
+import {useLightbox} from '#/components/Lightbox/state'
 import {IS_IOS} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
+// This is a generic type; we could update ~30 call sites but this approach is consistent with RN internals. -dsb
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ListProps<ItemT = any> = Omit<
   FlatListPropsWithLayout<ItemT>,
   | 'onMomentumScrollBegin' // Use ScrollContext instead.
@@ -58,7 +60,7 @@ let List = forwardRef<ListMethods, ListProps>(
       ...props
     },
     ref,
-  ): React.ReactElement<any> => {
+  ): React.ReactElement => {
     const isScrolledDown = useSharedValue(false)
     const t = useTheme()
     const dedupe = useDedupe(400)
@@ -83,7 +85,7 @@ let List = forwardRef<ListMethods, ListProps>(
         onBeginDragFromContext?.(e, ctx)
       },
       onEndDrag(e, ctx) {
-        runOnJS(updateActiveVideoViewAsync)()
+        scheduleOnRN(updateActiveVideoViewAsync)
         onEndDragFromContext?.(e, ctx)
       },
       onScroll(e, ctx) {
@@ -93,18 +95,18 @@ let List = forwardRef<ListMethods, ListProps>(
         if (isScrolledDown.get() !== didScrollDown) {
           isScrolledDown.set(didScrollDown)
           if (onScrolledDownChange != null) {
-            runOnJS(handleScrolledDownChange)(didScrollDown)
+            scheduleOnRN(handleScrolledDownChange, didScrollDown)
           }
         }
 
         if (IS_IOS) {
-          runOnJS(dedupe)(updateActiveVideoViewAsync)
+          scheduleOnRN(dedupe, updateActiveVideoViewAsync)
         }
       },
       // Note: adding onMomentumBegin here makes simulator scroll
       // lag on Android. So either don't add it, or figure out why.
       onMomentumEnd(e, ctx) {
-        runOnJS(updateActiveVideoViewAsync)()
+        scheduleOnRN(updateActiveVideoViewAsync)
         onMomentumEndFromContext?.(e, ctx)
       },
     })
@@ -145,12 +147,10 @@ let List = forwardRef<ListMethods, ListProps>(
       )
     }
 
-    let contentOffset
     if (headerOffset != null) {
       style = addStyle(style, {
         paddingTop: headerOffset,
       })
-      contentOffset = {x: 0, y: headerOffset * -1}
     }
 
     return (
@@ -168,7 +168,6 @@ let List = forwardRef<ListMethods, ListProps>(
           ...props.scrollIndicatorInsets,
         }}
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
-        contentOffset={contentOffset}
         refreshControl={refreshControl}
         onScroll={scrollHandler}
         scrollsToTop={scrollsToTop}

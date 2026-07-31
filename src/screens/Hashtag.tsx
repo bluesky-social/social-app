@@ -1,10 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
-import {useFocusEffect} from '@react-navigation/native'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -15,9 +12,8 @@ import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
-import {useSearchPostsQuery} from '#/state/queries/search-posts'
+import {useSearchPostsV2Query} from '#/state/queries/search-posts-v2'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Pager} from '#/view/com/pager/Pager'
@@ -45,7 +41,7 @@ export default function HashtagScreen({
   route,
 }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
   const {tag, author} = route.params
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const decodedTag = useMemo(() => {
     return decodeURIComponent(tag)
@@ -75,30 +71,19 @@ export default function HashtagScreen({
     if (author) {
       url.searchParams.set('author', author)
     }
-    shareUrl(url.toString())
+    void shareUrl(url.toString())
   }, [tag, author])
 
   const [activeTab, setActiveTab] = useState(0)
-  const setMinimalShellMode = useSetMinimalShellMode()
 
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
-
-  const onPageSelected = useCallback(
-    (index: number) => {
-      setMinimalShellMode(false)
-      setActiveTab(index)
-    },
-    [setMinimalShellMode],
-  )
+  const onPageSelected = (index: number) => {
+    setActiveTab(index)
+  }
 
   const sections = useMemo(() => {
     return [
       {
-        title: _(msg`Top`),
+        title: l`Top`,
         component: (
           <HashtagScreenTab
             fullTag={fullTag}
@@ -109,7 +94,7 @@ export default function HashtagScreen({
         ),
       },
       {
-        title: _(msg`Latest`),
+        title: l`Latest`,
         component: (
           <HashtagScreenTab
             fullTag={fullTag}
@@ -120,7 +105,7 @@ export default function HashtagScreen({
         ),
       },
     ]
-  }, [_, fullTag, author, activeTab])
+  }, [l, fullTag, author, activeTab])
 
   return (
     <Layout.Screen>
@@ -134,13 +119,15 @@ export default function HashtagScreen({
                 <Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
                 {author && (
                   <Layout.Header.SubtitleText>
-                    {_(msg`From @${sanitizedAuthor}`)}
+                    {author.startsWith('did:')
+                      ? l`From ${sanitizedAuthor}`
+                      : l`From @${sanitizedAuthor}`}
                   </Layout.Header.SubtitleText>
                 )}
               </Layout.Header.Content>
               <Layout.Header.Slot>
                 <Button
-                  label={_(msg`Share`)}
+                  label={l`Share`}
                   size="small"
                   variant="ghost"
                   color="primary"
@@ -175,7 +162,7 @@ function HashtagScreenTab({
   sort: 'top' | 'latest'
   active: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const [isPTR, setIsPTR] = useState(false)
   const t = useTheme()
@@ -185,11 +172,9 @@ function HashtagScreenTab({
   const isCashtag = fullTag.startsWith('$')
 
   const queryParam = useMemo(() => {
-    // Cashtags need # prefix for search: "#$BTC" or "#$BTC from:author"
-    const searchTag = isCashtag ? `#${fullTag}` : fullTag
-    if (!author) return searchTag
-    return `${searchTag} from:${author}`
-  }, [fullTag, author, isCashtag])
+    // Cashtags need # prefix for search: "#$BTC"
+    return isCashtag ? `#${fullTag}` : fullTag
+  }, [fullTag, isCashtag])
 
   const {
     data,
@@ -201,7 +186,14 @@ function HashtagScreenTab({
     refetch,
     fetchNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: queryParam, sort, enabled: active})
+  } = useSearchPostsV2Query({
+    query: queryParam,
+    sort,
+    enabled: active,
+    filters: {
+      author,
+    },
+  })
 
   const posts = useMemo(() => {
     return data?.pages.flatMap(page => page.posts) || []
@@ -215,7 +207,7 @@ function HashtagScreenTab({
 
   const onEndReached = useCallback(() => {
     if (isFetchingNextPage || !hasNextPage || error) return
-    fetchNextPage()
+    void fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
   const closeAllActiveElements = useCloseAllActiveElements()
@@ -233,19 +225,15 @@ function HashtagScreenTab({
 
   if (!hasSession) {
     return (
-      <SearchError
-        title={_(msg`Search is currently unavailable when logged out`)}>
+      <SearchError title={l`Search is currently unavailable when logged out`}>
         <Text style={[a.text_md, a.text_center, a.leading_snug]}>
           <Trans>
-            <InlineLinkText
-              label={_(msg`Sign in`)}
-              to={'#'}
-              onPress={showSignIn}>
+            <InlineLinkText label={l`Sign in`} to={'#'} onPress={showSignIn}>
               Sign in
             </InlineLinkText>
             <Text style={t.atoms.text_contrast_medium}> or </Text>
             <InlineLinkText
-              label={_(msg`Create an account`)}
+              label={l`Create an account`}
               to={'#'}
               onPress={showCreateAccount}>
               create an account
@@ -269,7 +257,7 @@ function HashtagScreenTab({
           isError={isError}
           onRetry={refetch}
           emptyType="results"
-          emptyMessage={_(msg`We couldn't find any results for that tag.`)}
+          emptyMessage={l`We couldn't find any results for that tag.`}
         />
       ) : (
         <List
@@ -277,7 +265,7 @@ function HashtagScreenTab({
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           refreshing={isPTR}
-          onRefresh={onRefresh}
+          onRefresh={() => void onRefresh()}
           onEndReached={onEndReached}
           onEndReachedThreshold={4}
           onItemSeen={trackPostView}

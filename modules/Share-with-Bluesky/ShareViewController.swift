@@ -3,6 +3,7 @@ import AVKit
 
 let IMAGE_EXTENSIONS: [String] = ["png", "jpg", "jpeg", "gif", "heic"]
 let MOVIE_EXTENSIONS: [String] = ["mov", "mp4", "m4v"]
+let MAX_IMAGES = 10
 
 enum URLType: String, CaseIterable {
   case image
@@ -71,17 +72,12 @@ class ShareViewController: UIViewController {
   }
 
   private func handleImages(items: [NSItemProvider]) async {
-    let firstFourItems: [NSItemProvider]
-    if items.count < 4 {
-      firstFourItems = items
-    } else {
-      firstFourItems = Array(items[0...3])
-    }
+    let itemsToProcess = Array(items.prefix(MAX_IMAGES))
 
     var valid = true
     var imageUris = ""
 
-    for (index, item) in firstFourItems.enumerated() {
+    for (index, item) in itemsToProcess.enumerated() {
       var imageUriInfo: String?
 
       do {
@@ -100,7 +96,7 @@ class ShareViewController: UIViewController {
 
       if let imageUriInfo = imageUriInfo {
         imageUris.append(imageUriInfo)
-        if index < items.count - 1 {
+        if index < itemsToProcess.count - 1 {
           imageUris.append(",")
         }
       } else {
@@ -121,7 +117,6 @@ class ShareViewController: UIViewController {
     let firstItem = items.first
 
     if let dataUrl = try? await firstItem?.loadItem(forTypeIdentifier: "public.movie") as? URL {
-      let ext = String(dataUrl.lastPathComponent.split(separator: ".").last ?? "mp4")
       if let videoUriInfo = saveVideoWithInfo(dataUrl),
          let url = URL(string: "\(self.appScheme)://intent/compose?videoUri=\(videoUriInfo)") {
         _ = self.openURL(url)

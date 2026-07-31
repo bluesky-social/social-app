@@ -26,7 +26,7 @@ export function useOpenLink() {
   const {inAppBrowserConsentControl} = useGlobalDialogsControlContext()
 
   const openLink = useCallback(
-    async (url: string, override?: boolean, shouldProxy?: boolean) => {
+    (url: string, override?: boolean, shouldProxy?: boolean) => {
       if (isBskyRSSUrl(url) && isRelativeUrl(url)) {
         url = createBskyAppAbsoluteUrl(url)
       }
@@ -66,12 +66,12 @@ export function useOpenLink() {
           }).catch(err => {
             if (__DEV__)
               logger.error('Could not open web browser', {message: err})
-            Linking.openURL(url)
+            void Linking.openURL(url)
           })
           return
         }
       }
-      Linking.openURL(url)
+      void Linking.openURL(url)
     },
     [ax, enabled, inAppBrowserConsentControl, t, dialogContext],
   )

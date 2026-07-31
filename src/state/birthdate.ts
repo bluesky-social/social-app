@@ -1,9 +1,11 @@
 import {useMemo} from 'react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
+import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
 import {preferencesQueryKey} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
 import {usePatchAgeAssuranceOtherRequiredData} from '#/ageAssurance'
+import {isUnderAge} from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
 import {account} from '#/storage'
 
@@ -14,7 +16,7 @@ const BIRTHDATE_DELAY_HOURS = IS_DEV ? 0.001 : 48
  * Stores the timestamp of the birthday update locally. This is used to
  * debounce birthday updates globally.
  *
- * Use {@link useIsBirthDateUpdateAllowed} to check if an update is allowed.
+ * Use {@link useIsBirthdateUpdateAllowed} to check if an update is allowed.
  */
 export function snoozeBirthdateUpdateAllowedForDid(did: string) {
   account.set([did, 'birthdateLastUpdatedAt'], new Date().toISOString())
@@ -63,6 +65,15 @@ export function useBirthdateMutation() {
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
       })
+
+      if (isUnderAge(birthDate.toISOString(), 18)) {
+        await restrictChatSettings({
+          agent,
+          restrictIncoming: true,
+          restrictGroupInvites: true,
+        })
+      }
+
       /**
        * Also patch the age assurance other required data with the new
        * birthdate, which may change the user's age assurance access level.

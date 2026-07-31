@@ -8,7 +8,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import {type AtpSessionEvent, type BskyAgent} from '@atproto/api'
+import {type AtpAgent, type AtpSessionEvent} from '@atproto/api'
 
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -36,8 +36,8 @@ import {
 } from '#/state/session/types'
 import {useOnboardingDispatch} from '#/state/shell/onboarding'
 import {
-  clearAgeAssuranceData,
-  clearAgeAssuranceDataForDid,
+  clearAgeAssuranceServerDataForAll,
+  clearAgeAssuranceServerDataForDid,
 } from '#/ageAssurance/data'
 
 const StateContext = createContext<SessionStateContext>({
@@ -47,7 +47,7 @@ const StateContext = createContext<SessionStateContext>({
 })
 StateContext.displayName = 'SessionStateContext'
 
-const AgentContext = createContext<BskyAgent | null>(null)
+const AgentContext = createContext<AtpAgent | null>(null)
 AgentContext.displayName = 'SessionAgentContext'
 
 const ApiContext = createContext<SessionApiContext>({
@@ -96,7 +96,7 @@ class SessionStore {
         ),
       }
       addSessionDebugLog({type: 'persisted:broadcast', data: persistedData})
-      persisted.write('session', persistedData)
+      void persisted.write('session', persistedData)
     }
     this.listeners.forEach(listener => listener())
   }
@@ -105,12 +105,13 @@ class SessionStore {
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const ax = useAnalyticsBase()
   const cancelPendingTask = useOneTaskAtATime()
+  // eslint-disable-next-line react/hook-use-state
   const [store] = useState(() => new SessionStore())
   const state = useSyncExternalStore(store.subscribe, store.getState)
   const onboardingDispatch = useOnboardingDispatch()
 
   const onAgentSessionChange = useCallback(
-    (agent: BskyAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
+    (agent: AtpAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
       const refreshedAccount = agentToSessionAccount(agent) // Mutable, so snapshot it right away.
       if (sessionEvent === 'expired' || sessionEvent === 'create-failed') {
         emitSessionDropped()
@@ -202,7 +203,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
       if (prevState.currentAgentState.did) {
-        clearAgeAssuranceDataForDid({did: prevState.currentAgentState.did})
+        clearAgeAssuranceServerDataForDid({
+          did: prevState.currentAgentState.did,
+        })
         void clearPersistedQueryStorage(prevState.currentAgentState.did)
       }
       // reset onboarding flow on logout
@@ -233,7 +236,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         },
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
-      clearAgeAssuranceData()
+      clearAgeAssuranceServerDataForAll()
       for (const account of prevState.accounts) {
         void clearPersistedQueryStorage(account.did)
       }
@@ -303,7 +306,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         accountDid: account.did,
       })
       addSessionDebugLog({type: 'method:end', method: 'removeAccount', account})
-      clearAgeAssuranceDataForDid({did: account.did})
+      clearAgeAssuranceServerDataForDid({did: account.did})
     },
     [store, cancelPendingTask],
   )
@@ -327,10 +330,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
            * follower tabs. Follower tabs will therefore receive the fresh
            * session. See APP-1960, or ask Eric.
            */
-          resumeSession(syncedAccount)
+          void resumeSession(syncedAccount)
         } else {
-          const agent = state.currentAgentState.agent as BskyAgent
+          const agent = state.currentAgentState.agent as AtpAgent
           const prevSession = agent.session
+          // eslint-disable-next-line react-compiler/react-compiler
           agent.sessionManager.session = sessionAccountToSession(syncedAccount)
           addSessionDebugLog({
             type: 'agent:patch',
@@ -376,6 +380,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   // @ts-expect-error window type is not declared, debug only
+  // eslint-disable-next-line react-hooks/immutability
   if (__DEV__ && IS_WEB) window.agent = state.currentAgentState.agent
 
   const agent = state.currentAgentState.agent as BskyAppAgent
@@ -448,7 +453,7 @@ export function useRequireAuth() {
   )
 }
 
-export function useAgent(): BskyAgent {
+export function useAgent(): AtpAgent {
   const agent = useContext(AgentContext)
   if (!agent) {
     throw Error('useAgent() must be below <SessionProvider>.')

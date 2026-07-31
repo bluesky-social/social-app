@@ -1,3 +1,4 @@
+import {useCallback, useMemo} from 'react'
 import {
   type AppBskyActorDefs,
   type AppBskyActorGetSuggestions,
@@ -7,10 +8,12 @@ import {
   type InfiniteData,
   type QueryClient,
   useQuery,
+  useQueryClient,
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
+import type * as bsky from '#/types/bsky'
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows'
 
@@ -44,6 +47,56 @@ export function useSuggestedFollowsByActorQuery({
     },
     enabled,
   })
+}
+
+export function useSuggestedFollowsByActorWithDismiss({
+  did,
+  enabled,
+  staleTime,
+}: {
+  did: string
+  enabled?: boolean
+  staleTime?: number
+}) {
+  const {isLoading, data, error} = useSuggestedFollowsByActorQuery({
+    did,
+    enabled,
+    staleTime,
+  })
+  const queryClient = useQueryClient()
+
+  const onDismiss = useCallback(
+    (dismissedDid: string) => {
+      queryClient.setQueryData(
+        suggestedFollowsByActorQueryKey(did),
+        (previous: typeof data) => {
+          if (!previous) return previous
+          return {
+            ...previous,
+            suggestions: previous.suggestions.filter(
+              s => s.did !== dismissedDid,
+            ),
+          }
+        },
+      )
+    },
+    [did, queryClient],
+  )
+
+  const profiles = useMemo(() => {
+    return (data?.suggestions ?? []).map(profile => ({
+      actor: profile,
+      recId: data?.recId,
+    }))
+  }, [data?.suggestions, data?.recId])
+
+  return {
+    profiles,
+    recId: data?.recId,
+    onDismiss,
+    isLoading,
+    error,
+  }
 }
 
 export function* findAllProfilesInQueryData(

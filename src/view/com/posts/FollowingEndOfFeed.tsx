@@ -1,22 +1,20 @@
 import {useCallback} from 'react'
 import {Dimensions, StyleSheet, View} from 'react-native'
-import {
-  FontAwesomeIcon,
-  type FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {IS_WEB} from '#/env'
-import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 
 export function FollowingEndOfFeed() {
+  const {t: l} = useLingui()
   const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
   const navigation = useNavigation<NavigationProp>()
 
   const onPressFindAccounts = useCallback(() => {
@@ -46,36 +44,34 @@ export function FollowingEndOfFeed() {
             follow.
           </Trans>
         </Text>
-        <Button
-          type="inverted"
-          style={styles.emptyBtn}
-          onPress={onPressFindAccounts}>
-          <Text type="lg-medium" style={palInverted.text}>
-            <Trans>Find accounts to follow</Trans>
-          </Text>
-          <FontAwesomeIcon
-            icon="angle-right"
-            style={palInverted.text as FontAwesomeIconStyle}
-            size={14}
-          />
-        </Button>
+        <View style={[a.mt_xl, a.align_center]}>
+          <Button
+            label={l`Find accounts to follow`}
+            onPress={onPressFindAccounts}
+            color="secondary_inverted"
+            size="large">
+            <ButtonText>
+              <Trans>Find accounts to follow</Trans>
+            </ButtonText>
+            <ButtonIcon icon={ChevronRightIcon} />
+          </Button>
+        </View>
 
         <Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
           <Trans>You can also discover new Custom Feeds to follow.</Trans>
         </Text>
-        <Button
-          type="inverted"
-          style={[styles.emptyBtn, s.mt10]}
-          onPress={onPressDiscoverFeeds}>
-          <Text type="lg-medium" style={palInverted.text}>
-            <Trans>Discover new custom feeds</Trans>
-          </Text>
-          <FontAwesomeIcon
-            icon="angle-right"
-            style={palInverted.text as FontAwesomeIconStyle}
-            size={14}
-          />
-        </Button>
+        <View style={[a.mt_md, a.align_center]}>
+          <Button
+            label={l`Discover new custom feeds`}
+            onPress={onPressDiscoverFeeds}
+            color="secondary_inverted"
+            size="large">
+            <ButtonText>
+              <Trans>Discover new custom feeds</Trans>
+            </ButtonText>
+            <ButtonIcon icon={ChevronRightIcon} />
+          </Button>
+        </View>
       </View>
     </View>
   )
@@ -92,14 +88,5 @@ const styles = StyleSheet.create({
   inner: {
     width: '100%',
     maxWidth: 460,
-  },
-  emptyBtn: {
-    marginVertical: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 18,
-    paddingHorizontal: 24,
-    borderRadius: 30,
   },
 })

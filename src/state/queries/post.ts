@@ -1,6 +1,11 @@
 import {useCallback} from 'react'
 import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {
+  type QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {updatePostShadow} from '#/state/cache/post-shadow'
@@ -41,6 +46,14 @@ export function usePostQuery(uri: string | undefined) {
     },
     enabled: !!uri,
   })
+}
+
+export function precachePost(
+  queryClient: QueryClient,
+  uri: string,
+  post: AppBskyFeedDefs.PostView,
+) {
+  queryClient.setQueryData(RQKEY(uri), post)
 }
 
 export function useGetPost() {

@@ -132,7 +132,7 @@ export function Takendown() {
           ]}>
           <View style={[a.flex_1, {maxWidth: COL_WIDTH, minHeight: COL_WIDTH}]}>
             <View style={[a.pb_xl]}>
-              <Logo width={64} />
+              <Logo allowVariants={false} width={64} />
             </View>
 
             <Text style={[a.text_4xl, a.font_bold, a.pb_md]}>

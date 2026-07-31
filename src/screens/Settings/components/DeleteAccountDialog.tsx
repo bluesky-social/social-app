@@ -9,7 +9,7 @@ import {useCleanError} from '#/lib/hooks/useCleanError'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {type DialogOuterProps} from '#/components/Dialog'
 import {
@@ -19,7 +19,7 @@ import {
 import * as TextField from '#/components/forms/TextField'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
-import {createStaticClick, InlineLinkText} from '#/components/Link'
+import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as toast from '#/components/Toast'
@@ -113,12 +113,9 @@ function DeleteAccountDialogInner({
       }
       const token = confirmCode.replace(WHITESPACE_RE, '')
       // Inform chat service of intent to delete account.
-      const {success} = await agent.api.chat.bsky.actor.deleteAccount(
-        undefined,
-        {
-          headers: DM_SERVICE_HEADERS,
-        },
-      )
+      const {success} = await agent.chat.bsky.actor.deleteAccount(undefined, {
+        headers: DM_SERVICE_HEADERS,
+      })
       if (!success) {
         throw new Error('Failed to inform chat service of account deletion')
       }
@@ -213,11 +210,11 @@ function DeleteAccountDialogInner({
           <Admonition style={[a.mt_lg]} type="tip">
             <Trans>
               You can also{' '}
-              <Span
-                style={[{color: t.palette.primary_500}, web(a.underline)]}
-                onPress={handleDeactivate}>
+              <SimpleInlineLinkText
+                label={_(msg`Temporarily deactivate your account`)}
+                {...createStaticClick(handleDeactivate)}>
                 temporarily deactivate
-              </Span>{' '}
+              </SimpleInlineLinkText>{' '}
               your account instead. Your profile, posts, feeds, and lists will
               no longer be visible to other Bluesky users. You can reactivate
               your account at any time by logging in.
@@ -262,24 +259,20 @@ function DeleteAccountDialogInner({
             {emailSentCount > 1 ? (
               <Trans>
                 Email sent!{' '}
-                <InlineLinkText
-                  label={_(msg`Resend`)}
-                  {...createStaticClick(() => {
-                    void handleSendEmail()
-                  })}>
+                <SimpleInlineLinkText
+                  label={_(msg`Click here to resend the email`)}
+                  {...createStaticClick(handleSendEmail)}>
                   Click here to resend.
-                </InlineLinkText>
+                </SimpleInlineLinkText>
               </Trans>
             ) : (
               <Trans>
                 Don’t see a code?{' '}
-                <InlineLinkText
-                  label={_(msg`Resend`)}
-                  {...createStaticClick(() => {
-                    void handleSendEmail()
-                  })}>
+                <SimpleInlineLinkText
+                  label={_(msg`Click here to resend the email`)}
+                  {...createStaticClick(handleSendEmail)}>
                   Click here to resend.
-                </InlineLinkText>
+                </SimpleInlineLinkText>
               </Trans>
             )}{' '}
             <Span style={{top: 1}}>
@@ -340,12 +333,11 @@ function DeleteAccountDialogInner({
                   {currentHandle}
                 </Span>{' '}
                 and all associated data. Note that this will affect any other{' '}
-                <InlineLinkText
-                  label={_(msg`Learn more about the AT Protocol.`)}
-                  style={[a.text_md]}
-                  to="https://bsky.social/about/faq">
+                <SimpleInlineLinkText
+                  to="https://bsky.social/about/faq"
+                  label={_(msg`AT Protocol FAQ`)}>
                   AT Protocol
-                </InlineLinkText>{' '}
+                </SimpleInlineLinkText>{' '}
                 services you use with this account.
               </Trans>
             </Prompt.DescriptionText>

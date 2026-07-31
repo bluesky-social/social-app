@@ -1,13 +1,13 @@
 import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
+  type AtpAgent,
   type ComAtprotoRepoStrongRef,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {type BskyAgent} from '@atproto/api'
 
-import {POST_IMG_MAX} from '#/lib/constants'
-import {getLinkMeta} from '#/lib/link-meta/link-meta'
+import {DM_SERVICE_HEADERS, IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
+import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
 import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
 import {downloadAndResize} from '#/lib/media/manip'
 import {
@@ -15,18 +15,21 @@ import {
   parseStarterPackUri,
 } from '#/lib/strings/starter-pack'
 import {
+  convertBskyAppUrlIfNeeded,
+  getChatInviteCodeFromUrl,
   isBskyCustomFeedUrl,
   isBskyListUrl,
   isBskyPostUrl,
   isBskyStarterPackUrl,
   isBskyStartUrl,
   isShortLink,
+  makeRecordUri,
 } from '#/lib/strings/url-helpers'
 import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
-import {type Gif} from '#/state/queries/tenor'
+import {type ChatInvitePreview} from '#/state/queries/join-links'
+import {type Gif} from '#/features/gifPicker/types'
 import {createGIFDescription} from '../gif-alt-text'
-import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
 
 type ResolvedExternalLink = {
   type: 'external'
@@ -34,6 +37,12 @@ type ResolvedExternalLink = {
   title: string
   description: string
   thumb: ComposerImage | undefined
+  /**
+   * The AT-URI of the Atmosphere record representing this external content, if
+   * it exists. Example: a site.standard.document record.
+   */
+  associatedRefs?: LinkMeta['associatedRefs']
+  view?: LinkMeta['view']
 }
 
 type ResolvedPostRecord = {
@@ -64,12 +73,20 @@ type ResolvedStarterPackRecord = {
   view: AppBskyGraphDefs.StarterPackView
 }
 
+type ResolvedChatInvite = {
+  type: 'chat-invite'
+  uri: string
+  code: string
+  view?: ChatInvitePreview
+}
+
 export type ResolvedLink =
   | ResolvedExternalLink
   | ResolvedPostRecord
   | ResolvedFeedRecord
   | ResolvedListRecord
   | ResolvedStarterPackRecord
+  | ResolvedChatInvite
 
 export class EmbeddingDisabledError extends Error {
   constructor() {
@@ -78,7 +95,7 @@ export class EmbeddingDisabledError extends Error {
 }
 
 export async function resolveLink(
-  agent: BskyAgent,
+  agent: AtpAgent,
   uri: string,
 ): Promise<ResolvedLink> {
   if (isShortLink(uri)) {
@@ -134,6 +151,19 @@ export async function resolveLink(
       view: res.data.list,
     }
   }
+  const chatInviteCode = getChatInviteCodeFromUrl(uri)
+  if (chatInviteCode) {
+    const res = await agent.chat.bsky.group.getJoinLinkPreviews(
+      {codes: [chatInviteCode]},
+      {headers: DM_SERVICE_HEADERS},
+    )
+    return {
+      type: 'chat-invite',
+      uri,
+      code: chatInviteCode,
+      view: res.data.joinLinkPreviews[0],
+    }
+  }
   if (isBskyStartUrl(uri) || isBskyStarterPackUrl(uri)) {
     const parsed = parseStarterPackUri(uri)
     if (!parsed) {
@@ -187,21 +217,49 @@ export async function resolveLink(
 }
 
 export async function resolveGif(
-  agent: BskyAgent,
+  agent: AtpAgent,
   gif: Gif,
 ): Promise<ResolvedExternalLink> {
-  const uri = `${gif.media_formats.gif.url}?hh=${gif.media_formats.gif.dims[1]}&ww=${gif.media_formats.gif.dims[0]}`
+  const gifUrl = gif.media_formats.gif.url
+  const params = new URLSearchParams()
+  params.set('hh', String(gif.media_formats.gif.dims[1]))
+  params.set('ww', String(gif.media_formats.gif.dims[0]))
+
+  // For Klipy GIFs, embed video format slugs so parseKlipyGif can
+  // swap to the right format per platform at render time. Klipy uses
+  // different filename slugs per format (unlike Tenor where format is
+  // encoded in the URL ID), so this info must travel with the URL.
+  try {
+    const url = new URL(gifUrl)
+    if (url.hostname === 'static.klipy.com') {
+      const mp4Slug = getFileSlug(gif.media_formats.mp4?.url)
+      const webmSlug = getFileSlug(gif.media_formats.webm?.url)
+      if (mp4Slug) params.set('mp4', mp4Slug)
+      if (webmSlug) params.set('webm', webmSlug)
+    }
+  } catch {}
+
+  const uri = `${gifUrl}?${params.toString()}`
+  const altText = gif.content_description || gif.title
   return {
     type: 'external',
     uri,
-    title: gif.content_description,
-    description: createGIFDescription(gif.content_description),
+    title: altText,
+    description: createGIFDescription(altText),
     thumb: await imageToThumb(gif.media_formats.preview.url),
   }
 }
 
+function getFileSlug(url: string | undefined): string | undefined {
+  if (!url) return undefined
+  const filename = url.split('/').pop()
+  if (!filename) return undefined
+  const dotIndex = filename.lastIndexOf('.')
+  return dotIndex > 0 ? filename.slice(0, dotIndex) : undefined
+}
+
 async function resolveExternal(
-  agent: BskyAgent,
+  agent: AtpAgent,
   uri: string,
 ): Promise<ResolvedExternalLink> {
   const result = await getLinkMeta(agent, uri)
@@ -211,6 +269,12 @@ async function resolveExternal(
     title: result.title ?? '',
     description: result.description ?? '',
     thumb: result.image ? await imageToThumb(result.image) : undefined,
+    /*
+     * New fields from Standard Site integration. Other fields are derived from
+     * opengraph/oembed as before.
+     */
+    associatedRefs: result.associatedRefs,
+    view: result.view,
   }
 }
 
@@ -220,10 +284,7 @@ export async function imageToThumb(
   try {
     const img = await downloadAndResize({
       uri: imageUri,
-      width: POST_IMG_MAX.width,
-      height: POST_IMG_MAX.height,
-      mode: 'contain',
-      maxSize: POST_IMG_MAX.size,
+      ...IMAGE_SIZE_CONFIG_2K_1MB,
       timeout: 15e3,
     })
     if (img) {

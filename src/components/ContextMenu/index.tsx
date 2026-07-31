@@ -30,7 +30,6 @@ import {KeyboardEvents} from 'react-native-keyboard-controller'
 import Animated, {
   clamp,
   interpolate,
-  runOnJS,
   type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -44,6 +43,7 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
+import {scheduleOnRN} from 'react-native-worklets'
 import {Image, type ImageErrorEventData} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -54,7 +54,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logger} from '#/logger'
-import {atoms as a, platform, tokens, useTheme} from '#/alf'
+import {atoms as a, flatten, platform, tokens, useTheme} from '#/alf'
 import {
   Context,
   ItemContext,
@@ -89,14 +89,12 @@ const SPRING_IN: WithSpringConfig = {
   mass: 0.75,
   damping: 300,
   stiffness: 1200,
-  restDisplacementThreshold: 0.01,
 }
 
 const SPRING_OUT: WithSpringConfig = {
   mass: IS_IOS ? 1.25 : 0.75,
   damping: 150,
   stiffness: 1000,
-  restDisplacementThreshold: 0.01,
 }
 
 /**
@@ -132,7 +130,7 @@ export function Root({children}: {children: React.ReactNode}) {
   const onHoverableTouchUp = useCallback((id: string) => {
     const hoverable = hoverables.current.get(id)
     if (!hoverable) {
-      logger.warn(`No such hoverable with id ${id}`)
+      logger.warn(`No such hoverable`, {id})
       return
     }
     hoverable.onTouchUp()
@@ -168,7 +166,7 @@ export function Root({children}: {children: React.ReactNode}) {
                 // note: return location has to be reset on open,
                 // rather than on close, otherwise there's a flicker
                 // where the reanimated update is faster than the react render
-                runOnJS(onCompletedClose)()
+                scheduleOnRN(onCompletedClose)
               }
             }),
           )
@@ -235,7 +233,14 @@ export function Root({children}: {children: React.ReactNode}) {
   return <Context.Provider value={context}>{children}</Context.Provider>
 }
 
-export function Trigger({children, label, contentLabel, style}: TriggerProps) {
+export function Trigger({
+  children,
+  label,
+  contentLabel,
+  style,
+  onTap,
+  swipeGesture,
+}: TriggerProps) {
   const context = useContextMenuContext()
   const playHaptic = useHaptics()
   const insets = useSafeAreaInsets()
@@ -294,6 +299,17 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
     }
   }, [context, insets])
 
+  const tapGesture = useMemo(() => {
+    const gesture = Gesture.Tap()
+      .numberOfTaps(1)
+      .cancelsTouchesInView(false)
+      .runOnJS(true)
+    if (onTap) {
+      gesture.onEnd(() => void onTap())
+    }
+    return gesture
+  }, [onTap])
+
   const doubleTapGesture = useMemo(() => {
     return Gesture.Tap()
       .numberOfTaps(2)
@@ -315,7 +331,7 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
     () => hoveredItemSV.get(),
     (hovered, prev) => {
       if (hovered !== prev) {
-        runOnJS(setHoveredMenuItem)(hovered)
+        scheduleOnRN(setHoveredMenuItem, hovered)
       }
     },
   )
@@ -327,7 +343,7 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
       .averageTouches(true)
       .onStart(() => {
         'worklet'
-        runOnJS(open)('full')
+        scheduleOnRN(open, 'full')
       })
       .onUpdate(evt => {
         'worklet'
@@ -341,15 +357,25 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
         // as the menu may have slid into place beneath their finger
         const item = hoveredItemSV.get()
         if (item) {
-          runOnJS(onTouchUpMenuItem)(item)
+          scheduleOnRN(onTouchUpMenuItem, item)
         }
       })
   }, [open, hoverablesSV, onTouchUpMenuItem, hoveredItemSV, translationSV])
 
-  const composedGestures = Gesture.Exclusive(
+  // Order matters here: doubleTapGesture must come before tapGesture.
+  const tapAndHoldGestures = Gesture.Exclusive(
     doubleTapGesture,
+    tapGesture,
     pressAndHoldGesture,
   )
+
+  // An optional swipe gesture (e.g. swipe-to-reply) races against the tap/hold
+  // group: whichever activates first wins and cancels the rest, so they're
+  // mutually exclusive. Race (not Exclusive) avoids a held-but-not-yet-moved
+  // swipe Pan blocking the long-press from firing.
+  const composedGestures = swipeGesture
+    ? Gesture.Race(swipeGesture, tapAndHoldGestures)
+    : tapAndHoldGestures
 
   const measurement = context.measurement || pendingMeasurement?.measurement
 
@@ -359,7 +385,10 @@ export function Trigger({children, label, contentLabel, style}: TriggerProps) {
         <View ref={ref} style={[{opacity: context.isOpen ? 0 : 1}, style]}>
           {children({
             IS_NATIVE: true,
-            control: {isOpen: context.isOpen, open},
+            control: {
+              isOpen: context.isOpen,
+              open: mode => void open(mode),
+            },
             state: {
               pressed: false,
               hovered: false,
@@ -477,12 +506,17 @@ function TriggerClone({
         accessibilityLabel={label}
         accessibilityHint={_(msg`The subject of the context menu`)}
         accessibilityIgnoresInvertColors={false}
+        cachePolicy="none"
       />
     </Animated.View>
   )
 }
 
-export function AuxiliaryView({children, align = 'left'}: AuxiliaryViewProps) {
+export function AuxiliaryView({
+  children,
+  align = 'left',
+  style,
+}: AuxiliaryViewProps) {
   const context = useContextMenuContext()
   const {width: screenWidth} = useWindowDimensions()
   const {top: topInset} = useSafeAreaInsets()
@@ -504,7 +538,8 @@ export function AuxiliaryView({children, align = 'left'}: AuxiliaryViewProps) {
     }
   })
 
-  const menuContext = useMemo(() => ({align}), [align])
+  const xOffset = (flatten(style)?.marginLeft as number) ?? 0
+  const menuContext = useMemo(() => ({align, xOffset}), [align, xOffset])
 
   const onLayout = useCallback(() => {
     if (!measurement) return
@@ -556,6 +591,7 @@ export function AuxiliaryView({children, align = 'left'}: AuxiliaryViewProps) {
                 : {right: screenWidth - measurement.x - measurement.width},
               animatedStyle,
               a.z_20,
+              style,
             ]}>
             {children}
           </Animated.View>
@@ -569,12 +605,16 @@ const MENU_WIDTH = 240
 
 export function Outer({
   children,
+  label,
   style,
   align = 'left',
 }: {
   children: React.ReactNode
+  label?: string
   style?: StyleProp<ViewStyle>
   align?: 'left' | 'right'
+  /** Web only. Native restores focus differently. */
+  onCloseAutoFocus?: (event: Event) => void
 }) {
   const t = useTheme()
   const context = useContextMenuContext()
@@ -631,7 +671,8 @@ export function Outer({
     [context.measurement, frame.height, insets, translationSV],
   )
 
-  const menuContext = useMemo(() => ({align}), [align])
+  const xOffset = (flatten(style)?.marginLeft as number) ?? 0
+  const menuContext = useMemo(() => ({align, xOffset}), [align, xOffset])
 
   if (!context.isOpen || !context.measurement) return null
 
@@ -683,23 +724,25 @@ export function Outer({
                 ]}>
                 {/* innermost element - needs an overflow: hidden for children, but we also need a shadow,
                 so put the shadow on the scaling element and the overflow on the innermost element */}
-                <View
-                  style={[
-                    a.flex_1,
-                    a.rounded_md,
-                    a.overflow_hidden,
-                    a.border,
-                    t.atoms.border_contrast_low,
-                  ]}>
+                <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
+                  {label ? (
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        a.pl_md,
+                        a.pt_md,
+                        a.pr_lg,
+                        a.pb_md,
+                        a.text_xs,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      {label}
+                    </Text>
+                  ) : null}
                   {flattenReactChildren(children).map((child, i) => {
                     return isValidElement(child) &&
                       (child.type === Item || child.type === Divider) ? (
                       <Fragment key={i}>
-                        {i > 0 ? (
-                          <View
-                            style={[a.border_b, t.atoms.border_contrast_low]}
-                          />
-                        ) : null}
                         {cloneElement(child, {
                           // @ts-expect-error not typed
                           style: {
@@ -710,6 +753,7 @@ export function Outer({
                       </Fragment>
                     ) : null
                   })}
+                  {label ? <View style={[a.pb_md]} /> : null}
                 </View>
               </Animated.View>
             </Animated.View>
@@ -727,6 +771,7 @@ export function Item({
   style,
   onPress,
   position,
+  destructive = false,
   ...rest
 }: ItemProps) {
   const t = useTheme()
@@ -739,7 +784,7 @@ export function Item({
     onOut: onPressOut,
   } = useInteractionState()
   const id = useId()
-  const {align} = useContextMenuMenuContext()
+  const {align, xOffset: menuXOffset} = useContextMenuMenuContext()
 
   const {close, measurement, registerHoverable} = context
 
@@ -755,8 +800,8 @@ export function Item({
       const xOffset = position
         ? position.x
         : align === 'left'
-          ? measurement.x
-          : measurement.x + measurement.width - layout.width
+          ? measurement.x + menuXOffset
+          : measurement.x + measurement.width - layout.width - menuXOffset
 
       registerHoverable(
         id,
@@ -772,12 +817,21 @@ export function Item({
         },
       )
     },
-    [id, measurement, registerHoverable, close, onPress, align, position],
+    [
+      id,
+      measurement,
+      registerHoverable,
+      close,
+      onPress,
+      align,
+      menuXOffset,
+      position,
+    ],
   )
 
   const itemContext = useMemo(
-    () => ({disabled: Boolean(rest.disabled)}),
-    [rest.disabled],
+    () => ({disabled: Boolean(rest.disabled), destructive}),
+    [rest.disabled, destructive],
   )
 
   return (
@@ -805,12 +859,10 @@ export function Item({
         !unstyled && [
           a.flex_row,
           a.align_center,
+          a.px_lg,
           a.gap_sm,
-          a.px_md,
           a.rounded_md,
-          a.border,
           t.atoms.bg_contrast_25,
-          t.atoms.border_contrast_low,
           {minHeight: 44, paddingVertical: 10},
           (focused || pressed || context.hoveredMenuItem === id) &&
             !rest.disabled &&
@@ -832,7 +884,7 @@ export function Item({
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
-  const {disabled} = useContextMenuItemContext()
+  const {disabled, destructive} = useContextMenuItemContext()
   return (
     <Text
       numberOfLines={2}
@@ -840,10 +892,9 @@ export function ItemText({children, style}: ItemTextProps) {
       style={[
         a.flex_1,
         a.text_md,
-        a.font_semi_bold,
-        t.atoms.text_contrast_high,
-        {paddingTop: 3},
+        a.font_medium,
         style,
+        destructive && {color: t.palette.negative_500},
         disabled && t.atoms.text_contrast_low,
       ]}>
       {children}
@@ -853,14 +904,16 @@ export function ItemText({children, style}: ItemTextProps) {
 
 export function ItemIcon({icon: Comp}: ItemIconProps) {
   const t = useTheme()
-  const {disabled} = useContextMenuItemContext()
+  const {disabled, destructive} = useContextMenuItemContext()
   return (
     <Comp
-      size="lg"
+      size="md"
       fill={
         disabled
           ? t.atoms.text_contrast_low.color
-          : t.atoms.text_contrast_medium.color
+          : destructive
+            ? t.palette.negative_500
+            : t.atoms.text.color
       }
     />
   )

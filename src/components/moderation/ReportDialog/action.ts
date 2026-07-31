@@ -55,7 +55,9 @@ export function useSubmitReportMutation() {
       let report:
         | ComAtprotoModerationCreateReport.InputSchema
         | (Omit<ComAtprotoModerationCreateReport.InputSchema, 'subject'> & {
-            subject: $Typed<ChatBskyConvoDefs.MessageRef>
+            subject:
+              | $Typed<ChatBskyConvoDefs.MessageRef>
+              | $Typed<ChatBskyConvoDefs.ConvoRef>
           })
 
       switch (subject.type) {
@@ -95,6 +97,18 @@ export function useSubmitReportMutation() {
               messageId: subject.message.id,
               convoId: subject.convoId,
               did: subject.message.sender.did,
+            },
+          }
+          break
+        }
+        case 'convo': {
+          report = {
+            reasonType,
+            reason: state.details,
+            subject: {
+              $type: 'chat.bsky.convo.defs#convoRef',
+              convoId: subject.convoId,
+              did: subject.did,
             },
           }
           break

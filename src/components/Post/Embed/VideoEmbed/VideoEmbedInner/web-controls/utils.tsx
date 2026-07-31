@@ -189,7 +189,7 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
               `The play() request was interrupted by a call to pause()`,
             )
           ) {
-            logger.error('Error playing video:', {message: err})
+            logger.warn('Error playing video:', {message: err})
           }
         })
       }

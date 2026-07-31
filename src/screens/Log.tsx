@@ -1,9 +1,8 @@
-import {useCallback, useState} from 'react'
+import {useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useFocusEffect} from '@react-navigation/native'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {
@@ -11,7 +10,7 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {getEntries} from '#/logger/logDump'
-import {useSetMinimalShellMode, useTickEveryMinute} from '#/state/shell'
+import {useTickEveryMinute} from '#/state/shell'
 import {atoms as a, useTheme} from '#/alf'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottomIcon,
@@ -28,16 +27,9 @@ export function LogScreen({}: NativeStackScreenProps<
 >) {
   const t = useTheme()
   const {_} = useLingui()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const [expanded, setExpanded] = useState<string[]>([])
   const timeAgo = useGetTimeAgo()
   const tick = useTickEveryMinute()
-
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   const toggler = (id: string) => () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -68,7 +60,7 @@ export function LogScreen({}: NativeStackScreenProps<
                 <Pressable
                   style={[
                     a.flex_row,
-                    a.align_center,
+                    a.align_start,
                     a.py_md,
                     a.px_sm,
                     a.border_b,
@@ -86,14 +78,7 @@ export function LogScreen({}: NativeStackScreenProps<
                   ) : (
                     <CircleInfoIcon size="sm" />
                   )}
-                  <View
-                    style={[
-                      a.flex_1,
-                      a.flex_row,
-                      a.justify_start,
-                      a.align_center,
-                      a.gap_sm,
-                    ]}>
+                  <View style={[a.flex_1, a.gap_sm]}>
                     {entry.context && (
                       <Text style={[t.atoms.text_contrast_medium]}>
                         ({String(entry.context)})

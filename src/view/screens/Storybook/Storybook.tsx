@@ -7,6 +7,8 @@ import {useSetThemePrefs} from '#/state/shell'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {
   useDeviceGeolocationApi,
   useRequestDeviceGeolocation,
@@ -24,6 +26,7 @@ import {Shadows} from './Shadows'
 import {Spacing} from './Spacing'
 import {Theming} from './Theming'
 import {Toasts} from './Toasts'
+import {Tooltips} from './Tooltips'
 import {Typography} from './Typography'
 
 export default function Storybook() {
@@ -32,6 +35,7 @@ export default function Storybook() {
   const navigation = useNavigation<NavigationProp>()
   const requestDeviceGeolocation = useRequestDeviceGeolocation()
   const {setDeviceGeolocation} = useDeviceGeolocationApi()
+  const inviteFriendsControl = Dialog.useDialogControl()
 
   return (
     <>
@@ -86,16 +90,25 @@ export default function Storybook() {
             <Button
               color="primary_subtle"
               size="large"
-              onPress={() =>
-                requestDeviceGeolocation().then(req => {
+              onPress={() => {
+                void requestDeviceGeolocation().then(req => {
                   if (req.granted && req.location) {
                     setDeviceGeolocation(req.location)
                   }
                 })
-              }
+              }}
               label="crash">
               <ButtonText>Get GPS Location</ButtonText>
             </Button>
+
+            <Button
+              color="primary"
+              size="large"
+              onPress={() => inviteFriendsControl.open()}
+              label="Open invite friends sheet (APP-2142)">
+              <ButtonText>Open invite friends sheet (APP-2142)</ButtonText>
+            </Button>
+            <InviteFriendsDialog control={inviteFriendsControl} />
 
             <ThemeProvider theme="light">
               <Theming />
@@ -115,6 +128,7 @@ export default function Storybook() {
             <Shadows />
             <Icons />
             <Links />
+            <Tooltips />
             <Dialogs />
             <Menus />
             <Breakpoints />

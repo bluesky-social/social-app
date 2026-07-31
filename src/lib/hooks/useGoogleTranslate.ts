@@ -50,10 +50,10 @@ export function useGoogleTranslate() {
         } catch (err) {
           if (__DEV__) console.error(err)
           // most likely means they don't have the translate app
-          await openLink(translateUrl)
+          openLink(translateUrl)
         }
       } else {
-        await openLink(translateUrl)
+        openLink(translateUrl)
       }
     },
     [openLink],

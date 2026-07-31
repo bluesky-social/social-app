@@ -21,11 +21,11 @@ import {
 } from 'react-native'
 import {useReanimatedKeyboardAnimation} from 'react-native-keyboard-controller'
 import Animated, {
-  runOnJS,
   type ScrollEvent,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -157,6 +157,9 @@ export function Outer({
     [open, close],
   )
 
+  const isHeightConstrained =
+    nativeOptions?.maxHeight != null || nativeOptions?.fullHeight === true
+
   const context = useMemo(
     () => ({
       close,
@@ -165,8 +168,9 @@ export function Outer({
       disableDrag,
       setDisableDrag,
       isWithinDialog: true,
+      isHeightConstrained,
     }),
-    [close, snapPoint, disableDrag, setDisableDrag],
+    [close, snapPoint, disableDrag, setDisableDrag, isHeightConstrained],
   )
 
   return (
@@ -180,7 +184,9 @@ export function Outer({
       onStateChange={onStateChange}
       disableDrag={disableDrag}>
       <Context.Provider value={context}>
-        <View testID={testID} style={[a.relative]}>
+        <View
+          testID={testID}
+          style={[a.relative, isHeightConstrained && a.flex_1]}>
           {children}
         </View>
       </Context.Provider>
@@ -191,32 +197,17 @@ export function Outer({
 /**
  * @deprecated use `Dialog.ScrollableInner` instead
  */
-export function Inner({children, style, header}: DialogInnerProps) {
-  const insets = useSafeAreaInsets()
-  return (
-    <>
-      {header}
-      <View
-        style={[
-          a.pt_2xl,
-          a.px_xl,
-          IS_LIQUID_GLASS
-            ? a.pb_2xl
-            : {paddingBottom: insets.bottom + insets.top},
-          style,
-        ]}>
-        {children}
-      </View>
-    </>
-  )
+export function Inner(props: DialogInnerProps) {
+  return <ScrollableInner {...props} />
 }
 
 export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
   function ScrollableInner(
-    {children, contentContainerStyle, header, ...props},
+    {children, contentContainerStyle, header, footer, style, ...props},
     ref,
   ) {
-    const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
+    const {nativeSnapPoint, disableDrag, setDisableDrag, isHeightConstrained} =
+      useDialogContext()
     const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
     const insets = useSafeAreaInsets()
     const [keyboardHeight, setKeyboardHeight] = useState(() =>
@@ -242,41 +233,45 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
     }
 
     return (
-      <ScrollView
-        contentContainerStyle={[
-          a.pt_2xl,
-          IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
-          platform({
-            ios: a.pb_2xl,
-            android: {
-              paddingBottom: keyboardHeight + insets.bottom + tokens.space.xl,
-            },
-          }),
-          contentContainerStyle,
-        ]}
-        ref={ref}
-        showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
-        contentInsetAdjustmentBehavior={
-          isAtMaxSnapPoint ? 'automatic' : 'never'
-        }
-        automaticallyAdjustKeyboardInsets={isAtMaxSnapPoint}
-        {...props}
-        bounces={isAtMaxSnapPoint}
-        scrollEventThrottle={50}
-        // set drag state based on scroll on android.
-        // we want to detect if it's at the top or not, so watch
-        // scrollEndDrag and momentumScrollEnd as well
-        onScroll={android(onScroll)}
-        onScrollEndDrag={android(onScroll)}
-        onMomentumScrollEnd={android(onScroll)}
-        keyboardShouldPersistTaps="handled"
-        // TODO: figure out why this positions the header absolutely (rather than stickily)
-        // on Android. fine to disable for now, because we don't have any
-        // dialogs that use this that actually scroll -sfn
-        stickyHeaderIndices={ios(header ? [0] : undefined)}>
-        {header}
-        {children}
-      </ScrollView>
+      <>
+        <ScrollView
+          style={[isHeightConstrained && a.flex_1, style]}
+          contentContainerStyle={[
+            a.pt_2xl,
+            IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
+            platform({
+              ios: a.pb_2xl,
+              android: {
+                paddingBottom: keyboardHeight + insets.bottom + tokens.space.xl,
+              },
+            }),
+            contentContainerStyle,
+          ]}
+          ref={ref}
+          showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
+          contentInsetAdjustmentBehavior={
+            isAtMaxSnapPoint ? 'automatic' : 'never'
+          }
+          automaticallyAdjustKeyboardInsets={isAtMaxSnapPoint}
+          {...props}
+          bounces={isAtMaxSnapPoint}
+          scrollEventThrottle={50}
+          // set drag state based on scroll on android.
+          // we want to detect if it's at the top or not, so watch
+          // scrollEndDrag and momentumScrollEnd as well
+          onScroll={android(onScroll)}
+          onScrollEndDrag={android(onScroll)}
+          onMomentumScrollEnd={android(onScroll)}
+          keyboardShouldPersistTaps="handled"
+          // TODO: figure out why this positions the header absolutely (rather than stickily)
+          // on Android. fine to disable for now, because we don't have any
+          // dialogs that use this that actually scroll -sfn
+          stickyHeaderIndices={ios(header ? [0] : undefined)}>
+          {header}
+          {children}
+        </ScrollView>
+        {footer}
+      </>
     )
   },
 )
@@ -304,9 +299,9 @@ export const InnerFlatList = forwardRef<
     }
     const {contentOffset} = e
     if (contentOffset.y > 0 && !disableDrag) {
-      runOnJS(setDisableDrag)(true)
+      scheduleOnRN(setDisableDrag, true)
     } else if (contentOffset.y <= 1 && disableDrag) {
-      runOnJS(setDisableDrag)(false)
+      scheduleOnRN(setDisableDrag, false)
     }
   }
 
@@ -343,9 +338,11 @@ export const InnerFlatList = forwardRef<
 export function FlatListFooter({
   children,
   onLayout,
+  border = true,
 }: {
   children: React.ReactNode
   onLayout?: (event: LayoutChangeEvent) => void
+  border?: boolean
 }) {
   const t = useTheme()
   const {bottom} = useSafeAreaInsets()
@@ -366,7 +363,7 @@ export function FlatListFooter({
         a.bottom_0,
         a.w_full,
         a.z_10,
-        a.border_t,
+        border && a.border_t,
         t.atoms.bg,
         t.atoms.border_contrast_low,
         a.px_lg,

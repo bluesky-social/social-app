@@ -185,7 +185,6 @@ let ListMaybePlaceholder = ({
         message={errorMessage ?? _(msg`Something went wrong!`)}
         onRetry={onRetry}
         onGoBack={onGoBack}
-        sideBorders={sideBorders}
         hideBackButton={hideBackButton}
       />
     )
@@ -226,7 +225,6 @@ let ListMaybePlaceholder = ({
         onRetry={onRetry}
         onGoBack={onGoBack}
         hideBackButton={hideBackButton}
-        sideBorders={sideBorders}
       />
     )
   }

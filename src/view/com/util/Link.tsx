@@ -13,6 +13,7 @@ import {
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions} from '@react-navigation/native'
 
+import {useGroupChatJoinIntent} from '#/lib/hooks/useIntentHandler'
 import {
   type DebouncedNavigationProp,
   useNavigationDeduped,
@@ -21,16 +22,16 @@ import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {
   convertBskyAppUrlIfNeeded,
+  getChatInviteCodeFromUrl,
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
 import {type TypographyVariant} from '#/lib/ThemeContext'
 import {emitSoftReset} from '#/state/events'
-import {useModalControls} from '#/state/modals'
 import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
 import {useTheme} from '#/alf'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {IS_ANDROID, IS_WEB} from '#/env'
+import {IS_WEB} from '#/env'
 import {router} from '../../../routes'
 import {PressableWithHover} from './PressableWithHover'
 import {Text} from './text/Text'
@@ -77,26 +78,33 @@ export const Link = memo(function Link({
   ...props
 }: Props) {
   const t = useTheme()
-  const {closeModal} = useModalControls()
   const navigation = useNavigationDeduped()
   const anchorHref = asAnchor ? sanitizeUrl(href) : undefined
   const openLink = useOpenLink()
+  const groupChatJoinIntent = useGroupChatJoinIntent()
 
   const onPress = useCallback(
     (e?: Event) => {
       onBeforePress?.()
       if (typeof href === 'string') {
         return onPressInner(
-          closeModal,
           navigation,
           sanitizeUrl(href),
           navigationAction,
           openLink,
+          groupChatJoinIntent,
           e,
         )
       }
     },
-    [closeModal, navigation, navigationAction, href, openLink, onBeforePress],
+    [
+      navigation,
+      navigationAction,
+      href,
+      openLink,
+      onBeforePress,
+      groupChatJoinIntent,
+    ],
   )
 
   const accessibilityActionsWithActivate = [
@@ -129,8 +137,7 @@ export const Link = memo(function Link({
           {...props}
           android_ripple={{
             color: t.atoms.bg_contrast_25.backgroundColor,
-          }}
-          unstable_pressDelay={IS_ANDROID ? 90 : undefined}>
+          }}>
           {/* @ts-ignore web only -prf */}
           <View style={style} href={anchorHref}>
             {children ? children : <Text>{title || 'link'}</Text>}
@@ -194,9 +201,9 @@ export const TextLink = memo(function TextLink({
   onBeforePress?: () => void
 } & TextProps) {
   const navigation = useNavigationDeduped()
-  const {closeModal} = useModalControls()
   const {linkWarningDialogControl} = useGlobalDialogsControlContext()
   const openLink = useOpenLink()
+  const groupChatJoinIntent = useGroupChatJoinIntent()
 
   if (!disableMismatchWarning && typeof text !== 'string') {
     console.error('Unable to detect mismatching label')
@@ -234,18 +241,17 @@ export const TextLink = memo(function TextLink({
         return onPressProp()
       }
       return onPressInner(
-        closeModal,
         navigation,
         sanitizeUrl(href),
         navigationAction,
         openLink,
+        groupChatJoinIntent,
         e,
       )
     },
     [
       onBeforePress,
       onPressProp,
-      closeModal,
       navigation,
       href,
       text,
@@ -253,6 +259,7 @@ export const TextLink = memo(function TextLink({
       navigationAction,
       openLink,
       linkWarningDialogControl,
+      groupChatJoinIntent,
     ],
   )
   const hrefAttrs = useMemo(() => {
@@ -369,11 +376,11 @@ const EXEMPT_PATHS = ['/robots.txt', '/security.txt', '/.well-known/']
 // needed customizations
 // -prf
 function onPressInner(
-  closeModal = () => {},
   navigation: DebouncedNavigationProp,
   href: string,
   navigationAction: 'push' | 'replace' | 'navigate' = 'push',
   openLink: (href: string) => void,
+  groupChatJoinIntent: (code: string, uri?: string) => void,
   e?: Event,
 ) {
   let shouldHandle = false
@@ -401,6 +408,11 @@ function onPressInner(
 
   if (shouldHandle) {
     href = convertBskyAppUrlIfNeeded(href)
+    const chatInviteCode = getChatInviteCodeFromUrl(href)
+    if (chatInviteCode) {
+      groupChatJoinIntent(chatInviteCode, href)
+      return
+    }
     if (
       newTab ||
       href.startsWith('http') ||
@@ -409,8 +421,6 @@ function onPressInner(
     ) {
       openLink(href)
     } else {
-      closeModal() // close any active modals
-
       const [routeName, params] = router.matchPath(href)
       if (navigationAction === 'push') {
         // @ts-ignore we're not able to type check on this one -prf

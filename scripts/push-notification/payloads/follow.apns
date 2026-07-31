@@ -1,0 +1,14 @@
+{
+  "aps": {
+    "alert": {
+      "title": "alice.test",
+      "body": "followed you"
+    },
+    "mutable-content": 1,
+    "sound": "default"
+  },
+  "reason": "follow",
+  "uri": "at://did:plc:senderdummy00000000000000/app.bsky.graph.follow/3kfakefollow001",
+  "subject": "at://__RECIPIENT_DID__",
+  "recipientDid": "__RECIPIENT_DID__"
+}

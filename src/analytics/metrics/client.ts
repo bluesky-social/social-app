@@ -67,10 +67,6 @@ export class MetricsClient<M extends Record<string, any>> {
   }
 
   private async sendBatch(events: Event<M>[], isRetry: boolean = false) {
-    logger.debug(`sendBatch: ${events.length}`, {
-      isRetry,
-    })
-
     try {
       const body = JSON.stringify({events})
       if (env.IS_WEB && 'navigator' in globalThis && navigator.sendBeacon) {

@@ -8,7 +8,7 @@ import {
 import * as Clipboard from 'expo-clipboard'
 import {
   type AppBskyFeedDefs,
-  AppBskyFeedPost,
+  type AppBskyFeedPost,
   type AppBskyFeedThreadgate,
   AtUri,
   type RichText as RichTextAPI,
@@ -28,6 +28,7 @@ import {
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useTranslate} from '#/lib/translation'
+import {getPostLanguageTags} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -87,6 +88,7 @@ import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import {BlockDialog} from '#/components/moderation/BlockDialog'
 import {
   ReportDialog,
   useReportDialogControl,
@@ -95,7 +97,6 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
-import * as bsky from '#/types/bsky'
 
 let PostMenuItems = ({
   post,
@@ -277,21 +278,9 @@ let PostMenuItems = ({
   const onPressTranslate = () => {
     void translate({
       text: record.text,
-      targetLangCode: langPrefs.primaryLanguage,
+      expectedTargetLanguage: langPrefs.primaryLanguage,
+      possibleSourceLanguages: getPostLanguageTags(post),
     })
-
-    if (
-      bsky.dangerousIsType<AppBskyFeedPost.Record>(
-        post.record,
-        AppBskyFeedPost.isRecord,
-      )
-    ) {
-      ax.metric('translate', {
-        sourceLanguages: post.record.langs ?? [],
-        targetLanguage: langPrefs.primaryLanguage,
-        textLength: post.record.text.length,
-      })
-    }
   }
 
   const onHidePost = () => {
@@ -562,9 +551,17 @@ let PostMenuItems = ({
               ) : (
                 <Menu.Item
                   testID="postDropdownTranslateBtn"
-                  label={l`Translate`}
+                  label={
+                    forceGoogleTranslate
+                      ? l`Open in Google Translate`
+                      : l`Translate`
+                  }
                   onPress={onPressTranslate}>
-                  <Menu.ItemText>{l`Translate`}</Menu.ItemText>
+                  <Menu.ItemText>
+                    {forceGoogleTranslate
+                      ? l`Open in Google Translate`
+                      : l`Translate`}
+                  </Menu.ItemText>
                   <Menu.ItemIcon icon={Translate} position="right" />
                 </Menu.Item>
               )}
@@ -857,13 +854,10 @@ let PostMenuItems = ({
         onConfirm={() => void onToggleReplyVisibility()}
         confirmButtonCta={l`Yes, hide`}
       />
-      <Prompt.Basic
+      <BlockDialog
         control={blockPromptControl}
-        title={l`Block Account?`}
-        description={l`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`}
-        onConfirm={() => void onBlockAuthor()}
-        confirmButtonCta={l`Block`}
-        confirmButtonColor="negative"
+        profile={postAuthor}
+        onBlock={onBlockAuthor}
       />
     </>
   )

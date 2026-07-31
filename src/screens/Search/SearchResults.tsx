@@ -1,16 +1,21 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
+import {type AppBskyFeedDefs, type AppBskyGraphDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useCallOnce} from '#/lib/once'
-import {cleanError} from '#/lib/strings/errors'
+import {
+  cleanError,
+  isNetworkError,
+  shouldRetryError,
+} from '#/lib/strings/errors'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
-import {useSearchPostsQuery} from '#/state/queries/search-posts'
+import {useSearchPostsV2Query} from '#/state/queries/search-posts-v2'
+import {useStarterPackSearch} from '#/state/queries/starter-pack-search'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -19,6 +24,11 @@ import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
+import {StarterPackCard} from '#/screens/Search/components/StarterPackCard'
+import {
+  hasPostOnlyFilters,
+  type SearchFilters,
+} from '#/screens/Search/searchParams'
 import {atoms as a, useTheme, web} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
@@ -31,32 +41,53 @@ import type * as bsky from '#/types/bsky'
 
 let SearchResults = ({
   query,
-  queryWithParams,
+  filters,
+  hasFilters,
+  fromMe,
   activeTab,
   onPageSelected,
   headerHeight,
-  initialPage = 0,
 }: {
   query: string
-  queryWithParams: string
+  filters: SearchFilters
+  hasFilters: boolean
+  fromMe: boolean
   activeTab: number
   onPageSelected: (page: number) => void
   headerHeight: number
-  initialPage?: number
 }): React.ReactNode => {
+  const ax = useAnalytics()
   const {t: l} = useLingui()
+  /*
+   * People/Feeds visibility keys off post-only filters: a `lang` filter applies
+   * to people and feeds too, so it must not hide those tabs (which would also
+   * regress the non-v2 legacy language dropdown). Other filters are post-only.
+   */
+  const hasPostFilters = hasPostOnlyFilters(filters) || fromMe
+  const activePage = hasPostFilters && activeTab > 1 ? 0 : activeTab
+  const tabShape = hasPostFilters ? 'filtered' : 'plain'
+
+  const isStarterPacksEnabled = ax.features.enabled(
+    ax.features.SearchStarterPacksV2Enable,
+  )
 
   const sections = useMemo(() => {
-    if (!queryWithParams) return []
-    const noParams = queryWithParams === query
+    if (!query && !hasFilters) return []
+    /*
+     * People and Feeds tabs only make sense without post-restricting filters -
+     * those filters don't apply to actors or feeds.
+     */
+    const noFilters = !hasPostFilters
     return [
       {
         title: l`Top`,
         component: (
           <SearchScreenPostResults
-            query={queryWithParams}
+            hasFilters={hasFilters}
+            query={query}
+            filters={filters}
             sort="top"
-            active={activeTab === 0}
+            active={activePage === 0}
           />
         ),
       },
@@ -64,35 +95,56 @@ let SearchResults = ({
         title: l`Latest`,
         component: (
           <SearchScreenPostResults
-            query={queryWithParams}
+            hasFilters={hasFilters}
+            query={query}
+            filters={filters}
             sort="latest"
-            active={activeTab === 1}
+            active={activePage === 1}
           />
         ),
       },
-      noParams && {
+      noFilters && {
         title: l`People`,
         component: (
-          <SearchScreenUserResults query={query} active={activeTab === 2} />
+          <SearchScreenUserResults query={query} active={activePage === 2} />
         ),
       },
-      noParams && {
+      noFilters && {
         title: l`Feeds`,
         component: (
-          <SearchScreenFeedsResults query={query} active={activeTab === 3} />
+          <SearchScreenFeedsResults query={query} active={activePage === 3} />
         ),
       },
+      noFilters &&
+        isStarterPacksEnabled && {
+          title: l`Starter packs`,
+          component: (
+            <SearchScreenStarterPackResults
+              query={query}
+              active={activePage === 4}
+            />
+          ),
+        },
     ].filter(Boolean) as {
       title: string
       component: React.ReactNode
     }[]
-  }, [l, query, queryWithParams, activeTab])
+  }, [
+    l,
+    query,
+    filters,
+    hasFilters,
+    hasPostFilters,
+    activePage,
+    isStarterPacksEnabled,
+  ])
 
   // There may be fewer tabs after changing the search options.
-  const selectedPage = initialPage > sections.length - 1 ? 0 : initialPage
+  const selectedPage = activePage > sections.length - 1 ? 0 : activePage
 
   return (
     <Pager
+      key={tabShape}
       onPageSelected={onPageSelected}
       renderTabBar={props => (
         <Layout.Center style={[a.z_10, web([a.sticky, {top: headerHeight}])]}>
@@ -164,9 +216,10 @@ function EmptyState({
 }
 
 function NoResultsText({
+  hasFilters = false,
   query,
 }: {
-  sort?: 'top' | 'latest' | 'people' | 'feeds'
+  hasFilters?: boolean
   query: string
 }) {
   const t = useTheme()
@@ -175,24 +228,58 @@ function NoResultsText({
   return (
     <>
       <Text style={[a.text_lg, t.atoms.text_contrast_high]}>
-        <Trans>
-          No results found for “
-          <Text style={[a.text_lg, t.atoms.text, a.font_medium]}>{query}</Text>
-          ”.
-        </Trans>
+        {hasFilters ? (
+          query ? (
+            <Trans>
+              No results found for “
+              <Text style={[a.text_lg, a.font_medium]}>{query}</Text>” with
+              advanced search filters applied.
+            </Trans>
+          ) : (
+            <Trans>
+              No results found for your query with advanced search filters
+              applied.
+            </Trans>
+          )
+        ) : (
+          <Trans>
+            No results found for “
+            <Text style={[a.text_lg, a.font_medium]}>{query}</Text>”.
+          </Trans>
+        )}
       </Text>
       {'\n\n'}
-      <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
+      <Text
+        style={[
+          a.mt_lg,
+          a.text_md,
+          a.leading_snug,
+          t.atoms.text_contrast_high,
+        ]}>
+        {hasFilters ? (
+          <Trans>Try a different search term or remove some filters.</Trans>
+        ) : (
+          <Trans>Try a different search term.</Trans>
+        )}
+      </Text>
+      {'\n\n'}
+      <Text
+        style={[
+          a.mt_lg,
+          a.text_md,
+          a.leading_snug,
+          t.atoms.text_contrast_high,
+        ]}>
         <Trans context="english-only-resource">
-          Try a different search term, or{' '}
+          Learn more about{' '}
           <InlineLinkText
             label={l({
-              message: 'read about how to use search filters',
+              message: 'Read about how to use advanced search filters',
               context: 'english-only-resource',
             })}
             to={urls.website.blog.searchTipsAndTricks}
             style={[a.text_md, a.leading_snug]}>
-            read about how to use search filters
+            how to use advanced search
           </InlineLinkText>
           .
         </Trans>
@@ -213,24 +300,34 @@ type SearchResultSlice =
     }
 
 let SearchScreenPostResults = ({
+  hasFilters = false,
   query,
+  filters,
   sort,
   active,
 }: {
+  hasFilters: boolean
   query: string
+  filters?: SearchFilters
   sort?: 'top' | 'latest'
   active: boolean
 }): React.ReactNode => {
   const ax = useAnalytics()
   const {t: l} = useLingui()
-  const {currentAccount, hasSession} = useSession()
+  const {hasSession} = useSession()
   const [isPTR, setIsPTR] = useState(false)
   const trackPostView = usePostViewTracking('SearchResults')
 
-  const augmentedQuery = useMemo(() => {
-    return augmentSearchQuery(query || '', {did: currentAccount?.did})
-  }, [query, currentAccount])
+  const augmentedV2Query = useMemo(() => {
+    return augmentSearchQuery(query || '')
+  }, [query])
 
+  const v2 = useSearchPostsV2Query({
+    query: augmentedV2Query,
+    filters,
+    sort,
+    enabled: active,
+  })
   const {
     isFetched,
     data: results,
@@ -240,7 +337,7 @@ let SearchScreenPostResults = ({
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: active})
+  } = v2
 
   const t = useTheme()
   const onPullToRefresh = useCallback(async () => {
@@ -336,7 +433,11 @@ let SearchScreenPostResults = ({
 
   return error ? (
     <EmptyState
-      messageText={l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`}
+      messageText={
+        shouldRetryError(error) || isNetworkError(error)
+          ? l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`
+          : l`We’re sorry, but your search could not be completed.`
+      }
       error={cleanError(error)}
     />
   ) : (
@@ -381,7 +482,11 @@ let SearchScreenPostResults = ({
               }
             />
           ) : (
-            <EmptyState messageText={<NoResultsText query={query} />} />
+            <EmptyState
+              messageText={
+                <NoResultsText hasFilters={hasFilters} query={query} />
+              }
+            />
           )}
         </>
       ) : (
@@ -469,7 +574,11 @@ let SearchScreenUserResults = ({
   if (error) {
     return (
       <EmptyState
-        messageText={l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`}
+        messageText={
+          shouldRetryError(error) || isNetworkError(error)
+            ? l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`
+            : l`We’re sorry, but your search could not be completed.`
+        }
         error={error.toString()}
       />
     )
@@ -609,4 +718,124 @@ function SearchFeedCard({
   }
 
   return <FeedCard.Default view={view} onPress={handleOnPress} />
+}
+
+let SearchScreenStarterPackResults = ({
+  query,
+  active,
+}: {
+  query: string
+  active: boolean
+}): React.ReactNode => {
+  const ax = useAnalytics()
+  const {t: l} = useLingui()
+  const [isPTR, setIsPTR] = useState(false)
+
+  const {
+    isFetched,
+    data: results,
+    isFetching,
+    error,
+    refetch,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useStarterPackSearch({
+    query,
+    enabled: active,
+  })
+
+  const onPullToRefresh = useCallback(async () => {
+    setIsPTR(true)
+    await refetch()
+    setIsPTR(false)
+  }, [setIsPTR, refetch])
+  const onEndReached = useCallback(() => {
+    if (isFetching || !hasNextPage || error) return
+    void fetchNextPage()
+  }, [isFetching, error, hasNextPage, fetchNextPage])
+  const starterPacks = useMemo(() => {
+    return results?.pages.flatMap(page => page.starterPacks) || []
+  }, [results])
+
+  const fireTracking = useCallOnce(() => {
+    ax.metric('search:results:loaded', {
+      tab: 'starterPacks',
+      initialCount: starterPacks.length,
+    })
+  })
+  if (isFetched) {
+    fireTracking()
+  }
+
+  if (error) {
+    return (
+      <EmptyState
+        messageText={
+          shouldRetryError(error) || isNetworkError(error)
+            ? l`We’re sorry, but your search could not be completed. Please try again in a few minutes.`
+            : l`We’re sorry, but your search could not be completed.`
+        }
+        error={cleanError(error)}
+      />
+    )
+  }
+
+  return isFetched ? (
+    <>
+      {starterPacks.length ? (
+        <List
+          data={starterPacks}
+          renderItem={({
+            item,
+            index,
+          }: {
+            item: AppBskyGraphDefs.StarterPackView
+            index: number
+          }) => (
+            <View style={[a.px_lg, a.pb_lg, index === 0 && a.pt_lg]}>
+              <SearchStarterPack position={index} view={item} />
+            </View>
+          )}
+          keyExtractor={(item: AppBskyGraphDefs.StarterPackView) => item.uri}
+          refreshing={isPTR}
+          onRefresh={() => void onPullToRefresh()}
+          onEndReached={onEndReached}
+          desktopFixedHeight
+          ListFooterComponent={
+            <ListFooter
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+            />
+          }
+        />
+      ) : (
+        <EmptyState messageText={<NoResultsText query={query} />} />
+      )}
+    </>
+  ) : (
+    <Loader />
+  )
+}
+SearchScreenStarterPackResults = memo(SearchScreenStarterPackResults)
+
+function SearchStarterPack({
+  position,
+  view,
+}: {
+  position: number
+  view: AppBskyGraphDefs.StarterPackView
+}) {
+  const ax = useAnalytics()
+
+  const handleOnPress = () => {
+    ax.metric('search:result:press', {
+      tab: 'starterPacks',
+      resultType: 'starterPack',
+      position,
+      uri: view.uri,
+    })
+  }
+
+  return <StarterPackCard view={view} onPress={handleOnPress} />
 }

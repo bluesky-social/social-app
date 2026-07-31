@@ -8,12 +8,10 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {ComposeIcon2} from '#/lib/icons'
 import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
 } from '#/lib/routes/types'
-import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {emitSoftReset, listenSoftReset} from '#/state/events'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
@@ -23,17 +21,16 @@ import {
   useUnreadNotificationsApi,
 } from '#/state/queries/notifications/unread'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {NotificationFeed} from '#/view/com/notifications/NotificationFeed'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
-import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {ButtonIcon} from '#/components/Button'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
@@ -51,6 +48,7 @@ type Props = NativeStackScreenProps<
 >
 export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
+  const t = useTheme()
   const {openComposer} = useOpenComposer()
   const unreadNotifs = useUnreadNotifications()
   const hasNew = !!unreadNotifs
@@ -162,7 +160,7 @@ export function NotificationsScreen({}: Props) {
       <FAB
         testID="composeFAB"
         onPress={() => openComposer({logContext: 'Fab'})}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+        icon={<EditBigIcon size="lg" fill={t.palette.white} />}
         accessibilityRole="button"
         accessibilityLabel={_(msg`New post`)}
         accessibilityHint=""
@@ -187,7 +185,6 @@ function NotificationsTab({
   setIsLoadingLatest: (v: boolean) => void
 }) {
   const {_} = useLingui()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const scrollElRef = useRef<ListMethods>(null)
   const queryClient = useQueryClient()
@@ -198,8 +195,7 @@ function NotificationsTab({
   // =
   const scrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({animated: IS_NATIVE, offset: 0})
-    setMinimalShellMode(false)
-  }, [scrollElRef, setMinimalShellMode])
+  }, [scrollElRef])
 
   const onPressLoadLatest = useCallback(() => {
     scrollToTop()
@@ -242,11 +238,10 @@ function NotificationsTab({
   useFocusEffect(
     useCallback(() => {
       if (isFocusedAndActive) {
-        setMinimalShellMode(false)
         logger.debug('NotificationsScreen: Focus')
         onFocusCheckLatest()
       }
-    }, [setMinimalShellMode, onFocusCheckLatest, isFocusedAndActive]),
+    }, [onFocusCheckLatest, isFocusedAndActive]),
   )
 
   useEffect(() => {
@@ -258,20 +253,18 @@ function NotificationsTab({
 
   return (
     <>
-      <MainScrollProvider>
-        <NotificationFeed
-          enabled={isFocusedAndActive}
-          filter={filter}
-          refreshNotifications={() => checkUnread({invalidate: true})}
-          onScrolledDownChange={setIsScrolledDown}
-          scrollElRef={scrollElRef}
-          ListHeaderComponent={
-            filter === 'mentions' ? (
-              <DisabledNotificationsWarning active={isFocusedAndActive} />
-            ) : null
-          }
-        />
-      </MainScrollProvider>
+      <NotificationFeed
+        enabled={isFocusedAndActive}
+        filter={filter}
+        refreshNotifications={() => checkUnread({invalidate: true})}
+        onScrolledDownChange={setIsScrolledDown}
+        scrollElRef={scrollElRef}
+        ListHeaderComponent={
+          filter === 'mentions' ? (
+            <DisabledNotificationsWarning active={isFocusedAndActive} />
+          ) : null
+        }
+      />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}

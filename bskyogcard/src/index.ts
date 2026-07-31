@@ -19,10 +19,13 @@ export class CardService {
   private terminator?: HttpTerminator
   private metricsTerminator?: HttpTerminator
 
-  constructor(
-    public app: express.Application,
-    public ctx: AppContext,
-  ) {}
+  public app: express.Application
+  public ctx: AppContext
+
+  constructor(app: express.Application, ctx: AppContext) {
+    this.app = app
+    this.ctx = ctx
+  }
 
   static async create(cfg: Config): Promise<CardService> {
     let app = express()

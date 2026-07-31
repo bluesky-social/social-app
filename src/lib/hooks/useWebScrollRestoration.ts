@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
-import {type EventArg, useNavigation} from '@react-navigation/core'
+import {type EventArg, useNavigation} from '@react-navigation/native'
 
 if ('scrollRestoration' in history) {
   // Tell the brower not to mess with the scroll.
@@ -42,7 +42,11 @@ export function useWebScrollRestoration() {
     () => ({
       focus(e: EventArg<'focus', boolean | undefined, unknown>) {
         const scrollY = state.scrollYs.get(e.target) ?? 0
-        window.scrollTo(0, scrollY)
+        // Deferred so that screens re-mounted by LRU eviction have
+        // time to render their content before we scroll.
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollY)
+        })
         state.focusedKey = e.target ?? null
       },
     }),

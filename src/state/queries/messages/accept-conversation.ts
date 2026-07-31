@@ -1,6 +1,6 @@
 import {
   type ChatBskyConvoAcceptConvo,
-  type ChatBskyConvoListConvos,
+  type ChatBskyConvoDefs,
 } from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
@@ -8,7 +8,16 @@ import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {
-  RQKEY as CONVO_LIST_KEY,
+  type ConvoRequestListQueryData,
+  optimisticDelete as optimisticDeleteRequest,
+  RQKEY_ROOT as REQUESTS_RQKEY_ROOT,
+} from './list-conversation-requests'
+import {
+  type ConvoListQueryData,
+  convoListQueryPredicate,
+  getConvoFromQueryData,
+  optimisticDelete,
+  RQKEY_PARTIAL as CONVO_LIST_PARTIAL_KEY,
   RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
 } from './list-conversations'
 
@@ -37,101 +46,79 @@ export function useAcceptConversation(
       return data
     },
     onMutate: () => {
-      let prevAcceptedPages: ChatBskyConvoListConvos.OutputSchema[] = []
-      let prevInboxPages: ChatBskyConvoListConvos.OutputSchema[] = []
-      let convoBeingAccepted:
-        | ChatBskyConvoListConvos.OutputSchema['convos'][number]
-        | undefined
-      queryClient.setQueryData(
-        CONVO_LIST_KEY('request'),
-        (old?: {
-          pageParams: Array<string | undefined>
-          pages: Array<ChatBskyConvoListConvos.OutputSchema>
-        }) => {
-          if (!old) return old
-          prevInboxPages = old.pages
-          return {
-            ...old,
-            pages: old.pages.map(page => {
-              const found = page.convos.find(convo => convo.id === convoId)
-              if (found) {
-                convoBeingAccepted = found
-                return {
-                  ...page,
-                  convos: page.convos.filter(convo => convo.id !== convoId),
-                }
-              }
-              return page
-            }),
-          }
-        },
+      // snapshot every convo-list cache up front so onError can restore them
+      // all by their exact keys
+      const prevConvoListQueries =
+        queryClient.getQueriesData<ConvoListQueryData>({
+          queryKey: [CONVO_LIST_ROOT_KEY],
+        })
+      let convoBeingAccepted: ChatBskyConvoDefs.ConvoView | null = null
+      for (const [_key, data] of queryClient.getQueriesData<ConvoListQueryData>(
+        {queryKey: CONVO_LIST_PARTIAL_KEY('request')},
+      )) {
+        if (!data) continue
+        convoBeingAccepted = getConvoFromQueryData(convoId, data)
+        if (convoBeingAccepted) break
+      }
+      queryClient.setQueriesData(
+        {queryKey: CONVO_LIST_PARTIAL_KEY('request')},
+        (old?: ConvoListQueryData) => optimisticDelete(convoId, old),
       )
-      queryClient.setQueryData(
-        CONVO_LIST_KEY('accepted'),
-        (old?: {
-          pageParams: Array<string | undefined>
-          pages: Array<ChatBskyConvoListConvos.OutputSchema>
-        }) => {
-          if (!old) return old
-          prevAcceptedPages = old.pages
-          if (convoBeingAccepted) {
+      if (convoBeingAccepted) {
+        const acceptedConvo: ChatBskyConvoDefs.ConvoView = {
+          ...convoBeingAccepted,
+          status: 'accepted',
+        }
+        queryClient.setQueriesData(
+          {
+            queryKey: CONVO_LIST_PARTIAL_KEY('accepted'),
+            predicate: convoListQueryPredicate(acceptedConvo),
+          },
+          (old?: ConvoListQueryData) => {
+            if (!old) return old
             return {
               ...old,
-              pages: [
-                {
-                  ...old.pages[0],
-                  convos: [
-                    {
-                      ...convoBeingAccepted,
-                      status: 'accepted',
-                    },
-                    ...old.pages[0].convos,
-                  ],
-                },
-                ...old.pages.slice(1),
-              ],
+              pages: old.pages.map((page, i) => {
+                const convos = page.convos.filter(c => c.id !== convoId)
+                if (i === 0) {
+                  return {...page, convos: [acceptedConvo, ...convos]}
+                }
+                return {...page, convos}
+              }),
             }
-          } else {
-            return old
-          }
-        },
+          },
+        )
+      }
+      const prevRequestsQueries =
+        queryClient.getQueriesData<ConvoRequestListQueryData>({
+          queryKey: [REQUESTS_RQKEY_ROOT],
+        })
+      queryClient.setQueriesData<ConvoRequestListQueryData>(
+        {queryKey: [REQUESTS_RQKEY_ROOT]},
+        old => optimisticDeleteRequest(convoId, old),
       )
       onMutate?.()
-      return {prevAcceptedPages, prevInboxPages}
+      return {prevConvoListQueries, prevRequestsQueries}
     },
     onSuccess: data => {
-      queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
+      void queryClient.invalidateQueries({queryKey: [CONVO_LIST_ROOT_KEY]})
+      void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
       onSuccess?.(data)
     },
     onError: (error, _, context) => {
       logger.error(error)
-      queryClient.setQueryData(
-        CONVO_LIST_KEY('accepted'),
-        (old?: {
-          pageParams: Array<string | undefined>
-          pages: Array<ChatBskyConvoListConvos.OutputSchema>
-        }) => {
-          if (!old) return old
-          return {
-            ...old,
-            pages: context?.prevAcceptedPages || old.pages,
-          }
-        },
-      )
-      queryClient.setQueryData(
-        CONVO_LIST_KEY('request'),
-        (old?: {
-          pageParams: Array<string | undefined>
-          pages: Array<ChatBskyConvoListConvos.OutputSchema>
-        }) => {
-          if (!old) return old
-          return {
-            ...old,
-            pages: context?.prevInboxPages || old.pages,
-          }
-        },
-      )
-      queryClient.invalidateQueries({queryKey: [CONVO_LIST_ROOT_KEY]})
+      if (context?.prevConvoListQueries) {
+        for (const [queryKey, prevData] of context.prevConvoListQueries) {
+          queryClient.setQueryData(queryKey, prevData)
+        }
+      }
+      if (context?.prevRequestsQueries) {
+        for (const [queryKey, prevData] of context.prevRequestsQueries) {
+          queryClient.setQueryData(queryKey, prevData)
+        }
+      }
+      void queryClient.invalidateQueries({queryKey: [CONVO_LIST_ROOT_KEY]})
+      void queryClient.invalidateQueries({queryKey: [REQUESTS_RQKEY_ROOT]})
       onError?.(error)
     },
   })

@@ -140,8 +140,8 @@ function DialogInner({
           {type === 'feed' ? (
             <Trans>
               We could not connect to the service that provides this custom
-              feed. It may be temporarily unavailable and experiencing issues,
-              or permanently unavailable.
+              feed. It may be temporarily experiencing issues, or permanently
+              unavailable.
             </Trans>
           ) : (
             <Trans>We could not find this list. It was probably deleted.</Trans>

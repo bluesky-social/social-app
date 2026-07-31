@@ -101,6 +101,7 @@ export function DraftsAnnouncement() {
                   'Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.',
               }),
             )}
+            useAppleWebpCodec
           />
         </View>
         <View style={[a.align_center, a.px_xl, a.pt_xl, a.gap_2xl, a.pb_sm]}>

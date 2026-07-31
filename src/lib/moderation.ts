@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import {
   type AppBskyLabelerDefs,
-  BskyAgent,
+  AtpAgent,
   type ComAtprotoLabelDefs,
   type InterpretedLabelValueDefinition,
   LABELS,
@@ -58,6 +58,21 @@ export function labelIsHideableOffense(
   return ['!hide', '!takedown'].includes(label.val)
 }
 
+/**
+ * Filters out labels that are not user-facing: system labels (val prefixed
+ * with `!`) and the user's own "bot" self-label.
+ */
+export function filterUserFacingLabels(
+  labels: ComAtprotoLabelDefs.Label[],
+  currentAccountDid: string | undefined,
+): ComAtprotoLabelDefs.Label[] {
+  return labels.filter(
+    label =>
+      !label.val.startsWith('!') &&
+      !(label.val === 'bot' && label.src === currentAccountDid),
+  )
+}
+
 export function getLabelingServiceTitle({
   displayName,
   handle,
@@ -91,9 +106,9 @@ export function isAppLabeler(
     | AppBskyLabelerDefs.LabelerViewDetailed,
 ): boolean {
   if (typeof labeler === 'string') {
-    return BskyAgent.appLabelers.includes(labeler)
+    return AtpAgent.appLabelers.includes(labeler)
   }
-  return BskyAgent.appLabelers.includes(labeler.creator.did)
+  return AtpAgent.appLabelers.includes(labeler.creator.did)
 }
 
 export function isLabelerSubscribed(

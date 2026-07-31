@@ -1,16 +1,14 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {VIDEO_FEED_URIS} from '#/lib/constants'
+import {TRENDING_DID, TRENDING_HANDLE, VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {ComposeIcon2} from '#/lib/icons'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
@@ -40,6 +38,8 @@ import {
   ProfileFeedHeader,
   ProfileFeedHeaderSkeleton,
 } from '#/screens/Profile/components/ProfileFeedHeader'
+import {useTheme} from '#/alf'
+import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {IS_NATIVE} from '#/env'
@@ -51,7 +51,7 @@ export function ProfileFeedScreen(props: Props) {
   const feedParams: FeedParams | undefined = props.route.params.feedCacheKey
     ? {feedCacheKey: props.route.params.feedCacheKey}
     : undefined
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const uri = useMemo(
     () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
@@ -69,7 +69,7 @@ export function ProfileFeedScreen(props: Props) {
       <Layout.Screen testID="profileFeedScreenError">
         <ErrorScreen
           showHeader
-          title={_(msg`Could not load feed`)}
+          title={l`Could not load feed`}
           message={cleanError(error)}
           onPressTryAgain={() => void refetch()}
         />
@@ -130,10 +130,11 @@ export function ProfileFeedScreenInner({
   feedInfo: FeedSourceFeedInfo
   feedParams: FeedParams | undefined
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {hasSession} = useSession()
   const {openComposer} = useOpenComposer()
   const isScreenFocused = useIsFocused()
+  const t = useTheme()
 
   useSetTitle(feedInfo?.displayName)
 
@@ -166,10 +167,10 @@ export function ProfileFeedScreenInner({
       <EmptyState
         icon={HashtagWideIcon}
         iconSize="2xl"
-        message={_(msg`This feed is empty.`)}
+        message={l`This feed is empty.`}
       />
     )
-  }, [_])
+  }, [l])
 
   const isVideoFeed = useMemo(() => {
     const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
@@ -179,12 +180,17 @@ export function ProfileFeedScreenInner({
     return IS_NATIVE && _isVideoFeed
   }, [feedInfo])
 
+  const isTrending =
+    feedInfo.creatorDid.toLowerCase() === TRENDING_DID ||
+    feedInfo.creatorHandle.toLowerCase() === TRENDING_HANDLE
+
   return (
     <>
-      <ProfileFeedHeader info={feedInfo} />
-
+      <ProfileFeedHeader info={feedInfo} isTrending={isTrending} />
       <FeedFeedbackProvider value={feedFeedback}>
         <PostFeed
+          enabled
+          description={isTrending ? feedInfo.description : undefined}
           feed={feed}
           feedParams={feedParams}
           pollInterval={60e3}
@@ -196,28 +202,20 @@ export function ProfileFeedScreenInner({
           isVideoFeed={isVideoFeed}
         />
       </FeedFeedbackProvider>
-
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onScrollToTop}
-          label={_(msg`Load new posts`)}
+          label={l`Load new posts`}
           showIndicator={hasNew}
         />
       )}
-
       {hasSession && (
         <FAB
           testID="composeFAB"
           onPress={() => openComposer({logContext: 'Fab'})}
-          icon={
-            <ComposeIcon2
-              strokeWidth={1.5}
-              size={29}
-              style={{color: 'white'}}
-            />
-          }
+          icon={<EditBigIcon size="lg" fill={t.palette.white} />}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
+          accessibilityLabel={l`New post`}
           accessibilityHint=""
         />
       )}

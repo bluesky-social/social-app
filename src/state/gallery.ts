@@ -13,12 +13,12 @@ import {
 } from 'expo-image-manipulator'
 import {nanoid} from 'nanoid/non-secure'
 
-import {POST_IMG_MAX} from '#/lib/constants'
 import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {getDataUriSize} from '#/lib/media/util'
 import {isCancelledError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
 import {IS_NATIVE, IS_WEB} from '#/env'
 
 export type ImageTransformation = {
@@ -149,6 +149,7 @@ export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
     }
   } catch (e) {
     if (!isCancelledError(e)) {
+      logger.error('Failed to crop image', {safeMessage: e})
       return img
     }
 
@@ -200,19 +201,49 @@ export function resetImageManipulation(
   return img
 }
 
-export async function compressImage(img: ComposerImage): Promise<PickerImage> {
+export async function compressImage(
+  img: ComposerImage,
+  {maxDimension, maxSize}: {maxDimension: number; maxSize: number},
+): Promise<PickerImage> {
   const source = img.transformed || img.source
 
-  const [w, h] = containImageRes(source.width, source.height, POST_IMG_MAX)
+  let attempts = 0
+  // Seeded from `maxDimension` but shrunk per attempt below, so keep the
+  // passed-in value pristine.
+  let currentDimension = maxDimension
+  const maxBytes = maxSize
 
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive
   let newDataUri
 
   while (maxQualityPercentage - minQualityPercentage > 1) {
+    if (attempts >= 4) break
+
+    const [w, h] = containImageRes(
+      source.width,
+      source.height,
+      currentDimension,
+    )
     const qualityPercentage = Math.round(
       (maxQualityPercentage + minQualityPercentage) / 2,
     )
+
+    /*
+     * In the event the image doesn't compress well, we want to avoid
+     * unecessary iterations. In this case, binary search will check 51, 26,
+     * 13(rounded). We don't want to go below 25, so if we've halved to 13,
+     * reset the loop and reduce the image dimensions instead.
+     */
+    if (qualityPercentage <= 13) {
+      minQualityPercentage = 0
+      maxQualityPercentage = 101
+      attempts++
+      // max.width → 0.8× → 0.64× → 0.512× → ~0.41×
+      // e.g. 4000px → 3200px → 2560px → 2048px → ~1638px
+      currentDimension = Math.floor(currentDimension * 0.8)
+      continue
+    }
 
     const res = await manipulateAsync(
       source.path,
@@ -226,7 +257,7 @@ export async function compressImage(img: ComposerImage): Promise<PickerImage> {
 
     const base64 = res.base64
     const size = base64 ? getDataUriSize(base64) : 0
-    if (base64 && size <= POST_IMG_MAX.size) {
+    if (base64 && size <= maxBytes) {
       minQualityPercentage = qualityPercentage
       newDataUri = {
         path: await moveIfNecessary(res.uri),
@@ -250,7 +281,7 @@ export async function compressImage(img: ComposerImage): Promise<PickerImage> {
 async function moveIfNecessary(from: string) {
   const cacheDir = IS_NATIVE && getImageCacheDirectory()
 
-  if (cacheDir && from.startsWith(cacheDir)) {
+  if (cacheDir && !from.startsWith(cacheDir)) {
     const to = joinPath(cacheDir, nanoid(36))
 
     await makeDirectoryAsync(cacheDir, {intermediates: true})
@@ -327,14 +358,37 @@ function blobToDataUri(blob: Blob): Promise<string> {
   })
 }
 
+/**
+ * Caches that the OS image picker and manipulator write into when attaching
+ * media to a post. They live alongside our own `bsky-composer` dir under the OS
+ * cache directory. expo-image-picker copies every originally selected photo and
+ * video here, and expo-image-manipulator leaves intermediate full-resolution
+ * outputs here (compressImage makes several manipulateAsync passes, only the
+ * last of which gets moved into `bsky-composer`). Nothing else cleans these up,
+ * so on iOS - where the OS exposes no "clear cache" - they accumulate
+ * indefinitely, one full-resolution copy per attached item.
+ */
+const SYSTEM_MEDIA_CACHE_DIRS = ['ImagePicker', 'ImageManipulator']
+
 /** Purge files that were created to accomodate image manipulation */
 export async function purgeTemporaryImageFiles() {
-  const cacheDir = IS_NATIVE && getImageCacheDirectory()
+  if (!IS_NATIVE) {
+    return
+  }
 
+  const cacheDir = getImageCacheDirectory()
   if (cacheDir) {
     await deleteAsync(cacheDir, {idempotent: true})
     await makeDirectoryAsync(cacheDir)
   }
+
+  // We don't recreate these - the respective expo modules recreate them on
+  // demand the next time they run.
+  await Promise.all(
+    SYSTEM_MEDIA_CACHE_DIRS.map(dir =>
+      deleteAsync(joinPath(cacheDirectory!, dir), {idempotent: true}),
+    ),
+  )
 }
 
 function joinPath(a: string, b: string) {
@@ -352,12 +406,12 @@ function joinPath(a: string, b: string) {
 function containImageRes(
   w: number,
   h: number,
-  {width: maxW, height: maxH}: {width: number; height: number},
+  max: number,
 ): [width: number, height: number] {
   let scale = 1
 
-  if (w > maxW || h > maxH) {
-    scale = w > h ? maxW / w : maxH / h
+  if (w > max || h > max) {
+    scale = w > h ? max / w : max / h
     w = Math.floor(w * scale)
     h = Math.floor(h * scale)
   }

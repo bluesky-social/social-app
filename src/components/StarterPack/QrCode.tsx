@@ -86,7 +86,7 @@ export function QrCode({
             <Trans>
               on
               <View style={[a.flex_row, a.align_center, {gap: 6}]}>
-                <Logo width={25} fill="white" />
+                <Logo allowVariants={false} width={25} fill="white" />
                 <View style={[{marginTop: 3.5}]}>
                   <Logotype width={72} fill="white" />
                 </View>
@@ -129,7 +129,11 @@ export function QrCodeInner({link}: {link: string}) {
             zIndex: 1,
             padding: 4,
           }}>
-          <Logo width={logoArea.width - 14} height={logoArea.height - 14} />
+          <Logo
+            allowVariants={false}
+            width={logoArea.width - 14}
+            height={logoArea.height - 14}
+          />
         </View>
       )}
       <QRCode
