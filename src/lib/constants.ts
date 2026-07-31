@@ -5,13 +5,6 @@ import {api} from '@bsky.app/sdk'
 import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
 import {type app} from '#/lexicons'
 
-/**
- * The `atproto-proxy` header value: a DID plus a service fragment, e.g.
- * `did:web:api.bsky.app#bsky_appview`. Kept local to this module (previously
- * lived in the now-removed session `agent.ts` compat layer).
- */
-type ProxyHeaderValue = `did:${string}:${string}#${string}`
-
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
@@ -247,7 +240,7 @@ export const DEV_ENV_APPVIEW_DID = `did:plc:dw4kbjf5mn7nhenabiqpkyh3` // always 
 export const BLUESKY_PROXY_HEADER = {
   value: `${BLUESKY_PROXY_DID}#bsky_appview`,
   get() {
-    return this.value as ProxyHeaderValue
+    return this.value as Service
   },
   set(value: string) {
     this.value = value
