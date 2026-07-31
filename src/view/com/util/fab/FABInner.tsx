@@ -1,4 +1,4 @@
-import {type ComponentProps, type JSX} from 'react'
+import {type ComponentProps} from 'react'
 import {
   type GestureResponderEvent,
   type Pressable,
@@ -18,7 +18,7 @@ import {IS_WEB} from '#/env'
 
 export interface FABProps extends ComponentProps<typeof Pressable> {
   testID?: string
-  icon: JSX.Element
+  icon: React.JSX.Element
   style?: StyleProp<ViewStyle>
 }
 
