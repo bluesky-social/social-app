@@ -30,14 +30,20 @@ import {
 } from '#/ageAssurance/data'
 import {unsafeGetAndComputeAgeAssurance} from '#/ageAssurance/state'
 import {features} from '#/analytics'
-import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
 import {
   configureModerationForAccount,
   configureModerationForGuest,
 } from './moderation'
+import {networkAwareFetch} from './network'
+import {
+  isSessionExpired,
+  isSignupQueued,
+  sessionAccountToSession,
+} from './session-data'
 import {type SessionAccount} from './types'
-import {isSessionExpired, isSignupQueued} from './util'
+
+export {sessionAccountToSession} from './session-data'
 
 export type ProxyHeaderValue = `${Did}#${AtprotoServiceType}`
 
@@ -313,26 +319,6 @@ export function agentToSessionAccount(
   }
 }
 
-export function sessionAccountToSession(
-  account: SessionAccount,
-): AtpSessionData {
-  return {
-    // Sorted in the same property order as when returned by BskyAgent (alphabetical).
-    accessJwt: account.accessJwt ?? '',
-    did: account.did,
-    email: account.email,
-    emailAuthFactor: account.emailAuthFactor,
-    emailConfirmed: account.emailConfirmed,
-    handle: account.handle,
-    refreshJwt: account.refreshJwt ?? '',
-    /**
-     * @see https://github.com/bluesky-social/atproto/blob/c5d36d5ba2a2c2a5c4f366a5621c06a5608e361e/packages/api/src/agent.ts#L188
-     */
-    active: account.active ?? true,
-    status: account.status,
-  }
-}
-
 export class Agent extends BaseAgent {
   constructor(
     proxyHeader: ProxyHeaderValue | null,
@@ -349,7 +335,6 @@ export class Agent extends BaseAgent {
 // WARN: In the factories above, we _manually set a proxy header_ for the agent after we do whatever it is we are supposed to do.
 // Ideally, we wouldn't be doing this. However, since there is so much logic that requires making calls to the PDS right now, it
 // feels safer to just let those run as-is and set the header afterward.
-let realFetch = globalThis.fetch
 class BskyAppAgent extends AtpAgent {
   persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
     undefined
@@ -357,23 +342,7 @@ class BskyAppAgent extends AtpAgent {
   constructor({service}: {service: string}) {
     super({
       service,
-      async fetch(...args) {
-        let success = false
-        try {
-          const result = await realFetch(...args)
-          success = true
-          return result
-        } catch (e) {
-          success = false
-          throw e
-        } finally {
-          if (success) {
-            emitNetworkConfirmed()
-          } else {
-            emitNetworkLost()
-          }
-        }
-      },
+      fetch: networkAwareFetch,
       persistSession: (event: AtpSessionEvent) => {
         if (this.persistSessionHandler) {
           this.persistSessionHandler(event)

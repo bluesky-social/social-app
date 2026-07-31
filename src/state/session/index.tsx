@@ -25,7 +25,7 @@ import {
   sessionAccountToSession,
 } from './agent'
 import {type Action, getInitialState, reducer, type State} from './reducer'
-export {isSignupQueued} from './util'
+export {isSignupQueued} from './session-data'
 import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
 
