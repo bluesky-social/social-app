@@ -1,7 +1,10 @@
 import {Suspense, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {type ViewShotRef} from 'react-native-view-shot'
-import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
+import {
+  requestPermissionsAsync,
+  saveToLibraryAsync,
+} from 'expo-media-library/legacy'
 import * as Sharing from 'expo-sharing'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
