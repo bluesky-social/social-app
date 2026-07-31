@@ -48,7 +48,7 @@ export function LoadLatestBtn({
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
-  const showBottomBar = hasSession ? !gtMobile : !gtTablet
+  const showBottomBar = IS_NATIVE || (hasSession ? !gtMobile : !gtTablet)
 
   const bottomInset = gtMobile ? a.pb_lg.paddingBottom : a.pb_md.paddingBottom
   const bottomPosition = gtMobile
