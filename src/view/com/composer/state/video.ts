@@ -20,6 +20,16 @@ import {logger} from '#/logger'
 
 type CaptionsTrack = {lang: string; file: File}
 
+type VideoJobStatus = AppBskyVideoDefs.JobStatus & {
+  failureCode?:
+    | 'validation_failure'
+    | 'encoding_failure'
+    | 'pds_upload_failure'
+    | 'pds_upload_unsupported_blob_size'
+    | 'generic_failure'
+    | (string & {})
+}
+
 export type VideoAction =
   | {
       type: 'compressing_to_uploading'
@@ -359,7 +369,7 @@ export async function processVideo(
     }
 
     const videoAgent = createVideoAgent()
-    let status: AppBskyVideoDefs.JobStatus | undefined
+    let status: VideoJobStatus | undefined
     let blob: BlobRef | undefined
     try {
       const response = await videoAgent.app.bsky.video.getJobStatus({jobId})
@@ -387,10 +397,11 @@ export async function processVideo(
       telemetry.processingFailed(e)
       dispatch({
         type: 'to_error',
-        error:
-          status?.state === 'JOB_STATE_FAILED' && status.message
-            ? status.message
-            : i18n._(msg`Video failed to process`),
+        error: getProcessingErrorMessage(
+          status?.failureCode,
+          status?.error,
+          i18n,
+        ),
         signal,
       })
       return // Exit async loop
@@ -420,6 +431,56 @@ export async function processVideo(
     }
 
     return // Exit async loop
+  }
+}
+
+function getProcessingErrorMessage(
+  failureCode: string | undefined,
+  error: string | undefined,
+  i18n: I18n,
+) {
+  const validationError = getValidationErrorMessage(error, i18n)
+  if (failureCode === 'validation_failure') {
+    return (
+      validationError ?? i18n._(msg`The selected video could not be processed.`)
+    )
+  }
+  // Support workers deployed before failureCode was added.
+  if (!failureCode && validationError) {
+    return validationError
+  }
+
+  switch (failureCode) {
+    case 'encoding_failure':
+      return i18n._(
+        msg`An error occurred while processing the video. Please try again.`,
+      )
+    case 'pds_upload_failure':
+      return i18n._(
+        msg`The video could not be uploaded to your service provider. Please try again.`,
+      )
+    case 'pds_upload_unsupported_blob_size':
+      return i18n._(
+        msg`Your service provider does not support videos this large. Please try again with a smaller file.`,
+      )
+    case 'generic_failure':
+    default:
+      return i18n._(msg`Video failed to process`)
+  }
+}
+
+function getValidationErrorMessage(error: string | undefined, i18n: I18n) {
+  switch (error) {
+    case 'video_too_long':
+      return i18n._(msg`The selected video is too long.`)
+    case 'bad_aspect_ratio':
+      return i18n._(msg`The selected video has an unsupported aspect ratio.`)
+    case 'unsupported_codec':
+      return i18n._(msg`The selected video uses an unsupported format.`)
+    case 'encoded_video_too_large':
+      return i18n._(
+        msg`The processed video is too large. Please try again with a smaller file.`,
+      )
   }
 }
 
