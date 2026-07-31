@@ -6,7 +6,6 @@ import {useMediaQuery} from 'react-responsive'
 import {HITSLOP_20} from '#/lib/constants'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {useSession} from '#/state/session'
 import {
@@ -32,10 +31,9 @@ export function LoadLatestBtn({
   showIndicator: boolean
 }) {
   const {hasSession} = useSession()
-  const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {centerColumnOffset} = useLayoutBreakpoints()
   const {width: windowWidth} = useWindowDimensions()
-  const {gtMobile} = useBreakpoints()
+  const {gtMobile, gtTablet} = useBreakpoints()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
   const insets = useSafeAreaInsets()
   const t = useTheme()
@@ -50,11 +48,12 @@ export function LoadLatestBtn({
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
-  const showBottomBar = hasSession ? isMobile : isTabletOrMobile
+  const showBottomBar = hasSession ? !gtMobile : !gtTablet
 
-  const bottomPosition = isTablet
-    ? {bottom: 50}
-    : {bottom: clamp(insets.bottom, 15, 60) + 15}
+  const bottomInset = gtMobile ? a.pb_lg.paddingBottom : a.pb_md.paddingBottom
+  const bottomPosition = gtMobile
+    ? {bottom: bottomInset}
+    : {bottom: clamp(insets.bottom, bottomInset, 60) + bottomInset}
 
   return (
     <Animated.View
@@ -63,11 +62,11 @@ export function LoadLatestBtn({
         a.fixed,
         a.z_20,
         {left: gtMobile ? a.pl_lg.paddingLeft : a.pl_md.paddingLeft},
-        isDesktop &&
+        gtTablet &&
           (isTallViewport
             ? styles.loadLatestOutOfLine
             : styles.loadLatestInline),
-        isTablet &&
+        gtMobile &&
           (centerColumnOffset
             ? styles.loadLatestInlineOffset
             : styles.loadLatestInline),
@@ -75,7 +74,7 @@ export function LoadLatestBtn({
          * Always inline on native: the native left nav is a scroll view drawn
          * above the screen, so it would swallow taps on the out-of-line spot.
          */
-        IS_NATIVE && (isTablet || isDesktop) && {left: windowWidth / 2 - 282},
+        IS_NATIVE && gtMobile && {left: windowWidth / 2 - 292},
         bottomPosition,
         showBottomBar && fabMinimalShellTransform,
       ]}>
@@ -116,10 +115,10 @@ export function LoadLatestBtn({
 
 const styles = StyleSheet.create({
   loadLatestInline: {
-    left: web('calc(50vw - 282px)'),
+    left: web('calc(50vw - 292px)'),
   },
   loadLatestInlineOffset: {
-    left: web(`calc(50vw - 282px + ${CENTER_COLUMN_OFFSET}px)`),
+    left: web(`calc(50vw - 292px + ${CENTER_COLUMN_OFFSET}px)`),
   },
   loadLatestOutOfLine: {
     left: web('calc(50vw - 382px)'),
