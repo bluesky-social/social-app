@@ -1171,7 +1171,7 @@ msgstr ""
 
 #: src/view/com/composer/GifAltText.tsx:76
 #: src/view/com/composer/GifAltText.tsx:150
-#: src/view/com/composer/GifAltText.tsx:217
+#: src/view/com/composer/GifAltText.tsx:216
 #: src/view/com/composer/photos/Gallery.tsx:201
 #: src/view/com/composer/photos/Gallery.tsx:236
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:95
@@ -1556,8 +1556,8 @@ msgid "Alt text describes images for blind and low-vision users, and helps give 
 msgstr ""
 
 #. placeholder {0}: i18n.number(MAX_ALT_TEXT)
-#: src/view/com/composer/GifAltText.tsx:185
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:149
+#: src/view/com/composer/GifAltText.tsx:184
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:148
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
 msgstr ""
 
@@ -10465,12 +10465,12 @@ msgstr "Sad GIFs"
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:315
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:269
-#: src/view/com/composer/GifAltText.tsx:199
-#: src/view/com/composer/GifAltText.tsx:208
+#: src/view/com/composer/GifAltText.tsx:198
+#: src/view/com/composer/GifAltText.tsx:207
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:63
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:76
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:163
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:173
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:162
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:172
 msgid "Save"
 msgstr ""
 
