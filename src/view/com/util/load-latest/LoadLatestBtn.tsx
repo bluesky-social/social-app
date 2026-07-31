@@ -19,7 +19,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon} from '#/components/icons/Arrow'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {SubtleHover} from '#/components/SubtleHover'
-import {IS_NATIVE} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 export function LoadLatestBtn({
   onPress,
@@ -49,10 +49,16 @@ export function LoadLatestBtn({
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
   const showBottomBar = IS_NATIVE || (hasSession ? !gtMobile : !gtTablet)
 
+  const isTablet = gtMobile && !gtTablet
+  const isMobileWeb = IS_WEB && !gtMobile
   const bottomInset = gtMobile ? a.pb_lg.paddingBottom : a.pb_md.paddingBottom
-  const bottomPosition = gtMobile
-    ? {bottom: bottomInset}
-    : {bottom: clamp(insets.bottom, bottomInset, 60) + bottomInset}
+  const bottomGutter = isMobileWeb ? a.pb_lg.paddingBottom : bottomInset
+  const shouldAccountForBottomBar = !gtMobile || (isTablet && showBottomBar)
+  const bottomPosition = {
+    bottom: shouldAccountForBottomBar
+      ? clamp(insets.bottom, bottomInset, 60) + bottomGutter
+      : bottomInset,
+  }
 
   return (
     <Animated.View
