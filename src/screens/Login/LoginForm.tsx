@@ -1,10 +1,10 @@
 import {useRef, useState} from 'react'
 import {Keyboard, type TextInput, View} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
+import {LexAuthFactorError} from '@atproto/lex-password-session'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {DEFAULT_SERVICE, HITSLOP_10, HITSLOP_20} from '#/lib/constants'
-import {getErrorName} from '#/lib/lex-error'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
@@ -141,11 +141,10 @@ export const LoginForm = ({
       const errMsg = String(err)
       setIsProcessing(false)
       /*
-       * Matches a `LexAuthFactorError` from `PasswordSession.login`, which is
-       * NOT an `XrpcError` - so `getErrorName`, gated on `LexError`, is
-       * required here.
+       * `LexAuthFactorError` is what `PasswordSession.login` throws when the
+       * server demands an email 2FA token.
        */
-      if (getErrorName(err) === 'AuthFactorTokenRequired') {
+      if (err instanceof LexAuthFactorError) {
         setIsAuthFactorTokenNeeded(true)
       } else {
         onAttemptFailed()
