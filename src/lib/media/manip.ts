@@ -13,7 +13,7 @@ import {
   writeAsStringAsync,
 } from 'expo-file-system/legacy'
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
-import * as MediaLibrary from 'expo-media-library'
+import * as MediaLibrary from 'expo-media-library/legacy'
 import * as Sharing from 'expo-sharing'
 
 import {logger} from '#/logger'

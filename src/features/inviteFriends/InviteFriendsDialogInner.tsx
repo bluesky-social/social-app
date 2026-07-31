@@ -2,7 +2,10 @@ import {Suspense, useRef} from 'react'
 import {Pressable, View} from 'react-native'
 import {type ViewShotRef} from 'react-native-view-shot'
 import {setStringAsync} from 'expo-clipboard'
-import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
+import {
+  requestPermissionsAsync,
+  saveToLibraryAsync,
+} from 'expo-media-library/legacy'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
