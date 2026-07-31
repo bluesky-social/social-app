@@ -11,8 +11,6 @@ export function useRequestEmailVerification() {
       await pdsClient.call(
         com.atproto.server.requestEmailConfirmation,
         undefined,
-        // service: null strips the appview proxy header - this must hit the account host (PDS)
-        {service: null},
       )
     },
   })

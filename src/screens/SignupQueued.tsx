@@ -39,12 +39,7 @@ export function SignupQueued() {
   const checkStatus = useCallback(async () => {
     setProcessing(true)
     try {
-      const res = await pdsClient.call(
-        com.atproto.temp.checkSignupQueue,
-        {},
-        // service: null strips the appview proxy header - this must hit the account host (PDS)
-        {service: null},
-      )
+      const res = await pdsClient.call(com.atproto.temp.checkSignupQueue, {})
       if (res.activated) {
         // ready to go, exchange the access token for a usable one and kick off onboarding
         const refreshed = await refreshSession()

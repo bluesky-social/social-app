@@ -1,25 +1,17 @@
 import {PasswordSession} from '@atproto/lex-password-session'
 
-import {isJwtExpired} from '#/lib/jwt'
 import {createLexClient} from '#/lib/lexClient'
 import {type TemporaryPushClient} from '#/lib/notifications/notifications'
 import * as persisted from '#/state/persisted'
-import {networkAwareFetch, sessionAccountToSessionData} from './session-core'
+import {networkAwareFetch} from './network'
+import {sessionAccountToSessionData} from './session-data'
 import {type SessionAccount} from './types'
 
-export {isSignupQueued} from './session-core'
+export {isSessionExpired, isSignupQueued} from './session-data'
 
 export function readLastActiveAccount() {
   const {currentAccount, accounts} = persisted.get('session')
   return accounts.find(a => a.did === currentAccount?.did)
-}
-
-export function isSessionExpired(account: SessionAccount) {
-  if (account.accessJwt) {
-    return isJwtExpired(account.accessJwt)
-  } else {
-    return true
-  }
 }
 
 /**

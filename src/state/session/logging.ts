@@ -1,7 +1,6 @@
 import {type Schema} from '../persisted'
 import {type Action, type State} from './reducer'
-import {type AtpSessionEvent} from './session-core'
-import {type SessionAccount} from './types'
+import {type AtpSessionEvent, type SessionAccount} from './types'
 
 type Reducer = (state: State, action: Action) => State
 
@@ -45,9 +44,9 @@ type Log =
       data: Schema['session']
     }
   | {
-      type: 'agent:switch'
-      prevAgent: object
-      nextAgent: object
+      type: 'bundle:switch'
+      prevBundle: object
+      nextBundle: object
     }
   | {
       /*
@@ -55,8 +54,8 @@ type Log =
        * (the reducer never reads its internals); the session snapshots are
        * plain objects captured for debugging.
        */
-      type: 'agent:patch'
-      agent: object
+      type: 'bundle:patch'
+      bundle: object
       prevSession: object | undefined
       nextSession: object | undefined
     }

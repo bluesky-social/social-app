@@ -13,31 +13,15 @@ jest.mock('#/state/events', () => ({
 }))
 
 /*
- * session-core now imports the factory dependency graph (birthdate,
- * restrictChatSettings, ageAssurance, moderation). Mock the heavy leaves so the
- * pure-converter tests here stay lightweight and do not pull in the native
- * bottom-sheet module chain (same approach as session-test.ts).
- */
-jest.mock('#/state/birthdate')
-/*
  * `prefetchAgeAssuranceServerData` is a genuine prep await in each factory
- * (moderation config is synchronous now, so the AA prefetch is where the
- * fix-1 tests inject a mid-prep token rotation). The default is a no-op;
+ * (moderation config is synchronous, so the AA prefetch is where the factory
+ * tests inject a mid-prep token rotation). The default is a no-op;
  * individual tests install behavior via `mockImplementationOnce`.
  */
 const mockPrefetchAgeAssuranceServerData = jest.fn<() => void | Promise<void>>()
 jest.mock('#/ageAssurance/data', () => ({
   prefetchAgeAssuranceServerData: () => mockPrefetchAgeAssuranceServerData(),
-  setBirthdateForDid: () => {},
-  setCreatedAtForDid: () => {},
 }))
-jest.mock('#/ageAssurance/state', () => ({
-  unsafeGetAndComputeAgeAssurance: () => ({state: {}, flags: {}}),
-}))
-jest.mock('#/state/queries/messages/restrictChatSettings', () => ({
-  restrictChatSettings: () => Promise.resolve(),
-}))
-
 /*
  * The factory tail awaits `features.refresh(...)`; stub the analytics module so
  * the factory does not pull GrowthBook (and its native deps) into this
@@ -51,11 +35,10 @@ jest.mock('#/analytics', () => ({
  * `configureModerationForAccount` is now fully synchronous (the labeler cache
  * is a local MMKV read), so it is no longer a prep await - but it still runs
  * inside each factory with the freshly built bundle, before the awaited prep
- * steps. The fix-1 tests use this mock to CAPTURE the bundle, then inject a
- * REAL `session.refresh()` into the awaited AA prefetch (see the
- * `#/ageAssurance/data` mock above), so a token rotation happens DURING prep
- * (before arm()) - exactly the 401 auto-refresh scenario the re-snapshot fix
- * guards against. The default is a no-op so other tests are unaffected.
+ * steps. The factory tests capture the bundle with this mock, then inject a
+ * real `session.refresh()` into the awaited AA prefetch so a token rotation
+ * happens during prep, before arm(). The default is a no-op so other tests are
+ * unaffected.
  * (jest requires out-of-scope factory references to be `mock`-prefixed.)
  */
 const mockConfigureModerationForAccount =
@@ -85,22 +68,35 @@ jest.mock('jwt-decode', () => ({
 
 import {
   type AtpSessionEvent,
+  createSessionBundleFromStoredAccount,
   disposeBundle,
-  extractPdsUrl,
   makeSessionHooks,
-  MAX_EXPIRY_RESCUE_GENERATIONS,
-  pickExpiryRescueCandidate,
   registerBundleKillSwitch,
   sessionAccountToSessionData,
   type SessionBundle,
   sessionDataToSessionAccount,
-  synthDidDoc,
 } from '../session-core'
 
 const DID = 'did:plc:example123'
 const HANDLE = 'alice.test'
 const SERVICE = 'https://bsky.social'
 const PDS_URL = 'https://shimeji.us-east.host.bsky.network'
+
+function synthDidDoc(
+  did: string,
+  pdsUrl: string,
+): NonNullable<SessionData['didDoc']> {
+  return {
+    id: did,
+    service: [
+      {
+        id: '#atproto_pds',
+        type: 'AtprotoPersonalDataServer',
+        serviceEndpoint: pdsUrl,
+      },
+    ],
+  }
+}
 
 function makeSessionData(overrides: Partial<SessionData> = {}): SessionData {
   return {
@@ -116,54 +112,6 @@ function makeSessionData(overrides: Partial<SessionData> = {}): SessionData {
     ...overrides,
   }
 }
-
-describe('extractPdsUrl', () => {
-  it('extracts the PDS endpoint from a didDoc', () => {
-    expect(extractPdsUrl(synthDidDoc(DID, PDS_URL))).toBe(PDS_URL)
-  })
-
-  it('matches full service ids ending in #atproto_pds', () => {
-    const didDoc = {
-      id: DID,
-      service: [
-        {
-          id: `${DID}#atproto_pds`,
-          type: 'AtprotoPersonalDataServer',
-          serviceEndpoint: PDS_URL,
-        },
-      ],
-    }
-    expect(extractPdsUrl(didDoc)).toBe(PDS_URL)
-  })
-
-  it('returns null for missing/invalid input', () => {
-    expect(extractPdsUrl(undefined)).toBe(null)
-    expect(extractPdsUrl(null)).toBe(null)
-    expect(extractPdsUrl({})).toBe(null)
-    expect(extractPdsUrl({service: 'not-an-array'})).toBe(null)
-    expect(
-      extractPdsUrl({
-        service: [{id: '#other_service', serviceEndpoint: PDS_URL}],
-      }),
-    ).toBe(null)
-    expect(
-      extractPdsUrl({service: [{id: '#atproto_pds', serviceEndpoint: 42}]}),
-    ).toBe(null)
-    expect(
-      extractPdsUrl({
-        service: [{id: '#atproto_pds', serviceEndpoint: 'not a url'}],
-      }),
-    ).toBe(null)
-  })
-})
-
-describe('synthDidDoc', () => {
-  it('produces a didDoc that extractPdsUrl round-trips', () => {
-    const doc = synthDidDoc(DID, PDS_URL)
-    expect(extractPdsUrl(doc)).toBe(PDS_URL)
-    expect(doc.id).toBe(DID)
-  })
-})
 
 describe('sessionDataToSessionAccount', () => {
   it('returns undefined for a missing session', () => {
@@ -197,7 +145,7 @@ describe('sessionDataToSessionAccount', () => {
     })
   })
 
-  it('normalizes service with a trailing slash like agent.serviceUrl.toString()', () => {
+  it('serializes service as a normalized URL', () => {
     const account = sessionDataToSessionAccount(
       makeSessionData(),
       'https://bsky.social',
@@ -205,15 +153,11 @@ describe('sessionDataToSessionAccount', () => {
     expect(account.service).toBe('https://bsky.social/')
   })
 
-  it('derives pdsUrl from the didDoc, normalized as a URL string', () => {
+  it('serializes the didDoc PDS endpoint as a normalized URL', () => {
     const account = sessionDataToSessionAccount(
       makeSessionData({didDoc: synthDidDoc(DID, PDS_URL)}),
       'https://bsky.social',
     )!
-    /*
-     * The old code read agent.pdsUrl?.toString() - a URL - so the persisted
-     * value carries a trailing slash.
-     */
     expect(account.pdsUrl).toBe(`${PDS_URL}/`)
   })
 
@@ -223,6 +167,15 @@ describe('sessionDataToSessionAccount', () => {
       'https://bsky.social',
     )!
     expect(account.pdsUrl).toBe(undefined)
+  })
+
+  it('retains the stored PDS when a valid didDoc has no PDS service', () => {
+    const account = sessionDataToSessionAccount(
+      makeSessionData({didDoc: {id: DID}}),
+      'https://bsky.social',
+      PDS_URL,
+    )!
+    expect(account.pdsUrl).toBe(`${PDS_URL}/`)
   })
 
   it('derives isSelfHosted from the service URL', () => {
@@ -267,11 +220,10 @@ describe('sessionDataToSessionAccount', () => {
     expect(account.emailAuthFactor).toBe(false)
   })
 
-  it('preserves the exact field order of the old agentToSessionAccount literal', () => {
+  it('preserves the exact SessionAccount field order', () => {
     /*
      * Byte-stability guard: the reducer's JSON.stringify fast path and the
-     * session test snapshots depend on this exact key order. This is the
-     * object literal order of the old agentToSessionAccount in agent.ts.
+     * session test snapshots depend on this exact persisted key order.
      */
     const account = sessionDataToSessionAccount(
       makeSessionData({didDoc: synthDidDoc(DID, PDS_URL)}),
@@ -332,15 +284,14 @@ describe('sessionAccountToSessionData', () => {
   it('omits didDoc when the account has no stored pdsUrl', () => {
     const data = sessionAccountToSessionData(baseAccount)
     expect('didDoc' in data).toBe(false)
-    expect(extractPdsUrl(data.didDoc)).toBe(null)
   })
 
-  it('synthesizes a didDoc from a stored pdsUrl so PDS routing works pre-refresh', () => {
+  it('does not synthesize protocol data from a stored pdsUrl', () => {
     const data = sessionAccountToSessionData({
       ...baseAccount,
       pdsUrl: `${PDS_URL}/`,
     })
-    expect(extractPdsUrl(data.didDoc)).toBe(`${PDS_URL}/`)
+    expect('didDoc' in data).toBe(false)
   })
 
   it('round-trips account -> SessionData -> account preserving all fields', () => {
@@ -350,7 +301,11 @@ describe('sessionAccountToSessionData', () => {
     }
     for (const account of [baseAccount, withPds]) {
       const data = sessionAccountToSessionData(account)
-      const roundTripped = sessionDataToSessionAccount(data, account.service)!
+      const roundTripped = sessionDataToSessionAccount(
+        data,
+        account.service,
+        account.pdsUrl,
+      )!
       expect(roundTripped).toEqual(account)
       expect(JSON.stringify(roundTripped)).toBe(JSON.stringify(account))
     }
@@ -380,6 +335,7 @@ describe('sessionAccountToSessionData', () => {
     const roundTripped = sessionDataToSessionAccount(
       sessionAccountToSessionData(selfHosted),
       selfHosted.service,
+      selfHosted.pdsUrl,
     )!
     expect(roundTripped).toEqual(selfHosted)
   })
@@ -403,6 +359,41 @@ function makeAccount(overrides: Partial<SessionAccount> = {}): SessionAccount {
     ...overrides,
   }
 }
+
+describe('createSessionBundleFromStoredAccount', () => {
+  it('builds distinct appview and PDS clients over one session', () => {
+    const result = createSessionBundleFromStoredAccount(
+      makeAccount(),
+      jest.fn(),
+    )!
+
+    expect(result.bundle.appviewClient).not.toBe(result.bundle.pdsClient)
+    expect(result.bundle.appviewClient.service).toBe(
+      'did:web:api.bsky.app#bsky_appview',
+    )
+    expect(result.bundle.pdsClient.service).toBeNull()
+    disposeBundle(result.bundle)
+  })
+
+  it('disposes a bundle rejected by the activation guard', async () => {
+    const onSessionChange = jest.fn()
+    let rejectedBundle: SessionBundle | undefined
+    const result = createSessionBundleFromStoredAccount(
+      makeAccount(),
+      onSessionChange,
+      bundle => {
+        rejectedBundle = bundle
+        return false
+      },
+    )
+
+    expect(result).toBeUndefined()
+    await expect(
+      rejectedBundle!.session.fetchHandler('/xrpc/test', {}),
+    ).rejects.toThrow('session disposed')
+    expect(onSessionChange).not.toHaveBeenCalled()
+  })
+})
 
 /**
  * Build a mock `fetch` that returns canned XRPC responses keyed by the last
@@ -457,12 +448,6 @@ function asFetch(mock: ReturnType<typeof makeMockFetch>): typeof fetch {
   return mock as unknown as typeof fetch
 }
 
-/*
- * Ported from the now-deleted bridge-agent-test: the arm-latch + event mapping
- * is the durable session-hook semantics that survives the bridge removal. The
- * hook now hands the whole bundle to onSessionChange (not a bridge agent), so
- * getBundle returns a stand-in bundle whose identity is what matters.
- */
 describe('makeSessionHooks arm-latch + event mapping', () => {
   /*
    * The hooks read neither `this` (the PasswordSession) nor their data
@@ -549,8 +534,8 @@ describe('makeSessionHooks arm-latch + event mapping', () => {
 
 /*
  * The exact derivation from the provider's onSessionChange (index.tsx). Pinned
- * here because the payload threading (session-core) and this mapping together
- * are the fix: read tokens from the delivered payload on 'update', and force
+ * here because payload threading and this mapping together read tokens from
+ * the delivered payload on 'update' and force
  * undefined on the drop paths so the reducer logs the user out.
  */
 function deriveRefreshedAccount(
@@ -563,7 +548,7 @@ function deriveRefreshedAccount(
 }
 
 /*
- * Pins the pre-commit ordering bug fix. `PasswordSession` fires onUpdated with
+ * `PasswordSession` fires onUpdated with
  * the fresh session BEFORE committing it internally, so the live getter is
  * still stale at hook time. Driven through the real library (not a hand-rolled
  * fixture) so the ordering is authentic.
@@ -581,12 +566,12 @@ describe('session-hook payload threading (pre-commit ordering)', () => {
         event: AtpSessionEvent,
         sessionData?: SessionData,
       ) => {
-        /* what the OLD code did: snapshot the live (mutable) getter */
+        /* Capture the live getter to demonstrate its pre-commit state. */
         liveGetterAtHookTime = sessionDataToSessionAccount(
           session.session,
           session.session.service,
         )
-        /* what the fix does: derive from the delivered payload */
+        /* Derive fresh data from the delivered payload. */
         refreshedAccountAtHookTime = deriveRefreshedAccount(event, sessionData)
       },
     )
@@ -603,9 +588,9 @@ describe('session-hook payload threading (pre-commit ordering)', () => {
 
     await session.refresh()
 
-    /* pre-commit ordering: at hook time the live getter still held OLD tokens */
+    /* at hook time the live getter still held the previous tokens */
     expect(liveGetterAtHookTime?.accessJwt).toBe('access-jwt')
-    /* the fix reads the fresh tokens from the payload the hook delivered */
+    /* the payload already contains the fresh tokens */
     expect(refreshedAccountAtHookTime?.accessJwt).toBe('access-jwt-2')
     expect(refreshedAccountAtHookTime?.refreshJwt).toBe('refresh-jwt-2')
     /* and the session does eventually commit those same tokens */
@@ -661,7 +646,7 @@ describe('session-hook payload threading (pre-commit ordering)', () => {
 })
 
 /*
- * Pins the disposal kill-switch (fix 3). `PasswordSession` exposes no local
+ * `PasswordSession` exposes no local
  * destroy, so disposeBundle neutralizes the session by tripping the flag inside
  * the injected fetch - after disposal every request (direct or auto-refresh,
  * which shares this same captured fetch) throws before touching the network.
@@ -707,10 +692,8 @@ describe('disposeBundle kill-switch', () => {
 })
 
 /*
- * Ported from bridge-agent-test: PasswordSession lifecycle over a mocked fetch.
- * This exercises the auth core directly (the bridge that used to wrap it is
- * gone), covering the resume fast path plus the onUpdated/onDeleted/
- * onUpdateFailure hook firing that makeSessionHooks maps into reducer events.
+ * PasswordSession lifecycle over a mocked fetch, covering the resume fast path
+ * and the hooks that makeSessionHooks maps into reducer events.
  */
 describe('PasswordSession lifecycle over mocked fetch', () => {
   it('resume fast path: constructing does not hit the network', () => {
@@ -784,8 +767,7 @@ describe('PasswordSession lifecycle over mocked fetch', () => {
 })
 
 /*
- * refreshSession coverage (design decision (b) / Test plan). The
- * `useSessionApi().refreshSession()` callback is a thin wrapper over
+ * `useSessionApi().refreshSession()` is a thin wrapper over
  * `PasswordSession.refresh()`: on success the armed hooks dispatch exactly one
  * 'update' event and the returned snapshot reflects the refreshed data;
  * rejections propagate. We exercise the auth-core mechanics that the callback
@@ -849,7 +831,7 @@ describe('refreshSession semantics', () => {
 })
 
 /*
- * Fix 1: the resume/login factories must snapshot the RETURNED account AFTER
+ * The resume/login factories must snapshot the returned account after
  * the prep awaits, not before. A 401 during prep triggers PasswordSession's
  * internal auto-refresh (rotating BOTH tokens and firing an onUpdated the
  * disarmed latch drops); an early snapshot would persist the stale refreshJwt,
@@ -860,12 +842,11 @@ describe('refreshSession semantics', () => {
  * `prefetchAgeAssuranceServerData` (a genuine prep await in each factory) run
  * a real `session.refresh()`. The factory itself is re-required inside
  * `jest.isolateModulesAsync` AFTER overriding `globalThis.fetch`, because
- * session-core captures `globalThis.fetch` into `networkAwareFetch` at module
- * load - and that captured fetch is what PasswordSession's auto-refresh routes
- * through.
+ * the network leaf captures `globalThis.fetch` at module load - and that
+ * captured fetch is what PasswordSession's auto-refresh routes through.
  */
-describe('factory account snapshot is taken AFTER prep (fix 1)', () => {
-  /** Load a fresh session-core whose networkAwareFetch captures `fetch`. */
+describe('factory account snapshot after preparation', () => {
+  /** Load a fresh factory graph whose network leaf captures `fetch`. */
   async function withFreshFactory(
     fetch: typeof globalThis.fetch,
     run: (core: typeof import('../session-core')) => Promise<void>,
@@ -924,9 +905,8 @@ describe('factory account snapshot is taken AFTER prep (fix 1)', () => {
 
   it('resume: returned account falls back to the stored account when the fast path yields no live token change', async () => {
     /*
-     * Control: no mid-prep refresh. The re-snapshot still reflects the (still
-     * valid) stored tokens, confirming the moved snapshot did not regress the
-     * happy path.
+     * With no mid-prep refresh, the snapshot still reflects the valid stored
+     * tokens.
      */
     mockConfigureModerationForAccount.mockReturnValueOnce(undefined)
     const fetchMock = makeMockFetch()
@@ -939,91 +919,5 @@ describe('factory account snapshot is taken AFTER prep (fix 1)', () => {
       expect(account.accessJwt).toBe('valid-access-jwt')
       expect(account.refreshJwt).toBe('refresh-jwt')
     })
-  })
-})
-
-/*
- * Fix 1: the pure decision behind the cross-tab expiry rescue. Given the dying
- * session's refreshJwt and a preference-ordered list of "latest known"
- * candidates, it picks the first candidate that is a usable, strictly-newer,
- * not-already-failed generation - or undefined (fall through to logout).
- */
-describe('pickExpiryRescueCandidate', () => {
-  it('picks a candidate whose refreshJwt differs from the dying one', () => {
-    const fresh = makeAccount({refreshJwt: 'refresh-jwt-2'})
-    const picked = pickExpiryRescueCandidate({
-      dyingRefreshJwt: 'refresh-jwt-1',
-      candidates: [fresh],
-      failedRefreshJwts: new Set(),
-    })
-    expect(picked).toBe(fresh)
-  })
-
-  it('rejects a candidate carrying the dying refreshJwt (equally dead)', () => {
-    const picked = pickExpiryRescueCandidate({
-      dyingRefreshJwt: 'refresh-jwt-1',
-      candidates: [makeAccount({refreshJwt: 'refresh-jwt-1'})],
-      failedRefreshJwts: new Set(),
-    })
-    expect(picked).toBe(undefined)
-  })
-
-  it('rejects a candidate with no refreshJwt', () => {
-    const picked = pickExpiryRescueCandidate({
-      dyingRefreshJwt: 'refresh-jwt-1',
-      candidates: [makeAccount({refreshJwt: undefined}), undefined],
-      failedRefreshJwts: new Set(),
-    })
-    expect(picked).toBe(undefined)
-  })
-
-  it('rejects a candidate already recorded as failed (loop guard)', () => {
-    const picked = pickExpiryRescueCandidate({
-      dyingRefreshJwt: 'refresh-jwt-1',
-      candidates: [makeAccount({refreshJwt: 'refresh-jwt-2'})],
-      failedRefreshJwts: new Set(['refresh-jwt-2']),
-    })
-    expect(picked).toBe(undefined)
-  })
-
-  it('tries candidates in order, preferring the first qualifying one', () => {
-    const persistedCandidate = makeAccount({
-      refreshJwt: 'refresh-jwt-persisted',
-    })
-    const reducerCandidate = makeAccount({refreshJwt: 'refresh-jwt-reducer'})
-    const picked = pickExpiryRescueCandidate({
-      dyingRefreshJwt: 'refresh-jwt-1',
-      candidates: [persistedCandidate, reducerCandidate],
-      failedRefreshJwts: new Set(),
-    })
-    expect(picked).toBe(persistedCandidate)
-  })
-
-  it('skips an unusable first candidate and falls back to a later one', () => {
-    const reducerCandidate = makeAccount({refreshJwt: 'refresh-jwt-reducer'})
-    const picked = pickExpiryRescueCandidate({
-      dyingRefreshJwt: 'refresh-jwt-1',
-      /* first candidate is the dying token; second is genuinely newer */
-      candidates: [
-        makeAccount({refreshJwt: 'refresh-jwt-1'}),
-        reducerCandidate,
-      ],
-      failedRefreshJwts: new Set(),
-    })
-    expect(picked).toBe(reducerCandidate)
-  })
-
-  it('gives up once the failed-generation set hits the hard cap', () => {
-    const failed = new Set<string>()
-    for (let i = 0; i < MAX_EXPIRY_RESCUE_GENERATIONS; i++) {
-      failed.add(`refresh-jwt-failed-${i}`)
-    }
-    const picked = pickExpiryRescueCandidate({
-      dyingRefreshJwt: 'refresh-jwt-dying',
-      /* a genuinely newer candidate exists, but the budget is exhausted */
-      candidates: [makeAccount({refreshJwt: 'refresh-jwt-brand-new'})],
-      failedRefreshJwts: failed,
-    })
-    expect(picked).toBe(undefined)
   })
 })

@@ -3,44 +3,29 @@ import {PasswordSession} from '@atproto/lex-password-session'
 import {api} from '@bsky.app/sdk'
 import {describe, expect, it, jest} from '@jest/globals'
 
-/*
- * clients.ts imports session-core (for networkAwareFetch), which pulls the
- * factory dependency graph. Mock the heavy leaves so this test does not load
- * the native module chain (same approach as session-core-test.ts).
- */
 jest.mock('#/state/events', () => ({
   emitNetworkConfirmed: jest.fn(),
   emitNetworkLost: jest.fn(),
-}))
-jest.mock('#/state/birthdate')
-jest.mock('#/ageAssurance/data')
-jest.mock('#/ageAssurance/state', () => ({
-  unsafeGetAndComputeAgeAssurance: () => ({state: {}, flags: {}}),
-}))
-jest.mock('#/state/queries/messages/restrictChatSettings', () => ({
-  restrictChatSettings: () => Promise.resolve(),
-}))
-jest.mock('jwt-decode', () => ({
-  jwtDecode() {
-    return {scope: 'com.atproto.access'}
-  },
 }))
 
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {app, chat, com} from '#/lexicons'
 import {
-  buildBskyClient,
+  buildAppviewClient,
   buildChatClient,
-  getPublicLexClient,
-  getUnauthenticatedClient,
+  buildPdsClient,
+  getPublicAppviewClient,
+  getUnauthenticatedThrowingClient,
   NotAuthenticatedError,
+  routeSessionToPds,
 } from '../clients'
-import {sessionAccountToSessionData} from '../session-core'
+import {sessionAccountToSessionData} from '../session-data'
 import {type SessionAccount} from '../types'
 
 const DID = 'did:plc:example123'
 const HANDLE = 'alice.test'
 const SERVICE = 'https://bsky.social'
+const PDS_URL = 'https://pds.example.com'
 const APPVIEW_PROXY = 'did:web:api.bsky.app#bsky_appview'
 const CHAT_PROXY = 'did:web:api.bsky.chat#bsky_chat'
 const CUSTOM_LABELER = 'did:plc:custom-labeler'
@@ -84,11 +69,7 @@ function makeCapturingFetch() {
       input: URL | string | Request,
       init: RequestInit = {},
     ): Promise<Response> => {
-      /*
-       * The lex Client calls fetch as (url, {headers}); the old AtpAgent
-       * (XrpcClient) calls it with a single Request object carrying the
-       * headers. Read headers from whichever the caller used.
-       */
+      /* Read headers from either valid fetch input shape. */
       const url = isRequest(input)
         ? input.url
         : input instanceof URL
@@ -122,11 +103,11 @@ function makeSession(
   })
 }
 
-describe('buildBskyClient', () => {
+describe('buildAppviewClient', () => {
   it('sets the appview atproto-proxy header and includes only the per-instance labelers', async () => {
     const {seen, fetchMock} = makeCapturingFetch()
     const session = makeSession(fetchMock)
-    const client = buildBskyClient(session, [CUSTOM_LABELER])
+    const client = buildAppviewClient(session, [CUSTOM_LABELER])
 
     await client.call(app.bsky.actor.getProfile.main, {actor: HANDLE})
 
@@ -138,7 +119,7 @@ describe('buildBskyClient', () => {
      * The moderation DID is NOT a per-instance labeler: it flows only through
      * the global Client.appLabelers (unset in this test), where lex-client
      * merges it into the header with `;redact` on every request. See the
-     * labeler-header regression guard below for the merged composition.
+     * labeler header composition suite below.
      */
     expect(labelers).not.toContain(api.moderation.did)
   })
@@ -146,7 +127,7 @@ describe('buildBskyClient', () => {
   it('routes through the session fetchHandler with the bearer token', async () => {
     const {seen, fetchMock} = makeCapturingFetch()
     const session = makeSession(fetchMock)
-    const client = buildBskyClient(session, [])
+    const client = buildAppviewClient(session, [])
 
     await client.call(app.bsky.actor.getProfile.main, {actor: HANDLE})
 
@@ -170,7 +151,7 @@ describe('buildBskyClient', () => {
      */
     const {seen, fetchMock} = makeCapturingFetch()
     const session = makeSession(fetchMock)
-    const client = buildBskyClient(session, [CUSTOM_LABELER])
+    const client = buildAppviewClient(session, [CUSTOM_LABELER])
 
     await client.getRecord('app.bsky.feed.post', 'self').catch(() => {})
 
@@ -182,7 +163,7 @@ describe('buildBskyClient', () => {
   it('inherits the appview proxy on a raw appview query call', async () => {
     const {seen, fetchMock} = makeCapturingFetch()
     const session = makeSession(fetchMock)
-    const client = buildBskyClient(session, [])
+    const client = buildAppviewClient(session, [])
 
     await client.call(app.bsky.feed.getTimeline.main, {}).catch(() => {})
 
@@ -198,7 +179,7 @@ describe('buildBskyClient', () => {
      */
     const {seen, fetchMock} = makeCapturingFetch()
     const session = makeSession(fetchMock)
-    const client = buildBskyClient(session, [])
+    const client = buildAppviewClient(session, [])
 
     await client
       .call(com.atproto.server.getSession.main, {}, {service: null})
@@ -206,6 +187,33 @@ describe('buildBskyClient', () => {
 
     expect(seen.length).toBe(1)
     expect(seen[0].headers.get('atproto-proxy')).toBeNull()
+  })
+})
+
+describe('buildPdsClient', () => {
+  it('targets the account host by default with the session bearer token', async () => {
+    const {seen, fetchMock} = makeCapturingFetch()
+    const session = makeSession(fetchMock)
+    const client = buildPdsClient(session)
+
+    await client.call(com.atproto.server.getSession.main, {}).catch(() => {})
+
+    expect(seen).toHaveLength(1)
+    expect(seen[0].url).toContain('bsky.social')
+    expect(seen[0].headers.get('atproto-proxy')).toBeNull()
+    expect(seen[0].headers.get('authorization')).toBe('Bearer access-jwt')
+  })
+
+  it('targets an explicitly routed PDS using the same session auth', async () => {
+    const {seen, fetchMock} = makeCapturingFetch()
+    const session = makeSession(fetchMock)
+    const client = buildPdsClient(routeSessionToPds(session, PDS_URL))
+
+    await client.call(com.atproto.server.getSession.main, {}).catch(() => {})
+
+    expect(seen).toHaveLength(1)
+    expect(seen[0].url).toContain('pds.example.com')
+    expect(seen[0].headers.get('authorization')).toBe('Bearer access-jwt')
   })
 })
 
@@ -233,12 +241,12 @@ describe('buildChatClient', () => {
   })
 })
 
-describe('getUnauthenticatedClient', () => {
+describe('getUnauthenticatedThrowingClient', () => {
   it('is a stable singleton with no did', () => {
-    const client = getUnauthenticatedClient()
+    const client = getUnauthenticatedThrowingClient()
     expect(client.did).toBeUndefined()
     /* identity is stable so it is safe in React Query keys */
-    expect(getUnauthenticatedClient()).toBe(client)
+    expect(getUnauthenticatedThrowingClient()).toBe(client)
   })
 
   it('rejects on a call, with NotAuthenticatedError as the root cause', async () => {
@@ -247,7 +255,7 @@ describe('getUnauthenticatedClient', () => {
      * a fetchHandler throw in an XrpcInternalError whose `.cause` is the
      * original error, so the NotAuthenticatedError surfaces as the cause.
      */
-    const client = getUnauthenticatedClient()
+    const client = getUnauthenticatedThrowingClient()
 
     const err = await client
       .call(chat.bsky.convo.listConvos.main)
@@ -259,7 +267,7 @@ describe('getUnauthenticatedClient', () => {
   })
 
   it('surfaces a NotAuthenticatedError with a stable name and message', async () => {
-    const client = getUnauthenticatedClient()
+    const client = getUnauthenticatedThrowingClient()
 
     const err = await client
       .call(chat.bsky.convo.listConvos.main)
@@ -275,17 +283,17 @@ describe('getUnauthenticatedClient', () => {
   })
 })
 
-describe('getPublicLexClient', () => {
+describe('getPublicAppviewClient', () => {
   it('is an unauthenticated singleton (no session did)', () => {
-    const client = getPublicLexClient()
+    const client = getPublicAppviewClient()
     expect(client.did).toBeUndefined()
     /* process-wide singleton: identity is stable across calls */
-    expect(getPublicLexClient()).toBe(client)
+    expect(getPublicAppviewClient()).toBe(client)
   })
 
   it('routes to public.api.bsky.app with no proxy or auth header', async () => {
     /*
-     * getPublicLexClient builds `new Client({service: PUBLIC_BSKY_SERVICE,
+     * getPublicAppviewClient builds `new Client({service: PUBLIC_BSKY_SERVICE,
      * fetch: networkAwareFetch})`. networkAwareFetch captures the global fetch
      * at import time, which is hard to intercept here, so we reconstruct the
      * same Client shape with an observable fetch to assert the routing +
@@ -308,20 +316,12 @@ describe('getPublicLexClient', () => {
   })
 })
 
-/*
- * Regression guard: the emitted `atproto-accept-labelers` header from a
- * fully-configured appview client must carry the exact byte-shape the old
- * AtpAgent produced - global appLabelers carry the `;redact` suffix, per
- * -instance labelers are plain. The old AtpAgent reference implementation is
- * gone with the bridge, so we assert the composition invariant directly (design
- * section 6).
- */
-describe('labeler-header regression guard', () => {
+describe('labeler header composition', () => {
   it('bsky client emits the global Bluesky labeler redacted and the per-instance labeler plain', async () => {
     /*
      * The moderation DID flows only through the global Client.appLabelers,
      * which lex-client merges into the header per request with the `;redact`
-     * suffix; buildBskyClient no longer lists it as a per-instance labeler.
+     * suffix; buildAppviewClient does not list it as a per-instance labeler.
      * Configure the global appLabelers to the Bluesky moderation DID (matching
      * switchToBskyAppLabeler in moderation.ts) so the composition matches
      * production.
@@ -330,7 +330,7 @@ describe('labeler-header regression guard', () => {
 
     const {seen, fetchMock} = makeCapturingFetch()
     const session = makeSession(fetchMock)
-    const client = buildBskyClient(session, [CUSTOM_LABELER])
+    const client = buildAppviewClient(session, [CUSTOM_LABELER])
     await client
       .call(app.bsky.actor.getProfile.main, {actor: HANDLE})
       .catch(() => {})

@@ -35,12 +35,7 @@ export function ExportCarDialog({
     try {
       setLoading('repo')
       const did = currentAccount.did as DidString
-      const data = await pdsClient.call(
-        com.atproto.sync.getRepo,
-        {did},
-        // service: null strips the appview proxy header - this must hit the account host (PDS)
-        {service: null},
-      )
+      const data = await pdsClient.call(com.atproto.sync.getRepo, {did})
       /*
        * getRepo returns raw bytes; the lex client does not surface the response
        * content-type, and this endpoint always returns CAR data, so the constant

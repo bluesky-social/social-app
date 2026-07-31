@@ -3,6 +3,9 @@ import {type Metrics} from '#/analytics/metrics'
 
 export type SessionAccount = PersistedAccount
 
+/** Session-change events understood by the reducer and logging hooks. */
+export type AtpSessionEvent = 'update' | 'expired' | 'network-error'
+
 export type SessionStateContext = {
   accounts: SessionAccount[]
   currentAccount: SessionAccount | undefined

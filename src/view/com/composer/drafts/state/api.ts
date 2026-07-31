@@ -12,7 +12,7 @@ import {mimeToExt} from '#/lib/media/video/util'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {type ComposerImage} from '#/state/gallery'
 import {threadgateAllowUISettingToAllowRecordValue} from '#/state/queries/threadgate/util'
-import {getPublicLexClient} from '#/state/session/clients'
+import {getPublicAppviewClient} from '#/state/session/clients'
 import {
   type ComposerState,
   type EmbedDraft,
@@ -140,7 +140,7 @@ async function postDraftToServerPost(
 
   // Add quote record embed
   if (post.embed.quote) {
-    const publicClient = getPublicLexClient()
+    const publicClient = getPublicAppviewClient()
     const resolved = await resolveLink(
       {appview: publicClient, chat: publicClient},
       post.embed.quote.uri,

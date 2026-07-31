@@ -98,15 +98,10 @@ export function CreateListFromStarterPackDialog({
 
             const chunks = chunk(listitemWrites, 50)
             for (const c of chunks) {
-              await pdsClient.call(
-                com.atproto.repo.applyWrites,
-                {
-                  repo: currentAccount.did as AtIdentifierString,
-                  writes: c,
-                },
-                // service: null strips the appview proxy header - this must hit the account host (PDS)
-                {service: null},
-              )
+              await pdsClient.call(com.atproto.repo.applyWrites, {
+                repo: currentAccount.did as AtIdentifierString,
+                writes: c,
+              })
             }
 
             await until(

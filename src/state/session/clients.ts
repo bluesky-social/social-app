@@ -1,4 +1,4 @@
-import {type Client} from '@atproto/lex'
+import {type Agent, type Client} from '@atproto/lex'
 import {type PasswordSession} from '@atproto/lex-password-session'
 
 import {
@@ -7,7 +7,7 @@ import {
   PUBLIC_BSKY_SERVICE,
 } from '#/lib/constants'
 import {createLexClient} from '#/lib/lexClient'
-import {networkAwareFetch} from './session-core'
+import {networkAwareFetch} from './network'
 
 /**
  * Lazily-constructed unauthenticated client pointed at the public appview. It
@@ -15,10 +15,10 @@ import {networkAwareFetch} from './session-core'
  */
 let publicClient: Client | undefined
 
-export function getPublicLexClient(): Client {
+export function getPublicAppviewClient(): Client {
   /*
    * Pass networkAwareFetch so the unauthenticated public path feeds the same
-   * reachability signal as the session-backed clients (see session-core).
+   * reachability signal as the session-backed clients.
    */
   publicClient ??= createLexClient({
     service: PUBLIC_BSKY_SERVICE,
@@ -37,8 +37,8 @@ export function getPublicLexClient(): Client {
  * env-configurable `CHAT_PROXY_DID` (via `EXPO_PUBLIC_CHAT_PROXY_DID`) rather
  * than the hard-coded SDK constant, so it can be retargeted per environment.
  */
-export function buildChatClient(session: PasswordSession): Client {
-  return createLexClient(session, {service: CHAT_PROXY_SERVICE})
+export function buildChatClient(agent: Agent): Client {
+  return createLexClient(agent, {service: CHAT_PROXY_SERVICE})
 }
 
 /** Thrown when a write/auth-only client is used with no active session. */
@@ -61,7 +61,7 @@ export class NotAuthenticatedError extends Error {
  */
 let unauthedClient: Client | undefined
 
-export function getUnauthenticatedClient(): Client {
+export function getUnauthenticatedThrowingClient(): Client {
   unauthedClient ??= createLexClient({
     did: undefined,
     fetchHandler: () => {
@@ -72,29 +72,8 @@ export function getUnauthenticatedClient(): Client {
 }
 
 /**
- * Build the single authed Bluesky client over a {@link PasswordSession}. This
- * is the merged account-plus-appview client: one instance serves both reads
- * (proxied to the Bluesky appview) and writes (routed to the user's PDS),
- * because lex-client 0.3.0's record helpers pick the target per call.
- *
- * The instance is configured with `service = BLUESKY_PROXY_HEADER.get()`, so by
- * default every request carries the `atproto-proxy` header and is proxied to
- * the Bluesky appview, along with the per-instance labelers. The getter exists
- * so the e2e `TestCtrls` hack can retarget the appview via
- * `BLUESKY_PROXY_HEADER.set()` before sign-in (the client is built at sign-in,
- * so it picks up the override).
- *
- * Two request shapes take DIFFERENT targets off this one instance:
- *  - Record helpers (`createRecord`/`putRecord`/...) and the typed record sugar
- *    (`create`/`put`/`get`/`delete`/`list`) default per-call `service = null`
- *    in lex-client 0.3.0, which DELETES the `atproto-proxy` header regardless of
- *    the instance default. So writes auto-target the account host and hit the
- *    user's PDS through the session's `fetchHandler` (which resolves the PDS
- *    origin per request from the didDoc, falling back to `service`).
- *  - Raw `client.call(lexicon, ...)` inherits the appview proxy from the
- *    instance `service`, UNLESS the call site passes `{service: null}` to strip
- *    it (needed for `com.atproto.server`/`identity`/`sync`/`temp` calls that
- *    must hit the PDS directly).
+ * Build the signed-in appview client. Raw calls inherit the configured appview
+ * proxy; record helpers still target the account host by default.
  *
  * The Bluesky moderation labeler (`api.moderation.did`) is deliberately NOT
  * listed in `labelerDids` - it must flow only through the global
@@ -104,20 +83,32 @@ export function getUnauthenticatedClient(): Client {
  * We intentionally do NOT pass `fetch` here: a client built over a session uses
  * that session's own `fetch` (networkAwareFetch, set at construction).
  */
-export function buildBskyClient(
-  session: PasswordSession,
+export function buildAppviewClient(
+  agent: Agent,
   labelerDids: string[],
 ): Client {
-  return createLexClient(session, {
+  return createLexClient(agent, {
     service: BLUESKY_PROXY_HEADER.get(),
     labelers: labelerDids as `did:${string}:${string}`[],
   })
 }
 
-/**
- * Unauthenticated lex {@link Client} for public appview reads. A process-wide
- * singleton, so its identity is stable across renders.
- */
-export function usePublicLexClient(): Client {
-  return getPublicLexClient()
+/** Build the signed-in account-host client with no service proxy. */
+export function buildPdsClient(agent: Agent): Client {
+  return createLexClient(agent)
+}
+
+/** Route client requests to a PDS while retaining the session's auth lifecycle. */
+export function routeSessionToPds(
+  session: PasswordSession,
+  pdsUrl: string,
+): Agent {
+  return {
+    did: session.did,
+    fetchHandler(path, init) {
+      const url = new URL(path, pdsUrl).href
+      // PasswordSession preserves absolute inputs while applying auth/refresh.
+      return session.fetchHandler(url, init)
+    },
+  }
 }

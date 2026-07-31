@@ -7,7 +7,7 @@ import {
   resolveLink,
 } from '#/lib/api/resolve'
 import {STALE} from '#/state/queries/index'
-import {useChatClient, useLexClient} from '#/state/session'
+import {useAppviewClient, useChatClient} from '#/state/session'
 import {type Gif} from '#/features/gifPicker/types'
 
 export const RQKEY_LINK_ROOT = 'resolve-link'
@@ -30,7 +30,7 @@ export function resolveLinkQueryOptions(clients: ResolveClients, url: string) {
  * chat client serves group join-link previews.
  */
 export function useResolveClients(): ResolveClients {
-  const appview = useLexClient()
+  const appview = useAppviewClient()
   const chat = useChatClient()
   return {appview, chat}
 }

@@ -23,20 +23,7 @@ jest.mock('#/lib/notifications/notifications', () => ({
   },
 }))
 
-/*
- * The reducer no longer sees real agents - the provider stores a SessionBundle
- * and the reducer's opaque view only reads `.service`. These helpers replace
- * the old `new AtpAgent(...)` + `agentToSessionAccountOrThrow(agent)` dance:
- *
- * - `makeBundle(service)` builds the opaque bundle view the reducer receives as
- *   `newAgent`/`agent` - just `{service: new URL(service)}`. Object identity is
- *   load-bearing (the reducer compares `agent === currentAgentState.agent`), so
- *   reuse the same bundle instance across a test's actions for one account.
- * - `makeAccount(service, session)` builds the persisted `SessionAccount` via
- *   the real `sessionDataToSessionAccount` converter, so field order and
- *   derivation stay byte-identical to the old `agentToSessionAccount` output
- *   (the JSON.stringify fast path and the inline snapshots depend on this).
- */
+// Reuse a bundle within each test: session events are scoped by bundle identity.
 function makeBundle(service: string) {
   return {service: new URL(service)}
 }
@@ -70,8 +57,8 @@ describe('session', () => {
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://public.api.bsky.app/",
           },
           "did": undefined,
@@ -91,11 +78,11 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: aliceAccount,
       },
     ])
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].did).toBe('alice-did')
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
@@ -119,8 +106,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://alice.com/",
           },
           "did": "alice-did",
@@ -135,7 +122,7 @@ describe('session', () => {
       },
     ])
     // Should keep the account but clear out the tokens.
-    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.currentBundleState.did).toBe(undefined)
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].did).toBe('alice-did')
     expect(state.accounts[0].accessJwt).toBe(undefined)
@@ -159,8 +146,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://public.api.bsky.app/",
           },
           "did": undefined,
@@ -185,14 +172,14 @@ describe('session', () => {
       {
         // Switch to Alice.
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: aliceAccount,
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].did).toBe('alice-did')
-    expect(state.currentAgentState.did).toBe('alice-did')
-    expect(state.currentAgentState.agent).toBe(aliceBundle)
+    expect(state.currentBundleState.did).toBe('alice-did')
+    expect(state.currentBundleState.bundle).toBe(aliceBundle)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -212,8 +199,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://alice.com/",
           },
           "did": "alice-did",
@@ -234,7 +221,7 @@ describe('session', () => {
       {
         // Switch to Bob.
         type: 'switched-to-account',
-        newAgent: bobBundle,
+        newBundle: bobBundle,
         newAccount: bobAccount,
       },
     ])
@@ -242,8 +229,8 @@ describe('session', () => {
     // Bob should float upwards.
     expect(state.accounts[0].did).toBe('bob-did')
     expect(state.accounts[1].did).toBe('alice-did')
-    expect(state.currentAgentState.did).toBe('bob-did')
-    expect(state.currentAgentState.agent).toBe(bobBundle)
+    expect(state.currentBundleState.did).toBe('bob-did')
+    expect(state.currentBundleState.bundle).toBe(bobBundle)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -278,8 +265,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://bob.com/",
           },
           "did": "bob-did",
@@ -300,7 +287,7 @@ describe('session', () => {
       {
         // Switch back to Alice.
         type: 'switched-to-account',
-        newAgent: aliceBundle2,
+        newBundle: aliceBundle2,
         newAccount: aliceAccount2,
       },
     ])
@@ -308,8 +295,8 @@ describe('session', () => {
     // Alice should float upwards.
     expect(state.accounts[0].did).toBe('alice-did')
     expect(state.accounts[0].handle).toBe('alice-updated.test')
-    expect(state.currentAgentState.did).toBe('alice-did')
-    expect(state.currentAgentState.agent).toBe(aliceBundle2)
+    expect(state.currentBundleState.did).toBe('alice-did')
+    expect(state.currentBundleState.bundle).toBe(aliceBundle2)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -344,8 +331,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://alice.com/",
           },
           "did": "alice-did",
@@ -366,14 +353,14 @@ describe('session', () => {
       {
         // Switch to Jay.
         type: 'switched-to-account',
-        newAgent: jayBundle,
+        newBundle: jayBundle,
         newAccount: jayAccount,
       },
     ])
     expect(state.accounts.length).toBe(3)
     expect(state.accounts[0].did).toBe('jay-did')
-    expect(state.currentAgentState.did).toBe('jay-did')
-    expect(state.currentAgentState.agent).toBe(jayBundle)
+    expect(state.currentBundleState.did).toBe('jay-did')
+    expect(state.currentBundleState.bundle).toBe(jayBundle)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -423,8 +410,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://jay.com/",
           },
           "did": "jay-did",
@@ -440,7 +427,7 @@ describe('session', () => {
       },
     ])
     expect(state.accounts.length).toBe(3)
-    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.currentBundleState.did).toBe(undefined)
     // All tokens should be gone.
     expect(state.accounts[0].accessJwt).toBe(undefined)
     expect(state.accounts[0].refreshJwt).toBe(undefined)
@@ -497,8 +484,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://public.api.bsky.app/",
           },
           "did": undefined,
@@ -522,14 +509,14 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: aliceAccount,
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-1')
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
 
     state = run(state, [
       {
@@ -539,7 +526,7 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].accessJwt).toBe(undefined)
     expect(state.accounts[0].refreshJwt).toBe(undefined)
-    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.currentBundleState.did).toBe(undefined)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -559,8 +546,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://public.api.bsky.app/",
           },
           "did": undefined,
@@ -580,14 +567,14 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle2,
+        newBundle: aliceBundle2,
         newAccount: aliceAccount2,
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-2')
     expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-2')
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -607,8 +594,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://alice.com/",
           },
           "did": "alice-did",
@@ -632,14 +619,14 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: aliceAccount,
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-1')
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
 
     state = run(state, [
       {
@@ -648,12 +635,12 @@ describe('session', () => {
       },
     ])
     expect(state.accounts.length).toBe(0)
-    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.currentBundleState.did).toBe(undefined)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://public.api.bsky.app/",
           },
           "did": undefined,
@@ -685,17 +672,17 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: aliceAccount,
       },
       {
         type: 'switched-to-account',
-        newAgent: bobBundle,
+        newBundle: bobBundle,
         newAccount: bobAccount,
       },
     ])
     expect(state.accounts.length).toBe(2)
-    expect(state.currentAgentState.did).toBe('bob-did')
+    expect(state.currentBundleState.did).toBe('bob-did')
 
     state = run(state, [
       {
@@ -704,7 +691,7 @@ describe('session', () => {
       },
     ])
     expect(state.accounts.length).toBe(1)
-    expect(state.currentAgentState.did).toBe('bob-did')
+    expect(state.currentBundleState.did).toBe('bob-did')
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -724,8 +711,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://bob.com/",
           },
           "did": "bob-did",
@@ -741,7 +728,7 @@ describe('session', () => {
       },
     ])
     expect(state.accounts.length).toBe(0)
-    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.currentBundleState.did).toBe(undefined)
   })
 
   it('can log out of the current account', () => {
@@ -758,14 +745,14 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: aliceAccount,
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-1')
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
 
     const bobBundle = makeBundle('https://bob.com')
     const bobAccount = makeAccount('https://bob.com', {
@@ -778,14 +765,14 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: bobBundle,
+        newBundle: bobBundle,
         newAccount: bobAccount,
       },
     ])
     expect(state.accounts.length).toBe(2)
     expect(state.accounts[0].accessJwt).toBe('bob-access-jwt-1')
     expect(state.accounts[0].refreshJwt).toBe('bob-refresh-jwt-1')
-    expect(state.currentAgentState.did).toBe('bob-did')
+    expect(state.currentBundleState.did).toBe('bob-did')
 
     state = run(state, [
       {
@@ -797,7 +784,7 @@ describe('session', () => {
     expect(state.accounts[0].refreshJwt).toBe(undefined)
     expect(state.accounts[1].accessJwt).toBe('alice-access-jwt-1')
     expect(state.accounts[1].refreshJwt).toBe('alice-refresh-jwt-1')
-    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.currentBundleState.did).toBe(undefined)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -832,8 +819,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://public.api.bsky.app/",
           },
           "did": undefined,
@@ -850,7 +837,7 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -861,13 +848,13 @@ describe('session', () => {
       },
     ])
     expect(state.accounts.length).toBe(1)
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
 
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -886,7 +873,7 @@ describe('session', () => {
     expect(state.accounts[0].handle).toBe('alice-updated.test')
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-2')
     expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-2')
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -906,8 +893,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://alice.com/",
           },
           "did": "alice-did",
@@ -918,9 +905,9 @@ describe('session', () => {
 
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -939,7 +926,7 @@ describe('session', () => {
     expect(state.accounts[0].handle).toBe('alice-updated.test')
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-3')
     expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-3')
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -959,8 +946,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://alice.com/",
           },
           "did": "alice-did",
@@ -971,9 +958,9 @@ describe('session', () => {
 
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -992,7 +979,7 @@ describe('session', () => {
     expect(state.accounts[0].handle).toBe('alice-updated.test')
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-4')
     expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-4')
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -1012,8 +999,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://alice.com/",
           },
           "did": "alice-did",
@@ -1030,7 +1017,7 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1041,13 +1028,13 @@ describe('session', () => {
       },
     ])
     expect(state.accounts.length).toBe(1)
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
 
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1064,9 +1051,9 @@ describe('session', () => {
     const lastState = state
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1081,9 +1068,9 @@ describe('session', () => {
 
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1098,7 +1085,7 @@ describe('session', () => {
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-3')
   })
 
-  it('ignores updates from a stale agent bundle', () => {
+  it('ignores updates from a stale bundle', () => {
     let state = getInitialState([])
 
     const aliceBundle = makeBundle('https://alice.com')
@@ -1108,7 +1095,7 @@ describe('session', () => {
       {
         // Switch to Alice.
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1120,7 +1107,7 @@ describe('session', () => {
       {
         // Switch to Bob.
         type: 'switched-to-account',
-        newAgent: bobBundle,
+        newBundle: bobBundle,
         newAccount: makeAccount('https://bob.com', {
           active: true,
           did: 'bob-did',
@@ -1131,7 +1118,7 @@ describe('session', () => {
       },
     ])
     expect(state.accounts.length).toBe(2)
-    expect(state.currentAgentState.did).toBe('bob-did')
+    expect(state.currentBundleState.did).toBe('bob-did')
 
     /*
      * An 'update' from the stale (background) Alice bundle is now dropped
@@ -1142,9 +1129,9 @@ describe('session', () => {
     const beforeStaleUpdate = state
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1168,9 +1155,9 @@ describe('session', () => {
     state = run(state, [
       {
         // Update Bob (the current bundle) - this still applies.
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'bob-did',
-        agent: bobBundle,
+        bundle: bobBundle,
         refreshedAccount: makeAccount('https://bob.com', {
           active: true,
           did: 'bob-did',
@@ -1221,8 +1208,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://bob.com/",
           },
           "did": "bob-did",
@@ -1231,13 +1218,13 @@ describe('session', () => {
       }
     `)
 
-    // Ignore other events for the inactive agent too (network-error, expired).
+    // Ignore other events for the inactive bundle too (network-error, expired).
     const lastState = state
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: undefined,
         sessionEvent: 'network-error',
       },
@@ -1245,9 +1232,9 @@ describe('session', () => {
     expect(lastState === state).toBe(true)
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: undefined,
         sessionEvent: 'expired',
       },
@@ -1262,7 +1249,7 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1272,12 +1259,12 @@ describe('session', () => {
         }),
       },
     ])
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
 
     // Alice logs out: her account entry stays, but tokens are cleared and the
     // current bundle becomes the public (logged-out) bundle.
     state = run(state, [{type: 'logged-out-current-account'}])
-    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.currentBundleState.did).toBe(undefined)
     expect(state.accounts[0].did).toBe('alice-did')
     expect(state.accounts[0].accessJwt).toBe(undefined)
     expect(state.accounts[0].refreshJwt).toBe(undefined)
@@ -1291,9 +1278,9 @@ describe('session', () => {
     const afterLogout = state
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1307,7 +1294,7 @@ describe('session', () => {
     expect(afterLogout === state).toBe(true)
     expect(state.accounts[0].accessJwt).toBe(undefined)
     expect(state.accounts[0].refreshJwt).toBe(undefined)
-    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.currentBundleState.did).toBe(undefined)
   })
 
   it('applies an update from the current bundle', () => {
@@ -1317,7 +1304,7 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1330,9 +1317,9 @@ describe('session', () => {
 
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1346,10 +1333,10 @@ describe('session', () => {
     // The current bundle's update lands and rotates the stored tokens.
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-2')
     expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-2')
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
   })
 
-  it('ignores updates from a removed agent', () => {
+  it('ignores updates from a removed bundle', () => {
     let state = getInitialState([])
 
     const aliceBundle = makeBundle('https://alice.com')
@@ -1358,7 +1345,7 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1369,7 +1356,7 @@ describe('session', () => {
       },
       {
         type: 'switched-to-account',
-        newAgent: bobBundle,
+        newBundle: bobBundle,
         newAccount: makeAccount('https://bob.com', {
           active: true,
           did: 'bob-did',
@@ -1384,13 +1371,13 @@ describe('session', () => {
       },
     ])
     expect(state.accounts.length).toBe(1)
-    expect(state.currentAgentState.did).toBe('bob-did')
+    expect(state.currentBundleState.did).toBe('bob-did')
 
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1404,7 +1391,7 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].did).toBe('bob-did')
     expect(state.accounts[0].accessJwt).toBe('bob-access-jwt-1')
-    expect(state.currentAgentState.did).toBe('bob-did')
+    expect(state.currentBundleState.did).toBe('bob-did')
   })
 
   it('ignores network errors', () => {
@@ -1415,7 +1402,7 @@ describe('session', () => {
       {
         // Switch to Alice.
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1426,13 +1413,13 @@ describe('session', () => {
       },
     ])
     expect(state.accounts.length).toBe(1)
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
 
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: undefined,
         sessionEvent: 'network-error',
       },
@@ -1440,7 +1427,7 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-1')
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -1460,8 +1447,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://alice.com/",
           },
           "did": "alice-did",
@@ -1478,7 +1465,7 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1490,13 +1477,13 @@ describe('session', () => {
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.did).toBe('alice-did')
 
     state = run(state, [
       {
-        type: 'received-agent-event',
+        type: 'received-session-event',
         accountDid: 'alice-did',
-        agent: aliceBundle,
+        bundle: aliceBundle,
         refreshedAccount: undefined,
         sessionEvent: 'expired',
       },
@@ -1504,7 +1491,7 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].accessJwt).toBe(undefined)
     expect(state.accounts[0].refreshJwt).toBe(undefined)
-    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.currentBundleState.did).toBe(undefined)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -1524,72 +1511,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
-            "service": "https://public.api.bsky.app/",
-          },
-          "did": undefined,
-        },
-        "needsPersist": true,
-      }
-    `)
-  })
-
-  it('resets tokens on created-failed event', () => {
-    let state = getInitialState([])
-
-    const aliceBundle = makeBundle('https://alice.com')
-    state = run(state, [
-      {
-        type: 'switched-to-account',
-        newAgent: aliceBundle,
-        newAccount: makeAccount('https://alice.com', {
-          active: true,
-          did: 'alice-did',
-          handle: 'alice.test',
-          accessJwt: 'alice-access-jwt-1',
-          refreshJwt: 'alice-refresh-jwt-1',
-        }),
-      },
-    ])
-    expect(state.accounts.length).toBe(1)
-    expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
-    expect(state.currentAgentState.did).toBe('alice-did')
-
-    state = run(state, [
-      {
-        type: 'received-agent-event',
-        accountDid: 'alice-did',
-        agent: aliceBundle,
-        refreshedAccount: undefined,
-        sessionEvent: 'create-failed',
-      },
-    ])
-    expect(state.accounts.length).toBe(1)
-    expect(state.accounts[0].accessJwt).toBe(undefined)
-    expect(state.accounts[0].refreshJwt).toBe(undefined)
-    expect(state.currentAgentState.did).toBe(undefined)
-    expect(printState(state)).toMatchInlineSnapshot(`
-      {
-        "accounts": [
-          {
-            "accessJwt": undefined,
-            "active": true,
-            "did": "alice-did",
-            "email": undefined,
-            "emailAuthFactor": false,
-            "emailConfirmed": false,
-            "handle": "alice.test",
-            "isSelfHosted": true,
-            "pdsUrl": undefined,
-            "refreshJwt": undefined,
-            "service": "https://alice.com/",
-            "signupQueued": false,
-            "status": undefined,
-          },
-        ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://public.api.bsky.app/",
           },
           "did": undefined,
@@ -1607,7 +1530,7 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1618,7 +1541,7 @@ describe('session', () => {
       },
       {
         type: 'switched-to-account',
-        newAgent: bobBundle,
+        newBundle: bobBundle,
         newAccount: makeAccount('https://bob.com', {
           active: true,
           did: 'bob-did',
@@ -1629,7 +1552,7 @@ describe('session', () => {
       },
     ])
     expect(state.accounts.length).toBe(2)
-    expect(state.currentAgentState.did).toBe('bob-did')
+    expect(state.currentBundleState.did).toBe('bob-did')
 
     state = run(state, [
       {
@@ -1659,7 +1582,7 @@ describe('session', () => {
     expect(state.accounts[1].accessJwt).toBe('bob-access-jwt-2')
     // Keep Bob logged in.
     // (The bundle is rebuilt from the synced tokens outside the reducer.)
-    expect(state.currentAgentState.did).toBe('bob-did')
+    expect(state.currentBundleState.did).toBe('bob-did')
     expect(state.needsPersist).toBe(false)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
@@ -1695,8 +1618,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://bob.com/",
           },
           "did": "bob-did",
@@ -1724,7 +1647,7 @@ describe('session', () => {
     expect(state.accounts[0].did).toBe('clarence-did')
     // Log out because we have no matching user.
     // (In practice, we'll resume this session outside the reducer.)
-    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.currentBundleState.did).toBe(undefined)
     expect(state.needsPersist).toBe(false)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
@@ -1745,8 +1668,8 @@ describe('session', () => {
             "status": undefined,
           },
         ],
-        "currentAgentState": {
-          "agent": {
+        "currentBundleState": {
+          "bundle": {
             "service": "https://public.api.bsky.app/",
           },
           "did": undefined,
@@ -1763,7 +1686,7 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1773,7 +1696,7 @@ describe('session', () => {
         }),
       },
     ])
-    expect(state.currentAgentState.agent).toBe(aliceBundle)
+    expect(state.currentBundleState.bundle).toBe(aliceBundle)
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
 
     // A fresh bundle rebuilt from synced tokens (no network).
@@ -1788,13 +1711,13 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'replaced-current-bundle',
-        newAgent: aliceBundle2,
+        newBundle: aliceBundle2,
         newAccount: aliceAccount2,
       },
     ])
     // The bundle is swapped in place, the did is preserved.
-    expect(state.currentAgentState.agent).toBe(aliceBundle2)
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.bundle).toBe(aliceBundle2)
+    expect(state.currentBundleState.did).toBe('alice-did')
     // The matching account entry is replaced with the synced one.
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].did).toBe('alice-did')
@@ -1811,7 +1734,7 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: aliceBundle,
+        newBundle: aliceBundle,
         newAccount: makeAccount('https://alice.com', {
           active: true,
           did: 'alice-did',
@@ -1824,7 +1747,7 @@ describe('session', () => {
         }),
       },
     ])
-    expect(state.currentAgentState.agent).toBe(aliceBundle)
+    expect(state.currentBundleState.bundle).toBe(aliceBundle)
     expect(state.accounts[0].emailConfirmed).toBe(false)
     expect(state.accounts[0].emailAuthFactor).toBe(false)
 
@@ -1839,8 +1762,8 @@ describe('session', () => {
     expect(state.accounts[0].emailConfirmed).toBe(true)
     expect(state.accounts[0].emailAuthFactor).toBe(true)
     // The bundle is untouched - no session mutation, same reference.
-    expect(state.currentAgentState.agent).toBe(aliceBundle)
-    expect(state.currentAgentState.did).toBe('alice-did')
+    expect(state.currentBundleState.bundle).toBe(aliceBundle)
+    expect(state.currentBundleState.did).toBe('alice-did')
     expect(state.needsPersist).toBe(true)
   })
 })
@@ -1856,9 +1779,9 @@ function run(initialState: State, actions: Action[]): State {
 function printState(state: State) {
   return {
     accounts: state.accounts,
-    currentAgentState: {
-      agent: {service: state.currentAgentState.agent.service},
-      did: state.currentAgentState.did,
+    currentBundleState: {
+      bundle: {service: state.currentBundleState.bundle.service},
+      did: state.currentBundleState.did,
     },
     needsPersist: state.needsPersist,
   }

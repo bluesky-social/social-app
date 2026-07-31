@@ -5,8 +5,9 @@ import {IS_TEST_USER} from '#/lib/constants'
 import {com} from '#/lexicons'
 import {account as accountStorage} from '#/storage'
 import {configureAdditionalModerationAuthorities} from './additional-moderation-authorities'
-import {type SessionBundle} from './session-core'
 import {type SessionAccount} from './types'
+
+type ModerationSession = {appviewClient: Client}
 
 /**
  * Set the global app labelers on the lex `Client` static so every client emits
@@ -56,7 +57,7 @@ export function configureModerationForGuest() {
 
 /** Configure global authorities and cached account subscriptions. */
 export function configureModerationForAccount(
-  bundle: SessionBundle,
+  bundle: ModerationSession,
   account: SessionAccount,
 ) {
   switchToBskyAppLabeler()
@@ -67,7 +68,7 @@ export function configureModerationForAccount(
 
   const labelerDids = readLabelers(account.did)
   if (labelerDids) {
-    applyLabelersToClient(bundle.bskyClient, labelerDids)
+    applyLabelersToClient(bundle.appviewClient, labelerDids)
   } else {
     // The preferences query populates the cache after the initial requests.
   }
@@ -80,9 +81,9 @@ function switchToBskyAppLabeler() {
 }
 
 /** Resolve and install the test environment's moderation authority. */
-async function trySwitchToTestAppLabeler(bundle: SessionBundle) {
+async function trySwitchToTestAppLabeler(bundle: ModerationSession) {
   const did = (
-    await bundle.bskyClient
+    await bundle.appviewClient
       .call(com.atproto.identity.resolveHandle, {handle: 'mod-authority.test'})
       .catch(_ => undefined)
   )?.did

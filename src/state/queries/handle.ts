@@ -45,14 +45,9 @@ export function useUpdateHandleMutation(opts?: {
 
   return useMutation({
     mutationFn: async ({handle}: {handle: string}) => {
-      await pdsClient.call(
-        com.atproto.identity.updateHandle,
-        {
-          handle: handle as HandleString,
-        },
-        // service: null strips the appview proxy header - this must hit the account host (PDS)
-        {service: null},
-      )
+      await pdsClient.call(com.atproto.identity.updateHandle, {
+        handle: handle as HandleString,
+      })
     },
     onSuccess(_data, variables) {
       opts?.onSuccess?.(variables.handle)

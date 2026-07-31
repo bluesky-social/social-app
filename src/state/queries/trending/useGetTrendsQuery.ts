@@ -10,7 +10,7 @@ import {logger} from '#/logger'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useLexClient} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 
 export const DEFAULT_LIMIT = 5
@@ -33,7 +33,7 @@ export const createGetTrendsQueryKey = (limit?: number) =>
   limit === undefined ? ['trends'] : ['trends', {limit}]
 
 export function useGetTrendsQuery(props: QueryProps = {}) {
-  const client = useLexClient()
+  const client = useAppviewClient()
   const {data: preferences} = usePreferencesQuery()
   const limit = props.limit ?? DEFAULT_LIMIT
   const mutedWords = useMemo(() => {

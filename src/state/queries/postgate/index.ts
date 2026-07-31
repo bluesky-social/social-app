@@ -49,16 +49,11 @@ export async function getPostgateRecord({
         return true
       },
       () =>
-        pdsClient.call(
-          com.atproto.repo.getRecord,
-          {
-            repo: urip.host,
-            collection: POSTGATE_COLLECTION,
-            rkey: urip.rkey,
-          },
-          // service: null strips the appview proxy header - this must hit the account host (PDS)
-          {service: null},
-        ),
+        pdsClient.call(com.atproto.repo.getRecord, {
+          repo: urip.host,
+          collection: POSTGATE_COLLECTION,
+          rkey: urip.rkey,
+        }),
     )
 
     if (data.value && bsky.matches(app.bsky.feed.postgate, data.value)) {
@@ -92,17 +87,12 @@ export async function writePostgateRecord({
   const postUrip = new AtUri(postUri)
 
   await networkRetry(2, () =>
-    pdsClient.call(
-      com.atproto.repo.putRecord,
-      {
-        repo: pdsClient.assertDid,
-        collection: POSTGATE_COLLECTION,
-        rkey: postUrip.rkey,
-        record: postgate,
-      },
-      // service: null strips the appview proxy header - this must hit the account host (PDS)
-      {service: null},
-    ),
+    pdsClient.call(com.atproto.repo.putRecord, {
+      repo: pdsClient.assertDid,
+      collection: POSTGATE_COLLECTION,
+      rkey: postUrip.rkey,
+      record: postgate,
+    }),
   )
 }
 

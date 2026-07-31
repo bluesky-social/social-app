@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 
-import {useLexClient} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 
 export function useRichText(text: string): [RichTextAPI, boolean] {
   const [prevText, setPrevText] = useState(text)
@@ -9,11 +9,10 @@ export function useRichText(text: string): [RichTextAPI, boolean] {
   const [resolvedRT, setResolvedRT] = useState<RichTextAPI | null>(null)
   /*
    * Facet/mention resolution is an appview job - it resolves handles via
-   * `com.atproto.identity.resolveHandle` through the appview. `useLexClient`
-   * falls back to the public client when logged out, so mentions still resolve
-   * on logged-out surfaces (StarterPackLandingScreen, web ProfileHoverCard).
+   * `com.atproto.identity.resolveHandle` through the appview. The public
+   * fallback keeps mentions working on logged-out surfaces.
    */
-  const client = useLexClient()
+  const client = useAppviewClient()
   if (text !== prevText) {
     setPrevText(text)
     setRawRT(new RichTextAPI({text}))

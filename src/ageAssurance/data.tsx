@@ -678,21 +678,20 @@ export function useDeviceSignalsQuery() {
   )
 }
 
-/**
- * Helper to prefetch all age assurance data from the server. Takes the single
- * merged Bluesky client, which serves both roles: the appview reads (`getState`,
- * device signals) inherit the appview proxy, while `getPreferences` (an SDK
- * action that passes `service: null` internally) and `fetchActorDeclarationRecord`
- * (a typed record `get`, `service: null` by default) auto-target the account
- * host.
- */
-export function prefetchAgeAssuranceServerData({client}: {client: Client}) {
+/** Prefetch age-assurance data from both the appview and account host. */
+export function prefetchAgeAssuranceServerData({
+  appviewClient,
+  accountClient,
+}: {
+  appviewClient: Client
+  accountClient: Client
+}) {
   return Promise.allSettled([
     // config fetch initiated at the top of the App.platform.tsx files, awaited here
     configPrefetchPromise,
-    prefetchServerState({appviewClient: client}),
-    prefetchOtherRequiredData({accountClient: client}),
-    prefetchDeviceSignals({appviewClient: client}),
+    prefetchServerState({appviewClient}),
+    prefetchOtherRequiredData({accountClient}),
+    prefetchDeviceSignals({appviewClient}),
   ])
 }
 

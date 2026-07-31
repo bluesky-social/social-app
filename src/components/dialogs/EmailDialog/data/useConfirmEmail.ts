@@ -17,15 +17,10 @@ export function useConfirmEmail({
         throw new Error('No email found for the current account')
       }
 
-      await pdsClient.call(
-        com.atproto.server.confirmEmail,
-        {
-          email: currentAccount.email.trim(),
-          token: token.trim(),
-        },
-        // service: null strips the appview proxy header - this must hit the account host (PDS)
-        {service: null},
-      )
+      await pdsClient.call(com.atproto.server.confirmEmail, {
+        email: currentAccount.email.trim(),
+        token: token.trim(),
+      })
       // will update session state at root of app
       await refreshSession()
     },

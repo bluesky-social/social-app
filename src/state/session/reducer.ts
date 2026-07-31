@@ -10,34 +10,34 @@ type OpaqueSessionBundle = {
   readonly service: URL
 }
 
-type AgentState = {
-  readonly agent: OpaqueSessionBundle
+type BundleState = {
+  readonly bundle: OpaqueSessionBundle
   readonly did: string | undefined
 }
 
 export type State = {
   readonly accounts: SessionAccount[]
-  readonly currentAgentState: AgentState
+  readonly currentBundleState: BundleState
   needsPersist: boolean // Cleared after persistence is scheduled.
 }
 
 export type Action =
   | {
-      type: 'received-agent-event'
-      agent: OpaqueSessionBundle
+      type: 'received-session-event'
+      bundle: OpaqueSessionBundle
       accountDid: string
       refreshedAccount: SessionAccount | undefined
       sessionEvent: AtpSessionEvent
     }
   | {
       type: 'switched-to-account'
-      newAgent: OpaqueSessionBundle
+      newBundle: OpaqueSessionBundle
       newAccount: SessionAccount
     }
   | {
       // Replace an immutable session from synced or rescued tokens without rebroadcasting.
       type: 'replaced-current-bundle'
-      newAgent: OpaqueSessionBundle
+      newBundle: OpaqueSessionBundle
       newAccount: SessionAccount
     }
   | {
@@ -61,9 +61,9 @@ export type Action =
       patch: Pick<SessionAccount, 'emailConfirmed' | 'emailAuthFactor'>
     }
 
-function createPublicAgentState(): AgentState {
+function createPublicBundleState(): BundleState {
   return {
-    agent: createPublicSessionBundle(),
+    bundle: createPublicSessionBundle(),
     did: undefined,
   }
 }
@@ -71,16 +71,16 @@ function createPublicAgentState(): AgentState {
 export function getInitialState(persistedAccounts: SessionAccount[]): State {
   return {
     accounts: persistedAccounts,
-    currentAgentState: createPublicAgentState(),
+    currentBundleState: createPublicBundleState(),
     needsPersist: false,
   }
 }
 
 let reducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case 'received-agent-event': {
-      const {agent, accountDid, refreshedAccount, sessionEvent} = action
-      if (agent !== state.currentAgentState.agent) {
+    case 'received-session-event': {
+      const {bundle, accountDid, refreshedAccount, sessionEvent} = action
+      if (bundle !== state.currentBundleState.bundle) {
         /*
          * Stale bundles must neither log out the current account nor restore
          * tokens after logout or an account switch.
@@ -115,33 +115,33 @@ let reducer = (state: State, action: Action): State => {
             return a
           }
         }),
-        currentAgentState: refreshedAccount
-          ? state.currentAgentState
-          : createPublicAgentState(), // Log out if expired.
+        currentBundleState: refreshedAccount
+          ? state.currentBundleState
+          : createPublicBundleState(), // Log out if expired.
         needsPersist: true,
       }
     }
     case 'switched-to-account': {
-      const {newAccount, newAgent} = action
+      const {newAccount, newBundle} = action
       return {
         accounts: [
           newAccount,
           ...state.accounts.filter(a => a.did !== newAccount.did),
         ],
-        currentAgentState: {
+        currentBundleState: {
           did: newAccount.did,
-          agent: newAgent,
+          bundle: newBundle,
         },
         needsPersist: true,
       }
     }
     case 'replaced-current-bundle': {
-      const {newAgent, newAccount} = action
+      const {newBundle, newAccount} = action
       return {
         ...state,
-        currentAgentState: {
-          did: state.currentAgentState.did,
-          agent: newAgent,
+        currentBundleState: {
+          did: state.currentBundleState.did,
+          bundle: newBundle,
         },
         accounts: state.accounts.map(a =>
           a.did === newAccount.did ? newAccount : a,
@@ -155,7 +155,7 @@ let reducer = (state: State, action: Action): State => {
       const account = state.accounts.find(a => a.did === accountDid)
       if (account) {
         createTemporaryClientsAndResume([account])
-          .then(agents => unregisterPushToken(agents))
+          .then(clients => unregisterPushToken(clients))
           .then(() =>
             logger.debug('Push token unregistered', {did: accountDid}),
           )
@@ -169,20 +169,20 @@ let reducer = (state: State, action: Action): State => {
 
       return {
         accounts: state.accounts.filter(a => a.did !== accountDid),
-        currentAgentState:
-          state.currentAgentState.did === accountDid
-            ? createPublicAgentState() // Log out if removing the current one.
-            : state.currentAgentState,
+        currentBundleState:
+          state.currentBundleState.did === accountDid
+            ? createPublicBundleState() // Log out if removing the current one.
+            : state.currentBundleState,
         needsPersist: true,
       }
     }
     case 'logged-out-current-account': {
-      const {currentAgentState} = state
-      const accountDid = currentAgentState.did
+      const {currentBundleState} = state
+      const accountDid = currentBundleState.did
       const account = state.accounts.find(a => a.did === accountDid)
       if (account && accountDid) {
         createTemporaryClientsAndResume([account])
-          .then(agents => unregisterPushToken(agents))
+          .then(clients => unregisterPushToken(clients))
           .then(() =>
             logger.debug('Push token unregistered', {did: accountDid}),
           )
@@ -204,13 +204,13 @@ let reducer = (state: State, action: Action): State => {
               }
             : a,
         ),
-        currentAgentState: createPublicAgentState(),
+        currentBundleState: createPublicBundleState(),
         needsPersist: true,
       }
     }
     case 'logged-out-every-account': {
       createTemporaryClientsAndResume(state.accounts)
-        .then(agents => unregisterPushToken(agents))
+        .then(clients => unregisterPushToken(clients))
         .then(() => logger.debug('Push token unregistered'))
         .catch(err => {
           logger.error('Failed to unregister push token', {
@@ -225,7 +225,7 @@ let reducer = (state: State, action: Action): State => {
           refreshJwt: undefined,
           accessJwt: undefined,
         })),
-        currentAgentState: createPublicAgentState(),
+        currentBundleState: createPublicBundleState(),
         needsPersist: true,
       }
     }
@@ -233,10 +233,10 @@ let reducer = (state: State, action: Action): State => {
       const {syncedAccounts, syncedCurrentDid} = action
       return {
         accounts: syncedAccounts,
-        currentAgentState:
-          syncedCurrentDid === state.currentAgentState.did
-            ? state.currentAgentState
-            : createPublicAgentState(), // Log out if different user.
+        currentBundleState:
+          syncedCurrentDid === state.currentBundleState.did
+            ? state.currentBundleState
+            : createPublicBundleState(), // Log out if different user.
         needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
       }
     }

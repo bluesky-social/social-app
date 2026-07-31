@@ -53,12 +53,7 @@ function Inner({}: {control: DialogControlProps}) {
 
   const onPressResendEmail = async () => {
     setSending(true)
-    await pdsClient.call(
-      com.atproto.server.requestEmailConfirmation,
-      undefined,
-      // service: null strips the appview proxy header - this must hit the account host (PDS)
-      {service: null},
-    )
+    await pdsClient.call(com.atproto.server.requestEmailConfirmation, undefined)
     setSending(false)
     setStatus('resent')
   }

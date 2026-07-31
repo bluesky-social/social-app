@@ -145,12 +145,7 @@ export function useClearPreferencesMutation() {
 
   return useMutation({
     mutationFn: async () => {
-      // service: null strips the appview proxy header - putPreferences is served by the account host (PDS)
-      await client.call(
-        app.bsky.actor.putPreferences,
-        {preferences: []},
-        {service: null},
-      )
+      await client.call(app.bsky.actor.putPreferences, {preferences: []})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

@@ -95,7 +95,7 @@ import {
   resolveLinkQueryOptions,
   useResolveClients,
 } from '#/state/queries/resolve-link'
-import {useLexClient, usePdsClient, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
@@ -268,7 +268,7 @@ export const ComposePost = ({
   const t = useTheme()
   const ax = useAnalytics()
   const pdsClient = usePdsClient()
-  const appviewClient = useLexClient()
+  const appviewClient = useAppviewClient()
   const resolveClients = useResolveClients()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
