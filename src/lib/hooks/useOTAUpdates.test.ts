@@ -45,6 +45,12 @@ jest.mock('#/storage', () => ({
   },
 }))
 
+jest.mock('#/alf', () => ({
+  useTheme: jest.fn().mockImplementation(() => ({
+    scheme: 'light',
+  })),
+}))
+
 /**
  * `channel` here is the build-time constant baked into the native build, not the
  * channel of the running bundle. `channel` is passed as the manifest metadata
