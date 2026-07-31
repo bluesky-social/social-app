@@ -2,8 +2,8 @@ import {useCallback, useEffect, useRef, useState} from 'react'
 import {
   Alert,
   AppState,
-  Image as RNImage,
   type AppStateStatus,
+  Image as RNImage,
 } from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
 import {
@@ -20,9 +20,9 @@ import {
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useTheme} from '#/alf'
 import {APP_VERSION, IS_IOS, IS_TESTFLIGHT} from '#/env'
 import {device} from '#/storage'
-import {useTheme} from '#/alf'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
 const OTA_RECOVERY_WINDOW = 5 * 60e3
