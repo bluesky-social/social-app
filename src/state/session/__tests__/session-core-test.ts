@@ -32,12 +32,12 @@ jest.mock('#/analytics', () => ({
 }))
 
 /*
- * `configureModerationForAccount` is now fully synchronous (the labeler cache
- * is a local MMKV read), so it is no longer a prep await - but it still runs
- * inside each factory with the freshly built bridge agent, before the awaited
- * prep steps. The factory tests capture the agent with this mock, then inject a
- * real refresh into the awaited AA prefetch so a token rotation happens during
- * prep, before arm(). The default is a no-op so other tests are unaffected.
+ * `configureModerationForAccount` is synchronous (the labeler cache is a local
+ * MMKV read), so it is not a prep await - but it still runs inside each factory
+ * with the freshly built bridge agent, before the awaited prep steps. The
+ * factory tests capture the agent with this mock, then inject a real refresh
+ * into the awaited AA prefetch so a token rotation happens during prep, before
+ * arm(). The default is a no-op so other tests are unaffected.
  * (jest requires out-of-scope factory references to be `mock`-prefixed.)
  */
 const mockConfigureModerationForAccount =
@@ -553,10 +553,8 @@ function deriveRefreshedAccount(
 }
 
 /*
- * `PasswordSession` fires onUpdated with
- * the fresh session BEFORE committing it internally, so the live getter is
- * still stale at hook time. Driven through the real library (not a hand-rolled
- * fixture) so the ordering is authentic.
+ * `PasswordSession` fires onUpdated with the fresh session BEFORE committing it
+ * internally, so the live getter is still stale at hook time.
  */
 describe('session-hook payload threading (pre-commit ordering)', () => {
   it('delivers the NEW tokens via the payload even though the live getter is still pre-commit stale', async () => {
@@ -843,9 +841,9 @@ describe('refreshSession semantics', () => {
  * which is dead on the next cold start.
  *
  * We simulate the mid-prep rotation by capturing the bundle from the mocked
- * (now synchronous) `configureModerationForAccount` and making the mocked
- * `prefetchAgeAssuranceServerData` (a genuine prep await in each factory) run
- * a real `session.refresh()`. The factory itself is re-required inside
+ * `configureModerationForAccount` and making the mocked
+ * `prefetchAgeAssuranceServerData` (a genuine prep await in each factory) run a
+ * real `session.refresh()`. The factory itself is re-required inside
  * `jest.isolateModulesAsync` AFTER overriding `globalThis.fetch`, because
  * the network leaf captures `globalThis.fetch` at module load - and that
  * captured fetch is what PasswordSession's auto-refresh routes through.

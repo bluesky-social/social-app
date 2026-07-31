@@ -1121,7 +1121,7 @@ describe('session', () => {
     expect(state.currentBundleState.did).toBe('bob-did')
 
     /*
-     * An 'update' from the stale (background) Alice bundle is now dropped
+     * An 'update' from the stale (background) Alice bundle is dropped
      * ENTIRELY - identical state object, no token write. A refresh completing
      * after switching away must not resurrect fresh tokens into the
      * switched-away account entry.
