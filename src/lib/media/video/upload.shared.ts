@@ -40,16 +40,11 @@ export async function getServiceAuthToken({
     }
     resolvedAud = pdsAud
   }
-  const {token} = await client.call(
-    com.atproto.server.getServiceAuth,
-    {
-      aud: resolvedAud,
-      lxm,
-      exp,
-    },
-    // service: null strips the appview proxy header - this must hit the account host (PDS)
-    {service: null},
-  )
+  const {token} = await client.call(com.atproto.server.getServiceAuth, {
+    aud: resolvedAud,
+    lxm,
+    exp,
+  })
   return token
 }
 
