@@ -53,7 +53,8 @@ export function LoadLatestBtn({
   const isMobileWeb = IS_WEB && !gtMobile
   const bottomInset = gtMobile ? a.pb_lg.paddingBottom : a.pb_md.paddingBottom
   const bottomGutter = isMobileWeb ? a.pb_lg.paddingBottom : bottomInset
-  const shouldAccountForBottomBar = !gtMobile || (isTablet && showBottomBar)
+  const shouldAccountForBottomBar =
+    IS_NATIVE || !gtMobile || (isTablet && showBottomBar)
   const bottomPosition = {
     bottom: shouldAccountForBottomBar
       ? clamp(insets.bottom, bottomInset, 60) + bottomGutter
