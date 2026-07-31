@@ -250,7 +250,13 @@ let NotificationFeedItem = ({
           t.atoms.text,
           a.font_semi_bold,
           a.text_md,
-          a.leading_tight,
+          /*
+           * Must match the leading of the surrounding text. On iOS the whole
+           * paragraph takes its line metrics from the first character, so a
+           * tighter leading here silently compressed every line of the
+           * notification.
+           */
+          a.leading_snug,
           web({direction: 'ltr', unicodeBidi: 'isolate'}),
         ]}
         to={firstAuthor.href}
@@ -261,12 +267,15 @@ let NotificationFeedItem = ({
         <ProfileBadges
           profile={firstAuthor.profile}
           size="md"
+          inlineFontSize={a.text_md.fontSize}
           style={[
             a.relative,
             {
-              // weird stuff here
+              /*
+               * Empirical nudges to line the badges up with the text on
+               * Android and web. iOS is handled by `inlineFontSize` above.
+               */
               paddingTop: platform({android: 2}),
-              marginBottom: platform({ios: -6}),
               top: platform({web: 2}),
               paddingLeft: 3,
               paddingRight: 2,

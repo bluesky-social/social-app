@@ -8,10 +8,18 @@ import {BotBadge, BotBadgeButton, isBotAccount} from '#/components/BotBadge'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
+import {IS_IOS} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {BetaBadge, BetaBadgeButton, useIsBetaBadgeVisible} from './BetaBadge'
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+
+/*
+ * Cap height of Inter as a fraction of its em size, from the font's OS/2
+ * table. The system font (used when the "system font" setting is on) is within
+ * 0.015em of this, so a single constant covers both.
+ */
+const CAP_HEIGHT_RATIO = 0.7275
 
 const verificationIconSizes: Record<Size, number> = {
   xs: 10,
@@ -51,11 +59,18 @@ export function ProfileBadges({
   size,
   style,
   allowFontScaling = true,
+  inlineFontSize,
 }: ViewStyleProp & {
   profile: bsky.profile.AnyProfileView
   interactive?: boolean
   size: Size
   allowFontScaling?: boolean
+  /**
+   * Unscaled `fontSize` of the text this is rendered inline within. Set this
+   * when rendering inside a `<Text>` so the badges line up with the text
+   * instead of hanging off its baseline - see `inlineHeight` below.
+   */
+  inlineFontSize?: number
 }) {
   const shadowed = useProfileShadow(profile)
   const verification = useSimpleVerificationState({profile})
@@ -84,6 +99,29 @@ export function ProfileBadges({
   const betaIconWidth = betaIconSizes[size] * scaleMultiplier
   const betaBadgeScaledPadding = betaBadgePadding[size] * scaleMultiplier
 
+  /*
+   * A `View` nested inside a `<Text>` is laid out as a text attachment on iOS,
+   * and on the new architecture the attachment box is placed at
+   * `lineTop + baseline - boxHeight` (`RCTTextLayoutManager`), pinning its
+   * bottom edge to the text baseline. `margin` and `top` have no effect there:
+   * `ParagraphShadowNode` measures the box with `LayoutableShadowNode::measure`
+   * (frame size only, margins excluded) and then overwrites its origin. The old
+   * architecture folded margins into the measured box and offset it by the
+   * font's descender, which is why the pre-new-arch fix was a negative
+   * `marginBottom`.
+   *
+   * The box height is the only lever left, so constrain it to the cap height of
+   * the surrounding text. That lands the box exactly over the capital letters,
+   * and `align_center` then centers the badges on them - independent of which
+   * badges are visible and how tall they are. Keeping the box this short also
+   * keeps it inside the line's ascent, so TextKit never has to shift it to make
+   * it fit, which is what the badges' full height used to force.
+   */
+  const inlineHeight =
+    IS_IOS && inlineFontSize
+      ? inlineFontSize * scaleMultiplier * CAP_HEIGHT_RATIO
+      : undefined
+
   const gap = isOnTheSmallSide ? a.gap_2xs : a.gap_xs
   const padding = gap.gap / 2
   let visibleBadgeIndex = 0
@@ -99,7 +137,8 @@ export function ProfileBadges({
   })
 
   return (
-    <View style={[a.flex_row, a.align_center, gap, style]}>
+    <View
+      style={[a.flex_row, a.align_center, gap, {height: inlineHeight}, style]}>
       {interactive ? (
         <>
           <VerificationCheckButton
