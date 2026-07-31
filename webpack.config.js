@@ -77,6 +77,18 @@ module.exports = async function (env, argv) {
       __dirname,
       'node_modules/react-native-svg/lib/module/utils/fetchData',
     )]: false,
+    /*
+     * reanimated's webUtils.web.js mixes ESM exports with bare CommonJS
+     * require() calls in try/catch, which webpack leaves untranspiled - they
+     * throw at runtime and createReactDOMStyle & co. silently stay undefined,
+     * making _updatePropsJS crash on every animated style update. The shim
+     * imports the same react-native-web internals statically. See the shim
+     * file for details.
+     */
+    [path.join(
+      __dirname,
+      'node_modules/react-native-reanimated/lib/module/ReanimatedModule/js-reanimated/webUtils',
+    )]: path.join(__dirname, 'web/reanimatedWebUtilsShim.js'),
   })
 
   /*
