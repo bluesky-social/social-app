@@ -21,8 +21,8 @@ const UNSUPPORTED =
   'Not supported on PasswordSessionManager; use the session factories in session-core'
 
 /**
- * Convert live `PasswordSession` session data into the old `AtpSessionData`
- * shape that `CredentialSession.session` consumers expect.
+ * Convert live `PasswordSession` session data into the `AtpSessionData` shape
+ * that `CredentialSession.session` consumers expect.
  *
  * The only real adaptation is `active`: `AtpSessionData` requires it, while the
  * lexicon payload leaves it optional (absent means active, per the lexicon
@@ -59,8 +59,8 @@ function parseUrl(input: string): URL | undefined {
 /**
  * A `CredentialSession` whose auth core is a `PasswordSession`.
  *
- * This is the compat shim that lets the new session layer sit under the old
- * `AtpAgent`: every call site that reads `agent.session`, `agent.pdsUrl`,
+ * This is the compat shim that lets a `PasswordSession` sit under `AtpAgent`:
+ * every call site that reads `agent.session`, `agent.pdsUrl`,
  * `agent.dispatchUrl`, `agent.did` or calls `agent.resumeSession()` keeps
  * working, while the actual tokens, refresh serialization and PDS routing live
  * in the `PasswordSession` underneath.
@@ -111,9 +111,10 @@ export class PasswordSessionManager extends CredentialSession {
      * Why `defineProperty` and not `get session()` in the class body: the
      * parent declares `session` and `pdsUrl` as *properties*, and TypeScript
      * rejects overriding a property with an accessor (TS2611). Installing them
-     * at runtime sidesteps that, and it is safe because the parent's emitted
-     * constructor never assigns either one - both are declaration-only in the
-     * 0.20.34 dist, so there is nothing to clobber and no ordering hazard.
+     * at runtime sidesteps that, and it is safe as long as
+     * `CredentialSession`'s emitted constructor does not assign either one
+     * (both are declaration-only), so there is nothing to clobber and no
+     * ordering hazard.
      *
      * For the same reason this class must NOT redeclare `session`/`pdsUrl` as
      * fields: under `useDefineForClassFields` semantics (target esnext) a field
@@ -205,7 +206,7 @@ export class PasswordSessionManager extends CredentialSession {
 
   /*
    * `did`, `hasSession` and `dispatchUrl` are deliberately NOT overridden: the
-   * inherited getters read `this.session` / `this.pdsUrl`, which now resolve
+   * inherited getters read `this.session` / `this.pdsUrl`, which resolve
    * through the accessors above, so they are already live.
    */
 
@@ -214,21 +215,19 @@ export class PasswordSessionManager extends CredentialSession {
     init?: RequestInit,
   ): Promise<Response> {
     /*
-     * Absolutizing against `dispatchUrl` is what replaces the old
-     * `sessionManager.pdsUrl = ...` writes and `_updateApiEndpoint`: it routes
-     * to the stored PDS on the resume fast path and to the didDoc PDS from the
-     * first refresh onwards, since `PasswordSession` resolves an already
-     * absolute URL against its own base as a no-op.
+     * Absolutizing against `dispatchUrl` routes to the stored PDS on the resume
+     * fast path and to the didDoc PDS from the first refresh onwards, since
+     * `PasswordSession` resolves an already absolute URL against its own base
+     * as a no-op.
      */
     const target = new URL(url, this.dispatchUrl)
     const inner = this.#disposed ? null : this.#inner
 
     /*
      * A caller that set its own `authorization` header bypasses the inner
-     * session entirely. This preserves old `CredentialSession` semantics (it
-     * skipped its own bearer in that case) and is mandatory here:
-     * `PasswordSession.fetchHandler` throws `TypeError` on a pre-set
-     * authorization header rather than deferring to it.
+     * session entirely. This is mandatory: `PasswordSession.fetchHandler`
+     * throws `TypeError` on a pre-set authorization header rather than
+     * deferring to it.
      */
     if (
       !inner ||
@@ -252,9 +251,9 @@ export class PasswordSessionManager extends CredentialSession {
     }
     const data = await inner.refresh()
     /*
-     * Re-shape the lex payload into the old XRPC envelope. `headers` is empty
-     * because the inner session does not surface response headers, and no
-     * caller in this app reads them off a refresh.
+     * Re-shape the lex payload into the `@atproto/api` XRPC response envelope.
+     * `headers` is empty because the inner session does not surface response
+     * headers, and no caller in this app reads them off a refresh.
      */
     return {
       success: true,

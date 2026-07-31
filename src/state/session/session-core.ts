@@ -223,9 +223,8 @@ export async function createSessionBundleAndResume(
   const aa = prefetchAgeAssuranceServerData({agent: bundle.agent})
 
   /*
-   * Proxy-header ordering matches the old agent factories: the header is
-   * applied after the age-assurance prefetch starts and before the prep await,
-   * so the PDS-targeting setup calls above run without it.
+   * The proxy header is applied after the PDS-targeting setup above, so those
+   * calls run without it.
    */
   bundle.agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
@@ -285,7 +284,6 @@ export async function createSessionBundleAndLogin(
   configureModerationForAccount(bundle.agent, earlyAccount)
   const aa = prefetchAgeAssuranceServerData({agent: bundle.agent})
 
-  // Proxy-header ordering matches the old agent factories.
   bundle.agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   await Promise.all([gates, aa])

@@ -123,8 +123,6 @@ export async function createSessionBundleAndCreateAccount(
     })
   }
 
-  // Proxy-header ordering matches the old agent factories: after the void-fired
-  // post-signup writes are started, before the prep await.
   bundle.agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   await Promise.all([gates, aa])
@@ -138,10 +136,9 @@ export async function createSessionBundleAndCreateAccount(
  * Snapshot a just-created session as a `SessionAccount`.
  *
  * `com.atproto.server.createAccount` returns only tokens, handle, did and
- * didDoc, so the lex session carries no email state or `active` flag until the
- * first refresh. The old `CredentialSession.createAccount` synthesized those
- * fields from the creation input; do the same here so the persisted account
- * does not briefly claim the email is unknown.
+ * didDoc, so the session carries no email state or `active` flag until the
+ * first refresh. Synthesize those fields from the creation input so the
+ * persisted account does not briefly claim the email is unknown.
  */
 function snapshotNewAccount(
   session: PasswordSession,
