@@ -103,7 +103,7 @@ function ThreadItemTreePostDeleted({
             t.atoms.bg_contrast_25,
             {
               gap: 6,
-              paddingHorizontal: OUTER_SPACE,
+              paddingHorizontal: OUTER_SPACE / 2,
               height: TREE_AVI_WIDTH,
             },
           ]}>
@@ -190,13 +190,13 @@ const ThreadItemTreePostInnerWrapper = memo(
             paddingTop: OUTER_SPACE / 2,
           },
           item.ui.indent === 1 && [
-            !item.ui.showParentReplyLine && {paddingTop: OUTER_SPACE},
+            !item.ui.showParentReplyLine && {paddingTop: OUTER_SPACE / 1.5},
             !item.ui.showChildReplyLine && a.pb_sm,
           ],
           item.ui.isLastChild &&
             !item.ui.precedesChildReadMore && [
               {
-                paddingBottom: OUTER_SPACE,
+                paddingBottom: OUTER_SPACE / 2,
               },
             ],
         ]}>
@@ -446,7 +446,7 @@ export function ThreadItemTreePostSkeleton({index}: {index: number}) {
   return (
     <View
       style={[
-        {paddingHorizontal: OUTER_SPACE, paddingVertical: OUTER_SPACE},
+        {paddingHorizontal: OUTER_SPACE, paddingVertical: OUTER_SPACE / 1.5},
         a.border_t,
         t.atoms.border_contrast_low,
       ]}>
