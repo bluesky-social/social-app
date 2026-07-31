@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import * as MediaLibrary from 'expo-media-library'
+import * as MediaLibrary from 'expo-media-library/legacy'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
