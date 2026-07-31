@@ -65,6 +65,7 @@ export function LoadLatestBtn({
             ? styles.loadLatestOutOfLine
             : styles.loadLatestInline),
         gtMobile &&
+          !gtTablet &&
           (centerColumnOffset
             ? styles.loadLatestInlineOffset
             : styles.loadLatestInline),

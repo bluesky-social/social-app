@@ -162,7 +162,8 @@ function PostInner({
         href={itemHref}
         style={[
           styles.outer,
-          gtMobile ? a.px_lg : a.px_md,
+          gtMobile ? a.pl_sm : a.pl_xs,
+          gtMobile ? a.pr_lg : a.pr_md,
           gtMobile ? a.pt_lg : a.pt_md,
           gtMobile ? a.pb_sm : a.pb_xs,
           t.atoms.border_contrast_low,
