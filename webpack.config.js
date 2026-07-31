@@ -67,6 +67,13 @@ module.exports = async function (env, argv) {
     'react-native-gesture-handler': false, // RNGH should not be used on web, so let's cause a build error if it sneaks in
     '@sentry-internal/replay': false, // not used, ~300kb of dead weight
     /*
+     * @sentry/react-native's tracing integration probes for expo-router via a
+     * try/catch require(). We don't use expo-router, so the module can't
+     * resolve and webpack warns on every build. Stubbing it to an empty
+     * module makes the probe return null (`mod?.store ?? null`) silently.
+     */
+    'expo-router/build/global-state/router-store': false,
+    /*
      * react-native-svg's fetchData util imports the ~55KB `buffer` polyfill,
      * but is only needed by SvgUri/SvgXml remote loading, which we don't use.
      * Stubbing it out makes fetchText undefined, so it throws if ever called.
