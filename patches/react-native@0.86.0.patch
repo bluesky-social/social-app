@@ -23,19 +23,6 @@ index 1b02e8b2d39672063551411d5c403a69b671a869..b3481c1b98b45dea769035140dc2fd8d
  - (void)setFrame:(CGRect)frame
  {
    [super setFrame:frame];
-diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
-index 914a2494a57923fbf185644b7e2bb8aca8848e56..0deac55f22350f5e8377d8963fb1c2434bf6abfd 100644
---- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
-+++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
-@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
-  */
- @interface RCTPullToRefreshViewComponentView : RCTViewComponentView <RCTCustomPullToRefreshViewProtocol>
- 
-+- (void)beginRefreshingProgrammatically;
-+
- @end
- 
- NS_ASSUME_NONNULL_END
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 index a087536f3af0d33b13fe38d8abd1bc6d7935def2..01f5c884ea4772350c0ebe6263723d97632f2b74 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
