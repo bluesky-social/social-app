@@ -64,7 +64,7 @@ export async function createAgentAndResume(
   const gates = features.refresh({
     strategy: 'prefer-low-latency',
   })
-  const moderation = configureModerationForAccount(agent, storedAccount)
+  configureModerationForAccount(agent, storedAccount)
   const prevSession: AtpSessionData = sessionAccountToSession(storedAccount)
   if (isSessionExpired(storedAccount)) {
     await networkRetry(1, () => agent.resumeSession(prevSession))
@@ -78,7 +78,7 @@ export async function createAgentAndResume(
   agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   return agent.prepare({
-    resolvers: [gates, moderation, aa],
+    resolvers: [gates, aa],
     onSessionChange,
   })
 }
@@ -111,13 +111,13 @@ export async function createAgentAndLogin(
 
   const account = agentToSessionAccountOrThrow(agent)
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
-  const moderation = configureModerationForAccount(agent, account)
+  configureModerationForAccount(agent, account)
   const aa = prefetchAgeAssuranceServerData({agent})
 
   agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   return agent.prepare({
-    resolvers: [gates, moderation, aa],
+    resolvers: [gates, aa],
     onSessionChange,
   })
 }
@@ -159,7 +159,7 @@ export async function createAgentAndCreateAccount(
   })
   const account = agentToSessionAccountOrThrow(agent)
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
-  const moderation = configureModerationForAccount(agent, account)
+  configureModerationForAccount(agent, account)
 
   const createdAt = new Date().toISOString()
   const birthdate = birthDate.toISOString()
@@ -277,7 +277,7 @@ export async function createAgentAndCreateAccount(
   agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   return agent.prepare({
-    resolvers: [gates, moderation, aa],
+    resolvers: [gates, aa],
     onSessionChange,
   })
 }

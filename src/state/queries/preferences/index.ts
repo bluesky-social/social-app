@@ -21,7 +21,7 @@ import {
 } from '#/state/queries/preferences/types'
 import {createQueryKey} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
-import {saveLabelers} from '#/state/session/agent-config'
+import {saveLabelers} from '#/state/session/moderation'
 import {useAgeAssurance} from '#/ageAssurance'
 import {makeAgeRestrictedModerationPrefs} from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
@@ -53,7 +53,7 @@ export function usePreferencesQuery() {
         const res = await agent.getPreferences()
 
         // save to local storage to ensure there are labels on initial requests
-        void saveLabelers(
+        saveLabelers(
           agent.did,
           res.moderationPrefs.labelers.map(l => l.did),
         )
