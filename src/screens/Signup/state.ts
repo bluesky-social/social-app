@@ -1,11 +1,11 @@
 import {createContext, useCallback, useContext} from 'react'
 import {LayoutAnimation} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
+import {XrpcResponseError} from '@atproto/lex-client'
 import {useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
-import {getErrorName} from '#/lib/lex-error'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
@@ -259,20 +259,19 @@ export const useSignupContext = () => useContext(SignupContext)
  */
 function classifyExpectedSignupError(e: unknown): string | undefined {
   /*
-   * `createAccount` now goes through `PasswordSession`, so these arrive as lex
-   * error codes rather than the generated `@atproto/api` error classes.
-   * Comparing the code as a plain string means a typo silently never matches; a
-   * typed variant constrained to the errors the lexicon declares arrives with
-   * the lexicon codegen in a later PR.
+   * TODO: `XrpcResponseError.error` is the open `LexErrorCode` union, so these
+   * codes are compared as plain strings and a typo silently never matches.
+   * Narrowing to the errors `com.atproto.server.createAccount` declares needs
+   * the generated lexicons.
    */
-  const name = getErrorName(e)
-  if (
-    name === 'InvalidHandle' ||
-    name === 'HandleNotAvailable' ||
-    name === 'InvalidPassword' ||
-    name === 'UnsupportedDomain'
-  ) {
-    return name
+  if (e instanceof XrpcResponseError) {
+    switch (e.error) {
+      case 'InvalidHandle':
+      case 'HandleNotAvailable':
+      case 'InvalidPassword':
+      case 'UnsupportedDomain':
+        return e.error
+    }
   }
   /* the server sends no typed error for this case */
   if (String(e).includes('Email already taken')) return 'EmailTaken'
@@ -363,7 +362,7 @@ export function useSubmitSignup() {
       } catch (err) {
         const e = err as Error
         let errMsg = e.toString()
-        if (getErrorName(e) === 'InvalidInviteCode') {
+        if (e instanceof XrpcResponseError && e.error === 'InvalidInviteCode') {
           dispatch({
             type: 'setError',
             value: l`Invite code not accepted. Check that you input it correctly and try again.`,
