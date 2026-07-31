@@ -1,5 +1,10 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
-import {Alert, AppState, type AppStateStatus} from 'react-native'
+import {
+  Alert,
+  AppState,
+  type AppStateStatus,
+  Image as RNImage,
+} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
 import {
   checkForUpdateAsync,
@@ -7,6 +12,7 @@ import {
   fetchUpdateAsync,
   isEnabled,
   reloadAsync,
+  type ReloadScreenOptions,
   setExtraParamAsync,
   UpdateCheckResultNotAvailableReason,
   useUpdates,
@@ -14,6 +20,7 @@ import {
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useTheme} from '#/alf'
 import {APP_VERSION, IS_IOS, IS_TESTFLIGHT} from '#/env'
 import {device} from '#/storage'
 
@@ -83,7 +90,7 @@ async function setExtraParamsPullRequest(channel: string) {
   await setExtraParamAsync('channel', channel)
 }
 
-async function updateTestflight() {
+async function updateTestflight(scheme: 'light' | 'dark') {
   await setExtraParams()
 
   const res = await checkForUpdateAsync()
@@ -101,7 +108,9 @@ async function updateTestflight() {
           text: 'Relaunch',
           style: 'default',
           onPress: async () => {
-            await reloadAsync()
+            await reloadAsync({
+              reloadScreenOptions: splash(scheme),
+            })
           },
         },
       ],
@@ -110,6 +119,7 @@ async function updateTestflight() {
 }
 
 export function useApplyPullRequestOTAUpdate() {
+  const t = useTheme()
   const {currentlyRunning} = useUpdates()
   const [pending, setPending] = useState(false)
   const currentChannel = getRunningChannel(currentlyRunning)
@@ -174,7 +184,9 @@ export function useApplyPullRequestOTAUpdate() {
              * after the reload.
              */
             // Linking.clearInitialURL()
-            await reloadAsync()
+            await reloadAsync({
+              reloadScreenOptions: splash(t.scheme),
+            })
           } catch (e) {
             device.remove(['pendingOTAUpdate'])
             throw e
@@ -335,6 +347,7 @@ export function useOTAUpdateRecovery() {
 export function useOTAUpdates() {
   const shouldReceiveUpdates = isEnabled && !__DEV__
 
+  const t = useTheme()
   const appState = useRef<AppStateStatus>('active')
   const lastMinimize = useRef(0)
   const ranInitialCheck = useRef(false)
@@ -366,13 +379,13 @@ export function useOTAUpdates() {
 
   const onIsTestFlight = useCallback(async () => {
     try {
-      await updateTestflight()
+      await updateTestflight(t.scheme)
     } catch (err: any) {
       if (!isNetworkError(err)) {
         logger.error('Internal OTA Update Error', {safeMessage: err})
       }
     }
-  }, [])
+  }, [t.scheme])
 
   useEffect(() => {
     // We don't need to check anything if the current update is a PR update
@@ -414,7 +427,9 @@ export function useOTAUpdates() {
           // chances are that there isn't anything important going on in the current session.
           if (lastMinimize.current <= Date.now() - MINIMUM_MINIMIZE_TIME) {
             if (isUpdatePending) {
-              await reloadAsync()
+              await reloadAsync({
+                reloadScreenOptions: splash(t.scheme),
+              })
             } else {
               setCheckTimeout()
             }
@@ -431,5 +446,27 @@ export function useOTAUpdates() {
       clearTimeout(timeout.current)
       subscription.remove()
     }
-  }, [isUpdatePending, currentChannel, setCheckTimeout])
+  }, [isUpdatePending, currentChannel, setCheckTimeout, t.scheme])
+}
+
+/**
+ * Splash screen for while the app is updating
+ */
+export const splash = (scheme: 'light' | 'dark') => {
+  const source =
+    scheme === 'light'
+      ? require('../../../assets/splash/splash.png')
+      : require('../../../assets/splash/splash-dark.png')
+
+  return {
+    image: RNImage.resolveAssetSource(source).uri,
+    imageFullScreen: true,
+    imageResizeMode: 'cover',
+    backgroundColor: scheme === 'light' ? '#006AFF' : '#002861',
+    spinner: {
+      enabled: true,
+      color: '#ffffff',
+      size: 'large',
+    },
+  } satisfies ReloadScreenOptions
 }
