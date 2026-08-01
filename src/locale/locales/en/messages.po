@@ -5241,7 +5241,7 @@ msgctxt "toast"
 msgid "Feeds updated!"
 msgstr ""
 
-#: src/screens/Settings/components/OTAInfo.tsx:61
+#: src/screens/Settings/components/OTAInfo.tsx:66
 msgid "Fetch update"
 msgstr ""
 
@@ -8827,19 +8827,19 @@ msgstr ""
 msgid "Or, sign in to one of your other accounts."
 msgstr ""
 
-#: src/screens/Settings/components/OTAInfo.tsx:55
+#: src/screens/Settings/components/OTAInfo.tsx:60
 msgid "OTA status: ..."
 msgstr ""
 
-#: src/screens/Settings/components/OTAInfo.tsx:51
+#: src/screens/Settings/components/OTAInfo.tsx:56
 msgid "OTA status: Available!"
 msgstr ""
 
-#: src/screens/Settings/components/OTAInfo.tsx:53
+#: src/screens/Settings/components/OTAInfo.tsx:58
 msgid "OTA status: Error fetching update"
 msgstr ""
 
-#: src/screens/Settings/components/OTAInfo.tsx:57
+#: src/screens/Settings/components/OTAInfo.tsx:62
 msgid "OTA status: None available"
 msgstr ""
 
@@ -13357,8 +13357,8 @@ msgstr "Until"
 msgid "Up to 50 people"
 msgstr "Up to 50 people"
 
-#: src/screens/Settings/components/OTAInfo.tsx:61
-#: src/screens/Settings/components/OTAInfo.tsx:77
+#: src/screens/Settings/components/OTAInfo.tsx:66
+#: src/screens/Settings/components/OTAInfo.tsx:82
 msgid "Update"
 msgstr ""
 
