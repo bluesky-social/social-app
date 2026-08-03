@@ -6,14 +6,15 @@ import {
   AtUri,
   moderatePost,
   type ModerationDecision,
-  RichText as RichTextAPI,
 } from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
+import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -68,7 +69,7 @@ export function Post({
       record
         ? new RichTextAPI({
             text: record.text,
-            facets: record.facets,
+            facets: asSdkFacets(record.facets),
           })
         : undefined,
     [record],

@@ -5,9 +5,9 @@ import {
   type AppBskyGraphDefs,
   AtUri,
   moderateFeedGenerator,
-  RichText,
 } from '@atproto/api'
 import {type AtUriString} from '@atproto/syntax'
+import {RichText} from '@bsky.app/sdk/richtext'
 import {t} from '@lingui/core/macro'
 import {
   type InfiniteData,
@@ -22,6 +22,7 @@ import {
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {GCTIME, STALE} from '#/state/queries'
 import {RQKEY as listQueryKey} from '#/state/queries/list'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -104,7 +105,7 @@ export function hydrateFeedGenerator(
 
   const description = new RichText({
     text: view.description || '',
-    facets: (view.descriptionFacets || [])?.slice(),
+    facets: asSdkFacets((view.descriptionFacets || [])?.slice()),
   })
 
   if (!view.descriptionFacets) {
@@ -145,7 +146,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 
   const description = new RichText({
     text: view.description || '',
-    facets: (view.descriptionFacets || [])?.slice(),
+    facets: asSdkFacets((view.descriptionFacets || [])?.slice()),
   })
 
   if (!view.descriptionFacets) {

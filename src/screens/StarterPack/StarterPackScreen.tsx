@@ -6,8 +6,8 @@ import {
   AppBskyGraphStarterpack,
   AtUri,
   type ModerationOpts,
-  RichText as RichTextAPI,
 } from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -24,6 +24,7 @@ import {
   type NavigationProp,
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
+import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
@@ -418,7 +419,7 @@ function Header({
   const richText = record.description
     ? new RichTextAPI({
         text: record.description,
-        facets: record.descriptionFacets,
+        facets: asSdkFacets(record.descriptionFacets),
       })
     : undefined
 

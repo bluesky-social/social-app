@@ -31,8 +31,8 @@ import {
   AppBskyFeedPost,
   AtUri,
   type ModerationDecision,
-  RichText as RichTextAPI,
 } from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {
   type RouteProp,
@@ -58,6 +58,7 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {
@@ -834,7 +835,7 @@ function Overlay({
     : undefined
   const richText = new RichTextAPI({
     text: record?.text || '',
-    facets: record?.facets,
+    facets: asSdkFacets(record?.facets),
   })
   const handle = sanitizeHandle(post.author.handle, '@')
 

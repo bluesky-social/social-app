@@ -15,8 +15,8 @@ import {
   type ModerationBehavior,
   type ModerationDecision,
   type ModerationOpts,
-  RichText,
 } from '@atproto/api'
+import {RichText} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 

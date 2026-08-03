@@ -5,8 +5,8 @@ import {
   type AppBskyFeedPost,
   type AppBskyFeedThreadgate,
   AtUri,
-  type RichText as RichTextAPI,
 } from '@atproto/api'
+import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 

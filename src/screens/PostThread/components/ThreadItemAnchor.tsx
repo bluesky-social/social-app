@@ -5,8 +5,8 @@ import {
   AppBskyFeedPost,
   type AppBskyFeedThreadgate,
   AtUri,
-  RichText as RichTextAPI,
 } from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -14,6 +14,7 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {niceDate} from '#/lib/strings/time'
 import {
   POST_TOMBSTONE,
@@ -199,7 +200,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     () =>
       new RichTextAPI({
         text: record.text,
-        facets: record.facets,
+        facets: asSdkFacets(record.facets),
       }),
     [record],
   )
