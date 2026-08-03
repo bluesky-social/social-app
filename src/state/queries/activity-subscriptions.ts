@@ -1,7 +1,6 @@
 import {
   type AppBskyActorDefs,
   type AppBskyNotificationDeclaration,
-  type AppBskyNotificationListActivitySubscriptions,
 } from '@atproto/api'
 import {t} from '@lingui/core/macro'
 import {
@@ -13,23 +12,23 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {useAgent, useSession} from '#/state/session'
+import {useAgent, useAppviewClient, useSession} from '#/state/session'
 import * as Toast from '#/components/Toast'
+import {app} from '#/lexicons'
 
 export const RQKEY_getActivitySubscriptions = ['activity-subscriptions']
 export const RQKEY_getNotificationDeclaration = ['notification-declaration']
 
 export function useActivitySubscriptionsQuery() {
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   return useInfiniteQuery({
     queryKey: RQKEY_getActivitySubscriptions,
     queryFn: async ({pageParam}) => {
-      const response =
-        await agent.app.bsky.notification.listActivitySubscriptions({
-          cursor: pageParam,
-        })
-      return response.data
+      return await client.call(
+        app.bsky.notification.listActivitySubscriptions,
+        {cursor: pageParam},
+      )
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: prev => prev.cursor,
@@ -111,7 +110,7 @@ export function* findAllProfilesInQueryData(
   did: string,
 ): Generator<AppBskyActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyNotificationListActivitySubscriptions.OutputSchema>
+    InfiniteData<app.bsky.notification.listActivitySubscriptions.$OutputBody>
   >({
     queryKey: RQKEY_getActivitySubscriptions,
   })
