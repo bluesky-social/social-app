@@ -13,6 +13,31 @@ jest.mock('#/state/events', () => ({
 }))
 
 /*
+ * `makeSessionHooks` reports a throwing `onSessionChange` through the logger
+ * rather than letting it escape into PasswordSession's session promise. Stub
+ * the module so that report is assertable (and so nothing reaches the real
+ * transports).
+ */
+const mockLoggerError = jest.fn()
+jest.mock('#/logger', () => {
+  const noopLogger = {
+    error: (...args: unknown[]) => mockLoggerError(...args),
+    warn: () => {},
+    info: () => {},
+    log: () => {},
+    debug: () => {},
+  }
+  return {
+    logger: noopLogger,
+    Logger: {
+      create: () => noopLogger,
+      Context: new Proxy({}, {get: (_t, key) => String(key)}),
+      Level: {},
+    },
+  }
+})
+
+/*
  * `prefetchAgeAssuranceServerData` is a genuine prep await in each factory
  * (moderation config is synchronous, so the AA prefetch is where the factory
  * tests inject a mid-prep token rotation). The default is a no-op;
@@ -71,32 +96,29 @@ import {
   buildBundle,
   createSessionBundleFromStoredAccount,
   disposeBundle,
+  finishPreparation,
   makeSessionHooks,
   registerBundleKillSwitch,
   sessionAccountToSessionData,
   type SessionBundle,
   sessionDataToSessionAccount,
 } from '../session-core'
-
-const DID = 'did:plc:example123'
-const HANDLE = 'alice.test'
-const SERVICE = 'https://bsky.social'
-const PDS_URL = 'https://shimeji.us-east.host.bsky.network'
+import {
+  asFetch,
+  DID,
+  HANDLE,
+  makeAccount,
+  makeDidDoc,
+  makeMockFetch,
+  PDS_HOST as PDS_URL,
+  SERVICE,
+} from './mock-fetch'
 
 function synthDidDoc(
   did: string,
   pdsUrl: string,
 ): NonNullable<SessionData['didDoc']> {
-  return {
-    id: did,
-    service: [
-      {
-        id: '#atproto_pds',
-        type: 'AtprotoPersonalDataServer',
-        serviceEndpoint: pdsUrl,
-      },
-    ],
-  }
+  return makeDidDoc(pdsUrl, did)
 }
 
 function makeSessionData(overrides: Partial<SessionData> = {}): SessionData {
@@ -342,25 +364,6 @@ describe('sessionAccountToSessionData', () => {
   })
 })
 
-function makeAccount(overrides: Partial<SessionAccount> = {}): SessionAccount {
-  return {
-    service: SERVICE,
-    did: DID,
-    handle: HANDLE,
-    email: 'alice@example.com',
-    emailConfirmed: true,
-    emailAuthFactor: false,
-    refreshJwt: 'refresh-jwt',
-    accessJwt: 'access-jwt',
-    signupQueued: false,
-    active: true,
-    status: undefined,
-    pdsUrl: undefined,
-    isSelfHosted: false,
-    ...overrides,
-  }
-}
-
 describe('createSessionBundleFromStoredAccount', () => {
   it('builds a bridge agent over one session', () => {
     const result = createSessionBundleFromStoredAccount(
@@ -399,59 +402,6 @@ describe('createSessionBundleFromStoredAccount', () => {
     expect(onSessionChange).not.toHaveBeenCalled()
   })
 })
-
-/**
- * Build a mock `fetch` that returns canned XRPC responses keyed by the last
- * path segment (nsid). `refreshSession` returns fresh tokens; `getSession`
- * echoes the account; anything else returns an empty 200.
- */
-function makeMockFetch(
-  overrides: Record<
-    string,
-    (url: string, init: RequestInit) => Response | Promise<Response>
-  > = {},
-) {
-  const json = (body: unknown, status = 200) =>
-    new Response(JSON.stringify(body), {
-      status,
-      headers: {'content-type': 'application/json'},
-    })
-  const fetchMock = jest.fn(
-    async (input: URL | string, init: RequestInit = {}): Promise<Response> => {
-      const url = input instanceof URL ? input.href : input
-      const nsid = url.split('/xrpc/')[1]?.split('?')[0]
-      const handler = nsid ? overrides[nsid] : undefined
-      if (handler) {
-        return handler(url, init)
-      }
-      if (nsid === 'com.atproto.server.refreshSession') {
-        return json({
-          accessJwt: 'access-jwt-2',
-          refreshJwt: 'refresh-jwt-2',
-          handle: HANDLE,
-          did: DID,
-          active: true,
-        })
-      }
-      if (nsid === 'com.atproto.server.getSession') {
-        return json({
-          did: DID,
-          handle: HANDLE,
-          email: 'alice@example.com',
-          emailConfirmed: true,
-          active: true,
-        })
-      }
-      return json({})
-    },
-  )
-  return fetchMock
-}
-
-/** Cast a jest fetch mock to the `fetch` type PasswordSession options expect. */
-function asFetch(mock: ReturnType<typeof makeMockFetch>): typeof fetch {
-  return mock as unknown as typeof fetch
-}
 
 describe('makeSessionHooks arm-latch + event mapping', () => {
   /*
@@ -770,13 +720,13 @@ describe('PasswordSession lifecycle over mocked fetch', () => {
 })
 
 /*
- * `useSessionApi().refreshSession()` is a thin wrapper over
- * `PasswordSession.refresh()`: on success the armed hooks dispatch exactly one
- * 'update' event and the returned snapshot reflects the refreshed data;
- * rejections propagate. We exercise the auth-core mechanics that the callback
- * relies on (a full provider render is out of scope for a unit test).
+ * A refresh through a bundle's armed hooks: the app has no `refreshSession` api
+ * of its own, so every rotation the reducer sees originates here, in
+ * `PasswordSession.refresh()`. On success the armed hooks dispatch exactly one
+ * 'update' event and the post-refresh snapshot carries the rotated tokens;
+ * rejections propagate to the caller.
  */
-describe('refreshSession semantics', () => {
+describe('PasswordSession.refresh through armed hooks', () => {
   it('refresh() resolves updated data and the armed hooks dispatch exactly one update', async () => {
     const fetchMock = makeMockFetch()
     const onSessionChange =
@@ -808,7 +758,7 @@ describe('refreshSession semantics', () => {
     expect(onSessionChange).toHaveBeenCalledTimes(1)
     expect(onSessionChange.mock.calls[0][2]).toBe('update')
 
-    /* the callback's return value is the post-refresh SessionAccount snapshot */
+    /* the post-refresh SessionAccount snapshot carries the rotated tokens */
     const snapshot = sessionDataToSessionAccount(
       session.session,
       session.session.service,
@@ -833,6 +783,30 @@ describe('refreshSession semantics', () => {
   })
 })
 
+/**
+ * Load a fresh factory graph whose network leaf captures `fetch`.
+ *
+ * `session-core`'s network leaf reads `globalThis.fetch` at module load, and
+ * that captured fetch is what `PasswordSession`'s auto-refresh routes through,
+ * so the module has to be re-required after the override is in place.
+ */
+async function withFreshFactory(
+  fetch: typeof globalThis.fetch,
+  run: (core: typeof import('../session-core')) => Promise<void>,
+) {
+  const realFetch = globalThis.fetch
+  globalThis.fetch = fetch
+  try {
+    await jest.isolateModulesAsync(async () => {
+      const core =
+        require('../session-core') as typeof import('../session-core')
+      await run(core)
+    })
+  } finally {
+    globalThis.fetch = realFetch
+  }
+}
+
 /*
  * The resume/login factories must snapshot the returned account after
  * the prep awaits, not before. A 401 during prep triggers PasswordSession's
@@ -849,24 +823,6 @@ describe('refreshSession semantics', () => {
  * captured fetch is what PasswordSession's auto-refresh routes through.
  */
 describe('factory account snapshot after preparation', () => {
-  /** Load a fresh factory graph whose network leaf captures `fetch`. */
-  async function withFreshFactory(
-    fetch: typeof globalThis.fetch,
-    run: (core: typeof import('../session-core')) => Promise<void>,
-  ) {
-    const realFetch = globalThis.fetch
-    globalThis.fetch = fetch
-    try {
-      await jest.isolateModulesAsync(async () => {
-        const core =
-          require('../session-core') as typeof import('../session-core')
-        await run(core)
-      })
-    } finally {
-      globalThis.fetch = realFetch
-    }
-  }
-
   beforeEach(() => {
     mockConfigureModerationForAccount.mockReset()
     mockPrefetchAgeAssuranceServerData.mockReset()
@@ -923,5 +879,149 @@ describe('factory account snapshot after preparation', () => {
       expect(account.accessJwt).toBe('valid-access-jwt')
       expect(account.refreshJwt).toBe('refresh-jwt')
     })
+  })
+})
+
+/*
+ * Preparation is the window between building the bundle and arming its hooks.
+ * The session is live but its events are swallowed, so a session that dies in
+ * here would otherwise leave the app holding a bundle that looks signed in and
+ * can only make unauthenticated requests, with nothing left to log it out.
+ * Both failure modes must therefore dispose the bundle and reject.
+ */
+describe('a session destroyed or rejected during preparation', () => {
+  beforeEach(() => {
+    mockConfigureModerationForAccount.mockReset()
+    mockPrefetchAgeAssuranceServerData.mockReset()
+  })
+
+  it('resume: rejects with the revoked-during-prep error and disposes the bundle', async () => {
+    /*
+     * A revoked refresh token: the session's own refresh during prep gets a
+     * declared invalid-token error, which destroys it. `logout()` is the only
+     * way to drive a session to `destroyed` from outside, and it takes the same
+     * `deleteSession` -> onDeleted -> destroyed path the real 401 rescue does.
+     */
+    let capturedAgent: BskyAppAgent | undefined
+    mockConfigureModerationForAccount.mockImplementationOnce(
+      (agent: unknown) => {
+        capturedAgent = agent as BskyAppAgent
+      },
+    )
+    mockPrefetchAgeAssuranceServerData.mockImplementationOnce(async () => {
+      await capturedAgent!.logout()
+    })
+    const fetchMock = makeMockFetch()
+
+    await withFreshFactory(asFetch(fetchMock), async core => {
+      /*
+       * The clean error, not PasswordSession's opaque `Logged out` getter
+       * throw, which is what a naive `snapshot()` on a destroyed session would
+       * surface.
+       */
+      await expect(
+        core.createSessionBundleAndResume(
+          makeAccount({accessJwt: 'valid-access-jwt'}),
+          jest.fn(),
+        ),
+      ).rejects.toThrow('Session was revoked while it was being prepared')
+
+      /* the bundle the caller never received reads as logged out */
+      expect(capturedAgent!.session).toBe(undefined)
+    })
+  })
+
+  it('resume: a prep rejection propagates and disposes the bundle', async () => {
+    let capturedAgent: BskyAppAgent | undefined
+    mockConfigureModerationForAccount.mockImplementationOnce(
+      (agent: unknown) => {
+        capturedAgent = agent as BskyAppAgent
+      },
+    )
+    mockPrefetchAgeAssuranceServerData.mockImplementationOnce(() =>
+      Promise.reject(new Error('prefetch blew up')),
+    )
+    const fetchMock = makeMockFetch()
+
+    await withFreshFactory(asFetch(fetchMock), async core => {
+      await expect(
+        core.createSessionBundleAndResume(
+          makeAccount({accessJwt: 'valid-access-jwt'}),
+          jest.fn(),
+        ),
+      ).rejects.toThrow('prefetch blew up')
+
+      /* the still-live session was disposed rather than left refreshing */
+      expect(capturedAgent!.session).toBe(undefined)
+    })
+  })
+
+  it('finishPreparation disposes and rethrows without running the snapshot', async () => {
+    const hooks = makeSessionHooks(
+      jest.fn(),
+      () => bundle,
+      () => DID,
+    )
+    const session = new PasswordSession(
+      sessionAccountToSessionData(makeAccount()),
+      {...hooks, fetch: asFetch(makeMockFetch())},
+    )
+    const bundle = buildBundle(session)
+    registerBundleKillSwitch(bundle, hooks.kill)
+    const snapshot = jest.fn(() => 'never')
+
+    await expect(
+      finishPreparation(bundle, Promise.reject(new Error('nope')), snapshot),
+    ).rejects.toThrow('nope')
+
+    expect(snapshot).not.toHaveBeenCalled()
+    expect(bundle.agent.session).toBe(undefined)
+  })
+})
+
+/*
+ * A hook must never throw: PasswordSession awaits its hooks inside the
+ * assignment to its internal session promise, so an escaping throw would leave
+ * that promise permanently rejected - every later request fails, while the
+ * session is never marked destroyed, so disposeBundle cannot even see that the
+ * bundle is dead.
+ */
+describe('a throwing onSessionChange does not brick the session', () => {
+  beforeEach(() => {
+    mockLoggerError.mockClear()
+  })
+
+  it('reports through logger.error and leaves the session usable', async () => {
+    const fetchMock = makeMockFetch()
+    const onSessionChange = jest.fn(() => {
+      throw new Error('reducer side effect exploded')
+    })
+    let bundle!: SessionBundle
+    const hooks = makeSessionHooks(
+      onSessionChange,
+      () => bundle,
+      () => DID,
+    )
+    const session = new PasswordSession(
+      sessionAccountToSessionData(makeAccount()),
+      {...hooks, fetch: asFetch(fetchMock)},
+    )
+    bundle = buildBundle(session)
+    hooks.arm()
+
+    await session.refresh()
+
+    expect(onSessionChange).toHaveBeenCalledTimes(1)
+    expect(mockLoggerError).toHaveBeenCalledTimes(1)
+    expect(mockLoggerError.mock.calls[0][1]).toEqual({
+      message: "session: onSessionChange threw for a 'update' event",
+    })
+
+    /* the session still committed the rotation, and can still refresh again */
+    expect(session.session.accessJwt).toBe('access-jwt-2')
+    await expect(session.refresh()).resolves.toBeDefined()
+    await expect(
+      session.fetchHandler('/xrpc/app.bsky.actor.getProfile', {}),
+    ).resolves.toBeDefined()
   })
 })
