@@ -1,10 +1,6 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type ComAtprotoLabelDefs,
-  type ModerationCause,
-  type ModerationUI,
-} from '@atproto/api'
+import {type AppBskyFeedDefs, type ComAtprotoLabelDefs} from '@atproto/api'
+import {type ModerationCause, type ModerationUI} from '@bsky.app/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
