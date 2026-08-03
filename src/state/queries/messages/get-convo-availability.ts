@@ -1,7 +1,7 @@
 import {type DidString} from '@atproto/syntax'
 import {useQuery} from '@tanstack/react-query'
 
-import {useChatClient} from '#/state/session'
+import {useChatClient, useSession} from '#/state/session'
 import {chat} from '#/lexicons'
 import {STALE} from '..'
 
@@ -13,6 +13,7 @@ export function useGetConvoAvailabilityQuery(
   {enabled = true}: {enabled?: boolean} = {},
 ) {
   const client = useChatClient()
+  const {hasSession} = useSession()
 
   return useQuery({
     queryKey: RQKEY(did),
@@ -23,6 +24,6 @@ export function useGetConvoAvailabilityQuery(
       })
     },
     staleTime: STALE.INFINITY,
-    enabled,
+    enabled: enabled && hasSession,
   })
 }
