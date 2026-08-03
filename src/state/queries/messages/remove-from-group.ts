@@ -4,15 +4,16 @@ import {
   type ChatBskyConvoListConvos,
   type ChatBskyGroupRemoveMembers,
 } from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {
   type InfiniteData,
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
 import {listConvoMembersQueryKey} from './list-convo-members'
@@ -28,16 +29,16 @@ export function useRemoveFromGroupChat(
   },
 ) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = useChatClient()
 
   return useMutation({
     mutationFn: async ({members}: {members: string[]}) => {
       if (!convoId) throw new Error('No convoId provided')
-      const {data} = await agent.chat.bsky.group.removeMembers(
-        {convoId, members},
-        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-      )
-      return data
+      return await client.call(chat.bsky.group.removeMembers, {
+        convoId,
+        // callers pass already-resolved actor dids
+        members: members as DidString[],
+      })
     },
     onMutate: ({members}) => {
       if (!convoId) return
