@@ -1099,12 +1099,6 @@
     },
     "typescript/no-misused-promises": {
       "count": 2
-    },
-    "typescript/no-unsafe-call": {
-      "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 2
     }
   },
   "src/screens/Settings/components/CopyButton.tsx": {
