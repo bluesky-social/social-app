@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useInsertionEffect,
   useMemo,
   useRef,
   useState,
@@ -31,7 +32,14 @@ import {
   sessionDataToSessionAccount,
 } from './session-core'
 export {isSignupQueued} from './session-data'
-import {addSessionDebugLog} from './logging'
+import {
+  addSessionDebugLog,
+  getBundleId,
+  redactAccount,
+  redactPersistedSession,
+  redactSessionData,
+  redactState,
+} from './logging'
 export type {SessionAccount} from '#/state/session/types'
 
 import {clearPersistedQueryStorage} from '#/lib/persisted-query-storage'
@@ -76,7 +84,7 @@ class SessionStore {
   constructor() {
     // Careful: By the time this runs, `persisted` needs to already be filled.
     const initialState = getInitialState(persisted.get('session').accounts)
-    addSessionDebugLog({type: 'reducer:init', state: initialState})
+    addSessionDebugLog({type: 'reducer:init', state: redactState(initialState)})
     this.state = initialState
   }
 
@@ -103,7 +111,10 @@ class SessionStore {
           a => a.did === nextState.currentBundleState.did,
         ),
       }
-      addSessionDebugLog({type: 'persisted:broadcast', data: persistedData})
+      addSessionDebugLog({
+        type: 'persisted:broadcast',
+        data: redactPersistedSession(persistedData),
+      })
       void persisted.write('session', persistedData)
     }
     this.listeners.forEach(listener => listener())
@@ -122,7 +133,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const failedExpiryTokensRef = useRef<Map<string, Set<string>>>(new Map())
   /*
    * Rescued bundles need this callback for their own events. A ref avoids a
-   * self-reference in the callback's dependency list.
+   * self-reference in the callback's dependency list. It is filled by the
+   * insertion effect below, which commits well before any session hook can
+   * fire: hooks are armed only after an asynchronous session factory resolves.
    */
   const onSessionChangeRef = useRef<
     | ((
@@ -226,7 +239,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     },
     [store],
   )
-  onSessionChangeRef.current = onSessionChange
+  /*
+   * Writing the ref during render is forbidden under React Compiler. An
+   * insertion effect is the earliest commit-time slot, and the only reader
+   * (`onSessionChange`'s expiry-rescue path) runs from armed session hooks,
+   * which cannot fire before the first commit.
+   */
+  useInsertionEffect(() => {
+    onSessionChangeRef.current = onSessionChange
+  }, [onSessionChange])
 
   const createAccount = useCallback<SessionApiContext['createAccount']>(
     async (params, metrics) => {
@@ -251,7 +272,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       ax.metric('account:create:success', metrics, {
         session: utils.accountToSessionMetadata(account),
       })
-      addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
+      addSessionDebugLog({
+        type: 'method:end',
+        method: 'createAccount',
+        account: redactAccount(account),
+      })
     },
     [ax, store, onSessionChange, cancelPendingTask],
   )
@@ -280,7 +305,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         {logContext, withPassword: true},
         {session: utils.accountToSessionMetadata(account)},
       )
-      addSessionDebugLog({type: 'method:end', method: 'login', account})
+      addSessionDebugLog({
+        type: 'method:end',
+        method: 'login',
+        account: redactAccount(account),
+      })
     },
     [ax, store, onSessionChange, cancelPendingTask],
   )
@@ -356,7 +385,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({
         type: 'method:start',
         method: 'resumeSession',
-        account: storedAccount,
+        account: redactAccount(storedAccount),
       })
       const signal = cancelPendingTask()
       const {bundle, account} = await createSessionBundleAndResume(
@@ -385,7 +414,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newBundle: bundle,
         newAccount: account,
       })
-      addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
+      addSessionDebugLog({
+        type: 'method:end',
+        method: 'resumeSession',
+        account: redactAccount(account),
+      })
       if (isSwitchingAccounts) {
         // reset onboarding flow on switch account
         onboardingDispatch({type: 'skip'})
@@ -397,7 +430,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const partialRefreshSession = useCallback<
     SessionApiContext['partialRefreshSession']
   >(async () => {
-    const bundle = state.currentBundleState.bundle as unknown as SessionBundle
+    /*
+     * Read the live bundle rather than the one captured by this render: a
+     * dispatch that lands before the next render would otherwise leave this
+     * holding a disposed bundle, whose agent dispatches unauthenticated.
+     */
+    const bundle = store.getState().currentBundleState
+      .bundle as unknown as SessionBundle
     const signal = cancelPendingTask()
     /* getSession targets the PDS; only the persisted account fields are patched. */
     const {data} = await bundle.agent.com.atproto.server.getSession()
@@ -415,21 +454,25 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         emailAuthFactor: data.emailAuthFactor,
       },
     })
-  }, [store, state, cancelPendingTask])
+  }, [store, cancelPendingTask])
 
   const removeAccount = useCallback<SessionApiContext['removeAccount']>(
     account => {
       addSessionDebugLog({
         type: 'method:start',
         method: 'removeAccount',
-        account,
+        account: redactAccount(account),
       })
       cancelPendingTask()
       store.dispatch({
         type: 'removed-account',
         accountDid: account.did,
       })
-      addSessionDebugLog({type: 'method:end', method: 'removeAccount', account})
+      addSessionDebugLog({
+        type: 'method:end',
+        method: 'removeAccount',
+        account: redactAccount(account),
+      })
       clearAgeAssuranceServerDataForDid({did: account.did})
     },
     [store, cancelPendingTask],
@@ -437,7 +480,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   useEffect(() => {
     return persisted.onUpdate('session', nextSession => {
       const synced = nextSession
-      addSessionDebugLog({type: 'persisted:receive', data: synced})
+      addSessionDebugLog({
+        type: 'persisted:receive',
+        data: redactPersistedSession(synced),
+      })
       store.dispatch({
         type: 'synced-accounts',
         syncedAccounts: synced.accounts,
@@ -498,12 +544,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               if (isCurrent) {
                 addSessionDebugLog({
                   type: 'bundle:patch',
-                  bundle: newBundle,
-                  prevSession:
+                  bundleId: getBundleId(newBundle),
+                  prevSession: redactSessionData(
                     prevBundle.session && !prevBundle.session.destroyed
                       ? prevBundle.session.session
                       : undefined,
-                  nextSession: newBundle.session.session,
+                  ),
+                  nextSession: redactSessionData(newBundle.session.session),
                 })
               }
               return isCurrent
@@ -577,8 +624,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       currentBundleRef.current = bundle
       addSessionDebugLog({
         type: 'bundle:switch',
-        prevBundle,
-        nextBundle: bundle,
+        prevBundleId: getBundleId(prevBundle),
+        nextBundleId: getBundleId(bundle),
       })
       // Replaced bundles must never consume another refresh token.
       disposeBundle(prevBundle)
