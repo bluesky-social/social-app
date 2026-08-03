@@ -1,5 +1,6 @@
 import {useMemo} from 'react'
-import {AtpAgent, interpretLabelValueDefinitions} from '@atproto/api'
+import {AtpAgent} from '@atproto/api'
+import {interpretLabelValueDefinitions} from '@bsky.app/sdk/moderation'
 
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useLabelersDetailedInfoQuery} from '../labeler'

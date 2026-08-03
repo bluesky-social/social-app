@@ -89,13 +89,10 @@ export function usePreferencesQuery() {
         agent.configureLabelers(labelerDids)
 
         /*
-         * The sdk's `BskyPreferences` is field-for-field identical to the
-         * legacy one that `UsePreferencesQueryResponse` is still derived from;
-         * only its strings are branded (`AtUriString`, `DidString`). Cast at
-         * this one seam so every downstream consumer of the response - notably
-         * the `moderationPrefs` readers - keeps its current types.
+         * `BskyPreferences` is now the sdk's own type, so the assembled
+         * response types structurally with no cast at this seam.
          */
-        const preferences = {
+        const preferences: UsePreferencesQueryResponse = {
           ...res,
           savedFeeds: res.savedFeeds.filter(f => f.type !== 'unknown'),
           /**
@@ -111,7 +108,7 @@ export function usePreferencesQuery() {
             ...(res.threadViewPrefs ?? {}),
           },
           userAge: res.birthDate ? getAge(res.birthDate) : undefined,
-        } as UsePreferencesQueryResponse
+        }
         return preferences
       }
     },
@@ -381,11 +378,8 @@ export function useUpsertMutedWordsMutation() {
   const client = usePdsClient()
 
   return useMutation({
-    mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
-      await client.call(
-        upsertMutedWords,
-        mutedWords as app.bsky.actor.defs.MutedWord[],
-      )
+    mutationFn: async (mutedWords: app.bsky.actor.defs.MutedWord[]) => {
+      await client.call(upsertMutedWords, mutedWords)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -399,11 +393,8 @@ export function useUpdateMutedWordMutation() {
   const client = usePdsClient()
 
   return useMutation({
-    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
-      await client.call(
-        updateMutedWord,
-        mutedWord as app.bsky.actor.defs.MutedWord,
-      )
+    mutationFn: async (mutedWord: app.bsky.actor.defs.MutedWord) => {
+      await client.call(updateMutedWord, mutedWord)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -417,11 +408,8 @@ export function useRemoveMutedWordMutation() {
   const client = usePdsClient()
 
   return useMutation({
-    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
-      await client.call(
-        removeMutedWord,
-        mutedWord as app.bsky.actor.defs.MutedWord,
-      )
+    mutationFn: async (mutedWord: app.bsky.actor.defs.MutedWord) => {
+      await client.call(removeMutedWord, mutedWord)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -435,11 +423,8 @@ export function useRemoveMutedWordsMutation() {
   const client = usePdsClient()
 
   return useMutation({
-    mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
-      await client.call(
-        removeMutedWords,
-        mutedWords as app.bsky.actor.defs.MutedWord[],
-      )
+    mutationFn: async (mutedWords: app.bsky.actor.defs.MutedWord[]) => {
+      await client.call(removeMutedWords, mutedWords)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
