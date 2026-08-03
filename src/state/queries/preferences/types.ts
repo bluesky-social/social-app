@@ -1,4 +1,4 @@
-import {type BskyFeedViewPreference, type BskyPreferences} from '@atproto/api'
+import {type BskyFeedViewPreference, type BskyPreferences} from '@bsky.app/sdk'
 
 export type UsePreferencesQueryResponse = Omit<
   BskyPreferences,
