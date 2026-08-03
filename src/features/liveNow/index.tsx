@@ -2,13 +2,12 @@ import {useMemo} from 'react'
 import {
   type $Typed,
   type AppBskyActorDefs,
-  type AppBskyActorStatus,
   AppBskyEmbedExternal,
-  AtUri,
-  ComAtprotoRepoPutRecord,
   moderateStatus,
 } from '@atproto/api'
 import {retry} from '@atproto/common-web'
+import {type l} from '@atproto/lex'
+import {type AtIdentifierString, AtUri, toDatetimeString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
@@ -17,18 +16,20 @@ import {isAfter, parseISO} from 'date-fns'
 import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {useAppConfig} from '#/state/appConfig'
 import {
   updateProfileShadow,
   useMaybeProfileShadow,
 } from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useAgent, useSession} from '#/state/session'
+import {useAgent, usePdsClient, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
 import {useDialogContext} from '#/components/Dialog'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {getLiveNowHost, getLiveServiceNames} from '#/features/liveNow/utils'
+import {app, com} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export * from '#/features/liveNow/utils'
@@ -218,6 +219,7 @@ export function useUpsertLiveStatusMutation(
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const agent = useAgent()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const control = useDialogContext()
   const {_} = useLingui()
@@ -226,10 +228,10 @@ export function useUpsertLiveStatusMutation(
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not logged in')
 
-      let embed: $Typed<AppBskyEmbedExternal.Main> | undefined
+      let embed: $Typed<app.bsky.embed.external.Main> | undefined
 
       if (linkMeta) {
-        let thumb
+        let thumb: l.BlobRef | undefined
 
         if (linkMeta.image) {
           try {
@@ -240,7 +242,11 @@ export function useUpsertLiveStatusMutation(
                 img.source.path,
                 img.source.mime,
               )
-              thumb = blob.data.blob
+              /*
+               * `uploadBlob` still returns the legacy `BlobRef` class
+               * instance; it moves to the client with the blob pipeline.
+               */
+              thumb = blob.data.blob as unknown as l.BlobRef
             }
           } catch (e: any) {
             ax.logger.error(`Failed to upload thumbnail for live status`, {
@@ -257,7 +263,8 @@ export function useUpsertLiveStatusMutation(
             $type: 'app.bsky.embed.external#external',
             title: linkMeta.title ?? '',
             description: linkMeta.description ?? '',
-            uri: linkMeta.url,
+            // `getLinkMeta` returns a plain url string
+            uri: linkMeta.url as l.UriString,
             thumb,
           },
         }
@@ -265,32 +272,41 @@ export function useUpsertLiveStatusMutation(
 
       const record = {
         $type: 'app.bsky.actor.status',
-        createdAt: createdAt ?? new Date().toISOString(),
+        createdAt: toDatetimeString(
+          createdAt ? new Date(createdAt) : new Date(),
+        ),
         status: 'app.bsky.actor.status#live',
         durationMinutes: duration,
         embed,
-      } satisfies AppBskyActorStatus.Record
+      } satisfies app.bsky.actor.status.Main
 
       const upsert = async () => {
-        const repo = currentAccount.did
+        // the session account is still legacy-typed, so its did is unbranded
+        const repo = currentAccount.did as AtIdentifierString
         const collection = 'app.bsky.actor.status'
 
-        const existing = await agent.com.atproto.repo
-          .getRecord({repo, collection, rkey: 'self'})
+        const existing = await pdsClient
+          .call(com.atproto.repo.getRecord, {repo, collection, rkey: 'self'})
           .catch(_e => undefined)
 
-        await agent.com.atproto.repo.putRecord({
+        /*
+         * Stays on the raw `putRecord`, not `pdsClient.put`: the lexicon lets
+         * `swapRecord` be null (meaning "must not already exist"), while the
+         * record-helper option type is `string | undefined`.
+         */
+        await pdsClient.call(com.atproto.repo.putRecord, {
           repo,
           collection,
           rkey: 'self',
           record,
-          swapRecord: existing?.data.cid || null,
+          swapRecord: existing?.cid || null,
         })
       }
 
       await retry(upsert, {
         maxRetries: 5,
-        retryable: e => e instanceof ComAtprotoRepoPutRecord.InvalidSwapError,
+        retryable: e =>
+          matchXrpcError(e, com.atproto.repo.putRecord) === 'InvalidSwap',
       })
 
       return {
@@ -347,7 +363,7 @@ export function useUpsertLiveStatusMutation(
 export function useRemoveLiveStatusMutation() {
   const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const control = useDialogContext()
   const {_} = useLingui()
@@ -356,8 +372,8 @@ export function useRemoveLiveStatusMutation() {
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not logged in')
 
-      await agent.app.bsky.actor.status.delete({
-        repo: currentAccount.did,
+      await pdsClient.delete(app.bsky.actor.status, {
+        repo: currentAccount.did as AtIdentifierString,
         rkey: 'self',
       })
     },
