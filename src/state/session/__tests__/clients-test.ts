@@ -15,6 +15,7 @@ jest.mock('jwt-decode', () => ({
 
 import {CHAT_PROXY_SERVICE} from '#/lib/constants'
 import {app, chat, com} from '#/lexicons'
+import {configureGlobalAppLabelers} from '../additional-moderation-authorities'
 import {BskyAppAgent, PasswordSessionManager} from '../bridge-agent'
 import {
   agentToAppviewClient,
@@ -163,6 +164,32 @@ describe('agentToAppviewClient', () => {
     expect(entries).toHaveLength(1)
   })
 
+  it('does not duplicate a global app labeler set on both statics', async () => {
+    /*
+     * `configureGlobalAppLabelers` populates the agent AND the lex `Client`
+     * static, because clients built without a wrapped agent read only the
+     * latter. On this path both producers are in play for the same request, and
+     * neither dedupes against the other - the agent joins its list with the
+     * existing header string while lex collects into a `Set` keyed on the
+     * `;redact`-suffixed value. The appview client suppresses its `appLabelers`
+     * so exactly one producer contributes.
+     */
+    configureGlobalAppLabelers(['did:plc:global-labeler'])
+    const {agent} = setup(fetchMock)
+
+    await agentToAppviewClient(agent).call(app.bsky.actor.getProfile, {
+      actor: HANDLE,
+    })
+
+    const init = initFor(fetchMock, 'app.bsky.actor.getProfile')
+    const labelers = new Headers(init?.headers).get('atproto-accept-labelers')
+    const entries = labelers!
+      .split(',')
+      .map(l => l.trim())
+      .filter(l => l.includes('did:plc:global-labeler'))
+    expect(entries).toEqual(['did:plc:global-labeler;redact'])
+  })
+
   it('sends the session access token', async () => {
     const {agent} = setup(fetchMock)
 
@@ -238,6 +265,8 @@ describe('agentToPdsClient', () => {
     const {agent} = setup(fetchMock)
     agent.configureProxy('did:web:api.bsky.app#bsky_appview')
     agent.configureLabelersHeader(['did:plc:labeler'])
+    /* nor the global authorities: a PDS call is not an appview read */
+    configureGlobalAppLabelers(['did:plc:global-labeler'])
 
     await agentToPdsClient(agent).call(com.atproto.server.getSession, {})
 
@@ -302,6 +331,8 @@ describe('agentToChatClient', () => {
   it('does not emit the agent labeler header', async () => {
     const {agent} = setup(fetchMock)
     agent.configureLabelersHeader(['did:plc:labeler'])
+    /* nor the global authorities: a chat call is not an appview read */
+    configureGlobalAppLabelers(['did:plc:global-labeler'])
 
     await agentToChatClient(agent)
       .call(chat.bsky.convo.listConvos, {})

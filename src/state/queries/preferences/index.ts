@@ -40,7 +40,7 @@ import {
 } from '#/state/queries/preferences/types'
 import {createQueryKey} from '#/state/queries/util'
 import {useAgent, usePdsClient} from '#/state/session'
-import {saveLabelers} from '#/state/session/moderation'
+import {applyLabelersToClient, saveLabelers} from '#/state/session/moderation'
 import {useAgeAssurance} from '#/ageAssurance'
 import {makeAgeRestrictedModerationPrefs} from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
@@ -81,12 +81,17 @@ export function usePreferencesQuery() {
         /*
          * `BskyAgent.getPreferences` used to call `configureLabelers` itself,
          * so subscribing to a labeler took effect on the very next appview
-         * read. The sdk action has no such side effect, and appview reads still
-         * inherit `atproto-accept-labelers` from the agent's fetch handler, so
-         * apply the subscriptions there rather than on the wrapping client -
-         * setting them on both would emit the header twice.
+         * read. The sdk action has no such side effect, so apply the
+         * subscriptions here - without this, subscribing to or unsubscribing
+         * from a labeler would not affect server-attached labels until the
+         * session bundle was rebuilt.
+         *
+         * `applyLabelersToClient` writes to the agent, which is what stamps the
+         * header on the requests the wrapping appview client issues, and it
+         * drops the Bluesky moderation DID so the globally redacted authority is
+         * not also listed unredacted.
          */
-        agent.configureLabelers(labelerDids)
+        applyLabelersToClient(agent, labelerDids)
 
         /*
          * `BskyPreferences` is now the sdk's own type, so the assembled
