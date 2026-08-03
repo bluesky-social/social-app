@@ -7,7 +7,6 @@ import {
   type ComAtprotoServerRefreshSession,
   CredentialSession,
 } from '@atproto/api'
-import {getPdsEndpoint, isValidDidDoc} from '@atproto/common-web'
 import {
   type PasswordSession,
   type SessionData,
@@ -51,6 +50,47 @@ function parseUrl(input: string): URL | undefined {
   } catch {
     return undefined
   }
+}
+
+/**
+ * Read a property off an unknown value the way JS optional chaining would,
+ * without narrowing assumptions about the shape of a `LexMap`.
+ */
+function prop(value: unknown, key: string): unknown {
+  return typeof value === 'object' && value !== null
+    ? (value as Record<string, unknown>)[key]
+    : undefined
+}
+
+/**
+ * The PDS endpoint declared by a DID document, or `undefined`.
+ *
+ * This deliberately mirrors `extractPdsUrl` in `@atproto/lex-password-session`,
+ * which is the predicate `PasswordSession` uses to route its own requests: the
+ * first service entry whose `id` ends with `#atproto_pds`, taking its
+ * `serviceEndpoint` if it parses as a URL. It is looser than the
+ * `isValidDidDoc` + `getPdsEndpoint` pair from `@atproto/common-web` (no doc
+ * schema validation, no `type` check), and that is the point - a stricter
+ * predicate here would let `dispatchUrl` disagree with the host requests
+ * actually go to, which in turn mints service-auth tokens (video upload) for
+ * the wrong audience.
+ */
+function extractPdsUrl(didDoc: SessionData['didDoc']): URL | undefined {
+  const services = prop(didDoc, 'service')
+  if (!Array.isArray(services)) {
+    return undefined
+  }
+  /*
+   * `find`, not a scan: the inner session stops at the first `#atproto_pds`
+   * entry and gives up if its endpoint does not parse, rather than falling
+   * through to a later entry.
+   */
+  const pds = services.find(service => {
+    const id = prop(service, 'id')
+    return typeof id === 'string' && id.endsWith('#atproto_pds')
+  })
+  const endpoint = prop(pds, 'serviceEndpoint')
+  return typeof endpoint === 'string' ? parseUrl(endpoint) : undefined
 }
 
 /**
@@ -155,9 +195,11 @@ export class PasswordSessionManager extends CredentialSession {
    *
    * Identity-cached on the source `SessionData`: consecutive reads with no
    * intervening token rotation return the same object, and a rotation produces
-   * a new one. Consumers depend on this - `useAccountEmailState` has a
-   * `useMemo` keyed on `agent.session`, which would recompute on every render
-   * if we allocated a fresh object per read.
+   * a new one. `CredentialSession` declares `session` as a plain field, so
+   * consumers are entitled to treat it as a value whose identity changes only
+   * when the session does; this class is read from render paths, and returning
+   * a freshly allocated object on every read would break that expectation for
+   * any memo, dependency array or reference comparison built on top of it.
    */
   #readSession(): AtpSessionData | undefined {
     const live = this.#liveData()
@@ -176,11 +218,13 @@ export class PasswordSessionManager extends CredentialSession {
   /**
    * The `pdsUrl` accessor's implementation.
    *
-   * The DID document's PDS endpoint wins when there is one. Before the first
-   * refresh delivers a didDoc (the non-expired resume fast path, which makes no
-   * network call) we fall back to the `pdsUrl` persisted on the account, so the
-   * very first requests still reach the right host - entryway accounts have
-   * `service: bsky.social` but live on a different PDS.
+   * The DID document's PDS endpoint wins when there is one, derived with
+   * {@link extractPdsUrl} so this agrees exactly with the inner session's own
+   * routing. Before the first refresh delivers a didDoc (the non-expired resume
+   * fast path, which makes no network call) we fall back to the `pdsUrl`
+   * persisted on the account, so the very first requests still reach the right
+   * host - entryway accounts have `service: bsky.social` but live on a
+   * different PDS.
    *
    * Identity-cached on the didDoc for the same reason as `session`.
    */
@@ -193,10 +237,7 @@ export class PasswordSessionManager extends CredentialSession {
     }
     if (live !== this.#pdsSource) {
       this.#pdsSource = live
-      const endpoint = isValidDidDoc(live.didDoc)
-        ? getPdsEndpoint(live.didDoc)
-        : undefined
-      this.#pdsValue = endpoint ? parseUrl(endpoint) : this.#storedPdsUrl
+      this.#pdsValue = extractPdsUrl(live.didDoc) ?? this.#storedPdsUrl
     }
     return this.#pdsValue
   }
@@ -225,6 +266,12 @@ export class PasswordSessionManager extends CredentialSession {
      * session entirely. This is mandatory: `PasswordSession.fetchHandler`
      * throws `TypeError` on a pre-set authorization header rather than
      * deferring to it.
+     *
+     * Bypassing also means these requests get no refresh-on-401 retry, since
+     * that lives in `PasswordSession.fetchHandler`. That is intentional: the
+     * caller supplied its own credential (a service-auth token, say), so
+     * rotating the session's tokens would not make the request any more likely
+     * to succeed on a retry.
      */
     if (
       !inner ||
@@ -241,12 +288,38 @@ export class PasswordSessionManager extends CredentialSession {
     return inner.fetchHandler(target.href, init ?? {})
   }
 
+  /**
+   * Refresh the session, rejecting if nothing was refreshed.
+   *
+   * This restores the contract of the `CredentialSession.refreshSession` this
+   * class replaces, which rejected on any refresh failure.
+   * `PasswordSession.refresh()` does not: on a transient failure (a 500, a
+   * network error) it reports through `onUpdateFailure` and then *resolves*
+   * with the unchanged session data, reserving rejection for the cases where
+   * the session is definitively gone. Callers here read resolution as "tokens
+   * rotated" - `SignupQueued` refreshes and then re-checks the token scope, and
+   * the various verification dialogs refresh and then close - so a resolved
+   * no-op would silently loop or report success.
+   *
+   * The signal is the identity of the returned `SessionData`, not a field
+   * comparison: `PasswordSession` builds a brand new object on every successful
+   * rotation and returns the existing one untouched on a transient failure, so
+   * identity separates the two exactly. Comparing against the data captured
+   * immediately before the call also gets concurrent refreshes right - if
+   * another caller's refresh rotated the tokens while ours was queued behind it
+   * (`PasswordSession` serializes refreshes), the data we get back still
+   * differs from what we captured, which is a success for our caller.
+   */
   override async refreshSession(): Promise<ComAtprotoServerRefreshSession.Response> {
     const inner = this.#disposed ? null : this.#inner
     if (!inner || inner.destroyed) {
       throw new Error('No session to refresh')
     }
+    const before = this.#liveData()
     const data = await inner.refresh()
+    if (data === before) {
+      throw new Error('Failed to refresh session')
+    }
     /*
      * Re-shape the lex payload into the `@atproto/api` XRPC response envelope.
      * `headers` is empty because the inner session does not surface response
@@ -278,6 +351,9 @@ export class PasswordSessionManager extends CredentialSession {
    * now". The returned envelope is the refresh one, which is structurally a
    * superset of `ComAtprotoServerGetSession.Response` (the shape `AtpAgent`
    * advertises), so both layers stay type-correct.
+   *
+   * It inherits {@link PasswordSessionManager.refreshSession}'s contract, so it
+   * rejects rather than resolving when no tokens were rotated.
    */
   override resumeSession(
     _session: AtpSessionData,
