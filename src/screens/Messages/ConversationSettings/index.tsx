@@ -3,7 +3,6 @@ import {Pressable, View} from 'react-native'
 import {
   ChatBskyActorDefs,
   ChatBskyConvoDefs,
-  ChatBskyConvoUnlockConvo,
   type ModerationOpts,
 } from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -19,6 +18,7 @@ import {
   type NativeStackScreenProps,
   type NavigationProp,
 } from '#/lib/routes/types'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
@@ -59,6 +59,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from '../components/InviteLinkDialog'
 import {AddMembersLink} from './AddMembersLink'
@@ -432,7 +433,8 @@ function SettingsHeader({
         logger.error('Failed to lock group chat', {message: e})
         Toast.show(l`Failed to lock group chat`, {type: 'error'})
       } else if (
-        e instanceof ChatBskyConvoUnlockConvo.ConvoLockedByModerationError
+        matchXrpcError(e, chat.bsky.convo.unlockConvo) ===
+        'ConvoLockedByModeration'
       ) {
         Toast.show(l`This chat is locked by a moderation action`, {
           type: 'error',
