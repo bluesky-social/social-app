@@ -1400,16 +1400,13 @@
   },
   "src/state/queries/postgate/index.ts": {
     "typescript/no-explicit-any": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-floating-promises": {
       "count": 1
     },
-    "typescript/no-unsafe-call": {
-      "count": 2
-    },
     "typescript/no-unsafe-member-access": {
-      "count": 3
+      "count": 1
     },
     "typescript/require-await": {
       "count": 2
@@ -1426,17 +1423,8 @@
     }
   },
   "src/state/queries/threadgate/index.ts": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    },
     "typescript/no-floating-promises": {
       "count": 3
-    },
-    "typescript/no-unsafe-call": {
-      "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 2
     },
     "typescript/require-await": {
       "count": 3

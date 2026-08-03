@@ -16,6 +16,7 @@ import {
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import {type Client} from '@atproto/lex'
+import {toDatetimeString} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {t} from '@lingui/core/macro'
 import {type QueryClient} from '@tanstack/react-query'
@@ -145,7 +146,7 @@ export async function post(
         collection: 'app.bsky.feed.threadgate',
         rkey: rkey,
         value: createThreadgateRecord({
-          createdAt: now.toISOString(),
+          createdAt: toDatetimeString(now),
           post: uri,
           allow: threadgateAllowUISettingToAllowRecordValue(thread.threadgate),
         }),
