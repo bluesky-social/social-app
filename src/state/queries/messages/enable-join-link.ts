@@ -1,10 +1,10 @@
 import {ChatBskyConvoDefs, type ChatBskyGroupEnableJoinLink} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {invalidateJoinLinkPreviewsForCode} from '#/state/queries/join-links'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
 import {
   rollbackConvoOptimistic,
   updateConvoOptimistic,
@@ -21,16 +21,12 @@ export function useEnableJoinLink(
   },
 ) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = useChatClient()
 
   return useMutation({
     mutationFn: async () => {
       if (!convoId) throw new Error('No convoId provided')
-      const {data} = await agent.chat.bsky.group.enableJoinLink(
-        {convoId},
-        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-      )
-      return data
+      return await client.call(chat.bsky.group.enableJoinLink, {convoId})
     },
     onMutate: () => {
       if (!convoId) return
