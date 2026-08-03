@@ -413,7 +413,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   }
                 />
               ) : (
-                <ThreadItemPostNumber value={postNumbering} />
+                <ThreadItemPostNumber inline={false} value={postNumbering} />
               )}
               <TranslatedPost post={post} postTextStyle={[a.text_lg]} />
               {post.embed && (

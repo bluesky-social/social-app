@@ -361,20 +361,30 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                         authorHandle={post.author.handle}
                         shouldProxyLinks={true}
                         suffix={
+                          !limitLines &&
                           hasThreadItemPostNumber(postNumbering) ? (
                             <ThreadItemPostNumber value={postNumbering} />
                           ) : undefined
                         }
                       />
                       {limitLines && (
-                        <ShowMoreTextButton
-                          style={[a.text_md]}
-                          onPress={onPressShowMore}
-                        />
+                        <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                          <ShowMoreTextButton
+                            style={[a.text_md]}
+                            onPress={onPressShowMore}
+                          />
+                          <ThreadItemPostNumber
+                            inline={false}
+                            value={postNumbering}
+                          />
+                        </View>
                       )}
                     </View>
                   ) : (
-                    <ThreadItemPostNumber value={postNumbering} />
+                    <ThreadItemPostNumber
+                      inline={false}
+                      value={postNumbering}
+                    />
                   )}
                   <TranslatedPost hideTranslateLink post={post} />
                   {post.embed && (
