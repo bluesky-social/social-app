@@ -14,11 +14,11 @@ import {
 } from '@tanstack/react-query'
 import throttle from 'lodash.throttle'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {invalidateJoinLinkPreviewsForConvo} from '#/state/queries/join-links'
-import {useAgent, useSession} from '#/state/session'
+import {useChatClient, useSession} from '#/state/session'
+import {chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {
@@ -119,24 +119,20 @@ export function useListConvosQuery({
   limit?: number
   lockStatus?: 'unlocked' | 'locked' | 'locked-permanently'
 } = {}) {
-  const agent = useAgent()
+  const client = useChatClient()
 
   return useInfiniteQuery({
     enabled,
     queryKey: RQKEY(status ?? 'all', readState, kind, lockStatus, limit),
     queryFn: async ({pageParam}) => {
-      const {data} = await agent.chat.bsky.convo.listConvos(
-        {
-          limit,
-          cursor: pageParam,
-          readState: readState === 'unread' ? 'unread' : undefined,
-          kind: kind === 'all' ? undefined : kind,
-          lockStatus,
-          status,
-        },
-        {headers: DM_SERVICE_HEADERS},
-      )
-      return data
+      return await client.call(chat.bsky.convo.listConvos, {
+        limit,
+        cursor: pageParam,
+        readState: readState === 'unread' ? 'unread' : undefined,
+        kind: kind === 'all' ? undefined : kind,
+        lockStatus,
+        status,
+      })
     },
     initialPageParam: undefined as RQPageParam,
     getNextPageParam: lastPage => lastPage.cursor,

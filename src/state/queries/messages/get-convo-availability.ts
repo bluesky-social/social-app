@@ -1,7 +1,7 @@
 import {useQuery} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
 import {STALE} from '..'
 
 const RQKEY_ROOT = 'convo-availability'
@@ -11,17 +11,17 @@ export function useGetConvoAvailabilityQuery(
   did: string,
   {enabled = true}: {enabled?: boolean} = {},
 ) {
-  const agent = useAgent()
+  const client = useChatClient()
 
   return useQuery({
     queryKey: RQKEY(did),
     queryFn: async () => {
-      const {data} = await agent.chat.bsky.convo.getConvoAvailability(
-        {members: [did]},
-        {headers: DM_SERVICE_HEADERS},
-      )
-
-      return data
+      return await client.call(chat.bsky.convo.getConvoAvailability, {
+        // callers pass an already-resolved actor did
+        members: [
+          did,
+        ] as chat.bsky.convo.getConvoAvailability.$Params['members'],
+      })
     },
     staleTime: STALE.INFINITY,
     enabled,
