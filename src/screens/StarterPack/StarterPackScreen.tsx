@@ -37,7 +37,7 @@ import {
   useDeleteStarterPackMutation,
   useStarterPackQuery,
 } from '#/state/queries/starter-packs'
-import {useAgent, useSession} from '#/state/session'
+import {useAgent, useAppviewClient, useSession} from '#/state/session'
 import {useSetActiveStarterPack} from '#/state/shell/landing'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {
@@ -312,6 +312,7 @@ function Header({
   const t = useTheme()
   const {currentAccount, hasSession} = useSession()
   const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const queryClient = useQueryClient()
   const setActiveStarterPack = useSetActiveStarterPack()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
@@ -354,7 +355,7 @@ function Header({
 
     let listItems: AppBskyGraphDefs.ListItemView[] = []
     try {
-      listItems = await getAllListMembers(agent, starterPack.list.uri)
+      listItems = await getAllListMembers(appviewClient, starterPack.list.uri)
     } catch (e) {
       setIsProcessing(false)
       Toast.show(_(msg`An error occurred while trying to follow all`), {
