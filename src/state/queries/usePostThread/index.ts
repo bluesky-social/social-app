@@ -27,10 +27,11 @@ import {
 } from '#/state/queries/usePostThread/types'
 import {getThreadgateRecord} from '#/state/queries/usePostThread/utils'
 import * as views from '#/state/queries/usePostThread/views'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import {useMergeThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {useBreakpoints} from '#/alf'
 import {IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 
 export * from '#/state/queries/usePostThread/context'
 export {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread/queryCache'
@@ -38,7 +39,7 @@ export * from '#/state/queries/usePostThread/types'
 
 export function usePostThread({anchor}: {anchor?: string}) {
   const qc = useQueryClient()
-  const agent = useAgent()
+  const client = useAppviewClient()
   const {hasSession} = useSession()
   const {gtPhone} = useBreakpoints()
   const moderationOpts = useModerationOpts()
@@ -71,8 +72,8 @@ export function usePostThread({anchor}: {anchor?: string}) {
     enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
     queryKey: postThreadQueryKey,
     async queryFn(ctx) {
-      const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
-        anchor: anchor!,
+      const data = await client.call(app.bsky.unspecced.getPostThreadV2, {
+        anchor: anchor! as app.bsky.unspecced.getPostThreadV2.$Params['anchor'],
         branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
         below,
         sort: sort,
@@ -93,18 +94,24 @@ export function usePostThread({anchor}: {anchor?: string}) {
         ctx.meta.hasOtherReplies = true
       }
 
+      /*
+       * The generated views type `threadgate.record` as an opaque lex map and
+       * brand at-uris, so the response is asserted to the exported result type
+       * here; the record swap-in below and every downstream consumer of the
+       * thread read that narrower contract.
+       */
       const result = {
         thread: data.thread || [],
         threadgate: data.threadgate,
         hasOtherReplies: !!ctx.meta.hasOtherReplies,
-      }
+      } as UsePostThreadQueryResult
 
       const record = getThreadgateRecord(result.threadgate)
       if (result.threadgate && record) {
         result.threadgate.record = record
       }
 
-      return result as UsePostThreadQueryResult
+      return result
     },
     placeholderData() {
       if (!anchor) return
@@ -161,10 +168,10 @@ export function usePostThread({anchor}: {anchor?: string}) {
     enabled: additionalQueryEnabled,
     queryKey: postThreadOtherQueryKey,
     async queryFn() {
-      const {data} = await agent.app.bsky.unspecced.getPostThreadOtherV2({
-        anchor: anchor!,
+      return await client.call(app.bsky.unspecced.getPostThreadOtherV2, {
+        anchor:
+          anchor! as app.bsky.unspecced.getPostThreadOtherV2.$Params['anchor'],
       })
-      return data
     },
   })
   const serverOtherThreadItems: ThreadItem[] = useMemo(() => {
