@@ -16,9 +16,9 @@ overrides:
   'react-native-screens': '4.24.0'
 allowBuilds:
   '@sentry/cli': true
-  core-js: false
-  'core-js-pure': true
-  'esbuild': true
+  'core-js': false
+  'core-js-pure': false
+  'esbuild': false
   'unrs-resolver': true
 patchedDependencies:
   '@sentry/expo-upload-sourcemaps@8.18.0': patches/@sentry__expo-upload-sourcemaps@8.18.0.patch
