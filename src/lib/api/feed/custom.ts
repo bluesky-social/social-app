@@ -1,46 +1,46 @@
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedGetFeed as GetCustomFeed,
-  AtpAgent,
-  jsonStringToLex,
-} from '@atproto/api'
+import {type AppBskyFeedDefs, AtpAgent, jsonStringToLex} from '@atproto/api'
+import {type Client, type XrpcRequestParams} from '@atproto/lex'
 
 import {
   getAppLanguageAsContentLanguage,
   getContentLanguages,
 } from '#/state/preferences/languages'
+import {app} from '#/lexicons'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
+type GetCustomFeedParams = XrpcRequestParams<typeof app.bsky.feed.getFeed.main>
+
 export class CustomFeedAPI implements FeedAPI {
-  agent: AtpAgent
-  params: GetCustomFeed.QueryParams
+  client: Client
+  params: GetCustomFeedParams
   userInterests?: string
 
   constructor({
-    agent,
+    client,
     feedParams,
     userInterests,
   }: {
-    agent: AtpAgent
-    feedParams: GetCustomFeed.QueryParams
+    client: Client
+    feedParams: GetCustomFeedParams
     userInterests?: string
   }) {
-    this.agent = agent
+    this.client = client
     this.params = feedParams
     this.userInterests = userInterests
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
     const contentLangs = getContentLanguages().join(',')
-    const res = await this.agent.app.bsky.feed.getFeed(
+    const data = await this.client.call(
+      app.bsky.feed.getFeed,
       {
         ...this.params,
         limit: 1,
       },
       {headers: {'Accept-Language': contentLangs}},
     )
-    return res.data.feed[0]
+    return data.feed[0]
   }
 
   async fetch({
@@ -51,11 +51,17 @@ export class CustomFeedAPI implements FeedAPI {
     limit: number
   }): Promise<FeedAPIResponse> {
     const contentLangs = getContentLanguages().join(',')
-    const agent = this.agent
     const isBlueskyOwned = isBlueskyOwnedFeed(this.params.feed)
 
-    const res = agent.did
-      ? await this.agent.app.bsky.feed.getFeed(
+    /*
+     * The authed branch rejects on failure, so the error propagates to the
+     * query and drives the feed error UI (feedgen offline, misconfigured, rate
+     * limited). Only the logged-out branch can resolve without data, and it
+     * signals that with a null body.
+     */
+    const data = this.client.did
+      ? await this.client.call(
+          app.bsky.feed.getFeed,
           {
             ...this.params,
             cursor,
@@ -71,21 +77,22 @@ export class CustomFeedAPI implements FeedAPI {
           },
         )
       : await loggedOutFetch({...this.params, cursor, limit})
-    if (res.success) {
-      // NOTE
-      // some custom feeds fail to enforce the pagination limit
-      // so we manually truncate here
-      // -prf
-      if (res.data.feed.length > limit) {
-        res.data.feed = res.data.feed.slice(0, limit)
-      }
+
+    if (!data) {
       return {
-        cursor: res.data.feed.length ? res.data.cursor : undefined,
-        feed: res.data.feed,
+        feed: [],
       }
     }
+
+    // NOTE
+    // some custom feeds fail to enforce the pagination limit
+    // so we manually truncate here
+    // -prf
+    const feed =
+      data.feed.length > limit ? data.feed.slice(0, limit) : data.feed
     return {
-      feed: [],
+      cursor: feed.length ? data.cursor : undefined,
+      feed,
     }
   }
 }
@@ -105,7 +112,7 @@ async function loggedOutFetch({
   feed: string
   limit: number
   cursor?: string
-}) {
+}): Promise<app.bsky.feed.getFeed.$OutputBody | null> {
   let contentLangs = getAppLanguageAsContentLanguage()
 
   /**
@@ -128,14 +135,15 @@ async function loggedOutFetch({
       headers: {'Accept-Language': contentLangs, ...labelersHeader},
     },
   )
+  /*
+   * The response is hand-decoded rather than validated, so the lex output shape
+   * is asserted here just as the old-world one was.
+   */
   let data = res.ok
-    ? (jsonStringToLex(await res.text()) as GetCustomFeed.OutputSchema)
+    ? (jsonStringToLex(await res.text()) as app.bsky.feed.getFeed.$OutputBody)
     : null
   if (data?.feed?.length) {
-    return {
-      success: true,
-      data,
-    }
+    return data
   }
 
   // no data, try again with language headers removed
@@ -146,17 +154,11 @@ async function loggedOutFetch({
     {method: 'GET', headers: {'Accept-Language': '', ...labelersHeader}},
   )
   data = res.ok
-    ? (jsonStringToLex(await res.text()) as GetCustomFeed.OutputSchema)
+    ? (jsonStringToLex(await res.text()) as app.bsky.feed.getFeed.$OutputBody)
     : null
   if (data?.feed?.length) {
-    return {
-      success: true,
-      data,
-    }
+    return data
   }
 
-  return {
-    success: false,
-    data: {feed: []},
-  }
+  return null
 }
