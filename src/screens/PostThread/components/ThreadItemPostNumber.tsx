@@ -47,11 +47,12 @@ export function ThreadItemPostNumber({
           paddingLeft: 5,
           paddingRight: 5,
         },
-        inline &&
-          platform({
-            native: {transform: [{translateY: 6}]},
-            web: {top: -2},
-          }),
+        inline
+          ? platform({
+              native: {transform: [{translateY: 6}]},
+              web: {top: -2},
+            })
+          : {top: -2},
       ]}>
       <Text
         style={[
