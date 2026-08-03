@@ -1,5 +1,6 @@
 import {useCallback, useMemo} from 'react'
 import {type AppBskyActorDefs} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -37,8 +38,7 @@ export function useSuggestedFollowsByActorQuery({
       const data = await client.call(
         app.bsky.graph.getSuggestedFollowsByActor,
         {
-          actor:
-            did as app.bsky.graph.getSuggestedFollowsByActor.$Params['actor'],
+          actor: did as DidString,
         },
       )
       const suggestions = data.suggestions.filter(

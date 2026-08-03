@@ -1,4 +1,5 @@
 import {type AppBskyActorDefs} from '@atproto/api'
+import {type AtIdentifierString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -37,7 +38,7 @@ export function useListsWithMembershipQuery({
     queryFn: async ({pageParam}: {pageParam?: string}) => {
       return await client.call(app.bsky.graph.getListsWithMembership, {
         // the enabled flag prevents this from running until actor is set
-        actor: actor! as app.bsky.graph.getListsWithMembership.$Params['actor'],
+        actor: actor! as AtIdentifierString,
         limit: 50,
         cursor: pageParam,
       })

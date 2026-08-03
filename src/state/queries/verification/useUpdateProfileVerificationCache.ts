@@ -1,4 +1,5 @@
 import {useCallback} from 'react'
+import {type DidString} from '@atproto/syntax'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -20,8 +21,7 @@ export function useUpdateProfileVerificationCache() {
     async ({profile}: {profile: bsky.profile.AnyProfileView}) => {
       try {
         const updated = await client.call(app.bsky.actor.getProfile, {
-          actor: (profile.did ??
-            '') as app.bsky.actor.getProfile.$Params['actor'],
+          actor: (profile.did ?? '') as DidString,
         })
         updateProfileShadow(qc, profile.did, {
           verification: updated.verification,

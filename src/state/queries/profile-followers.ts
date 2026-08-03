@@ -1,4 +1,5 @@
 import {type AppBskyActorDefs} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -51,7 +52,7 @@ export function useProfileFollowersQuery(
        * is `undefined`, hence the conditional spread.
        */
       return await client.call(app.bsky.graph.getFollowers, {
-        actor: (did || '') as app.bsky.graph.getFollowers.$Params['actor'],
+        actor: (did || '') as DidString,
         limit: PAGE_SIZE,
         cursor: pageParam,
         ...(sortParam ? {sort: sortParam} : {}),

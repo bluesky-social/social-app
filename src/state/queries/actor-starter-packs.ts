@@ -1,3 +1,4 @@
+import {type DidString} from '@atproto/syntax'
 import {type QueryClient, useInfiniteQuery} from '@tanstack/react-query'
 
 import {useAppviewClient} from '#/state/session'
@@ -25,7 +26,7 @@ export function useActorStarterPacksQuery({
     queryFn: async ({pageParam}: {pageParam?: string}) => {
       return await client.call(app.bsky.graph.getActorStarterPacks, {
         // the enabled flag prevents this from running until did is set
-        actor: did! as app.bsky.graph.getActorStarterPacks.$Params['actor'],
+        actor: did! as DidString,
         limit: 10,
         cursor: pageParam,
       })
@@ -50,8 +51,7 @@ export function useActorStarterPacksWithMembershipsQuery({
     queryFn: async ({pageParam}: {pageParam?: string}) => {
       return await client.call(app.bsky.graph.getStarterPacksWithMembership, {
         // the enabled flag prevents this from running until did is set
-        actor:
-          did! as app.bsky.graph.getStarterPacksWithMembership.$Params['actor'],
+        actor: did! as DidString,
         limit: 10,
         cursor: pageParam,
       })

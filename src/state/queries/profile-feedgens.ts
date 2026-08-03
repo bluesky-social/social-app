@@ -1,4 +1,5 @@
 import {moderateFeedGenerator} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryKey,
@@ -33,7 +34,7 @@ export function useProfileFeedgensQuery(
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const data = await client.call(app.bsky.feed.getActorFeeds, {
-        actor: did as app.bsky.feed.getActorFeeds.$Params['actor'],
+        actor: did as DidString,
         limit: PAGE_SIZE,
         cursor: pageParam,
       })
