@@ -161,10 +161,19 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       /*
        * PasswordSession invokes its hooks before updating its live getter. Use
        * the delivered payload so a refresh persists the newly rotated tokens.
+       *
+       * A refresh payload carries no didDoc unless the server sends one, so the
+       * stored account's `pdsUrl` is threaded in as the fallback. Without it the
+       * refresh would persist `pdsUrl: undefined` and the next cold start would
+       * route pre-refresh requests to the entryway instead of the PDS.
        */
       const refreshedAccount =
         sessionEvent === 'update' && sessionData
-          ? sessionDataToSessionAccount(sessionData, sessionData.service)
+          ? sessionDataToSessionAccount(
+              sessionData,
+              sessionData.service,
+              store.getState().accounts.find(a => a.did === accountDid)?.pdsUrl,
+            )
           : undefined
 
       /*
