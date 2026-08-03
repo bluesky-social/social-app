@@ -39,6 +39,7 @@ export function parseReportSubject(
       type: 'account',
       did: subject.did,
       nsid: 'app.bsky.actor.profile',
+      profile: subject,
     }
   } else if (AppBskyActorDefs.isStatusView(subject)) {
     if (!subject.uri || !subject.cid) return
@@ -83,6 +84,7 @@ export function parseReportSubject(
         uri: subject.uri,
         cid: subject.cid,
         nsid: 'app.bsky.feed.post',
+        authorProfile: subject.author,
         attributes: {
           reply: !!record.reply,
           image:
