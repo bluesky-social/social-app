@@ -19,113 +19,20 @@ jest.mock('jwt-decode', () => ({
 import {BskyAppAgent, PasswordSessionManager} from '../bridge-agent'
 import {sessionAccountToSessionData} from '../session-data'
 import {type SessionAccount} from '../types'
-
-const DID = 'did:plc:example123'
-const HANDLE = 'alice.test'
-const SERVICE = 'https://bsky.social'
-const PDS_HOST = 'https://shimeji.us-east.host.bsky.network'
-const DIDDOC_PDS_HOST = 'https://morel.us-west.host.bsky.network'
-
-function makeAccount(overrides: Partial<SessionAccount> = {}): SessionAccount {
-  return {
-    service: SERVICE,
-    did: DID,
-    handle: HANDLE,
-    email: 'alice@example.com',
-    emailConfirmed: true,
-    emailAuthFactor: false,
-    refreshJwt: 'refresh-jwt',
-    accessJwt: 'access-jwt',
-    signupQueued: false,
-    active: true,
-    status: undefined,
-    pdsUrl: undefined,
-    isSelfHosted: false,
-    ...overrides,
-  }
-}
-
-/** A minimal valid DID document whose only service entry is a PDS. */
-function makeDidDoc(pdsUrl: string) {
-  return {
-    id: DID,
-    service: [
-      {
-        id: '#atproto_pds',
-        type: 'AtprotoPersonalDataServer',
-        serviceEndpoint: pdsUrl,
-      },
-    ],
-  }
-}
-
-function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {'content-type': 'application/json'},
-  })
-}
-
-/**
- * Build a mock `fetch` that returns canned XRPC responses keyed by the last
- * path segment (nsid). `refreshSession` returns fresh tokens; `getSession`
- * echoes the account; anything else returns an empty 200.
- */
-function makeMockFetch(
-  overrides: Record<
-    string,
-    (url: string, init: RequestInit) => Response | Promise<Response>
-  > = {},
-) {
-  return jest.fn(
-    /*
-     * PasswordSession calls fetch with a URL object (new URL(path, service));
-     * asFetch() below widens the mock to the full fetch signature it expects.
-     */
-    async (input: URL | string, init: RequestInit = {}): Promise<Response> => {
-      const url = input instanceof URL ? input.href : input
-      const nsid = url.split('/xrpc/')[1]?.split('?')[0]
-      const handler = nsid ? overrides[nsid] : undefined
-      if (handler) {
-        return handler(url, init)
-      }
-      if (nsid === 'com.atproto.server.refreshSession') {
-        return json({
-          accessJwt: 'access-jwt-2',
-          refreshJwt: 'refresh-jwt-2',
-          handle: HANDLE,
-          did: DID,
-          email: 'alice@example.com',
-          /* both emailConfirmed and didDoc present -> no getSession follow-up */
-          emailConfirmed: true,
-          didDoc: makeDidDoc(DIDDOC_PDS_HOST),
-          active: true,
-        })
-      }
-      if (nsid === 'com.atproto.server.getSession') {
-        return json({
-          did: DID,
-          handle: HANDLE,
-          email: 'alice@example.com',
-          emailConfirmed: true,
-          active: true,
-        })
-      }
-      return json({})
-    },
-  )
-}
-
-type MockFetch = ReturnType<typeof makeMockFetch>
-
-/** Cast a jest fetch mock to the `fetch` type PasswordSession options expect. */
-function asFetch(mock: MockFetch): typeof fetch {
-  return mock as unknown as typeof fetch
-}
-
-function urlsOf(mock: MockFetch): string[] {
-  return mock.mock.calls.map(c => (c[0] instanceof URL ? c[0].href : c[0]))
-}
+import {
+  asFetch,
+  DID,
+  DIDDOC_PDS_HOST,
+  HANDLE,
+  json,
+  makeAccount,
+  makeDidDoc,
+  makeMockFetch,
+  type MockFetch,
+  PDS_HOST,
+  SERVICE,
+  urlsOf,
+} from './mock-fetch'
 
 /**
  * Build the manager + agent pair under test.
@@ -222,6 +129,63 @@ describe('PasswordSessionManager getters', () => {
     const {agent} = setup({pdsUrl: 'not a url'})
     expect(agent.pdsUrl).toBe(undefined)
     expect(agent.dispatchUrl.toString()).toBe('https://bsky.social/')
+  })
+
+  it('matches the inner session on didDocs a strict validator would reject', () => {
+    /*
+     * No `id` on the document and a non-canonical service `type`: enough for
+     * isValidDidDoc/getPdsEndpoint to bail, but PasswordSession still routes
+     * here, so the bridge must agree or dispatchUrl lies about where requests
+     * go (and service-auth aud gets minted for the wrong host).
+     */
+    const {agent} = setup({
+      didDoc: {
+        service: [
+          {
+            id: '#atproto_pds',
+            type: 'SomethingElse',
+            serviceEndpoint: DIDDOC_PDS_HOST,
+          },
+        ],
+      },
+      pdsUrl: PDS_HOST,
+    })
+    expect(agent.pdsUrl?.toString()).toBe(`${DIDDOC_PDS_HOST}/`)
+    expect(agent.dispatchUrl.toString()).toBe(`${DIDDOC_PDS_HOST}/`)
+  })
+
+  it('falls back to the stored pdsUrl when the didDoc has no PDS service', () => {
+    const {agent} = setup({
+      didDoc: {
+        id: DID,
+        service: [
+          {
+            id: '#bsky_notif',
+            type: 'BskyNotificationService',
+            serviceEndpoint: DIDDOC_PDS_HOST,
+          },
+        ],
+      },
+      pdsUrl: PDS_HOST,
+    })
+    expect(agent.pdsUrl?.toString()).toBe(`${PDS_HOST}/`)
+  })
+
+  it('falls back to the stored pdsUrl when the PDS endpoint does not parse', () => {
+    const {agent} = setup({
+      didDoc: {
+        id: DID,
+        service: [
+          {
+            id: '#atproto_pds',
+            type: 'AtprotoPersonalDataServer',
+            serviceEndpoint: 'not a url',
+          },
+        ],
+      },
+      pdsUrl: PDS_HOST,
+    })
+    expect(agent.pdsUrl?.toString()).toBe(`${PDS_HOST}/`)
   })
 })
 
@@ -570,9 +534,40 @@ describe('PasswordSession lifecycle over mocked fetch', () => {
       fetchMock,
       sessionOptions: {onDeleted, onUpdateFailure},
     })
-    await manager.refreshSession()
+    /*
+     * PasswordSession.refresh() resolves with the unchanged data here; the
+     * bridge restores the old CredentialSession contract by rejecting.
+     */
+    await expect(manager.refreshSession()).rejects.toThrow(
+      'Failed to refresh session',
+    )
     expect(onUpdateFailure).toHaveBeenCalledTimes(1)
     expect(onDeleted).not.toHaveBeenCalled()
     expect(manager.session?.accessJwt).toBe('access-jwt')
+  })
+
+  it('rejects on a network error rather than reporting a no-op success', async () => {
+    const fetchMock = makeMockFetch({
+      'com.atproto.server.refreshSession': () => {
+        throw new TypeError('Network request failed')
+      },
+    })
+    const {manager} = setup({fetchMock})
+    await expect(manager.refreshSession()).rejects.toThrow(
+      'Failed to refresh session',
+    )
+    /* the session survives, exactly as the old transient-failure path did */
+    expect(manager.session?.accessJwt).toBe('access-jwt')
+  })
+
+  it('resumeSession rejects on a transient failure too', async () => {
+    const fetchMock = makeMockFetch({
+      'com.atproto.server.refreshSession': () =>
+        json({error: 'InternalServerError'}, 500),
+    })
+    const {agent} = setup({fetchMock})
+    await expect(agent.resumeSession(agent.session!)).rejects.toThrow(
+      'Failed to refresh session',
+    )
   })
 })
