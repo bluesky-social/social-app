@@ -13,9 +13,10 @@ import {
   type ComAtprotoLabelDefs,
   type ComAtprotoRepoApplyWrites,
   type ComAtprotoRepoStrongRef,
-  RichText,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
+import {type Client} from '@atproto/lex'
+import {RichText} from '@bsky.app/sdk/richtext'
 import {t} from '@lingui/core/macro'
 import {type QueryClient} from '@tanstack/react-query'
 import {sha256} from 'js-sha256'
@@ -51,6 +52,12 @@ interface PostOpts {
   replyTo?: string
   onStateChange?: (state: string) => void
   langs?: string[]
+  /*
+   * Facet/mention resolution is an appview job - it resolves handles through
+   * the appview, and the public fallback keeps it working when logged out.
+   * The rest of this pipeline still writes through the agent.
+   */
+  appviewClient: Client
 }
 
 export async function post(
@@ -87,7 +94,7 @@ export async function post(
     const draft = thread.posts[i]
 
     // Not awaited to avoid waterfalls.
-    const rtPromise = resolveRT(agent, draft.richtext)
+    const rtPromise = resolveRT(opts.appviewClient, draft.richtext)
     const embedPromise = resolveEmbed(
       agent,
       queryClient,
@@ -196,14 +203,14 @@ export async function post(
   return {uris}
 }
 
-async function resolveRT(agent: AtpAgent, richtext: RichText) {
+async function resolveRT(appviewClient: Client, richtext: RichText) {
   const trimmedText = richtext.text
     // Trim leading whitespace-only lines (but don't break ASCII art).
     .replace(/^(\s*\n)+/, '')
     // Trim any trailing whitespace.
     .trimEnd()
   let rt = new RichText({text: trimmedText}, {cleanNewlines: true})
-  await rt.detectFacets(agent)
+  await rt.detectFacets(appviewClient)
 
   rt = shortenLinks(rt)
   rt = stripInvalidMentions(rt)

@@ -2,17 +2,14 @@ import {memo, useCallback} from 'react'
 import {Platform} from 'react-native'
 import {type GestureType} from 'react-native-gesture-handler'
 import * as Clipboard from 'expo-clipboard'
-import {
-  type ChatBskyConvoDefs,
-  type ModerationOpts,
-  RichText,
-} from '@atproto/api'
+import {type ChatBskyConvoDefs, type ModerationOpts} from '@atproto/api'
+import {RichText} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
-import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {asSdkFacets, richTextToString} from '#/lib/strings/rich-text-helpers'
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -88,7 +85,7 @@ export let MessageContextMenu = ({
     const str = richTextToString(
       new RichText({
         text: message.text,
-        facets: message.facets,
+        facets: asSdkFacets(message.facets),
       }),
       true,
     )

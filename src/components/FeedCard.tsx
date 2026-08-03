@@ -1,11 +1,7 @@
 import {useCallback, useEffect, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  AtUri,
-  RichText as RichTextApi,
-} from '@atproto/api'
+import {type AppBskyFeedDefs, type AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {RichText as RichTextApi} from '@bsky.app/sdk/richtext'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 

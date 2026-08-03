@@ -4,14 +4,15 @@ import {
   type AppBskyFeedDefs,
   type AppBskyFeedThreadgate,
   AtUri,
-  RichText as RichTextAPI,
 } from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
+import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -211,7 +212,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
     () =>
       new RichTextAPI({
         text: record.text,
-        facets: record.facets,
+        facets: asSdkFacets(record.facets),
       }),
     [record],
   )

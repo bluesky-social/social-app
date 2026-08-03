@@ -1,12 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, View} from 'react-native'
-import {
-  AppBskyFeedPost,
-  AppBskyRichtextFacet,
-  AtUri,
-  moderatePost,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+import {AppBskyFeedPost, AtUri, moderatePost} from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 
@@ -16,6 +11,7 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
+import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {
   convertBskyAppUrlIfNeeded,
   getChatInviteCodeFromUrl,
@@ -36,6 +32,7 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 /**
@@ -106,7 +103,7 @@ export function useExtractEmbedFromFacets(
   for (const facet of rt.facets ?? []) {
     for (const feature of facet.features) {
       if (
-        AppBskyRichtextFacet.isLink(feature) &&
+        bsky.isType(app.bsky.richtext.facet.link, feature) &&
         (isBskyPostUrl(feature.uri) || isBskyChatInviteUrl(feature.uri))
       ) {
         uriFromFacet = feature.uri
@@ -176,7 +173,7 @@ function MessageInputPostEmbed({
       return {
         rt: new RichTextAPI({
           text: post.record.text,
-          facets: post.record.facets,
+          facets: asSdkFacets(post.record.facets),
         }),
         record: post.record,
       }
