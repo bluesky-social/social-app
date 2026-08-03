@@ -161,7 +161,6 @@ function PostInner({
       <Link
         href={itemHref}
         style={[
-          styles.outer,
           gtMobile ? a.pl_sm : a.pl_xs,
           gtMobile ? a.pr_lg : a.pr_md,
           gtMobile ? a.pt_lg : a.pt_md,
@@ -279,10 +278,6 @@ function PostInner({
 }
 
 const styles = StyleSheet.create({
-  outer: {
-    // @ts-ignore web only -prf
-    cursor: 'pointer',
-  },
   layout: {
     flexDirection: 'row',
     gap: 10,
