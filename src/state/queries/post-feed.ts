@@ -4,12 +4,13 @@ import {
   type AppBskyActorDefs,
   AppBskyFeedDefs,
   type AppBskyFeedPost,
-  type AtpAgent,
   AtUri,
   moderatePost,
   type ModerationDecision,
   type ModerationPrefs,
 } from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {type AtIdentifierString, type AtUriString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -33,7 +34,7 @@ import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {useAgent} from '#/state/session'
+import {useAgent, useAppviewClient} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
@@ -149,6 +150,7 @@ export function usePostFeedQuery(
     ) ?? -1
   const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
   const agent = useAgent()
+  const client = useAppviewClient()
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
@@ -193,7 +195,7 @@ export function usePostFeedQuery(
               feedDesc,
               feedParams: params || {},
               feedTuners,
-              agent,
+              client,
               // Not in the query key because they don't change:
               userInterests,
               // Not in the query key. Reacting to it switching isn't important:
@@ -443,55 +445,68 @@ function createApi({
   feedParams,
   feedTuners,
   userInterests,
-  agent,
+  client,
   enableFollowingToDiscoverFallback,
 }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
   userInterests?: string
-  agent: AtpAgent
+  client: Client
   enableFollowingToDiscoverFallback: boolean
 }) {
   if (feedDesc === 'following') {
     if (feedParams.mergeFeedEnabled) {
       return new MergeFeedAPI({
-        agent,
+        client,
         feedParams,
         feedTuners,
         userInterests,
       })
     } else {
       if (enableFollowingToDiscoverFallback) {
-        return new HomeFeedAPI({agent, userInterests})
+        return new HomeFeedAPI({client, userInterests})
       } else {
-        return new FollowingFeedAPI({agent})
+        return new FollowingFeedAPI({client})
       }
     }
   } else if (feedDesc.startsWith('author')) {
     const [__, actor, filter] = feedDesc.split('|')
-    return new AuthorFeedAPI({agent, feedParams: {actor, filter}})
+    /*
+     * The descriptor is split out of an internally-built string, so neither the
+     * actor identifier nor the filter token is narrowed by the compiler here.
+     */
+    return new AuthorFeedAPI({
+      client,
+      feedParams: {actor: actor as AtIdentifierString, filter},
+    })
   } else if (feedDesc.startsWith('likes')) {
     const [__, actor] = feedDesc.split('|')
-    return new LikesFeedAPI({agent, feedParams: {actor}})
+    return new LikesFeedAPI({
+      client,
+      feedParams: {actor: actor as AtIdentifierString},
+    })
   } else if (feedDesc.startsWith('feedgen')) {
     const [__, feed] = feedDesc.split('|')
     return new CustomFeedAPI({
-      agent,
-      feedParams: {feed},
+      client,
+      feedParams: {feed: feed as AtUriString},
       userInterests,
     })
   } else if (feedDesc.startsWith('list')) {
     const [__, list] = feedDesc.split('|')
-    return new ListFeedAPI({agent, feedParams: {list}})
+    return new ListFeedAPI({client, feedParams: {list: list as AtUriString}})
   } else if (feedDesc.startsWith('posts')) {
     const [__, uriList] = feedDesc.split('|')
-    return new PostListFeedAPI({agent, feedParams: {uris: uriList.split(',')}})
+    return new PostListFeedAPI({
+      client,
+      feedParams: {uris: uriList.split(',') as AtUriString[]},
+    })
   } else if (feedDesc === 'demo') {
-    return new DemoFeedAPI({agent})
+    return new DemoFeedAPI({client})
   } else {
     // shouldnt happen
-    return new FollowingFeedAPI({agent})
+    return new FollowingFeedAPI({client})
   }
 }
 
