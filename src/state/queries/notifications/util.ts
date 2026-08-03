@@ -6,15 +6,17 @@ import {
   type AppBskyGraphDefs,
   AppBskyGraphStarterpack,
   type AppBskyNotificationListNotifications,
-  type AtpAgent,
   hasMutedWord,
   moderateNotification,
   type ModerationOpts,
 } from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {type AtUriString} from '@atproto/syntax'
 import {type QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {precacheProfile} from '../profile'
 import {
@@ -38,7 +40,7 @@ const MS_2DAY = MS_1HR * 48
 // =
 
 export async function fetchPage({
-  agent,
+  client,
   cursor,
   limit,
   queryClient,
@@ -46,7 +48,7 @@ export async function fetchPage({
   fetchAdditionalData,
   reasons,
 }: {
-  agent: AtpAgent
+  client: Client
   cursor: string | undefined
   limit: number
   queryClient: QueryClient
@@ -57,16 +59,16 @@ export async function fetchPage({
   page: FeedPage
   indexedAt: string | undefined
 }> {
-  const res = await agent.listNotifications({
+  const data = await client.call(app.bsky.notification.listNotifications, {
     limit,
     cursor,
     reasons,
   })
 
-  const indexedAt = res.data.notifications[0]?.indexedAt
+  const indexedAt = data.notifications[0]?.indexedAt
 
   // filter out notifs by mod rules
-  const notifs = res.data.notifications.filter(
+  const notifs = data.notifications.filter(
     notif => !shouldFilterNotif(notif, moderationOpts),
   )
 
@@ -76,7 +78,7 @@ export async function fetchPage({
   // we fetch subjects of notifications (usually posts) now instead of lazily
   // in the UI to avoid relayouts
   if (fetchAdditionalData) {
-    const subjects = await fetchSubjects(agent, notifsGrouped)
+    const subjects = await fetchSubjects(client, notifsGrouped)
     for (const notif of notifsGrouped) {
       if (notif.subjectUri) {
         if (
@@ -96,17 +98,17 @@ export async function fetchPage({
     }
   }
 
-  let seenAt = res.data.seenAt ? new Date(res.data.seenAt) : new Date()
+  let seenAt = data.seenAt ? new Date(data.seenAt) : new Date()
   if (Number.isNaN(seenAt.getTime())) {
     seenAt = new Date()
   }
 
   return {
     page: {
-      cursor: res.data.cursor,
+      cursor: data.cursor,
       seenAt,
       items: notifsGrouped,
-      priority: res.data.priority ?? false,
+      priority: data.priority ?? false,
     },
     indexedAt,
   }
@@ -207,7 +209,7 @@ export function groupNotifications(
 }
 
 async function fetchSubjects(
-  agent: AtpAgent,
+  client: Client,
   groupedNotifs: FeedNotification[],
 ): Promise<{
   posts: Map<string, AppBskyFeedDefs.PostView>
@@ -224,18 +226,22 @@ async function fetchSubjects(
       packUris.add(notif.notification.reasonSubject)
     }
   }
-  const postUriChunks = chunk(Array.from(postUris), 25)
-  const packUriChunks = chunk(Array.from(packUris), 25)
+  /*
+   * Both uri sets are collected from notification fields the server already
+   * validated as at-uris, so the branded cast reflects what the values are.
+   */
+  const postUriChunks = chunk(Array.from(postUris) as AtUriString[], 25)
+  const packUriChunks = chunk(Array.from(packUris) as AtUriString[], 25)
   const postsChunks = await Promise.all(
     postUriChunks.map(uris =>
-      agent.app.bsky.feed.getPosts({uris}).then(res => res.data.posts),
+      client.call(app.bsky.feed.getPosts, {uris}).then(data => data.posts),
     ),
   )
   const packsChunks = await Promise.all(
     packUriChunks.map(uris =>
-      agent.app.bsky.graph
-        .getStarterPacks({uris})
-        .then(res => res.data.starterPacks),
+      client
+        .call(app.bsky.graph.getStarterPacks, {uris})
+        .then(data => data.starterPacks),
     ),
   )
   const postsMap = new Map<string, AppBskyFeedDefs.PostView>()
