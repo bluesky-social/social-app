@@ -1,5 +1,5 @@
 import {XRPCError} from '@atproto/api'
-import {LexError} from '@atproto/lex-client'
+import {LexError} from '@atproto/lex'
 import {t} from '@lingui/core/macro'
 
 /**

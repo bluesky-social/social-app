@@ -1,5 +1,5 @@
 import {XRPCError} from '@atproto/api'
-import {LexError, XrpcResponseError} from '@atproto/lex-client'
+import {LexError, XrpcResponseError} from '@atproto/lex'
 import {beforeAll, describe, expect, it} from '@jest/globals'
 import {i18n} from '@lingui/core'
 
