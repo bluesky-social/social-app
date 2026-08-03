@@ -38,7 +38,6 @@ import * as userActionHistory from '#/state/userActionHistory'
 import {useAnalytics} from '#/analytics'
 import {type Metrics, toClout} from '#/analytics/metrics'
 import type * as bsky from '#/types/bsky'
-import {getMutedOnlyReposts} from '#/types/bsky/mute'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
@@ -484,7 +483,7 @@ export function useProfileMuteRepostsMutationQueue(
   const ax = useAnalytics()
   const queryClient = useQueryClient()
   const did = profile.did
-  const initialMutedOnlyReposts = getMutedOnlyReposts(profile.viewer)
+  const initialMutedOnlyReposts = !!profile.viewer?.mutedOnlyReposts
   const muteRepostsMutation = useProfileMuteRepostsMutation()
   const unmuteMutation = useProfileUnmuteMutation()
 
@@ -550,16 +549,7 @@ function useProfileMuteRepostsMutation() {
   const agent = useAgent()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
-      /*
-       * TODO: switch to agent.mute(did, {onlyReposts: true}) once
-       * @atproto/api ships scoped mutes
-       * (https://github.com/bluesky-social/atproto/pull/5118). The generated
-       * client does no runtime input validation, so the extra property is
-       * sent through as-is.
-       */
-      await agent.app.bsky.graph.muteActor({actor: did, onlyReposts: true} as {
-        actor: string
-      })
+      await agent.mute(did, {onlyReposts: true})
     },
     onSuccess() {
       void queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})

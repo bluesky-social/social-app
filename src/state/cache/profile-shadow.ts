@@ -245,9 +245,9 @@ export function isProfileShadowApplied<
     if (profile.viewer?.muted !== shadow.muted) return false
   }
   if ('mutedOnlyReposts' in shadow) {
-    const viewer: bsky.mute.ViewerStateWithScopedMutes | undefined =
-      profile.viewer
-    if (viewer?.mutedOnlyReposts !== shadow.mutedOnlyReposts) return false
+    if (profile.viewer?.mutedOnlyReposts !== shadow.mutedOnlyReposts) {
+      return false
+    }
   }
   if ('blockingUri' in shadow) {
     if (profile.viewer?.blocking !== shadow.blockingUri) return false
@@ -271,8 +271,6 @@ export function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
   profile: TProfileView,
   shadow: Partial<ProfileShadow>,
 ): Shadow<TProfileView> {
-  const viewer: bsky.mute.ViewerStateWithScopedMutes | undefined =
-    profile.viewer
   return castAsShadow({
     ...profile,
     viewer: {
@@ -285,14 +283,14 @@ export function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
       mutedOnlyReposts:
         'mutedOnlyReposts' in shadow
           ? shadow.mutedOnlyReposts
-          : viewer?.mutedOnlyReposts,
+          : profile.viewer?.mutedOnlyReposts,
       blocking:
         'blockingUri' in shadow ? shadow.blockingUri : profile.viewer?.blocking,
       activitySubscription:
         'activitySubscription' in shadow
           ? shadow.activitySubscription
           : profile.viewer?.activitySubscription,
-    } satisfies bsky.mute.ViewerStateWithScopedMutes,
+    } satisfies AppBskyActorDefs.ViewerState,
     verification:
       'verification' in shadow ? shadow.verification : profile.verification,
     status:

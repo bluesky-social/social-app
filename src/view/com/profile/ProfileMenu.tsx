@@ -64,7 +64,6 @@ import {GoLiveDisabledDialog} from '#/features/liveNow/components/GoLiveDisabled
 import {Dot} from '#/features/nuxs/components/Dot'
 import {Gradient} from '#/features/nuxs/components/Gradient'
 import {useDevMode} from '#/storage/hooks/dev-mode'
-import {getMutedOnlyReposts} from '#/types/bsky/mute'
 
 let ProfileMenu = ({
   profile,
@@ -168,7 +167,7 @@ let ProfileMenu = ({
   }, [ax, profile.viewer?.muted, queueUnmute, l, queueMute])
 
   const onPressMuteReposts = useCallback(async () => {
-    if (getMutedOnlyReposts(profile.viewer)) {
+    if (profile.viewer?.mutedOnlyReposts) {
       try {
         await queueUnmuteReposts()
         Toast.show(l({message: 'Reposts turned on', context: 'toast'}))
@@ -494,13 +493,13 @@ let ProfileMenu = ({
                             <Menu.Item
                               testID="profileHeaderDropdownMuteRepostsBtn"
                               label={
-                                getMutedOnlyReposts(profile.viewer)
+                                profile.viewer?.mutedOnlyReposts
                                   ? l`Turn on reposts`
                                   : l`Turn off reposts`
                               }
                               onPress={() => void onPressMuteReposts()}>
                               <Menu.ItemText>
-                                {getMutedOnlyReposts(profile.viewer) ? (
+                                {profile.viewer?.mutedOnlyReposts ? (
                                   <Trans>Turn on reposts</Trans>
                                 ) : (
                                   <Trans>Turn off reposts</Trans>

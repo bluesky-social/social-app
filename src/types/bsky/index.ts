@@ -1,6 +1,5 @@
 import {type ValidationResult} from '@atproto/lexicon'
 
-export * as mute from '#/types/bsky/mute'
 export * as post from '#/types/bsky/post'
 export * as profile from '#/types/bsky/profile'
 export * as starterPack from '#/types/bsky/starterPack'
