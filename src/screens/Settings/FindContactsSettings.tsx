@@ -1,11 +1,8 @@
 import {useCallback, useEffect, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import * as Contacts from 'expo-contacts'
-import {
-  type AppBskyContactDefs,
-  type AppBskyContactGetSyncStatus,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type AppBskyContactDefs, type ModerationOpts} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -32,7 +29,7 @@ import {
   useContactsMatchesQuery,
   useContactsSyncStatusQuery,
 } from '#/state/queries/find-contacts'
-import {useAgent, useSession} from '#/state/session'
+import {useAgent, useAppviewClient, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {List} from '#/view/com/util/List'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
@@ -52,6 +49,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../Onboarding/util'
 
@@ -194,7 +192,7 @@ function SyncStatus({
   refetchStatus: () => Promise<any>
 }) {
   const ax = useAnalytics()
-  const agent = useAgent()
+  const client = useAppviewClient()
   const queryClient = useQueryClient()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -219,7 +217,9 @@ function SyncStatus({
 
   const {mutate: dismissMatch} = useMutation({
     mutationFn: async (did: string) => {
-      await agent.app.bsky.contact.dismissMatch({subject: did})
+      await client.call(app.bsky.contact.dismissMatch, {
+        subject: did as DidString,
+      })
     },
     onMutate: async (did: string) => {
       ax.metric('contacts:settings:dismiss', {})
@@ -371,6 +371,7 @@ function StatusHeader({
   const {_} = useLingui()
   const ax = useAnalytics()
   const agent = useAgent()
+  const client = useAppviewClient()
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
 
@@ -384,12 +385,12 @@ function StatusHeader({
 
       let cursor: string | undefined
       do {
-        const page = await agent.app.bsky.contact.getMatches({
+        const page = await client.call(app.bsky.contact.getMatches, {
           limit: 100,
           cursor,
         })
-        cursor = page.data.cursor
-        for (const profile of page.data.matches) {
+        cursor = page.cursor
+        for (const profile of page.matches) {
           if (
             profile.did !== currentAccount?.did &&
             !isBlockedOrBlocking(profile) &&
@@ -487,17 +488,17 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
   const {_, i18n} = useLingui()
   const t = useTheme()
   const ax = useAnalytics()
-  const agent = useAgent()
+  const client = useAppviewClient()
   const queryClient = useQueryClient()
 
   const {mutate: removeData, isPending} = useMutation({
     mutationFn: async () => {
-      await agent.app.bsky.contact.removeData({})
+      await client.call(app.bsky.contact.removeData, {})
     },
     onMutate: () => ax.metric('contacts:settings:removeData', {}),
     onSuccess: () => {
       Toast.show(_(msg`Contacts removed`))
-      queryClient.setQueryData<AppBskyContactGetSyncStatus.OutputSchema>(
+      queryClient.setQueryData<app.bsky.contact.getSyncStatus.$OutputBody>(
         findContactsStatusQueryKey,
         {syncStatus: undefined},
       )
