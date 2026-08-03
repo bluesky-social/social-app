@@ -115,6 +115,7 @@
     "@bsky.app/expo-translate-text": "^0.2.9",
     "@bsky.app/peek-menu": "^0.3.2",
     "@bsky.app/react-native-uitextview": "^2.6.0",
+    "@bsky.app/sdk": "npm:bsky-sdk-preview@0.0.1-preview.2",
     "@bsky.app/sift": "^0.3.9",
     "@bsky.app/tapper": "^0.6.1",
     "@bsky.app/video": "0.3.6",
@@ -339,7 +340,7 @@
       "^await-lock$": "<rootDir>/node_modules/await-lock/build/AwaitLock.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|multiformats|uint8arrays|@ipld/.*|cborg|await-lock)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|@bsky.app/sdk|tlds|multiformats|uint8arrays|@ipld/.*|cborg|await-lock)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",

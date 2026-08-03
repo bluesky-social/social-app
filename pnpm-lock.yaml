@@ -287,6 +287,9 @@ importers:
       '@bsky.app/react-native-uitextview':
         specifier: ^2.6.0
         version: 2.6.0(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@bsky.app/sdk':
+        specifier: npm:bsky-sdk-preview@0.0.1-preview.2
+        version: bsky-sdk-preview@0.0.1-preview.2(@atproto/lex@0.3.2)
       '@bsky.app/sift':
         specifier: ^0.3.9
         version: 0.3.9(expo@54.0.35(@babel/core@7.29.0)(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0)(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -887,6 +890,10 @@ packages:
 
   '@atproto-labs/fetch@0.3.5':
     resolution: {integrity: sha512-iDFZEoNqfL17EVKE+uNzdUD7YF8LWhEhxeBtP6x+PNuAxoXv3ip9vLmB8nNzNxFwVn++FipfDtSiPqmziv1bdA==}
+    engines: {node: '>=22'}
+
+  '@atproto-labs/handle-resolver@0.4.7':
+    resolution: {integrity: sha512-wDVPKWEqC1ERlPrFskZnxl3PCWjpvtcAiuyAeykzfy3ORgOt1sDAcgjmc0ljKBvA6Vbg8Ow9tPNf9G+7XqE6sw==}
     engines: {node: '>=22'}
 
   '@atproto-labs/pipe@0.2.4':
@@ -4466,6 +4473,12 @@ packages:
 
   bser@2.1.1:
     resolution: {integrity: sha512-gQxTNE/GAfIIrmHLUE3oJyp5FO6HRBfhjnw4/wMmA63ZGDJnWBmgY/lyQBpnDUkGmAhbSe39tx2d/iTOAfglwQ==}
+
+  bsky-sdk-preview@0.0.1-preview.2:
+    resolution: {integrity: sha512-LOcuvzc6UASiI5os1BUIo9dxAeVPIFiplcVSYbaDCgpH+tkpv2mqSqqsCRTP0g2CaVCwozqaTVy+jnsTO6/9BQ==}
+    engines: {node: '>=22.12.0'}
+    peerDependencies:
+      '@atproto/lex': ^0.3.0
 
   buffer-crc32@0.2.13:
     resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
@@ -9594,6 +9607,13 @@ snapshots:
     dependencies:
       '@atproto-labs/pipe': 0.2.4
 
+  '@atproto-labs/handle-resolver@0.4.7':
+    dependencies:
+      '@atproto-labs/simple-store': 0.5.0
+      '@atproto-labs/simple-store-memory': 0.2.5
+      '@atproto/did': 0.5.4
+      zod: 3.25.76
+
   '@atproto-labs/pipe@0.2.4': {}
 
   '@atproto-labs/simple-store-memory@0.2.6':
@@ -13892,6 +13912,13 @@ snapshots:
   bser@2.1.1:
     dependencies:
       node-int64: 0.4.0
+
+  bsky-sdk-preview@0.0.1-preview.2(@atproto/lex@0.3.2):
+    dependencies:
+      '@atproto-labs/handle-resolver': 0.4.7
+      '@atproto/lex': 0.3.2
+      '@atproto/syntax': 0.7.2
+      tlds: 1.261.0
 
   buffer-crc32@0.2.13: {}
 
