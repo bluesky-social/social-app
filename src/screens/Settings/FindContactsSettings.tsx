@@ -29,7 +29,7 @@ import {
   useContactsMatchesQuery,
   useContactsSyncStatusQuery,
 } from '#/state/queries/find-contacts'
-import {useAgent, useAppviewClient, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {List} from '#/view/com/util/List'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
@@ -370,7 +370,7 @@ function StatusHeader({
 }) {
   const {_} = useLingui()
   const ax = useAnalytics()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const client = useAppviewClient()
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
@@ -406,7 +406,10 @@ function StatusHeader({
         followCount: didsToFollow.length,
       })
 
-      const uris = await wait(500, bulkWriteFollows(agent, didsToFollow))
+      const uris = await wait(
+        500,
+        bulkWriteFollows(pdsClient, client, didsToFollow),
+      )
 
       for (const did of didsToFollow) {
         const uri = uris.get(did)
