@@ -1,4 +1,5 @@
 import {type ChatBskyConvoGetConvoForMembers} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -20,8 +21,7 @@ export function useGetConvoForMembers({
     mutationFn: async (members: string[]) => {
       return await client.call(chat.bsky.convo.getConvoForMembers, {
         // callers pass already-resolved actor dids
-        members:
-          members as chat.bsky.convo.getConvoForMembers.$Params['members'],
+        members: members as DidString[],
       })
     },
     onSuccess: data => {
