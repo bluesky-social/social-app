@@ -1,17 +1,13 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AtUri,
-  moderatePost,
-  type ModerationDecision,
-} from '@atproto/api'
+import {type AppBskyFeedDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
+import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {moderatePost} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
 import {asSdkFacets} from '#/lib/strings/rich-text-helpers'

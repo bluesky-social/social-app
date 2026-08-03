@@ -7,8 +7,8 @@ import {
   AppBskyEmbedVideo,
   type AppBskyFeedDefs,
   AppBskyFeedPost,
-  type ModerationDecision,
 } from '@atproto/api'
+import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
 import {sanitizeHandle} from '#/lib/strings/handles'

@@ -1,5 +1,6 @@
 import {type StyleProp, type ViewStyle} from 'react-native'
-import {type AppBskyFeedDefs, type ModerationDecision} from '@atproto/api'
+import {type AppBskyFeedDefs} from '@atproto/api'
+import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 
 export enum PostEmbedViewContext {
   ThreadHighlighted = 'ThreadHighlighted',

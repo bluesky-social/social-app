@@ -5,8 +5,9 @@ import Animated, {
   useAnimatedRef,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
+import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 

@@ -4,8 +4,8 @@ import {
   type AppBskyActorDefs,
   type AppBskyGraphGetList,
   AtUri,
-  type ModerationOpts,
 } from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {
   type InfiniteData,
   type UseInfiniteQueryResult,

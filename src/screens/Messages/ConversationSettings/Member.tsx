@@ -1,9 +1,9 @@
 import {View} from 'react-native'
-import {moderateProfile} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'

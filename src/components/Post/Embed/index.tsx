@@ -5,12 +5,12 @@ import {
   type AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
-  moderatePost,
 } from '@atproto/api'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {moderatePost} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {getChatInviteCodeFromUrl} from '#/lib/strings/url-helpers'

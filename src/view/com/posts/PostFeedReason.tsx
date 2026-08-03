@@ -1,5 +1,6 @@
 import {StyleSheet, View} from 'react-native'
-import {AppBskyFeedDefs, type ModerationDecision} from '@atproto/api'
+import {AppBskyFeedDefs} from '@atproto/api'
+import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

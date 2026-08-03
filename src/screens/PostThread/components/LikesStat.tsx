@@ -1,7 +1,8 @@
 import {View} from 'react-native'
-import {type AppBskyFeedDefs, AtUri, moderateProfile} from '@atproto/api'
+import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'

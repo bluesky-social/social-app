@@ -1,17 +1,17 @@
 import {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {
-  type AppBskyActorDefs,
-  moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
-} from '@atproto/api'
+} from '@bsky.app/sdk/moderation'
 import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {logger} from '#/logger'
 import {type Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
