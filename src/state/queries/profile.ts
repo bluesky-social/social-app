@@ -7,7 +7,6 @@ import {
   type AppBskyGraphGetFollows,
   type AtpAgent,
   AtUri,
-  type ComAtprotoRepoUploadBlob,
   type Un$Typed,
 } from '@atproto/api'
 import {
@@ -25,6 +24,7 @@ import {
 } from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
+import {toLegacyBlobRef} from '#/lib/api/legacy-blob'
 import {until} from '#/lib/async/until'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
@@ -149,6 +149,7 @@ interface ProfileUpdateParams {
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const pdsClient = usePdsClient()
   const updateProfileVerificationCache = useUpdateProfileVerificationCache()
   return useMutation<void, Error, ProfileUpdateParams>({
     mutationFn: async ({
@@ -158,22 +159,18 @@ export function useProfileUpdateMutation() {
       newUserBanner,
       checkCommitted,
     }) => {
-      let newUserAvatarPromise:
-        | Promise<ComAtprotoRepoUploadBlob.Response>
-        | undefined
+      let newUserAvatarPromise: ReturnType<typeof uploadBlob> | undefined
       if (newUserAvatar) {
         newUserAvatarPromise = uploadBlob(
-          agent,
+          pdsClient,
           newUserAvatar.path,
           newUserAvatar.mime,
         )
       }
-      let newUserBannerPromise:
-        | Promise<ComAtprotoRepoUploadBlob.Response>
-        | undefined
+      let newUserBannerPromise: ReturnType<typeof uploadBlob> | undefined
       if (newUserBanner) {
         newUserBannerPromise = uploadBlob(
-          agent,
+          pdsClient,
           newUserBanner.path,
           newUserBanner.mime,
         )
@@ -191,13 +188,13 @@ export function useProfileUpdateMutation() {
         }
         if (newUserAvatarPromise) {
           const res = await newUserAvatarPromise
-          next.avatar = res.data.blob
+          next.avatar = toLegacyBlobRef(res.blob)
         } else if (newUserAvatar === null) {
           next.avatar = undefined
         }
         if (newUserBannerPromise) {
           const res = await newUserBannerPromise
-          next.banner = res.data.blob
+          next.banner = toLegacyBlobRef(res.blob)
         } else if (newUserBanner === null) {
           next.banner = undefined
         }

@@ -43,6 +43,7 @@ import {type app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {createGIFDescription} from '../gif-alt-text'
 import {computeCid} from './computeCid'
+import {toLegacyBlobRef} from './legacy-blob'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
@@ -55,9 +56,13 @@ interface PostOpts {
   /*
    * Facet/mention resolution is an appview job - it resolves handles through
    * the appview, and the public fallback keeps it working when logged out.
-   * The rest of this pipeline still writes through the agent.
    */
   appviewClient: Client
+  /*
+   * Record blobs (images, gallery items, link thumbnails, video captions)
+   * upload to the account's own PDS, never the appview.
+   */
+  pdsClient: Client
 }
 
 export async function post(
@@ -97,6 +102,7 @@ export async function post(
     const rtPromise = resolveRT(opts.appviewClient, draft.richtext)
     const embedPromise = resolveEmbed(
       agent,
+      opts.pdsClient,
       queryClient,
       draft,
       opts.onStateChange,
@@ -263,6 +269,7 @@ async function resolveReply(agent: AtpAgent, replyTo: string) {
 
 async function resolveEmbed(
   agent: AtpAgent,
+  pdsClient: Client,
   queryClient: QueryClient,
   draft: PostDraft,
   onStateChange: ((state: string) => void) | undefined,
@@ -277,7 +284,7 @@ async function resolveEmbed(
 > {
   if (draft.embed.quote) {
     const [resolvedMedia, resolvedQuote] = await Promise.all([
-      resolveMedia(agent, queryClient, draft.embed, onStateChange),
+      resolveMedia(agent, pdsClient, queryClient, draft.embed, onStateChange),
       resolveRecord(agent, queryClient, draft.embed.quote.uri),
     ])
     if (resolvedMedia) {
@@ -297,6 +304,7 @@ async function resolveEmbed(
   }
   const resolvedMedia = await resolveMedia(
     agent,
+    pdsClient,
     queryClient,
     draft.embed,
     onStateChange,
@@ -322,6 +330,7 @@ async function resolveEmbed(
 
 async function resolveMedia(
   agent: AtpAgent,
+  pdsClient: Client,
   queryClient: QueryClient,
   embedDraft: EmbedDraft,
   onStateChange: ((state: string) => void) | undefined,
@@ -346,9 +355,9 @@ async function resolveMedia(
           IMAGE_SIZE_CONFIG_POSTS,
         )
         logger.debug(`Uploading image #${i}`)
-        const res = await uploadBlob(agent, path, mime)
+        const res = await uploadBlob(pdsClient, path, mime)
         return {
-          image: res.data.blob,
+          image: toLegacyBlobRef(res.blob),
           alt: image.alt,
           aspectRatio: {width, height},
         }
@@ -373,10 +382,10 @@ async function resolveMedia(
           IMAGE_SIZE_CONFIG_POSTS,
         )
         logger.debug(`Uploading image #${i}`)
-        const res = await uploadBlob(agent, path, mime)
+        const res = await uploadBlob(pdsClient, path, mime)
         return {
           $type: 'app.bsky.embed.gallery#image' as const,
-          image: res.data.blob,
+          image: toLegacyBlobRef(res.blob),
           alt: image.alt,
           aspectRatio: {width, height},
         }
@@ -438,8 +447,8 @@ async function resolveMedia(
     if (resolvedGif.thumb) {
       onStateChange?.(t`Uploading link thumbnail...`)
       const {path, mime} = resolvedGif.thumb.source
-      const response = await uploadBlob(agent, path, mime)
-      blob = response.data.blob
+      const response = await uploadBlob(pdsClient, path, mime)
+      blob = toLegacyBlobRef(response.blob)
     }
     return {
       $type: 'app.bsky.embed.external',
@@ -462,8 +471,8 @@ async function resolveMedia(
       if (resolvedLink.thumb) {
         onStateChange?.(t`Uploading link thumbnail...`)
         const {path, mime} = resolvedLink.thumb.source
-        const response = await uploadBlob(agent, path, mime)
-        blob = response.data.blob
+        const response = await uploadBlob(pdsClient, path, mime)
+        blob = toLegacyBlobRef(response.blob)
       }
       return {
         $type: 'app.bsky.embed.external',
