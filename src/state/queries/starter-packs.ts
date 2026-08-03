@@ -1,11 +1,10 @@
 import {
   AppBskyFeedDefs,
   AppBskyGraphDefs,
-  type AppBskyGraphGetStarterPack,
   AppBskyGraphStarterpack,
-  type AtpAgent,
-  AtUri,
 } from '@atproto/api'
+import {type Client, type LexValue} from '@atproto/lex'
+import {AtUri, type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {
   type QueryClient,
@@ -25,8 +24,8 @@ import {
 import {invalidateActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
 import {STALE} from '#/state/queries/index'
 import {invalidateListMembersQuery} from '#/state/queries/list-members'
-import {useAgent, useAppviewClient} from '#/state/session'
-import {type app} from '#/lexicons'
+import {useAppviewClient, usePdsClient} from '#/state/session'
+import {app, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const RQKEY_ROOT = 'starter-pack'
@@ -56,7 +55,7 @@ export function useStarterPackQuery({
   did?: string
   rkey?: string
 }) {
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   return useQuery<AppBskyGraphDefs.StarterPackView>({
     queryKey: RQKEY(uri ? {uri} : {did, rkey}),
@@ -67,10 +66,10 @@ export function useStarterPackQuery({
         uri = httpStarterPackUriToAtUri(uri) as string
       }
 
-      const res = await agent.app.bsky.graph.getStarterPack({
-        starterPack: uri,
+      const res = await client.call(app.bsky.graph.getStarterPack, {
+        starterPack: uri as AtUriString,
       })
-      return res.data.starterPack
+      return res.starterPack
     },
     enabled: Boolean(uri) || Boolean(did && rkey),
     staleTime: STALE.MINUTES.FIVE,
@@ -104,12 +103,12 @@ export function useCreateStarterPackMutation({
   onError: (e: Error) => void
 }) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
   /*
    * Facet/mention resolution is an appview job - it resolves handles through
    * the appview, and the public fallback keeps it working when logged out.
    */
   const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
 
   return useMutation<
     {uri: string; cid: string},
@@ -130,30 +129,26 @@ export function useCreateStarterPackMutation({
         description,
         profiles,
         descriptionFacets,
-        agent,
+        client: pdsClient,
       })
 
-      return await agent.app.bsky.graph.starterpack.create(
-        {
-          repo: agent.assertDid,
-        },
-        {
-          name,
-          description,
-          descriptionFacets,
-          list: listRes?.uri,
-          feeds: feeds?.map(f => ({uri: f.uri})),
-          createdAt: new Date().toISOString(),
-        },
-      )
+      return await pdsClient.create(app.bsky.graph.starterpack, {
+        name,
+        description,
+        descriptionFacets,
+        // `createStarterPackList` returns a plain string uri
+        list: listRes?.uri as AtUriString,
+        feeds: feeds?.map(f => ({uri: f.uri as AtUriString})),
+        createdAt: toDatetimeString(new Date()),
+      })
     },
     onSuccess: async data => {
-      await whenAppViewReady(agent, data.uri, v => {
-        return typeof v?.data.starterPack.uri === 'string'
+      await whenAppViewReady(appviewClient, data.uri, v => {
+        return typeof v?.starterPack.uri === 'string'
       })
       await invalidateActorStarterPacksQuery({
         queryClient,
-        did: agent.session!.did,
+        did: pdsClient.assertDid,
       })
       onSuccess(data)
     },
@@ -171,8 +166,8 @@ export function useEditStarterPackMutation({
   onError: (error: Error) => void
 }) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
   const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
 
   return useMutation<
     void,
@@ -197,25 +192,29 @@ export function useEditStarterPackMutation({
         descriptionFacets = rt.facets
       }
 
-      if (!AppBskyGraphStarterpack.isRecord(currentStarterPack.record)) {
+      if (!bsky.isType(app.bsky.graph.starterpack, currentStarterPack.record)) {
         throw new Error('Invalid starter pack')
       }
 
       const removedItems = currentListItems.filter(
         i =>
-          i.subject.did !== agent.session?.did &&
+          i.subject.did !== pdsClient.did &&
           !profiles.find(p => p.did === i.subject.did && p.did),
       )
       if (removedItems.length !== 0) {
         const chunks = chunk(removedItems, 50)
         for (const chunk of chunks) {
-          await agent.com.atproto.repo.applyWrites({
-            repo: agent.session!.did,
-            writes: chunk.map(i => ({
-              $type: 'com.atproto.repo.applyWrites#delete',
-              collection: 'app.bsky.graph.listitem',
-              rkey: new AtUri(i.uri).rkey,
-            })),
+          await pdsClient.call(com.atproto.repo.applyWrites, {
+            repo: pdsClient.assertDid,
+            writes: chunk.map(
+              (
+                i,
+              ): com.atproto.repo.applyWrites.$InputBody['writes'][number] => ({
+                $type: 'com.atproto.repo.applyWrites#delete',
+                collection: 'app.bsky.graph.listitem',
+                rkey: new AtUri(i.uri).rkeySafe,
+              }),
+            ),
           })
         }
       }
@@ -226,33 +225,44 @@ export function useEditStarterPackMutation({
       if (addedProfiles.length > 0) {
         const chunks = chunk(addedProfiles, 50)
         for (const chunk of chunks) {
-          await agent.com.atproto.repo.applyWrites({
-            repo: agent.session!.did,
-            writes: chunk.map(p => ({
-              $type: 'com.atproto.repo.applyWrites#create',
-              collection: 'app.bsky.graph.listitem',
-              value: {
-                $type: 'app.bsky.graph.listitem',
-                subject: p.did,
-                list: currentStarterPack.list?.uri,
-                createdAt: new Date().toISOString(),
-              },
-            })),
+          await pdsClient.call(com.atproto.repo.applyWrites, {
+            repo: pdsClient.assertDid,
+            writes: chunk.map(
+              (
+                p,
+              ): com.atproto.repo.applyWrites.$InputBody['writes'][number] => ({
+                $type: 'com.atproto.repo.applyWrites#create',
+                collection: 'app.bsky.graph.listitem',
+                value: {
+                  $type: 'app.bsky.graph.listitem',
+                  subject: p.did,
+                  list: currentStarterPack.list?.uri,
+                  createdAt: new Date().toISOString(),
+                },
+              }),
+            ),
           })
         }
       }
 
       const rkey = parseStarterPackUri(currentStarterPack.uri)!.rkey
-      await agent.com.atproto.repo.putRecord({
-        repo: agent.session!.did,
+      await pdsClient.call(com.atproto.repo.putRecord, {
+        repo: pdsClient.assertDid,
         collection: 'app.bsky.graph.starterpack',
         rkey,
         record: {
+          $type: 'app.bsky.graph.starterpack',
           name,
           description,
           descriptionFacets,
           list: currentStarterPack.list?.uri,
-          feeds,
+          /*
+           * Pre-existing quirk preserved verbatim: the edit path writes whole
+           * `GeneratorView`s where the lexicon declares `feedItem` refs. lex
+           * types the raw `putRecord` body as a `LexValue`, which the legacy
+           * view interface does not structurally satisfy, hence the cast.
+           */
+          feeds: feeds as unknown as LexValue,
           createdAt: currentStarterPack.record.createdAt,
           updatedAt: new Date().toISOString(),
         },
@@ -260,12 +270,12 @@ export function useEditStarterPackMutation({
     },
     onSuccess: async (_, {currentStarterPack}) => {
       const parsed = parseStarterPackUri(currentStarterPack.uri)
-      await whenAppViewReady(agent, currentStarterPack.uri, v => {
-        return currentStarterPack.cid !== v?.data.starterPack.cid
+      await whenAppViewReady(appviewClient, currentStarterPack.uri, v => {
+        return currentStarterPack.cid !== v?.starterPack.cid
       })
       await invalidateActorStarterPacksQuery({
         queryClient,
-        did: agent.session!.did,
+        did: pdsClient.assertDid,
       })
       if (currentStarterPack.list) {
         await invalidateListMembersQuery({
@@ -275,7 +285,7 @@ export function useEditStarterPackMutation({
       }
       await invalidateStarterPack({
         queryClient,
-        did: agent.session!.did,
+        did: pdsClient.assertDid,
         rkey: parsed!.rkey,
       })
       onSuccess()
@@ -293,35 +303,34 @@ export function useDeleteStarterPackMutation({
   onSuccess: () => void
   onError: (error: Error) => void
 }) {
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async ({listUri, rkey}: {listUri?: string; rkey: string}) => {
-      if (!agent.session) {
-        throw new Error(`Requires signed in user`)
-      }
+      const did = pdsClient.assertDid
 
       if (listUri) {
-        await agent.app.bsky.graph.list.delete({
-          repo: agent.session.did,
-          rkey: new AtUri(listUri).rkey,
+        await pdsClient.delete(app.bsky.graph.list, {
+          repo: did,
+          rkey: new AtUri(listUri).rkeySafe,
         })
       }
-      await agent.app.bsky.graph.starterpack.delete({
-        repo: agent.session.did,
+      await pdsClient.delete(app.bsky.graph.starterpack, {
+        repo: did,
         rkey,
       })
     },
     onSuccess: async (_, {listUri, rkey}) => {
       const uri = createStarterPackUri({
-        did: agent.session!.did,
+        did: pdsClient.assertDid,
         rkey,
       })
 
       if (uri) {
-        await whenAppViewReady(agent, uri, v => {
-          return Boolean(v?.data?.starterPack) === false
+        await whenAppViewReady(appviewClient, uri, v => {
+          return Boolean(v?.starterPack) === false
         })
       }
 
@@ -330,11 +339,11 @@ export function useDeleteStarterPackMutation({
       }
       await invalidateActorStarterPacksQuery({
         queryClient,
-        did: agent.session!.did,
+        did: pdsClient.assertDid,
       })
       await invalidateStarterPack({
         queryClient,
-        did: agent.session!.did,
+        did: pdsClient.assertDid,
         rkey,
       })
       onSuccess()
@@ -346,15 +355,18 @@ export function useDeleteStarterPackMutation({
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  client: Client,
   uri: string,
-  fn: (res?: AppBskyGraphGetStarterPack.Response) => boolean,
+  fn: (res?: app.bsky.graph.getStarterPack.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    () => agent.app.bsky.graph.getStarterPack({starterPack: uri}),
+    () =>
+      client.call(app.bsky.graph.getStarterPack, {
+        starterPack: uri as AtUriString,
+      }),
   )
 }
 
