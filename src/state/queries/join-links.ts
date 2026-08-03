@@ -166,6 +166,11 @@ let publicChatClient: Client | undefined
  * so no `atproto-proxy` header is involved. A single module-level instance,
  * because there is no session to scope it to and reconstructing it per call
  * would be waste.
+ *
+ * Unlike the public appview client this does NOT wrap `networkAwareFetch`,
+ * matching the plain-fetch behavior of the ad-hoc agent it replaces: a
+ * logged-out link resolution failing says nothing useful about the session's
+ * reachability, so it should not move the app-wide network signal.
  */
 function getPublicChatClient(): Client {
   return (publicChatClient ??= createLexClient({service: CHAT_SERVICE}))
