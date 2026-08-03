@@ -242,6 +242,20 @@ describe('general functionality', () => {
         __context__: 'logger',
       },
     })
+
+    const fingerprint = ['{{ default }}', 'report-dialog:upstream-fetch']
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.ReportDialog,
+      e,
+      {fingerprint},
+      timestamp,
+    )
+    expect(Sentry.captureException).toHaveBeenLastCalledWith(e, {
+      tags: {category: 'report-dialog'},
+      extra: {__context__: 'report-dialog'},
+      fingerprint,
+    })
   })
 
   test('sentryTransport serializes errors', () => {
