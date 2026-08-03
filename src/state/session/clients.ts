@@ -55,6 +55,13 @@ let publicLexClient: Client | undefined
  * {@link agentToLexClient}: there is no session to scope it to, so it lives for
  * the lifetime of the process. Requests go through {@link networkAwareFetch} so
  * public reads feed the app's reachability signal like authenticated ones do.
+ *
+ * Unlike the public agent it parallels, this client sends neither
+ * `atproto-proxy` nor `atproto-accept-labelers`. `createPublicAgent` configures
+ * the app labeler and the proxy header, so a logged-out appview *agent* read
+ * does carry labelers while the same read through this client does not. A
+ * consumer that needs moderation labels on public reads must configure labelers
+ * itself before issuing the request.
  */
 export function getPublicLexClient(): Client {
   return (publicLexClient ??= createLexClient({
