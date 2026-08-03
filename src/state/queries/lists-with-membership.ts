@@ -1,7 +1,4 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyGraphGetListsWithMembership,
-} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,
@@ -10,10 +7,11 @@ import {
 } from '@tanstack/react-query'
 
 import {createQueryKey} from '#/state/queries/util'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 export type ListWithMembership =
-  AppBskyGraphGetListsWithMembership.ListWithMembership
+  app.bsky.graph.getListsWithMembership.ListWithMembership
 
 const listsWithMembershipQueryKeyRoot = 'lists-with-membership'
 export const createListsWithMembershipQueryKey = (args: {actor: string}) =>
@@ -26,23 +24,23 @@ export function useListsWithMembershipQuery({
   actor: string | undefined
   enabled?: boolean
 }) {
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   return useInfiniteQuery<
-    AppBskyGraphGetListsWithMembership.OutputSchema,
+    app.bsky.graph.getListsWithMembership.$OutputBody,
     Error,
-    InfiniteData<AppBskyGraphGetListsWithMembership.OutputSchema>,
+    InfiniteData<app.bsky.graph.getListsWithMembership.$OutputBody>,
     QueryKey,
     string | undefined
   >({
     queryKey: createListsWithMembershipQueryKey({actor: actor ?? ''}),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
-      const res = await agent.app.bsky.graph.getListsWithMembership({
-        actor: actor!, // the enabled flag prevents this from running until actor is set
+      return await client.call(app.bsky.graph.getListsWithMembership, {
+        // the enabled flag prevents this from running until actor is set
+        actor: actor! as app.bsky.graph.getListsWithMembership.$Params['actor'],
         limit: 50,
         cursor: pageParam,
       })
-      return res.data
     },
     enabled: Boolean(actor) && enabled,
     initialPageParam: undefined,
@@ -64,7 +62,7 @@ export function updateListMembershipOptimistically({
   subject: AppBskyActorDefs.ProfileView
 }) {
   queryClient.setQueryData<
-    InfiniteData<AppBskyGraphGetListsWithMembership.OutputSchema>
+    InfiniteData<app.bsky.graph.getListsWithMembership.$OutputBody>
   >(createListsWithMembershipQueryKey({actor}), old => {
     if (!old) return old
 
@@ -74,12 +72,18 @@ export function updateListMembershipOptimistically({
         ...page,
         listsWithMembership: page.listsWithMembership.map(lwm => {
           if (lwm.list.uri === listUri) {
+            /*
+             * Callers hand over a plain at-uri and an old-world ProfileView,
+             * whose `uri`/`did` are unbranded strings. They are runtime
+             * identical to the generated branded forms, so the synthesised
+             * listItem is asserted rather than re-validated.
+             */
             return {
               ...lwm,
               listItem: {
                 uri: membershipUri,
                 subject,
-              },
+              } as app.bsky.graph.defs.ListItemView,
             }
           }
           return lwm
@@ -99,7 +103,7 @@ export function removeListMembershipOptimistically({
   listUri: string
 }) {
   queryClient.setQueryData<
-    InfiniteData<AppBskyGraphGetListsWithMembership.OutputSchema>
+    InfiniteData<app.bsky.graph.getListsWithMembership.$OutputBody>
   >(createListsWithMembershipQueryKey({actor}), old => {
     if (!old) return old
 
