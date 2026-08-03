@@ -5,8 +5,8 @@ import {
   type AppBskyUnspeccedDefs,
   type AppBskyUnspeccedGetPostThreadOtherV2,
   type AppBskyUnspeccedGetPostThreadV2,
-  type ModerationDecision,
 } from '@atproto/api'
+import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 
 export type ApiThreadItem =
   | AppBskyUnspeccedGetPostThreadV2.ThreadItem
