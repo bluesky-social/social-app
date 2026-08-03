@@ -689,7 +689,7 @@
     },
     "app.bsky.graph.searchStarterPacksV2": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.graph.searchStarterPacksV2",
-      "cid": "bafyreifzm4bcm3tw26peaor6u2ebj7qehfapnjyazhfj5tp6r2zikvet54"
+      "cid": "bafyreiftevu66nkth5uprlwhoxtxloz4aqym25hu3wj2bal2vcuupa6uky"
     },
     "app.bsky.graph.starterpack": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.graph.starterpack",
