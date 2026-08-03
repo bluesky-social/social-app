@@ -6,6 +6,12 @@ import {
   type AtUriString,
   toDatetimeString,
 } from '@atproto/syntax'
+import {
+  blockActorList,
+  muteActorList,
+  unblockActorList,
+  unmuteActorList,
+} from '@bsky.app/sdk'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
@@ -13,12 +19,7 @@ import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
-import {
-  useAgent,
-  useAppviewClient,
-  usePdsClient,
-  useSession,
-} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {app, com} from '#/lexicons'
 import {FEED_INFO_RQKEY_ROOT} from './feed'
 import {invalidate as invalidateMyLists} from './my-lists'
@@ -255,15 +256,13 @@ export function useListDeleteMutation() {
 
 export function useListMuteMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
   const appviewClient = useAppviewClient()
   return useMutation<void, Error, {uri: string; mute: boolean}>({
     mutationFn: async ({uri, mute}) => {
-      // `muteModList`/`unmuteModList` are preference writes, migrated in wave B
       if (mute) {
-        await agent.muteModList(uri)
+        await appviewClient.call(muteActorList, {list: uri as AtUriString})
       } else {
-        await agent.unmuteModList(uri)
+        await appviewClient.call(unmuteActorList, {list: uri as AtUriString})
       }
 
       await whenAppViewReady(appviewClient, uri, v => {
@@ -280,15 +279,14 @@ export function useListMuteMutation() {
 
 export function useListBlockMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
   const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   return useMutation<void, Error, {uri: string; block: boolean}>({
     mutationFn: async ({uri, block}) => {
-      // `blockModList`/`unblockModList` write a block record, migrated in wave B
       if (block) {
-        await agent.blockModList(uri)
+        await pdsClient.call(blockActorList, {list: uri as AtUriString})
       } else {
-        await agent.unblockModList(uri)
+        await pdsClient.call(unblockActorList, {list: uri as AtUriString})
       }
 
       await whenAppViewReady(appviewClient, uri, v => {
