@@ -1,0 +1,66 @@
+{
+  "id": "app.bsky.feed.getPostThread",
+  "defs": {
+    "main": {
+      "type": "query",
+      "errors": [
+        {
+          "name": "NotFound"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "thread"
+          ],
+          "properties": {
+            "thread": {
+              "refs": [
+                "app.bsky.feed.defs#threadViewPost",
+                "app.bsky.feed.defs#notFoundPost",
+                "app.bsky.feed.defs#blockedPost"
+              ],
+              "type": "union"
+            },
+            "threadgate": {
+              "ref": "app.bsky.feed.defs#threadgateView",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "uri"
+        ],
+        "properties": {
+          "uri": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Reference (AT-URI) to post record."
+          },
+          "depth": {
+            "type": "integer",
+            "default": 6,
+            "maximum": 1000,
+            "minimum": 0,
+            "description": "How many levels of reply depth should be included in response."
+          },
+          "parentHeight": {
+            "type": "integer",
+            "default": 80,
+            "maximum": 1000,
+            "minimum": 0,
+            "description": "How many levels of parent (and grandparent, etc) post to include."
+          }
+        }
+      },
+      "description": "Get posts in a thread. Does not require auth, but additional metadata and filtering will be applied for authed requests."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}
