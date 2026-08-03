@@ -848,9 +848,6 @@
     },
     "typescript/no-misused-promises": {
       "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 1
     }
   },
   "src/screens/E2E/SharedPreferencesTesterScreen.tsx": {
