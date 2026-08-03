@@ -1,4 +1,5 @@
 import {type AppBskyActorDefs} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -28,7 +29,7 @@ export function useProfileKnownFollowersQuery(did: string | undefined) {
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       return await client.call(app.bsky.graph.getKnownFollowers, {
         // the enabled flag prevents this from running until did is set
-        actor: did! as app.bsky.graph.getKnownFollowers.$Params['actor'],
+        actor: did! as DidString,
         limit: PAGE_SIZE,
         cursor: pageParam,
       })

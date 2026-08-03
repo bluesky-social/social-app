@@ -1,4 +1,5 @@
 import {moderateUserList} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryKey,
@@ -29,7 +30,7 @@ export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       return await client.call(app.bsky.graph.getLists, {
-        actor: did as app.bsky.graph.getLists.$Params['actor'],
+        actor: did as DidString,
         limit: PAGE_SIZE,
         cursor: pageParam,
       })

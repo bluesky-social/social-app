@@ -1,4 +1,5 @@
 import {type AppBskyGraphDefs} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {type QueryClient, useQuery} from '@tanstack/react-query'
 
 import {accumulate} from '#/lib/async/accumulate'
@@ -27,8 +28,7 @@ export function useMyListsQuery(filter: MyListsFilter) {
         accumulate(cursor =>
           client
             .call(app.bsky.graph.getLists, {
-              actor: currentAccount!
-                .did as app.bsky.graph.getLists.$Params['actor'],
+              actor: currentAccount!.did as DidString,
               cursor,
               limit: 50,
             })

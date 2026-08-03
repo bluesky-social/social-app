@@ -3,6 +3,7 @@ import {
   type AppBskyGraphDefs,
   type AtpAgent,
 } from '@atproto/api'
+import {type AtUriString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -37,7 +38,7 @@ export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       return await client.call(app.bsky.graph.getList, {
         // the enabled flag will prevent this from running until uri is set
-        list: uri! as app.bsky.graph.getList.$Params['list'],
+        list: uri! as AtUriString,
         limit,
         cursor: pageParam,
       })
