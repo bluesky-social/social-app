@@ -263,12 +263,20 @@ export const BLUESKY_PROXY_HEADER = {
  */
 export const CHAT_PROXY_SERVICE: Service = `${CHAT_PROXY_DID}#bsky_chat`
 
+/**
+ * Bluesky's own moderation service, in the `did#service_id` form a lex client's
+ * per-call `service` option takes. Passing it emits `atproto-proxy: <this
+ * value>` on that one request, routing a `com.atproto.moderation.*` call to
+ * Bluesky's labeler.
+ *
+ * Reports and appeals aimed at a DIFFERENT labeler build their own value from
+ * that labeler's creator did instead, so this is a per-call option rather than a
+ * client-level one like {@link CHAT_PROXY_SERVICE}.
+ */
+export const MOD_PROXY_SERVICE: Service = `${BSKY_LABELER_DID}#atproto_labeler`
+
 export const DM_SERVICE_HEADERS = {
   'atproto-proxy': `${CHAT_PROXY_DID}#bsky_chat`,
-}
-
-export const BLUESKY_MOD_SERVICE_HEADERS = {
-  'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
 }
 
 export const BLUESKY_NOTIF_SERVICE_HEADERS = {

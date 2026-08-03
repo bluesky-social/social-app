@@ -1,20 +1,22 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, ToolsOzoneReportDefs} from '@atproto/api'
+import {type AtUriString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
-import {BLUESKY_MOD_SERVICE_HEADERS} from '#/lib/constants'
+import {MOD_PROXY_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {atoms as a, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {com} from '#/lexicons'
 
 export function GoLiveDisabledDialog({
   control,
@@ -39,12 +41,12 @@ export function DialogInner({
   status: AppBskyActorDefs.StatusView
 }) {
   const {_} = useLingui()
-  const agent = useAgent()
+  const client = useAppviewClient()
   const [details, setDetails] = useState('')
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
-      if (!agent.session?.did) {
+      if (!client.did) {
         throw new Error('Not logged in')
       }
       if (!status.uri || !status.cid) {
@@ -56,20 +58,19 @@ export function DialogInner({
           details,
         })
       } else {
-        await agent.createModerationReport(
+        await client.call(
+          com.atproto.moderation.createReport,
           {
             reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
             subject: {
               $type: 'com.atproto.repo.strongRef',
-              uri: status.uri,
+              // a status view's uri is an at-uri produced by the appview
+              uri: status.uri as AtUriString,
               cid: status.cid,
             },
             reason: details,
           },
-          {
-            encoding: 'application/json',
-            headers: BLUESKY_MOD_SERVICE_HEADERS,
-          },
+          {service: MOD_PROXY_SERVICE},
         )
       }
     },
