@@ -22,6 +22,18 @@ jest.mock('#/lib/notifications/notifications', () => ({
     return Promise.resolve()
   },
 }))
+/*
+ * The logout and account-removal reducer cases fire a push-token side effect
+ * whose first step, `createTemporaryAgentsAndResume`, builds real `AtpAgent`s
+ * and resumes them over the real network. Under jest that request outlives the
+ * suite: it rejects after teardown, and the resulting `logger.error` reaches
+ * for `nanoid` in an environment that no longer has it, failing whichever suite
+ * happens to be running at that moment. Stubbing the module keeps the side
+ * effect synchronous and offline.
+ */
+jest.mock('../util', () => ({
+  createTemporaryAgentsAndResume: () => Promise.resolve([]),
+}))
 
 // Reuse a bundle within each test: session events are scoped by bundle identity.
 function makeBundle(service: string) {

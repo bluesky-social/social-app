@@ -1,4 +1,4 @@
-import {describe, expect, it, jest} from '@jest/globals'
+import {beforeEach, describe, expect, it, jest} from '@jest/globals'
 import {act, render} from '@testing-library/react-native'
 
 /*
@@ -86,8 +86,20 @@ function renderProvider(): SessionApiContext {
  * for an account the app is no longer tracking.
  */
 describe('superseded session tasks dispose their bundle', () => {
+  /*
+   * Without this, a recorded call from an earlier test satisfies a later
+   * assertion. The tagged bundles below are the other half of that guard: two
+   * `{}` literals are structurally equal, so `toHaveBeenCalledWith` could not
+   * tell one test's bundle from the other's even within a cleared mock.
+   */
+  beforeEach(() => {
+    mockLogin.mockReset()
+    mockCreateAccount.mockReset()
+    mockDisposeBundle.mockReset()
+  })
+
   it('disposes the bundle of an aborted login', async () => {
-    const bundle = {} as never
+    const bundle = {tag: 'login-bundle'} as never
     let resolveLogin!: (value: unknown) => void
     mockLogin.mockReturnValueOnce(
       new Promise(resolve => {
@@ -110,7 +122,7 @@ describe('superseded session tasks dispose their bundle', () => {
   })
 
   it('disposes the bundle of an aborted createAccount', async () => {
-    const bundle = {} as never
+    const bundle = {tag: 'create-account-bundle'} as never
     let resolveCreate!: (value: unknown) => void
     mockCreateAccount.mockReturnValueOnce(
       new Promise(resolve => {
