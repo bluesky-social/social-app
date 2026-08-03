@@ -23,7 +23,7 @@ import {
   useMaybeProfileShadow,
 } from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useAgent, usePdsClient, useSession} from '#/state/session'
+import {usePdsClient, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
 import {useDialogContext} from '#/components/Dialog'
 import * as Toast from '#/components/Toast'
@@ -188,7 +188,6 @@ export function useLiveLinkMetaQuery(url: string | null) {
   const liveNowConfig = useLiveNowConfig()
   const {_} = useLingui()
 
-  const agent = useAgent()
   return useQuery({
     enabled: !!url,
     queryKey: ['link-meta', url],
@@ -206,7 +205,7 @@ export function useLiveLinkMetaQuery(url: string | null) {
         )
       }
 
-      return await getLinkMeta(agent, url)
+      return await getLinkMeta(url)
     },
   })
 }
