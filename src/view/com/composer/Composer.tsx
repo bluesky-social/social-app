@@ -49,12 +49,11 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyDraftCreateDraft,
   AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
-  type AtpAgent,
   AtUri,
   ChatBskyGroupDefs,
   type RichText,
 } from '@atproto/api'
+import {type Client} from '@atproto/lex'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -98,7 +97,7 @@ import {
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
-import {useAgent, useSession} from '#/state/session'
+import {useAgent, useAppviewClient, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
@@ -145,6 +144,7 @@ import {
   IS_WEB_SAFARI,
 } from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
+import {app} from '#/lexicons'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   draftToComposerPosts,
@@ -275,6 +275,7 @@ export const ComposePost = ({
     ? VIDEO_10_MINUTE_MAX_DURATION_MS
     : VIDEO_MAX_DURATION_MS
   const agent = useAgent()
+  const client = useAppviewClient()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
   const {closeComposer} = useComposerControls()
@@ -1105,23 +1106,27 @@ export const ComposePost = ({
             5,
             _e => true,
             async () => {
-              const res = await agent.app.bsky.unspecced.getPostThreadV2({
-                anchor: postUri!,
-                above: false,
-                below: filteredThread.posts.length - 1,
-                branchingFactor: 1,
-              })
-              if (res.data.thread.length !== filteredThread.posts.length) {
+              const res = await client.call(
+                app.bsky.unspecced.getPostThreadV2,
+                {
+                  anchor:
+                    postUri! as app.bsky.unspecced.getPostThreadV2.$Params['anchor'],
+                  above: false,
+                  below: filteredThread.posts.length - 1,
+                  branchingFactor: 1,
+                },
+              )
+              if (res.thread.length !== filteredThread.posts.length) {
                 throw new Error(`composer: app view is not ready`)
               }
               if (
-                !res.data.thread.every(p =>
+                !res.thread.every(p =>
                   AppBskyUnspeccedDefs.isThreadItemPost(p.value),
                 )
               ) {
                 throw new Error(`composer: app view returned non-post items`)
               }
-              return res.data.thread
+              return res.thread
             },
             1e3,
           )
@@ -1224,8 +1229,8 @@ export const ComposePost = ({
     setLangPrefs.savePostLanguageToHistory()
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-      void whenAppViewReady(agent, initQuote.uri, res => {
-        const anchor = res.data.thread.at(0)
+      void whenAppViewReady(client, initQuote.uri, res => {
+        const anchor = res.thread.at(0)
         if (
           AppBskyUnspeccedDefs.isThreadItemPost(anchor?.value) &&
           anchor.value.post.quoteCount !== initQuote.quoteCount
@@ -1272,6 +1277,7 @@ export const ComposePost = ({
     l,
     ax,
     agent,
+    client,
     canPost,
     isPublishing,
     currentLanguages,
@@ -2483,17 +2489,17 @@ function useKeyboardVerticalOffset() {
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  client: Client,
   uri: string,
-  fn: (res: AppBskyUnspeccedGetPostThreadV2.Response) => boolean,
+  fn: (res: app.bsky.unspecced.getPostThreadV2.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
     () =>
-      agent.app.bsky.unspecced.getPostThreadV2({
-        anchor: uri,
+      client.call(app.bsky.unspecced.getPostThreadV2, {
+        anchor: uri as app.bsky.unspecced.getPostThreadV2.$Params['anchor'],
         above: false,
         below: 0,
         branchingFactor: 0,
