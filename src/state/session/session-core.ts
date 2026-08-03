@@ -4,8 +4,8 @@ import {
   type SessionData,
 } from '@atproto/lex-password-session'
 
-import {networkRetry} from '#/lib/async/retry'
 import {BLUESKY_PROXY_HEADER, PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {logger} from '#/logger'
 import {prefetchAgeAssuranceServerData} from '#/ageAssurance/data'
 import {features} from '#/analytics'
 import {
@@ -127,10 +127,24 @@ export function makeSessionHooks(
     if (!armed) {
       return
     }
-    const did = getDid()
-    onSessionChange(getBundle(), did, event, sessionData)
-    if (event !== 'update') {
-      addSessionErrorLog(did, event)
+    /*
+     * A hook must never throw. PasswordSession awaits its hooks inside the
+     * assignment to its internal session promise, so a synchronous throw here
+     * leaves that promise permanently rejected: every later request fails, and
+     * because the session is never marked destroyed, disposeBundle cannot even
+     * see that the bundle is dead. The dispatch path reaches reducer side
+     * effects and event emitters, so treat it as capable of throwing.
+     */
+    try {
+      const did = getDid()
+      onSessionChange(getBundle(), did, event, sessionData)
+      if (event !== 'update') {
+        addSessionErrorLog(did, event)
+      }
+    } catch (e) {
+      logger.error(e instanceof Error ? e : String(e), {
+        message: `session: onSessionChange threw for a '${event}' event`,
+      })
     }
   }
   const hooks: PasswordSessionOptions = {
@@ -181,9 +195,51 @@ export function createPublicSessionBundle(): PublicSessionBundle {
 }
 
 /**
+ * Run the prepare tail shared by the asynchronous factories.
+ *
+ * Preparation does real network work, so it can both reject and - when a
+ * request gets a 401 and the session's own refresh then fails definitively -
+ * destroy the session underneath us.
+ *
+ * A session destroyed during preparation is fatal rather than recoverable. The
+ * hooks are still disarmed at that point, so the session's `expired` event was
+ * swallowed and nothing will ever tell the reducer to log the account out;
+ * returning the bundle anyway would leave the app looking signed in over a
+ * session that can only make unauthenticated requests. Failing instead matches
+ * what `CredentialSession.resumeSession` did on a revoked token, and every
+ * caller already handles a rejected factory. Checking `destroyed` first also
+ * keeps `PasswordSession`'s `Logged out` getter throw from escaping as the
+ * opaque rejection a caller would surface, so `snapshot` only ever runs against
+ * a live session.
+ *
+ * Both failure modes dispose: the bundle is fully built by this point, and a
+ * still-live session left behind would keep its refresh and dispatch paths
+ * alive with nothing tracking it. (Disposal is a no-op for the destroyed case,
+ * where the session already refuses to refresh and the bridge agent already
+ * reads as logged out - but the two paths are indistinguishable to the caller,
+ * so both go through it.)
+ */
+export async function finishPreparation<T>(
+  bundle: SessionBundle,
+  preparation: Promise<unknown>,
+  snapshot: () => T,
+): Promise<T> {
+  try {
+    await preparation
+    if (bundle.session.destroyed) {
+      throw new Error('Session was revoked while it was being prepared')
+    }
+    return snapshot()
+  } catch (e) {
+    disposeBundle(bundle)
+    throw e
+  }
+}
+
+/**
  * Resume a stored account into a {@link SessionBundle}. Expired sessions take a
- * network resume (one retry); still-valid stored tokens take a synchronous
- * no-network fast path. Hooks are armed only after the prepare tail resolves.
+ * network resume; still-valid stored tokens take a synchronous no-network fast
+ * path. Hooks are armed only after the prepare tail resolves.
  */
 export async function createSessionBundleAndResume(
   storedAccount: SessionAccount,
@@ -200,10 +256,18 @@ export async function createSessionBundleAndResume(
   let session: PasswordSession
   const sessionData = sessionAccountToSessionData(storedAccount)
   if (isSessionExpired(storedAccount)) {
-    // The arm latch swallows resume's initial onUpdated event.
-    session = await networkRetry(1, () =>
-      PasswordSession.resume(sessionData, hooks),
-    )
+    /*
+     * The arm latch swallows resume's initial onUpdated event.
+     *
+     * There is deliberately no network retry here: `resume` rejects only when
+     * the session is definitively invalid, and it swallows everything else -
+     * a failed refresh reports through `onUpdateFailure` and resolves with the
+     * stale tokens. So an offline cold start now stays signed in with dead
+     * tokens (requests fail until connectivity returns) rather than throwing
+     * the way the old `CredentialSession.resumeSession` did, and retrying a
+     * definitive rejection would only repeat a request that cannot succeed.
+     */
+    session = await PasswordSession.resume(sessionData, hooks)
   } else {
     // Sync fast path: trust the stored tokens, no network.
     session = new PasswordSession(sessionData, hooks)
@@ -228,14 +292,17 @@ export async function createSessionBundleAndResume(
    */
   bundle.agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
-  await Promise.all([gates, aa])
   // Preparation may auto-refresh the session while hooks are still disarmed.
-  const account =
-    sessionDataToSessionAccount(
-      session.session,
-      session.session.service,
-      storedAccount.pdsUrl,
-    ) ?? storedAccount
+  const account = await finishPreparation(
+    bundle,
+    Promise.all([gates, aa]),
+    () =>
+      sessionDataToSessionAccount(
+        session.session,
+        session.session.service,
+        storedAccount.pdsUrl,
+      ) ?? storedAccount,
+  )
   hooks.arm()
   return {account, bundle}
 }
@@ -286,9 +353,12 @@ export async function createSessionBundleAndLogin(
 
   bundle.agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
-  await Promise.all([gates, aa])
   // Preparation may auto-refresh the session while hooks are still disarmed.
-  const account = sessionDataToSessionAccountOrThrow(session)
+  const account = await finishPreparation(
+    bundle,
+    Promise.all([gates, aa]),
+    () => sessionDataToSessionAccountOrThrow(session),
+  )
   hooks.arm()
   return {account, bundle}
 }

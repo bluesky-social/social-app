@@ -24,6 +24,7 @@ import {type BskyAppAgent} from './bridge-agent'
 import {configureModerationForAccount} from './moderation'
 import {
   buildBundle,
+  finishPreparation,
   makeSessionHooks,
   type OnSessionChange,
   registerBundleKillSwitch,
@@ -125,9 +126,12 @@ export async function createSessionBundleAndCreateAccount(
 
   bundle.agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
-  await Promise.all([gates, aa])
   // Preparation may auto-refresh the session while hooks are still disarmed.
-  const account = snapshotNewAccount(session, email)
+  const account = await finishPreparation(
+    bundle,
+    Promise.all([gates, aa]),
+    () => snapshotNewAccount(session, email),
+  )
   hooks.arm()
   return {account, bundle}
 }
