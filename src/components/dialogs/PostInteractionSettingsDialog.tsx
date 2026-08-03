@@ -1,10 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import {LayoutAnimation, Text as NestedText, View} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPostgate,
-  AtUri,
-} from '@atproto/api'
+import {type AppBskyFeedDefs} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -36,7 +33,7 @@ import {
   PostThreadContextProvider,
   usePostThreadContext,
 } from '#/state/queries/usePostThread'
-import {useAgent, useSession} from '#/state/session'
+import {usePdsClient, useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -53,6 +50,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
+import {type app} from '#/lexicons'
 
 export type PostInteractionSettingsFormProps = {
   canSave?: boolean
@@ -63,8 +61,8 @@ export type PostInteractionSettingsFormProps = {
   persist?: boolean
   onChangePersist?: (v: boolean) => void
 
-  postgate: AppBskyFeedPostgate.Record
-  onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
+  postgate: app.bsky.feed.postgate.Main
+  onChangePostgate: (v: app.bsky.feed.postgate.Main) => void
 
   threadgateAllowUISettings: ThreadgateAllowUISetting[]
   onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void
@@ -178,7 +176,7 @@ export function PostInteractionSettingsDialogControlledInner(
   const {mutateAsync: setThreadgateAllow} = useSetThreadgateAllowMutation()
 
   const [editedPostgate, setEditedPostgate] =
-    useState<AppBskyFeedPostgate.Record>()
+    useState<app.bsky.feed.postgate.Main>()
   const [editedAllowUISettings, setEditedAllowUISettings] =
     useState<ThreadgateAllowUISetting[]>()
 
@@ -697,7 +695,7 @@ export function usePrefetchPostInteractionSettings({
 }) {
   const ax = useAnalytics()
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const getPost = useGetPost()
 
   return useCallback(async () => {
@@ -706,7 +704,7 @@ export function usePrefetchPostInteractionSettings({
         queryClient.prefetchQuery({
           queryKey: createPostgateQueryKey(postUri),
           queryFn: () =>
-            getPostgateRecord({agent, postUri}).then(res => res ?? null),
+            getPostgateRecord({pdsClient, postUri}).then(res => res ?? null),
           staleTime: STALE.SECONDS.THIRTY,
         }),
         queryClient.prefetchQuery({
@@ -723,5 +721,5 @@ export function usePrefetchPostInteractionSettings({
         safeMessage: e.message,
       })
     }
-  }, [ax, queryClient, agent, postUri, rootPostUri, getPost])
+  }, [ax, queryClient, pdsClient, postUri, rootPostUri, getPost])
 }
