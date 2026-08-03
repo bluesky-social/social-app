@@ -1,14 +1,11 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {
-  type ChatBskyConvoDefs,
-  ChatBskyConvoLeaveConvo,
-  ChatBskyGroupRemoveMembers,
-} from '@atproto/api'
+import {type ChatBskyConvoDefs, ChatBskyGroupRemoveMembers} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {isNetworkError} from '#/lib/strings/errors'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/types'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
@@ -27,6 +24,7 @@ import {parseConvoView} from '#/components/dms/util'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {chat} from '#/lexicons'
 import {type AnyProfileView} from '#/types/bsky/profile'
 
 type Item = ChatBskyConvoDefs.ConvoView
@@ -282,12 +280,15 @@ function MutualGroupChat({
         let errorMessage = l`Could not leave chat.`
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (error instanceof ChatBskyConvoLeaveConvo.InvalidConvoError) {
-          errorMessage = l`Chat not found.`
-        } else if (
-          error instanceof ChatBskyConvoLeaveConvo.OwnerCannotLeaveError
-        ) {
-          errorMessage = l`Chat owners cannot leave a group chat.`
+        } else {
+          switch (matchXrpcError(error, chat.bsky.convo.leaveConvo)) {
+            case 'InvalidConvo':
+              errorMessage = l`Chat not found.`
+              break
+            case 'OwnerCannotLeave':
+              errorMessage = l`Chat owners cannot leave a group chat.`
+              break
+          }
         }
         Toast.show(errorMessage, {type: 'error'})
       },
