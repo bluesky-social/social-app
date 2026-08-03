@@ -1,6 +1,7 @@
 import {type QueryClient, useInfiniteQuery} from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 export const RQKEY_ROOT = 'actor-starter-packs'
 export const RQKEY_WITH_MEMBERSHIP_ROOT = 'actor-starter-packs-with-membership'
@@ -17,17 +18,17 @@ export function useActorStarterPacksQuery({
   did?: string
   enabled?: boolean
 }) {
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   return useInfiniteQuery({
     queryKey: RQKEY(did),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
-      const res = await agent.app.bsky.graph.getActorStarterPacks({
-        actor: did!,
+      return await client.call(app.bsky.graph.getActorStarterPacks, {
+        // the enabled flag prevents this from running until did is set
+        actor: did! as app.bsky.graph.getActorStarterPacks.$Params['actor'],
         limit: 10,
         cursor: pageParam,
       })
-      return res.data
     },
     enabled: Boolean(did) && enabled,
     initialPageParam: undefined,
@@ -42,17 +43,18 @@ export function useActorStarterPacksWithMembershipsQuery({
   did?: string
   enabled?: boolean
 }) {
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   return useInfiniteQuery({
     queryKey: RQKEY_WITH_MEMBERSHIP(did),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
-      const res = await agent.app.bsky.graph.getStarterPacksWithMembership({
-        actor: did!,
+      return await client.call(app.bsky.graph.getStarterPacksWithMembership, {
+        // the enabled flag prevents this from running until did is set
+        actor:
+          did! as app.bsky.graph.getStarterPacksWithMembership.$Params['actor'],
         limit: 10,
         cursor: pageParam,
       })
-      return res.data
     },
     enabled: Boolean(did) && enabled,
     initialPageParam: undefined,
