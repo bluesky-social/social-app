@@ -18,7 +18,6 @@ import {WebOnlyInlineLinkText} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {TimeElapsed} from './TimeElapsed'
 import {PreviewableUserAvatar} from './UserAvatar'
@@ -145,24 +144,21 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 a.pl_xs,
                 a.text_md,
                 a.leading_tight,
-                IS_ANDROID && a.flex_grow,
                 a.text_right,
                 t.atoms.text_contrast_medium,
                 web({
                   whiteSpace: 'nowrap',
                 }),
               ]}>
-              {!IS_ANDROID && (
-                <Text
-                  style={[
-                    a.text_md,
-                    a.leading_tight,
-                    t.atoms.text_contrast_medium,
-                  ]}
-                  accessible={false}>
-                  &middot;{' '}
-                </Text>
-              )}
+              <Text
+                style={[
+                  a.text_md,
+                  a.leading_tight,
+                  t.atoms.text_contrast_medium,
+                ]}
+                accessible={false}>
+                &middot;{' '}
+              </Text>
               {timeElapsed}
             </MaybeLinkText>
           )}
