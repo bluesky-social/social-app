@@ -45,6 +45,7 @@ import {
   SUPPORT_PAGE,
 } from './const'
 import {useCopyForSubject} from './copy'
+import {classifyReportError} from './errors'
 import {
   getNciiQualificationOutcome,
   initialState,
@@ -244,14 +245,39 @@ function Inner(props: ReportDialogProps) {
         })
       }, 1e3)
     } catch (err) {
-      const e = err as Error
+      const e = err instanceof Error ? err : new Error(String(err))
+      const classification = classifyReportError(e)
+      const tags = {
+        ...classification.tags,
+        report_subject_type: props.subject.type,
+        report_labeler: state.selectedLabeler?.creator.did,
+        report_reason: state.selectedOption?.reason,
+      }
+
       ax.metric('reportDialog:failure', {})
-      logger.error(e, {
-        source: 'ReportDialog',
-      })
+
+      if (classification.shouldReport) {
+        logger.error(e, {
+          source: 'ReportDialog',
+          fingerprint: classification.fingerprint,
+          tags,
+        })
+      } else {
+        logger.warn('Report rejected for taken down account', {tags})
+      }
+
+      let error = l`Something went wrong. Please try again.`
+      if (classification.kind === 'account-takedown') {
+        error = l`Your account cannot submit reports while it is taken down.`
+      } else if (classification.kind === 'invalid-reason-type') {
+        error = l`This moderation service does not support that report reason. Please choose a different reason or moderation service.`
+      } else if (classification.kind === 'service-unavailable') {
+        error = l`The moderation service is temporarily unavailable. Please try again later.`
+      }
+
       dispatch({
         type: 'setError',
-        error: l`Something went wrong. Please try again.`,
+        error,
       })
     } finally {
       setIsPending(false)
