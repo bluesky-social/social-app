@@ -184,7 +184,7 @@ export async function resolveLink(
       view: res.data.starterPack,
     }
   }
-  return resolveExternal(agent, uri)
+  return resolveExternal(uri)
 
   // Forked from useGetPost. TODO: move into RQ.
   async function getPost({uri}: {uri: string}) {
@@ -258,11 +258,8 @@ function getFileSlug(url: string | undefined): string | undefined {
   return dotIndex > 0 ? filename.slice(0, dotIndex) : undefined
 }
 
-async function resolveExternal(
-  agent: AtpAgent,
-  uri: string,
-): Promise<ResolvedExternalLink> {
-  const result = await getLinkMeta(agent, uri)
+async function resolveExternal(uri: string): Promise<ResolvedExternalLink> {
+  const result = await getLinkMeta(uri)
   return {
     type: 'external',
     uri: result.url,

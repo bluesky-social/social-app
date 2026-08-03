@@ -3,7 +3,7 @@ import {logger} from '#/lib/notifications/util'
 import {wrapSessionReducerForLogging} from './logging'
 import {createPublicSessionBundle} from './session-core'
 import {type AtpSessionEvent, type SessionAccount} from './types'
-import {createTemporaryAgentsAndResume} from './util'
+import {createTemporaryClientsAndResume} from './util'
 
 // Keep session internals outside the reducer's static view of a bundle.
 type OpaqueSessionBundle = {
@@ -155,8 +155,8 @@ let reducer = (state: State, action: Action): State => {
       // side effect
       const account = state.accounts.find(a => a.did === accountDid)
       if (account) {
-        createTemporaryAgentsAndResume([account])
-          .then(agents => unregisterPushToken(agents))
+        createTemporaryClientsAndResume([account])
+          .then(clients => unregisterPushToken(clients))
           .then(() =>
             logger.debug('Push token unregistered', {did: accountDid}),
           )
@@ -183,8 +183,8 @@ let reducer = (state: State, action: Action): State => {
       // side effect
       const account = state.accounts.find(a => a.did === accountDid)
       if (account && accountDid) {
-        createTemporaryAgentsAndResume([account])
-          .then(agents => unregisterPushToken(agents))
+        createTemporaryClientsAndResume([account])
+          .then(clients => unregisterPushToken(clients))
           .then(() =>
             logger.debug('Push token unregistered', {did: accountDid}),
           )
@@ -211,8 +211,8 @@ let reducer = (state: State, action: Action): State => {
       }
     }
     case 'logged-out-every-account': {
-      createTemporaryAgentsAndResume(state.accounts)
-        .then(agents => unregisterPushToken(agents))
+      createTemporaryClientsAndResume(state.accounts)
+        .then(clients => unregisterPushToken(clients))
         .then(() => logger.debug('Push token unregistered'))
         .catch(err => {
           logger.error('Failed to unregister push token', {

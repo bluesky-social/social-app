@@ -1,4 +1,3 @@
-import {type AtpAgent} from '@atproto/api'
 import {type SessionData} from '@atproto/lex-password-session'
 import {describe, expect, it, jest} from '@jest/globals'
 
@@ -18,21 +17,21 @@ jest.mock('../../../ageAssurance/state', () => ({
   unsafeGetAndComputeAgeAssurance: () => ({state: {}}),
 }))
 jest.mock('#/lib/notifications/notifications', () => ({
-  unregisterPushToken(_agents: AtpAgent[]) {
+  unregisterPushToken(_clients: unknown[]) {
     return Promise.resolve()
   },
 }))
 /*
  * The logout and account-removal reducer cases fire a push-token side effect
- * whose first step, `createTemporaryAgentsAndResume`, builds real `AtpAgent`s
- * and resumes them over the real network. Under jest that request outlives the
+ * whose first step, `createTemporaryClientsAndResume`, resumes real
+ * `PasswordSession`s over the real network. Under jest that request outlives the
  * suite: it rejects after teardown, and the resulting `logger.error` reaches
  * for `nanoid` in an environment that no longer has it, failing whichever suite
  * happens to be running at that moment. Stubbing the module keeps the side
  * effect synchronous and offline.
  */
 jest.mock('../util', () => ({
-  createTemporaryAgentsAndResume: () => Promise.resolve([]),
+  createTemporaryClientsAndResume: () => Promise.resolve([]),
 }))
 
 // Reuse a bundle within each test: session events are scoped by bundle identity.
