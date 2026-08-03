@@ -1,10 +1,7 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {
-  ChatBskyActorDefs,
-  ChatBskyConvoDefs,
-  type ModerationOpts,
-} from '@atproto/api'
+import {ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 

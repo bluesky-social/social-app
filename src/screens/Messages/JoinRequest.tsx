@@ -1,11 +1,12 @@
 import {useEffect} from 'react'
 import {View} from 'react-native'
 import {ImageBackground} from 'expo-image'
-import {ChatBskyGroupDefs, moderateProfile} from '@atproto/api'
+import {ChatBskyGroupDefs} from '@atproto/api'
 import {type ThemeName} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useJoinLinkPreviewsQuery} from '#/state/queries/join-links'

@@ -1,13 +1,9 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {
-  AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
-  AtUri,
-  type ModerationOpts,
-} from '@atproto/api'
+import {AppBskyGraphDefs, AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {type AtUriString} from '@atproto/syntax'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'

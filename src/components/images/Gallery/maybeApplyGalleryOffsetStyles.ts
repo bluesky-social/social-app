@@ -4,9 +4,8 @@ import {
   AppBskyEmbedRecordWithMedia,
   type AppBskyFeedDefs,
   AppBskyFeedPost,
-  type ModerationCause,
-  type ModerationUI,
 } from '@atproto/api'
+import {type ModerationCause, type ModerationUI} from '@bsky.app/sdk/moderation'
 
 import {unique} from '#/lib/moderation'
 import {type AppModerationCause} from '#/components/Pills'

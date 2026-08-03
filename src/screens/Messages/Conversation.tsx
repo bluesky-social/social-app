@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {ChatBskyConvoDefs, moderateProfile} from '@atproto/api'
+import {ChatBskyConvoDefs} from '@atproto/api'
 import {
   ScrollEdgeEffect,
   ScrollEdgeEffectProvider,
@@ -18,6 +18,7 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useViewportZoomLock} from '#/lib/hooks/useViewportZoomLock'
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
