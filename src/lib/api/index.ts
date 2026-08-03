@@ -8,7 +8,7 @@ import {
   type AppBskyEmbedVideo,
   AppBskyFeedPost,
   type AtpAgent,
-  BlobRef,
+  type BlobRef,
   ChatBskyGroupDefs,
   type ComAtprotoLabelDefs,
   type ComAtprotoRepoApplyWrites,
@@ -20,9 +20,6 @@ import {toDatetimeString} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {t} from '@lingui/core/macro'
 import {type QueryClient} from '@tanstack/react-query'
-import {sha256} from 'js-sha256'
-import {CID} from 'multiformats/cid'
-import * as Hasher from 'multiformats/hashes/hasher'
 
 import {IMAGE_SIZE_CONFIG_POSTS} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
@@ -42,8 +39,10 @@ import {
   type PostDraft,
   type ThreadDraft,
 } from '#/view/com/composer/state/composer'
+import {type app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {createGIFDescription} from '../gif-alt-text'
+import {computeCid} from './computeCid'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
@@ -172,7 +171,13 @@ export async function post(
 
     // Prepare a ref to the current post for the next post in the thread.
     const ref = {
-      cid: await computeCid(record),
+      /*
+       * `computeCid` is typed against the lex record. The pipeline still builds
+       * the legacy `AppBskyFeedPost.Record`; the two shapes are structurally
+       * equivalent for hashing, so bridge them until the pipeline itself moves
+       * to the lex record type.
+       */
+      cid: await computeCid(record as unknown as app.bsky.feed.post.Main),
       uri,
     }
     replyPromise = {
@@ -498,91 +503,4 @@ async function resolveRecord(
     throw Error(t`Expected uri to resolve to a record`)
   }
   return resolvedLink.record
-}
-
-// The built-in hashing functions from multiformats (`multiformats/hashes/sha2`)
-// are meant for Node.js, this is the cross-platform equivalent.
-const mf_sha256 = Hasher.from({
-  name: 'sha2-256',
-  code: 0x12,
-  encode: input => {
-    const digest = sha256.arrayBuffer(input)
-    return new Uint8Array(digest)
-  },
-})
-
-async function computeCid(record: AppBskyFeedPost.Record): Promise<string> {
-  /*
-   * Lazily loaded since it's only needed when posting a thread, and its
-   * `cborg` dependency is ~190KB that would otherwise be in the initial
-   * web bundle.
-   */
-  const dcbor = await import('@ipld/dag-cbor')
-  // IMPORTANT: `prepareObject` prepares the record to be hashed by removing
-  // fields with undefined value, and converting BlobRef instances to the
-  // right IPLD representation.
-  const prepared = prepareForHashing(record)
-  // 1. Encode the record into DAG-CBOR format
-  const encoded = dcbor.encode(prepared)
-  // 2. Hash the record in SHA-256 (code 0x12)
-  const digest = await mf_sha256.digest(encoded)
-  // 3. Create a CIDv1, specifying DAG-CBOR as content (code 0x71)
-  const cid = CID.createV1(0x71, digest)
-  // 4. Get the Base32 representation of the CID (`b` prefix)
-  return cid.toString()
-}
-
-// Returns a transformed version of the object for use in DAG-CBOR.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function prepareForHashing(v: any): any {
-  // IMPORTANT: BlobRef#ipld() returns the correct object we need for hashing,
-  // the API client will convert this for you but we're hashing in the client,
-  // so we need it *now*.
-  if (v instanceof BlobRef) {
-    return v.ipld()
-  }
-
-  // Walk through arrays
-  if (Array.isArray(v)) {
-    let pure = true
-    const mapped = v.map(value => {
-      if (value !== (value = prepareForHashing(value))) {
-        pure = false
-      }
-      return value
-    })
-    return pure ? v : mapped
-  }
-
-  // Walk through plain objects
-  if (isPlainObject(v)) {
-    const obj: Record<string, unknown> = {}
-    let pure = true
-    for (const key in v) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      let value = v[key]
-      // `value` is undefined
-      if (value === undefined) {
-        pure = false
-        continue
-      }
-      // `prepareObject` returned a value that's different from what we had before
-      if (value !== (value = prepareForHashing(value))) {
-        pure = false
-      }
-      obj[key] = value
-    }
-    // Return as is if we haven't needed to tamper with anything
-    return pure ? v : obj
-  }
-  return v
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isPlainObject(v: any): boolean {
-  if (typeof v !== 'object' || v === null) {
-    return false
-  }
-  const proto = Object.getPrototypeOf(v)
-  return proto === Object.prototype || proto === null
 }
