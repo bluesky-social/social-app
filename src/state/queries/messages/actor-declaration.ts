@@ -3,11 +3,13 @@ import {
   type AppBskyActorDefs,
   type ChatBskyActorDeclaration,
 } from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {useAgent, useSession} from '#/state/session'
+import {usePdsClient, useSession} from '#/state/session'
 import {resolveAllowGroupInvites} from '#/components/dms/util'
+import {com} from '#/lexicons'
 import {RQKEY as PROFILE_RKEY} from '../profile'
 
 export function useUpdateActorDeclaration({
@@ -19,7 +21,7 @@ export function useUpdateActorDeclaration({
 }) {
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
 
   return useMutation({
     mutationFn: async (update: {
@@ -41,8 +43,9 @@ export function useUpdateActorDeclaration({
           update.allowGroupInvites ??
           current?.associated?.chat?.allowGroupInvites,
       })
-      const result = await agent.com.atproto.repo.putRecord({
-        repo: currentAccount.did,
+      const result = await pdsClient.call(com.atproto.repo.putRecord, {
+        // the session account is still legacy-typed, so its did is unbranded
+        repo: currentAccount.did as DidString,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
         record: {
@@ -101,13 +104,13 @@ export function useUpdateActorDeclaration({
 // for use in the settings screen for testing
 export function useDeleteActorDeclaration() {
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
 
   return useMutation({
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not signed in')
-      const result = await agent.api.com.atproto.repo.deleteRecord({
-        repo: currentAccount.did,
+      const result = await pdsClient.call(com.atproto.repo.deleteRecord, {
+        repo: currentAccount.did as DidString,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
       })
@@ -116,6 +119,11 @@ export function useDeleteActorDeclaration() {
   })
 }
 
+/*
+ * Still takes the legacy agent: its only caller is `getOtherRequiredData` in
+ * `#/ageAssurance/data`, which is blocked on `getPreferences` and so cannot
+ * hand over a lex client yet.
+ */
 export async function fetchActorDeclarationRecord({
   agent,
   did,
