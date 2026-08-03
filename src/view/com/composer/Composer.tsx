@@ -54,6 +54,7 @@ import {
   type RichText,
 } from '@atproto/api'
 import {type Client} from '@atproto/lex'
+import {type AtUriString} from '@atproto/syntax'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -1109,8 +1110,7 @@ export const ComposePost = ({
               const res = await client.call(
                 app.bsky.unspecced.getPostThreadV2,
                 {
-                  anchor:
-                    postUri! as app.bsky.unspecced.getPostThreadV2.$Params['anchor'],
+                  anchor: postUri! as AtUriString,
                   above: false,
                   below: filteredThread.posts.length - 1,
                   branchingFactor: 1,
@@ -2499,7 +2499,7 @@ async function whenAppViewReady(
     fn,
     () =>
       client.call(app.bsky.unspecced.getPostThreadV2, {
-        anchor: uri as app.bsky.unspecced.getPostThreadV2.$Params['anchor'],
+        anchor: uri as AtUriString,
         above: false,
         below: 0,
         branchingFactor: 0,

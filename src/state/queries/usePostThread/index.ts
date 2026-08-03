@@ -1,4 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
+import {type AtUriString} from '@atproto/syntax'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -73,7 +74,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     queryKey: postThreadQueryKey,
     async queryFn(ctx) {
       const data = await client.call(app.bsky.unspecced.getPostThreadV2, {
-        anchor: anchor! as app.bsky.unspecced.getPostThreadV2.$Params['anchor'],
+        anchor: anchor! as AtUriString,
         branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
         below,
         sort: sort,
@@ -169,8 +170,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     queryKey: postThreadOtherQueryKey,
     async queryFn() {
       return await client.call(app.bsky.unspecced.getPostThreadOtherV2, {
-        anchor:
-          anchor! as app.bsky.unspecced.getPostThreadOtherV2.$Params['anchor'],
+        anchor: anchor! as AtUriString,
       })
     },
   })
