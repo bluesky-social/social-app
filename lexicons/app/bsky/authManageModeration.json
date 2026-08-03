@@ -1,0 +1,44 @@
+{
+  "id": "app.bsky.authManageModeration",
+  "defs": {
+    "main": {
+      "type": "permission-set",
+      "title": "Manage Personal Moderation",
+      "detail": "Control over blocks, mutes, mod lists, mod services, and preferences.",
+      "title:lang": {},
+      "detail:lang": {},
+      "permissions": [
+        {
+          "lxm": [
+            "app.bsky.actor.getPreferences",
+            "app.bsky.actor.putPreferences",
+            "app.bsky.graph.muteActor",
+            "app.bsky.graph.muteActorList",
+            "app.bsky.graph.muteThread",
+            "app.bsky.graph.unmuteActor",
+            "app.bsky.graph.unmuteActorList",
+            "app.bsky.graph.unmuteThread"
+          ],
+          "type": "permission",
+          "resource": "rpc",
+          "inheritAud": true
+        },
+        {
+          "type": "permission",
+          "action": [
+            "create",
+            "update",
+            "delete"
+          ],
+          "resource": "repo",
+          "collection": [
+            "app.bsky.graph.block",
+            "app.bsky.graph.listblock"
+          ]
+        }
+      ]
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -1,0 +1,70 @@
+{
+  "id": "chat.bsky.moderation.getActorMetadata",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "day",
+            "month",
+            "all"
+          ],
+          "properties": {
+            "all": {
+              "ref": "#metadata",
+              "type": "ref"
+            },
+            "day": {
+              "ref": "#metadata",
+              "type": "ref"
+            },
+            "month": {
+              "ref": "#metadata",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "actor"
+        ],
+        "properties": {
+          "actor": {
+            "type": "string",
+            "format": "did"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "messagesSent",
+        "messagesReceived",
+        "convos",
+        "convosStarted"
+      ],
+      "properties": {
+        "convos": {
+          "type": "integer"
+        },
+        "messagesSent": {
+          "type": "integer"
+        },
+        "convosStarted": {
+          "type": "integer"
+        },
+        "messagesReceived": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

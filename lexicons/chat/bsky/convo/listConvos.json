@@ -1,0 +1,77 @@
+{
+  "id": "chat.bsky.convo.listConvos",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convos"
+          ],
+          "properties": {
+            "convos": {
+              "type": "array",
+              "items": {
+                "ref": "chat.bsky.convo.defs#convoView",
+                "type": "ref"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "Filter by conversation kind.",
+            "knownValues": [
+              "direct",
+              "group"
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "description": "Filter convos by their status. It is discouraged to call with \"request\" and preferred to call chat.bsky.convo.listConvoRequests, which also includes group join requests made by the user.",
+            "knownValues": [
+              "request",
+              "accepted"
+            ]
+          },
+          "readState": {
+            "type": "string",
+            "knownValues": [
+              "unread"
+            ]
+          },
+          "lockStatus": {
+            "type": "string",
+            "description": "Filter by conversation lock status. Values follow chat.bsky.convo.defs#convoLockStatus.",
+            "knownValues": [
+              "unlocked",
+              "locked",
+              "locked-permanently"
+            ]
+          }
+        }
+      },
+      "description": "Returns a page of conversations (direct or group) for the user."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

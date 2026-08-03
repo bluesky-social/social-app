@@ -1,0 +1,17 @@
+{
+  "id": "com.atproto.sync.defs",
+  "defs": {
+    "hostStatus": {
+      "type": "string",
+      "knownValues": [
+        "active",
+        "idle",
+        "offline",
+        "throttled",
+        "banned"
+      ]
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}
