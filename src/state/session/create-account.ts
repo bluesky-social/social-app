@@ -27,7 +27,7 @@ import {
 import {unsafeGetAndComputeAgeAssurance} from '#/ageAssurance/state'
 import {features} from '#/analytics'
 import {type app} from '#/lexicons'
-import {agentToPdsClient} from './clients'
+import {agentToAppviewClient, agentToPdsClient} from './clients'
 import {configureModerationForAccount} from './moderation'
 import {
   buildBundle,
@@ -105,12 +105,15 @@ export async function createSessionBundleAndCreateAccount(
   setCreatedAtForDid({did: earlyAccount.did, createdAt})
   setBirthdateForDid({did: earlyAccount.did, birthdate})
   snoozeBirthdateUpdateAllowedForDid(earlyAccount.did)
-  // Start the prefetch after seeding its synchronous birthdate inputs.
-  const aa = prefetchAgeAssuranceServerData({agent: bundle.agent})
-
-  const isProd = Boolean(IS_PROD_SERVICE(service))
   // Post-signup writes all target the account's own repo and actor store.
   const pdsClient = agentToPdsClient(bundle.agent)
+  // Start the prefetch after seeding its synchronous birthdate inputs.
+  const aa = prefetchAgeAssuranceServerData({
+    appviewClient: agentToAppviewClient(bundle.agent),
+    accountClient: pdsClient,
+  })
+
+  const isProd = Boolean(IS_PROD_SERVICE(service))
   const postSignupTasks: Promise<unknown>[] = [
     savePersonalDetails(pdsClient, birthDate),
     initializeProfile(pdsClient, {handle, createdAt, isProd}),
