@@ -11,7 +11,7 @@ import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {getAllListMembers} from '#/state/queries/list-members'
-import {useAgent, useSession} from '#/state/session'
+import {useAgent, useAppviewClient, useSession} from '#/state/session'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {AvatarStack} from '#/screens/Search/components/StarterPackCard'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -36,6 +36,7 @@ export function StarterPackCard({
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
   const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const queryClient = useQueryClient()
   const record = view.record
   const [isProcessing, setIsProcessing] = useState(false)
@@ -48,7 +49,7 @@ export function StarterPackCard({
 
     let listItems: AppBskyGraphDefs.ListItemView[] = []
     try {
-      listItems = await getAllListMembers(agent, view.list.uri)
+      listItems = await getAllListMembers(appviewClient, view.list.uri)
     } catch (e) {
       setIsProcessing(false)
       Toast.show(_(msg`An error occurred while trying to follow all`), {

@@ -1,8 +1,5 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyGraphDefs,
-  type AtpAgent,
-} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyGraphDefs} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 import {type AtUriString} from '@atproto/syntax'
 import {
   type InfiniteData,
@@ -13,7 +10,7 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent, useAppviewClient} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 
 const PAGE_SIZE = 30
@@ -50,36 +47,32 @@ export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
 }
 
 export function useAllListMembersQuery(uri?: string) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useQuery({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY_ALL(uri ?? ''),
     queryFn: async () => {
-      return getAllListMembers(agent, uri!)
+      return getAllListMembers(client, uri!)
     },
     enabled: Boolean(uri),
   })
 }
 
-/*
- * Still on the legacy agent: four call sites outside this cluster pass their
- * own `AtpAgent`, so the parameter type is migrated with those consumers.
- */
-export async function getAllListMembers(agent: AtpAgent, uri: string) {
+export async function getAllListMembers(client: Client, uri: string) {
   let hasMore = true
   let cursor: string | undefined
   const listItems: AppBskyGraphDefs.ListItemView[] = []
   // We want to cap this at 6 pages, just for anything weird happening with the api
   let i = 0
   while (hasMore && i < 6) {
-    const res = await agent.app.bsky.graph.getList({
-      list: uri,
+    const res = await client.call(app.bsky.graph.getList, {
+      list: uri as AtUriString,
       limit: 50,
       cursor,
     })
-    listItems.push(...res.data.items)
-    hasMore = Boolean(res.data.cursor)
-    cursor = res.data.cursor
+    listItems.push(...res.items)
+    hasMore = Boolean(res.cursor)
+    cursor = res.cursor
     i++
   }
   return listItems
