@@ -91,7 +91,7 @@ export async function createSessionBundleAndCreateAccount(
   accountDid = earlyAccount.did
 
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
-  configureModerationForAccount(bundle.agent, earlyAccount)
+  configureModerationForAccount(bundle, earlyAccount)
 
   const createdAt = toDatetimeString(new Date())
   const birthdate = birthDate.toISOString()
