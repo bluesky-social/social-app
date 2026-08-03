@@ -2,9 +2,9 @@ import {
   type AppBskyActorDefs,
   AppBskyEmbedRecord,
   type AppBskyFeedDefs,
-  type AppBskyFeedGetQuotes,
   AtUri,
 } from '@atproto/api'
+import {type AtUriString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -12,7 +12,8 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
@@ -26,22 +27,22 @@ const RQKEY_ROOT = 'post-quotes'
 export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function usePostQuotesQuery(resolvedUri: string | undefined) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useInfiniteQuery<
-    AppBskyFeedGetQuotes.OutputSchema,
+    app.bsky.feed.getQuotes.$OutputBody,
     Error,
-    InfiniteData<AppBskyFeedGetQuotes.OutputSchema>,
+    InfiniteData<app.bsky.feed.getQuotes.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(resolvedUri || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.api.app.bsky.feed.getQuotes({
-        uri: resolvedUri || '',
+      return await client.call(app.bsky.feed.getQuotes, {
+        // the enabled flag prevents this from running until resolvedUri is set
+        uri: (resolvedUri || '') as AtUriString,
         limit: PAGE_SIZE,
         cursor: pageParam,
       })
-      return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -72,7 +73,7 @@ export function* findAllProfilesInQueryData(
   did: string,
 ): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyFeedGetQuotes.OutputSchema>
+    InfiniteData<app.bsky.feed.getQuotes.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })
@@ -99,7 +100,7 @@ export function* findAllPostsInQueryData(
   uri: string,
 ): Generator<AppBskyFeedDefs.PostView, undefined> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyFeedGetQuotes.OutputSchema>
+    InfiniteData<app.bsky.feed.getQuotes.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })
