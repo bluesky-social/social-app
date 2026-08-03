@@ -7,7 +7,7 @@ export const sentryTransport: Transport = (
   level,
   context,
   message,
-  {type, tags, ...metadata},
+  {type, tags, fingerprint, ...metadata},
   timestamp,
 ) => {
   // Skip debug messages entirely for now - esb
@@ -70,6 +70,7 @@ export const sentryTransport: Transport = (
         level: severity,
         tags: _tags,
         extra: meta,
+        ...(fingerprint ? {fingerprint} : {}),
       })
     }
   } else {
@@ -84,6 +85,7 @@ export const sentryTransport: Transport = (
     Sentry.captureException(message, {
       tags: _tags,
       extra: meta,
+      ...(fingerprint ? {fingerprint} : {}),
     })
   }
 }
