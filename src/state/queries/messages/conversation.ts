@@ -11,10 +11,10 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {STALE} from '#/state/queries'
 import {useOnMarkAsRead} from '#/state/queries/messages/list-conversations'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
 import {
   RQKEY_PARTIAL as UNREAD_COUNTS_PARTIAL_KEY,
   UNREAD_ACCEPTED_CAP,
@@ -30,15 +30,12 @@ export const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
 export function useConvoQuery({convoId}: {convoId: string}) {
-  const agent = useAgent()
+  const client = useChatClient()
 
   return useQuery({
     queryKey: RQKEY(convoId),
     queryFn: async () => {
-      const {data} = await agent.chat.bsky.convo.getConvo(
-        {convoId},
-        {headers: DM_SERVICE_HEADERS},
-      )
+      const data = await client.call(chat.bsky.convo.getConvo, {convoId})
       return data.convo
     },
     staleTime: STALE.INFINITY,
@@ -55,7 +52,7 @@ export function precacheConvoQuery(
 export function useMarkAsReadMutation() {
   const optimisticUpdate = useOnMarkAsRead()
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = useChatClient()
 
   return useMutation({
     mutationFn: async ({
@@ -67,16 +64,10 @@ export function useMarkAsReadMutation() {
     }) => {
       if (!convoId) throw new Error('No convoId provided')
 
-      await agent.chat.bsky.convo.updateRead(
-        {
-          convoId,
-          messageId,
-        },
-        {
-          encoding: 'application/json',
-          headers: DM_SERVICE_HEADERS,
-        },
-      )
+      await client.call(chat.bsky.convo.updateRead, {
+        convoId,
+        messageId,
+      })
     },
     onMutate({convoId}) {
       if (!convoId) throw new Error('No convoId provided')
