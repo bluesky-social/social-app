@@ -1,9 +1,9 @@
 import {ChatBskyConvoDefs, type ChatBskyGroupEditGroup} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
 import {
   rollbackConvoOptimistic,
   updateConvoOptimistic,
@@ -20,16 +20,15 @@ export function useEditGroupChatName(
   },
 ) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = useChatClient()
 
   return useMutation({
     mutationFn: async ({name: groupName}: {name: string}) => {
       if (!convoId) throw new Error('No convoId provided')
-      const {data} = await agent.chat.bsky.group.editGroup(
-        {convoId, name: groupName},
-        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-      )
-      return data
+      return await client.call(chat.bsky.group.editGroup, {
+        convoId,
+        name: groupName,
+      })
     },
     onMutate: ({name: groupName}) => {
       if (!convoId) return
