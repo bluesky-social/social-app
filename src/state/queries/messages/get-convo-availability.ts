@@ -1,3 +1,4 @@
+import {type DidString} from '@atproto/syntax'
 import {useQuery} from '@tanstack/react-query'
 
 import {useChatClient} from '#/state/session'
@@ -18,9 +19,7 @@ export function useGetConvoAvailabilityQuery(
     queryFn: async () => {
       return await client.call(chat.bsky.convo.getConvoAvailability, {
         // callers pass an already-resolved actor did
-        members: [
-          did,
-        ] as chat.bsky.convo.getConvoAvailability.$Params['members'],
+        members: [did as DidString],
       })
     },
     staleTime: STALE.INFINITY,
