@@ -17,12 +17,7 @@
  */
 
 import {useCallback, useEffect, useMemo, useRef} from 'react'
-import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AtUri,
-  moderatePost,
-} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,
@@ -31,6 +26,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {moderatePost} from '#/lib/moderation/subjects'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'

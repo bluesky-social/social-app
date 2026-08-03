@@ -3,7 +3,6 @@ import {
   type $Typed,
   type AppBskyActorDefs,
   AppBskyEmbedExternal,
-  moderateStatus,
 } from '@atproto/api'
 import {retry} from '@atproto/common-web'
 import {type l} from '@atproto/lex'
@@ -16,6 +15,7 @@ import {isAfter, parseISO} from 'date-fns'
 import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
+import {moderateStatus} from '#/lib/moderation/subjects'
 import {matchXrpcError} from '#/lib/xrpc-error'
 import {useAppConfig} from '#/state/appConfig'
 import {
