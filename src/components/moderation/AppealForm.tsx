@@ -1,7 +1,8 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoLabelDefs, ToolsOzoneReportDefs} from '@atproto/api'
-import {XRPCError} from '@atproto/api'
+import {XrpcResponseError} from '@atproto/lex'
+import {type AtUriString, type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -12,7 +13,7 @@ import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -22,6 +23,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID} from '#/env'
+import {com} from '#/lexicons'
 
 export function AppealForm({
   label,
@@ -38,7 +40,7 @@ export function AppealForm({
   const [details, setDetails] = useState('')
   const {subject} = useLabelSubject({label})
   const isAccountReport = 'did' in subject
-  const agent = useAgent()
+  const client = useAppviewClient()
   const sourceName = labeler
     ? sanitizeHandle(labeler.creator.handle, '@')
     : label.src
@@ -46,28 +48,38 @@ export function AppealForm({
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
-      const $type = !isAccountReport
-        ? 'com.atproto.repo.strongRef'
-        : 'com.atproto.admin.defs#repoRef'
-      await agent.createModerationReport(
+      await client.call(
+        com.atproto.moderation.createReport,
         {
           reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
-          subject: {
-            $type,
-            ...subject,
-          },
+          /*
+           * `useLabelSubject` derives one shape or the other from the label's
+           * `cid`: an at-uri plus cid for a record, or the label's `uri` reused
+           * as the account did.
+           */
+          subject: isAccountReport
+            ? {
+                $type: 'com.atproto.admin.defs#repoRef',
+                did: subject.did as DidString,
+              }
+            : {
+                $type: 'com.atproto.repo.strongRef',
+                uri: subject.uri as AtUriString,
+                cid: subject.cid,
+              },
           reason: details,
         },
-        {
-          encoding: 'application/json',
-          headers: {
-            'atproto-proxy': `${label.src}#atproto_labeler`,
-          },
-        },
+        // the appeal goes to the labeler that applied the label
+        {service: `${label.src as DidString}#atproto_labeler`},
       )
     },
     onError: err => {
-      if (err instanceof XRPCError && err.error === 'AlreadyAppealed') {
+      /*
+       * `AlreadyAppealed` is real server behavior that createReport's lexicon
+       * does NOT declare, so `matchXrpcError` cannot see it and the raw error
+       * code is checked instead. Worth an upstream PR to declare it.
+       */
+      if (err instanceof XrpcResponseError && err.error === 'AlreadyAppealed') {
         setError(
           _(
             msg`You've already appealed this label and it's being reviewed by our moderation team.`,
