@@ -1,9 +1,9 @@
 import {type ChatBskyConvoGetUnreadCounts} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
 import {RQKEY_PARTIAL as UNREAD_COUNTS_PARTIAL_KEY} from './get-unread-counts'
 import {
   type ConvoRequestListQueryData,
@@ -29,16 +29,11 @@ export function useUpdateAllRead(
   },
 ) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = useChatClient()
 
   return useMutation({
     mutationFn: async () => {
-      const {data} = await agent.chat.bsky.convo.updateAllRead(
-        {status},
-        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-      )
-
-      return data
+      return await client.call(chat.bsky.convo.updateAllRead, {status})
     },
     onMutate: () => {
       // snapshot every convo-list cache up front so onError can restore them
