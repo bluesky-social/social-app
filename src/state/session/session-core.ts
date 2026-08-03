@@ -13,6 +13,7 @@ import {
   createPublicAgent,
   PasswordSessionManager,
 } from './bridge-agent'
+import {agentToAppviewClient, agentToPdsClient} from './clients'
 import {addSessionErrorLog} from './logging'
 import {configureModerationForAccount} from './moderation'
 import {networkAwareFetch} from './network'
@@ -290,7 +291,10 @@ export async function createSessionBundleAndResume(
     ) ?? storedAccount
 
   configureModerationForAccount(bundle.agent, earlyAccount)
-  const aa = prefetchAgeAssuranceServerData({agent: bundle.agent})
+  const aa = prefetchAgeAssuranceServerData({
+    appviewClient: agentToAppviewClient(bundle.agent),
+    accountClient: agentToPdsClient(bundle.agent),
+  })
 
   /*
    * The proxy header is applied after the PDS-targeting setup above, so those
@@ -355,7 +359,10 @@ export async function createSessionBundleAndLogin(
 
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
   configureModerationForAccount(bundle.agent, earlyAccount)
-  const aa = prefetchAgeAssuranceServerData({agent: bundle.agent})
+  const aa = prefetchAgeAssuranceServerData({
+    appviewClient: agentToAppviewClient(bundle.agent),
+    accountClient: agentToPdsClient(bundle.agent),
+  })
 
   bundle.agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
