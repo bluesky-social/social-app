@@ -1,19 +1,18 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyActorGetProfile,
-  AtUri,
-} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {type AtIdentifierString, AtUri} from '@atproto/syntax'
 import {useMutation} from '@tanstack/react-query'
 
 import {until} from '#/lib/async/until'
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function useVerificationsRemoveMutation() {
   const ax = useAnalytics()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const {currentAccount} = useSession()
   const updateProfileVerificationCache = useUpdateProfileVerificationCache()
 
@@ -33,9 +32,8 @@ export function useVerificationsRemoveMutation() {
 
       await Promise.all(
         uris.map(uri => {
-          return agent.app.bsky.graph.verification.delete({
-            repo: currentAccount.did,
-            rkey: new AtUri(uri).rkey,
+          return pdsClient.delete(app.bsky.graph.verification, {
+            rkey: new AtUri(uri).rkeySafe,
           })
         }),
       )
@@ -43,7 +41,7 @@ export function useVerificationsRemoveMutation() {
       await until(
         5,
         1e3,
-        ({data: profile}: AppBskyActorGetProfile.Response) => {
+        (profile: app.bsky.actor.getProfile.$OutputBody) => {
           if (
             !profile.verification?.verifications.some(v => uris.includes(v.uri))
           ) {
@@ -52,7 +50,10 @@ export function useVerificationsRemoveMutation() {
           return false
         },
         () => {
-          return agent.getProfile({actor: profile.did ?? ''})
+          return appviewClient.call(app.bsky.actor.getProfile, {
+            // the profile view is still legacy-typed, so its did is unbranded
+            actor: (profile.did ?? '') as AtIdentifierString,
+          })
         },
       )
     },

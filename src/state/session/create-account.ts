@@ -1,5 +1,6 @@
 import {type AppBskyActorProfile, type Un$Typed} from '@atproto/api'
 import {TID} from '@atproto/common-web'
+import {type Client} from '@atproto/lex'
 import {PasswordSession} from '@atproto/lex-password-session'
 
 import {networkRetry} from '#/lib/async/retry'
@@ -21,6 +22,7 @@ import {
 import {unsafeGetAndComputeAgeAssurance} from '#/ageAssurance/state'
 import {features} from '#/analytics'
 import {type BskyAppAgent} from './bridge-agent'
+import {agentToPdsClient} from './clients'
 import {configureModerationForAccount} from './moderation'
 import {
   buildBundle,
@@ -109,7 +111,11 @@ export async function createSessionBundleAndCreateAccount(
   if (isProd) {
     postSignupTasks.push(
       initializeSavedFeeds(bundle.agent),
-      restrictChatAfterAgeAssurance(aa, bundle.agent, earlyAccount.did),
+      restrictChatAfterAgeAssurance(
+        aa,
+        agentToPdsClient(bundle.agent),
+        earlyAccount.did,
+      ),
     )
   }
   // Post-signup writes are not required to enter onboarding.
@@ -207,14 +213,14 @@ function initializeSavedFeeds(agent: BskyAppAgent) {
 
 function restrictChatAfterAgeAssurance(
   ageAssurance: Promise<unknown>,
-  agent: BskyAppAgent,
+  client: Client,
   did: string,
 ) {
   return ageAssurance.then(() => {
     const {flags} = unsafeGetAndComputeAgeAssurance({did})
     if (flags?.chatDisabled || flags?.groupChatDisabled) {
       void restrictChatSettings({
-        agent,
+        client,
         restrictIncoming: flags.chatDisabled,
         restrictGroupInvites: flags.groupChatDisabled,
       })
