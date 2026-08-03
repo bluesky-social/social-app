@@ -145,7 +145,7 @@ export function useSubmitReportMutation() {
          * the proxy target is built per call from that labeler's creator did.
          */
         await client.call(com.atproto.moderation.createReport, report, {
-          service: `${labeler.creator.did as DidString}#atproto_labeler`,
+          service: `${labeler.creator.did}#atproto_labeler`,
         })
       }
     },
