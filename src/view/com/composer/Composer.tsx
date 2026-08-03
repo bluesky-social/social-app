@@ -285,6 +285,12 @@ export const ComposePost = ({
   const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
+  /*
+   * The host the video service-auth token is minted for. This is the same value
+   * that seeds the session's PDS routing, so the audience always matches the host
+   * the upload actually reaches; a mismatch would 401 the upload.
+   */
+  const currentDispatchUrl = currentAccount!.pdsUrl ?? currentAccount!.service
   const {closeComposer} = useComposerControls()
   const {t: l, i18n} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -479,7 +485,8 @@ export const ComposePost = ({
             },
           })
         },
-        agent,
+        pdsClient,
+        currentDispatchUrl,
         currentDid,
         abortController.signal,
         i18n,
@@ -489,7 +496,8 @@ export const ComposePost = ({
     [
       l,
       i18n,
-      agent,
+      pdsClient,
+      currentDispatchUrl,
       currentDid,
       composerDispatch,
       ax.metric,
@@ -661,7 +669,8 @@ export const ComposePost = ({
               },
             })
           },
-          agent,
+          pdsClient,
+          currentDispatchUrl,
           currentDid,
           abortController.signal,
           i18n,
@@ -677,7 +686,8 @@ export const ComposePost = ({
     [
       l,
       i18n,
-      agent,
+      pdsClient,
+      currentDispatchUrl,
       currentDid,
       composerDispatch,
       ax.metric,

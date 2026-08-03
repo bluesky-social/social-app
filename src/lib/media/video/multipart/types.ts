@@ -1,3 +1,5 @@
+import {type app} from '#/lexicons'
+
 /**
  * One part of a multipart upload. `partNumber` is 1-indexed to match the S3
  * convention the backend uses.
@@ -57,13 +59,13 @@ export type UploadStatusResponse = {
   expiresAt: string
   state: UploadState
   completedJobId?: string
-  jobStatus?: import('@atproto/api').AppBskyVideoDefs.JobStatus
+  jobStatus?: app.bsky.video.defs.JobStatus
   failureReason?: string
 }
 
 export type FinishUploadResponse = {
   completedJobId: string
-  jobStatus: import('@atproto/api').AppBskyVideoDefs.JobStatus
+  jobStatus: app.bsky.video.defs.JobStatus
 }
 
 export type AbortUploadResponse = Pick<
