@@ -308,7 +308,53 @@ function useHLS({
         ) {
           setError(new VideoNotFoundError())
         } else {
-          setError(new HLSFatalError(data.details, data.error))
+          const video = videoRef.current
+          const mediaError = video?.error
+          setError(
+            new HLSFatalError({
+              detail: data.details,
+              type: data.type,
+              cause: data.error,
+              diagnostics: {
+                hlsError: {
+                  detail: data.details,
+                  type: data.type,
+                  sourceBufferName: data.sourceBufferName,
+                  parent: data.parent,
+                  reason: data.reason,
+                  errorName: data.error.name,
+                  errorCode: (data.error as DOMException).code,
+                },
+                fragment: data.frag
+                  ? {
+                      sn: data.frag.sn,
+                      level: data.frag.level,
+                      type: data.frag.type,
+                      start: data.frag.start,
+                      duration: data.frag.duration,
+                      cc: data.frag.cc,
+                    }
+                  : undefined,
+                media: video
+                  ? {
+                      errorCode: mediaError?.code,
+                      errorMessage: mediaError?.message,
+                      readyState: video.readyState,
+                      networkState: video.networkState,
+                      currentTime: video.currentTime,
+                      paused: video.paused,
+                      ended: video.ended,
+                      seeking: video.seeking,
+                    }
+                  : undefined,
+                lifecycle: {
+                  documentVisibility: document.visibilityState,
+                  hlsIsCurrent: hlsRef.current === hls,
+                },
+                playlist,
+              },
+            }),
+          )
         }
       } else {
         console.error(data.error)
