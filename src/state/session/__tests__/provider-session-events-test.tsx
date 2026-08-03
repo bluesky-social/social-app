@@ -242,6 +242,36 @@ function dyingData(refreshJwt: string): SessionData {
   }
 }
 
+/** The rotated payload PasswordSession threads through its `onUpdated` hook. */
+function refreshedData(
+  refreshJwt: string,
+  didDoc?: SessionData['didDoc'],
+): SessionData {
+  return {
+    accessJwt: 'fresh-access-jwt',
+    refreshJwt,
+    handle: 'alice.test',
+    did: DID,
+    active: true,
+    service: SERVICE,
+    ...(didDoc ? {didDoc} : {}),
+  }
+}
+
+/** A minimal valid DID document whose only service entry is a PDS. */
+function makeDidDoc(pdsUrl: string): SessionData['didDoc'] {
+  return {
+    id: DID,
+    service: [
+      {
+        id: '#atproto_pds',
+        type: 'AtprotoPersonalDataServer',
+        serviceEndpoint: pdsUrl,
+      },
+    ],
+  }
+}
+
 beforeEach(() => {
   mockPersisted.session = {accounts: [], currentAccount: undefined}
   mockPersisted.latest = {accounts: [], currentAccount: undefined}
@@ -363,6 +393,59 @@ describe('expiry rescue', () => {
     expect(mockRebuilds.length).toBe(1)
     expect(mockEmitSessionDropped).toHaveBeenCalledTimes(1)
     expect(hasSession()).toBe(false)
+  })
+})
+
+/*
+ * A refresh payload only carries a didDoc when the server sends one, but
+ * `pdsUrl` is never derived from the login service. If the provider does not
+ * thread the stored value through, an ordinary refresh persists
+ * `pdsUrl: undefined` and the next cold start routes pre-refresh requests to
+ * the entryway instead of the account's PDS.
+ */
+describe('refresh persistence', () => {
+  const PDS_HOST = 'https://shimeji.us-east.host.bsky.network'
+  const DIDDOC_PDS_HOST = 'https://morel.us-west.host.bsky.network'
+
+  it('keeps the stored pdsUrl when the refresh carries no didDoc', async () => {
+    const account = makeAccount({pdsUrl: `${PDS_HOST}/`})
+    const bundle = makeBundle(account)
+    const {onSessionChange, currentAccount} = await renderLoggedIn(
+      account,
+      bundle,
+    )
+
+    act(() => {
+      onSessionChange(
+        bundle as unknown as SessionBundle,
+        DID,
+        'update',
+        refreshedData('refresh-jwt-2'),
+      )
+    })
+
+    expect(currentAccount()?.refreshJwt).toBe('refresh-jwt-2')
+    expect(currentAccount()?.pdsUrl).toBe(`${PDS_HOST}/`)
+  })
+
+  it('prefers the didDoc endpoint over the stored pdsUrl', async () => {
+    const account = makeAccount({pdsUrl: `${PDS_HOST}/`})
+    const bundle = makeBundle(account)
+    const {onSessionChange, currentAccount} = await renderLoggedIn(
+      account,
+      bundle,
+    )
+
+    act(() => {
+      onSessionChange(
+        bundle as unknown as SessionBundle,
+        DID,
+        'update',
+        refreshedData('refresh-jwt-2', makeDidDoc(DIDDOC_PDS_HOST)),
+      )
+    })
+
+    expect(currentAccount()?.pdsUrl).toBe(`${DIDDOC_PDS_HOST}/`)
   })
 })
 
