@@ -23,6 +23,7 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {
+  hasThreadItemPostNumber,
   ThreadItemPostNumber,
   type ThreadItemPostNumbering,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
@@ -262,6 +263,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 
   const post = item.value.post
   const record = item.value.post.record
+  const postNumbering = item.value as ThreadItemPostNumbering
   const moderation = item.moderation
   const richText = useMemo(
     () =>
@@ -331,20 +333,15 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
           interpretFilterAsBlur>
           <ThreadItemTreePostInnerWrapper item={item}>
             <View style={[a.flex_1]}>
-              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                <PostMeta
-                  author={post.author}
-                  moderation={moderation}
-                  timestamp={post.indexedAt}
-                  postHref={postHref}
-                  avatarSize={TREE_AVI_WIDTH}
-                  style={[a.pb_0]}
-                  showAvatar
-                />
-                <ThreadItemPostNumber
-                  value={item.value as ThreadItemPostNumbering}
-                />
-              </View>
+              <PostMeta
+                author={post.author}
+                moderation={moderation}
+                timestamp={post.indexedAt}
+                postHref={postHref}
+                avatarSize={TREE_AVI_WIDTH}
+                style={[a.pb_0]}
+                showAvatar
+              />
               <View style={[a.flex_row]}>
                 <ThreadItemTreeReplyChildReplyLine item={item} />
                 <View style={[a.flex_1, a.pl_2xs]}>
@@ -363,6 +360,11 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                         numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                         authorHandle={post.author.handle}
                         shouldProxyLinks={true}
+                        suffix={
+                          hasThreadItemPostNumber(postNumbering) ? (
+                            <ThreadItemPostNumber value={postNumbering} />
+                          ) : undefined
+                        }
                       />
                       {limitLines && (
                         <ShowMoreTextButton
@@ -371,7 +373,9 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                         />
                       )}
                     </View>
-                  ) : null}
+                  ) : (
+                    <ThreadItemPostNumber value={postNumbering} />
+                  )}
                   <TranslatedPost hideTranslateLink post={post} />
                   {post.embed && (
                     <View style={[a.pb_xs]}>

@@ -31,6 +31,7 @@ import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {KnownLikers, LikesStat} from '#/screens/PostThread/components/LikesStat'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
+  hasThreadItemPostNumber,
   ThreadItemPostNumber,
   type ThreadItemPostNumbering,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
@@ -188,6 +189,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 
   const post = postShadow
   const record = item.value.post.record
+  const postNumbering = item.value as ThreadItemPostNumbering
   const moderation = item.moderation
   const authorShadow = useProfileShadow(post.author)
   const {isActive: live} = useActorStatus(post.author)
@@ -377,11 +379,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               </View>
             </Link>
             <View collapsable={false} style={[a.self_center]}>
-              <ThreadItemPostNumber
-                value={item.value as ThreadItemPostNumbering}
-              />
-            </View>
-            <View collapsable={false} style={[a.self_center]}>
               <ThreadItemAnchorFollowButton
                 did={post.author.did}
                 enabled={showFollowButton}
@@ -409,8 +406,15 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   style={[a.flex_1, a.text_lg]}
                   authorHandle={post.author.handle}
                   shouldProxyLinks={true}
+                  suffix={
+                    hasThreadItemPostNumber(postNumbering) ? (
+                      <ThreadItemPostNumber value={postNumbering} />
+                    ) : undefined
+                  }
                 />
-              ) : undefined}
+              ) : (
+                <ThreadItemPostNumber value={postNumbering} />
+              )}
               <TranslatedPost post={post} postTextStyle={[a.text_lg]} />
               {post.embed && (
                 <View style={[richText?.text ? a.py_xs : []]}>

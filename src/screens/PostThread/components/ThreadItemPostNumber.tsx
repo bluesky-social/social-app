@@ -1,12 +1,24 @@
-import {View} from 'react-native'
+import {Text, View} from 'react-native'
 
-import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
+import {atoms as a, native, platform, useTheme} from '#/alf'
 
 // TODO: Remove this mock once @atproto/api includes these lexicon fields.
 export type ThreadItemPostNumbering = {
   opThreadPostIndex?: number
   opThreadPostCount?: number
+}
+
+export function hasThreadItemPostNumber(value: ThreadItemPostNumbering) {
+  const index = value.opThreadPostIndex
+  const count = value.opThreadPostCount
+
+  return (
+    index !== undefined &&
+    count !== undefined &&
+    index >= 1 &&
+    count >= 1 &&
+    index <= count
+  )
 }
 
 export function ThreadItemPostNumber({
@@ -18,13 +30,7 @@ export function ThreadItemPostNumber({
   const index = value.opThreadPostIndex
   const count = value.opThreadPostCount
 
-  if (
-    index === undefined ||
-    count === undefined ||
-    index < 1 ||
-    count < 1 ||
-    index > count
-  ) {
+  if (!hasThreadItemPostNumber(value)) {
     return null
   }
 
@@ -33,11 +39,26 @@ export function ThreadItemPostNumber({
       style={[
         a.flex_shrink_0,
         a.rounded_full,
-        a.px_sm,
-        a.py_2xs,
-        t.atoms.bg_contrast_25,
+        t.atoms.bg_contrast_50,
+        native(a.py_2xs),
+        {
+          paddingLeft: 5,
+          paddingRight: 5,
+        },
+        platform({
+          native: {transform: [{translateY: 6}]},
+          web: {top: -2},
+        }),
       ]}>
-      <Text style={[a.text_xs, a.font_semi_bold, t.atoms.text_contrast_medium]}>
+      <Text
+        style={[
+          a.text_xs,
+          a.font_medium,
+          t.atoms.text_contrast_high,
+          {
+            fontVariant: ['tabular-nums'],
+          },
+        ]}>
         {index}/{count}
       </Text>
     </View>

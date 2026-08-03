@@ -1,4 +1,4 @@
-import {useMemo} from 'react'
+import {type ReactNode, useMemo} from 'react'
 import {type StyleProp, type TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 
@@ -27,6 +27,7 @@ export type RichTextProps = TextStyleProp &
     interactiveStyle?: StyleProp<TextStyle>
     emojiMultiplier?: number
     shouldProxyLinks?: boolean
+    suffix?: ReactNode
     /**
      * DANGEROUS: Disable facet lexicon validation
      *
@@ -54,6 +55,7 @@ export function RichText({
   onLayout,
   onTextLayout,
   shouldProxyLinks,
+  suffix,
   disableMentionFacetValidation,
 }: RichTextProps) {
   const richText = useMemo(() => {
@@ -87,6 +89,8 @@ export function RichText({
           // @ts-ignore web only -prf
           dataSet={WORD_WRAP}>
           {text}
+          {suffix ? ' ' : null}
+          {suffix}
         </Text>
       )
     }
@@ -102,6 +106,8 @@ export function RichText({
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
         {text}
+        {suffix ? ' ' : null}
+        {suffix}
       </Text>
     )
   }
@@ -188,6 +194,8 @@ export function RichText({
       // @ts-ignore web only -prf
       dataSet={WORD_WRAP}>
       {els}
+      {suffix ? ' ' : null}
+      {suffix}
     </Text>
   )
 }

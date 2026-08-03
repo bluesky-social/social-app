@@ -24,6 +24,7 @@ import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replie
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {
+  hasThreadItemPostNumber,
   ThreadItemPostNumber,
   type ThreadItemPostNumbering,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
@@ -200,6 +201,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 
   const post = item.value.post
   const record = item.value.post.record
+  const postNumbering = item.value as ThreadItemPostNumbering
   const moderation = item.moderation
   const richText = useMemo(
     () =>
@@ -299,25 +301,20 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
             </View>
 
             <View style={[a.flex_1]}>
-              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                <PostMeta
-                  author={post.author}
-                  moderation={moderation}
-                  timestamp={post.indexedAt}
-                  postHref={postHref}
-                  style={[
-                    a.pb_xs,
-                    maybeApplyGalleryOffsetStyles('meta', {
-                      post,
-                      modui: moderation.ui('contentList'),
-                      additionalCauses: additionalPostAlerts,
-                    }),
-                  ]}
-                />
-                <ThreadItemPostNumber
-                  value={item.value as ThreadItemPostNumbering}
-                />
-              </View>
+              <PostMeta
+                author={post.author}
+                moderation={moderation}
+                timestamp={post.indexedAt}
+                postHref={postHref}
+                style={[
+                  a.pb_xs,
+                  maybeApplyGalleryOffsetStyles('meta', {
+                    post,
+                    modui: moderation.ui('contentList'),
+                    additionalCauses: additionalPostAlerts,
+                  }),
+                ]}
+              />
               <PostAlerts
                 post={post}
                 modui={moderation.ui('contentList')}
@@ -333,6 +330,11 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}
                     shouldProxyLinks={true}
+                    suffix={
+                      hasThreadItemPostNumber(postNumbering) ? (
+                        <ThreadItemPostNumber value={postNumbering} />
+                      ) : undefined
+                    }
                   />
                   {limitLines && (
                     <ShowMoreTextButton
@@ -341,7 +343,9 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                     />
                   )}
                 </View>
-              ) : undefined}
+              ) : (
+                <ThreadItemPostNumber value={postNumbering} />
+              )}
               <TranslatedPost hideTranslateLink post={post} />
               {post.embed && (
                 <View
