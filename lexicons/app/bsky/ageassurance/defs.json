@@ -155,6 +155,18 @@
           },
           "description": "The ordered list of Age Assurance rules that apply to this region. Rules should be applied in order, and the first matching rule determines the access level granted. The rules array should always include a default rule as the last item."
         },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "knownValues": [
+              "web",
+              "ios",
+              "android"
+            ]
+          },
+          "description": "The platforms this configuration applies to. If omitted, the configuration applies to all platforms."
+        },
         "regionCode": {
           "type": "string",
           "description": "The ISO 3166-2 region code this configuration applies to. If omitted, the configuration applies to the entire country."

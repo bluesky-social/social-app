@@ -35,6 +35,14 @@
           "actor"
         ],
         "properties": {
+          "sort": {
+            "type": "string",
+            "description": "Sort order of the returned followers.",
+            "knownValues": [
+              "latest",
+              "top"
+            ]
+          },
           "actor": {
             "type": "string",
             "format": "at-identifier"
