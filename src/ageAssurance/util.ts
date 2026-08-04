@@ -46,18 +46,23 @@ export function getAgeAssuranceRegionConfigForGeolocation(
   geolocation: Geolocation,
 ): app.bsky.ageassurance.defs.ConfigRegion | undefined {
   /*
-   * The SDK's region matcher takes no `platform` filter (and the generated
-   * `ConfigRegion` carries no `platforms` field yet), so platform scoping is
-   * applied here: regions restricted to other platforms are dropped before
-   * matching, which is what passing `platform` to the old api helper did.
-   * Fold this back into the SDK call once it accepts a platform.
+   * The SDK's region matcher takes no `platform` filter, so platform scoping
+   * is applied here: regions restricted to other platforms are dropped before
+   * matching. Once the SDK accepts a platform, this whole function body
+   * collapses to:
+   *
+   *   return getAgeAssuranceRegionConfig(config, {
+   *     countryCode: geolocation.countryCode ?? '',
+   *     regionCode: geolocation.regionCode,
+   *     platform: AGE_ASSURANCE_PLATFORM,
+   *   })
    */
   const scoped: app.bsky.ageassurance.defs.Config = {
     ...config,
-    regions: config.regions.filter(region => {
-      const platforms = (region as {platforms?: string[]}).platforms
-      return !platforms || platforms.includes(AGE_ASSURANCE_PLATFORM)
-    }),
+    regions: config.regions.filter(
+      region =>
+        !region.platforms || region.platforms.includes(AGE_ASSURANCE_PLATFORM),
+    ),
   }
   return getAgeAssuranceRegionConfig(scoped, {
     countryCode: geolocation.countryCode ?? '',

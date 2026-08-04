@@ -1,15 +1,6 @@
 import {type app} from '#/lexicons'
 
-/**
- * A `listNotifications` notification, widened with the `starterPack` the server
- * attaches to a `follow` notification sourced from a starter pack. The pinned
- * lexicon does not declare the field yet, so it is added here rather than read
- * off an `unknown`. Drop this alias once the generated type carries it.
- */
-export type Notification =
-  app.bsky.notification.listNotifications.Notification & {
-    starterPack?: app.bsky.graph.defs.StarterPackViewBasic
-  }
+export type Notification = app.bsky.notification.listNotifications.Notification
 
 export type NotificationType =
   | StarterPackNotificationType

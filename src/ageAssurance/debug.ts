@@ -55,11 +55,6 @@ export const config: app.bsky.ageassurance.defs.Config = {
         }),
       ],
     },
-    /*
-     * `platforms` is not in the generated `ConfigRegion` yet (the server sends
-     * it and `getAgeAssuranceRegionConfigForGeolocation` reads it), so this
-     * fixture asserts the shape until the lexicon carries the field.
-     */
     {
       // On-device verification region, native-only (web users in TX are not
       // age assured). KWS is included as a fallback for when the device
@@ -78,7 +73,7 @@ export const config: app.bsky.ageassurance.defs.Config = {
           access: 'none',
         }),
       ],
-    } as app.bsky.ageassurance.defs.ConfigRegion,
+    },
     {
       countryCode: 'GB',
       minAccessAge: 13,

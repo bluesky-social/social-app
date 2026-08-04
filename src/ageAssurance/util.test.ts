@@ -12,15 +12,14 @@ describe('getAgeAssuranceRegionConfigForGeolocation', () => {
   const region = (
     countryCode: string,
     regionCode?: string,
-    platforms?: string[],
-  ) =>
-    ({
-      countryCode,
-      regionCode,
-      platforms,
-      minAccessAge: 13,
-      rules: [],
-    }) as app.bsky.ageassurance.defs.ConfigRegion
+    platforms?: app.bsky.ageassurance.defs.ConfigRegion['platforms'],
+  ): app.bsky.ageassurance.defs.ConfigRegion => ({
+    countryCode,
+    regionCode,
+    platforms,
+    minAccessAge: 13,
+    rules: [],
+  })
 
   it('skips regions for other platforms and continues matching', () => {
     const web = region('US', undefined, ['web'])
