@@ -1,11 +1,5 @@
 import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 import * as AgeRange from 'expo-age-range'
-import {
-  type AppBskyAgeassuranceDefs,
-  type AppBskyAgeassuranceGetConfig,
-  type AppBskyAgeassuranceGetState,
-  type ChatBskyActorDeclaration,
-} from '@atproto/api'
 import {type Client} from '@atproto/lex'
 import {getPreferences} from '@bsky.app/sdk'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
@@ -38,7 +32,7 @@ import {
 } from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
 import {useGeolocation} from '#/geolocation'
-import {app} from '#/lexicons'
+import {app, chat} from '#/lexicons'
 import {device} from '#/storage'
 
 /**
@@ -104,12 +98,12 @@ export async function getConfig() {
    */
   return (await getPublicAppviewClient().call(
     app.bsky.ageassurance.getConfig,
-  )) as AppBskyAgeassuranceGetConfig.OutputSchema
+  )) as app.bsky.ageassurance.getConfig.$OutputBody
 }
 export function getConfigFromCache():
-  | AppBskyAgeassuranceGetConfig.OutputSchema
+  | app.bsky.ageassurance.getConfig.$OutputBody
   | undefined {
-  return qc.getQueryData<AppBskyAgeassuranceGetConfig.OutputSchema>(
+  return qc.getQueryData<app.bsky.ageassurance.getConfig.$OutputBody>(
     configQueryKey,
   )
 }
@@ -130,7 +124,7 @@ export function prefetchConfig() {
       try {
         logger.debug(`prefetchAgeAssuranceConfig: resolving...`)
         const res = await networkRetry(3, () => getConfig())
-        qc.setQueryData<AppBskyAgeassuranceGetConfig.OutputSchema>(
+        qc.setQueryData<app.bsky.ageassurance.getConfig.$OutputBody>(
           configQueryKey,
           res,
         )
@@ -146,7 +140,7 @@ export function prefetchConfig() {
 export async function refetchConfig() {
   logger.debug(`refetchConfig: fetching...`)
   const res = await getConfig()
-  qc.setQueryData<AppBskyAgeassuranceGetConfig.OutputSchema>(
+  qc.setQueryData<app.bsky.ageassurance.getConfig.$OutputBody>(
     configQueryKey,
     res,
   )
@@ -216,8 +210,8 @@ export function getServerStateFromCache({
   did,
 }: {
   did: string
-}): AppBskyAgeassuranceGetState.OutputSchema | undefined {
-  return qc.getQueryData<AppBskyAgeassuranceGetState.OutputSchema>(
+}): app.bsky.ageassurance.getState.$OutputBody | undefined {
+  return qc.getQueryData<app.bsky.ageassurance.getState.$OutputBody>(
     createServerStateQueryKey({did}),
   )
 }
@@ -243,7 +237,7 @@ export async function prefetchServerState({
     logger.debug(`prefetchServerState: resolving...`)
     const res = await networkRetry(3, () => getServerState({appviewClient}))
     if (res) {
-      qc.setQueryData<AppBskyAgeassuranceGetState.OutputSchema>(qk, res)
+      qc.setQueryData<app.bsky.ageassurance.getState.$OutputBody>(qk, res)
     }
   } catch (err) {
     const e = err as Error
@@ -262,7 +256,7 @@ export async function refetchServerState({
   logger.debug(`refetchServerState: fetching...`)
   const res = await networkRetry(3, () => getServerState({appviewClient}))
   if (res) {
-    qc.setQueryData<AppBskyAgeassuranceGetState.OutputSchema>(
+    qc.setQueryData<app.bsky.ageassurance.getState.$OutputBody>(
       createServerStateQueryKey({did}),
       res,
     )
@@ -272,16 +266,16 @@ export async function refetchServerState({
 export function usePatchServerState() {
   const {currentAccount} = useSession()
   return useCallback(
-    (next: AppBskyAgeassuranceDefs.State) => {
+    (next: app.bsky.ageassurance.defs.State) => {
       if (!currentAccount) return
       const did = currentAccount.did
       const prev = getServerStateFromCache({did})
-      const merged: AppBskyAgeassuranceGetState.OutputSchema = {
+      const merged: app.bsky.ageassurance.getState.$OutputBody = {
         metadata: {},
         ...(prev || {}),
         state: next,
       }
-      qc.setQueryData<AppBskyAgeassuranceGetState.OutputSchema>(
+      qc.setQueryData<app.bsky.ageassurance.getState.$OutputBody>(
         createServerStateQueryKey({did}),
         merged,
       )
@@ -347,7 +341,7 @@ export function useServerStateQuery() {
 
 export type OtherRequiredData = {
   birthdate: string | undefined
-  actorDeclaration?: ChatBskyActorDeclaration.Main
+  actorDeclaration?: chat.bsky.actor.declaration.Main
 }
 export function createOtherRequiredDataQueryKey({did}: {did: string}) {
   return ['otherRequiredData', did]
@@ -422,7 +416,7 @@ export function setOtherRequiredDataActorDeclarationCache({
   actorDeclaration,
 }: {
   did: string
-  actorDeclaration: ChatBskyActorDeclaration.Main
+  actorDeclaration: chat.bsky.actor.declaration.Main
 }) {
   const prev = getOtherRequiredDataFromCache({did})
   const next: OtherRequiredData = {
@@ -564,7 +558,7 @@ export function getDeviceSignalsFromCacheForRegion({
   region,
 }: {
   did: string
-  region: AppBskyAgeassuranceDefs.ConfigRegion
+  region: app.bsky.ageassurance.defs.ConfigRegion
 }): AgeRange.AgeRangeResponse | undefined {
   const regionKey = createRegionKey(region)
   return getDeviceSignalsMapFromCache({did})?.[regionKey]
@@ -718,11 +712,11 @@ export type AgeAssuranceServerData = {
   /**
    * The raw config from the appview.
    */
-  config: AppBskyAgeassuranceDefs.Config | undefined
+  config: app.bsky.ageassurance.defs.Config | undefined
   /**
    * The raw state from the appview. Must be further processed before being useful.
    */
-  state: AppBskyAgeassuranceDefs.State | undefined
+  state: app.bsky.ageassurance.defs.State | undefined
   metadata: AgeAssuranceMetadata | undefined
   /**
    * The native on-device age signals for the region the user is currently in,

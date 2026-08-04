@@ -1,10 +1,8 @@
 import {useEffect, useMemo, useState} from 'react'
 import type * as AgeRange from 'expo-age-range'
-import {
-  type AppBskyAgeassuranceDefs,
-  computeAgeAssuranceRegionAccess,
-} from '@atproto/api'
+import {computeAgeAssuranceRegionAccess} from '@bsky.app/sdk/utils'
 
+import {type app} from '#/lexicons'
 import {getAge} from '#/lib/strings/time'
 import {useSession} from '#/state/session'
 import {
@@ -47,8 +45,8 @@ function computeAgeAssuranceState({
 }: {
   hasSession: boolean
   geolocation: Geolocation
-  config?: AppBskyAgeassuranceDefs.Config
-  state?: AppBskyAgeassuranceDefs.State
+  config?: app.bsky.ageassurance.defs.Config
+  state?: app.bsky.ageassurance.defs.State
   metadata?: AgeAssuranceMetadata
   deviceSignals?: AgeRange.AgeRangeResponse
 }) {
