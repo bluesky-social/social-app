@@ -1,4 +1,5 @@
 import {Text, View} from 'react-native'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, native, platform, useTheme} from '#/alf'
 
@@ -29,6 +30,7 @@ export function ThreadItemPostNumber({
   inline?: boolean
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
   const index = value.opThreadPostIndex
   const count = value.opThreadPostCount
 
@@ -55,6 +57,13 @@ export function ThreadItemPostNumber({
           : {top: -2},
       ]}>
       <Text
+        accessibilityLabel={l({
+          message: `Post ${index} of ${count}`,
+          context: 'post-number-in-thread',
+          comment:
+            "Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5",
+        })}
+        accessibilityHint=""
         style={[
           a.text_xs,
           a.font_medium,
@@ -63,7 +72,11 @@ export function ThreadItemPostNumber({
             fontVariant: ['tabular-nums'],
           },
         ]}>
-        {index}/{count}
+        <Trans
+          context="post-number-in-thread"
+          comment="Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'">
+          {index}/{count}
+        </Trans>
       </Text>
     </View>
   )
