@@ -144,9 +144,8 @@ export function useSaveDraftMutation() {
         composerState,
       )
       /*
-       * `composerStateToDraft` builds the draft against the `@atproto/api`
-       * types, whose string fields are unbranded, so it is asserted once here
-       * to the vendored input type.
+       * `composerStateToDraft` builds the draft with unbranded string fields,
+       * so it is asserted once here to the generated input type.
        */
       const draft = apiDraft as unknown as app.bsky.draft.defs.Draft
 

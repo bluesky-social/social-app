@@ -568,9 +568,8 @@ export function MessagesList({
             embed = {
               $type: 'app.bsky.embed.record',
               /*
-               * `getPost` still returns an `@atproto/api` view, whose `uri` and
-               * `cid` are plain strings rather than the branded syntax types
-               * the lexicon input declares.
+               * `getPost` hands back `uri` and `cid` as plain strings rather
+               * than the branded syntax types the lexicon input declares.
                */
               record: {
                 uri: post.uri,

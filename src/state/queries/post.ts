@@ -45,8 +45,7 @@ export function usePostQuery(uri: string | undefined) {
  * Read one post by AT-URI, resolving a handle authority first when the URI
  * carries one.
  *
- * The appview still answers with `@atproto/api`-shaped views for the callers of
- * these hooks, so the generated view is asserted across at this single
+ * The appview response is asserted to the generated view at this single
  * boundary rather than at every consumer.
  */
 async function fetchPost(
