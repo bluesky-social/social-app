@@ -933,17 +933,6 @@
       "count": 1
     }
   },
-  "src/screens/Onboarding/StepInterests/index.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
-    },
-    "typescript/require-await": {
-      "count": 1
-    }
-  },
   "src/screens/Onboarding/StepProfile/index.tsx": {
     "typescript/no-floating-promises": {
       "count": 2

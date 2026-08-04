@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {Pressable, View} from 'react-native'
+import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {interests, useInterestsDisplayNames} from '#/lib/interests'
@@ -17,7 +17,7 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
-import * as Toast from '#/components/Toast'
+import * as Tooltip from '#/components/Tooltip'
 import {useAnalytics} from '#/analytics'
 
 export function StepInterests() {
@@ -27,6 +27,7 @@ export function StepInterests() {
 
   const {state, dispatch} = useOnboardingInternalState()
   const [saving, setSaving] = useState(false)
+  const [tooltipVisible, setTooltipVisible] = useState(false)
   const [selectedInterests, setSelectedInterests] = useState<string[]>(
     state.interestsStepResults.selectedInterests.map(i => i),
   )
@@ -34,13 +35,19 @@ export function StepInterests() {
    * Behind this gate, users must choose at least one interest before they can
    * continue.
    */
-  const interestRequired = ax.features.enabled(
+  const interestRequired = !ax.features.enabled(
     ax.features.OnboardingInterestsRequiredEnable,
   )
   const missingRequiredInterest =
     interestRequired && selectedInterests.length === 0
 
-  const saveInterests = useCallback(async () => {
+  const onVisibleChange = (visible: boolean) => {
+    if (!missingRequiredInterest) return
+    ax.metric('onboarding:interests:disabledNextPressed', {})
+    setTooltipVisible(visible)
+  }
+
+  const saveInterests = useCallback(() => {
     setSaving(true)
 
     try {
@@ -54,8 +61,9 @@ export function StepInterests() {
         selectedInterests,
         selectedInterestsLength: selectedInterests.length,
       })
-    } catch (e: any) {
-      logger.info(`onboading: error saving interests`)
+    } catch (error) {
+      const e = error as Error
+      logger.info(`onboarding: error saving interests`)
       logger.error(e)
     }
   }, [ax, selectedInterests, setSaving, dispatch])
@@ -97,44 +105,37 @@ export function StepInterests() {
 
       <OnboardingControls.Portal>
         <View style={[a.relative]}>
-          <Button
-            disabled={saving || missingRequiredInterest}
-            testID="onboardingContinue"
-            variant="solid"
+          <Tooltip.Outer
             color="primary"
-            size="large"
-            label={
-              missingRequiredInterest
-                ? l`Choose an interest`
-                : l`Continue to next step`
-            }
-            onPress={saveInterests}>
-            <ButtonText>
-              {missingRequiredInterest ? (
-                <Trans>Choose an interest</Trans>
-              ) : (
-                <Trans>Continue</Trans>
-              )}
-            </ButtonText>
-            {saving && <ButtonIcon icon={Loader} />}
-          </Button>
-          {missingRequiredInterest && (
-            /*
-             * A disabled button receives no touch events, so this invisible
-             * overlay catches taps on it to explain why it is disabled.
-             */
-            <Pressable
-              accessible={false}
-              focusable={false}
-              style={[a.absolute, a.inset_0]}
-              onPress={() => {
-                Toast.show(l`Choose at least one interest.`, {
-                  position: 'top-center',
-                })
-                ax.metric('onboarding:interests:disabledNextPressed', {})
-              }}
-            />
-          )}
+            visible={tooltipVisible}
+            onVisibleChange={onVisibleChange}>
+            <Tooltip.Target>
+              <Button
+                disabled={saving || missingRequiredInterest}
+                testID="onboardingContinue"
+                variant="solid"
+                color="primary"
+                size="large"
+                label={
+                  missingRequiredInterest
+                    ? l`Choose an interest`
+                    : l`Continue to next step`
+                }
+                onPress={() => void saveInterests()}>
+                <ButtonText style={{pointerEvents: 'none'}}>
+                  {missingRequiredInterest ? (
+                    <Trans>Choose an interest</Trans>
+                  ) : (
+                    <Trans>Continue</Trans>
+                  )}
+                </ButtonText>
+                {saving && <ButtonIcon icon={Loader} />}
+              </Button>
+            </Tooltip.Target>
+            <Tooltip.BubbleText label={l`Beta features enabled`}>
+              <Trans>Choose at least one interest.</Trans>
+            </Tooltip.BubbleText>
+          </Tooltip.Outer>
         </View>
       </OnboardingControls.Portal>
     </View>
