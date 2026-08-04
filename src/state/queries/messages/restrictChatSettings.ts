@@ -3,7 +3,6 @@ import {type Client} from '@atproto/lex'
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import {
-  getDidFromClient,
   getOtherRequiredDataFromCache,
   setOtherRequiredDataActorDeclarationCache,
 } from '#/ageAssurance/data'
@@ -32,7 +31,7 @@ export async function restrictChatSettings({
   restrictIncoming?: boolean
   restrictGroupInvites?: boolean
 }): Promise<void> {
-  const did = getDidFromClient(client)
+  const did = client.did
   if (!did) return
 
   const cached = getOtherRequiredDataFromCache({did})?.actorDeclaration

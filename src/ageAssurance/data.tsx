@@ -7,7 +7,6 @@ import {
   AtpAgent,
   type ChatBskyActorDeclaration,
 } from '@atproto/api'
-import {type Client} from '@atproto/lex'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {focusManager, QueryClient, useQuery} from '@tanstack/react-query'
 import {persistQueryClient} from '@tanstack/react-query-persist-client'
@@ -68,17 +67,6 @@ export function getDidFromAgentSession(agent: AtpAgent) {
   const sessionManager = agent.sessionManager
   if (!sessionManager || !sessionManager.did) return
   return sessionManager.did
-}
-
-/**
- * Reads the active account did from a lex {@link Client}. Logged-out clients
- * expose `did: undefined`, so this returns undefined in that case.
- *
- * Lives alongside {@link getDidFromAgentSession} rather than replacing it: the
- * rest of this file is still agent-shaped and blocked on `getPreferences`.
- */
-export function getDidFromClient(client: Client) {
-  return client.did
 }
 
 /*
