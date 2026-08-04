@@ -1,8 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {interests, useInterestsDisplayNames} from '#/lib/interests'
 import {capitalize} from '#/lib/strings/capitalize'
@@ -22,7 +20,7 @@ import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/analytics'
 
 export function StepInterests() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const interestsDisplayNames = useInterestsDisplayNames()
 
@@ -31,6 +29,15 @@ export function StepInterests() {
   const [selectedInterests, setSelectedInterests] = useState<string[]>(
     state.interestsStepResults.selectedInterests.map(i => i),
   )
+  /*
+   * Behind this gate, users must choose at least one interest before they can
+   * continue.
+   */
+  const interestRequired = ax.features.enabled(
+    ax.features.OnboardingInterestsRequiredEnable,
+  )
+  const missingRequiredInterest =
+    interestRequired && selectedInterests.length === 0
 
   const saveInterests = useCallback(async () => {
     setSaving(true)
@@ -59,14 +66,20 @@ export function StepInterests() {
         <Trans>What are your interests?</Trans>
       </OnboardingTitleText>
       <OnboardingDescriptionText>
-        <Trans>We'll use this to help customize your experience.</Trans>
+        {interestRequired ? (
+          <Trans>
+            Choose at least one. We'll use this to customize your experience.
+          </Trans>
+        ) : (
+          <Trans>We'll use this to help customize your experience.</Trans>
+        )}
       </OnboardingDescriptionText>
 
       <View style={[a.w_full, a.pt_lg]}>
         <Toggle.Group
           values={selectedInterests}
           onChange={setSelectedInterests}
-          label={_(msg`Select your interests from the options below`)}>
+          label={l`Select your interests from the options below`}>
           <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
             {interests.map(interest => (
               <Toggle.Item
@@ -82,15 +95,23 @@ export function StepInterests() {
 
       <OnboardingControls.Portal>
         <Button
-          disabled={saving}
+          disabled={saving || missingRequiredInterest}
           testID="onboardingContinue"
           variant="solid"
           color="primary"
           size="large"
-          label={_(msg`Continue to next step`)}
+          label={
+            missingRequiredInterest
+              ? l`Choose an interest`
+              : l`Continue to next step`
+          }
           onPress={saveInterests}>
           <ButtonText>
-            <Trans>Continue</Trans>
+            {missingRequiredInterest ? (
+              <Trans>Choose an interest</Trans>
+            ) : (
+              <Trans>Continue</Trans>
+            )}
           </ButtonText>
           {saving && <ButtonIcon icon={Loader} />}
         </Button>
