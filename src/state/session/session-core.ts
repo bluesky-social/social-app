@@ -114,13 +114,19 @@ export type OnSessionChange = (
 /**
  * Hooks stay inert during initial session preparation. `kill()` disarms them
  * and disables the injected fetch so a disposed session cannot refresh or
- * dispatch. The bundle getters are deferred because hooks are created first.
+ * dispatch.
  */
-export function makeSessionHooks(
-  onSessionChange: OnSessionChange,
-  getBundle: () => SessionBundle,
-  getDid: () => string,
-) {
+export function makeSessionHooks({
+  onSessionChange,
+  getBundle,
+  getDid,
+}: {
+  onSessionChange: OnSessionChange
+  /** Deferred: hooks are created before the bundle exists. */
+  getBundle: () => SessionBundle
+  /** Deferred: hooks are created before the bundle exists. */
+  getDid: () => string
+}) {
   let armed = false
   let killed = false
   const dispatch = (event: AtpSessionEvent, sessionData?: SessionData) => {
@@ -247,11 +253,11 @@ export async function createSessionBundleAndResume(
 ): Promise<{account: SessionAccount; bundle: SessionBundle}> {
   const gates = features.refresh({strategy: 'prefer-low-latency'})
   let bundle!: SessionBundle
-  const hooks = makeSessionHooks(
+  const hooks = makeSessionHooks({
     onSessionChange,
-    () => bundle,
-    () => storedAccount.did,
-  )
+    getBundle: () => bundle,
+    getDid: () => storedAccount.did,
+  })
 
   let session: PasswordSession
   const sessionData = sessionAccountToSessionData(storedAccount)
@@ -326,11 +332,11 @@ export async function createSessionBundleAndLogin(
 ): Promise<{account: SessionAccount; bundle: SessionBundle}> {
   let bundle!: SessionBundle
   let accountDid = ''
-  const hooks = makeSessionHooks(
+  const hooks = makeSessionHooks({
     onSessionChange,
-    () => bundle,
-    () => accountDid,
-  )
+    getBundle: () => bundle,
+    getDid: () => accountDid,
+  })
 
   const session = await PasswordSession.login({
     ...hooks,
@@ -376,11 +382,11 @@ export function createSessionBundleFromStoredAccount(
   ) => boolean = () => true,
 ): {account: SessionAccount; bundle: SessionBundle} | undefined {
   let bundle!: SessionBundle
-  const hooks = makeSessionHooks(
+  const hooks = makeSessionHooks({
     onSessionChange,
-    () => bundle,
-    () => storedAccount.did,
-  )
+    getBundle: () => bundle,
+    getDid: () => storedAccount.did,
+  })
   const session = new PasswordSession(
     sessionAccountToSessionData(storedAccount),
     hooks,

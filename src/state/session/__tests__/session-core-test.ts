@@ -425,11 +425,11 @@ describe('makeSessionHooks arm-latch + event mapping', () => {
       >()
     /* the hook only passes this through by identity; a stub bundle suffices */
     const bundle = {} as SessionBundle
-    const hooks = makeSessionHooks(
+    const hooks = makeSessionHooks({
       onSessionChange,
-      () => bundle,
-      () => DID,
-    )
+      getBundle: () => bundle,
+      getDid: () => DID,
+    })
     return {onSessionChange, bundle, hooks}
   }
 
@@ -528,11 +528,11 @@ describe('session-hook payload threading (pre-commit ordering)', () => {
         refreshedAccountAtHookTime = deriveRefreshedAccount(event, sessionData)
       },
     )
-    const hooks = makeSessionHooks(
+    const hooks = makeSessionHooks({
       onSessionChange,
-      () => ({}) as SessionBundle,
-      () => DID,
-    )
+      getBundle: () => ({}) as SessionBundle,
+      getDid: () => DID,
+    })
     session = new PasswordSession(sessionAccountToSessionData(makeAccount()), {
       ...hooks,
       fetch: asFetch(fetchMock),
@@ -573,11 +573,11 @@ describe('session-hook payload threading (pre-commit ordering)', () => {
         refreshedAccountAtHookTime = deriveRefreshedAccount(event, sessionData)
       },
     )
-    const hooks = makeSessionHooks(
+    const hooks = makeSessionHooks({
       onSessionChange,
-      () => ({}) as SessionBundle,
-      () => DID,
-    )
+      getBundle: () => ({}) as SessionBundle,
+      getDid: () => DID,
+    })
     const session = new PasswordSession(
       sessionAccountToSessionData(makeAccount()),
       {...hooks, fetch: asFetch(fetchMock)},
@@ -606,11 +606,11 @@ describe('session-hook payload threading (pre-commit ordering)', () => {
  */
 describe('disposeBundle kill-switch', () => {
   it('the injected fetch throws after disposeBundle', () => {
-    const hooks = makeSessionHooks(
-      jest.fn(),
-      () => ({}) as SessionBundle,
-      () => DID,
-    )
+    const hooks = makeSessionHooks({
+      onSessionChange: jest.fn(),
+      getBundle: () => ({}) as SessionBundle,
+      getDid: () => DID,
+    })
     /* the injected fetch is the kill-switch wrapper makeSessionHooks bakes in */
     const injectedFetch = hooks.fetch!
 
@@ -734,11 +734,11 @@ describe('PasswordSession.refresh through armed hooks', () => {
         (bundle: SessionBundle, did: string, event: AtpSessionEvent) => void
       >()
     const bundle = {} as SessionBundle
-    const hooks = makeSessionHooks(
+    const hooks = makeSessionHooks({
       onSessionChange,
-      () => bundle,
-      () => DID,
-    )
+      getBundle: () => bundle,
+      getDid: () => DID,
+    })
     /*
      * makeSessionHooks bakes in networkAwareFetch (the real global fetch);
      * override it with the mock while keeping the arm-latched callbacks (they
@@ -957,11 +957,11 @@ describe('a session destroyed or rejected during preparation', () => {
   })
 
   it('finishPreparation disposes and rethrows without running the snapshot', async () => {
-    const hooks = makeSessionHooks(
-      jest.fn(),
-      () => bundle,
-      () => DID,
-    )
+    const hooks = makeSessionHooks({
+      onSessionChange: jest.fn(),
+      getBundle: () => bundle,
+      getDid: () => DID,
+    })
     const session = new PasswordSession(
       sessionAccountToSessionData(makeAccount()),
       {...hooks, fetch: asFetch(makeMockFetch())},
@@ -997,11 +997,11 @@ describe('a throwing onSessionChange does not brick the session', () => {
       throw new Error('reducer side effect exploded')
     })
     let bundle!: SessionBundle
-    const hooks = makeSessionHooks(
+    const hooks = makeSessionHooks({
       onSessionChange,
-      () => bundle,
-      () => DID,
-    )
+      getBundle: () => bundle,
+      getDid: () => DID,
+    })
     const session = new PasswordSession(
       sessionAccountToSessionData(makeAccount()),
       {...hooks, fetch: asFetch(fetchMock)},
