@@ -1,14 +1,10 @@
 import {createContext, useContext, useMemo, useState} from 'react'
-import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
-} from '@atproto/api'
 import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {app} from '#/lexicons'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {postUriToRelativePath, toBskyAppUrl} from '#/lib/strings/url-helpers'
 import {purgeTemporaryImageFiles} from '#/state/gallery'
@@ -24,15 +20,15 @@ export interface ComposerOptsPostRef {
   cid: string
   text: string
   langs?: string[]
-  author: AppBskyActorDefs.ProfileViewBasic
-  embed?: AppBskyFeedDefs.PostView['embed']
+  author: app.bsky.actor.defs.ProfileViewBasic
+  embed?: app.bsky.feed.defs.PostView['embed']
   moderation?: ModerationDecision
 }
 
 export type OnPostSuccessData =
   | {
       replyToUri?: string
-      posts: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]
+      posts: app.bsky.unspecced.getPostThreadV2.ThreadItem[]
     }
   | undefined
 
@@ -48,7 +44,7 @@ export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: (postUri: string | undefined) => void
   onPostSuccess?: (data: OnPostSuccessData) => void
-  quote?: AppBskyFeedDefs.PostView
+  quote?: app.bsky.feed.defs.PostView
   mention?: string // handle of user to mention
   text?: string
   imageUris?: {uri: string; width: number; height: number; altText?: string}[]

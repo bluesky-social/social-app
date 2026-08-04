@@ -1,4 +1,3 @@
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type AtIdentifierString, AtUri} from '@atproto/syntax'
 import {useMutation} from '@tanstack/react-query'
 
@@ -22,7 +21,7 @@ export function useVerificationsRemoveMutation() {
       verifications,
     }: {
       profile: bsky.profile.AnyProfileView
-      verifications: AppBskyActorDefs.VerificationView[]
+      verifications: app.bsky.actor.defs.VerificationView[]
     }) {
       if (!currentAccount) {
         throw new Error('User not logged in')

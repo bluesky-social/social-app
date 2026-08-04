@@ -1,5 +1,4 @@
 import {useCallback, useMemo} from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type DidString} from '@atproto/syntax'
 import {
   type InfiniteData,
@@ -103,7 +102,7 @@ export function useSuggestedFollowsByActorWithDismiss({
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did)
   yield* findAllProfilesInSuggestedFollowsByActorQueryData(queryClient, did)
 }

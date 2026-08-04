@@ -1,10 +1,4 @@
 import {
-  type ChatBskyActorDefs,
-  type ChatBskyConvoDefs,
-  type ChatBskyConvoGetConvo,
-  type ChatBskyConvoGetUnreadCounts,
-} from '@atproto/api'
-import {
   type QueryClient,
   useMutation,
   useQuery,
@@ -44,7 +38,7 @@ export function useConvoQuery({convoId}: {convoId: string}) {
 
 export function precacheConvoQuery(
   queryClient: QueryClient,
-  convo: ChatBskyConvoDefs.ConvoView,
+  convo: chat.bsky.convo.defs.ConvoView,
 ) {
   queryClient.setQueryData(RQKEY(convo.id), convo)
 }
@@ -81,7 +75,7 @@ export function useMarkAsReadMutation() {
       // find the convo so we know which badge counter (if any) to decrement.
       // keep scanning past a stale unreadCount === 0 cache so another cache
       // holding the true unread state still drives the decrement
-      let unreadStatus: ChatBskyConvoDefs.ConvoView['status'] | undefined
+      let unreadStatus: chat.bsky.convo.defs.ConvoView['status'] | undefined
       for (const [, data] of prevListQueries) {
         if (!data) continue
         const convo = getConvoFromQueryData(convoId, data)
@@ -96,11 +90,13 @@ export function useMarkAsReadMutation() {
       // the badge count query is a separate server query that the list caches
       // don't feed, so decrement it here to keep the badge in sync
       const prevUnreadCountsQueries =
-        queryClient.getQueriesData<ChatBskyConvoGetUnreadCounts.OutputSchema>({
-          queryKey: UNREAD_COUNTS_PARTIAL_KEY,
-        })
+        queryClient.getQueriesData<chat.bsky.convo.getUnreadCounts.$OutputBody>(
+          {
+            queryKey: UNREAD_COUNTS_PARTIAL_KEY,
+          },
+        )
       if (unreadStatus) {
-        queryClient.setQueriesData<ChatBskyConvoGetUnreadCounts.OutputSchema>(
+        queryClient.setQueriesData<chat.bsky.convo.getUnreadCounts.$OutputBody>(
           {queryKey: UNREAD_COUNTS_PARTIAL_KEY},
           old => {
             if (!old) return old
@@ -184,9 +180,9 @@ export function useMarkAsReadMutation() {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<ChatBskyActorDefs.ProfileViewBasic, void> {
+): Generator<chat.bsky.actor.defs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<
-    ChatBskyConvoGetConvo.OutputSchema['convo']
+    chat.bsky.convo.getConvo.$OutputBody['convo']
   >({
     queryKey: [RQKEY_ROOT],
   })

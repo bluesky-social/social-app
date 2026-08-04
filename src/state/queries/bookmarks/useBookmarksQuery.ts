@@ -1,4 +1,3 @@
-import {type $Typed, AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,
@@ -11,6 +10,8 @@ import {
   embedViewRecordToPostView,
   getEmbeddedPost,
 } from '#/state/queries/util'
+import {type $Typed} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -57,7 +58,7 @@ export async function truncateAndInvalidate(qc: QueryClient) {
 
 export async function optimisticallySaveBookmark(
   qc: QueryClient,
-  post: AppBskyFeedDefs.PostView,
+  post: app.bsky.feed.defs.PostView,
 ) {
   qc.setQueriesData<InfiniteData<app.bsky.bookmark.getBookmarks.$OutputBody>>(
     {
@@ -81,7 +82,7 @@ export async function optimisticallySaveBookmark(
                 uri: post.uri,
                 cid: post.cid,
               },
-              item: post as $Typed<AppBskyFeedDefs.PostView>,
+              item: post as $Typed<app.bsky.feed.defs.PostView>,
             } as unknown as app.bsky.bookmark.defs.BookmarkView
             return {
               ...page,
@@ -121,7 +122,7 @@ export async function optimisticallyDeleteBookmark(
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.PostView, undefined> {
+): Generator<app.bsky.feed.defs.PostView, undefined> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<app.bsky.bookmark.getBookmarks.$OutputBody>
   >({
@@ -135,13 +136,7 @@ export function* findAllPostsInQueryData(
     }
     for (const page of queryData?.pages) {
       for (const bookmark of page.bookmarks) {
-        if (
-          !bsky.dangerousIsType<AppBskyFeedDefs.PostView>(
-            bookmark.item,
-            AppBskyFeedDefs.isPostView,
-          )
-        )
-          continue
+        if (!bsky.isType(app.bsky.feed.defs.postView, bookmark.item)) continue
 
         if (didOrHandleUriMatches(atUri, bookmark.item)) {
           yield bookmark.item

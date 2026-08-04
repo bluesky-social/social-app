@@ -1,4 +1,3 @@
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {type Client} from '@atproto/lex'
 import {AtUri, type HandleString} from '@atproto/syntax'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
@@ -67,7 +66,7 @@ export function useThreadgateViewQuery({
   initialData,
 }: {
   postUri?: string
-  initialData?: AppBskyFeedDefs.ThreadgateView
+  initialData?: app.bsky.feed.defs.ThreadgateView
 } = {}) {
   const getPost = useGetPost()
 
@@ -248,7 +247,7 @@ export function useSetThreadgateAllowMutation() {
       })
     },
     async onSuccess(_, {postUri, allow}) {
-      const data = await retry<AppBskyFeedDefs.ThreadgateView | undefined>(
+      const data = await retry<app.bsky.feed.defs.ThreadgateView | undefined>(
         5, // 5 tries
         _e => true,
         async () => {

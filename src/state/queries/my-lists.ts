@@ -1,4 +1,3 @@
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {type DidString} from '@atproto/syntax'
 import {type QueryClient, useQuery} from '@tanstack/react-query'
 
@@ -19,11 +18,11 @@ export const RQKEY = (filter: MyListsFilter) => [RQKEY_ROOT, filter]
 export function useMyListsQuery(filter: MyListsFilter) {
   const {currentAccount} = useSession()
   const client = useAppviewClient()
-  return useQuery<AppBskyGraphDefs.ListView[]>({
+  return useQuery<app.bsky.graph.defs.ListView[]>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(filter),
     async queryFn() {
-      let lists: AppBskyGraphDefs.ListView[] = []
+      let lists: app.bsky.graph.defs.ListView[] = []
       const promises = [
         accumulate(cursor =>
           client

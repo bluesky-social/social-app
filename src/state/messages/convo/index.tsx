@@ -6,10 +6,11 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import {ChatBskyConvoDefs} from '@atproto/api'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import * as bsky from '#/types/bsky'
+import {chat} from '#/lexicons'
 import {useAppState} from '#/lib/appState'
 import {Convo} from '#/state/messages/convo/agent'
 import {
@@ -34,8 +35,8 @@ import {type GroupConvoMember} from '#/components/dms/util'
 export * from '#/state/messages/convo/util'
 
 function membersChanged(
-  a: ChatBskyConvoDefs.ConvoView['members'],
-  b: ChatBskyConvoDefs.ConvoView['members'],
+  a: chat.bsky.convo.defs.ConvoView['members'],
+  b: chat.bsky.convo.defs.ConvoView['members'],
 ) {
   if (a.length !== b.length) return true
   const aDids = new Set(a.map(m => m.did))
@@ -83,9 +84,10 @@ export function ConvoProvider({
   const chatClient = useChatClient()
   const events = useMessagesEventBus()
   const [convo] = useState(() => {
-    const placeholder = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
-      getConvoKey(convoId),
-    )
+    const placeholder =
+      queryClient.getQueryData<chat.bsky.convo.defs.ConvoView>(
+        getConvoKey(convoId),
+      )
     return new Convo({
       convoId,
       chatClient,
@@ -151,14 +153,14 @@ export function ConvoProvider({
       const queryKey = event.query.queryKey as string[]
       if (queryKey[0] === root && queryKey[1] === id) {
         const data = event.query.state.data as
-          | ChatBskyConvoDefs.ConvoView
+          | chat.bsky.convo.defs.ConvoView
           | undefined
         if (data && convo.convo && data.muted !== convo.convo.view.muted) {
           convo.updateMuted(data.muted)
         }
         if (
           data &&
-          ChatBskyConvoDefs.isGroupConvo(data.kind) &&
+          bsky.isType(chat.bsky.convo.defs.groupConvo, data.kind) &&
           convo.convo?.kind === 'group'
         ) {
           if (data.kind.name !== convo.convo.details.name) {
@@ -180,7 +182,7 @@ export function ConvoProvider({
         }
         if (
           data &&
-          ChatBskyConvoDefs.isGroupConvo(data.kind) &&
+          bsky.isType(chat.bsky.convo.defs.groupConvo, data.kind) &&
           convo.convo?.kind === 'group' &&
           (membersChanged(data.members, convo.convo.members) ||
             data.kind.memberCount !== convo.convo.details.memberCount)

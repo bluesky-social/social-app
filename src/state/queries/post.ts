@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
-import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {type Client} from '@atproto/lex'
-import {type AtUriString, type HandleString} from '@atproto/syntax'
+import {type AtUriString, type HandleString, AtUri} from '@atproto/syntax'
 import {deleteLike, deletePost, deleteRepost, like, repost} from '@bsky.app/sdk'
 import {
   type QueryClient,
@@ -26,7 +25,7 @@ export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
 
 export function usePostQuery(uri: string | undefined) {
   const client = useAppviewClient()
-  return useQuery<AppBskyFeedDefs.PostView>({
+  return useQuery<app.bsky.feed.defs.PostView>({
     queryKey: RQKEY(uri || ''),
     queryFn: async () => {
       if (!uri) throw new Error('[unreachable] No URI provided')
@@ -53,7 +52,7 @@ export function usePostQuery(uri: string | undefined) {
 async function fetchPost(
   client: Client,
   uri: string,
-): Promise<AppBskyFeedDefs.PostView | undefined> {
+): Promise<app.bsky.feed.defs.PostView | undefined> {
   const urip = new AtUri(uri)
 
   if (!urip.host.startsWith('did:')) {
@@ -72,7 +71,7 @@ async function fetchPost(
 export function precachePost(
   queryClient: QueryClient,
   uri: string,
-  post: AppBskyFeedDefs.PostView,
+  post: app.bsky.feed.defs.PostView,
 ) {
   queryClient.setQueryData(RQKEY(uri), post)
 }
@@ -110,7 +109,7 @@ export function useGetPosts() {
             uris: uris as AtUriString[],
           })
           // See the note on `fetchPost` about the view shapes.
-          return data.posts as AppBskyFeedDefs.PostView[]
+          return data.posts as app.bsky.feed.defs.PostView[]
         },
       })
     },
@@ -119,7 +118,7 @@ export function useGetPosts() {
 }
 
 export function usePostLikeMutationQueue(
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  post: Shadow<app.bsky.feed.defs.PostView>,
   viaRepost: {uri: string; cid: string} | undefined,
   feedDescriptor: string | undefined,
   logContext: Metrics['post:like']['logContext'],
@@ -183,7 +182,7 @@ export function usePostLikeMutationQueue(
 function usePostLikeMutation(
   feedDescriptor: string | undefined,
   logContext: Metrics['post:like']['logContext'],
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  post: Shadow<app.bsky.feed.defs.PostView>,
 ) {
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
@@ -196,7 +195,7 @@ function usePostLikeMutation(
     {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({
     mutationFn: ({uri, cid, via}) => {
-      let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
+      let ownProfile: app.bsky.actor.defs.ProfileViewDetailed | undefined
       if (currentAccount) {
         ownProfile = findProfileQueryData(queryClient, currentAccount.did)
       }
@@ -231,7 +230,7 @@ function usePostLikeMutation(
 function usePostUnlikeMutation(
   feedDescriptor: string | undefined,
   logContext: Metrics['post:unlike']['logContext'],
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  post: Shadow<app.bsky.feed.defs.PostView>,
 ) {
   const pdsClient = usePdsClient()
   const ax = useAnalytics()
@@ -249,7 +248,7 @@ function usePostUnlikeMutation(
 }
 
 export function usePostRepostMutationQueue(
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  post: Shadow<app.bsky.feed.defs.PostView>,
   viaRepost: {uri: string; cid: string} | undefined,
   feedDescriptor: string | undefined,
   logContext: Metrics['post:repost']['logContext'],
@@ -315,7 +314,7 @@ export function usePostRepostMutationQueue(
 function usePostRepostMutation(
   feedDescriptor: string | undefined,
   logContext: Metrics['post:repost']['logContext'],
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  post: Shadow<app.bsky.feed.defs.PostView>,
 ) {
   const pdsClient = usePdsClient()
   const ax = useAnalytics()
@@ -343,7 +342,7 @@ function usePostRepostMutation(
 function usePostUnrepostMutation(
   feedDescriptor: string | undefined,
   logContext: Metrics['post:unrepost']['logContext'],
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  post: Shadow<app.bsky.feed.defs.PostView>,
 ) {
   const pdsClient = usePdsClient()
   const ax = useAnalytics()
@@ -374,7 +373,7 @@ export function usePostDeleteMutation() {
 }
 
 export function useThreadMuteMutationQueue(
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  post: Shadow<app.bsky.feed.defs.PostView>,
   rootUri: string,
 ) {
   const threadMuteMutation = useThreadMuteMutation()

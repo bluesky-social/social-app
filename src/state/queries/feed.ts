@@ -1,11 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef} from 'react'
-import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  AtUri,
-} from '@atproto/api'
-import {type AtUriString} from '@atproto/syntax'
+import {type AtUriString, AtUri} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {t} from '@lingui/core/macro'
 import {
@@ -36,7 +30,7 @@ import {precacheResolvedUri} from './resolve-uri'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
-  view?: AppBskyFeedDefs.GeneratorView
+  view?: app.bsky.feed.defs.GeneratorView
   uri: string
   feedDescriptor: FeedDescriptor
   route: {
@@ -53,12 +47,12 @@ export type FeedSourceFeedInfo = {
   likeCount: number | undefined
   acceptsInteractions?: boolean
   likeUri: string | undefined
-  contentMode: AppBskyFeedDefs.GeneratorView['contentMode']
+  contentMode: app.bsky.feed.defs.GeneratorView['contentMode']
 }
 
 export type FeedSourceListInfo = {
   type: 'list'
-  view?: AppBskyGraphDefs.ListView
+  view?: app.bsky.graph.defs.ListView
   uri: string
   feedDescriptor: FeedDescriptor
   route: {
@@ -95,7 +89,7 @@ const feedSourceNSIDs = {
 }
 
 export function hydrateFeedGenerator(
-  view: AppBskyFeedDefs.GeneratorView,
+  view: app.bsky.feed.defs.GeneratorView,
 ): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
@@ -137,7 +131,9 @@ export function hydrateFeedGenerator(
   }
 }
 
-export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
+export function hydrateList(
+  view: app.bsky.graph.defs.ListView,
+): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
     urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
@@ -410,7 +406,7 @@ export function usePopularFeedsSearch({
 }
 
 export type SavedFeedSourceInfo = FeedSourceInfo & {
-  savedFeed: AppBskyActorDefs.SavedFeed
+  savedFeed: app.bsky.actor.defs.SavedFeed
 }
 
 const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
@@ -549,17 +545,17 @@ export function usePinnedFeedsInfos() {
 export type SavedFeedItem =
   | {
       type: 'feed'
-      config: AppBskyActorDefs.SavedFeed
-      view: AppBskyFeedDefs.GeneratorView
+      config: app.bsky.actor.defs.SavedFeed
+      view: app.bsky.feed.defs.GeneratorView
     }
   | {
       type: 'list'
-      config: AppBskyActorDefs.SavedFeed
-      view: AppBskyGraphDefs.ListView
+      config: app.bsky.actor.defs.SavedFeed
+      view: app.bsky.graph.defs.ListView
     }
   | {
       type: 'timeline'
-      config: AppBskyActorDefs.SavedFeed
+      config: app.bsky.actor.defs.SavedFeed
       view: undefined
     }
 
@@ -587,8 +583,8 @@ export function useSavedFeeds() {
       )
     },
     queryFn: async () => {
-      const resolvedFeeds = new Map<string, AppBskyFeedDefs.GeneratorView>()
-      const resolvedLists = new Map<string, AppBskyGraphDefs.ListView>()
+      const resolvedFeeds = new Map<string, app.bsky.feed.defs.GeneratorView>()
+      const resolvedLists = new Map<string, app.bsky.graph.defs.ListView>()
 
       const savedFeeds = savedItems.filter(feed => feed.type === 'feed')
       const savedLists = savedItems.filter(feed => feed.type === 'list')
@@ -703,10 +699,10 @@ function precacheFeed(queryClient: QueryClient, hydratedFeed: FeedSourceInfo) {
 
 export function precacheList(
   queryClient: QueryClient,
-  list: AppBskyGraphDefs.ListView,
+  list: app.bsky.graph.defs.ListView,
 ) {
   precacheResolvedUri(queryClient, list.creator.handle, list.creator.did)
-  queryClient.setQueryData<AppBskyGraphDefs.ListView>(
+  queryClient.setQueryData<app.bsky.graph.defs.ListView>(
     listQueryKey(list.uri),
     list,
   )
@@ -714,7 +710,7 @@ export function precacheList(
 
 export function precacheFeedFromGeneratorView(
   queryClient: QueryClient,
-  view: AppBskyFeedDefs.GeneratorView,
+  view: app.bsky.feed.defs.GeneratorView,
 ) {
   const hydratedFeed = hydrateFeedGenerator(view)
   precacheFeed(queryClient, hydratedFeed)

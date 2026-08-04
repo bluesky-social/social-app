@@ -1,8 +1,4 @@
 import {
-  type AppBskyActorDefs,
-  type AppBskyGraphGetStarterPacksWithMembership,
-} from '@atproto/api'
-import {
   AtUri,
   type AtUriString,
   type DidString,
@@ -73,7 +69,7 @@ export function useListMembershipAddMutation({
       // update WITH_MEMBERSHIPS query for starter packs
       if (subject) {
         queryClient.setQueryData<
-          InfiniteData<AppBskyGraphGetStarterPacksWithMembership.OutputSchema>
+          InfiniteData<app.bsky.graph.getStarterPacksWithMembership.$OutputBody>
         >(STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid), old => {
           if (!old) return old
 
@@ -94,7 +90,7 @@ export function useListMembershipAddMutation({
                         listItemsSample: [
                           {
                             uri: data.uri,
-                            subject: subject as AppBskyActorDefs.ProfileView,
+                            subject: subject as app.bsky.actor.defs.ProfileView,
                           },
                           ...(spWithMembership.starterPack.listItemsSample?.filter(
                             item => item.subject.did !== variables.actorDid,
@@ -109,7 +105,7 @@ export function useListMembershipAddMutation({
                       },
                       listItem: {
                         uri: data.uri,
-                        subject: subject as AppBskyActorDefs.ProfileView,
+                        subject: subject as app.bsky.actor.defs.ProfileView,
                       },
                     }
                   }
@@ -167,7 +163,7 @@ export function useListMembershipRemoveMutation({
 
       // update WITH_MEMBERSHIPS query for starter packs
       queryClient.setQueryData<
-        InfiniteData<AppBskyGraphGetStarterPacksWithMembership.OutputSchema>
+        InfiniteData<app.bsky.graph.getStarterPacksWithMembership.$OutputBody>
       >(STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid), old => {
         if (!old) return old
 

@@ -1,10 +1,9 @@
+import {app} from '#/lexicons'
 /*
  * Pure helpers for lifting structured `app.bsky.feed.searchPosts` params out of
  * a free-text query. Kept free of React Native imports so it can be unit
  * tested in isolation (the search-posts query hook re-exports these).
  */
-
-import {type AppBskyFeedSearchPostsV2} from '@atproto/api'
 
 import {
   filtersToApiParams,
@@ -204,9 +203,9 @@ function mergeList(a?: string[], b?: string[]): string[] | undefined {
 export function buildSearchPostsV2Filters(
   embedded: Omit<ExtractedSearchParams, 'q'>,
   filters?: SearchFilters,
-): AppBskyFeedSearchPostsV2.QueryParams {
+): app.bsky.feed.searchPostsV2.$Params {
   const apiFilters = filters ? filtersToApiParams(filters) : {}
-  const params: AppBskyFeedSearchPostsV2.QueryParams = {}
+  const params: app.bsky.feed.searchPostsV2.$Params = {}
 
   const authors = mergeList(
     embedded.author ? [embedded.author] : undefined,
