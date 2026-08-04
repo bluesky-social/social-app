@@ -35,7 +35,7 @@ export function StepInterests() {
    * Behind this gate, users must choose at least one interest before they can
    * continue.
    */
-  const interestRequired = !ax.features.enabled(
+  const interestRequired = ax.features.enabled(
     ax.features.OnboardingInterestsRequiredEnable,
   )
   const missingRequiredInterest =
