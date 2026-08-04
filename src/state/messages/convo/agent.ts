@@ -1,20 +1,17 @@
 import {
   type $Typed,
   type AppBskyEmbedRecord,
-  type AtpAgent,
   type ChatBskyActorDefs,
   ChatBskyConvoDefs,
   type ChatBskyConvoGetLog,
-  type ChatBskyConvoSendMessage,
   type ChatBskyEmbedJoinLink,
   type ChatBskyGroupDefs,
 } from '@atproto/api'
-import {XRPCError} from '@atproto/api'
+import {type Client, XrpcResponseError} from '@atproto/lex'
 import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {
   isErrorMaybeAppPasswordPermissions,
   isNetworkError,
@@ -52,6 +49,7 @@ import {
   parseConvoView,
 } from '#/components/dms/util'
 import {IS_NATIVE} from '#/env'
+import {chat} from '#/lexicons'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
 
@@ -105,7 +103,7 @@ function toDeletedMessageView(
 export class Convo {
   private id: string
 
-  private agent: AtpAgent
+  private chatClient: Client
   private events: MessagesEventBus
   private senderUserDid: string
 
@@ -131,7 +129,7 @@ export class Convo {
     string,
     {
       id: string
-      message: ChatBskyConvoSendMessage.InputSchema['message']
+      message: chat.bsky.convo.defs.MessageInput
       optimisticEmbedView?:
         | $Typed<AppBskyEmbedRecord.View>
         | $Typed<ChatBskyEmbedJoinLink.View>
@@ -166,9 +164,9 @@ export class Convo {
   constructor(params: ConvoParams) {
     this.id = nanoid(3)
     this.convoId = params.convoId
-    this.agent = params.agent
+    this.chatClient = params.chatClient
     this.events = params.events
-    this.senderUserDid = params.agent.assertDid
+    this.senderUserDid = params.chatClient.assertDid
 
     if (params.placeholderData) {
       this.setupPlaceholderData(params.placeholderData)
@@ -195,6 +193,15 @@ export class Convo {
   private commit() {
     this.snapshot = undefined
     this.subscribers.forEach(subscriber => subscriber())
+  }
+
+  /**
+   * Point the convo at a new chat client, for when the session bundle is
+   * replaced underneath it. Conversation state is unaffected: the same account
+   * is being served over a fresh session.
+   */
+  updateClient(chatClient: Client) {
+    this.chatClient = chatClient
   }
 
   private subscribers: (() => void)[] = []
@@ -720,13 +727,12 @@ export class Convo {
     this.pendingFetchConvo = (async () => {
       try {
         const response = await networkRetry(2, () => {
-          return this.agent.chat.bsky.convo.getConvo(
-            {convoId: this.convoId},
-            {headers: DM_SERVICE_HEADERS},
-          )
+          return this.chatClient.call(chat.bsky.convo.getConvo, {
+            convoId: this.convoId,
+          })
         })
 
-        const convo = response.data.convo
+        const convo = response.convo
 
         return {
           convo,
@@ -763,18 +769,15 @@ export class Convo {
     let cursor: string | undefined
     do {
       const result = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getConvoMembers(
-          {
-            convoId: this.convoId,
-            limit: 50,
-            cursor,
-          },
-          {headers: DM_SERVICE_HEADERS},
-        )
+        return this.chatClient.call(chat.bsky.convo.getConvoMembers, {
+          convoId: this.convoId,
+          limit: 50,
+          cursor,
+        })
       })
-      cursor = result.data.cursor
+      cursor = result.cursor
 
-      for (const member of result.data.members) {
+      for (const member of result.members) {
         this.relatedProfiles.set(member.did, member)
       }
     } while (cursor)
@@ -808,16 +811,13 @@ export class Convo {
 
       const nextCursor = this.oldestRev // for TS
       const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getMessages(
-          {
-            cursor: nextCursor,
-            convoId: this.convoId,
-            limit: IS_NATIVE ? 30 : 60,
-          },
-          {headers: DM_SERVICE_HEADERS},
-        )
+        return this.chatClient.call(chat.bsky.convo.getMessages, {
+          cursor: nextCursor,
+          convoId: this.convoId,
+          limit: IS_NATIVE ? 30 : 60,
+        })
       })
-      const {cursor, messages, relatedProfiles} = response.data
+      const {cursor, messages, relatedProfiles} = response
 
       // Trust the cursor for pagination. We can't infer "no more pages" from a
       // short page: the server pages by raw rows but strips deleted messages
@@ -1031,7 +1031,7 @@ export class Convo {
   private pendingMessageFailure: 'recoverable' | 'unrecoverable' | null = null
 
   sendMessage(
-    message: ChatBskyConvoSendMessage.InputSchema['message'],
+    message: chat.bsky.convo.defs.MessageInput,
     optimisticEmbedView?:
       | $Typed<AppBskyEmbedRecord.View>
       | $Typed<ChatBskyEmbedJoinLink.View>,
@@ -1165,14 +1165,10 @@ export class Convo {
 
       const {id, message} = pendingMessage
 
-      const response = await this.agent.chat.bsky.convo.sendMessage(
-        {
-          convoId: this.convoId,
-          message,
-        },
-        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-      )
-      const res = response.data
+      const res = await this.chatClient.call(chat.bsky.convo.sendMessage, {
+        convoId: this.convoId,
+        message,
+      })
 
       // remove from queue
       this.pendingMessages.delete(id)
@@ -1197,8 +1193,15 @@ export class Convo {
     }
   }
 
-  private handleSendMessageFailure(e: Error | XRPCError) {
-    if (e instanceof XRPCError) {
+  /*
+   * The lex client throws `XrpcResponseError`, not `@atproto/api`'s
+   * `XRPCError`, so the status/message branch narrows on the lex class. Only
+   * a genuine server response carries a status: transport and internal lex
+   * failures are `XrpcInternalError`s and fall through to the generic arm,
+   * where `isNetworkError` keeps them out of the logs.
+   */
+  private handleSendMessageFailure(e: Error | XrpcResponseError) {
+    if (e instanceof XrpcResponseError) {
       if (NETWORK_FAILURE_STATUSES.includes(e.status)) {
         this.pendingMessageFailure = 'recoverable'
       } else {
@@ -1261,16 +1264,15 @@ export class Convo {
     )
 
     try {
-      const {data} = await this.agent.chat.bsky.convo.sendMessageBatch(
+      const {items} = await this.chatClient.call(
+        chat.bsky.convo.sendMessageBatch,
         {
           items: messageArray.map(({message}) => ({
             convoId: this.convoId,
             message,
           })),
         },
-        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
       )
-      const {items} = data
 
       /*
        * Insert into `newMessages` as soon as we have a real ID. That way, when
@@ -1304,13 +1306,10 @@ export class Convo {
 
     try {
       await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.deleteMessageForSelf(
-          {
-            convoId: this.convoId,
-            messageId,
-          },
-          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-        )
+        return this.chatClient.call(chat.bsky.convo.deleteMessageForSelf, {
+          convoId: this.convoId,
+          messageId,
+        })
       })
     } catch (err) {
       const e = err as Error
@@ -1529,10 +1528,11 @@ export class Convo {
 
     try {
       logger.debug(`Adding reaction ${emoji} to message ${messageId}`)
-      const {data} = await this.agent.chat.bsky.convo.addReaction(
-        {messageId, value: emoji, convoId: this.convoId},
-        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-      )
+      const data = await this.chatClient.call(chat.bsky.convo.addReaction, {
+        messageId,
+        value: emoji,
+        convoId: this.convoId,
+      })
       if (ChatBskyConvoDefs.isMessageView(data.message)) {
         if (this.pastMessages.has(messageId)) {
           this.pastMessages.set(messageId, data.message)
@@ -1594,10 +1594,11 @@ export class Convo {
 
     try {
       logger.debug(`Removing reaction ${emoji} from message ${messageId}`)
-      await this.agent.chat.bsky.convo.removeReaction(
-        {messageId, value: emoji, convoId: this.convoId},
-        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-      )
+      await this.chatClient.call(chat.bsky.convo.removeReaction, {
+        messageId,
+        value: emoji,
+        convoId: this.convoId,
+      })
     } catch (error) {
       if (restore) restore()
       throw error
