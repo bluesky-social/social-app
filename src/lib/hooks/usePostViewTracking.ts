@@ -1,6 +1,6 @@
 import {useCallback, useRef} from 'react'
-import {type AppBskyFeedDefs} from '@atproto/api'
 
+import {app} from '#/lexicons'
 import {type Metrics, useAnalytics} from '#/analytics'
 
 /**
@@ -17,7 +17,7 @@ export function usePostViewTracking(
   const seenUrisRef = useRef(new Set<string>())
 
   const trackPostView = useCallback(
-    (post: AppBskyFeedDefs.PostView) => {
+    (post: app.bsky.feed.defs.PostView) => {
       if (seenUrisRef.current.has(post.uri)) return
       seenUrisRef.current.add(post.uri)
 

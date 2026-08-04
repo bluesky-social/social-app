@@ -1,5 +1,5 @@
-import {type AppBskyFeedGetFeed} from '@atproto/api'
 import {subDays, subMinutes} from 'date-fns'
+import {app} from '#/lexicons'
 
 const DID = `did:plc:z72i7hdynmk6r22z27h6tvur`
 const NOW = new Date()
@@ -197,6 +197,6 @@ export const DEMO_FEED = {
       },
     },
   ],
-} satisfies AppBskyFeedGetFeed.OutputSchema
+} satisfies app.bsky.feed.getFeed.$OutputBody
 
 export const BOTTOM_BAR_AVI = 'https://bsky.social/about/adi/user_avi.jpg'

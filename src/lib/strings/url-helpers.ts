@@ -1,7 +1,7 @@
-import {AtUri} from '@atproto/api'
 import {parse} from 'psl'
 import TLDs from 'tlds'
 
+import {AtUri} from '@atproto/syntax'
 import {BSKY_SERVICE} from '#/lib/constants'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'

@@ -1,4 +1,3 @@
-import {ChatBskyGroupDefs} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import {type $Typed, type Client} from '@atproto/lex'
 import {
@@ -29,7 +28,7 @@ import {
   type PostDraft,
   type ThreadDraft,
 } from '#/view/com/composer/state/composer'
-import {app, com} from '#/lexicons'
+import {app, chat, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {createGIFDescription} from '../gif-alt-text'
 import {computeCid} from './computeCid'
@@ -483,7 +482,7 @@ async function resolveMedia(
     }
     if (
       resolvedLink.type === 'chat-invite' &&
-      ChatBskyGroupDefs.isJoinLinkPreviewView(resolvedLink.view)
+      bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, resolvedLink.view)
     ) {
       return {
         $type: 'app.bsky.embed.external',

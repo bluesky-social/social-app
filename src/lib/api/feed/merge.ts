@@ -1,4 +1,3 @@
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {type Client} from '@atproto/lex'
 import {type AtUriString} from '@atproto/syntax'
 import shuffle from 'lodash.shuffle'
@@ -28,7 +27,7 @@ const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
  */
 type MergeFeedPage = {
   cursor?: string
-  feed: AppBskyFeedDefs.FeedViewPost[]
+  feed: app.bsky.feed.defs.FeedViewPost[]
 } | null
 
 export class MergeFeedAPI implements FeedAPI {
@@ -89,7 +88,7 @@ export class MergeFeedAPI implements FeedAPI {
     }
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
     const data = await this.client.call(app.bsky.feed.getTimeline, {
       limit: 1,
     })
@@ -136,7 +135,7 @@ export class MergeFeedAPI implements FeedAPI {
     await Promise.all(promises)
 
     // assemble a response by sampling from feeds with content
-    const posts: AppBskyFeedDefs.FeedViewPost[] = []
+    const posts: app.bsky.feed.defs.FeedViewPost[] = []
     while (posts.length < limit) {
       let slice = this.sampleItem()
       if (slice[0]) {
@@ -188,7 +187,7 @@ class MergeFeedSource {
   feedTuners: FeedTunerFn[]
   sourceInfo: ReasonFeedSource | undefined
   cursor: string | undefined = undefined
-  queue: AppBskyFeedDefs.FeedViewPost[] = []
+  queue: app.bsky.feed.defs.FeedViewPost[] = []
   hasMore = true
 
   constructor({
@@ -210,7 +209,7 @@ class MergeFeedSource {
     return this.hasMore && this.queue.length === 0
   }
 
-  take(n: number): AppBskyFeedDefs.FeedViewPost[] {
+  take(n: number): app.bsky.feed.defs.FeedViewPost[] {
     return this.queue.splice(0, n)
   }
 
@@ -327,7 +326,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
       // some custom feeds fail to enforce the pagination limit
       // so we manually truncate here
       // -prf
-      let feed: AppBskyFeedDefs.FeedViewPost[] =
+      let feed: app.bsky.feed.defs.FeedViewPost[] =
         limit && data.feed.length > limit
           ? data.feed.slice(0, limit)
           : data.feed

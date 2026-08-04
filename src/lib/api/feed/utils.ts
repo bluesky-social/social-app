@@ -1,5 +1,4 @@
-import {AtUri} from '@atproto/api'
-
+import {AtUri} from '@atproto/syntax'
 import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences'
 import {IS_WEB} from '#/env'

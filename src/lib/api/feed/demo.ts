@@ -1,6 +1,6 @@
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {type Client} from '@atproto/lex'
 
+import {app} from '#/lexicons'
 import {DEMO_FEED} from '#/lib/demo'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
@@ -11,7 +11,7 @@ export class DemoFeedAPI implements FeedAPI {
     this.client = client
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
     return DEMO_FEED.feed[0]
   }
 
