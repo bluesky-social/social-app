@@ -13,7 +13,10 @@ import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
-import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
+import {
+  DEFAULT_LIMIT,
+  useGetTrendsQuery,
+} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/service-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {formatCount} from '#/view/com/util/numeric/format'
@@ -29,8 +32,6 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import * as ModuleHeader from '../components/ModuleHeader'
 
-const TOPIC_COUNT = 5
-
 const IMAGE_SIZE = 56
 
 export function ExploreTrendingTopics() {
@@ -42,9 +43,20 @@ export function ExploreTrendingTopics() {
 function Inner() {
   const ax = useAnalytics()
   const {t: l} = useLingui()
+
+  const topicCount = ax.features.getValue(
+    ax.features.TrendingExploreTopicsCountValue,
+    DEFAULT_LIMIT,
+  )
+
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
-  const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery()
+  const {
+    data: trending,
+    error,
+    isLoading,
+    isRefetching,
+  } = useGetTrendsQuery({limit: topicCount})
   const noTopics = !isLoading && !error && !trending?.trends?.length
   const showLoading = isLoading || isRefetching
 
@@ -64,23 +76,27 @@ function Inner() {
           />
         </ModuleHeader.Container>
         {showLoading
-          ? Array.from({length: TOPIC_COUNT}).map((__, i) => (
+          ? Array.from({length: topicCount}).map((__, i) => (
               <TrendingTopicRowSkeleton key={i} />
             ))
-          : trending?.trends.map((trend, index) => (
-              <TrendRow
-                key={trend.link}
-                trend={trend}
-                rank={index + 1}
-                recId={trending.recId}
-                onPress={() => {
-                  ax.metric('trendingTopic:click', {
-                    context: 'explore',
-                    recId: trending.recId,
-                  })
-                }}
-              />
-            ))}
+          : trending?.trends.map((trend, index) => {
+              const rank = index + 1
+              return (
+                <TrendRow
+                  key={trend.link}
+                  trend={trend}
+                  rank={rank}
+                  recId={trending.recId}
+                  onPress={() => {
+                    ax.metric('trendingTopic:click', {
+                      context: 'explore',
+                      rank,
+                      recId: trending.recId,
+                    })
+                  }}
+                />
+              )
+            })}
       </View>
 
       <Prompt.Basic
@@ -116,7 +132,7 @@ export function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
-  useTrendingTopicSeen('explore', recId)
+  useTrendingTopicSeen('explore', rank, recId)
 
   const description = useMemo(() => {
     if (!trend.description) return
@@ -143,7 +159,6 @@ export function TrendRow({
               style={[
                 a.text_md,
                 a.font_medium,
-
                 t.atoms.text_contrast_low,
                 {
                   fontVariant: ['tabular-nums'],
@@ -156,7 +171,7 @@ export function TrendRow({
             <View style={[a.flex_1, a.gap_2xs]}>
               <Text
                 style={[a.text_md, a.font_semi_bold, a.leading_snug]}
-                numberOfLines={1}>
+                numberOfLines={2}>
                 {trend.displayName}
               </Text>
               {description ? (

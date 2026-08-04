@@ -159,6 +159,7 @@ type FeedRow =
   | {
       type: 'interstitialFeedTrendingTopics'
       key: string
+      feedSliceIndex: number
     }
   | {
       type: 'interstitialTrendingVideos'
@@ -210,10 +211,6 @@ export type PostFeedRef = {
 // DISABLED need to check if this is causing random feed refreshes -prf
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
-
-const TRENDING_TOPICS_INDEX = 5
-const TRENDING_VIDEO_INDEX = 30
-const SUGGESTED_FOR_YOU_INDEX = 15
 
 let PostFeed = ({
   feed,
@@ -279,6 +276,15 @@ let PostFeed = ({
   const {gtMobile} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
   const areVideoFeedsEnabled = IS_NATIVE
+
+  const trendingIndices = ax.features.getValue(
+    ax.features.TrendingDiscoverValues,
+    {
+      topics: 5,
+      accounts: 15,
+      videos: 30,
+    },
+  )
 
   const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(
     () => new Set<string>(),
@@ -574,19 +580,20 @@ let PostFeed = ({
                         key: 'composerPrompt-' + sliceIndex,
                       })
                     }
-                  } else if (sliceIndex === TRENDING_TOPICS_INDEX) {
+                  } else if (sliceIndex === trendingIndices.topics) {
                     arr.push({
                       type: 'interstitialFeedTrendingTopics',
                       key: 'interstitialFeedTrendingTopics-' + sliceIndex,
+                      feedSliceIndex: sliceIndex,
                     })
-                  } else if (sliceIndex === TRENDING_VIDEO_INDEX) {
+                  } else if (sliceIndex === trendingIndices.videos) {
                     if (areVideoFeedsEnabled && !trendingVideoDisabled) {
                       arr.push({
                         type: 'interstitialTrendingVideos',
                         key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                       })
                     }
-                  } else if (sliceIndex === SUGGESTED_FOR_YOU_INDEX) {
+                  } else if (sliceIndex === trendingIndices.accounts) {
                     arr.push({
                       type: 'interstitialFollows',
                       key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
@@ -739,6 +746,7 @@ let PostFeed = ({
     ageAssuranceBannerState,
     isCurrentFeedAtStartupSelected,
     blockedOrMutedAuthors,
+    trendingIndices,
   ])
 
   // events
@@ -852,7 +860,9 @@ let PostFeed = ({
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
       } else if (row.type === 'interstitialFeedTrendingTopics') {
-        return <FeedTrendingTopicsInterstitial />
+        return (
+          <FeedTrendingTopicsInterstitial feedSliceIndex={row.feedSliceIndex} />
+        )
       } else if (row.type === 'liveEventFeedsAndTrendingBanner') {
         return <DiscoverFeedLiveEventFeedsAndTrendingBanner />
       } else if (row.type === 'composerPrompt') {

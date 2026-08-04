@@ -37,6 +37,11 @@ export function ProfileHeaderDisplayName({
         <View style={[a.pl_xs, {marginTop: platform({ios: 2})}]}>
           <ProfileBadges profile={profile} size="lg" interactive />
         </View>
+        {/*
+         * TODO: Workaround for a rounding bug in Android RN.
+         * Fixed upstream in RN main (facebook/react-native#56651); remove this
+         *  once we are on a release that contains it (0.86.0 should be good).
+         */}{' '}
       </Text>
     </View>
   )

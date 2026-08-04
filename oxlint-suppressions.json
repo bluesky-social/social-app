@@ -707,7 +707,7 @@
       "count": 1
     },
     "typescript/no-misused-promises": {
-      "count": 4
+      "count": 3
     }
   },
   "src/lib/hooks/usePermissions.ts": {
@@ -1216,11 +1216,6 @@
       "count": 1
     }
   },
-  "src/screens/StarterPack/Wizard/StepProfiles.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/screens/StarterPack/Wizard/index.tsx": {
     "typescript/no-floating-promises": {
       "count": 2
@@ -1635,31 +1630,6 @@
     },
     "typescript/no-floating-promises": {
       "count": 2
-    },
-    "typescript/no-misused-promises": {
-      "count": 3
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 2
-    }
-  },
-  "src/view/com/notifications/NotificationFeed.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 2
-    },
-    "typescript/no-floating-promises": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 6
-    }
-  },
-  "src/view/com/notifications/NotificationFeedItem.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 3
     },
     "typescript/no-misused-promises": {
       "count": 3

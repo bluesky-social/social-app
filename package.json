@@ -40,7 +40,7 @@
     "prepare": "is-ci || husky",
     "postinstall": "pnpm intl:compile-if-needed",
     "prebuild": "EXPO_NO_GIT_STATUS=1 expo prebuild --clean",
-    "android": "expo run:android",
+    "android": "expo run:android --variant debugOptimized",
     "android:prod": "expo run:android --variant release",
     "android:profile": "BSKY_PROFILE=1 expo run:android --variant release",
     "ios": "expo run:ios",
@@ -96,7 +96,7 @@
     "prettier": "prettier --check ."
   },
   "dependencies": {
-    "@atproto/api": "0.20.33",
+    "@atproto/api": "0.20.34",
     "@atproto/common-web": "0.5.6",
     "@atproto/syntax": "0.7.2",
     "@bitdrift/react-native": "^0.6.8",
@@ -107,7 +107,7 @@
     "@bsky.app/expo-image-crop-tool": "^0.5.1",
     "@bsky.app/expo-scroll-edge-effect": "^0.1.9",
     "@bsky.app/expo-translate-text": "^0.2.9",
-    "@bsky.app/peek-menu": "^0.3.1",
+    "@bsky.app/peek-menu": "^0.3.2",
     "@bsky.app/react-native-uitextview": "^2.5.0",
     "@bsky.app/sift": "^0.3.9",
     "@bsky.app/tapper": "^0.6.1",

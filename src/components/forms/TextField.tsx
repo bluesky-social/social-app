@@ -267,7 +267,16 @@ export function createInput(Component: typeof TextInput) {
             ctx.onBlur()
             onBlur?.(e)
           }}
-          placeholder={placeholder === null ? undefined : placeholder || label}
+          /*
+           * Android sizes an empty input from the font's bounding box instead
+           * of `lineHeight`, so a field with no placeholder shrinks on the
+           * first keystroke.
+           */
+          placeholder={
+            placeholder === null
+              ? platform({android: ' '})
+              : placeholder || label
+          }
           placeholderTextColor={t.palette.contrast_500}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
           style={flattened}

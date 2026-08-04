@@ -98,30 +98,35 @@ export function Inner() {
               </View>
             ) : !trending?.trends ? null : (
               <>
-                {trending.trends.map(topic => (
-                  <TrendingTopicLink
-                    key={topic.link}
-                    topic={topic}
-                    metricContext="interstitial"
-                    recId={trending.recId}
-                    onPress={() => {
-                      ax.metric('trendingTopic:click', {
-                        context: 'interstitial',
-                        recId: trending.recId,
-                      })
-                    }}>
-                    <View style={[a.py_lg]}>
-                      <Text
-                        style={[
-                          t.atoms.text_contrast_medium,
-                          a.text_sm,
-                          a.font_semi_bold,
-                        ]}>
-                        {topic.topic}
-                      </Text>
-                    </View>
-                  </TrendingTopicLink>
-                ))}
+                {trending.trends.map((topic, index) => {
+                  const rank = index + 1
+                  return (
+                    <TrendingTopicLink
+                      key={topic.link}
+                      topic={topic}
+                      metricContext="interstitial"
+                      rank={rank}
+                      recId={trending.recId}
+                      onPress={() => {
+                        ax.metric('trendingTopic:click', {
+                          context: 'interstitial',
+                          rank,
+                          recId: trending.recId,
+                        })
+                      }}>
+                      <View style={[a.py_lg]}>
+                        <Text
+                          style={[
+                            t.atoms.text_contrast_medium,
+                            a.text_sm,
+                            a.font_semi_bold,
+                          ]}>
+                          {topic.topic}
+                        </Text>
+                      </View>
+                    </TrendingTopicLink>
+                  )
+                })}
                 <Button
                   label={l`Hide trending topics`}
                   size="tiny"
