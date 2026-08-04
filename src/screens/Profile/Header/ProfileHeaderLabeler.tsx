@@ -312,7 +312,6 @@ export function HeaderLabelerButtons({
       !profile.viewer?.blockedBy &&
       !profile.viewer?.blocking ? (
         <>
-          <MessageProfileButton profile={profile} />
           {subscriptionsAllowed && (
             <SubscribeProfileButton
               profile={profile}
@@ -320,6 +319,7 @@ export function HeaderLabelerButtons({
               disableHint={minimal}
             />
           )}
+          <MessageProfileButton profile={profile} />
         </>
       ) : null}
 
