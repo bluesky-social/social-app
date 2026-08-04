@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {interests, useInterestsDisplayNames} from '#/lib/interests'
@@ -41,10 +41,9 @@ export function StepInterests() {
   const missingRequiredInterest =
     interestRequired && selectedInterests.length === 0
 
-  const onVisibleChange = (visible: boolean) => {
-    if (!missingRequiredInterest) return
+  const showMissingInterestTooltip = () => {
     ax.metric('onboarding:interests:disabledNextPressed', {})
-    setTooltipVisible(visible)
+    setTooltipVisible(true)
   }
 
   const saveInterests = useCallback(() => {
@@ -67,6 +66,30 @@ export function StepInterests() {
       logger.error(e)
     }
   }, [ax, selectedInterests, setSaving, dispatch])
+
+  const continueButton = (
+    <Button
+      disabled={saving || missingRequiredInterest}
+      testID="onboardingContinue"
+      variant="solid"
+      color="primary"
+      size="large"
+      label={
+        missingRequiredInterest
+          ? l`Choose an interest`
+          : l`Continue to next step`
+      }
+      onPress={() => void saveInterests()}>
+      <ButtonText style={{pointerEvents: 'none'}}>
+        {missingRequiredInterest ? (
+          <Trans>Choose an interest</Trans>
+        ) : (
+          <Trans>Continue</Trans>
+        )}
+      </ButtonText>
+      {saving && <ButtonIcon icon={Loader} />}
+    </Button>
+  )
 
   return (
     <View style={[a.align_start, a.gap_sm]} testID="onboardingInterests">
@@ -105,37 +128,32 @@ export function StepInterests() {
 
       <OnboardingControls.Portal>
         <View style={[a.relative]}>
-          <Tooltip.Outer
-            color="primary"
-            visible={tooltipVisible}
-            onVisibleChange={onVisibleChange}>
-            <Tooltip.Target>
-              <Button
-                disabled={saving || missingRequiredInterest}
-                testID="onboardingContinue"
-                variant="solid"
-                color="primary"
-                size="large"
-                label={
-                  missingRequiredInterest
-                    ? l`Choose an interest`
-                    : l`Continue to next step`
-                }
-                onPress={() => void saveInterests()}>
-                <ButtonText style={{pointerEvents: 'none'}}>
-                  {missingRequiredInterest ? (
-                    <Trans>Choose an interest</Trans>
-                  ) : (
-                    <Trans>Continue</Trans>
-                  )}
-                </ButtonText>
-                {saving && <ButtonIcon icon={Loader} />}
-              </Button>
-            </Tooltip.Target>
-            <Tooltip.BubbleText label={l`Beta features enabled`}>
-              <Trans>Choose at least one interest.</Trans>
-            </Tooltip.BubbleText>
-          </Tooltip.Outer>
+          {missingRequiredInterest ? (
+            <Tooltip.Outer
+              position="top"
+              visible={tooltipVisible}
+              onVisibleChange={setTooltipVisible}>
+              <Tooltip.Target>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={l`Choose an interest`}
+                  accessibilityHint={l`Choose at least one interest to continue`}
+                  onPress={showMissingInterestTooltip}>
+                  <View
+                    pointerEvents="none"
+                    accessibilityElementsHidden
+                    importantForAccessibility="no-hide-descendants">
+                    {continueButton}
+                  </View>
+                </Pressable>
+              </Tooltip.Target>
+              <Tooltip.BubbleText label={l`Choose at least one interest.`}>
+                <Trans>Choose at least one interest.</Trans>
+              </Tooltip.BubbleText>
+            </Tooltip.Outer>
+          ) : (
+            continueButton
+          )}
         </View>
       </OnboardingControls.Portal>
     </View>
