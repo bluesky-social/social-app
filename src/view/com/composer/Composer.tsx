@@ -25,7 +25,6 @@ import {Circle as ProgressCircle} from 'react-native-progress'
 import Animated, {
   type AnimatedRef,
   type AnimatedStyle,
-  Easing,
   FadeIn,
   FadeOut,
   interpolateColor,
@@ -37,7 +36,6 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  withRepeat,
   withTiming,
   ZoomIn,
   ZoomOut,
@@ -180,6 +178,7 @@ import {
   processVideo,
   type VideoState,
 } from './state/video'
+import {videoProgressWithinPhase} from './state/videoProgress'
 import {type TextInputRef} from './text-input/TextInput.types'
 import {getVideoMetadata} from './videos/metadata'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
@@ -1996,7 +1995,10 @@ function ComposerEmbeds({
               (video.status === 'compressing' ? (
                 <VideoTranscodeProgress
                   asset={video.asset}
-                  progress={video.progress}
+                  progress={videoProgressWithinPhase(
+                    'compressing',
+                    video.progress,
+                  )}
                   clear={clearVideo}
                 />
               ) : video.video ? (
@@ -2672,30 +2674,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const progress = state.progress
-  const processingProgress =
-    state.status === 'processing' ? state.jobStatus?.progress : undefined
-  const shouldRotate =
-    state.status === 'processing' && processingProgress === undefined
   let wheelProgress = progress
-
-  const rotate = useDerivedValue(() => {
-    if (shouldRotate) {
-      return withRepeat(
-        withTiming(360, {
-          duration: 2500,
-          easing: Easing.out(Easing.cubic),
-        }),
-        -1,
-      )
-    }
-    return 0
-  })
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{rotateZ: `${rotate.get()}deg`}],
-    }
-  })
 
   let text = ''
 
@@ -2738,19 +2717,17 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
 
   return (
     <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
-      <Animated.View style={[animatedStyle]}>
-        <ProgressCircle
-          size={30}
-          borderWidth={1}
-          borderColor={t.atoms.border_contrast_low.borderColor}
-          color={
-            state.status === 'error'
-              ? t.palette.negative_500
-              : t.palette.primary_500
-          }
-          progress={wheelProgress}
-        />
-      </Animated.View>
+      <ProgressCircle
+        size={30}
+        borderWidth={1}
+        borderColor={t.atoms.border_contrast_low.borderColor}
+        color={
+          state.status === 'error'
+            ? t.palette.negative_500
+            : t.palette.primary_500
+        }
+        progress={wheelProgress}
+      />
       <Text style={[a.font_semi_bold, a.ml_sm]}>{text}</Text>
     </ToolbarWrapper>
   )

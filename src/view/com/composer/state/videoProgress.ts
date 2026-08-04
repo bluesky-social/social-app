@@ -1,4 +1,8 @@
-export type VideoProgressPhase = 'compressing' | 'uploading' | 'processing'
+export type VideoProgressPhase =
+  | 'compressing'
+  | 'uploading'
+  | 'uploadingWithoutCompression'
+  | 'processing'
 
 // Keep progress monotonic across the full client pipeline instead of showing
 // three separate 0 -> 100 cycles. Backend processing progress covers the
@@ -6,6 +10,7 @@ export type VideoProgressPhase = 'compressing' | 'uploading' | 'processing'
 const PHASE_RANGES: Record<VideoProgressPhase, [number, number]> = {
   compressing: [0, 0.3],
   uploading: [0.3, 0.5],
+  uploadingWithoutCompression: [0, 0.5],
   processing: [0.5, 1],
 }
 
@@ -16,6 +21,14 @@ export function videoProgressForPhase(
   const [start, end] = PHASE_RANGES[phase]
   const clamped = Math.min(1, Math.max(0, phaseProgress))
   return start + (end - start) * clamped
+}
+
+export function videoProgressWithinPhase(
+  phase: VideoProgressPhase,
+  progress: number,
+): number {
+  const [start, end] = PHASE_RANGES[phase]
+  return Math.min(1, Math.max(0, (progress - start) / (end - start)))
 }
 
 export function advanceVideoProgress(
