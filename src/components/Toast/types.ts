@@ -19,7 +19,6 @@ export type BaseToastOptions = Pick<
   'duration' | 'dismissible' | 'promiseOptions'
 > & {
   type?: ToastType
-  position?: 'top-center' | 'bottom-center'
 
   /**
    * These methods differ between web/native implementations
