@@ -2,7 +2,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {useListBlockMutation, useListMuteMutation} from '#/state/queries/list'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -13,6 +12,7 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 
 export function SubscribeMenu({list}: {list: app.bsky.graph.defs.ListView}) {
   const {_} = useLingui()

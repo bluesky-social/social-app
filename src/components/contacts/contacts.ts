@@ -1,5 +1,5 @@
-import {app} from '#/lexicons'
 import {type CountryCode} from '#/lib/international-telephone-codes'
+import {app} from '#/lexicons'
 import {normalizePhoneNumber} from './phone-number'
 import {type Contact, type Match} from './state'
 

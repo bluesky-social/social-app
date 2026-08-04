@@ -1,11 +1,10 @@
 import {memo, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
+import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
 import {EMBED_SCRIPT} from '#/lib/constants'
 import {niceDate} from '#/lib/strings/time'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -21,6 +20,7 @@ import {
 } from '#/components/icons/Chevron'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 
 export type ColorModeValues = 'system' | 'light' | 'dark'
 

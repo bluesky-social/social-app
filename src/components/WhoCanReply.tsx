@@ -6,12 +6,11 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
 import {HITSLOP_10} from '#/lib/constants'
 import {makeListLink, makeProfileLink} from '#/lib/routes/links'
 import {
@@ -34,6 +33,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 interface WhoCanReplyProps {

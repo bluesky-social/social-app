@@ -1,6 +1,5 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {type AtUriString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -15,7 +14,7 @@ import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {app, com, tools} from '#/lexicons'
+import {type app, com, tools} from '#/lexicons'
 
 export function GoLiveDisabledDialog({
   control,
@@ -64,7 +63,7 @@ export function DialogInner({
             subject: {
               $type: 'com.atproto.repo.strongRef',
               // a status view's uri is an at-uri produced by the appview
-              uri: status.uri as AtUriString,
+              uri: status.uri,
               cid: status.cid,
             },
             reason: details,

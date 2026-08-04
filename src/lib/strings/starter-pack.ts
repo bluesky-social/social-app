@@ -1,4 +1,5 @@
 import {AtUri} from '@atproto/syntax'
+
 import type * as bsky from '#/types/bsky'
 
 export function createStarterPackLinkFromAndroidReferrer(

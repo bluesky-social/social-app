@@ -10,7 +10,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -18,6 +17,7 @@ import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/compone
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {app} from '#/lexicons'
 
 export function ConstrainedImage({
   aspectRatio,

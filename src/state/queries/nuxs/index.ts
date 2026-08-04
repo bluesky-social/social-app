@@ -8,7 +8,6 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {usePdsClient} from '#/state/session'
-import {type app} from '#/lexicons'
 
 export {Nux} from '#/state/queries/nuxs/definitions'
 
@@ -108,10 +107,7 @@ export function useSaveNux() {
        * `serializeAppNux` still returns the legacy `Nux`, whose strings are
        * unbranded; it is validated against the same schema the action expects.
        */
-      await pdsClient.call(
-        upsertNux,
-        serializeAppNux(nux) as app.bsky.actor.defs.Nux,
-      )
+      await pdsClient.call(upsertNux, serializeAppNux(nux))
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

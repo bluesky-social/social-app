@@ -3,7 +3,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural} from '@lingui/react/macro'
 
-import {com} from '#/lexicons'
 import {filterUserFacingLabels} from '#/lib/moderation'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
@@ -18,6 +17,7 @@ import {
   LabelsOnMeDialog,
   useLabelsOnMeDialogControl,
 } from '#/components/moderation/LabelsOnMeDialog'
+import {com} from '#/lexicons'
 
 export function LabelsOnMe({
   labels,

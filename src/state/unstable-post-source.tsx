@@ -1,9 +1,9 @@
 import {useEffect, useId, useState} from 'react'
-
 import {AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
+
 import {Logger} from '#/logger'
 import {type FeedSourceInfo} from '#/state/queries/feed'
+import {app} from '#/lexicons'
 
 /**
  * Separate logger for better debugging

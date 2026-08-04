@@ -4,9 +4,9 @@ import {
   type QueryKey,
 } from '@tanstack/react-query'
 
+import {chat} from '#/lexicons'
 import {RQKEY as CONVO_KEY} from '../conversation'
 import {RQKEY_ROOT as CONVO_LIST_KEY} from '../list-conversations'
-import {chat} from '#/lexicons'
 
 type ConvoUpdater = (
   prev: chat.bsky.convo.defs.ConvoView,

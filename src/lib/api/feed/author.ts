@@ -1,7 +1,7 @@
 import {type Client, type XrpcRequestParams} from '@atproto/lex'
 
-import * as bsky from '#/types/bsky'
 import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 type GetAuthorFeedParams = XrpcRequestParams<

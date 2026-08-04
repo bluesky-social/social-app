@@ -1,4 +1,5 @@
 import {AtUri} from '@atproto/syntax'
+
 import {app, com} from '#/lexicons'
 
 export function isStandardSiteDocumentUri(

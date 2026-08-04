@@ -2,7 +2,6 @@ import {useEffect, useMemo, useState} from 'react'
 import type * as AgeRange from 'expo-age-range'
 import {computeAgeAssuranceRegionAccess} from '@bsky.app/sdk/utils'
 
-import {type app} from '#/lexicons'
 import {getAge} from '#/lib/strings/time'
 import {useSession} from '#/state/session'
 import {
@@ -28,6 +27,7 @@ import {
   getAgeAssuranceRegionConfigWithFallback,
 } from '#/ageAssurance/util'
 import {type Geolocation, useGeolocation} from '#/geolocation'
+import {type app} from '#/lexicons'
 import {device} from '#/storage'
 
 /**

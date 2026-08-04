@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {chat} from '#/lexicons'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -22,6 +21,7 @@ import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {chat} from '#/lexicons'
 
 export function RecentChats({
   postUri,

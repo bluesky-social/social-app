@@ -1,4 +1,4 @@
-import {type AtUriString, AtUri} from '@atproto/syntax'
+import {AtUri, type AtUriString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -6,9 +6,9 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import * as bsky from '#/types/bsky'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,

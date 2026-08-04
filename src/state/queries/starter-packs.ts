@@ -1,4 +1,4 @@
-import {type Client, type LexValue} from '@atproto/lex'
+import {type Client} from '@atproto/lex'
 import {AtUri, type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {
@@ -133,7 +133,7 @@ export function useCreateStarterPackMutation({
         descriptionFacets,
         // `createStarterPackList` returns a plain string uri
         list: listRes?.uri as AtUriString,
-        feeds: feeds?.map(f => ({uri: f.uri as AtUriString})),
+        feeds: feeds?.map(f => ({uri: f.uri})),
         createdAt: toDatetimeString(new Date()),
       })
     },
@@ -257,7 +257,7 @@ export function useEditStarterPackMutation({
            * types the raw `putRecord` body as a `LexValue`, which the legacy
            * view interface does not structurally satisfy, hence the cast.
            */
-          feeds: feeds as unknown as LexValue,
+          feeds: feeds,
           createdAt: currentStarterPack.record.createdAt,
           updatedAt: new Date().toISOString(),
         },

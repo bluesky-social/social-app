@@ -16,8 +16,6 @@ import {
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import * as bsky from '#/types/bsky'
-import {chat} from '#/lexicons'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useViewportZoomLock} from '#/lib/hooks/useViewportZoomLock'
 import {
@@ -47,6 +45,8 @@ import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
 import {IS_LIQUID_GLASS} from '#/env'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatEnded} from './components/ChatEnded'
 import {ChatLocked} from './components/ChatLocked'

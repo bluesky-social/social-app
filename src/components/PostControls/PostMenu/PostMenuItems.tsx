@@ -6,13 +6,12 @@ import {
   type ViewStyle,
 } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
+import {AtUri} from '@atproto/syntax'
 import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
@@ -93,6 +92,7 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
+import {app} from '#/lexicons'
 
 let PostMenuItems = ({
   post,

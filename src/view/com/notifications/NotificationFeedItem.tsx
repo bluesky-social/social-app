@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native'
 import {TID} from '@atproto/common-web'
-import {type DidString, AtUri} from '@atproto/syntax'
+import {AtUri, type DidString} from '@atproto/syntax'
 import {
   moderateProfile,
   type ModerationDecision,

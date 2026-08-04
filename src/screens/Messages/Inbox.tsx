@@ -7,8 +7,6 @@ import {
   type UseInfiniteQueryResult,
 } from '@tanstack/react-query'
 
-import * as bsky from '#/types/bsky'
-import {chat} from '#/lexicons'
 import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {
@@ -41,6 +39,8 @@ import {ListFooter} from '#/components/Lists'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {IncomingRequestListItem} from './components/IncomingRequestListItem'
 import {OutgoingRequestListItem} from './components/OutgoingRequestListItem'
 import {useIsWithinSplitView} from './components/splitView/context'

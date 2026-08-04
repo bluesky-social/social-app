@@ -6,7 +6,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {app} from '#/lexicons'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -20,6 +19,7 @@ import {UserAvatar, type UserAvatarType} from '#/view/com/util/UserAvatar'
 import {StarterPack} from '#/components/icons/StarterPack'
 import * as Layout from '#/components/Layout'
 import {useLightboxControls} from '#/components/Lightbox/state'
+import {app} from '#/lexicons'
 
 export function ProfileSubpageHeader({
   isLoading,

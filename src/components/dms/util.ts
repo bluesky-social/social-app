@@ -1,7 +1,6 @@
+import {type $Typed} from '@atproto/lex'
 import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 
-import {type $Typed} from '@atproto/lex'
-import {chat} from '#/lexicons'
 import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
@@ -9,6 +8,7 @@ import {type Shadow} from '#/state/cache/profile-shadow'
 import {type ConvoState, ConvoStatus} from '#/state/messages/convo/types'
 import {platform} from '#/alf'
 import {type ReportSubject} from '#/components/moderation/ReportDialog/types'
+import {chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000

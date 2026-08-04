@@ -6,7 +6,6 @@ import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {tokens} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
@@ -32,6 +31,7 @@ import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {GCP_PROJECT_ID, IS_ANDROID} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {

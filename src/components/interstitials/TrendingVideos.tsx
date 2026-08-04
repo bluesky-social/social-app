@@ -1,11 +1,9 @@
 import {useCallback, useEffect, useMemo} from 'react'
 import {ScrollView, View} from 'react-native'
+import {AtUri} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {AtUri} from '@atproto/syntax'
-import * as bsky from '#/types/bsky'
-import {app} from '#/lexicons'
 import {VIDEO_FEED_URI} from '#/lib/constants'
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {useTrendingSettingsApi} from '#/state/preferences/trending'
@@ -23,6 +21,8 @@ import {
   CompactVideoPostCardPlaceholder,
 } from '#/components/VideoPostCard'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const CARD_WIDTH = 108
 

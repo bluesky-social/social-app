@@ -5,7 +5,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAllListMembersQuery} from '#/state/queries/list-members'
@@ -23,6 +22,7 @@ import {
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function ListAddRemoveUsersDialog({

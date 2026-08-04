@@ -31,7 +31,7 @@ export function useBookmarkMutation() {
       if (args.action === 'create') {
         updatePostShadow(qc, args.post.uri, {bookmarked: true})
         await client.call(app.bsky.bookmark.createBookmark, {
-          uri: args.post.uri as AtUriString,
+          uri: args.post.uri,
           cid: args.post.cid,
         })
       } else if (args.action === 'delete') {

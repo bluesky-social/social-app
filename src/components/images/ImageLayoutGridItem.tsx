@@ -6,7 +6,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, tokens, useTheme} from '#/alf'
@@ -14,6 +13,7 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {type PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 
 type EventFunction = (index: number) => void
 

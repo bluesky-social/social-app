@@ -2,7 +2,6 @@ import {memo, useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {urls} from '#/lib/constants'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {useCallOnce} from '#/lib/once'
@@ -37,6 +36,7 @@ import {ListFooter} from '#/components/Lists'
 import {SearchError} from '#/components/SearchError'
 import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 let SearchResults = ({

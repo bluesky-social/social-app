@@ -3,7 +3,6 @@ import {useWindowDimensions, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {chat} from '#/lexicons'
 import {useSession} from '#/state/session'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import * as ContextMenu from '#/components/ContextMenu'
@@ -14,6 +13,7 @@ import {
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {type TriggerProps} from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
+import {chat} from '#/lexicons'
 import {EmojiPopup} from './EmojiPopup'
 import {hasAlreadyReacted, hasReachedReactionLimit} from './util'
 

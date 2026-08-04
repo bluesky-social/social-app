@@ -1,6 +1,7 @@
 import {AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
+
 import {isInvalidHandle} from '#/lib/strings/handles'
+import {app} from '#/lexicons'
 
 export function makeProfileLink(
   info: {

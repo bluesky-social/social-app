@@ -4,8 +4,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import * as bsky from '#/types/bsky'
-import {app} from '#/lexicons'
 import {isReasonFeedSource, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -16,6 +14,8 @@ import {Repost_Stroke2_Corner3_Rounded as RepostIcon} from '#/components/icons/R
 import {Link} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {FeedNameText} from '../util/FeedInfoText'
 
 export function PostFeedReason({

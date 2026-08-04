@@ -5,7 +5,6 @@ import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import * as bsky from '#/types/bsky'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {useCallOnce} from '#/lib/once'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -47,6 +46,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {ProfileBadges} from '../ProfileBadges'
 
 export function GroupChatJoinDialog() {

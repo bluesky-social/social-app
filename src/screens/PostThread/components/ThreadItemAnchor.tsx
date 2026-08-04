@@ -1,10 +1,9 @@
 import {memo, useMemo} from 'react'
 import {Text as RNText, View} from 'react-native'
+import {AtUri} from '@atproto/syntax'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
-import {AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -60,6 +59,7 @@ import {Text} from '#/components/Typography'
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({

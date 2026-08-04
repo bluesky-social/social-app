@@ -3,12 +3,12 @@ import {type Insets} from 'react-native'
 import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import * as Menu from '#/components/Menu'
 import {useMenuControl} from '#/components/Menu'
+import {app} from '#/lexicons'
 import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
 import {PostMenuItems} from './PostMenuItems'
 

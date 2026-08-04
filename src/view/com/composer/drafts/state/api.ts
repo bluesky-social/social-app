@@ -2,12 +2,10 @@
  * Type converters for Draft API - convert between ComposerState and server Draft types.
  */
 import {type UriString} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {nanoid} from 'nanoid/non-secure'
 
-import {AtUri} from '@atproto/syntax'
-import * as bsky from '#/types/bsky'
-import {app} from '#/lexicons'
 import {type LinkResolvers, resolveLink} from '#/lib/api/resolve'
 import {getDeviceName} from '#/lib/deviceName'
 import {getImageDim} from '#/lib/media/manip'
@@ -25,6 +23,8 @@ import {type VideoState} from '#/view/com/composer/state/video'
 import {type AnalyticsContextType} from '#/analytics'
 import {getDeviceId} from '#/analytics/identifiers'
 import {type Gif} from '#/features/gifPicker/types'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {logger} from './logger'
 import {type DraftPostDisplay, type DraftSummary} from './schema'
 import * as storage from './storage'

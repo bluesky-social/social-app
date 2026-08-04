@@ -8,7 +8,6 @@ import {Image} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {app} from '#/lexicons'
 import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
@@ -17,6 +16,7 @@ import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 
 export function ExternalGif({
   link,

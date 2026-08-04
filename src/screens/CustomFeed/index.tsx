@@ -5,7 +5,6 @@ import {useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {app} from '#/lexicons'
 import {TRENDING_DID, TRENDING_HANDLE, VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
@@ -43,6 +42,7 @@ import {
   CustomFeedHeader,
   CustomFeedHeaderSkeleton,
 } from './components/CustomFeedHeader'
+import {app} from '#/lexicons'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export function CustomFeedScreen(props: Props) {

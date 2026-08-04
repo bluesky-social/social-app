@@ -1,4 +1,4 @@
-import {type Client, type $Typed} from '@atproto/lex'
+import {type $Typed, type Client} from '@atproto/lex'
 
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type ConvoWithDetails} from '#/components/dms/util'

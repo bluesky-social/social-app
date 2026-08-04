@@ -1,6 +1,7 @@
 import {useMemo} from 'react'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+
 import {tools} from '#/lexicons'
 
 export type ReportCategory =

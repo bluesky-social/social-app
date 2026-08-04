@@ -2,8 +2,6 @@ import {setStringAsync} from 'expo-clipboard'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import * as bsky from '#/types/bsky'
-import {chat} from '#/lexicons'
 import {type NavigationProp} from '#/lib/routes/types'
 import {
   type ChatInvitePreview,
@@ -19,6 +17,8 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import * as Toast from '#/components/Toast'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   type ChatInviteAction,
   ChatInviteProvider,

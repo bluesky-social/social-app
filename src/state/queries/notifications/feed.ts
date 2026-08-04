@@ -17,6 +17,8 @@
  */
 
 import {useCallback, useEffect, useMemo, useRef} from 'react'
+import {AtUri} from '@atproto/syntax'
+import {moderatePost} from '@bsky.app/sdk/moderation'
 import {
   type InfiniteData,
   type QueryClient,
@@ -25,13 +27,11 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {AtUri} from '@atproto/syntax'
-import {moderatePost} from '@bsky.app/sdk/moderation'
-import {app} from '#/lexicons'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'
 import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {
   didOrHandleUriMatches,

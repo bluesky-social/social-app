@@ -2,10 +2,10 @@ import {useCallback} from 'react'
 import {type Client, type Un$Typed} from '@atproto/lex'
 import {
   type AtIdentifierString,
+  AtUri,
   type AtUriString,
   type DidString,
   toDatetimeString,
-  AtUri,
 } from '@atproto/syntax'
 import {
   deleteFollow,
@@ -337,7 +337,7 @@ export function useProfileFollowMutationQueue(
       if (finalFollowingUri) {
         void client
           .call(app.bsky.graph.getSuggestedFollowsByActor, {
-            actor: did as AtIdentifierString,
+            actor: did,
           })
           .then(res => {
             const dids = res.suggestions

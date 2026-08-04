@@ -49,7 +49,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export type PostInteractionSettingsFormProps = {
   canSave?: boolean

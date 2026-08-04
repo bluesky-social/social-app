@@ -1,7 +1,7 @@
 import {useCallback, useRef} from 'react'
 
-import {app} from '#/lexicons'
 import {type Metrics, useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 
 /**
  * Hook that returns a callback to track post:view events.

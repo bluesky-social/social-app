@@ -1,13 +1,12 @@
 import {useEffect, useMemo} from 'react'
 import {View} from 'react-native'
+import {AtUri} from '@atproto/syntax'
 import {moderateUserList, type ModerationUI} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {precacheList} from '#/state/queries/feed'
@@ -23,6 +22,7 @@ import {
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 /*

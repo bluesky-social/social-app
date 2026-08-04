@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {AppState} from 'react-native'
 import {type Client} from '@atproto/lex'
-import {type AtIdentifierString, type AtUriString, AtUri} from '@atproto/syntax'
+import {type AtIdentifierString, AtUri, type AtUriString} from '@atproto/syntax'
 import {
   moderatePost,
   type ModerationDecision,
@@ -14,8 +14,6 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import * as bsky from '#/types/bsky'
-import {app} from '#/lexicons'
 import {AuthorFeedAPI} from '#/lib/api/feed/author'
 import {CustomFeedAPI} from '#/lib/api/feed/custom'
 import {DemoFeedAPI} from '#/lib/api/feed/demo'
@@ -35,6 +33,8 @@ import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAppviewClient, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {usePreferencesQuery} from './preferences'

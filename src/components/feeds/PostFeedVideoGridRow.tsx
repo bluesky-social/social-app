@@ -1,7 +1,5 @@
 import {View} from 'react-native'
 
-import * as bsky from '#/types/bsky'
-import {app} from '#/lexicons'
 import {type FeedPostSliceItem} from '#/state/queries/post-feed'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useGutters} from '#/alf'
@@ -11,6 +9,8 @@ import {
   VideoPostCardPlaceholder,
 } from '#/components/VideoPostCard'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export function PostFeedVideoGridRow({
   items: slices,

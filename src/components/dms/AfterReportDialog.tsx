@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
-import {app} from '#/lexicons'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
@@ -19,6 +18,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {app} from '#/lexicons'
 
 type ReportDialogParams = {
   convoId: string

@@ -10,12 +10,12 @@ import {
 } from '@tiptap/suggestion'
 import tippy, {type Instance as TippyInstance} from 'tippy.js'
 
-import {app} from '#/lexicons'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {type ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {atoms as a, useTheme} from '#/alf'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 
 interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean

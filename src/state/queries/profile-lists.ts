@@ -1,11 +1,11 @@
 import {type DidString} from '@atproto/syntax'
+import {moderateUserList} from '@bsky.app/sdk/moderation'
 import {
   type InfiniteData,
   type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {moderateUserList} from '@bsky.app/sdk/moderation'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 import {useModerationOpts} from '../preferences/moderation-opts'

@@ -1,10 +1,8 @@
-import {type AtUriString} from '@atproto/syntax'
 import {useEffect, useMemo, useState} from 'react'
+import {type AtUriString} from '@atproto/syntax'
 import {type QueryClient} from '@tanstack/react-query'
 import {EventEmitter} from 'eventemitter3'
 
-import * as bsky from '#/types/bsky'
-import {app} from '#/lexicons'
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {findAllPostsInQueryData as findAllPostsInBookmarksQueryData} from '#/state/queries/bookmarks/useBookmarksQuery'
 import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
@@ -13,6 +11,8 @@ import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/qu
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts-v2'
 import {findAllPostsInQueryData as findAllPostsInThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {castAsShadow, type Shadow} from './types'
 export type {Shadow} from './types'
 

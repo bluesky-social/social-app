@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {app} from '#/lexicons'
 import {useGoBack} from '#/lib/hooks/useGoBack'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
@@ -27,6 +26,7 @@ import {Loader} from '#/components/Loader'
 import {useHider} from '#/components/moderation/Hider'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 
 export function ListHiddenScreen({
   list,

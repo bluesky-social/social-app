@@ -1,12 +1,10 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {type AtUriString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {app} from '#/lexicons'
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
@@ -22,6 +20,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const IGNORED_ACCOUNT = 'did:plc:pifkcjimdcfwaxkanzhwxufp'
@@ -77,7 +76,7 @@ export function StarterPackCard({
     try {
       followUris = await bulkWriteFollows(pdsClient, appviewClient, dids, {
         // the starter pack view is still legacy-typed
-        uri: view.uri as AtUriString,
+        uri: view.uri,
         cid: view.cid,
       })
     } catch (e) {

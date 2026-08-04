@@ -4,7 +4,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
@@ -25,6 +24,7 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
+import {app} from '#/lexicons'
 
 export function EditProfileDialog({
   profile,

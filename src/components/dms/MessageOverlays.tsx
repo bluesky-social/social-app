@@ -10,7 +10,6 @@ import {LayoutAnimation} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {chat} from '#/lexicons'
 import {useConvoActive} from '#/state/messages/convo'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useDialogControl} from '#/components/Dialog'
@@ -20,6 +19,7 @@ import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
+import {chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 type MessageDialogsContextType = {

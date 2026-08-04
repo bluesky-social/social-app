@@ -1,10 +1,9 @@
 import {View} from 'react-native'
+import {type $Typed} from '@atproto/lex'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {type $Typed} from '@atproto/lex'
-import {com} from '#/lexicons'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {RQKEY_ROOT as POST_FEED_RQKEY_ROOT} from '#/state/queries/post-feed'
 import {
@@ -23,6 +22,7 @@ import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {useAnalytics} from '#/analytics'
+import {com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 type Props = NativeStackScreenProps<

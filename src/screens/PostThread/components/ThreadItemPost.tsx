@@ -1,10 +1,9 @@
 import {memo, type ReactNode, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
+import {AtUri} from '@atproto/syntax'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 
-import {AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -51,6 +50,7 @@ import * as Skele from '#/components/Skeleton'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {useActorStatus} from '#/features/liveNow'
+import {app} from '#/lexicons'
 
 export type ThreadItemPostProps = {
   item: Extract<ThreadItem, {type: 'threadPost'}>

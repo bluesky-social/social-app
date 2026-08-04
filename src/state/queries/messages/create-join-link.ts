@@ -1,10 +1,10 @@
 import {toDatetimeString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import * as bsky from '#/types/bsky'
 import {logger} from '#/logger'
 import {useChatClient} from '#/state/session'
 import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   rollbackConvoOptimistic,
   updateConvoOptimistic,

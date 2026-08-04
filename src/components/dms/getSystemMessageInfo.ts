@@ -1,8 +1,6 @@
 import {type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
-import * as bsky from '#/types/bsky'
-import {chat} from '#/lexicons'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
 import {ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon} from '#/components/icons/ArrowBoxRight'
@@ -16,6 +14,8 @@ import {
   Unlock_Stroke2_Corner2_Rounded as UnlockIcon,
 } from '#/components/icons/Lock'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilIcon} from '#/components/icons/Pencil'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export type SystemMessageAction =
   | {

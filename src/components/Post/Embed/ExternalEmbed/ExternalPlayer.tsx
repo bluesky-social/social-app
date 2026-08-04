@@ -19,7 +19,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {app} from '#/lexicons'
 import {type NavigationProp} from '#/lib/routes/types'
 import {
   type EmbedPlayerParams,
@@ -34,6 +33,7 @@ import {Fill} from '#/components/Fill'
 import {KeepAwake} from '#/components/KeepAwake'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {IS_NATIVE} from '#/env'
+import {app} from '#/lexicons'
 
 interface ShouldStartLoadRequest {
   url: string

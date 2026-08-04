@@ -5,7 +5,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
@@ -19,6 +18,7 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useStarterPackLink} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function StarterPackCard({

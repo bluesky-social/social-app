@@ -312,7 +312,7 @@ async function resolveEmbed(
          * unbranded strings. Assert at the boundary until it moves to the
          * clients.
          */
-        record: resolvedLink.record as com.atproto.repo.strongRef.Main,
+        record: resolvedLink.record,
       }
     }
   }
@@ -474,9 +474,7 @@ async function resolveMedia(
           title: resolvedLink.title,
           description: resolvedLink.description,
           thumb: blob,
-          associatedRefs: resolvedLink.associatedRefs as
-            | com.atproto.repo.strongRef.Main[]
-            | undefined,
+          associatedRefs: resolvedLink.associatedRefs,
         },
       }
     }
@@ -511,5 +509,5 @@ async function resolveRecord(
   if (resolvedLink.type !== 'record') {
     throw Error(t`Expected uri to resolve to a record`)
   }
-  return resolvedLink.record as com.atproto.repo.strongRef.Main
+  return resolvedLink.record
 }

@@ -1,7 +1,6 @@
 import {type DidString} from '@atproto/syntax'
 import {describe, expect, it, jest} from '@jest/globals'
 
-import {app} from '#/lexicons'
 import {type Notification} from '../types'
 import {groupNotifications} from '../util'
 
@@ -36,7 +35,7 @@ function makeFollowNotification(
       : undefined,
     isRead: false,
     indexedAt: '2026-07-28T12:00:00.000Z',
-  } as Notification
+  }
 }
 
 describe('groupNotifications', () => {

@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
 import {type Client} from '@atproto/lex'
-import {type AtUriString, type HandleString, AtUri} from '@atproto/syntax'
+import {AtUri, type AtUriString, type HandleString} from '@atproto/syntax'
 import {deleteLike, deletePost, deleteRepost, like, repost} from '@bsky.app/sdk'
 import {
   type QueryClient,
@@ -108,7 +108,7 @@ export function useGetPosts() {
             uris: uris as AtUriString[],
           })
           // See the note on `fetchPost` about the view shapes.
-          return data.posts as app.bsky.feed.defs.PostView[]
+          return data.posts
         },
       })
     },

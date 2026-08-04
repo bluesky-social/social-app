@@ -1,4 +1,3 @@
-import {app} from '#/lexicons'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 /**

@@ -2,10 +2,10 @@ import {useRef} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 
-import {app} from '#/lexicons'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {type Dimensions} from '#/components/Lightbox/types'
 import {type PostEmbedViewContext} from '#/components/Post/Embed/types'
+import {app} from '#/lexicons'
 import {GalleryItem} from './ImageLayoutGridItem'
 
 interface ImageLayoutGridProps {

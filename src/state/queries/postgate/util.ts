@@ -1,8 +1,8 @@
-import {type AtUriString, toDatetimeString, AtUri} from '@atproto/syntax'
-
 import {type $Typed} from '@atproto/lex'
-import * as bsky from '#/types/bsky'
+import {AtUri, type AtUriString, toDatetimeString} from '@atproto/syntax'
+
 import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate'
 

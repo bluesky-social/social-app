@@ -1,5 +1,5 @@
-import {type UriString} from '@atproto/lex'
 import {type ImagePickerAsset} from 'expo-image-picker'
+import {type UriString} from '@atproto/lex'
 import {type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {nanoid} from 'nanoid/non-secure'
@@ -325,14 +325,13 @@ export function composerReducer(
              * Draft records are still typed against the legacy client, so the
              * stored rules arrive unbranded. Wave B migrates the draft types.
              */
-            embeddingRules:
-              postgateEmbeddingRules as app.bsky.feed.postgate.Main['embeddingRules'],
+            embeddingRules: postgateEmbeddingRules,
           }),
           threadgate: threadgateRecordToAllowUISetting({
             $type: 'app.bsky.feed.threadgate',
             post: '' as AtUriString,
             createdAt: toDatetimeString(new Date()),
-            allow: threadgateAllow as app.bsky.feed.threadgate.Main['allow'],
+            allow: threadgateAllow,
           }),
         },
       }
@@ -755,15 +754,13 @@ export function createComposerState({
          * Preferences are still typed against the legacy client, so the stored
          * rules arrive unbranded. Wave B migrates `getPreferences`.
          */
-        embeddingRules: (initInteractionSettings?.postgateEmbeddingRules ||
-          []) as app.bsky.feed.postgate.Main['embeddingRules'],
+        embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
       }),
       threadgate: threadgateRecordToAllowUISetting({
         $type: 'app.bsky.feed.threadgate',
         post: '' as AtUriString,
         createdAt: toDatetimeString(new Date()),
-        allow:
-          initInteractionSettings?.threadgateAllowRules as app.bsky.feed.threadgate.Main['allow'],
+        allow: initInteractionSettings?.threadgateAllowRules,
       }),
     },
   }

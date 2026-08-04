@@ -6,7 +6,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {differenceInSeconds} from 'date-fns'
 
-import {app} from '#/lexicons'
 import {HITSLOP_10} from '#/lib/constants'
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -20,6 +19,7 @@ import {Newskie} from '#/components/icons/Newskie'
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {app} from '#/lexicons'
 
 export function NewskieDialog({
   profile,

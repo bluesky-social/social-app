@@ -13,9 +13,9 @@ import {
   getTraversalMetadata,
   storeTraversalMetadata,
 } from '#/state/queries/usePostThread/utils'
-import * as bsky from '#/types/bsky'
-import {app} from '#/lexicons'
 import * as views from '#/state/queries/usePostThread/views'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export function sortAndAnnotateThreadItems(
   thread: ApiThreadItem[],

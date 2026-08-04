@@ -8,7 +8,6 @@ import {
   getModerationCauseKey,
   unique,
 } from '#/lib/moderation'
-import {app, com} from '#/lexicons'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
 import {
@@ -16,6 +15,7 @@ import {
   useLabelsOnMeDialogControl,
 } from '#/components/moderation/LabelsOnMeDialog'
 import * as Pills from '#/components/Pills'
+import {app, com} from '#/lexicons'
 
 export function PostAlerts({
   post,

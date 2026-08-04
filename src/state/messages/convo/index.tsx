@@ -9,8 +9,6 @@ import {
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import * as bsky from '#/types/bsky'
-import {chat} from '#/lexicons'
 import {useAppState} from '#/lib/appState'
 import {Convo} from '#/state/messages/convo/agent'
 import {
@@ -31,6 +29,8 @@ import {RQKEY_ROOT as ListConvosQueryKeyRoot} from '#/state/queries/messages/lis
 import {RQKEY as createProfileQueryKey} from '#/state/queries/profile'
 import {useChatClient} from '#/state/session'
 import {type GroupConvoMember} from '#/components/dms/util'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export * from '#/state/messages/convo/util'
 

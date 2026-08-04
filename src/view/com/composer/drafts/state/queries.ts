@@ -4,7 +4,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import * as bsky from '#/types/bsky'
 import {isNetworkError} from '#/lib/strings/errors'
 import {matchXrpcError} from '#/lib/xrpc-error'
 import {useAppviewClient, useChatClient} from '#/state/session'
@@ -12,6 +11,7 @@ import {type ComposerState} from '#/view/com/composer/state/composer'
 import {useAnalytics} from '#/analytics'
 import {getDeviceId} from '#/analytics/identifiers'
 import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {composerStateToDraft, draftViewToSummary} from './api'
 import {logger} from './logger'
 import * as storage from './storage'
@@ -147,7 +147,7 @@ export function useSaveDraftMutation() {
        * `composerStateToDraft` builds the draft with unbranded string fields,
        * so it is asserted once here to the generated input type.
        */
-      const draft = apiDraft as unknown as app.bsky.draft.defs.Draft
+      const draft = apiDraft
 
       logger.debug('saving draft', {
         existingDraftId,

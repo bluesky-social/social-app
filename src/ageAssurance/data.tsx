@@ -32,7 +32,7 @@ import {
 } from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
 import {useGeolocation} from '#/geolocation'
-import {app, chat} from '#/lexicons'
+import {app, type chat} from '#/lexicons'
 import {device} from '#/storage'
 
 /**
@@ -96,9 +96,7 @@ export async function getConfig() {
    * before there is any session (and while logged out), so it goes through the
    * process-wide public client rather than a bundle one.
    */
-  return (await getPublicAppviewClient().call(
-    app.bsky.ageassurance.getConfig,
-  )) as app.bsky.ageassurance.getConfig.$OutputBody
+  return await getPublicAppviewClient().call(app.bsky.ageassurance.getConfig)
 }
 export function getConfigFromCache():
   | app.bsky.ageassurance.getConfig.$OutputBody

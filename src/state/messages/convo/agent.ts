@@ -1,9 +1,8 @@
+import {type $Typed, type Client, XrpcResponseError} from '@atproto/lex'
 import {type DidString, toDatetimeString} from '@atproto/syntax'
-import {type Client, XrpcResponseError, type $Typed} from '@atproto/lex'
 import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
-import * as bsky from '#/types/bsky'
 import {networkRetry} from '#/lib/async/retry'
 import {
   isErrorMaybeAppPasswordPermissions,
@@ -43,6 +42,7 @@ import {
 } from '#/components/dms/util'
 import {IS_NATIVE} from '#/env'
 import {app, chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
 

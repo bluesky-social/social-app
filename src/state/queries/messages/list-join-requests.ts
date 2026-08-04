@@ -1,11 +1,11 @@
 import {useEffect} from 'react'
 import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query'
 
-import * as bsky from '#/types/bsky'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {createQueryKey} from '#/state/queries/util'
 import {useChatClient} from '#/state/session'
 import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {STALE} from '..'
 
 export const JOIN_REQUESTS_THRESHOLD = 20

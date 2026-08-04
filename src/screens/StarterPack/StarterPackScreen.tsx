@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {type AtUriString, AtUri} from '@atproto/syntax'
+import {AtUri} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
@@ -11,7 +11,6 @@ import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {app} from '#/lexicons'
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {HITSLOP_20} from '#/lib/constants'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
@@ -74,6 +73,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 type StarterPackScreeProps = NativeStackScreenProps<
@@ -377,7 +377,7 @@ function Header({
     try {
       followUris = await bulkWriteFollows(pdsClient, appviewClient, dids, {
         // the starter pack view is still legacy-typed
-        uri: starterPack.uri as AtUriString,
+        uri: starterPack.uri,
         cid: starterPack.cid,
       })
     } catch (e) {

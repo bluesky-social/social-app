@@ -1,9 +1,9 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import Svg, {Circle, Line} from 'react-native-svg'
+import {AtUri} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
 
-import {AtUri} from '@atproto/syntax'
 import {makeProfileLink} from '#/lib/routes/links'
 import {atoms as a, select, useTheme} from '#/alf'
 import {Link} from '#/components/Link'

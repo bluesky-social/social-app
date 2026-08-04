@@ -2,7 +2,6 @@ import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {shareImageModal} from '#/lib/media/manip'
 import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
 import {isGifEmbed} from '#/lib/strings/embed-player'
@@ -13,6 +12,7 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as PeekMenu from '#/components/PeekMenu'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 /**

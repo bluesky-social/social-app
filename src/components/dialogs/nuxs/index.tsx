@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react'
 
-import {app} from '#/lexicons'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
@@ -30,6 +29,7 @@ import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
 import {useAnalytics} from '#/analytics'
 import {useGeolocation} from '#/geolocation'
+import {app} from '#/lexicons'
 
 type Context = {
   activeNux: Nux | undefined

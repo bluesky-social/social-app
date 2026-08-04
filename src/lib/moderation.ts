@@ -12,7 +12,7 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {type AppModerationCause} from '#/components/Pills'
-import {type app, com} from '#/lexicons'
+import {type app, type com} from '#/lexicons'
 
 export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const
 export const OTHER_SELF_LABELS = ['graphic-media'] as const

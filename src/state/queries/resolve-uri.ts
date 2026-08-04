@@ -1,5 +1,5 @@
 import {type Client} from '@atproto/lex'
-import {type HandleString, AtUri} from '@atproto/syntax'
+import {AtUri, type HandleString} from '@atproto/syntax'
 import {type QueryClient, queryOptions, useQuery} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'

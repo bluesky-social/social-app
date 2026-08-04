@@ -1,8 +1,8 @@
 import {useLingui} from '@lingui/react/macro'
 
-import * as bsky from '#/types/bsky'
-import {app, chat} from '#/lexicons'
 import {BSKY_APP_HOST, toShortUrl} from '#/lib/strings/url-helpers'
+import {app, chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 /**
  * Describes the embed of a quoted message that has no text of its own, so the

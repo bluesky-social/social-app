@@ -1,4 +1,5 @@
 import {type UseSiftReturn} from '@bsky.app/sift'
+
 import {com} from '#/lexicons'
 
 export type HandleSuggestionsProps = {
