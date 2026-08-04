@@ -1,12 +1,8 @@
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {
-  AppBskyEmbedGallery,
-  type AppBskyEmbedImages,
-  type AppBskyFeedDefs,
-} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {app} from '#/lexicons'
 import {shareImageModal} from '#/lib/media/manip'
 import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
 import {isGifEmbed} from '#/lib/strings/embed-player'
@@ -27,7 +23,7 @@ export function Embed({
   style,
   peekable = false,
 }: {
-  embed: AppBskyFeedDefs.PostView['embed']
+  embed: app.bsky.feed.defs.PostView['embed']
   style?: StyleProp<ViewStyle>
   peekable?: boolean
 }) {
@@ -59,9 +55,9 @@ export function Embed({
     const tiles: React.ReactNode[] = []
     for (const item of e.view.items) {
       if (tiles.length >= 4) break
-      if (!AppBskyEmbedGallery.isViewImage(item)) continue
+      if (!bsky.isType(app.bsky.embed.gallery.viewImage, item)) continue
       if (peekable) {
-        const image: AppBskyEmbedImages.ViewImage = {
+        const image: app.bsky.embed.images.ViewImage = {
           thumb: item.thumbnail,
           fullsize: item.fullsize,
           alt: item.alt,
@@ -202,7 +198,7 @@ export function VideoItem({
   )
 }
 
-function PeekableImageItem({image}: {image: AppBskyEmbedImages.ViewImage}) {
+function PeekableImageItem({image}: {image: app.bsky.embed.images.ViewImage}) {
   const {t: l} = useLingui()
   const saveImage = useSaveImageToMediaLibrary()
 

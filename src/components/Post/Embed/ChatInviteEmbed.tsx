@@ -1,6 +1,6 @@
 import {type StyleProp, type ViewStyle} from 'react-native'
-import {type AppBskyEmbedExternal} from '@atproto/api'
 
+import {app} from '#/lexicons'
 import {atoms as a} from '#/alf'
 import * as ChatInvite from '#/components/dms/ChatInvite'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
@@ -18,7 +18,7 @@ export function ChatInviteEmbed({
   style,
 }: {
   code: string
-  link: AppBskyEmbedExternal.ViewExternal
+  link: app.bsky.embed.external.ViewExternal
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) {
@@ -34,7 +34,7 @@ function ChatInviteEmbedBody({
   onOpen,
   style,
 }: {
-  link: AppBskyEmbedExternal.ViewExternal
+  link: app.bsky.embed.external.ViewExternal
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) {

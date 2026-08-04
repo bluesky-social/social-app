@@ -1,9 +1,9 @@
 import {memo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
+import {app} from '#/lexicons'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
@@ -113,7 +113,7 @@ function DoneStep({
 }: {
   convoId: string
   currentScreen: 'list' | 'conversation'
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
 }) {
   const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()

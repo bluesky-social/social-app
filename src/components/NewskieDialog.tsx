@@ -1,11 +1,11 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {differenceInSeconds} from 'date-fns'
 
+import {app} from '#/lexicons'
 import {HITSLOP_10} from '#/lib/constants'
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {moderateProfile} from '#/lib/moderation/subjects'
@@ -25,7 +25,7 @@ export function NewskieDialog({
   profile,
   disabled,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   disabled?: boolean
 }) {
   const t = useTheme()
@@ -75,7 +75,7 @@ function DialogInner({
   createdAt,
   now,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   createdAt: string
   now: number
 }) {

@@ -1,5 +1,4 @@
-import {type AppBskyContactDefs} from '@atproto/api'
-
+import {app} from '#/lexicons'
 import {type CountryCode} from '#/lib/international-telephone-codes'
 import {normalizePhoneNumber} from './phone-number'
 import {type Contact, type Match} from './state'
@@ -70,7 +69,7 @@ export function normalizeContactBook(
 
 export function filterMatchedNumbers(
   contacts: Contact[],
-  results: AppBskyContactDefs.MatchAndContactIndex[],
+  results: app.bsky.contact.defs.MatchAndContactIndex[],
   mapping: Map<number, Contact['id']>,
 ) {
   const filteredIds = new Set<Contact['id']>()
@@ -87,7 +86,7 @@ export function filterMatchedNumbers(
 
 export function getMatchedContacts(
   contacts: Contact[],
-  results: AppBskyContactDefs.MatchAndContactIndex[],
+  results: app.bsky.contact.defs.MatchAndContactIndex[],
   mapping: Map<number, Contact['id']>,
 ): Array<Match> {
   const contactsById = new Map(contacts.map(c => [c.id, c]))

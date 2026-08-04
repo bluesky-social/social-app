@@ -1,15 +1,12 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {
-  type $Typed,
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AtUri,
-} from '@atproto/api'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {type $Typed} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
+import {app} from '#/lexicons'
 import {moderatePost} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
@@ -267,7 +264,7 @@ export function QuoteEmbed({
   linkDisabled?: boolean
 }) {
   const moderationOpts = useModerationOpts()
-  const quote = useMemo<$Typed<AppBskyFeedDefs.PostView>>(
+  const quote = useMemo<$Typed<app.bsky.feed.defs.PostView>>(
     () => ({
       ...embed.view,
       $type: 'app.bsky.feed.defs#postView',
@@ -287,13 +284,7 @@ export function QuoteEmbed({
   const itemTitle = `Post by ${quote.author.handle}`
 
   const richText = useMemo(() => {
-    if (
-      !bsky.dangerousIsType<AppBskyFeedPost.Record>(
-        quote.record,
-        AppBskyFeedPost.isRecord,
-      )
-    )
-      return undefined
+    if (!bsky.isType(app.bsky.feed.post, quote.record)) return undefined
     const {text, facets} = quote.record
     return text.trim()
       ? new RichTextAPI({text: text, facets: asSdkFacets(facets)})

@@ -5,8 +5,9 @@ import Animated, {
   type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {type $Typed, type AppBskyEmbedRecord} from '@atproto/api'
 
+import {type $Typed} from '@atproto/lex'
+import {app} from '#/lexicons'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {MessageContextProvider} from './MessageContext'
@@ -22,7 +23,7 @@ let MessageItemEmbed = ({
   squaredBottomCorner,
   highlightSV,
 }: {
-  embed: $Typed<AppBskyEmbedRecord.View>
+  embed: $Typed<app.bsky.embed.record.View>
   isFromSelf: boolean
   isGroupChat: boolean
   squaredTopCorner: boolean

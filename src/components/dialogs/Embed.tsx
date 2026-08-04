@@ -1,10 +1,11 @@
 import {memo, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, type AppBskyFeedPost, AtUri} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {AtUri} from '@atproto/syntax'
+import {app} from '#/lexicons'
 import {EMBED_SCRIPT} from '#/lib/constants'
 import {niceDate} from '#/lib/strings/time'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -25,10 +26,10 @@ export type ColorModeValues = 'system' | 'light' | 'dark'
 
 type EmbedDialogProps = {
   control: Dialog.DialogControlProps
-  postAuthor: AppBskyActorDefs.ProfileViewBasic
+  postAuthor: app.bsky.actor.defs.ProfileViewBasic
   postCid: string
   postUri: string
-  record: AppBskyFeedPost.Record
+  record: app.bsky.feed.post.Main
   timestamp: string
 }
 

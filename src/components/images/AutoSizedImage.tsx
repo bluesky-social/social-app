@@ -5,12 +5,12 @@ import Animated, {
   useAnimatedRef,
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {app} from '#/lexicons'
 import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -71,7 +71,7 @@ export function AutoSizedImage({
   onContainerRef,
   onDimsChange,
 }: {
-  image: AppBskyEmbedImages.ViewImage
+  image: app.bsky.embed.images.ViewImage
   crop?: 'none' | 'square' | 'constrained'
   onPress?: (
     containerRef: AnimatedRef<any>,

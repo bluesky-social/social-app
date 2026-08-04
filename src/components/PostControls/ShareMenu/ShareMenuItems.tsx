@@ -1,10 +1,10 @@
 import {memo, useMemo} from 'react'
 import * as ExpoClipboard from 'expo-clipboard'
-import {AtUri} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {AtUri} from '@atproto/syntax'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'

@@ -7,10 +7,10 @@ import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {app} from '#/lexicons'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
@@ -569,7 +569,7 @@ export function SuggestedFeeds() {
   const {gtMobile} = useBreakpoints()
 
   const feeds = useMemo(() => {
-    const items: AppBskyFeedDefs.GeneratorView[] = []
+    const items: app.bsky.feed.defs.GeneratorView[] = []
 
     if (!data) return items
 

@@ -1,11 +1,9 @@
-import {ToolsOzoneReportDefs as OzoneReportDefs} from '@atproto/api'
-
 import {OTHER_REPORT_REASONS} from '#/components/moderation/ReportDialog/const'
 import {
   type ReportCategoryConfig,
   type ReportOption,
 } from '#/components/moderation/ReportDialog/utils/useReportOptions'
-import {type app} from '#/lexicons'
+import {type app, tools} from '#/lexicons'
 
 export type NciiQualification = {
   isDepicted?: boolean
@@ -125,7 +123,8 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         includeVideoTimestamp: false,
       }
     case 'selectOption': {
-      const isNcii = action.option.reason === OzoneReportDefs.REASONSEXUALNCII
+      const isNcii =
+        action.option.reason === tools.ozone.report.defs.reasonSexualNCII
       return {
         ...state,
         selectedOption: action.option,

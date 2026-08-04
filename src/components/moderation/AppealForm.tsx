@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {type ComAtprotoLabelDefs, ToolsOzoneReportDefs} from '@atproto/api'
 import {XrpcResponseError} from '@atproto/lex'
 import {type AtUriString, type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
@@ -23,14 +22,14 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID} from '#/env'
-import {com} from '#/lexicons'
+import {com, tools} from '#/lexicons'
 
 export function AppealForm({
   label,
   control,
   onPressBack,
 }: {
-  label: ComAtprotoLabelDefs.Label
+  label: com.atproto.label.defs.Label
   control: Dialog.DialogOuterProps['control']
   onPressBack: () => void
 }) {
@@ -51,7 +50,7 @@ export function AppealForm({
       await client.call(
         com.atproto.moderation.createReport,
         {
-          reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
+          reasonType: tools.ozone.report.defs.reasonAppeal,
           /*
            * `useLabelSubject` derives one shape or the other from the label's
            * `cid`: an at-uri plus cid for a record, or the label's `uri` reused

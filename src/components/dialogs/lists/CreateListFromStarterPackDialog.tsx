@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {type AppBskyGraphDefs, type AppBskyGraphStarterpack} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import {type $Typed} from '@atproto/lex'
 import {
@@ -37,7 +36,7 @@ export function CreateListFromStarterPackDialog({
   starterPack,
 }: {
   control: Dialog.DialogControlProps
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: app.bsky.graph.defs.StarterPackView
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -50,7 +49,7 @@ export function CreateListFromStarterPackDialog({
   const createDialogControl = Dialog.useDialogControl()
   const loadingDialogControl = Dialog.useDialogControl()
 
-  const record = starterPack.record as AppBskyGraphStarterpack.Record
+  const record = starterPack.record as app.bsky.graph.starterpack.Main
 
   const onPressCreate = () => {
     control.close(() => createDialogControl.open())

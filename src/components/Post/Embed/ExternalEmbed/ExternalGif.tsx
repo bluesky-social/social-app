@@ -5,10 +5,10 @@ import {
   Pressable,
 } from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {app} from '#/lexicons'
 import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
@@ -22,7 +22,7 @@ export function ExternalGif({
   link,
   params,
 }: {
-  link: AppBskyEmbedExternal.ViewExternal
+  link: app.bsky.embed.external.ViewExternal
   params: EmbedPlayerParams
 }) {
   const t = useTheme()

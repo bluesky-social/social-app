@@ -1,12 +1,6 @@
-import {
-  AppBskyEmbedGallery,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecordWithMedia,
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-} from '@atproto/api'
 import {type ModerationCause, type ModerationUI} from '@bsky.app/sdk/moderation'
 
+import {app} from '#/lexicons'
 import {unique} from '#/lib/moderation'
 import {type AppModerationCause} from '#/components/Pills'
 import {Features, features} from '#/analytics/features'
@@ -22,17 +16,12 @@ export function maybeApplyGalleryOffsetStyles(
     modui,
     additionalCauses,
   }: {
-    post: AppBskyFeedDefs.PostView
+    post: app.bsky.feed.defs.PostView
     modui: ModerationUI
     additionalCauses?: ModerationCause[] | AppModerationCause[]
   },
 ) {
-  if (
-    !bsky.dangerousIsType<AppBskyFeedPost.Record>(
-      post.record,
-      AppBskyFeedPost.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.feed.post, post.record)) {
     return
   }
 
@@ -47,24 +36,11 @@ export function maybeApplyGalleryOffsetStyles(
    * First check if we even have images
    */
   const embed = post.record.embed
-  const isImageEmbed =
-    embed &&
-    bsky.dangerousIsType<AppBskyEmbedImages.Main>(
-      embed,
-      AppBskyEmbedImages.isMain,
-    )
+  const isImageEmbed = embed && bsky.isType(app.bsky.embed.images.main, embed)
   const isGalleryEmbed =
-    embed &&
-    bsky.dangerousIsType<AppBskyEmbedGallery.Main>(
-      embed,
-      AppBskyEmbedGallery.isMain,
-    )
+    embed && bsky.isType(app.bsky.embed.gallery.main, embed)
   const isRecordWithMedia =
-    embed &&
-    bsky.dangerousIsType<AppBskyEmbedRecordWithMedia.Main>(
-      embed,
-      AppBskyEmbedRecordWithMedia.isMain,
-    )
+    embed && bsky.isType(app.bsky.embed.recordWithMedia.main, embed)
   let hasImages = false
   if (isImageEmbed) {
     if (!isPostGalleryEmbedEnabled) return
@@ -78,23 +54,13 @@ export function maybeApplyGalleryOffsetStyles(
     hasImages = true
   }
   if (isRecordWithMedia) {
-    if (
-      bsky.dangerousIsType<AppBskyEmbedImages.Main>(
-        embed.media,
-        AppBskyEmbedImages.isMain,
-      )
-    ) {
+    if (bsky.isType(app.bsky.embed.images.main, embed.media)) {
       if (!isPostGalleryEmbedEnabled) return
       // one image, not a gallery
       if (embed.media.images.length === 1) return
       hasImages = true
     }
-    if (
-      bsky.dangerousIsType<AppBskyEmbedGallery.Main>(
-        embed.media,
-        AppBskyEmbedGallery.isMain,
-      )
-    ) {
+    if (bsky.isType(app.bsky.embed.gallery.main, embed.media)) {
       // single (or empty) gallery - no offset needed
       if (embed.media.items.length <= 1) return
       hasImages = true

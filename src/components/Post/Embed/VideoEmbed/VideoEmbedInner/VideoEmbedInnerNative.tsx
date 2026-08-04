@@ -1,9 +1,9 @@
 import {useImperativeHandle, useRef, useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyEmbedVideo} from '@atproto/api'
 import {BlueskyVideoView} from '@bsky.app/video'
 import {useLingui} from '@lingui/react/macro'
 
+import {app} from '#/lexicons'
 import {HITSLOP_30} from '#/lib/constants'
 import {useAutoplayDisabled} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
@@ -29,7 +29,7 @@ export function VideoEmbedInnerNative({
   onError,
 }: {
   ref: React.Ref<{togglePlayback: () => void}>
-  embed: AppBskyEmbedVideo.View
+  embed: app.bsky.embed.video.View
   setStatus: (status: 'playing' | 'paused') => void
   setIsLoading: (isLoading: boolean) => void
   setIsActive: (isActive: boolean) => void

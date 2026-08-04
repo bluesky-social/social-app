@@ -2,12 +2,12 @@ import {memo, useCallback} from 'react'
 import {Platform} from 'react-native'
 import {type GestureType} from 'react-native-gesture-handler'
 import * as Clipboard from 'expo-clipboard'
-import {type ChatBskyConvoDefs} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
+import {chat} from '#/lexicons'
 import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {asSdkFacets, richTextToString} from '#/lib/strings/rich-text-helpers'
@@ -39,7 +39,7 @@ export let MessageContextMenu = ({
   children,
   swipeGesture,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  message: chat.bsky.convo.defs.MessageView
   senderProfile?: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts | undefined
   children: TriggerProps['children']

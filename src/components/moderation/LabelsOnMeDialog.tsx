@@ -1,10 +1,10 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type ComAtprotoLabelDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {com} from '#/lexicons'
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -23,7 +23,7 @@ export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialo
 
 export interface LabelsOnMeDialogProps {
   control: Dialog.DialogOuterProps['control']
-  labels: ComAtprotoLabelDefs.Label[]
+  labels: com.atproto.label.defs.Label[]
   /**
    * Whether the labels are being shown on the user's account or on a post.
    * With `content`, the list may include account-level labels, which get a
@@ -47,7 +47,7 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [appealingLabel, setAppealingLabel] = useState<
-    ComAtprotoLabelDefs.Label | undefined
+    com.atproto.label.defs.Label | undefined
   >(undefined)
   const {labels} = props
   const isAccount = props.type === 'account'
@@ -118,7 +118,7 @@ function Label({
   control,
   onPressAppeal,
 }: {
-  label: ComAtprotoLabelDefs.Label
+  label: com.atproto.label.defs.Label
   isSelfLabel: boolean
   /**
    * Call out that the label applies to the whole account, for contexts that
@@ -126,7 +126,7 @@ function Label({
    */
   showAccountCallout?: boolean
   control: Dialog.DialogOuterProps['control']
-  onPressAppeal: (label: ComAtprotoLabelDefs.Label) => void
+  onPressAppeal: (label: com.atproto.label.defs.Label) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()

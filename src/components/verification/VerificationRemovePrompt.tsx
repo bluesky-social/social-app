@@ -1,8 +1,8 @@
 import {useCallback} from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {app} from '#/lexicons'
 import {logger} from '#/logger'
 import {useVerificationsRemoveMutation} from '#/state/queries/verification/useVerificationsRemoveMutation'
 import {type DialogControlProps} from '#/components/Dialog'
@@ -20,7 +20,7 @@ export function VerificationRemovePrompt({
 }: {
   control: DialogControlProps
   profile: bsky.profile.AnyProfileView
-  verifications: AppBskyActorDefs.VerificationView[]
+  verifications: app.bsky.actor.defs.VerificationView[]
   onConfirm?: () => void
 }) {
   const {_} = useLingui()

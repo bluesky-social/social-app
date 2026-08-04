@@ -6,12 +6,12 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {app} from '#/lexicons'
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
@@ -57,7 +57,7 @@ interface ProfileFeedgensProps {
   emptyStateIcon?: React.ComponentType<any> | React.ReactElement
 }
 
-function keyExtractor(item: AppBskyGraphDefs.StarterPackViewBasic) {
+function keyExtractor(item: app.bsky.graph.defs.StarterPackViewBasic) {
   return item.uri
 }
 
@@ -147,7 +147,7 @@ export function ProfileStarterPacks({
     ({
       item,
       index,
-    }: ListRenderItemInfo<AppBskyGraphDefs.StarterPackViewBasic>) => {
+    }: ListRenderItemInfo<app.bsky.graph.defs.StarterPackViewBasic>) => {
       return (
         <View
           style={[

@@ -6,8 +6,8 @@ import {
   useMemo,
   useState,
 } from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
 
+import {app} from '#/lexicons'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
@@ -93,7 +93,7 @@ function Inner({
   preferences,
 }: {
   currentAccount: SessionAccount
-  currentProfile: AppBskyActorDefs.ProfileViewDetailed
+  currentProfile: app.bsky.actor.defs.ProfileViewDetailed
   preferences: UsePreferencesQueryResponse
 }) {
   const ax = useAnalytics()

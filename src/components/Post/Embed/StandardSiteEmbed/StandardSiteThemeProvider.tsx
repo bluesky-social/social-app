@@ -1,5 +1,4 @@
-import {type AppBskyEmbedExternal} from '@atproto/api'
-
+import {app} from '#/lexicons'
 import {Context, useAlf, utils} from '#/alf'
 
 /**
@@ -12,7 +11,7 @@ export function StandardSiteThemeProvider({
   view,
   children,
 }: {
-  view: AppBskyEmbedExternal.ViewExternal
+  view: app.bsky.embed.external.ViewExternal
   children: React.ReactNode
 }) {
   const alf = useAlf()
