@@ -58,11 +58,11 @@ export async function createSessionBundleAndCreateAccount(
 ): Promise<{account: SessionAccount; bundle: SessionBundle}> {
   let bundle!: SessionBundle
   let accountDid = ''
-  const hooks = makeSessionHooks(
+  const hooks = makeSessionHooks({
     onSessionChange,
-    () => bundle,
-    () => accountDid,
-  )
+    getBundle: () => bundle,
+    getDid: () => accountDid,
+  })
 
   const session = await PasswordSession.createAccount(
     {
