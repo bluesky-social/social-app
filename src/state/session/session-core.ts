@@ -1,21 +1,27 @@
+import {type Client} from '@atproto/lex'
 import {
   PasswordSession,
   type PasswordSessionOptions,
   type SessionData,
 } from '@atproto/lex-password-session'
 
-import {BLUESKY_PROXY_HEADER, PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'
 import {prefetchAgeAssuranceServerData} from '#/ageAssurance/data'
 import {features} from '#/analytics'
 import {
-  BskyAppAgent,
-  createPublicAgent,
-  PasswordSessionManager,
-} from './bridge-agent'
-import {agentToAppviewClient, agentToPdsClient} from './clients'
+  buildAppviewClient,
+  buildChatClient,
+  buildPdsClient,
+  getPublicAppviewClient,
+  getUnauthenticatedThrowingClient,
+  routeSessionToPds,
+} from './clients'
 import {addSessionErrorLog} from './logging'
-import {configureModerationForAccount} from './moderation'
+import {
+  configureModerationForAccount,
+  configureModerationForGuest,
+} from './moderation'
 import {networkAwareFetch} from './network'
 import {
   isSessionExpired,
@@ -46,10 +52,12 @@ function deriveServiceUrl(session: PasswordSession | null): URL {
   )
 }
 
-/** An `AtpAgent` bridged over one `PasswordSession`, the bundle's sole auth core. */
+/** The three clients over one `PasswordSession`, the bundle's sole auth core. */
 export type SessionBundle = {
   session: PasswordSession
-  agent: BskyAppAgent
+  appviewClient: Client
+  pdsClient: Client
+  chatClient: Client
   readonly service: URL
 }
 
@@ -63,38 +71,38 @@ const bundleKillSwitches = new WeakMap<SessionBundle, () => void>()
 /**
  * Register the lifecycle closure used by {@link disposeBundle}.
  *
- * Disposing also detaches the bridge agent from its session, so a stale
- * bundle's `agent.session` / `agent.pdsUrl` read as `undefined` rather than
- * serving tokens the app has stopped tracking.
+ * Killing the hooks is the whole of disposal now: the clients hold no state of
+ * their own, and every request they make goes through the session's injected
+ * fetch, which the kill switch disables.
  */
 export function registerBundleKillSwitch(
   bundle: SessionBundle,
   kill: () => void,
 ) {
-  bundleKillSwitches.set(bundle, () => {
-    kill()
-    bundle.agent.dispose()
-  })
+  bundleKillSwitches.set(bundle, kill)
 }
 
 /**
- * Wrap a session in the bridge agent.
+ * Build the three clients over a session.
  *
- * `storedPdsUrl` seeds {@link PasswordSessionManager}'s PDS routing so requests
- * made before the first refresh delivers a didDoc still reach the right host.
- * Once a didDoc arrives the manager prefers its endpoint.
+ * `storedPdsUrl` pins PDS routing for requests made before a refresh has
+ * delivered a didDoc - see {@link routeSessionToPds}, which explains why the
+ * session's own routing is not sufficient in that window. With no stored url
+ * there is nothing better to pin to, so the clients go straight over the
+ * session and it resolves them against its own service.
  */
 export function buildBundle(
   session: PasswordSession,
   storedPdsUrl?: string,
 ): SessionBundle {
-  const manager = new PasswordSessionManager(session, {
-    service: deriveServiceUrl(session).toString(),
-    pdsUrl: storedPdsUrl,
-  })
+  const agent = storedPdsUrl
+    ? routeSessionToPds(session, storedPdsUrl)
+    : session
   return {
     session,
-    agent: new BskyAppAgent(manager),
+    appviewClient: buildAppviewClient(agent),
+    pdsClient: buildPdsClient(agent),
+    chatClient: buildChatClient(agent),
     get service() {
       return deriveServiceUrl(session)
     },
@@ -182,23 +190,36 @@ export function makeSessionHooks({
   })
 }
 
-/** The agent exposed while logged out. */
+/** The clients exposed while logged out. */
 export type PublicSessionBundle = {
   session: null
-  agent: BskyAppAgent
+  appviewClient: Client
+  pdsClient: Client
+  chatClient: Client
   readonly service: URL
 }
 
 /**
- * Build the logged-out bundle. `createPublicAgent` installs the guest
- * moderation authorities as part of building the agent, which is what populates
- * the global `Client.appLabelers` that {@link getPublicAppviewClient} relies on
- * for its labeler header.
+ * Build the logged-out bundle.
+ *
+ * `configureModerationForGuest` is what populates the global
+ * `Client.appLabelers` that {@link getPublicAppviewClient} reads for its labeler
+ * header, so it must run before the public client's first request. There is no
+ * agent stamping that header any more, which makes this call load-bearing rather
+ * than test-only: without it a logged-out read would carry no moderation
+ * authorities at all.
+ *
+ * The write surfaces get the throwing client rather than a public one, so an
+ * unauthenticated write fails legibly instead of 4xx-ing against public
+ * infrastructure.
  */
 export function createPublicSessionBundle(): PublicSessionBundle {
+  configureModerationForGuest()
   return {
     session: null,
-    agent: createPublicAgent(),
+    appviewClient: getPublicAppviewClient(),
+    pdsClient: getUnauthenticatedThrowingClient(),
+    chatClient: getUnauthenticatedThrowingClient(),
     service: new URL(PUBLIC_BSKY_SERVICE),
   }
 }
@@ -224,9 +245,8 @@ export function createPublicSessionBundle(): PublicSessionBundle {
  * Both failure modes dispose: the bundle is fully built by this point, and a
  * still-live session left behind would keep its refresh and dispatch paths
  * alive with nothing tracking it. (Disposal is a no-op for the destroyed case,
- * where the session already refuses to refresh and the bridge agent already
- * reads as logged out - but the two paths are indistinguishable to the caller,
- * so both go through it.)
+ * where the session already refuses to refresh - but the two paths are
+ * indistinguishable to the caller, so both go through it.)
  */
 export async function finishPreparation<T>(
   bundle: SessionBundle,
@@ -294,15 +314,9 @@ export async function createSessionBundleAndResume(
 
   configureModerationForAccount(bundle, earlyAccount)
   const aa = prefetchAgeAssuranceServerData({
-    appviewClient: agentToAppviewClient(bundle.agent),
-    accountClient: agentToPdsClient(bundle.agent),
+    appviewClient: bundle.appviewClient,
+    accountClient: bundle.pdsClient,
   })
-
-  /*
-   * The proxy header is applied after the PDS-targeting setup above, so those
-   * calls run without it.
-   */
-  bundle.agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   // Preparation may auto-refresh the session while hooks are still disarmed.
   const account = await finishPreparation(
@@ -362,11 +376,9 @@ export async function createSessionBundleAndLogin(
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
   configureModerationForAccount(bundle, earlyAccount)
   const aa = prefetchAgeAssuranceServerData({
-    appviewClient: agentToAppviewClient(bundle.agent),
-    accountClient: agentToPdsClient(bundle.agent),
+    appviewClient: bundle.appviewClient,
+    accountClient: bundle.pdsClient,
   })
-
-  bundle.agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   // Preparation may auto-refresh the session while hooks are still disarmed.
   const account = await finishPreparation(
@@ -403,7 +415,6 @@ export function createSessionBundleFromStoredAccount(
   bundle = buildBundle(session, storedAccount.pdsUrl)
   registerBundleKillSwitch(bundle, hooks.kill)
   configureModerationForAccount(bundle, storedAccount)
-  bundle.agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   const account = session.destroyed
     ? storedAccount
