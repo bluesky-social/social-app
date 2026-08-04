@@ -1,12 +1,7 @@
 import {View} from 'react-native'
 import {TID} from '@atproto/common-web'
 import {type $Typed} from '@atproto/lex'
-import {
-  type AtIdentifierString,
-  AtUri,
-  type AtUriString,
-  toDatetimeString,
-} from '@atproto/syntax'
+import {AtUri, type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -99,7 +94,7 @@ export function CreateListFromStarterPackDialog({
             const chunks = chunk(listitemWrites, 50)
             for (const c of chunks) {
               await pdsClient.call(com.atproto.repo.applyWrites, {
-                repo: currentAccount.did as AtIdentifierString,
+                repo: currentAccount.did,
                 writes: c,
               })
             }

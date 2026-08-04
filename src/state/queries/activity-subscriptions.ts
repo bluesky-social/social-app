@@ -1,4 +1,3 @@
-import {type AtIdentifierString} from '@atproto/syntax'
 import {t} from '@lingui/core/macro'
 import {
   type InfiniteData,
@@ -42,7 +41,7 @@ export function useNotificationDeclarationQuery() {
       try {
         const response = await client.get(app.bsky.notification.declaration, {
           // the session account is still legacy-typed, so its did is unbranded
-          repo: currentAccount!.did as AtIdentifierString,
+          repo: currentAccount!.did,
           rkey: 'self',
         })
         return response
@@ -72,7 +71,7 @@ export function useNotificationDeclarationMutation() {
         app.bsky.notification.declaration,
         record,
         {
-          repo: currentAccount!.did as AtIdentifierString,
+          repo: currentAccount!.did,
           rkey: 'self',
         },
       )

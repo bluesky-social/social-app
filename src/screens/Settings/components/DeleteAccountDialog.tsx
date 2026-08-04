@@ -1,6 +1,5 @@
 import {useCallback, useRef, useState} from 'react'
 import {type TextInput, View} from 'react-native'
-import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -127,7 +126,7 @@ function DeleteAccountDialogInner({
       await chatClient.call(chat.bsky.actor.deleteAccount)
       await client.call(com.atproto.server.deleteAccount, {
         // the persisted account did is already resolved
-        did: currentAccount.did as DidString,
+        did: currentAccount.did,
         password,
         token,
       })

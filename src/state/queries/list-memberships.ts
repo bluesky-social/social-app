@@ -145,7 +145,7 @@ export function useListMembershipRemoveMutation({
       }
       const membershipUrip = new AtUri(membershipUri)
       await pdsClient.delete(app.bsky.graph.listitem, {
-        repo: currentAccount.did as DidString,
+        repo: currentAccount.did,
         rkey: membershipUrip.rkeySafe,
       })
     },
