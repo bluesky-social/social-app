@@ -48,10 +48,7 @@ import {
 } from './const'
 import {useCopyForSubject} from './copy'
 import {classifyReportError} from './errors'
-import {
-  type ReportDialogMetadataRef,
-  useReportDialogMetadataContext,
-} from './ReportDialogMetadataContext'
+import {useReportDialogMetadataContext} from './ReportDialogMetadataContext'
 import {
   getNciiQualificationOutcome,
   initialState,
@@ -85,12 +82,29 @@ export function ReportDialog(
   },
 ) {
   const ax = useAnalytics()
-  const [openCount, onOpen] = useReducer(count => count + 1, 0)
   const reportDialogMetadata = useReportDialogMetadataContext()
   const subject = useMemo(
     () => (props.subject ? parseReportSubject(props.subject) : undefined),
     [props.subject],
   )
+  const [presentation, setPresentation] = useState<{
+    openCount: number
+    videoTimestampSeconds?: number
+  }>({openCount: 0})
+  const onOpen = useCallback(() => {
+    const seconds =
+      subject?.type === 'post' && subject.attributes.video
+        ? reportDialogMetadata?.current.videoTimestampSeconds
+        : undefined
+
+    setPresentation(current => ({
+      openCount: current.openCount + 1,
+      // Values below one second indicate that the video was never meaningfully
+      // played, so avoid offering to attach a noisy "0:00" timestamp.
+      videoTimestampSeconds:
+        seconds !== undefined && seconds >= 1 ? Math.floor(seconds) : undefined,
+    }))
+  }, [reportDialogMetadata, subject])
   const propsOnClose = props.onClose
   const onClose = useCallback(() => {
     ax.metric('reportDialog:close', {})
@@ -101,11 +115,10 @@ export function ReportDialog(
       <Dialog.Handle />
       {subject ? (
         <Inner
-          key={openCount}
+          key={presentation.openCount}
           {...props}
           subject={subject}
-          dialogHasOpened={openCount > 0}
-          reportDialogMetadata={reportDialogMetadata}
+          videoTimestampSeconds={presentation.videoTimestampSeconds}
         />
       ) : (
         <Invalid />
@@ -138,8 +151,7 @@ function Invalid() {
 
 function Inner(
   props: ReportDialogProps & {
-    dialogHasOpened: boolean
-    reportDialogMetadata: ReportDialogMetadataRef | null
+    videoTimestampSeconds?: number
   },
 ) {
   const ax = useAnalytics()
@@ -165,27 +177,7 @@ function Inner(
   const [isPending, setIsPending] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
 
-  /*
-   * The video may keep playing while the user works through the steps, so
-   * snapshot the position once on open. Native dialogs keep their children
-   * mounted while hidden, so `ReportDialog` remounts this component on every
-   * presentation. Floor here rather than at the point of use so the label and
-   * the value we send can't disagree: `formatTime` rounds, and the wire format
-   * wants an integer.
-   */
-  // oxlint-disable-next-line react/hook-use-state
-  const [videoTimestampSeconds] = useState(() => {
-    if (!props.dialogHasOpened) return
-    if (props.subject.type !== 'post' || !props.subject.attributes.video) return
-    const seconds = props.reportDialogMetadata?.current.videoTimestampSeconds
-    /*
-     * The native player reports a position as soon as a video is on screen, so
-     * anything under a second means the user never really watched it - offering
-     * to attach "0:00" to every video report would be noise.
-     */
-    if (seconds === undefined || seconds < 1) return
-    return Math.floor(seconds)
-  })
+  const {videoTimestampSeconds} = props
 
   // some reasons ONLY go to Bluesky
   const isBskyOnlyReason = state?.selectedOption?.reason

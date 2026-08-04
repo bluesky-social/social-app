@@ -78,13 +78,6 @@ export function parseReportSubject(
         AppBskyFeedPost.isRecord,
       )
     ) {
-      const video =
-        embed.type === 'video'
-          ? embed.view
-          : embed.type === 'post_with_media' && embed.media.type === 'video'
-            ? embed.media.view
-            : undefined
-
       return {
         type: 'post',
         uri: subject.uri,
@@ -98,7 +91,9 @@ export function parseReportSubject(
             (embed.type === 'post_with_media' &&
               (embed.media.type === 'images' ||
                 embed.media.type === 'gallery')),
-          video: !!video,
+          video:
+            embed.type === 'video' ||
+            (embed.type === 'post_with_media' && embed.media.type === 'video'),
           link:
             embed.type === 'link' ||
             (embed.type === 'post_with_media' && embed.media.type === 'link'),
