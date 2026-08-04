@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack, AtUri} from '@atproto/api'
-import {type AtUriString} from '@atproto/syntax'
+import {type AtUriString, AtUri} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
@@ -12,6 +11,7 @@ import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {app} from '#/lexicons'
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {HITSLOP_20} from '#/lib/constants'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
@@ -147,8 +147,8 @@ export function StarterPackScreenInner({
   const isValid =
     starterPack &&
     (starterPack.list || starterPack?.creator?.did === currentAccount?.did) &&
-    AppBskyGraphDefs.validateStarterPackView(starterPack) &&
-    AppBskyGraphStarterpack.validateRecord(starterPack.record)
+    bsky.matches(app.bsky.graph.defs.starterPackView, starterPack) &&
+    bsky.matches(app.bsky.graph.starterpack, starterPack.record)
 
   if (!did || !starterPack || !isValid || !moderationOpts) {
     return (
@@ -179,7 +179,7 @@ function StarterPackScreenLoaded({
   routeParams,
   moderationOpts,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: app.bsky.graph.defs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   moderationOpts: ModerationOpts
 }) {
@@ -301,7 +301,7 @@ function Header({
   routeParams,
   onOpenShareDialog,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: app.bsky.graph.defs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
 }) {
@@ -350,7 +350,7 @@ function Header({
 
     setIsProcessing(true)
 
-    let listItems: AppBskyGraphDefs.ListItemView[] = []
+    let listItems: app.bsky.graph.defs.ListItemView[] = []
     try {
       listItems = await getAllListMembers(appviewClient, starterPack.list.uri)
     } catch (e) {
@@ -406,12 +406,7 @@ function Header({
     })
   }
 
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
   }
 
@@ -522,7 +517,7 @@ function OverflowMenu({
   routeParams,
   onOpenShareDialog,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: app.bsky.graph.defs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
 }) {

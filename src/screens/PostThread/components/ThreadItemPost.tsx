@@ -1,13 +1,10 @@
 import {memo, type ReactNode, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedThreadgate,
-  AtUri,
-} from '@atproto/api'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 
+import {AtUri} from '@atproto/syntax'
+import {app} from '#/lexicons'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -63,7 +60,7 @@ export type ThreadItemPostProps = {
     topBorder?: boolean
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
 }
 
 export function ThreadItemPost({
@@ -197,7 +194,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   onPostSuccess,
   threadgateRecord,
 }: ThreadItemPostProps & {
-  postShadow: Shadow<AppBskyFeedDefs.PostView>
+  postShadow: Shadow<app.bsky.feed.defs.PostView>
 }) {
   const t = useTheme()
   const {openComposer} = useOpenComposer()

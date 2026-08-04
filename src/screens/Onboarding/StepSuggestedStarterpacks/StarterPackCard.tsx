@@ -1,12 +1,12 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {type AtUriString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {app} from '#/lexicons'
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
@@ -29,7 +29,7 @@ const IGNORED_ACCOUNT = 'did:plc:pifkcjimdcfwaxkanzhwxufp'
 export function StarterPackCard({
   view,
 }: {
-  view: AppBskyGraphDefs.StarterPackView
+  view: app.bsky.graph.defs.StarterPackView
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -48,7 +48,7 @@ export function StarterPackCard({
 
     setIsProcessing(true)
 
-    let listItems: AppBskyGraphDefs.ListItemView[] = []
+    let listItems: app.bsky.graph.defs.ListItemView[] = []
     try {
       listItems = await getAllListMembers(appviewClient, view.list.uri)
     } catch (e) {
@@ -105,12 +105,7 @@ export function StarterPackCard({
     })
   }
 
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
   }
 

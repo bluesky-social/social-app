@@ -2,7 +2,6 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {ToolsOzoneReportDefs} from '@atproto/api'
 import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -25,7 +24,7 @@ import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
-import {com} from '#/lexicons'
+import {com, tools} from '#/lexicons'
 
 const COL_WIDTH = 400
 
@@ -55,7 +54,7 @@ export function Takendown() {
       await client.call(
         com.atproto.moderation.createReport,
         {
-          reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
+          reasonType: tools.ozone.report.defs.reasonAppeal,
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
             // the persisted account did is already resolved

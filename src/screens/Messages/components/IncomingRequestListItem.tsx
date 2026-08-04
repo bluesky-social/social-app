@@ -1,7 +1,7 @@
 import {View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
+import {chat} from '#/lexicons'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {atoms as a, tokens} from '#/alf'
@@ -14,7 +14,7 @@ import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 export function IncomingRequestListItem({
   convo: convoView,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: chat.bsky.convo.defs.ConvoView
 }) {
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()

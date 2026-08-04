@@ -1,13 +1,10 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedThreadgate,
-  AtUri,
-} from '@atproto/api'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 
+import {AtUri} from '@atproto/syntax'
+import {app} from '#/lexicons'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -69,7 +66,7 @@ export function ThreadItemTreePost({
     topBorder?: boolean
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
 }) {
   const postShadow = usePostShadow(item.value.post)
 
@@ -252,13 +249,13 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
   threadgateRecord,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
-  postShadow: Shadow<AppBskyFeedDefs.PostView>
+  postShadow: Shadow<app.bsky.feed.defs.PostView>
   overrides?: {
     moderation?: boolean
     topBorder?: boolean
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
 }): React.ReactNode {
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()

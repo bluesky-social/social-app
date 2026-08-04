@@ -1,8 +1,8 @@
 import {useMemo, useState} from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {app} from '#/lexicons'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {
   type CommonNavigatorParams,
@@ -22,7 +22,7 @@ function renderItem({
   item,
   index,
 }: {
-  item: AppBskyActorDefs.ProfileView
+  item: app.bsky.actor.defs.ProfileView
   index: number
 }) {
   return (
@@ -34,7 +34,7 @@ function renderItem({
   )
 }
 
-function keyExtractor(item: AppBskyActorDefs.ProfileView) {
+function keyExtractor(item: app.bsky.actor.defs.ProfileView) {
   return item.did
 }
 

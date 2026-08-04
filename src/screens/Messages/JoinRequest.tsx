@@ -1,10 +1,11 @@
 import {useEffect} from 'react'
 import {View} from 'react-native'
 import {ImageBackground} from 'expo-image'
-import {ChatBskyGroupDefs} from '@atproto/api'
 import {type ThemeName} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import * as bsky from '#/types/bsky'
+import {chat} from '#/lexicons'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {moderateProfile} from '#/lib/moderation/subjects'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -84,7 +85,10 @@ export function JoinRequest({setScreenState}: Props) {
           ]}>
           {error ||
           (data &&
-            !ChatBskyGroupDefs.isJoinLinkPreviewView(joinLinkPreview)) ? (
+            !bsky.isType(
+              chat.bsky.group.defs.joinLinkPreviewView,
+              joinLinkPreview,
+            )) ? (
             <Wrapper>
               <ChainLinkBrokenIcon fill={t.palette.primary_500} size="3xl" />
               <Text
@@ -101,7 +105,10 @@ export function JoinRequest({setScreenState}: Props) {
             </Wrapper>
           ) : data &&
             moderationOpts &&
-            ChatBskyGroupDefs.isJoinLinkPreviewView(joinLinkPreview) ? (
+            bsky.isType(
+              chat.bsky.group.defs.joinLinkPreviewView,
+              joinLinkPreview,
+            ) ? (
             <Wrapper>
               <AvatarBubbles
                 profiles={[joinLinkPreview.owner]}

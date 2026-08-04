@@ -1,10 +1,10 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {type ChatBskyGroupDefs} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {chat} from '#/lexicons'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {moderateProfile} from '#/lib/moderation/subjects'
@@ -560,13 +560,13 @@ export function InviteLinkDialog({
   )
 }
 
-function joinLinkToKey(joinLink: ChatBskyGroupDefs.JoinLinkView): string {
+function joinLinkToKey(joinLink: chat.bsky.group.defs.JoinLinkView): string {
   return `${joinLink.joinRule}${joinLink.requireApproval ? ':requireApproval' : ''}`
 }
 
 function keyToJoinLink(
   key: string,
-): Pick<ChatBskyGroupDefs.JoinLinkView, 'joinRule' | 'requireApproval'> {
+): Pick<chat.bsky.group.defs.JoinLinkView, 'joinRule' | 'requireApproval'> {
   const [joinRule, requireApproval] = key.split(':')
   return {
     joinRule,

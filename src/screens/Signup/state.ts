@@ -1,6 +1,5 @@
 import {createContext, useCallback, useContext} from 'react'
 import {LayoutAnimation} from 'react-native'
-import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
@@ -14,7 +13,7 @@ import {useOnboardingDispatch} from '#/state/shell'
 import {type AnalyticsContextType, useAnalytics} from '#/analytics'
 import {com} from '#/lexicons'
 
-export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
+export type ServiceDescription = com.atproto.server.describeServer.$OutputBody
 
 const date = new Date()
 date.setFullYear(date.getFullYear() - 20) // default to 20 years ago

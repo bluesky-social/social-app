@@ -1,11 +1,11 @@
 import {memo, useEffect} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorSearchActors} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {type InfiniteData} from '@tanstack/react-query'
 
+import {app} from '#/lexicons'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {logger} from '#/logger'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -25,7 +25,7 @@ export function useLoadEnoughProfiles({
   fetchNextPage,
 }: {
   interest: string | null
-  data?: InfiniteData<AppBskyActorSearchActors.OutputSchema>
+  data?: InfiniteData<app.bsky.actor.searchActors.$OutputBody>
   isLoading: boolean
   isFetchingNextPage: boolean
   hasNextPage: boolean

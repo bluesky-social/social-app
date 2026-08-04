@@ -1,12 +1,14 @@
 import {useMemo} from 'react'
 import {ScrollView, View} from 'react-native'
-import {AppBskyEmbedVideo, AtUri} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {AtUri} from '@atproto/syntax'
+import * as bsky from '#/types/bsky'
+import {app} from '#/lexicons'
 import {VIDEO_FEED_URI} from '#/lib/constants'
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {RQKEY, usePostFeedQuery} from '#/state/queries/post-feed'
@@ -158,7 +160,7 @@ function VideoCards({
       .flatMap(page => page.slices)
       .map(slice => slice.items[0])
       .filter(Boolean)
-      .filter(item => AppBskyEmbedVideo.isView(item.post.embed))
+      .filter(item => bsky.isType(app.bsky.embed.video.view, item.post.embed))
       .slice(0, 8)
   }, [data])
   const href = useMemo(() => {

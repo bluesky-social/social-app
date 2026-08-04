@@ -1,9 +1,9 @@
-import {type AppBskyNotificationDeclaration} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {app} from '#/lexicons'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useNotificationDeclarationQuery} from '#/state/queries/activity-subscriptions'
 import {useAppPasswordsQuery} from '#/state/queries/app-passwords'
@@ -146,7 +146,7 @@ function NotificationDeclaration({
   isError,
 }: {
   data?: {
-    value: AppBskyNotificationDeclaration.Record
+    value: app.bsky.notification.declaration.Main
   }
   isError?: boolean
 }) {

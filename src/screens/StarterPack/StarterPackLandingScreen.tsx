@@ -1,12 +1,13 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {AtUri} from '@atproto/syntax'
+import {app} from '#/lexicons'
 import {JOINED_THIS_WEEK} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {createStarterPackGooglePlayUri} from '#/lib/strings/starter-pack'
@@ -68,8 +69,8 @@ export function LandingScreen({
   const isValid =
     starterPack &&
     starterPack.list &&
-    AppBskyGraphDefs.validateStarterPackView(starterPack) &&
-    AppBskyGraphStarterpack.validateRecord(starterPack.record)
+    bsky.matches(app.bsky.graph.defs.starterPackView, starterPack) &&
+    bsky.matches(app.bsky.graph.starterpack, starterPack.record)
 
   useEffect(() => {
     if (isErrorStarterPack || (starterPack && !isValid)) {
@@ -82,12 +83,7 @@ export function LandingScreen({
   }
 
   // Just for types, this cannot be hit
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      starterPack.record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, starterPack.record)) {
     return null
   }
 
@@ -109,8 +105,8 @@ function LandingScreenLoaded({
 
   moderationOpts,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
-  starterPackRecord: AppBskyGraphStarterpack.Record
+  starterPack: app.bsky.graph.defs.StarterPackView
+  starterPackRecord: app.bsky.graph.starterpack.Main
   setScreenState: (state: LoggedOutScreenState) => void
   moderationOpts: ModerationOpts
 }) {

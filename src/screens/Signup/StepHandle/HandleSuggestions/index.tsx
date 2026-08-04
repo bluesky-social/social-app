@@ -1,13 +1,13 @@
-import {type ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
 import {Sift, SiftItem} from '@bsky.app/sift'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {com} from '#/lexicons'
 import {atoms as a, useTheme} from '#/alf'
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {type HandleSuggestionsProps} from './shared'
 
-type Suggestion = ComAtprotoTempCheckHandleAvailability.Suggestion & {
+type Suggestion = com.atproto.temp.checkHandleAvailability.Suggestion & {
   key: string
 }
 
