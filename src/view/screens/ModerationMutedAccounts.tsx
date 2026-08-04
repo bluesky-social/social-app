@@ -1,9 +1,9 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {app} from '#/lexicons'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -68,7 +68,7 @@ export function ModerationMutedAccounts({}: Props) {
     item,
     index,
   }: {
-    item: ActorDefs.ProfileView
+    item: app.bsky.actor.defs.ProfileView
     index: number
   }) => {
     if (!moderationOpts) return null

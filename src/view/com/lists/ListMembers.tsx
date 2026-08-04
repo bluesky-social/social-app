@@ -6,11 +6,11 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {app} from '#/lexicons'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -43,7 +43,7 @@ type Item =
   | typeof LOAD_MORE_ERROR_ITEM
   | {
       kind: 'list_item'
-      listItem: AppBskyGraphDefs.ListItemView
+      listItem: app.bsky.graph.defs.ListItemView
     }
 
 export function ListMembers({

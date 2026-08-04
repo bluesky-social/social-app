@@ -1,8 +1,8 @@
 import {View} from 'react-native'
 import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
+import {app} from '#/lexicons'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -70,7 +70,7 @@ function AutocompleteProfileCard({
   totalItems,
   onPress,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: app.bsky.actor.defs.ProfileViewBasic
   itemIndex: number
   totalItems: number
   onPress: () => void

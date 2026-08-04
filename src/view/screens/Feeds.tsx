@@ -1,11 +1,11 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
+import {app} from '#/lexicons'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -91,7 +91,7 @@ type FlatlistSlice =
       type: 'popularFeed'
       key: string
       feedUri: string
-      feed: AppBskyFeedDefs.GeneratorView
+      feed: app.bsky.feed.defs.GeneratorView
     }
   | {
       type: 'popularFeedsLoadingMore'

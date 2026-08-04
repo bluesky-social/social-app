@@ -1,15 +1,12 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  AppBskyFeedGetAuthorFeed,
-  AtUri,
-} from '@atproto/api'
 import {msg as msgLingui} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {AtUri} from '@atproto/syntax'
+import {app} from '#/lexicons'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
@@ -45,7 +42,7 @@ export function PostFeedErrorMessage({
   feedDesc: FeedDescriptor
   error?: Error
   onPressTryAgain: () => void
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: app.bsky.actor.defs.SavedFeed
 }) {
   const {_: _l} = useLingui()
   const knownError = useMemo(
@@ -96,7 +93,7 @@ function FeedgenErrorMessage({
   feedDesc: FeedDescriptor
   knownError: KnownError
   rawError?: Error
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: app.bsky.actor.defs.SavedFeed
 }) {
   const pal = usePalette('default')
   const {_: _l} = useLingui()
@@ -242,8 +239,8 @@ function detectKnownError(
     return undefined
   }
   if (
-    error instanceof AppBskyFeedGetAuthorFeed.BlockedActorError ||
-    error instanceof AppBskyFeedGetAuthorFeed.BlockedByActorError
+    error instanceof app.bsky.feed.getAuthorFeed.BlockedActorError ||
+    error instanceof app.bsky.feed.getAuthorFeed.BlockedByActorError
   ) {
     return KnownError.Block
   }

@@ -1,6 +1,5 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Trans} from '@lingui/react/macro'
 import {ReactRenderer} from '@tiptap/react'
@@ -11,6 +10,7 @@ import {
 } from '@tiptap/suggestion'
 import tippy, {type Instance as TippyInstance} from 'tippy.js'
 
+import {app} from '#/lexicons'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {type ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {atoms as a, useTheme} from '#/alf'
@@ -205,7 +205,7 @@ function AutocompleteProfileCard({
   onHover,
   moderationOpts,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: app.bsky.actor.defs.ProfileViewBasic
   isSelected: boolean
   onPress: () => void
   onHover: () => void

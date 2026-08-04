@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {app} from '#/lexicons'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
@@ -23,7 +23,7 @@ function renderItem({
   index,
   contextProfileDid,
 }: {
-  item: ActorDefs.ProfileView
+  item: app.bsky.actor.defs.ProfileView
   index: number
   contextProfileDid: string | undefined
 }) {
@@ -38,7 +38,7 @@ function renderItem({
   )
 }
 
-function keyExtractor(item: ActorDefs.ProfileView) {
+function keyExtractor(item: app.bsky.actor.defs.ProfileView) {
   return item.did
 }
 
@@ -143,7 +143,7 @@ export function ProfileFollows({name}: {name: string}) {
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
   const renderItemWithContext = useCallback(
-    ({item, index}: {item: ActorDefs.ProfileView; index: number}) =>
+    ({item, index}: {item: app.bsky.actor.defs.ProfileView; index: number}) =>
       renderItem({item, index, contextProfileDid: resolvedDid}),
     [resolvedDid],
   )
@@ -165,7 +165,7 @@ export function ProfileFollows({name}: {name: string}) {
     seenItemsRef.current.clear()
   }, [resolvedDid])
   const onItemSeen = useCallback(
-    (item: ActorDefs.ProfileView) => {
+    (item: app.bsky.actor.defs.ProfileView) => {
       if (seenItemsRef.current.has(item.did)) {
         return
       }

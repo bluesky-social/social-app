@@ -1,6 +1,6 @@
 import {type StyleProp, type TextStyle} from 'react-native'
-import {type AppBskyActorGetProfile} from '@atproto/api'
 
+import {app} from '#/lexicons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -19,7 +19,7 @@ export function UserInfoText({
   style,
 }: {
   did: string
-  attr?: keyof AppBskyActorGetProfile.OutputSchema
+  attr?: keyof app.bsky.actor.getProfile.$OutputBody
   loading?: string
   failed?: string
   prefix?: string

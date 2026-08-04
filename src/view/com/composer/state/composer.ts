@@ -1,5 +1,4 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {type AppBskyActorDefs, type AppBskyDraftDefs} from '@atproto/api'
 import {type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {nanoid} from 'nanoid/non-secure'
@@ -141,8 +140,8 @@ export type ComposerAction =
       type: 'restore_from_draft'
       draftId: string
       posts: PostDraft[]
-      threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow']
-      postgateEmbeddingRules: AppBskyDraftDefs.Draft['postgateEmbeddingRules']
+      threadgateAllow: app.bsky.draft.defs.Draft['threadgateAllow']
+      postgateEmbeddingRules: app.bsky.draft.defs.Draft['postgateEmbeddingRules']
 
       /** Map of localRefPath -> loaded media path/URL */
       loadedMedia: Map<string, string>
@@ -152,7 +151,7 @@ export type ComposerAction =
   | {
       type: 'clear'
       initInteractionSettings:
-        | AppBskyActorDefs.PostInteractionSettingsPref
+        | app.bsky.actor.defs.PostInteractionSettingsPref
         | undefined
     }
   | {
@@ -632,7 +631,7 @@ export function createComposerState({
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
   initInteractionSettings:
-    | AppBskyActorDefs.PostInteractionSettingsPref
+    | app.bsky.actor.defs.PostInteractionSettingsPref
     | undefined
 }): ComposerState {
   let media: ImagesMedia | GalleryMedia | undefined

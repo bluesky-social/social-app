@@ -1,10 +1,10 @@
-import {AppBskyDraftDefs} from '@atproto/api'
 import {
   useInfiniteQuery,
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
 
+import * as bsky from '#/types/bsky'
 import {isNetworkError} from '#/lib/strings/errors'
 import {matchXrpcError} from '#/lib/xrpc-error'
 import {useAppviewClient, useChatClient} from '#/state/session'
@@ -52,7 +52,9 @@ export function useDraftsQuery() {
  * Load a draft's local media for editing.
  * Takes the full Draft object (from DraftSummary) to avoid re-fetching.
  */
-export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
+export async function loadDraftMedia(
+  draft: app.bsky.draft.defs.Draft,
+): Promise<{
   loadedMedia: Map<string, string>
 }> {
   // Load local media files
@@ -81,7 +83,7 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
     // Load gallery
     if (post.embedGallery) {
       for (const item of post.embedGallery.items) {
-        if (!AppBskyDraftDefs.isDraftEmbedImage(item)) continue
+        if (!bsky.isType(app.bsky.draft.defs.draftEmbedImage, item)) continue
         try {
           const url = await storage.loadMediaFromLocal(item.localRef.path)
           loadedMedia.set(item.localRef.path, url)
@@ -242,7 +244,7 @@ export function useDeleteDraftMutation() {
       draftId,
     }: {
       draftId: string
-      draft: AppBskyDraftDefs.Draft
+      draft: app.bsky.draft.defs.Draft
     }) => {
       // Delete from server first - if this fails, we keep local media for retry
       await client.call(app.bsky.draft.deleteDraft, {id: draftId})
@@ -257,7 +259,8 @@ export function useDeleteDraftMutation() {
         }
         if (post.embedGallery) {
           for (const item of post.embedGallery.items) {
-            if (!AppBskyDraftDefs.isDraftEmbedImage(item)) continue
+            if (!bsky.isType(app.bsky.draft.defs.draftEmbedImage, item))
+              continue
             await storage.deleteMediaFromLocal(item.localRef.path)
           }
         }

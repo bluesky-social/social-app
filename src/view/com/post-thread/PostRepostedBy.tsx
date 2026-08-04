@@ -1,8 +1,8 @@
 import {useCallback, useMemo, useState} from 'react'
-import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {app} from '#/lexicons'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -16,7 +16,7 @@ function renderItem({
   item,
   index,
 }: {
-  item: ActorDefs.ProfileView
+  item: app.bsky.actor.defs.ProfileView
   index: number
 }) {
   return (
@@ -28,7 +28,7 @@ function renderItem({
   )
 }
 
-function keyExtractor(item: ActorDefs.ProfileView) {
+function keyExtractor(item: app.bsky.actor.defs.ProfileView) {
   return item.did
 }
 

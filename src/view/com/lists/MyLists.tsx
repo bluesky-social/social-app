@@ -7,10 +7,10 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {app} from '#/lexicons'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
@@ -38,7 +38,10 @@ export function MyLists({
   filter: MyListsFilter
   inline?: boolean
   style?: StyleProp<ViewStyle>
-  renderItem?: (list: GraphDefs.ListView, index: number) => JSX.Element
+  renderItem?: (
+    list: app.bsky.graph.defs.ListView,
+    index: number,
+  ) => JSX.Element
   testID?: string
 }) {
   const pal = usePalette('default')
