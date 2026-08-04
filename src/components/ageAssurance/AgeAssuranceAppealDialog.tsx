@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -63,7 +62,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
             // the persisted account did is already resolved
-            did: currentAccount.did as DidString,
+            did: currentAccount.did,
           },
           reason: `AGE_ASSURANCE_INQUIRY: ` + details,
         },

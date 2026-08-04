@@ -173,7 +173,7 @@ function makeBundle(account: SessionAccount): FakeBundle {
         refreshJwt: account.refreshJwt ?? '',
         /* SessionData types these as branded strings; the values are fixtures */
         handle: account.handle as `${string}.${string}`,
-        did: account.did as `did:${string}:${string}`,
+        did: account.did,
         active: true,
         service: account.service,
       },

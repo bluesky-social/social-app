@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import {retry} from '@atproto/common-web'
 import {type $Typed, type l, type UriString} from '@atproto/lex'
-import {type AtIdentifierString, AtUri, toDatetimeString} from '@atproto/syntax'
+import {AtUri, toDatetimeString} from '@atproto/syntax'
 import {moderateStatus} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -271,7 +271,7 @@ export function useUpsertLiveStatusMutation(
 
       const upsert = async () => {
         // the session account is still legacy-typed, so its did is unbranded
-        const repo = currentAccount.did as AtIdentifierString
+        const repo = currentAccount.did
         const collection = 'app.bsky.actor.status'
 
         const existing = await pdsClient
@@ -363,7 +363,7 @@ export function useRemoveLiveStatusMutation() {
       if (!currentAccount) throw new Error('Not logged in')
 
       await pdsClient.delete(app.bsky.actor.status, {
-        repo: currentAccount.did as AtIdentifierString,
+        repo: currentAccount.did,
         rkey: 'self',
       })
     },

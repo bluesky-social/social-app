@@ -670,7 +670,7 @@ function useProfileUnblockMutation() {
       }
       const {rkeySafe: rkey} = new AtUri(blockUri)
       await pdsClient.delete(app.bsky.graph.block, {
-        repo: currentAccount.did as AtIdentifierString,
+        repo: currentAccount.did,
         rkey,
       })
     },

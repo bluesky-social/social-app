@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {type DidString} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -69,7 +68,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const {accounts} = useSession()
   const client = useAppviewClient()
   useEffect(() => {
-    const actors = accounts.map(acc => acc.did as DidString)
+    const actors = accounts.map(acc => acc.did)
     if (actors.length === 0) return
     void queryClient.prefetchQuery({
       queryKey: profilesQueryKey(actors),
