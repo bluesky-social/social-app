@@ -36,7 +36,7 @@ import {moderatePost} from '#/lib/moderation/subjects'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {useAgent, useAppviewClient} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
@@ -151,7 +151,7 @@ export function usePostFeedQuery(
       f => f.pinned && f.value === 'following',
     ) ?? -1
   const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
-  const agent = useAgent()
+  const {hasSession} = useSession()
   const client = useAppviewClient()
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
@@ -214,7 +214,7 @@ export function usePostFeedQuery(
        * moderations happen later, which results in some posts being shown and
        * some not.
        */
-      if (!agent.session) {
+      if (!hasSession) {
         assertSomePostsPassModeration(
           res.feed,
           preferences?.moderationPrefs ||

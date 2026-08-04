@@ -1,10 +1,10 @@
 import {useCallback} from 'react'
-import {type HandleString} from '@atproto/syntax'
+import {type DidString, type HandleString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent, usePdsClient} from '#/state/session'
-import {com} from '#/lexicons'
+import {useAppviewClient, usePdsClient} from '#/state/session'
+import {app, com} from '#/lexicons'
 
 const handleQueryKeyRoot = 'handle'
 const fetchHandleQueryKey = (handleOrDid: string) => [
@@ -16,21 +16,24 @@ const fetchDidQueryKey = (handleOrDid: string) => [didQueryKeyRoot, handleOrDid]
 
 export function useFetchHandle() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   return useCallback(
     async (handleOrDid: string) => {
       if (handleOrDid.startsWith('did:')) {
-        const res = await queryClient.fetchQuery({
+        const data = await queryClient.fetchQuery({
           staleTime: STALE.MINUTES.FIVE,
           queryKey: fetchHandleQueryKey(handleOrDid),
-          queryFn: () => agent.getProfile({actor: handleOrDid}),
+          queryFn: () =>
+            client.call(app.bsky.actor.getProfile, {
+              actor: handleOrDid as DidString,
+            }),
         })
-        return res.data.handle
+        return data.handle
       }
       return handleOrDid
     },
-    [queryClient, agent],
+    [queryClient, client],
   )
 }
 
@@ -42,7 +45,6 @@ export function useUpdateHandleMutation(opts?: {
 
   return useMutation({
     mutationFn: async ({handle}: {handle: string}) => {
-      // `agent.updateHandle` was a pure alias for this method
       await client.call(com.atproto.identity.updateHandle, {
         // callers validate the handle before submitting
         handle: handle as HandleString,
@@ -59,7 +61,7 @@ export function useUpdateHandleMutation(opts?: {
 
 export function useFetchDid() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   return useCallback(
     async (handleOrDid: string) => {
@@ -69,13 +71,15 @@ export function useFetchDid() {
         queryFn: async () => {
           let identifier = handleOrDid
           if (!identifier.startsWith('did:')) {
-            const res = await agent.resolveHandle({handle: identifier})
-            identifier = res.data.did
+            const data = await client.call(com.atproto.identity.resolveHandle, {
+              handle: identifier as HandleString,
+            })
+            identifier = data.did
           }
           return identifier
         },
       })
     },
-    [queryClient, agent],
+    [queryClient, client],
   )
 }
