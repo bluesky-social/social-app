@@ -1,17 +1,21 @@
 import {type Client} from '@atproto/lex'
 import {type AtUriString} from '@atproto/syntax'
-import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {
+  hasMutedWord,
+  moderateNotification,
+  type ModerationOpts,
+} from '@bsky.app/sdk/moderation'
 import {type QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
-import {hasMutedWord, moderateNotification} from '#/lib/moderation/subjects'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {precacheProfile} from '../profile'
 import {
   type FeedNotification,
   type FeedPage,
+  type Notification,
   type NotificationType,
 } from './types'
 
@@ -108,7 +112,7 @@ export async function fetchPage({
 // =
 
 export function shouldFilterNotif(
-  notif: app.bsky.notification.listNotifications.Notification,
+  notif: Notification,
   moderationOpts: ModerationOpts | undefined,
 ): boolean {
   const containsImperative = !!notif.author.labels?.some(labelIsHideableOffense)
@@ -138,9 +142,7 @@ export function shouldFilterNotif(
   return moderateNotification(notif, moderationOpts).ui('contentList').filter
 }
 
-export function groupNotifications(
-  notifs: app.bsky.notification.listNotifications.Notification[],
-): FeedNotification[] {
+export function groupNotifications(notifs: Notification[]): FeedNotification[] {
   const groupedNotifs: FeedNotification[] = []
   for (const notif of notifs) {
     const ts = +new Date(notif.indexedAt)
@@ -249,9 +251,7 @@ async function fetchSubjects(
   }
 }
 
-function toKnownType(
-  notif: app.bsky.notification.listNotifications.Notification,
-): NotificationType {
+function toKnownType(notif: Notification): NotificationType {
   if (notif.reason === 'like') {
     if (notif.reasonSubject?.includes('feed.generator')) {
       return 'feedgen-like'
@@ -279,7 +279,7 @@ function toKnownType(
 
 function getSubjectUri(
   type: NotificationType,
-  notif: app.bsky.notification.listNotifications.Notification,
+  notif: Notification,
 ): string | undefined {
   if (
     type === 'reply' ||

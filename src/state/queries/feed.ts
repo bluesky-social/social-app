@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {type AtUriString, AtUri} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
+import {moderateFeedGenerator} from '@bsky.app/sdk/moderation'
 import {t} from '@lingui/core/macro'
 import {
   type InfiniteData,
@@ -13,10 +14,8 @@ import {
 } from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
-import {moderateFeedGenerator} from '#/lib/moderation/subjects'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {GCTIME, STALE} from '#/state/queries'
 import {RQKEY as listQueryKey} from '#/state/queries/list'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -99,7 +98,7 @@ export function hydrateFeedGenerator(
 
   const description = new RichText({
     text: view.description || '',
-    facets: asSdkFacets((view.descriptionFacets || [])?.slice()),
+    facets: (view.descriptionFacets || [])?.slice(),
   })
 
   if (!view.descriptionFacets) {
@@ -142,7 +141,7 @@ export function hydrateList(
 
   const description = new RichText({
     text: view.description || '',
-    facets: asSdkFacets((view.descriptionFacets || [])?.slice()),
+    facets: (view.descriptionFacets || [])?.slice(),
   })
 
   if (!view.descriptionFacets) {

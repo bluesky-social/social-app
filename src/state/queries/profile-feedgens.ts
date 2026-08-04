@@ -5,7 +5,7 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {moderateFeedGenerator} from '#/lib/moderation/subjects'
+import {moderateFeedGenerator} from '@bsky.app/sdk/moderation'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 import {useModerationOpts} from '../preferences/moderation-opts'

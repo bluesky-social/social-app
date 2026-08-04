@@ -1,6 +1,6 @@
 import {useRef} from 'react'
 import {type Client} from '@atproto/lex'
-import {AtUri, type HandleString} from '@atproto/syntax'
+import {AtUri, type AtUriString, type HandleString} from '@atproto/syntax'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry, retry} from '#/lib/async/retry'
@@ -177,7 +177,7 @@ export function useToggleQuoteDetachmentMutation() {
       action,
     }: {
       post: app.bsky.feed.defs.PostView
-      quoteUri: string
+      quoteUri: AtUriString
       action: 'detach' | 'reattach'
     }) => {
       // cache here since post shadow mutates original object

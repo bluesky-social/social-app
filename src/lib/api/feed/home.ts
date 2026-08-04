@@ -15,7 +15,12 @@ import {type FeedAPI, type FeedAPIResponse} from './types'
 // we use this fallback marker post to drive this instead. see Feed.tsx
 // for the usage.
 // -prf
-export const FALLBACK_MARKER_POST: app.bsky.feed.defs.FeedViewPost = {
+/*
+ * A synthetic marker, not a real view: its `uri`/`did`/`indexedAt` are
+ * deliberately not well-formed, so the literal is asserted rather than branded.
+ * Only `post.uri` is ever read (see Feed.tsx).
+ */
+export const FALLBACK_MARKER_POST = {
   post: {
     uri: 'fallback-marker-post',
     cid: 'fake',
@@ -26,7 +31,7 @@ export const FALLBACK_MARKER_POST: app.bsky.feed.defs.FeedViewPost = {
     },
     indexedAt: new Date().toISOString(),
   },
-}
+} as unknown as app.bsky.feed.defs.FeedViewPost
 
 export class HomeFeedAPI implements FeedAPI {
   client: Client

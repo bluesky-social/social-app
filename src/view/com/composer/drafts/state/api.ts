@@ -1,6 +1,7 @@
 /**
  * Type converters for Draft API - convert between ComposerState and server Draft types.
  */
+import {type UriString} from '@atproto/lex'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -275,7 +276,7 @@ function serializeGif(gifMedia: {
 
   return {
     $type: 'app.bsky.draft.defs#draftEmbedExternal',
-    uri: url.toString(),
+    uri: url.toString() as UriString,
   }
 }
 
@@ -607,7 +608,7 @@ export async function draftToComposerPosts(
         const record = post.embedRecords[0]
         const urip = new AtUri(record.record.uri)
         const url = `https://bsky.app/profile/${urip.host}/post/${urip.rkey}`
-        embed.quote = {type: 'link', uri: url}
+        embed.quote = {type: 'link', uri: url as UriString}
       }
 
       // Restore link embed (only if not a GIF)

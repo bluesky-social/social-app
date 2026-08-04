@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 
-import {moderateUserList} from '#/lib/moderation/subjects'
+import {moderateUserList} from '@bsky.app/sdk/moderation'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, useTheme} from '#/alf'
 import * as ListCard from '#/components/ListCard'

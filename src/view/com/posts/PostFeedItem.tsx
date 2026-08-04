@@ -12,7 +12,6 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
-import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -100,7 +99,7 @@ export function PostFeedItem({
     () =>
       new RichTextAPI({
         text: record.text,
-        facets: asSdkFacets(record.facets),
+        facets: record.facets,
       }),
     [record],
   )
@@ -253,8 +252,13 @@ let FeedItemInner = ({
       feedSourceInfo,
       post: {
         post,
+        /*
+         * `isType` requires a present `$type` at runtime but narrows to the
+         * schema's input type, whose `$type` is optional, so the `$Typed` arm
+         * of `FeedViewPost['reason']` needs the assertion back.
+         */
         reason: bsky.isType(app.bsky.feed.defs.reasonRepost, reason)
-          ? reason
+          ? (reason as app.bsky.feed.defs.FeedViewPost['reason'])
           : undefined,
         feedContext,
         reqId,

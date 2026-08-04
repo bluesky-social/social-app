@@ -1,6 +1,7 @@
 import {
   getMain,
   type InferMethodError,
+  LexError,
   type Main,
   type Procedure,
   type Query,
@@ -25,6 +26,19 @@ export function isXrpcError(e: unknown): e is XrpcError {
  */
 export function getErrorStatus(e: unknown): number | undefined {
   return e instanceof XrpcResponseError ? e.status : undefined
+}
+
+/**
+ * The lexicon error code (`err.error`), or undefined when `e` carries none.
+ * Gated on `LexError` (the base of every `XrpcError`) rather than `XrpcError`,
+ * so the non-XRPC lex errors are covered too.
+ *
+ * Prefer {@link matchXrpcError} where the method that threw is known: it
+ * constrains the compared name to that method's declared errors. Use this only
+ * where the source method is genuinely ambiguous.
+ */
+export function getErrorName(e: unknown): string | undefined {
+  return e instanceof LexError ? e.error : undefined
 }
 
 /**

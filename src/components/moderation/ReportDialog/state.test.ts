@@ -8,12 +8,12 @@ import {
 
 const nciiOption = {
   title: 'Non-consensual intimate imagery',
-  reason: tools.ozone.report.defs.reasonSexualNCII,
+  reason: tools.ozone.report.defs.reasonSexualNCII.value,
 }
 
 const otherOption = {
   title: 'Unlabeled adult content',
-  reason: tools.ozone.report.defs.reasonSexualUnlabeled,
+  reason: tools.ozone.report.defs.reasonSexualUnlabeled.value,
 }
 
 function selectNciiOption(state: ReportState = initialState) {

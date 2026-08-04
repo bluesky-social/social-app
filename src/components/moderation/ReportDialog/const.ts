@@ -30,93 +30,93 @@ export const NEW_TO_OLD_REASONS_MAP: Record<
   tools.ozone.report.defs.ReasonType,
   com.atproto.moderation.defs.ReasonType
 > = {
-  [tools.ozone.report.defs.reasonAppeal]:
-    com.atproto.moderation.defs.reasonAppeal,
-  [tools.ozone.report.defs.reasonOther]:
-    com.atproto.moderation.defs.reasonOther,
+  [tools.ozone.report.defs.reasonAppeal.value]:
+    com.atproto.moderation.defs.reasonAppeal.value,
+  [tools.ozone.report.defs.reasonOther.value]:
+    com.atproto.moderation.defs.reasonOther.value,
 
-  [tools.ozone.report.defs.reasonViolenceAnimal]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonViolenceThreats]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonViolenceGraphicContent]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonViolenceGlorification]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonViolenceExtremistContent]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonViolenceTrafficking]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonViolenceOther]:
-    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonViolenceAnimal.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonViolenceThreats.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonViolenceGraphicContent.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonViolenceGlorification.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonViolenceExtremistContent.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonViolenceTrafficking.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonViolenceOther.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
 
-  [tools.ozone.report.defs.reasonSexualAbuseContent]:
-    com.atproto.moderation.defs.reasonSexual,
-  [tools.ozone.report.defs.reasonSexualNCII]:
-    com.atproto.moderation.defs.reasonSexual,
-  [tools.ozone.report.defs.reasonSexualDeepfake]:
-    com.atproto.moderation.defs.reasonSexual,
-  [tools.ozone.report.defs.reasonSexualAnimal]:
-    com.atproto.moderation.defs.reasonSexual,
-  [tools.ozone.report.defs.reasonSexualUnlabeled]:
-    com.atproto.moderation.defs.reasonSexual,
-  [tools.ozone.report.defs.reasonSexualOther]:
-    com.atproto.moderation.defs.reasonSexual,
+  [tools.ozone.report.defs.reasonSexualAbuseContent.value]:
+    com.atproto.moderation.defs.reasonSexual.value,
+  [tools.ozone.report.defs.reasonSexualNCII.value]:
+    com.atproto.moderation.defs.reasonSexual.value,
+  [tools.ozone.report.defs.reasonSexualDeepfake.value]:
+    com.atproto.moderation.defs.reasonSexual.value,
+  [tools.ozone.report.defs.reasonSexualAnimal.value]:
+    com.atproto.moderation.defs.reasonSexual.value,
+  [tools.ozone.report.defs.reasonSexualUnlabeled.value]:
+    com.atproto.moderation.defs.reasonSexual.value,
+  [tools.ozone.report.defs.reasonSexualOther.value]:
+    com.atproto.moderation.defs.reasonSexual.value,
 
-  [tools.ozone.report.defs.reasonChildSafetyCSAM]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonChildSafetyGroom]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonChildSafetyPrivacy]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonChildSafetyHarassment]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonChildSafetyOther]:
-    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonChildSafetyCSAM.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonChildSafetyGroom.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonChildSafetyPrivacy.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonChildSafetyHarassment.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonChildSafetyOther.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
 
-  [tools.ozone.report.defs.reasonHarassmentTroll]:
-    com.atproto.moderation.defs.reasonRude,
-  [tools.ozone.report.defs.reasonHarassmentTargeted]:
-    com.atproto.moderation.defs.reasonRude,
-  [tools.ozone.report.defs.reasonHarassmentHateSpeech]:
-    com.atproto.moderation.defs.reasonRude,
-  [tools.ozone.report.defs.reasonHarassmentDoxxing]:
-    com.atproto.moderation.defs.reasonRude,
-  [tools.ozone.report.defs.reasonHarassmentOther]:
-    com.atproto.moderation.defs.reasonRude,
+  [tools.ozone.report.defs.reasonHarassmentTroll.value]:
+    com.atproto.moderation.defs.reasonRude.value,
+  [tools.ozone.report.defs.reasonHarassmentTargeted.value]:
+    com.atproto.moderation.defs.reasonRude.value,
+  [tools.ozone.report.defs.reasonHarassmentHateSpeech.value]:
+    com.atproto.moderation.defs.reasonRude.value,
+  [tools.ozone.report.defs.reasonHarassmentDoxxing.value]:
+    com.atproto.moderation.defs.reasonRude.value,
+  [tools.ozone.report.defs.reasonHarassmentOther.value]:
+    com.atproto.moderation.defs.reasonRude.value,
 
-  [tools.ozone.report.defs.reasonMisleadingBot]:
-    com.atproto.moderation.defs.reasonMisleading,
-  [tools.ozone.report.defs.reasonMisleadingImpersonation]:
-    com.atproto.moderation.defs.reasonMisleading,
-  [tools.ozone.report.defs.reasonMisleadingSpam]:
-    com.atproto.moderation.defs.reasonSpam,
-  [tools.ozone.report.defs.reasonMisleadingScam]:
-    com.atproto.moderation.defs.reasonMisleading,
-  [tools.ozone.report.defs.reasonMisleadingElections]:
-    com.atproto.moderation.defs.reasonMisleading,
-  [tools.ozone.report.defs.reasonMisleadingOther]:
-    com.atproto.moderation.defs.reasonMisleading,
+  [tools.ozone.report.defs.reasonMisleadingBot.value]:
+    com.atproto.moderation.defs.reasonMisleading.value,
+  [tools.ozone.report.defs.reasonMisleadingImpersonation.value]:
+    com.atproto.moderation.defs.reasonMisleading.value,
+  [tools.ozone.report.defs.reasonMisleadingSpam.value]:
+    com.atproto.moderation.defs.reasonSpam.value,
+  [tools.ozone.report.defs.reasonMisleadingScam.value]:
+    com.atproto.moderation.defs.reasonMisleading.value,
+  [tools.ozone.report.defs.reasonMisleadingElections.value]:
+    com.atproto.moderation.defs.reasonMisleading.value,
+  [tools.ozone.report.defs.reasonMisleadingOther.value]:
+    com.atproto.moderation.defs.reasonMisleading.value,
 
-  [tools.ozone.report.defs.reasonRuleSiteSecurity]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonRuleProhibitedSales]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonRuleBanEvasion]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonRuleOther]:
-    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonRuleSiteSecurity.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonRuleProhibitedSales.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonRuleBanEvasion.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonRuleOther.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
 
-  [tools.ozone.report.defs.reasonSelfHarmContent]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonSelfHarmED]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonSelfHarmStunts]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonSelfHarmSubstances]:
-    com.atproto.moderation.defs.reasonViolation,
-  [tools.ozone.report.defs.reasonSelfHarmOther]:
-    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonSelfHarmContent.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonSelfHarmED.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonSelfHarmStunts.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonSelfHarmSubstances.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
+  [tools.ozone.report.defs.reasonSelfHarmOther.value]:
+    com.atproto.moderation.defs.reasonViolation.value,
 }
 
 /**
@@ -130,26 +130,26 @@ export const OLD_TO_NEW_REASONS_MAP: Record<
   >,
   tools.ozone.report.defs.ReasonType
 > = {
-  [com.atproto.moderation.defs.reasonSpam]: [
-    tools.ozone.report.defs.reasonMisleadingSpam,
+  [com.atproto.moderation.defs.reasonSpam.value]: [
+    tools.ozone.report.defs.reasonMisleadingSpam.value,
   ],
-  [com.atproto.moderation.defs.reasonViolation]: [
-    tools.ozone.report.defs.reasonRuleOther,
+  [com.atproto.moderation.defs.reasonViolation.value]: [
+    tools.ozone.report.defs.reasonRuleOther.value,
   ],
-  [com.atproto.moderation.defs.reasonMisleading]: [
-    tools.ozone.report.defs.reasonMisleadingOther,
+  [com.atproto.moderation.defs.reasonMisleading.value]: [
+    tools.ozone.report.defs.reasonMisleadingOther.value,
   ],
-  [com.atproto.moderation.defs.reasonSexual]: [
-    tools.ozone.report.defs.reasonSexualUnlabeled,
+  [com.atproto.moderation.defs.reasonSexual.value]: [
+    tools.ozone.report.defs.reasonSexualUnlabeled.value,
   ],
-  [com.atproto.moderation.defs.reasonRude]: [
-    tools.ozone.report.defs.reasonHarassmentOther,
+  [com.atproto.moderation.defs.reasonRude.value]: [
+    tools.ozone.report.defs.reasonHarassmentOther.value,
   ],
-  [com.atproto.moderation.defs.reasonOther]: [
-    tools.ozone.report.defs.reasonOther,
+  [com.atproto.moderation.defs.reasonOther.value]: [
+    tools.ozone.report.defs.reasonOther.value,
   ],
-  [com.atproto.moderation.defs.reasonAppeal]: [
-    tools.ozone.report.defs.reasonAppeal,
+  [com.atproto.moderation.defs.reasonAppeal.value]: [
+    tools.ozone.report.defs.reasonAppeal.value,
   ],
 }
 
@@ -159,14 +159,14 @@ export const OLD_TO_NEW_REASONS_MAP: Record<
  */
 export const OTHER_REPORT_REASONS: Set<tools.ozone.report.defs.ReasonType> =
   new Set([
-    tools.ozone.report.defs.reasonViolenceOther,
-    tools.ozone.report.defs.reasonSexualOther,
-    tools.ozone.report.defs.reasonChildSafetyOther,
-    tools.ozone.report.defs.reasonHarassmentOther,
-    tools.ozone.report.defs.reasonMisleadingOther,
-    tools.ozone.report.defs.reasonRuleOther,
-    tools.ozone.report.defs.reasonSelfHarmOther,
-    tools.ozone.report.defs.reasonOther,
+    tools.ozone.report.defs.reasonViolenceOther.value,
+    tools.ozone.report.defs.reasonSexualOther.value,
+    tools.ozone.report.defs.reasonChildSafetyOther.value,
+    tools.ozone.report.defs.reasonHarassmentOther.value,
+    tools.ozone.report.defs.reasonMisleadingOther.value,
+    tools.ozone.report.defs.reasonRuleOther.value,
+    tools.ozone.report.defs.reasonSelfHarmOther.value,
+    tools.ozone.report.defs.reasonOther.value,
   ])
 
 /**
@@ -174,10 +174,10 @@ export const OTHER_REPORT_REASONS: Set<tools.ozone.report.defs.ReasonType> =
  */
 export const BSKY_LABELER_ONLY_REPORT_REASONS: Set<tools.ozone.report.defs.ReasonType> =
   new Set([
-    tools.ozone.report.defs.reasonChildSafetyCSAM,
-    tools.ozone.report.defs.reasonChildSafetyGroom,
-    tools.ozone.report.defs.reasonChildSafetyOther,
-    tools.ozone.report.defs.reasonViolenceExtremistContent,
+    tools.ozone.report.defs.reasonChildSafetyCSAM.value,
+    tools.ozone.report.defs.reasonChildSafetyGroom.value,
+    tools.ozone.report.defs.reasonChildSafetyOther.value,
+    tools.ozone.report.defs.reasonViolenceExtremistContent.value,
   ])
 
 /**

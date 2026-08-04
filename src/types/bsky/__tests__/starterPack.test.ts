@@ -1,5 +1,3 @@
-import {type AppBskyGraphDefs} from '@atproto/api'
-
 import {type app} from '#/lexicons'
 import {
   type AnyStarterPackView,
@@ -30,24 +28,18 @@ const fullView = {
 }
 
 /*
- * Type-level assertions for the dual-world widening: the alias must accept a
- * starter pack view from either world, because both have live producers. These
- * are compile-time only - a failure surfaces as a typecheck error.
+ * Type-level assertions for the view alias: it must accept both the basic and
+ * the full starter pack view. Compile-time only - a failure surfaces as a
+ * typecheck error.
  */
 type Assignable<From, To> = From extends To ? true : false
 type Expect<T extends true> = T
 
-type _AcceptsNewBasicView = Expect<
+type _AcceptsBasicView = Expect<
   Assignable<app.bsky.graph.defs.StarterPackViewBasic, AnyStarterPackView>
 >
-type _AcceptsNewFullView = Expect<
+type _AcceptsFullView = Expect<
   Assignable<app.bsky.graph.defs.StarterPackView, AnyStarterPackView>
->
-type _AcceptsOldBasicView = Expect<
-  Assignable<AppBskyGraphDefs.StarterPackViewBasic, AnyStarterPackView>
->
-type _AcceptsOldFullView = Expect<
-  Assignable<AppBskyGraphDefs.StarterPackView, AnyStarterPackView>
 >
 
 describe('types/bsky/starterPack guards', () => {

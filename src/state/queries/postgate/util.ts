@@ -58,7 +58,7 @@ export function mergePostgateRecords(
 export function createEmbedViewDetachedRecord({
   uri,
 }: {
-  uri: string
+  uri: AtUriString
 }): $Typed<app.bsky.embed.record.View> {
   const record: $Typed<app.bsky.embed.record.ViewDetached> = {
     $type: 'app.bsky.embed.record#viewDetached',
@@ -86,7 +86,7 @@ export function createMaybeDetachedQuoteEmbed({
   | {
       post: app.bsky.feed.defs.PostView
       quote: undefined
-      quoteUri: string
+      quoteUri: AtUriString
       detached: true
     }):
   | app.bsky.embed.record.View

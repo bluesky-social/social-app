@@ -54,7 +54,7 @@ export function Takendown() {
       await client.call(
         com.atproto.moderation.createReport,
         {
-          reasonType: tools.ozone.report.defs.reasonAppeal,
+          reasonType: tools.ozone.report.defs.reasonAppeal.value,
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
             // the persisted account did is already resolved

@@ -103,7 +103,17 @@ export function Embed({
     // ignore any unknowns
     e.media.view !== null
   ) {
-    return <Embed embed={e.media.view} style={style} />
+    /*
+     * Every media arm's view is a `$Typed<...>` of a def that `PostView.embed`
+     * also admits, but TS will not narrow the parsed union back into the raw
+     * embed union, so the arm is re-asserted here.
+     */
+    return (
+      <Embed
+        embed={e.media.view as app.bsky.feed.defs.PostView['embed']}
+        style={style}
+      />
+    )
   }
 
   return null

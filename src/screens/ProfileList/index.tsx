@@ -1,7 +1,7 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {moderateUserList, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -12,7 +12,6 @@ import {AtUri} from '@atproto/syntax'
 import {app} from '#/lexicons'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {moderateUserList} from '#/lib/moderation/subjects'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -156,7 +155,7 @@ function ProfileListScreenLoaded({
   const {rkey} = route.params
   const feedSectionRef = useRef<SectionRef>(null)
   const aboutSectionRef = useRef<SectionRef>(null)
-  const isCurateList = list.purpose === app.bsky.graph.defs.curatelist
+  const isCurateList = list.purpose === app.bsky.graph.defs.curatelist.value
   const isScreenFocused = useIsFocused()
   const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
   const isOwner = currentAccount?.did === list.creator.did

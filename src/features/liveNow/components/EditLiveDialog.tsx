@@ -55,7 +55,9 @@ function DialogInner({
   const {_, i18n} = useLingui()
   const t = useTheme()
 
-  const [liveLink, setLiveLink] = useState(embed.external.uri)
+  /* Holds the user-editable link text, so it is a plain string rather than
+   * the branded `uri` the view it was seeded from carries. */
+  const [liveLink, setLiveLink] = useState<string>(embed.external.uri)
   const [liveLinkError, setLiveLinkError] = useState('')
   const tick = useTickEveryMinute()
 

@@ -1,6 +1,7 @@
 import {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
+  moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
 } from '@bsky.app/sdk/moderation'
@@ -11,7 +12,6 @@ import {Trans} from '@lingui/react/macro'
 
 import {app} from '#/lexicons'
 import {useHaptics} from '#/lib/haptics'
-import {moderateProfile} from '#/lib/moderation/subjects'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {logger} from '#/logger'
 import {type Shadow, useProfileShadow} from '#/state/cache/profile-shadow'

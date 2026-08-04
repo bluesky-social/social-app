@@ -5,6 +5,7 @@ import {
   ScrollEdgeEffect,
   ScrollEdgeEffectProvider,
 } from '@bsky.app/expo-scroll-edge-effect'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {
   type RouteProp,
@@ -19,7 +20,6 @@ import * as bsky from '#/types/bsky'
 import {chat} from '#/lexicons'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useViewportZoomLock} from '#/lib/hooks/useViewportZoomLock'
-import {moderateProfile} from '#/lib/moderation/subjects'
 import {
   type CommonNavigatorParams,
   type NavigationProp,

@@ -10,7 +10,7 @@ import {useLingui} from '@lingui/react/macro'
 import {chat} from '#/lexicons'
 import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
-import {asSdkFacets, richTextToString} from '#/lib/strings/rich-text-helpers'
+import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -86,7 +86,7 @@ export let MessageContextMenu = ({
     const str = richTextToString(
       new RichText({
         text: message.text,
-        facets: asSdkFacets(message.facets),
+        facets: message.facets,
       }),
       true,
     )

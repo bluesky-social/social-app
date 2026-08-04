@@ -1,3 +1,4 @@
+import {type UriString} from '@atproto/lex'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
@@ -55,7 +56,12 @@ type GifMedia = {
 
 type Link = {
   type: 'link'
-  uri: string
+  /*
+   * A URL the user typed or pasted, validated by the link resolver rather than
+   * at construction, so it carries lex's `uri` brand for the record and view
+   * slots it flows into.
+   */
+  uri: UriString
 }
 
 // This structure doesn't exactly correspond to the data model.
@@ -90,7 +96,7 @@ export type PostAction =
     }
   | {type: 'embed_remove_video'}
   | {type: 'embed_update_video'; videoAction: VideoAction}
-  | {type: 'embed_add_uri'; uri: string}
+  | {type: 'embed_add_uri'; uri: UriString}
   | {type: 'embed_remove_quote'}
   | {type: 'embed_remove_link'}
   | {type: 'embed_add_gif'; gif: Gif}
@@ -645,7 +651,7 @@ export function createComposerState({
     if (path) {
       quote = {
         type: 'link',
-        uri: toBskyAppUrl(path),
+        uri: toBskyAppUrl(path) as UriString,
       }
     }
   }
@@ -699,7 +705,7 @@ export function createComposerState({
     if (suggestedExtUri) {
       link = {
         type: 'link',
-        uri: suggestedExtUri,
+        uri: suggestedExtUri as UriString,
       }
     }
     const suggestedPostUri = suggestLinkCardUri(
@@ -716,7 +722,7 @@ export function createComposerState({
       if (!quote) {
         quote = {
           type: 'link',
-          uri: suggestedPostUri,
+          uri: suggestedPostUri as UriString,
         }
       }
     }

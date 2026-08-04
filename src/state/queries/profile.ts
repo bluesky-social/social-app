@@ -146,7 +146,7 @@ interface ProfileUpdateParams {
       ) => Un$Typed<app.bsky.actor.profile.Main>)
   newUserAvatar?: ImageMeta | undefined | null
   newUserBanner?: ImageMeta | undefined | null
-  checkCommitted?: (res: app.bsky.actor.getProfile.Response) => boolean
+  checkCommitted?: (profile: app.bsky.actor.getProfile.$OutputBody) => boolean
 }
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
@@ -206,21 +206,21 @@ export function useProfileUpdateMutation() {
         appviewClient,
         profile.did,
         checkCommitted ||
-          (res => {
+          (profile => {
             if (typeof newUserAvatar !== 'undefined') {
-              if (newUserAvatar === null && res.data.avatar) {
+              if (newUserAvatar === null && profile.avatar) {
                 // url hasn't cleared yet
                 return false
-              } else if (res.data.avatar === profile.avatar) {
+              } else if (profile.avatar === profile.avatar) {
                 // url hasn't changed yet
                 return false
               }
             }
             if (typeof newUserBanner !== 'undefined') {
-              if (newUserBanner === null && res.data.banner) {
+              if (newUserBanner === null && profile.banner) {
                 // url hasn't cleared yet
                 return false
-              } else if (res.data.banner === profile.banner) {
+              } else if (profile.banner === profile.banner) {
                 // url hasn't changed yet
                 return false
               }
@@ -229,8 +229,8 @@ export function useProfileUpdateMutation() {
               return true
             }
             return (
-              res.data.displayName === updates.displayName &&
-              res.data.description === updates.description
+              profile.displayName === updates.displayName &&
+              profile.description === updates.description
             )
           }),
       )
@@ -381,7 +381,7 @@ function useProfileFollowMutation(
   const queryClient = useQueryClient()
   const {captureAction} = useProgressGuideControls()
 
-  return useMutation<{uri: string; cid: string}, Error, {did: string}>({
+  return useMutation<{uri: AtUriString; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
       let ownProfile: app.bsky.actor.defs.ProfileViewDetailed | undefined
       if (currentAccount) {
@@ -641,7 +641,7 @@ function useProfileBlockMutation() {
   const {currentAccount} = useSession()
   const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
-  return useMutation<{uri: string; cid: string}, Error, {did: string}>({
+  return useMutation<{uri: AtUriString; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
       if (!currentAccount) {
         throw new Error('Not signed in')
@@ -683,23 +683,16 @@ function useProfileUnblockMutation() {
 async function whenAppViewReady(
   client: Client,
   actor: string,
-  fn: (res: app.bsky.actor.getProfile.Response) => boolean,
+  fn: (profile: app.bsky.actor.getProfile.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    /*
-     * `checkCommitted` callbacks are still written against the legacy
-     * `Response` envelope, so wrap the lex output until those consumers move.
-     */
-    async () => ({
-      success: true,
-      headers: {},
-      data: await client.call(app.bsky.actor.getProfile, {
+    async () =>
+      await client.call(app.bsky.actor.getProfile, {
         actor: actor as AtIdentifierString,
       }),
-    }),
   )
 }
 

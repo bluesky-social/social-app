@@ -742,11 +742,18 @@ export function ListConvosProviderInner({
                 return {
                   ...convo,
                   members: [...convo.members, ...relatedProfilesSansMembers],
+                  /*
+                   * `logAddReaction.message` is the wider message union (it can
+                   * carry a deleted message too), while the reaction view's
+                   * `message` slot is only the live `messageView` - the server
+                   * never pairs a reaction with a deleted message, so the arm is
+                   * asserted rather than re-narrowed.
+                   */
                   lastReaction: {
                     $type: 'chat.bsky.convo.defs#messageAndReactionView',
                     reaction: log.reaction,
                     message: log.message,
-                  },
+                  } as chat.bsky.convo.defs.ConvoView['lastReaction'],
                   rev: log.rev,
                 }
               }),

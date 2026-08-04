@@ -9,7 +9,6 @@ import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
-import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -269,7 +268,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
     () =>
       new RichTextAPI({
         text: record.text,
-        facets: asSdkFacets(record.facets),
+        facets: record.facets,
       }),
     [record],
   )

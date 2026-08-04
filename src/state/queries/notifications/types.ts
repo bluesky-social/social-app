@@ -1,5 +1,16 @@
 import {app} from '#/lexicons'
 
+/**
+ * A `listNotifications` notification, widened with the `starterPack` the server
+ * attaches to a `follow` notification sourced from a starter pack. The pinned
+ * lexicon does not declare the field yet, so it is added here rather than read
+ * off an `unknown`. Drop this alias once the generated type carries it.
+ */
+export type Notification =
+  app.bsky.notification.listNotifications.Notification & {
+    starterPack?: app.bsky.graph.defs.StarterPackViewBasic
+  }
+
 export type NotificationType =
   | StarterPackNotificationType
   | OtherNotificationType
@@ -50,8 +61,8 @@ type OtherNotificationType =
 
 type FeedNotificationBase = {
   _reactKey: string
-  notification: app.bsky.notification.listNotifications.Notification
-  additional?: app.bsky.notification.listNotifications.Notification[]
+  notification: Notification
+  additional?: Notification[]
   subjectUri?: string
   subject?:
     | app.bsky.feed.defs.PostView
