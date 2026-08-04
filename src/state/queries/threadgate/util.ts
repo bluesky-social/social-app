@@ -1,4 +1,3 @@
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {type AtUriString, toDatetimeString} from '@atproto/syntax'
 
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
@@ -12,7 +11,7 @@ import * as bsky from '#/types/bsky'
  * through `com.atproto.repo.putRecord`, whose body is typed as a lex `LexMap`.
  */
 export function threadgateViewToAllowUISetting(
-  threadgateView: AppBskyFeedDefs.ThreadgateView | undefined,
+  threadgateView: app.bsky.feed.defs.ThreadgateView | undefined,
 ): ThreadgateAllowUISetting[] {
   // Validate the record for clarity, since backwards compat code is a little confusing
   const threadgate =

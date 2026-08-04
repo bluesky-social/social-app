@@ -1,4 +1,3 @@
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type AtIdentifierString} from '@atproto/syntax'
 import {
   type InfiniteData,
@@ -60,7 +59,7 @@ export function updateListMembershipOptimistically({
   actor: string
   listUri: string
   membershipUri: string
-  subject: AppBskyActorDefs.ProfileView
+  subject: app.bsky.actor.defs.ProfileView
 }) {
   queryClient.setQueryData<
     InfiniteData<app.bsky.graph.getListsWithMembership.$OutputBody>

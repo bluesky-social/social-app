@@ -1,8 +1,8 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
-import {type AppBskyUnspeccedGetPostThreadV2} from '@atproto/api'
 import {useFocusEffect} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
+import {app} from '#/lexicons'
 import {useCallOnce} from '#/lib/once'
 import {
   usePreferencesQuery,
@@ -13,7 +13,7 @@ import {useAnalytics} from '#/analytics'
 import {type Literal} from '#/types/utils'
 
 export type ThreadSortOption = Literal<
-  AppBskyUnspeccedGetPostThreadV2.QueryParams['sort'],
+  app.bsky.unspecced.getPostThreadV2.$Params['sort'],
   string
 >
 export type ThreadViewOption = 'linear' | 'tree'

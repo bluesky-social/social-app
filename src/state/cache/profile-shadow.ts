@@ -1,8 +1,8 @@
 import {useEffect, useMemo, useState} from 'react'
-import {type AppBskyActorDefs, type AppBskyNotificationDefs} from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 import {EventEmitter} from 'eventemitter3'
 
+import {app} from '#/lexicons'
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {findAllProfilesInQueryData as findAllProfilesInActivitySubscriptionsQueryData} from '#/state/queries/activity-subscriptions'
 import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '#/state/queries/actor-search'
@@ -43,9 +43,11 @@ export interface ProfileShadow {
   muted: boolean | undefined
   mutedOnlyReposts: boolean | undefined
   blockingUri: string | undefined
-  verification: AppBskyActorDefs.VerificationState
-  status: AppBskyActorDefs.StatusView | undefined
-  activitySubscription: AppBskyNotificationDefs.ActivitySubscription | undefined
+  verification: app.bsky.actor.defs.VerificationState
+  status: app.bsky.actor.defs.StatusView | undefined
+  activitySubscription:
+    | app.bsky.notification.defs.ActivitySubscription
+    | undefined
 }
 
 const shadows: WeakMap<

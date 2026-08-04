@@ -1,13 +1,8 @@
-import {
-  type $Typed,
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
-  AtUri,
-} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 
+import {type $Typed} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
+import {app} from '#/lexicons'
 import {moderatePost} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
@@ -26,7 +21,7 @@ export function threadPostNoUnauthenticated({
     key: uri,
     uri,
     depth,
-    value: value as AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated,
+    value: value as app.bsky.unspecced.defs.ThreadItemNoUnauthenticated,
     // @ts-ignore populated by the traversal
     ui: {},
   }
@@ -42,7 +37,7 @@ export function threadPostNotFound({
     key: uri,
     uri,
     depth,
-    value: value as AppBskyUnspeccedDefs.ThreadItemNotFound,
+    value: value as app.bsky.unspecced.defs.ThreadItemNotFound,
   }
 }
 
@@ -56,7 +51,7 @@ export function threadPostBlocked({
     key: uri,
     uri,
     depth,
-    value: value as AppBskyUnspeccedDefs.ThreadItemBlocked,
+    value: value as app.bsky.unspecced.defs.ThreadItemBlocked,
   }
 }
 
@@ -69,7 +64,7 @@ export function threadPost({
 }: {
   uri: string
   depth: number
-  value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>
+  value: $Typed<app.bsky.unspecced.defs.ThreadItemPost>
   moderationOpts: ModerationOpts
   threadgateHiddenReplies: Set<string>
 }): Extract<ThreadItem, {type: 'threadPost'}> {
@@ -91,8 +86,8 @@ export function threadPost({
        * Do not spread anything here, load bearing for post shadow strict
        * equality reference checks.
        */
-      post: value.post as Omit<AppBskyFeedDefs.PostView, 'record'> & {
-        record: AppBskyFeedPost.Record
+      post: value.post as Omit<app.bsky.feed.defs.PostView, 'record'> & {
+        record: app.bsky.feed.post.Main
       },
     },
     isBlurred,
@@ -161,10 +156,10 @@ export function skeleton({
 }
 
 export function postViewToThreadPlaceholder(
-  post: AppBskyFeedDefs.PostView,
+  post: app.bsky.feed.defs.PostView,
 ): $Typed<
-  Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
-    value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>
+  Omit<app.bsky.unspecced.getPostThreadV2.ThreadItem, 'value'> & {
+    value: $Typed<app.bsky.unspecced.defs.ThreadItemPost>
   }
 > {
   return {

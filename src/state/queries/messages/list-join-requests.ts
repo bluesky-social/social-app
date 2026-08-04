@@ -1,7 +1,7 @@
 import {useEffect} from 'react'
-import {ChatBskyConvoDefs} from '@atproto/api'
 import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query'
 
+import * as bsky from '#/types/bsky'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {createQueryKey} from '#/state/queries/util'
 import {useChatClient} from '#/state/session'
@@ -35,9 +35,9 @@ export function useListJoinRequestsQuery({
         if (event.type !== 'logs') return
         for (const log of event.logs) {
           if (
-            ChatBskyConvoDefs.isLogIncomingJoinRequest(log) ||
-            ChatBskyConvoDefs.isLogApproveJoinRequest(log) ||
-            ChatBskyConvoDefs.isLogRejectJoinRequest(log)
+            bsky.isType(chat.bsky.convo.defs.logIncomingJoinRequest, log) ||
+            bsky.isType(chat.bsky.convo.defs.logApproveJoinRequest, log) ||
+            bsky.isType(chat.bsky.convo.defs.logRejectJoinRequest, log)
           ) {
             void queryClient.invalidateQueries({
               queryKey: createListJoinRequestsQueryKey({convoId}),

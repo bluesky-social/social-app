@@ -1,18 +1,11 @@
 import {useCallback} from 'react'
-import {
-  type AppBskyActorDefs,
-  type AppBskyActorGetProfile,
-  type AppBskyActorGetProfiles,
-  type AppBskyGraphGetFollows,
-  AtUri,
-  type Un$Typed,
-} from '@atproto/api'
-import {type Client} from '@atproto/lex'
+import {type Client, type Un$Typed} from '@atproto/lex'
 import {
   type AtIdentifierString,
   type AtUriString,
   type DidString,
   toDatetimeString,
+  AtUri,
 } from '@atproto/syntax'
 import {
   deleteFollow,
@@ -82,7 +75,7 @@ export function useProfileQuery({
 }) {
   const client = useAppviewClient()
   const {getUnstableProfile} = useUnstableProfileViewCache()
-  return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
+  return useQuery<app.bsky.actor.defs.ProfileViewDetailed>({
     // WARNING
     // this staleTime is load-bearing
     // if you remove it, the UI infinite-loops
@@ -97,7 +90,7 @@ export function useProfileQuery({
     },
     placeholderData: () => {
       if (!did) return
-      return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed
+      return getUnstableProfile(did) as app.bsky.actor.defs.ProfileViewDetailed
     },
     enabled: !!did,
   })
@@ -145,7 +138,7 @@ export function usePrefetchProfileQuery() {
 }
 
 interface ProfileUpdateParams {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   updates:
     | Un$Typed<app.bsky.actor.profile.Main>
     | ((
@@ -153,7 +146,7 @@ interface ProfileUpdateParams {
       ) => Un$Typed<app.bsky.actor.profile.Main>)
   newUserAvatar?: ImageMeta | undefined | null
   newUserBanner?: ImageMeta | undefined | null
-  checkCommitted?: (res: AppBskyActorGetProfile.Response) => boolean
+  checkCommitted?: (res: app.bsky.actor.getProfile.Response) => boolean
 }
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
@@ -303,7 +296,7 @@ export function useProfileFollowMutationQueue(
       // Optimistically update profile follows cache for avatar displays
       if (currentAccount?.did) {
         type FollowsQueryData =
-          InfiniteData<AppBskyGraphGetFollows.OutputSchema>
+          InfiniteData<app.bsky.graph.getFollows.$OutputBody>
         queryClient.setQueryData<FollowsQueryData>(
           PROFILE_FOLLOWS_RQKEY(currentAccount.did),
           old => {
@@ -320,7 +313,7 @@ export function useProfileFollowMutationQueue(
                   {
                     ...old.pages[0],
                     follows: [
-                      profile as AppBskyActorDefs.ProfileView,
+                      profile as app.bsky.actor.defs.ProfileView,
                       ...old.pages[0].follows,
                     ],
                   },
@@ -390,7 +383,7 @@ function useProfileFollowMutation(
 
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
-      let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
+      let ownProfile: app.bsky.actor.defs.ProfileViewDetailed | undefined
       if (currentAccount) {
         ownProfile = findProfileQueryData(queryClient, currentAccount.did)
       }
@@ -690,7 +683,7 @@ function useProfileUnblockMutation() {
 async function whenAppViewReady(
   client: Client,
   actor: string,
-  fn: (res: AppBskyActorGetProfile.Response) => boolean,
+  fn: (res: app.bsky.actor.getProfile.Response) => boolean,
 ) {
   await until(
     5, // 5 tries
@@ -713,9 +706,9 @@ async function whenAppViewReady(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewDetailed, void> {
+): Generator<app.bsky.actor.defs.ProfileViewDetailed, void> {
   const profileQueryDatas =
-    queryClient.getQueriesData<AppBskyActorDefs.ProfileViewDetailed>({
+    queryClient.getQueriesData<app.bsky.actor.defs.ProfileViewDetailed>({
       queryKey: [RQKEY_ROOT],
     })
   for (const [_queryKey, queryData] of profileQueryDatas) {
@@ -727,7 +720,7 @@ export function* findAllProfilesInQueryData(
     }
   }
   const profilesQueryDatas =
-    queryClient.getQueriesData<AppBskyActorGetProfiles.OutputSchema>({
+    queryClient.getQueriesData<app.bsky.actor.getProfiles.$OutputBody>({
       queryKey: [profilesQueryKeyRoot],
     })
   for (const [_queryKey, queryData] of profilesQueryDatas) {
@@ -745,8 +738,8 @@ export function* findAllProfilesInQueryData(
 export function findProfileQueryData(
   queryClient: QueryClient,
   did: string,
-): AppBskyActorDefs.ProfileViewDetailed | undefined {
-  return queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(
+): app.bsky.actor.defs.ProfileViewDetailed | undefined {
+  return queryClient.getQueryData<app.bsky.actor.defs.ProfileViewDetailed>(
     RQKEY(did),
   )
 }

@@ -1,4 +1,3 @@
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type AtIdentifierString} from '@atproto/syntax'
 import {t} from '@lingui/core/macro'
 import {
@@ -106,7 +105,7 @@ export function useNotificationDeclarationMutation() {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<app.bsky.notification.listActivitySubscriptions.$OutputBody>
   >({

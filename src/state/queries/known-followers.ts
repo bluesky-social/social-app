@@ -1,4 +1,3 @@
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type DidString} from '@atproto/syntax'
 import {
   type InfiniteData,
@@ -43,7 +42,7 @@ export function useProfileKnownFollowersQuery(did: string | undefined) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<app.bsky.graph.getKnownFollowers.$OutputBody>
   >({

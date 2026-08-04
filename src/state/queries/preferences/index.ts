@@ -1,5 +1,4 @@
 import {useCallback} from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type DidString} from '@atproto/syntax'
 import {
   addSavedFeeds,
@@ -278,7 +277,7 @@ export function useOverwriteSavedFeedsMutation() {
   const queryClient = useQueryClient()
   const client = usePdsClient()
 
-  return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
+  return useMutation<void, unknown, app.bsky.actor.defs.SavedFeed[]>({
     mutationFn: async savedFeeds => {
       await client.call(overwriteSavedFeeds, savedFeeds)
       // triggers a refetch
@@ -296,7 +295,7 @@ export function useAddSavedFeedsMutation() {
   return useMutation<
     void,
     unknown,
-    Pick<AppBskyActorDefs.SavedFeed, 'type' | 'value' | 'pinned'>[]
+    Pick<app.bsky.actor.defs.SavedFeed, 'type' | 'value' | 'pinned'>[]
   >({
     mutationFn: async savedFeeds => {
       await client.call(addSavedFeeds, savedFeeds)
@@ -312,7 +311,7 @@ export function useRemoveFeedMutation() {
   const queryClient = useQueryClient()
   const client = usePdsClient()
 
-  return useMutation<void, unknown, Pick<AppBskyActorDefs.SavedFeed, 'id'>>({
+  return useMutation<void, unknown, Pick<app.bsky.actor.defs.SavedFeed, 'id'>>({
     mutationFn: async savedFeed => {
       await client.call(removeSavedFeeds, [savedFeed.id])
       // triggers a refetch
@@ -332,8 +331,8 @@ export function useReplaceForYouWithDiscoverFeedMutation() {
       forYouFeedConfig,
       discoverFeedConfig,
     }: {
-      forYouFeedConfig: AppBskyActorDefs.SavedFeed | undefined
-      discoverFeedConfig: AppBskyActorDefs.SavedFeed | undefined
+      forYouFeedConfig: app.bsky.actor.defs.SavedFeed | undefined
+      discoverFeedConfig: app.bsky.actor.defs.SavedFeed | undefined
     }) => {
       if (forYouFeedConfig) {
         await client.call(removeSavedFeeds, [forYouFeedConfig.id])
@@ -366,7 +365,7 @@ export function useUpdateSavedFeedsMutation() {
   const queryClient = useQueryClient()
   const client = usePdsClient()
 
-  return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
+  return useMutation<void, unknown, app.bsky.actor.defs.SavedFeed[]>({
     mutationFn: async feeds => {
       await client.call(updateSavedFeeds, feeds)
 
@@ -477,7 +476,7 @@ export function useSetActiveProgressGuideMutation() {
 
   return useMutation({
     mutationFn: async (
-      guide: AppBskyActorDefs.BskyAppProgressGuide | undefined,
+      guide: app.bsky.actor.defs.BskyAppProgressGuide | undefined,
     ) => {
       await client.call(setActiveProgressGuide, guide)
       // triggers a refetch
@@ -508,7 +507,7 @@ export function useSetVerificationPrefsMutation() {
   const queryClient = useQueryClient()
   const client = usePdsClient()
 
-  return useMutation<void, unknown, AppBskyActorDefs.VerificationPrefs>({
+  return useMutation<void, unknown, app.bsky.actor.defs.VerificationPrefs>({
     mutationFn: async prefs => {
       await client.call(setVerificationPrefs, prefs)
       if (prefs.hideBadges) {

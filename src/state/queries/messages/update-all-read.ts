@@ -1,4 +1,3 @@
-import {type ChatBskyConvoGetUnreadCounts} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -94,10 +93,12 @@ export function useUpdateAllRead(
       // zero out the badge count query that actually drives the unread badge,
       // since it's a separate server query that the list caches don't feed
       const prevUnreadCountsQueries =
-        queryClient.getQueriesData<ChatBskyConvoGetUnreadCounts.OutputSchema>({
-          queryKey: UNREAD_COUNTS_PARTIAL_KEY,
-        })
-      queryClient.setQueriesData<ChatBskyConvoGetUnreadCounts.OutputSchema>(
+        queryClient.getQueriesData<chat.bsky.convo.getUnreadCounts.$OutputBody>(
+          {
+            queryKey: UNREAD_COUNTS_PARTIAL_KEY,
+          },
+        )
+      queryClient.setQueriesData<chat.bsky.convo.getUnreadCounts.$OutputBody>(
         {queryKey: UNREAD_COUNTS_PARTIAL_KEY},
         old => {
           if (!old) return old

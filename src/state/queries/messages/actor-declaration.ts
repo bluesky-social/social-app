@@ -1,4 +1,3 @@
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type Client} from '@atproto/lex'
 import {type DidString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
@@ -6,7 +5,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {usePdsClient, useSession} from '#/state/session'
 import {resolveAllowGroupInvites} from '#/components/dms/util'
-import {chat, com} from '#/lexicons'
+import {app, chat, com} from '#/lexicons'
 import {RQKEY as PROFILE_RKEY} from '../profile'
 
 export function useUpdateActorDeclaration({
@@ -27,7 +26,7 @@ export function useUpdateActorDeclaration({
     }) => {
       if (!currentAccount) throw new Error('Not signed in')
       const current =
-        queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(
+        queryClient.getQueryData<app.bsky.actor.defs.ProfileViewDetailed>(
           PROFILE_RKEY(currentAccount.did),
         )
       const allowIncoming =
@@ -57,7 +56,7 @@ export function useUpdateActorDeclaration({
       if (!currentAccount) return
       queryClient.setQueryData(
         PROFILE_RKEY(currentAccount?.did),
-        (old?: AppBskyActorDefs.ProfileViewDetailed) => {
+        (old?: app.bsky.actor.defs.ProfileViewDetailed) => {
           if (!old) return old
           const allowIncoming =
             update.allowIncoming ??
@@ -81,7 +80,7 @@ export function useUpdateActorDeclaration({
                 allowGroupInvites,
               },
             },
-          } satisfies AppBskyActorDefs.ProfileViewDetailed
+          } satisfies app.bsky.actor.defs.ProfileViewDetailed
         },
       )
     },

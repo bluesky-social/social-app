@@ -1,7 +1,3 @@
-import {
-  type ChatBskyConvoAcceptConvo,
-  type ChatBskyConvoDefs,
-} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -29,7 +25,7 @@ export function useAcceptConversation(
     onError,
   }: {
     onMutate?: () => void
-    onSuccess?: (data: ChatBskyConvoAcceptConvo.OutputSchema) => void
+    onSuccess?: (data: chat.bsky.convo.acceptConvo.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -47,7 +43,7 @@ export function useAcceptConversation(
         queryClient.getQueriesData<ConvoListQueryData>({
           queryKey: [CONVO_LIST_ROOT_KEY],
         })
-      let convoBeingAccepted: ChatBskyConvoDefs.ConvoView | null = null
+      let convoBeingAccepted: chat.bsky.convo.defs.ConvoView | null = null
       for (const [_key, data] of queryClient.getQueriesData<ConvoListQueryData>(
         {queryKey: CONVO_LIST_PARTIAL_KEY('request')},
       )) {
@@ -60,7 +56,7 @@ export function useAcceptConversation(
         (old?: ConvoListQueryData) => optimisticDelete(convoId, old),
       )
       if (convoBeingAccepted) {
-        const acceptedConvo: ChatBskyConvoDefs.ConvoView = {
+        const acceptedConvo: chat.bsky.convo.defs.ConvoView = {
           ...convoBeingAccepted,
           status: 'accepted',
         }

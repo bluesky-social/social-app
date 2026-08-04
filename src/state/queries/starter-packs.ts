@@ -1,8 +1,3 @@
-import {
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
-} from '@atproto/api'
 import {type Client, type LexValue} from '@atproto/lex'
 import {AtUri, type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
@@ -57,7 +52,7 @@ export function useStarterPackQuery({
 }) {
   const client = useAppviewClient()
 
-  return useQuery<AppBskyGraphDefs.StarterPackView>({
+  return useQuery<app.bsky.graph.defs.StarterPackView>({
     queryKey: RQKEY(uri ? {uri} : {did, rkey}),
     queryFn: async () => {
       if (!uri) {
@@ -92,7 +87,7 @@ interface UseCreateStarterPackMutationParams {
   name: string
   description?: string
   profiles: bsky.profile.AnyProfileView[]
-  feeds?: AppBskyFeedDefs.GeneratorView[]
+  feeds?: app.bsky.feed.defs.GeneratorView[]
 }
 
 export function useCreateStarterPackMutation({
@@ -173,8 +168,8 @@ export function useEditStarterPackMutation({
     void,
     Error,
     UseCreateStarterPackMutationParams & {
-      currentStarterPack: AppBskyGraphDefs.StarterPackView
-      currentListItems: AppBskyGraphDefs.ListItemView[]
+      currentStarterPack: app.bsky.graph.defs.StarterPackView
+      currentListItems: app.bsky.graph.defs.ListItemView[]
     }
   >({
     mutationFn: async ({
@@ -373,33 +368,33 @@ async function whenAppViewReady(
 export function precacheStarterPack(
   queryClient: QueryClient,
   starterPack:
-    | AppBskyGraphDefs.StarterPackViewBasic
-    | AppBskyGraphDefs.StarterPackView,
+    | app.bsky.graph.defs.StarterPackViewBasic
+    | app.bsky.graph.defs.StarterPackView,
 ) {
-  if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
+  if (!bsky.isType(app.bsky.graph.starterpack, starterPack.record)) {
     return
   }
 
-  let starterPackView: AppBskyGraphDefs.StarterPackView | undefined
-  if (AppBskyGraphDefs.isStarterPackView(starterPack)) {
+  let starterPackView: app.bsky.graph.defs.StarterPackView | undefined
+  if (bsky.isType(app.bsky.graph.defs.starterPackView, starterPack)) {
     starterPackView = starterPack
   } else if (
-    AppBskyGraphDefs.isStarterPackViewBasic(starterPack) &&
-    bsky.validate(starterPack.record, AppBskyGraphStarterpack.validateRecord)
+    bsky.isType(app.bsky.graph.defs.starterPackViewBasic, starterPack) &&
+    bsky.matches(app.bsky.graph.starterpack, starterPack.record)
   ) {
-    let feeds: AppBskyFeedDefs.GeneratorView[] | undefined
+    let feeds: app.bsky.feed.defs.GeneratorView[] | undefined
     if (starterPack.record.feeds) {
       feeds = []
       for (const feed of starterPack.record.feeds) {
         // note: types are wrong? claims to be `FeedItem`, but we actually
         // get un$typed `GeneratorView` objects here -sfn
-        if (bsky.validate(feed, AppBskyFeedDefs.validateGeneratorView)) {
+        if (bsky.matches(app.bsky.feed.defs.generatorView, feed)) {
           feeds.push(feed)
         }
       }
     }
 
-    const listView: AppBskyGraphDefs.ListViewBasic = {
+    const listView: app.bsky.graph.defs.ListViewBasic = {
       uri: starterPack.record.list,
       // This will be populated once the data from server is fetched
       cid: '',

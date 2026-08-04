@@ -1,6 +1,6 @@
-import {ChatBskyConvoDefs, type ChatBskyGroupEditGroup} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
+import * as bsky from '#/types/bsky'
 import {logger} from '#/logger'
 import {useChatClient} from '#/state/session'
 import {chat} from '#/lexicons'
@@ -15,7 +15,7 @@ export function useEditGroupChatName(
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: ChatBskyGroupEditGroup.OutputSchema) => void
+    onSuccess?: (data: chat.bsky.group.editGroup.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -33,7 +33,8 @@ export function useEditGroupChatName(
     onMutate: ({name: groupName}) => {
       if (!convoId) return
       return updateConvoOptimistic(queryClient, convoId, prev => {
-        if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined
+        if (!bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind))
+          return undefined
         return {
           ...prev,
           kind: {...prev.kind, name: groupName},

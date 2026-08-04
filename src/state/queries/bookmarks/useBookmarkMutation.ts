@@ -1,4 +1,3 @@
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {type AtUriString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
@@ -13,7 +12,7 @@ import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 
 type MutationArgs =
-  | {action: 'create'; post: AppBskyFeedDefs.PostView}
+  | {action: 'create'; post: app.bsky.feed.defs.PostView}
   | {
       action: 'delete'
       /**
