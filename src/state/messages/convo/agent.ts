@@ -1187,8 +1187,8 @@ export class Convo {
   }
 
   /*
-   * The lex client throws `XrpcResponseError`, not `@atproto/api`'s
-   * `XRPCError`, so the status/message branch narrows on the lex class. Only
+   * The lex client throws `XrpcResponseError`, so the status/message branch
+   * narrows on that class. Only
    * a genuine server response carries a status: transport and internal lex
    * failures are `XrpcInternalError`s and fall through to the generic arm,
    * where `isNetworkError` keeps them out of the logs.

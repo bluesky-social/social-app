@@ -72,9 +72,9 @@ export async function optimisticallySaveBookmark(
           if (index === 0) {
             post.$type = 'app.bsky.feed.defs#postView'
             /*
-             * The optimistic entry is synthesized from an `@atproto/api`
-             * `PostView`, whose string fields are unbranded, so it is asserted
-             * to the vendored view type the query data is now keyed on.
+             * The optimistic entry is synthesized with unbranded string
+             * fields, so it is asserted to the generated view type the query
+             * data is keyed on.
              */
             const bookmark = {
               createdAt: new Date().toISOString(),

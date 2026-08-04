@@ -287,7 +287,7 @@ export function buildSearchPostsV2Filters(
 }
 
 /**
- * Consistent with timestamp parsing in @atproto/api. Only the date is used; the
+ * Only the date is used; the
  * time is appended here since the lexicon expects a datetime value.
  */
 const parseTimestamp = (value: string | undefined): string | undefined => {
