@@ -1,6 +1,7 @@
 import {type Insets, Platform} from 'react-native'
-import {type AppBskyActorDefs, BSKY_LABELER_DID} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {type Service} from '@atproto/lex'
+import {api} from '@bsky.app/sdk'
 
 import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
 
@@ -269,7 +270,7 @@ export const CHAT_PROXY_SERVICE: Service = `${CHAT_PROXY_DID}#bsky_chat`
  * that labeler's creator did instead, so this is a per-call option rather than a
  * client-level one like {@link CHAT_PROXY_SERVICE}.
  */
-export const MOD_PROXY_SERVICE: Service = `${BSKY_LABELER_DID}#atproto_labeler`
+export const MOD_PROXY_SERVICE: Service = `${api.moderation.did}#atproto_labeler`
 
 /**
  * The notification service's proxy target, in the `did#service_id` form a lex
