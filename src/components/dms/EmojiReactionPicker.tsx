@@ -1,9 +1,9 @@
 import {useMemo, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {chat} from '#/lexicons'
 import {useSession} from '#/state/session'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import * as ContextMenu from '#/components/ContextMenu'
@@ -21,7 +21,7 @@ export function EmojiReactionPicker({
   message,
   onEmojiSelect,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  message: chat.bsky.convo.defs.MessageView
   children?: TriggerProps['children']
   onEmojiSelect: (emoji: string) => void
 }) {

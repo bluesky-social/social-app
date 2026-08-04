@@ -1,9 +1,9 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type ComAtprotoLabelDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural} from '@lingui/react/macro'
 
+import {com} from '#/lexicons'
 import {filterUserFacingLabels} from '#/lib/moderation'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
@@ -24,7 +24,7 @@ export function LabelsOnMe({
   size,
   style,
 }: {
-  labels: ComAtprotoLabelDefs.Label[] | undefined
+  labels: com.atproto.label.defs.Label[] | undefined
   size?: ButtonSize
   style?: StyleProp<ViewStyle>
 }) {

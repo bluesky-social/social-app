@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
-import {ToolsOzoneReportDefs as OzoneReportDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {tools} from '#/lexicons'
 
 export type ReportCategory =
   | 'childSafety'
@@ -22,7 +22,7 @@ export type ReportCategoryConfig = {
 
 export type ReportOption = {
   title: string
-  reason: OzoneReportDefs.ReasonType
+  reason: tools.ozone.report.defs.ReasonType
 }
 
 export function useReportOptions() {
@@ -37,27 +37,27 @@ export function useReportOptions() {
         options: [
           {
             title: _(msg`Spam`),
-            reason: OzoneReportDefs.REASONMISLEADINGSPAM,
+            reason: tools.ozone.report.defs.reasonMisleadingSpam,
           },
           {
             title: _(msg`Scam`),
-            reason: OzoneReportDefs.REASONMISLEADINGSCAM,
+            reason: tools.ozone.report.defs.reasonMisleadingScam,
           },
           {
             title: _(msg`Fake account or bot`),
-            reason: OzoneReportDefs.REASONMISLEADINGBOT,
+            reason: tools.ozone.report.defs.reasonMisleadingBot,
           },
           {
             title: _(msg`Impersonation`),
-            reason: OzoneReportDefs.REASONMISLEADINGIMPERSONATION,
+            reason: tools.ozone.report.defs.reasonMisleadingImpersonation,
           },
           {
             title: _(msg`False information about elections`),
-            reason: OzoneReportDefs.REASONMISLEADINGELECTIONS,
+            reason: tools.ozone.report.defs.reasonMisleadingElections,
           },
           {
             title: _(msg`Other misleading content`),
-            reason: OzoneReportDefs.REASONMISLEADINGOTHER,
+            reason: tools.ozone.report.defs.reasonMisleadingOther,
           },
         ],
       },
@@ -70,27 +70,27 @@ export function useReportOptions() {
         options: [
           {
             title: _(msg`Unlabeled adult content`),
-            reason: OzoneReportDefs.REASONSEXUALUNLABELED,
+            reason: tools.ozone.report.defs.reasonSexualUnlabeled,
           },
           {
             title: _(msg`Adult sexual abuse content`),
-            reason: OzoneReportDefs.REASONSEXUALABUSECONTENT,
+            reason: tools.ozone.report.defs.reasonSexualAbuseContent,
           },
           {
             title: _(msg`Non-consensual intimate imagery`),
-            reason: OzoneReportDefs.REASONSEXUALNCII,
+            reason: tools.ozone.report.defs.reasonSexualNCII,
           },
           {
             title: _(msg`Deepfake adult content`),
-            reason: OzoneReportDefs.REASONSEXUALDEEPFAKE,
+            reason: tools.ozone.report.defs.reasonSexualDeepfake,
           },
           {
             title: _(msg`Animal sexual abuse`),
-            reason: OzoneReportDefs.REASONSEXUALANIMAL,
+            reason: tools.ozone.report.defs.reasonSexualAnimal,
           },
           {
             title: _(msg`Other sexual violence content`),
-            reason: OzoneReportDefs.REASONSEXUALOTHER,
+            reason: tools.ozone.report.defs.reasonSexualOther,
           },
         ],
       },
@@ -101,23 +101,23 @@ export function useReportOptions() {
         options: [
           {
             title: _(msg`Trolling`),
-            reason: OzoneReportDefs.REASONHARASSMENTTROLL,
+            reason: tools.ozone.report.defs.reasonHarassmentTroll,
           },
           {
             title: _(msg`Targeted harassment`),
-            reason: OzoneReportDefs.REASONHARASSMENTTARGETED,
+            reason: tools.ozone.report.defs.reasonHarassmentTargeted,
           },
           {
             title: _(msg`Hate speech`),
-            reason: OzoneReportDefs.REASONHARASSMENTHATESPEECH,
+            reason: tools.ozone.report.defs.reasonHarassmentHateSpeech,
           },
           {
             title: _(msg`Doxxing`),
-            reason: OzoneReportDefs.REASONHARASSMENTDOXXING,
+            reason: tools.ozone.report.defs.reasonHarassmentDoxxing,
           },
           {
             title: _(msg`Other harassing or hateful content`),
-            reason: OzoneReportDefs.REASONHARASSMENTOTHER,
+            reason: tools.ozone.report.defs.reasonHarassmentOther,
           },
         ],
       },
@@ -128,31 +128,31 @@ export function useReportOptions() {
         options: [
           {
             title: _(msg`Animal welfare`),
-            reason: OzoneReportDefs.REASONVIOLENCEANIMAL,
+            reason: tools.ozone.report.defs.reasonViolenceAnimal,
           },
           {
             title: _(msg`Threats or incitement`),
-            reason: OzoneReportDefs.REASONVIOLENCETHREATS,
+            reason: tools.ozone.report.defs.reasonViolenceThreats,
           },
           {
             title: _(msg`Graphic violent content`),
-            reason: OzoneReportDefs.REASONVIOLENCEGRAPHICCONTENT,
+            reason: tools.ozone.report.defs.reasonViolenceGraphicContent,
           },
           {
             title: _(msg`Glorification of violence`),
-            reason: OzoneReportDefs.REASONVIOLENCEGLORIFICATION,
+            reason: tools.ozone.report.defs.reasonViolenceGlorification,
           },
           {
             title: _(msg`Extremist content`),
-            reason: OzoneReportDefs.REASONVIOLENCEEXTREMISTCONTENT,
+            reason: tools.ozone.report.defs.reasonViolenceExtremistContent,
           },
           {
             title: _(msg`Human trafficking`),
-            reason: OzoneReportDefs.REASONVIOLENCETRAFFICKING,
+            reason: tools.ozone.report.defs.reasonViolenceTrafficking,
           },
           {
             title: _(msg`Other violent content`),
-            reason: OzoneReportDefs.REASONVIOLENCEOTHER,
+            reason: tools.ozone.report.defs.reasonViolenceOther,
           },
         ],
       },
@@ -163,23 +163,23 @@ export function useReportOptions() {
         options: [
           {
             title: _(msg`Child Sexual Abuse Material (CSAM)`),
-            reason: OzoneReportDefs.REASONCHILDSAFETYCSAM,
+            reason: tools.ozone.report.defs.reasonChildSafetyCSAM,
           },
           {
             title: _(msg`Grooming or predatory behavior`),
-            reason: OzoneReportDefs.REASONCHILDSAFETYGROOM,
+            reason: tools.ozone.report.defs.reasonChildSafetyGroom,
           },
           {
             title: _(msg`Privacy violation of a minor`),
-            reason: OzoneReportDefs.REASONCHILDSAFETYPRIVACY,
+            reason: tools.ozone.report.defs.reasonChildSafetyPrivacy,
           },
           {
             title: _(msg`Minor harassment or bullying`),
-            reason: OzoneReportDefs.REASONCHILDSAFETYHARASSMENT,
+            reason: tools.ozone.report.defs.reasonChildSafetyHarassment,
           },
           {
             title: _(msg`Other child safety issue`),
-            reason: OzoneReportDefs.REASONCHILDSAFETYOTHER,
+            reason: tools.ozone.report.defs.reasonChildSafetyOther,
           },
         ],
       },
@@ -190,23 +190,23 @@ export function useReportOptions() {
         options: [
           {
             title: _(msg`Content promoting or depicting self-harm`),
-            reason: OzoneReportDefs.REASONSELFHARMCONTENT,
+            reason: tools.ozone.report.defs.reasonSelfHarmContent,
           },
           {
             title: _(msg`Eating disorders`),
-            reason: OzoneReportDefs.REASONSELFHARMED,
+            reason: tools.ozone.report.defs.reasonSelfHarmED,
           },
           {
             title: _(msg`Dangerous challenges or activities`),
-            reason: OzoneReportDefs.REASONSELFHARMSTUNTS,
+            reason: tools.ozone.report.defs.reasonSelfHarmStunts,
           },
           {
             title: _(msg`Dangerous substances or drug abuse`),
-            reason: OzoneReportDefs.REASONSELFHARMSUBSTANCES,
+            reason: tools.ozone.report.defs.reasonSelfHarmSubstances,
           },
           {
             title: _(msg`Other dangerous content`),
-            reason: OzoneReportDefs.REASONSELFHARMOTHER,
+            reason: tools.ozone.report.defs.reasonSelfHarmOther,
           },
         ],
       },
@@ -217,19 +217,19 @@ export function useReportOptions() {
         options: [
           {
             title: _(msg`Hacking or system attacks`),
-            reason: OzoneReportDefs.REASONRULESITESECURITY,
+            reason: tools.ozone.report.defs.reasonRuleSiteSecurity,
           },
           {
             title: _(msg`Promoting or selling prohibited items or services`),
-            reason: OzoneReportDefs.REASONRULEPROHIBITEDSALES,
+            reason: tools.ozone.report.defs.reasonRuleProhibitedSales,
           },
           {
             title: _(msg`Banned user returning`),
-            reason: OzoneReportDefs.REASONRULEBANEVASION,
+            reason: tools.ozone.report.defs.reasonRuleBanEvasion,
           },
           {
             title: _(msg`Other network rule-breaking`),
-            reason: OzoneReportDefs.REASONRULEOTHER,
+            reason: tools.ozone.report.defs.reasonRuleOther,
           },
         ],
       },
@@ -240,7 +240,7 @@ export function useReportOptions() {
         options: [
           {
             title: _(msg`Other`),
-            reason: OzoneReportDefs.REASONOTHER,
+            reason: tools.ozone.report.defs.reasonOther,
           },
         ],
       },

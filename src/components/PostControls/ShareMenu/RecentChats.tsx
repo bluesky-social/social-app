@@ -1,11 +1,11 @@
 import {ScrollView, View} from 'react-native'
-import {type ChatBskyActorDefs} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {chat} from '#/lexicons'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {moderateProfile} from '#/lib/moderation/subjects'
@@ -114,7 +114,7 @@ function RecentChatItem({
   onPress: () => void
   moderationOpts: ModerationOpts
   convo: ConvoWithDetails
-  primaryMember: ChatBskyActorDefs.ProfileViewBasic
+  primaryMember: chat.bsky.actor.defs.ProfileViewBasic
 }) {
   const {_} = useLingui()
   const t = useTheme()

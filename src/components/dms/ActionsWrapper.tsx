@@ -1,8 +1,8 @@
 import {View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
+import {chat} from '#/lexicons'
 import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
 import {useMessageReplies} from '#/components/dms/MessageReplies'
 import {SwipeToReply} from '#/components/dms/SwipeToReply'
@@ -15,7 +15,7 @@ export function ActionsWrapper({
   moderationOpts,
   children,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  message: chat.bsky.convo.defs.MessageView
   isFromSelf: boolean
   senderProfile?: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts | undefined

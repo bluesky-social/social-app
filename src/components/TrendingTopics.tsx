@@ -1,7 +1,8 @@
 import {useEffect, useMemo} from 'react'
-import {type AppBskyUnspeccedDefs, type AtUri} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
+import {type AtUri} from '@atproto/syntax'
+import {app} from '#/lexicons'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useCallOnce} from '#/lib/once'
 // import {makeProfileLink} from '#/lib/routes/links'
@@ -18,7 +19,7 @@ export function TrendingTopicLink({
   children,
   ...rest
 }: {
-  topic: AppBskyUnspeccedDefs.TrendView
+  topic: app.bsky.unspecced.defs.TrendView
   metricContext: Metrics['trendingTopic:seen']['context']
   rank: number
   recId?: string
@@ -75,7 +76,7 @@ type ParsedTrendingTopic =
     }
 
 export function useTopic(
-  raw: AppBskyUnspeccedDefs.TrendView,
+  raw: app.bsky.unspecced.defs.TrendView,
 ): ParsedTrendingTopic {
   const {t: l} = useLingui()
   return useMemo(() => {

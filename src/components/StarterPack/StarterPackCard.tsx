@@ -1,12 +1,13 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {AtUri} from '@atproto/syntax'
+import {app} from '#/lexicons'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {precacheResolvedUri} from '#/state/queries/resolve-uri'
@@ -62,12 +63,7 @@ export function Card({
   const t = useTheme()
   const {currentAccount} = useSession()
 
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
   }
 
@@ -127,10 +123,7 @@ export function useStarterPackLink({
 
   return {
     to: `/starter-pack/${handleOrDid}/${rkey}`,
-    label: bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      view.record,
-      AppBskyGraphStarterpack.isRecord,
-    )
+    label: bsky.isType(app.bsky.graph.starterpack, view.record)
       ? _(msg`Navigate to ${view.record.name}`)
       : _(msg`Navigate to starter pack`),
     precache,
@@ -154,12 +147,7 @@ export function Link({
     return {rkey, handleOrDid: creator.handle || creator.did}
   }, [starterPack])
 
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
   }
 

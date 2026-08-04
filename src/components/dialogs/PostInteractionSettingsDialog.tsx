@@ -1,6 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
 import {LayoutAnimation, Text as NestedText, View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -50,7 +49,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
-import {type app} from '#/lexicons'
+import {app} from '#/lexicons'
 
 export type PostInteractionSettingsFormProps = {
   canSave?: boolean
@@ -133,10 +132,10 @@ export type PostInteractionSettingsDialogProps = {
    */
   rootPostUri: string
   /**
-   * Optional initial {@link AppBskyFeedDefs.ThreadgateView} to use if we
+   * Optional initial {@link app.bsky.feed.defs.ThreadgateView} to use if we
    * happen to have one before opening the settings dialog.
    */
-  initialThreadgateView?: AppBskyFeedDefs.ThreadgateView
+  initialThreadgateView?: app.bsky.feed.defs.ThreadgateView
 }
 
 /**

@@ -7,13 +7,13 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type ModerationCause, type ModerationUI} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {app} from '#/lexicons'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {addStyle} from '#/lib/styles'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
@@ -31,7 +31,7 @@ interface Props extends React.ComponentProps<typeof Link> {
   iconSize: number
   iconStyles: StyleProp<ViewStyle>
   modui: ModerationUI
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: app.bsky.actor.defs.ProfileViewBasic
   interpretFilterAsBlur?: boolean
   hiderStyle?: StyleProp<ViewStyle>
 }

@@ -1,11 +1,11 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {app} from '#/lexicons'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-availability'
@@ -20,7 +20,7 @@ import {useAnalytics} from '#/analytics'
 export function MessageProfileButton({
   profile,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
   const t = useTheme()

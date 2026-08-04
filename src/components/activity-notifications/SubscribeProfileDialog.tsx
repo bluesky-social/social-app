@@ -1,6 +1,5 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyNotificationDefs, type Un$Typed} from '@atproto/api'
 import {type DidString} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
@@ -12,6 +11,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {type Un$Typed} from '@atproto/lex'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -118,7 +118,7 @@ function DialogInner({
     error,
   } = useMutation({
     mutationFn: async (
-      activitySubscription: Un$Typed<AppBskyNotificationDefs.ActivitySubscription>,
+      activitySubscription: Un$Typed<app.bsky.notification.defs.ActivitySubscription>,
     ) => {
       await client.call(app.bsky.notification.putActivitySubscription, {
         // the profile view carries an already-resolved did
@@ -307,8 +307,8 @@ function DialogInner({
 }
 
 function parseActivitySubscription(
-  sub?: AppBskyNotificationDefs.ActivitySubscription,
-): Un$Typed<AppBskyNotificationDefs.ActivitySubscription> {
+  sub?: app.bsky.notification.defs.ActivitySubscription,
+): Un$Typed<app.bsky.notification.defs.ActivitySubscription> {
   if (!sub) return {post: false, reply: false}
   const {post, reply} = sub
   return {post, reply}

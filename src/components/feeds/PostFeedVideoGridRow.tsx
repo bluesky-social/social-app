@@ -1,6 +1,7 @@
 import {View} from 'react-native'
-import {AppBskyEmbedVideo} from '@atproto/api'
 
+import * as bsky from '#/types/bsky'
+import {app} from '#/lexicons'
 import {type FeedPostSliceItem} from '#/state/queries/post-feed'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useGutters} from '#/alf'
@@ -21,7 +22,7 @@ export function PostFeedVideoGridRow({
   const ax = useAnalytics()
   const gutters = useGutters(['base', 'base', 0, 'base'])
   const posts = slices
-    .filter(slice => AppBskyEmbedVideo.isView(slice.post.embed))
+    .filter(slice => bsky.isType(app.bsky.embed.video.view, slice.post.embed))
     .map(slice => ({
       post: slice.post,
       moderation: slice.moderation,

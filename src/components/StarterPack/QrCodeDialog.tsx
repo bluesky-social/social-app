@@ -3,11 +3,11 @@ import {View} from 'react-native'
 import type ViewShot from 'react-native-view-shot'
 import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
-import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {app} from '#/lexicons'
 import {logger} from '#/logger'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -28,7 +28,7 @@ export function QrCodeDialog({
   link,
   control,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: app.bsky.graph.defs.StarterPackView
   link?: string
   control: DialogControlProps
 }) {
@@ -87,12 +87,7 @@ export function QrCodeDialog({
       } else {
         setIsSaveProcessing(true)
 
-        if (
-          !bsky.validate(
-            starterPack.record,
-            AppBskyGraphStarterpack.validateRecord,
-          )
-        ) {
+        if (!bsky.matches(app.bsky.graph.starterpack, starterPack.record)) {
           return
         }
 

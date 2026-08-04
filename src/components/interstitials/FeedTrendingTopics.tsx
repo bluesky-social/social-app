@@ -1,8 +1,8 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
-import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {app} from '#/lexicons'
 import {moderateProfile} from '#/lib/moderation/subjects'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
@@ -183,7 +183,7 @@ function TrendRow({
   recId,
   onPress,
 }: ViewStyleProp & {
-  trend: AppBskyUnspeccedDefs.TrendView
+  trend: app.bsky.unspecced.defs.TrendView
   rank: number
   feedSliceIndex: number
   recId?: string
@@ -291,7 +291,7 @@ function TrendingTopicRowSkeleton({rank}: {rank: number}) {
 }
 
 function useModerateTrendingActors(
-  actors: AppBskyUnspeccedDefs.TrendView['actors'],
+  actors: app.bsky.unspecced.defs.TrendView['actors'],
 ) {
   const moderationOpts = useModerationOpts()
 

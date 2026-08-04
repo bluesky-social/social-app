@@ -1,8 +1,8 @@
 import {Fragment, type ReactNode} from 'react'
 import {View} from 'react-native'
-import {AtUri} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
+import {AtUri} from '@atproto/syntax'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
 import {

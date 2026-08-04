@@ -1,8 +1,9 @@
 import {setStringAsync} from 'expo-clipboard'
-import {ChatBskyGroupDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import * as bsky from '#/types/bsky'
+import {chat} from '#/lexicons'
 import {type NavigationProp} from '#/lib/routes/types'
 import {
   type ChatInvitePreview,
@@ -71,7 +72,7 @@ export function Root({
     status = 'loading'
   } else if (error) {
     status = 'error'
-  } else if (ChatBskyGroupDefs.isJoinLinkPreviewView(preview)) {
+  } else if (bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, preview)) {
     status = 'available'
   } else {
     // Resolved to a disabled/invalid/unrecognized preview - nothing to join.
@@ -79,7 +80,7 @@ export function Root({
   }
 
   let action: ChatInviteAction | undefined
-  if (ChatBskyGroupDefs.isJoinLinkPreviewView(preview)) {
+  if (bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, preview)) {
     const convoId = preview.convo?.id
     const isFollowing = preview.owner.viewer?.followedBy ?? false
     const hasRequested = !convoId && preview.viewer?.requestedAt != null

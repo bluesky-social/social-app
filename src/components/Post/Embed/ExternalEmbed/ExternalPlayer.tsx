@@ -15,11 +15,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
 import {scheduleOnRN} from 'react-native-worklets'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {app} from '#/lexicons'
 import {type NavigationProp} from '#/lib/routes/types'
 import {
   type EmbedPlayerParams,
@@ -122,7 +122,7 @@ export function ExternalPlayer({
   link,
   params,
 }: {
-  link: AppBskyEmbedExternal.ViewExternal
+  link: app.bsky.embed.external.ViewExternal
   params: EmbedPlayerParams
 }) {
   const t = useTheme()

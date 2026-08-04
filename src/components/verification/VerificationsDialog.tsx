@@ -1,9 +1,9 @@
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {app} from '#/lexicons'
 import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -180,7 +180,7 @@ function VerifierCard({
   subject,
   outerDialogControl,
 }: {
-  verification: AppBskyActorDefs.VerificationView
+  verification: app.bsky.actor.defs.VerificationView
   subject: bsky.profile.AnyProfileView
   outerDialogControl: Dialog.DialogControlProps
 }) {

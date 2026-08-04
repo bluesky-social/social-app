@@ -7,10 +7,10 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
-import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {app} from '#/lexicons'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
@@ -37,7 +37,7 @@ const noop = () => {}
  */
 const MIN_CARD_WIDTH = 280
 
-export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
+export function VideoEmbed({embed}: {embed: app.bsky.embed.video.View}) {
   const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
   const {
@@ -297,7 +297,7 @@ function VideoError({
   error,
   retry,
 }: {
-  embed: AppBskyEmbedVideo.View
+  embed: app.bsky.embed.video.View
   error: unknown
   retry: () => void
 }) {

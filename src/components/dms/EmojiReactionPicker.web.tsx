@@ -1,9 +1,9 @@
 import {useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {DropdownMenu} from 'radix-ui'
 
+import {chat} from '#/lexicons'
 import {useSession} from '#/state/session'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import * as EmojiPicker from '#/components/EmojiPicker'
@@ -17,7 +17,7 @@ export function EmojiReactionPicker({
   children,
   onEmojiSelect,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  message: chat.bsky.convo.defs.MessageView
   children?: EmojiPicker.TriggerProps['children']
   onEmojiSelect: (emoji: string) => void
 }) {
@@ -40,7 +40,7 @@ function MenuInner({
   message,
   onEmojiSelect,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  message: chat.bsky.convo.defs.MessageView
   onEmojiSelect: (emoji: string) => void
 }) {
   const t = useTheme()

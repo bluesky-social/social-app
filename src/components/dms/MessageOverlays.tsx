@@ -7,10 +7,10 @@ import {
   useState,
 } from 'react'
 import {LayoutAnimation} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {chat} from '#/lexicons'
 import {useConvoActive} from '#/state/messages/convo'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useDialogControl} from '#/components/Dialog'
@@ -23,12 +23,12 @@ import * as Toast from '#/components/Toast'
 import type * as bsky from '#/types/bsky'
 
 type MessageDialogsContextType = {
-  openDeleteMessage: (message: ChatBskyConvoDefs.MessageView) => void
+  openDeleteMessage: (message: chat.bsky.convo.defs.MessageView) => void
   openReportMessage: (
-    message: ChatBskyConvoDefs.MessageView,
+    message: chat.bsky.convo.defs.MessageView,
     senderProfile: bsky.profile.AnyProfileView | undefined,
   ) => void
-  openReactions: (message: ChatBskyConvoDefs.MessageView) => void
+  openReactions: (message: chat.bsky.convo.defs.MessageView) => void
 }
 
 const Context = createContext<MessageDialogsContextType | null>(null)
@@ -52,18 +52,18 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
   const reactionsControl = useDialogControl()
 
   const [deleteTarget, setDeleteTarget] =
-    useState<ChatBskyConvoDefs.MessageView | null>(null)
+    useState<chat.bsky.convo.defs.MessageView | null>(null)
   const [reportTarget, setReportTarget] = useState<{
-    message: ChatBskyConvoDefs.MessageView
+    message: chat.bsky.convo.defs.MessageView
     senderProfile: bsky.profile.AnyProfileView | undefined
   } | null>(null)
   const [afterReportTarget, setAfterReportTarget] =
-    useState<ChatBskyConvoDefs.MessageView | null>(null)
+    useState<chat.bsky.convo.defs.MessageView | null>(null)
   const [reactionsTarget, setReactionsTarget] =
-    useState<ChatBskyConvoDefs.MessageView | null>(null)
+    useState<chat.bsky.convo.defs.MessageView | null>(null)
 
   const openDeleteMessage = useCallback(
-    (message: ChatBskyConvoDefs.MessageView) => {
+    (message: chat.bsky.convo.defs.MessageView) => {
       setDeleteTarget(message)
       deleteControl.open()
     },
@@ -72,7 +72,7 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
 
   const openReportMessage = useCallback(
     (
-      message: ChatBskyConvoDefs.MessageView,
+      message: chat.bsky.convo.defs.MessageView,
       senderProfile: bsky.profile.AnyProfileView | undefined,
     ) => {
       setReportTarget({message, senderProfile})
@@ -82,7 +82,7 @@ export function MessageOverlays({children}: {children: React.ReactNode}) {
   )
 
   const openReactions = useCallback(
-    (message: ChatBskyConvoDefs.MessageView) => {
+    (message: chat.bsky.convo.defs.MessageView) => {
       setReactionsTarget(message)
     },
     [],

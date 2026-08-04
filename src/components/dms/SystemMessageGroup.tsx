@@ -7,10 +7,10 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {type ChatBskyActorDefs} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
+import {chat} from '#/lexicons'
 import {HITSLOP_10} from '#/lib/constants'
 import {type SystemMessageGroupItem} from '#/screens/Messages/components/groupSystemMessages'
 import {atoms as a, useTheme} from '#/alf'
@@ -29,7 +29,7 @@ export function SystemMessageGroup({
   item: SystemMessageGroupItem
   expanded: boolean
   onToggle: (key: string) => void
-  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
+  relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic>
 }) {
   const t = useTheme()
   const {t: l} = useLingui()

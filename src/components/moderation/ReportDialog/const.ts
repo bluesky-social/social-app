@@ -1,9 +1,5 @@
 import {applicationId} from 'expo-application'
-import {
-  ComAtprotoModerationDefs as RootReportDefs,
-  ToolsOzoneReportDefs as OzoneReportDefs,
-} from '@atproto/api'
-
+import {com, tools} from '#/lexicons'
 import {type ParsedReportSubject} from '#/components/moderation/ReportDialog/types'
 import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
 
@@ -31,59 +27,96 @@ export const NEW_TO_OLD_REASON_MAPPING: Record<string, string> = {}
  * @see https://github.com/bluesky-social/atproto/blob/4c15fb47cec26060bff2e710e95869a90c9d7fdd/packages/ozone/src/mod-service/profile.ts#L16-L64
  */
 export const NEW_TO_OLD_REASONS_MAP: Record<
-  OzoneReportDefs.ReasonType,
-  RootReportDefs.ReasonType
+  tools.ozone.report.defs.ReasonType,
+  com.atproto.moderation.defs.ReasonType
 > = {
-  [OzoneReportDefs.REASONAPPEAL]: RootReportDefs.REASONAPPEAL,
-  [OzoneReportDefs.REASONOTHER]: RootReportDefs.REASONOTHER,
+  [tools.ozone.report.defs.reasonAppeal]:
+    com.atproto.moderation.defs.reasonAppeal,
+  [tools.ozone.report.defs.reasonOther]:
+    com.atproto.moderation.defs.reasonOther,
 
-  [OzoneReportDefs.REASONVIOLENCEANIMAL]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONVIOLENCETHREATS]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONVIOLENCEGRAPHICCONTENT]:
-    RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONVIOLENCEGLORIFICATION]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONVIOLENCEEXTREMISTCONTENT]:
-    RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONVIOLENCETRAFFICKING]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONVIOLENCEOTHER]: RootReportDefs.REASONVIOLATION,
+  [tools.ozone.report.defs.reasonViolenceAnimal]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonViolenceThreats]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonViolenceGraphicContent]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonViolenceGlorification]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonViolenceExtremistContent]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonViolenceTrafficking]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonViolenceOther]:
+    com.atproto.moderation.defs.reasonViolation,
 
-  [OzoneReportDefs.REASONSEXUALABUSECONTENT]: RootReportDefs.REASONSEXUAL,
-  [OzoneReportDefs.REASONSEXUALNCII]: RootReportDefs.REASONSEXUAL,
-  [OzoneReportDefs.REASONSEXUALDEEPFAKE]: RootReportDefs.REASONSEXUAL,
-  [OzoneReportDefs.REASONSEXUALANIMAL]: RootReportDefs.REASONSEXUAL,
-  [OzoneReportDefs.REASONSEXUALUNLABELED]: RootReportDefs.REASONSEXUAL,
-  [OzoneReportDefs.REASONSEXUALOTHER]: RootReportDefs.REASONSEXUAL,
+  [tools.ozone.report.defs.reasonSexualAbuseContent]:
+    com.atproto.moderation.defs.reasonSexual,
+  [tools.ozone.report.defs.reasonSexualNCII]:
+    com.atproto.moderation.defs.reasonSexual,
+  [tools.ozone.report.defs.reasonSexualDeepfake]:
+    com.atproto.moderation.defs.reasonSexual,
+  [tools.ozone.report.defs.reasonSexualAnimal]:
+    com.atproto.moderation.defs.reasonSexual,
+  [tools.ozone.report.defs.reasonSexualUnlabeled]:
+    com.atproto.moderation.defs.reasonSexual,
+  [tools.ozone.report.defs.reasonSexualOther]:
+    com.atproto.moderation.defs.reasonSexual,
 
-  [OzoneReportDefs.REASONCHILDSAFETYCSAM]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONCHILDSAFETYGROOM]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONCHILDSAFETYPRIVACY]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONCHILDSAFETYHARASSMENT]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONCHILDSAFETYOTHER]: RootReportDefs.REASONVIOLATION,
+  [tools.ozone.report.defs.reasonChildSafetyCSAM]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonChildSafetyGroom]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonChildSafetyPrivacy]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonChildSafetyHarassment]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonChildSafetyOther]:
+    com.atproto.moderation.defs.reasonViolation,
 
-  [OzoneReportDefs.REASONHARASSMENTTROLL]: RootReportDefs.REASONRUDE,
-  [OzoneReportDefs.REASONHARASSMENTTARGETED]: RootReportDefs.REASONRUDE,
-  [OzoneReportDefs.REASONHARASSMENTHATESPEECH]: RootReportDefs.REASONRUDE,
-  [OzoneReportDefs.REASONHARASSMENTDOXXING]: RootReportDefs.REASONRUDE,
-  [OzoneReportDefs.REASONHARASSMENTOTHER]: RootReportDefs.REASONRUDE,
+  [tools.ozone.report.defs.reasonHarassmentTroll]:
+    com.atproto.moderation.defs.reasonRude,
+  [tools.ozone.report.defs.reasonHarassmentTargeted]:
+    com.atproto.moderation.defs.reasonRude,
+  [tools.ozone.report.defs.reasonHarassmentHateSpeech]:
+    com.atproto.moderation.defs.reasonRude,
+  [tools.ozone.report.defs.reasonHarassmentDoxxing]:
+    com.atproto.moderation.defs.reasonRude,
+  [tools.ozone.report.defs.reasonHarassmentOther]:
+    com.atproto.moderation.defs.reasonRude,
 
-  [OzoneReportDefs.REASONMISLEADINGBOT]: RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONMISLEADINGIMPERSONATION]:
-    RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONMISLEADINGSPAM]: RootReportDefs.REASONSPAM,
-  [OzoneReportDefs.REASONMISLEADINGSCAM]: RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONMISLEADINGELECTIONS]: RootReportDefs.REASONMISLEADING,
-  [OzoneReportDefs.REASONMISLEADINGOTHER]: RootReportDefs.REASONMISLEADING,
+  [tools.ozone.report.defs.reasonMisleadingBot]:
+    com.atproto.moderation.defs.reasonMisleading,
+  [tools.ozone.report.defs.reasonMisleadingImpersonation]:
+    com.atproto.moderation.defs.reasonMisleading,
+  [tools.ozone.report.defs.reasonMisleadingSpam]:
+    com.atproto.moderation.defs.reasonSpam,
+  [tools.ozone.report.defs.reasonMisleadingScam]:
+    com.atproto.moderation.defs.reasonMisleading,
+  [tools.ozone.report.defs.reasonMisleadingElections]:
+    com.atproto.moderation.defs.reasonMisleading,
+  [tools.ozone.report.defs.reasonMisleadingOther]:
+    com.atproto.moderation.defs.reasonMisleading,
 
-  [OzoneReportDefs.REASONRULESITESECURITY]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONRULEPROHIBITEDSALES]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONRULEBANEVASION]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONRULEOTHER]: RootReportDefs.REASONVIOLATION,
+  [tools.ozone.report.defs.reasonRuleSiteSecurity]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonRuleProhibitedSales]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonRuleBanEvasion]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonRuleOther]:
+    com.atproto.moderation.defs.reasonViolation,
 
-  [OzoneReportDefs.REASONSELFHARMCONTENT]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONSELFHARMED]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONSELFHARMSTUNTS]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONSELFHARMSUBSTANCES]: RootReportDefs.REASONVIOLATION,
-  [OzoneReportDefs.REASONSELFHARMOTHER]: RootReportDefs.REASONVIOLATION,
+  [tools.ozone.report.defs.reasonSelfHarmContent]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonSelfHarmED]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonSelfHarmStunts]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonSelfHarmSubstances]:
+    com.atproto.moderation.defs.reasonViolation,
+  [tools.ozone.report.defs.reasonSelfHarmOther]:
+    com.atproto.moderation.defs.reasonViolation,
 }
 
 /**
@@ -91,42 +124,60 @@ export const NEW_TO_OLD_REASONS_MAP: Record<
  * @see https://github.com/bluesky-social/proposals/tree/main/0009-mod-report-granularity#backwards-compatibility
  */
 export const OLD_TO_NEW_REASONS_MAP: Record<
-  Exclude<RootReportDefs.ReasonType, OzoneReportDefs.ReasonType>,
-  OzoneReportDefs.ReasonType
+  Exclude<
+    com.atproto.moderation.defs.ReasonType,
+    tools.ozone.report.defs.ReasonType
+  >,
+  tools.ozone.report.defs.ReasonType
 > = {
-  [RootReportDefs.REASONSPAM]: [OzoneReportDefs.REASONMISLEADINGSPAM],
-  [RootReportDefs.REASONVIOLATION]: [OzoneReportDefs.REASONRULEOTHER],
-  [RootReportDefs.REASONMISLEADING]: [OzoneReportDefs.REASONMISLEADINGOTHER],
-  [RootReportDefs.REASONSEXUAL]: [OzoneReportDefs.REASONSEXUALUNLABELED],
-  [RootReportDefs.REASONRUDE]: [OzoneReportDefs.REASONHARASSMENTOTHER],
-  [RootReportDefs.REASONOTHER]: [OzoneReportDefs.REASONOTHER],
-  [RootReportDefs.REASONAPPEAL]: [OzoneReportDefs.REASONAPPEAL],
+  [com.atproto.moderation.defs.reasonSpam]: [
+    tools.ozone.report.defs.reasonMisleadingSpam,
+  ],
+  [com.atproto.moderation.defs.reasonViolation]: [
+    tools.ozone.report.defs.reasonRuleOther,
+  ],
+  [com.atproto.moderation.defs.reasonMisleading]: [
+    tools.ozone.report.defs.reasonMisleadingOther,
+  ],
+  [com.atproto.moderation.defs.reasonSexual]: [
+    tools.ozone.report.defs.reasonSexualUnlabeled,
+  ],
+  [com.atproto.moderation.defs.reasonRude]: [
+    tools.ozone.report.defs.reasonHarassmentOther,
+  ],
+  [com.atproto.moderation.defs.reasonOther]: [
+    tools.ozone.report.defs.reasonOther,
+  ],
+  [com.atproto.moderation.defs.reasonAppeal]: [
+    tools.ozone.report.defs.reasonAppeal,
+  ],
 }
 
 /**
  * Set of report reasons that should optionally include additional details from
  * the reporter.
  */
-export const OTHER_REPORT_REASONS: Set<OzoneReportDefs.ReasonType> = new Set([
-  OzoneReportDefs.REASONVIOLENCEOTHER,
-  OzoneReportDefs.REASONSEXUALOTHER,
-  OzoneReportDefs.REASONCHILDSAFETYOTHER,
-  OzoneReportDefs.REASONHARASSMENTOTHER,
-  OzoneReportDefs.REASONMISLEADINGOTHER,
-  OzoneReportDefs.REASONRULEOTHER,
-  OzoneReportDefs.REASONSELFHARMOTHER,
-  OzoneReportDefs.REASONOTHER,
-])
+export const OTHER_REPORT_REASONS: Set<tools.ozone.report.defs.ReasonType> =
+  new Set([
+    tools.ozone.report.defs.reasonViolenceOther,
+    tools.ozone.report.defs.reasonSexualOther,
+    tools.ozone.report.defs.reasonChildSafetyOther,
+    tools.ozone.report.defs.reasonHarassmentOther,
+    tools.ozone.report.defs.reasonMisleadingOther,
+    tools.ozone.report.defs.reasonRuleOther,
+    tools.ozone.report.defs.reasonSelfHarmOther,
+    tools.ozone.report.defs.reasonOther,
+  ])
 
 /**
  * Set of report reasons that should only be sent to Bluesky's moderation service.
  */
-export const BSKY_LABELER_ONLY_REPORT_REASONS: Set<OzoneReportDefs.ReasonType> =
+export const BSKY_LABELER_ONLY_REPORT_REASONS: Set<tools.ozone.report.defs.ReasonType> =
   new Set([
-    OzoneReportDefs.REASONCHILDSAFETYCSAM,
-    OzoneReportDefs.REASONCHILDSAFETYGROOM,
-    OzoneReportDefs.REASONCHILDSAFETYOTHER,
-    OzoneReportDefs.REASONVIOLENCEEXTREMISTCONTENT,
+    tools.ozone.report.defs.reasonChildSafetyCSAM,
+    tools.ozone.report.defs.reasonChildSafetyGroom,
+    tools.ozone.report.defs.reasonChildSafetyOther,
+    tools.ozone.report.defs.reasonViolenceExtremistContent,
   ])
 
 /**

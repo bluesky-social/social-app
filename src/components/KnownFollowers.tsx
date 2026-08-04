@@ -1,9 +1,9 @@
 import {useRef} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {app} from '#/lexicons'
 import {moderateProfile} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -24,7 +24,7 @@ const AVI_BORDER = 1
  * `count` includes blocked users and `followers` does not.
  */
 export function shouldShowKnownFollowers(
-  knownFollowers?: AppBskyActorDefs.KnownFollowers,
+  knownFollowers?: app.bsky.actor.defs.KnownFollowers,
 ) {
   return knownFollowers && knownFollowers.followers.length > 0
 }
@@ -42,7 +42,9 @@ export function KnownFollowers({
   minimal?: boolean
   showIfEmpty?: boolean
 }) {
-  const cache = useRef<Map<string, AppBskyActorDefs.KnownFollowers>>(new Map())
+  const cache = useRef<Map<string, app.bsky.actor.defs.KnownFollowers>>(
+    new Map(),
+  )
 
   /*
    * Results for `knownFollowers` are not sorted consistently, so when
@@ -83,7 +85,7 @@ function KnownFollowersInner({
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
-  cachedKnownFollowers: AppBskyActorDefs.KnownFollowers
+  cachedKnownFollowers: app.bsky.actor.defs.KnownFollowers
   onLinkPress?: LinkProps['onPress']
   minimal?: boolean
   showIfEmpty?: boolean

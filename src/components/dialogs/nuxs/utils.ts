@@ -1,5 +1,4 @@
-import {type AppBskyActorDefs} from '@atproto/api'
-
+import {app} from '#/lexicons'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences'
 import {type SessionAccount} from '#/state/session'
 import {type AnalyticsContextType} from '#/analytics'
@@ -8,7 +7,7 @@ import {type Geolocation} from '#/geolocation'
 export type EnabledCheckProps = {
   features: AnalyticsContextType['features']
   currentAccount: SessionAccount
-  currentProfile: AppBskyActorDefs.ProfileViewDetailed
+  currentProfile: app.bsky.actor.defs.ProfileViewDetailed
   preferences: UsePreferencesQueryResponse
   geolocation: Geolocation
 }
