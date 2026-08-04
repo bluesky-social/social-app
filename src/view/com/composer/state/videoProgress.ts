@@ -1,12 +1,12 @@
 export type VideoProgressPhase = 'compressing' | 'uploading' | 'processing'
 
 // Keep progress monotonic across the full client pipeline instead of showing
-// three separate 0 -> 100 cycles. Processing stops short of complete because
-// a server-reported 100% can precede the completed blob becoming available.
+// three separate 0 -> 100 cycles. Backend processing progress covers the
+// entire server-side job, so it maps directly onto the final half.
 const PHASE_RANGES: Record<VideoProgressPhase, [number, number]> = {
-  compressing: [0, 0.4],
-  uploading: [0.4, 0.55],
-  processing: [0.55, 0.95],
+  compressing: [0, 0.3],
+  uploading: [0.3, 0.5],
+  processing: [0.5, 1],
 }
 
 export function videoProgressForPhase(

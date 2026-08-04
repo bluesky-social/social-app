@@ -2646,10 +2646,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
   const processingProgress =
     state.status === 'processing' ? state.jobStatus?.progress : undefined
   const shouldRotate =
-    state.status === 'processing' &&
-    (processingProgress === undefined ||
-      processingProgress <= 0 ||
-      processingProgress >= 100)
+    state.status === 'processing' && processingProgress === undefined
   let wheelProgress = progress
 
   const rotate = useDerivedValue(() => {
