@@ -4,10 +4,28 @@ import {
   type Main,
   type Procedure,
   type Query,
+  XrpcError,
   XrpcResponseError,
 } from '@atproto/lex'
 
 import {com} from '#/lexicons'
+
+/**
+ * True for an XRPC error from a lex `Client` (`XrpcError` is the abstract base
+ * of `XrpcResponseError`/`XrpcInvalidResponseError`/`XrpcInternalError`).
+ */
+export function isXrpcError(e: unknown): e is XrpcError {
+  return e instanceof XrpcError
+}
+
+/**
+ * HTTP status, or undefined when `e` is not an XRPC error carrying a response.
+ * Only `XrpcResponseError` (a genuine server response) has a status; the
+ * internal/fetch lex errors do not.
+ */
+export function getErrorStatus(e: unknown): number | undefined {
+  return e instanceof XrpcResponseError ? e.status : undefined
+}
 
 /**
  * The lexicon error code carried by `e`, narrowed to the errors DECLARED by

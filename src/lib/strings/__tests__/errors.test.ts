@@ -1,4 +1,3 @@
-import {XRPCError} from '@atproto/api'
 import {LexError, XrpcResponseError} from '@atproto/lex'
 import {beforeAll, describe, expect, it} from '@jest/globals'
 import {i18n} from '@lingui/core'
@@ -72,18 +71,8 @@ describe('cleanError', () => {
     )
   })
 
-  it('matches the upstream-failure branch on a legacy XRPC error', () => {
-    const e = new XRPCError(502)
-    expect(cleanError(e)).toBe(
-      'The server appears to be experiencing issues. Please try again in a few moments.',
-    )
-  })
-
-  it('matches NotEnoughResources on both error shapes', () => {
+  it('matches NotEnoughResources', () => {
     expect(cleanError(xrpcStatusError(503))).toBe(
-      'The server appears to be experiencing issues. Please try again in a few moments.',
-    )
-    expect(cleanError(new XRPCError(503))).toBe(
       'The server appears to be experiencing issues. Please try again in a few moments.',
     )
   })

@@ -1,12 +1,4 @@
 import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  type AppBskyNotificationListNotifications,
-  type AppBskyRichtextFacet,
-  type ChatBskyActorDefs,
-} from '@atproto/api'
-import {
   hasMutedWord as sdkHasMutedWord,
   moderateFeedGenerator as sdkModerateFeedGenerator,
   moderateNotification as sdkModerateNotification,
@@ -18,7 +10,7 @@ import {
   type ModerationOpts,
 } from '@bsky.app/sdk/moderation'
 
-import {type app, type chat} from '#/lexicons'
+import {app, chat} from '#/lexicons'
 
 /*
  * TRANSITIONAL. The moderation implementation now comes from
@@ -43,26 +35,26 @@ type AnyProfileSubject =
   | app.bsky.actor.defs.ProfileView
   | app.bsky.actor.defs.ProfileViewDetailed
   | chat.bsky.actor.defs.ProfileViewBasic
-  | AppBskyActorDefs.ProfileViewBasic
-  | AppBskyActorDefs.ProfileView
-  | AppBskyActorDefs.ProfileViewDetailed
-  | ChatBskyActorDefs.ProfileViewBasic
+  | app.bsky.actor.defs.ProfileViewBasic
+  | app.bsky.actor.defs.ProfileView
+  | app.bsky.actor.defs.ProfileViewDetailed
+  | chat.bsky.actor.defs.ProfileViewBasic
 
-type AnyPostSubject = app.bsky.feed.defs.PostView | AppBskyFeedDefs.PostView
+type AnyPostSubject = app.bsky.feed.defs.PostView | app.bsky.feed.defs.PostView
 
 type AnyUserListSubject =
   | app.bsky.graph.defs.ListViewBasic
   | app.bsky.graph.defs.ListView
-  | AppBskyGraphDefs.ListViewBasic
-  | AppBskyGraphDefs.ListView
+  | app.bsky.graph.defs.ListViewBasic
+  | app.bsky.graph.defs.ListView
 
 type AnyFeedGeneratorSubject =
   | app.bsky.feed.defs.GeneratorView
-  | AppBskyFeedDefs.GeneratorView
+  | app.bsky.feed.defs.GeneratorView
 
 type AnyNotificationSubject =
   | app.bsky.notification.listNotifications.Notification
-  | AppBskyNotificationListNotifications.Notification
+  | app.bsky.notification.listNotifications.Notification
 
 export function moderateProfile(
   subject: AnyProfileSubject,
@@ -120,7 +112,7 @@ export function moderateNotification(
 export function hasMutedWord(params: {
   mutedWords: app.bsky.actor.defs.MutedWord[]
   text: string
-  facets?: app.bsky.richtext.facet.Main[] | AppBskyRichtextFacet.Main[]
+  facets?: app.bsky.richtext.facet.Main[] | app.bsky.richtext.facet.Main[]
   outlineTags?: string[]
   languages?: string[]
   actor?: AnyProfileSubject

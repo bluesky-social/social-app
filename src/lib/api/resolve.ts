@@ -1,11 +1,5 @@
-import {
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  type ComAtprotoRepoStrongRef,
-} from '@atproto/api'
-import {AtUri} from '@atproto/api'
 import {type Client} from '@atproto/lex'
-import {type AtUriString, type HandleString} from '@atproto/syntax'
+import {AtUri, type AtUriString, type HandleString} from '@atproto/syntax'
 
 import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
@@ -49,30 +43,30 @@ type ResolvedExternalLink = {
 
 type ResolvedPostRecord = {
   type: 'record'
-  record: ComAtprotoRepoStrongRef.Main
+  record: com.atproto.repo.strongRef.Main
   kind: 'post'
-  view: AppBskyFeedDefs.PostView
+  view: app.bsky.feed.defs.PostView
 }
 
 type ResolvedFeedRecord = {
   type: 'record'
-  record: ComAtprotoRepoStrongRef.Main
+  record: com.atproto.repo.strongRef.Main
   kind: 'feed'
-  view: AppBskyFeedDefs.GeneratorView
+  view: app.bsky.feed.defs.GeneratorView
 }
 
 type ResolvedListRecord = {
   type: 'record'
-  record: ComAtprotoRepoStrongRef.Main
+  record: com.atproto.repo.strongRef.Main
   kind: 'list'
-  view: AppBskyGraphDefs.ListView
+  view: app.bsky.graph.defs.ListView
 }
 
 type ResolvedStarterPackRecord = {
   type: 'record'
-  record: ComAtprotoRepoStrongRef.Main
+  record: com.atproto.repo.strongRef.Main
   kind: 'starter-pack'
-  view: AppBskyGraphDefs.StarterPackView
+  view: app.bsky.graph.defs.StarterPackView
 }
 
 type ResolvedChatInvite = {
