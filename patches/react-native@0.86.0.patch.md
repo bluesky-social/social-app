@@ -6,6 +6,28 @@ Patching `RCTRefreshControl.mm` temporarily to play an impact haptic on refresh 
 17.4, there has been a regression somewhere causing haptics to not play on iOS on refresh. Should monitor for an update
 in the RN repo: https://github.com/facebook/react-native/issues/43388
 
+## RCTPullToRefreshViewComponentView.mm Patch - Same iOS 17.4+ haptic regression on New Arch
+
+The Paper fix above does not cover Fabric: `RCTPullToRefreshViewComponentView` owns a plain
+`UIRefreshControl` and applies `tintColor` in `updateProps`, which runs during the Create mount
+mutation - before `_attach` puts the control on the scroll view - so the haptic regression
+(react-native#43388) resurfaced on the New Architecture.
+
+Port of the Paper approach to Fabric (developed and A/B tested in the `fresh-expo57-refresh`
+repro app against bare RN 0.86.2 and Expo 54/RN 0.81.5 controls):
+
+- `RCTHapticCompatibleRefreshControl` subclass stores the wanted color in `customTintColor` and
+  refuses direct `setTintColor:` until the superview is the scroll view; `didMoveToSuperview`
+  applies the stored color once actually inside the hierarchy.
+- `shouldBeRecycled = NO`: recycled instances get all props force-applied in `updateProps` before
+  the new control is inserted into the scroll view, which would re-trigger the bug; opting out of
+  recycling keeps every mount on the untouched-before-attach path.
+- `_updateTitle` no longer writes `attributedTitle = nil` when there is nothing to clear - even a
+  nil write before attach suppresses the haptic.
+
+Upstream issue still open as of Aug 2026. Haptics cannot be verified on the simulator - physical
+device only.
+
 ## RCTEnhancedScrollView.mm / RCTScrollViewComponentView.mm Patch - centerContent insets stale after content resize on New Arch
 
 **TODO: Remove after bumping React Native to 0.87+** (fixed upstream by facebook/react-native#56832,
