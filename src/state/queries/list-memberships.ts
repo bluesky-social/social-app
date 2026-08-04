@@ -44,8 +44,8 @@ export function useListMembershipAddMutation({
         throw new Error('Not signed in')
       }
       /*
-       * The mutation's inputs are plain strings held by legacy-typed views, so
-       * they are asserted to their branded forms here.
+       * The mutation takes the list uri and actor did as plain strings, so they
+       * are asserted to their branded forms here.
        */
       const res = await pdsClient.create(app.bsky.graph.listitem, {
         subject: actorDid as DidString,

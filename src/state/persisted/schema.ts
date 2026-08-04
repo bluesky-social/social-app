@@ -9,17 +9,21 @@ import {PlatformInfo} from '../../../modules/expo-bluesky-swiss-army'
 const externalEmbedOptions = ['show', 'hide'] as const
 
 /**
+ * Types a persisted string field with a branded type WITHOUT validating the
+ * brand at runtime. Persisted values predate the brands and must never fail
+ * schema validation over one (that would drop the account on upgrade).
+ */
+function unvalidatedBranded<T extends string>(): z.ZodType<T> {
+  return z.string() as unknown as z.ZodType<T>
+}
+
+/**
  * A account persisted to storage. Stored in the `accounts[]` array. Contains
  * base account info and access tokens.
  */
 const accountSchema = z.object({
   service: z.string(),
-  /*
-   * Branded at the type level only. The runtime check stays a bare `z.string()`
-   * so already-persisted accounts can never fail validation over the brand,
-   * which would log the user out on upgrade.
-   */
-  did: z.string() as unknown as z.ZodType<DidString>,
+  did: unvalidatedBranded<DidString>(),
   handle: z.string(),
   email: z.string().optional(),
   emailConfirmed: z.boolean().optional(),

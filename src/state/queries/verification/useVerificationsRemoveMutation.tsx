@@ -50,7 +50,6 @@ export function useVerificationsRemoveMutation() {
         },
         () => {
           return appviewClient.call(app.bsky.actor.getProfile, {
-            // the profile view is still legacy-typed, so its did is unbranded
             actor: profile.did ?? '',
           })
         },

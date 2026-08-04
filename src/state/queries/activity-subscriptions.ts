@@ -40,7 +40,6 @@ export function useNotificationDeclarationQuery() {
     queryFn: async () => {
       try {
         const response = await client.get(app.bsky.notification.declaration, {
-          // the session account is still legacy-typed, so its did is unbranded
           repo: currentAccount!.did,
           rkey: 'self',
         })

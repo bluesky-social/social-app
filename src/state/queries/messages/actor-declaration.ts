@@ -40,7 +40,6 @@ export function useUpdateActorDeclaration({
           current?.associated?.chat?.allowGroupInvites,
       })
       const result = await pdsClient.call(com.atproto.repo.putRecord, {
-        // the session account is still legacy-typed, so its did is unbranded
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',

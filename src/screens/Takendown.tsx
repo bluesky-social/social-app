@@ -56,7 +56,6 @@ export function Takendown() {
           reasonType: tools.ozone.report.defs.reasonAppeal.value,
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
-            // the persisted account did is already resolved
             did: currentAccount.did,
           },
           reason: appealText,
