@@ -1,11 +1,11 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyActorDefs, type AppBskyEmbedExternal} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {app} from '#/lexicons'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {moderateStatus} from '#/lib/moderation/subjects'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -37,8 +37,8 @@ export function LiveStatusDialog({
 }: {
   control: Dialog.DialogControlProps
   profile: bsky.profile.AnyProfileView
-  status: AppBskyActorDefs.StatusView
-  embed: AppBskyEmbedExternal.View
+  status: app.bsky.actor.defs.StatusView
+  embed: app.bsky.embed.external.View
 }) {
   const navigation = useNavigation<NavigationProp>()
   return (
@@ -61,9 +61,9 @@ function DialogInner({
   status,
 }: {
   profile: bsky.profile.AnyProfileView
-  embed: AppBskyEmbedExternal.View
+  embed: app.bsky.embed.external.View
   navigation: NavigationProp
-  status: AppBskyActorDefs.StatusView
+  status: app.bsky.actor.defs.StatusView
 }) {
   const {t: l} = useLingui()
   const control = Dialog.useDialogContext()
@@ -99,9 +99,9 @@ export function LiveStatus({
   padding = 'xl',
   onPressOpenProfile,
 }: {
-  status: AppBskyActorDefs.StatusView
+  status: app.bsky.actor.defs.StatusView
   profile: bsky.profile.AnyProfileView
-  embed: AppBskyEmbedExternal.View
+  embed: app.bsky.embed.external.View
   padding?: 'lg' | 'xl'
   onPressOpenProfile: () => void
 }) {
