@@ -1,10 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {
-  ChatBskyConvoDefs,
-  type ChatBskyConvoListConvoRequests,
-  ChatBskyGroupDefs,
-} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {
@@ -12,6 +7,8 @@ import {
   type UseInfiniteQueryResult,
 } from '@tanstack/react-query'
 
+import * as bsky from '#/types/bsky'
+import {chat} from '#/lexicons'
 import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {
@@ -51,8 +48,8 @@ import {useIsWithinSplitView} from './components/splitView/context'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>
 
 type RequestItem =
-  | {type: 'incoming'; view: ChatBskyConvoDefs.ConvoView}
-  | {type: 'outgoing'; view: ChatBskyGroupDefs.JoinRequestConvoView}
+  | {type: 'incoming'; view: chat.bsky.convo.defs.ConvoView}
+  | {type: 'outgoing'; view: chat.bsky.group.defs.JoinRequestConvoView}
 
 export function MessagesInboxScreen(props: Props) {
   const {t: l} = useLingui()
@@ -75,9 +72,11 @@ export function MessagesInboxScreenInner({}: Props) {
     const items: RequestItem[] = []
     for (const page of data.pages) {
       for (const item of page.requests) {
-        if (ChatBskyConvoDefs.isConvoView(item)) {
+        if (bsky.isType(chat.bsky.convo.defs.convoView, item)) {
           items.push({type: 'incoming', view: item})
-        } else if (ChatBskyGroupDefs.isJoinRequestConvoView(item)) {
+        } else if (
+          bsky.isType(chat.bsky.group.defs.joinRequestConvoView, item)
+        ) {
           items.push({type: 'outgoing', view: item})
         }
       }
@@ -112,7 +111,7 @@ function RequestList({
   conversations,
 }: {
   listConvosQuery: UseInfiniteQueryResult<
-    InfiniteData<ChatBskyConvoListConvoRequests.OutputSchema>,
+    InfiniteData<chat.bsky.convo.listConvoRequests.$OutputBody>,
     Error
   >
   conversations: RequestItem[]

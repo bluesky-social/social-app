@@ -1,8 +1,8 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {AtUri} from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {AtUri} from '@atproto/syntax'
 import {TRENDING_HANDLE} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {makeCustomFeedLink, makeProfileLink} from '#/lib/routes/links'

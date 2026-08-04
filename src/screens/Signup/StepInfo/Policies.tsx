@@ -1,10 +1,10 @@
 import {type ReactElement} from 'react'
 import {View} from 'react-native'
-import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {com} from '#/lexicons'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {InlineLinkText} from '#/components/Link'
@@ -13,7 +13,7 @@ import {Text} from '#/components/Typography'
 export const Policies = ({
   serviceDescription,
 }: {
-  serviceDescription: ComAtprotoServerDescribeServer.OutputSchema
+  serviceDescription: com.atproto.server.describeServer.$OutputBody
 }) => {
   const t = useTheme()
   const {_} = useLingui()

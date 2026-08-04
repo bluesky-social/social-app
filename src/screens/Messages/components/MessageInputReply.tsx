@@ -1,7 +1,7 @@
 import {LayoutAnimation, View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
+import {chat} from '#/lexicons'
 import {HITSLOP_20} from '#/lib/constants'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {useConvoActive} from '#/state/messages/convo'
@@ -29,7 +29,7 @@ export function MessageInputReply() {
 function MessageInputReplyInner({
   replyTo,
 }: {
-  replyTo: ChatBskyConvoDefs.MessageView
+  replyTo: chat.bsky.convo.defs.MessageView
 }) {
   const t = useTheme()
   const {t: l} = useLingui()

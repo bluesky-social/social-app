@@ -1,10 +1,10 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {app} from '#/lexicons'
 import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
@@ -57,7 +57,7 @@ export function ThreadItemAnchorFollowButtonInner({
 function PostThreadFollowBtnLoaded({
   profile: profileUnshadowed,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
 }) {
   const navigation = useNavigation()
   const {_} = useLingui()

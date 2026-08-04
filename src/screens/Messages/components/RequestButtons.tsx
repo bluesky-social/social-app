@@ -1,9 +1,9 @@
 import {useCallback} from 'react'
-import {type ChatBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {chat} from '#/lexicons'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useEmail} from '#/state/email-verification'
@@ -56,7 +56,7 @@ export function RejectMenu({
   label?: string
   icon?: boolean
   convo: ConvoWithDetails
-  profile: ChatBskyActorDefs.ProfileViewBasic
+  profile: chat.bsky.actor.defs.ProfileViewBasic
   showDeleteConvo?: boolean
   currentScreen: 'list' | 'conversation'
 }) {
@@ -214,7 +214,7 @@ export function AcceptChatButton({
 }: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
   label?: string
   icon?: boolean
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: chat.bsky.convo.defs.ConvoView
   onAcceptConvo?: () => void
   currentScreen: 'list' | 'conversation'
 }) {
@@ -301,7 +301,7 @@ export function DeleteChatButton({
 }: Omit<ButtonProps, 'children' | 'label'> & {
   label?: string
   icon?: boolean
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: chat.bsky.convo.defs.ConvoView
   currentScreen: 'list' | 'conversation'
 }) {
   const {t: l} = useLingui()

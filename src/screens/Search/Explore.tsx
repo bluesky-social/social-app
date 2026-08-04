@@ -1,14 +1,10 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {View, type ViewabilityConfig} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
+import {app} from '#/lexicons'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -155,7 +151,7 @@ type ExploreScreenItems =
   | {
       type: 'profile'
       key: string
-      profile: AppBskyActorDefs.ProfileView
+      profile: app.bsky.actor.defs.ProfileView
       recId?: string
     }
   | {
@@ -165,7 +161,7 @@ type ExploreScreenItems =
   | {
       type: 'feed'
       key: string
-      feed: AppBskyFeedDefs.GeneratorView
+      feed: app.bsky.feed.defs.GeneratorView
     }
   | {
       type: 'loadMore'
@@ -191,7 +187,7 @@ type ExploreScreenItems =
   | {
       type: 'starterPack'
       key: string
-      view: AppBskyGraphDefs.StarterPackView
+      view: app.bsky.graph.defs.StarterPackView
     }
   | {
       type: 'starterPackSkeleton'

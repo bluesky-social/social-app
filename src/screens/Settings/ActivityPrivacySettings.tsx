@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {type AppBskyNotificationDeclaration} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -12,6 +11,7 @@ import {
   useNotificationDeclarationMutation,
   useNotificationDeclarationQuery,
 } from '#/state/queries/activity-subscriptions'
+import {app} from '#/lexicons'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import * as Toggle from '#/components/forms/Toggle'
@@ -85,7 +85,7 @@ export function Inner({
   notificationDeclaration: {
     uri?: string
     cid?: string
-    value: AppBskyNotificationDeclaration.Record
+    value: app.bsky.notification.declaration.Main
   }
 }) {
   const t = useTheme()

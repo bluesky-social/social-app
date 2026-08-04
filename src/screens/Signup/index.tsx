@@ -3,10 +3,10 @@ import {AppState, type AppStateStatus, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
-import {AppBskyGraphStarterpack} from '@atproto/api'
 import {tokens} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {app} from '#/lexicons'
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
@@ -141,10 +141,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
             scrollable>
             <View testID="createAccount" style={a.flex_1}>
               {showStarterPackCard &&
-              bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-                starterPack.record,
-                AppBskyGraphStarterpack.isRecord,
-              ) ? (
+              bsky.isType(app.bsky.graph.starterpack, starterPack.record) ? (
                 <Animated.View
                   entering={!isFetchedAtMount ? FadeIn : undefined}>
                   <LinearGradientBackground

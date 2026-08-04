@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {type ChatBskyActorGetStatus, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {
   useFocusEffect,
@@ -9,6 +8,7 @@ import {
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {chat} from '#/lexicons'
 import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -63,11 +63,11 @@ import {InboxRequests} from './components/InboxRequests'
 import {useIsWithinSplitView} from './components/splitView/context'
 import {splitViewLeftScroll} from './components/splitView/leftColumnScroll'
 
-type ChatStatus = ChatBskyActorGetStatus.OutputSchema
+type ChatStatus = chat.bsky.actor.getStatus.$OutputBody
 
 type ListItem = {
   type: 'CONVERSATION'
-  conversation: ChatBskyConvoDefs.ConvoView
+  conversation: chat.bsky.convo.defs.ConvoView
   selected: boolean
 }
 

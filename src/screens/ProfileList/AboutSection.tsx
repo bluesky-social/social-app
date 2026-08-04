@@ -1,10 +1,10 @@
 import {useCallback, useImperativeHandle, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {app} from '#/lexicons'
 import {useSession} from '#/state/session'
 import {ListMembers} from '#/view/com/lists/ListMembers'
 import {EmptyState} from '#/view/com/util/EmptyState'
@@ -22,7 +22,7 @@ interface SectionRef {
 
 interface AboutSectionProps {
   ref?: React.Ref<SectionRef>
-  list: AppBskyGraphDefs.ListView
+  list: app.bsky.graph.defs.ListView
   onPressAddUser: () => void
   headerHeight: number
   scrollElRef: ListRef
