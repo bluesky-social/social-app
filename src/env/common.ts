@@ -1,5 +1,4 @@
-import {type Did} from '@atproto/api'
-
+import {type Did} from '@atproto/syntax'
 import packageJson from '#/../package.json'
 
 /**

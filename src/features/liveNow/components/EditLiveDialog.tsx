@@ -1,11 +1,11 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {differenceInMinutes} from 'date-fns'
 
+import {app} from '#/lexicons'
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {cleanError} from '#/lib/strings/errors'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
@@ -33,8 +33,8 @@ export function EditLiveDialog({
   embed,
 }: {
   control: Dialog.DialogControlProps
-  status: AppBskyActorDefs.StatusView
-  embed: AppBskyEmbedExternal.View
+  status: app.bsky.actor.defs.StatusView
+  embed: app.bsky.embed.external.View
 }) {
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -48,8 +48,8 @@ function DialogInner({
   status,
   embed,
 }: {
-  status: AppBskyActorDefs.StatusView
-  embed: AppBskyEmbedExternal.View
+  status: app.bsky.actor.defs.StatusView
+  embed: app.bsky.embed.external.View
 }) {
   const control = Dialog.useDialogContext()
   const {_, i18n} = useLingui()
