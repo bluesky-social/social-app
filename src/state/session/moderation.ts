@@ -1,13 +1,18 @@
-import {type AtpAgent, BSKY_LABELER_DID} from '@atproto/api'
+import {BSKY_LABELER_DID} from '@atproto/api'
 import {type Client} from '@atproto/lex'
+import {type DidString} from '@atproto/syntax'
 
 import {IS_TEST_USER} from '#/lib/constants'
+import {com} from '#/lexicons'
 import {account as accountStorage} from '#/storage'
 import {
   configureAdditionalModerationAuthorities,
   configureGlobalAppLabelers,
 } from './additional-moderation-authorities'
 import {type SessionAccount} from './types'
+
+/** The moderation surface of a session bundle. */
+type ModerationSession = {appviewClient: Client}
 
 /**
  * Cache an account's subscribed labeler DIDs. Called on every preferences
@@ -31,25 +36,24 @@ export function readLabelers(did: string): string[] | undefined {
 }
 
 /**
- * Apply an account's labeler subscriptions without duplicating the globally
- * redacted Bluesky moderation authority.
+ * Apply an account's labeler subscriptions to the appview client, without
+ * duplicating the globally redacted Bluesky moderation authority.
  *
  * The Bluesky DID is filtered out because it already flows through the global
- * `appLabelers`, which lex and the agent both emit with a `;redact` suffix.
- * Listing it per-subscription would add a second, non-redacting entry for the
- * same authority.
+ * `Client.appLabelers`, which lex emits with a `;redact` suffix. Listing it
+ * per-instance would add a second, non-redacting entry for the same authority:
+ * lex collects the two lists into a `Set` keyed on the suffixed string, so
+ * neither dedupes against the other.
  *
- * Writes to the agent rather than the client: the agent-level fetch handler is
- * what stamps `atproto-accept-labelers` on the requests the wrapping clients
- * issue, so setting them here reaches every appview read. The bundle rework
- * moves this to `appviewClient.setLabelers` once the agent is gone.
+ * Only the appview client takes subscriptions - the PDS and chat clients suppress
+ * labelers entirely (see clients.ts).
  */
 export function applyLabelersToClient(
-  agent: AtpAgent,
+  client: Client,
   subscribedDids: string[],
 ) {
-  agent.configureLabelersHeader(
-    subscribedDids.filter(did => did !== BSKY_LABELER_DID),
+  client.setLabelers(
+    subscribedDids.filter(did => did !== BSKY_LABELER_DID) as DidString[],
   )
 }
 
@@ -66,7 +70,7 @@ export function configureModerationForGuest() {
  * in the same tick, before any request goes out.
  */
 export function configureModerationForAccount(
-  bundle: {agent: AtpAgent; appviewClient?: Client},
+  bundle: ModerationSession,
   account: SessionAccount,
 ) {
   // This global mutation is *only* OK because this code is only relevant for testing.
@@ -74,13 +78,13 @@ export function configureModerationForAccount(
   switchToBskyAppLabeler()
   if (IS_TEST_USER(account.handle)) {
     // Test accounts may briefly use the production authority while this resolves.
-    void trySwitchToTestAppLabeler(bundle.agent)
+    void trySwitchToTestAppLabeler(bundle.appviewClient)
   }
 
   // The code below is actually relevant to production (and isn't global).
   const labelerDids = readLabelers(account.did)
   if (labelerDids) {
-    applyLabelersToClient(bundle.agent, labelerDids)
+    applyLabelersToClient(bundle.appviewClient, labelerDids)
   } else {
     // If there are no headers in the storage, we'll not send them on the initial requests.
     // If we wanted to fix this, we could block on the preferences query here.
@@ -94,12 +98,14 @@ function switchToBskyAppLabeler() {
 }
 
 /** Resolve and install the test environment's moderation authority. */
-async function trySwitchToTestAppLabeler(agent: AtpAgent) {
+async function trySwitchToTestAppLabeler(client: Client) {
   const did = (
-    await agent
-      .resolveHandle({handle: 'mod-authority.test'})
+    await client
+      .call(com.atproto.identity.resolveHandle, {
+        handle: 'mod-authority.test',
+      })
       .catch(_ => undefined)
-  )?.data.did
+  )?.did
   if (did) {
     console.warn('USING TEST ENV MODERATION')
     configureGlobalAppLabelers([did])

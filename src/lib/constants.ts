@@ -2,7 +2,6 @@ import {type Insets, Platform} from 'react-native'
 import {type AppBskyActorDefs, BSKY_LABELER_DID} from '@atproto/api'
 import {type Service} from '@atproto/lex'
 
-import {type ProxyHeaderValue} from '#/state/session/agent'
 import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
 
 export const LOCAL_DEV_SERVICE =
@@ -241,7 +240,7 @@ export const DEV_ENV_APPVIEW_DID = `did:plc:dw4kbjf5mn7nhenabiqpkyh3` // always 
 export const BLUESKY_PROXY_HEADER = {
   value: `${BLUESKY_PROXY_DID}#bsky_appview`,
   get() {
-    return this.value as ProxyHeaderValue
+    return this.value as Service
   },
   set(value: string) {
     this.value = value

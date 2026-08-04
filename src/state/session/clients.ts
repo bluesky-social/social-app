@@ -1,132 +1,102 @@
-import {type Client} from '@atproto/lex'
+import {type Agent, type Client} from '@atproto/lex'
+import {type PasswordSession} from '@atproto/lex-password-session'
 
-import {CHAT_PROXY_SERVICE, PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {
+  BLUESKY_PROXY_HEADER,
+  CHAT_PROXY_SERVICE,
+  PUBLIC_BSKY_SERVICE,
+} from '#/lib/constants'
 import {createLexClient} from '#/lib/lexClient'
-import {type BskyAppAgent} from './bridge-agent'
 import {networkAwareFetch} from './network'
 
-/*
- * One client per agent, per surface, so that repeated reads for the same agent
- * return the same instance. Client identity is observable: a lex `Client` is
- * passed to React Query `queryFn`s and read from render paths, so a freshly
- * allocated client on every read would break any dependency array or reference
- * comparison built on top of it.
- *
- * Keying on the agent also ties client lifetime to agent lifetime. A disposed
- * agent's `fetchHandler` falls back to unauthenticated fetch, and session
- * rotation builds a new agent rather than mutating the old one, so a client
- * derived from a stale agent becomes unreachable exactly when its agent does.
- */
-const appviewClients = new WeakMap<BskyAppAgent, Client>()
-const pdsClients = new WeakMap<BskyAppAgent, Client>()
-const chatClients = new WeakMap<BskyAppAgent, Client>()
-
 /**
- * The appview {@link Client} for an agent, memoized per agent.
+ * Build the signed-in appview {@link Client}.
  *
- * The wrapped handler is `agent.fetchHandler`, NOT
- * `agent.sessionManager.fetchHandler`. The agent-level handler is where
- * `atproto-proxy` and `atproto-accept-labelers` are set before the request is
- * passed down to the session manager, which only adds authorization and PDS
- * routing. Because the agent already emits both headers, the client is
- * deliberately built with neither a `service` option nor labelers - setting
- * either here would emit them a second time.
+ * {@link BLUESKY_PROXY_HEADER} is passed as the client's `service`, so lex sets
+ * `atproto-proxy: <that value>` on every request and raw calls are proxied to
+ * the appview. Record helpers force `service: null`, so they still target the
+ * account host.
  *
- * `appLabelers: null` suppresses the class-wide `Client.appLabelers` for this
- * instance specifically. The static is populated (see
- * `configureGlobalAppLabelers`) so that clients built without a wrapped agent
- * carry the global authorities, but the agent already stamped those same DIDs
- * onto the request, and lex would append its own copy on top: the agent joins
- * its list with the existing header value while lex collects into a `Set` keyed
- * on the suffixed string, so neither dedupes against the other and every global
- * authority would appear twice.
+ * The class-wide `Client.appLabelers` static is deliberately NOT suppressed
+ * here: this client is the only producer of `atproto-accept-labelers` on an
+ * appview request now that no agent sits underneath it. The account's own
+ * subscriptions arrive separately, through `applyLabelersToClient` on the
+ * instance, and that function filters out the Bluesky moderation DID so the
+ * globally redacted authority is not also listed unredacted.
+ *
+ * No `fetch` option: a client built over a session uses that session's own
+ * fetch, which is `networkAwareFetch` wrapped in the disposal kill switch.
  */
-export function agentToAppviewClient(agent: BskyAppAgent): Client {
-  const existing = appviewClients.get(agent)
-  if (existing) {
-    return existing
-  }
-  const client = createLexClient(
-    {
-      get did() {
-        return agent.did
-      },
-      fetchHandler: (path, init) => agent.fetchHandler(path, init),
-    },
-    {appLabelers: null},
-  )
-  appviewClients.set(agent, client)
-  return client
+export function buildAppviewClient(agent: Agent): Client {
+  return createLexClient(agent, {service: BLUESKY_PROXY_HEADER.get()})
 }
 
 /**
- * The account-host {@link Client} for an agent, memoized per agent.
+ * Build the signed-in account-host {@link Client}.
  *
- * This wraps `agent.sessionManager.fetchHandler`, one layer below
- * {@link agentToAppviewClient}. That layer does authorization and refresh-on-401
- * and resolves the request against `dispatchUrl` (the account's PDS), but it
- * does NOT set `atproto-proxy` or `atproto-accept-labelers`, so requests reach
- * the PDS itself rather than being proxied onward. That is the right transport
- * for `com.atproto.*` repo/server/identity calls.
+ * No `service`, so no proxy header: `com.atproto.*` repo, server and identity
+ * calls reach the account's own PDS rather than being proxied onward.
  *
- * No `service` option for the same reason: adding one would reintroduce the
- * proxy header this client exists to avoid. `appLabelers: null` is the same
- * kind of suppression: a PDS request is not an appview read, so it must carry no
- * moderation authorities at all - without this it would start emitting the
- * global `Client.appLabelers`.
- *
- * The handler is wrapped in a closure rather than passed by reference because
- * `PasswordSessionManager.fetchHandler` reads `this`. Relative paths are
- * intentional: lex-client hands its handler an origin-less
- * `/xrpc/<nsid>[?query]` path, which the session manager absolutizes against
- * `dispatchUrl`.
+ * `appLabelers: null` suppresses the class-wide static for this instance. A PDS
+ * request is not an appview read, so it must carry no moderation authorities at
+ * all; without the suppression it would start emitting the global list.
  */
-export function agentToPdsClient(agent: BskyAppAgent): Client {
-  const existing = pdsClients.get(agent)
-  if (existing) {
-    return existing
-  }
-  const client = createLexClient(
-    {
-      get did() {
-        return agent.did
-      },
-      fetchHandler: (path, init) =>
-        agent.sessionManager.fetchHandler(path, init),
-    },
-    {appLabelers: null},
-  )
-  pdsClients.set(agent, client)
-  return client
+export function buildPdsClient(agent: Agent): Client {
+  return createLexClient(agent, {appLabelers: null})
 }
 
 /**
- * The chat {@link Client} for an agent, memoized per agent.
+ * Build the signed-in chat {@link Client}.
  *
- * Same session-manager transport as {@link agentToPdsClient} - authorization
- * and PDS routing, no agent-level proxy or labeler headers - but constructed
- * with {@link CHAT_PROXY_SERVICE} as its `service`, so lex-client emits
- * `atproto-proxy: <CHAT_PROXY_SERVICE>` on every request and `chat.bsky.*`
- * calls are proxied to the chat service. `appLabelers: null` for the same
- * reason as the PDS client: the chat service takes no moderation authorities.
+ * {@link CHAT_PROXY_SERVICE} (`${CHAT_PROXY_DID}#bsky_chat`, default
+ * `did:web:api.bsky.chat#bsky_chat`) is the client's `service`, so `chat.bsky.*`
+ * calls are proxied to the chat service. The DID is read from the
+ * env-configurable `CHAT_PROXY_DID` rather than a hard-coded constant, so it can
+ * be retargeted per environment.
+ *
+ * `appLabelers: null` for the same reason as the PDS client: the chat service
+ * takes no moderation authorities.
  */
-export function agentToChatClient(agent: BskyAppAgent): Client {
-  const existing = chatClients.get(agent)
-  if (existing) {
-    return existing
-  }
-  const client = createLexClient(
-    {
-      get did() {
-        return agent.did
-      },
-      fetchHandler: (path, init) =>
-        agent.sessionManager.fetchHandler(path, init),
+export function buildChatClient(agent: Agent): Client {
+  return createLexClient(agent, {
+    appLabelers: null,
+    service: CHAT_PROXY_SERVICE,
+  })
+}
+
+/**
+ * Wrap a session so requests resolve against a known PDS while auth and refresh
+ * stay with the session.
+ *
+ * This exists for the pre-didDoc window. `PasswordSession` resolves each request
+ * against `extractPdsUrl(didDoc) ?? service`, so before a refresh has delivered
+ * a didDoc it falls back to the login service - which for an entryway account
+ * (`service: bsky.social`, PDS elsewhere) is the wrong host. The synchronous
+ * resume fast path makes no network request at all, so that window covers every
+ * request of a cold start until something triggers a refresh.
+ *
+ * Absolutizing here is enough because `PasswordSession.fetchHandler` builds its
+ * URL with `new URL(path, base)`, which ignores the base for an already-absolute
+ * input. So an absolute URL passes through untouched, and the session's own
+ * didDoc routing still wins for any client built directly over it.
+ *
+ * The tradeoff is that this pins the STORED url for the bundle's lifetime, where
+ * the session would prefer a didDoc endpoint that arrived later. That is
+ * acceptable because the two only disagree if the account's PDS moved, and the
+ * next cold start persists (and therefore pins) the new endpoint.
+ */
+export function routeSessionToPds(
+  session: PasswordSession,
+  pdsUrl: string,
+): Agent {
+  return {
+    get did() {
+      return session.did
     },
-    {appLabelers: null, service: CHAT_PROXY_SERVICE},
-  )
-  chatClients.set(agent, client)
-  return client
+    fetchHandler(path, init) {
+      return session.fetchHandler(new URL(path, pdsUrl).href, init)
+    },
+  }
 }
 
 /** Thrown when a write/auth-only client is used with no active session. */
@@ -164,20 +134,17 @@ let publicLexClient: Client | undefined
  * The unauthenticated {@link Client} for public reads, pointed at the public
  * appview.
  *
- * A single module-level instance for the same identity-stability reason as
- * {@link agentToAppviewClient}: there is no session to scope it to, so it lives
- * for the lifetime of the process. Requests go through
- * {@link networkAwareFetch} so public reads feed the app's reachability signal
- * like authenticated ones do.
+ * A single module-level instance: there is no session to scope it to, so it
+ * lives for the lifetime of the process, and its identity is therefore stable
+ * enough for a React Query key. Requests go through {@link networkAwareFetch} so
+ * public reads feed the app's reachability signal like authenticated ones do.
  *
- * Unlike the agent-wrapping clients, this one does NOT suppress
- * `Client.appLabelers`: there is no agent underneath to stamp the header, so the
- * class-wide static is the only producer and a logged-out read carries the same
- * `;redact` moderation authorities an authenticated one does.
- *
- * That makes `configureModerationForGuest()` load-bearing rather than
- * test-only - it is what populates the static before this client's first
- * request. `createPublicSessionBundle` runs it while building the bundle.
+ * Like the session appview client, it carries the class-wide
+ * `Client.appLabelers`, so a logged-out read gets the same `;redact` moderation
+ * authorities an authenticated one does. That makes `configureModerationForGuest`
+ * load-bearing rather than test-only - it is what populates the static before
+ * this client's first request, and `createPublicSessionBundle` runs it while
+ * building the bundle.
  */
 export function getPublicAppviewClient(): Client {
   return (publicLexClient ??= createLexClient({

@@ -9,7 +9,6 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import {type AtpAgent} from '@atproto/api'
 import {type Client} from '@atproto/lex'
 import {type SessionData} from '@atproto/lex-password-session'
 
@@ -18,14 +17,9 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {com} from '#/lexicons'
 import {emitSessionDropped} from '../events'
-import {
-  agentToAppviewClient,
-  agentToChatClient,
-  agentToPdsClient,
-  getPublicAppviewClient,
-  getUnauthenticatedThrowingClient,
-} from './clients'
+import {getPublicAppviewClient} from './clients'
 import {createSessionBundleAndCreateAccount} from './create-account'
 import {pickExpiryRescueCandidate} from './expiry-rescue'
 import {type Action, getInitialState, reducer, type State} from './reducer'
@@ -451,13 +445,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     /*
      * Read the live bundle rather than the one captured by this render: a
      * dispatch that lands before the next render would otherwise leave this
-     * holding a disposed bundle, whose agent dispatches unauthenticated.
+     * holding a disposed bundle, whose clients dispatch through a disabled
+     * fetch.
      */
     const bundle = store.getState().currentBundleState
       .bundle as unknown as SessionBundle
     const signal = cancelPendingTask()
     /* getSession targets the PDS; only the persisted account fields are patched. */
-    const {data} = await bundle.agent.com.atproto.server.getSession()
+    const data = await bundle.pdsClient.call(com.atproto.server.getSession, {})
     if (signal.aborted) return
     store.dispatch({
       type: 'partial-refresh-session',
@@ -478,9 +473,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
    * Rotate the session's tokens and hand back the resulting account snapshot.
    *
    * Rejects when the rotation was a no-op, restoring the contract the
-   * `agent.resumeSession(agent.session!)` call sites were written against (the
-   * bridge agent's `refreshSession` override does the same, for the same
-   * reason). `PasswordSession.refresh()` resolves with the
+   * `agent.resumeSession(agent.session!)` call sites were written against.
+   * `PasswordSession.refresh()` resolves with the
    * unchanged `SessionData` on a transient failure - a 500 or a network error
    * reported through `onUpdateFailure` - and reserves rejection for a
    * definitively dead session. Callers here all read resolution as "tokens
@@ -672,15 +666,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   // @ts-expect-error window type is not declared, debug only
   // eslint-disable-next-line react-hooks/immutability
-  if (__DEV__ && IS_WEB) window.agent = bundle.agent
+  if (__DEV__ && IS_WEB) window.bundle = bundle
 
   const currentBundleRef = useRef(bundle)
   /*
    * Disposal is deferred to this post-commit effect deliberately: components may
    * still render against the outgoing bundle during the commit that swaps it, so
-   * tearing its agent down inline would pull the agent out from under them. The
-   * reducer's bundle-identity guard drops any events the not-yet-disposed session
-   * emits in that window.
+   * disabling its session inline would pull the transport out from under them.
+   * The reducer's bundle-identity guard drops any events the not-yet-disposed
+   * session emits in that window.
    */
   useEffect(() => {
     if (currentBundleRef.current !== bundle) {
@@ -753,30 +747,15 @@ export function useRequireAuth() {
 }
 
 /**
- * The active session's agent, or the public agent when logged out.
- */
-export function useAgent(): AtpAgent {
-  const bundle = useContext(BundleContext)
-  if (!bundle) {
-    throw Error('useAgent() must be below <SessionProvider>.')
-  }
-  return bundle.agent
-}
-
-/**
- * Client for appview reads.
- *
- * When logged out the bundle's agent is the public agent built by
- * `createPublicAgent`, which is configured with the appview proxy and dispatches
- * unauthenticated, so the logged-out fallback is the agent itself - there is no
- * separate public branch here.
+ * Client for appview reads. Logged out, this is the bundle's public client,
+ * which dispatches unauthenticated against the public appview.
  */
 export function useAppviewClient(): Client {
   const bundle = useContext(BundleContext)
   if (!bundle) {
     throw Error('useAppviewClient() must be below <SessionProvider>.')
   }
-  return agentToAppviewClient(bundle.agent)
+  return bundle.appviewClient
 }
 
 /**
@@ -790,9 +769,7 @@ export function usePdsClient(): Client {
   if (!bundle) {
     throw Error('usePdsClient() must be below <SessionProvider>.')
   }
-  return bundle.session
-    ? agentToPdsClient(bundle.agent)
-    : getUnauthenticatedThrowingClient()
+  return bundle.pdsClient
 }
 
 /**
@@ -804,9 +781,7 @@ export function useChatClient(): Client {
   if (!bundle) {
     throw Error('useChatClient() must be below <SessionProvider>.')
   }
-  return bundle.session
-    ? agentToChatClient(bundle.agent)
-    : getUnauthenticatedThrowingClient()
+  return bundle.chatClient
 }
 
 /**
@@ -814,7 +789,7 @@ export function useChatClient(): Client {
  */
 export function useMaybePdsClient(): Client | null {
   const bundle = useContext(BundleContext)
-  return bundle?.session ? agentToPdsClient(bundle.agent) : null
+  return bundle?.session ? bundle.pdsClient : null
 }
 
 /**
@@ -822,7 +797,7 @@ export function useMaybePdsClient(): Client | null {
  */
 export function useMaybeChatClient(): Client | null {
   const bundle = useContext(BundleContext)
-  return bundle?.session ? agentToChatClient(bundle.agent) : null
+  return bundle?.session ? bundle.chatClient : null
 }
 
 /**

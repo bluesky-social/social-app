@@ -72,11 +72,10 @@ import {
   useSessionApi,
 } from '#/state/session'
 import {type SessionApiContext} from '#/state/session/types'
-import {BskyAppAgent, PasswordSessionManager} from '../bridge-agent'
 import {
-  agentToAppviewClient,
-  agentToChatClient,
-  agentToPdsClient,
+  buildAppviewClient,
+  buildChatClient,
+  buildPdsClient,
   getUnauthenticatedThrowingClient,
 } from '../clients'
 import {type SessionBundle} from '../session-core'
@@ -92,22 +91,19 @@ type Clients = {
 }
 
 /**
- * Build a bundle whose agent is a real `BskyAppAgent` over a real
- * `PasswordSession`, since the client builders derive from the agent. Only the
- * fields the provider reads are populated.
+ * Build a bundle over a real `PasswordSession`, with the three clients the
+ * provider serves. Only the fields the provider reads are populated.
  */
 function makeBundle(account: SessionAccount): SessionBundle {
   const fetchMock = makeMockFetch()
   const session = new PasswordSession(sessionAccountToSessionData(account), {
     fetch: asFetch(fetchMock),
   })
-  const manager = new PasswordSessionManager(session, {
-    service: account.service,
-  })
-  manager.setFetch(asFetch(fetchMock))
   return {
     session,
-    agent: new BskyAppAgent(manager),
+    appviewClient: buildAppviewClient(session),
+    pdsClient: buildPdsClient(session),
+    chatClient: buildChatClient(session),
     service: new URL(account.service),
   }
 }
@@ -140,10 +136,10 @@ beforeEach(() => {
 })
 
 describe('client hooks while logged out', () => {
-  it('serves the public agent for appview reads', () => {
+  it('serves the public client for appview reads', () => {
     const {clients} = renderClients()
     expect(clients().appview).toBeDefined()
-    /* the logged-out bundle's agent IS the public agent, so no separate branch */
+    /* the logged-out bundle holds the public appview client itself */
     expect(clients().appview.did).toBeUndefined()
   })
 
@@ -162,7 +158,7 @@ describe('client hooks while logged out', () => {
 })
 
 describe('client hooks with a session', () => {
-  it('derives every surface from the session bundle agent', async () => {
+  it('serves every surface straight off the session bundle', async () => {
     const account = makeAccount()
     const bundle = makeBundle(account)
     const {api, clients} = renderClients()
@@ -172,9 +168,9 @@ describe('client hooks with a session', () => {
       await api.login({} as never, 'LoginForm')
     })
 
-    expect(clients().appview).toBe(agentToAppviewClient(bundle.agent))
-    expect(clients().pds).toBe(agentToPdsClient(bundle.agent))
-    expect(clients().chat).toBe(agentToChatClient(bundle.agent))
+    expect(clients().appview).toBe(bundle.appviewClient)
+    expect(clients().pds).toBe(bundle.pdsClient)
+    expect(clients().chat).toBe(bundle.chatClient)
   })
 
   it('serves the same clients from the maybe variants', async () => {
