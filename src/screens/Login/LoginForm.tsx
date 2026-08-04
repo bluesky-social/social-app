@@ -169,7 +169,9 @@ export const LoginForm = ({
           )
         } else {
           logger.warn('Failed to login', {error: errMsg})
-          setError(cleanError(errMsg))
+          /* the error object, not its stringification: cleanError only
+           * extracts the clean server message from a live LexError */
+          setError(cleanError(err))
         }
       }
     }
