@@ -1,3 +1,4 @@
+import {type DidString} from '@atproto/syntax'
 import {z} from 'zod'
 
 import {deviceLanguageCodes, deviceLocales} from '#/locale/deviceLocales'
@@ -13,7 +14,12 @@ const externalEmbedOptions = ['show', 'hide'] as const
  */
 const accountSchema = z.object({
   service: z.string(),
-  did: z.string(),
+  /*
+   * Branded at the type level only. The runtime check stays a bare `z.string()`
+   * so already-persisted accounts can never fail validation over the brand,
+   * which would log the user out on upgrade.
+   */
+  did: z.string() as unknown as z.ZodType<DidString>,
   handle: z.string(),
   email: z.string().optional(),
   emailConfirmed: z.boolean().optional(),
