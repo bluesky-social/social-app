@@ -1,4 +1,4 @@
-import {type DidString} from '@atproto/syntax'
+import {isDidString} from '@atproto/lex'
 import {z} from 'zod'
 
 import {deviceLanguageCodes, deviceLocales} from '#/locale/deviceLocales'
@@ -9,21 +9,22 @@ import {PlatformInfo} from '../../../modules/expo-bluesky-swiss-army'
 const externalEmbedOptions = ['show', 'hide'] as const
 
 /**
- * Types a persisted string field with a branded type WITHOUT validating the
- * brand at runtime. Persisted values predate the brands and must never fail
- * schema validation over one (that would drop the account on upgrade).
- */
-function unvalidatedBranded<T extends string>(): z.ZodType<T> {
-  return z.string() as unknown as z.ZodType<T>
-}
-
-/**
  * A account persisted to storage. Stored in the `accounts[]` array. Contains
  * base account info and access tokens.
  */
 const accountSchema = z.object({
   service: z.string(),
-  did: unvalidatedBranded<DidString>(),
+  /**
+   * Genuinely validated, not just branded: the refinement rejects malformed
+   * values at runtime and narrows the inferred type to `DidString`.
+   *
+   * Weigh any further tightening of this field carefully. One failing field
+   * fails the whole root schema, and {@link tryParse} then discards the ENTIRE
+   * persisted state - every account and every preference - so the app boots
+   * logged out with defaults. Persisted dids come from com.atproto.server
+   * responses and are always canonical, so this particular check is safe.
+   */
+  did: z.string().refine(isDidString),
   handle: z.string(),
   email: z.string().optional(),
   emailConfirmed: z.boolean().optional(),
