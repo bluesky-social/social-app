@@ -97,8 +97,8 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
 import {
-  useAgent,
   useAppviewClient,
+  useChatClient,
   usePdsClient,
   useSession,
 } from '#/state/session'
@@ -280,8 +280,8 @@ export const ComposePost = ({
   const videoMaxDurationMs = allow10MinuteVideos
     ? VIDEO_10_MINUTE_MAX_DURATION_MS
     : VIDEO_MAX_DURATION_MS
-  const agent = useAgent()
   const client = useAppviewClient()
+  const chatClient = useChatClient()
   const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
@@ -1003,7 +1003,7 @@ export const ComposePost = ({
     .map(post => post.embed.link!.uri)
   const linkQueries = useQueries({
     queries: linkUris.map(uri => ({
-      ...resolveLinkQueryOptions(agent, uri),
+      ...resolveLinkQueryOptions({appviewClient: client, chatClient}, uri),
       enabled: false,
     })),
   })
@@ -1094,12 +1094,13 @@ export const ComposePost = ({
     try {
       logger.info(`composer: posting...`)
       postUri = (
-        await apilib.post(agent, queryClient, {
+        await apilib.post(queryClient, {
           thread: filteredThread,
           replyTo: replyTo?.uri,
           onStateChange: setPublishingStage,
           langs: currentLanguages,
           appviewClient: client,
+          chatClient,
           pdsClient,
         })
       ).uris[0]
@@ -1294,8 +1295,8 @@ export const ComposePost = ({
   }, [
     l,
     ax,
-    agent,
     client,
+    chatClient,
     pdsClient,
     canPost,
     isPublishing,

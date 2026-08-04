@@ -1,4 +1,4 @@
-import {type AtpAgent, ChatBskyGroupDefs} from '@atproto/api'
+import {ChatBskyGroupDefs} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import {type $Typed, type Client} from '@atproto/lex'
 import {
@@ -10,6 +10,7 @@ import {RichText} from '@bsky.app/sdk/richtext'
 import {t} from '@lingui/core/macro'
 import {type QueryClient} from '@tanstack/react-query'
 
+import {type LinkResolvers} from '#/lib/api/resolve'
 import {IMAGE_SIZE_CONFIG_POSTS} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
@@ -48,6 +49,11 @@ interface PostOpts {
    */
   appviewClient: Client
   /*
+   * A quoted chat invite link resolves its preview through the chat service, so
+   * the embed resolver needs the chat client alongside the appview one.
+   */
+  chatClient: Client
+  /*
    * The repo write itself (applyWrites) plus every record blob (images,
    * gallery items, link thumbnails, video captions) goes to the account's own
    * PDS, never the appview.
@@ -55,15 +61,7 @@ interface PostOpts {
   pdsClient: Client
 }
 
-/**
- * The `agent` is only still here for the link/gif resolvers in `resolve.ts`,
- * which read through it; drop the parameter when those move to the clients.
- */
-export async function post(
-  agent: AtpAgent,
-  queryClient: QueryClient,
-  opts: PostOpts,
-) {
+export async function post(queryClient: QueryClient, opts: PostOpts) {
   const thread = opts.thread
   opts.onStateChange?.(t`Processing...`)
 
@@ -95,7 +93,8 @@ export async function post(
     // Not awaited to avoid waterfalls.
     const rtPromise = resolveRT(opts.appviewClient, draft.richtext)
     const embedPromise = resolveEmbed(
-      agent,
+      opts.appviewClient,
+      opts.chatClient,
       opts.pdsClient,
       queryClient,
       draft,
@@ -251,7 +250,8 @@ async function resolveReply(appviewClient: Client, replyTo: string) {
 }
 
 async function resolveEmbed(
-  agent: AtpAgent,
+  appviewClient: Client,
+  chatClient: Client,
   pdsClient: Client,
   queryClient: QueryClient,
   draft: PostDraft,
@@ -259,8 +259,19 @@ async function resolveEmbed(
 ): Promise<app.bsky.feed.post.Main['embed']> {
   if (draft.embed.quote) {
     const [resolvedMedia, resolvedQuote] = await Promise.all([
-      resolveMedia(agent, pdsClient, queryClient, draft.embed, onStateChange),
-      resolveRecord(agent, queryClient, draft.embed.quote.uri),
+      resolveMedia(
+        appviewClient,
+        chatClient,
+        pdsClient,
+        queryClient,
+        draft.embed,
+        onStateChange,
+      ),
+      resolveRecord(
+        {appviewClient, chatClient},
+        queryClient,
+        draft.embed.quote.uri,
+      ),
     ])
     if (resolvedMedia) {
       return {
@@ -278,7 +289,8 @@ async function resolveEmbed(
     }
   }
   const resolvedMedia = await resolveMedia(
-    agent,
+    appviewClient,
+    chatClient,
     pdsClient,
     queryClient,
     draft.embed,
@@ -290,7 +302,7 @@ async function resolveEmbed(
   if (draft.embed.link) {
     const resolvedLink = await fetchResolveLinkQuery(
       queryClient,
-      agent,
+      {appviewClient, chatClient},
       draft.embed.link.uri,
     )
     if (resolvedLink.type === 'record') {
@@ -309,7 +321,8 @@ async function resolveEmbed(
 }
 
 async function resolveMedia(
-  agent: AtpAgent,
+  appviewClient: Client,
+  chatClient: Client,
   pdsClient: Client,
   queryClient: QueryClient,
   embedDraft: EmbedDraft,
@@ -423,11 +436,7 @@ async function resolveMedia(
   }
   if (embedDraft.media?.type === 'gif') {
     const gifDraft = embedDraft.media
-    const resolvedGif = await fetchResolveGifQuery(
-      queryClient,
-      agent,
-      gifDraft.gif,
-    )
+    const resolvedGif = await fetchResolveGifQuery(queryClient, gifDraft.gif)
     let blob: app.bsky.embed.external.External['thumb']
     if (resolvedGif.thumb) {
       onStateChange?.(t`Uploading link thumbnail...`)
@@ -448,7 +457,7 @@ async function resolveMedia(
   if (embedDraft.link) {
     const resolvedLink = await fetchResolveLinkQuery(
       queryClient,
-      agent,
+      {appviewClient, chatClient},
       embedDraft.link.uri,
     )
     if (resolvedLink.type === 'external') {
@@ -490,15 +499,16 @@ async function resolveMedia(
 }
 
 /*
- * `resolve.ts` still resolves through the agent and returns legacy-typed refs;
- * assert at the boundary until it moves to the clients.
+ * `resolve.ts` still returns legacy-typed views, so its strong refs carry plain
+ * strings where the record write wants the branded syntax types; assert at the
+ * boundary until those views come from the generated lexicons.
  */
 async function resolveRecord(
-  agent: AtpAgent,
+  clients: LinkResolvers,
   queryClient: QueryClient,
   uri: string,
 ): Promise<com.atproto.repo.strongRef.Main> {
-  const resolvedLink = await fetchResolveLinkQuery(queryClient, agent, uri)
+  const resolvedLink = await fetchResolveLinkQuery(queryClient, clients, uri)
   if (resolvedLink.type !== 'record') {
     throw Error(t`Expected uri to resolve to a record`)
   }
