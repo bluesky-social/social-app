@@ -4,7 +4,6 @@ import {
   type AppBskyAgeassuranceDefs,
   type AppBskyAgeassuranceGetConfig,
   type AppBskyAgeassuranceGetState,
-  AtpAgent,
   type ChatBskyActorDeclaration,
 } from '@atproto/api'
 import {type Client} from '@atproto/lex'
@@ -15,7 +14,6 @@ import {persistQueryClient} from '@tanstack/react-query-persist-client'
 import debounce from 'lodash.debounce'
 
 import {networkRetry} from '#/lib/async/retry'
-import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {getAge} from '#/lib/strings/time'
 import {
@@ -24,6 +22,7 @@ import {
 } from '#/state/birthdate'
 import {fetchActorDeclarationRecord} from '#/state/queries/messages/actor-declaration'
 import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
+import {getPublicAppviewClient} from '#/state/session/clients'
 import {DEVICE_SIGNALS_SUPPORTED} from '#/ageAssurance/const'
 import * as debug from '#/ageAssurance/debug'
 import {logger} from '#/ageAssurance/logger'
@@ -98,11 +97,14 @@ export function setBirthdateForDid({
 export const configQueryKey = ['config']
 export async function getConfig() {
   if (debug.enabled) return debug.resolve(debug.config)
-  const agent = new AtpAgent({
-    service: PUBLIC_BSKY_SERVICE,
-  })
-  const res = await agent.app.bsky.ageassurance.getConfig()
-  return res.data
+  /*
+   * An unauthenticated read against the public appview: the config is fetched
+   * before there is any session (and while logged out), so it goes through the
+   * process-wide public client rather than a bundle one.
+   */
+  return (await getPublicAppviewClient().call(
+    app.bsky.ageassurance.getConfig,
+  )) as AppBskyAgeassuranceGetConfig.OutputSchema
 }
 export function getConfigFromCache():
   | AppBskyAgeassuranceGetConfig.OutputSchema
