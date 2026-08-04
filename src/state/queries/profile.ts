@@ -206,21 +206,21 @@ export function useProfileUpdateMutation() {
         appviewClient,
         profile.did,
         checkCommitted ||
-          (profile => {
+          (fresh => {
             if (typeof newUserAvatar !== 'undefined') {
-              if (newUserAvatar === null && profile.avatar) {
+              if (newUserAvatar === null && fresh.avatar) {
                 // url hasn't cleared yet
                 return false
-              } else if (profile.avatar === profile.avatar) {
+              } else if (fresh.avatar === profile.avatar) {
                 // url hasn't changed yet
                 return false
               }
             }
             if (typeof newUserBanner !== 'undefined') {
-              if (newUserBanner === null && profile.banner) {
+              if (newUserBanner === null && fresh.banner) {
                 // url hasn't cleared yet
                 return false
-              } else if (profile.banner === profile.banner) {
+              } else if (fresh.banner === profile.banner) {
                 // url hasn't changed yet
                 return false
               }
@@ -229,8 +229,8 @@ export function useProfileUpdateMutation() {
               return true
             }
             return (
-              profile.displayName === updates.displayName &&
-              profile.description === updates.description
+              fresh.displayName === updates.displayName &&
+              fresh.description === updates.description
             )
           }),
       )

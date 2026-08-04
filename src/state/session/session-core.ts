@@ -95,9 +95,16 @@ export function buildBundle(
   session: PasswordSession,
   storedPdsUrl?: string,
 ): SessionBundle {
-  const agent = storedPdsUrl
-    ? routeSessionToPds(session, storedPdsUrl)
-    : session
+  /*
+   * The stored url is persisted data and may be malformed (legacy writes,
+   * corruption). `routeSessionToPds` feeds it to `new URL()` on every request,
+   * so an invalid value would throw from every client call; discard it here
+   * and let the session route against its own service instead.
+   */
+  const agent =
+    storedPdsUrl && URL.canParse(storedPdsUrl)
+      ? routeSessionToPds(session, storedPdsUrl)
+      : session
   return {
     session,
     appviewClient: buildAppviewClient(agent),
