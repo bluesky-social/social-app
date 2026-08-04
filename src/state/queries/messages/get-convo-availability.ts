@@ -18,7 +18,7 @@ export function useGetConvoAvailabilityQuery(
   return useQuery({
     queryKey: RQKEY(did),
     queryFn: async () => {
-      return await client.call(chat.bsky.convo.getConvoAvailability, {
+      return client.call(chat.bsky.convo.getConvoAvailability, {
         // callers pass an already-resolved actor did
         members: [did as DidString],
       })
