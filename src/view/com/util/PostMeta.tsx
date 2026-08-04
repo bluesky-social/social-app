@@ -1,11 +1,11 @@
 import {memo, useCallback} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {app} from '#/lexicons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {forceLTR} from '#/lib/strings/bidi'
 import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
@@ -25,7 +25,7 @@ import {TimeElapsed} from './TimeElapsed'
 import {PreviewableUserAvatar} from './UserAvatar'
 
 interface PostMetaOpts {
-  author: AppBskyActorDefs.ProfileViewBasic
+  author: app.bsky.actor.defs.ProfileViewBasic
   moderation: ModerationDecision | undefined
   postHref: string
   timestamp: string

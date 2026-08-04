@@ -18,7 +18,7 @@ import {
   CASHTAG_REGEX,
   TAG_REGEX,
   TRAILING_PUNCTUATION_REGEX,
-} from '@atproto/api'
+} from '@bsky.app/sdk/richtext'
 import {Mark} from '@tiptap/core'
 import {type Node as ProsemirrorNode} from '@tiptap/pm/model'
 import {Plugin, PluginKey} from '@tiptap/pm/state'

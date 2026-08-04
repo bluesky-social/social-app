@@ -1,9 +1,9 @@
 import {memo, useCallback, useMemo} from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {app} from '#/lexicons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
@@ -71,7 +71,7 @@ import {useDevMode} from '#/storage/hooks/dev-mode'
 let ProfileMenu = ({
   profile,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<app.bsky.actor.defs.ProfileViewDetailed>
 }): React.ReactNode => {
   const t = useTheme()
   const ax = useAnalytics()

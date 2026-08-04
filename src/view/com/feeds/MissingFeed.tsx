@@ -1,9 +1,9 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {AtUri} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {AtUri} from '@atproto/syntax'
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getFeedTypeFromUri} from '#/state/queries/feed'

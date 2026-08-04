@@ -2,7 +2,6 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {ScrollForwarderView} from 'react-native-scroll-forwarder'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
@@ -11,6 +10,7 @@ import {Trans} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {app} from '#/lexicons'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
@@ -166,7 +166,7 @@ function ProfileScreenLoaded({
   moderationOpts,
   hideBackButton,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hideBackButton: boolean
   isPlaceholderProfile: boolean

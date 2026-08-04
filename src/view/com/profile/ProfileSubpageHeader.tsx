@@ -1,12 +1,12 @@
 import {useCallback} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {useAnimatedRef} from 'react-native-reanimated'
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {app} from '#/lexicons'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -37,7 +37,7 @@ export function ProfileSubpageHeader({
   title: string | undefined
   avatar: string | undefined
   isOwner: boolean | undefined
-  purpose: AppBskyGraphDefs.ListPurpose | undefined
+  purpose: app.bsky.graph.defs.ListPurpose | undefined
   creator:
     | {
         did: string
