@@ -25,6 +25,7 @@ export type VideoAction =
   | {
       type: 'compressing_to_uploading'
       video: CompressedVideo
+      compressionSkipped: boolean
       signal: AbortSignal
     }
   | {
@@ -103,6 +104,7 @@ type CompressingState = {
 type UploadingState = {
   status: 'uploading'
   progress: number
+  compressionSkipped: boolean
   abortController: AbortController
   asset: ImagePickerAsset
   video: CompressedVideo
@@ -186,13 +188,13 @@ export function videoReducer(
     }
   } else if (action.type === 'update_progress') {
     if (state.status === 'compressing' || state.status === 'uploading') {
+      const phase =
+        state.status === 'uploading' && state.compressionSkipped
+          ? 'uploadingWithoutCompression'
+          : state.status
       return {
         ...state,
-        progress: advanceVideoProgress(
-          state.progress,
-          state.status,
-          action.progress,
-        ),
+        progress: advanceVideoProgress(state.progress, phase, action.progress),
       }
     }
   } else if (action.type === 'update_alt_text') {
@@ -209,7 +211,13 @@ export function videoReducer(
     if (state.status === 'compressing') {
       return {
         status: 'uploading',
-        progress: videoProgressForPhase('uploading', 0),
+        progress: videoProgressForPhase(
+          action.compressionSkipped
+            ? 'uploadingWithoutCompression'
+            : 'uploading',
+          0,
+        ),
+        compressionSkipped: action.compressionSkipped,
         abortController: state.abortController,
         asset: state.asset,
         video: action.video,
@@ -323,6 +331,7 @@ export async function processVideo(
   dispatch({
     type: 'compressing_to_uploading',
     video,
+    compressionSkipped: video.passthroughReason !== undefined,
     signal,
   })
 
