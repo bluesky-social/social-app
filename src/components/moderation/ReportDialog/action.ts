@@ -67,7 +67,7 @@ export function useSubmitReportMutation() {
             reason: state.details,
             subject: {
               $type: 'com.atproto.admin.defs#repoRef',
-              // the parsed subject carries an already-resolved did
+              // the parsed subject holds the did as a plain string
               did: subject.did as DidString,
             },
           }

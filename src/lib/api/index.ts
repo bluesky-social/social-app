@@ -307,11 +307,6 @@ async function resolveEmbed(
     if (resolvedLink.type === 'record') {
       return {
         $type: 'app.bsky.embed.record',
-        /*
-         * `resolve.ts` is still legacy-typed - its strong refs and URIs carry
-         * unbranded strings. Assert at the boundary until it moves to the
-         * clients.
-         */
         record: resolvedLink.record,
       }
     }
@@ -495,11 +490,6 @@ async function resolveMedia(
   return undefined
 }
 
-/*
- * `resolve.ts` still returns legacy-typed views, so its strong refs carry plain
- * strings where the record write wants the branded syntax types; assert at the
- * boundary until those views come from the generated lexicons.
- */
 async function resolveRecord(
   clients: LinkResolvers,
   queryClient: QueryClient,

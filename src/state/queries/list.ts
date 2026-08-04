@@ -189,7 +189,6 @@ export function useListDeleteMutation() {
       let listitemRecordUris: string[] = []
       for (let i = 0; i < 100; i++) {
         const res = await pdsClient.list(app.bsky.graph.listitem, {
-          // the session account is still legacy-typed, so its did is unbranded
           repo: currentAccount.did,
           cursor,
           limit: 100,

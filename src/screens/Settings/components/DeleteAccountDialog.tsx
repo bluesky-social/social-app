@@ -125,7 +125,6 @@ function DeleteAccountDialogInner({
        */
       await chatClient.call(chat.bsky.actor.deleteAccount)
       await client.call(com.atproto.server.deleteAccount, {
-        // the persisted account did is already resolved
         did: currentAccount.did,
         password,
         token,

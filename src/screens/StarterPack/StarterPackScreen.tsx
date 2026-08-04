@@ -376,7 +376,6 @@ function Header({
     let followUris: Map<string, string>
     try {
       followUris = await bulkWriteFollows(pdsClient, appviewClient, dids, {
-        // the starter pack view is still legacy-typed
         uri: starterPack.uri,
         cid: starterPack.cid,
       })

@@ -136,7 +136,7 @@ async function loggedOutFetch({
   )
   /*
    * The response is hand-decoded rather than validated, so the lex output shape
-   * is asserted here just as the old-world one was.
+   * is asserted here.
    */
   let data = res.ok
     ? (lexParse(await res.text()) as app.bsky.feed.getFeed.$OutputBody)

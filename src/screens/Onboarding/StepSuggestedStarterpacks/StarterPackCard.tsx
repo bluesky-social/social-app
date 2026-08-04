@@ -75,7 +75,6 @@ export function StarterPackCard({
     let followUris: Map<string, string>
     try {
       followUris = await bulkWriteFollows(pdsClient, appviewClient, dids, {
-        // the starter pack view is still legacy-typed
         uri: view.uri,
         cid: view.cid,
       })

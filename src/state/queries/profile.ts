@@ -647,7 +647,7 @@ function useProfileBlockMutation() {
         throw new Error('Not signed in')
       }
       return await pdsClient.create(app.bsky.graph.block, {
-        // the profile view is still legacy-typed, so its did is unbranded
+        // the mutation takes the did as a plain string
         subject: did as DidString,
         createdAt: toDatetimeString(new Date()),
       })

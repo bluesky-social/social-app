@@ -1,4 +1,4 @@
-import {type AtIdentifierString} from '@atproto/syntax'
+import {type AtIdentifierString, type AtUriString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -72,18 +72,13 @@ export function updateListMembershipOptimistically({
         ...page,
         listsWithMembership: page.listsWithMembership.map(lwm => {
           if (lwm.list.uri === listUri) {
-            /*
-             * Callers hand over a plain at-uri and an old-world ProfileView,
-             * whose `uri`/`did` are unbranded strings. They are runtime
-             * identical to the generated branded forms, so the synthesised
-             * listItem is asserted rather than re-validated.
-             */
             return {
               ...lwm,
               listItem: {
-                uri: membershipUri,
+                // callers hand over the membership uri as a plain string
+                uri: membershipUri as AtUriString,
                 subject,
-              } as app.bsky.graph.defs.ListItemView,
+              },
             }
           }
           return lwm

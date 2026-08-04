@@ -46,7 +46,7 @@ export function usePinnedPostMutation() {
           profile,
           updates: existing => {
             existing.pinnedPost = pinCurrentPost
-              ? // the caller's uri/cid are unbranded strings
+              ? // the mutation takes the uri/cid as plain strings
                 ({
                   uri: postUri,
                   cid: postCid,

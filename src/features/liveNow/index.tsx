@@ -270,7 +270,6 @@ export function useUpsertLiveStatusMutation(
       } satisfies app.bsky.actor.status.Main
 
       const upsert = async () => {
-        // the session account is still legacy-typed, so its did is unbranded
         const repo = currentAccount.did
         const collection = 'app.bsky.actor.status'
 
