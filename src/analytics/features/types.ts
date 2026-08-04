@@ -22,6 +22,7 @@ export enum Features {
   VideoMultipartUploadEnable = 'video:multipart_upload:enable',
   SearchStarterPacksV2Enable = 'search_starter_packs_v2:enable',
   FollowSortEnable = 'follow_sort:enable',
+  OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
 
   // values
   TrendingDiscoverValues = 'trending_discover:values',
