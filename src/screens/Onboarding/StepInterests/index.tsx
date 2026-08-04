@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {interests, useInterestsDisplayNames} from '#/lib/interests'
@@ -17,6 +17,7 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 
 export function StepInterests() {
@@ -69,6 +70,7 @@ export function StepInterests() {
         {interestRequired ? (
           <Trans>
             Choose at least one. We'll use this to customize your experience.
+            You can change these anytime.
           </Trans>
         ) : (
           <Trans>We'll use this to help customize your experience.</Trans>
@@ -94,27 +96,46 @@ export function StepInterests() {
       </View>
 
       <OnboardingControls.Portal>
-        <Button
-          disabled={saving || missingRequiredInterest}
-          testID="onboardingContinue"
-          variant="solid"
-          color="primary"
-          size="large"
-          label={
-            missingRequiredInterest
-              ? l`Choose an interest`
-              : l`Continue to next step`
-          }
-          onPress={saveInterests}>
-          <ButtonText>
-            {missingRequiredInterest ? (
-              <Trans>Choose an interest</Trans>
-            ) : (
-              <Trans>Continue</Trans>
-            )}
-          </ButtonText>
-          {saving && <ButtonIcon icon={Loader} />}
-        </Button>
+        <View style={[a.relative]}>
+          <Button
+            disabled={saving || missingRequiredInterest}
+            testID="onboardingContinue"
+            variant="solid"
+            color="primary"
+            size="large"
+            label={
+              missingRequiredInterest
+                ? l`Choose an interest`
+                : l`Continue to next step`
+            }
+            onPress={saveInterests}>
+            <ButtonText>
+              {missingRequiredInterest ? (
+                <Trans>Choose an interest</Trans>
+              ) : (
+                <Trans>Continue</Trans>
+              )}
+            </ButtonText>
+            {saving && <ButtonIcon icon={Loader} />}
+          </Button>
+          {missingRequiredInterest && (
+            /*
+             * A disabled button receives no touch events, so this invisible
+             * overlay catches taps on it to explain why it is disabled.
+             */
+            <Pressable
+              accessible={false}
+              focusable={false}
+              style={[a.absolute, a.inset_0]}
+              onPress={() => {
+                Toast.show(l`Choose at least one interest.`, {
+                  position: 'top-center',
+                })
+                ax.metric('onboarding:interests:disabledNextPressed', {})
+              }}
+            />
+          )}
+        </View>
       </OnboardingControls.Portal>
     </View>
   )
