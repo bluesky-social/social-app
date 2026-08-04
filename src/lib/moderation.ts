@@ -1,5 +1,7 @@
 import {useMemo} from 'react'
-import {AtpAgent, type ComAtprotoLabelDefs} from '@atproto/api'
+import {type ComAtprotoLabelDefs} from '@atproto/api'
+import {Client} from '@atproto/lex'
+import {type DidString} from '@atproto/syntax'
 import {
   type InterpretedLabelValueDefinition,
   LABELS,
@@ -105,9 +107,9 @@ export function isAppLabeler(
     | app.bsky.labeler.defs.LabelerViewDetailed,
 ): boolean {
   if (typeof labeler === 'string') {
-    return AtpAgent.appLabelers.includes(labeler)
+    return Client.appLabelers.includes(labeler as DidString)
   }
-  return AtpAgent.appLabelers.includes(labeler.creator.did)
+  return Client.appLabelers.includes(labeler.creator.did)
 }
 
 export function isLabelerSubscribed(
