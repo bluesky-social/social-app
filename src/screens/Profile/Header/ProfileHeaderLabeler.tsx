@@ -15,6 +15,7 @@ import {Plural, Trans} from '@lingui/react/macro'
 import {MAX_LABELERS} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
@@ -307,10 +308,7 @@ export function HeaderLabelerButtons({
 
   return (
     <>
-      {hasSession &&
-      !isMe &&
-      !profile.viewer?.blockedBy &&
-      !profile.viewer?.blocking ? (
+      {hasSession && !isMe && !isBlockedOrBlocking(profile) ? (
         <>
           {subscriptionsAllowed && (
             <SubscribeProfileButton
