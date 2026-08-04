@@ -5,14 +5,13 @@ import {AppBskyDraftDefs, AtUri} from '@atproto/api'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {nanoid} from 'nanoid/non-secure'
 
-import {resolveLink} from '#/lib/api/resolve'
+import {type LinkResolvers, resolveLink} from '#/lib/api/resolve'
 import {getDeviceName} from '#/lib/deviceName'
 import {getImageDim} from '#/lib/media/manip'
 import {mimeToExt} from '#/lib/media/video/util'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {type ComposerImage} from '#/state/gallery'
 import {threadgateAllowUISettingToAllowRecordValue} from '#/state/queries/threadgate/util'
-import {createPublicAgent} from '#/state/session/bridge-agent'
 import {
   type ComposerState,
   type EmbedDraft,
@@ -60,7 +59,10 @@ function parseVideoMimeType(localRefPath: string): string {
  * Convert ComposerState to server Draft format for saving.
  * Returns both the draft and a map of localRef paths to their source paths.
  */
-export async function composerStateToDraft(state: ComposerState): Promise<{
+export async function composerStateToDraft(
+  clients: LinkResolvers,
+  state: ComposerState,
+): Promise<{
   draft: AppBskyDraftDefs.Draft
   localRefPaths: Map<string, string>
 }> {
@@ -68,7 +70,7 @@ export async function composerStateToDraft(state: ComposerState): Promise<{
 
   const posts: AppBskyDraftDefs.DraftPost[] = await Promise.all(
     state.thread.posts.map(post => {
-      return postDraftToServerPost(post, localRefPaths)
+      return postDraftToServerPost(clients, post, localRefPaths)
     }),
   )
 
@@ -94,6 +96,7 @@ export async function composerStateToDraft(state: ComposerState): Promise<{
  * Convert a single PostDraft to server DraftPost format.
  */
 async function postDraftToServerPost(
+  clients: LinkResolvers,
   post: PostDraft,
   localRefPaths: Map<string, string>,
 ): Promise<AppBskyDraftDefs.DraftPost> {
@@ -138,10 +141,7 @@ async function postDraftToServerPost(
 
   // Add quote record embed
   if (post.embed.quote) {
-    const resolved = await resolveLink(
-      createPublicAgent(),
-      post.embed.quote.uri,
-    )
+    const resolved = await resolveLink(clients, post.embed.quote.uri)
     if (resolved && resolved.type === 'record') {
       draftPost.embedRecords = [
         {

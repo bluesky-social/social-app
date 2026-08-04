@@ -257,9 +257,6 @@ export const BLUESKY_PROXY_HEADER = {
  * The DID comes from the env-configurable `CHAT_PROXY_DID` (via
  * `EXPO_PUBLIC_CHAT_PROXY_DID`) rather than a hard-coded constant, so the
  * target can be retargeted per environment.
- *
- * This is the client-level equivalent of {@link DM_SERVICE_HEADERS}, which
- * carries the same value as a per-call header.
  */
 export const CHAT_PROXY_SERVICE: Service = `${CHAT_PROXY_DID}#bsky_chat`
 
@@ -274,10 +271,6 @@ export const CHAT_PROXY_SERVICE: Service = `${CHAT_PROXY_DID}#bsky_chat`
  * client-level one like {@link CHAT_PROXY_SERVICE}.
  */
 export const MOD_PROXY_SERVICE: Service = `${BSKY_LABELER_DID}#atproto_labeler`
-
-export const DM_SERVICE_HEADERS = {
-  'atproto-proxy': `${CHAT_PROXY_DID}#bsky_chat`,
-}
 
 /**
  * The notification service's proxy target, in the `did#service_id` form a lex
