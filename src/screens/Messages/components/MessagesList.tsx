@@ -22,10 +22,10 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
+import {type $Typed} from '@atproto/lex'
 import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
 import {RichText} from '@bsky.app/sdk/richtext'
 
-import {type $Typed} from '@atproto/lex'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {mergeRefs} from '#/lib/merge-refs'
 import {ScrollProvider} from '#/lib/ScrollContext'
@@ -64,7 +64,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
-import {app, chat, type com} from '#/lexicons'
+import {app, chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {groupSystemMessages, type RenderItem} from './groupSystemMessages'
@@ -574,7 +574,7 @@ export function MessagesList({
               record: {
                 uri: post.uri,
                 cid: post.cid,
-              } as com.atproto.repo.strongRef.Main,
+              },
             }
 
             embedView = {

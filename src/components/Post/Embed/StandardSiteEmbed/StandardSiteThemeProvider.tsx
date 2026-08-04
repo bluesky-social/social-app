@@ -1,5 +1,5 @@
-import {app} from '#/lexicons'
 import {Context, useAlf, utils} from '#/alf'
+import {app} from '#/lexicons'
 
 /**
  * Overrides only the values needed for `secondary_inverted` buttons atm.

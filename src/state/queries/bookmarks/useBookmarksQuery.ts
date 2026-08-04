@@ -1,3 +1,5 @@
+import {type $Typed} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -10,8 +12,6 @@ import {
   embedViewRecordToPostView,
   getEmbeddedPost,
 } from '#/state/queries/util'
-import {type $Typed} from '@atproto/lex'
-import {AtUri} from '@atproto/syntax'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'

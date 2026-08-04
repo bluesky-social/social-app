@@ -1,4 +1,4 @@
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export type VideoEmbedInnerWebProps = {
   embed: app.bsky.embed.video.View

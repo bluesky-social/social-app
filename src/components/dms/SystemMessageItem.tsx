@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {chat} from '#/lexicons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {useInviteLinkDialog} from '#/screens/Messages/components/InviteLinkDialogProvider'
@@ -10,6 +9,7 @@ import {Button} from '#/components/Button'
 import {getSystemMessageInfo} from '#/components/dms/getSystemMessageInfo'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {chat} from '#/lexicons'
 
 export function SystemMessageItem({
   item,

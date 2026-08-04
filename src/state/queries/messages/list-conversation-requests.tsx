@@ -4,9 +4,9 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import * as bsky from '#/types/bsky'
 import {useChatClient} from '#/state/session'
 import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const DEFAULT_LIMIT = 10
 

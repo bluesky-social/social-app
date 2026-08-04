@@ -4,7 +4,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {app} from '#/lexicons'
 import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
@@ -18,6 +17,7 @@ import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Che
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Toast from '#/components/Toast'
 import {IS_IOS} from '#/env'
+import {app} from '#/lexicons'
 import {GrowthHack} from './GrowthHack'
 
 export function ThreadItemAnchorFollowButton({

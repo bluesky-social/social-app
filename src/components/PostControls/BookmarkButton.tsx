@@ -4,7 +4,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
@@ -15,6 +14,7 @@ import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import {PostControlButton, PostControlButtonIcon} from './PostControlButton'
 
 export const BookmarkButton = memo(function BookmarkButton({

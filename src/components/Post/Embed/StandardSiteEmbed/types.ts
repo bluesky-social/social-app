@@ -1,4 +1,4 @@
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export type CommonProps = {
   view: app.bsky.embed.external.ViewExternal

@@ -5,11 +5,11 @@ import Animated, {
   type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-
 import {type $Typed} from '@atproto/lex'
-import {app} from '#/lexicons'
+
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {app} from '#/lexicons'
 import {MessageContextProvider} from './MessageContext'
 
 const BORDER_RADIUS = 20

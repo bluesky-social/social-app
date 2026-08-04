@@ -10,7 +10,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -26,6 +25,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {UserAddRemoveListsDialog} from '#/components/dialogs/lists/UserAddRemoveListsDialog'
 import {ListFooter} from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 const LOADING_ITEM = {kind: 'loading', _reactKey: '__loading__'} as const

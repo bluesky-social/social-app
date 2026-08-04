@@ -9,7 +9,6 @@ import {
   createPlaybackTelemetry,
   type PlaybackTelemetry,
 } from '#/lib/media/video/playbackTelemetry'
-import {app} from '#/lexicons'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, platform} from '#/alf'
 import {Button} from '#/components/Button'
@@ -17,6 +16,7 @@ import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import {GifPresentationControls} from './GifPresentationControls'
 import {VideoEmbedInnerNative} from './VideoEmbedInner/VideoEmbedInnerNative'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'

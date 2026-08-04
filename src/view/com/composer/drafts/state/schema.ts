@@ -1,4 +1,4 @@
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 /**
  * Types for draft display and local media tracking.
  * Server draft types come from the generated `#/lexicons` modules.

@@ -1,12 +1,10 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {type $Typed} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 
-import {type $Typed} from '@atproto/lex'
-import {AtUri} from '@atproto/syntax'
-import * as bsky from '#/types/bsky'
-import {app} from '#/lexicons'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {
   type FeedSourceInfo,
@@ -20,6 +18,8 @@ import {atoms as a, useTheme} from '#/alf'
 import {Link} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {MissingFeed} from './MissingFeed'
 
 type FeedSourceCardProps = {

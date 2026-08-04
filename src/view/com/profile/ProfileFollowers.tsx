@@ -2,7 +2,6 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {app} from '#/lexicons'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
@@ -19,6 +18,7 @@ import {
   FollowersPromoBanner,
   useFollowersPromoDismissed,
 } from '#/features/inviteFriends'
+import {app} from '#/lexicons'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
 

@@ -4,7 +4,6 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Trans} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {useA11y} from '#/state/a11y'
 import {
@@ -21,6 +20,7 @@ import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 
 function keyExtractor(item: app.bsky.feed.defs.GeneratorView) {
   return item.uri

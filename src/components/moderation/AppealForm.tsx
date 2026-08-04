@@ -69,7 +69,7 @@ export function AppealForm({
           reason: details,
         },
         // the appeal goes to the labeler that applied the label
-        {service: `${label.src as DidString}#atproto_labeler`},
+        {service: `${label.src}#atproto_labeler`},
       )
     },
     onError: err => {

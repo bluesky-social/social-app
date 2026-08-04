@@ -1,7 +1,6 @@
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
-import {app, chat} from '#/lexicons'
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {
@@ -9,6 +8,7 @@ import {
   toBskyAppUrl,
   toShortUrl,
 } from '#/lib/strings/url-helpers'
+import {app, chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export type UserMessageInfo = {

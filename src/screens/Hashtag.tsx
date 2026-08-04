@@ -3,7 +3,6 @@ import {type ListRenderItemInfo, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {app} from '#/lexicons'
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
@@ -28,6 +27,7 @@ import {InlineLinkText} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {SearchError} from '#/components/SearchError'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 
 const renderItem = ({
   item,

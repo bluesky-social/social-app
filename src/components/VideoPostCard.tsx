@@ -5,7 +5,6 @@ import {LinearGradient} from 'expo-linear-gradient'
 import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -21,6 +20,7 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 function getBlackColor(t: ReturnType<typeof useTheme>) {

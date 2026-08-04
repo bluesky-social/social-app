@@ -3,7 +3,6 @@ import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {app} from '#/lexicons'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -16,6 +15,7 @@ import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,

@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {app} from '#/lexicons'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-availability'
@@ -16,6 +15,7 @@ import {canBeMessaged} from '#/components/dms/util'
 import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Message'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 
 export function MessageProfileButton({
   profile,

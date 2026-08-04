@@ -2,7 +2,6 @@ import {useCallback, useMemo} from 'react'
 import {Platform, type StyleProp, type TextStyle, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {HITSLOP_30} from '#/lib/constants'
 import {useTranslate} from '#/lib/translation'
 import {
@@ -28,6 +27,7 @@ import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const X_ICON_OFFSET = 16

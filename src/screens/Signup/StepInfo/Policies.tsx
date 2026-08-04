@@ -4,11 +4,11 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {com} from '#/lexicons'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {com} from '#/lexicons'
 
 export const Policies = ({
   serviceDescription,

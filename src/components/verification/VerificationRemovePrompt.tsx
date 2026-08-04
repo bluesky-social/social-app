@@ -2,12 +2,12 @@ import {useCallback} from 'react'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {app} from '#/lexicons'
 import {logger} from '#/logger'
 import {useVerificationsRemoveMutation} from '#/state/queries/verification/useVerificationsRemoveMutation'
 import {type DialogControlProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl as usePromptControl} from '#/components/Dialog'

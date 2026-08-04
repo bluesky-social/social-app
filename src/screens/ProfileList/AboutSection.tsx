@@ -4,7 +4,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {useSession} from '#/state/session'
 import {ListMembers} from '#/view/com/lists/ListMembers'
 import {EmptyState} from '#/view/com/util/EmptyState'
@@ -15,6 +14,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {IS_NATIVE} from '#/env'
+import {app} from '#/lexicons'
 
 interface SectionRef {
   scrollToTop: () => void

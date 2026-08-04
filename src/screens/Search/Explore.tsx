@@ -4,7 +4,6 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
-import {app} from '#/lexicons'
 import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -64,6 +63,7 @@ import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
 import {ExploreScreenLiveEventFeedsBanner} from '#/features/liveEvents/components/ExploreScreenLiveEventFeedsBanner'
+import {app} from '#/lexicons'
 import * as ModuleHeader from './components/ModuleHeader'
 import {
   SuggestedAccountsTabBar,

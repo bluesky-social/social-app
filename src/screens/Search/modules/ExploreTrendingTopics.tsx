@@ -1,11 +1,10 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
-import {RichText as RichTextApi} from '@bsky.app/sdk/richtext'
 import {moderateProfile} from '@bsky.app/sdk/moderation'
+import {RichText as RichTextApi} from '@bsky.app/sdk/richtext'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   useTrendingSettings,
@@ -28,6 +27,7 @@ import {SubtleHover} from '#/components/SubtleHover'
 import {useTrendingTopicSeen} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import * as ModuleHeader from '../components/ModuleHeader'
 
 const IMAGE_SIZE = 56

@@ -1,5 +1,5 @@
-import {isStandardSiteEmbed, isStandardSitePublicationEmbed} from './utils'
 import {app} from '#/lexicons'
+import {isStandardSiteEmbed, isStandardSitePublicationEmbed} from './utils'
 
 function makeView(
   partial: Record<string, unknown>,

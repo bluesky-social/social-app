@@ -2,7 +2,6 @@ import {useCallback, useMemo, useState} from 'react'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {app} from '#/lexicons'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -11,6 +10,7 @@ import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {app} from '#/lexicons'
 
 function renderItem({
   item,

@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
-import {app} from '#/lexicons'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -45,6 +44,7 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import * as ListCard from '#/components/ListCard'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
 

@@ -2,7 +2,6 @@ import {useCallback, useMemo, useRef, useState} from 'react'
 import {useFocusEffect} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
-import {app} from '#/lexicons'
 import {useCallOnce} from '#/lib/once'
 import {
   usePreferencesQuery,
@@ -10,6 +9,7 @@ import {
 } from '#/state/queries/preferences'
 import {type ThreadViewPreferences} from '#/state/queries/preferences/types'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import {type Literal} from '#/types/utils'
 
 export type ThreadSortOption = Literal<

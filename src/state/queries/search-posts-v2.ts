@@ -1,4 +1,6 @@
 import {useCallback, useMemo, useRef} from 'react'
+import {AtUri} from '@atproto/syntax'
+import {moderatePost} from '@bsky.app/sdk/moderation'
 import {
   type InfiniteData,
   type QueryClient,
@@ -6,8 +8,6 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {AtUri} from '@atproto/syntax'
-import {moderatePost} from '@bsky.app/sdk/moderation'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAppviewClient} from '#/state/session'
 import {type SearchFilters} from '#/screens/Search/searchParams'

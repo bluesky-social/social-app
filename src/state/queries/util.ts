@@ -1,10 +1,10 @@
+import {type AtUri} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
   type QueryKey,
 } from '@tanstack/react-query'
 
-import {type AtUri} from '@atproto/syntax'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 

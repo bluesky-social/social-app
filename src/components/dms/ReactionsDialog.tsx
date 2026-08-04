@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {chat} from '#/lexicons'
 import {HITSLOP_10} from '#/lib/constants'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -23,6 +22,7 @@ import {filterBlockedReactions} from '#/components/dms/util'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 type Reaction = {

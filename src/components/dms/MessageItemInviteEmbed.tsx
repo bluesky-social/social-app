@@ -5,13 +5,13 @@ import Animated, {
   type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-
 import {type $Typed} from '@atproto/lex'
-import {chat} from '#/lexicons'
+
 import {useConvoActive} from '#/state/messages/convo'
 import {isKnownJoinLinkPreview} from '#/state/queries/join-links'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import * as ChatInvite from '#/components/dms/ChatInvite'
+import {chat} from '#/lexicons'
 import {MessageContextProvider} from './MessageContext'
 
 const BORDER_RADIUS = 20

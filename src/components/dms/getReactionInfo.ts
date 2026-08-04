@@ -1,9 +1,9 @@
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
-import {chat} from '#/lexicons'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {isDidBlockedInConvo} from '#/components/dms/getMessageInfo'
+import {chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export type UserReactionInfo = {

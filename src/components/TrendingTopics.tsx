@@ -1,8 +1,7 @@
 import {useEffect, useMemo} from 'react'
+import {type AtUri} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
 
-import {type AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useCallOnce} from '#/lib/once'
 // import {makeProfileLink} from '#/lib/routes/links'
@@ -10,6 +9,7 @@ import {useCallOnce} from '#/lib/once'
 import {native} from '#/alf'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {type Metrics, useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 
 export function TrendingTopicLink({
   topic: raw,

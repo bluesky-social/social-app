@@ -1,13 +1,12 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
+import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {precacheResolvedUri} from '#/state/queries/resolve-uri'
@@ -20,6 +19,7 @@ import {
   type LinkProps as BaseLinkProps,
 } from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function Default({

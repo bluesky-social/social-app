@@ -11,7 +11,7 @@ import {
   useGlobalLabelStrings,
 } from '#/lib/moderation/useGlobalLabelStrings'
 import {useLabelDefinitions} from '#/state/preferences'
-import {type app, com} from '#/lexicons'
+import {type app, type com} from '#/lexicons'
 
 export interface LabelInfo {
   label: com.atproto.label.defs.Label

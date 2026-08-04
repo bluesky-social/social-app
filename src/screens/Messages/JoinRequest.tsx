@@ -5,8 +5,6 @@ import {type ThemeName} from '@bsky.app/alf'
 import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import * as bsky from '#/types/bsky'
-import {chat} from '#/lexicons'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -22,6 +20,8 @@ import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/componen
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const desktopDarkBg = require('../../../assets/images/chat-desktop-bg-dark.webp')
 const desktopDimBg = require('../../../assets/images/chat-desktop-bg-dim.webp')

@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type DidString} from '@atproto/syntax'
+import {type Un$Typed} from '@atproto/lex'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -11,7 +11,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {type Un$Typed} from '@atproto/lex'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -121,8 +120,7 @@ function DialogInner({
       activitySubscription: Un$Typed<app.bsky.notification.defs.ActivitySubscription>,
     ) => {
       await client.call(app.bsky.notification.putActivitySubscription, {
-        // the profile view carries an already-resolved did
-        subject: profile.did as DidString,
+        subject: profile.did,
         activitySubscription,
       })
     },

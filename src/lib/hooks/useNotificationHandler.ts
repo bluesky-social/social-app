@@ -1,10 +1,10 @@
 import {useEffect} from 'react'
 import * as Notifications from 'expo-notifications'
+import {AtUri} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
 import {CommonActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {AtUri} from '@atproto/syntax'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {logger as notyLogger} from '#/lib/notifications/util'
 import {type NavigationProp} from '#/lib/routes/types'

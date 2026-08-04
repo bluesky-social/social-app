@@ -1,8 +1,6 @@
 import {View} from 'react-native'
 import {Plural, Trans} from '@lingui/react/macro'
 
-import * as bsky from '#/types/bsky'
-import {chat} from '#/lexicons'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -11,6 +9,8 @@ import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {InlineLinkText} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {useChatInvite} from './Context'
 
 /**

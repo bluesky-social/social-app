@@ -2,7 +2,6 @@ import {View} from 'react-native'
 import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated'
 import {Trans} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -11,6 +10,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 
 export function Autocomplete({
   prefix,

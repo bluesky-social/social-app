@@ -5,13 +5,13 @@ import QRCode from 'react-native-qrcode-styled'
 import type ViewShot from 'react-native-view-shot'
 import {Trans} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const LazyViewShot = lazy(

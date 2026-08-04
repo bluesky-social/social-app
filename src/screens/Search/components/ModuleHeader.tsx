@@ -1,8 +1,7 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-
 import {AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
+
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -15,6 +14,7 @@ import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/component
 import {Link} from '#/components/Link'
 import {Text, type TextProps} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 
 export function Container({
   style,

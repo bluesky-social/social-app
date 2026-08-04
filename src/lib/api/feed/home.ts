@@ -1,8 +1,8 @@
 import {type Client} from '@atproto/lex'
 import {type AtUriString} from '@atproto/syntax'
 
-import {app} from '#/lexicons'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {app} from '#/lexicons'
 import {CustomFeedAPI} from './custom'
 import {FollowingFeedAPI} from './following'
 import {type FeedAPI, type FeedAPIResponse} from './types'

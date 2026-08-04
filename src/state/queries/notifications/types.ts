@@ -1,4 +1,4 @@
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 /**
  * A `listNotifications` notification, widened with the `starterPack` the server

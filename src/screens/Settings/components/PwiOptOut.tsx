@@ -1,5 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
+import {type $Typed} from '@atproto/lex'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -8,12 +9,11 @@ import {
   useProfileQuery,
   useProfileUpdateMutation,
 } from '#/state/queries/profile'
-import {type $Typed} from '@atproto/lex'
-import {com} from '#/lexicons'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
+import {com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function PwiOptOut() {

@@ -1,11 +1,10 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
+import {AtUri} from '@atproto/syntax'
 import {moderatePost, type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -35,6 +34,7 @@ import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function Post({

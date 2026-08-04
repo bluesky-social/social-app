@@ -2,8 +2,8 @@ import {type Insets, Platform} from 'react-native'
 import {type Service} from '@atproto/lex'
 import {api} from '@bsky.app/sdk'
 
-import {app} from '#/lexicons'
 import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
+import {app} from '#/lexicons'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'

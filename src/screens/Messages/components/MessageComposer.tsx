@@ -13,12 +13,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
 import {GlassContainer} from 'expo-glass-effect'
 import {LinearGradient} from 'expo-linear-gradient'
+import {type $Typed} from '@atproto/lex'
 import {ScrollEdgeEffect} from '@bsky.app/expo-scroll-edge-effect'
 import {useLingui} from '@lingui/react/macro'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
-import {type $Typed} from '@atproto/lex'
-import {chat} from '#/lexicons'
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -38,6 +37,7 @@ import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} fro
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {chat} from '#/lexicons'
 import {type MessageEmbedState} from './MessageInputEmbed'
 
 const MIN_HEIGHT = 40

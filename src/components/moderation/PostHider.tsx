@@ -13,7 +13,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {app} from '#/lexicons'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {addStyle} from '#/lib/styles'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
@@ -25,6 +24,7 @@ import {
   useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 
 interface Props extends React.ComponentProps<typeof Link> {
   disabled: boolean

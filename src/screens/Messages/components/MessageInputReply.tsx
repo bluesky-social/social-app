@@ -1,7 +1,6 @@
 import {LayoutAnimation, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {chat} from '#/lexicons'
 import {HITSLOP_20} from '#/lib/constants'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {useConvoActive} from '#/state/messages/convo'
@@ -11,6 +10,7 @@ import {useMessageReplies} from '#/components/dms/MessageReplies'
 import {useReplyPreviewText} from '#/components/dms/replyPreview'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
+import {chat} from '#/lexicons'
 
 /**
  * The reply staged in the message composer. Renders a preview of the message

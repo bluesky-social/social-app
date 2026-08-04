@@ -1,9 +1,10 @@
+import {AtUri} from '@atproto/syntax'
+
 import {
   type ApiThreadItem,
   type ThreadItem,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
-import {AtUri} from '@atproto/syntax'
 import {app} from '#/lexicons'
 import {isDevMode} from '#/storage/hooks/dev-mode'
 import * as bsky from '#/types/bsky'

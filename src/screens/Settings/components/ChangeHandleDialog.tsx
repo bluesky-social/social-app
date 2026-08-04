@@ -15,7 +15,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {com} from '#/lexicons'
 import {HITSLOP_10, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {
@@ -46,6 +45,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
+import {com} from '#/lexicons'
 import {CopyButton} from './CopyButton'
 
 export function ChangeHandleDialog({

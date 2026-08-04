@@ -1,9 +1,9 @@
 import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 
-import * as bsky from '#/types/bsky'
-import {app} from '#/lexicons'
 import {hasProp} from '#/lib/type-guards'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   AppLanguage,
   type Language,

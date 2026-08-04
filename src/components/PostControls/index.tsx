@@ -4,7 +4,6 @@ import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {CountWheel} from '#/lib/custom-animations/CountWheel'
 import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -25,6 +24,7 @@ import {useFormatPostStatCount} from '#/components/PostControls/util'
 import * as Skele from '#/components/Skeleton'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import {BookmarkButton} from './BookmarkButton'
 import {
   PostControlButton,

@@ -12,7 +12,6 @@ import {useLingui} from '@lingui/react'
 import {type NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {app} from '#/lexicons'
 import {DISCOVER_FEED_URI, VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
@@ -38,6 +37,7 @@ import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {app} from '#/lexicons'
 
 const POLL_FREQ = 60e3 // 60sec
 

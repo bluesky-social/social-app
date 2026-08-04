@@ -11,7 +11,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {app} from '#/lexicons'
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
@@ -37,6 +36,7 @@ import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
+import {app} from '#/lexicons'
 
 interface SectionRef {
   scrollToTop: () => void

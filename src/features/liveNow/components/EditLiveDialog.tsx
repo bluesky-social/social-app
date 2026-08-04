@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {differenceInMinutes} from 'date-fns'
 
-import {app} from '#/lexicons'
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {cleanError} from '#/lib/strings/errors'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
@@ -26,6 +25,7 @@ import {
   useUpsertLiveStatusMutation,
 } from '#/features/liveNow'
 import {LinkPreview} from '#/features/liveNow/components/LinkPreview'
+import {app} from '#/lexicons'
 
 export function EditLiveDialog({
   control,

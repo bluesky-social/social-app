@@ -3,7 +3,6 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {app} from '#/lexicons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
@@ -66,6 +65,7 @@ import {GoLiveDialog} from '#/features/liveNow/components/GoLiveDialog'
 import {GoLiveDisabledDialog} from '#/features/liveNow/components/GoLiveDisabledDialog'
 import {Dot} from '#/features/nuxs/components/Dot'
 import {Gradient} from '#/features/nuxs/components/Gradient'
+import {app} from '#/lexicons'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 
 let ProfileMenu = ({

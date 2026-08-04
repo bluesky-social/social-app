@@ -1,13 +1,12 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {type $Typed} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
 import {moderatePost} from '@bsky.app/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {type $Typed} from '@atproto/lex'
-import {AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {getChatInviteCodeFromUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -26,6 +25,7 @@ import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/uti
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {
   type Embed as TEmbed,

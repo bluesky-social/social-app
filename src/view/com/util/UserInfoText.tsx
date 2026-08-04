@@ -1,6 +1,5 @@
 import {type StyleProp, type TextStyle} from 'react-native'
 
-import {app} from '#/lexicons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -9,6 +8,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {atoms as a} from '#/alf'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
 
 export function UserInfoText({

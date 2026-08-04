@@ -1,8 +1,9 @@
 import {type I18n} from '@lingui/core'
 import {plural} from '@lingui/core/macro'
 import psl from 'psl'
-import * as bsky from '#/types/bsky'
+
 import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 /**
  * Validates a raw status record and returns the typed record, or null if the

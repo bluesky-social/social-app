@@ -1,13 +1,12 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+import {AtUri} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {AtUri} from '@atproto/syntax'
-import {app} from '#/lexicons'
 import {JOINED_THIS_WEEK} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {createStarterPackGooglePlayUri} from '#/lib/strings/starter-pack'
@@ -35,6 +34,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB, IS_WEB_MOBILE_ANDROID} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)

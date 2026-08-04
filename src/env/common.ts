@@ -1,4 +1,5 @@
 import {type DidString} from '@atproto/syntax'
+
 import packageJson from '#/../package.json'
 
 /**

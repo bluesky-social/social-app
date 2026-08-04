@@ -1,10 +1,10 @@
 import {type StyleProp, type ViewStyle} from 'react-native'
 
-import {app} from '#/lexicons'
 import {atoms as a} from '#/alf'
 import * as ChatInvite from '#/components/dms/ChatInvite'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
 import {JoinRequestEmbedBody} from '#/components/Post/Embed/JoinRequestEmbed'
+import {app} from '#/lexicons'
 
 /**
  * Renders a chat invite link found in an `app.bsky.embed.external` embed (e.g.

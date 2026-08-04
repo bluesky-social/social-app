@@ -1,9 +1,9 @@
 import {createContext, useContext, useReducer} from 'react'
 import {msg, plural} from '@lingui/core/macro'
 
-import {app} from '#/lexicons'
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import * as Toast from '#/components/Toast'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const

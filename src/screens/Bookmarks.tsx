@@ -1,5 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
+import {type $Typed} from '@atproto/lex'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -9,9 +10,6 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 
-import {type $Typed} from '@atproto/lex'
-import * as bsky from '#/types/bsky'
-import {app} from '#/lexicons'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {
@@ -36,6 +34,8 @@ import * as toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>
 

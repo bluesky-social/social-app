@@ -1,6 +1,7 @@
 import {type $Typed} from '@atproto/lex'
-import {app, chat} from '#/lexicons'
+
 import type * as Dialog from '#/components/Dialog'
+import {app, chat} from '#/lexicons'
 
 export type ReportSubjectConvoMessage = {
   view: 'convo' | 'message'

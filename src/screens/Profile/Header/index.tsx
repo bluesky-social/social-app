@@ -21,7 +21,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Header} from '#/components/Layout'
 import * as ProfileCard from '#/components/ProfileCard'
 import {IS_NATIVE} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {
   HeaderLabelerButtons,
   ProfileHeaderLabeler,

@@ -2,7 +2,6 @@ import {useMemo, useState} from 'react'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {app} from '#/lexicons'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {
   type CommonNavigatorParams,
@@ -17,6 +16,7 @@ import {List} from '#/view/com/util/List'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import * as Layout from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {app} from '#/lexicons'
 
 function renderItem({
   item,

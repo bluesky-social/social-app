@@ -2,13 +2,13 @@ import {View} from 'react-native'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {app} from '#/lexicons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type Shadow} from '#/state/cache/types'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme} from '#/alf'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 
 export function ProfileHeaderMetrics({
   profile,

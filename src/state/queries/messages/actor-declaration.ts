@@ -5,7 +5,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {usePdsClient, useSession} from '#/state/session'
 import {resolveAllowGroupInvites} from '#/components/dms/util'
-import {app, chat, com} from '#/lexicons'
+import {type app, chat, com} from '#/lexicons'
 import {RQKEY as PROFILE_RKEY} from '../profile'
 
 export function useUpdateActorDeclaration({

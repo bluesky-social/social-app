@@ -1,10 +1,10 @@
 import type * as AgeRange from 'expo-age-range'
 import {toDatetimeString} from '@atproto/syntax'
 
-import {app} from '#/lexicons'
 import {type OtherRequiredData} from '#/ageAssurance/data'
 import {IS_DEV, IS_E2E} from '#/env'
 import {type Geolocation} from '#/geolocation'
+import {app} from '#/lexicons'
 
 export const enabled = (IS_DEV && false) || IS_E2E
 

@@ -1,14 +1,12 @@
 import {useCallback} from 'react'
+import {type $Typed} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
 import {type QueryClient, useQueryClient} from '@tanstack/react-query'
 
 import {
   dangerousGetPostShadow,
   updatePostShadow,
 } from '#/state/cache/post-shadow'
-import {type $Typed} from '@atproto/lex'
-import {AtUri} from '@atproto/syntax'
-import * as bsky from '#/types/bsky'
-import {app} from '#/lexicons'
 import {findAllPostsInQueryData as findAllPostsInBookmarksQueryData} from '#/state/queries/bookmarks/useBookmarksQuery'
 import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/queries/notifications/feed'
@@ -31,6 +29,8 @@ import {
   embedViewRecordToPostView,
   getEmbeddedPost,
 } from '#/state/queries/util'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export function createCacheMutator({
   queryClient,

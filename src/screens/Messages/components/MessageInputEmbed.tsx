@@ -1,11 +1,11 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, View} from 'react-native'
-import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {AtUri} from '@atproto/syntax'
 import {moderatePost} from '@bsky.app/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 
-import {AtUri} from '@atproto/syntax'
 import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
 import {

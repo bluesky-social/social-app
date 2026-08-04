@@ -1,9 +1,9 @@
 import {type ModerationCause, type ModerationUI} from '@bsky.app/sdk/moderation'
 
-import {app} from '#/lexicons'
 import {unique} from '#/lib/moderation'
 import {type AppModerationCause} from '#/components/Pills'
 import {Features, features} from '#/analytics/features'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export const POST_META_NO_CONTENT_OFFSET = {paddingTop: 10}

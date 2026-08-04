@@ -5,8 +5,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import * as bsky from '#/types/bsky'
-import {app} from '#/lexicons'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {type ComposerOptsPostRef} from '#/state/shell/composer'
@@ -15,6 +13,8 @@ import {atoms as a, useTheme, utils, web} from '#/alf'
 import {QuoteEmbed} from '#/components/Post/Embed'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {parseEmbed} from '#/types/bsky/post'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {

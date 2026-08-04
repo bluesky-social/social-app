@@ -5,10 +5,10 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import * as bsky from '#/types/bsky'
 import {logger} from '#/logger'
 import {useChatClient} from '#/state/session'
 import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
 import {listConvoMembersQueryKey} from './list-convo-members'

@@ -6,7 +6,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {app} from '#/lexicons'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {type ListMethods} from '#/view/com/util/List'
 import {
@@ -22,6 +21,7 @@ import {
 } from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 
 function keyExtractor(
   item: app.bsky.actor.defs.ProfileViewBasic | app.bsky.feed.defs.GeneratorView,

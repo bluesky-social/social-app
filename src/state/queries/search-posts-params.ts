@@ -1,14 +1,13 @@
-import {app} from '#/lexicons'
 /*
  * Pure helpers for lifting structured `app.bsky.feed.searchPosts` params out of
  * a free-text query. Kept free of React Native imports so it can be unit
  * tested in isolation (the search-posts query hook re-exports these).
  */
-
 import {
   filtersToApiParams,
   type SearchFilters,
 } from '#/screens/Search/searchParams'
+import {app} from '#/lexicons'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}/
 

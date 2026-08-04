@@ -1,6 +1,6 @@
-import {type UriString} from '@atproto/lex'
 import {useMemo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {type UriString} from '@atproto/lex'
 
 import {cleanError} from '#/lib/strings/errors'
 import {

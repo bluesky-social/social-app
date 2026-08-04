@@ -1,5 +1,5 @@
 import {useMemo, useRef} from 'react'
-import {type AtUriString, AtUri} from '@atproto/syntax'
+import {AtUri} from '@atproto/syntax'
 import {moderatePost} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -9,8 +9,6 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import * as bsky from '#/types/bsky'
-import {app} from '#/lexicons'
 import {CustomFeedAPI} from '#/lib/api/feed/custom'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner} from '#/lib/api/feed-manip'
@@ -27,6 +25,8 @@ import {
   getEmbeddedPost,
 } from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const RQKEY_ROOT = 'feed-previews'
 const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds]
@@ -142,7 +142,7 @@ export function useFeedPreviews(
       const feed = feeds[pageParam]
       const api = new CustomFeedAPI({
         client,
-        feedParams: {feed: feed.uri as AtUriString},
+        feedParams: {feed: feed.uri},
         userInterests,
       })
       const data = await api.fetch({cursor: undefined, limit: LIMIT})

@@ -6,7 +6,6 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {app} from '#/lexicons'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -27,6 +26,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function LiveStatusDialog({
