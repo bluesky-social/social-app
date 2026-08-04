@@ -61,7 +61,7 @@ export function ThreadItemPostNumber({
           message: `Post ${index} of ${count}`,
           context: 'post-number-in-thread',
           comment:
-            "Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5",
+            "Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'",
         })}
         accessibilityHint=""
         style={[
