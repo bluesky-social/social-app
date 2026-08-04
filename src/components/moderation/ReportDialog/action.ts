@@ -1,4 +1,5 @@
 import {type AtUriString, type DidString} from '@atproto/syntax'
+import {api} from '@bsky.app/sdk'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
@@ -9,7 +10,6 @@ import {com} from '#/lexicons'
 import {NEW_TO_OLD_REASONS_MAP, REPORT_MOD_TOOL_NAME} from './const'
 import {type ReportState} from './state'
 import {type ParsedReportSubject} from './types'
-import {BSKY_LABELER_DID} from '@atproto/api'
 
 type ReportInput = com.atproto.moderation.createReport.$InputBody
 
@@ -121,7 +121,7 @@ export function useSubmitReportMutation() {
         state.includeVideoTimestamp &&
         videoTimestampSeconds != null &&
         subject.type === 'post' &&
-        labeler.creator.did === BSKY_LABELER_DID
+        labeler.creator.did === api.moderation.did
           ? {videoTimestampSeconds}
           : undefined
 
