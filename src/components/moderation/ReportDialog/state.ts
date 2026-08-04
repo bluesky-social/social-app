@@ -124,7 +124,7 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
       }
     case 'selectOption': {
       const isNcii =
-        action.option.reason === tools.ozone.report.defs.reasonSexualNCII
+        action.option.reason === tools.ozone.report.defs.reasonSexualNCII.value
       return {
         ...state,
         selectedOption: action.option,

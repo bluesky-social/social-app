@@ -3,6 +3,7 @@ import {AppState} from 'react-native'
 import {type Client} from '@atproto/lex'
 import {type AtIdentifierString, type AtUriString, AtUri} from '@atproto/syntax'
 import {
+  moderatePost,
   type ModerationDecision,
   type ModerationPrefs,
 } from '@bsky.app/sdk/moderation'
@@ -28,7 +29,6 @@ import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
-import {moderatePost} from '#/lib/moderation/subjects'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
@@ -78,7 +78,7 @@ export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
 
 export interface FeedPostSliceItem {
   _reactKey: string
-  uri: string
+  uri: AtUriString
   post: app.bsky.feed.defs.PostView
   record: app.bsky.feed.post.Main
   moderation: ModerationDecision

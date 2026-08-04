@@ -1,9 +1,8 @@
-import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {moderatePost, type ModerationOpts} from '@bsky.app/sdk/moderation'
 
 import {type $Typed} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
 import {app} from '#/lexicons'
-import {moderatePost} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
   type ApiThreadItem,

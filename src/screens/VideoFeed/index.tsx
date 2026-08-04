@@ -54,7 +54,6 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {
@@ -831,7 +830,7 @@ function Overlay({
     : undefined
   const richText = new RichTextAPI({
     text: record?.text || '',
-    facets: asSdkFacets(record?.facets),
+    facets: record?.facets,
   })
   const handle = sanitizeHandle(post.author.handle, '@')
 

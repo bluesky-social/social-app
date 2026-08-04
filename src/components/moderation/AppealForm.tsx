@@ -50,7 +50,7 @@ export function AppealForm({
       await client.call(
         com.atproto.moderation.createReport,
         {
-          reasonType: tools.ozone.report.defs.reasonAppeal,
+          reasonType: tools.ozone.report.defs.reasonAppeal.value,
           /*
            * `useLabelSubject` derives one shape or the other from the label's
            * `cid`: an at-uri plus cid for a record, or the label's `uri` reused

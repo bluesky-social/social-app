@@ -8,7 +8,7 @@ import {Plural, Trans} from '@lingui/react/macro'
 import {app} from '#/lexicons'
 import {cleanError} from '#/lib/strings/errors'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
-import {asSdkFacets, richTextToString} from '#/lib/strings/rich-text-helpers'
+import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
 import {type ImageMeta} from '#/state/gallery'
@@ -169,7 +169,7 @@ function DialogInner({
     // We want to be working with a blank state here, so let's get the
     // serialized version and turn it back into a RichText
     const serialized = richTextToString(
-      new RichTextAPI({text, facets: asSdkFacets(facets)}),
+      new RichTextAPI({text, facets: facets}),
       false,
     )
 

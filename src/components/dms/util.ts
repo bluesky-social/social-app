@@ -1,10 +1,9 @@
-import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 
 import {type $Typed} from '@atproto/lex'
 import {chat} from '#/lexicons'
 import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
-import {moderateProfile} from '#/lib/moderation/subjects'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/profile-shadow'
 import {type ConvoState, ConvoStatus} from '#/state/messages/convo/types'

@@ -21,7 +21,6 @@ import {
   type NavigationProp,
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
-import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
@@ -413,7 +412,7 @@ function Header({
   const richText = record.description
     ? new RichTextAPI({
         text: record.description,
-        facets: asSdkFacets(record.descriptionFacets),
+        facets: record.descriptionFacets,
       })
     : undefined
 

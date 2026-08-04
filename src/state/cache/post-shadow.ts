@@ -1,3 +1,4 @@
+import {type AtUriString} from '@atproto/syntax'
 import {useEffect, useMemo, useState} from 'react'
 import {type QueryClient} from '@tanstack/react-query'
 import {EventEmitter} from 'eventemitter3'
@@ -15,9 +16,13 @@ import {findAllPostsInQueryData as findAllPostsInThreadV2QueryData} from '#/stat
 import {castAsShadow, type Shadow} from './types'
 export type {Shadow} from './types'
 
+/**
+ * `'pending'` is the optimistic sentinel written before the real record uri
+ * comes back, so the two uri slots admit it alongside a real at-uri.
+ */
 export interface PostShadow {
-  likeUri: string | undefined
-  repostUri: string | undefined
+  likeUri: AtUriString | 'pending' | undefined
+  repostUri: AtUriString | 'pending' | undefined
   isDeleted: boolean
   embed:
     | app.bsky.embed.record.View
@@ -130,7 +135,12 @@ function mergeShadow(
       (bsky.isType(app.bsky.embed.recordWithMedia.view, post.embed) &&
         bsky.isType(app.bsky.embed.recordWithMedia.view, shadow.embed))
     ) {
-      embed = shadow.embed
+      /*
+       * `isType` asserts a present, matching `$type` at runtime but narrows to
+       * the schema's input type, whose `$type` is optional - so the value does
+       * not satisfy the `$Typed` arm of `PostView['embed']` without this cast.
+       */
+      embed = shadow.embed as typeof post.embed
     }
   }
 
@@ -143,8 +153,15 @@ function mergeShadow(
     bookmarkCount: bookmarkCount,
     viewer: {
       ...(post.viewer || {}),
-      like: 'likeUri' in shadow ? shadow.likeUri : post.viewer?.like,
-      repost: 'repostUri' in shadow ? shadow.repostUri : post.viewer?.repost,
+      /*
+       * The optimistic `'pending'` sentinel is not a real at-uri; consumers only
+       * test these for presence while the write is in flight.
+       */
+      like: (('likeUri' in shadow ? shadow.likeUri : post.viewer?.like) ??
+        undefined) as AtUriString | undefined,
+      repost: (('repostUri' in shadow
+        ? shadow.repostUri
+        : post.viewer?.repost) ?? undefined) as AtUriString | undefined,
       pinned: 'pinned' in shadow ? shadow.pinned : post.viewer?.pinned,
       bookmarked:
         'bookmarked' in shadow ? shadow.bookmarked : post.viewer?.bookmarked,

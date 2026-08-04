@@ -1,14 +1,19 @@
+import {type DidString} from '@atproto/syntax'
 import {describe, expect, it, jest} from '@jest/globals'
 
-import {groupNotifications} from '../util'
 import {app} from '#/lexicons'
+import {type Notification} from '../types'
+import {groupNotifications} from '../util'
 
 jest.mock('#/state/queries/profile', () => ({precacheProfile: jest.fn()}))
 
-type Notification = app.bsky.notification.listNotifications.Notification
-
+/*
+ * Fixture builder. The generated view brands `did`/`uri`/`cid`/`indexedAt`, and
+ * these are plain test strings, so the whole literal is asserted once - the
+ * grouping logic under test only compares them as strings.
+ */
 function makeFollowNotification(
-  did: string,
+  did: DidString,
   starterPackUri?: string,
 ): Notification {
   return {
@@ -31,7 +36,7 @@ function makeFollowNotification(
       : undefined,
     isRead: false,
     indexedAt: '2026-07-28T12:00:00.000Z',
-  }
+  } as Notification
 }
 
 describe('groupNotifications', () => {

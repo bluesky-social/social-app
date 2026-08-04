@@ -44,7 +44,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnUI} from 'react-native-worklets'
 import * as FileSystem from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {type Client} from '@atproto/lex'
+import {type Client, type UriString} from '@atproto/lex'
 import {type AtUriString, AtUri} from '@atproto/syntax'
 import {type RichText} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
@@ -52,6 +52,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueries, useQueryClient} from '@tanstack/react-query'
 
+import {matchXrpcError} from '#/lib/xrpc-error'
 import * as bsky from '#/types/bsky'
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
@@ -766,7 +767,9 @@ export const ComposePost = ({
 
   const getDraftSaveError = useCallback(
     (e: unknown): string => {
-      if (e instanceof app.bsky.draft.createDraft.DraftLimitReachedError) {
+      if (
+        matchXrpcError(e, app.bsky.draft.createDraft) === 'DraftLimitReached'
+      ) {
         return l`You've reached the maximum number of drafts`
       }
       return l`Failed to save draft`
@@ -1676,7 +1679,7 @@ let ComposerPost = memo(function ComposerPost({
 
   const onNewLink = useCallback(
     (uri: string) => {
-      dispatchPost({type: 'embed_add_uri', uri})
+      dispatchPost({type: 'embed_add_uri', uri: uri as UriString})
     },
     [dispatchPost],
   )

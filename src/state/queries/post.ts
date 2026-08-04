@@ -190,7 +190,7 @@ function usePostLikeMutation(
   const pdsClient = usePdsClient()
   const ax = useAnalytics()
   return useMutation<
-    {uri: string}, // responds with the uri of the like
+    {uri: AtUriString}, // responds with the uri of the like
     Error,
     {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({
@@ -319,7 +319,7 @@ function usePostRepostMutation(
   const pdsClient = usePdsClient()
   const ax = useAnalytics()
   return useMutation<
-    {uri: string}, // responds with the uri of the repost
+    {uri: AtUriString}, // responds with the uri of the repost
     Error,
     {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({

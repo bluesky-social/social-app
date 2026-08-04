@@ -43,7 +43,7 @@ export function ListHiddenScreen({
   const goBack = useGoBack()
   const queryClient = useQueryClient()
 
-  const isModList = list.purpose === app.bsky.graph.defs.modlist
+  const isModList = list.purpose === app.bsky.graph.defs.modlist.value
 
   const [isProcessing, setIsProcessing] = useState(false)
   const listBlockMutation = useListBlockMutation()

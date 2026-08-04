@@ -60,7 +60,7 @@ export function DialogInner({
         await client.call(
           com.atproto.moderation.createReport,
           {
-            reasonType: tools.ozone.report.defs.reasonAppeal,
+            reasonType: tools.ozone.report.defs.reasonAppeal.value,
             subject: {
               $type: 'com.atproto.repo.strongRef',
               // a status view's uri is an at-uri produced by the appview

@@ -1,11 +1,11 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {app} from '#/lexicons'
-import {moderateProfile} from '#/lib/moderation/subjects'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'

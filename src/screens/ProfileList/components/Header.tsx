@@ -8,7 +8,6 @@ import {Trans} from '@lingui/react/macro'
 import {app} from '#/lexicons'
 import {useHaptics} from '#/lib/haptics'
 import {makeListLink} from '#/lib/routes/links'
-import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {logger} from '#/logger'
 import {useListBlockMutation, useListMuteMutation} from '#/state/queries/list'
 import {
@@ -40,8 +39,8 @@ export function Header({
   const {_} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const isCurateList = list.purpose === app.bsky.graph.defs.curatelist
-  const isModList = list.purpose === app.bsky.graph.defs.modlist
+  const isCurateList = list.purpose === app.bsky.graph.defs.curatelist.value
+  const isModList = list.purpose === app.bsky.graph.defs.modlist.value
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const playHaptic = useHaptics()
@@ -130,7 +129,7 @@ export function Header({
       list.description
         ? new RichTextAPI({
             text: list.description,
-            facets: asSdkFacets(list.descriptionFacets),
+            facets: list.descriptionFacets,
           })
         : undefined,
     [list],

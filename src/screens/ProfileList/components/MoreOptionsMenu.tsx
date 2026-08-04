@@ -58,8 +58,8 @@ export function MoreOptionsMenu({
   const {mutateAsync: muteList} = useListMuteMutation()
   const {mutateAsync: blockList} = useListBlockMutation()
 
-  const isCurateList = list.purpose === app.bsky.graph.defs.curatelist
-  const isModList = list.purpose === app.bsky.graph.defs.modlist
+  const isCurateList = list.purpose === app.bsky.graph.defs.curatelist.value
+  const isModList = list.purpose === app.bsky.graph.defs.modlist.value
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const isPinned = Boolean(savedFeedConfig?.pinned)

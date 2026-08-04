@@ -1,15 +1,14 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {moderatePost} from '@bsky.app/sdk/moderation'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {type $Typed} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
 import {app} from '#/lexicons'
-import {moderatePost} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
-import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {getChatInviteCodeFromUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
@@ -287,7 +286,7 @@ export function QuoteEmbed({
     if (!bsky.isType(app.bsky.feed.post, quote.record)) return undefined
     const {text, facets} = quote.record
     return text.trim()
-      ? new RichTextAPI({text: text, facets: asSdkFacets(facets)})
+      ? new RichTextAPI({text: text, facets: facets})
       : undefined
   }, [quote.record])
 

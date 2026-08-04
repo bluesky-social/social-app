@@ -1,6 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
+  moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
 } from '@bsky.app/sdk/moderation'
@@ -12,7 +13,6 @@ import {chat} from '#/lexicons'
 import {GestureActionView} from '#/lib/custom-animations/GestureActionView'
 import {useHaptics} from '#/lib/haptics'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {moderateProfile} from '#/lib/moderation/subjects'
 import {decrementBadgeCount} from '#/lib/notifications/notifications'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {

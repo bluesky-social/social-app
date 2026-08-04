@@ -69,8 +69,8 @@ export function PwiOptOut() {
 
         return existing
       },
-      checkCommitted: res => {
-        const exists = !!res.data.labels?.some(
+      checkCommitted: profile => {
+        const exists = !!profile.labels?.some(
           l => l.val === '!no-unauthenticated',
         )
         return exists === wasAdded

@@ -1,18 +1,17 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, View} from 'react-native'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {moderatePost} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 
 import {AtUri} from '@atproto/syntax'
 import {HITSLOP_20} from '#/lib/constants'
-import {moderatePost} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {
   convertBskyAppUrlIfNeeded,
   getChatInviteCodeFromUrl,
@@ -168,7 +167,7 @@ function MessageInputPostEmbed({
       return {
         rt: new RichTextAPI({
           text: post.record.text,
-          facets: asSdkFacets(post.record.facets),
+          facets: post.record.facets,
         }),
         record: post.record,
       }

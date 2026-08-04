@@ -1,5 +1,3 @@
-import {AppBskyFeedPost} from '@atproto/api'
-
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
@@ -165,44 +163,5 @@ describe('types/bsky lexicon schema helpers (#/lexicons)', () => {
         'hello world',
       )
     })
-  })
-})
-
-describe('types/bsky validator helpers (@atproto/api)', () => {
-  it('dangerousIsType accepts the right $type without validating the body', () => {
-    expect(
-      bsky.dangerousIsType<AppBskyFeedPost.Record>(
-        validPost,
-        AppBskyFeedPost.isRecord,
-      ),
-    ).toBe(true)
-    // Right $type, invalid body - still passes the fast guard.
-    expect(
-      bsky.dangerousIsType<AppBskyFeedPost.Record>(
-        invalidPost,
-        AppBskyFeedPost.isRecord,
-      ),
-    ).toBe(true)
-    expect(
-      bsky.dangerousIsType<AppBskyFeedPost.Record>(
-        wrongType,
-        AppBskyFeedPost.isRecord,
-      ),
-    ).toBe(false)
-  })
-
-  it('validate fully validates the body', () => {
-    expect(
-      bsky.validate<AppBskyFeedPost.Record>(
-        validPost,
-        AppBskyFeedPost.validateRecord,
-      ),
-    ).toBe(true)
-    expect(
-      bsky.validate<AppBskyFeedPost.Record>(
-        invalidPost,
-        AppBskyFeedPost.validateRecord,
-      ),
-    ).toBe(false)
   })
 })

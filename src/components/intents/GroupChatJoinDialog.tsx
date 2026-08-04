@@ -1,12 +1,12 @@
 import {useEffect} from 'react'
 import {View} from 'react-native'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import * as bsky from '#/types/bsky'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {moderateProfile} from '#/lib/moderation/subjects'
 import {useCallOnce} from '#/lib/once'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'

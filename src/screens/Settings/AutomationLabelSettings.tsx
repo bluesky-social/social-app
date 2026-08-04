@@ -79,8 +79,8 @@ export function AutomationLabelSettingsScreen({}: Props) {
 
           return existing
         },
-        checkCommitted: res => {
-          const exists = !!res.data.labels?.some(l => l.val === 'bot')
+        checkCommitted: profile => {
+          const exists = !!profile.labels?.some(l => l.val === 'bot')
           return exists === wasAdded
         },
       },

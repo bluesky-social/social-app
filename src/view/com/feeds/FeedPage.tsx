@@ -77,7 +77,7 @@ export function FeedPage({
   const isVideoFeed = useMemo(() => {
     const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
     const feedIsVideoMode =
-      feedInfo.contentMode === app.bsky.feed.defs.contentModeVideo
+      feedInfo.contentMode === app.bsky.feed.defs.contentModeVideo.value
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
     return IS_NATIVE && _isVideoFeed
   }, [feedInfo])

@@ -10,7 +10,6 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {niceDate} from '#/lib/strings/time'
 import {
   POST_TOMBSTONE,
@@ -196,7 +195,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     () =>
       new RichTextAPI({
         text: record.text,
-        facets: asSdkFacets(record.facets),
+        facets: record.facets,
       }),
     [record],
   )

@@ -1,7 +1,8 @@
 import {useMemo} from 'react'
 import {retry} from '@atproto/common-web'
-import {type l, type $Typed} from '@atproto/lex'
+import {type $Typed, type l, type UriString} from '@atproto/lex'
 import {type AtIdentifierString, AtUri, toDatetimeString} from '@atproto/syntax'
+import {moderateStatus} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
@@ -10,7 +11,6 @@ import {isAfter, parseISO} from 'date-fns'
 import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
-import {moderateStatus} from '#/lib/moderation/subjects'
 import {matchXrpcError} from '#/lib/xrpc-error'
 import {useAppConfig} from '#/state/appConfig'
 import {
@@ -335,7 +335,7 @@ export function useUpsertLiveStatusMutation(
             $type: 'app.bsky.actor.defs#statusView',
             status: 'app.bsky.actor.status#live',
             isActive: true,
-            expiresAt: expiresAt.toISOString(),
+            expiresAt: toDatetimeString(expiresAt),
             embed:
               record.embed && image
                 ? {
@@ -343,7 +343,8 @@ export function useUpsertLiveStatusMutation(
                     external: {
                       ...record.embed.external,
                       $type: 'app.bsky.embed.external#viewExternal',
-                      thumb: image,
+                      // an opengraph image URL from link resolution
+                      thumb: image as UriString,
                     },
                   }
                 : undefined,

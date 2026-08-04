@@ -1,5 +1,6 @@
+import {toDatetimeString} from '@atproto/syntax'
 import {useCallback} from 'react'
-import {type Client, type $Typed} from '@atproto/lex'
+import {type $Typed, type Client, type Unknown$TypedObject} from '@atproto/lex'
 import {type QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import * as bsky from '#/types/bsky'
@@ -22,10 +23,10 @@ export type KnownChatInvitePreview =
   | $Typed<chat.bsky.group.defs.InvalidJoinLinkPreviewView>
 
 /**
- * The full open-union shape, including the `{$type: string}` fallback for
- * future variants.
+ * The full open-union shape, including lex's `Unknown$TypedObject` fallback for
+ * unrecognized future variants.
  */
-export type ChatInvitePreview = KnownChatInvitePreview | {$type: string}
+export type ChatInvitePreview = KnownChatInvitePreview | Unknown$TypedObject
 
 /**
  * Narrows a preview to one of the three known variants, filtering out the
@@ -112,7 +113,9 @@ export function setJoinLinkPreviewRequestedForCode(
               ...preview,
               viewer: {
                 ...preview.viewer,
-                requestedAt: requested ? new Date().toISOString() : undefined,
+                requestedAt: requested
+                  ? toDatetimeString(new Date())
+                  : undefined,
               },
             }
           }

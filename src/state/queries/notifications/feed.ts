@@ -26,8 +26,8 @@ import {
 } from '@tanstack/react-query'
 
 import {AtUri} from '@atproto/syntax'
+import {moderatePost} from '@bsky.app/sdk/moderation'
 import {app} from '#/lexicons'
-import {moderatePost} from '#/lib/moderation/subjects'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'

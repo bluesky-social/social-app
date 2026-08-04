@@ -1,3 +1,4 @@
+import {type DidString, toDatetimeString} from '@atproto/syntax'
 import {type Client, XrpcResponseError, type $Typed} from '@atproto/lex'
 import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
@@ -97,7 +98,7 @@ export class Convo {
 
   private chatClient: Client
   private events: MessagesEventBus
-  private senderUserDid: string
+  private senderUserDid: DidString
 
   private status: ConvoStatus = ConvoStatus.Uninitialized
   private error: ConvoError | undefined
@@ -1420,7 +1421,7 @@ export class Convo {
           $type: 'chat.bsky.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',
-          sentAt: new Date().toISOString(),
+          sentAt: toDatetimeString(new Date()),
           sender: {
             $type: 'chat.bsky.convo.defs#messageViewSender',
             did: this.senderUserDid,
@@ -1462,10 +1463,10 @@ export class Convo {
    * @param emoji - must be one grapheme
    */
   async addReaction(messageId: string, emoji: string) {
-    const optimisticReaction = {
+    const optimisticReaction: chat.bsky.convo.defs.ReactionView = {
       value: emoji,
       sender: {did: this.senderUserDid},
-      createdAt: new Date().toISOString(),
+      createdAt: toDatetimeString(new Date()),
     }
     let restore: null | (() => void) = null
     if (this.pastMessages.has(messageId)) {

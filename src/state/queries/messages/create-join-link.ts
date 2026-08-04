@@ -1,3 +1,4 @@
+import {toDatetimeString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import * as bsky from '#/types/bsky'
@@ -52,7 +53,7 @@ export function useCreateJoinLink(
               enabledStatus: 'enabled',
               joinRule,
               requireApproval,
-              createdAt: new Date().toISOString(),
+              createdAt: toDatetimeString(new Date()),
             },
           },
         }

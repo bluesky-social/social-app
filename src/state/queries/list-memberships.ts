@@ -28,14 +28,14 @@ export function useListMembershipAddMutation({
    * Needed for optimistic update of starter pack query
    */
   subject?: bsky.profile.AnyProfileView
-  onSuccess?: (data: {uri: string; cid: string}) => void
+  onSuccess?: (data: {uri: AtUriString; cid: string}) => void
   onError?: (error: Error) => void
 } = {}) {
   const {currentAccount} = useSession()
   const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   return useMutation<
-    {uri: string; cid: string},
+    {uri: AtUriString; cid: string},
     Error,
     {listUri: string; actorDid: string}
   >({

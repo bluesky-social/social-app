@@ -6,6 +6,7 @@ import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {AtUri} from '@atproto/syntax'
+import {getErrorName, getErrorStatus} from '#/lib/xrpc-error'
 import {app} from '#/lexicons'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -238,15 +239,21 @@ function detectKnownError(
   if (!error) {
     return undefined
   }
+  /*
+   * Both names are declared by `app.bsky.feed.getAuthorFeed` AND
+   * `.getActorLikes`, and this helper takes an error from an arbitrary feed
+   * descriptor, so the source method is ambiguous - hence the untyped
+   * `getErrorName` check rather than `matchXrpcError`.
+   */
   if (
-    error instanceof app.bsky.feed.getAuthorFeed.BlockedActorError ||
-    error instanceof app.bsky.feed.getAuthorFeed.BlockedByActorError
+    getErrorName(error) === 'BlockedActor' ||
+    getErrorName(error) === 'BlockedByActor'
   ) {
     return KnownError.Block
   }
 
   // check status codes
-  if (error?.status === 429) {
+  if (getErrorStatus(error) === 429) {
     return KnownError.FeedTooManyRequests
   }
 

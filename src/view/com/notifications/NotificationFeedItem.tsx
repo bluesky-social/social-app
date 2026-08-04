@@ -11,6 +11,7 @@ import {
 import {TID} from '@atproto/common-web'
 import {type DidString, AtUri} from '@atproto/syntax'
 import {
+  moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
 } from '@bsky.app/sdk/moderation'
@@ -21,7 +22,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
-import {moderateProfile} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {forceLTR} from '#/lib/strings/bidi'
