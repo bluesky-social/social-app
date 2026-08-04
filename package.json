@@ -63,6 +63,7 @@
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
     "lexicons:generate": "lex build --clear --index-file --import-ext ''",
+    "lexicons:install": "lex install",
     "lexicons:update": "lex install --update",
     "lexicons:verify": "lex install --ci",
     "typecheck": "pnpm run typecheck:ios && pnpm run typecheck:android && pnpm run typecheck:web",

@@ -122,6 +122,11 @@
           "type": "string",
           "format": "datetime"
         },
+        "starterPack": {
+          "ref": "app.bsky.graph.defs#starterPackViewBasic",
+          "type": "ref",
+          "description": "The starter pack associated with this notification. Present when the notification is for a follow originating from a starter pack."
+        },
         "reasonSubject": {
           "type": "string",
           "format": "at-uri"
