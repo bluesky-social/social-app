@@ -127,23 +127,17 @@ function StepCaptchaInner({
         value: _(msg`Error receiving captcha response.`),
       })
       ax.metric('signup:captchaFailure', {})
-      logger.error('Signup Flow Error', {
-        registrationHandle: state.handle,
-        error,
+      logger.error('Signup: captcha response error', {
+        safeMessage: error,
       })
     },
-    [_, ax, dispatch, state.handle],
+    [_, ax, dispatch],
   )
 
   const onBackPress = useCallback(() => {
-    logger.error('Signup Flow Error', {
-      errorMessage:
-        'User went back from captcha step. Possibly encountered an error.',
-      registrationHandle: state.handle,
-    })
-
+    ax.metric('signup:captchaBackPress', {})
     dispatch({type: 'prev'})
-  }, [dispatch, state.handle])
+  }, [ax, dispatch])
 
   return (
     <>

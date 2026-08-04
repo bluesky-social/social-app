@@ -1,3 +1,5 @@
+import {AbortError} from '#/lib/async/cancelable'
+import {MultipartUploadError} from './api'
 import {type ChunkReader, type UploadPartFn} from './types'
 import {uploadParts} from './uploadParts'
 
@@ -65,7 +67,7 @@ describe('uploadParts', () => {
       const n = (attemptsByPart.get(part.partNumber) ?? 0) + 1
       attemptsByPart.set(part.partNumber, n)
       if (part.partNumber === 2 && n === 1) {
-        return Promise.reject(new Error('transient'))
+        return Promise.reject(new TypeError('transient network error'))
       }
       return Promise.resolve({
         partNumber: part.partNumber,
@@ -86,9 +88,59 @@ describe('uploadParts', () => {
     expect(results).toHaveLength(3)
   })
 
+  it('retries rate-limited parts', async () => {
+    let attempts = 0
+    const uploadPart: UploadPartFn = ({part}) => {
+      attempts++
+      if (attempts === 1) {
+        return Promise.reject(
+          new MultipartUploadError('rate limited', 'RateLimitExceeded', 429),
+        )
+      }
+      return Promise.resolve({
+        partNumber: part.partNumber,
+        sizeBytes: part.size,
+      })
+    }
+
+    await uploadParts({
+      parts: parts.slice(0, 1),
+      reader: fakeReader(),
+      uploadPart,
+      totalBytes: 10,
+      setProgress: () => {},
+      signal: new AbortController().signal,
+    })
+
+    expect(attempts).toBe(2)
+  })
+
+  it('does not retry a non-retryable response', async () => {
+    const uploadPart = jest.fn<
+      ReturnType<UploadPartFn>,
+      Parameters<UploadPartFn>
+    >(() =>
+      Promise.reject(
+        new MultipartUploadError('bad request', 'InvalidRequest', 400),
+      ),
+    )
+
+    await expect(
+      uploadParts({
+        parts: parts.slice(0, 1),
+        reader: fakeReader(),
+        uploadPart,
+        totalBytes: 10,
+        setProgress: () => {},
+        signal: new AbortController().signal,
+      }),
+    ).rejects.toThrow('bad request')
+    expect(uploadPart).toHaveBeenCalledTimes(1)
+  })
+
   it('throws after exhausting attempts', async () => {
     const uploadPart: UploadPartFn = () =>
-      Promise.reject(new Error('always fails'))
+      Promise.reject(new TypeError('always fails'))
 
     await expect(
       uploadParts({
@@ -101,6 +153,32 @@ describe('uploadParts', () => {
         maxAttempts: 2,
       }),
     ).rejects.toThrow('always fails')
+  })
+
+  it('preserves the originating error when sibling workers abort', async () => {
+    const uploadPart: UploadPartFn = ({part, signal}) => {
+      if (part.partNumber === 1) {
+        return new Promise((_resolve, reject) => {
+          signal.addEventListener('abort', () => reject(new AbortError()), {
+            once: true,
+          })
+        })
+      }
+      return Promise.reject(new Error('part upload failed'))
+    }
+
+    await expect(
+      uploadParts({
+        parts: parts.slice(0, 2),
+        reader: fakeReader(),
+        uploadPart,
+        totalBytes: 20,
+        setProgress: () => {},
+        signal: new AbortController().signal,
+        concurrency: 2,
+        maxAttempts: 1,
+      }),
+    ).rejects.toThrow('part upload failed')
   })
 
   it('reports progress that reaches 1 when all parts complete', async () => {

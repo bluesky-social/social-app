@@ -39,9 +39,9 @@ export const SplashScreen = ({
       logoFill,
       logoShadow: isDarkMode
         ? [
-            t.atoms.shadow_md,
             {
               shadowColor: logoFill,
+              shadowRadius: 8,
               shadowOpacity: 0.5,
               shadowOffset: {
                 width: 0,
@@ -93,13 +93,15 @@ export const SplashScreen = ({
             size="large"
             color={isDarkMode ? 'secondary_inverted' : 'secondary'}
             style={[
-              t.atoms.shadow_md,
               {
+                shadowColor: t.palette.black,
+                shadowRadius: 8,
                 shadowOpacity: 0.1,
                 shadowOffset: {
                   width: 0,
                   height: 5,
                 },
+                elevation: 16,
               },
             ]}>
             <ButtonText>

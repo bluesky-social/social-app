@@ -136,7 +136,7 @@ wait_for_port 1986 "the E2E mock-server manager"
 
 phase "Starting Metro"
 EXPO_PUBLIC_ENV=e2e \
-  NODE_ENV=test \
+  NODE_ENV=development \
   RN_SRC_EXT=e2e.ts,e2e.tsx \
   pnpm exec expo start --dev-client --clear --port 8081 \
   >"$artifact_dir/metro.log" 2>&1 &

@@ -58,14 +58,14 @@ export function UserBanner({
     if (!(await requestCameraAccessIfNeeded())) {
       return
     }
-    onSelectNewBanner?.(
-      await compressIfNeeded(
-        await openCamera({
-          aspect: [3, 1],
-        }),
-        IMAGE_SIZE_CONFIG_2K_1MB,
-      ),
-    )
+    const image = await openCamera({
+      aspect: [3, 1],
+    })
+    if (!image) {
+      return
+    }
+
+    onSelectNewBanner?.(await compressIfNeeded(image, IMAGE_SIZE_CONFIG_2K_1MB))
   }, [onSelectNewBanner, requestCameraAccessIfNeeded])
 
   const onOpenLibrary = useCallback(async () => {

@@ -1,4 +1,12 @@
-import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -151,6 +159,7 @@ type FeedRow =
   | {
       type: 'interstitialFeedTrendingTopics'
       key: string
+      feedSliceIndex: number
     }
   | {
       type: 'interstitialTrendingVideos'
@@ -195,6 +204,10 @@ export function getItemsForFeedback(feedRow: FeedRow): {
   }
 }
 
+export type PostFeedRef = {
+  refreshFeed: () => Promise<void>
+}
+
 // DISABLED need to check if this is causing random feed refreshes -prf
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
@@ -222,6 +235,7 @@ let PostFeed = ({
   savedFeedConfig,
   initialNumToRender: initialNumToRenderOverride,
   isVideoFeed = false,
+  ref,
 }: {
   feed: FeedDescriptor
   description?: RichTextType
@@ -246,6 +260,7 @@ let PostFeed = ({
   initialNumToRender?: number
   isVideoFeed?: boolean
   lastFetchDate?: () => number
+  ref?: React.Ref<PostFeedRef>
 }): React.ReactNode => {
   const ax = useAnalytics()
   const t = useTheme()
@@ -261,6 +276,15 @@ let PostFeed = ({
   const {gtMobile} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
   const areVideoFeedsEnabled = IS_NATIVE
+
+  const trendingIndices = ax.features.getValue(
+    ax.features.TrendingDiscoverValues,
+    {
+      topics: 5,
+      accounts: 15,
+      videos: 30,
+    },
+  )
 
   const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(
     () => new Set<string>(),
@@ -556,19 +580,20 @@ let PostFeed = ({
                         key: 'composerPrompt-' + sliceIndex,
                       })
                     }
-                  } else if (sliceIndex === 1) {
+                  } else if (sliceIndex === trendingIndices.topics) {
                     arr.push({
                       type: 'interstitialFeedTrendingTopics',
                       key: 'interstitialFeedTrendingTopics-' + sliceIndex,
+                      feedSliceIndex: sliceIndex,
                     })
-                  } else if (sliceIndex === 15) {
+                  } else if (sliceIndex === trendingIndices.videos) {
                     if (areVideoFeedsEnabled && !trendingVideoDisabled) {
                       arr.push({
                         type: 'interstitialTrendingVideos',
                         key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                       })
                     }
-                  } else if (sliceIndex === 30) {
+                  } else if (sliceIndex === trendingIndices.accounts) {
                     arr.push({
                       type: 'interstitialFollows',
                       key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
@@ -721,12 +746,14 @@ let PostFeed = ({
     ageAssuranceBannerState,
     isCurrentFeedAtStartupSelected,
     blockedOrMutedAuthors,
+    trendingIndices,
   ])
 
   // events
   // =
+  //
 
-  const onRefresh = useCallback(async () => {
+  const refreshFeed = async () => {
     if (!enabled) return
 
     ax.metric('feed:refresh', {
@@ -734,24 +761,23 @@ let PostFeed = ({
       feedUrl: feed,
       reason: 'pull-to-refresh',
     })
-    setIsPTRing(true)
     try {
       await truncateAndInvalidate(queryClient, RQKEY(feed, feedParams))
       onHasNew?.(false)
     } catch (err) {
       logger.error('Failed to refresh posts feed', {message: err})
     }
+  }
+
+  const onRefresh = async () => {
+    setIsPTRing(true)
+    await refreshFeed()
     setIsPTRing(false)
-  }, [
-    ax,
-    queryClient,
-    setIsPTRing,
-    onHasNew,
-    feed,
-    feedParams,
-    feedType,
-    enabled,
-  ])
+  }
+
+  useImperativeHandle(ref, () => ({
+    refreshFeed,
+  }))
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -834,7 +860,9 @@ let PostFeed = ({
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
       } else if (row.type === 'interstitialFeedTrendingTopics') {
-        return <FeedTrendingTopicsInterstitial />
+        return (
+          <FeedTrendingTopicsInterstitial feedSliceIndex={row.feedSliceIndex} />
+        )
       } else if (row.type === 'liveEventFeedsAndTrendingBanner') {
         return <DiscoverFeedLiveEventFeedsAndTrendingBanner />
       } else if (row.type === 'composerPrompt') {
