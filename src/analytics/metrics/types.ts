@@ -143,6 +143,7 @@ export type Events = {
     selectedInterests: string[]
     selectedInterestsLength: number
   }
+  'onboarding:interests:disabledNextPressed': {}
   'onboarding:suggestedAccounts:tabPressed': {
     tab: string
   }

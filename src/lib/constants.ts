@@ -194,6 +194,7 @@ export const VIDEO_SERVICE = 'https://video.bsky.app'
 export const VIDEO_SERVICE_DID = 'did:web:video.bsky.app'
 
 export const VIDEO_MAX_DURATION_MS = 3 * 60 * 1000 // 3 minutes in milliseconds
+export const VIDEO_10_MINUTE_MAX_DURATION_MS = 10 * 60 * 1000
 /**
  * Maximum size of a video in megabytes, _not_ mebibytes. Backend uses
  * ISO megabytes.

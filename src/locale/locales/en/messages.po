@@ -2805,6 +2805,25 @@ msgstr ""
 msgid "Child Sexual Abuse Material (CSAM)"
 msgstr ""
 
+#: src/screens/Onboarding/StepInterests/index.tsx:79
+#: src/screens/Onboarding/StepInterests/index.tsx:85
+#: src/screens/Onboarding/StepInterests/index.tsx:139
+msgid "Choose an interest"
+msgstr "Choose an interest"
+
+#: src/screens/Onboarding/StepInterests/index.tsx:140
+msgid "Choose at least one interest to continue"
+msgstr "Choose at least one interest to continue"
+
+#: src/screens/Onboarding/StepInterests/index.tsx:150
+#: src/screens/Onboarding/StepInterests/index.tsx:151
+msgid "Choose at least one interest."
+msgstr "Choose at least one interest."
+
+#: src/screens/Onboarding/StepInterests/index.tsx:102
+msgid "Choose at least one. We'll use this to customize your experience. You can change these anytime."
+msgstr "Choose at least one. We'll use this to customize your experience. You can change these anytime."
+
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:401
 msgid "Choose domain verification method"
 msgstr ""
@@ -3273,7 +3292,7 @@ msgstr ""
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:171
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:149
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:152
-#: src/screens/Onboarding/StepInterests/index.tsx:93
+#: src/screens/Onboarding/StepInterests/index.tsx:87
 #: src/screens/Onboarding/StepProfile/index.tsx:301
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:305
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:117
@@ -3302,7 +3321,7 @@ msgstr ""
 msgid "Continue to group name"
 msgstr "Continue to group name"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:90
+#: src/screens/Onboarding/StepInterests/index.tsx:80
 #: src/screens/Onboarding/StepProfile/index.tsx:298
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:302
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:114
@@ -5250,7 +5269,7 @@ msgstr ""
 msgid "File saved successfully!"
 msgstr ""
 
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:31
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:34
 msgid "Filter by author (currently: {currentLabel})"
 msgstr "Filter by author (currently: {currentLabel})"
 
@@ -7440,7 +7459,7 @@ msgstr "Marked all requests as read"
 msgid "Maybe later"
 msgstr ""
 
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:24
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:27
 msgid "Me"
 msgstr "Me"
 
@@ -8059,7 +8078,7 @@ msgid "No app passwords yet"
 msgstr ""
 
 #: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:27
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:30
 msgid "No author filter"
 msgstr "No author filter"
 
@@ -8978,7 +8997,6 @@ msgstr ""
 msgid "People following @{0}"
 msgstr ""
 
-#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:23
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:180
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:184
 msgid "People I follow"
@@ -8991,6 +9009,11 @@ msgstr "People I follow"
 
 #: src/screens/Messages/Settings.tsx:82
 msgctxt "allow messages from"
+msgid "People I follow"
+msgstr "People I follow"
+
+#: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:25
+msgctxt "display posts made by"
 msgid "People I follow"
 msgstr "People I follow"
 
@@ -10939,7 +10962,7 @@ msgstr ""
 msgid "Select your date of birth"
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:69
+#: src/screens/Onboarding/StepInterests/index.tsx:115
 #: src/screens/Settings/InterestsSettings.tsx:178
 msgid "Select your interests from the options below"
 msgstr ""
@@ -14107,7 +14130,7 @@ msgstr "We’d love to hear about your experience testing beta features!"
 msgid "We'll send an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:62
+#: src/screens/Onboarding/StepInterests/index.tsx:107
 msgid "We'll use this to help customize your experience."
 msgstr ""
 
@@ -14221,7 +14244,7 @@ msgstr ""
 msgid "Welcome, friend!"
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:59
+#: src/screens/Onboarding/StepInterests/index.tsx:98
 msgid "What are your interests?"
 msgstr ""
 

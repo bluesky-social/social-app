@@ -14,12 +14,16 @@ import {
   MultipartUploadError,
   startUpload,
 } from './api'
-import {MULTIPART_FINISH_ATTEMPTS} from './constants'
+import {
+  MULTIPART_ABORT_ATTEMPTS,
+  MULTIPART_ABORT_TIMEOUT_MS,
+  MULTIPART_FINISH_ATTEMPTS,
+} from './constants'
 import {getMissingParts, planParts} from './planParts'
 import {createChunkReader} from './readChunk'
 import {createUploadPart} from './uploadPart'
 import {uploadParts} from './uploadParts'
-import {delay, isRetryableMultipartError} from './utils'
+import {delay, isRetryableMultipartError, retryDelayMs} from './utils'
 
 export class MultipartFallbackError extends Error {}
 
@@ -221,7 +225,7 @@ async function abortThenFallbackOrResolve(
   token: string,
   cause: unknown,
 ): Promise<AppBskyVideoDefs.JobStatus> {
-  const result = await abortUpload(jobId, token)
+  const result = await abortUploadWithRetry(jobId, token)
   if (result.state === 'aborted') {
     throw new MultipartFallbackError(
       cause instanceof Error ? cause.message : 'Multipart upload failed',
@@ -236,6 +240,28 @@ async function abortThenFallbackOrResolve(
     result.failureReason || `Multipart upload ${result.state}`,
     result.state === 'failed' ? 'UploadFailed' : undefined,
   )
+}
+
+async function abortUploadWithRetry(jobId: string, token: string) {
+  let lastError: unknown
+  for (let attempt = 1; attempt <= MULTIPART_ABORT_ATTEMPTS; attempt++) {
+    const controller = new AbortController()
+    const timer = setTimeout(
+      () => controller.abort(),
+      MULTIPART_ABORT_TIMEOUT_MS,
+    )
+    try {
+      return await abortUpload(jobId, token, controller.signal)
+    } catch (err) {
+      lastError = err
+      if (attempt < MULTIPART_ABORT_ATTEMPTS) {
+        await delay(retryDelayMs(attempt), new AbortController().signal)
+      }
+    } finally {
+      clearTimeout(timer)
+    }
+  }
+  throw lastError
 }
 
 function createTokenProvider(agent: AtpAgent, signal: AbortSignal) {
