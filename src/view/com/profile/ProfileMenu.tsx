@@ -470,39 +470,20 @@ let ProfileMenu = ({
                     {!profile.viewer?.blocking &&
                       !profile.viewer?.mutedByList && (
                         <>
-                          <Menu.Item
-                            testID="profileHeaderDropdownMuteBtn"
-                            label={
-                              profile.viewer?.muted
-                                ? l`Unmute account`
-                                : l`Mute account`
-                            }
-                            onPress={() => void onPressMuteAccount()}>
-                            <Menu.ItemText>
-                              {profile.viewer?.muted ? (
-                                <Trans>Unmute account</Trans>
-                              ) : (
-                                <Trans>Mute account</Trans>
-                              )}
-                            </Menu.ItemText>
-                            <Menu.ItemIcon
-                              icon={profile.viewer?.muted ? Unmute : Mute}
-                            />
-                          </Menu.Item>
                           {!profile.viewer?.muted && (
                             <Menu.Item
                               testID="profileHeaderDropdownMuteRepostsBtn"
                               label={
                                 profile.viewer?.mutedOnlyReposts
-                                  ? l`Turn on reposts`
-                                  : l`Turn off reposts`
+                                  ? l`Show reposts in feeds`
+                                  : l`Hide reposts in feeds`
                               }
                               onPress={() => void onPressMuteReposts()}>
                               <Menu.ItemText>
                                 {profile.viewer?.mutedOnlyReposts ? (
-                                  <Trans>Turn on reposts</Trans>
+                                  <Trans>Show reposts in feeds</Trans>
                                 ) : (
-                                  <Trans>Turn off reposts</Trans>
+                                  <Trans>Hide reposts in feeds</Trans>
                                 )}
                               </Menu.ItemText>
                               <Menu.ItemIcon icon={Repost} />
@@ -510,6 +491,25 @@ let ProfileMenu = ({
                           )}
                         </>
                       )}
+                    <Menu.Item
+                      testID="profileHeaderDropdownMuteBtn"
+                      label={
+                        profile.viewer?.muted
+                          ? l`Unmute account`
+                          : l`Mute account`
+                      }
+                      onPress={() => void onPressMuteAccount()}>
+                      <Menu.ItemText>
+                        {profile.viewer?.muted ? (
+                          <Trans>Unmute account</Trans>
+                        ) : (
+                          <Trans>Mute account</Trans>
+                        )}
+                      </Menu.ItemText>
+                      <Menu.ItemIcon
+                        icon={profile.viewer?.muted ? Unmute : Mute}
+                      />
+                    </Menu.Item>
                     {!profile.viewer?.blockingByList && (
                       <Menu.Item
                         testID="profileHeaderDropdownBlockBtn"
