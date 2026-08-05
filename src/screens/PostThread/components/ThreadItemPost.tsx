@@ -24,6 +24,10 @@ import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replie
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {
+  hasThreadItemPostNumber,
+  ThreadItemPostNumber,
+} from '#/screens/PostThread/components/ThreadItemPostNumber'
+import {
   LINEAR_AVI_WIDTH,
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
@@ -196,6 +200,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 
   const post = item.value.post
   const record = item.value.post.record
+  const postNumbering = item.value
   const moderation = item.moderation
   const richText = useMemo(
     () =>
@@ -324,15 +329,28 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}
                     shouldProxyLinks={true}
+                    suffix={
+                      !limitLines && hasThreadItemPostNumber(postNumbering) ? (
+                        <ThreadItemPostNumber value={postNumbering} />
+                      ) : undefined
+                    }
                   />
                   {limitLines && (
-                    <ShowMoreTextButton
-                      style={[a.text_md]}
-                      onPress={onPressShowMore}
-                    />
+                    <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                      <ShowMoreTextButton
+                        style={[a.text_md]}
+                        onPress={onPressShowMore}
+                      />
+                      <ThreadItemPostNumber
+                        inline={false}
+                        value={postNumbering}
+                      />
+                    </View>
                   )}
                 </View>
-              ) : undefined}
+              ) : (
+                <ThreadItemPostNumber inline={false} value={postNumbering} />
+              )}
               <TranslatedPost hideTranslateLink post={post} />
               {post.embed && (
                 <View

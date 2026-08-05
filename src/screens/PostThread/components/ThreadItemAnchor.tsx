@@ -31,6 +31,10 @@ import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {KnownLikers, LikesStat} from '#/screens/PostThread/components/LikesStat'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
+  hasThreadItemPostNumber,
+  ThreadItemPostNumber,
+} from '#/screens/PostThread/components/ThreadItemPostNumber'
+import {
   LINEAR_AVI_WIDTH,
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
@@ -184,6 +188,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 
   const post = postShadow
   const record = item.value.post.record
+  const postNumbering = item.value
   const moderation = item.moderation
   const authorShadow = useProfileShadow(post.author)
   const {isActive: live} = useActorStatus(post.author)
@@ -400,8 +405,15 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   style={[a.flex_1, a.text_lg]}
                   authorHandle={post.author.handle}
                   shouldProxyLinks={true}
+                  suffix={
+                    hasThreadItemPostNumber(postNumbering) ? (
+                      <ThreadItemPostNumber value={postNumbering} />
+                    ) : undefined
+                  }
                 />
-              ) : undefined}
+              ) : (
+                <ThreadItemPostNumber inline={false} value={postNumbering} />
+              )}
               <TranslatedPost post={post} postTextStyle={[a.text_lg]} />
               {post.embed && (
                 <View style={[richText?.text ? a.py_xs : []]}>

@@ -23,6 +23,10 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {
+  hasThreadItemPostNumber,
+  ThreadItemPostNumber,
+} from '#/screens/PostThread/components/ThreadItemPostNumber'
+import {
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
   TREE_AVI_WIDTH,
@@ -258,6 +262,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 
   const post = item.value.post
   const record = item.value.post.record
+  const postNumbering = item.value
   const moderation = item.moderation
   const richText = useMemo(
     () =>
@@ -354,15 +359,32 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                         numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                         authorHandle={post.author.handle}
                         shouldProxyLinks={true}
+                        suffix={
+                          !limitLines &&
+                          hasThreadItemPostNumber(postNumbering) ? (
+                            <ThreadItemPostNumber value={postNumbering} />
+                          ) : undefined
+                        }
                       />
                       {limitLines && (
-                        <ShowMoreTextButton
-                          style={[a.text_md]}
-                          onPress={onPressShowMore}
-                        />
+                        <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                          <ShowMoreTextButton
+                            style={[a.text_md]}
+                            onPress={onPressShowMore}
+                          />
+                          <ThreadItemPostNumber
+                            inline={false}
+                            value={postNumbering}
+                          />
+                        </View>
                       )}
                     </View>
-                  ) : null}
+                  ) : (
+                    <ThreadItemPostNumber
+                      inline={false}
+                      value={postNumbering}
+                    />
+                  )}
                   <TranslatedPost hideTranslateLink post={post} />
                   {post.embed && (
                     <View style={[a.pb_xs]}>
