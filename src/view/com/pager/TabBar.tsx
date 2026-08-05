@@ -369,7 +369,7 @@ export function TabBar({
           </Animated.View>
         </ScrollView>
       </BlockDrawerGesture>
-      <View style={[t.atoms.border_contrast_low, styles.outerBottomBorder]} />
+      <View style={[t.atoms.bg_contrast_100, styles.outerBottomBorder]} />
     </View>
   )
 }
@@ -470,6 +470,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: '100%',
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    height: StyleSheet.hairlineWidth,
   },
 })

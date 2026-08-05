@@ -9,6 +9,12 @@
     "paths": {
       "#/*": ["./src/*"],
       "crypto": ["./src/platform/crypto.ts"],
+      /*
+       * expo-file-system 57 ships an `exports` map without `./build/*`, which
+       * blocks the deep type imports in src/platform/misc.web-check.d.ts
+       * under `moduleResolution: "bundler"`. Type-check-only escape hatch.
+       */
+      "expo-file-system/build/*": ["./node_modules/expo-file-system/build/*"],
     },
     "plugins": [
       {

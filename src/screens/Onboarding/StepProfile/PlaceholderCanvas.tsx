@@ -7,15 +7,12 @@ import {
   useRef,
 } from 'react'
 import {View} from 'react-native'
-import type ViewShot from 'react-native-view-shot'
+import {type ViewShotRef} from 'react-native-view-shot'
 
 import {useAvatar} from '#/screens/Onboarding/StepProfile/index'
 import {atoms as a} from '#/alf'
 
-const LazyViewShot = lazy(
-  // @ts-expect-error dynamic import
-  () => import('react-native-view-shot/src/index'),
-)
+const LazyViewShot = lazy(() => import('react-native-view-shot'))
 
 const SIZE_MULTIPLIER = 5
 
@@ -28,7 +25,7 @@ export interface PlaceholderCanvasRef {
 export const PlaceholderCanvas = forwardRef<PlaceholderCanvasRef, {}>(
   function PlaceholderCanvas({}, ref) {
     const {avatar} = useAvatar()
-    const viewshotRef = useRef<ViewShot>(null)
+    const viewshotRef = useRef<ViewShotRef>(null)
     const Icon = avatar.placeholder.component
 
     const styles = useMemo(

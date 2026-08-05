@@ -1,28 +1,28 @@
 diff --git a/android/src/main/java/com/swmansion/rnscreens/Screen.kt b/android/src/main/java/com/swmansion/rnscreens/Screen.kt
-index c99ca362df5baee81fa48d1c9ef09b40a2c23f07..725c07aa0ed516f9dd09f81e522f2d3191d9b5d0 100644
+index 76bb694854b29d7f779f38244cd48113b429ea1f..fd402ac938862e8d39c5467c1b5c86c4e7eb0c83 100644
 --- a/android/src/main/java/com/swmansion/rnscreens/Screen.kt
 +++ b/android/src/main/java/com/swmansion/rnscreens/Screen.kt
-@@ -17,6 +17,7 @@ import androidx.annotation.RequiresApi
+@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
  import androidx.coordinatorlayout.widget.CoordinatorLayout
  import androidx.core.view.children
  import androidx.fragment.app.Fragment
 +import androidx.recyclerview.widget.RecyclerView
  import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
- import com.facebook.react.bridge.GuardedRunnable
  import com.facebook.react.bridge.ReactContext
-@@ -637,7 +638,7 @@ class Screen(
+ import com.facebook.react.uimanager.PixelUtil
+@@ -462,7 +463,7 @@ class Screen(
                  endTransitionRecursive(childView.toolbar)
              }
-
+ 
 -            if (childView is ViewGroup) {
 +            if (childView is ViewGroup && childView !is RecyclerView) {
                  endTransitionRecursive(childView)
              }
          }
-@@ -666,7 +667,10 @@ class Screen(
+@@ -491,7 +492,10 @@ class Screen(
                      startTransitionRecursive(child.toolbar)
                  }
-
+ 
 -                if (child is ViewGroup) {
 +                // Transition a RecyclerView as one unit. Marking its recyclable children as
 +                // transitioning keeps their parent set after removal, so RecyclerView crashes
