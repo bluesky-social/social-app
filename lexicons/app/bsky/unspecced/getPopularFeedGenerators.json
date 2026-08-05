@@ -14,12 +14,8 @@
             "maximum": 100,
             "default": 50
           },
-          "cursor": {
-            "type": "string"
-          },
-          "query": {
-            "type": "string"
-          }
+          "cursor": { "type": "string" },
+          "query": { "type": "string" }
         }
       },
       "output": {
@@ -28,9 +24,7 @@
           "type": "object",
           "required": ["feeds"],
           "properties": {
-            "cursor": {
-              "type": "string"
-            },
+            "cursor": { "type": "string" },
             "feeds": {
               "type": "array",
               "items": {
