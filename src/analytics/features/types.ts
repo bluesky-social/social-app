@@ -24,6 +24,7 @@ export enum Features {
   SearchStarterPacksV2Enable = 'search_starter_packs_v2:enable',
   FollowSortEnable = 'follow_sort:enable',
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
+  CanonicalPostNumberingEnable = 'canonical_post_numbering:enable',
 
   // values
   TrendingDiscoverValues = 'trending_discover:values',

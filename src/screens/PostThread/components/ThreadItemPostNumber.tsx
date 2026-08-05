@@ -2,6 +2,7 @@ import {Text, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, native, platform, useTheme} from '#/alf'
+import {useAnalytics} from '#/analytics'
 
 // TODO: Remove this mock once @atproto/api includes these lexicon fields.
 export type ThreadItemPostNumbering = {
@@ -29,12 +30,17 @@ export function ThreadItemPostNumber({
   value: ThreadItemPostNumbering
   inline?: boolean
 }) {
+  const ax = useAnalytics()
   const t = useTheme()
   const {t: l} = useLingui()
   const index = value.opThreadPostIndex
   const count = value.opThreadPostCount
 
-  if (!hasThreadItemPostNumber(value)) {
+  const isEnabled = ax.features.enabled(
+    ax.features.CanonicalPostNumberingEnable,
+  )
+
+  if (!isEnabled || !hasThreadItemPostNumber(value)) {
     return null
   }
 

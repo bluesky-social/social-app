@@ -1,4 +1,4 @@
-import {type ReactNode, useMemo} from 'react'
+import {useMemo} from 'react'
 import {type StyleProp, type TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 
@@ -27,7 +27,7 @@ export type RichTextProps = TextStyleProp &
     interactiveStyle?: StyleProp<TextStyle>
     emojiMultiplier?: number
     shouldProxyLinks?: boolean
-    suffix?: ReactNode
+    suffix?: React.ReactNode
     /**
      * DANGEROUS: Disable facet lexicon validation
      *
