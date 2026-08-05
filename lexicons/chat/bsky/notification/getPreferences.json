@@ -1,0 +1,23 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.notification.getPreferences",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get the requesting account's chat notification preferences. Defaults are returned for accounts that have not set any preferences. Requires auth.",
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["preferences"],
+          "properties": {
+            "preferences": {
+              "type": "ref",
+              "ref": "chat.bsky.notification.defs#preferences"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import {useCallback, useEffect} from 'react'
 import {type ScrollView, View} from 'react-native'
 import Animated, {useAnimatedRef, useSharedValue} from 'react-native-reanimated'
-import {moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'

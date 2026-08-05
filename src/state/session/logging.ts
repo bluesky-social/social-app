@@ -1,8 +1,6 @@
-import {type AtpSessionData, type AtpSessionEvent} from '@atproto/api'
-
 import {type Schema} from '../persisted'
 import {type Action, type State} from './reducer'
-import {type SessionAccount} from './types'
+import {type AtpSessionEvent, type SessionAccount} from './types'
 
 type Reducer = (state: State, action: Action) => State
 
@@ -46,15 +44,20 @@ type Log =
       data: Schema['session']
     }
   | {
-      type: 'agent:switch'
-      prevAgent: object
-      nextAgent: object
+      type: 'bundle:switch'
+      prevBundle: object
+      nextBundle: object
     }
   | {
-      type: 'agent:patch'
-      agent: object
-      prevSession: AtpSessionData | undefined
-      nextSession: AtpSessionData | undefined
+      /*
+       * Dev-only bundle-swap log. The bundle is treated as an opaque object
+       * (the reducer never reads its internals); the session snapshots are
+       * plain objects captured for debugging.
+       */
+      type: 'bundle:patch'
+      bundle: object
+      prevSession: object | undefined
+      nextSession: object | undefined
     }
 
 export function wrapSessionReducerForLogging(reducer: Reducer): Reducer {
@@ -65,9 +68,6 @@ export function wrapSessionReducerForLogging(reducer: Reducer): Reducer {
   }
 }
 
-/**
- * Stubs, previously used to log session errors to Statsig. We may revive this
- * using Sentry or Bitdrift in the future.
- */
+/** Reserved session logging hooks; currently no-ops. */
 export function addSessionErrorLog(_did: string, _event: AtpSessionEvent) {}
 export function addSessionDebugLog(_log: Log) {}

@@ -1,4 +1,4 @@
-import {type AppBskyActorDefs, type AppBskyGraphGetFollows} from '@atproto/api'
+import {type AtIdentifierString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -7,8 +7,9 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 
 const DEFAULT_SORT = 'latest'
 const PAGE_SIZE = 30
@@ -34,27 +35,26 @@ export function useProfileFollowsQuery(
 ) {
   const ax = useAnalytics()
   const isSortEnabled = ax.features.enabled(ax.features.FollowSortEnable)
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   const sortParam = isSortEnabled ? sort || DEFAULT_SORT : undefined
 
   return useInfiniteQuery<
-    AppBskyGraphGetFollows.OutputSchema,
+    app.bsky.graph.getFollows.$OutputBody,
     Error,
-    InfiniteData<AppBskyGraphGetFollows.OutputSchema>,
+    InfiniteData<app.bsky.graph.getFollows.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(did || '', sortParam),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getFollows({
-        actor: did || '',
+      return await client.call(app.bsky.graph.getFollows, {
+        actor: (did || '') as AtIdentifierString,
         limit: limit || PAGE_SIZE,
         cursor: pageParam,
         sort: sortParam,
       })
-      return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -65,9 +65,9 @@ export function useProfileFollowsQuery(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyGraphGetFollows.OutputSchema>
+    InfiniteData<app.bsky.graph.getFollows.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })

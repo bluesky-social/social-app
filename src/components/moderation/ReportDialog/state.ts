@@ -1,13 +1,11 @@
-import {
-  type AppBskyLabelerDefs,
-  ToolsOzoneReportDefs as OzoneReportDefs,
-} from '@atproto/api'
-
 import {OTHER_REPORT_REASONS} from '#/components/moderation/ReportDialog/const'
 import {
   type ReportCategoryConfig,
   type ReportOption,
 } from '#/components/moderation/ReportDialog/utils/useReportOptions'
+import {type app, tools} from '#/lexicons'
+
+const OzoneReportDefs = tools.ozone.report.defs
 
 export type NciiQualification = {
   isDepicted?: boolean
@@ -16,7 +14,7 @@ export type NciiQualification = {
 export type ReportState = {
   selectedCategory?: ReportCategoryConfig
   selectedOption?: ReportOption
-  selectedLabeler?: AppBskyLabelerDefs.LabelerViewDetailed
+  selectedLabeler?: app.bsky.labeler.defs.LabelerViewDetailed
   details?: string
   detailsOpen: boolean
   activeStepIndex1: number
@@ -66,7 +64,7 @@ export type ReportAction =
     }
   | {
       type: 'selectLabeler'
-      labeler: AppBskyLabelerDefs.LabelerViewDetailed
+      labeler: app.bsky.labeler.defs.LabelerViewDetailed
     }
   | {
       type: 'clearLabeler'
@@ -116,7 +114,8 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         ncii: undefined,
       }
     case 'selectOption': {
-      const isNcii = action.option.reason === OzoneReportDefs.REASONSEXUALNCII
+      const isNcii =
+        action.option.reason === OzoneReportDefs.reasonSexualNCII.value
       return {
         ...state,
         selectedOption: action.option,

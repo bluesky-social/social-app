@@ -1,7 +1,9 @@
-import {AppBskyActorStatus, AppBskyEmbedExternal} from '@atproto/api'
 import {type I18n} from '@lingui/core'
 import {plural} from '@lingui/core/macro'
 import psl from 'psl'
+
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 /**
  * Validates a raw status record and returns the typed record, or null if the
@@ -9,11 +11,9 @@ import psl from 'psl'
  */
 export function getValidLiveStatusRecord(
   statusRecord: unknown,
-): AppBskyActorStatus.Record | null {
-  if (!AppBskyActorStatus.isRecord(statusRecord)) return null
-  const validation = AppBskyActorStatus.validateRecord(statusRecord)
-  if (!validation.success) return null
-  return validation.value
+): app.bsky.actor.status.Main | null {
+  if (!bsky.matches(app.bsky.actor.status, statusRecord)) return null
+  return statusRecord
 }
 
 /**
@@ -23,7 +23,7 @@ export function getValidLiveStatusRecord(
 export function getLiveLinkFromStatusRecord(statusRecord: unknown): string {
   const record = getValidLiveStatusRecord(statusRecord)
   if (!record) return ''
-  if (!AppBskyEmbedExternal.isMain(record.embed)) return ''
+  if (!bsky.isType(app.bsky.embed.external, record.embed)) return ''
   return record.embed.external.uri
 }
 

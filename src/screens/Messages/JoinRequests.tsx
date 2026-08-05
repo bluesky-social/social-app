@@ -1,10 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {
-  ChatBskyGroupApproveJoinRequest,
-  type ChatBskyGroupListJoinRequests,
-  ChatBskyGroupRejectJoinRequest,
-} from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type InfiniteData, useQueryClient} from '@tanstack/react-query'
@@ -16,6 +11,7 @@ import {
   type NativeStackScreenProps,
   type NavigationProp,
 } from '#/lib/routes/types'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {ConvoProvider, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
@@ -43,6 +39,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from './components/InviteLinkDialog'
 
@@ -142,7 +139,7 @@ function JoinRequestsList({
 
   const getRemainingRequestCount = () => {
     const data = queryClient.getQueryData<
-      InfiniteData<ChatBskyGroupListJoinRequests.OutputSchema>
+      InfiniteData<chat.bsky.group.listJoinRequests.$OutputBody>
     >(createListJoinRequestsQueryKey({convoId}))
     return data?.pages.reduce((sum, page) => sum + page.requests.length, 0) ?? 0
   }
@@ -191,16 +188,27 @@ function JoinRequestsList({
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
         } else if (
-          error instanceof ChatBskyGroupApproveJoinRequest.InvalidConvoError
+          isXrpcErrorOf(
+            chat.bsky.group.approveJoinRequest,
+            error,
+            'InvalidConvo',
+          )
         ) {
           errorMessage = l`Conversation not found.`
         } else if (
-          error instanceof ChatBskyGroupApproveJoinRequest.InsufficientRoleError
+          isXrpcErrorOf(
+            chat.bsky.group.approveJoinRequest,
+            error,
+            'InsufficientRole',
+          )
         ) {
           errorMessage = l`Only admins can accept join requests.`
         } else if (
-          error instanceof
-          ChatBskyGroupApproveJoinRequest.MemberLimitReachedError
+          isXrpcErrorOf(
+            chat.bsky.group.approveJoinRequest,
+            error,
+            'MemberLimitReached',
+          )
         ) {
           errorMessage = l`The member limit has been reached.`
         }
@@ -224,11 +232,19 @@ function JoinRequestsList({
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
         } else if (
-          error instanceof ChatBskyGroupRejectJoinRequest.InvalidConvoError
+          isXrpcErrorOf(
+            chat.bsky.group.rejectJoinRequest,
+            error,
+            'InvalidConvo',
+          )
         ) {
           errorMessage = l`Conversation not found.`
         } else if (
-          error instanceof ChatBskyGroupRejectJoinRequest.InsufficientRoleError
+          isXrpcErrorOf(
+            chat.bsky.group.rejectJoinRequest,
+            error,
+            'InsufficientRole',
+          )
         ) {
           errorMessage = l`Only admins can reject join requests.`
         }

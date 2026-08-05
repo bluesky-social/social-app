@@ -1,0 +1,40 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.moderation.getConvos",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Gets existing conversations by their IDs, for moderation purposes. Does not require the requester to be a member of the conversations. Unknown IDs are silently omitted from the response.",
+      "parameters": {
+        "type": "params",
+        "required": ["convoIds"],
+        "properties": {
+          "convoIds": {
+            "type": "array",
+            "minLength": 1,
+            "maxLength": 100,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convos"],
+          "properties": {
+            "convos": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "chat.bsky.moderation.defs#convoView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

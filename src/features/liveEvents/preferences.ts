@@ -1,12 +1,12 @@
 import {useEffect} from 'react'
-import {type Agent, AppBskyActorDefs, asPredicate} from '@atproto/api'
+import {getPreferences, updateLiveEventPreferences} from '@bsky.app/sdk'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {
   preferencesQueryKey,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import {usePdsClient} from '#/state/session'
 import {useAnalytics} from '#/analytics'
 import * as env from '#/env'
 import {IS_WEB} from '#/env'
@@ -14,10 +14,11 @@ import {
   type LiveEventFeed,
   type LiveEventFeedMetricContext,
 } from '#/features/liveEvents/types'
+import {type app} from '#/lexicons'
 
 export type LiveEventPreferencesAction = Parameters<
-  Agent['updateLiveEventPreferences']
->[0] & {
+  typeof updateLiveEventPreferences
+>[1] & {
   /**
    * Flag that is internal to this hook, do not set when updating prefs
    */
@@ -38,7 +39,7 @@ export function useLiveEventPreferences() {
 
 function useWebOnlyDebugLiveEventPreferences() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
 
   useEffect(() => {
     if (env.IS_DEV && IS_WEB && typeof window !== 'undefined') {
@@ -46,14 +47,14 @@ function useWebOnlyDebugLiveEventPreferences() {
       window.__updateLiveEventPreferences = async (
         action: LiveEventPreferencesAction,
       ) => {
-        await agent.updateLiveEventPreferences(action)
+        await pdsClient.call(updateLiveEventPreferences, action)
         // triggers a refetch
         await queryClient.invalidateQueries({
           queryKey: preferencesQueryKey,
         })
       }
     }
-  }, [agent, queryClient])
+  }, [pdsClient, queryClient])
 }
 
 export function useUpdateLiveEventPreferences(props: {
@@ -65,10 +66,10 @@ export function useUpdateLiveEventPreferences(props: {
 }) {
   const ax = useAnalytics()
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
 
   return useMutation<
-    AppBskyActorDefs.LiveEventPreferences,
+    app.bsky.actor.defs.LiveEventPreferences,
     Error,
     LiveEventPreferencesAction,
     {undoAction: LiveEventPreferencesAction | null}
@@ -108,10 +109,14 @@ export function useUpdateLiveEventPreferences(props: {
       }
     },
     mutationFn: async action => {
-      const updated = await agent.updateLiveEventPreferences(action)
-      const prefs = updated.find(p =>
-        asPredicate(AppBskyActorDefs.validateLiveEventPreferences)(p),
-      )
+      /*
+       * The SDK action returns void, so after applying the update we read the
+       * fresh, interpreted preferences back to obtain the updated
+       * `liveEventPreferences` (the SDK extracts it from the raw prefs array for
+       * us, replacing the old `asPredicate(...).find(...)` lookup).
+       */
+      await pdsClient.call(updateLiveEventPreferences, action)
+      const {liveEventPreferences: prefs} = await pdsClient.call(getPreferences)
 
       switch (action.type) {
         case 'hideFeed':
@@ -138,7 +143,7 @@ export function useUpdateLiveEventPreferences(props: {
           break
         }
         case 'toggleHideAllFeeds': {
-          if (prefs!.hideAllFeeds) {
+          if (prefs.hideAllFeeds) {
             ax.metric('liveEvents:hideAllFeedBanners', {
               context: props.metricContext,
             })
@@ -156,7 +161,7 @@ export function useUpdateLiveEventPreferences(props: {
         queryKey: preferencesQueryKey,
       })
 
-      return prefs!
+      return prefs
     },
   })
 }

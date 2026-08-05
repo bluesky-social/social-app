@@ -57,16 +57,17 @@ export type UploadStatusResponse = {
   expiresAt: string
   state: UploadState
   completedJobId?: string
-  jobStatus?: import('@atproto/api').AppBskyVideoDefs.JobStatus
+  jobStatus?: app.bsky.video.defs.JobStatus
   failureReason?: string
 }
 
 export type FinishUploadResponse = {
   completedJobId: string
-  jobStatus: import('@atproto/api').AppBskyVideoDefs.JobStatus
+  jobStatus: app.bsky.video.defs.JobStatus
 }
 
 export type AbortUploadResponse = Pick<
   UploadStatusResponse,
   'completedJobId' | 'failureReason'
 > & {state: 'aborted' | 'completed' | 'failed' | 'expired'}
+import {type app} from '#/lexicons'

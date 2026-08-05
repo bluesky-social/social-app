@@ -6,7 +6,6 @@ import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
-import {type ComAtprotoServerListAppPasswords} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -33,6 +32,7 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {type com} from '#/lexicons'
 import {AddAppPasswordDialog} from './components/AddAppPasswordDialog'
 import * as SettingsList from './components/SettingsList'
 
@@ -135,7 +135,7 @@ export function AppPasswordsScreen({}: Props) {
 function AppPasswordCard({
   appPassword,
 }: {
-  appPassword: ComAtprotoServerListAppPasswords.AppPassword
+  appPassword: com.atproto.server.listAppPasswords.AppPassword
 }) {
   const t = useTheme()
   const {i18n, _} = useLingui()

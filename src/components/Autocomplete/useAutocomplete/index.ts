@@ -1,18 +1,19 @@
 import {useCallback, useMemo} from 'react'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {keepPreviousData, useQuery} from '@tanstack/react-query'
 
 import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {
   type AutocompleteApi,
   type AutocompleteItem,
   type AutocompleteItemType,
   type AutocompleteProfile,
 } from '#/components/Autocomplete/types'
+import {app} from '#/lexicons'
 import {useEmojiSearch} from './useEmojiSearch'
 
 const DEFAULT_MOD_OPTS = {
@@ -31,7 +32,7 @@ export function useAutocomplete({
   limit?: number
   showSearchFallback?: boolean
 }): AutocompleteApi {
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const moderationOpts = useModerationOpts()
   const emojiSearch = useEmojiSearch()
 
@@ -52,12 +53,15 @@ export function useAutocomplete({
         // Going from "foo" to "foo." should not clear matches.
         q = q.toLowerCase().trim().replace(/\.$/, '')
 
-        const res = await agent.searchActorsTypeahead({
-          q,
-          limit: limit || 8,
-        })
+        const res = await appviewClient.call(
+          app.bsky.actor.searchActorsTypeahead,
+          {
+            q,
+            limit: limit || 8,
+          },
+        )
 
-        return (res?.data.actors || []).map(profile => ({
+        return (res?.actors || []).map(profile => ({
           key: profile.did,
           type: 'profile' as const,
           value: '@' + profile.handle,

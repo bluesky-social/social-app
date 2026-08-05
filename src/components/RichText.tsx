@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {type StyleProp, type TextStyle} from 'react-native'
-import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 
 import {toShortUrl} from '#/lib/strings/url-helpers'
 import {atoms as a, flatten, type TextStyleProp} from '#/alf'
@@ -9,6 +9,8 @@ import {InlineLinkText, type LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichTextTag} from '#/components/RichTextTag'
 import {Text, type TextProps} from '#/components/Typography'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const WORD_WRAP = {wordWrap: 1}
 // lifted from facet detection in `RichText` impl, _without_ `gm` flags
@@ -117,7 +119,7 @@ export function RichText({
     if (
       mention &&
       (disableMentionFacetValidation ||
-        AppBskyRichtextFacet.validateMention(mention).success) &&
+        bsky.matches(app.bsky.richtext.facet.mention, mention)) &&
       !disableLinks
     ) {
       els.push(
@@ -134,7 +136,7 @@ export function RichText({
           </InlineLinkText>
         </ProfileHoverCard>,
       )
-    } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
+    } else if (link && bsky.matches(app.bsky.richtext.facet.link, link)) {
       const isValidLink = URL_REGEX.test(link.uri)
       if (!isValidLink || disableLinks) {
         els.push(toShortUrl(segment.text))
@@ -159,7 +161,7 @@ export function RichText({
       !disableLinks &&
       enableTags &&
       tag &&
-      AppBskyRichtextFacet.validateTag(tag).success
+      bsky.matches(app.bsky.richtext.facet.tag, tag)
     ) {
       els.push(
         <RichTextTag

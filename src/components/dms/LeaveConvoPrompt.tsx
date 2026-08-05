@@ -1,14 +1,15 @@
-import {ChatBskyConvoLeaveConvo} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {isNetworkError} from '#/lib/strings/errors'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {type DialogOuterProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {IS_NATIVE} from '#/env'
+import {chat} from '#/lexicons'
 
 export function LeaveConvoPrompt({
   control,
@@ -36,10 +37,12 @@ export function LeaveConvoPrompt({
       let errorMessage = l`Could not leave chat`
       if (isNetworkError(error)) {
         errorMessage = l`A network error occurred. Please check your internet connection.`
-      } else if (error instanceof ChatBskyConvoLeaveConvo.InvalidConvoError) {
+      } else if (
+        isXrpcErrorOf(chat.bsky.convo.leaveConvo, error, 'InvalidConvo')
+      ) {
         errorMessage = l`Conversation not found.`
       } else if (
-        error instanceof ChatBskyConvoLeaveConvo.OwnerCannotLeaveError
+        isXrpcErrorOf(chat.bsky.convo.leaveConvo, error, 'OwnerCannotLeave')
       ) {
         errorMessage = l`Owner must lock the group before leaving.`
       }

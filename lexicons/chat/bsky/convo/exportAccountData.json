@@ -1,0 +1,13 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.exportAccountData",
+  "description": "Stub: chat.bsky.convo.exportAccountData is referenced in chat.bsky.authFullChatClient but the lexicon may have been renamed in the local repo.",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "encoding": "application/jsonl"
+      }
+    }
+  }
+}

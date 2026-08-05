@@ -1,11 +1,7 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedThreadgate,
-  AtUri,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 
 import {MAX_POST_LINES} from '#/lib/constants'
@@ -44,6 +40,7 @@ import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
 /**
  * Mimic the space in PostMeta
@@ -62,7 +59,7 @@ export function ThreadItemTreePost({
     topBorder?: boolean
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
 }) {
   const postShadow = usePostShadow(item.value.post)
 
@@ -245,13 +242,13 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
   threadgateRecord,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
-  postShadow: Shadow<AppBskyFeedDefs.PostView>
+  postShadow: Shadow<app.bsky.feed.defs.PostView>
   overrides?: {
     moderation?: boolean
     topBorder?: boolean
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
 }): React.ReactNode {
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()

@@ -1,31 +1,28 @@
-import {
-  type $Typed,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  type AppBskyFeedDefs,
-  type AppBskyFeedPostgate,
-  AtUri,
-} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
+import {AtUri, type AtUriString, toDatetimeString} from '@atproto/syntax'
+
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate'
 
 export function createPostgateRecord(
-  postgate: Partial<AppBskyFeedPostgate.Record> & {
-    post: AppBskyFeedPostgate.Record['post']
+  postgate: Omit<Partial<app.bsky.feed.postgate.Main>, 'post'> & {
+    post: string
   },
-): AppBskyFeedPostgate.Record {
+): app.bsky.feed.postgate.Main {
   return {
     $type: POSTGATE_COLLECTION,
-    createdAt: new Date().toISOString(),
-    post: postgate.post,
+    createdAt: toDatetimeString(new Date()),
+    post: postgate.post as AtUriString,
     detachedEmbeddingUris: postgate.detachedEmbeddingUris || [],
     embeddingRules: postgate.embeddingRules || [],
   }
 }
 
 export function mergePostgateRecords(
-  prev: AppBskyFeedPostgate.Record,
-  next: Partial<AppBskyFeedPostgate.Record>,
+  prev: app.bsky.feed.postgate.Main,
+  next: Partial<app.bsky.feed.postgate.Main>,
 ) {
   const detachedEmbeddingUris = Array.from(
     new Set([
@@ -50,10 +47,10 @@ export function createEmbedViewDetachedRecord({
   uri,
 }: {
   uri: string
-}): $Typed<AppBskyEmbedRecord.View> {
-  const record: $Typed<AppBskyEmbedRecord.ViewDetached> = {
+}): $Typed<app.bsky.embed.record.View> {
+  const record: $Typed<app.bsky.embed.record.ViewDetached> = {
     $type: 'app.bsky.embed.record#viewDetached',
-    uri,
+    uri: uri as AtUriString,
     detached: true,
   }
   return {
@@ -69,24 +66,27 @@ export function createMaybeDetachedQuoteEmbed({
   detached,
 }:
   | {
-      post: AppBskyFeedDefs.PostView
-      quote: AppBskyFeedDefs.PostView
+      post: app.bsky.feed.defs.PostView
+      quote: app.bsky.feed.defs.PostView
       quoteUri: undefined
       detached: false
     }
   | {
-      post: AppBskyFeedDefs.PostView
+      post: app.bsky.feed.defs.PostView
       quote: undefined
       quoteUri: string
       detached: true
-    }): AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined {
-  if (AppBskyEmbedRecord.isView(post.embed)) {
+    }):
+  | app.bsky.embed.record.View
+  | app.bsky.embed.recordWithMedia.View
+  | undefined {
+  if (bsky.isType(app.bsky.embed.record.view, post.embed)) {
     if (detached) {
       return createEmbedViewDetachedRecord({uri: quoteUri})
     } else {
       return createEmbedRecordView({post: quote})
     }
-  } else if (AppBskyEmbedRecordWithMedia.isView(post.embed)) {
+  } else if (bsky.isType(app.bsky.embed.recordWithMedia.view, post.embed)) {
     if (detached) {
       return {
         ...post.embed,
@@ -99,8 +99,8 @@ export function createMaybeDetachedQuoteEmbed({
 }
 
 export function createEmbedViewRecordFromPost(
-  post: AppBskyFeedDefs.PostView,
-): $Typed<AppBskyEmbedRecord.ViewRecord> {
+  post: app.bsky.feed.defs.PostView,
+): $Typed<app.bsky.embed.record.ViewRecord> {
   return {
     $type: 'app.bsky.embed.record#viewRecord',
     uri: post.uri,
@@ -120,8 +120,8 @@ export function createEmbedViewRecordFromPost(
 export function createEmbedRecordView({
   post,
 }: {
-  post: AppBskyFeedDefs.PostView
-}): AppBskyEmbedRecord.View {
+  post: app.bsky.feed.defs.PostView
+}): app.bsky.embed.record.View {
   return {
     $type: 'app.bsky.embed.record#view',
     record: createEmbedViewRecordFromPost(post),
@@ -132,10 +132,10 @@ export function createEmbedRecordWithMediaView({
   post,
   quote,
 }: {
-  post: AppBskyFeedDefs.PostView
-  quote: AppBskyFeedDefs.PostView
-}): AppBskyEmbedRecordWithMedia.View | undefined {
-  if (!AppBskyEmbedRecordWithMedia.isView(post.embed)) return
+  post: app.bsky.feed.defs.PostView
+  quote: app.bsky.feed.defs.PostView
+}): app.bsky.embed.recordWithMedia.View | undefined {
+  if (!bsky.isType(app.bsky.embed.recordWithMedia.view, post.embed)) return
   return {
     ...(post.embed || {}),
     record: {
@@ -149,11 +149,11 @@ export function getMaybeDetachedQuoteEmbed({
   post,
 }: {
   viewerDid: string
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
 }) {
-  if (AppBskyEmbedRecord.isView(post.embed)) {
+  if (bsky.isType(app.bsky.embed.record.view, post.embed)) {
     // detached
-    if (AppBskyEmbedRecord.isViewDetached(post.embed.record)) {
+    if (bsky.isType(app.bsky.embed.record.viewDetached, post.embed.record)) {
       const urip = new AtUri(post.embed.record.uri)
       return {
         embed: post.embed,
@@ -164,7 +164,7 @@ export function getMaybeDetachedQuoteEmbed({
     }
 
     // post
-    if (AppBskyEmbedRecord.isViewRecord(post.embed.record)) {
+    if (bsky.isType(app.bsky.embed.record.viewRecord, post.embed.record)) {
       const urip = new AtUri(post.embed.record.uri)
       return {
         embed: post.embed,
@@ -173,9 +173,11 @@ export function getMaybeDetachedQuoteEmbed({
         isDetached: false,
       }
     }
-  } else if (AppBskyEmbedRecordWithMedia.isView(post.embed)) {
+  } else if (bsky.isType(app.bsky.embed.recordWithMedia.view, post.embed)) {
     // detached
-    if (AppBskyEmbedRecord.isViewDetached(post.embed.record.record)) {
+    if (
+      bsky.isType(app.bsky.embed.record.viewDetached, post.embed.record.record)
+    ) {
       const urip = new AtUri(post.embed.record.record.uri)
       return {
         embed: post.embed,
@@ -186,7 +188,9 @@ export function getMaybeDetachedQuoteEmbed({
     }
 
     // post
-    if (AppBskyEmbedRecord.isViewRecord(post.embed.record.record)) {
+    if (
+      bsky.isType(app.bsky.embed.record.viewRecord, post.embed.record.record)
+    ) {
       const urip = new AtUri(post.embed.record.record.uri)
       return {
         embed: post.embed,
@@ -199,5 +203,5 @@ export function getMaybeDetachedQuoteEmbed({
 }
 
 export const embeddingRules = {
-  disableRule: {$type: 'app.bsky.feed.postgate#disableRule'},
+  disableRule: {$type: 'app.bsky.feed.postgate#disableRule'} as const,
 }

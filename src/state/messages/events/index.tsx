@@ -2,7 +2,7 @@ import {createContext, useContext, useEffect, useState} from 'react'
 import {AppState} from 'react-native'
 
 import {MessagesEventBus} from '#/state/messages/events/agent'
-import {useAgent, useSession} from '#/state/session'
+import {useChatClient, useSession} from '#/state/session'
 
 const MessagesEventBusContext = createContext<MessagesEventBus | null>(null)
 MessagesEventBusContext.displayName = 'MessagesEventBusContext'
@@ -42,13 +42,17 @@ export function MessagesEventBusProviderInner({
 }: {
   children: React.ReactNode
 }) {
-  const agent = useAgent()
+  const chatClient = useChatClient()
   const [bus] = useState(
     () =>
       new MessagesEventBus({
-        agent,
+        chatClient,
       }),
   )
+
+  useEffect(() => {
+    bus.updateClient(chatClient)
+  }, [bus, chatClient])
 
   useEffect(() => {
     bus.resume()

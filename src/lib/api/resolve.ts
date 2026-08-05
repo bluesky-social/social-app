@@ -1,12 +1,7 @@
-import {
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  type AtpAgent,
-  type ComAtprotoRepoStrongRef,
-} from '@atproto/api'
-import {AtUri} from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {AtUri, type AtUriString, type HandleString} from '@atproto/syntax'
 
-import {DM_SERVICE_HEADERS, IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
+import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
 import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
 import {downloadAndResize} from '#/lib/media/manip'
@@ -29,7 +24,17 @@ import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
 import {type ChatInvitePreview} from '#/state/queries/join-links'
 import {type Gif} from '#/features/gifPicker/types'
+import {app, chat, com} from '#/lexicons'
 import {createGIFDescription} from '../gif-alt-text'
+
+/**
+ * Clients the link resolver needs. `appview` serves the `app.bsky.*` feed/graph
+ * reads plus handle resolution; `chat` serves the group join-link previews.
+ */
+export type ResolveClients = {
+  appview: Client
+  chat: Client
+}
 
 type ResolvedExternalLink = {
   type: 'external'
@@ -47,30 +52,30 @@ type ResolvedExternalLink = {
 
 type ResolvedPostRecord = {
   type: 'record'
-  record: ComAtprotoRepoStrongRef.Main
+  record: com.atproto.repo.strongRef.Main
   kind: 'post'
-  view: AppBskyFeedDefs.PostView
+  view: app.bsky.feed.defs.PostView
 }
 
 type ResolvedFeedRecord = {
   type: 'record'
-  record: ComAtprotoRepoStrongRef.Main
+  record: com.atproto.repo.strongRef.Main
   kind: 'feed'
-  view: AppBskyFeedDefs.GeneratorView
+  view: app.bsky.feed.defs.GeneratorView
 }
 
 type ResolvedListRecord = {
   type: 'record'
-  record: ComAtprotoRepoStrongRef.Main
+  record: com.atproto.repo.strongRef.Main
   kind: 'list'
-  view: AppBskyGraphDefs.ListView
+  view: app.bsky.graph.defs.ListView
 }
 
 type ResolvedStarterPackRecord = {
   type: 'record'
-  record: ComAtprotoRepoStrongRef.Main
+  record: com.atproto.repo.strongRef.Main
   kind: 'starter-pack'
-  view: AppBskyGraphDefs.StarterPackView
+  view: app.bsky.graph.defs.StarterPackView
 }
 
 type ResolvedChatInvite = {
@@ -95,9 +100,10 @@ export class EmbeddingDisabledError extends Error {
 }
 
 export async function resolveLink(
-  agent: AtpAgent,
+  clients: ResolveClients,
   uri: string,
 ): Promise<ResolvedLink> {
+  const {appview, chat: chatClient} = clients
   if (isShortLink(uri)) {
     uri = await resolveShortLink(uri)
   }
@@ -124,15 +130,15 @@ export async function resolveLink(
     const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
     const did = await fetchDid(handleOrDid)
     const feed = makeRecordUri(did, 'app.bsky.feed.generator', rkey)
-    const res = await agent.app.bsky.feed.getFeedGenerator({feed})
+    const {view} = await appview.call(app.bsky.feed.getFeedGenerator, {feed})
     return {
       type: 'record',
       record: {
-        uri: res.data.view.uri,
-        cid: res.data.view.cid,
+        uri: view.uri,
+        cid: view.cid,
       },
       kind: 'feed',
-      view: res.data.view,
+      view,
     }
   }
   if (isBskyListUrl(uri)) {
@@ -140,28 +146,27 @@ export async function resolveLink(
     const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
     const did = await fetchDid(handleOrDid)
     const list = makeRecordUri(did, 'app.bsky.graph.list', rkey)
-    const res = await agent.app.bsky.graph.getList({list})
+    const res = await appview.call(app.bsky.graph.getList, {list})
     return {
       type: 'record',
       record: {
-        uri: res.data.list.uri,
-        cid: res.data.list.cid,
+        uri: res.list.uri,
+        cid: res.list.cid,
       },
       kind: 'list',
-      view: res.data.list,
+      view: res.list,
     }
   }
   const chatInviteCode = getChatInviteCodeFromUrl(uri)
   if (chatInviteCode) {
-    const res = await agent.chat.bsky.group.getJoinLinkPreviews(
-      {codes: [chatInviteCode]},
-      {headers: DM_SERVICE_HEADERS},
-    )
+    const res = await chatClient.call(chat.bsky.group.getJoinLinkPreviews, {
+      codes: [chatInviteCode],
+    })
     return {
       type: 'chat-invite',
       uri,
       code: chatInviteCode,
-      view: res.data.joinLinkPreviews[0],
+      view: res.joinLinkPreviews[0],
     }
   }
   if (isBskyStartUrl(uri) || isBskyStarterPackUrl(uri)) {
@@ -173,34 +178,35 @@ export async function resolveLink(
     }
     const did = await fetchDid(parsed.name)
     const starterPack = createStarterPackUri({did, rkey: parsed.rkey})
-    const res = await agent.app.bsky.graph.getStarterPack({starterPack})
+    const res = await appview.call(app.bsky.graph.getStarterPack, {
+      starterPack: starterPack as AtUriString,
+    })
     return {
       type: 'record',
       record: {
-        uri: res.data.starterPack.uri,
-        cid: res.data.starterPack.cid,
+        uri: res.starterPack.uri,
+        cid: res.starterPack.cid,
       },
       kind: 'starter-pack',
-      view: res.data.starterPack,
+      view: res.starterPack,
     }
   }
-  return resolveExternal(agent, uri)
+  return resolveExternal(uri)
 
   // Forked from useGetPost. TODO: move into RQ.
   async function getPost({uri}: {uri: string}) {
     const urip = new AtUri(uri)
     if (!urip.host.startsWith('did:')) {
-      const res = await agent.resolveHandle({
-        handle: urip.host,
+      const {did} = await appview.call(com.atproto.identity.resolveHandle, {
+        handle: urip.host as HandleString,
       })
-      // @ts-expect-error TODO new-sdk-migration
-      urip.host = res.data.did
+      urip.host = did
     }
-    const res = await agent.getPosts({
+    const res = await appview.call(app.bsky.feed.getPosts, {
       uris: [urip.toString()],
     })
-    if (res.success && res.data.posts[0]) {
-      return res.data.posts[0]
+    if (res.posts[0]) {
+      return res.posts[0]
     }
     throw new Error('getPost: post not found')
   }
@@ -209,17 +215,16 @@ export async function resolveLink(
   async function fetchDid(handleOrDid: string) {
     let identifier = handleOrDid
     if (!identifier.startsWith('did:')) {
-      const res = await agent.resolveHandle({handle: identifier})
-      identifier = res.data.did
+      const {did} = await appview.call(com.atproto.identity.resolveHandle, {
+        handle: identifier as HandleString,
+      })
+      identifier = did
     }
     return identifier
   }
 }
 
-export async function resolveGif(
-  agent: AtpAgent,
-  gif: Gif,
-): Promise<ResolvedExternalLink> {
+export async function resolveGif(gif: Gif): Promise<ResolvedExternalLink> {
   const gifUrl = gif.media_formats.gif.url
   const params = new URLSearchParams()
   params.set('hh', String(gif.media_formats.gif.dims[1]))
@@ -258,11 +263,8 @@ function getFileSlug(url: string | undefined): string | undefined {
   return dotIndex > 0 ? filename.slice(0, dotIndex) : undefined
 }
 
-async function resolveExternal(
-  agent: AtpAgent,
-  uri: string,
-): Promise<ResolvedExternalLink> {
-  const result = await getLinkMeta(agent, uri)
+async function resolveExternal(uri: string): Promise<ResolvedExternalLink> {
+  const result = await getLinkMeta(uri)
   return {
     type: 'external',
     uri: result.url,

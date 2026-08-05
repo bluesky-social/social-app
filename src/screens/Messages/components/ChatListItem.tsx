@@ -1,11 +1,10 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
-  ChatBskyConvoDefs,
   moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
-} from '@atproto/api'
+} from '@bsky.app/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -53,7 +52,8 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-import type * as bsky from '#/types/bsky'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {useIsWithinSplitView} from './splitView/context'
 
 export const ChatListItemPortal = createPortalGroup()
@@ -64,7 +64,7 @@ export function ChatListItem({
   selected = false,
   children,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: chat.bsky.convo.defs.ConvoView
   showMenu?: boolean
   selected?: boolean
   children?: React.ReactNode
@@ -314,7 +314,12 @@ function BaseChatItem({
     let lastMessageSentAt: string | null = null
 
     // Deleted message
-    if (ChatBskyConvoDefs.isDeletedMessageView(convo.view.lastMessage)) {
+    if (
+      bsky.isType(
+        chat.bsky.convo.defs.deletedMessageView,
+        convo.view.lastMessage,
+      )
+    ) {
       lastMessageSentAt = convo.view.lastMessage.sentAt
 
       lastMessage = isDeletedAccount
@@ -323,7 +328,7 @@ function BaseChatItem({
     }
 
     // Message
-    if (ChatBskyConvoDefs.isMessageView(convo.view.lastMessage)) {
+    if (bsky.isType(chat.bsky.convo.defs.messageView, convo.view.lastMessage)) {
       const info = getMessageInfo({
         convo: convo.view,
         currentAccountDid: currentAccount?.did,
@@ -339,7 +344,12 @@ function BaseChatItem({
     }
 
     // Reaction
-    if (ChatBskyConvoDefs.isMessageAndReactionView(convo.view.lastReaction)) {
+    if (
+      bsky.isType(
+        chat.bsky.convo.defs.messageAndReactionView,
+        convo.view.lastReaction,
+      )
+    ) {
       const info = getReactionInfo({
         convo: convo.view,
         currentAccountDid: currentAccount?.did,
@@ -358,7 +368,12 @@ function BaseChatItem({
     }
 
     // System message
-    if (ChatBskyConvoDefs.isSystemMessageView(convo.view.lastMessage)) {
+    if (
+      bsky.isType(
+        chat.bsky.convo.defs.systemMessageView,
+        convo.view.lastMessage,
+      )
+    ) {
       const info = getSystemMessageInfo(
         convo.view.lastMessage.data,
         new Map(convo.view.members.map(m => [m.did, m])),
@@ -496,7 +511,10 @@ function BaseChatItem({
                   ]
                 : undefined
             }
-            onPressIn={() => precacheConvoQuery(queryClient, convo.view)}
+            onPressIn={() =>
+              // see onPress: old-typed dms/util view into the new-typed cache
+              precacheConvoQuery(queryClient, convo.view)
+            }
             onPress={onPress}
             onLongPress={showMenu && IS_NATIVE ? onLongPress : undefined}
             onAccessibilityAction={showMenu ? onLongPress : undefined}>

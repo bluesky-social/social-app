@@ -1,0 +1,62 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.listConvos",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Returns a page of conversations (direct or group) for the user.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "readState": {
+            "type": "string",
+            "knownValues": ["unread"]
+          },
+          "status": {
+            "description": "Filter convos by their status. It is discouraged to call with \"request\" and preferred to call chat.bsky.convo.listConvoRequests, which also includes group join requests made by the user.",
+            "type": "string",
+            "knownValues": ["request", "accepted"]
+          },
+          "kind": {
+            "type": "string",
+            "description": "Filter by conversation kind.",
+            "knownValues": ["direct", "group"]
+          },
+          "lockStatus": {
+            "type": "string",
+            "description": "Filter by conversation lock status. Values follow chat.bsky.convo.defs#convoLockStatus.",
+            "knownValues": ["unlocked", "locked", "locked-permanently"]
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convos"],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "convos": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "chat.bsky.convo.defs#convoView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

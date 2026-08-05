@@ -1,7 +1,7 @@
 import {useCallback, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
-import {type ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

@@ -2,10 +2,10 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {createLexClient} from '#/lib/lexClient'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
-import {Agent} from '#/state/session/agent'
 import {atoms as a, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -16,6 +16,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {com} from '#/lexicons'
 import {FormContainer} from './FormContainer'
 
 export const SetNewPasswordForm = ({
@@ -61,8 +62,8 @@ export const SetNewPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const agent = new Agent(null, {service: serviceUrl})
-      await agent.com.atproto.server.resetPassword({
+      const client = createLexClient({service: serviceUrl})
+      await client.call(com.atproto.server.resetPassword, {
         token: formattedCode,
         password,
       })

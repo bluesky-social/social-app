@@ -1,22 +1,15 @@
-import {
-  type $Typed,
-  type AppBskyEmbedRecord,
-  type AtpAgent,
-  type ChatBskyActorDefs,
-  type ChatBskyConvoDefs,
-  type ChatBskyConvoSendMessage,
-  type ChatBskyEmbedJoinLink,
-} from '@atproto/api'
+import {type $Typed, type Client} from '@atproto/lex'
 
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type ConvoWithDetails} from '#/components/dms/util'
+import {type app, type chat} from '#/lexicons'
 
 export type ConvoParams = {
   convoId: string
-  agent: AtpAgent
+  chatClient: Client
   events: MessagesEventBus
   placeholderData?: {
-    convo: ChatBskyConvoDefs.ConvoView
+    convo: chat.bsky.convo.defs.ConvoView
   }
 }
 
@@ -74,12 +67,12 @@ export type ConvoItem =
   | {
       type: 'message'
       key: string
-      message: ChatBskyConvoDefs.MessageView
+      message: chat.bsky.convo.defs.MessageView
     }
   | {
       type: 'pending-message'
       key: string
-      message: ChatBskyConvoDefs.MessageView
+      message: chat.bsky.convo.defs.MessageView
       failed: boolean
       /**
        * Retry sending the message. If present, the message is in a failed state.
@@ -89,12 +82,12 @@ export type ConvoItem =
   | {
       type: 'deleted-message'
       key: string
-      message: ChatBskyConvoDefs.DeletedMessageView
+      message: chat.bsky.convo.defs.DeletedMessageView
     }
   | {
       type: 'system-message'
       key: string
-      message: ChatBskyConvoDefs.SystemMessageView
+      message: chat.bsky.convo.defs.SystemMessageView
     }
   | {
       type: 'error'
@@ -108,12 +101,12 @@ export type ConvoItem =
 
 type DeleteMessage = (messageId: string) => Promise<void>
 type SendMessage = (
-  message: ChatBskyConvoSendMessage.InputSchema['message'],
+  message: chat.bsky.convo.sendMessage.$InputBody['message'],
   optimisticEmbedView:
-    | $Typed<AppBskyEmbedRecord.View>
-    | $Typed<ChatBskyEmbedJoinLink.View>
+    | $Typed<app.bsky.embed.record.View>
+    | $Typed<chat.bsky.embed.joinLink.View>
     | undefined,
-  optimisticReplyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
+  optimisticReplyTo?: $Typed<chat.bsky.convo.defs.MessageView>,
 ) => void
 type FetchMessageHistory = () => Promise<void>
 type MarkConvoAccepted = () => void
@@ -152,7 +145,7 @@ export type ConvoStateReady = {
   status: ConvoStatus.Ready
   items: ConvoItem[]
   convo: ConvoWithDetails
-  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
+  relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic>
   error: undefined
   isFetchingHistory: boolean
   hasAllHistory: boolean
@@ -167,7 +160,7 @@ export type ConvoStateBackgrounded = {
   status: ConvoStatus.Backgrounded
   items: ConvoItem[]
   convo: ConvoWithDetails
-  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
+  relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic>
   error: undefined
   isFetchingHistory: boolean
   hasAllHistory: boolean
@@ -182,7 +175,7 @@ export type ConvoStateSuspended = {
   status: ConvoStatus.Suspended
   items: ConvoItem[]
   convo: ConvoWithDetails
-  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
+  relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic>
   error: undefined
   isFetchingHistory: boolean
   hasAllHistory: boolean
@@ -211,7 +204,7 @@ export type ConvoStateDisabled = {
   status: ConvoStatus.Disabled
   items: ConvoItem[]
   convo: ConvoWithDetails
-  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
+  relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic>
   error: undefined
   isFetchingHistory: boolean
   hasAllHistory: boolean

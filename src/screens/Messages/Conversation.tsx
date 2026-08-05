@@ -1,11 +1,11 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {ChatBskyConvoDefs, moderateProfile} from '@atproto/api'
 import {
   ScrollEdgeEffect,
   ScrollEdgeEffectProvider,
 } from '@bsky.app/expo-scroll-edge-effect'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {
   type RouteProp,
@@ -45,6 +45,8 @@ import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
 import {IS_LIQUID_GLASS} from '#/env'
+import {chat} from '#/lexicons'
+import {isType} from '#/types/bsky'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatEnded} from './components/ChatEnded'
 import {ChatLocked} from './components/ChatLocked'
@@ -178,7 +180,8 @@ function InnerReady({
   const emailDialogControl = useEmailDialogControl()
 
   const unreadRequestCount =
-    convo?.kind === 'group' && ChatBskyConvoDefs.isGroupConvo(convo.view.kind)
+    convo?.kind === 'group' &&
+    isType(chat.bsky.convo.defs.groupConvo, convo.view.kind)
       ? (convo.view.kind.unreadJoinRequestCount ?? 0)
       : 0
   const {mutate: markJoinRequestsRead} = useMarkJoinRequestsRead(convo?.view.id)

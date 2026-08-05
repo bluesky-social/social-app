@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'

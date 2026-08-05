@@ -1,0 +1,27 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.authDeleteContent",
+  "defs": {
+    "main": {
+      "type": "permission-set",
+      "title": "Delete Bluesky Content",
+      "title:lang": {},
+      "detail": "Clean up public account history: posts, reposts, and likes.",
+      "detail:lang": {},
+      "permissions": [
+        {
+          "type": "permission",
+          "resource": "repo",
+          "action": ["delete"],
+          "collection": [
+            "app.bsky.feed.like",
+            "app.bsky.feed.post",
+            "app.bsky.feed.postgate",
+            "app.bsky.feed.repost",
+            "app.bsky.feed.threadgate"
+          ]
+        }
+      ]
+    }
+  }
+}

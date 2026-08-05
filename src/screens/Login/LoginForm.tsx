@@ -1,9 +1,5 @@
 import {useRef, useState} from 'react'
 import {Keyboard, type TextInput, View} from 'react-native'
-import {
-  ComAtprotoServerCreateSession,
-  type ComAtprotoServerDescribeServer,
-} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {DEFAULT_SERVICE, HITSLOP_10, HITSLOP_20} from '#/lib/constants'
@@ -11,6 +7,7 @@ import {useRequestNotificationsPermission} from '#/lib/notifications/notificatio
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {isBlueskyHostedUrl, toNiceHostingUrl} from '#/lib/strings/url-helpers'
+import {getErrorName} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {
@@ -35,11 +32,12 @@ import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_IOS, IS_NATIVE} from '#/env'
+import {type com} from '#/lexicons'
 import {ConfirmHostingProviderDialog} from './components/ConfirmHostingProviderDialog'
 import {HostingProviderDialog} from './components/HostingProviderDialog'
 import {FormContainer} from './FormContainer'
 
-type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
+type ServiceDescription = com.atproto.server.describeServer.$OutputBody
 
 export const LoginForm = ({
   error,
@@ -142,10 +140,8 @@ export const LoginForm = ({
     } catch (err) {
       const errMsg = String(err)
       setIsProcessing(false)
-      if (
-        err instanceof
-        ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
-      ) {
+      /* matches a LexAuthFactorError from PasswordSession.login (not an XrpcError), so getErrorName - gated on LexError, not isXrpcError - is required here */
+      if (getErrorName(err) === 'AuthFactorTokenRequired') {
         setIsAuthFactorTokenNeeded(true)
       } else {
         onAttemptFailed()

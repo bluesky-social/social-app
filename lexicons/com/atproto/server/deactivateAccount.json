@@ -1,0 +1,23 @@
+{
+  "lexicon": 1,
+  "id": "com.atproto.server.deactivateAccount",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Deactivates a currently active account. Stops serving of repo, and future writes to repo until reactivated. Used to finalize account migration with the old host after the account has been activated on the new host.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "deleteAfter": {
+              "type": "string",
+              "format": "datetime",
+              "description": "A recommendation to server as to how long they should hold onto the deactivated account before deleting."
+            }
+          }
+        }
+      }
+    }
+  }
+}

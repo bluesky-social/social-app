@@ -1,14 +1,15 @@
-import {type AppBskyNotificationListNotifications} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {describe, expect, it, jest} from '@jest/globals'
 
+import {type app} from '#/lexicons'
 import {groupNotifications} from '../util'
 
 jest.mock('#/state/queries/profile', () => ({precacheProfile: jest.fn()}))
 
-type Notification = AppBskyNotificationListNotifications.Notification
+type Notification = app.bsky.notification.listNotifications.Notification
 
 function makeFollowNotification(
-  did: string,
+  did: DidString,
   starterPackUri?: string,
 ): Notification {
   return {

@@ -1,13 +1,15 @@
 import {useState} from 'react'
 import {type DidDocument, getPdsEndpoint} from '@atproto/common-web'
+import {type HandleString} from '@atproto/syntax'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {DEFAULT_SERVICE, PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
+import {createLexClient} from '#/lib/lexClient'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
-import {Agent} from '#/state/session/agent'
+import {com} from '#/lexicons'
 
 const RQKEY_ROOT = 'pds-detection'
 export const RQKEY = (identifier: string) => [RQKEY_ROOT, identifier]
@@ -147,16 +149,24 @@ export async function resolvePdsForIdentifier(
   identifier: string,
 ): Promise<{did: string; pdsUrl: string | null} | null> {
   const norm = normalizeIdentifier(identifier)
-  const agent = new Agent(null, {service: PUBLIC_BSKY_SERVICE})
+  /*
+   * Unauthenticated throwaway client pointed at the public appview -
+   * resolveHandle is a public read.
+   */
+  const client = createLexClient({service: PUBLIC_BSKY_SERVICE})
   try {
     let did: string
     if (norm.startsWith('did:')) {
       did = norm
     } else {
       const res = await withResolveTimeout(signal =>
-        agent.resolveHandle({handle: norm}, {signal}),
+        client.call(
+          com.atproto.identity.resolveHandle,
+          {handle: norm as HandleString},
+          {signal},
+        ),
       )
-      did = res.data.did
+      did = res.did
     }
     logger.debug('pds-detection: resolved identifier to DID', {
       identifier: norm,

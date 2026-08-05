@@ -1,25 +1,22 @@
-import {
-  type Agent,
-  type AppBskyFeedDefs,
-  type AppBskyFeedGetPosts,
-} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 
 import {logger} from '#/logger'
+import {app} from '#/lexicons'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class PostListFeedAPI implements FeedAPI {
-  agent: Agent
-  params: AppBskyFeedGetPosts.QueryParams
-  peek: AppBskyFeedDefs.FeedViewPost | null = null
+  client: Client
+  params: app.bsky.feed.getPosts.$Params
+  peek: app.bsky.feed.defs.FeedViewPost | null = null
 
   constructor({
-    agent,
+    client,
     feedParams,
   }: {
-    agent: Agent
-    feedParams: AppBskyFeedGetPosts.QueryParams
+    client: Client
+    feedParams: app.bsky.feed.getPosts.$Params
   }) {
-    this.agent = agent
+    this.client = client
     if (feedParams.uris.length > 25) {
       logger.warn(
         `Too many URIs provided - expected 25, got ${feedParams.uris.length}`,
@@ -30,23 +27,22 @@ export class PostListFeedAPI implements FeedAPI {
     }
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  setClient(client: Client) {
+    this.client = client
+  }
+
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
     if (this.peek) return this.peek
     throw new Error('Has not fetched yet')
   }
 
   async fetch({}: {}): Promise<FeedAPIResponse> {
-    const res = await this.agent.app.bsky.feed.getPosts({
+    const res = await this.client.call(app.bsky.feed.getPosts, {
       ...this.params,
     })
-    if (res.success) {
-      this.peek = {post: res.data.posts[0]}
-      return {
-        feed: res.data.posts.map(post => ({post})),
-      }
-    }
+    this.peek = {post: res.posts[0]}
     return {
-      feed: [],
+      feed: res.posts.map(post => ({post})),
     }
   }
 }

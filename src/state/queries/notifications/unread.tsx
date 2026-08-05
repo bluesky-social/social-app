@@ -11,6 +11,8 @@ import {
   useState,
 } from 'react'
 import {AppState} from 'react-native'
+import {type DatetimeString} from '@atproto/syntax'
+import {updateSeenNotifications} from '@bsky.app/sdk'
 import {useQueryClient} from '@tanstack/react-query'
 import {EventEmitter} from 'eventemitter3'
 
@@ -18,7 +20,7 @@ import BroadcastChannel from '#/lib/broadcast'
 import {resetBadgeCount} from '#/lib/notifications/notifications'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
 import {type CachedFeedPage, type FeedPage} from './types'
 import {fetchPage} from './util'
@@ -52,7 +54,7 @@ apiContext.displayName = 'NotificationsUnreadApiContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {hasSession} = useSession()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
 
@@ -120,8 +122,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return {
       async markAllRead() {
         // update server
-        await agent.updateSeenNotifications(
-          cacheRef.current.syncedAt.toISOString(),
+        await appviewClient.call(
+          updateSeenNotifications,
+          // toISOString() always yields a valid datetime string
+          cacheRef.current.syncedAt.toISOString() as DatetimeString,
         )
 
         // update & broadcast
@@ -135,7 +139,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         isPoll,
       }: {invalidate?: boolean; isPoll?: boolean} = {}) {
         try {
-          if (!agent.session) return
+          if (!hasSession) return
           if (AppState.currentState !== 'active') {
             return
           }
@@ -156,7 +160,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
           // count
           const {page, indexedAt: lastIndexed} = await fetchPage({
-            agent,
+            client: appviewClient,
             cursor: undefined,
             limit: 40,
             queryClient,
@@ -207,7 +211,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       },
     }
-  }, [setNumUnread, queryClient, moderationOpts, agent])
+  }, [setNumUnread, queryClient, moderationOpts, appviewClient, hasSession])
   checkUnreadRef.current = api.checkUnread
 
   return (

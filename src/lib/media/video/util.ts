@@ -1,6 +1,5 @@
-import {AtpAgent} from '@atproto/api'
-
 import {type SupportedMimeTypes, VIDEO_SERVICE} from '#/lib/constants'
+import {createLexClient} from '#/lib/lexClient'
 
 export const createVideoEndpointUrl = (
   route: string,
@@ -16,10 +15,28 @@ export const createVideoEndpointUrl = (
   return url.href
 }
 
-export function createVideoAgent() {
-  return new AtpAgent({
+/**
+ * A non-refreshing throwaway lex {@link Client} scoped to the video service,
+ * authenticated by a per-call service-auth token. It has no session, so nothing
+ * can refresh it: requests go straight to the video service with the token as a
+ * static Authorization header (a raw client, unlike a session, is allowed to
+ * preset that header). Mirrors the scoped-client pattern in
+ * `#/ageAssurance/useBeginAgeAssurance`.
+ */
+export function createVideoServiceClient(token: string) {
+  return createLexClient({
     service: VIDEO_SERVICE,
+    headers: {authorization: `Bearer ${token}`},
   })
+}
+
+/**
+ * An unauthenticated lex {@link Client} scoped to the video service, used for
+ * public reads like `getJobStatus` polling. Mirrors the old unauthenticated
+ * `AtpAgent` at `VIDEO_SERVICE`.
+ */
+export function createTokenlessVideoServiceClient() {
+  return createLexClient({service: VIDEO_SERVICE})
 }
 
 export function mimeToExt(mimeType: SupportedMimeTypes | (string & {})) {

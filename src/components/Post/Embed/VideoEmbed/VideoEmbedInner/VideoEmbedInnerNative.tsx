@@ -1,6 +1,5 @@
 import {useImperativeHandle, useRef, useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyEmbedVideo} from '@atproto/api'
 import {BlueskyVideoView} from '@bsky.app/video'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -17,6 +16,7 @@ import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/compone
 import {KeepAwake} from '#/components/KeepAwake'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useVideoMuteState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {type app} from '#/lexicons'
 import {GifPresentationControls} from '../GifPresentationControls'
 import {TimeIndicator} from './TimeIndicator'
 
@@ -29,7 +29,7 @@ export function VideoEmbedInnerNative({
   onError,
 }: {
   ref: React.Ref<{togglePlayback: () => void}>
-  embed: AppBskyEmbedVideo.View
+  embed: app.bsky.embed.video.View
   setStatus: (status: 'playing' | 'paused') => void
   setIsLoading: (isLoading: boolean) => void
   setIsActive: (isActive: boolean) => void

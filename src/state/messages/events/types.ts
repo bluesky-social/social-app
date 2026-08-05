@@ -1,7 +1,9 @@
-import {type AtpAgent, type ChatBskyConvoGetLog} from '@atproto/api'
+import {type Client} from '@atproto/lex'
+
+import {type chat} from '#/lexicons'
 
 export type MessagesEventBusParams = {
-  agent: AtpAgent
+  chatClient: Client
 }
 
 export enum MessagesEventBusStatus {
@@ -64,5 +66,5 @@ export type MessagesEventBusEvent =
     }
   | {
       type: 'logs'
-      logs: ChatBskyConvoGetLog.OutputSchema['logs']
+      logs: chat.bsky.convo.getLog.$OutputBody['logs']
     }

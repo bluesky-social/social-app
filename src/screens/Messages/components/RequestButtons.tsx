@@ -1,5 +1,4 @@
 import {useCallback} from 'react'
-import {type ChatBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -41,6 +40,7 @@ import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Toast from '#/components/Toast'
+import {type chat} from '#/lexicons'
 
 export function RejectMenu({
   convo,
@@ -56,7 +56,7 @@ export function RejectMenu({
   label?: string
   icon?: boolean
   convo: ConvoWithDetails
-  profile: ChatBskyActorDefs.ProfileViewBasic
+  profile: chat.bsky.actor.defs.ProfileViewBasic
   showDeleteConvo?: boolean
   currentScreen: 'list' | 'conversation'
 }) {
@@ -214,7 +214,7 @@ export function AcceptChatButton({
 }: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
   label?: string
   icon?: boolean
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: chat.bsky.convo.defs.ConvoView
   onAcceptConvo?: () => void
   currentScreen: 'list' | 'conversation'
 }) {
@@ -228,7 +228,10 @@ export function AcceptChatButton({
     onMutate: () => {
       onAcceptConvo?.()
       if (currentScreen === 'list') {
-        precacheConvoQuery(queryClient, {...convo, status: 'accepted'})
+        precacheConvoQuery(queryClient, {
+          ...convo,
+          status: 'accepted',
+        })
         navigation.navigate('MessagesConversation', {
           conversation: convo.id,
           accept: true,
@@ -301,7 +304,7 @@ export function DeleteChatButton({
 }: Omit<ButtonProps, 'children' | 'label'> & {
   label?: string
   icon?: boolean
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: chat.bsky.convo.defs.ConvoView
   currentScreen: 'list' | 'conversation'
 }) {
   const {t: l} = useLingui()

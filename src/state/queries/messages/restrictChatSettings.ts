@@ -1,13 +1,13 @@
-import type AtpAgent from '@atproto/api'
-import {type ChatBskyActorDeclaration} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import {
-  getDidFromAgentSession,
+  getDidFromClient,
   getOtherRequiredDataFromCache,
   setOtherRequiredDataActorDeclarationCache,
 } from '#/ageAssurance/data'
+import {chat} from '#/lexicons'
 
 /**
  * Updates the chat actor declaration record to restrict who can contact the
@@ -24,15 +24,15 @@ import {
  * back to the lexicon defaults when the cache is empty.
  */
 export async function restrictChatSettings({
-  agent,
+  client,
   restrictIncoming = false,
   restrictGroupInvites = false,
 }: {
-  agent: AtpAgent
+  client: Client
   restrictIncoming?: boolean
   restrictGroupInvites?: boolean
 }): Promise<void> {
-  const did = getDidFromAgentSession(agent)
+  const did = getDidFromClient(client)
   if (!did) return
 
   const cached = getOtherRequiredDataFromCache({did})?.actorDeclaration
@@ -49,7 +49,7 @@ export async function restrictChatSettings({
     )
   }
 
-  const record: ChatBskyActorDeclaration.Main = {
+  const record: chat.bsky.actor.declaration.Main = {
     $type: 'chat.bsky.actor.declaration',
     allowIncoming: restrictIncoming
       ? 'none'
@@ -69,11 +69,9 @@ export async function restrictChatSettings({
 
   try {
     await networkRetry(3, () =>
-      agent.com.atproto.repo.putRecord({
+      client.put(chat.bsky.actor.declaration, record, {
         repo: did,
-        collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
-        record,
       }),
     )
     // important, update local cache to avoid running this again

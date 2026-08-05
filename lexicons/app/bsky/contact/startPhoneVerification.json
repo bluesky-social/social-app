@@ -1,0 +1,44 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.contact.startPhoneVerification",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Starts a phone verification flow. The phone passed will receive a code via SMS that should be passed to `app.bsky.contact.verifyPhone`. Requires authentication.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["phone"],
+          "properties": {
+            "phone": {
+              "description": "The phone number to receive the code via SMS.",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "errors": [
+        {
+          "name": "RateLimitExceeded"
+        },
+        {
+          "name": "InvalidDid"
+        },
+        {
+          "name": "InvalidPhone"
+        },
+        {
+          "name": "InternalError"
+        }
+      ]
+    }
+  }
+}

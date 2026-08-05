@@ -1,0 +1,51 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.group.removeMembers",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Removes members from a group. This deletes convo memberships, doesn't just set a status.",
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        },
+        {
+          "name": "InsufficientRole"
+        }
+      ],
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convoId", "members"],
+          "properties": {
+            "convoId": {
+              "type": "string"
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "did"
+              },
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["convo"],
+          "properties": {
+            "convo": {
+              "type": "ref",
+              "ref": "chat.bsky.convo.defs#convoView"
+            }
+          }
+        }
+      }
+    }
+  }
+}

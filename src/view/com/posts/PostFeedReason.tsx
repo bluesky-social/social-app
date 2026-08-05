@@ -1,5 +1,5 @@
 import {StyleSheet, View} from 'react-native'
-import {AppBskyFeedDefs, type ModerationDecision} from '@atproto/api'
+import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -14,6 +14,8 @@ import {Repost_Stroke2_Corner3_Rounded as RepostIcon} from '#/components/icons/R
 import {Link} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {FeedNameText} from '../util/FeedInfoText'
 
 export function PostFeedReason({
@@ -23,8 +25,8 @@ export function PostFeedReason({
 }: {
   reason:
     | ReasonFeedSource
-    | AppBskyFeedDefs.ReasonRepost
-    | AppBskyFeedDefs.ReasonPin
+    | app.bsky.feed.defs.ReasonRepost
+    | app.bsky.feed.defs.ReasonPin
     | {[k: string]: unknown; $type: string}
   moderation?: ModerationDecision
   onOpenReposter?: () => void
@@ -63,7 +65,7 @@ export function PostFeedReason({
     )
   }
 
-  if (AppBskyFeedDefs.isReasonRepost(reason)) {
+  if (bsky.isType(app.bsky.feed.defs.reasonRepost, reason)) {
     const isOwner = reason.by.did === currentAccount?.did
     const reposter = createSanitizedDisplayName(
       reason.by,
@@ -102,7 +104,7 @@ export function PostFeedReason({
     )
   }
 
-  if (AppBskyFeedDefs.isReasonPin(reason)) {
+  if (bsky.isType(app.bsky.feed.defs.reasonPin, reason)) {
     return (
       <View style={styles.includeReason}>
         <PinIcon

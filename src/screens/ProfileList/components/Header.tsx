@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -23,6 +23,7 @@ import {Loader} from '#/components/Loader'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import {MoreOptionsMenu} from './MoreOptionsMenu'
 import {SubscribeMenu} from './SubscribeMenu'
 
@@ -32,14 +33,14 @@ export function Header({
   preferences,
 }: {
   rkey: string
-  list: AppBskyGraphDefs.ListView
+  list: app.bsky.graph.defs.ListView
   preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST
-  const isModList = list.purpose === AppBskyGraphDefs.MODLIST
+  const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
+  const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const playHaptic = useHaptics()

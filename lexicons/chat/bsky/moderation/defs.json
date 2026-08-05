@@ -1,0 +1,74 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.moderation.defs",
+  "defs": {
+    "convoView": {
+      "description": "A view of a conversation for moderation purposes. Unlike chat.bsky.convo.defs#convoView, it does not include viewer-specific data (such as muted, unreadCount, status, lastMessage, lastReaction), since the requester is a moderator and not a member of the conversation. The member list is not included; use chat.bsky.moderation.getConvoMembers to list members.",
+      "type": "object",
+      "required": ["id", "rev"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "rev": {
+          "type": "string"
+        },
+        "kind": {
+          "description": "Union field that has data specific to different kinds of convos.",
+          "type": "union",
+          "refs": ["#directConvo", "#groupConvo"]
+        }
+      }
+    },
+    "directConvo": {
+      "description": "Data specific to a direct conversation, for moderation purposes.",
+      "type": "object",
+      "properties": {}
+    },
+    "groupConvo": {
+      "description": "Data specific to a group conversation, for moderation purposes. Unlike chat.bsky.convo.defs#groupConvo, it does not include viewer-specific data (such as unreadJoinRequestCount), since the requester is a moderator and not a member of the conversation.",
+      "type": "object",
+      "required": [
+        "createdAt",
+        "joinRequestCount",
+        "lockStatus",
+        "memberCount",
+        "memberLimit",
+        "name"
+      ],
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "joinLink": {
+          "type": "ref",
+          "ref": "chat.bsky.group.defs#joinLinkView"
+        },
+        "joinRequestCount": {
+          "type": "integer",
+          "description": "The total number of pending join requests for the group conversation. This information is only visible to the owner and to moderators. Capped at 21."
+        },
+        "lockStatus": {
+          "description": "The lock status of the conversation.",
+          "type": "ref",
+          "ref": "chat.bsky.convo.defs#convoLockStatus"
+        },
+        "memberCount": {
+          "type": "integer",
+          "description": "The total number of members in the group conversation."
+        },
+        "memberLimit": {
+          "type": "integer",
+          "description": "The maximum number of members allowed in the group conversation."
+        },
+        "name": {
+          "type": "string",
+          "description": "The display name of the group conversation.",
+          "maxGraphemes": 50,
+          "maxLength": 500
+        }
+      }
+    }
+  }
+}

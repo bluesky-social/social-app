@@ -1,9 +1,10 @@
-import {type AppBskyVideoDefs, type AtpAgent} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {shouldRetryError} from '#/lib/strings/errors'
+import {type app} from '#/lexicons'
 import {getServiceAuthToken} from '../upload.shared'
 import {mimeToExt} from '../util'
 import {
@@ -25,19 +26,21 @@ export class MultipartFallbackError extends Error {}
 
 export async function uploadVideoMultipart({
   video,
-  agent,
+  client,
+  dispatchUrl,
   setProgress,
   signal,
   onStarted,
 }: {
   video: CompressedVideo
-  agent: AtpAgent
+  client: Client
+  dispatchUrl: string | URL
   setProgress: (progress: number) => void
   signal: AbortSignal
   onStarted?: () => void
-}): Promise<AppBskyVideoDefs.JobStatus> {
+}): Promise<app.bsky.video.defs.JobStatus> {
   throwIfAborted(signal)
-  const tokenProvider = createTokenProvider(agent, signal)
+  const tokenProvider = createTokenProvider(client, dispatchUrl, signal)
   const token = await tokenProvider.get()
   const name = `${nanoid(12)}.${mimeToExt(video.mimeType)}`
   let session
@@ -130,7 +133,7 @@ async function finishAndRecover({
   getToken: (forceRefresh?: boolean) => Promise<string>
   signal: AbortSignal
   resendMissingParts: (receivedPartNumbers: number[]) => Promise<boolean>
-}): Promise<AppBskyVideoDefs.JobStatus> {
+}): Promise<app.bsky.video.defs.JobStatus> {
   let createdFailures = 0
   let forceTokenRefresh = true
   while (true) {
@@ -220,7 +223,7 @@ async function abortThenFallbackOrResolve(
   jobId: string,
   token: string,
   cause: unknown,
-): Promise<AppBskyVideoDefs.JobStatus> {
+): Promise<app.bsky.video.defs.JobStatus> {
   const result = await abortUpload(jobId, token)
   if (result.state === 'aborted') {
     throw new MultipartFallbackError(
@@ -238,7 +241,11 @@ async function abortThenFallbackOrResolve(
   )
 }
 
-function createTokenProvider(agent: AtpAgent, signal: AbortSignal) {
+function createTokenProvider(
+  client: Client,
+  dispatchUrl: string | URL,
+  signal: AbortSignal,
+) {
   let token: string | undefined
   let expiresAt = 0
   let refresh: Promise<string> | undefined
@@ -247,7 +254,7 @@ function createTokenProvider(agent: AtpAgent, signal: AbortSignal) {
     if (!forceRefresh && token && Date.now() < expiresAt - 60_000) return token
     if (!refresh) {
       const exp = Math.floor(Date.now() / 1000) + 60 * 30
-      refresh = getServiceAuthTokenWithRetry(agent, exp, signal)
+      refresh = getServiceAuthTokenWithRetry(client, dispatchUrl, exp, signal)
         .then(nextToken => {
           token = nextToken
           expiresAt = exp * 1000
@@ -264,7 +271,8 @@ function createTokenProvider(agent: AtpAgent, signal: AbortSignal) {
 }
 
 async function getServiceAuthTokenWithRetry(
-  agent: AtpAgent,
+  client: Client,
+  dispatchUrl: string | URL,
   exp: number,
   signal: AbortSignal,
 ) {
@@ -273,7 +281,8 @@ async function getServiceAuthTokenWithRetry(
     throwIfAborted(signal)
     try {
       return await getServiceAuthToken({
-        agent,
+        client,
+        dispatchUrl,
         lxm: 'com.atproto.repo.uploadBlob',
         exp,
       })

@@ -1,9 +1,9 @@
-import {ChatBskyConvoDefs} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {
   type ConvoListQueryData,
@@ -12,26 +12,25 @@ import {
 
 export function useMarkJoinRequestsRead(convoId: string | undefined) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const chatClient = useChatClient()
 
   return useMutation({
     mutationFn: async () => {
       if (!convoId) throw new Error('No convoId provided')
-      await agent.chat.bsky.group.updateJoinRequestsRead(
-        {convoId},
-        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-      )
+      await chatClient.call(chat.bsky.group.updateJoinRequestsRead, {convoId})
     },
     onMutate: () => {
       if (!convoId) return
 
-      const prevConvo = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
-        CONVO_KEY(convoId),
-      )
-      queryClient.setQueryData<ChatBskyConvoDefs.ConvoView | undefined>(
+      const prevConvo =
+        queryClient.getQueryData<chat.bsky.convo.defs.ConvoView>(
+          CONVO_KEY(convoId),
+        )
+      queryClient.setQueryData<chat.bsky.convo.defs.ConvoView | undefined>(
         CONVO_KEY(convoId),
         old => {
-          if (!old || !ChatBskyConvoDefs.isGroupConvo(old.kind)) return old
+          if (!old || !bsky.isType(chat.bsky.convo.defs.groupConvo, old.kind))
+            return old
           return {
             ...old,
             kind: {...old.kind, unreadJoinRequestCount: 0},
@@ -53,7 +52,7 @@ export function useMarkJoinRequestsRead(convoId: string | undefined) {
               convos: page.convos.map(convo => {
                 if (
                   convo.id !== convoId ||
-                  !ChatBskyConvoDefs.isGroupConvo(convo.kind)
+                  !bsky.isType(chat.bsky.convo.defs.groupConvo, convo.kind)
                 ) {
                   return convo
                 }

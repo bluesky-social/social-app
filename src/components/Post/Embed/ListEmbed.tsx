@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {moderateUserList} from '@atproto/api'
+import {moderateUserList} from '@bsky.app/sdk/moderation'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, useTheme} from '#/alf'

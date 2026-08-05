@@ -1,0 +1,64 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.convo.getMessages",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Returns a page of messages from a conversation.",
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        }
+      ],
+      "parameters": {
+        "type": "params",
+        "required": ["convoId"],
+        "properties": {
+          "convoId": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["messages"],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "messages": {
+              "type": "array",
+              "items": {
+                "type": "union",
+                "refs": [
+                  "chat.bsky.convo.defs#messageView",
+                  "chat.bsky.convo.defs#deletedMessageView",
+                  "chat.bsky.convo.defs#systemMessageView"
+                ]
+              }
+            },
+            "relatedProfiles": {
+              "description": "Set of all members who authored or reacted to the returned messages. Members referred to by system messages are also included.",
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "chat.bsky.actor.defs#profileViewBasic"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

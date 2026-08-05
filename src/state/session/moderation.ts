@@ -1,54 +1,94 @@
-import {AtpAgent, BSKY_LABELER_DID} from '@atproto/api'
+import {Client} from '@atproto/lex'
+import {api} from '@bsky.app/sdk'
 
 import {IS_TEST_USER} from '#/lib/constants'
+import {com} from '#/lexicons'
+import {account as accountStorage} from '#/storage'
 import {configureAdditionalModerationAuthorities} from './additional-moderation-authorities'
-import {readLabelers} from './agent-config'
 import {type SessionAccount} from './types'
 
+type ModerationSession = {appviewClient: Client}
+
+/**
+ * Set the global app labelers on the lex `Client` static so every client emits
+ * the same `;redact` moderation authorities.
+ */
+function configureGlobalAppLabelers(dids: string[]) {
+  Client.configure({appLabelers: dids as `did:${string}:${string}`[]})
+}
+
+/**
+ * Cache an account's subscribed labeler DIDs. Called on every preferences
+ * fetch, so the cache is eventually consistent with the server.
+ */
+export function saveLabelers(did: string, value: string[]) {
+  accountStorage.set([did, 'labelers'], value)
+}
+
+/**
+ * Read the cached labeler DIDs for an account, or `undefined` if none have
+ * been cached yet (first session on this device) or the entry is unreadable.
+ */
+export function readLabelers(did: string): string[] | undefined {
+  try {
+    return accountStorage.get([did, 'labelers'])
+  } catch {
+    /* a corrupt entry fails JSON.parse inside Storage.get; treat as no cache */
+    return undefined
+  }
+}
+
+/**
+ * Apply account subscriptions without duplicating the globally redacted
+ * Bluesky moderation authority.
+ */
+export function applyLabelersToClient(
+  client: Client,
+  subscribedDids: string[],
+) {
+  const perAccount = subscribedDids.filter(did => did !== api.moderation.did)
+  client.setLabelers(perAccount as `did:${string}:${string}`[])
+}
+
 export function configureModerationForGuest() {
-  // This global mutation is *only* OK because this code is only relevant for testing.
-  // Don't add any other global behavior here!
   switchToBskyAppLabeler()
   configureAdditionalModerationAuthorities()
 }
 
-export async function configureModerationForAccount(
-  agent: AtpAgent,
+/** Configure global authorities and cached account subscriptions. */
+export function configureModerationForAccount(
+  bundle: ModerationSession,
   account: SessionAccount,
 ) {
-  // This global mutation is *only* OK because this code is only relevant for testing.
-  // Don't add any other global behavior here!
   switchToBskyAppLabeler()
   if (IS_TEST_USER(account.handle)) {
-    await trySwitchToTestAppLabeler(agent)
+    // Test accounts may briefly use the production authority while this resolves.
+    void trySwitchToTestAppLabeler(bundle)
   }
 
-  // The code below is actually relevant to production (and isn't global).
-  const labelerDids = await readLabelers(account.did).catch(_ => {})
+  const labelerDids = readLabelers(account.did)
   if (labelerDids) {
-    agent.configureLabelersHeader(
-      labelerDids.filter(did => did !== BSKY_LABELER_DID),
-    )
+    applyLabelersToClient(bundle.appviewClient, labelerDids)
   } else {
-    // If there are no headers in the storage, we'll not send them on the initial requests.
-    // If we wanted to fix this, we could block on the preferences query here.
+    // The preferences query populates the cache after the initial requests.
   }
 
   configureAdditionalModerationAuthorities()
 }
 
 function switchToBskyAppLabeler() {
-  AtpAgent.configure({appLabelers: [BSKY_LABELER_DID]})
+  configureGlobalAppLabelers([api.moderation.did])
 }
 
-async function trySwitchToTestAppLabeler(agent: AtpAgent) {
+/** Resolve and install the test environment's moderation authority. */
+async function trySwitchToTestAppLabeler(bundle: ModerationSession) {
   const did = (
-    await agent
-      .resolveHandle({handle: 'mod-authority.test'})
+    await bundle.appviewClient
+      .call(com.atproto.identity.resolveHandle, {handle: 'mod-authority.test'})
       .catch(_ => undefined)
-  )?.data.did
+  )?.did
   if (did) {
     console.warn('USING TEST ENV MODERATION')
-    AtpAgent.configure({appLabelers: [did]})
+    configureGlobalAppLabelers([did])
   }
 }

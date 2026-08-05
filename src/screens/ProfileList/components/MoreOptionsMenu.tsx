@@ -1,4 +1,4 @@
-import {type AppBskyActorDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -36,13 +36,14 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
 
 export function MoreOptionsMenu({
   list,
   savedFeedConfig,
 }: {
-  list: AppBskyGraphDefs.ListView
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  list: app.bsky.graph.defs.ListView
+  savedFeedConfig?: app.bsky.actor.defs.SavedFeed
 }) {
   const {_} = useLingui()
   const ax = useAnalytics()
@@ -57,8 +58,8 @@ export function MoreOptionsMenu({
   const {mutateAsync: muteList} = useListMuteMutation()
   const {mutateAsync: blockList} = useListBlockMutation()
 
-  const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST
-  const isModList = list.purpose === AppBskyGraphDefs.MODLIST
+  const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
+  const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const isPinned = Boolean(savedFeedConfig?.pinned)

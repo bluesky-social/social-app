@@ -2,33 +2,47 @@ import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
-import {type AppBskyNotificationRegisterPush, type AtpAgent} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 import debounce from 'lodash.debounce'
 
 import {
-  BLUESKY_NOTIF_SERVICE_HEADERS,
+  NOTIF_SERVICE,
   PUBLIC_APPVIEW_DID,
   PUBLIC_STAGING_APPVIEW_DID,
 } from '#/lib/constants'
 import {logger as notyLogger} from '#/lib/notifications/util'
 import {isNetworkError} from '#/lib/strings/errors'
-import {type SessionAccount, useAgent, useSession} from '#/state/session'
+import {type SessionAccount, usePdsClient, useSession} from '#/state/session'
 import BackgroundNotificationHandler from '#/../modules/expo-background-notification-handler'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {IS_DEV, IS_NATIVE} from '#/env'
+import {app} from '#/lexicons'
+
+/**
+ * A resumed throwaway account client paired with the account's service origin
+ * and handle. Produced by `createTemporaryClientsAndResume` (session util) and
+ * consumed by {@link unregisterPushToken}, which needs the service host to pick
+ * the correct appview DID and the handle for a debug log line without reaching
+ * into the session internals.
+ */
+export type TemporaryPushClient = {
+  client: Client
+  service: string
+  handle: string
+}
 
 /**
  * @private
  * Registers the device's push notification token with the Bluesky server.
  */
 async function _registerPushToken({
-  agent,
+  client,
   currentAccount,
   token,
   extra = {},
 }: {
-  agent: AtpAgent
+  client: Client
   currentAccount: SessionAccount
   token: Notifications.DevicePushToken
   extra?: {
@@ -36,7 +50,7 @@ async function _registerPushToken({
   }
 }) {
   try {
-    const payload: AppBskyNotificationRegisterPush.InputSchema = {
+    const payload: app.bsky.notification.registerPush.$InputBody = {
       serviceDid: currentAccount.service?.includes('staging')
         ? PUBLIC_STAGING_APPVIEW_DID
         : PUBLIC_APPVIEW_DID,
@@ -48,8 +62,8 @@ async function _registerPushToken({
 
     notyLogger.debug(`registerPushToken: registering`, {...payload})
 
-    await agent.app.bsky.notification.registerPush(payload, {
-      headers: BLUESKY_NOTIF_SERVICE_HEADERS,
+    await client.call(app.bsky.notification.registerPush, payload, {
+      service: NOTIF_SERVICE,
     })
 
     notyLogger.debug(`registerPushToken: success`)
@@ -74,7 +88,7 @@ const _registerPushTokenDebounced = debounce(_registerPushToken, 100)
  * `_registerPushTokenDebounced` directly.
  */
 export function useRegisterPushToken() {
-  const agent = useAgent()
+  const client = usePdsClient()
   const {currentAccount} = useSession()
 
   return useCallback(
@@ -87,7 +101,7 @@ export function useRegisterPushToken() {
     }) => {
       if (!currentAccount) return
       return _registerPushTokenDebounced({
-        agent,
+        client,
         currentAccount,
         token,
         extra: {
@@ -95,7 +109,7 @@ export function useRegisterPushToken() {
         },
       })
     },
-    [agent, currentAccount],
+    [client, currentAccount],
   )
 }
 
@@ -326,16 +340,17 @@ export async function resetBadgeCount() {
   await setBadgeCountAsync(0)
 }
 
-export async function unregisterPushToken(agents: AtpAgent[]) {
+export async function unregisterPushToken(clients: TemporaryPushClient[]) {
   if (!IS_NATIVE) return
 
   try {
     const token = await getPushToken()
     if (token) {
-      for (const agent of agents) {
-        await agent.app.bsky.notification.unregisterPush(
+      for (const {client, service, handle} of clients) {
+        await client.call(
+          app.bsky.notification.unregisterPush,
           {
-            serviceDid: agent.serviceUrl.hostname.includes('staging')
+            serviceDid: service.includes('staging')
               ? PUBLIC_STAGING_APPVIEW_DID
               : PUBLIC_APPVIEW_DID,
             platform: Platform.OS,
@@ -343,10 +358,10 @@ export async function unregisterPushToken(agents: AtpAgent[]) {
             appId: 'xyz.blueskyweb.app',
           },
           {
-            headers: BLUESKY_NOTIF_SERVICE_HEADERS,
+            service: NOTIF_SERVICE,
           },
         )
-        notyLogger.debug(`Push token unregistered for ${agent.session?.handle}`)
+        notyLogger.debug(`Push token unregistered for ${handle}`)
       }
     } else {
       notyLogger.debug('Tried to unregister push token, but could not find one')

@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import Svg, {Circle, Line} from 'react-native-svg'
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'

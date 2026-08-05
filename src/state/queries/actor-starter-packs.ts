@@ -1,6 +1,8 @@
+import {type AtIdentifierString} from '@atproto/syntax'
 import {type QueryClient, useInfiniteQuery} from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 export const RQKEY_ROOT = 'actor-starter-packs'
 export const RQKEY_WITH_MEMBERSHIP_ROOT = 'actor-starter-packs-with-membership'
@@ -17,17 +19,16 @@ export function useActorStarterPacksQuery({
   did?: string
   enabled?: boolean
 }) {
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
 
   return useInfiniteQuery({
     queryKey: RQKEY(did),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
-      const res = await agent.app.bsky.graph.getActorStarterPacks({
-        actor: did!,
+      return await appviewClient.call(app.bsky.graph.getActorStarterPacks, {
+        actor: did! as AtIdentifierString,
         limit: 10,
         cursor: pageParam,
       })
-      return res.data
     },
     enabled: Boolean(did) && enabled,
     initialPageParam: undefined,
@@ -42,17 +43,19 @@ export function useActorStarterPacksWithMembershipsQuery({
   did?: string
   enabled?: boolean
 }) {
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
 
   return useInfiniteQuery({
     queryKey: RQKEY_WITH_MEMBERSHIP(did),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
-      const res = await agent.app.bsky.graph.getStarterPacksWithMembership({
-        actor: did!,
-        limit: 10,
-        cursor: pageParam,
-      })
-      return res.data
+      return await appviewClient.call(
+        app.bsky.graph.getStarterPacksWithMembership,
+        {
+          actor: did! as AtIdentifierString,
+          limit: 10,
+          cursor: pageParam,
+        },
+      )
     },
     enabled: Boolean(did) && enabled,
     initialPageParam: undefined,

@@ -1,0 +1,39 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.contact.dismissMatch",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Removes a match that was found via contact import. It shouldn't appear again if the same contact is re-imported. Requires authentication.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["subject"],
+          "properties": {
+            "subject": {
+              "description": "The subject's DID to dismiss the match with.",
+              "type": "string",
+              "format": "did"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "errors": [
+        {
+          "name": "InvalidDid"
+        },
+        {
+          "name": "InternalError"
+        }
+      ]
+    }
+  }
+}

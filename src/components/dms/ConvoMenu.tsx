@@ -1,6 +1,6 @@
 import {memo, useCallback} from 'react'
 import {Keyboard, View} from 'react-native'
-import {type ModerationCause} from '@atproto/api'
+import {type ModerationCause} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'

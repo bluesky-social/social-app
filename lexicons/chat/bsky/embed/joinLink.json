@@ -1,0 +1,31 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.embed.joinLink",
+  "description": "A join link embedded in a chat message.",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": ["code"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "The join link code."
+        }
+      }
+    },
+    "view": {
+      "type": "object",
+      "required": ["joinLinkPreview"],
+      "properties": {
+        "joinLinkPreview": {
+          "type": "union",
+          "refs": [
+            "chat.bsky.group.defs#joinLinkPreviewView",
+            "chat.bsky.group.defs#disabledJoinLinkPreviewView",
+            "chat.bsky.group.defs#invalidJoinLinkPreviewView"
+          ]
+        }
+      }
+    }
+  }
+}

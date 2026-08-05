@@ -2,19 +2,16 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {type ComAtprotoAdminDefs, ToolsOzoneReportDefs} from '@atproto/api'
+import {api} from '@bsky.app/sdk'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
-import {
-  BLUESKY_MOD_SERVICE_HEADERS,
-  MAX_REPORT_REASON_GRAPHEME_LENGTH,
-} from '#/lib/constants'
+import {MAX_REPORT_REASON_GRAPHEME_LENGTH} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
-import {useAgent, useSession, useSessionApi} from '#/state/session'
+import {usePdsClient, useSession, useSessionApi} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -22,8 +19,10 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import {accountReportSubject} from '#/components/moderation/ReportDialog/utils/reportSubject'
 import {P, Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {com, tools} from '#/lexicons'
 
 const COL_WIDTH = 400
 
@@ -34,7 +33,7 @@ export function Takendown() {
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
   const {logoutCurrentAccount} = useSessionApi()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const [isAppealling, setIsAppealling] = useState(false)
   const [reason, setReason] = useState('')
 
@@ -50,18 +49,15 @@ export function Takendown() {
   } = useMutation({
     mutationFn: async (appealText: string) => {
       if (!currentAccount) throw new Error('No session')
-      await agent.com.atproto.moderation.createReport(
+      await pdsClient.call(
+        com.atproto.moderation.createReport,
         {
-          reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
-          subject: {
-            $type: 'com.atproto.admin.defs#repoRef',
-            did: currentAccount.did,
-          } satisfies ComAtprotoAdminDefs.RepoRef,
+          reasonType: tools.ozone.report.defs.reasonAppeal.value,
+          subject: accountReportSubject(currentAccount.did),
           reason: appealText,
         },
         {
-          encoding: 'application/json',
-          headers: BLUESKY_MOD_SERVICE_HEADERS,
+          service: api.moderation.service,
         },
       )
     },

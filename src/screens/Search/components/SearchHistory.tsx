@@ -1,5 +1,5 @@
 import {ScrollView, View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {createHitslop} from '#/lib/constants'

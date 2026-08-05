@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -15,7 +15,7 @@ import {
   useListCreateMutation,
   useListMetadataMutation,
 } from '#/state/queries/list'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -27,6 +27,7 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
 const DESCRIPTION_MAX_GRAPHEMES = 300
@@ -45,8 +46,8 @@ export function CreateOrEditListDialog({
   initialValues,
 }: {
   control: Dialog.DialogControlProps
-  list?: AppBskyGraphDefs.ListView
-  purpose?: AppBskyGraphDefs.ListPurpose
+  list?: app.bsky.graph.defs.ListView
+  purpose?: app.bsky.graph.defs.ListPurpose
   onSave?: (uri: string) => void
   initialValues?: InitialListValues
 }) {
@@ -113,8 +114,8 @@ function DialogInner({
   onPressCancel,
   initialValues,
 }: {
-  list?: AppBskyGraphDefs.ListView
-  purpose?: AppBskyGraphDefs.ListPurpose
+  list?: app.bsky.graph.defs.ListView
+  purpose?: app.bsky.graph.defs.ListPurpose
   onSave?: (uri: string) => void
   setDirty: (dirty: boolean) => void
   onPressCancel: () => void
@@ -133,7 +134,7 @@ function DialogInner({
 
   const {_} = useLingui()
   const t = useTheme()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const control = Dialog.useDialogContext()
   const {
     mutateAsync: createListMutation,
@@ -163,7 +164,10 @@ function DialogInner({
 
     // We want to be working with a blank state here, so let's get the
     // serialized version and turn it back into a RichText
-    const serialized = richTextToString(new RichTextAPI({text, facets}), false)
+    const serialized = richTextToString(
+      new RichTextAPI({text, facets: facets}),
+      false,
+    )
 
     const richText = new RichTextAPI({text: serialized})
     richText.detectFacetsWithoutResolution()
@@ -224,7 +228,7 @@ function DialogInner({
         {cleanNewlines: true},
       )
 
-      await richText.detectFacets(agent)
+      await richText.detectFacets(appviewClient)
       richText = shortenLinks(richText)
       richText = stripInvalidMentions(richText)
 
@@ -272,7 +276,7 @@ function DialogInner({
     setImageError,
     activePurpose,
     isCurateList,
-    agent,
+    appviewClient,
     _,
   ])
 

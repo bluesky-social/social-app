@@ -1,11 +1,8 @@
 import {useCallback, useState} from 'react'
-import {
-  ChatBskyConvoGetConvoForMembers,
-  ChatBskyGroupCreateGroup,
-} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
 import {isNetworkError} from '#/lib/strings/errors'
+import {isXrpcErrorOf} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useCreateGroupChat} from '#/state/queries/messages/create-group-chat'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
@@ -14,6 +11,7 @@ import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
 import {InitiateChatFlow} from '#/components/dms/InitiateChatFlow'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {chat} from '#/lexicons'
 
 export function SendViaChatDialog({
   control,
@@ -70,24 +68,39 @@ function SendViaChatDialogInner({
       if (isNetworkError(error)) {
         errorMessage = l`A network error occurred. Please check your internet connection.`
       } else if (
-        error instanceof ChatBskyConvoGetConvoForMembers.AccountSuspendedError
+        isXrpcErrorOf(
+          chat.bsky.convo.getConvoForMembers,
+          error,
+          'AccountSuspended',
+        )
       ) {
         errorMessage = l`Suspended accounts cannot participate in chat.`
       } else if (
-        error instanceof ChatBskyConvoGetConvoForMembers.BlockedActorError
+        isXrpcErrorOf(chat.bsky.convo.getConvoForMembers, error, 'BlockedActor')
       ) {
         errorMessage = l`This user has blocked you and cannot be messaged.`
       } else if (
-        error instanceof ChatBskyConvoGetConvoForMembers.MessagesDisabledError
+        isXrpcErrorOf(
+          chat.bsky.convo.getConvoForMembers,
+          error,
+          'MessagesDisabled',
+        )
       ) {
         errorMessage = l`This user has disabled chat and cannot be messaged.`
       } else if (
-        error instanceof
-        ChatBskyConvoGetConvoForMembers.NotFollowedBySenderError
+        isXrpcErrorOf(
+          chat.bsky.convo.getConvoForMembers,
+          error,
+          'NotFollowedBySender',
+        )
       ) {
         errorMessage = l`Chat recipient is not followed by the sender.`
       } else if (
-        error instanceof ChatBskyConvoGetConvoForMembers.RecipientNotFoundError
+        isXrpcErrorOf(
+          chat.bsky.convo.getConvoForMembers,
+          error,
+          'RecipientNotFound',
+        )
       ) {
         errorMessage = l`Unable to find the selected recipient.`
       }
@@ -109,26 +122,31 @@ function SendViaChatDialogInner({
       if (isNetworkError(error)) {
         errorMessage = l`A network error occurred. Please check your internet connection.`
       } else if (
-        error instanceof ChatBskyGroupCreateGroup.AccountSuspendedError
+        isXrpcErrorOf(chat.bsky.group.createGroup, error, 'AccountSuspended')
       ) {
         errorMessage = l`Suspended accounts cannot participate in a group chat.`
-      } else if (error instanceof ChatBskyGroupCreateGroup.BlockedActorError) {
+      } else if (
+        isXrpcErrorOf(chat.bsky.group.createGroup, error, 'BlockedActor')
+      ) {
         errorMessage = l`One of the selected recipients has blocked you and cannot be messaged.`
       } else if (
-        error instanceof
-        ChatBskyGroupCreateGroup.NewAccountCannotCreateGroupError
+        isXrpcErrorOf(
+          chat.bsky.group.createGroup,
+          error,
+          'NewAccountCannotCreateGroup',
+        )
       ) {
         errorMessage = l`You cannot create a group chat yet.`
       } else if (
-        error instanceof ChatBskyGroupCreateGroup.NotFollowedBySenderError
+        isXrpcErrorOf(chat.bsky.group.createGroup, error, 'NotFollowedBySender')
       ) {
         errorMessage = l`A selected recipient is not followed by the sender.`
       } else if (
-        error instanceof ChatBskyGroupCreateGroup.RecipientNotFoundError
+        isXrpcErrorOf(chat.bsky.group.createGroup, error, 'RecipientNotFound')
       ) {
         errorMessage = l`Unable to find a selected recipient.`
       } else if (
-        error instanceof ChatBskyGroupCreateGroup.UserForbidsGroupsError
+        isXrpcErrorOf(chat.bsky.group.createGroup, error, 'UserForbidsGroups')
       ) {
         errorMessage = l`One of the selected recipients does not allow group chats.`
       }
