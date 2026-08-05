@@ -33,7 +33,6 @@ import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/Thre
 import {
   hasThreadItemPostNumber,
   ThreadItemPostNumber,
-  type ThreadItemPostNumbering,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
 import {
   LINEAR_AVI_WIDTH,
@@ -189,7 +188,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 
   const post = postShadow
   const record = item.value.post.record
-  const postNumbering = item.value as ThreadItemPostNumbering
+  const postNumbering = item.value
   const moderation = item.moderation
   const authorShadow = useProfileShadow(post.author)
   const {isActive: live} = useActorStatus(post.author)

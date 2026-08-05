@@ -25,7 +25,6 @@ import {PostMeta} from '#/view/com/util/PostMeta'
 import {
   hasThreadItemPostNumber,
   ThreadItemPostNumber,
-  type ThreadItemPostNumbering,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
 import {
   OUTER_SPACE,
@@ -263,7 +262,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 
   const post = item.value.post
   const record = item.value.post.record
-  const postNumbering = item.value as ThreadItemPostNumbering
+  const postNumbering = item.value
   const moderation = item.moderation
   const richText = useMemo(
     () =>

@@ -1,16 +1,13 @@
 import {Text, View} from 'react-native'
+import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {useAnalytics} from '#/analytics'
 
-// TODO: Remove this mock once @atproto/api includes these lexicon fields.
-export type ThreadItemPostNumbering = {
-  opThreadPostIndex?: number
-  opThreadPostCount?: number
-}
-
-export function hasThreadItemPostNumber(value: ThreadItemPostNumbering) {
+export function hasThreadItemPostNumber(
+  value: AppBskyUnspeccedDefs.ThreadItemPost,
+) {
   const index = value.opThreadPostIndex
   const count = value.opThreadPostCount
 
@@ -27,7 +24,7 @@ export function ThreadItemPostNumber({
   value,
   inline = true,
 }: {
-  value: ThreadItemPostNumbering
+  value: AppBskyUnspeccedDefs.ThreadItemPost
   inline?: boolean
 }) {
   const ax = useAnalytics()
