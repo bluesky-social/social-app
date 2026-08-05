@@ -82,6 +82,16 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     ),
     [key, embed],
   )
+  const getErrorMetadata = useCallback((error: Error) => {
+    if (!(error instanceof HLSFatalError)) return {}
+    return {
+      tags: {
+        hls_error_detail: error.detail,
+        hls_error_type: error.type,
+      },
+      hls: error.diagnostics,
+    }
+  }, [])
 
   let aspectRatio: number | undefined
   const dims = embed.aspectRatio
@@ -158,7 +168,10 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
           />
         </>
       )}
-      <ErrorBoundary renderError={renderError} key={key}>
+      <ErrorBoundary
+        renderError={renderError}
+        getErrorMetadata={getErrorMetadata}
+        key={key}>
         <OnlyNearScreen>
           <VideoEmbedInnerWeb
             embed={embed}

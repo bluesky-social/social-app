@@ -47,8 +47,10 @@ export async function openPicker(opts?: ImagePickerOptions) {
 
 export async function openUnifiedPicker({
   selectionCountRemaining,
+  videoMaxDurationMs = VIDEO_MAX_DURATION_MS,
 }: {
   selectionCountRemaining: number
+  videoMaxDurationMs?: number
 }) {
   return await launchImageLibraryAsync({
     exif: false,
@@ -61,6 +63,6 @@ export async function openUnifiedPicker({
     preferredAssetRepresentationMode:
       UIImagePickerPreferredAssetRepresentationMode.Automatic,
     videoExportPreset: VideoExportPreset.Passthrough,
-    videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
+    videoMaxDuration: videoMaxDurationMs / 1000,
   })
 }
