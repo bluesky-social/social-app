@@ -30,17 +30,12 @@
       "type": "object",
       "required": ["tag", "subjectType", "subject"],
       "properties": {
-        "tag": {
-          "type": "string"
-        },
+        "tag": { "type": "string" },
         "subjectType": {
           "type": "string",
           "knownValues": ["actor", "feed"]
         },
-        "subject": {
-          "type": "string",
-          "format": "uri"
-        }
+        "subject": { "type": "string", "format": "uri" }
       }
     }
   }
