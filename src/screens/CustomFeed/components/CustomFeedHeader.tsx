@@ -395,7 +395,9 @@ export function CustomFeedHeader({
           ) : null}
         </Layout.Header.Outer>
       </Layout.Center>
-      <Dialog.Outer control={infoControl}>
+      <Dialog.Outer
+        control={infoControl}
+        nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <Dialog.ScrollableInner
           label={l`Feed menu`}
