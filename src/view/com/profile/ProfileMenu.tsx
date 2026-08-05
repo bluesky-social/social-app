@@ -170,11 +170,11 @@ let ProfileMenu = ({
     if (profile.viewer?.mutedOnlyReposts) {
       try {
         await queueUnmuteReposts()
-        Toast.show(l({message: 'Reposts turned on', context: 'toast'}))
+        Toast.show(l({message: 'Reposts shown', context: 'toast'}))
       } catch (err) {
         const e = err as Error
         if (e?.name !== 'AbortError') {
-          ax.logger.error('Failed to unmute reposts', {message: e})
+          ax.logger.error('Failed to show reposts', {message: e})
           Toast.show(l`There was an issue! ${e.toString()}`, {
             type: 'error',
           })
@@ -183,11 +183,11 @@ let ProfileMenu = ({
     } else {
       try {
         await queueMuteReposts()
-        Toast.show(l({message: 'Reposts turned off', context: 'toast'}))
+        Toast.show(l({message: 'Reposts hidden', context: 'toast'}))
       } catch (err) {
         const e = err as Error
         if (e?.name !== 'AbortError') {
-          ax.logger.error('Failed to mute reposts', {message: e})
+          ax.logger.error('Failed to hide reposts', {message: e})
           Toast.show(l`There was an issue! ${e.toString()}`, {
             type: 'error',
           })
