@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react'
 import {type TextStyle, View, type ViewStyle} from 'react-native'
-import {setInterestsPref} from '@bsky.app/sdk'
+import {setInterestsPref} from '@bsky/sdk'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

@@ -46,12 +46,4 @@ minimumReleaseAgeExclude:
   - '@atproto/*'
   - '@atproto-labs/*'
   - '@bsky.app/*'
-  # todo: remove when old enough
-  - '@oxlint-tsgolint/darwin-arm64@7.0.2001'
-  - '@oxlint-tsgolint/darwin-x64@7.0.2001'
-  - '@oxlint-tsgolint/linux-arm64@7.0.2001'
-  - '@oxlint-tsgolint/linux-x64@7.0.2001'
-  - '@oxlint-tsgolint/win32-arm64@7.0.2001'
-  - '@oxlint-tsgolint/win32-x64@7.0.2001'
-  - oxlint-tsgolint@7.0.2001
-  - bsky-sdk-preview@0.0.1-preview.2
+  - '@bsky/*'

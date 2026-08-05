@@ -24,7 +24,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
 import {type $Typed} from '@atproto/lex'
 import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
-import {RichText} from '@bsky.app/sdk/richtext'
+import {RichText} from '@bsky/sdk/richtext'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {mergeRefs} from '#/lib/merge-refs'

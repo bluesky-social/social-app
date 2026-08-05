@@ -4,8 +4,8 @@ import {
   moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
-} from '@bsky.app/sdk/moderation'
-import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+} from '@bsky/sdk/moderation'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

@@ -4,7 +4,7 @@ import {
   moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
-} from '@bsky.app/sdk/moderation'
+} from '@bsky/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'

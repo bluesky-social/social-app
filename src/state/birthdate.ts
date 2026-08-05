@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {setPersonalDetails} from '@bsky.app/sdk'
+import {setPersonalDetails} from '@bsky/sdk'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'

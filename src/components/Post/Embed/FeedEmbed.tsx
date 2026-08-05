@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {moderateFeedGenerator} from '@bsky.app/sdk/moderation'
+import {moderateFeedGenerator} from '@bsky/sdk/moderation'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, useTheme} from '#/alf'

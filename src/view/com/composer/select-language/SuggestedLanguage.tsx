@@ -5,7 +5,7 @@ import {
   guessLanguageAsync,
   type LanguageResult,
 } from '@bsky.app/expo-guess-language'
-import {RichText} from '@bsky.app/sdk/richtext'
+import {RichText} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 

@@ -1,6 +1,6 @@
 import {type $Typed} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
-import {moderatePost, type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {moderatePost, type ModerationOpts} from '@bsky/sdk/moderation'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {

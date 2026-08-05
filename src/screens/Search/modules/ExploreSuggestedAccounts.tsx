@@ -1,6 +1,6 @@
 import {memo, useEffect} from 'react'
 import {View} from 'react-native'
-import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {type InfiniteData} from '@tanstack/react-query'

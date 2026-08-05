@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 import {View} from 'react-native'
-import {moderateProfile} from '@bsky.app/sdk/moderation'
+import {moderateProfile} from '@bsky/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'

@@ -1,5 +1,5 @@
 import {type StyleProp, type ViewStyle} from 'react-native'
-import {type ModerationDecision} from '@bsky.app/sdk/moderation'
+import {type ModerationDecision} from '@bsky/sdk/moderation'
 
 import {type app} from '#/lexicons'
 

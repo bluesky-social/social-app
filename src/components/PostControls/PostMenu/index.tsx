@@ -1,6 +1,6 @@
 import {memo, useMemo, useState} from 'react'
 import {type Insets} from 'react-native'
-import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 
 import {type Shadow} from '#/state/cache/post-shadow'

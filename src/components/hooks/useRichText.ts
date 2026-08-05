@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 
 import {useAppviewClient} from '#/state/session'
 

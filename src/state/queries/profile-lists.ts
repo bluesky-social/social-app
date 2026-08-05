@@ -1,5 +1,5 @@
 import {type DidString} from '@atproto/syntax'
-import {moderateUserList} from '@bsky.app/sdk/moderation'
+import {moderateUserList} from '@bsky/sdk/moderation'
 import {
   type InfiniteData,
   type QueryKey,

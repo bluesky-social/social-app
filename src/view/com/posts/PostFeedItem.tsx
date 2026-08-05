@@ -1,8 +1,8 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
-import {type ModerationDecision} from '@bsky.app/sdk/moderation'
-import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {type ModerationDecision} from '@bsky/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {type ReasonFeedSource} from '#/lib/api/feed/types'

@@ -1,6 +1,6 @@
 import {type Insets, Platform} from 'react-native'
 import {type Service} from '@atproto/lex'
-import {api} from '@bsky.app/sdk'
+import {api} from '@bsky/sdk'
 
 import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
 import {type app} from '#/lexicons'

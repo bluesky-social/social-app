@@ -1,6 +1,6 @@
 import {memo, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 

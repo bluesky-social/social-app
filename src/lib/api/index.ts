@@ -5,7 +5,7 @@ import {
   toDatetimeString,
   type UriString,
 } from '@atproto/syntax'
-import {RichText} from '@bsky.app/sdk/richtext'
+import {RichText} from '@bsky/sdk/richtext'
 import {t} from '@lingui/core/macro'
 import {type QueryClient} from '@tanstack/react-query'
 

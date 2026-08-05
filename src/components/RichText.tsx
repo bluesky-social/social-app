@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {type StyleProp, type TextStyle} from 'react-native'
-import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 
 import {toShortUrl} from '#/lib/strings/url-helpers'
 import {android, atoms as a, flatten, type TextStyleProp} from '#/alf'

@@ -1,5 +1,5 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type ModerationCause, type ModerationUI} from '@bsky.app/sdk/moderation'
+import {type ModerationCause, type ModerationUI} from '@bsky/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 

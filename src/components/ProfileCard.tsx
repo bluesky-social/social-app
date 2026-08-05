@@ -6,8 +6,8 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
-import {RichText as RichTextApi} from '@bsky.app/sdk/richtext'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
+import {RichText as RichTextApi} from '@bsky/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 
 import {getModerationCauseKey} from '#/lib/moderation'
