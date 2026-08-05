@@ -302,7 +302,7 @@
     "react-refresh": "^0.14.0",
     "svgo": "^4.0.2",
     "ts-plugin-sort-import-suggestions": "^1.0.4",
-    "typescript": "^6.0.3",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "webpack-bundle-analyzer": "^4.10.1"
   },
   "jest": {
