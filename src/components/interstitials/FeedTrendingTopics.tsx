@@ -32,15 +32,21 @@ import {useAnalytics} from '#/analytics'
 
 const TOPIC_COUNT = 3
 
-export function FeedTrendingTopicsInterstitial() {
+export function FeedTrendingTopicsInterstitial({
+  feedSliceIndex,
+}: {
+  feedSliceIndex: number
+}) {
   const {enabled} = useTrendingConfig()
   const {trendingDisabled} = useTrendingSettings()
   const {rightNavVisible} = useLayoutBreakpoints()
 
-  return enabled && !trendingDisabled && !rightNavVisible ? <Inner /> : null
+  return enabled && !trendingDisabled && !rightNavVisible ? (
+    <Inner feedSliceIndex={feedSliceIndex} />
+  ) : null
 }
 
-function Inner() {
+function Inner({feedSliceIndex}: {feedSliceIndex: number}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const gutters = useGutters([0, 'base'])
@@ -132,20 +138,26 @@ function Inner() {
               ? Array.from({length: TOPIC_COUNT}).map((_, i) => (
                   <TrendingTopicRowSkeleton key={i} rank={i + 1} />
                 ))
-              : trending?.trends?.map((trend, index) => (
-                  <TrendRow
-                    key={trend.link}
-                    trend={trend}
-                    rank={index + 1}
-                    recId={trending.recId}
-                    onPress={() => {
-                      ax.metric('trendingTopic:click', {
-                        context: 'interstitial',
-                        recId: trending.recId,
-                      })
-                    }}
-                  />
-                ))}
+              : trending?.trends?.map((trend, index) => {
+                  const rank = index + 1
+                  return (
+                    <TrendRow
+                      key={trend.link}
+                      trend={trend}
+                      rank={rank}
+                      feedSliceIndex={feedSliceIndex}
+                      recId={trending.recId}
+                      onPress={() => {
+                        ax.metric('trendingTopic:click', {
+                          context: 'interstitial',
+                          rank,
+                          feedSliceIndex,
+                          recId: trending.recId,
+                        })
+                      }}
+                    />
+                  )
+                })}
           </View>
         </View>
       </View>
@@ -166,11 +178,13 @@ function Inner() {
 function TrendRow({
   trend,
   rank,
+  feedSliceIndex,
   recId,
   onPress,
 }: ViewStyleProp & {
   trend: AppBskyUnspeccedDefs.TrendView
   rank: number
+  feedSliceIndex: number
   recId?: string
   children?: React.ReactNode
   onPress?: () => void
@@ -180,7 +194,7 @@ function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
-  useTrendingTopicSeen('interstitial', recId)
+  useTrendingTopicSeen('interstitial', rank, recId, feedSliceIndex)
 
   return (
     <Link
@@ -218,7 +232,7 @@ function TrendRow({
               </Trans>
             </Text>
             <View style={[a.flex_1, a.gap_xs]}>
-              <Text style={[a.text_md, a.font_medium]} numberOfLines={1}>
+              <Text style={[a.text_md, a.font_medium]} numberOfLines={2}>
                 {trend.displayName}
               </Text>
               <View style={[a.flex_row, a.gap_sm, a.align_center]}>

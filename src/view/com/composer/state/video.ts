@@ -20,16 +20,6 @@ import {logger} from '#/logger'
 
 type CaptionsTrack = {lang: string; file: File}
 
-type VideoJobStatus = AppBskyVideoDefs.JobStatus & {
-  failureCode?:
-    | 'validation_failure'
-    | 'encoding_failure'
-    | 'pds_upload_failure'
-    | 'pds_upload_unsupported_blob_size'
-    | 'generic_failure'
-    | (string & {})
-}
-
 export type VideoAction =
   | {
       type: 'compressing_to_uploading'
@@ -336,6 +326,7 @@ export async function processVideo(
       did,
       signal,
       i18n,
+      onTransport: telemetry.uploadTransport,
       setProgress: p => {
         dispatch({type: 'update_progress', progress: p, signal})
       },
@@ -369,7 +360,7 @@ export async function processVideo(
     }
 
     const videoAgent = createVideoAgent()
-    let status: VideoJobStatus | undefined
+    let status: AppBskyVideoDefs.JobStatus | undefined
     let blob: BlobRef | undefined
     try {
       const response = await videoAgent.app.bsky.video.getJobStatus({jobId})

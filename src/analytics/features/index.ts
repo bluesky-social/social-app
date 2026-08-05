@@ -40,6 +40,7 @@ const TIMEOUT_PREFER_FRESH_GATES = 1500
 export const features = new GrowthBook({
   apiHost: env.GROWTHBOOK_API_HOST,
   clientKey: env.GROWTHBOOK_CLIENT_KEY,
+  enableDevMode: env.IS_INTERNAL,
 })
 
 /**
@@ -59,8 +60,7 @@ export const init = features.init({timeout: TIMEOUT_INIT}).then(res => {
 })
 
 /**
- * Refresh feature gates from GrowthBook. Updates attributes based on the
- * provided account, if any.
+ * Refresh feature gates from GrowthBook.
  */
 export async function refresh({strategy}: {strategy: FeatureFetchStrategy}) {
   await features.refreshFeatures({
