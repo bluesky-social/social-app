@@ -125,9 +125,8 @@ nominative-use basis or on permission from the mark owner.
 
 - `assets/icons/apple_logo.svg` — Apple Inc.
 - `assets/icons/android_logo.svg` — Google LLC
-- `assets/icons/community/` — Leaflet, Offprint, pckt (`pckt.svg`, `pckt-full.svg`), and
-  standard-site
-- `assets/images/germ_logo.webp` — Germ Network
+- `assets/icons/community/` — Leaflet, Offprint, pckt (`pckt.svg`, `pckt-full.svg`),
+  standard-site, and Germ Network (`germ_logo.webp`)
 
 Apple's and Google's marks in particular carry their own brand guidelines governing size,
 spacing, and permitted contexts. If you ship a sign-in button or a store badge, follow theirs,

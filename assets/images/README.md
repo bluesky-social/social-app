@@ -7,9 +7,6 @@ out file by file which is which, treat the whole directory as not licensed for y
 
 If you are forking this repository, replace these files or ship without them.
 
-`germ_logo.webp` is the mark of [Germ Network](https://germnetwork.com), a third party. It is
-theirs, not ours, and we can neither grant nor withhold permission to use it.
-
 **Internal note:** this directory is carved out of the MIT license as a whole. If you are adding
 an asset that we do want forks to be able to reuse, put it somewhere else rather than adding an
 exception here — the carve-out only stays maintainable if the directory boundary means something.
