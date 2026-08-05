@@ -1,5 +1,5 @@
 import {ScrollView, View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -21,7 +21,7 @@ import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {chat} from '#/lexicons'
+import {type chat} from '#/lexicons'
 
 export function RecentChats({
   postUri,

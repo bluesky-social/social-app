@@ -1,6 +1,6 @@
 import {useCallback, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
@@ -13,7 +13,7 @@ import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
 import {EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import * as Toast from '#/components/Toast'
-import {chat} from '#/lexicons'
+import {type chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
 import {

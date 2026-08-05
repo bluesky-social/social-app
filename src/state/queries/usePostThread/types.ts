@@ -1,6 +1,6 @@
-import {type ModerationDecision} from '@bsky.app/sdk/moderation'
+import {type ModerationDecision} from '@bsky/sdk/moderation'
 
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export type ApiThreadItem =
   | app.bsky.unspecced.getPostThreadV2.ThreadItem

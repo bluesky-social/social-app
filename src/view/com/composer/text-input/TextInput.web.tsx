@@ -8,7 +8,7 @@ import {
 } from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-import {RichText} from '@bsky.app/sdk/richtext'
+import {RichText} from '@bsky/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 import {getSchema} from '@tiptap/core'
 import {Document} from '@tiptap/extension-document'

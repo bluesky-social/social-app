@@ -1,6 +1,6 @@
 import {type $Typed} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
-import {moderatePost, type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {moderatePost, type ModerationOpts} from '@bsky/sdk/moderation'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {
@@ -8,7 +8,7 @@ import {
   type ThreadItem,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export function threadPostNoUnauthenticated({
   uri,

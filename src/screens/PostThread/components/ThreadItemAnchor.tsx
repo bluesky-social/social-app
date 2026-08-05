@@ -1,7 +1,7 @@
 import {memo, useMemo} from 'react'
 import {Text as RNText, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
-import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'

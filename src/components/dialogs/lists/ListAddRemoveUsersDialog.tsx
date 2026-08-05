@@ -1,6 +1,6 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -22,7 +22,7 @@ import {
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function ListAddRemoveUsersDialog({

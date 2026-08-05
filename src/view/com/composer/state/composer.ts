@@ -1,7 +1,7 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {type UriString} from '@atproto/lex'
 import {type AtUriString, toDatetimeString} from '@atproto/syntax'
-import {RichText} from '@bsky.app/sdk/richtext'
+import {RichText} from '@bsky/sdk/richtext'
 import {nanoid} from 'nanoid/non-secure'
 
 import {type VideoTelemetry} from '#/lib/media/video/telemetry'

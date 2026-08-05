@@ -1,5 +1,5 @@
 import {type DidString} from '@atproto/syntax'
-import {addLabeler, removeLabeler} from '@bsky.app/sdk'
+import {addLabeler, removeLabeler} from '@bsky/sdk'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 

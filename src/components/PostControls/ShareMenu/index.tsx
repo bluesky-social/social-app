@@ -1,7 +1,7 @@
 import {memo, useMemo, useState} from 'react'
 import {type Insets} from 'react-native'
 import {AtUri} from '@atproto/syntax'
-import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,7 +16,7 @@ import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/
 import * as Menu from '#/components/Menu'
 import {useMenuControl} from '#/components/Menu'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
 import {ShareMenuItems} from './ShareMenuItems'
 

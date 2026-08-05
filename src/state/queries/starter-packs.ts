@@ -1,6 +1,6 @@
 import {type Client} from '@atproto/lex'
 import {AtUri, type AtUriString, toDatetimeString} from '@atproto/syntax'
-import {RichText} from '@bsky.app/sdk/richtext'
+import {RichText} from '@bsky/sdk/richtext'
 import {
   type QueryClient,
   useMutation,

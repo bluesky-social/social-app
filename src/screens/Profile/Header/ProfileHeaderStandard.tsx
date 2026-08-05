@@ -4,8 +4,8 @@ import {
   moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
-} from '@bsky.app/sdk/moderation'
-import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+} from '@bsky/sdk/moderation'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -39,7 +39,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {GermButton} from '../components/GermButton'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'

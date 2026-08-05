@@ -1,4 +1,4 @@
-import {RichText} from '@bsky.app/sdk/richtext'
+import {RichText} from '@bsky/sdk/richtext'
 import {i18n} from '@lingui/core'
 
 import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'

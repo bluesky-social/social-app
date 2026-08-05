@@ -13,7 +13,7 @@ import {
   muteActor,
   unmuteActor,
   upsertProfile,
-} from '@bsky.app/sdk'
+} from '@bsky/sdk'
 import {
   type InfiniteData,
   keepPreviousData,

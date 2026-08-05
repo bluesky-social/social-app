@@ -1,6 +1,6 @@
 import {memo, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
@@ -24,7 +24,7 @@ import {useFormatPostStatCount} from '#/components/PostControls/util'
 import * as Skele from '#/components/Skeleton'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {BookmarkButton} from './BookmarkButton'
 import {
   PostControlButton,

@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {AtUri, type AtUriString} from '@atproto/syntax'
-import {moderateFeedGenerator} from '@bsky.app/sdk/moderation'
-import {RichText} from '@bsky.app/sdk/richtext'
+import {moderateFeedGenerator} from '@bsky/sdk/moderation'
+import {RichText} from '@bsky/sdk/richtext'
 import {t} from '@lingui/core/macro'
 import {
   type InfiniteData,

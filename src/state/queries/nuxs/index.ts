@@ -1,4 +1,4 @@
-import {removeNuxs, upsertNux} from '@bsky.app/sdk'
+import {removeNuxs, upsertNux} from '@bsky/sdk'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {type AppNux, type Nux} from '#/state/queries/nuxs/definitions'

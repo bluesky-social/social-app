@@ -4,7 +4,7 @@ import {
   moderateProfile,
   type ModerationOpts,
   type ModerationUI,
-} from '@bsky.app/sdk/moderation'
+} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -24,7 +24,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Checkbox} from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 function WizardListCard({

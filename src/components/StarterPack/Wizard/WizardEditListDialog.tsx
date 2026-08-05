@@ -1,7 +1,7 @@
 import {useRef} from 'react'
 import {type ListRenderItemInfo} from 'react-native'
 import {View} from 'react-native'
-import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -21,7 +21,7 @@ import {
 } from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 function keyExtractor(
   item: app.bsky.actor.defs.ProfileViewBasic | app.bsky.feed.defs.GeneratorView,

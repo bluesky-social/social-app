@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react'
 import {Pressable, type ScrollView, View} from 'react-native'
-import {api} from '@bsky.app/sdk'
+import {api} from '@bsky/sdk'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'

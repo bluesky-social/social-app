@@ -1,6 +1,6 @@
 import {memo, useCallback, useEffect, useMemo, useReducer, useRef} from 'react'
 import {View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -38,7 +38,7 @@ import {Text} from '#/components/Typography'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [

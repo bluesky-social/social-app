@@ -1,4 +1,4 @@
-import {type RichText} from '@bsky.app/sdk/richtext'
+import {type RichText} from '@bsky/sdk/richtext'
 
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'

@@ -20,8 +20,8 @@ import {
   updateMutedWord,
   updateSavedFeeds,
   upsertMutedWords,
-} from '@bsky.app/sdk'
-import {type LabelPreference} from '@bsky.app/sdk/moderation'
+} from '@bsky/sdk'
+import {type LabelPreference} from '@bsky/sdk/moderation'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'

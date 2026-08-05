@@ -1,6 +1,6 @@
 import {View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
-import {moderateProfile} from '@bsky.app/sdk/moderation'
+import {moderateProfile} from '@bsky/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -15,7 +15,7 @@ import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 const AVI_SIZE = 20
 

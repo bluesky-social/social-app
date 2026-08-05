@@ -1,6 +1,6 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {type ModerationDecision} from '@bsky.app/sdk/moderation'
+import {type ModerationDecision} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useProfileShadow} from '#/state/cache/profile-shadow'

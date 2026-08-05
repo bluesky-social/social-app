@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {moderatePost, type ModerationDecision} from '@bsky.app/sdk/moderation'
+import {moderatePost, type ModerationDecision} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 

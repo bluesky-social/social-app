@@ -1,5 +1,5 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type ModerationCause, type ModerationUI} from '@bsky.app/sdk/moderation'
+import {type ModerationCause, type ModerationUI} from '@bsky/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
@@ -15,7 +15,7 @@ import {
   useLabelsOnMeDialogControl,
 } from '#/components/moderation/LabelsOnMeDialog'
 import * as Pills from '#/components/Pills'
-import {app, com} from '#/lexicons'
+import {type app, type com} from '#/lexicons'
 
 export function PostAlerts({
   post,
