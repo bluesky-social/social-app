@@ -77,19 +77,21 @@ export function getFeatures() {
 
 export function getFeatureDescription(feature: Features, i18n: I18n) {
   switch (feature) {
-    case Features.PostThreadKnownLikersEnable:
+    case Features.CanonicalPostNumberingEnable:
       return {
         key: feature,
         name: i18n._(
           msg({
-            message: 'Social proofing on posts',
-            comment: 'Name for a feature flag',
+            message: 'Post numbering',
+            comment:
+              'Name for a feature flag (See the number of posts in a thread by the original author)',
           }),
         ),
         description: i18n._(
           msg({
-            message: 'Spot posts your friends and follows have liked.',
-            comment: 'Description of a feature flag (Social proofing on posts)',
+            message:
+              'See the number of posts in a thread by the original author.',
+            comment: 'Description of a feature flag (Post numbering)',
           }),
         ),
       }
