@@ -401,7 +401,7 @@ export function CustomFeedHeader({
         <Dialog.Handle />
         <Dialog.ScrollableInner
           label={l`Feed menu`}
-          style={[gtMobile ? {width: 'auto', minWidth: 450} : a.w_full]}>
+          style={[a.w_full, gtMobile && web({width: 'auto', minWidth: 450})]}>
           <DialogInner
             info={info}
             likeUri={likeUri}
