@@ -267,6 +267,7 @@
     "@lingui/cli": "^5.9.2",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@react-native/babel-preset": "0.86.0",
+    "@react-native/jest-preset": "0.86.0",
     "@react-native/typescript-config": "^0.81.5",
     "@sentry/webpack-plugin": "^3.2.2",
     "@testing-library/react-native": "^13.2.0",
