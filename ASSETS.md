@@ -93,7 +93,7 @@ supports it.
 - `bskyweb/static/favicon.png`, `favicon-16x16.png`, `favicon-32x32.png`
 - `bskyweb/static/apple-touch-icon.png`
 - `bskyweb/static/safari-pinned-tab.svg`
-- `bskyweb/static/social-card-default.png`, `social-card-default-gradient.png`
+- `bskyweb/static/social-card-default.png`, `bskyweb/static/social-card-default-gradient.png`
 - `bskyweb/embedr-static/favicon.png`, `favicon-16x16.png`, `favicon-32x32.png`
 - `modules/BlueskyClip/Images.xcassets/AppIcon.appiconset/`
 - Inline vector path data in `src/view/icons/Logo.tsx` and `src/view/icons/Logotype.tsx`

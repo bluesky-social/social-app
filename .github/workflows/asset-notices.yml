@@ -7,39 +7,13 @@ name: Asset notices
 # updated, the notice silently stops meaning anything. This job makes that visible in review
 # rather than a year later.
 #
-# The two paths lists below are duplicated on purpose — GitHub Actions does not support YAML
-# anchors. Keep them in sync.
+# No paths filter: the notices also reference files under src/ (e.g. the inline logo components),
+# so any rename anywhere in the tree can rot a notice. The check runs in under a second.
 
 on:
   push:
     branches: [main]
-    paths:
-      - 'ASSETS.md'
-      - 'NOTICE.md'
-      - 'LICENSE'
-      - 'licenses/**'
-      - 'assets/**'
-      - 'bskyembed/assets/**'
-      - 'bskyogcard/src/assets/**'
-      - 'bskyweb/static/**'
-      - 'bskyweb/embedr-static/**'
-      - 'modules/BlueskyClip/Images.xcassets/**'
-      - 'scripts/check-asset-notices.mjs'
-      - '.github/workflows/asset-notices.yml'
   pull_request:
-    paths:
-      - 'ASSETS.md'
-      - 'NOTICE.md'
-      - 'LICENSE'
-      - 'licenses/**'
-      - 'assets/**'
-      - 'bskyembed/assets/**'
-      - 'bskyogcard/src/assets/**'
-      - 'bskyweb/static/**'
-      - 'bskyweb/embedr-static/**'
-      - 'modules/BlueskyClip/Images.xcassets/**'
-      - 'scripts/check-asset-notices.mjs'
-      - '.github/workflows/asset-notices.yml'
 
 concurrency:
   group: '${{ github.workflow }}-${{ github.head_ref || github.ref }}'
