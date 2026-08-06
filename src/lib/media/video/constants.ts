@@ -7,4 +7,4 @@ export const COMPRESSION_TARGET_BITRATE = 3_000_000 // 3 Mbps
 export const COMPRESSION_MAX_DIMENSION = 1920
 // Web only: files under this size skip compression entirely. Native applies
 // its own threshold logic inside react-native-compressor.
-export const COMPRESSION_MIN_SIZE_BYTES = 25_000_000
+export const COMPRESSION_MIN_SIZE_BYTES = 25 * 1024 * 1024 // 25 MiB = 26,214,400 bytes

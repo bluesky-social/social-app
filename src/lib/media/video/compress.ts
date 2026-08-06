@@ -4,10 +4,9 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {SUPPORTED_MIME_TYPES, type SupportedMimeTypes} from '#/lib/constants'
 import {logger} from '#/logger'
 import {probe} from '../../../../modules/expo-bluesky-video-compress'
+import {COMPRESSION_MIN_SIZE_BYTES} from './constants'
 import {type CompressedVideo, type ProbedMetadata} from './types'
 import {extToMime} from './util'
-
-const MIN_SIZE_FOR_COMPRESSION_BYTES = 25 * 1024 * 1024 // 25mb
 
 export async function compressVideo(
   file: ImagePickerAsset,
@@ -50,7 +49,7 @@ export async function compressVideo(
   if (
     isAcceptableFormat &&
     file.fileSize != null &&
-    file.fileSize < MIN_SIZE_FOR_COMPRESSION_BYTES
+    file.fileSize < COMPRESSION_MIN_SIZE_BYTES
   ) {
     return {
       uri: file.uri,
