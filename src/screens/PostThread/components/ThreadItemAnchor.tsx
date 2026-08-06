@@ -31,8 +31,9 @@ import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {KnownLikers, LikesStat} from '#/screens/PostThread/components/LikesStat'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
-  hasThreadItemPostNumber,
+  POST_NUMBER_INLINE_OFFSET,
   ThreadItemPostNumber,
+  useHasThreadItemPostNumber,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
 import {
   LINEAR_AVI_WIDTH,
@@ -190,6 +191,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const post = postShadow
   const record = item.value.post.record
   const postNumbering = item.value
+  const showPostNumber = useHasThreadItemPostNumber(postNumbering)
   const moderation = item.moderation
   const authorShadow = useProfileShadow(post.author)
   const {isActive: live} = useActorStatus(post.author)
@@ -406,8 +408,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   style={[a.flex_1, a.text_lg]}
                   authorHandle={post.author.handle}
                   shouldProxyLinks={true}
+                  suffixOffset={POST_NUMBER_INLINE_OFFSET}
                   suffix={
-                    hasThreadItemPostNumber(postNumbering) ? (
+                    showPostNumber ? (
                       <ThreadItemPostNumber value={postNumbering} />
                     ) : undefined
                   }

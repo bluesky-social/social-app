@@ -24,8 +24,9 @@ import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replie
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {
-  hasThreadItemPostNumber,
+  POST_NUMBER_INLINE_OFFSET,
   ThreadItemPostNumber,
+  useHasThreadItemPostNumber,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
 import {
   LINEAR_AVI_WIDTH,
@@ -204,6 +205,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   const post = item.value.post
   const record = item.value.post.record
   const postNumbering = item.value
+  const showPostNumber = useHasThreadItemPostNumber(postNumbering)
   const moderation = item.moderation
   const richText = useMemo(
     () =>
@@ -332,8 +334,9 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}
                     shouldProxyLinks={true}
+                    suffixOffset={POST_NUMBER_INLINE_OFFSET}
                     suffix={
-                      !limitLines && hasThreadItemPostNumber(postNumbering) ? (
+                      !limitLines && showPostNumber ? (
                         <ThreadItemPostNumber value={postNumbering} />
                       ) : undefined
                     }
