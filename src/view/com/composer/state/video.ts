@@ -446,11 +446,11 @@ function getProcessingErrorMessage(
       return i18n._(msg`The selected video could not be encoded.`)
     case 'pds_upload_failure':
       return i18n._(
-        msg`The video could not be uploaded to your PDS. Please try again.`,
+        msg`The video could not be uploaded to your hosting provider. Please try again.`,
       )
     case 'pds_upload_unsupported_blob_size':
       return i18n._(
-        msg`Your PDS does not support videos this large. Please try again with a smaller file.`,
+        msg`Your hosting provider does not support videos this large. Please try again with a smaller file.`,
       )
     case 'generic_failure':
     default:
