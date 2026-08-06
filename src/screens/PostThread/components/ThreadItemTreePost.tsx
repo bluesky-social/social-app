@@ -23,8 +23,9 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {
-  hasThreadItemPostNumber,
+  POST_NUMBER_INLINE_OFFSET,
   ThreadItemPostNumber,
+  useHasThreadItemPostNumber,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
 import {
   OUTER_SPACE,
@@ -264,6 +265,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
   const post = item.value.post
   const record = item.value.post.record
   const postNumbering = item.value
+  const showPostNumber = useHasThreadItemPostNumber(postNumbering)
   const moderation = item.moderation
   const richText = useMemo(
     () =>
@@ -360,9 +362,9 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                         numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                         authorHandle={post.author.handle}
                         shouldProxyLinks={true}
+                        suffixOffset={POST_NUMBER_INLINE_OFFSET}
                         suffix={
-                          !limitLines &&
-                          hasThreadItemPostNumber(postNumbering) ? (
+                          !limitLines && showPostNumber ? (
                             <ThreadItemPostNumber value={postNumbering} />
                           ) : undefined
                         }

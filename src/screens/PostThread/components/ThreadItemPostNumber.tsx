@@ -5,13 +5,22 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {useAnalytics} from '#/analytics'
 
-export function hasThreadItemPostNumber(
+/**
+ * How far the inline badge is nudged below the text baseline to optically
+ * center it. The containing `RichText` must reserve matching room via
+ * `suffixOffset`, or iOS clips the overflow.
+ */
+export const POST_NUMBER_INLINE_OFFSET = 6
+
+export function useHasThreadItemPostNumber(
   value: AppBskyUnspeccedDefs.ThreadItemPost,
 ) {
+  const ax = useAnalytics()
   const index = value.opThreadPostIndex
   const count = value.opThreadPostCount
 
   return (
+    ax.features.enabled(ax.features.CanonicalPostNumberingEnable) &&
     index !== undefined &&
     count !== undefined &&
     index >= 1 &&
@@ -27,17 +36,13 @@ export function ThreadItemPostNumber({
   value: AppBskyUnspeccedDefs.ThreadItemPost
   inline?: boolean
 }) {
-  const ax = useAnalytics()
   const t = useTheme()
   const {t: l} = useLingui()
+  const shouldRender = useHasThreadItemPostNumber(value)
   const index = value.opThreadPostIndex
   const count = value.opThreadPostCount
 
-  const isEnabled = ax.features.enabled(
-    ax.features.CanonicalPostNumberingEnable,
-  )
-
-  if (!isEnabled || !hasThreadItemPostNumber(value)) {
+  if (!shouldRender) {
     return null
   }
 
@@ -54,7 +59,7 @@ export function ThreadItemPostNumber({
         },
         inline
           ? platform({
-              native: {transform: [{translateY: 6}]},
+              native: {transform: [{translateY: POST_NUMBER_INLINE_OFFSET}]},
               web: {top: -2},
             })
           : {top: -2},
