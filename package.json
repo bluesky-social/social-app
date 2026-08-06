@@ -174,7 +174,7 @@
     "expo-font": "~57.0.1",
     "expo-glass-effect": "57.0.1",
     "expo-haptics": "~57.0.1",
-    "expo-image": "~57.0.1",
+    "expo-image": "57.0.1",
     "expo-image-manipulator": "~57.0.6",
     "expo-image-picker": "~57.0.6",
     "expo-intent-launcher": "~57.0.1",
