@@ -268,7 +268,7 @@ function Inner(props: ReportDialogProps) {
 
       let error = l`Something went wrong. Please try again.`
       if (classification.kind === 'account-takedown') {
-        error = l`Your account cannot submit reports while it is taken down.`
+        error = l`Your account cannot submit reports while it is suspended.`
       } else if (classification.kind === 'invalid-reason-type') {
         error = l`This moderation service does not support that report reason. Please choose a different reason or moderation service.`
       } else if (classification.kind === 'service-unavailable') {
