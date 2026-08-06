@@ -34,18 +34,18 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {
-  ProfileFeedHeader,
-  ProfileFeedHeaderSkeleton,
-} from '#/screens/Profile/components/ProfileFeedHeader'
 import {useTheme} from '#/alf'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {IS_NATIVE} from '#/env'
+import {
+  CustomFeedHeader,
+  CustomFeedHeaderSkeleton,
+} from './components/CustomFeedHeader'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
-export function ProfileFeedScreen(props: Props) {
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
+export function CustomFeedScreen(props: Props) {
   const {rkey, name: handleOrDid} = props.route.params
 
   const feedParams: FeedParams | undefined = props.route.params.feedCacheKey
@@ -66,7 +66,7 @@ export function ProfileFeedScreen(props: Props) {
 
   if (error && !isRefetching) {
     return (
-      <Layout.Screen testID="profileFeedScreenError">
+      <Layout.Screen testID="customFeedScreenError">
         <ErrorScreen
           showHeader
           title={l`Could not load feed`}
@@ -78,15 +78,15 @@ export function ProfileFeedScreen(props: Props) {
   }
 
   return resolvedUri ? (
-    <Layout.Screen testID="profileFeedScreen">
-      <ProfileFeedScreenIntermediate
+    <Layout.Screen testID="customFeedScreen">
+      <CustomFeedScreenIntermediate
         feedUri={resolvedUri.uri}
         feedParams={feedParams}
       />
     </Layout.Screen>
   ) : (
-    <Layout.Screen testID="profileFeedScreen">
-      <ProfileFeedHeaderSkeleton />
+    <Layout.Screen testID="customFeedScreen">
+      <CustomFeedHeaderSkeleton />
       <Layout.Content>
         <PostFeedLoadingPlaceholder />
       </Layout.Content>
@@ -94,7 +94,7 @@ export function ProfileFeedScreen(props: Props) {
   )
 }
 
-function ProfileFeedScreenIntermediate({
+function CustomFeedScreenIntermediate({
   feedUri,
   feedParams,
 }: {
@@ -107,14 +107,14 @@ function ProfileFeedScreenIntermediate({
   if (!preferences || !info) {
     return (
       <Layout.Content>
-        <ProfileFeedHeaderSkeleton />
+        <CustomFeedHeaderSkeleton />
         <PostFeedLoadingPlaceholder />
       </Layout.Content>
     )
   }
 
   return (
-    <ProfileFeedScreenInner
+    <CustomFeedScreenInner
       preferences={preferences}
       feedInfo={info as FeedSourceFeedInfo}
       feedParams={feedParams}
@@ -122,7 +122,7 @@ function ProfileFeedScreenIntermediate({
   )
 }
 
-export function ProfileFeedScreenInner({
+export function CustomFeedScreenInner({
   feedInfo,
   feedParams,
 }: {
@@ -186,7 +186,7 @@ export function ProfileFeedScreenInner({
 
   return (
     <>
-      <ProfileFeedHeader info={feedInfo} isTrending={isTrending} />
+      <CustomFeedHeader info={feedInfo} isTrending={isTrending} />
       <FeedFeedbackProvider value={feedFeedback}>
         <PostFeed
           enabled
