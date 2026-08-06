@@ -216,6 +216,16 @@ jobs:
             ${{ env.BUILD_DIR }}/Bluesky.ipa
             ${{ env.BUILD_DIR }}/Bluesky.app.dSYM.zip
 
+      - name: 📝 Write build summary
+        env:
+          REMOTE_BUILD_NUMBER: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}
+        run: |
+          {
+            echo "### iOS build number"
+            echo
+            echo "\`$REMOTE_BUILD_NUMBER\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
   submit:
     name: Submit iOS
     # Submission and dSYM upload are I/O bound and don't need the xlarge builder.
