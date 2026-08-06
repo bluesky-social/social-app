@@ -470,8 +470,8 @@ importers:
         specifier: ~57.0.1
         version: 57.0.1(patch_hash=b33910ba2753c4eccdc885b449e6e33aa90b9cefa75ca8639762a26013141410)(expo@57.0.8)
       expo-image:
-        specifier: ~57.0.1
-        version: 57.0.2(expo@57.0.8)(react-native-web@0.21.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-native@0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0)(@react-native/jest-preset@0.86.0(@babel/core@7.29.0)(react@19.2.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3)
+        specifier: 57.0.1
+        version: 57.0.1(expo@57.0.8)(react-native-web@0.21.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-native@0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0)(@react-native/jest-preset@0.86.0(@babel/core@7.29.0)(react@19.2.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3)
       expo-image-manipulator:
         specifier: ~57.0.6
         version: 57.0.7(expo@57.0.8)
@@ -5414,8 +5414,8 @@ packages:
     peerDependencies:
       expo: '*'
 
-  expo-image@57.0.2:
-    resolution: {integrity: sha512-SAHDJiQ/Sf8JJ6NJ5/RbSewo8HtQtIGn4bDEgcvipwIw5lPURP0vXPzIOIrZ/ZroZ0abPgwTaWmkspoEO8Sxcw==}
+  expo-image@57.0.1:
+    resolution: {integrity: sha512-EP0lisd2bUqtErry4weRcMW9bLMxtKsht/MLLK3/3do5u4ZMiJbWkY5zfYV+WYmeGab7x9G0sjbeFeEagYGjMw==}
     peerDependencies:
       expo: '*'
       react: '*'
@@ -14673,7 +14673,7 @@ snapshots:
       expo: 57.0.8(patch_hash=1722861d12907a2d412d04230545b2fcbfa5547a79f99d763cb3e8de6f3a6f2a)(facf1066cf40bcd5cf4299d39d773b4d)
       expo-image-loader: 57.0.1(expo@57.0.8)
 
-  expo-image@57.0.2(expo@57.0.8)(react-native-web@0.21.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-native@0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0)(@react-native/jest-preset@0.86.0(@babel/core@7.29.0)(react@19.2.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3):
+  expo-image@57.0.1(expo@57.0.8)(react-native-web@0.21.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-native@0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0)(@react-native/jest-preset@0.86.0(@babel/core@7.29.0)(react@19.2.3))(@react-native/metro-config@0.86.0(@babel/core@7.29.0))(@types/react@19.2.18)(react@19.2.3))(react@19.2.3):
     dependencies:
       expo: 57.0.8(patch_hash=1722861d12907a2d412d04230545b2fcbfa5547a79f99d763cb3e8de6f3a6f2a)(facf1066cf40bcd5cf4299d39d773b4d)
       react: 19.2.3
