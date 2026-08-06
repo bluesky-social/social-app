@@ -112,6 +112,7 @@
     "@bsky.app/sift": "^0.3.9",
     "@bsky.app/tapper": "^0.6.1",
     "@bsky.app/video": "0.3.6",
+    "@bsky.app/video-compressor": "0.2.0",
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.12.5",
