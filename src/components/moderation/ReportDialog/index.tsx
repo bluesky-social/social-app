@@ -17,7 +17,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useMyLabelersQuery} from '#/state/queries/preferences'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useGutters, useTheme} from '#/alf'
+import {atoms as a, useGutters, useTheme, web} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -295,7 +295,7 @@ function Inner(props: ReportDialogProps) {
       testID="report:dialog"
       label={l`Report dialog`}
       ref={ref}
-      style={[a.w_full, {maxWidth: 500}]}>
+      style={[a.w_full, web({maxWidth: 500})]}>
       <View style={[a.gap_2xl, IS_NATIVE && a.pt_md]}>
         <StepOuter>
           <StepTitle
