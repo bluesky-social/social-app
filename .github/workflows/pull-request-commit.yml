@@ -22,6 +22,7 @@ permissions: {}
 # job downloads. Bump this one line to roll denis.
 env:
   DENIS_RELEASE_TAG: denis-v0.1.1
+  NODE_OPTIONS: --max-old-space-size=4096
 
 jobs:
   # Populate this from main so every PR can restore the same trusted baseline.
