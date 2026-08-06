@@ -7,7 +7,7 @@ import {useModerationCauseDescription} from '#/lib/moderation/useModerationCause
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
-import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon} from '#/components/icons/EyeSlash'
+import {RepostStrike_Stroke2_Corner0_Rounded as RepostStrikeIcon} from '#/components/icons/Repost'
 import {
   ModerationDetailsDialog,
   useModerationDetailsDialogControl,
@@ -228,7 +228,10 @@ export function MutedOnlyReposts(props: CommonProps) {
       {...props}
       label={l`Reposts Hidden`}
       icon={
-        <EyeSlashIcon width={size} fill={t.atoms.text_contrast_medium.color} />
+        <RepostStrikeIcon
+          width={size}
+          fill={t.atoms.text_contrast_medium.color}
+        />
       }
       disabled={true}
       onPress={() => {}}

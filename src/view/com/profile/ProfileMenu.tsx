@@ -173,7 +173,9 @@ let ProfileMenu = ({
     if (profile.viewer?.mutedOnlyReposts) {
       try {
         await queueUnmuteReposts()
-        Toast.show(l({message: 'Reposts shown', context: 'toast'}))
+        Toast.show(
+          l({message: 'Reposts will be shown in feeds', context: 'toast'}),
+        )
       } catch (err) {
         const e = err as Error
         if (e?.name !== 'AbortError') {
@@ -186,7 +188,9 @@ let ProfileMenu = ({
     } else {
       try {
         await queueMuteReposts()
-        Toast.show(l({message: 'Reposts hidden', context: 'toast'}))
+        Toast.show(
+          l({message: 'Reposts will be hidden in feeds', context: 'toast'}),
+        )
       } catch (err) {
         const e = err as Error
         if (e?.name !== 'AbortError') {
@@ -500,27 +504,29 @@ let ProfileMenu = ({
                               />
                             </Menu.Item>
                           )}
+                          <Menu.Item
+                            testID="profileHeaderDropdownMuteBtn"
+                            label={
+                              profile.viewer?.muted
+                                ? l`Unmute account`
+                                : l`Mute account`
+                            }
+                            onPress={() => void onPressMuteAccount()}>
+                            <Menu.ItemText>
+                              {profile.viewer?.muted ? (
+                                <Trans>Unmute account</Trans>
+                              ) : (
+                                <Trans>Mute account</Trans>
+                              )}
+                            </Menu.ItemText>
+                            <Menu.ItemIcon
+                              icon={
+                                profile.viewer?.muted ? UnmuteIcon : MuteIcon
+                              }
+                            />
+                          </Menu.Item>
                         </>
                       )}
-                    <Menu.Item
-                      testID="profileHeaderDropdownMuteBtn"
-                      label={
-                        profile.viewer?.muted
-                          ? l`Unmute account`
-                          : l`Mute account`
-                      }
-                      onPress={() => void onPressMuteAccount()}>
-                      <Menu.ItemText>
-                        {profile.viewer?.muted ? (
-                          <Trans>Unmute account</Trans>
-                        ) : (
-                          <Trans>Mute account</Trans>
-                        )}
-                      </Menu.ItemText>
-                      <Menu.ItemIcon
-                        icon={profile.viewer?.muted ? UnmuteIcon : MuteIcon}
-                      />
-                    </Menu.Item>
                     {!profile.viewer?.blockingByList && (
                       <Menu.Item
                         testID="profileHeaderDropdownBlockBtn"
