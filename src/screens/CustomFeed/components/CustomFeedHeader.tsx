@@ -52,7 +52,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
-export function ProfileFeedHeaderSkeleton() {
+export function CustomFeedHeaderSkeleton() {
   const t = useTheme()
 
   return (
@@ -82,7 +82,7 @@ export function ProfileFeedHeaderSkeleton() {
   )
 }
 
-export function ProfileFeedHeader({
+export function CustomFeedHeader({
   info,
   isTrending,
 }: {
