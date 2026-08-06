@@ -245,8 +245,8 @@ importers:
         specifier: 0.20.37
         version: 0.20.37
       '@atproto/common-web':
-        specifier: 0.5.6
-        version: 0.5.6
+        specifier: 0.5.7
+        version: 0.5.7
       '@atproto/syntax':
         specifier: 0.7.2
         version: 0.7.2
@@ -878,24 +878,24 @@ packages:
     resolution: {integrity: sha512-TEt8oKMbuC+1GvqyLKDBLqmptnk1mh52FdHPQEomlPIWxh88YcNnk0g0iKNVBevaeeLtWZF1a7Am/t/q255u5Q==}
     engines: {node: '>=22'}
 
-  '@atproto/common-web@0.5.6':
-    resolution: {integrity: sha512-5Y4MIK9dpkJPiKiE6u7iEHitxj+g3aAU2GfGL686JlKE2zDKD4y18BJb+uVek6nXQKb5XOdNVvw+7BHarpn8Fw==}
+  '@atproto/common-web@0.5.7':
+    resolution: {integrity: sha512-lvU8lFO5UByacsl3AReXkpTWjcPBS8mBqt40B45HwCt+s58a+xT/YI/+AUpmzSmsPVZCpeCmP6wgsOSC8RILXg==}
     engines: {node: '>=22'}
 
   '@atproto/common-web@0.5.8':
     resolution: {integrity: sha512-GiYY2Jgbg1aWe9QGT3TswC/wZNicipBDz0nFo4FrP6XqENEJJRxGKAf/zjvqbesfIQFhHXi1VbSFY7GStB8v8w==}
     engines: {node: '>=22'}
 
-  '@atproto/lex-data@0.1.5':
-    resolution: {integrity: sha512-TEM6GHuYpNm4O90LjNgbYq1Gmcr875S+BHrDxkg4PB5w/nlsz4HlbkGQG/WP/xbIV5O8TF5nNHDpCZ5ezTRrFA==}
+  '@atproto/lex-data@0.1.6':
+    resolution: {integrity: sha512-rvovRrYWDEuerX+ZeQbdI5dKs0bYvuMjhwDOtT+pkOvdY4MkfN41DJCz/RAYVAQ7noPdaalB6pAX9euukheE/w==}
     engines: {node: '>=22'}
 
   '@atproto/lex-data@0.1.7':
     resolution: {integrity: sha512-kW/dPLqo/WgCLV+XESR4JKwV6c1rZWJGOfuPupZGTjEDAKoBbKXdaEzX9/1vKQYbZ9U3j0DS/n7OFFK7wBugyQ==}
     engines: {node: '>=22'}
 
-  '@atproto/lex-json@0.1.4':
-    resolution: {integrity: sha512-ENR2cWkVrES+UL6TovbCRdX9BJOyHHJUS8jYx3Lxp3j4vEphjn/u+DW7bWloST2O8ID2OuVlt6+28ftNEEjmQQ==}
+  '@atproto/lex-json@0.1.5':
+    resolution: {integrity: sha512-qOp6+Za5p/xDXACYIP3vySbKaf9CJDwiZEN78ghPT1gRoJohKG3ONt/WmvOxBVJqc6VTRaqEpbG9vX9oLF2qsA==}
     engines: {node: '>=22'}
 
   '@atproto/lex-json@0.1.6':
@@ -9426,10 +9426,10 @@ snapshots:
       tlds: 1.261.0
       zod: 3.25.76
 
-  '@atproto/common-web@0.5.6':
+  '@atproto/common-web@0.5.7':
     dependencies:
-      '@atproto/lex-data': 0.1.5
-      '@atproto/lex-json': 0.1.4
+      '@atproto/lex-data': 0.1.6
+      '@atproto/lex-json': 0.1.5
       '@atproto/syntax': 0.7.2
       zod: 3.25.76
 
@@ -9440,7 +9440,7 @@ snapshots:
       '@atproto/syntax': 0.7.3
       zod: 3.25.76
 
-  '@atproto/lex-data@0.1.5':
+  '@atproto/lex-data@0.1.6':
     dependencies:
       multiformats: 13.4.2
       tslib: 2.8.1
@@ -9452,9 +9452,9 @@ snapshots:
       tslib: 2.8.1
       unicode-segmenter: 0.14.5
 
-  '@atproto/lex-json@0.1.4':
+  '@atproto/lex-json@0.1.5':
     dependencies:
-      '@atproto/lex-data': 0.1.5
+      '@atproto/lex-data': 0.1.6
       tslib: 2.8.1
 
   '@atproto/lex-json@0.1.6':

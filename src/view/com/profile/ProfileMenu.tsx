@@ -15,6 +15,7 @@ import {
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
   useProfileMuteMutationQueue,
+  useProfileMuteRepostsMutationQueue,
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
@@ -28,20 +29,24 @@ import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/i
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
-import {DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
-import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
-import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
+import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
+import {ListSparkle_Stroke2_Corner0_Rounded as ListIcon} from '#/components/icons/ListSparkle'
 import {Live_Stroke2_Corner0_Rounded as LiveIcon} from '#/components/icons/Live'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
-import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
-import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
+import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
+import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinusIcon} from '#/components/icons/PeopleRemove2'
 import {
-  PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
-  PersonX_Stroke2_Corner0_Rounded as PersonX,
+  PersonCheck_Stroke2_Corner0_Rounded as PersonCheckIcon,
+  PersonX_Stroke2_Corner0_Rounded as PersonXIcon,
 } from '#/components/icons/Person'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
-import {StarterPack} from '#/components/icons/StarterPack'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {
+  Repost_Stroke2_Corner0_Rounded as RepostIcon,
+  RepostStrike_Stroke2_Corner0_Rounded as RepostStrikeIcon,
+} from '#/components/icons/Repost'
+import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
+import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
 import * as Menu from '#/components/Menu'
 import {BlockDialog} from '#/components/moderation/BlockDialog'
 import {
@@ -93,6 +98,8 @@ let ProfileMenu = ({
   const {mutate: saveNux} = useSaveNux()
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
+  const [queueMuteReposts, queueUnmuteReposts] =
+    useProfileMuteRepostsMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
@@ -161,6 +168,40 @@ let ProfileMenu = ({
       }
     }
   }, [ax, profile.viewer?.muted, queueUnmute, l, queueMute])
+
+  const onPressMuteReposts = useCallback(async () => {
+    if (profile.viewer?.mutedOnlyReposts) {
+      try {
+        await queueUnmuteReposts()
+        Toast.show(
+          l({message: 'Reposts will be shown in feeds', context: 'toast'}),
+        )
+      } catch (err) {
+        const e = err as Error
+        if (e?.name !== 'AbortError') {
+          ax.logger.error('Failed to show reposts', {message: e})
+          Toast.show(l`There was an issue! ${e.toString()}`, {
+            type: 'error',
+          })
+        }
+      }
+    } else {
+      try {
+        await queueMuteReposts()
+        Toast.show(
+          l({message: 'Reposts will be hidden in feeds', context: 'toast'}),
+        )
+      } catch (err) {
+        const e = err as Error
+        if (e?.name !== 'AbortError') {
+          ax.logger.error('Failed to hide reposts', {message: e})
+          Toast.show(l`There was an issue! ${e.toString()}`, {
+            type: 'error',
+          })
+        }
+      }
+    }
+  }, [ax, profile.viewer, queueUnmuteReposts, l, queueMuteReposts])
 
   const blockAccount = useCallback(async () => {
     if (profile.viewer?.blocking) {
@@ -265,7 +306,7 @@ let ProfileMenu = ({
                   size="small"
                   shape="round">
                   {statusNudgeActive && <Gradient style={[a.rounded_full]} />}
-                  <ButtonIcon icon={Ellipsis} size="sm" />
+                  <ButtonIcon icon={EllipsisIcon} size="sm" />
                 </Button>
                 {statusNudgeActive && <Dot top={1} right={1} />}
               </>
@@ -331,7 +372,9 @@ let ProfileMenu = ({
                             <Trans>Follow account</Trans>
                           )}
                         </Menu.ItemText>
-                        <Menu.ItemIcon icon={isFollowing ? UserMinus : Plus} />
+                        <Menu.ItemIcon
+                          icon={isFollowing ? UserMinusIcon : PlusIcon}
+                        />
                       </Menu.Item>
                     )}
                   </>
@@ -343,7 +386,7 @@ let ProfileMenu = ({
                   <Menu.ItemText>
                     <Trans>Add to starter packs</Trans>
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={StarterPack} />
+                  <Menu.ItemIcon icon={StarterPackIcon} />
                 </Menu.Item>
                 <Menu.Item
                   testID="profileHeaderDropdownListAddRemoveBtn"
@@ -352,7 +395,7 @@ let ProfileMenu = ({
                   <Menu.ItemText>
                     <Trans>Add to lists</Trans>
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={List} />
+                  <Menu.ItemIcon icon={ListIcon} />
                 </Menu.Item>
                 {isSelf && canGoLive && (
                   <Menu.Item
@@ -435,25 +478,54 @@ let ProfileMenu = ({
                   <>
                     {!profile.viewer?.blocking &&
                       !profile.viewer?.mutedByList && (
-                        <Menu.Item
-                          testID="profileHeaderDropdownMuteBtn"
-                          label={
-                            profile.viewer?.muted
-                              ? l`Unmute account`
-                              : l`Mute account`
-                          }
-                          onPress={() => void onPressMuteAccount()}>
-                          <Menu.ItemText>
-                            {profile.viewer?.muted ? (
-                              <Trans>Unmute account</Trans>
-                            ) : (
-                              <Trans>Mute account</Trans>
-                            )}
-                          </Menu.ItemText>
-                          <Menu.ItemIcon
-                            icon={profile.viewer?.muted ? Unmute : Mute}
-                          />
-                        </Menu.Item>
+                        <>
+                          {!profile.viewer?.muted && (
+                            <Menu.Item
+                              testID="profileHeaderDropdownMuteRepostsBtn"
+                              label={
+                                profile.viewer?.mutedOnlyReposts
+                                  ? l`Show reposts in feeds`
+                                  : l`Hide reposts in feeds`
+                              }
+                              onPress={() => void onPressMuteReposts()}>
+                              <Menu.ItemText>
+                                {profile.viewer?.mutedOnlyReposts ? (
+                                  <Trans>Show reposts in feeds</Trans>
+                                ) : (
+                                  <Trans>Hide reposts in feeds</Trans>
+                                )}
+                              </Menu.ItemText>
+                              <Menu.ItemIcon
+                                icon={
+                                  profile.viewer?.mutedOnlyReposts
+                                    ? RepostIcon
+                                    : RepostStrikeIcon
+                                }
+                              />
+                            </Menu.Item>
+                          )}
+                          <Menu.Item
+                            testID="profileHeaderDropdownMuteBtn"
+                            label={
+                              profile.viewer?.muted
+                                ? l`Unmute account`
+                                : l`Mute account`
+                            }
+                            onPress={() => void onPressMuteAccount()}>
+                            <Menu.ItemText>
+                              {profile.viewer?.muted ? (
+                                <Trans>Unmute account</Trans>
+                              ) : (
+                                <Trans>Mute account</Trans>
+                              )}
+                            </Menu.ItemText>
+                            <Menu.ItemIcon
+                              icon={
+                                profile.viewer?.muted ? UnmuteIcon : MuteIcon
+                              }
+                            />
+                          </Menu.Item>
+                        </>
                       )}
                     {!profile.viewer?.blockingByList && (
                       <Menu.Item
@@ -473,7 +545,9 @@ let ProfileMenu = ({
                         </Menu.ItemText>
                         <Menu.ItemIcon
                           icon={
-                            profile.viewer?.blocking ? PersonCheck : PersonX
+                            profile.viewer?.blocking
+                              ? PersonCheckIcon
+                              : PersonXIcon
                           }
                         />
                       </Menu.Item>
@@ -485,7 +559,7 @@ let ProfileMenu = ({
                       <Menu.ItemText>
                         <Trans>Report account</Trans>
                       </Menu.ItemText>
-                      <Menu.ItemIcon icon={Flag} />
+                      <Menu.ItemIcon icon={FlagIcon} />
                     </Menu.Item>
                   </>
                 )}

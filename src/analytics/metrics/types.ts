@@ -510,6 +510,8 @@ export type Events = {
   }
   'profile:mute': {}
   'profile:unmute': {}
+  'profile:muteReposts': {}
+  'profile:unmuteReposts': {}
   'profile:block': {}
   'profile:unblock': {}
   'suggestedUser:follow': {

@@ -992,11 +992,6 @@
       "count": 3
     }
   },
-  "src/screens/Profile/Header/Shell.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/screens/Profile/KnownFollowers.tsx": {
     "typescript/no-misused-promises": {
       "count": 2
