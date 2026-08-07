@@ -172,14 +172,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               <LayoutAnimationConfig skipEntering>
                 <ScreenTransition
                   key={state.activeStep}
-                  direction={state.screenTransitionDirection}>
-                  <View
-                    style={[
-                      a.flex_1,
-                      a.px_xl,
-                      a.pt_2xl,
-                      !gtMobile && {paddingBottom: 100},
-                    ]}>
+                  direction={state.screenTransitionDirection}
+                  style={a.flex_1}>
+                  <View style={[a.flex_1, a.px_xl, a.pt_2xl]}>
                     <View style={[a.gap_sm, a.pb_3xl]}>
                       <Text
                         style={[
