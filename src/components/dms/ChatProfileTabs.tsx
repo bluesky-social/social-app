@@ -95,6 +95,8 @@ function Tab({
     moderation.ui('displayName'),
   )
 
+  const isLabeler = profile.associated?.labeler
+
   const onPressItem = useCallback(
     (did: string) => {
       onRemove?.(did)
@@ -111,7 +113,7 @@ function Tab({
         a.border,
         a.justify_center,
         a.rounded_lg,
-        a.pl_xs,
+        isLabeler ? a.pl_sm : a.pl_xs,
         a.pr_sm,
         a.py_xs,
         t.atoms.border_contrast_low,
