@@ -1,46 +1,13 @@
-import {type SessionData} from '@atproto/lex-password-session'
+import {
+  extractPdsEndpoint,
+  type SessionData,
+} from '@atproto/lex-password-session'
 import {jwtDecode} from 'jwt-decode'
 
 import {BSKY_SERVICE} from '#/lib/constants'
 import {isJwtExpired} from '#/lib/jwt'
 import {hasProp} from '#/lib/type-guards'
 import {type SessionAccount} from './types'
-
-/**
- * The PDS endpoint declared by a DID document, or `undefined`.
- *
- * This deliberately mirrors `extractPdsUrl` in `@atproto/lex-password-session`,
- * the predicate `PasswordSession` uses to route its own requests: the first
- * service entry whose `id` ends with `#atproto_pds`, taking its
- * `serviceEndpoint` if it parses as a URL. A stricter predicate here (schema
- * validation, `type` checks) would let the PERSISTED `pdsUrl` disagree with
- * the host the live session actually routes to, so the next cold start would
- * seed the wrong endpoint.
- */
-function extractPdsUrl(didDoc: SessionData['didDoc']): string | undefined {
-  const services = prop(didDoc, 'service')
-  if (!Array.isArray(services)) {
-    return undefined
-  }
-  const pds = services.find(service => {
-    const id = prop(service, 'id')
-    return typeof id === 'string' && id.endsWith('#atproto_pds')
-  })
-  const endpoint = prop(pds, 'serviceEndpoint')
-  return typeof endpoint === 'string' && URL.canParse(endpoint)
-    ? endpoint
-    : undefined
-}
-
-/**
- * Read a property off an unknown value the way JS optional chaining would,
- * without narrowing assumptions about the shape of a `LexMap`.
- */
-function prop(value: unknown, key: string): unknown {
-  return typeof value === 'object' && value !== null
-    ? (value as Record<string, unknown>)[key]
-    : undefined
-}
 
 /** Whether an access token was issued for a queued (waitlisted) signup. */
 export function isSignupQueued(accessJwt: string | undefined) {
@@ -75,7 +42,7 @@ export function sessionDataToSessionAccount(
     return undefined
   }
   const normalizedService = new URL(service).toString()
-  const pdsUrl = extractPdsUrl(session.didDoc) ?? storedPdsUrl
+  const pdsUrl = extractPdsEndpoint(session.didDoc) ?? storedPdsUrl
   return {
     service: normalizedService,
     did: session.did,
