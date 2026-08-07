@@ -2880,7 +2880,7 @@ msgstr ""
 msgid "Choose your password"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:201
+#: src/screens/Signup/index.tsx:196
 msgid "Choose your username"
 msgstr ""
 
@@ -3142,7 +3142,7 @@ msgstr ""
 msgid "Complete onboarding and start using your account"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:203
+#: src/screens/Signup/index.tsx:198
 msgid "Complete the challenge"
 msgstr ""
 
@@ -3223,8 +3223,8 @@ msgid "Contact our support team"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:156
-#: src/screens/Signup/index.tsx:248
-#: src/screens/Signup/index.tsx:251
+#: src/screens/Signup/index.tsx:243
+#: src/screens/Signup/index.tsx:246
 msgid "Contact support"
 msgstr ""
 
@@ -5895,7 +5895,7 @@ msgid "Go to next"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:262
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:98
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:102
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:194
 #: src/view/shell/desktop/LeftNav.tsx:336
 #: src/view/shell/desktop/LeftNav.tsx:342
@@ -5910,7 +5910,7 @@ msgstr "Go to the group chat named \"{chatName}\""
 msgid "Go to user's profile"
 msgstr ""
 
-#: src/screens/Messages/components/MessagesListInfoPanel.tsx:92
+#: src/screens/Messages/components/MessagesListInfoPanel.tsx:96
 msgid "Go to user’s profile"
 msgstr "Go to user’s profile"
 
@@ -6093,7 +6093,7 @@ msgstr ""
 msgid "Have we got your location wrong? <0>Tap here to update your location with GPS.</0>"
 msgstr "Have we got your location wrong? <0>Tap here to update your location with GPS.</0>"
 
-#: src/screens/Signup/index.tsx:246
+#: src/screens/Signup/index.tsx:241
 msgid "Having trouble?"
 msgstr ""
 
@@ -11852,7 +11852,7 @@ msgstr ""
 #. placeholder {1}: state.serviceDescription && !state.serviceDescription.phoneVerificationRequired ? '2' : '3'
 #. placeholder {1}: state.totalSteps
 #: src/screens/Onboarding/Layout.tsx:226
-#: src/screens/Signup/index.tsx:189
+#: src/screens/Signup/index.tsx:184
 msgid "Step {0} of {1}"
 msgstr ""
 
@@ -15017,7 +15017,7 @@ msgstr ""
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:199
+#: src/screens/Signup/index.tsx:194
 msgid "Your account"
 msgstr ""
 
