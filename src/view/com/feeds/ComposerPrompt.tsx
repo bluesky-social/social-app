@@ -14,7 +14,7 @@ import {openCamera, openUnifiedPicker} from '#/lib/media/picker'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {MAX_GALLERY_IMAGES} from '#/view/com/composer/state/composer'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Camera_Stroke2_Corner0_Rounded as CameraIcon} from '#/components/icons/Camera'
@@ -29,6 +29,7 @@ export function ComposerPrompt() {
   const ax = useAnalytics()
   const {_} = useLingui()
   const {openComposer} = useOpenComposer()
+  const {gtMobile} = useBreakpoints()
   const profile = useCurrentAccountProfile()
   const [hover, setHover] = useState(false)
   const {requestCameraAccessIfNeeded} = useCameraPermission()
@@ -155,10 +156,7 @@ export function ComposerPrompt() {
         a.relative,
         a.flex_row,
         a.align_start,
-        {
-          paddingLeft: 18,
-          paddingRight: 15,
-        },
+        gtMobile ? a.px_lg : a.px_md,
         a.py_md,
         native({
           paddingTop: 10,
@@ -178,12 +176,12 @@ export function ComposerPrompt() {
       <View
         style={[
           a.flex_1,
-          a.ml_md,
           a.flex_row,
           a.align_center,
           a.justify_between,
           {
             height: 40,
+            marginLeft: 10,
           },
         ]}>
         <Text
@@ -194,7 +192,7 @@ export function ComposerPrompt() {
           ]}>
           <Trans>What's up?</Trans>
         </Text>
-        <View style={[a.flex_row, a.gap_md]}>
+        <View style={[a.flex_row, a.gap_md, a.pr_xs]}>
           {IS_NATIVE && (
             <Button
               onPress={e => {
