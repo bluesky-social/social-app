@@ -344,8 +344,8 @@ jobs:
         uses: ./.github/actions/setup-denis
         with:
           release-tag: ${{ env.DENIS_RELEASE_TAG }}
-          app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
-          private-key: ${{ secrets.SYNC_INTERNAL_PK }}
+          app-id: ${{ secrets.BLUESKY_CI_APP_ID }}
+          private-key: ${{ secrets.BLUESKY_CI_APP_PRIVATE_KEY }}
 
       - name: 🔢 Get native build numbers
         id: build-info
