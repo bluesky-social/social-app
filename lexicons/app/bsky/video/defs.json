@@ -38,6 +38,17 @@
           "maximum": 100,
           "minimum": 0,
           "description": "Progress within the current processing state."
+        },
+        "failureCode": {
+          "type": "string",
+          "description": "A machine-readable code for why the video processing job failed.",
+          "knownValues": [
+            "validation_failure",
+            "encoding_failure",
+            "pds_upload_failure",
+            "pds_upload_unsupported_blob_size",
+            "generic_failure"
+          ]
         }
       }
     }

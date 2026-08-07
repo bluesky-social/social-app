@@ -270,7 +270,7 @@
   "resolutions": {
     "app.bsky.actor.defs": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.actor.defs",
-      "cid": "bafyreielcp7ccfxuvtdthry5qqdqmvcqo5wx3shkuz32xd5rlypmhw6ufa"
+      "cid": "bafyreiaxduxpwdpjgvve3klfs4flkwjwfqiurszw4o6jvjarpqqmeqwiza"
     },
     "app.bsky.actor.getPreferences": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.actor.getPreferences",
@@ -378,7 +378,7 @@
     },
     "app.bsky.draft.createDraft": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.draft.createDraft",
-      "cid": "bafyreiac6mvg7bdmdb3dndr3dvtpbn6ifjtv5uoweliw4sk2wpbdcwlfca"
+      "cid": "bafyreid43zfsfg4wk4p3mf3gihwhpqh4d5rmpw7l5n3zks3kl53bsrsaba"
     },
     "app.bsky.draft.defs": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.draft.defs",
@@ -586,7 +586,7 @@
     },
     "app.bsky.graph.getMutes": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.graph.getMutes",
-      "cid": "bafyreif4wfqhk2eldaqwn4552ppul26p6z4e4epuqkngb6dkpll7akfqbm"
+      "cid": "bafyreibnvq62dmchuulpzvvl6w2x6z4mofnqdrfbsvc5ynoo6cazr7wove"
     },
     "app.bsky.graph.getRelationships": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.graph.getRelationships",
@@ -622,7 +622,7 @@
     },
     "app.bsky.graph.muteActor": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.graph.muteActor",
-      "cid": "bafyreiauvwzkpqibtwpegxofryhdwldk2aitvmz7g2gidchlfcdkamwk6a"
+      "cid": "bafyreiebgeqbzitzytuvuu23nxgiyxjdh3iawcxonsiu6t2aubqd6ugt6m"
     },
     "app.bsky.graph.muteActorList": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.graph.muteActorList",
@@ -726,7 +726,7 @@
     },
     "app.bsky.video.defs": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.video.defs",
-      "cid": "bafyreifgpicywqtgxj3afrw3fsadrr3qeykesmu52we3arwp5sps2blgpm"
+      "cid": "bafyreibxabe2aejhtnjbwsnt7va4bvge35p7lzcjt2nwmf2c4taww46yyq"
     },
     "app.bsky.video.getJobStatus": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.video.getJobStatus",
