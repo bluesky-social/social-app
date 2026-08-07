@@ -15,7 +15,9 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
 
-export function PwiOptOut() {
+const NO_PROMOTE_LABEL = '!no-promote'
+
+export function AlgoVisibilityOptOut() {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -23,7 +25,7 @@ export function PwiOptOut() {
   const updateProfile = useProfileUpdateMutation()
 
   const isOptedOut =
-    profile?.labels?.some(l => l.val === '!no-unauthenticated') || false
+    profile?.labels?.some(label => label.val === NO_PROMOTE_LABEL) || false
   const canToggle = profile && !updateProfile.isPending
 
   const onToggleOptOut = useCallback(() => {
@@ -34,7 +36,6 @@ export function PwiOptOut() {
     updateProfile.mutate({
       profile,
       updates: existing => {
-        // create labels attr if needed
         const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.validate(
           existing.labels,
           ComAtprotoLabelDefs.validateSelfLabels,
@@ -45,21 +46,18 @@ export function PwiOptOut() {
               values: [],
             }
 
-        // toggle the label
         const hasLabel = labels.values.some(
-          l => l.val === '!no-unauthenticated',
+          label => label.val === NO_PROMOTE_LABEL,
         )
         if (hasLabel) {
-          wasAdded = false
           labels.values = labels.values.filter(
-            l => l.val !== '!no-unauthenticated',
+            label => label.val !== NO_PROMOTE_LABEL,
           )
         } else {
           wasAdded = true
-          labels.values.push({val: '!no-unauthenticated'})
+          labels.values.push({val: NO_PROMOTE_LABEL})
         }
 
-        // delete if no longer needed
         if (labels.values.length === 0) {
           delete existing.labels
         } else {
@@ -68,9 +66,9 @@ export function PwiOptOut() {
 
         return existing
       },
-      checkCommitted: res => {
-        const exists = !!res.data.labels?.some(
-          l => l.val === '!no-unauthenticated',
+      checkCommitted: response => {
+        const exists = !!response.data.labels?.some(
+          label => label.val === NO_PROMOTE_LABEL,
         )
         return exists === wasAdded
       },
@@ -80,17 +78,17 @@ export function PwiOptOut() {
   return (
     <View style={[a.flex_1, a.gap_sm]}>
       <Toggle.Item
-        name="logged_out_visibility"
-        disabled={!canToggle || updateProfile.isPending}
+        name="algorithmic_visibility"
+        disabled={!canToggle}
         value={isOptedOut}
         onChange={onToggleOptOut}
         label={_(
-          msg`Ask apps and sites not to show my account to logged-out users`,
+          msg`Ask apps to hide my posts from algorithmic recommendations`,
         )}
         style={[a.w_full]}>
         <Toggle.LabelText style={[a.flex_1]}>
           <Trans>
-            Ask apps and sites not to show my account to logged-out users
+            Ask apps to hide my posts from algorithmic recommendations
           </Trans>
         </Toggle.LabelText>
         <Toggle.Platform />
@@ -98,9 +96,9 @@ export function PwiOptOut() {
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_high]}>
         <Trans>
-          Bluesky will not show your account to logged-out users and will ask
-          other apps to do the same. Other apps may not honor this request. It
-          doesn't make your account private.
+          Bluesky will not show your posts in algorithmic recommendations and
+          will ask other apps to do the same. Your posts may still appear in the
+          Discover feed, but only to your followers.
         </Trans>
       </Text>
     </View>
