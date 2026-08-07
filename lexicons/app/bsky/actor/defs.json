@@ -250,7 +250,8 @@
       "type": "object",
       "properties": {
         "muted": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Whether the account is fully muted, directly or via a mutelist. False when the mute is scoped to specific kinds; see mutedOnlyReposts and mutedOnlyQuoteposts."
         },
         "blocking": {
           "type": "string",
@@ -279,6 +280,14 @@
           "ref": "#knownFollowers",
           "type": "ref",
           "description": "This property is present only in selected cases, as an optimization."
+        },
+        "mutedOnlyReposts": {
+          "type": "boolean",
+          "description": "Whether the account's reposts are muted. Scoped mutes are exclusive with muted: this can be true while muted is false. If muted is true, this will be false."
+        },
+        "mutedOnlyQuoteposts": {
+          "type": "boolean",
+          "description": "Whether the account's quote posts are muted. Scoped mutes are exclusive with muted: this can be true while muted is false. If muted is true, this will be false."
         },
         "activitySubscription": {
           "ref": "app.bsky.notification.defs#activitySubscription",
