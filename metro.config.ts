@@ -26,21 +26,36 @@ const config = getSentryExpoConfig(import.meta.dirname, {
     if (process.env.BSKY_PROFILE) {
       // @ts-expect-error readonly property
       config.cacheVersion += ':PROFILE'
-
-      const resolver: CustomResolver = (context, moduleName, platform) => {
-        if (moduleName.endsWith('ReactNativeRenderer-prod')) {
-          return context.resolveRequest(
-            context,
-            moduleName.replace('-prod', '-profiling'),
-            platform,
-          )
-        }
-        return context.resolveRequest(context, moduleName, platform)
-      }
-
-      // @ts-expect-error readonly property
-      config.resolver.resolveRequest = resolver
     }
+
+    const resolver: CustomResolver = (context, moduleName, platform) => {
+      /*
+       * react-native-webview has no web implementation (its fallback renders
+       * "does not support this platform"), so swap in react-native-web-webview
+       * to keep external media embeds working. Mirrors the old webpack alias.
+       */
+      if (platform === 'web' && moduleName === 'react-native-webview') {
+        return context.resolveRequest(
+          context,
+          'react-native-web-webview',
+          platform,
+        )
+      }
+      if (
+        process.env.BSKY_PROFILE &&
+        moduleName.endsWith('ReactNativeRenderer-prod')
+      ) {
+        return context.resolveRequest(
+          context,
+          moduleName.replace('-prod', '-profiling'),
+          platform,
+        )
+      }
+      return context.resolveRequest(context, moduleName, platform)
+    }
+
+    // @ts-expect-error readonly property
+    config.resolver.resolveRequest = resolver
 
     config.transformer.getTransformOptions = () =>
       Promise.resolve({
