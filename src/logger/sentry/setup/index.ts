@@ -20,6 +20,7 @@ init({
      * Un-useful errors
      */
     `Network request failed`,
+    `Network request timed out`,
   ],
   /**
    * Does not affect traces of error events or other logs, just disables
