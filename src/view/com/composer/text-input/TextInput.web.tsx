@@ -236,10 +236,19 @@ export function TextInput({
                   // otherwise, delete the last grapheme using deleteRange,
                   // so that emojis are deleted as a whole
                   const deleteFrom = cursorPosition - lastGrapheme.length
-                  editor?.commands.deleteRange({
-                    from: deleteFrom,
-                    to: cursorPosition,
-                  })
+                  // Resolve positions against `view`, not the closed-over
+                  // `editor`. The `editor` ref can briefly point at a stale
+                  // instance (e.g. after the editor is recreated on a theme
+                  // change or content reset) whose document is out of sync
+                  // with the live `view`, causing deleteRange to throw
+                  // "Position X out of range". Clamp to the live doc as a
+                  // final guard. See APP-SBSP -sfn
+                  const docSize = view.state.doc.content.size
+                  const from = Math.max(0, Math.min(deleteFrom, docSize))
+                  const to = Math.max(from, Math.min(cursorPosition, docSize))
+                  if (from < to) {
+                    view.dispatch(view.state.tr.delete(from, to))
+                  }
                   return true
                 }
               }
