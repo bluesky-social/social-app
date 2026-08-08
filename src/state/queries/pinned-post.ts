@@ -1,3 +1,4 @@
+import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
@@ -5,14 +6,15 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import * as Toast from '#/components/Toast'
+import {app} from '#/lexicons'
 import {updatePostShadow} from '../cache/post-shadow'
-import {useAgent, useSession} from '../session'
+import {useAppviewClient, useSession} from '../session'
 import {useProfileUpdateMutation} from './profile'
 
 export function usePinnedPostMutation() {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const client = useAppviewClient()
   const queryClient = useQueryClient()
   const {mutateAsync: profileUpdateMutate} = useProfileUpdateMutation()
 
@@ -33,8 +35,8 @@ export function usePinnedPostMutation() {
 
         // get the currently pinned post so we can optimistically remove the pin from it
         if (!currentAccount) throw new Error('Not signed in')
-        const {data: profile} = await agent.getProfile({
-          actor: currentAccount.did,
+        const profile = await client.call(app.bsky.actor.getProfile, {
+          actor: currentAccount.did as DidString,
         })
         prevPinnedPost = profile.pinnedPost?.uri
         if (prevPinnedPost && prevPinnedPost !== postUri) {

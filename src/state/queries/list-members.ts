@@ -1,9 +1,9 @@
 import {
   type AppBskyActorDefs,
   type AppBskyGraphDefs,
-  type AppBskyGraphGetList,
   type AtpAgent,
 } from '@atproto/api'
+import {type AtUriString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -13,7 +13,8 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import {useAgent, useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -24,23 +25,23 @@ export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 export const RQKEY_ALL = (uri: string) => [RQKEY_ROOT_ALL, uri]
 
 export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useInfiniteQuery<
-    AppBskyGraphGetList.OutputSchema,
+    app.bsky.graph.getList.$OutputBody,
     Error,
-    InfiniteData<AppBskyGraphGetList.OutputSchema>,
+    InfiniteData<app.bsky.graph.getList.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri ?? ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getList({
-        list: uri!, // the enabled flag will prevent this from running until uri is set
+      return await client.call(app.bsky.graph.getList, {
+        // the enabled flag will prevent this from running until uri is set
+        list: uri! as AtUriString,
         limit,
         cursor: pageParam,
       })
-      return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -60,6 +61,10 @@ export function useAllListMembersQuery(uri?: string) {
   })
 }
 
+/*
+ * Still on the legacy agent: four call sites outside this cluster pass their
+ * own `AtpAgent`, so the parameter type is migrated with those consumers.
+ */
 export async function getAllListMembers(agent: AtpAgent, uri: string) {
   let hasMore = true
   let cursor: string | undefined
@@ -95,7 +100,7 @@ export function* findAllProfilesInQueryData(
   did: string,
 ): Generator<AppBskyActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyGraphGetList.OutputSchema>
+    InfiniteData<app.bsky.graph.getList.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })

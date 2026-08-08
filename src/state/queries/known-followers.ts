@@ -1,7 +1,5 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyGraphGetKnownFollowers,
-} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -9,7 +7,8 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 const PAGE_SIZE = 50
 type RQPageParam = string | undefined
@@ -18,22 +17,22 @@ const RQKEY_ROOT = 'profile-known-followers'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
 export function useProfileKnownFollowersQuery(did: string | undefined) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useInfiniteQuery<
-    AppBskyGraphGetKnownFollowers.OutputSchema,
+    app.bsky.graph.getKnownFollowers.$OutputBody,
     Error,
-    InfiniteData<AppBskyGraphGetKnownFollowers.OutputSchema>,
+    InfiniteData<app.bsky.graph.getKnownFollowers.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(did || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getKnownFollowers({
-        actor: did!,
+      return await client.call(app.bsky.graph.getKnownFollowers, {
+        // the enabled flag prevents this from running until did is set
+        actor: did! as DidString,
         limit: PAGE_SIZE,
         cursor: pageParam,
       })
-      return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -46,7 +45,7 @@ export function* findAllProfilesInQueryData(
   did: string,
 ): Generator<AppBskyActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyGraphGetKnownFollowers.OutputSchema>
+    InfiniteData<app.bsky.graph.getKnownFollowers.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })
