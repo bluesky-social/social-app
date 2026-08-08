@@ -1,9 +1,7 @@
 import {useRef, useState} from 'react'
 import {Keyboard, type TextInput, View} from 'react-native'
-import {
-  ComAtprotoServerCreateSession,
-  type ComAtprotoServerDescribeServer,
-} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
+import {LexAuthFactorError} from '@atproto/lex-password-session'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {DEFAULT_SERVICE, HITSLOP_10, HITSLOP_20} from '#/lib/constants'
@@ -142,10 +140,11 @@ export const LoginForm = ({
     } catch (err) {
       const errMsg = String(err)
       setIsProcessing(false)
-      if (
-        err instanceof
-        ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
-      ) {
+      /*
+       * `LexAuthFactorError` is what `PasswordSession.login` throws when the
+       * server demands an email 2FA token.
+       */
+      if (err instanceof LexAuthFactorError) {
         setIsAuthFactorTokenNeeded(true)
       } else {
         onAttemptFailed()

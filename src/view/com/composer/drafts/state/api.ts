@@ -11,7 +11,7 @@ import {mimeToExt} from '#/lib/media/video/util'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {type ComposerImage} from '#/state/gallery'
 import {threadgateAllowUISettingToAllowRecordValue} from '#/state/queries/threadgate/util'
-import {createPublicAgent} from '#/state/session/agent'
+import {createPublicAgent} from '#/state/session/bridge-agent'
 import {
   type ComposerState,
   type EmbedDraft,

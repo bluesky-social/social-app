@@ -3,6 +3,9 @@ import {type Metrics} from '#/analytics/metrics'
 
 export type SessionAccount = PersistedAccount
 
+/** Session-change events understood by the reducer and logging hooks. */
+export type AtpSessionEvent = 'update' | 'expired' | 'network-error'
+
 export type SessionStateContext = {
   accounts: SessionAccount[]
   currentAccount: SessionAccount | undefined
@@ -44,11 +47,9 @@ export type SessionApiContext = {
   ) => Promise<void>
   removeAccount: (account: SessionAccount) => void
   /**
-   * Calls `getSession` and updates select fields on the current account and
-   * `BskyAgent`. This is an alternative to `resumeSession`, which updates
-   * current account/agent using the `persistSessionHandler`, but is more load
-   * bearing. This patches in updates without causing any side effects via
-   * `persistSessionHandler`.
+   * Calls `getSession` and patches the email fields of the current account.
+   * Unlike `resumeSession`, this does not rotate tokens or rebuild the session,
+   * so it produces no session-change side effects.
    */
   partialRefreshSession: () => Promise<void>
 }
