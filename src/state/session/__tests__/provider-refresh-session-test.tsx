@@ -63,7 +63,7 @@ jest.mock('../create-account', () => ({
 
 import {Provider, useSession, useSessionApi} from '#/state/session'
 import {type SessionApiContext} from '#/state/session/types'
-import {BskyAppAgent, PasswordSessionManager} from '../bridge-agent'
+import {buildAppviewClient, buildChatClient, buildPdsClient} from '../clients'
 import {type SessionBundle} from '../session-core'
 import {sessionAccountToSessionData} from '../session-data'
 import {
@@ -87,13 +87,11 @@ function makeBundle(
   const session = new PasswordSession(sessionAccountToSessionData(account), {
     fetch: asFetch(fetchMock),
   })
-  const manager = new PasswordSessionManager(session, {
-    service: account.service,
-  })
-  manager.setFetch(asFetch(fetchMock))
   return {
     session,
-    agent: new BskyAppAgent(manager),
+    appviewClient: buildAppviewClient(session),
+    pdsClient: buildPdsClient(session),
+    chatClient: buildChatClient(session),
     service: new URL(account.service),
   }
 }

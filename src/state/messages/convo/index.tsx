@@ -28,7 +28,7 @@ import {
 } from '#/state/queries/messages/conversation'
 import {RQKEY_ROOT as ListConvosQueryKeyRoot} from '#/state/queries/messages/list-conversations'
 import {RQKEY as createProfileQueryKey} from '#/state/queries/profile'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
 import {type GroupConvoMember} from '#/components/dms/util'
 
 export * from '#/state/messages/convo/util'
@@ -80,7 +80,7 @@ export function ConvoProvider({
   convoId,
 }: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const chatClient = useChatClient()
   const events = useMessagesEventBus()
   const [convo] = useState(() => {
     const placeholder = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
@@ -88,13 +88,23 @@ export function ConvoProvider({
     )
     return new Convo({
       convoId,
-      agent,
+      chatClient,
       events,
       placeholderData: placeholder ? {convo: placeholder} : undefined,
     })
   })
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
   const {mutate: markAsRead} = useMarkAsReadMutation()
+
+  /*
+   * The convo outlives the client it was constructed with: replacing the
+   * session bundle builds fresh clients over the new session and disposes the
+   * old ones, so a convo still holding the previous client would send through a
+   * dead session.
+   */
+  useEffect(() => {
+    convo.updateClient(chatClient)
+  }, [convo, chatClient])
 
   const appState = useAppState()
   const isActive = appState === 'active'

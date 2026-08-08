@@ -59,17 +59,17 @@ jest.mock('#/analytics', () => ({
 /*
  * `configureModerationForAccount` is synchronous (the labeler cache is a local
  * MMKV read), so it is not a prep await - but it still runs inside each factory
- * with the freshly built bridge agent, before the awaited prep steps. The
- * factory tests capture the agent with this mock, then inject a real refresh
- * into the awaited AA prefetch so a token rotation happens during prep, before
- * arm(). The default is a no-op so other tests are unaffected.
+ * with the freshly built bundle, before the awaited prep steps. The factory
+ * tests capture the bundle with this mock, then inject a real refresh into the
+ * awaited AA prefetch so a token rotation happens during prep, before arm().
+ * The default is a no-op so other tests are unaffected.
  * (jest requires out-of-scope factory references to be `mock`-prefixed.)
  */
 const mockConfigureModerationForAccount =
-  jest.fn<(agent: unknown, account: unknown) => void>()
+  jest.fn<(bundle: unknown, account: unknown) => void>()
 jest.mock('../moderation', () => ({
-  configureModerationForAccount: (agent: unknown, account: unknown) =>
-    mockConfigureModerationForAccount(agent, account),
+  configureModerationForAccount: (bundle: unknown, account: unknown) =>
+    mockConfigureModerationForAccount(bundle, account),
   configureModerationForGuest: () => {},
 }))
 
@@ -90,7 +90,6 @@ jest.mock('jwt-decode', () => ({
   },
 }))
 
-import {type BskyAppAgent} from '../bridge-agent'
 import {
   type AtpSessionEvent,
   buildBundle,
@@ -365,22 +364,23 @@ describe('sessionAccountToSessionData', () => {
 })
 
 describe('createSessionBundleFromStoredAccount', () => {
-  it('builds a bridge agent over one session', () => {
+  it('builds three clients over one session', async () => {
     const result = createSessionBundleFromStoredAccount(
       makeAccount(),
       jest.fn(),
     )!
 
-    /* the agent reads its identity straight through the shared session */
-    expect(result.bundle.agent.session?.accessJwt).toBe('access-jwt')
-    expect(result.bundle.agent.did).toBe(DID)
-    expect(result.bundle.agent.sessionManager.session).toBe(
-      result.bundle.agent.session,
-    )
+    /* every client reads its identity straight through the shared session */
+    expect(result.bundle.session.session.accessJwt).toBe('access-jwt')
+    expect(result.bundle.appviewClient.did).toBe(DID)
+    expect(result.bundle.pdsClient.did).toBe(DID)
+    expect(result.bundle.chatClient.did).toBe(DID)
     expect(result.bundle.service.toString()).toBe(`${SERVICE}/`)
     disposeBundle(result.bundle)
-    /* disposal detaches the agent from the session */
-    expect(result.bundle.agent.session).toBe(undefined)
+    /* disposal disables the transport every client shares */
+    await expect(
+      result.bundle.session.fetchHandler('/xrpc/test', {}),
+    ).rejects.toThrow('session disposed')
   })
 
   it('disposes a bundle rejected by the activation guard', async () => {
@@ -836,15 +836,14 @@ describe('factory account snapshot after preparation', () => {
      * captured from the (synchronous) moderation call, and the rotation is
      * injected into the awaited AA prefetch.
      */
-    let capturedAgent: BskyAppAgent | undefined
+    let capturedBundle: SessionBundle | undefined
     mockConfigureModerationForAccount.mockImplementationOnce(
       (bundle: unknown) => {
-        capturedAgent = (bundle as {agent: BskyAppAgent}).agent
+        capturedBundle = bundle as SessionBundle
       },
     )
     mockPrefetchAgeAssuranceServerData.mockImplementationOnce(async () => {
-      /* routes through the bridge into the shared PasswordSession's refresh */
-      await capturedAgent!.sessionManager.refreshSession()
+      await capturedBundle!.session.refresh()
     })
     const fetchMock = makeMockFetch()
 
@@ -902,14 +901,14 @@ describe('a session destroyed or rejected during preparation', () => {
      * way to drive a session to `destroyed` from outside, and it takes the same
      * `deleteSession` -> onDeleted -> destroyed path the real 401 rescue does.
      */
-    let capturedAgent: BskyAppAgent | undefined
+    let capturedBundle: SessionBundle | undefined
     mockConfigureModerationForAccount.mockImplementationOnce(
       (bundle: unknown) => {
-        capturedAgent = (bundle as {agent: BskyAppAgent}).agent
+        capturedBundle = bundle as SessionBundle
       },
     )
     mockPrefetchAgeAssuranceServerData.mockImplementationOnce(async () => {
-      await capturedAgent!.logout()
+      await capturedBundle!.session.logout()
     })
     const fetchMock = makeMockFetch()
 
@@ -927,15 +926,15 @@ describe('a session destroyed or rejected during preparation', () => {
       ).rejects.toThrow('Session was revoked while it was being prepared')
 
       /* the bundle the caller never received reads as logged out */
-      expect(capturedAgent!.session).toBe(undefined)
+      expect(capturedBundle!.session.destroyed).toBe(true)
     })
   })
 
   it('resume: a prep rejection propagates and disposes the bundle', async () => {
-    let capturedAgent: BskyAppAgent | undefined
+    let capturedBundle: SessionBundle | undefined
     mockConfigureModerationForAccount.mockImplementationOnce(
       (bundle: unknown) => {
-        capturedAgent = (bundle as {agent: BskyAppAgent}).agent
+        capturedBundle = bundle as SessionBundle
       },
     )
     mockPrefetchAgeAssuranceServerData.mockImplementationOnce(() =>
@@ -952,7 +951,9 @@ describe('a session destroyed or rejected during preparation', () => {
       ).rejects.toThrow('prefetch blew up')
 
       /* the still-live session was disposed rather than left refreshing */
-      expect(capturedAgent!.session).toBe(undefined)
+      await expect(
+        capturedBundle!.session.fetchHandler('/xrpc/test', {}),
+      ).rejects.toThrow('session disposed')
     })
   })
 
@@ -964,7 +965,12 @@ describe('a session destroyed or rejected during preparation', () => {
     })
     const session = new PasswordSession(
       sessionAccountToSessionData(makeAccount()),
-      {...hooks, fetch: asFetch(makeMockFetch())},
+      /*
+       * The hooks' own `fetch` is what the kill switch disables, so it must not
+       * be overridden here. Nothing in this test reaches the network: the
+       * post-disposal `fetchHandler` call throws before dispatching.
+       */
+      hooks,
     )
     const bundle = buildBundle(session)
     registerBundleKillSwitch(bundle, hooks.kill)
@@ -975,7 +981,9 @@ describe('a session destroyed or rejected during preparation', () => {
     ).rejects.toThrow('nope')
 
     expect(snapshot).not.toHaveBeenCalled()
-    expect(bundle.agent.session).toBe(undefined)
+    await expect(bundle.session.fetchHandler('/xrpc/test', {})).rejects.toThrow(
+      'session disposed',
+    )
   })
 })
 

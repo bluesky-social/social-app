@@ -13,26 +13,29 @@ jest.mock('jwt-decode', () => ({
   },
 }))
 
-import {CHAT_PROXY_SERVICE} from '#/lib/constants'
+import {BLUESKY_PROXY_HEADER, CHAT_PROXY_SERVICE} from '#/lib/constants'
 import {app, chat, com} from '#/lexicons'
 import {configureGlobalAppLabelers} from '../additional-moderation-authorities'
-import {BskyAppAgent, PasswordSessionManager} from '../bridge-agent'
 import {
-  agentToAppviewClient,
-  agentToChatClient,
-  agentToPdsClient,
+  buildAppviewClient,
+  buildChatClient,
+  buildPdsClient,
   getUnauthenticatedThrowingClient,
   NotAuthenticatedError,
+  routeSessionToPds,
 } from '../clients'
 import {sessionAccountToSessionData} from '../session-data'
 import {
   asFetch,
   DID,
+  DIDDOC_PDS_HOST,
   HANDLE,
   json,
   makeAccount,
+  makeDidDoc,
   makeMockFetch,
   type MockFetch,
+  PDS_HOST,
   SERVICE,
   urlsOf,
 } from './mock-fetch'
@@ -49,25 +52,16 @@ function makeProfileFetch(): MockFetch {
   })
 }
 
-/** An authenticated agent whose whole network path is the mock fetch. */
-function setup(fetchMock: MockFetch = makeProfileFetch()) {
+/** A live `PasswordSession` whose whole network path is the mock fetch. */
+function makeSession(fetchMock: MockFetch, didDocPdsUrl?: string) {
   const account = makeAccount()
-  const inner = new PasswordSession(sessionAccountToSessionData(account), {
-    fetch: asFetch(fetchMock),
-  })
-  const manager = new PasswordSessionManager(inner, {
-    service: account.service,
-  })
-  manager.setFetch(asFetch(fetchMock))
-  const agent = new BskyAppAgent(manager)
-  return {agent, fetchMock}
-}
-
-/** A logged-out agent whose whole network path is the mock fetch. */
-function setupPublic(fetchMock: MockFetch = makeProfileFetch()) {
-  const manager = new PasswordSessionManager(null, {service: SERVICE})
-  manager.setFetch(asFetch(fetchMock))
-  return {agent: new BskyAppAgent(manager), fetchMock}
+  return new PasswordSession(
+    {
+      ...sessionAccountToSessionData(account),
+      ...(didDocPdsUrl ? {didDoc: makeDidDoc(didDocPdsUrl)} : {}),
+    },
+    {fetch: asFetch(fetchMock)},
+  )
 }
 
 /** The `init` a mock fetch was called with for a given nsid. */
@@ -79,84 +73,56 @@ function initFor(mock: MockFetch, nsid: string): RequestInit | undefined {
   return call?.[1]
 }
 
-describe('agentToAppviewClient', () => {
+/** The headers a mock fetch was called with for a given nsid. */
+function headersFor(mock: MockFetch, nsid: string): Headers {
+  return new Headers(initFor(mock, nsid)?.headers)
+}
+
+describe('buildAppviewClient', () => {
   let fetchMock: MockFetch
 
   beforeEach(() => {
     fetchMock = makeProfileFetch()
+    configureGlobalAppLabelers([])
   })
 
-  it('memoizes one client per agent', () => {
-    const {agent: agentA} = setup(fetchMock)
-    const {agent: agentB} = setup(fetchMock)
-
-    const clientA1 = agentToAppviewClient(agentA)
-    const clientA2 = agentToAppviewClient(agentA)
-    const clientB = agentToAppviewClient(agentB)
-
-    expect(clientA1).toBeInstanceOf(Client)
-    expect(clientA1).toBe(clientA2)
-    expect(clientA1).not.toBe(clientB)
+  it('passes through the session did', () => {
+    const client = buildAppviewClient(makeSession(fetchMock))
+    expect(client).toBeInstanceOf(Client)
+    expect(client.did).toBe(DID)
   })
 
-  it('passes through the agent did', () => {
-    const {agent} = setup(fetchMock)
-    expect(agentToAppviewClient(agent).did).toBe(DID)
-  })
+  it('routes client.call through the session to the network', async () => {
+    const client = buildAppviewClient(makeSession(fetchMock))
 
-  it('reflects an undefined did on a logged-out agent', () => {
-    const {agent} = setupPublic(fetchMock)
-    expect(agentToAppviewClient(agent).did).toBeUndefined()
-  })
-
-  it('routes client.call through the agent to the network', async () => {
-    const {agent} = setup(fetchMock)
-
-    const body = await agentToAppviewClient(agent).call(
-      app.bsky.actor.getProfile,
-      {
-        actor: HANDLE,
-      },
-    )
+    const body = await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
 
     expect(body.handle).toBe(HANDLE)
-    const call = fetchMock.mock.calls.find(c => {
-      const url = c[0] instanceof URL ? c[0].href : String(c[0])
-      return url.includes('/xrpc/app.bsky.actor.getProfile')
-    })
-    expect(call).toBeDefined()
-    const url = call![0] instanceof URL ? call![0].href : String(call![0])
-    expect(url).toContain(`actor=${HANDLE}`)
+    expect(urlsOf(fetchMock).join()).toContain(`actor=${HANDLE}`)
   })
 
-  it('emits the agent proxy header', async () => {
-    const {agent} = setup(fetchMock)
-    agent.configureProxy('did:web:api.bsky.app#bsky_appview')
+  it('emits the appview proxy header', async () => {
+    const client = buildAppviewClient(makeSession(fetchMock))
 
-    await agentToAppviewClient(agent).call(app.bsky.actor.getProfile, {
-      actor: HANDLE,
-    })
+    await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
 
-    const init = initFor(fetchMock, 'app.bsky.actor.getProfile')
-    expect(new Headers(init?.headers).get('atproto-proxy')).toBe(
-      'did:web:api.bsky.app#bsky_appview',
+    expect(
+      headersFor(fetchMock, 'app.bsky.actor.getProfile').get('atproto-proxy'),
+    ).toBe(BLUESKY_PROXY_HEADER.get())
+  })
+
+  it('emits an account subscription exactly once', async () => {
+    const client = buildAppviewClient(makeSession(fetchMock))
+    client.setLabelers(['did:plc:labeler'])
+
+    await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
+
+    const labelers = headersFor(fetchMock, 'app.bsky.actor.getProfile').get(
+      'atproto-accept-labelers',
     )
-  })
-
-  it('emits the agent labeler header exactly once', async () => {
-    const {agent} = setup(fetchMock)
-    agent.configureLabelersHeader(['did:plc:labeler'])
-
-    await agentToAppviewClient(agent).call(app.bsky.actor.getProfile, {
-      actor: HANDLE,
-    })
-
-    const init = initFor(fetchMock, 'app.bsky.actor.getProfile')
-    const labelers = new Headers(init?.headers).get('atproto-accept-labelers')
-    expect(labelers).toContain('did:plc:labeler')
     /*
-     * The client contributes no labelers of its own, so the agent's single
-     * entry must not be duplicated.
+     * The client is the only producer of this header now, so a duplicate would
+     * mean lex itself emitted the same DID twice.
      */
     const entries = labelers!
       .split(',')
@@ -164,25 +130,21 @@ describe('agentToAppviewClient', () => {
     expect(entries).toHaveLength(1)
   })
 
-  it('does not duplicate a global app labeler set on both statics', async () => {
+  it('emits a global app labeler once, redacted', async () => {
     /*
-     * `configureGlobalAppLabelers` populates the agent AND the lex `Client`
-     * static, because clients built without a wrapped agent read only the
-     * latter. On this path both producers are in play for the same request, and
-     * neither dedupes against the other - the agent joins its list with the
-     * existing header string while lex collects into a `Set` keyed on the
-     * `;redact`-suffixed value. The appview client suppresses its `appLabelers`
-     * so exactly one producer contributes.
+     * The global static is the ONLY producer of the redacted authorities - no
+     * agent stamps them any more - and lex suffixes them with `;redact`. An
+     * account subscription that also listed the same DID would produce a second,
+     * non-redacting entry, which is what `applyLabelersToClient` filters against.
      */
     configureGlobalAppLabelers(['did:plc:global-labeler'])
-    const {agent} = setup(fetchMock)
+    const client = buildAppviewClient(makeSession(fetchMock))
 
-    await agentToAppviewClient(agent).call(app.bsky.actor.getProfile, {
-      actor: HANDLE,
-    })
+    await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
 
-    const init = initFor(fetchMock, 'app.bsky.actor.getProfile')
-    const labelers = new Headers(init?.headers).get('atproto-accept-labelers')
+    const labelers = headersFor(fetchMock, 'app.bsky.actor.getProfile').get(
+      'atproto-accept-labelers',
+    )
     const entries = labelers!
       .split(',')
       .map(l => l.trim())
@@ -191,100 +153,69 @@ describe('agentToAppviewClient', () => {
   })
 
   it('sends the session access token', async () => {
-    const {agent} = setup(fetchMock)
-
-    await agentToAppviewClient(agent).call(app.bsky.actor.getProfile, {
-      actor: HANDLE,
-    })
-
-    const init = initFor(fetchMock, 'app.bsky.actor.getProfile')
-    expect(new Headers(init?.headers).get('authorization')).toBe(
-      'Bearer access-jwt',
-    )
-  })
-
-  it('falls back to unauthenticated requests once the agent is disposed', async () => {
-    const {agent} = setup(fetchMock)
-    const client = agentToAppviewClient(agent)
-    agent.dispose()
+    const client = buildAppviewClient(makeSession(fetchMock))
 
     await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
 
-    const init = initFor(fetchMock, 'app.bsky.actor.getProfile')
-    expect(new Headers(init?.headers).has('authorization')).toBe(false)
-    expect(client.did).toBeUndefined()
+    expect(
+      headersFor(fetchMock, 'app.bsky.actor.getProfile').get('authorization'),
+    ).toBe('Bearer access-jwt')
   })
 })
 
-describe('agentToPdsClient', () => {
+describe('buildPdsClient', () => {
   let fetchMock: MockFetch
 
   beforeEach(() => {
     fetchMock = makeProfileFetch()
+    configureGlobalAppLabelers([])
   })
 
-  it('memoizes one client per agent', () => {
-    const {agent: agentA} = setup(fetchMock)
-    const {agent: agentB} = setup(fetchMock)
-
-    const clientA1 = agentToPdsClient(agentA)
-    const clientA2 = agentToPdsClient(agentA)
-
-    expect(clientA1).toBeInstanceOf(Client)
-    expect(clientA1).toBe(clientA2)
-    expect(clientA1).not.toBe(agentToPdsClient(agentB))
-  })
-
-  it('is a distinct client from the appview client for the same agent', () => {
-    const {agent} = setup(fetchMock)
-    expect(agentToPdsClient(agent)).not.toBe(agentToAppviewClient(agent))
-  })
-
-  it('passes through the agent did', () => {
-    const {agent} = setup(fetchMock)
-    expect(agentToPdsClient(agent).did).toBe(DID)
+  it('is a distinct client from the appview client over the same session', () => {
+    const session = makeSession(fetchMock)
+    expect(buildPdsClient(session)).not.toBe(buildAppviewClient(session))
   })
 
   it('sends the session access token', async () => {
-    const {agent} = setup(fetchMock)
-
-    await agentToPdsClient(agent).call(com.atproto.server.getSession, {})
-
-    const init = initFor(fetchMock, 'com.atproto.server.getSession')
-    expect(new Headers(init?.headers).get('authorization')).toBe(
-      'Bearer access-jwt',
+    await buildPdsClient(makeSession(fetchMock)).call(
+      com.atproto.server.getSession,
+      {},
     )
+
+    expect(
+      headersFor(fetchMock, 'com.atproto.server.getSession').get(
+        'authorization',
+      ),
+    ).toBe('Bearer access-jwt')
   })
 
-  it('emits neither the proxy nor the labeler header the agent is configured with', async () => {
+  it('emits neither the proxy nor any labeler header', async () => {
     /*
-     * The load-bearing difference from the appview client: this client wraps the
-     * session manager, below the agent layer that sets both headers, so a
-     * request reaches the account's PDS instead of being proxied onward.
+     * The load-bearing difference from the appview client: a PDS request must
+     * reach the account host itself rather than being proxied onward, and it is
+     * not an appview read, so it carries no moderation authorities either.
      */
-    const {agent} = setup(fetchMock)
-    agent.configureProxy('did:web:api.bsky.app#bsky_appview')
-    agent.configureLabelersHeader(['did:plc:labeler'])
-    /* nor the global authorities: a PDS call is not an appview read */
     configureGlobalAppLabelers(['did:plc:global-labeler'])
 
-    await agentToPdsClient(agent).call(com.atproto.server.getSession, {})
-
-    const headers = new Headers(
-      initFor(fetchMock, 'com.atproto.server.getSession')?.headers,
+    await buildPdsClient(makeSession(fetchMock)).call(
+      com.atproto.server.getSession,
+      {},
     )
+
+    const headers = headersFor(fetchMock, 'com.atproto.server.getSession')
     expect(headers.get('atproto-proxy')).toBeNull()
     expect(headers.get('atproto-accept-labelers')).toBeNull()
   })
 
   it('resolves the relative xrpc path against the account host', async () => {
     /*
-     * lex-client hands its fetchHandler an origin-less `/xrpc/<nsid>` path; the
-     * session manager absolutizes it against dispatchUrl.
+     * lex hands its fetchHandler an origin-less `/xrpc/<nsid>` path; the session
+     * absolutizes it against its didDoc endpoint or, absent one, its service.
      */
-    const {agent} = setup(fetchMock)
-
-    await agentToPdsClient(agent).call(com.atproto.server.getSession, {})
+    await buildPdsClient(makeSession(fetchMock)).call(
+      com.atproto.server.getSession,
+      {},
+    )
 
     expect(urlsOf(fetchMock)).toContain(
       `${SERVICE}/xrpc/com.atproto.server.getSession`,
@@ -292,34 +223,26 @@ describe('agentToPdsClient', () => {
   })
 })
 
-describe('agentToChatClient', () => {
+describe('buildChatClient', () => {
   let fetchMock: MockFetch
 
   beforeEach(() => {
     fetchMock = makeProfileFetch()
+    configureGlobalAppLabelers([])
   })
 
-  it('memoizes one client per agent, distinct from the pds client', () => {
-    const {agent} = setup(fetchMock)
-
-    const client = agentToChatClient(agent)
-
-    expect(client).toBeInstanceOf(Client)
-    expect(client).toBe(agentToChatClient(agent))
-    expect(client).not.toBe(agentToPdsClient(agent))
+  it('is a distinct client from the pds client over the same session', () => {
+    const session = makeSession(fetchMock)
+    expect(buildChatClient(session)).not.toBe(buildPdsClient(session))
   })
 
   it('emits the chat proxy header exactly once, with the session token', async () => {
-    const {agent} = setup(fetchMock)
-
     /* the stub body fails listConvos output validation; headers are recorded pre-parse */
-    await agentToChatClient(agent)
+    await buildChatClient(makeSession(fetchMock))
       .call(chat.bsky.convo.listConvos, {})
       .catch(() => {})
 
-    const headers = new Headers(
-      initFor(fetchMock, 'chat.bsky.convo.listConvos')?.headers,
-    )
+    const headers = headersFor(fetchMock, 'chat.bsky.convo.listConvos')
     /*
      * An exact match, not `toContain`: `Headers` comma-joins repeated entries
      * for the same name, so a second contributor would show up here.
@@ -328,20 +251,96 @@ describe('agentToChatClient', () => {
     expect(headers.get('authorization')).toBe('Bearer access-jwt')
   })
 
-  it('does not emit the agent labeler header', async () => {
-    const {agent} = setup(fetchMock)
-    agent.configureLabelersHeader(['did:plc:labeler'])
-    /* nor the global authorities: a chat call is not an appview read */
+  it('emits no labeler header', async () => {
+    /* the global authorities do not apply: a chat call is not an appview read */
     configureGlobalAppLabelers(['did:plc:global-labeler'])
 
-    await agentToChatClient(agent)
+    await buildChatClient(makeSession(fetchMock))
       .call(chat.bsky.convo.listConvos, {})
       .catch(() => {})
 
-    const headers = new Headers(
-      initFor(fetchMock, 'chat.bsky.convo.listConvos')?.headers,
-    )
-    expect(headers.get('atproto-accept-labelers')).toBeNull()
+    expect(
+      headersFor(fetchMock, 'chat.bsky.convo.listConvos').get(
+        'atproto-accept-labelers',
+      ),
+    ).toBeNull()
+  })
+})
+
+describe('routeSessionToPds', () => {
+  let fetchMock: MockFetch
+
+  beforeEach(() => {
+    fetchMock = makeProfileFetch()
+  })
+
+  it('sends a request to the pinned host rather than the login service', async () => {
+    /*
+     * The entryway case, and the reason this shim exists: an account whose
+     * service is `bsky.social` but whose PDS is elsewhere, with no didDoc yet
+     * (the synchronous resume fast path, i.e. the common cold start). Without
+     * the shim the session would resolve against its service and every request
+     * of that cold start would go to the entryway.
+     */
+    const session = makeSession(fetchMock)
+    const client = buildPdsClient(routeSessionToPds(session, PDS_HOST))
+
+    await client.call(com.atproto.server.getSession, {})
+
+    expect(urlsOf(fetchMock)).toEqual([
+      `${PDS_HOST}/xrpc/com.atproto.server.getSession`,
+    ])
+  })
+
+  it('keeps the session auth lifecycle on the pinned host', async () => {
+    const session = makeSession(fetchMock)
+    const client = buildPdsClient(routeSessionToPds(session, PDS_HOST))
+
+    await client.call(com.atproto.server.getSession, {})
+
+    expect(
+      headersFor(fetchMock, 'com.atproto.server.getSession').get(
+        'authorization',
+      ),
+    ).toBe('Bearer access-jwt')
+  })
+
+  it('passes through the session did', () => {
+    const session = makeSession(fetchMock)
+    expect(routeSessionToPds(session, PDS_HOST).did).toBe(DID)
+  })
+
+  it('pins the stored host even when the session carries a different didDoc endpoint', async () => {
+    /*
+     * The narrowing this shim accepts versus the session manager it replaces:
+     * the manager preferred a didDoc endpoint once one arrived, whereas an
+     * absolute URL handed to `session.fetchHandler` survives `new URL(path,
+     * base)` untouched, so the stored host wins for the bundle's lifetime. That
+     * only matters if the account's PDS moved, and the next cold start pins the
+     * newly persisted endpoint.
+     */
+    const session = makeSession(fetchMock, DIDDOC_PDS_HOST)
+    const client = buildPdsClient(routeSessionToPds(session, PDS_HOST))
+
+    await client.call(com.atproto.server.getSession, {})
+
+    expect(urlsOf(fetchMock)).toEqual([
+      `${PDS_HOST}/xrpc/com.atproto.server.getSession`,
+    ])
+  })
+
+  it('lets the session route by didDoc when nothing is pinned', async () => {
+    /*
+     * The counterpart: a bundle built with no stored `pdsUrl` goes straight over
+     * the session, which resolves against its own didDoc endpoint.
+     */
+    const client = buildPdsClient(makeSession(fetchMock, DIDDOC_PDS_HOST))
+
+    await client.call(com.atproto.server.getSession, {})
+
+    expect(urlsOf(fetchMock)).toEqual([
+      `${DIDDOC_PDS_HOST}/xrpc/com.atproto.server.getSession`,
+    ])
   })
 })
 

@@ -1,4 +1,3 @@
-import {AtpAgent} from '@atproto/api'
 import {Client} from '@atproto/lex'
 
 import {device} from '#/storage'
@@ -83,27 +82,27 @@ export function configureAdditionalModerationAuthorities() {
     additionalLabelers = []
   }
 
+  /*
+   * Merge with whatever is already on the static rather than replacing it, so
+   * `switchToBskyAppLabeler`'s entry survives.
+   */
   const appLabelers = Array.from(
-    new Set([...AtpAgent.appLabelers, ...additionalLabelers]),
+    new Set<string>([...Client.appLabelers, ...additionalLabelers]),
   )
 
   configureGlobalAppLabelers(appLabelers)
 }
 
 /**
- * Set the global app labelers on BOTH statics, so the agent-backed request path
- * and any client built without a wrapped agent emit the same `;redact`
- * authorities.
+ * Set the global app labelers on the lex `Client` static, which every client
+ * reads, so a request carries the same `;redact` authorities whether or not
+ * there is a session behind it.
  *
- * Keeping the two in lockstep is what makes the duplicate-header hazard
- * avoidable: the agent joins its own list with whatever the caller already put
- * on the request, and lex appends the `Client` static on top of that, so a DID
- * present in both would appear twice. The agent-wrapping clients therefore
- * suppress their `appLabelers` (see `clients.ts`), which leaves exactly one
- * producer per request while both statics stay populated for the paths that
- * read only one of them.
+ * It is a single global producer by design. The PDS and chat clients opt out
+ * with `appLabelers: null` (see `clients.ts`) because those services take no
+ * moderation authorities, leaving exactly one producer on an appview request and
+ * none elsewhere.
  */
 export function configureGlobalAppLabelers(dids: string[]) {
-  AtpAgent.configure({appLabelers: dids})
   Client.configure({appLabelers: dids as `did:${string}:${string}`[]})
 }
