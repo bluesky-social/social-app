@@ -20,6 +20,11 @@ export const APP_METADATA = `${BUNDLE_IDENTIFIER.slice(0, 7)} (${__DEV__ ? 'dev'
  */
 export const IOS_MAJOR_VERSION: number = 0
 /**
+ * The minor version number of the current iOS device, or `0` on non-iOS
+ * platforms (always `0` on web).
+ */
+export const IOS_MINOR_VERSION: number = 0
+/**
  * The Android API level of the current device, or `0` on non-Android platforms
  * (always `0` on web).
  */
@@ -60,3 +65,4 @@ export const IS_HIGH_DPI: boolean = window.matchMedia(
 ).matches
 export const IS_LIQUID_GLASS: boolean = false
 export const IS_TRANSLATION_SUPPORTED: boolean = false
+export const IS_UNSUPPORTED_IOS: boolean = false

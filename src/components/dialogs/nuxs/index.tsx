@@ -26,6 +26,10 @@ import {
   enabled as isInviteFriendsAnnouncementEnabled,
   InviteFriendsAnnouncement,
 } from '#/components/dialogs/nuxs/InviteFriendsAnnouncement'
+import {
+  enabled as isIosVersionSunsetAnnouncementEnabled,
+  IosVersionSunsetAnnouncement,
+} from '#/components/dialogs/nuxs/IosVersionSunsetAnnouncement'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
 import {useAnalytics} from '#/analytics'
@@ -40,6 +44,10 @@ const queuedNuxs: {
   id: Nux
   enabled?: (props: EnabledCheckProps) => boolean
 }[] = [
+  {
+    id: Nux.IosVersionSunset164,
+    enabled: isIosVersionSunsetAnnouncementEnabled,
+  },
   {
     id: Nux.GroupChatsAnnouncement,
     enabled: isGroupChatsAnnouncementEnabled,
@@ -194,6 +202,9 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
+      {activeNux === Nux.IosVersionSunset164 && (
+        <IosVersionSunsetAnnouncement />
+      )}
       {activeNux === Nux.GroupChatsAnnouncement && <GroupChatsAnnouncement />}
       {/*
         Mounted unconditionally: it gates the announcement on `activeNux`
