@@ -1,9 +1,6 @@
 import {ScrollView, View} from 'react-native'
-import {
-  type ChatBskyActorDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type ChatBskyActorDefs} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -11,6 +8,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'

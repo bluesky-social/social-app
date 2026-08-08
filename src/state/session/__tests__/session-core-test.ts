@@ -838,8 +838,8 @@ describe('factory account snapshot after preparation', () => {
      */
     let capturedAgent: BskyAppAgent | undefined
     mockConfigureModerationForAccount.mockImplementationOnce(
-      (agent: unknown) => {
-        capturedAgent = agent as BskyAppAgent
+      (bundle: unknown) => {
+        capturedAgent = (bundle as {agent: BskyAppAgent}).agent
       },
     )
     mockPrefetchAgeAssuranceServerData.mockImplementationOnce(async () => {
@@ -904,8 +904,8 @@ describe('a session destroyed or rejected during preparation', () => {
      */
     let capturedAgent: BskyAppAgent | undefined
     mockConfigureModerationForAccount.mockImplementationOnce(
-      (agent: unknown) => {
-        capturedAgent = agent as BskyAppAgent
+      (bundle: unknown) => {
+        capturedAgent = (bundle as {agent: BskyAppAgent}).agent
       },
     )
     mockPrefetchAgeAssuranceServerData.mockImplementationOnce(async () => {
@@ -934,8 +934,8 @@ describe('a session destroyed or rejected during preparation', () => {
   it('resume: a prep rejection propagates and disposes the bundle', async () => {
     let capturedAgent: BskyAppAgent | undefined
     mockConfigureModerationForAccount.mockImplementationOnce(
-      (agent: unknown) => {
-        capturedAgent = agent as BskyAppAgent
+      (bundle: unknown) => {
+        capturedAgent = (bundle as {agent: BskyAppAgent}).agent
       },
     )
     mockPrefetchAgeAssuranceServerData.mockImplementationOnce(() =>

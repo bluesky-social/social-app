@@ -1,11 +1,7 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  type AppBskyLabelerDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -15,6 +11,7 @@ import {Plural, Trans} from '@lingui/react/macro'
 import {MAX_LABELERS} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
@@ -37,6 +34,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
+import {type app} from '#/lexicons'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
@@ -45,7 +43,7 @@ import {ProfileHeaderShell} from './Shell'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed
+  labeler: app.bsky.labeler.defs.LabelerViewDetailed
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean

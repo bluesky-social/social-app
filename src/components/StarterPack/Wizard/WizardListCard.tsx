@@ -1,17 +1,12 @@
 import {Keyboard, View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  moderateFeedGenerator,
-  moderateProfile,
-  type ModerationOpts,
-  type ModerationUI,
-} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyFeedDefs} from '@atproto/api'
+import {type ModerationOpts, type ModerationUI} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE} from '#/lib/constants'
+import {moderateFeedGenerator, moderateProfile} from '#/lib/moderation/subjects'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useSession} from '#/state/session'

@@ -191,7 +191,9 @@ export type PublicSessionBundle = {
 
 /**
  * Build the logged-out bundle. `createPublicAgent` installs the guest
- * moderation authorities as part of building the agent.
+ * moderation authorities as part of building the agent, which is what populates
+ * the global `Client.appLabelers` that {@link getPublicAppviewClient} relies on
+ * for its labeler header.
  */
 export function createPublicSessionBundle(): PublicSessionBundle {
   return {
@@ -290,7 +292,7 @@ export async function createSessionBundleAndResume(
       storedAccount.pdsUrl,
     ) ?? storedAccount
 
-  configureModerationForAccount(bundle.agent, earlyAccount)
+  configureModerationForAccount(bundle, earlyAccount)
   const aa = prefetchAgeAssuranceServerData({
     appviewClient: agentToAppviewClient(bundle.agent),
     accountClient: agentToPdsClient(bundle.agent),
@@ -358,7 +360,7 @@ export async function createSessionBundleAndLogin(
   accountDid = earlyAccount.did
 
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
-  configureModerationForAccount(bundle.agent, earlyAccount)
+  configureModerationForAccount(bundle, earlyAccount)
   const aa = prefetchAgeAssuranceServerData({
     appviewClient: agentToAppviewClient(bundle.agent),
     accountClient: agentToPdsClient(bundle.agent),
@@ -400,7 +402,7 @@ export function createSessionBundleFromStoredAccount(
   )
   bundle = buildBundle(session, storedAccount.pdsUrl)
   registerBundleKillSwitch(bundle, hooks.kill)
-  configureModerationForAccount(bundle.agent, storedAccount)
+  configureModerationForAccount(bundle, storedAccount)
   bundle.agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   const account = session.destroyed

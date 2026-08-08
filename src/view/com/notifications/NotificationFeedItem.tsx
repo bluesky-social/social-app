@@ -16,12 +16,13 @@ import {
   AppBskyGraphFollow,
   AppBskyGraphStarterpack,
   AtUri,
-  moderateProfile,
-  type ModerationDecision,
-  type ModerationOpts,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import {type DidString} from '@atproto/syntax'
+import {
+  type ModerationDecision,
+  type ModerationOpts,
+} from '@bsky.app/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -29,6 +30,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {forceLTR} from '#/lib/strings/bidi'

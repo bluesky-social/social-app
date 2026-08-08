@@ -1,6 +1,6 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {TextInput, View, type ViewToken} from 'react-native'
-import {type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'

@@ -1,9 +1,10 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'

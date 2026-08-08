@@ -1,12 +1,10 @@
 import {useRef} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {UserAvatar} from '#/view/com/util/UserAvatar'

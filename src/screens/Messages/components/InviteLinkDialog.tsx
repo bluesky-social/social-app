@@ -1,15 +1,13 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {
-  type ChatBskyGroupDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type ChatBskyGroupDefs} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {shareUrl} from '#/lib/sharing'
 import {useCreateJoinLink} from '#/state/queries/messages/create-join-link'
 import {useDisableJoinLink} from '#/state/queries/messages/disable-join-link'

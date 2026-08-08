@@ -1,6 +1,6 @@
 import {View} from 'react-native'
-import {moderateProfile} from '@atproto/api'
 
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfilesQuery} from '#/state/queries/profile'

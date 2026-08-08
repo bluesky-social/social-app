@@ -1,12 +1,10 @@
 import {useCallback} from 'react'
-import {
-  type AppBskyActorDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {keepPreviousData, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'

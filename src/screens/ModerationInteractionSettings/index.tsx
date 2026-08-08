@@ -23,7 +23,6 @@ import {PostInteractionSettingsForm} from '#/components/dialogs/PostInteractionS
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
-import {type app} from '#/lexicons'
 
 export function Screen() {
   const gutters = useGutters(['base'])
@@ -76,15 +75,14 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
        * Preferences are still typed against the legacy client, so the stored
        * rules arrive unbranded. Wave B migrates `getPreferences`.
        */
-      allow: preferences.postInteractionSettings
-        .threadgateAllowRules as app.bsky.feed.threadgate.Main['allow'],
+      allow: preferences.postInteractionSettings.threadgateAllowRules,
     })
   }, [preferences.postInteractionSettings.threadgateAllowRules])
   const postgate = useMemo(() => {
     return createPostgateRecord({
       post: '',
-      embeddingRules: preferences.postInteractionSettings
-        .postgateEmbeddingRules as app.bsky.feed.postgate.Main['embeddingRules'],
+      embeddingRules:
+        preferences.postInteractionSettings.postgateEmbeddingRules,
     })
   }, [preferences.postInteractionSettings.postgateEmbeddingRules])
 

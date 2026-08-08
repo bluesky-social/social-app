@@ -1,8 +1,9 @@
 import {useCallback, useMemo} from 'react'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {keepPreviousData, useQuery} from '@tanstack/react-query'
 
 import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences'

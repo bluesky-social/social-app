@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useRef} from 'react'
-import {type AppBskyFeedDefs, AtUri, moderatePost} from '@atproto/api'
+import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,
@@ -7,6 +7,7 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
+import {moderatePost} from '#/lib/moderation/subjects'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAppviewClient} from '#/state/session'
 import {type SearchFilters} from '#/screens/Search/searchParams'

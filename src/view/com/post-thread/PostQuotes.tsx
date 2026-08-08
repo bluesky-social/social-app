@@ -1,15 +1,12 @@
 import {useCallback, useState} from 'react'
-import {
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  moderatePost,
-  type ModerationDecision,
-} from '@atproto/api'
+import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
+import {moderatePost} from '#/lib/moderation/subjects'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'

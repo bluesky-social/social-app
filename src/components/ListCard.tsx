@@ -1,16 +1,13 @@
 import {useEffect, useMemo} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyGraphDefs,
-  AtUri,
-  moderateUserList,
-  type ModerationUI,
-} from '@atproto/api'
+import {type AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {type ModerationUI} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {moderateUserList} from '#/lib/moderation/subjects'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {precacheList} from '#/state/queries/feed'

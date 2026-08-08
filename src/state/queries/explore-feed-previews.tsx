@@ -1,10 +1,5 @@
 import {useMemo, useRef} from 'react'
-import {
-  type AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AtUri,
-  moderatePost,
-} from '@atproto/api'
+import {type AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {type AtUriString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -17,6 +12,7 @@ import {
 import {CustomFeedAPI} from '#/lib/api/feed/custom'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner} from '#/lib/api/feed-manip'
+import {moderatePost} from '#/lib/moderation/subjects'
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {

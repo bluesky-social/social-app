@@ -1,9 +1,6 @@
 import {useMemo} from 'react'
-import {
-  BSKY_LABELER_DID,
-  type ModerationCause,
-  type ModerationCauseSource,
-} from '@atproto/api'
+import {BSKY_LABELER_DID} from '@atproto/api'
+import {type ModerationCause} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -25,7 +22,7 @@ export interface ModerationCauseDescription {
   description: string
   source?: string
   sourceDisplayName?: string
-  sourceType?: ModerationCauseSource['type']
+  sourceType?: ModerationCause['source']['type']
   sourceAvi?: string
   sourceDid?: string
   isSubjectAccount?: boolean

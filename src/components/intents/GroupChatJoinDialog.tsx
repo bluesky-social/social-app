@@ -1,11 +1,12 @@
 import {useEffect} from 'react'
 import {View} from 'react-native'
-import {ChatBskyGroupDefs, moderateProfile} from '@atproto/api'
+import {ChatBskyGroupDefs} from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {useCallOnce} from '#/lib/once'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'

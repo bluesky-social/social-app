@@ -1,6 +1,7 @@
 import {useCallback, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {type ChatBskyConvoDefs, type ModerationOpts} from '@atproto/api'
+import {type ChatBskyConvoDefs} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 

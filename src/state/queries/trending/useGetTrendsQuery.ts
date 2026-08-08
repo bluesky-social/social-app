@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {hasMutedWord} from '@atproto/api'
+import {hasMutedWord} from '@bsky.app/sdk/moderation'
 import {useQuery} from '@tanstack/react-query'
 
 import {

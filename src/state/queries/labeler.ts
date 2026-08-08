@@ -1,4 +1,3 @@
-import {type AppBskyLabelerDefs} from '@atproto/api'
 import {type DidString} from '@atproto/syntax'
 import {addLabeler, removeLabeler} from '@bsky.app/sdk'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
@@ -11,7 +10,8 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {createQueryKey} from '#/state/queries/util'
-import {useAgent, usePdsClient} from '#/state/session'
+import {useAppviewClient, usePdsClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 const labelerInfoQueryKeyRoot = 'labeler-info'
 export const labelerInfoQueryKey = (did: string) => [
@@ -35,45 +35,47 @@ export function useLabelerInfoQuery({
   did?: string
   enabled?: boolean
 }) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useQuery({
     enabled: !!did && enabled !== false,
     queryKey: labelerInfoQueryKey(did as string),
     queryFn: async () => {
-      const res = await agent.app.bsky.labeler.getServices({
-        dids: [did!],
+      const res = await client.call(app.bsky.labeler.getServices, {
+        dids: [did! as DidString],
         detailed: true,
       })
-      return res.data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed
+      return res.views[0] as app.bsky.labeler.defs.LabelerViewDetailed
     },
   })
 }
 
 export function useLabelersInfoQuery({dids}: {dids: string[]}) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useQuery({
     enabled: !!dids.length,
     queryKey: labelersInfoQueryKey(dids),
     queryFn: async () => {
-      const res = await agent.app.bsky.labeler.getServices({dids})
-      return res.data.views as AppBskyLabelerDefs.LabelerView[]
+      const res = await client.call(app.bsky.labeler.getServices, {
+        dids: dids as DidString[],
+      })
+      return res.views as app.bsky.labeler.defs.LabelerView[]
     },
   })
 }
 
 export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useQuery({
     enabled: !!dids.length,
     queryKey: createLabelersDetailedInfoQueryKey(dids),
     gcTime: GCTIME.INFINITY,
     staleTime: STALE.MINUTES.ONE,
     queryFn: async () => {
-      const res = await agent.app.bsky.labeler.getServices({
-        dids,
+      const res = await client.call(app.bsky.labeler.getServices, {
+        dids: dids as DidString[],
         detailed: true,
       })
-      return res.data.views as AppBskyLabelerDefs.LabelerViewDetailed[]
+      return res.views as app.bsky.labeler.defs.LabelerViewDetailed[]
     },
   })
 }
@@ -98,7 +100,7 @@ export function useRemoveLabelersMutation() {
 
 export function useLabelerSubscriptionMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const pdsClient = usePdsClient()
   const preferences = usePreferencesQuery()
 
@@ -122,28 +124,30 @@ export function useLabelerSubscriptionMutation() {
       const labelerDids = (
         preferences.data?.moderationPrefs?.labelers ?? []
       ).map(l => l.did)
-      const invalidLabelers: string[] = []
+      const invalidLabelers: DidString[] = []
       if (labelerDids.length) {
-        const profiles = await agent.getProfiles({actors: labelerDids})
-        if (profiles.data) {
-          for (const did of labelerDids) {
-            const exists = profiles.data.profiles.find(p => p.did === did)
+        const profiles = await appviewClient.call(app.bsky.actor.getProfiles, {
+          actors: labelerDids,
+        })
+        if (profiles) {
+          for (const labelerDid of labelerDids) {
+            const exists = profiles.profiles.find(p => p.did === labelerDid)
             if (exists) {
               // profile came back but it's not a valid labeler
               if (exists.associated && !exists.associated.labeler) {
-                invalidLabelers.push(did)
+                invalidLabelers.push(labelerDid)
               }
             } else {
               // no response came back, might be deactivated or takendown
-              invalidLabelers.push(did)
+              invalidLabelers.push(labelerDid)
             }
           }
         }
       }
       if (invalidLabelers.length) {
         await Promise.all(
-          invalidLabelers.map(did =>
-            pdsClient.call(removeLabeler, did as DidString),
+          invalidLabelers.map(labelerDid =>
+            pdsClient.call(removeLabeler, labelerDid),
           ),
         )
       }

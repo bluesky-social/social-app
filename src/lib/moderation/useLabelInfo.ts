@@ -1,10 +1,9 @@
+import {type ComAtprotoLabelDefs} from '@atproto/api'
 import {
-  type AppBskyLabelerDefs,
-  type ComAtprotoLabelDefs,
   type InterpretedLabelValueDefinition,
   interpretLabelValueDefinition,
   LABELS,
-} from '@atproto/api'
+} from '@bsky.app/sdk/moderation'
 import {useLingui} from '@lingui/react'
 import * as bcp47Match from 'bcp-47-match'
 
@@ -13,12 +12,13 @@ import {
   useGlobalLabelStrings,
 } from '#/lib/moderation/useGlobalLabelStrings'
 import {useLabelDefinitions} from '#/state/preferences'
+import {type app} from '#/lexicons'
 
 export interface LabelInfo {
   label: ComAtprotoLabelDefs.Label
   def: InterpretedLabelValueDefinition
   strings: ComAtprotoLabelDefs.LabelValueDefinitionStrings
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  labeler: app.bsky.labeler.defs.LabelerViewDetailed | undefined
 }
 
 export function useLabelInfo(label: ComAtprotoLabelDefs.Label): LabelInfo {
