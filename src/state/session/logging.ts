@@ -1,7 +1,7 @@
 import {type AtpSessionData, type AtpSessionEvent} from '@atproto/api'
 
-import {type Schema} from '../persisted'
 import {type Action, type State} from './reducer'
+import {type SessionSnapshot} from './storage'
 import {type SessionAccount} from './types'
 
 type Reducer = (state: State, action: Action) => State
@@ -39,11 +39,11 @@ type Log =
     }
   | {
       type: 'persisted:broadcast'
-      data: Schema['session']
+      data: SessionSnapshot
     }
   | {
       type: 'persisted:receive'
-      data: Schema['session']
+      data: SessionSnapshot
     }
   | {
       type: 'agent:switch'

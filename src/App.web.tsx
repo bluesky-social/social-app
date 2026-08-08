@@ -24,7 +24,6 @@ import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {MessagesProvider} from '#/state/messages'
-import {init as initPersistedState} from '#/state/persisted'
 import {Provider as PrefsStateProvider} from '#/state/preferences'
 import {BetaUserStorageSync} from '#/state/preferences/beta-user-sync'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
@@ -37,6 +36,7 @@ import {
   useSession,
   useSessionApi,
 } from '#/state/session'
+import {getSessionRepository} from '#/state/session/storage'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
@@ -63,12 +63,7 @@ import {
   prefetchAgeAssuranceConfig,
   Provider as AgeAssuranceV2Provider,
 } from '#/ageAssurance'
-import {
-  AnalyticsContext,
-  AnalyticsFeaturesContext,
-  features,
-  setupDeviceId,
-} from '#/analytics'
+import {AnalyticsContext, AnalyticsFeaturesContext, features} from '#/analytics'
 import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
@@ -76,6 +71,7 @@ import {
 import * as Geo from '#/geolocation'
 import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {useAppBootstrap} from './lib/hooks/useAppBootstrap'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
 /**
@@ -109,7 +105,7 @@ function InnerApp() {
         setIsReady(true)
       }
     }
-    const account = readLastActiveAccount()
+    const account = readLastActiveAccount(getSessionRepository().getSnapshot())
     void onLaunch(account)
   }, [resumeSession])
 
@@ -194,13 +190,7 @@ function InnerApp() {
 }
 
 function App() {
-  const [isReady, setIsReady] = useState(false)
-
-  useEffect(() => {
-    void Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(
-      () => setIsReady(true),
-    )
-  }, [])
+  const isReady = useAppBootstrap()
 
   if (!isReady) {
     return null

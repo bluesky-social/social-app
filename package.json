@@ -188,6 +188,7 @@
     "expo-paste-input": "^0.2.1",
     "expo-privacy-sensitive": "^0.2.0",
     "expo-screen-orientation": "~9.0.8",
+    "expo-secure-store": "~15.0.8",
     "expo-sharing": "~14.0.8",
     "expo-sms": "^14.0.7",
     "expo-splash-screen": "~31.0.13",

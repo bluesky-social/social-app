@@ -33,7 +33,6 @@ describe('session', () => {
           },
           "did": undefined,
         },
-        "needsPersist": false,
       }
     `)
 
@@ -82,7 +81,6 @@ describe('session', () => {
           },
           "did": "alice-did",
         },
-        "needsPersist": true,
       }
     `)
 
@@ -122,7 +120,6 @@ describe('session', () => {
           },
           "did": undefined,
         },
-        "needsPersist": true,
       }
     `)
   })
@@ -175,7 +172,6 @@ describe('session', () => {
           },
           "did": "alice-did",
         },
-        "needsPersist": true,
       }
     `)
 
@@ -241,7 +237,6 @@ describe('session', () => {
           },
           "did": "bob-did",
         },
-        "needsPersist": true,
       }
     `)
 
@@ -307,7 +302,6 @@ describe('session', () => {
           },
           "did": "alice-did",
         },
-        "needsPersist": true,
       }
     `)
 
@@ -386,7 +380,6 @@ describe('session', () => {
           },
           "did": "jay-did",
         },
-        "needsPersist": true,
       }
     `)
 
@@ -460,7 +453,6 @@ describe('session', () => {
           },
           "did": undefined,
         },
-        "needsPersist": true,
       }
     `)
   })
@@ -522,7 +514,6 @@ describe('session', () => {
           },
           "did": undefined,
         },
-        "needsPersist": true,
       }
     `)
 
@@ -570,7 +561,6 @@ describe('session', () => {
           },
           "did": "alice-did",
         },
-        "needsPersist": true,
       }
     `)
   })
@@ -615,7 +605,6 @@ describe('session', () => {
           },
           "did": undefined,
         },
-        "needsPersist": true,
       }
     `)
   })
@@ -687,7 +676,6 @@ describe('session', () => {
           },
           "did": "bob-did",
         },
-        "needsPersist": true,
       }
     `)
 
@@ -795,7 +783,6 @@ describe('session', () => {
           },
           "did": undefined,
         },
-        "needsPersist": true,
       }
     `)
   })
@@ -871,7 +858,6 @@ describe('session', () => {
           },
           "did": "alice-did",
         },
-        "needsPersist": true,
       }
     `)
 
@@ -925,7 +911,6 @@ describe('session', () => {
           },
           "did": "alice-did",
         },
-        "needsPersist": true,
       }
     `)
 
@@ -979,7 +964,6 @@ describe('session', () => {
           },
           "did": "alice-did",
         },
-        "needsPersist": true,
       }
     `)
   })
@@ -1159,7 +1143,6 @@ describe('session', () => {
           },
           "did": "bob-did",
         },
-        "needsPersist": true,
       }
     `)
 
@@ -1226,7 +1209,6 @@ describe('session', () => {
           },
           "did": "bob-did",
         },
-        "needsPersist": true,
       }
     `)
 
@@ -1378,7 +1360,6 @@ describe('session', () => {
           },
           "did": "alice-did",
         },
-        "needsPersist": true,
       }
     `)
   })
@@ -1444,7 +1425,6 @@ describe('session', () => {
           },
           "did": undefined,
         },
-        "needsPersist": true,
       }
     `)
   })
@@ -1510,7 +1490,6 @@ describe('session', () => {
           },
           "did": undefined,
         },
-        "needsPersist": true,
       }
     `)
   })
@@ -1582,7 +1561,6 @@ describe('session', () => {
     // Keep Bob logged in.
     // (We patch up agent.session outside the reducer for this to work.)
     expect(state.currentAgentState.did).toBe('bob-did')
-    expect(state.needsPersist).toBe(false)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -1623,7 +1601,6 @@ describe('session', () => {
           },
           "did": "bob-did",
         },
-        "needsPersist": false,
       }
     `)
 
@@ -1647,7 +1624,6 @@ describe('session', () => {
     // Log out because we have no matching user.
     // (In practice, we'll resume this session outside the reducer.)
     expect(state.currentAgentState.did).toBe(undefined)
-    expect(state.needsPersist).toBe(false)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -1673,7 +1649,6 @@ describe('session', () => {
           },
           "did": undefined,
         },
-        "needsPersist": false,
       }
     `)
   })
@@ -1694,6 +1669,5 @@ function printState(state: State) {
       agent: {service: state.currentAgentState.agent.service},
       did: state.currentAgentState.did,
     },
-    needsPersist: state.needsPersist,
   }
 }

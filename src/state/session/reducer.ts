@@ -24,7 +24,6 @@ type AgentState = {
 export type State = {
   readonly accounts: SessionAccount[]
   readonly currentAgentState: AgentState
-  needsPersist: boolean // Mutated in an effect.
 }
 
 export type Action =
@@ -72,7 +71,6 @@ export function getInitialState(persistedAccounts: SessionAccount[]): State {
   return {
     accounts: persistedAccounts,
     currentAgentState: createPublicAgentState(),
-    needsPersist: false,
   }
 }
 
@@ -121,7 +119,6 @@ let reducer = (state: State, action: Action): State => {
         currentAgentState: refreshedAccount
           ? state.currentAgentState
           : createPublicAgentState(), // Log out if expired.
-        needsPersist: true,
       }
     }
     case 'switched-to-account': {
@@ -135,7 +132,6 @@ let reducer = (state: State, action: Action): State => {
           did: newAccount.did,
           agent: newAgent,
         },
-        needsPersist: true,
       }
     }
     case 'removed-account': {
@@ -163,7 +159,6 @@ let reducer = (state: State, action: Action): State => {
           state.currentAgentState.did === accountDid
             ? createPublicAgentState() // Log out if removing the current one.
             : state.currentAgentState,
-        needsPersist: true,
       }
     }
     case 'logged-out-current-account': {
@@ -196,7 +191,6 @@ let reducer = (state: State, action: Action): State => {
             : a,
         ),
         currentAgentState: createPublicAgentState(),
-        needsPersist: true,
       }
     }
     case 'logged-out-every-account': {
@@ -217,7 +211,6 @@ let reducer = (state: State, action: Action): State => {
           accessJwt: undefined,
         })),
         currentAgentState: createPublicAgentState(),
-        needsPersist: true,
       }
     }
     case 'synced-accounts': {
@@ -228,7 +221,6 @@ let reducer = (state: State, action: Action): State => {
           syncedCurrentDid === state.currentAgentState.did
             ? state.currentAgentState
             : createPublicAgentState(), // Log out if different user.
-        needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
       }
     }
     case 'partial-refresh-session': {
@@ -261,7 +253,6 @@ let reducer = (state: State, action: Action): State => {
           }
           return a
         }),
-        needsPersist: true,
       }
     }
   }

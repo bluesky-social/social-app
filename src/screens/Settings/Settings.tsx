@@ -23,6 +23,7 @@ import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declarat
 import {useProfileQuery, useProfilesQuery} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {getSessionRepository} from '#/state/session/storage'
 import {useOnboardingDispatch} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -408,7 +409,7 @@ function DevOptions() {
   }
 
   const clearAllStorage = async () => {
-    await clearStorage()
+    await Promise.all([clearStorage(), getSessionRepository().clear()])
     Toast.show(l`Storage cleared, you need to restart the app now.`)
   }
 
