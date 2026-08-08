@@ -22,8 +22,8 @@ import Animated, {
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
-import {moderateProfile} from '@bsky.app/sdk/moderation'
-import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {moderateProfile} from '@bsky/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'

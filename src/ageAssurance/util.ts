@@ -1,10 +1,10 @@
 import {useMemo} from 'react'
 import type * as AgeRange from 'expo-age-range'
-import {type ModerationPrefs} from '@bsky.app/sdk/moderation'
+import {type ModerationPrefs} from '@bsky/sdk/moderation'
 import {
   computeAgeAssuranceRegionAccess,
   getAgeAssuranceRegionConfig,
-} from '@bsky.app/sdk/utils'
+} from '@bsky/sdk/utils'
 
 import {getAge} from '#/lib/strings/time'
 import {regionName} from '#/locale/helpers'
@@ -45,28 +45,10 @@ export function getAgeAssuranceRegionConfigForGeolocation(
   config: app.bsky.ageassurance.defs.Config,
   geolocation: Geolocation,
 ): app.bsky.ageassurance.defs.ConfigRegion | undefined {
-  /*
-   * The SDK's region matcher takes no `platform` filter, so platform scoping
-   * is applied here: regions restricted to other platforms are dropped before
-   * matching. Once the SDK accepts a platform, this whole function body
-   * collapses to:
-   *
-   *   return getAgeAssuranceRegionConfig(config, {
-   *     countryCode: geolocation.countryCode ?? '',
-   *     regionCode: geolocation.regionCode,
-   *     platform: AGE_ASSURANCE_PLATFORM,
-   *   })
-   */
-  const scoped: app.bsky.ageassurance.defs.Config = {
-    ...config,
-    regions: config.regions.filter(
-      region =>
-        !region.platforms || region.platforms.includes(AGE_ASSURANCE_PLATFORM),
-    ),
-  }
-  return getAgeAssuranceRegionConfig(scoped, {
+  return getAgeAssuranceRegionConfig(config, {
     countryCode: geolocation.countryCode ?? '',
     regionCode: geolocation.regionCode,
+    platform: AGE_ASSURANCE_PLATFORM,
   })
 }
 

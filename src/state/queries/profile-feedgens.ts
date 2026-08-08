@@ -1,5 +1,5 @@
 import {type DidString} from '@atproto/syntax'
-import {moderateFeedGenerator} from '@bsky.app/sdk/moderation'
+import {moderateFeedGenerator} from '@bsky/sdk/moderation'
 import {
   type InfiniteData,
   type QueryKey,

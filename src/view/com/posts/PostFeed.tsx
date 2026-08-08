@@ -18,7 +18,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type RichText as RichTextType} from '@bsky.app/sdk/richtext'
+import {type RichText as RichTextType} from '@bsky/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 

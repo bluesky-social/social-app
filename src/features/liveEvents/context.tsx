@@ -1,5 +1,5 @@
 import {createContext, useContext, useMemo} from 'react'
-import {hasMutedWord} from '@bsky.app/sdk/moderation'
+import {hasMutedWord} from '@bsky/sdk/moderation'
 import {QueryClient, useQuery} from '@tanstack/react-query'
 
 import {useOnAppStateChange} from '#/lib/appState'

@@ -1,4 +1,4 @@
-import {nuxSchema} from '@bsky.app/sdk/utils'
+import {nuxSchema} from '@bsky/sdk/utils'
 
 import {
   type AppNux,

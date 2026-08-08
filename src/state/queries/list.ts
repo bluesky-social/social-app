@@ -5,7 +5,7 @@ import {
   muteActorList,
   unblockActorList,
   unmuteActorList,
-} from '@bsky.app/sdk'
+} from '@bsky/sdk'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 

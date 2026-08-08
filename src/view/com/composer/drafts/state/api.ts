@@ -3,7 +3,7 @@
  */
 import {type UriString} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
-import {RichText} from '@bsky.app/sdk/richtext'
+import {RichText} from '@bsky/sdk/richtext'
 import {nanoid} from 'nanoid/non-secure'
 
 import {type LinkResolvers, resolveLink} from '#/lib/api/resolve'

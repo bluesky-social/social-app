@@ -5,7 +5,7 @@ import {
   ScrollEdgeEffect,
   ScrollEdgeEffectProvider,
 } from '@bsky.app/expo-scroll-edge-effect'
-import {moderateProfile} from '@bsky.app/sdk/moderation'
+import {moderateProfile} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {
   type RouteProp,

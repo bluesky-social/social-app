@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
-import {api} from '@bsky.app/sdk'
-import {type ModerationCause} from '@bsky.app/sdk/moderation'
+import {api} from '@bsky/sdk'
+import {type ModerationCause} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 

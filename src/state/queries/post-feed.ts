@@ -6,7 +6,7 @@ import {
   moderatePost,
   type ModerationDecision,
   type ModerationPrefs,
-} from '@bsky.app/sdk/moderation'
+} from '@bsky/sdk/moderation'
 import {
   type InfiniteData,
   type QueryClient,

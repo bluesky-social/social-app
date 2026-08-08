@@ -1,6 +1,6 @@
 import {type Client} from '@atproto/lex'
 import {type DidString} from '@atproto/syntax'
-import {api} from '@bsky.app/sdk'
+import {api} from '@bsky/sdk'
 
 import {IS_TEST_USER} from '#/lib/constants'
 import {com} from '#/lexicons'

@@ -7,7 +7,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type ModerationCause, type ModerationUI} from '@bsky.app/sdk/moderation'
+import {type ModerationCause, type ModerationUI} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -24,7 +24,7 @@ import {
   useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 interface Props extends React.ComponentProps<typeof Link> {
   disabled: boolean

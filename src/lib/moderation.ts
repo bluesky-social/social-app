@@ -7,7 +7,7 @@ import {
   type ModerationCause,
   type ModerationOpts,
   type ModerationUI,
-} from '@bsky.app/sdk/moderation'
+} from '@bsky/sdk/moderation'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'

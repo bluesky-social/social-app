@@ -1,10 +1,10 @@
 {
   "lexicon": 1,
-  "id": "app.bsky.unspecced.getTrendsSkeleton",
+  "id": "app.bsky.unspecced.getSuggestedUsersForDiscoverSkeleton",
   "defs": {
     "main": {
       "type": "query",
-      "description": "Get the skeleton of trends on the network. Intended to be called and then hydrated through app.bsky.unspecced.getTrends",
+      "description": "Get a skeleton of suggested users for the Discover page. Intended to be called and hydrated by app.bsky.unspecced.getSuggestedUsersForDiscover",
       "parameters": {
         "type": "params",
         "properties": {
@@ -16,8 +16,8 @@
           "limit": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 25,
-            "default": 10
+            "maximum": 50,
+            "default": 25
           }
         }
       },
@@ -25,13 +25,13 @@
         "encoding": "application/json",
         "schema": {
           "type": "object",
-          "required": ["trends"],
+          "required": ["dids"],
           "properties": {
-            "trends": {
+            "dids": {
               "type": "array",
               "items": {
-                "type": "ref",
-                "ref": "app.bsky.unspecced.defs#skeletonTrend"
+                "type": "string",
+                "format": "did"
               }
             },
             "recIdStr": {

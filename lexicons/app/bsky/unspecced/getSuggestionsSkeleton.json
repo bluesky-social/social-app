@@ -19,9 +19,7 @@
             "maximum": 100,
             "default": 50
           },
-          "cursor": {
-            "type": "string"
-          },
+          "cursor": { "type": "string" },
           "relativeToDid": {
             "type": "string",
             "format": "did",
@@ -35,9 +33,7 @@
           "type": "object",
           "required": ["actors"],
           "properties": {
-            "cursor": {
-              "type": "string"
-            },
+            "cursor": { "type": "string" },
             "actors": {
               "type": "array",
               "items": {

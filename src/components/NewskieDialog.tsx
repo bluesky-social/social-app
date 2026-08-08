@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {moderateProfile} from '@bsky.app/sdk/moderation'
+import {moderateProfile} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -19,7 +19,7 @@ import {Newskie} from '#/components/icons/Newskie'
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export function NewskieDialog({
   profile,

@@ -1,4 +1,4 @@
-import {setPostInteractionSettings} from '@bsky.app/sdk'
+import {setPostInteractionSettings} from '@bsky/sdk'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {preferencesQueryKey} from '#/state/queries/preferences'

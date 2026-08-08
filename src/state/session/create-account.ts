@@ -2,11 +2,7 @@ import {TID} from '@atproto/common-web'
 import {type Client} from '@atproto/lex'
 import {PasswordSession} from '@atproto/lex-password-session'
 import {toDatetimeString} from '@atproto/syntax'
-import {
-  overwriteSavedFeeds,
-  setPersonalDetails,
-  upsertProfile,
-} from '@bsky.app/sdk'
+import {overwriteSavedFeeds, setPersonalDetails, upsertProfile} from '@bsky/sdk'
 
 import {networkRetry} from '#/lib/async/retry'
 import {

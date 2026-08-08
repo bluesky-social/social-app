@@ -1,4 +1,4 @@
-import {type ModerationUI} from '@bsky.app/sdk/moderation'
+import {type ModerationUI} from '@bsky/sdk/moderation'
 
 // \u2705 = ✅
 // \u2713 = ✓

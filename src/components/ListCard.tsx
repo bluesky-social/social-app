@@ -1,7 +1,7 @@
 import {useEffect, useMemo} from 'react'
 import {View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
-import {moderateUserList, type ModerationUI} from '@bsky.app/sdk/moderation'
+import {moderateUserList, type ModerationUI} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -22,7 +22,7 @@ import {
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 /*
