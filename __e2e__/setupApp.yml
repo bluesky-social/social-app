@@ -28,9 +28,5 @@ appId: xyz.blueskyweb.app
       - back
 - extendedWaitUntil:
     visible:
-      id: e2eProxyHeaderInput
+      id: e2eSignInAlice
     timeout: 180000
-- tapOn:
-    id: e2eProxyHeaderInput
-- inputText: ${output.result}
-- pressKey: Enter
