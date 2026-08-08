@@ -8,16 +8,18 @@ import {
   AppBskyContactImportContacts,
   type Un$Typed,
 } from '@atproto/api'
+import {type Client} from '@atproto/lex'
 import {msg, t} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
+import {toLegacyBlobRef} from '#/lib/api/legacy-blob'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {findContactsStatusQueryKey} from '#/state/queries/find-contacts'
-import {useAgent} from '#/state/session'
+import {useAgent, usePdsClient} from '#/state/session'
 import {
   Context as OnboardingContext,
   type OnboardingAction,
@@ -55,6 +57,7 @@ export function GetContacts({
   const {_} = useLingui()
   const ax = useAnalytics()
   const agent = useAgent()
+  const pdsClient = usePdsClient()
   const insets = useSafeAreaInsets()
   const gutters = useGutters([0, 'wide'])
   const queryClient = useQueryClient()
@@ -72,7 +75,7 @@ export function GetContacts({
        */
       if (context === 'Onboarding' && maybeOnboardingContext) {
         try {
-          await createProfileRecord(agent, maybeOnboardingContext)
+          await createProfileRecord(agent, pdsClient, maybeOnboardingContext)
         } catch (error) {
           logger.debug('Error creating profile record:', {safeMessage: error})
         }
@@ -326,6 +329,7 @@ function showPermissionDeniedAlert() {
  */
 async function createProfileRecord(
   agent: AtpAgent,
+  pdsClient: Client,
   onboardingContext: {
     state: OnboardingState
     dispatch: React.Dispatch<OnboardingAction>
@@ -334,15 +338,17 @@ async function createProfileRecord(
   const profileStepResults = onboardingContext.state.profileStepResults
   const {imageUri, imageMime} = profileStepResults
   const blobPromise =
-    imageUri && imageMime ? uploadBlob(agent, imageUri, imageMime) : undefined
+    imageUri && imageMime
+      ? uploadBlob(pdsClient, imageUri, imageMime)
+      : undefined
 
   await agent.upsertProfile(async existing => {
     let next: Un$Typed<AppBskyActorProfile.Record> = existing ?? {}
 
     if (blobPromise) {
       const res = await blobPromise
-      if (res.data.blob) {
-        next.avatar = res.data.blob
+      if (res.blob) {
+        next.avatar = toLegacyBlobRef(res.blob)
       }
     }
 

@@ -98,7 +98,12 @@ import {
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
-import {useAgent, useAppviewClient, useSession} from '#/state/session'
+import {
+  useAgent,
+  useAppviewClient,
+  usePdsClient,
+  useSession,
+} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
@@ -277,6 +282,7 @@ export const ComposePost = ({
     : VIDEO_MAX_DURATION_MS
   const agent = useAgent()
   const client = useAppviewClient()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
   const {closeComposer} = useComposerControls()
@@ -1084,6 +1090,7 @@ export const ComposePost = ({
           onStateChange: setPublishingStage,
           langs: currentLanguages,
           appviewClient: client,
+          pdsClient,
         })
       ).uris[0]
 
@@ -1279,6 +1286,7 @@ export const ComposePost = ({
     ax,
     agent,
     client,
+    pdsClient,
     canPost,
     isPublishing,
     currentLanguages,
