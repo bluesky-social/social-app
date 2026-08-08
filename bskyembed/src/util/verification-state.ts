@@ -1,4 +1,4 @@
-import * as bsky from '../types/bsky'
+import {app} from '@bsky.app/sdk/lexicons'
 
 export type VerificationState = {
   role: 'default' | 'verifier'
@@ -8,7 +8,7 @@ export type VerificationState = {
 export function getVerificationState({
   profile,
 }: {
-  profile?: bsky.profile.AnyProfileView
+  profile?: app.bsky.actor.defs.ProfileViewBasic
 }): VerificationState {
   if (!profile || !profile.verification) {
     return {
