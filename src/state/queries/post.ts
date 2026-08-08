@@ -1,5 +1,7 @@
 import {useCallback} from 'react'
 import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {type AtUriString} from '@atproto/syntax'
+import {deleteLike, deletePost, deleteRepost, like, repost} from '@bsky.app/sdk'
 import {
   type QueryClient,
   useMutation,
@@ -10,10 +12,16 @@ import {
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {type Shadow} from '#/state/cache/types'
-import {useAgent, useSession} from '#/state/session'
+import {
+  useAgent,
+  useAppviewClient,
+  usePdsClient,
+  useSession,
+} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {useAnalytics} from '#/analytics'
 import {type Metrics, toClout} from '#/analytics/metrics'
+import {app} from '#/lexicons'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
 import {findProfileQueryData} from './profile'
 
@@ -184,7 +192,7 @@ function usePostLikeMutation(
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   const postAuthor = post.author
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const ax = useAnalytics()
   return useMutation<
     {uri: string}, // responds with the uri of the like
@@ -215,7 +223,11 @@ function usePostLikeMutation(
             : undefined,
         feedDescriptor: feedDescriptor,
       })
-      return agent.like(uri, cid, via)
+      return pdsClient.call(like, {
+        uri: uri as AtUriString,
+        cid: cid,
+        via: via ? {uri: via.uri as AtUriString, cid: via.cid} : undefined,
+      })
     },
   })
 }
@@ -225,7 +237,7 @@ function usePostUnlikeMutation(
   logContext: Metrics['post:unlike']['logContext'],
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const ax = useAnalytics()
   return useMutation<void, Error, {postUri: string; likeUri: string}>({
     mutationFn: ({postUri, likeUri}) => {
@@ -235,7 +247,7 @@ function usePostUnlikeMutation(
         logContext,
         feedDescriptor,
       })
-      return agent.deleteLike(likeUri)
+      return pdsClient.call(deleteLike, likeUri as AtUriString)
     },
   })
 }
@@ -309,7 +321,7 @@ function usePostRepostMutation(
   logContext: Metrics['post:repost']['logContext'],
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const ax = useAnalytics()
   return useMutation<
     {uri: string}, // responds with the uri of the repost
@@ -323,7 +335,11 @@ function usePostRepostMutation(
         logContext,
         feedDescriptor,
       })
-      return agent.repost(uri, cid, via)
+      return pdsClient.call(repost, {
+        uri: uri as AtUriString,
+        cid: cid,
+        via: via ? {uri: via.uri as AtUriString, cid: via.cid} : undefined,
+      })
     },
   })
 }
@@ -333,7 +349,7 @@ function usePostUnrepostMutation(
   logContext: Metrics['post:unrepost']['logContext'],
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const ax = useAnalytics()
   return useMutation<void, Error, {postUri: string; repostUri: string}>({
     mutationFn: ({postUri, repostUri}) => {
@@ -343,17 +359,17 @@ function usePostUnrepostMutation(
         logContext,
         feedDescriptor,
       })
-      return agent.deleteRepost(repostUri)
+      return pdsClient.call(deleteRepost, repostUri as AtUriString)
     },
   })
 }
 
 export function usePostDeleteMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   return useMutation<void, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await agent.deletePost(uri)
+      await pdsClient.call(deletePost, uri as AtUriString)
     },
     onSuccess(_, variables) {
       updatePostShadow(queryClient, variables.uri, {isDeleted: true})
@@ -407,23 +423,29 @@ export function useThreadMuteMutationQueue(
 }
 
 function useThreadMuteMutation() {
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   return useMutation<
     {},
     Error,
     {uri: string} // the root post's uri
   >({
-    mutationFn: ({uri}) => {
-      return agent.api.app.bsky.graph.muteThread({root: uri})
+    mutationFn: async ({uri}) => {
+      await appviewClient.call(app.bsky.graph.muteThread, {
+        root: uri as AtUriString,
+      })
+      return {}
     },
   })
 }
 
 function useThreadUnmuteMutation() {
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   return useMutation<{}, Error, {uri: string}>({
-    mutationFn: ({uri}) => {
-      return agent.api.app.bsky.graph.unmuteThread({root: uri})
+    mutationFn: async ({uri}) => {
+      await appviewClient.call(app.bsky.graph.unmuteThread, {
+        root: uri as AtUriString,
+      })
+      return {}
     },
   })
 }

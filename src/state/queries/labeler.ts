@@ -1,4 +1,6 @@
 import {type AppBskyLabelerDefs} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
+import {addLabeler, removeLabeler} from '@bsky.app/sdk'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 
@@ -9,7 +11,7 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {createQueryKey} from '#/state/queries/util'
-import {useAgent} from '#/state/session'
+import {useAgent, usePdsClient} from '#/state/session'
 
 const labelerInfoQueryKeyRoot = 'labeler-info'
 export const labelerInfoQueryKey = (did: string) => [
@@ -78,11 +80,13 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
 
 export function useRemoveLabelersMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation({
     async mutationFn({dids}: {dids: string[]}) {
-      await Promise.all(dids.map(did => agent.removeLabeler(did)))
+      await Promise.all(
+        dids.map(did => client.call(removeLabeler, did as DidString)),
+      )
     },
     async onSuccess() {
       await queryClient.invalidateQueries({
@@ -95,6 +99,7 @@ export function useRemoveLabelersMutation() {
 export function useLabelerSubscriptionMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const pdsClient = usePdsClient()
   const preferences = usePreferencesQuery()
 
   return useMutation({
@@ -136,7 +141,11 @@ export function useLabelerSubscriptionMutation() {
         }
       }
       if (invalidLabelers.length) {
-        await Promise.all(invalidLabelers.map(did => agent.removeLabeler(did)))
+        await Promise.all(
+          invalidLabelers.map(did =>
+            pdsClient.call(removeLabeler, did as DidString),
+          ),
+        )
       }
 
       if (subscribe) {
@@ -144,9 +153,9 @@ export function useLabelerSubscriptionMutation() {
         if (labelerCount >= MAX_LABELERS) {
           throw new Error('MAX_LABELERS')
         }
-        await agent.addLabeler(did)
+        await pdsClient.call(addLabeler, did as DidString)
       } else {
-        await agent.removeLabeler(did)
+        await pdsClient.call(removeLabeler, did as DidString)
       }
     },
     async onSuccess() {

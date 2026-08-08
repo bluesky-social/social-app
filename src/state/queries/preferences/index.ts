@@ -1,9 +1,28 @@
 import {useCallback} from 'react'
+import {type AppBskyActorDefs} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {
-  type AppBskyActorDefs,
+  addSavedFeeds,
   type BskyFeedViewPreference,
-  type LabelPreference,
-} from '@atproto/api'
+  dismissNudges,
+  getPreferences,
+  overwriteSavedFeeds,
+  queueNudges,
+  removeMutedWord,
+  removeMutedWords,
+  removeSavedFeeds,
+  setActiveProgressGuide,
+  setAdultContentEnabled,
+  setContentLabelPref,
+  setFeedViewPrefs,
+  setIsBetaUser,
+  setThreadViewPrefs,
+  setVerificationPrefs,
+  updateMutedWord,
+  updateSavedFeeds,
+  upsertMutedWords,
+} from '@bsky.app/sdk'
+import {type LabelPreference} from '@bsky.app/sdk/moderation'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
@@ -20,11 +39,12 @@ import {
   type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types'
 import {createQueryKey} from '#/state/queries/util'
-import {useAgent} from '#/state/session'
+import {useAgent, usePdsClient} from '#/state/session'
 import {saveLabelers} from '#/state/session/moderation'
 import {useAgeAssurance} from '#/ageAssurance'
 import {makeAgeRestrictedModerationPrefs} from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 
 export * from '#/state/queries/preferences/const'
 export * from '#/state/queries/preferences/moderation'
@@ -37,6 +57,7 @@ export const preferencesQueryKey = createQueryKey(
 )
 
 export function usePreferencesQuery() {
+  const client = usePdsClient()
   const agent = useAgent()
   const aa = useAgeAssurance()
 
@@ -47,18 +68,34 @@ export function usePreferencesQuery() {
     queryKey: preferencesQueryKey,
     gcTime: GCTIME.INFINITY,
     queryFn: async () => {
-      if (!agent.did) {
+      if (!client.did) {
         return DEFAULT_LOGGED_OUT_PREFERENCES
       } else {
-        const res = await agent.getPreferences()
+        const res = await client.call(getPreferences)
+
+        const labelerDids = res.moderationPrefs.labelers.map(l => l.did)
 
         // save to local storage to ensure there are labels on initial requests
-        saveLabelers(
-          agent.did,
-          res.moderationPrefs.labelers.map(l => l.did),
-        )
+        saveLabelers(client.did, labelerDids)
 
-        const preferences: UsePreferencesQueryResponse = {
+        /*
+         * `BskyAgent.getPreferences` used to call `configureLabelers` itself,
+         * so subscribing to a labeler took effect on the very next appview
+         * read. The sdk action has no such side effect, and appview reads still
+         * inherit `atproto-accept-labelers` from the agent's fetch handler, so
+         * apply the subscriptions there rather than on the wrapping client -
+         * setting them on both would emit the header twice.
+         */
+        agent.configureLabelers(labelerDids)
+
+        /*
+         * The sdk's `BskyPreferences` is field-for-field identical to the
+         * legacy one that `UsePreferencesQueryResponse` is still derived from;
+         * only its strings are branded (`AtUriString`, `DidString`). Cast at
+         * this one seam so every downstream consumer of the response - notably
+         * the `moderationPrefs` readers - keeps its current types.
+         */
+        const preferences = {
           ...res,
           savedFeeds: res.savedFeeds.filter(f => f.type !== 'unknown'),
           /**
@@ -74,7 +111,7 @@ export function usePreferencesQuery() {
             ...(res.threadViewPrefs ?? {}),
           },
           userAge: res.birthDate ? getAge(res.birthDate) : undefined,
-        }
+        } as UsePreferencesQueryResponse
         return preferences
       }
     },
@@ -113,11 +150,11 @@ export function usePreferencesQuery() {
 
 export function useClearPreferencesMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation({
     mutationFn: async () => {
-      await agent.app.bsky.actor.putPreferences({preferences: []})
+      await client.call(app.bsky.actor.putPreferences, {preferences: []})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -128,7 +165,7 @@ export function useClearPreferencesMutation() {
 
 export function usePreferencesSetContentLabelMutation() {
   const ax = useAnalytics()
-  const agent = useAgent()
+  const client = usePdsClient()
   const queryClient = useQueryClient()
 
   return useMutation<
@@ -137,7 +174,11 @@ export function usePreferencesSetContentLabelMutation() {
     {label: string; visibility: LabelPreference; labelerDid: string | undefined}
   >({
     mutationFn: async ({label, visibility, labelerDid}) => {
-      await agent.setContentLabelPref(label, visibility, labelerDid)
+      await client.call(setContentLabelPref, {
+        key: label,
+        value: visibility,
+        labelerDid: labelerDid as DidString | undefined,
+      })
       ax.metric('moderation:changeLabelPreference', {preference: visibility})
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -149,7 +190,7 @@ export function usePreferencesSetContentLabelMutation() {
 
 export function useSetContentLabelMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation({
     mutationFn: async ({
@@ -161,7 +202,11 @@ export function useSetContentLabelMutation() {
       visibility: LabelPreference
       labelerDid?: string
     }) => {
-      await agent.setContentLabelPref(label, visibility, labelerDid)
+      await client.call(setContentLabelPref, {
+        key: label,
+        value: visibility,
+        labelerDid: labelerDid as DidString | undefined,
+      })
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -172,11 +217,11 @@ export function useSetContentLabelMutation() {
 
 export function usePreferencesSetAdultContentMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation<void, unknown, {enabled: boolean}>({
     mutationFn: async ({enabled}) => {
-      await agent.setAdultContentEnabled(enabled)
+      await client.call(setAdultContentEnabled, enabled)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -187,7 +232,7 @@ export function usePreferencesSetAdultContentMutation() {
 
 export function useSetFeedViewPreferencesMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation<void, unknown, Partial<BskyFeedViewPreference>>({
     mutationFn: async prefs => {
@@ -195,7 +240,7 @@ export function useSetFeedViewPreferencesMutation() {
        * special handling here, merged into `feedViewPrefs` above, since
        * following was previously called `home`
        */
-      await agent.setFeedViewPrefs('home', prefs)
+      await client.call(setFeedViewPrefs, {feed: 'home', ...prefs})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -212,11 +257,11 @@ export function useSetThreadViewPreferencesMutation({
   onError?: (error: unknown) => void
 }) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation<void, unknown, Partial<ThreadViewPreferences>>({
     mutationFn: async prefs => {
-      await agent.setThreadViewPrefs(prefs)
+      await client.call(setThreadViewPrefs, prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -229,11 +274,11 @@ export function useSetThreadViewPreferencesMutation({
 
 export function useOverwriteSavedFeedsMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
     mutationFn: async savedFeeds => {
-      await agent.overwriteSavedFeeds(savedFeeds)
+      await client.call(overwriteSavedFeeds, savedFeeds)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -244,7 +289,7 @@ export function useOverwriteSavedFeedsMutation() {
 
 export function useAddSavedFeedsMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation<
     void,
@@ -252,7 +297,7 @@ export function useAddSavedFeedsMutation() {
     Pick<AppBskyActorDefs.SavedFeed, 'type' | 'value' | 'pinned'>[]
   >({
     mutationFn: async savedFeeds => {
-      await agent.addSavedFeeds(savedFeeds)
+      await client.call(addSavedFeeds, savedFeeds)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -263,11 +308,11 @@ export function useAddSavedFeedsMutation() {
 
 export function useRemoveFeedMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation<void, unknown, Pick<AppBskyActorDefs.SavedFeed, 'id'>>({
     mutationFn: async savedFeed => {
-      await agent.removeSavedFeeds([savedFeed.id])
+      await client.call(removeSavedFeeds, [savedFeed.id])
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -278,7 +323,7 @@ export function useRemoveFeedMutation() {
 
 export function useReplaceForYouWithDiscoverFeedMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation({
     mutationFn: async ({
@@ -289,10 +334,10 @@ export function useReplaceForYouWithDiscoverFeedMutation() {
       discoverFeedConfig: AppBskyActorDefs.SavedFeed | undefined
     }) => {
       if (forYouFeedConfig) {
-        await agent.removeSavedFeeds([forYouFeedConfig.id])
+        await client.call(removeSavedFeeds, [forYouFeedConfig.id])
       }
       if (!discoverFeedConfig) {
-        await agent.addSavedFeeds([
+        await client.call(addSavedFeeds, [
           {
             type: 'feed',
             value: PROD_DEFAULT_FEED('whats-hot'),
@@ -300,7 +345,7 @@ export function useReplaceForYouWithDiscoverFeedMutation() {
           },
         ])
       } else {
-        await agent.updateSavedFeeds([
+        await client.call(updateSavedFeeds, [
           {
             ...discoverFeedConfig,
             pinned: true,
@@ -317,11 +362,11 @@ export function useReplaceForYouWithDiscoverFeedMutation() {
 
 export function useUpdateSavedFeedsMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
     mutationFn: async feeds => {
-      await agent.updateSavedFeeds(feeds)
+      await client.call(updateSavedFeeds, feeds)
 
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -333,11 +378,14 @@ export function useUpdateSavedFeedsMutation() {
 
 export function useUpsertMutedWordsMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation({
     mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
-      await agent.upsertMutedWords(mutedWords)
+      await client.call(
+        upsertMutedWords,
+        mutedWords as app.bsky.actor.defs.MutedWord[],
+      )
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -348,11 +396,14 @@ export function useUpsertMutedWordsMutation() {
 
 export function useUpdateMutedWordMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation({
     mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
-      await agent.updateMutedWord(mutedWord)
+      await client.call(
+        updateMutedWord,
+        mutedWord as app.bsky.actor.defs.MutedWord,
+      )
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -363,11 +414,14 @@ export function useUpdateMutedWordMutation() {
 
 export function useRemoveMutedWordMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation({
     mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
-      await agent.removeMutedWord(mutedWord)
+      await client.call(
+        removeMutedWord,
+        mutedWord as app.bsky.actor.defs.MutedWord,
+      )
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -378,11 +432,14 @@ export function useRemoveMutedWordMutation() {
 
 export function useRemoveMutedWordsMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation({
     mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
-      await agent.removeMutedWords(mutedWords)
+      await client.call(
+        removeMutedWords,
+        mutedWords as app.bsky.actor.defs.MutedWord[],
+      )
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -393,11 +450,11 @@ export function useRemoveMutedWordsMutation() {
 
 export function useQueueNudgesMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation({
     mutationFn: async (nudges: string | string[]) => {
-      await agent.bskyAppQueueNudges(nudges)
+      await client.call(queueNudges, Array.isArray(nudges) ? nudges : [nudges])
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -408,11 +465,14 @@ export function useQueueNudgesMutation() {
 
 export function useDismissNudgesMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation({
     mutationFn: async (nudges: string | string[]) => {
-      await agent.bskyAppDismissNudges(nudges)
+      await client.call(
+        dismissNudges,
+        Array.isArray(nudges) ? nudges : [nudges],
+      )
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -423,13 +483,13 @@ export function useDismissNudgesMutation() {
 
 export function useSetActiveProgressGuideMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation({
     mutationFn: async (
       guide: AppBskyActorDefs.BskyAppProgressGuide | undefined,
     ) => {
-      await agent.bskyAppSetActiveProgressGuide(guide)
+      await client.call(setActiveProgressGuide, guide)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -440,11 +500,11 @@ export function useSetActiveProgressGuideMutation() {
 
 export function useSetIsBetaUserMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation({
     mutationFn: async (isBetaUser: boolean) => {
-      await agent.setIsBetaUser(isBetaUser)
+      await client.call(setIsBetaUser, isBetaUser)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -456,11 +516,11 @@ export function useSetIsBetaUserMutation() {
 export function useSetVerificationPrefsMutation() {
   const ax = useAnalytics()
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation<void, unknown, AppBskyActorDefs.VerificationPrefs>({
     mutationFn: async prefs => {
-      await agent.setVerificationPrefs(prefs)
+      await client.call(setVerificationPrefs, prefs)
       if (prefs.hideBadges) {
         ax.metric('verification:settings:hideBadges', {})
       } else {
