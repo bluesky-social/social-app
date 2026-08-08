@@ -3,29 +3,43 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   type AppBskyFeedDefs,
-  type AppBskyFeedPostgate,
   AtUri,
 } from '@atproto/api'
+import {type AtUriString, toDatetimeString} from '@atproto/syntax'
+
+import {type app} from '#/lexicons'
 
 export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate'
 
+/**
+ * Create a new {@link app.bsky.feed.postgate.Main}. URIs are accepted as plain
+ * strings (callers hold raw AT-URIs, often from legacy-typed views) and
+ * asserted to the branded `AtUriString` here.
+ */
 export function createPostgateRecord(
-  postgate: Partial<AppBskyFeedPostgate.Record> & {
-    post: AppBskyFeedPostgate.Record['post']
+  postgate: Omit<
+    Partial<app.bsky.feed.postgate.Main>,
+    'post' | 'detachedEmbeddingUris'
+  > & {
+    post: string
+    detachedEmbeddingUris?: string[]
   },
-): AppBskyFeedPostgate.Record {
+): app.bsky.feed.postgate.Main {
   return {
     $type: POSTGATE_COLLECTION,
-    createdAt: new Date().toISOString(),
-    post: postgate.post,
-    detachedEmbeddingUris: postgate.detachedEmbeddingUris || [],
+    createdAt: toDatetimeString(new Date()),
+    post: postgate.post as AtUriString,
+    detachedEmbeddingUris: (postgate.detachedEmbeddingUris ||
+      []) as AtUriString[],
     embeddingRules: postgate.embeddingRules || [],
   }
 }
 
 export function mergePostgateRecords(
-  prev: AppBskyFeedPostgate.Record,
-  next: Partial<AppBskyFeedPostgate.Record>,
+  prev: app.bsky.feed.postgate.Main,
+  next: Omit<Partial<app.bsky.feed.postgate.Main>, 'detachedEmbeddingUris'> & {
+    detachedEmbeddingUris?: string[]
+  },
 ) {
   const detachedEmbeddingUris = Array.from(
     new Set([
@@ -199,5 +213,5 @@ export function getMaybeDetachedQuoteEmbed({
 }
 
 export const embeddingRules = {
-  disableRule: {$type: 'app.bsky.feed.postgate#disableRule'},
+  disableRule: {$type: 'app.bsky.feed.postgate#disableRule'} as const,
 }

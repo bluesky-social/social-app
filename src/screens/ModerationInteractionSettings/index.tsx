@@ -1,5 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
+import {type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -22,6 +23,7 @@ import {PostInteractionSettingsForm} from '#/components/dialogs/PostInteractionS
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
+import {type app} from '#/lexicons'
 
 export function Screen() {
   const gutters = useGutters(['base'])
@@ -68,16 +70,21 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
   const allowUI = useMemo(() => {
     return threadgateRecordToAllowUISetting({
       $type: 'app.bsky.feed.threadgate',
-      post: '',
-      createdAt: new Date().toString(),
-      allow: preferences.postInteractionSettings.threadgateAllowRules,
+      post: '' as AtUriString,
+      createdAt: toDatetimeString(new Date()),
+      /*
+       * Preferences are still typed against the legacy client, so the stored
+       * rules arrive unbranded. Wave B migrates `getPreferences`.
+       */
+      allow: preferences.postInteractionSettings
+        .threadgateAllowRules as app.bsky.feed.threadgate.Main['allow'],
     })
   }, [preferences.postInteractionSettings.threadgateAllowRules])
   const postgate = useMemo(() => {
     return createPostgateRecord({
       post: '',
-      embeddingRules:
-        preferences.postInteractionSettings.postgateEmbeddingRules,
+      embeddingRules: preferences.postInteractionSettings
+        .postgateEmbeddingRules as app.bsky.feed.postgate.Main['embeddingRules'],
     })
   }, [preferences.postInteractionSettings.postgateEmbeddingRules])
 
