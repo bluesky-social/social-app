@@ -189,8 +189,8 @@ export function VideoPostCard({
               a.justify_center,
               a.rounded_md,
               a.overflow_hidden,
+              t.atoms.bg_contrast_50,
               {
-                backgroundColor: black,
                 aspectRatio: 9 / 16,
               },
             ]}>
@@ -252,7 +252,6 @@ export function VideoPostCard({
 
 export function VideoPostCardPlaceholder() {
   const t = useTheme()
-  const black = getBlackColor(t)
 
   return (
     <View style={[a.flex_1]}>
@@ -260,8 +259,8 @@ export function VideoPostCardPlaceholder() {
         style={[
           a.rounded_md,
           a.overflow_hidden,
+          t.atoms.bg_contrast_50,
           {
-            backgroundColor: black,
             aspectRatio: 9 / 16,
           },
         ]}>
