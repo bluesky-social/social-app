@@ -13,6 +13,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useSimilarAccountsDisabled} from '#/state/preferences/similar-accounts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useSuggestedFollowsByActorWithDismiss} from '#/state/queries/suggested-follows'
@@ -208,6 +209,7 @@ export function ProfileGrid({
   const gutters = useGutters([0, 'base'])
   const followDialogControl = useDialogControl()
 
+  const disabledSimilarAccounts = useSimilarAccountsDisabled()
   const isLoading = isSuggestionsLoading || !moderationOpts
   const isProfileHeaderContext = viewContext === 'profileHeader'
   const isFeedContext = viewContext === 'feed'
@@ -439,10 +441,25 @@ export function ProfileGrid({
   const profileCountForMinCheck = totalProfileCount ?? profiles.length
 
   useEffect(() => {
-    if (error || (!isLoading && profileCountForMinCheck < minLength)) {
+    if (
+      error ||
+      (!isLoading && profileCountForMinCheck < minLength) ||
+      disabledSimilarAccounts
+    ) {
       onRequestHide?.()
     }
-  }, [error, isLoading, onRequestHide, profileCountForMinCheck, minLength])
+  }, [
+    error,
+    isLoading,
+    onRequestHide,
+    profileCountForMinCheck,
+    minLength,
+    disabledSimilarAccounts,
+  ])
+
+  if (disabledSimilarAccounts) {
+    return null
+  }
 
   if (error || (!isLoading && profileCountForMinCheck < minLength)) {
     ax.logger.debug(`Not enough profiles to show suggested follows`)
