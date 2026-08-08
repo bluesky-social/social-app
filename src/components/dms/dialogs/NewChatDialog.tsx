@@ -1,12 +1,10 @@
 import {useCallback} from 'react'
-import {
-  ChatBskyConvoGetConvoForMembers,
-  ChatBskyGroupCreateGroup,
-} from '@atproto/api'
+import {ChatBskyGroupCreateGroup} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {isNetworkError} from '#/lib/strings/errors'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useCreateGroupChat} from '#/state/queries/messages/create-group-chat'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
@@ -19,6 +17,7 @@ import {InitiateChatFlow} from '#/components/dms/InitiateChatFlow'
 import {MessagePlus_Stroke2_Corner0_Rounded as NewChatIcon} from '#/components/icons/Message'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {chat} from '#/lexicons'
 
 export function NewChat({
   control,
@@ -54,27 +53,24 @@ export function NewChat({
       let errorMessage = l`An issue occurred starting the chat, please try again.`
       if (isNetworkError(error)) {
         errorMessage = l`A network error occurred. Please check your internet connection.`
-      } else if (
-        error instanceof ChatBskyConvoGetConvoForMembers.AccountSuspendedError
-      ) {
-        errorMessage = l`Suspended accounts cannot participate in chat.`
-      } else if (
-        error instanceof ChatBskyConvoGetConvoForMembers.BlockedActorError
-      ) {
-        errorMessage = l`This user has blocked you and cannot be messaged.`
-      } else if (
-        error instanceof ChatBskyConvoGetConvoForMembers.MessagesDisabledError
-      ) {
-        errorMessage = l`This user has disabled chat and cannot be messaged.`
-      } else if (
-        error instanceof
-        ChatBskyConvoGetConvoForMembers.NotFollowedBySenderError
-      ) {
-        errorMessage = l`Chat recipient is not followed by the sender.`
-      } else if (
-        error instanceof ChatBskyConvoGetConvoForMembers.RecipientNotFoundError
-      ) {
-        errorMessage = l`Unable to find the selected recipient.`
+      } else {
+        switch (matchXrpcError(error, chat.bsky.convo.getConvoForMembers)) {
+          case 'AccountSuspended':
+            errorMessage = l`Suspended accounts cannot participate in chat.`
+            break
+          case 'BlockedActor':
+            errorMessage = l`This user has blocked you and cannot be messaged.`
+            break
+          case 'MessagesDisabled':
+            errorMessage = l`This user has disabled chat and cannot be messaged.`
+            break
+          case 'NotFollowedBySender':
+            errorMessage = l`Chat recipient is not followed by the sender.`
+            break
+          case 'RecipientNotFound':
+            errorMessage = l`Unable to find the selected recipient.`
+            break
+        }
       }
       Toast.show(errorMessage, {
         type: 'error',
