@@ -1,8 +1,10 @@
 import {useCallback} from 'react'
+import {type HandleString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import {useAgent, usePdsClient} from '#/state/session'
+import {com} from '#/lexicons'
 
 const handleQueryKeyRoot = 'handle'
 const fetchHandleQueryKey = (handleOrDid: string) => [
@@ -36,11 +38,15 @@ export function useUpdateHandleMutation(opts?: {
   onSuccess?: (handle: string) => void
 }) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = usePdsClient()
 
   return useMutation({
     mutationFn: async ({handle}: {handle: string}) => {
-      await agent.updateHandle({handle})
+      // `agent.updateHandle` was a pure alias for this method
+      await client.call(com.atproto.identity.updateHandle, {
+        // callers validate the handle before submitting
+        handle: handle as HandleString,
+      })
     },
     onSuccess(_data, variables) {
       opts?.onSuccess?.(variables.handle)
