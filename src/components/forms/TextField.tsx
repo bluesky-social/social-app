@@ -21,6 +21,7 @@ import {
   useTheme,
   web,
 } from '#/alf'
+import {AutosizedTextarea} from '#/components/forms/AutosizedTextarea'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
@@ -168,6 +169,8 @@ export type InputProps = Omit<
    * behaviour, but for now just pass `null` if you want no placeholder -sfn
    */
   placeholder?: string | null | undefined
+  minRows?: number
+  maxRows?: number
 }
 
 export function createInput(Component: typeof TextInput) {
@@ -181,6 +184,8 @@ export function createInput(Component: typeof TextInput) {
     isInvalid,
     inputRef,
     style,
+    minRows,
+    maxRows = 15,
     ...rest
   }: InputProps) {
     const t = useTheme()
@@ -191,6 +196,11 @@ export function createInput(Component: typeof TextInput) {
     const {chromeHover, chromeFocus, chromeError, chromeErrorHover} =
       useSharedInputStyles()
 
+    const {multiline, numberOfLines, ...inputRest} = rest
+
+    const resolvedMinRows = minRows ?? numberOfLines ?? 3
+    const resolvedMaxRows = Math.max(maxRows, resolvedMinRows)
+
     if (!withinRoot) {
       return (
         <Root isInvalid={isInvalid}>
@@ -200,6 +210,8 @@ export function createInput(Component: typeof TextInput) {
             value={value}
             onChangeText={onChangeText}
             isInvalid={isInvalid}
+            minRows={resolvedMinRows}
+            maxRows={resolvedMaxRows}
             {...rest}
           />
         </Root>
@@ -218,8 +230,8 @@ export function createInput(Component: typeof TextInput) {
       {
         // paddingVertical doesn't work w/multiline - esb
         lineHeight: a.text_md.fontSize * 1.2,
-        textAlignVertical: rest.multiline ? 'top' : undefined,
-        minHeight: rest.multiline ? 80 : undefined,
+        textAlignVertical: multiline ? 'top' : undefined,
+        minHeight: multiline ? 80 : undefined,
         minWidth: 0,
         paddingTop: 13,
         paddingBottom: 13,
@@ -249,38 +261,61 @@ export function createInput(Component: typeof TextInput) {
       )
     }
 
+    const handleFocus: TextInputProps['onFocus'] = e => {
+      ctx.onFocus()
+      onFocus?.(e)
+    }
+    const handleBlur: TextInputProps['onBlur'] = e => {
+      ctx.onBlur()
+      onBlur?.(e)
+    }
+
+    const sharedProps = {
+      accessibilityLabel: label,
+      value,
+      onChangeText,
+      onFocus: handleFocus,
+      onBlur: handleBlur,
+      placeholderTextColor: t.palette.contrast_500,
+      keyboardAppearance:
+        t.name === 'light' ? ('light' as const) : ('dark' as const),
+      style: flattened,
+    }
+
     return (
       <>
-        <Component
-          accessibilityHint={undefined}
-          hitSlop={HITSLOP_20}
-          {...rest}
-          accessibilityLabel={label}
-          ref={refs}
-          value={value}
-          onChangeText={onChangeText}
-          onFocus={e => {
-            ctx.onFocus()
-            onFocus?.(e)
-          }}
-          onBlur={e => {
-            ctx.onBlur()
-            onBlur?.(e)
-          }}
-          /*
-           * Android sizes an empty input from the font's bounding box instead
-           * of `lineHeight`, so a field with no placeholder shrinks on the
-           * first keystroke.
-           */
-          placeholder={
-            placeholder === null
-              ? platform({android: ' '})
-              : placeholder || label
-          }
-          placeholderTextColor={t.palette.contrast_500}
-          keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          style={flattened}
-        />
+        {multiline ? (
+          <AutosizedTextarea
+            {...inputRest}
+            {...sharedProps}
+            placeholder={
+              placeholder === null ? undefined : placeholder || label
+            }
+            label={label}
+            minRows={minRows}
+            maxRows={maxRows}
+            ref={refs}
+          />
+        ) : (
+          <Component
+            accessibilityHint={undefined}
+            hitSlop={HITSLOP_20}
+            {...rest}
+            {...sharedProps}
+            /*
+             * Android sizes an empty input from the font's bounding box instead
+             * of `lineHeight`, so a field with no placeholder shrinks on the
+             * first keystroke. AutosizedTextarea drives its height explicitly
+             * and isn't affected, so this only applies here.
+             */
+            placeholder={
+              placeholder === null
+                ? platform({android: ' '})
+                : placeholder || label
+            }
+            ref={refs}
+          />
+        )}
 
         <View
           style={[
