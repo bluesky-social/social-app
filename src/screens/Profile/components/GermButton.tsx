@@ -102,7 +102,7 @@ export function GermButton({
 function GermLogo({size}: {size: 'small' | 'large'}) {
   return (
     <Image
-      source={require('../../../../assets/images/germ_logo.webp')}
+      source={require('../../../../assets/icons/community/germ_logo.webp')}
       accessibilityIgnoresInvertColors={false}
       contentFit="cover"
       useAppleWebpCodec
