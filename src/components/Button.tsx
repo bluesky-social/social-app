@@ -112,6 +112,7 @@ export type ButtonProps = Pick<
     label: string
     style?: StyleProp<ViewStyle>
     hoverStyle?: StyleProp<ViewStyle>
+    pressStyle?: StyleProp<ViewStyle>
     children: NonTextElements | ((context: ButtonContext) => NonTextElements)
     PressableComponent?: React.ComponentType<PressableProps>
   }
@@ -144,6 +145,7 @@ export const Button = forwardRef<View, ButtonProps>(
       disabled = false,
       style,
       hoverStyle: hoverStyleProp,
+      pressStyle: pressStyleProp,
       PressableComponent = Pressable,
       onPressIn: onPressInOuter,
       onPressOut: onPressOutOuter,
@@ -595,6 +597,7 @@ export const Button = forwardRef<View, ButtonProps>(
           ...(state.hovered || state.pressed
             ? [hoverStyles, hoverStyleProp]
             : []),
+          ...(state.pressed ? [pressStyleProp] : []),
         ]}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
