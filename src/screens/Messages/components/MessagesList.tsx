@@ -22,13 +22,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
-import {
-  type $Typed,
-  type AppBskyEmbedRecord,
-  ChatBskyConvoDefs,
-  type ChatBskyEmbedJoinLink,
-  ChatBskyGroupDefs,
-} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
 import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
 import {RichText} from '@bsky.app/sdk/richtext'
 
@@ -70,7 +64,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
-import {app, type chat, type com} from '#/lexicons'
+import {app, chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {groupSystemMessages, type RenderItem} from './groupSystemMessages'
@@ -117,8 +111,8 @@ function getNeighborMessage(
     neighbor.type === 'deleted-message'
   ) {
     if (
-      ChatBskyConvoDefs.isMessageView(neighbor.message) ||
-      ChatBskyConvoDefs.isDeletedMessageView(neighbor.message)
+      bsky.isType(chat.bsky.convo.defs.messageView, neighbor.message) ||
+      bsky.isType(chat.bsky.convo.defs.deletedMessageView, neighbor.message)
     ) {
       return neighbor.message
     }
@@ -525,7 +519,7 @@ export function MessagesList({
     async (
       text: string,
       embedState?: MessageEmbedState,
-      reply?: $Typed<ChatBskyConvoDefs.MessageView>,
+      reply?: $Typed<chat.bsky.convo.defs.MessageView>,
     ) => {
       let rt = new RichText({text: text.trimEnd()}, {cleanNewlines: true})
 
@@ -539,10 +533,10 @@ export function MessagesList({
 
       let embed: chat.bsky.convo.defs.MessageInput['embed']
       let embedView:
-        | $Typed<AppBskyEmbedRecord.View>
-        | $Typed<ChatBskyEmbedJoinLink.View>
+        | $Typed<app.bsky.embed.record.View>
+        | $Typed<chat.bsky.embed.joinLink.View>
         | undefined
-      let replyTo: ChatBskyConvoDefs.ReplyRef | undefined
+      let replyTo: chat.bsky.convo.defs.ReplyRef | undefined
 
       /**
        * Find the embedded link facet and, if it's at the start or end of the
@@ -574,14 +568,13 @@ export function MessagesList({
             embed = {
               $type: 'app.bsky.embed.record',
               /*
-               * `getPost` still returns an `@atproto/api` view, whose `uri` and
-               * `cid` are plain strings rather than the branded syntax types
-               * the lexicon input declares.
+               * `getPost` hands back `uri` and `cid` as plain strings rather
+               * than the branded syntax types the lexicon input declares.
                */
               record: {
                 uri: post.uri,
                 cid: post.cid,
-              } as com.atproto.repo.strongRef.Main,
+              },
             }
 
             embedView = {
@@ -666,7 +659,10 @@ export function MessagesList({
       }
       if (
         embedView?.$type === 'chat.bsky.embed.joinLink#view' &&
-        ChatBskyGroupDefs.isJoinLinkPreviewView(embedView.joinLinkPreview)
+        bsky.isType(
+          chat.bsky.group.defs.joinLinkPreviewView,
+          embedView.joinLinkPreview,
+        )
       ) {
         ax.metric('groupchat:inviteLink:shared', {
           convoId: embedView.joinLinkPreview.convoId,
@@ -904,7 +900,7 @@ function Composer({
   onSendMessage: (
     message: string,
     embed?: MessageEmbedState,
-    replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
+    replyTo?: $Typed<chat.bsky.convo.defs.MessageView>,
   ) => Promise<void>
   messageEmbed: MessageEmbedState | undefined
   setEmbed: (embedUrl: string | undefined) => void
@@ -914,7 +910,7 @@ function Composer({
     (
       message: string,
       embed?: MessageEmbedState,
-      replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
+      replyTo?: $Typed<chat.bsky.convo.defs.MessageView>,
     ) => {
       void onSendMessage(message, embed, replyTo)
     },

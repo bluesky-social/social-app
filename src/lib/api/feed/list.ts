@@ -1,4 +1,3 @@
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {type Client, type XrpcRequestParams} from '@atproto/lex'
 
 import {app} from '#/lexicons'
@@ -23,7 +22,7 @@ export class ListFeedAPI implements FeedAPI {
     this.params = feedParams
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
     const data = await this.client.call(app.bsky.feed.getListFeed, {
       ...this.params,
       limit: 1,

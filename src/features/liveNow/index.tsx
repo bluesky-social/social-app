@@ -1,12 +1,8 @@
 import {useMemo} from 'react'
-import {
-  type $Typed,
-  type AppBskyActorDefs,
-  AppBskyEmbedExternal,
-} from '@atproto/api'
 import {retry} from '@atproto/common-web'
-import {type l} from '@atproto/lex'
+import {type $Typed, type l, type UriString} from '@atproto/lex'
 import {type AtIdentifierString, AtUri, toDatetimeString} from '@atproto/syntax'
+import {moderateStatus} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
@@ -15,7 +11,6 @@ import {isAfter, parseISO} from 'date-fns'
 import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
-import {moderateStatus} from '#/lib/moderation/subjects'
 import {matchXrpcError} from '#/lib/xrpc-error'
 import {useAppConfig} from '#/state/appConfig'
 import {
@@ -30,7 +25,7 @@ import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {getLiveNowHost, getLiveServiceNames} from '#/features/liveNow/utils'
 import {app, com} from '#/lexicons'
-import type * as bsky from '#/types/bsky'
+import * as bsky from '#/types/bsky'
 
 export * from '#/features/liveNow/utils'
 
@@ -48,7 +43,7 @@ const DEFAULT_STATE = {
   isDisabled: false,
   isActive: false,
   record: {},
-} satisfies AppBskyActorDefs.StatusView
+} satisfies app.bsky.actor.defs.StatusView
 
 export type LiveNowConfig = {
   canGoLive: boolean
@@ -129,10 +124,10 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
           isDisabled: false,
           isActive: true,
           status: 'app.bsky.actor.status#live',
-          embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
+          embed: shadowed.status.embed as $Typed<app.bsky.embed.external.View>, // temp_isStatusValid asserts this
           expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
           record: shadowed.status.record,
-        } satisfies AppBskyActorDefs.StatusView
+        } satisfies app.bsky.actor.defs.StatusView
       }
       return {
         uri: shadowed.status.uri,
@@ -140,10 +135,10 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
         isDisabled,
         isActive: false,
         status: 'app.bsky.actor.status#live',
-        embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
+        embed: shadowed.status.embed as $Typed<app.bsky.embed.external.View>, // temp_isStatusValid asserts this
         expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
         record: shadowed.status.record,
-      } satisfies AppBskyActorDefs.StatusView
+      } satisfies app.bsky.actor.defs.StatusView
     } else {
       return DEFAULT_STATE
     }
@@ -163,14 +158,14 @@ export function isStatusStillActive(timeStr: string | undefined) {
  * validate if the status is valid for the acting user e.g. as they go live.
  */
 export function isStatusValidForViewers(
-  status: AppBskyActorDefs.StatusView,
+  status: app.bsky.actor.defs.StatusView,
   config: LiveNowConfig,
 ) {
   if (status.status !== 'app.bsky.actor.status#live') return false
   if (!status.uri) return false // should not happen, just backwards compat
   try {
     const {host: liveDid} = new AtUri(status.uri)
-    if (AppBskyEmbedExternal.isView(status.embed)) {
+    if (bsky.isType(app.bsky.embed.external.view, status.embed)) {
       const host = getLiveNowHost(status.embed.external.uri)
       const exception = config.allowedHostsExceptionsByDid.get(liveDid)
       const isValidException = exception ? exception.has(host) : false
@@ -334,7 +329,7 @@ export function useUpsertLiveStatusMutation(
             $type: 'app.bsky.actor.defs#statusView',
             status: 'app.bsky.actor.status#live',
             isActive: true,
-            expiresAt: expiresAt.toISOString(),
+            expiresAt: toDatetimeString(expiresAt),
             embed:
               record.embed && image
                 ? {
@@ -342,7 +337,8 @@ export function useUpsertLiveStatusMutation(
                     external: {
                       ...record.embed.external,
                       $type: 'app.bsky.embed.external#viewExternal',
-                      thumb: image,
+                      // an opengraph image URL from link resolution
+                      thumb: image as UriString,
                     },
                   }
                 : undefined,

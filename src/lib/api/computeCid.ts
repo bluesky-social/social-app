@@ -1,4 +1,3 @@
-import {BlobRef} from '@atproto/api'
 import {sha256} from 'js-sha256'
 import {CID} from 'multiformats/cid'
 import * as Hasher from 'multiformats/hashes/hasher'
@@ -71,17 +70,6 @@ function prepareForHashing(v: any): any {
    */
   if (isLexBlob(v)) {
     return v
-  }
-
-  /*
-   * The video pipeline still reads its blob off the legacy agent
-   * (`app.bsky.video.getJobStatus` in composer `state/video`), which yields a
-   * `BlobRef` class instance. `ipld()` gives the same IPLD shape a lex blob
-   * already has, so both branches hash identically. Drop this guard once the
-   * video client is migrated.
-   */
-  if (v instanceof BlobRef) {
-    return v.ipld()
   }
 
   // Walk through arrays

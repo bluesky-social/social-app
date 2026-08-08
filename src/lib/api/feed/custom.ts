@@ -1,5 +1,4 @@
-import {type AppBskyFeedDefs, jsonStringToLex} from '@atproto/api'
-import {Client, type XrpcRequestParams} from '@atproto/lex'
+import {Client, lexParse, type XrpcRequestParams} from '@atproto/lex'
 
 import {
   getAppLanguageAsContentLanguage,
@@ -30,7 +29,7 @@ export class CustomFeedAPI implements FeedAPI {
     this.userInterests = userInterests
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
     const contentLangs = getContentLanguages().join(',')
     const data = await this.client.call(
       app.bsky.feed.getFeed,
@@ -140,7 +139,7 @@ async function loggedOutFetch({
    * is asserted here just as the old-world one was.
    */
   let data = res.ok
-    ? (jsonStringToLex(await res.text()) as app.bsky.feed.getFeed.$OutputBody)
+    ? (lexParse(await res.text()) as app.bsky.feed.getFeed.$OutputBody)
     : null
   if (data?.feed?.length) {
     return data
@@ -154,7 +153,7 @@ async function loggedOutFetch({
     {method: 'GET', headers: {'Accept-Language': '', ...labelersHeader}},
   )
   data = res.ok
-    ? (jsonStringToLex(await res.text()) as app.bsky.feed.getFeed.$OutputBody)
+    ? (lexParse(await res.text()) as app.bsky.feed.getFeed.$OutputBody)
     : null
   if (data?.feed?.length) {
     return data

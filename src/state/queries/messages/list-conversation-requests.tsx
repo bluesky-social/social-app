@@ -1,9 +1,4 @@
 import {
-  ChatBskyConvoDefs,
-  type ChatBskyConvoListConvoRequests,
-  ChatBskyGroupDefs,
-} from '@atproto/api'
-import {
   type InfiniteData,
   type QueryClient,
   useInfiniteQuery,
@@ -11,6 +6,7 @@ import {
 
 import {useChatClient} from '#/state/session'
 import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const DEFAULT_LIMIT = 10
 
@@ -44,16 +40,18 @@ export function useListConvoRequests({
 
 export type ConvoRequestListQueryData = {
   pageParams: Array<string | undefined>
-  pages: Array<ChatBskyConvoListConvoRequests.OutputSchema>
+  pages: Array<chat.bsky.convo.listConvoRequests.$OutputBody>
 }
 
 export type ConvoRequestItem =
-  ChatBskyConvoListConvoRequests.OutputSchema['requests'][number]
+  chat.bsky.convo.listConvoRequests.$OutputBody['requests'][number]
 
 export function optimisticUpdate(
   chatId: string,
   old: ConvoRequestListQueryData | undefined,
-  updateFn: (convo: ChatBskyConvoDefs.ConvoView) => ChatBskyConvoDefs.ConvoView,
+  updateFn: (
+    convo: chat.bsky.convo.defs.ConvoView,
+  ) => chat.bsky.convo.defs.ConvoView,
 ): ConvoRequestListQueryData | undefined {
   if (!old) return old
 
@@ -62,7 +60,10 @@ export function optimisticUpdate(
     pages: old.pages.map(page => ({
       ...page,
       requests: page.requests.map((item): ConvoRequestItem => {
-        if (ChatBskyConvoDefs.isConvoView(item) && item.id === chatId) {
+        if (
+          bsky.isType(chat.bsky.convo.defs.convoView, item) &&
+          item.id === chatId
+        ) {
           return {
             ...updateFn(item),
             $type: 'chat.bsky.convo.defs#convoView',
@@ -85,7 +86,9 @@ export function optimisticDelete(
     pages: old.pages.map(page => ({
       ...page,
       requests: page.requests.filter(
-        item => !ChatBskyConvoDefs.isConvoView(item) || item.id !== chatId,
+        item =>
+          !bsky.isType(chat.bsky.convo.defs.convoView, item) ||
+          item.id !== chatId,
       ),
     })),
   }
@@ -101,7 +104,7 @@ export function markAllRead(
     pages: old.pages.map(page => ({
       ...page,
       requests: page.requests.map((item): ConvoRequestItem => {
-        if (ChatBskyConvoDefs.isConvoView(item)) {
+        if (bsky.isType(chat.bsky.convo.defs.convoView, item)) {
           return {
             ...item,
             $type: 'chat.bsky.convo.defs#convoView',
@@ -126,7 +129,7 @@ export function optimisticDeleteJoinRequest(
       ...page,
       requests: page.requests.filter(
         item =>
-          !ChatBskyGroupDefs.isJoinRequestConvoView(item) ||
+          !bsky.isType(chat.bsky.group.defs.joinRequestConvoView, item) ||
           item.convoId !== convoId,
       ),
     })),
@@ -138,7 +141,7 @@ export function* findAllProfilesInQueryData(
   did: string,
 ) {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<ChatBskyConvoListConvoRequests.OutputSchema>
+    InfiniteData<chat.bsky.convo.listConvoRequests.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })
@@ -147,13 +150,15 @@ export function* findAllProfilesInQueryData(
 
     for (const page of queryData.pages) {
       for (const item of page.requests) {
-        if (ChatBskyConvoDefs.isConvoView(item)) {
+        if (bsky.isType(chat.bsky.convo.defs.convoView, item)) {
           for (const member of item.members) {
             if (member.did === did) {
               yield member
             }
           }
-        } else if (ChatBskyGroupDefs.isJoinRequestConvoView(item)) {
+        } else if (
+          bsky.isType(chat.bsky.group.defs.joinRequestConvoView, item)
+        ) {
           if (item.owner.did === did) {
             yield item.owner
           }

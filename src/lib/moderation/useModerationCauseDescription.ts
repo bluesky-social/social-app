@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {BSKY_LABELER_DID} from '@atproto/api'
+import {api} from '@bsky.app/sdk'
 import {type ModerationCause} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -135,7 +135,7 @@ export function useModerationCauseDescription(
         : undefined
       let sourceDisplayName = labeler?.creator.displayName
       if (!source) {
-        if (cause.label.src === BSKY_LABELER_DID) {
+        if (cause.label.src === api.moderation.did) {
           source = 'moderation.bsky.app'
           sourceDisplayName = 'Bluesky Moderation Service'
         } else {

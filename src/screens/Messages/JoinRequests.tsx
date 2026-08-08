@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {type ChatBskyGroupListJoinRequests} from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type InfiniteData, useQueryClient} from '@tanstack/react-query'
@@ -140,7 +139,7 @@ function JoinRequestsList({
 
   const getRemainingRequestCount = () => {
     const data = queryClient.getQueryData<
-      InfiniteData<ChatBskyGroupListJoinRequests.OutputSchema>
+      InfiniteData<chat.bsky.group.listJoinRequests.$OutputBody>
     >(createListJoinRequestsQueryKey({convoId}))
     return data?.pages.reduce((sum, page) => sum + page.requests.length, 0) ?? 0
   }

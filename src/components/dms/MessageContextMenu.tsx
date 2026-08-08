@@ -2,7 +2,6 @@ import {memo, useCallback} from 'react'
 import {Platform} from 'react-native'
 import {type GestureType} from 'react-native-gesture-handler'
 import * as Clipboard from 'expo-clipboard'
-import {type ChatBskyConvoDefs} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
@@ -10,7 +9,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
-import {asSdkFacets, richTextToString} from '#/lib/strings/rich-text-helpers'
+import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {useConvoActive} from '#/state/messages/convo'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -28,6 +27,7 @@ import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Tra
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
 import {canReact, hasReachedReactionLimit} from './util'
@@ -39,7 +39,7 @@ export let MessageContextMenu = ({
   children,
   swipeGesture,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  message: chat.bsky.convo.defs.MessageView
   senderProfile?: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts | undefined
   children: TriggerProps['children']
@@ -86,7 +86,7 @@ export let MessageContextMenu = ({
     const str = richTextToString(
       new RichText({
         text: message.text,
-        facets: asSdkFacets(message.facets),
+        facets: message.facets,
       }),
       true,
     )

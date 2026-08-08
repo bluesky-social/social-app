@@ -1,9 +1,9 @@
 import {Text, View} from 'react-native'
-import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 
 /**
  * How far the inline badge is nudged below the text baseline to optically
@@ -13,7 +13,7 @@ import {useAnalytics} from '#/analytics'
 export const POST_NUMBER_INLINE_OFFSET = 6
 
 export function useHasThreadItemPostNumber(
-  value: AppBskyUnspeccedDefs.ThreadItemPost,
+  value: app.bsky.unspecced.defs.ThreadItemPost,
 ) {
   const ax = useAnalytics()
   const index = value.opThreadPostIndex
@@ -33,7 +33,7 @@ export function ThreadItemPostNumber({
   value,
   inline = true,
 }: {
-  value: AppBskyUnspeccedDefs.ThreadItemPost
+  value: app.bsky.unspecced.defs.ThreadItemPost
   inline?: boolean
 }) {
   const t = useTheme()

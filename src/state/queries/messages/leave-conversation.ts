@@ -1,7 +1,3 @@
-import {
-  type ChatBskyConvoLeaveConvo,
-  type ChatBskyConvoListConvos,
-} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -22,7 +18,7 @@ export function RQKEY(convoId: string | undefined) {
 
 type ConvoListQueryData = {
   pageParams: Array<string | undefined>
-  pages: Array<ChatBskyConvoListConvos.OutputSchema>
+  pages: Array<chat.bsky.convo.listConvos.$OutputBody>
 }
 
 export function useLeaveConvo(
@@ -33,7 +29,7 @@ export function useLeaveConvo(
     onError,
   }: {
     onMutate?: () => void
-    onSuccess?: (data: ChatBskyConvoLeaveConvo.OutputSchema) => void
+    onSuccess?: (data: chat.bsky.convo.leaveConvo.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {

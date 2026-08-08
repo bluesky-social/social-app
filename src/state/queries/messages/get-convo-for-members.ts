@@ -1,4 +1,3 @@
-import {type ChatBskyConvoGetConvoForMembers} from '@atproto/api'
 import {type DidString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
@@ -11,7 +10,7 @@ export function useGetConvoForMembers({
   onSuccess,
   onError,
 }: {
-  onSuccess?: (data: ChatBskyConvoGetConvoForMembers.OutputSchema) => void
+  onSuccess?: (data: chat.bsky.convo.getConvoForMembers.$OutputBody) => void
   onError?: (error: Error) => void
 }) {
   const queryClient = useQueryClient()

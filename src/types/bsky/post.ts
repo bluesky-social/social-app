@@ -1,110 +1,56 @@
-import {
-  type $Typed as $TypedApi,
-  type AppBskyEmbedExternal,
-  type AppBskyEmbedGallery,
-  type AppBskyEmbedImages,
-  type AppBskyEmbedRecord,
-  type AppBskyEmbedVideo,
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  type AppBskyLabelerDefs,
-} from '@atproto/api'
 import {type $Typed} from '@atproto/lex'
 
 import {app} from '#/lexicons'
 import {isType} from '#/types/bsky'
 
-/*
- * Each `view` slot below accepts both the generated `#/lexicons` view and the
- * `@atproto/api` view of the same def, because both worlds have live producers:
- * `parseEmbed` narrows with the `#/lexicons` schemas and so returns new-world
- * views, while call sites that build an `Embed` by hand still pass views
- * produced through the `@atproto/api` agent.
- *
- * The two worlds share the same `$type` strings, so the guards in this file
- * narrow a value from either producer; only the static type differs.
- *
- * TODO: remove the @atproto/api arms once all producers emit #/lexicons views
- */
 export type Embed =
   | {
       type: 'post'
-      view:
-        | $Typed<app.bsky.embed.record.ViewRecord>
-        | $TypedApi<AppBskyEmbedRecord.ViewRecord>
+      view: $Typed<app.bsky.embed.record.ViewRecord>
     }
   | {
       type: 'post_not_found'
-      view:
-        | $Typed<app.bsky.embed.record.ViewNotFound>
-        | $TypedApi<AppBskyEmbedRecord.ViewNotFound>
+      view: $Typed<app.bsky.embed.record.ViewNotFound>
     }
   | {
       type: 'post_blocked'
-      view:
-        | $Typed<app.bsky.embed.record.ViewBlocked>
-        | $TypedApi<AppBskyEmbedRecord.ViewBlocked>
+      view: $Typed<app.bsky.embed.record.ViewBlocked>
     }
   | {
       type: 'post_detached'
-      view:
-        | $Typed<app.bsky.embed.record.ViewDetached>
-        | $TypedApi<AppBskyEmbedRecord.ViewDetached>
+      view: $Typed<app.bsky.embed.record.ViewDetached>
     }
   | {
       type: 'feed'
-      view:
-        | $Typed<app.bsky.feed.defs.GeneratorView>
-        | $TypedApi<AppBskyFeedDefs.GeneratorView>
+      view: $Typed<app.bsky.feed.defs.GeneratorView>
     }
   | {
       type: 'list'
-      view:
-        | $Typed<app.bsky.graph.defs.ListView>
-        | $TypedApi<AppBskyGraphDefs.ListView>
+      view: $Typed<app.bsky.graph.defs.ListView>
     }
   | {
       type: 'labeler'
-      view:
-        | $Typed<app.bsky.labeler.defs.LabelerView>
-        | $TypedApi<AppBskyLabelerDefs.LabelerView>
+      view: $Typed<app.bsky.labeler.defs.LabelerView>
     }
   | {
       type: 'starter_pack'
-      view:
-        | $Typed<app.bsky.graph.defs.StarterPackViewBasic>
-        | $TypedApi<AppBskyGraphDefs.StarterPackViewBasic>
+      view: $Typed<app.bsky.graph.defs.StarterPackViewBasic>
     }
   | {
       type: 'images'
-      /*
-       * Only the `@atproto/api` view, unlike the other arms: the ImageEmbed
-       * consumer reads `view.images` directly, and the `#/lexicons` view is
-       * assignable to this slot, so `parseEmbed`'s new-world value flows in
-       * while the consumer keeps a single structural shape to read from.
-       */
-      view: $TypedApi<AppBskyEmbedImages.View>
+      view: $Typed<app.bsky.embed.images.View>
     }
   | {
       type: 'gallery'
-      /*
-       * Old-world only for the same reason as the `images` arm above: the
-       * consumer narrows `view.items` with `AppBskyEmbedGallery.isViewImage`,
-       * which cannot narrow the new view's `Unknown$TypedObject` arm.
-       */
-      view: $TypedApi<AppBskyEmbedGallery.View>
+      view: $Typed<app.bsky.embed.gallery.View>
     }
   | {
       type: 'link'
-      view:
-        | $Typed<app.bsky.embed.external.View>
-        | $TypedApi<AppBskyEmbedExternal.View>
+      view: $Typed<app.bsky.embed.external.View>
     }
   | {
       type: 'video'
-      view:
-        | $Typed<app.bsky.embed.video.View>
-        | $TypedApi<AppBskyEmbedVideo.View>
+      view: $Typed<app.bsky.embed.video.View>
     }
   | {
       type: 'post_with_media'
@@ -169,15 +115,7 @@ export function parseEmbedRecordView({
   }
 }
 
-export function parseEmbed(
-  /*
-   * Accepts a `PostView.embed` from either world; the `#/lexicons` guards below
-   * narrow on `$type`, which is world-independent.
-   */
-  embed:
-    | app.bsky.feed.defs.PostView['embed']
-    | AppBskyFeedDefs.PostView['embed'],
-): Embed {
+export function parseEmbed(embed: app.bsky.feed.defs.PostView['embed']): Embed {
   if (isType(app.bsky.embed.images.view, embed)) {
     return {
       type: 'images',

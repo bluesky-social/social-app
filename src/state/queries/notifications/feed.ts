@@ -17,7 +17,8 @@
  */
 
 import {useCallback, useEffect, useMemo, useRef} from 'react'
-import {AppBskyFeedDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {moderatePost} from '@bsky.app/sdk/moderation'
 import {
   type InfiniteData,
   type QueryClient,
@@ -26,12 +27,12 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {moderatePost} from '#/lib/moderation/subjects'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'
 import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
-import type * as bsky from '#/types/bsky'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
@@ -195,7 +196,9 @@ export function useNotificationFeedQuery(opts: {
                        * a `$type` field on the `subject`. But if the nested
                        * `record` is a post, we know it's a post view.
                        */
-                      if (AppBskyFeedPost.isRecord(item.subject?.record)) {
+                      if (
+                        bsky.isType(app.bsky.feed.post, item.subject?.record)
+                      ) {
                         const mod = moderatePost(item.subject, moderationOpts!)
                         if (mod.ui('contentList').filter) {
                           return false
@@ -272,7 +275,7 @@ export function useNotificationFeedQuery(opts: {
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.PostView, void> {
+): Generator<app.bsky.feed.defs.PostView, void> {
   const atUri = new AtUri(uri)
 
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
@@ -291,7 +294,7 @@ export function* findAllPostsInQueryData(
           }
         }
 
-        if (AppBskyFeedDefs.isPostView(item.subject)) {
+        if (bsky.isType(app.bsky.feed.defs.postView, item.subject)) {
           const quotedPost = getEmbeddedPost(item.subject?.embed)
           if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
             yield embedViewRecordToPostView(quotedPost)
@@ -329,7 +332,7 @@ export function* findAllProfilesInQueryData(
         ) {
           yield item.subject.author
         }
-        if (AppBskyFeedDefs.isPostView(item.subject)) {
+        if (bsky.isType(app.bsky.feed.defs.postView, item.subject)) {
           const quotedPost = getEmbeddedPost(item.subject?.embed)
           if (quotedPost?.author.did === did) {
             yield quotedPost.author

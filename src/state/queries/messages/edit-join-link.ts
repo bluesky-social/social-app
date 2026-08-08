@@ -1,13 +1,9 @@
-import {
-  ChatBskyConvoDefs,
-  type ChatBskyGroupDefs,
-  type ChatBskyGroupEditJoinLink,
-} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useChatClient} from '#/state/session'
 import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   rollbackConvoOptimistic,
   updateConvoOptimistic,
@@ -19,7 +15,7 @@ export function useEditJoinLink(
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: ChatBskyGroupEditJoinLink.OutputSchema) => void
+    onSuccess?: (data: chat.bsky.group.editJoinLink.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -31,7 +27,7 @@ export function useEditJoinLink(
       joinRule,
       requireApproval,
     }: {
-      joinRule: ChatBskyGroupDefs.JoinRule
+      joinRule: chat.bsky.group.defs.JoinRule
       requireApproval: boolean
     }) => {
       if (!convoId) throw new Error('No convoId provided')
@@ -44,7 +40,10 @@ export function useEditJoinLink(
     onMutate: ({joinRule, requireApproval}) => {
       if (!convoId) return
       return updateConvoOptimistic(queryClient, convoId, prev => {
-        if (!ChatBskyConvoDefs.isGroupConvo(prev.kind) || !prev.kind.joinLink) {
+        if (
+          !bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind) ||
+          !prev.kind.joinLink
+        ) {
           return undefined
         }
         return {
@@ -59,7 +58,8 @@ export function useEditJoinLink(
     onSuccess: data => {
       if (convoId) {
         updateConvoOptimistic(queryClient, convoId, prev => {
-          if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined
+          if (!bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind))
+            return undefined
           return {
             ...prev,
             kind: {...prev.kind, joinLink: data.joinLink},

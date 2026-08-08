@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import * as Contacts from 'expo-contacts'
-import {type AppBskyContactDefs} from '@atproto/api'
 import {type DidString} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
@@ -189,7 +188,7 @@ function SyncStatus({
   info,
   refetchStatus,
 }: {
-  info: AppBskyContactDefs.SyncStatus
+  info: app.bsky.contact.defs.SyncStatus
   refetchStatus: () => Promise<any>
 }) {
   const ax = useAnalytics()

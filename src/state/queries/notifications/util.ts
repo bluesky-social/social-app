@@ -1,26 +1,21 @@
-import {
-  type AppBskyFeedDefs,
-  AppBskyFeedLike,
-  AppBskyFeedPost,
-  AppBskyFeedRepost,
-  type AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
-  type AppBskyNotificationListNotifications,
-} from '@atproto/api'
 import {type Client} from '@atproto/lex'
 import {type AtUriString} from '@atproto/syntax'
-import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {
+  hasMutedWord,
+  moderateNotification,
+  type ModerationOpts,
+} from '@bsky.app/sdk/moderation'
 import {type QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
-import {hasMutedWord, moderateNotification} from '#/lib/moderation/subjects'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {precacheProfile} from '../profile'
 import {
   type FeedNotification,
   type FeedPage,
+  type Notification,
   type NotificationType,
 } from './types'
 
@@ -117,7 +112,7 @@ export async function fetchPage({
 // =
 
 export function shouldFilterNotif(
-  notif: AppBskyNotificationListNotifications.Notification,
+  notif: Notification,
   moderationOpts: ModerationOpts | undefined,
 ): boolean {
   const containsImperative = !!notif.author.labels?.some(labelIsHideableOffense)
@@ -129,10 +124,7 @@ export function shouldFilterNotif(
   }
   if (
     notif.reason === 'subscribed-post' &&
-    bsky.dangerousIsType<AppBskyFeedPost.Record>(
-      notif.record,
-      AppBskyFeedPost.isRecord,
-    ) &&
+    bsky.isType(app.bsky.feed.post, notif.record) &&
     hasMutedWord({
       mutedWords: moderationOpts.prefs.mutedWords,
       text: notif.record.text,
@@ -150,9 +142,7 @@ export function shouldFilterNotif(
   return moderateNotification(notif, moderationOpts).ui('contentList').filter
 }
 
-export function groupNotifications(
-  notifs: AppBskyNotificationListNotifications.Notification[],
-): FeedNotification[] {
+export function groupNotifications(notifs: Notification[]): FeedNotification[] {
   const groupedNotifs: FeedNotification[] = []
   for (const notif of notifs) {
     const ts = +new Date(notif.indexedAt)
@@ -211,8 +201,8 @@ async function fetchSubjects(
   client: Client,
   groupedNotifs: FeedNotification[],
 ): Promise<{
-  posts: Map<string, AppBskyFeedDefs.PostView>
-  starterPacks: Map<string, AppBskyGraphDefs.StarterPackViewBasic>
+  posts: Map<string, app.bsky.feed.defs.PostView>
+  starterPacks: Map<string, app.bsky.graph.defs.StarterPackViewBasic>
 }> {
   const postUris = new Set<string>()
   const packUris = new Set<string>()
@@ -243,15 +233,15 @@ async function fetchSubjects(
         .then(data => data.starterPacks),
     ),
   )
-  const postsMap = new Map<string, AppBskyFeedDefs.PostView>()
-  const packsMap = new Map<string, AppBskyGraphDefs.StarterPackViewBasic>()
+  const postsMap = new Map<string, app.bsky.feed.defs.PostView>()
+  const packsMap = new Map<string, app.bsky.graph.defs.StarterPackViewBasic>()
   for (const post of postsChunks.flat()) {
-    if (AppBskyFeedPost.isRecord(post.record)) {
+    if (bsky.isType(app.bsky.feed.post, post.record)) {
       postsMap.set(post.uri, post)
     }
   }
   for (const pack of packsChunks.flat()) {
-    if (AppBskyGraphStarterpack.isRecord(pack.record)) {
+    if (bsky.isType(app.bsky.graph.starterpack, pack.record)) {
       packsMap.set(pack.uri, pack)
     }
   }
@@ -261,9 +251,7 @@ async function fetchSubjects(
   }
 }
 
-function toKnownType(
-  notif: AppBskyNotificationListNotifications.Notification,
-): NotificationType {
+function toKnownType(notif: Notification): NotificationType {
   if (notif.reason === 'like') {
     if (notif.reasonSubject?.includes('feed.generator')) {
       return 'feedgen-like'
@@ -291,7 +279,7 @@ function toKnownType(
 
 function getSubjectUri(
   type: NotificationType,
-  notif: AppBskyNotificationListNotifications.Notification,
+  notif: Notification,
 ): string | undefined {
   if (
     type === 'reply' ||
@@ -307,14 +295,8 @@ function getSubjectUri(
     type === 'repost-via-repost'
   ) {
     if (
-      bsky.dangerousIsType<AppBskyFeedRepost.Record>(
-        notif.record,
-        AppBskyFeedRepost.isRecord,
-      ) ||
-      bsky.dangerousIsType<AppBskyFeedLike.Record>(
-        notif.record,
-        AppBskyFeedLike.isRecord,
-      )
+      bsky.isType(app.bsky.feed.repost, notif.record) ||
+      bsky.isType(app.bsky.feed.like, notif.record)
     ) {
       return typeof notif.record.subject?.uri === 'string'
         ? notif.record.subject?.uri

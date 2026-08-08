@@ -1,8 +1,3 @@
-import {
-  type $Typed as $TypedApi,
-  type AppBskyEmbedRecord,
-  type AppBskyFeedDefs,
-} from '@atproto/api'
 import {type $Typed} from '@atproto/lex'
 
 import {type app} from '#/lexicons'
@@ -109,35 +104,22 @@ const starterPackViewBasic = {
 const asEmbed = (v: unknown) => v as app.bsky.feed.defs.PostView['embed']
 
 /*
- * Type-level assertions for the dual-world widening. These are compile-time
- * only: each widened arm must accept both the `#/lexicons` view and the
- * `@atproto/api` view, and `parseEmbed` must accept a `PostView.embed` from
- * either world, because both worlds have live producers.
+ * Type-level assertions for the embed union. Compile-time only: each arm must
+ * accept the `#/lexicons` view of its def, and `parseEmbed` must accept a
+ * `PostView.embed`.
  */
 type Assignable<From, To> = From extends To ? true : false
 type Expect<T extends true> = T
 
-type _PostArmAcceptsNewWorld = Expect<
+type _PostArmAcceptsView = Expect<
   Assignable<
     {type: 'post'; view: $Typed<app.bsky.embed.record.ViewRecord>},
     EmbedType<'post'>
   >
 >
-type _PostArmAcceptsOldWorld = Expect<
-  Assignable<
-    {type: 'post'; view: $TypedApi<AppBskyEmbedRecord.ViewRecord>},
-    EmbedType<'post'>
-  >
->
-type _ParseEmbedAcceptsNewWorld = Expect<
+type _ParseEmbedAcceptsPostViewEmbed = Expect<
   Assignable<
     app.bsky.feed.defs.PostView['embed'],
-    Parameters<typeof parseEmbed>[0]
-  >
->
-type _ParseEmbedAcceptsOldWorld = Expect<
-  Assignable<
-    AppBskyFeedDefs.PostView['embed'],
     Parameters<typeof parseEmbed>[0]
   >
 >

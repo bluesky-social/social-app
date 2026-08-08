@@ -7,7 +7,6 @@
 jest.unmock('multiformats/cid')
 jest.unmock('multiformats/hashes/hasher')
 
-import {BlobRef} from '@atproto/api'
 import {CID} from 'multiformats/cid'
 
 import {computeCid} from '#/lib/api/computeCid'
@@ -67,8 +66,8 @@ describe('computeCid', () => {
      * `{$type: 'blob', ref, mimeType, size}` with `ref` a parsed CID. The
      * structural lex-blob guard passes it through `prepareForHashing`
      * untouched and DAG-CBOR encodes its CID `ref` as a CID link. The golden
-     * CID below is the byte-identical value the pre-migration `BlobRef` class
-     * instance produced via `.ipld()`.
+     * CID below is the byte-identical value the pre-migration legacy blob
+     * class instance produced via `.ipld()`.
      */
     const blob = {
       $type: 'blob' as const,
@@ -76,18 +75,6 @@ describe('computeCid', () => {
       mimeType: 'image/jpeg',
       size: 12345,
     }
-    expect(await computeCid(postWithImageBlob(blob))).toBe(
-      'bafyreiem7g6vja66nebr7he4fshfnlyndyldbvle2n265oixscmepjcbii',
-    )
-  })
-
-  it('case 2b: a legacy BlobRef instance hashes to the same CID', async () => {
-    /*
-     * The video pipeline still yields legacy `BlobRef` class instances, so
-     * `prepareForHashing` keeps its `instanceof` guard. Both branches must
-     * agree: this asserts the SAME golden CID as case 2.
-     */
-    const blob = new BlobRef(CID.parse(BLOB_CID), 'image/jpeg', 12345)
     expect(await computeCid(postWithImageBlob(blob))).toBe(
       'bafyreiem7g6vja66nebr7he4fshfnlyndyldbvle2n265oixscmepjcbii',
     )

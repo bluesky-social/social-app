@@ -1,6 +1,5 @@
 import {ScrollView, View} from 'react-native'
-import {type ChatBskyActorDefs} from '@atproto/api'
-import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -8,7 +7,6 @@ import {useNavigation} from '@react-navigation/native'
 
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {moderateProfile} from '#/lib/moderation/subjects'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -23,6 +21,7 @@ import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {chat} from '#/lexicons'
 
 export function RecentChats({
   postUri,
@@ -114,7 +113,7 @@ function RecentChatItem({
   onPress: () => void
   moderationOpts: ModerationOpts
   convo: ConvoWithDetails
-  primaryMember: ChatBskyActorDefs.ProfileViewBasic
+  primaryMember: chat.bsky.actor.defs.ProfileViewBasic
 }) {
   const {_} = useLingui()
   const t = useTheme()

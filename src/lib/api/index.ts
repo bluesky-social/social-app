@@ -1,4 +1,3 @@
-import {ChatBskyGroupDefs} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import {type $Typed, type Client} from '@atproto/lex'
 import {
@@ -29,7 +28,7 @@ import {
   type PostDraft,
   type ThreadDraft,
 } from '#/view/com/composer/state/composer'
-import {app, com} from '#/lexicons'
+import {app, chat, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {createGIFDescription} from '../gif-alt-text'
 import {computeCid} from './computeCid'
@@ -313,7 +312,7 @@ async function resolveEmbed(
          * unbranded strings. Assert at the boundary until it moves to the
          * clients.
          */
-        record: resolvedLink.record as com.atproto.repo.strongRef.Main,
+        record: resolvedLink.record,
       }
     }
   }
@@ -475,15 +474,13 @@ async function resolveMedia(
           title: resolvedLink.title,
           description: resolvedLink.description,
           thumb: blob,
-          associatedRefs: resolvedLink.associatedRefs as
-            | com.atproto.repo.strongRef.Main[]
-            | undefined,
+          associatedRefs: resolvedLink.associatedRefs,
         },
       }
     }
     if (
       resolvedLink.type === 'chat-invite' &&
-      ChatBskyGroupDefs.isJoinLinkPreviewView(resolvedLink.view)
+      bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, resolvedLink.view)
     ) {
       return {
         $type: 'app.bsky.embed.external',
@@ -512,5 +509,5 @@ async function resolveRecord(
   if (resolvedLink.type !== 'record') {
     throw Error(t`Expected uri to resolve to a record`)
   }
-  return resolvedLink.record as com.atproto.repo.strongRef.Main
+  return resolvedLink.record
 }

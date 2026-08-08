@@ -1,4 +1,3 @@
-import {type ChatBskyGroupWithdrawJoinRequest} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -14,7 +13,7 @@ export function useWithdrawJoinGroupChatRequest({
   onSuccess,
   onError,
 }: {
-  onSuccess?: (data: ChatBskyGroupWithdrawJoinRequest.OutputSchema) => void
+  onSuccess?: (data: chat.bsky.group.withdrawJoinRequest.$OutputBody) => void
   onError?: (error: Error) => void
 } = {}) {
   const client = useChatClient()

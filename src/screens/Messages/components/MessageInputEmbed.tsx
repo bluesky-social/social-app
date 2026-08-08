@@ -1,18 +1,17 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, View} from 'react-native'
-import {AppBskyFeedPost, AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {moderatePost} from '@bsky.app/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 
 import {HITSLOP_20} from '#/lib/constants'
-import {moderatePost} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {
   convertBskyAppUrlIfNeeded,
   getChatInviteCodeFromUrl,
@@ -164,17 +163,11 @@ function MessageInputPostEmbed({
   )
 
   const {rt, record} = useMemo(() => {
-    if (
-      post &&
-      bsky.dangerousIsType<AppBskyFeedPost.Record>(
-        post.record,
-        AppBskyFeedPost.isRecord,
-      )
-    ) {
+    if (post && bsky.isType(app.bsky.feed.post, post.record)) {
       return {
         rt: new RichTextAPI({
           text: post.record.text,
-          facets: asSdkFacets(post.record.facets),
+          facets: post.record.facets,
         }),
         record: post.record,
       }
