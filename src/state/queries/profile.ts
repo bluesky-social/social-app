@@ -11,6 +11,11 @@ import {
   type Un$Typed,
 } from '@atproto/api'
 import {
+  type AtIdentifierString,
+  type DidString,
+  toDatetimeString,
+} from '@atproto/syntax'
+import {
   type InfiniteData,
   keepPreviousData,
   type QueryClient,
@@ -33,10 +38,11 @@ import {
   useUnstableProfileViewCache,
 } from '#/state/queries/unstable-profile-cache'
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
-import {useAgent, useSession} from '#/state/session'
+import {useAgent, usePdsClient, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {useAnalytics} from '#/analytics'
 import {type Metrics, toClout} from '#/analytics/metrics'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {
   ProgressGuideAction,
@@ -634,17 +640,18 @@ export function useProfileBlockMutationQueue(
 
 function useProfileBlockMutation() {
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
       if (!currentAccount) {
         throw new Error('Not signed in')
       }
-      return await agent.app.bsky.graph.block.create(
-        {repo: currentAccount.did},
-        {subject: did, createdAt: new Date().toISOString()},
-      )
+      return await pdsClient.create(app.bsky.graph.block, {
+        // the profile view is still legacy-typed, so its did is unbranded
+        subject: did as DidString,
+        createdAt: toDatetimeString(new Date()),
+      })
     },
     onSuccess(_, {did}) {
       void queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
@@ -655,16 +662,16 @@ function useProfileBlockMutation() {
 
 function useProfileUnblockMutation() {
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {did: string; blockUri: string}>({
     mutationFn: async ({blockUri}) => {
       if (!currentAccount) {
         throw new Error('Not signed in')
       }
-      const {rkey} = new AtUri(blockUri)
-      await agent.app.bsky.graph.block.delete({
-        repo: currentAccount.did,
+      const {rkeySafe: rkey} = new AtUri(blockUri)
+      await pdsClient.delete(app.bsky.graph.block, {
+        repo: currentAccount.did as AtIdentifierString,
         rkey,
       })
     },

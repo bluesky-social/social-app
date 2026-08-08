@@ -3,7 +3,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
 import {preferencesQueryKey} from '#/state/queries/preferences'
-import {useAgent, useSession} from '#/state/session'
+import {useAgent, usePdsClient, useSession} from '#/state/session'
 import {usePatchAgeAssuranceOtherRequiredData} from '#/ageAssurance'
 import {isUnderAge} from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
@@ -55,6 +55,7 @@ export function useIsBirthdateUpdateAllowed() {
 export function useBirthdateMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const pdsClient = usePdsClient()
   const patchOtherRequiredData = usePatchAgeAssuranceOtherRequiredData()
 
   return useMutation<void, unknown, {birthDate: Date}>({
@@ -68,7 +69,7 @@ export function useBirthdateMutation() {
 
       if (isUnderAge(birthDate.toISOString(), 18)) {
         await restrictChatSettings({
-          agent,
+          client: pdsClient,
           restrictIncoming: true,
           restrictGroupInvites: true,
         })

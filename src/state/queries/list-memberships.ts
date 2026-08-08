@@ -1,8 +1,13 @@
 import {
   type AppBskyActorDefs,
   type AppBskyGraphGetStarterPacksWithMembership,
-  AtUri,
 } from '@atproto/api'
+import {
+  AtUri,
+  type AtUriString,
+  type DidString,
+  toDatetimeString,
+} from '@atproto/syntax'
 import {
   type InfiniteData,
   useMutation,
@@ -13,7 +18,8 @@ import {
   RQKEY as LIST_MEMBERS_RQKEY,
   RQKEY_ALL as LIST_MEMBERS_ALL_RQKEY,
 } from '#/state/queries/list-members'
-import {useAgent, useSession} from '#/state/session'
+import {usePdsClient, useSession} from '#/state/session'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY} from './actor-starter-packs'
 
@@ -30,7 +36,7 @@ export function useListMembershipAddMutation({
   onError?: (error: Error) => void
 } = {}) {
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   return useMutation<
     {uri: string; cid: string},
@@ -41,14 +47,15 @@ export function useListMembershipAddMutation({
       if (!currentAccount) {
         throw new Error('Not signed in')
       }
-      const res = await agent.app.bsky.graph.listitem.create(
-        {repo: currentAccount.did},
-        {
-          subject: actorDid,
-          list: listUri,
-          createdAt: new Date().toISOString(),
-        },
-      )
+      /*
+       * The mutation's inputs are plain strings held by legacy-typed views, so
+       * they are asserted to their branded forms here.
+       */
+      const res = await pdsClient.create(app.bsky.graph.listitem, {
+        subject: actorDid as DidString,
+        list: listUri as AtUriString,
+        createdAt: toDatetimeString(new Date()),
+      })
       return res
     },
     onSuccess: (data, variables) => {
@@ -129,7 +136,7 @@ export function useListMembershipRemoveMutation({
   onError?: (error: Error) => void
 } = {}) {
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   return useMutation<
     void,
@@ -141,9 +148,9 @@ export function useListMembershipRemoveMutation({
         throw new Error('Not signed in')
       }
       const membershipUrip = new AtUri(membershipUri)
-      await agent.app.bsky.graph.listitem.delete({
-        repo: currentAccount.did,
-        rkey: membershipUrip.rkey,
+      await pdsClient.delete(app.bsky.graph.listitem, {
+        repo: currentAccount.did as DidString,
+        rkey: membershipUrip.rkeySafe,
       })
     },
     onSuccess: (data, variables) => {
