@@ -23,4 +23,7 @@
   <meta name="description" content="Join the conversation" />
   <meta name="og:description" content="Join the conversation" />
   <meta name="twitter:description" content="Join the conversation" />
+  {%- if starterPackURI %}
+  <meta name="at:canonical" content="{{ starterPackURI }}" />
+  {% endif -%}
 {%- endblock %}
