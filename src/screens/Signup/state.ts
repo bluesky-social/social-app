@@ -1,7 +1,7 @@
 import {createContext, useCallback, useContext} from 'react'
 import {LayoutAnimation} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {XrpcResponseError} from '@atproto/lex-client'
+import {XrpcResponseError} from '@atproto/lex'
 import {useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
