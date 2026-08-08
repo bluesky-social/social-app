@@ -1,5 +1,7 @@
-import {getPdsEndpoint, isValidDidDoc} from '@atproto/common-web'
-import {type SessionData} from '@atproto/lex-password-session'
+import {
+  extractPdsEndpoint,
+  type SessionData,
+} from '@atproto/lex-password-session'
 import {jwtDecode} from 'jwt-decode'
 
 import {BSKY_SERVICE} from '#/lib/constants'
@@ -40,11 +42,7 @@ export function sessionDataToSessionAccount(
     return undefined
   }
   const normalizedService = new URL(service).toString()
-  const didDocPdsUrl =
-    session.didDoc && isValidDidDoc(session.didDoc)
-      ? getPdsEndpoint(session.didDoc)
-      : undefined
-  const pdsUrl = didDocPdsUrl ?? storedPdsUrl
+  const pdsUrl = extractPdsEndpoint(session.didDoc) ?? storedPdsUrl
   return {
     service: normalizedService,
     did: session.did,

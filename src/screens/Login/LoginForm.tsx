@@ -32,7 +32,7 @@ import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_IOS, IS_NATIVE} from '#/env'
-import {com} from '#/lexicons'
+import {type com} from '#/lexicons'
 import {ConfirmHostingProviderDialog} from './components/ConfirmHostingProviderDialog'
 import {HostingProviderDialog} from './components/HostingProviderDialog'
 import {FormContainer} from './FormContainer'
@@ -169,7 +169,9 @@ export const LoginForm = ({
           )
         } else {
           logger.warn('Failed to login', {error: errMsg})
-          setError(cleanError(errMsg))
+          /* the error object, not its stringification: cleanError only
+           * extracts the clean server message from a live LexError */
+          setError(cleanError(err))
         }
       }
     }

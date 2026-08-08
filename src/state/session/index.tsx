@@ -157,7 +157,19 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       sessionEvent: AtpSessionEvent,
       sessionData?: SessionData,
     ) => {
-      if (sessionEvent === 'update' && sessionData) {
+      /*
+       * Only the live bundle may reset the expiry-rescue bookkeeping: a stale
+       * bundle's late update would otherwise clear the failed-generation set
+       * that bounds the rescue loop. (Its dispatch below is separately dropped
+       * by the reducer's identity guard.)
+       */
+      if (
+        sessionEvent === 'update' &&
+        sessionData &&
+        (store.getState().currentBundleState.bundle as unknown as
+          | SessionBundle
+          | PublicSessionBundle) === bundle
+      ) {
         failedExpiryTokensRef.current.get(accountDid)?.clear()
       }
 
@@ -504,6 +516,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     const after = await bundle.session.refresh()
     if (after === before) {
       throw new Error('Failed to refresh session')
+    }
+    /*
+     * The user may have logged out or switched accounts while the refresh was
+     * in flight. Reporting success then would run the caller's success path
+     * (dialogs closing, success toasts, SignupQueued advancing) against an
+     * account that is no longer active, so a stale bundle rejects instead.
+     */
+    if (
+      (store.getState().currentBundleState.bundle as unknown) !==
+      (bundle as unknown)
+    ) {
+      throw new Error('The session changed while it was being refreshed')
     }
     /*
      * The session's `onUpdated` hook dispatches the new tokens into the store,
