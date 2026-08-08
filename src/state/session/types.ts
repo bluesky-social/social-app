@@ -52,4 +52,17 @@ export type SessionApiContext = {
    * so it produces no session-change side effects.
    */
   partialRefreshSession: () => Promise<void>
+  /**
+   * Rotates the session's tokens and resolves with the resulting account
+   * snapshot, or `undefined` when logged out.
+   *
+   * Rejects when nothing was rotated, so a resolved promise means "tokens
+   * rotated". Every caller relies on that: the verification dialogs close on
+   * resolution, and `SignupQueued` re-checks the token scope.
+   *
+   * The snapshot is returned rather than read off `currentAccount`, because the
+   * session's `onUpdated` hook -> `store.dispatch` path is a render cycle away
+   * and `SignupQueued` branches synchronously on the fresh `accessJwt`.
+   */
+  refreshSession: () => Promise<SessionAccount | undefined>
 }

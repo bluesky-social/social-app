@@ -1,4 +1,4 @@
-import {type AppBskyVideoDefs, type AtpAgent} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 import {nanoid} from 'nanoid/non-secure'
@@ -10,13 +10,15 @@ import {
   type VideoUploadTransport,
 } from '#/lib/media/video/types'
 import {Features, features} from '#/analytics/features'
+import {type app} from '#/lexicons'
 import {MultipartFallbackError, uploadVideoMultipart} from './multipart/upload'
 import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
 import {createVideoEndpointUrl, mimeToExt} from './util'
 
 export async function uploadVideo({
   video,
-  agent,
+  client,
+  dispatchUrl,
   did,
   setProgress,
   signal,
@@ -24,7 +26,9 @@ export async function uploadVideo({
   onTransport,
 }: {
   video: CompressedVideo
-  agent: AtpAgent
+  client: Client
+  /** The account's PDS/dispatch URL, for the uploadBlob service-auth token. */
+  dispatchUrl: string | URL
   did: string
   setProgress: (progress: number) => void
   signal: AbortSignal
@@ -34,13 +38,14 @@ export async function uploadVideo({
   if (signal.aborted) {
     throw new AbortError()
   }
-  await getVideoUploadLimits(agent, i18n)
+  await getVideoUploadLimits(client, i18n)
 
   if (features.isOn(Features.VideoMultipartUploadEnable)) {
     try {
       return await uploadVideoMultipart({
         video,
-        agent,
+        client,
+        dispatchUrl,
         setProgress,
         signal,
         onStarted: () => onTransport?.('multipart'),
@@ -71,7 +76,8 @@ export async function uploadVideo({
     throw new AbortError()
   }
   const token = await getServiceAuthToken({
-    agent,
+    client,
+    dispatchUrl,
     lxm: 'com.atproto.repo.uploadBlob',
     exp: Date.now() / 1000 + 60 * 30, // 30 minutes
   })
@@ -80,7 +86,7 @@ export async function uploadVideo({
     throw new AbortError()
   }
   const xhr = new XMLHttpRequest()
-  const res = await new Promise<AppBskyVideoDefs.JobStatus>(
+  const res = await new Promise<app.bsky.video.defs.JobStatus>(
     (resolve, reject) => {
       xhr.upload.addEventListener('progress', e => {
         const progress = e.loaded / e.total
@@ -92,7 +98,7 @@ export async function uploadVideo({
         } else if (xhr.readyState === 4) {
           const uploadRes = JSON.parse(
             xhr.responseText,
-          ) as AppBskyVideoDefs.JobStatus
+          ) as app.bsky.video.defs.JobStatus
           resolve(uploadRes)
         } else {
           reject(new ServerError(i18n._(msg`Failed to upload video`)))

@@ -279,9 +279,14 @@ export const DM_SERVICE_HEADERS = {
   'atproto-proxy': `${CHAT_PROXY_DID}#bsky_chat`,
 }
 
-export const BLUESKY_NOTIF_SERVICE_HEADERS = {
-  'atproto-proxy': `${BLUESKY_PROXY_DID}#bsky_notif`,
-}
+/**
+ * The notification service's proxy target, in the `did#service_id` form a lex
+ * client's per-call `service` option takes. Passing it emits `atproto-proxy:
+ * <this value>` on that one request, which is what routes push registration to
+ * the notification service (replaces the old
+ * `BLUESKY_NOTIF_SERVICE_HEADERS`).
+ */
+export const NOTIF_SERVICE: Service = `${BLUESKY_PROXY_DID}#bsky_notif`
 
 export const webLinks = {
   tos: `https://bsky.social/about/support/tos`,

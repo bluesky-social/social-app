@@ -82,6 +82,7 @@ const ApiContext = createContext<SessionApiContext>({
   resumeSession: async () => {},
   removeAccount: () => {},
   partialRefreshSession: async () => {},
+  refreshSession: () => Promise.resolve(undefined),
 })
 ApiContext.displayName = 'SessionApiContext'
 
@@ -473,6 +474,50 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     })
   }, [store, cancelPendingTask])
 
+  /**
+   * Rotate the session's tokens and hand back the resulting account snapshot.
+   *
+   * Rejects when the rotation was a no-op, restoring the contract the
+   * `agent.resumeSession(agent.session!)` call sites were written against (the
+   * bridge agent's `refreshSession` override does the same, for the same
+   * reason). `PasswordSession.refresh()` resolves with the
+   * unchanged `SessionData` on a transient failure - a 500 or a network error
+   * reported through `onUpdateFailure` - and reserves rejection for a
+   * definitively dead session. Callers here all read resolution as "tokens
+   * rotated": the verification dialogs close, `Deactivated` clears its error
+   * state, and `SignupQueued` re-checks the token scope, so a resolved no-op
+   * would report success or loop silently. Identity, not a field comparison, is
+   * the signal: `PasswordSession` allocates a new object per successful
+   * rotation and returns the existing one untouched otherwise. Capturing the
+   * data immediately before the call also handles concurrent refreshes, since a
+   * rotation another caller's queued refresh performed still differs from what
+   * we captured.
+   *
+   * Like {@link partialRefreshSession}, the bundle comes from
+   * `store.getState()` rather than the render's `state`: a dispatch landing
+   * before the next render would otherwise leave this holding a disposed
+   * bundle, and reading live also keeps the callback's identity stable across
+   * unrelated state updates.
+   */
+  const refreshSession = useCallback<
+    SessionApiContext['refreshSession']
+  >(async () => {
+    const bundle = store.getState().currentBundleState.bundle as unknown as
+      | SessionBundle
+      | PublicSessionBundle
+    if (!bundle.session) return undefined // logged out: nothing to refresh
+    const before = bundle.session.session
+    const after = await bundle.session.refresh()
+    if (after === before) {
+      throw new Error('Failed to refresh session')
+    }
+    /*
+     * The session's `onUpdated` hook dispatches the new tokens into the store,
+     * but that lands a render away; this snapshot exposes them immediately.
+     */
+    return sessionDataToSessionAccount(after, after.service)
+  }, [store])
+
   const removeAccount = useCallback<SessionApiContext['removeAccount']>(
     account => {
       addSessionDebugLog({
@@ -607,6 +652,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       resumeSession,
       removeAccount,
       partialRefreshSession,
+      refreshSession,
     }),
     [
       createAccount,
@@ -616,6 +662,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       resumeSession,
       removeAccount,
       partialRefreshSession,
+      refreshSession,
     ],
   )
 
