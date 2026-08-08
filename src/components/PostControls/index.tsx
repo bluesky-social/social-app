@@ -1,6 +1,7 @@
 import {memo, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
+  type AppBskyActorDefs,
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   type AppBskyFeedThreadgate,
@@ -53,6 +54,7 @@ let PostControls = ({
   threadgateRecord,
   onShowLess,
   viaRepost,
+  reposter,
   variant,
   forceGoogleTranslate = false,
 }: {
@@ -69,6 +71,7 @@ let PostControls = ({
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
   viaRepost?: {uri: string; cid: string}
+  reposter?: AppBskyActorDefs.ProfileViewBasic
   variant?: 'compact' | 'normal' | 'large'
   forceGoogleTranslate?: boolean
 }): React.ReactNode => {
@@ -345,6 +348,7 @@ let PostControls = ({
           timestamp={post.indexedAt}
           threadgateRecord={threadgateRecord}
           onShowLess={onShowLess}
+          reposter={reposter}
           hitSlop={{
             left: secondaryControlSpacingStyles.gap / 2,
           }}

@@ -75,6 +75,13 @@ interface FeedItemProps {
   hideTopBorder?: boolean
   isParentBlocked?: boolean
   isParentNotFound?: boolean
+  /**
+   * Author feeds show the account's own reposts regardless of a repost mute,
+   * so the "Hide reposts from ..." menu item is suppressed there - it would
+   * leave the rows in place while the header gains a "Reposts Hidden" pill,
+   * and the profile's own menu already offers the same action.
+   */
+  isAuthorFeed?: boolean
 }
 
 export function PostFeedItem({
@@ -92,6 +99,7 @@ export function PostFeedItem({
   hideTopBorder,
   isParentBlocked,
   isParentNotFound,
+  isAuthorFeed,
   rootPost,
   onShowLess,
 }: FeedItemProps & {
@@ -130,6 +138,7 @@ export function PostFeedItem({
           hideTopBorder={hideTopBorder}
           isParentBlocked={isParentBlocked}
           isParentNotFound={isParentNotFound}
+          isAuthorFeed={isAuthorFeed}
           rootPost={rootPost}
           onShowLess={onShowLess}
         />
@@ -155,6 +164,7 @@ let FeedItemInner = ({
   hideTopBorder,
   isParentBlocked,
   isParentNotFound,
+  isAuthorFeed,
   rootPost,
   onShowLess,
 }: FeedItemProps & {
@@ -299,6 +309,11 @@ let FeedItemInner = ({
     }
   }, [reason])
 
+  const reposter =
+    !isAuthorFeed && AppBskyFeedDefs.isReasonRepost(reason)
+      ? reason.by
+      : undefined
+
   const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
     threadgateRecord,
   })
@@ -441,6 +456,7 @@ let FeedItemInner = ({
               threadgateRecord={threadgateRecord}
               onShowLess={onShowLess}
               viaRepost={viaRepost}
+              reposter={reposter}
             />
           </View>
 

@@ -1,6 +1,7 @@
 import {memo, useMemo, useState} from 'react'
 import {type Insets} from 'react-native'
 import {
+  type AppBskyActorDefs,
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   type AppBskyFeedThreadgate,
@@ -27,6 +28,7 @@ let PostMenuButton = ({
   timestamp,
   threadgateRecord,
   onShowLess,
+  reposter,
   hitSlop,
   logContext,
   forceGoogleTranslate,
@@ -41,6 +43,7 @@ let PostMenuButton = ({
   timestamp: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  reposter?: AppBskyActorDefs.ProfileViewBasic
   hitSlop?: Insets
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   forceGoogleTranslate: boolean
@@ -90,6 +93,7 @@ let PostMenuButton = ({
             timestamp={timestamp}
             threadgateRecord={threadgateRecord}
             onShowLess={onShowLess}
+            reposter={reposter}
             logContext={logContext}
             forceGoogleTranslate={forceGoogleTranslate}
           />
