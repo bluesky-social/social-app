@@ -3,11 +3,10 @@ import {
   AppBskyGraphDefs,
   type AppBskyGraphGetStarterPack,
   AppBskyGraphStarterpack,
-  type AppBskyRichtextFacet,
   type AtpAgent,
   AtUri,
-  RichText,
 } from '@atproto/api'
+import {RichText} from '@bsky.app/sdk/richtext'
 import {
   type QueryClient,
   useMutation,
@@ -26,7 +25,8 @@ import {
 import {invalidateActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
 import {STALE} from '#/state/queries/index'
 import {invalidateListMembersQuery} from '#/state/queries/list-members'
-import {useAgent} from '#/state/session'
+import {useAgent, useAppviewClient} from '#/state/session'
+import {type app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const RQKEY_ROOT = 'starter-pack'
@@ -105,6 +105,11 @@ export function useCreateStarterPackMutation({
 }) {
   const queryClient = useQueryClient()
   const agent = useAgent()
+  /*
+   * Facet/mention resolution is an appview job - it resolves handles through
+   * the appview, and the public fallback keeps it working when logged out.
+   */
+  const appviewClient = useAppviewClient()
 
   return useMutation<
     {uri: string; cid: string},
@@ -112,10 +117,10 @@ export function useCreateStarterPackMutation({
     UseCreateStarterPackMutationParams
   >({
     mutationFn: async ({name, description, feeds, profiles}) => {
-      let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
+      let descriptionFacets: app.bsky.richtext.facet.Main[] | undefined
       if (description) {
         const rt = new RichText({text: description})
-        await rt.detectFacets(agent)
+        await rt.detectFacets(appviewClient)
         descriptionFacets = rt.facets
       }
 
@@ -167,6 +172,7 @@ export function useEditStarterPackMutation({
 }) {
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const appviewClient = useAppviewClient()
 
   return useMutation<
     void,
@@ -184,10 +190,10 @@ export function useEditStarterPackMutation({
       currentStarterPack,
       currentListItems,
     }) => {
-      let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
+      let descriptionFacets: app.bsky.richtext.facet.Main[] | undefined
       if (description) {
         const rt = new RichText({text: description})
-        await rt.detectFacets(agent)
+        await rt.detectFacets(appviewClient)
         descriptionFacets = rt.facets
       }
 

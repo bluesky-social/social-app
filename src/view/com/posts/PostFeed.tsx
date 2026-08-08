@@ -25,8 +25,8 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedVideo,
   type AppBskyFeedDefs,
-  type RichText as RichTextType,
 } from '@atproto/api'
+import {type RichText as RichTextType} from '@bsky.app/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
