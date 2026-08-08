@@ -8,8 +8,8 @@ export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate'
 
 /**
  * Create a new {@link app.bsky.feed.postgate.Main}. URIs are accepted as plain
- * strings (callers hold raw AT-URIs, often from legacy-typed views) and
- * asserted to the branded `AtUriString` here.
+ * strings (callers hold raw AT-URIs) and asserted to the branded `AtUriString`
+ * here.
  */
 export function createPostgateRecord(
   postgate: Omit<

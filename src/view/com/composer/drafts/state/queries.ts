@@ -143,10 +143,6 @@ export function useSaveDraftMutation() {
         {appviewClient: client, chatClient},
         composerState,
       )
-      /*
-       * `composerStateToDraft` builds the draft with unbranded string fields,
-       * so it is asserted once here to the generated input type.
-       */
       const draft = apiDraft
 
       logger.debug('saving draft', {

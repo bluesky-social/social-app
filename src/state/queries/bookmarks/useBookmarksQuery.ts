@@ -1,5 +1,5 @@
 import {type $Typed} from '@atproto/lex'
-import {AtUri} from '@atproto/syntax'
+import {AtUri, toDatetimeString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -71,19 +71,14 @@ export async function optimisticallySaveBookmark(
         pages: data.pages.map((page, index) => {
           if (index === 0) {
             post.$type = 'app.bsky.feed.defs#postView'
-            /*
-             * The optimistic entry is synthesized with unbranded string
-             * fields, so it is asserted to the generated view type the query
-             * data is keyed on.
-             */
-            const bookmark = {
-              createdAt: new Date().toISOString(),
+            const bookmark: app.bsky.bookmark.defs.BookmarkView = {
+              createdAt: toDatetimeString(new Date()),
               subject: {
                 uri: post.uri,
                 cid: post.cid,
               },
               item: post as $Typed<app.bsky.feed.defs.PostView>,
-            } as unknown as app.bsky.bookmark.defs.BookmarkView
+            }
             return {
               ...page,
               bookmarks: [bookmark, ...page.bookmarks],

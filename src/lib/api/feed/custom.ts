@@ -1,5 +1,11 @@
-import {Client, lexParse, type XrpcRequestParams} from '@atproto/lex'
+import {
+  type Client,
+  type XrpcRequestParams,
+  XrpcResponseError,
+} from '@atproto/lex'
 
+import {PUBLIC_APPVIEW} from '#/lib/constants'
+import {createLexClient} from '#/lib/lexClient'
 import {
   getAppLanguageAsContentLanguage,
   getContentLanguages,
@@ -96,68 +102,87 @@ export class CustomFeedAPI implements FeedAPI {
   }
 }
 
-// HACK
-// we want feeds to give language-specific results immediately when a
-// logged-out user changes their language. this comes with two problems:
-// 1. not all languages have content, and
-// 2. our public caching layer isnt correctly busting against the accept-language header
-// for now we handle both of these with a manual workaround
-// -prf
-async function loggedOutFetch({
-  feed,
-  limit,
-  cursor,
-}: {
-  feed: string
-  limit: number
-  cursor?: string
-}): Promise<app.bsky.feed.getFeed.$OutputBody | null> {
-  let contentLangs = getAppLanguageAsContentLanguage()
+let loggedOutAppviewClient: Client | undefined
 
-  /*
-   * This request is hand-rolled rather than issued through a client, so it has
-   * to reproduce the header lex would have emitted from the global static.
-   */
-  const labelersHeader = {
-    'atproto-accept-labelers': Client.appLabelers
-      .map(l => `${l};redact`)
-      .join(', '),
-  }
+/**
+ * The unauthenticated {@link Client} for logged-out feed reads, pointed at the
+ * direct appview ({@link PUBLIC_APPVIEW}, `api.bsky.app`).
+ *
+ * Deliberately NOT the public appview client (`public.api.bsky.app`): that host
+ * fronts a cache which does not vary on `Accept-Language`, so it would answer a
+ * language-filtered read from another language's cached body. The direct
+ * appview respects the header (verified 2026-08-04), at the cost of not being
+ * cached. See {@link loggedOutFetch}.
+ *
+ * A single module-level instance, because there is no session to scope it to.
+ * Like the public chat client, it uses plain `fetch` rather than
+ * `networkAwareFetch`, matching the ad-hoc fetch it replaces: this read has its
+ * own failure handling and should not move the app-wide network signal.
+ */
+function getLoggedOutAppviewClient(): Client {
+  return (loggedOutAppviewClient ??= createLexClient({
+    service: PUBLIC_APPVIEW,
+  }))
+}
 
-  // manually construct fetch call so we can add the `lang` cache-busting param
-  let res = await fetch(
-    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
-      cursor ? `&cursor=${cursor}` : ''
-    }&limit=${limit}&lang=${contentLangs}`,
-    {
-      method: 'GET',
-      headers: {'Accept-Language': contentLangs, ...labelersHeader},
-    },
-  )
-  /*
-   * The response is hand-decoded rather than validated, so the lex output shape
-   * is asserted here just as the old-world one was.
-   */
-  let data = res.ok
-    ? (lexParse(await res.text()) as app.bsky.feed.getFeed.$OutputBody)
-    : null
+/*
+ * HACK
+ * We want feeds to give language-specific results immediately when a logged-out
+ * user changes their language. That comes with two problems:
+ * 1. not all languages have content, and
+ * 2. our public caching layer does not bust against the `Accept-Language`
+ *    header.
+ * -prf
+ *
+ * Problem 2 is why this uses its own client rather than the app's public
+ * appview one: it talks to the direct appview, which honors the header, instead
+ * of the cached `public.api.bsky.app`, which does not vary on it. That trades
+ * CDN caching for language correctness on logged-out feed traffic.
+ *
+ * Problem 1 is host-independent, so it is still handled here: an empty
+ * language-filtered feed is retried once with the language constraint removed.
+ */
+async function loggedOutFetch(
+  params: GetCustomFeedParams,
+): Promise<app.bsky.feed.getFeed.$OutputBody | null> {
+  const contentLangs = getAppLanguageAsContentLanguage()
+
+  let data = await getFeedOrNull(params, contentLangs)
   if (data?.feed?.length) {
     return data
   }
 
   // no data, try again with language headers removed
-  res = await fetch(
-    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
-      cursor ? `&cursor=${cursor}` : ''
-    }&limit=${limit}`,
-    {method: 'GET', headers: {'Accept-Language': '', ...labelersHeader}},
-  )
-  data = res.ok
-    ? (lexParse(await res.text()) as app.bsky.feed.getFeed.$OutputBody)
-    : null
+  data = await getFeedOrNull(params, '')
   if (data?.feed?.length) {
     return data
   }
 
   return null
+}
+
+/**
+ * A logged-out `getFeed` read that resolves to null on a response error.
+ *
+ * The pre-client code only guarded `res.ok`, so a failed RESPONSE fell through
+ * to the next attempt while a failed REQUEST rejected. Catching
+ * `XrpcResponseError` preserves that split: every other lex error - the fetch
+ * and validation ones - still propagates.
+ */
+async function getFeedOrNull(
+  params: GetCustomFeedParams,
+  contentLangs: string,
+): Promise<app.bsky.feed.getFeed.$OutputBody | null> {
+  try {
+    return await getLoggedOutAppviewClient().call(
+      app.bsky.feed.getFeed,
+      params,
+      {headers: {'Accept-Language': contentLangs}},
+    )
+  } catch (e) {
+    if (e instanceof XrpcResponseError) {
+      return null
+    }
+    throw e
+  }
 }

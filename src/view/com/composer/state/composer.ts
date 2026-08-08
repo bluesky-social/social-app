@@ -321,10 +321,6 @@ export function composerReducer(
           posts,
           postgate: createPostgateRecord({
             post: '',
-            /*
-             * Draft records are still typed against the legacy client, so the
-             * stored rules arrive unbranded. Wave B migrates the draft types.
-             */
             embeddingRules: postgateEmbeddingRules,
           }),
           threadgate: threadgateRecordToAllowUISetting({
@@ -750,10 +746,6 @@ export function createComposerState({
       ],
       postgate: createPostgateRecord({
         post: '',
-        /*
-         * Preferences are still typed against the legacy client, so the stored
-         * rules arrive unbranded. Wave B migrates `getPreferences`.
-         */
         embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
       }),
       threadgate: threadgateRecordToAllowUISetting({

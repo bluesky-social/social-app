@@ -120,7 +120,6 @@ function DialogInner({
       activitySubscription: Un$Typed<app.bsky.notification.defs.ActivitySubscription>,
     ) => {
       await client.call(app.bsky.notification.putActivitySubscription, {
-        // the profile view carries an already-resolved did
         subject: profile.did,
         activitySubscription,
       })

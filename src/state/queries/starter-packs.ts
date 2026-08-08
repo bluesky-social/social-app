@@ -253,9 +253,9 @@ export function useEditStarterPackMutation({
           list: currentStarterPack.list?.uri,
           /*
            * Pre-existing quirk preserved verbatim: the edit path writes whole
-           * `GeneratorView`s where the lexicon declares `feedItem` refs. lex
-           * types the raw `putRecord` body as a `LexValue`, which the legacy
-           * view interface does not structurally satisfy, hence the cast.
+           * `GeneratorView`s where the lexicon declares `feedItem` refs. The
+           * raw `putRecord` body is typed as a lex `LexValue`, which the view
+           * structurally satisfies, so this passes through unchanged.
            */
           feeds: feeds,
           createdAt: currentStarterPack.record.createdAt,

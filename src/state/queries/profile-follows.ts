@@ -1,4 +1,3 @@
-import {type DidString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -56,7 +55,7 @@ export function useProfileFollowsQuery(
        * is `undefined`, hence the conditional spread.
        */
       return await client.call(app.bsky.graph.getFollows, {
-        actor: (did || '') as DidString,
+        actor: did || '',
         limit: limit || PAGE_SIZE,
         cursor: pageParam,
         ...(sortParam ? {sort: sortParam} : {}),

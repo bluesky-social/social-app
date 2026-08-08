@@ -124,7 +124,7 @@ function GermSelfButton({did}: {did: string}) {
   const {mutate: deleteDeclaration, isPending} = useMutation({
     mutationFn: async () => {
       const previousRecord = await pdsClient
-        // the profile view is still legacy-typed, so its did is unbranded
+        // the component takes the did as a plain string prop
         .get(com.germnetwork.declaration, {
           repo: did as DidString,
           rkey: 'self',

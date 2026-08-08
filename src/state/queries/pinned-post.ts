@@ -1,4 +1,3 @@
-import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
@@ -36,7 +35,7 @@ export function usePinnedPostMutation() {
         // get the currently pinned post so we can optimistically remove the pin from it
         if (!currentAccount) throw new Error('Not signed in')
         const profile = await client.call(app.bsky.actor.getProfile, {
-          actor: currentAccount.did as DidString,
+          actor: currentAccount.did,
         })
         prevPinnedPost = profile.pinnedPost?.uri
         if (prevPinnedPost && prevPinnedPost !== postUri) {
@@ -47,7 +46,7 @@ export function usePinnedPostMutation() {
           profile,
           updates: existing => {
             existing.pinnedPost = pinCurrentPost
-              ? // the caller's uri/cid are unbranded strings
+              ? // the mutation takes the uri/cid as plain strings
                 ({
                   uri: postUri,
                   cid: postCid,
