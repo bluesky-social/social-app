@@ -1,13 +1,14 @@
-import {type AppBskyFeedDefs, type AtpAgent} from '@atproto/api'
+import {type AppBskyFeedDefs} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 
 import {DEMO_FEED} from '#/lib/demo'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class DemoFeedAPI implements FeedAPI {
-  agent: AtpAgent
+  client: Client
 
-  constructor({agent}: {agent: AtpAgent}) {
-    this.agent = agent
+  constructor({client}: {client: Client}) {
+    this.client = client
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
