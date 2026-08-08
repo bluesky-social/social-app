@@ -19,7 +19,7 @@ concurrency:
 permissions: {}
 
 # denis release tag in bluesky-social/tango whose linux-amd64 binary the PR OTA
-# job downloads. Bump this one line to roll denis.
+# publish job downloads. Bump this one line to roll denis.
 env:
   DENIS_RELEASE_TAG: denis-v0.1.1
   NODE_OPTIONS: --max-old-space-size=4096
@@ -256,25 +256,24 @@ jobs:
   # every dependabot PR. There is no OTA preview worth publishing for a
   # dependency bump anyway.
   #
-  # Gated on a clean fingerprint-native run: an OTA can only carry JS, so once
-  # the native surface changes the published bundle no longer represents the PR
-  # and installing it on a store/TestFlight client is misleading at best. Those
-  # PRs need a native build instead. A skipped or failed fingerprint job also
-  # skips this one - without a verdict we can't say the OTA is representative.
-  publish-pr-ota:
-    name: Publish PR OTA to denis
-    needs: fingerprint-native
+  # The bundle is built here rather than in publish-pr-ota so it runs in
+  # PARALLEL with fingerprint-native instead of after it: both are multi-minute
+  # jobs, and the bundle does not depend on the fingerprint verdict - only the
+  # decision to publish it does. This job deliberately carries no AWS or denis
+  # credentials; it only produces an artifact. When the fingerprint turns out to
+  # be dirty the bundle is simply discarded unpublished, which costs a runner but
+  # saves the fingerprint's wall clock on every clean PR.
+  build-pr-ota:
+    name: Build PR OTA bundle
     runs-on: ubuntu-latest
     if: >-
       github.event_name == 'pull_request' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.pull_request.user.type != 'Bot' &&
-      needs.fingerprint-native.outputs.includes-changes != 'true'
+      github.event.pull_request.user.type != 'Bot'
     concurrency:
-      group: pr-ota-${{ github.event.pull_request.number }}
+      group: pr-ota-build-${{ github.event.pull_request.number }}
       cancel-in-progress: true
     permissions:
-      id-token: write
       contents: read
     outputs:
       release-version: ${{ steps.env.outputs.release-version }}
@@ -312,6 +311,71 @@ jobs:
           SENTRY_DIST=${{ steps.env.outputs.bundle-identifier }}
           pnpm export
 
+      # Assembling here (rather than inside denisPublish.sh) keeps the handoff to
+      # the publish job to just the files denis uploads, instead of all of ./dist
+      # plus a Node toolchain to process it.
+      - name: 📦 Assemble bundle directory
+        run: node scripts/bundleUpdate.js
+
+      # Read from the global EAS counters while the EAS CLI is still set up, so
+      # the publish job needs neither EXPO_TOKEN nor node_modules. These are the
+      # numbers the install link advertises, so the publish must be pinned to the
+      # same ones.
+      - name: 🔢 Get native build numbers
+        id: build-info
+        run: bash scripts/setGitHubOutput.sh
+
+      # The name is keyed on the run rather than the attempt so that re-running
+      # only the failed jobs still finds the bundle this run already built;
+      # overwrite keeps a full re-run (which rebuilds it) from colliding with the
+      # previous attempt's upload.
+      - name: 🚀 Upload bundle
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pr-ota-bundle-${{ github.run_id }}
+          path: bundleTempDir
+          retention-days: 1
+          if-no-files-found: error
+          overwrite: true
+
+  # Publish the bundle built above, once fingerprint-native has returned a clean
+  # verdict. An OTA can only carry JS, so once the native surface changes the
+  # published bundle no longer represents the PR and installing it on a
+  # store/TestFlight client is misleading at best. Those PRs need a native build
+  # instead. A skipped or failed fingerprint job also skips this one - without a
+  # verdict we can't say the OTA is representative.
+  #
+  # This is kept separate from build-pr-ota so the fingerprint gate holds back
+  # only the publish, which is quick, rather than the whole bundle build.
+  publish-pr-ota:
+    name: Publish PR OTA to denis
+    needs: [fingerprint-native, build-pr-ota]
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.type != 'Bot' &&
+      needs.fingerprint-native.outputs.includes-changes != 'true'
+    concurrency:
+      group: pr-ota-publish-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      # Needed for scripts/denisPublish.sh and the local composite actions; no
+      # dependency install, since denis is a downloaded binary.
+      - name: ⬇️ Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: ⬇️ Download bundle
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: pr-ota-bundle-${{ github.run_id }}
+          path: bundleTempDir
+
       - name: ☁️ Configure AWS credentials (denis, PR-scoped)
         uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
         with:
@@ -347,22 +411,23 @@ jobs:
           app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
           private-key: ${{ secrets.SYNC_INTERNAL_PK }}
 
-      - name: 🔢 Get native build numbers
-        id: build-info
-        run: bash scripts/setGitHubOutput.sh
-
+      # The use-build-number wrapper is skipped: every value it would look up is
+      # already fixed by the build job, and calling it would mean installing
+      # dependencies again just to shell out to the EAS CLI.
       - name: 🚀 Publish OTA to denis (S3)
-        run: pnpm use-build-number bash scripts/denisPublish.sh
+        run: bash scripts/denisPublish.sh
         env:
-          RUNTIME_VERSION: ''
+          # bundleTempDir arrived as an artifact; ./dist is not in this job.
+          SKIP_BUNDLE_ASSEMBLY: '1'
           CHANNEL_NAME: pull-request-${{ github.event.pull_request.number }}
           # Pin the publish to the same values exposed in the install link.
-          BSKY_IOS_BUILD_NUMBER: ${{ steps.build-info.outputs.BSKY_IOS_BUILD_NUMBER }}
-          BSKY_ANDROID_VERSION_CODE: ${{ steps.build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+          RUNTIME_VERSION: ${{ needs.build-pr-ota.outputs.release-version }}
+          BSKY_IOS_BUILD_NUMBER: ${{ needs.build-pr-ota.outputs.ios-build-number }}
+          BSKY_ANDROID_VERSION_CODE: ${{ needs.build-pr-ota.outputs.android-build-number }}
 
   comment-pr-ota:
     name: Comment PR OTA install link
-    needs: publish-pr-ota
+    needs: [build-pr-ota, publish-pr-ota]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -374,6 +439,6 @@ jobs:
           message: |
             The OTA deployment for this PR was successful! You may now apply it by either scanning the QR code or opening the deep link below in your browser:
 
-            <img src="https://bsky-qr.vercel.app?channel=pull-request-${{ github.event.pull_request.number }}&releaseVersion=${{ needs.publish-pr-ota.outputs.release-version }}&iosBuildNumber=${{ needs.publish-pr-ota.outputs.ios-build-number }}&androidBuildNumber=${{ needs.publish-pr-ota.outputs.android-build-number }}" width="300" height="300" alt="QR code for the PR OTA deployment">
+            <img src="https://bsky-qr.vercel.app?channel=pull-request-${{ github.event.pull_request.number }}&releaseVersion=${{ needs.build-pr-ota.outputs.release-version }}&iosBuildNumber=${{ needs.build-pr-ota.outputs.ios-build-number }}&androidBuildNumber=${{ needs.build-pr-ota.outputs.android-build-number }}" width="300" height="300" alt="QR code for the PR OTA deployment">
 
-            `bluesky://intent/apply-ota?channel=pull-request-${{ github.event.pull_request.number }}&releaseVersion=${{ needs.publish-pr-ota.outputs.release-version }}&iosBuildNumber=${{ needs.publish-pr-ota.outputs.ios-build-number }}&androidBuildNumber=${{ needs.publish-pr-ota.outputs.android-build-number }}`
+            `bluesky://intent/apply-ota?channel=pull-request-${{ github.event.pull_request.number }}&releaseVersion=${{ needs.build-pr-ota.outputs.release-version }}&iosBuildNumber=${{ needs.build-pr-ota.outputs.ios-build-number }}&androidBuildNumber=${{ needs.build-pr-ota.outputs.android-build-number }}`
