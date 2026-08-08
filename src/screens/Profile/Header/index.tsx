@@ -208,9 +208,14 @@ const MinimalHeader = memo(function MinimalHeader({
                 />
               </View>
             )
-          : labeler && (
+          : labeler &&
+            moderationOpts && (
               <View style={[a.flex_row, a.justify_end, a.gap_xs]}>
-                <HeaderLabelerButtons profile={profile} minimal />
+                <HeaderLabelerButtons
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                  minimal
+                />
               </View>
             )}
       </Header.Outer>
