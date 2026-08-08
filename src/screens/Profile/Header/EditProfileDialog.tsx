@@ -10,7 +10,12 @@ import {cleanError} from '#/lib/strings/errors'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
 import {type ImageMeta} from '#/state/gallery'
+import {useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
+import {
+  useFeaturedFeedUri,
+  useProfileRecordQuery,
+} from '#/state/queries/profile-featured-feed'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
@@ -19,12 +24,14 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
+import {FeaturedFeedPickerDialog} from './FeaturedFeedPickerDialog'
 
 export function EditProfileDialog({
   profile,
@@ -97,6 +104,7 @@ function DialogInner({
   const {_} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogContext()
+  const featuredFeedControl = Dialog.useDialogControl()
   const verification = useSimpleVerificationState({
     profile,
   })
@@ -124,11 +132,34 @@ function DialogInner({
     ImageMeta | undefined | null
   >()
 
+  /*
+   * The featured feed lives on the raw profile record, which loads
+   * asynchronously. Initialize local state once the record has been fetched so
+   * we do not clobber an existing value with `undefined` on save. We adjust
+   * state during render (rather than in an effect) so the initial value is in
+   * place before the first paint, matching the pattern used elsewhere in this
+   * file.
+   */
+  const recordQuery = useProfileRecordQuery({did: profile.did})
+  const initialFeaturedFeed = useFeaturedFeedUri({did: profile.did})
+  const [featuredFeed, setFeaturedFeed] = useState<string | undefined>()
+  const [featuredFeedReady, setFeaturedFeedReady] = useState(false)
+  if (!featuredFeedReady && recordQuery.isFetched) {
+    setFeaturedFeed(initialFeaturedFeed)
+    setFeaturedFeedReady(true)
+  }
+
+  const {data: featuredFeedInfo} = useFeedSourceInfoQuery({
+    uri: featuredFeed ?? '',
+    enabled: !!featuredFeed,
+  })
+
   const dirty =
     displayName !== initialDisplayName ||
     description !== initialDescription ||
     userAvatar !== profile.avatar ||
-    userBanner !== profile.banner
+    userBanner !== profile.banner ||
+    (featuredFeedReady && featuredFeed !== initialFeaturedFeed)
 
   useEffect(() => {
     setDirty(dirty)
@@ -175,10 +206,16 @@ function DialogInner({
     try {
       await updateProfileMutation({
         profile,
-        updates: {
-          displayName: displayName.trimEnd(),
-          description: description.trimEnd(),
-        },
+        updates: featuredFeedReady
+          ? {
+              displayName: displayName.trimEnd(),
+              description: description.trimEnd(),
+              featuredFeed,
+            }
+          : {
+              displayName: displayName.trimEnd(),
+              description: description.trimEnd(),
+            },
         newUserAvatar,
         newUserBanner,
       })
@@ -194,6 +231,8 @@ function DialogInner({
     control,
     displayName,
     description,
+    featuredFeed,
+    featuredFeedReady,
     newUserAvatar,
     newUserBanner,
     setImageError,
@@ -384,7 +423,44 @@ function DialogInner({
             </Text>
           )}
         </View>
+
+        <View>
+          <TextField.LabelText>
+            <Trans>Featured feed</Trans>
+          </TextField.LabelText>
+          <Button
+            label={_(msg`Choose a featured feed`)}
+            onPress={featuredFeedControl.open}
+            size="large"
+            color="secondary"
+            style={[a.justify_between]}
+            testID="editProfileFeaturedFeedBtn">
+            <ButtonText style={[a.flex_1, a.text_left]} numberOfLines={1}>
+              {featuredFeed ? (
+                (featuredFeedInfo?.displayName ?? _(msg`Selected feed`))
+              ) : (
+                <Trans>Latest posts</Trans>
+              )}
+            </ButtonText>
+            <ButtonIcon icon={ChevronRightIcon} />
+          </Button>
+          <Text
+            style={[a.text_sm, a.mt_xs, t.atoms.text_contrast_medium]}
+            emoji>
+            <Trans>
+              Show visitors a feed you have created when they open your profile,
+              instead of your latest posts.
+            </Trans>
+          </Text>
+        </View>
       </View>
+
+      <FeaturedFeedPickerDialog
+        control={featuredFeedControl}
+        did={profile.did}
+        selectedUri={featuredFeed}
+        onSelect={setFeaturedFeed}
+      />
     </Dialog.ScrollableInner>
   )
 }

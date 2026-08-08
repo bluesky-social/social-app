@@ -27,6 +27,7 @@ import {type Shadow} from '#/state/cache/types'
 import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
+import {RQKEY as PROFILE_RECORD_RQKEY} from '#/state/queries/profile-featured-feed'
 import {RQKEY as PROFILE_FOLLOWS_RQKEY} from '#/state/queries/profile-follows'
 import {
   unstableCacheProfileView,
@@ -129,10 +130,19 @@ export function usePrefetchProfileQuery() {
   return prefetchProfileQuery
 }
 
+/**
+ * The custom `featuredFeed` field is not part of the official lexicon, so it is
+ * not present on the generated record type. We allow setting it on the object
+ * form of profile updates.
+ */
+type ProfileRecordUpdate = Un$Typed<AppBskyActorProfile.Record> & {
+  featuredFeed?: string
+}
+
 interface ProfileUpdateParams {
   profile: AppBskyActorDefs.ProfileViewDetailed
   updates:
-    | Un$Typed<AppBskyActorProfile.Record>
+    | ProfileRecordUpdate
     | ((
         existing: Un$Typed<AppBskyActorProfile.Record>,
       ) => Un$Typed<AppBskyActorProfile.Record>)
@@ -181,6 +191,10 @@ export function useProfileUpdateMutation() {
           next.description = updates.description || undefined
           if ('pinnedPost' in updates) {
             next.pinnedPost = updates.pinnedPost
+          }
+          if ('featuredFeed' in updates) {
+            ;(next as ProfileRecordUpdate).featuredFeed =
+              updates.featuredFeed || undefined
           }
         }
         if (newUserAvatarPromise) {
@@ -237,6 +251,10 @@ export function useProfileUpdateMutation() {
       })
       void queryClient.invalidateQueries({
         queryKey: [profilesQueryKeyRoot, [variables.profile.did]],
+      })
+      // the raw profile record holds the custom `featuredFeed` field
+      void queryClient.invalidateQueries({
+        queryKey: PROFILE_RECORD_RQKEY(variables.profile.did),
       })
       await updateProfileVerificationCache({profile: variables.profile})
     },
