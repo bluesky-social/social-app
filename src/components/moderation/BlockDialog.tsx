@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {type ChatBskyConvoDefs, ChatBskyGroupRemoveMembers} from '@atproto/api'
+import {type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -309,14 +309,15 @@ function MutualGroupChat({
         let errorMessage = l`Could not remove member.`
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (
-          error instanceof ChatBskyGroupRemoveMembers.InvalidConvoError
-        ) {
-          errorMessage = l`Chat not found.`
-        } else if (
-          error instanceof ChatBskyGroupRemoveMembers.InsufficientRoleError
-        ) {
-          errorMessage = l`You must be a chat owner to remove a member.`
+        } else {
+          switch (matchXrpcError(error, chat.bsky.group.removeMembers)) {
+            case 'InvalidConvo':
+              errorMessage = l`Chat not found.`
+              break
+            case 'InsufficientRole':
+              errorMessage = l`You must be a chat owner to remove a member.`
+              break
+          }
         }
         Toast.show(errorMessage, {type: 'error'})
       },
