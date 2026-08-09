@@ -80,10 +80,12 @@ function Player({
   params,
   onLoad,
   isPlayerActive,
+  onFullscreenChange,
 }: {
   isPlayerActive: boolean
   params: EmbedPlayerParams
   onLoad: () => void
+  onFullscreenChange: (isFullscreen: boolean) => void
 }) {
   // ensures we only load what's requested
   // when it's a youtube video, we need to allow both bsky.app and youtube.com
@@ -111,6 +113,9 @@ function Player({
           nestedScrollEnabled
           source={{uri: params.playerUri}}
           onLoad={onLoad}
+          onFullscreenChange={event =>
+            onFullscreenChange(event.nativeEvent.isFullscreen)
+          }
           style={a.bg_transparent}
           setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
         />
@@ -140,6 +145,11 @@ export function ExternalPlayer({
 
   const [isPlayerActive, setIsPlayerActive] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  /**
+   * Whether the web content is in native fullscreen. Android only - the event
+   * that drives it has no iOS counterpart, so this stays `false` there.
+   */
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
   const activatePlayer = useCallback(() => {
     if (!isPlayerActive) {
@@ -206,7 +216,17 @@ export function ExternalPlayer({
   // watch for leaving the viewport due to scrolling
   useEffect(() => {
     // We don't want to do anything if the player isn't active
-    if (!isPlayerActive) return
+    if (!isPlayerActive) {
+      /*
+       * There is no WebView while inactive, so there is no fullscreen to be
+       * in. This is cleared here rather than left to the native exit event,
+       * which is dropped when the WebView is torn down while still fullscreen
+       * - leaving the flag stuck on and the visibility check permanently
+       * suspended for the next playback.
+       */
+      setIsFullscreen(false)
+      return
+    }
 
     // Interval for scrolling works in most cases, However, for twitch embeds, if we navigate away from the screen the webview will
     // continue playing. We need to watch for the blur event
@@ -214,14 +234,23 @@ export function ExternalPlayer({
       setIsPlayerActive(false)
     })
 
-    // Start watching for changes
-    frameCallback.setActive(true)
+    /*
+     * The frame callback asks where the player sits in the feed. In native
+     * fullscreen the content is reparented out of the WebView and into the
+     * activity's root view, so the wrapper we measure is an empty placeholder
+     * whose position says nothing about what is on screen - and the user
+     * cannot scroll anyway. Answering that question regardless is what stops
+     * playback when the device is rotated while fullscreen.
+     */
+    if (!isFullscreen) {
+      frameCallback.setActive(true)
+    }
 
     return () => {
       unsubscribe()
       frameCallback.setActive(false)
     }
-  }, [navigation, isPlayerActive, frameCallback])
+  }, [navigation, isPlayerActive, isFullscreen, frameCallback])
 
   const onLoad = useCallback(() => {
     setIsLoading(false)
@@ -293,6 +322,7 @@ export function ExternalPlayer({
           isPlayerActive={isPlayerActive}
           params={params}
           onLoad={onLoad}
+          onFullscreenChange={setIsFullscreen}
         />
       </Animated.View>
     </>
