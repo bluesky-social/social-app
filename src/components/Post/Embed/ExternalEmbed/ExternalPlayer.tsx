@@ -36,6 +36,7 @@ import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
+import {getPlayerVisibility} from './playerVisibility'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -182,13 +183,22 @@ export function ExternalPlayer({
         : winWidth
       : winHeight // On web, we always want the actual screen height
 
-    const top = measurement.pageY
-    const bot = measurement.pageY + measurement.height
+    const visibility = getPlayerVisibility({
+      player: {
+        top: measurement.pageY,
+        height: measurement.height,
+        width: measurement.width,
+      },
+      window: {width: winWidth, height: realWinHeight},
+      insets,
+    })
 
-    // We can use the same logic on all platforms against the screenHeight that we get above
-    const isVisible = top <= realWinHeight - insets.bottom && bot >= insets.top
-
-    if (!isVisible) {
+    /*
+     * Only `hidden` stops playback. `indeterminate` means we cannot tell yet -
+     * most often mid-rotation, where treating it as `hidden` would kill the
+     * player the moment the device is turned.
+     */
+    if (visibility === 'hidden') {
       scheduleOnRN(setIsPlayerActive, false)
     }
   }, false) // False here disables autostarting the callback
