@@ -432,7 +432,7 @@ export function useProfileMuteMutationQueue(
 ) {
   const ax = useAnalytics()
   const queryClient = useQueryClient()
-  const did = profile.did
+  const did = profile.did as DidString
   const initialMuted = profile.viewer?.muted
   const muteMutation = useProfileMuteMutation()
   const unmuteMutation = useProfileUnmuteMutation()
@@ -441,15 +441,11 @@ export function useProfileMuteMutationQueue(
     initialState: initialMuted,
     runMutation: async (_prevMuted, shouldMute) => {
       if (shouldMute) {
-        await muteMutation.mutateAsync({
-          did,
-        })
+        await muteMutation.mutateAsync({did})
         ax.metric('profile:mute', {})
         return true
       } else {
-        await unmuteMutation.mutateAsync({
-          did,
-        })
+        await unmuteMutation.mutateAsync({did})
         ax.metric('profile:unmute', {})
         return false
       }
@@ -494,7 +490,7 @@ export function useProfileMuteRepostsMutationQueue(
 ) {
   const ax = useAnalytics()
   const queryClient = useQueryClient()
-  const did = profile.did
+  const did = profile.did as DidString
   const initialMutedOnlyReposts = !!profile.viewer?.mutedOnlyReposts
   const muteRepostsMutation = useProfileMuteRepostsMutation()
   const unmuteMutation = useProfileUnmuteMutation()
@@ -503,15 +499,11 @@ export function useProfileMuteRepostsMutationQueue(
     initialState: initialMutedOnlyReposts,
     runMutation: async (_prevMutedOnlyReposts, shouldMute) => {
       if (shouldMute) {
-        await muteRepostsMutation.mutateAsync({
-          did,
-        })
+        await muteRepostsMutation.mutateAsync({did})
         ax.metric('profile:muteReposts', {})
         return true
       } else {
-        await unmuteMutation.mutateAsync({
-          did,
-        })
+        await unmuteMutation.mutateAsync({did})
         ax.metric('profile:unmuteReposts', {})
         return false
       }
@@ -546,9 +538,9 @@ export function useProfileMuteRepostsMutationQueue(
 function useProfileMuteMutation() {
   const queryClient = useQueryClient()
   const appviewClient = useAppviewClient()
-  return useMutation<void, Error, {did: string}>({
-    mutationFn: async ({did}) => {
-      await appviewClient.call(muteActor, {actor: did as AtIdentifierString})
+  return useMutation({
+    mutationFn: async ({did}: {did: DidString}) => {
+      await appviewClient.call(muteActor, {actor: did})
     },
     onSuccess() {
       void queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
@@ -558,10 +550,14 @@ function useProfileMuteMutation() {
 
 function useProfileMuteRepostsMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
-  return useMutation<void, Error, {did: string}>({
-    mutationFn: async ({did}) => {
-      await agent.mute(did, {onlyReposts: true})
+  const appviewClient = useAppviewClient()
+  return useMutation({
+    mutationFn: async ({did}: {did: DidString}) => {
+      await appviewClient.call(muteActor, {
+        actor: did,
+        // @ts-expect-error missing from this SDK version, remove this
+        onlyReposts: true,
+      })
     },
     onSuccess() {
       void queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
@@ -572,9 +568,9 @@ function useProfileMuteRepostsMutation() {
 function useProfileUnmuteMutation() {
   const queryClient = useQueryClient()
   const appviewClient = useAppviewClient()
-  return useMutation<void, Error, {did: string}>({
-    mutationFn: async ({did}) => {
-      await appviewClient.call(unmuteActor, {actor: did as AtIdentifierString})
+  return useMutation({
+    mutationFn: async ({did}: {did: DidString}) => {
+      await appviewClient.call(unmuteActor, {actor: did})
     },
     onSuccess() {
       void queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
