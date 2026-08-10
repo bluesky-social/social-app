@@ -68,7 +68,7 @@ function BetaFeaturesFeedbackDialogInner({
         {
           captureContext: {
             user: {
-              username: currentAccount?.handle,
+              name: currentAccount?.handle,
             },
             contexts: {
               betaFeatures: {keys: betaFeatureKeys},
