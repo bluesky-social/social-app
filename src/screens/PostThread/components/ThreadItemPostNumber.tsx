@@ -2,7 +2,7 @@ import {Text, View} from 'react-native'
 import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {atoms as a, native, platform, useTheme} from '#/alf'
+import {atoms as a, ios, platform, useTheme} from '#/alf'
 import {useAnalytics} from '#/analytics'
 
 /**
@@ -52,8 +52,8 @@ export function ThreadItemPostNumber({
         a.flex_shrink_0,
         a.rounded_full,
         t.atoms.bg_contrast_50,
-        native(a.py_2xs),
         !inline && a.self_start,
+        ios(a.py_2xs),
         {
           paddingLeft: 5,
           paddingRight: 5,

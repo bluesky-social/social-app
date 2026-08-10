@@ -3,7 +3,7 @@ import {type StyleProp, type TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 
 import {toShortUrl} from '#/lib/strings/url-helpers'
-import {atoms as a, flatten, ios, type TextStyleProp} from '#/alf'
+import {atoms as a, flatten, native, type TextStyleProp} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {InlineLinkText, type LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -84,7 +84,7 @@ export function RichText({
   const plainStyles = style
   const suffixStyles =
     suffix && suffixOffset
-      ? ios({paddingBottom: suffixOffset, marginBottom: -suffixOffset})
+      ? native({paddingBottom: suffixOffset, marginBottom: -suffixOffset})
       : null
   const interactiveStyles = [plainStyles, interactiveStyle]
 
