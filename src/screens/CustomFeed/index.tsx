@@ -38,11 +38,11 @@ import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {IS_NATIVE} from '#/env'
+import {app} from '#/lexicons'
 import {
   CustomFeedHeader,
   CustomFeedHeaderSkeleton,
 } from './components/CustomFeedHeader'
-import {app} from '#/lexicons'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeed'>
 export function CustomFeedScreen(props: Props) {

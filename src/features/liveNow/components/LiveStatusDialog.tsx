@@ -26,7 +26,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function LiveStatusDialog({

@@ -1,7 +1,7 @@
 import {Leaflet} from '#/components/icons/community/Leaflet'
 import {Offprint} from '#/components/icons/community/Offprint'
 import {Pckt} from '#/components/icons/community/Pckt'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export type StandardSitePublisher = {
   host: string

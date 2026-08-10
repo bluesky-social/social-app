@@ -20,7 +20,7 @@ import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 function keyExtractor(item: app.bsky.feed.defs.GeneratorView) {
   return item.uri

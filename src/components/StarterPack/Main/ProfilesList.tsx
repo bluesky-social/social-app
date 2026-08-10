@@ -18,7 +18,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
 import {IS_NATIVE, IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 function keyExtractor(item: app.bsky.actor.defs.ProfileView, index: number) {
   return `${item.did}-${index}`

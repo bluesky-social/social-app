@@ -14,7 +14,7 @@ import {PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon} from '#/compo
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
 

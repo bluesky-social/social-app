@@ -45,7 +45,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
-import {com} from '#/lexicons'
+import {type com} from '#/lexicons'
 import {CopyButton} from './CopyButton'
 
 export function ChangeHandleDialog({

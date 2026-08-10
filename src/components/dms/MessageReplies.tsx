@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react'
 
-import {chat} from '#/lexicons'
+import {type chat} from '#/lexicons'
 
 /**
  * How long a message stays highlighted after scrolling to it, before the flash

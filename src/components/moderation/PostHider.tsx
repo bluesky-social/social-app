@@ -24,7 +24,7 @@ import {
   useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 interface Props extends React.ComponentProps<typeof Link> {
   disabled: boolean

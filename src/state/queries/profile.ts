@@ -425,7 +425,7 @@ export function useProfileMuteMutationQueue(
 ) {
   const ax = useAnalytics()
   const queryClient = useQueryClient()
-  const did = profile.did as DidString
+  const did = profile.did
   const initialMuted = profile.viewer?.muted
   const muteMutation = useProfileMuteMutation()
   const unmuteMutation = useProfileUnmuteMutation()
@@ -483,7 +483,7 @@ export function useProfileMuteRepostsMutationQueue(
 ) {
   const ax = useAnalytics()
   const queryClient = useQueryClient()
-  const did = profile.did as DidString
+  const did = profile.did
   const initialMutedOnlyReposts = !!profile.viewer?.mutedOnlyReposts
   const muteRepostsMutation = useProfileMuteRepostsMutation()
   const unmuteMutation = useProfileUnmuteMutation()

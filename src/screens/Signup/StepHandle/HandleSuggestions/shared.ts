@@ -1,6 +1,6 @@
 import {type UseSiftReturn} from '@bsky.app/sift'
 
-import {com} from '#/lexicons'
+import {type com} from '#/lexicons'
 
 export type HandleSuggestionsProps = {
   suggestions: com.atproto.temp.checkHandleAvailability.Suggestion[]

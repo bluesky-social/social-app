@@ -21,7 +21,7 @@ import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {chat} from '#/lexicons'
+import {type chat} from '#/lexicons'
 
 export function RecentChats({
   postUri,

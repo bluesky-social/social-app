@@ -65,7 +65,7 @@ import {GoLiveDialog} from '#/features/liveNow/components/GoLiveDialog'
 import {GoLiveDisabledDialog} from '#/features/liveNow/components/GoLiveDisabledDialog'
 import {Dot} from '#/features/nuxs/components/Dot'
 import {Gradient} from '#/features/nuxs/components/Gradient'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 
 let ProfileMenu = ({

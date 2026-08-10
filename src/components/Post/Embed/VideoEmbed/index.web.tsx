@@ -24,7 +24,7 @@ import {
 } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB_FIREFOX} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 

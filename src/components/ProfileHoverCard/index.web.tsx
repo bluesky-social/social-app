@@ -38,7 +38,7 @@ import {Text} from '#/components/Typography'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [

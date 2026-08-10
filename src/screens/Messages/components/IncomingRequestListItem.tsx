@@ -7,7 +7,7 @@ import {atoms as a, tokens} from '#/alf'
 import {parseConvoView} from '#/components/dms/util'
 import {KnownFollowers} from '#/components/KnownFollowers'
 import {Text} from '#/components/Typography'
-import {chat} from '#/lexicons'
+import {type chat} from '#/lexicons'
 import {ChatListItem, ChatListItemPortal} from './ChatListItem'
 import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 

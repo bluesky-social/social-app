@@ -7,7 +7,7 @@ import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {Bot_Filled as RobotIcon} from '#/components/icons/Bot'
 import {useAnalytics} from '#/analytics'
-import {com} from '#/lexicons'
+import {type com} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function isBotAccount(profile: {

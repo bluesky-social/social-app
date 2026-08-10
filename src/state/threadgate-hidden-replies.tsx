@@ -1,6 +1,6 @@
 import {createContext, useCallback, useContext, useMemo, useState} from 'react'
 
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 type StateContext = {
   uris: Set<string>

@@ -7,7 +7,7 @@ import {type SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import {IS_NATIVE, IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 function keyExtractor(item: app.bsky.feed.defs.GeneratorView) {
   return item.uri

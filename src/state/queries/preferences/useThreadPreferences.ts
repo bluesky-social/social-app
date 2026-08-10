@@ -9,7 +9,7 @@ import {
 } from '#/state/queries/preferences'
 import {type ThreadViewPreferences} from '#/state/queries/preferences/types'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {type Literal} from '#/types/utils'
 
 export type ThreadSortOption = Literal<

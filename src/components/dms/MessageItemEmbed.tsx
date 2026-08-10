@@ -9,7 +9,7 @@ import {type $Typed} from '@atproto/lex'
 
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {MessageContextProvider} from './MessageContext'
 
 const BORDER_RADIUS = 20

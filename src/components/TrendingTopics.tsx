@@ -9,7 +9,7 @@ import {useCallOnce} from '#/lib/once'
 import {native} from '#/alf'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {type Metrics, useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export function TrendingTopicLink({
   topic: raw,

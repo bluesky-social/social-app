@@ -9,7 +9,7 @@ import {atoms as a, useTheme, web} from '#/alf'
 import {NewskieDialog} from '#/components/NewskieDialog'
 import {Text} from '#/components/Typography'
 import {IS_IOS, IS_NATIVE} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export function ProfileHeaderHandle({
   profile,

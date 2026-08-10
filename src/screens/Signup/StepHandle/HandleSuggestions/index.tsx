@@ -4,7 +4,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {atoms as a, useTheme} from '#/alf'
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
-import {com} from '#/lexicons'
+import {type com} from '#/lexicons'
 import {type HandleSuggestionsProps} from './shared'
 
 type Suggestion = com.atproto.temp.checkHandleAvailability.Suggestion & {

@@ -13,7 +13,7 @@ import {
   RQKEY_LINK_ROOT,
 } from '#/state/queries/resolve-link'
 import * as Toast from '#/components/Toast'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export interface ComposerOptsPostRef {
   uri: string

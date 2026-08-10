@@ -10,7 +10,7 @@ import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 function renderItem({
   item,

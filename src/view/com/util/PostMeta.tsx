@@ -20,7 +20,7 @@ import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {TimeElapsed} from './TimeElapsed'
 import {PreviewableUserAvatar} from './UserAvatar'
 

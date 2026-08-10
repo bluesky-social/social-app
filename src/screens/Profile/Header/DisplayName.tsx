@@ -7,7 +7,7 @@ import {type Shadow} from '#/state/cache/types'
 import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export function ProfileHeaderDisplayName({
   profile,

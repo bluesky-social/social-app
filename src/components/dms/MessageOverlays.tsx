@@ -19,7 +19,7 @@ import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
-import {chat} from '#/lexicons'
+import {type chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 type MessageDialogsContextType = {

@@ -18,7 +18,7 @@ import {
   FollowersPromoBanner,
   useFollowersPromoDismissed,
 } from '#/features/inviteFriends'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
 

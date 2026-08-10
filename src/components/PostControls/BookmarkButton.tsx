@@ -14,7 +14,7 @@ import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {PostControlButton, PostControlButtonIcon} from './PostControlButton'
 
 export const BookmarkButton = memo(function BookmarkButton({

@@ -8,7 +8,7 @@ import {
   type ThreadItem,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export function threadPostNoUnauthenticated({
   uri,

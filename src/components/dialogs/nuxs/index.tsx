@@ -29,7 +29,7 @@ import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
 import {useAnalytics} from '#/analytics'
 import {useGeolocation} from '#/geolocation'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 type Context = {
   activeNux: Nux | undefined

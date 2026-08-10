@@ -18,7 +18,7 @@ import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useActorStatus} from '#/features/liveNow'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export function AccountList({
   onSelectAccount,

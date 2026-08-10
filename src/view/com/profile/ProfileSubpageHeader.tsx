@@ -19,7 +19,7 @@ import {UserAvatar, type UserAvatarType} from '#/view/com/util/UserAvatar'
 import {StarterPackMultiPathLarge as StarterPackIcon} from '#/components/icons/StarterPack'
 import * as Layout from '#/components/Layout'
 import {useLightboxControls} from '#/components/Lightbox/state'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export function ProfileSubpageHeader({
   isLoading,

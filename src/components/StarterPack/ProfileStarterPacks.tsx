@@ -36,7 +36,7 @@ import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 interface SectionRef {
   scrollToTop: () => void

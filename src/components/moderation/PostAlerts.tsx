@@ -15,7 +15,7 @@ import {
   useLabelsOnMeDialogControl,
 } from '#/components/moderation/LabelsOnMeDialog'
 import * as Pills from '#/components/Pills'
-import {app, com} from '#/lexicons'
+import {type app, type com} from '#/lexicons'
 
 export function PostAlerts({
   post,

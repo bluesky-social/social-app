@@ -3,7 +3,7 @@ import {AtUri} from '@atproto/syntax'
 
 import {Logger} from '#/logger'
 import {type FeedSourceInfo} from '#/state/queries/feed'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 /**
  * Separate logger for better debugging

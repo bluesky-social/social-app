@@ -1,7 +1,8 @@
 import {applicationId} from 'expo-application'
-import {com, tools} from '#/lexicons'
+
 import {type ParsedReportSubject} from '#/components/moderation/ReportDialog/types'
 import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
+import {com, tools} from '#/lexicons'
 
 export const DMCA_LINK = 'https://bsky.social/about/support/copyright'
 export const SUPPORT_PAGE = 'https://bsky.social/about/support'

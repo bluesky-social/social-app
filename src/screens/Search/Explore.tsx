@@ -63,7 +63,7 @@ import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
 import {ExploreScreenLiveEventFeedsBanner} from '#/features/liveEvents/components/ExploreScreenLiveEventFeedsBanner'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import * as ModuleHeader from './components/ModuleHeader'
 import {
   SuggestedAccountsTabBar,

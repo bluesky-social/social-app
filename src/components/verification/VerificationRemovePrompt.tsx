@@ -7,7 +7,7 @@ import {useVerificationsRemoveMutation} from '#/state/queries/verification/useVe
 import {type DialogControlProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl as usePromptControl} from '#/components/Dialog'

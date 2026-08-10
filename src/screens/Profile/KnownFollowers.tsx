@@ -16,7 +16,7 @@ import {List} from '#/view/com/util/List'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import * as Layout from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 function renderItem({
   item,

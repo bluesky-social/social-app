@@ -14,7 +14,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {IS_NATIVE} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 interface SectionRef {
   scrollToTop: () => void

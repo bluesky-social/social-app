@@ -24,7 +24,7 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export function EditProfileDialog({
   profile,

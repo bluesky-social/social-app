@@ -33,7 +33,7 @@ import {Fill} from '#/components/Fill'
 import {KeepAwake} from '#/components/KeepAwake'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {IS_NATIVE} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 interface ShouldStartLoadRequest {
   url: string

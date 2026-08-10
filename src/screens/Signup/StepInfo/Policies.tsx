@@ -8,7 +8,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {com} from '#/lexicons'
+import {type com} from '#/lexicons'
 
 export const Policies = ({
   serviceDescription,

@@ -2,7 +2,7 @@ import {type UsePreferencesQueryResponse} from '#/state/queries/preferences'
 import {type SessionAccount} from '#/state/session'
 import {type AnalyticsContextType} from '#/analytics'
 import {type Geolocation} from '#/geolocation'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export type EnabledCheckProps = {
   features: AnalyticsContextType['features']

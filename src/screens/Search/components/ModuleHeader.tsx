@@ -14,7 +14,7 @@ import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/component
 import {Link} from '#/components/Link'
 import {Text, type TextProps} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export function Container({
   style,

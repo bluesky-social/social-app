@@ -9,7 +9,7 @@ import {Button} from '#/components/Button'
 import {getSystemMessageInfo} from '#/components/dms/getSystemMessageInfo'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {chat} from '#/lexicons'
+import {type chat} from '#/lexicons'
 
 export function SystemMessageItem({
   item,

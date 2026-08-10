@@ -13,7 +13,7 @@ import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
 import {EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import * as Toast from '#/components/Toast'
-import {chat} from '#/lexicons'
+import {type chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
 import {

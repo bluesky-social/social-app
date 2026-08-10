@@ -31,7 +31,7 @@ import {RichText, type RichTextProps} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useActiveLiveEventFeedUris} from '#/features/liveEvents/context'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from './icons/Trash'
 

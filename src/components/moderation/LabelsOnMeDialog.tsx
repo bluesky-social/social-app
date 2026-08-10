@@ -16,7 +16,7 @@ import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import {AppealForm} from '#/components/moderation/AppealForm'
 import {Text} from '#/components/Typography'
-import {com} from '#/lexicons'
+import {type com} from '#/lexicons'
 import {Divider} from '../Divider'
 
 export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'

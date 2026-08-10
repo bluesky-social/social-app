@@ -1,4 +1,4 @@
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {isStandardSiteEmbed, isStandardSitePublicationEmbed} from './utils'
 
 function makeView(

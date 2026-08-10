@@ -1,4 +1,3 @@
-import {BSKY_LABELER_DID} from '@atproto/api'
 import {type AtUriString, type DidString} from '@atproto/syntax'
 import {api} from '@bsky.app/sdk'
 import {msg} from '@lingui/core/macro'

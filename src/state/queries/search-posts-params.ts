@@ -7,7 +7,7 @@ import {
   filtersToApiParams,
   type SearchFilters,
 } from '#/screens/Search/searchParams'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}/
 

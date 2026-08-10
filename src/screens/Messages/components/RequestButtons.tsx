@@ -40,7 +40,7 @@ import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Toast from '#/components/Toast'
-import {chat} from '#/lexicons'
+import {type chat} from '#/lexicons'
 
 export function RejectMenu({
   convo,

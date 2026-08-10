@@ -33,7 +33,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {chat} from '#/lexicons'
+import {type chat} from '#/lexicons'
 import {CopyTextButton} from './CopyTextButton'
 import {EditTextButton} from './EditTextButton'
 

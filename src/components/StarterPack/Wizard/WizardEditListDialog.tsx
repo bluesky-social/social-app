@@ -21,7 +21,7 @@ import {
 } from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 function keyExtractor(
   item: app.bsky.actor.defs.ProfileViewBasic | app.bsky.feed.defs.GeneratorView,

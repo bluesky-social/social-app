@@ -13,7 +13,7 @@ import {
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {type TriggerProps} from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
-import {chat} from '#/lexicons'
+import {type chat} from '#/lexicons'
 import {EmojiPopup} from './EmojiPopup'
 import {hasAlreadyReacted, hasReachedReactionLimit} from './util'
 

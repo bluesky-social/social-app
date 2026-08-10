@@ -17,7 +17,7 @@ import {
   LabelsOnMeDialog,
   useLabelsOnMeDialogControl,
 } from '#/components/moderation/LabelsOnMeDialog'
-import {com} from '#/lexicons'
+import {type com} from '#/lexicons'
 
 export function LabelsOnMe({
   labels,

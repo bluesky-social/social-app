@@ -25,7 +25,7 @@ import {
   useUpsertLiveStatusMutation,
 } from '#/features/liveNow'
 import {LinkPreview} from '#/features/liveNow/components/LinkPreview'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export function EditLiveDialog({
   control,

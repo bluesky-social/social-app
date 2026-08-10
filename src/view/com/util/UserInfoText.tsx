@@ -8,7 +8,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {atoms as a} from '#/alf'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
 
 export function UserInfoText({

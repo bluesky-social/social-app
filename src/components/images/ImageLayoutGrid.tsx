@@ -5,7 +5,7 @@ import {type AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {type Dimensions} from '#/components/Lightbox/types'
 import {type PostEmbedViewContext} from '#/components/Post/Embed/types'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {GalleryItem} from './ImageLayoutGridItem'
 
 interface ImageLayoutGridProps {

@@ -92,7 +92,7 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 let PostMenuItems = ({
   post,

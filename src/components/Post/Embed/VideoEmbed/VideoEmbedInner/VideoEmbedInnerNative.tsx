@@ -16,7 +16,7 @@ import {KeepAwake} from '#/components/KeepAwake'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useReportDialogMetadataContext} from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import {useVideoMuteState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {GifPresentationControls} from '../GifPresentationControls'
 import {TimeIndicator} from './TimeIndicator'
 

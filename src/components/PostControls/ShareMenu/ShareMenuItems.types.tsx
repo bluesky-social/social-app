@@ -2,7 +2,7 @@ import {type PressableProps, type StyleProp, type ViewStyle} from 'react-native'
 import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 
 import {type Shadow} from '#/state/cache/post-shadow'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export interface ShareMenuItemsProps {
   testID: string

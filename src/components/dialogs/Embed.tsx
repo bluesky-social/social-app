@@ -20,7 +20,7 @@ import {
 } from '#/components/icons/Chevron'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export type ColorModeValues = 'system' | 'light' | 'dark'
 

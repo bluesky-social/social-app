@@ -1,6 +1,6 @@
 import {AtUri} from '@atproto/syntax'
 
-import {app, com} from '#/lexicons'
+import {type app, type com} from '#/lexicons'
 
 export function isStandardSiteDocumentUri(
   ref: com.atproto.repo.strongRef.Main,

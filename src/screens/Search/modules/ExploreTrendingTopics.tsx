@@ -27,7 +27,7 @@ import {SubtleHover} from '#/components/SubtleHover'
 import {useTrendingTopicSeen} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import * as ModuleHeader from '../components/ModuleHeader'
 
 const IMAGE_SIZE = 56

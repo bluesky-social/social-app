@@ -29,7 +29,7 @@ import {SubtleHover} from '#/components/SubtleHover'
 import {useTrendingTopicSeen} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 const TOPIC_COUNT = 3
 

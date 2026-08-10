@@ -20,7 +20,7 @@ import {Button, ButtonIcon} from '#/components/Button'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import * as Layout from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 const renderItem = ({
   item,

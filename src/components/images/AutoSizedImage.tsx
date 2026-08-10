@@ -17,7 +17,7 @@ import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/compone
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 
 export function ConstrainedImage({
   aspectRatio,

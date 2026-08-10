@@ -17,7 +17,7 @@ import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Che
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Toast from '#/components/Toast'
 import {IS_IOS} from '#/env'
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {GrowthHack} from './GrowthHack'
 
 export function ThreadItemAnchorFollowButton({
