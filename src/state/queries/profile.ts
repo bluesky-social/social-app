@@ -548,7 +548,6 @@ function useProfileMuteRepostsMutation() {
     mutationFn: async ({did}: {did: DidString}) => {
       await appviewClient.call(muteActor, {
         actor: did,
-        // @ts-expect-error missing from this SDK version, remove this
         onlyReposts: true,
       })
     },
