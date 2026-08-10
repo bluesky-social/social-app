@@ -19,8 +19,17 @@ export type BluvyDeclaration = {
 
 const bluvyDeclarationQueryKeyRoot = 'bluvy-declaration'
 
+// Bumped 1 -> 2 -> 3: dev builds of bluvy-client used to publish a loopback
+// messageMeUrl (e.g. http://127.0.0.1:8100/message) instead of
+// https://bluvy.app/message. Clients that cached one of those bad records
+// need to drop it and refetch now that bluvy-client always publishes the
+// bluvy.app URL. Bumped a second time (2 -> 3) because the 1 -> 2 bump
+// itself got fetched once while a bad record was still live and cached that
+// under the new key with a 1h staleTime -- staleTime tracks when the query
+// last ran, not when the underlying PDS record changed, so a version bump
+// only helps if it's fetched after the record is actually fixed.
 export const createBluvyDeclarationQueryKey = (did: string) =>
-  createQueryKey(bluvyDeclarationQueryKeyRoot, {did}, {persistedVersion: 1})
+  createQueryKey(bluvyDeclarationQueryKeyRoot, {did}, {persistedVersion: 3})
 
 export function useBluvyDeclarationQuery({did}: {did: string | undefined}) {
   const agent = useAgent()
