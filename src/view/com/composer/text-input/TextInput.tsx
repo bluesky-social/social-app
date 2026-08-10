@@ -6,10 +6,9 @@ import {
   useState,
 } from 'react'
 import {
-  type NativeSyntheticEvent,
   Text as RNText,
   TextInput as RNTextInput,
-  type TextInputSelectionChangeEventData,
+  type TextInputSelectionChangeEvent,
   View,
 } from 'react-native'
 import {type PasteEventPayload, TextInputWrapper} from 'expo-paste-input'
@@ -27,7 +26,7 @@ import {
 } from '#/view/com/composer/text-input/text-input-util'
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
-import {IS_ANDROID, IS_NATIVE} from '#/env'
+import {IS_ANDROID} from '#/env'
 import {Autocomplete} from './mobile/Autocomplete'
 import {type TextInputProps} from './TextInput.types'
 
@@ -141,7 +140,7 @@ export function TextInput({
   )
 
   const onSelectionChange = useCallback(
-    (evt: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
+    (evt: TextInputSelectionChangeEvent) => {
       // NOTE we track the input selection using a ref to avoid excessive renders -prf
       textInputSelection.current = evt.nativeEvent.selection
     },
@@ -150,7 +149,7 @@ export function TextInput({
 
   const onSelectAutocompleteItem = useCallback(
     (item: string) => {
-      onChangeText(
+      void onChangeText(
         insertMentionAt(
           richtext.text,
           textInputSelection.current?.start || 0,
@@ -171,13 +170,6 @@ export function TextInput({
         flags: {},
       },
     )
-
-    /**
-     * PasteInput doesn't like `lineHeight`, results in jumpiness
-     */
-    if (IS_NATIVE) {
-      style.lineHeight = undefined
-    }
 
     /*
      * Android impl of `PasteInput` doesn't support the array syntax for `fontVariant`
@@ -201,7 +193,9 @@ export function TextInput({
           style={[
             inputTextStyle,
             {
-              color: segment.facet ? t.palette.primary_500 : t.atoms.text.color,
+              color: segment.facet
+                ? t.atoms.text_link.color
+                : t.atoms.text.color,
               marginTop: -1,
             },
           ]}>
@@ -217,7 +211,7 @@ export function TextInput({
         <RNTextInput
           testID="composerTextInput"
           ref={textInput}
-          onChangeText={onChangeText}
+          onChangeText={(newText: string) => void onChangeText(newText)}
           onSelectionChange={onSelectionChange}
           placeholder={placeholder}
           placeholderTextColor={t.atoms.text_contrast_low.color}
@@ -226,7 +220,6 @@ export function TextInput({
           allowFontScaling
           multiline
           scrollEnabled={false}
-          numberOfLines={2}
           // Note: should be the default value, but as of v1.104
           // it switched to "none" on Android
           autoCapitalize="sentences"

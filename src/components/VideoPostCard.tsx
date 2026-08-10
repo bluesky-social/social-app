@@ -9,8 +9,7 @@ import {
   AppBskyFeedPost,
   type ModerationDecision,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {formatCount} from '#/view/com/util/numeric/format'
@@ -52,7 +51,7 @@ export function VideoPostCard({
   onInteract?: () => void
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const embed = post.embed
   const {
     state: pressed,
@@ -118,8 +117,8 @@ export function VideoPostCard({
 
   return (
     <Link
-      accessibilityHint={_(msg`Views video in immersive mode`)}
-      label={_(msg`Video from ${author.handle}: ${text}`)}
+      accessibilityHint={l`Views video in immersive mode`}
+      label={l`Video from ${author.handle}: ${text}`}
       to={{
         screen: 'VideoFeed',
         params: {
@@ -174,9 +173,7 @@ export function VideoPostCard({
               />
               <View style={[a.align_center, a.gap_xs]}>
                 <Eye size="lg" fill="white" />
-                <Text style={[a.text_sm, {color: 'white'}]}>
-                  {_(msg`Hidden`)}
-                </Text>
+                <Text style={[a.text_sm, {color: 'white'}]}>{l`Hidden`}</Text>
               </View>
             </View>
           </View>
@@ -367,7 +364,7 @@ export function CompactVideoPostCard({
   onInteract?: () => void
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const embed = post.embed
   const {
     state: pressed,
@@ -398,7 +395,7 @@ export function CompactVideoPostCard({
 
   return (
     <Link
-      label={_(msg`View video`)}
+      label={l`View video`}
       to={{
         screen: 'VideoFeed',
         params: {
@@ -413,7 +410,8 @@ export function CompactVideoPostCard({
       onPressOut={onPressOut}
       style={[
         a.flex_col,
-        t.atoms.shadow_sm,
+        a.rounded_xl,
+        t.atoms.shadow_md,
         {
           alignItems: undefined,
           justifyContent: undefined,
@@ -424,7 +422,7 @@ export function CompactVideoPostCard({
           <View
             style={[
               a.justify_center,
-              a.rounded_lg,
+              a.rounded_xl,
               a.overflow_hidden,
               a.border,
               t.atoms.border_contrast_low,
@@ -458,9 +456,7 @@ export function CompactVideoPostCard({
               />
               <View style={[a.align_center, a.gap_xs]}>
                 <Eye size="lg" fill="white" />
-                <Text style={[a.text_sm, {color: 'white'}]}>
-                  {_(msg`Hidden`)}
-                </Text>
+                <Text style={[a.text_sm, {color: 'white'}]}>{l`Hidden`}</Text>
               </View>
             </View>
           </View>
@@ -469,7 +465,7 @@ export function CompactVideoPostCard({
           <View
             style={[
               a.justify_center,
-              a.rounded_lg,
+              a.rounded_xl,
               a.overflow_hidden,
               a.border,
               t.atoms.border_contrast_low,
@@ -485,10 +481,17 @@ export function CompactVideoPostCard({
             />
             <MediaInsetBorder />
 
-            <View style={[a.absolute, a.inset_0, t.atoms.shadow_sm]}>
+            <View style={[a.absolute, a.inset_0, t.atoms.shadow_md]}>
               <View style={[a.absolute, a.inset_0, a.p_sm, {bottom: 'auto'}]}>
                 <View
-                  style={[a.relative, a.rounded_full, {width: 24, height: 24}]}>
+                  style={[
+                    a.relative,
+                    a.rounded_full,
+                    {
+                      width: 24,
+                      height: 24,
+                    },
+                  ]}>
                   <UserAvatar
                     type="user"
                     size={24}
@@ -547,10 +550,10 @@ export function CompactVideoPostCardPlaceholder() {
   const black = getBlackColor(t)
 
   return (
-    <View style={[a.flex_1, t.atoms.shadow_sm]}>
+    <View style={[a.flex_1, t.atoms.shadow_md]}>
       <View
         style={[
-          a.rounded_lg,
+          a.rounded_xl,
           a.overflow_hidden,
           a.border,
           t.atoms.border_contrast_low,

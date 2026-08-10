@@ -3,8 +3,8 @@ import {Pressable, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import type Hls from 'hls.js'
 
+import {formatTime} from '#/lib/media/video/formatTime'
 import {clamp} from '#/lib/numbers'
 import {
   useAutoplayDisabled,
@@ -32,7 +32,8 @@ import {GifPresentationControls} from '../../GifPresentationControls'
 import {TimeIndicator} from '../TimeIndicator'
 import {ControlButton} from './ControlButton'
 import {Scrubber} from './Scrubber'
-import {formatTime, useVideoElement} from './utils'
+import {useVideoElement} from './utils'
+import {type ControlsProps} from './VideoControls.shared'
 import {VolumeControl} from './VolumeControl'
 
 export function Controls({
@@ -49,21 +50,7 @@ export function Controls({
   isGif,
   altText,
   updateCuePositions,
-}: {
-  videoRef: React.RefObject<HTMLVideoElement | null>
-  hlsRef: React.RefObject<Hls | undefined | null>
-  active: boolean
-  setActive: () => void
-  focused: boolean
-  setFocused: (focused: boolean) => void
-  onScreen: boolean
-  fullscreenRef: React.RefObject<HTMLDivElement | null>
-  hlsLoading: boolean
-  hasSubtitleTrack: boolean
-  isGif: boolean
-  altText?: string
-  updateCuePositions: (controlsVisible?: boolean) => void
-}) {
+}: ControlsProps) {
   const {
     play,
     pause,

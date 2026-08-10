@@ -1,6 +1,12 @@
-import {createContext, useContext, useMemo} from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useSyncExternalStore,
+} from 'react'
 import {Platform} from 'react-native'
-import {type Result} from '@growthbook/growthbook-react'
+import {type Result, type WidenPrimitives} from '@growthbook/growthbook-react'
 
 import {Logger} from '#/logger'
 import {
@@ -26,7 +32,7 @@ import {type Metrics, metrics} from '#/analytics/metrics'
 import * as refParams from '#/analytics/misc/refParams'
 import * as env from '#/env'
 import {useGeolocationServiceResponse} from '#/geolocation/service'
-import {device} from '#/storage'
+import {account, device} from '#/storage'
 
 export * as utils from '#/analytics/utils'
 export const features = {init, refresh}
@@ -61,6 +67,7 @@ export type AnalyticsContextType = {
   ) => void
   features: typeof Features & {
     enabled(feature: Features): boolean
+    getValue<T>(feature: Features, defaultValue: T): WidenPrimitives<T>
   }
 }
 export type AnalyticsBaseContextType = Omit<AnalyticsContextType, 'features'>
@@ -77,6 +84,7 @@ function createLogger(
     warn: logger.warn.bind(logger),
     error: logger.error.bind(logger),
     useChild: (context: Exclude<Logger['context'], undefined>) => {
+      // oxlint-disable-next-line react-hooks/exhaustive-deps
       return useMemo(() => createLogger(context, metadata), [context, metadata])
     },
     Context: Logger.Context,
@@ -121,6 +129,38 @@ Context.displayName = 'AnalyticsContext'
 export const setupDeviceId = getAndMigrateDeviceId()
 
 /**
+ * Reads the per-account cached `isBetaUser` flag for `did`, kept in sync with
+ * writes from `BetaUserStorageSync` and the beta settings toggle.
+ *
+ * This deliberately does not use `useStorage`, whose `useState` seeds once and
+ * only updates via the change listener. The consuming `AnalyticsContext` lives
+ * above the `<Fragment key={did}>` remount breaker, so on an account switch it
+ * re-renders (with a new did) rather than remounting. `useStorage` would keep
+ * serving the previous account's seeded value until a write happened to fire
+ * its listener, leaking a beta account's flag into a non-beta account. Reading
+ * via `useSyncExternalStore` re-evaluates `getSnapshot` every render, so the
+ * value is always correct for the current did.
+ */
+function useAccountIsBetaUser(did: string | undefined): boolean | undefined {
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      if (!did) return () => {}
+      const sub = account.addOnValueChangedListener(
+        [did, 'isBetaUser'],
+        onChange,
+      )
+      return () => sub.remove()
+    },
+    [did],
+  )
+  const getSnapshot = useCallback(() => {
+    if (!did) return undefined
+    return account.get([did, 'isBetaUser'])
+  }, [did])
+  return useSyncExternalStore(subscribe, getSnapshot)
+}
+
+/**
  * Analytics context provider. Decorates the parent analytics context with
  * additional metadata. Nesting should be done carefully and sparingly.
  */
@@ -141,6 +181,16 @@ export function AnalyticsContext({
   const sessionId = useSessionId()
   const geolocation = useGeolocationServiceResponse()
   const parentContext = useContext(Context)
+  /*
+   * `isBetaUser` is account-specific, so it's cached per account. Read it
+   * scoped to the did for this render's session (from the `metadata` prop when
+   * set, otherwise inherited from the parent context). Without a did (e.g.
+   * logged out, or the top-level context above the session provider) there's
+   * no value, so beta-gated features are never evaluated for an ineligible or
+   * absent account.
+   */
+  const did = metadata?.session?.did ?? parentContext.metadata.session?.did
+  const isBetaUser = useAccountIsBetaUser(did)
   const childContext = useMemo(() => {
     const combinedMetadata = {
       ...parentContext.metadata,
@@ -148,6 +198,7 @@ export function AnalyticsContext({
       base: {
         ...parentContext.metadata.base,
         sessionId,
+        isBetaUser,
       },
       geolocation,
     }
@@ -166,7 +217,7 @@ export function AnalyticsContext({
       },
     }
     return context
-  }, [sessionId, geolocation, parentContext, metadata])
+  }, [parentContext, metadata, sessionId, isBetaUser, geolocation])
   return <Context.Provider value={childContext}>{children}</Context.Provider>
 }
 
@@ -265,6 +316,7 @@ export function AnalyticsFeaturesContext({
       ...parentContext,
       features: {
         enabled: feats.isOn.bind(feats),
+        getValue: feats.getFeatureValue.bind(feats),
         ...Features,
       },
     }

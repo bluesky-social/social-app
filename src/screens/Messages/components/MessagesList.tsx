@@ -13,17 +13,15 @@ import {
   KeyboardGestureArea,
 } from 'react-native-keyboard-controller'
 import Animated, {
-  FadeIn,
-  runOnJS,
   type ScrollEvent,
   type SharedValue,
-  useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {
   type $Typed,
   type AppBskyEmbedRecord,
@@ -154,7 +152,7 @@ export function MessagesList({
   const t = useTheme()
 
   const textInputId = 'chat-input-' + useId()
-  const flatListRef = useAnimatedRef<ListMethods>()
+  const flatListRef = useRef<ListMethods | null>(null)
 
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
     () => new Set(),
@@ -187,6 +185,14 @@ export function MessagesList({
       listOpacity.set(0)
     }
   }, [hasScrolled, listOpacity])
+
+  // Recreate FadeIn for the footer with a shared value so we can start from a
+  // non-zero opacity instead of fully transparent. (Needed for GlassView to work properly)
+  const footerOpacity = useSharedValue(0.05)
+
+  useEffect(() => {
+    footerOpacity.set(withTiming(1, {duration: 200}))
+  }, [footerOpacity])
 
   const inputHeightUI = useSharedValue(0)
   const [inputHeightJS, setInputHeightJS] = useState(0)
@@ -496,7 +502,7 @@ export function MessagesList({
         (e.contentOffset.y > newMessagesPill.startContentOffset + 200 ||
           isAtBottom.get())
       ) {
-        runOnJS(setNewMessagesPill)({
+        scheduleOnRN(setNewMessagesPill, {
           show: false,
           startContentOffset: 0,
         })
@@ -754,6 +760,10 @@ export function MessagesList({
     opacity: listOpacity.get(),
   }))
 
+  const animatedFooterStyle = useAnimatedStyle(() => ({
+    opacity: footerOpacity.get(),
+  }))
+
   return (
     <InviteLinkDialogProvider convo={convoState.convo}>
       <MessageRepliesProvider scrollToMessage={scrollToMessage}>
@@ -842,7 +852,7 @@ export function MessagesList({
                 opened: 0,
               }}>
               {footer ?? (
-                <Animated.View entering={FadeIn.duration(200)}>
+                <Animated.View style={animatedFooterStyle}>
                   <ConversationFooter
                     convoState={convoState}
                     hasAcceptOverride={hasAcceptOverride}>

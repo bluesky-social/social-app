@@ -39,5 +39,7 @@ appId: xyz.blueskyweb.app
     text: Your report will be sent to Dev-env Moderation.*
 - tapOn:
     id: "report:submit"
-- assertNotVisible:
-    id: "report:dialog"
+- extendedWaitUntil:
+    notVisible:
+      id: "report:dialog"
+    timeout: 20000

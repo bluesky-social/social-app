@@ -5,9 +5,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
@@ -29,7 +27,7 @@ const TOTAL_AVATARS = 10
 
 export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
   const {currentAccount} = useSession()
@@ -79,7 +77,7 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
             size="tiny"
             color="secondary"
             shape="round"
-            label={_(msg`Dismiss getting started guide`)}
+            label={l`Dismiss getting started guide`}
             onPress={endProgressGuide}
             style={[a.bg_transparent, {marginTop: -6, marginRight: -6}]}>
             <ButtonIcon icon={Times} size="xs" />
@@ -107,14 +105,14 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
             <ProgressGuideTask
               current={guide.numLikes + 1}
               total={10 + 1}
-              title={_(msg`Like 10 posts`)}
-              subtitle={_(msg`Teach our algorithm what you like`)}
+              title={l`Like 10 posts`}
+              subtitle={l`Teach our algorithm what you like`}
             />
             <ProgressGuideTask
               current={guide.numFollows + 1}
               total={7 + 1}
-              title={_(msg`Follow 7 accounts`)}
-              subtitle={_(msg`Bluesky is better with friends!`)}
+              title={l`Follow 7 accounts`}
+              subtitle={l`Bluesky is better with friends!`}
             />
           </>
         )}

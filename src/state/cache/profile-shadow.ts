@@ -41,6 +41,7 @@ export type {Shadow} from './types'
 export interface ProfileShadow {
   followingUri: string | undefined
   muted: boolean | undefined
+  mutedOnlyReposts: boolean | undefined
   blockingUri: string | undefined
   verification: AppBskyActorDefs.VerificationState
   status: AppBskyActorDefs.StatusView | undefined
@@ -243,6 +244,11 @@ export function isProfileShadowApplied<
   if ('muted' in shadow) {
     if (profile.viewer?.muted !== shadow.muted) return false
   }
+  if ('mutedOnlyReposts' in shadow) {
+    if (profile.viewer?.mutedOnlyReposts !== shadow.mutedOnlyReposts) {
+      return false
+    }
+  }
   if ('blockingUri' in shadow) {
     if (profile.viewer?.blocking !== shadow.blockingUri) return false
   }
@@ -274,13 +280,17 @@ export function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
           ? shadow.followingUri
           : profile.viewer?.following,
       muted: 'muted' in shadow ? shadow.muted : profile.viewer?.muted,
+      mutedOnlyReposts:
+        'mutedOnlyReposts' in shadow
+          ? shadow.mutedOnlyReposts
+          : profile.viewer?.mutedOnlyReposts,
       blocking:
         'blockingUri' in shadow ? shadow.blockingUri : profile.viewer?.blocking,
       activitySubscription:
         'activitySubscription' in shadow
           ? shadow.activitySubscription
           : profile.viewer?.activitySubscription,
-    },
+    } satisfies AppBskyActorDefs.ViewerState,
     verification:
       'verification' in shadow ? shadow.verification : profile.verification,
     status:

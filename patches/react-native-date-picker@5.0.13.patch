@@ -15,3 +15,17 @@ index 480746eb7acfbe86f67547d9e1de7a5be4d5faf2..13d30cb547195993dfcb4005cc0d248d
  
  #endif
 -
+diff --git a/package.json b/package.json
+index 469386dc2e81ded8994818dd4340409da1396488..36460e4e303ae56534c4d389471fc827433c7028 100644
+--- a/package.json
++++ b/package.json
+@@ -70,9 +70,6 @@
+     "ios": {
+       "componentProvider": {
+         "RNDatePicker": "RNDatePicker"
+-      },
+-      "modulesProvider": {
+-        "RNDatePicker": "RNDatePickerManager"
+       }
+     }
+   }

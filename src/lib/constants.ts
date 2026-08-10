@@ -146,6 +146,9 @@ export const BSKY_FEED_OWNER_DIDS = [
   'did:plc:q6gjnaw2blty4crticxkmujt',
 ]
 
+export const TRENDING_DID = 'did:plc:qrz3lhbyuxbeilrc6nekdqme'
+export const TRENDING_HANDLE = 'trending.bsky.app'
+
 export const DISCOVER_FEED_URI =
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
 export const VIDEO_FEED_URI =
@@ -191,6 +194,7 @@ export const VIDEO_SERVICE = 'https://video.bsky.app'
 export const VIDEO_SERVICE_DID = 'did:web:video.bsky.app'
 
 export const VIDEO_MAX_DURATION_MS = 3 * 60 * 1000 // 3 minutes in milliseconds
+export const VIDEO_10_MINUTE_MAX_DURATION_MS = 10 * 60 * 1000
 /**
  * Maximum size of a video in megabytes, _not_ mebibytes. Backend uses
  * ISO megabytes.

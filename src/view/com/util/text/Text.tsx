@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {StyleSheet, type TextProps} from 'react-native'
-import {UITextView} from 'react-native-uitextview'
+import {UITextView} from '@bsky.app/react-native-uitextview'
 
 import {lh, s} from '#/lib/styles'
 import {type TypographyVariant, useTheme} from '#/lib/ThemeContext'

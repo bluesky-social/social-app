@@ -28,8 +28,10 @@ import * as Layout from '#/components/Layout'
 
 export type ListMethods = {
   scrollToTop: () => void
-  scrollToOffset: (options: {animated: boolean; offset: number}) => void
-  scrollToEnd: (options?: {animated?: boolean}) => void
+  // Signature kept compatible with FlatList's scrollToOffset (the native
+  // ListMethods type) so callers stay platform-agnostic.
+  scrollToOffset: (options: {animated?: boolean | null; offset: number}) => void
+  scrollToEnd: (options?: {animated?: boolean | null}) => void
   // Signature kept compatible with FlatList's scrollToIndex (the native
   // ListMethods type) so callers stay platform-agnostic. viewOffset is
   // accepted for parity but not currently used by the web implementation.
@@ -40,7 +42,8 @@ export type ListMethods = {
     viewPosition?: number
   }) => void
 }
-export type ListProps<ItemT> = Omit<
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ListProps<ItemT = any> = Omit<
   FlatListProps<ItemT>,
   | 'onScroll' // Use ScrollContext instead.
   | 'refreshControl' // Pass refreshing and/or onRefresh instead.
@@ -59,7 +62,7 @@ export type ListProps<ItemT> = Omit<
    */
   sideBorders?: boolean
 }
-export type ListRef = React.RefObject<View>
+export type ListRef = React.RefObject<ListMethods | null>
 
 const ON_ITEM_SEEN_WAIT_DURATION = 0.5e3 // when we consider post to  be "seen"
 const ON_ITEM_SEEN_INTERSECTION_OPTS = {
@@ -248,7 +251,13 @@ function ListImpl<ItemT>(
         getScrollableNode()?.scrollTo({top: 0})
       },
 
-      scrollToOffset({animated, offset}: {animated: boolean; offset: number}) {
+      scrollToOffset({
+        animated,
+        offset,
+      }: {
+        animated?: boolean | null
+        offset: number
+      }) {
         getScrollableNode()?.scrollTo({
           left: 0,
           top: offset,

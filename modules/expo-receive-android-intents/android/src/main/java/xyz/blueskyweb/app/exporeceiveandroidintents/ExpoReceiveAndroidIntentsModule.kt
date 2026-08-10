@@ -15,6 +15,7 @@ import java.io.FileOutputStream
 import java.net.URLEncoder
 
 private const val TAG = "ExpoReceiveAndroidIntents"
+private const val MAX_IMAGES = 10
 
 enum class AttachmentType {
   IMAGE,
@@ -100,12 +101,12 @@ class ExpoReceiveAndroidIntentsModule : Module() {
         intent
           .getParcelableArrayListExtra(Intent.EXTRA_STREAM, Uri::class.java)
           ?.filterIsInstance<Uri>()
-          ?.take(4)
+          ?.take(MAX_IMAGES)
       } else {
         intent
           .getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
           ?.filterIsInstance<Uri>()
-          ?.take(4)
+          ?.take(MAX_IMAGES)
       }
 
     val text = intent.getStringExtra(Intent.EXTRA_TEXT)

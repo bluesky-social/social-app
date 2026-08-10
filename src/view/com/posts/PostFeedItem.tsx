@@ -39,8 +39,8 @@ import {
   maybeApplyGalleryOffsetStyles,
 } from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
-import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
+import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed} from '#/components/Post/Embed'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
@@ -113,27 +113,27 @@ export function PostFeedItem({
   }
   if (richText && moderation) {
     return (
-      <FeedItemInner
-        // Safeguard from clobbering per-post state below:
-        key={postShadowed.uri}
-        post={postShadowed}
-        record={record}
-        reason={reason}
-        feedContext={feedContext}
-        reqId={reqId}
-        richText={richText}
-        parentAuthor={parentAuthor}
-        showReplyTo={showReplyTo}
-        moderation={moderation}
-        isThreadChild={isThreadChild}
-        isThreadLastChild={isThreadLastChild}
-        isThreadParent={isThreadParent}
-        hideTopBorder={hideTopBorder}
-        isParentBlocked={isParentBlocked}
-        isParentNotFound={isParentNotFound}
-        rootPost={rootPost}
-        onShowLess={onShowLess}
-      />
+      <ReportDialogMetadataContext.Provider key={postShadowed.uri}>
+        <FeedItemInner
+          post={postShadowed}
+          record={record}
+          reason={reason}
+          feedContext={feedContext}
+          reqId={reqId}
+          richText={richText}
+          parentAuthor={parentAuthor}
+          showReplyTo={showReplyTo}
+          moderation={moderation}
+          isThreadChild={isThreadChild}
+          isThreadLastChild={isThreadLastChild}
+          isThreadParent={isThreadParent}
+          hideTopBorder={hideTopBorder}
+          isParentBlocked={isParentBlocked}
+          isParentNotFound={isParentNotFound}
+          rootPost={rootPost}
+          onShowLess={onShowLess}
+        />
+      </ReportDialogMetadataContext.Provider>
     )
   }
   return null
@@ -420,7 +420,6 @@ let FeedItemInner = ({
                   isParentNotFound={isParentNotFound}
                 />
               )}
-            <LabelsOnMyPost post={post} />
             <PostContent
               moderation={moderation}
               richText={richText}
@@ -495,6 +494,7 @@ let PostContent = ({
       ignoreMute
       childContainerStyle={styles.contentHiderChild}>
       <PostAlerts
+        post={post}
         modui={moderation.ui('contentList')}
         style={[a.pb_xs]}
         additionalCauses={additionalPostAlerts}

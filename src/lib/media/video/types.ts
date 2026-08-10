@@ -8,6 +8,8 @@ export type VideoCompressSkipReason =
   | 'no-webcodecs'
   | 'compress-error-fallback'
 
+export type VideoUploadTransport = 'multipart' | 'legacy' | 'legacy-fallback'
+
 export type CompressedVideo = {
   uri: string
   mimeType: string
@@ -20,7 +22,7 @@ export type CompressedVideo = {
 }
 
 // Source container metadata read off the input before any encoding decision.
-// Same shape across native (expo-bluesky-video-compress probe) and web
+// Same shape across native (@bsky.app/video-compressor probe) and web
 // (mediabunny Input + track inspection). Numbers are raw - no bucketing.
 export type ProbedMetadata = {
   mimeType: string

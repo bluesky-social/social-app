@@ -2,9 +2,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {Keyboard, type StyleProp, type ViewStyle} from 'react-native'
 import {type AnimatedStyle} from 'react-native-reanimated'
 import {type AppBskyFeedPostgate} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import deepEqual from 'fast-deep-equal'
 
 import {isNetworkError} from '#/lib/strings/errors'
@@ -24,7 +22,6 @@ import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon} from '#/co
 import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group'
 import * as Tooltip from '#/components/Tooltip'
-import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {useThreadgateNudged} from '#/storage/hooks/threadgate-nudged'
@@ -43,11 +40,12 @@ export function ThreadgateBtn({
 
   style?: StyleProp<AnimatedStyle<ViewStyle>>
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const control = Dialog.useDialogControl()
   const [threadgateNudged, setThreadgateNudged] = useThreadgateNudged()
   const [showTooltip, setShowTooltip] = useState(false)
+  // eslint-disable-next-line react/hook-use-state
   const [tooltipWasShown] = useState(!threadgateNudged)
 
   useEffect(() => {
@@ -134,8 +132,8 @@ export function ThreadgateBtn({
     !postgate.embeddingRules || postgate.embeddingRules.length === 0
   const anyoneCanInteract = anyoneCanReply && anyoneCanQuote
   const label = anyoneCanInteract
-    ? _(msg`Anyone can interact`)
-    : _(msg`Interaction limited`)
+    ? l`Anyone can interact`
+    : l`Interaction limited`
 
   return (
     <>
@@ -150,9 +148,7 @@ export function ThreadgateBtn({
             testID="openReplyGateButton"
             onPress={onPress}
             label={label}
-            accessibilityHint={_(
-              msg`Opens a dialog to choose who can interact with this post`,
-            )}>
+            accessibilityHint={l`Opens a dialog to choose who can interact with this post`}>
             <ButtonIcon icon={anyoneCanInteract ? EarthIcon : GroupIcon} />
             <ButtonText numberOfLines={1} maxFontSizeMultiplier={2}>
               {label}
@@ -160,13 +156,11 @@ export function ThreadgateBtn({
             <ButtonIcon icon={TinyChevronIcon} size="2xs" />
           </Button>
         </Tooltip.Target>
-        <Tooltip.TextBubble>
-          <Text>
-            <Trans>Psst! You can edit who can interact with this post.</Trans>
-          </Text>
-        </Tooltip.TextBubble>
+        <Tooltip.BubbleText
+          label={l`Psst! You can edit who can interact with this post.`}>
+          <Trans>Psst! You can edit who can interact with this post.</Trans>
+        </Tooltip.BubbleText>
       </Tooltip.Outer>
-
       <PostInteractionSettingsControlledDialog
         control={control}
         onSave={() => {

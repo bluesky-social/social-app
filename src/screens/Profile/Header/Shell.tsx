@@ -60,7 +60,7 @@ let ProfileHeaderShell = ({
   const liveStatusControl = useDialogControl()
 
   const aviRef = useAnimatedRef()
-  const bannerRef = useAnimatedRef<Animated.View>()
+  const bannerRef = useAnimatedRef()
 
   const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
@@ -73,7 +73,7 @@ let ProfileHeaderShell = ({
   const _openLightbox = useCallback(
     (
       uri: string,
-      thumbRef: AnimatedRef<any>,
+      thumbRef: AnimatedRef,
       type: 'circle-avi' | 'rect-avi' | 'image' = 'circle-avi',
     ) => {
       openLightbox({
@@ -228,7 +228,6 @@ let ProfileHeaderShell = ({
       {!isPlaceholderProfile &&
         (isMe ? (
           <LabelsOnMe
-            type="account"
             labels={profile.labels}
             style={[
               a.px_lg,
@@ -240,6 +239,7 @@ let ProfileHeaderShell = ({
         ) : (
           <ProfileHeaderAlerts
             moderation={moderation}
+            profile={profile}
             style={[
               a.px_lg,
               a.pt_xs,

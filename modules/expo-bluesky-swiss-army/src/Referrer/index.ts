@@ -5,6 +5,6 @@ export function getGooglePlayReferrerInfoAsync(): Promise<GooglePlayReferrerInfo
   throw new NotImplementedError()
 }
 
-export function getReferrerInfo(): ReferrerInfo | null {
+export function getReferrerInfo(): Promise<ReferrerInfo | null> {
   throw new NotImplementedError()
 }

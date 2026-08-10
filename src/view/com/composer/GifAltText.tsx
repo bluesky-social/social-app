@@ -162,7 +162,6 @@ function AltTextInner({
                   onChangeText={onChange}
                   defaultValue={altText}
                   multiline
-                  numberOfLines={3}
                   autoFocus
                   onKeyPress={({nativeEvent}) => {
                     if (nativeEvent.key === 'Escape') {

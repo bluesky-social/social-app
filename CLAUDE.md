@@ -30,7 +30,7 @@ pnpm ios                # Run on iOS
 # Testing & Quality
 # IMPORTANT: Always use these pnpm scripts, never call the underlying tools directly
 pnpm test               # Run Jest tests
-pnpm lint               # Run ESLint
+pnpm lint               # Run Oxlint
 pnpm typecheck          # Run TypeScript type checking
 pnpm prettier           # Run Prettier for code formatting
 

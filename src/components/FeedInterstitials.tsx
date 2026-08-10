@@ -23,6 +23,7 @@ import {
   atoms as a,
   native,
   useBreakpoints,
+  useGutters,
   useTheme,
   type ViewStyleProp,
   web,
@@ -60,10 +61,10 @@ function CardOuter({
         a.flex_1,
         a.w_full,
         a.p_md,
-        a.rounded_lg,
+        a.rounded_xl,
         a.border,
         t.atoms.bg,
-        t.atoms.shadow_sm,
+        t.atoms.shadow_md,
         t.atoms.border_contrast_low,
         !gtMobile && {
           width: MOBILE_CARD_WIDTH,
@@ -204,6 +205,7 @@ export function ProfileGrid({
   const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
   const {gtMobile} = useBreakpoints()
+  const gutters = useGutters([0, 'base'])
   const followDialogControl = useDialogControl()
 
   const isLoading = isSuggestionsLoading || !moderationOpts
@@ -414,7 +416,7 @@ export function ProfileGrid({
                       moderationOpts={moderationOpts}
                       logContext="FeedInterstitial"
                       withIcon={false}
-                      style={[a.rounded_sm]}
+                      style={[a.rounded_full]}
                       onFollow={() => {
                         ax.metric('suggestedUser:follow', {
                           logContext,
@@ -458,40 +460,43 @@ export function ProfileGrid({
       pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
       <View
         style={[
-          a.px_lg,
+          gutters,
           a.pt_md,
           a.flex_row,
           a.align_center,
           a.justify_between,
         ]}
         pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
-        <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
-          <Trans>Suggested for you</Trans>
-        </Text>
-        <Button
-          label={l`See more suggested profiles`}
-          onPress={() => {
-            followDialogControl.open()
-            ax.metric('suggestedUser:seeMore', {
-              logContext,
-              recId,
-            })
-          }}>
-          {({hovered}) => (
-            <Text
-              style={[
-                a.text_sm,
-                {color: t.palette.primary_500},
-                hovered &&
-                  web({
-                    textDecorationLine: 'underline',
-                    textDecorationColor: t.palette.primary_500,
-                  }),
-              ]}>
-              <Trans>See more</Trans>
-            </Text>
-          )}
-        </Button>
+        <View style={[a.w_full, a.pl_xs, a.flex_row, a.align_center]}>
+          <Text style={[a.flex_1, a.text_md, a.font_semi_bold]}>
+            <Trans>Suggested for you</Trans>
+          </Text>
+          <Button
+            label={l`See more suggested profiles`}
+            onPress={() => {
+              followDialogControl.open()
+              ax.metric('suggestedUser:seeMore', {
+                logContext,
+                recId,
+              })
+            }}>
+            {({hovered, pressed}) => (
+              <Text
+                style={[
+                  a.text_sm,
+                  a.font_medium,
+                  {
+                    color:
+                      hovered || pressed
+                        ? t.palette.contrast_800
+                        : t.palette.contrast_500,
+                  },
+                ]}>
+                <Trans>See more</Trans>
+              </Text>
+            )}
+          </Button>
+        </View>
       </View>
       <FollowDialogWithoutGuide control={followDialogControl} />
       <LayoutAnimationConfig skipExiting skipEntering>
@@ -540,7 +545,7 @@ function SeeMoreSuggestedProfilesCard({onPress}: {onPress: () => void}) {
         a.justify_center,
         a.gap_sm,
         a.p_md,
-        a.rounded_lg,
+        a.rounded_xl,
         {width: FINAL_CARD_WIDTH},
       ]}>
       <ButtonIcon icon={ArrowRight} size="lg" />

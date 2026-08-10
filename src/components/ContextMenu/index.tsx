@@ -30,7 +30,6 @@ import {KeyboardEvents} from 'react-native-keyboard-controller'
 import Animated, {
   clamp,
   interpolate,
-  runOnJS,
   type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -44,6 +43,7 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
+import {scheduleOnRN} from 'react-native-worklets'
 import {Image, type ImageErrorEventData} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -89,14 +89,12 @@ const SPRING_IN: WithSpringConfig = {
   mass: 0.75,
   damping: 300,
   stiffness: 1200,
-  restDisplacementThreshold: 0.01,
 }
 
 const SPRING_OUT: WithSpringConfig = {
   mass: IS_IOS ? 1.25 : 0.75,
   damping: 150,
   stiffness: 1000,
-  restDisplacementThreshold: 0.01,
 }
 
 /**
@@ -168,7 +166,7 @@ export function Root({children}: {children: React.ReactNode}) {
                 // note: return location has to be reset on open,
                 // rather than on close, otherwise there's a flicker
                 // where the reanimated update is faster than the react render
-                runOnJS(onCompletedClose)()
+                scheduleOnRN(onCompletedClose)
               }
             }),
           )
@@ -333,7 +331,7 @@ export function Trigger({
     () => hoveredItemSV.get(),
     (hovered, prev) => {
       if (hovered !== prev) {
-        runOnJS(setHoveredMenuItem)(hovered)
+        scheduleOnRN(setHoveredMenuItem, hovered)
       }
     },
   )
@@ -345,7 +343,7 @@ export function Trigger({
       .averageTouches(true)
       .onStart(() => {
         'worklet'
-        runOnJS(open)('full')
+        scheduleOnRN(open, 'full')
       })
       .onUpdate(evt => {
         'worklet'
@@ -359,7 +357,7 @@ export function Trigger({
         // as the menu may have slid into place beneath their finger
         const item = hoveredItemSV.get()
         if (item) {
-          runOnJS(onTouchUpMenuItem)(item)
+          scheduleOnRN(onTouchUpMenuItem, item)
         }
       })
   }, [open, hoverablesSV, onTouchUpMenuItem, hoveredItemSV, translationSV])

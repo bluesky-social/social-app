@@ -55,3 +55,15 @@ index 06829bd00dbded262e1871aaf6db3ae0cfa9d1b1..1b158185a6d7e907aa18ddc806902fcc
      invalidate();
    }
  
+diff --git a/lib/typescript/ReactNativeSVG.web.d.ts b/lib/typescript/ReactNativeSVG.web.d.ts
+deleted file mode 100644
+index e2001975fa97398fb159d2f85f45d067200f575b..0000000000000000000000000000000000000000
+diff --git a/lib/typescript/ReactNativeSVG.web.d.ts.map b/lib/typescript/ReactNativeSVG.web.d.ts.map
+deleted file mode 100644
+index c81af4416af5ee3eaca77b51bfc2952b30d49c8a..0000000000000000000000000000000000000000
+diff --git a/lib/typescript/elements.web.d.ts b/lib/typescript/elements.web.d.ts
+deleted file mode 100644
+index cf4083fbf749b2b002fb649d80b33ac74763847b..0000000000000000000000000000000000000000
+diff --git a/lib/typescript/elements.web.d.ts.map b/lib/typescript/elements.web.d.ts.map
+deleted file mode 100644
+index 29602aa47ad903bc7aaa111462a61dd862c4476d..0000000000000000000000000000000000000000
