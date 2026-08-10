@@ -108,7 +108,7 @@ describe('reducer NCII qualification', () => {
 })
 
 describe('reducer video timestamp', () => {
-  const labeler = {} as AppBskyLabelerDefs.LabelerViewDetailed
+  const labeler = {} as app.bsky.labeler.defs.LabelerViewDetailed
   const opted: ReportState = {...initialState, includeVideoTimestamp: true}
 
   it('is off by default', () => {
