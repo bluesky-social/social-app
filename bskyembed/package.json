@@ -36,6 +36,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@preact/preset-vite": "^2.10.6",
+    "@types/node": "^24.12.2",
     "@typescript-eslint/parser": "^8.64.0",
     "@vitejs/plugin-legacy": "^8.2.1",
     "autoprefixer": "^10.5.4",
@@ -56,5 +57,17 @@
   },
   "resolutions": {
     "@types/estree": "1.0.6"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

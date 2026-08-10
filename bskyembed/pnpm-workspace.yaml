@@ -1,8 +1,7 @@
 allowBuilds:
-  core-js: true
-  unrs-resolver: true
+  core-js: false
+  unrs-resolver: false
 minimumReleaseAgeExclude:
   - '@atproto/*'
   - '@atproto-labs/*'
-  - '@bsky.app/*'
-  - 'bsky-sdk-preview@0.0.1-preview.1'
+  - '@bsky/*'
