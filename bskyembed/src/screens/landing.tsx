@@ -2,8 +2,8 @@ import '../index.css'
 
 import {AtUriString, Client, type HandleString} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
-import {api} from '@bsky.app/sdk'
-import {app, com} from '@bsky.app/sdk/lexicons'
+import {api} from '@bsky/sdk'
+import {app, com} from '@bsky/sdk/lexicons'
 import {h, render} from 'preact'
 import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 

@@ -1,4 +1,4 @@
-import {app} from '@bsky.app/sdk/lexicons'
+import {app} from '@bsky/sdk/lexicons'
 
 export type VerificationState = {
   role: 'default' | 'verifier'

@@ -1,5 +1,5 @@
-import {app} from '@bsky.app/sdk/lexicons'
-import {RichText} from '@bsky.app/sdk/richtext'
+import {app} from '@bsky/sdk/lexicons'
+import {RichText} from '@bsky/sdk/richtext'
 import {ComponentChild, h} from 'preact'
 
 import {Container} from '#/components/container'

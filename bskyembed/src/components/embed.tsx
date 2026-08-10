@@ -1,4 +1,4 @@
-import {app} from '@bsky.app/sdk/lexicons'
+import {app} from '@bsky/sdk/lexicons'
 import {ComponentChildren, h} from 'preact'
 import {useMemo} from 'preact/hooks'
 
