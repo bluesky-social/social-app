@@ -1,8 +1,8 @@
 import '../index.css'
 
 import {Client, isAtUriString} from '@atproto/lex'
-import {api} from '@bsky.app/sdk'
-import {app} from '@bsky.app/sdk/lexicons'
+import {api} from '@bsky/sdk'
+import {app} from '@bsky/sdk/lexicons'
 import {h, render} from 'preact'
 
 import {applyTheme, initSystemColorMode} from '#/color-mode'

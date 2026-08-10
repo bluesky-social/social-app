@@ -1,4 +1,4 @@
-import {app} from '@bsky.app/sdk/lexicons'
+import {app} from '@bsky/sdk/lexicons'
 
 export const CONTENT_LABELS = ['porn', 'sexual', 'nudity', 'graphic-media']
 
