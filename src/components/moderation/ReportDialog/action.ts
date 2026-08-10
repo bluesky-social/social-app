@@ -1,3 +1,4 @@
+import {BSKY_LABELER_DID} from '@atproto/api'
 import {type AtUriString, type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -9,7 +10,6 @@ import {com} from '#/lexicons'
 import {NEW_TO_OLD_REASONS_MAP, REPORT_MOD_TOOL_NAME} from './const'
 import {type ReportState} from './state'
 import {type ParsedReportSubject} from './types'
-import {BSKY_LABELER_DID} from '@atproto/api'
 
 type ReportInput = com.atproto.moderation.createReport.$InputBody
 
