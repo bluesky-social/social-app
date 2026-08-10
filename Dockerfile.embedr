@@ -1,42 +1,29 @@
-FROM golang:1.26-bookworm AS build-env
+#
+# Stage 1: build the embed bundle with pnpm.
+#
+# Uses the official pnpm image. Node is auto-downloaded by pnpm using the
+# `devEngines.runtime` field in package.json (onFail: "download").
+#
+FROM ghcr.io/pnpm/pnpm:11 AS web-build
 
-WORKDIR /usr/src/social-app
+WORKDIR /app
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Node
-ENV NODE_VERSION=24.19.0
-ENV NVM_DIR=/usr/share/nvm
-
-# Go
-ENV GODEBUG="netdns=go"
-ENV GOOS="linux"
-ARG TARGETARCH
-ENV GOARCH=${TARGETARCH:-amd64}
-ENV CGO_ENABLED=1
-ENV GOEXPERIMENT="loopvar"
-
-# CI environment for pnpm
-ENV CI=true
+#
+# pnpm config
+#
+ENV CI=1
+# use the pnpm version specified in package.json
+ENV pnpm_config_pm_on_fail=download
 
 COPY . .
 
 #
-# Generate the JavaScript webpack. NOTE: this will change
+# Generate the embed bundle. NOTE: this will change
 #
-RUN mkdir --parents $NVM_DIR && \
-  wget \
-    --output-document=/tmp/nvm-install.sh \
-    https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh && \
-  bash /tmp/nvm-install.sh
-
-RUN \. "$NVM_DIR/nvm.sh" && \
-  nvm install $NODE_VERSION && \
-  nvm use $NODE_VERSION && \
-  npm install --global pnpm@11.21.0 && \
-  pnpm install --frozen-lockfile && \
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
   cd bskyembed && pnpm install --frozen-lockfile && cd .. && \
-  pnpm intl:build && \
   pnpm build-embed
 
 # DEBUG
@@ -48,8 +35,21 @@ RUN touch bskyweb/static/css/empty.txt
 RUN touch bskyweb/static/media/empty.txt
 
 #
-# Generate the embedr Go binary.
+# Stage 2: build the embedr Go binary, embedding the assets from stage 1.
 #
+FROM golang:1.26-bookworm AS go-build
+
+WORKDIR /usr/src/social-app
+
+ENV GODEBUG="netdns=go"
+ENV GOOS="linux"
+ARG TARGETARCH
+ENV GOARCH=${TARGETARCH:-amd64}
+ENV CGO_ENABLED=1
+ENV GOEXPERIMENT="loopvar"
+
+COPY --from=web-build /app/bskyweb ./bskyweb
+
 RUN cd bskyweb/ && \
   go mod download && \
   go mod verify
@@ -62,6 +62,9 @@ RUN cd bskyweb/ && \
     -o /embedr \
     ./cmd/embedr
 
+#
+# Stage 3: runtime image.
+#
 FROM debian:bookworm-slim
 
 ENV GODEBUG=netdns=go
@@ -75,7 +78,7 @@ RUN apt-get update && apt-get install --yes \
 ENTRYPOINT ["dumb-init", "--"]
 
 WORKDIR /embedr
-COPY --from=build-env /embedr /usr/bin/embedr
+COPY --from=go-build /embedr /usr/bin/embedr
 
 CMD ["/usr/bin/embedr"]
 
