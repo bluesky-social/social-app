@@ -2,6 +2,21 @@
   "name": "bskyembed",
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=24.18.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.21.0",
+      "onFail": "error"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "^24.18.0",
+      "onFail": "download"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "dev-snippet": "tsc --project tsconfig.snippet.json && serve -s dist -p 3000 -n",
