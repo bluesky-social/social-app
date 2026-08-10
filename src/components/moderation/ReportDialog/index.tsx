@@ -644,7 +644,7 @@ function Inner(
               </View>
 
               {videoTimestampSeconds !== undefined &&
-                state.selectedLabeler?.creator.did === BSKY_LABELER_DID && (
+                state.selectedLabeler?.creator.did === api.moderation.did && (
                   <IncludeVideoTimestampToggle
                     seconds={videoTimestampSeconds}
                     selected={state.includeVideoTimestamp}
