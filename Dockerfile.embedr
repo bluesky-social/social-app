@@ -23,6 +23,8 @@ COPY . .
 # Generate the embed bundle. NOTE: this will change
 #
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+  pnpm install --frozen-lockfile && \
+  export PATH="/app/node_modules/.bin:$PATH" && \
   cd bskyembed && pnpm install --frozen-lockfile && cd .. && \
   pnpm build-embed
 
