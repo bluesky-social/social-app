@@ -8,7 +8,7 @@ import {useAnalytics} from '#/analytics'
 /**
  * How far the inline badge is nudged below the text baseline to optically
  * center it. The containing `RichText` must reserve matching room via
- * `suffixOffset`, or iOS clips the overflow.
+ * `suffixOffset`, or native clips the overflow.
  */
 export const POST_NUMBER_INLINE_OFFSET = 6
 

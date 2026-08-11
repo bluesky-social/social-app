@@ -32,10 +32,10 @@ export type RichTextProps = TextStyleProp &
      * How far below the text baseline `suffix` extends, in px.
      *
      * Inline views inside `Text` sit with their bottom edge on the baseline, so
-     * a suffix nudged below it overflows the `Text`'s measured bounds and iOS
-     * clips it. We reserve this much room as bottom padding and cancel it with
-     * an equal negative margin, so the suffix can paint without moving anything
-     * after it. Pass the same offset the suffix nudges itself by.
+     * a suffix nudged below it overflows the `Text`'s measured bounds and
+     * native clips it. We reserve this much room as bottom padding and cancel
+     * it with an equal negative margin, so the suffix can paint without moving
+     * anything after it. Pass the same offset the suffix nudges itself by.
      *
      * Overrides any `paddingBottom`/`marginBottom` set via `style`.
      */
