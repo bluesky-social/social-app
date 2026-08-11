@@ -11,6 +11,7 @@ import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 const MAX_FEEDBACK_LENGTH = 300
 
@@ -41,6 +42,7 @@ function BetaFeaturesFeedbackDialogInner({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
   const control = Dialog.useDialogContext()
 
   const [feedback, setFeedback] = useState('')
@@ -72,6 +74,10 @@ function BetaFeaturesFeedbackDialogInner({
       return Promise.resolve()
     },
     onSuccess: () => {
+      ax.metric('betaFeatures:feedback:submit', {
+        betaFeatureKeys,
+        feedbackLength: feedback.trim().length,
+      })
       control.close(() => {
         setFeedback('')
         Toast.show(l`Thanks for your feedback!`)

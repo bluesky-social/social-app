@@ -1507,4 +1507,25 @@ export type Events = {
   }
 
   'post:likedBy:click': {}
+
+  /*
+   * Beta features settings screen
+   */
+
+  // user toggled "Enable beta features"; fired only after the preference
+  // write succeeds
+  'betaFeatures:toggle': {
+    enabled: boolean
+    /** Gate keys of beta features active for this user at toggle time */
+    betaFeatureKeys: string[]
+  }
+  // user pressed the "Share feedback" button, opening the dialog
+  'betaFeatures:feedback:open': {
+    betaFeatureKeys: string[]
+  }
+  // user submitted feedback and it was sent successfully
+  'betaFeatures:feedback:submit': {
+    betaFeatureKeys: string[]
+    feedbackLength: number
+  }
 }
