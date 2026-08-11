@@ -23,9 +23,6 @@ jobs:
         uses: pnpm/setup@84cb39b217b10273981911c288cd62326dc7c6d2 # v2.0.2
         with:
           cache: true
-          install: false
-      - name: 📦 pnpm install
-        run: pnpm install --frozen-lockfile
       - name: 🔤 Extract language strings
         run: pnpm intl:extract
       - name: 📝 Create commit
