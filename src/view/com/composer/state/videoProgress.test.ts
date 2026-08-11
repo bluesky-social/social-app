@@ -1,8 +1,19 @@
 import {
   advanceVideoProgress,
+  didSkipVideoCompression,
   videoProgressForPhase,
   videoProgressWithinPhase,
 } from './videoProgress'
+
+describe('didSkipVideoCompression', () => {
+  it('distinguishes a real skip from a failed compression attempt', () => {
+    expect(didSkipVideoCompression(undefined)).toBe(false)
+    expect(didSkipVideoCompression('below-byte-threshold')).toBe(true)
+    expect(didSkipVideoCompression('no-webcodecs')).toBe(true)
+    expect(didSkipVideoCompression('gif')).toBe(true)
+    expect(didSkipVideoCompression('compress-error-fallback')).toBe(false)
+  })
+})
 
 describe('videoProgressForPhase', () => {
   it('maps each phase onto one continuous timeline', () => {

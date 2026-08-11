@@ -125,6 +125,7 @@ import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as EmojiPicker from '#/components/EmojiPicker'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
@@ -2717,17 +2718,25 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
 
   return (
     <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
-      <ProgressCircle
-        size={30}
-        borderWidth={1}
-        borderColor={t.atoms.border_contrast_low.borderColor}
-        color={
-          state.status === 'error'
-            ? t.palette.negative_500
-            : t.palette.primary_500
-        }
-        progress={wheelProgress}
-      />
+      {state.status === 'done' ? (
+        <Animated.View
+          entering={ZoomIn.duration(300)}
+          style={[a.align_center, a.justify_center, {height: 30, width: 30}]}>
+          <CircleCheckIcon size="lg" fill={t.palette.primary_500} />
+        </Animated.View>
+      ) : (
+        <ProgressCircle
+          size={30}
+          borderWidth={1}
+          borderColor={t.atoms.border_contrast_low.borderColor}
+          color={
+            state.status === 'error'
+              ? t.palette.negative_500
+              : t.palette.primary_500
+          }
+          progress={wheelProgress}
+        />
+      )}
       <Text style={[a.font_semi_bold, a.ml_sm]}>{text}</Text>
     </ToolbarWrapper>
   )

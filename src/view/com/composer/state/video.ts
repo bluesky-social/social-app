@@ -17,7 +17,11 @@ import {uploadVideo} from '#/lib/media/video/upload'
 import {createVideoAgent} from '#/lib/media/video/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {advanceVideoProgress, videoProgressForPhase} from './videoProgress'
+import {
+  advanceVideoProgress,
+  didSkipVideoCompression,
+  videoProgressForPhase,
+} from './videoProgress'
 
 type CaptionsTrack = {lang: string; file: File}
 
@@ -331,7 +335,7 @@ export async function processVideo(
   dispatch({
     type: 'compressing_to_uploading',
     video,
-    compressionSkipped: video.passthroughReason !== undefined,
+    compressionSkipped: didSkipVideoCompression(video.passthroughReason),
     signal,
   })
 

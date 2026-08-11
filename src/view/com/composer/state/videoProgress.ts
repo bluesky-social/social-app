@@ -1,3 +1,5 @@
+import {type VideoCompressSkipReason} from '#/lib/media/video/types'
+
 export type VideoProgressPhase =
   | 'compressing'
   | 'uploading'
@@ -12,6 +14,18 @@ const PHASE_RANGES: Record<VideoProgressPhase, [number, number]> = {
   uploading: [0.3, 0.5],
   uploadingWithoutCompression: [0, 0.5],
   processing: [0.5, 1],
+}
+
+export function didSkipVideoCompression(
+  passthroughReason: VideoCompressSkipReason | undefined,
+): boolean {
+  // The web compressor can return the original file after reporting partial
+  // compression progress. Keep that case on the post-compression upload band
+  // so the global indicator cannot jump backwards.
+  return (
+    passthroughReason !== undefined &&
+    passthroughReason !== 'compress-error-fallback'
+  )
 }
 
 export function videoProgressForPhase(
