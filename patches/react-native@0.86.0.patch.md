@@ -61,6 +61,8 @@ Upstream issue #43388 still open as of Aug 2026. Haptics cannot be verified on t
 physical device only. Spinner position verified via frame logs; haptic on this variant NOT yet
 device-verified.
 
+Opened issue in RN repo: https://github.com/react/react-native/issues/57843
+
 ## RCTEnhancedScrollView.mm / RCTScrollViewComponentView.mm Patch - centerContent insets stale after content resize on New Arch
 
 **TODO: Remove after bumping React Native to 0.87+** (fixed upstream by facebook/react-native#56832,
