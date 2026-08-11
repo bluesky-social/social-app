@@ -17,6 +17,10 @@ ENV CI=1
 # use the pnpm version specified in package.json
 ENV pnpm_config_pm_on_fail=download
 
+# Metro's web export needs far more heap than Node's default (~1GB in the
+# container), which crashes the bundle step with a V8 OOM.
+ENV NODE_OPTIONS="--max-old-space-size=8192"
+
 # The latest git hash of the preview branch on render.com
 # https://render.com/docs/docker-secrets#environment-variables-in-docker-builds
 ARG RENDER_GIT_COMMIT
