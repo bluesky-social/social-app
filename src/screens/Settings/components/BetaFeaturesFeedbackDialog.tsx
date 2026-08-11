@@ -62,19 +62,8 @@ function BetaFeaturesFeedbackDialogInner({
         throw new Error('Sentry is disabled; feedback was not sent')
       }
       Sentry.captureFeedback(
-        {
-          message: feedback.trim(),
-        },
-        {
-          captureContext: {
-            user: {
-              name: currentAccount?.handle,
-            },
-            contexts: {
-              betaFeatures: {keys: betaFeatureKeys},
-            },
-          },
-        },
+        {name: currentAccount?.handle, message: feedback.trim()},
+        {captureContext: {contexts: {betaFeatures: {keys: betaFeatureKeys}}}},
       )
       return Promise.resolve()
     },
