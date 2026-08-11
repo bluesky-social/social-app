@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from 'react'
+import {createContext, use, useEffect, useState} from 'react'
 
 type StateContext = number
 
@@ -16,6 +16,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   return <stateContext.Provider value={tick}>{children}</stateContext.Provider>
 }
 
-export function useTickEveryMinute() {
-  return useContext(stateContext)
+/**
+ * Returns a timestamp that updates once per minute, re-rendering the caller
+ * on every tick. Pass `enabled: false` to skip subscribing entirely - the
+ * caller then never re-renders on tick and receives a stable `0`. Relies on
+ * React 19 `use()`, which may be called conditionally.
+ */
+export function useTickEveryMinute(enabled: boolean = true) {
+  if (enabled) {
+    return use(stateContext)
+  }
+  return 0
 }
