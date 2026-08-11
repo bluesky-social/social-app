@@ -1,4 +1,25 @@
 /**
+ * React Compiler tags generated nodes with loc = Symbol(GeneratedSource),
+ * which breaks the structuredClone Metro performs on the AST when
+ * EXPO_UNSTABLE_TREE_SHAKING is enabled. Strip them after all other
+ * transforms have run.
+ */
+const stripSymbolLocs = () => ({
+  post(file) {
+    file.path.traverse({
+      enter(path) {
+        if (typeof path.node.loc === 'symbol') {
+          path.node.loc = undefined
+        }
+      },
+    })
+    if (typeof file.ast.program.loc === 'symbol') {
+      file.ast.program.loc = undefined
+    }
+  },
+})
+
+/**
  * @param {import("@babel/core").ConfigAPI} api
  * @returns {import("@babel/core").InputOptions}
  */
@@ -45,6 +66,7 @@ module.exports = function (api) {
         : []),
       ...(api.env('production') ? ['transform-remove-console'] : []),
 
+      stripSymbolLocs,
       'react-native-worklets/plugin', // NOTE: this plugin MUST be last
     ],
   }
