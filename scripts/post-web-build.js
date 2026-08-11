@@ -148,7 +148,10 @@ copyDir(path.join(distDir, '_expo'), path.join(bskywebStatic, '_expo'))
 copyDir(path.join(distDir, 'assets'), path.join(bskywebStatic, 'assets'))
 
 // Upload source maps to Sentry
-if (process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_AUTH_TOKEN != 'unknown') {
+if (
+  process.env.SENTRY_AUTH_TOKEN &&
+  process.env.SENTRY_AUTH_TOKEN != 'unknown'
+) {
   const release =
     process.env.SENTRY_RELEASE ||
     require(path.join(projectRoot, 'package.json')).version
