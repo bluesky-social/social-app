@@ -76,7 +76,7 @@ export function ThreadItemPostNumber({
         style={[
           a.text_xs,
           a.font_medium,
-          t.atoms.text_contrast_high,
+          t.atoms.text_contrast_medium,
           {
             fontVariant: ['tabular-nums'],
           },
