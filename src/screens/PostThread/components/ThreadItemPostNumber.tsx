@@ -61,9 +61,9 @@ export function ThreadItemPostNumber({
         inline
           ? platform({
               native: {transform: [{translateY: POST_NUMBER_INLINE_OFFSET}]},
-              web: {top: -2},
+              web: {top: -2, marginBottom: -2},
             })
-          : {top: -2},
+          : {top: -2, marginBottom: -2},
       ]}>
       <Text
         accessibilityLabel={l({
