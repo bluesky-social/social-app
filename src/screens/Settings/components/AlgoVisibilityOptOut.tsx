@@ -1,79 +1,31 @@
-import {useCallback} from 'react'
 import {View} from 'react-native'
-import {type $Typed, ComAtprotoLabelDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {
-  useProfileQuery,
-  useProfileUpdateMutation,
-} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
+  useContentVisibilityMutation,
+  useContentVisibilityQuery,
+} from '#/state/queries/content-visibility'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
-
-const NO_PROMOTE_LABEL = '!no-promote'
+import {useAnalytics} from '#/analytics'
 
 export function AlgoVisibilityOptOut() {
   const t = useTheme()
   const {_} = useLingui()
-  const {currentAccount} = useSession()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
-  const updateProfile = useProfileUpdateMutation()
+  const ax = useAnalytics()
+  const {data, isPending: isQueryPending} = useContentVisibilityQuery()
+  const updateContentVisibility = useContentVisibilityMutation()
 
-  const isOptedOut =
-    profile?.labels?.some(label => label.val === NO_PROMOTE_LABEL) || false
-  const canToggle = profile && !updateProfile.isPending
+  const isOptedOut = data?.hideFromAlgorithmicRecommendations ?? false
+  const canToggle = !isQueryPending && !updateContentVisibility.isPending
 
-  const onToggleOptOut = useCallback(() => {
-    if (!profile) {
-      return
-    }
-    let wasAdded = false
-    updateProfile.mutate({
-      profile,
-      updates: existing => {
-        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.validate(
-          existing.labels,
-          ComAtprotoLabelDefs.validateSelfLabels,
-        )
-          ? existing.labels
-          : {
-              $type: 'com.atproto.label.defs#selfLabels',
-              values: [],
-            }
-
-        const hasLabel = labels.values.some(
-          label => label.val === NO_PROMOTE_LABEL,
-        )
-        if (hasLabel) {
-          labels.values = labels.values.filter(
-            label => label.val !== NO_PROMOTE_LABEL,
-          )
-        } else {
-          wasAdded = true
-          labels.values.push({val: NO_PROMOTE_LABEL})
-        }
-
-        if (labels.values.length === 0) {
-          delete existing.labels
-        } else {
-          existing.labels = labels
-        }
-
-        return existing
-      },
-      checkCommitted: response => {
-        const exists = !!response.data.labels?.some(
-          label => label.val === NO_PROMOTE_LABEL,
-        )
-        return exists === wasAdded
-      },
-    })
-  }, [updateProfile, profile])
+  const onToggleOptOut = (hide: boolean) => {
+    ax.metric('contentVisibility:algorithmicRecommendations:change', {hide})
+    updateContentVisibility.mutate(hide)
+  }
 
   return (
     <View style={[a.flex_1, a.gap_sm]}>
