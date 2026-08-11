@@ -53,6 +53,7 @@ export function ThreadItemPostNumber({
         a.rounded_full,
         t.atoms.bg_contrast_50,
         native(a.py_2xs),
+        !inline && a.self_start,
         {
           paddingLeft: 5,
           paddingRight: 5,
