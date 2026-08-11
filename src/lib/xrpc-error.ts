@@ -8,6 +8,18 @@ import {
 } from '@atproto/lex'
 
 /**
+ * Same nsid means `e` was thrown for this method schema, so `e` can be
+ * treated as an `XrpcResponseError<M>` - which is what lets the SDK's
+ * `matchesSchemaErrors()` narrow `e.error` to M's declared errors.
+ */
+function isThrownFor<M extends Procedure | Query>(
+  e: XrpcResponseError,
+  schema: M,
+): e is XrpcResponseError<M> {
+  return e.method.nsid === schema.nsid
+}
+
+/**
  * The lexicon error code carried by `e`, narrowed to the errors DECLARED by
  * `method`, or `undefined` when `e` is not such an error.
  *
@@ -39,12 +51,9 @@ export function matchXrpcError<M extends Procedure | Query>(
   if (!(e instanceof XrpcResponseError)) {
     return undefined
   }
-  const schema: Procedure | Query = getMain(method)
-  const thrownFor: Procedure | Query = e.method
-  if (thrownFor.nsid !== schema.nsid) {
-    return undefined
+  const schema = getMain(method)
+  if (isThrownFor(e, schema) && e.matchesSchemaErrors()) {
+    return e.error
   }
-  return schema.errors?.includes(e.error)
-    ? (e.error as InferMethodError<M>)
-    : undefined
+  return undefined
 }
