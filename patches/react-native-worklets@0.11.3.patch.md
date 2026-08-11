@@ -1,4 +1,4 @@
-# react-native-worklets@0.8.3.patch
+# react-native-worklets@0.11.3.patch
 
 Backport of https://github.com/software-mansion/react-native-reanimated/pull/10167
 ("fix(Worklets): web scheduleOnUI implementation on errors").

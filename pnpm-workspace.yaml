@@ -36,7 +36,7 @@ patchedDependencies:
   'react-native-reanimated@4.5.3': patches/react-native-reanimated@4.5.3.patch
   'react-native-screens@4.26.2': patches/react-native-screens@4.26.2.patch
   'react-native-svg@15.15.4': patches/react-native-svg@15.15.4.patch
-  react-native-worklets@0.8.3: patches/react-native-worklets@0.8.3.patch
+  react-native-worklets@0.11.3: patches/react-native-worklets@0.11.3.patch
   'react-native@0.86.0': patches/react-native@0.86.0.patch
 minimumReleaseAgeExclude:
   - '@atproto/*'
