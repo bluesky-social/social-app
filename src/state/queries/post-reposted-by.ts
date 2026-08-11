@@ -10,6 +10,7 @@ import {
 } from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
+import {useAutoPagination} from './util'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -20,7 +21,7 @@ export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function usePostRepostedByQuery(resolvedUri: string | undefined) {
   const agent = useAgent()
-  return useInfiniteQuery<
+  const query = useInfiniteQuery<
     AppBskyFeedGetRepostedBy.OutputSchema,
     Error,
     InfiniteData<AppBskyFeedGetRepostedBy.OutputSchema>,
@@ -40,6 +41,13 @@ export function usePostRepostedByQuery(resolvedUri: string | undefined) {
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: !!resolvedUri,
   })
+  const itemCount =
+    query.data?.pages.reduce(
+      (count, page) => count + page.repostedBy.length,
+      0,
+    ) ?? 0
+  useAutoPagination(query, itemCount, PAGE_SIZE)
+  return query
 }
 
 export function* findAllProfilesInQueryData(

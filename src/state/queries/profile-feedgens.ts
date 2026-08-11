@@ -8,6 +8,7 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
+import {useAutoPagination} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
 import {useModerationOpts} from '../preferences/moderation-opts'
 
@@ -25,7 +26,7 @@ export function useProfileFeedgensQuery(
   const moderationOpts = useModerationOpts()
   const enabled = opts?.enabled !== false && Boolean(moderationOpts)
   const agent = useAgent()
-  return useInfiniteQuery<
+  const query = useInfiniteQuery<
     AppBskyFeedGetActorFeeds.OutputSchema,
     Error,
     InfiniteData<AppBskyFeedGetActorFeeds.OutputSchema>,
@@ -66,4 +67,8 @@ export function useProfileFeedgensQuery(
       }
     },
   })
+  const itemCount =
+    query.data?.pages.reduce((count, page) => count + page.feeds.length, 0) ?? 0
+  useAutoPagination(query, itemCount, PAGE_SIZE)
+  return query
 }

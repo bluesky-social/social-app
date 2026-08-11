@@ -1,3 +1,4 @@
+import {useEffect, useRef} from 'react'
 import {
   type AppBskyActorDefs,
   AppBskyEmbedRecord,
@@ -13,6 +14,57 @@ import {
 } from '@tanstack/react-query'
 
 import * as bsky from '#/types/bsky'
+
+type AutoPaginationQuery = {
+  data?: {pageParams: unknown[]}
+  isLoading: boolean
+  isRefetching: boolean
+  isFetchingNextPage: boolean
+  hasNextPage: boolean
+  fetchNextPage: () => Promise<unknown>
+}
+
+export function useAutoPagination(
+  query: AutoPaginationQuery,
+  itemCount: number,
+  pageSize: number,
+) {
+  const lastItemCount = useRef(0)
+  const wantedItemCount = useRef(pageSize)
+  const attemptCount = useRef(0)
+
+  useEffect(() => {
+    if (itemCount !== lastItemCount.current) {
+      if (itemCount < lastItemCount.current) {
+        wantedItemCount.current = itemCount
+      }
+      lastItemCount.current = itemCount
+    }
+
+    if (query.isLoading || query.isRefetching) {
+      wantedItemCount.current = pageSize
+    } else if (query.isFetchingNextPage) {
+      if (itemCount > wantedItemCount.current) {
+        wantedItemCount.current = itemCount + pageSize
+      }
+    } else if (query.hasNextPage) {
+      if (itemCount < wantedItemCount.current) {
+        const pageParams = query.data?.pageParams
+        const repeatedCursor =
+          pageParams &&
+          pageParams.length > 1 &&
+          Object.is(pageParams.at(-1), pageParams.at(-2))
+        if (repeatedCursor) return
+        attemptCount.current++
+        if (attemptCount.current < 50) {
+          void query.fetchNextPage()
+        }
+      } else {
+        attemptCount.current = 0
+      }
+    }
+  }, [itemCount, pageSize, query])
+}
 
 export type StructuredQueryKey<T extends Record<string, unknown>> = readonly [
   string,

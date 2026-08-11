@@ -5,6 +5,7 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
+import {useAutoPagination} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
 import {useModerationOpts} from '../preferences/moderation-opts'
 
@@ -18,7 +19,7 @@ export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
   const moderationOpts = useModerationOpts()
   const enabled = opts?.enabled !== false && Boolean(moderationOpts)
   const agent = useAgent()
-  return useInfiniteQuery<
+  const query = useInfiniteQuery<
     AppBskyGraphGetLists.OutputSchema,
     Error,
     InfiniteData<AppBskyGraphGetLists.OutputSchema>,
@@ -55,4 +56,8 @@ export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
       }
     },
   })
+  const itemCount =
+    query.data?.pages.reduce((count, page) => count + page.lists.length, 0) ?? 0
+  useAutoPagination(query, itemCount, PAGE_SIZE)
+  return query
 }

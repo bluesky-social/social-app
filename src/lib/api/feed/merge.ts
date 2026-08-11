@@ -213,10 +213,9 @@ class MergeFeedSource {
     const res = await this._getFeed(this.cursor, n)
     if (res.success) {
       this.cursor = res.data.cursor
+      this.hasMore = Boolean(this.cursor)
       if (res.data.feed.length) {
         this.queue = this.queue.concat(res.data.feed)
-      } else {
-        this.hasMore = false
       }
     } else {
       this.hasMore = false

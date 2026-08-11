@@ -13,6 +13,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {useAutoPagination} from '#/state/queries/util'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/components/Toast'
 
@@ -22,7 +23,7 @@ export const RQKEY_getNotificationDeclaration = ['notification-declaration']
 export function useActivitySubscriptionsQuery() {
   const agent = useAgent()
 
-  return useInfiniteQuery({
+  const query = useInfiniteQuery({
     queryKey: RQKEY_getActivitySubscriptions,
     queryFn: async ({pageParam}) => {
       const response =
@@ -34,6 +35,13 @@ export function useActivitySubscriptionsQuery() {
     initialPageParam: undefined as string | undefined,
     getNextPageParam: prev => prev.cursor,
   })
+  const itemCount =
+    query.data?.pages.reduce(
+      (count, page) => count + page.subscriptions.length,
+      0,
+    ) ?? 0
+  useAutoPagination(query, itemCount, 50)
+  return query
 }
 
 export function useNotificationDeclarationQuery() {
