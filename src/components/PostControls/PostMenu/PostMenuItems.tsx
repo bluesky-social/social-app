@@ -494,6 +494,13 @@ let PostMenuItems = ({
     void openLink(url)
   }
 
+  const onLabelReply = () => {
+    const url = `https://docs.google.com/forms/d/e/1FAIpQLScWa03XbS_knVbSjnc4DENACN5A2YvBZjtjrpI1XdDbK7d3Ow/viewform?entry.1843100496=${toShareUrl(
+      href,
+    )}`
+    void openLink(url)
+  }
+
   const onSignIn = () => requireSignIn(() => {})
 
   const onPressHideTranslation = () => clearTranslation()
@@ -618,6 +625,15 @@ let PostMenuItems = ({
               <Menu.ItemText>{l`Assign topic for algo`}</Menu.ItemText>
               <Menu.ItemIcon icon={AtomIcon} position="right" />
             </Menu.Item>
+            {isReply && (
+              <Menu.Item
+                testID="postDropdownLabelReplyBtn"
+                label={l`Label reply for algo`}
+                onPress={onLabelReply}>
+                <Menu.ItemText>{l`Label reply for algo`}</Menu.ItemText>
+                <Menu.ItemIcon icon={AtomIcon} position="right" />
+              </Menu.Item>
+            )}
           </>
         )}
 
