@@ -39,6 +39,12 @@ import {logger} from '#/logger'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {
+  clearFollowingFeedPosition,
+  getFollowingFeedPosition,
+  saveFollowingFeedPosition,
+  useFollowingFeedResumeEnabled,
+} from '#/state/feed-position'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {STALE} from '#/state/queries'
 import {
@@ -212,6 +218,12 @@ export type PostFeedRef = {
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
 
+/*
+ * When restoring the last read position in the Following feed, fetch at most
+ * this many pages while looking for the anchor post before giving up.
+ */
+const RESTORE_MAX_PAGES = 6
+
 let PostFeed = ({
   feed,
   description,
@@ -358,6 +370,22 @@ let PostFeed = ({
     isScrolledDownRef.current = isScrolledDown
     onScrolledDownChange?.(isScrolledDown)
   }
+
+  const [resumeEnabled] = useFollowingFeedResumeEnabled()
+  /**
+   * The post to restore the Following feed position to, read once at mount.
+   * Restoration is pending until the anchor is found (or we give up);
+   * position saves are paused while pending so the stored anchor isn't
+   * overwritten before we've scrolled to it.
+   */
+  // oxlint-disable-next-line react/hook-use-state
+  const [restoreAnchorUri] = useState(() =>
+    feed === 'following' && resumeEnabled && currentAccount
+      ? getFollowingFeedPosition(currentAccount.did)
+      : undefined,
+  )
+  const restorePendingRef = useRef(restoreAnchorUri != null)
+  const restoreScrollRetriesRef = useRef(0)
 
   const myDid = currentAccount?.did || ''
   const onPostCreated = useCallback(() => {
@@ -749,6 +777,101 @@ let PostFeed = ({
     trendingIndices,
   ])
 
+  /*
+   * Restore the last read position on cold start. The anchor post may be
+   * several pages down, so keep fetching (up to RESTORE_MAX_PAGES) until it
+   * shows up in the feed, then scroll to it.
+   */
+  useEffect(() => {
+    if (!restorePendingRef.current || !restoreAnchorUri || !currentAccount) {
+      return
+    }
+    if (!data) return
+    /*
+     * Bail if the user already scrolled away, or if an explicit refresh
+     * (soft reset, pull-to-refresh, "Load new posts") cleared the saved
+     * position while we were looking for the anchor.
+     */
+    if (
+      isScrolledDownRef.current ||
+      getFollowingFeedPosition(currentAccount.did) !== restoreAnchorUri
+    ) {
+      restorePendingRef.current = false
+      ax.metric('feed:positionRestored', {
+        outcome: 'aborted',
+        pagesFetched: data.pages.length,
+      })
+      return
+    }
+    const index = feedItems.findIndex(
+      row =>
+        row.type === 'sliceItem' &&
+        row.slice.items[row.indexInSlice].uri === restoreAnchorUri,
+    )
+    if (index >= 0) {
+      restorePendingRef.current = false
+      scrollElRef?.current?.scrollToIndex({
+        index,
+        animated: false,
+        viewOffset: headerOffset,
+      })
+      ax.metric('feed:positionRestored', {
+        outcome: 'restored',
+        depth: index,
+        pagesFetched: data.pages.length,
+      })
+    } else if (
+      isError ||
+      !hasNextPage ||
+      data.pages.length >= RESTORE_MAX_PAGES
+    ) {
+      // the anchor post is gone or too far down - leave the user at the top
+      restorePendingRef.current = false
+      ax.metric('feed:positionRestored', {
+        outcome: 'not-found',
+        pagesFetched: data.pages.length,
+      })
+    } else if (!isFetchingNextPage) {
+      void fetchNextPage()
+    }
+  }, [
+    restoreAnchorUri,
+    currentAccount,
+    data,
+    feedItems,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    scrollElRef,
+    headerOffset,
+    ax,
+  ])
+
+  const onScrollToIndexFailed = useCallback(
+    (info: {index: number; averageItemLength: number}) => {
+      /*
+       * Native FlatList can't scroll to an index it hasn't rendered yet. Jump
+       * to an estimated offset, then retry once the region has rendered.
+       */
+      scrollElRef?.current?.scrollToOffset({
+        offset: info.averageItemLength * info.index,
+        animated: false,
+      })
+      if (restoreScrollRetriesRef.current < 3) {
+        restoreScrollRetriesRef.current += 1
+        setTimeout(() => {
+          scrollElRef?.current?.scrollToIndex({
+            index: info.index,
+            animated: false,
+            viewOffset: headerOffset,
+          })
+        }, 100)
+      }
+    },
+    [scrollElRef, headerOffset],
+  )
+
   // events
   // =
   //
@@ -756,6 +879,9 @@ let PostFeed = ({
   const refreshFeed = async () => {
     if (!enabled) return
 
+    if (feed === 'following' && currentAccount) {
+      clearFollowingFeedPosition(currentAccount.did)
+    }
     ax.metric('feed:refresh', {
       feedType: feedType,
       feedUrl: feed,
@@ -1028,6 +1154,24 @@ let PostFeed = ({
     (item: FeedRow) => {
       feedFeedback.onItemSeen(item)
 
+      /*
+       * Track the most recently viewed post as the anchor to restore to on
+       * next cold start. Paused while a restore is pending so the target
+       * isn't overwritten by posts seen at the top of the feed.
+       */
+      if (
+        item.type === 'sliceItem' &&
+        feed === 'following' &&
+        resumeEnabled &&
+        currentAccount &&
+        !restorePendingRef.current
+      ) {
+        saveFollowingFeedPosition(
+          currentAccount.did,
+          item.slice.items[item.indexInSlice].uri,
+        )
+      }
+
       // Events that should fire exactly once for every new post, regardless of
       // its position within a slice or video grid row.
       const onPostSeen = (post: AppBskyFeedDefs.PostView) => {
@@ -1131,7 +1275,15 @@ let PostFeed = ({
         }
       }
     },
-    [feedFeedback, feed, liveNowConfig, getPostPosition, ax],
+    [
+      feedFeedback,
+      feed,
+      liveNowConfig,
+      getPostPosition,
+      ax,
+      resumeEnabled,
+      currentAccount,
+    ],
   )
 
   return (
@@ -1154,6 +1306,7 @@ let PostFeed = ({
         onScrolledDownChange={handleScrolledDownChange}
         onEndReached={() => void onEndReached()}
         onEndReachedThreshold={2} // number of posts left to trigger load more
+        onScrollToIndexFailed={IS_NATIVE ? onScrollToIndexFailed : undefined}
         removeClippedSubviews={true}
         extraData={extraData}
         desktopFixedHeight={

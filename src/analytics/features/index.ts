@@ -93,6 +93,23 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
           }),
         ),
       }
+    case Features.FollowingFeedResumeEnable:
+      return {
+        key: feature,
+        name: i18n._(
+          msg({
+            message: 'Remember your place',
+            comment:
+              'Name for a feature flag (Reopen the Following feed at the last post you read.)',
+          }),
+        ),
+        description: i18n._(
+          msg({
+            message: 'Reopen the Following feed at the last post you read.',
+            comment: 'Description of a feature flag (Remember your place)',
+          }),
+        ),
+      }
     case Features.CanonicalPostNumberingEnable:
       return {
         key: feature,

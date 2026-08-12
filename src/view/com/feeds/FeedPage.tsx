@@ -19,6 +19,7 @@ import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {type AllNavigatorParams} from '#/lib/routes/types'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
+import {clearFollowingFeedPosition} from '#/state/feed-position'
 import {useSetHomeBadge} from '#/state/home-badge'
 import {type FeedSourceInfo} from '#/state/queries/feed'
 import {
@@ -63,7 +64,7 @@ export function FeedPage({
   feedInfo: FeedSourceInfo
 }) {
   const ax = useAnalytics()
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
   const queryClient = useQueryClient()
@@ -104,13 +105,24 @@ export function FeedPage({
       scrollToTop()
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
+      if (feed === 'following' && currentAccount) {
+        clearFollowingFeedPosition(currentAccount.did)
+      }
       ax.metric('feed:refresh', {
         feedType: feed.split('|')[0],
         feedUrl: feed,
         reason: 'soft-reset',
       })
     }
-  }, [ax, navigation, isPageFocused, scrollToTop, queryClient, feed])
+  }, [
+    ax,
+    navigation,
+    isPageFocused,
+    scrollToTop,
+    queryClient,
+    feed,
+    currentAccount,
+  ])
 
   // fires when page within screen is activated/deactivated
   useEffect(() => {
@@ -128,12 +140,15 @@ export function FeedPage({
     scrollToTop()
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
+    if (feed === 'following' && currentAccount) {
+      clearFollowingFeedPosition(currentAccount.did)
+    }
     ax.metric('feed:refresh', {
       feedType: feed.split('|')[0],
       feedUrl: feed,
       reason: 'load-latest',
     })
-  }, [ax, scrollToTop, feed, queryClient])
+  }, [ax, scrollToTop, feed, queryClient, currentAccount])
 
   const shouldPrefetch = IS_NATIVE && isPageAdjacent
   const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI

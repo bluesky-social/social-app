@@ -6,6 +6,7 @@ import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
+import {useFollowingFeedResumeEnabled} from '#/state/feed-position'
 import {
   usePreferencesQuery,
   useSetFeedViewPreferencesMutation,
@@ -15,9 +16,11 @@ import {Admonition} from '#/components/Admonition'
 import * as Toggle from '#/components/forms/Toggle'
 import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
+import {Clock_Stroke2_Corner0_Rounded as ClockIcon} from '#/components/icons/Clock'
 import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '#/components/icons/Quote'
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import * as Layout from '#/components/Layout'
+import {useAnalytics} from '#/analytics'
 import * as SettingsList from './components/SettingsList'
 
 type Props = NativeStackScreenProps<
@@ -26,6 +29,7 @@ type Props = NativeStackScreenProps<
 >
 export function FollowingFeedPreferencesScreen({}: Props) {
   const {_} = useLingui()
+  const ax = useAnalytics()
 
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setFeedViewPref, variables} =
@@ -47,6 +51,8 @@ export function FollowingFeedPreferencesScreen({}: Props) {
     variables?.lab_mergeFeedEnabled ??
     preferences?.feedViewPrefs?.lab_mergeFeedEnabled,
   )
+
+  const [resumeEnabled, setResumeEnabled] = useFollowingFeedResumeEnabled()
 
   return (
     <Layout.Screen testID="followingFeedPreferencesScreen">
@@ -120,6 +126,22 @@ export function FollowingFeedPreferencesScreen({}: Props) {
               <Toggle.Platform />
             </SettingsList.Item>
           </Toggle.Item>
+          {ax.features.enabled(ax.features.FollowingFeedResumeEnable) && (
+            <Toggle.Item
+              type="checkbox"
+              name="remember-place"
+              label={_(msg`Remember your place in the feed`)}
+              value={resumeEnabled}
+              onChange={setResumeEnabled}>
+              <SettingsList.Item>
+                <SettingsList.ItemIcon icon={ClockIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Remember your place in the feed</Trans>
+                </SettingsList.ItemText>
+                <Toggle.Platform />
+              </SettingsList.Item>
+            </Toggle.Item>
+          )}
           <SettingsList.Divider />
           <SettingsList.Group>
             <SettingsList.ItemIcon icon={BeakerIcon} />
