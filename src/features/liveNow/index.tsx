@@ -97,7 +97,13 @@ export function useLiveNowConfig(): LiveNowConfig {
 
 export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
   const shadowed = useMaybeProfileShadow(actor)
-  const tick = useTickEveryMinute()
+  /*
+   * The minute tick only exists to re-validate an existing status's expiry,
+   * so actors without a status record skip the subscription entirely. This
+   * keeps the every-minute tick from re-rendering every post in a feed.
+   */
+  const hasStatus = !!(shadowed && 'status' in shadowed && shadowed.status)
+  const tick = useTickEveryMinute(hasStatus)
   const config = useLiveNowConfig()
   const moderationOpts = useModerationOpts()
 
