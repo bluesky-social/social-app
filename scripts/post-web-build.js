@@ -85,8 +85,7 @@ if (!interRegular || !interItalic) {
   )
 }
 
-
-const interFontPath = "/assets/assets/fonts/inter/";
+const interFontPath = '/assets/assets/fonts/inter/'
 /*
  * The static index.html references the fonts by their unhashed names, but
  * Metro emits them content-hashed. Rewrite dist/index.html in place so the
