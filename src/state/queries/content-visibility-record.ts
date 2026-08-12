@@ -1,5 +1,5 @@
 export const CONTENT_VISIBILITY_COLLECTION =
-  'app.bsky.actor.contentVisibility' as const
+  'app.bsky.actor.contentVisibilityDeclaration' as const
 export const CONTENT_VISIBILITY_RKEY = 'self'
 
 export type ContentVisibilityRecord = {
