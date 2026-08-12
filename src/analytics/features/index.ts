@@ -82,8 +82,8 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
         key: feature,
         name: i18n._(
           msg({
-            message: '10-minute video uploads',
-            comment: 'Name for a feature flag (10-minute video uploads)',
+            message: 'Longer videos',
+            comment: 'Name for a feature flag (longer videos)',
           }),
         ),
         description: i18n._(
