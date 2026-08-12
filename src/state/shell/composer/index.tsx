@@ -2,6 +2,7 @@ import {createContext, useContext, useMemo, useState} from 'react'
 import {
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
+  type AppBskyRichtextFacet,
   type AppBskyUnspeccedGetPostThreadV2,
   type ModerationDecision,
 } from '@atproto/api'
@@ -23,6 +24,7 @@ export interface ComposerOptsPostRef {
   uri: string
   cid: string
   text: string
+  facets?: AppBskyRichtextFacet.Main[]
   langs?: string[]
   author: AppBskyActorDefs.ProfileViewBasic
   embed?: AppBskyFeedDefs.PostView['embed']
