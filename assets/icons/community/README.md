@@ -1,6 +1,6 @@
 The icons in this directory are the marks of third-party
 services that appear in the Bluesky app — [Leaflet](https://leaflet.pub),
-[Offprint](https://offprint.net), pckt, standard-site, and
+[Offprint](https://offprint.net), [pckt](https://pckt.blog), [Standard.site](https://standard.site), and
 [Germ Network](https://germnetwork.com).
 
 **These marks belong to their respective owners.** They are not Bluesky trademarks, they are not

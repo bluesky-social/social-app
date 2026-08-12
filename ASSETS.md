@@ -69,7 +69,7 @@ See [`assets/icons/README.md`](./assets/icons/README.md).
 
 Our name, logo, butterfly mark, logotype, and app icons are trademarks of Bluesky Social PBC.
 They are not licensed to you under the MIT license or by this document. Use of them is governed
-by our Trademark Policy and Brand Guidelines.
+by our [Trademark Policy](https://bsky.social/about/support/trademarks) and [Brand Guidelines](https://bsky.social/about/support/branding).
 
 You may refer to Bluesky by name to describe interoperability or origin — for example, "a client
 for Bluesky," or "based on the Bluesky app." You may not use our marks as the identity of your
@@ -126,7 +126,7 @@ nominative-use basis or on permission from the mark owner.
 - `assets/icons/apple_logo.svg` — Apple Inc.
 - `assets/icons/android_logo.svg` — Google LLC
 - `assets/icons/community/` — Leaflet, Offprint, pckt (`pckt.svg`, `pckt-full.svg`),
-  standard-site, and Germ Network (`germ_logo.webp`)
+  Standard.site, and Germ Network (`germ_logo.webp`)
 
 Apple's and Google's marks in particular carry their own brand guidelines governing size,
 spacing, and permitted contexts. If you ship a sign-in button or a store badge, follow theirs,
