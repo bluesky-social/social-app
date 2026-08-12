@@ -763,7 +763,9 @@ let PostFeed = ({
     })
     try {
       await truncateAndInvalidate(queryClient, RQKEY(feed, feedParams))
-      onHasNew?.(false)
+      if (onHasNew) {
+        onHasNew(false)
+      }
     } catch (err) {
       logger.error('Failed to refresh posts feed', {message: err})
     }
