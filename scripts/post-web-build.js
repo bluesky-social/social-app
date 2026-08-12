@@ -85,8 +85,29 @@ if (!interRegular || !interItalic) {
   )
 }
 
-const interRegularPath = `{{ staticCDNHost }}/static/assets/assets/fonts/inter/${interRegular}`
-const interItalicPath = `{{ staticCDNHost }}/static/assets/assets/fonts/inter/${interItalic}`
+
+const interFontPath = "/assets/assets/fonts/inter/";
+/*
+ * The static index.html references the fonts by their unhashed names, but
+ * Metro emits them content-hashed. Rewrite dist/index.html in place so the
+ * font preload and @font-face URLs resolve when serving dist/ directly.
+ */
+const fixedIndexHtml = indexHtml
+  .replaceAll(
+    '/assets/assets/fonts/inter/InterVariable.woff2',
+    `${interFontPath}${interRegular}`,
+  )
+  .replaceAll(
+    '/assets/assets/fonts/inter/InterVariable-Italic.woff2',
+    `${interFontPath}${interItalic}`,
+  )
+if (fixedIndexHtml !== indexHtml) {
+  console.log('Rewriting font paths in dist/index.html to hashed filenames')
+  fs.writeFileSync(path.join(distDir, 'index.html'), fixedIndexHtml)
+}
+
+const interRegularPath = `{{ staticCDNHost }}/static${interFontPath}${interRegular}`
+const interItalicPath = `{{ staticCDNHost }}/static${interFontPath}${interItalic}`
 
 const fontsHtml = `<link rel="preload" as="font" type="font/woff2" href="${interRegularPath}" crossorigin>
 <style>

@@ -94,8 +94,8 @@
     "export": "expo export --dump-sourcemap && pnpm upload-native-sourcemaps",
     "upload-native-sourcemaps": "pnpm exec sentry-expo-upload-sourcemaps dist",
     "make-deploy-bundle": "bash scripts/bundleUpdate.sh",
-    "generate-webpack-stats-file": "EXPO_PUBLIC_GENERATE_STATS=1 pnpm build-web",
-    "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 pnpm build-web",
+    "generate-web-stats": "EXPO_ATLAS=1 pnpm build-web",
+    "open-analyzer": "npx expo-atlas .expo/atlas.jsonl",
     "icons:optimize": "svgo -f ./assets/icons",
     "prettier": "prettier --check ."
   },
@@ -170,6 +170,7 @@
     "expo-age-range": "57.0.2",
     "expo-application": "~57.0.2",
     "expo-asset": "~57.0.7",
+    "expo-atlas": "^0.4.3",
     "expo-blur": "~57.0.2",
     "expo-build-properties": "~57.0.7",
     "expo-camera": "~57.0.3",
