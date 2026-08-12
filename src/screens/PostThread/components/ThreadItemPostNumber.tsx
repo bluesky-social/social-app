@@ -6,9 +6,8 @@ import {atoms as a, ios, platform, useTheme} from '#/alf'
 import {useAnalytics} from '#/analytics'
 
 /**
- * How far the inline badge is nudged below the text baseline to optically
- * center it. The containing `RichText` must reserve matching room via
- * `suffixOffset`, or native clips the overflow.
+ * How far the inline badge is nudged below the text baseline. Android's
+ * containing `RichText` reserves matching room via `suffixOffset`.
  */
 export const POST_NUMBER_INLINE_OFFSET = 6
 
