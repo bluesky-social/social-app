@@ -57,7 +57,7 @@ Please be sure to:
 - Change all branding in the repository and UI to clearly differentiate from Bluesky.
 - Change any support links (feedback, email, terms of service, etc) to your own systems.
 - Replace any analytics or error-collection systems with your own so we don't get super confused.
-- Replace the load-screen illustration in `assets/splash/`. It is commissioned artwork licensed to Bluesky alone, and our MIT license does not cover it.
+- Replace the landing-screen illustration in `assets/illustrations/`. It is commissioned artwork licensed to Bluesky alone, and our MIT license does not cover it.
 - Source your own UI icons. The glyph set in `assets/icons/` is licensed to us by a third party for our own use, and that license does not extend to you.
 - Replace the Bluesky logo, app icons, and other brand assets. Our trademarks are not licensed with the code.
 

@@ -24,12 +24,11 @@ on its own terms, which travel with the files.
 
 ## 1. Commissioned artwork — licensed to Bluesky only
 
-**`assets/splash/`**
+**`assets/illustrations/`**
 
-The load-screen illustration, in light and dark variants. Used by
-`src/view/com/auth/SplashScreen.tsx` (`illustration-mobile.png`, `illustration-mobile-dark.png`)
-and by `expo-splash-screen` via `app.config.js` (`splash.png`, `splash-dark.png`,
-`android-splash-logo-white.png`).
+The landing-screen illustration, in light and dark variants, used by
+`src/view/com/auth/SplashScreen.tsx` (`illustration-mobile.png` and
+`illustration-mobile-dark.png`).
 
 This artwork was commissioned by Bluesky Social PBC from illustrator Owen D. Pomery, through
 his agent Brilliant Artists Ltd. Copyright remains with the artist. Our license is limited to
@@ -39,7 +38,7 @@ sublicense the artwork or to distribute modified versions of it.
 **If you are forking this repository, replace these files.** They are not available for
 third-party licensing while our license runs, so please do not contact the artist or his agent
 to request permission — the answer is constrained by our agreement, not by their willingness.
-See [`assets/splash/README.md`](./assets/splash/README.md).
+See [`assets/illustrations/README.md`](./assets/illustrations/README.md).
 
 ## 2. Licensed icon system — not ours to pass on
 
@@ -83,6 +82,9 @@ supports it.
 - `assets/icon-android-foreground.png`
 - `assets/icon-android-monochrome.png`
 - `assets/icon-android-notification.png`
+- `assets/splash/splash.png`
+- `assets/splash/splash-dark.png`
+- `assets/splash/android-splash-logo-white.png`
 - `assets/icons/logomark.svg`
 - `assets/icons/newskie.svg`
 - `assets/icons/verifiedCheck.svg`
@@ -172,7 +174,7 @@ See [`assets/images/README.md`](./assets/images/README.md).
 
 You have our blessing to fork this application. To do it cleanly:
 
-1. **Replace `assets/splash/`.** Commissioned artwork, licensed to Bluesky only. See
+1. **Replace `assets/illustrations/`.** Commissioned artwork, licensed to Bluesky only. See
    [Section 1](#1-commissioned-artwork--licensed-to-bluesky-only).
 2. **Source your own UI icons.** The glyph set in `assets/icons/` is licensed to us for our own
    use. See [Section 2](#2-licensed-icon-system--not-ours-to-pass-on).
