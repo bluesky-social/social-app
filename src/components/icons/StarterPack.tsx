@@ -1,7 +1,7 @@
 import {createMultiPathSVG, createSinglePathSVG} from './TEMPLATE'
 
 /**
- * Special icon for large display. Use with `gradient="bsky"`
+ * Special icon for large display. Use with `gradient="sky"`
  *
  * If trying to slot into other components (e.g. as a Menu.Item) use StarterPack_Stroke2_Corner0_Rounded instead
  */
