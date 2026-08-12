@@ -1,4 +1,4 @@
-The load-screen illustration in this directory was commissioned by Bluesky Social PBC from
+The landing screen illustration in this directory was commissioned by Bluesky Social PBC from
 illustrator [Owen D. Pomery](https://owenpomery.com/work), through his agent
 [Brilliant Artists Ltd](https://brilliantartists.co.uk/). Copyright in the artwork remains with
 the artist.
