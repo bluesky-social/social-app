@@ -82,6 +82,8 @@ supports it.
 - `assets/icon-android-foreground.png`
 - `assets/icon-android-monochrome.png`
 - `assets/icon-android-notification.png`
+- `assets/splash/splash.png`
+- `assets/splash/splash-dark.png`
 - `assets/splash/android-splash-logo-white.png`
 - `assets/icons/logomark.svg`
 - `assets/icons/newskie.svg`
