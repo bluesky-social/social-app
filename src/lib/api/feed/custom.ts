@@ -148,7 +148,7 @@ async function loggedOutFetch({
   data = res.ok
     ? (jsonStringToLex(await res.text()) as GetCustomFeed.OutputSchema)
     : null
-  if (data?.feed?.length) {
+  if (data) {
     return {
       success: true,
       data,

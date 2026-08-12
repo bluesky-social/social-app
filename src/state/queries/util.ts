@@ -30,30 +30,55 @@ export function useAutoPagination(
   pageSize: number,
 ) {
   const lastItemCount = useRef(0)
+  const lastPageParams = useRef(query.data?.pageParams)
   const wantedItemCount = useRef(pageSize)
   const attemptCount = useRef(0)
 
   useEffect(() => {
+    const cursorOf = (param: unknown) =>
+      param && typeof param === 'object' && 'cursor' in param
+        ? param.cursor
+        : param
+    const pageParams = query.data?.pageParams
+    const previousPageParams = lastPageParams.current
+    const continuedPagination =
+      pageParams &&
+      previousPageParams &&
+      pageParams.length > previousPageParams.length &&
+      previousPageParams.every((param, index) =>
+        Object.is(cursorOf(param), cursorOf(pageParams[index])),
+      )
+    if (
+      pageParams !== previousPageParams &&
+      previousPageParams &&
+      !continuedPagination
+    ) {
+      wantedItemCount.current = pageSize
+      attemptCount.current = 0
+    }
+    lastPageParams.current = pageParams
+
     if (itemCount !== lastItemCount.current) {
+      attemptCount.current = 0
       if (itemCount < lastItemCount.current) {
-        wantedItemCount.current = itemCount
+        wantedItemCount.current = Math.max(itemCount, pageSize)
       }
       lastItemCount.current = itemCount
     }
 
     if (query.isLoading || query.isRefetching) {
       wantedItemCount.current = pageSize
+      attemptCount.current = 0
     } else if (query.isFetchingNextPage) {
       if (itemCount > wantedItemCount.current) {
         wantedItemCount.current = itemCount + pageSize
       }
     } else if (query.hasNextPage) {
       if (itemCount < wantedItemCount.current) {
-        const pageParams = query.data?.pageParams
-        const repeatedCursor =
-          pageParams &&
-          pageParams.length > 1 &&
-          Object.is(pageParams.at(-1), pageParams.at(-2))
+        const currentCursor = cursorOf(pageParams?.at(-1))
+        const repeatedCursor = pageParams
+          ?.slice(0, -1)
+          .some(param => Object.is(cursorOf(param), currentCursor))
         if (repeatedCursor) return
         attemptCount.current++
         if (attemptCount.current < 50) {
