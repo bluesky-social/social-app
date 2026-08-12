@@ -57,7 +57,7 @@ rather not buy one.
 
 This section covers every file at the top level of `assets/icons/` **except** those named
 elsewhere in this document — specifically `logomark.svg`, `newskie.svg`, `verifiedCheck.svg`,
-`verifierCheck.svg`, `starterPack.svg`, `starter_pack_icon.svg`, `custom_logo_japan.svg`,
+`verifierCheck.svg`, `starterPack.svg`, `starterPack_stroke2_corner0_rounded.svg`, `custom_logo_japan.svg`,
 `apple_logo.svg`, and `android_logo.svg`. The `assets/icons/flags/` and `assets/icons/community/`
 subdirectories are covered by [Section 6](#6-third-party-assets-you-may-redistribute) and
 [Section 5](#5-third-party-trademarks) respectively.
@@ -89,7 +89,7 @@ supports it.
 - `assets/icons/newskie.svg`
 - `assets/icons/verifiedCheck.svg`
 - `assets/icons/verifierCheck.svg`
-- `assets/icons/starterPack.svg`, `assets/icons/starter_pack_icon.svg`
+- `assets/icons/starterPack.svg`, `assets/icons/starterPack_stroke2_corner0_rounded.svg`
 - `bskyembed/assets/logo.svg`
 - `bskyembed/assets/logo_full_name.svg`
 - `bskyweb/static/favicon.png`, `favicon-16x16.png`, `favicon-32x32.png`
