@@ -197,12 +197,16 @@ export function FeedPage({
    * On the Following feed the pill takes over signaling new posts from the
    * LoadLatestBtn indicator, both when new posts arrive while reading
    * (hasNew) and after restoring the last read position. Other feeds keep
-   * the LoadLatestBtn indicator. Only shown while scrolled down - once the
-   * top of the feed is in view the pill would just be noise, so it hides
-   * even if hasNew is still set.
+   * the LoadLatestBtn indicator.
+   *
+   * The pill disappears once its promise is fulfilled - the new posts are
+   * on screen. After a restore the posts above are already loaded, so
+   * reaching the top fulfills it and the pill hides. When hasNew is set the
+   * posts are not loaded yet, so the pill persists at any scroll position
+   * until it is pressed or the feed is refreshed.
    */
   const showSeeNewPostsPill =
-    isFollowingFeed && isScrolledDown && (hasNew || showResumePill)
+    isFollowingFeed && (hasNew || (showResumePill && isScrolledDown))
   return (
     <View
       testID={testID}
