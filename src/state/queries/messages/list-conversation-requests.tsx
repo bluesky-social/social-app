@@ -9,8 +9,8 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
 
 const DEFAULT_LIMIT = 10
 
@@ -26,17 +26,16 @@ export function useListConvoRequests({
   enabled?: boolean
   limit?: number
 } = {}) {
-  const agent = useAgent()
+  const client = useChatClient()
 
   return useInfiniteQuery({
     enabled,
     queryKey: RQKEY(limit),
     queryFn: async ({pageParam}) => {
-      const {data} = await agent.chat.bsky.convo.listConvoRequests(
-        {limit, cursor: pageParam},
-        {headers: DM_SERVICE_HEADERS},
-      )
-      return data
+      return await client.call(chat.bsky.convo.listConvoRequests, {
+        limit,
+        cursor: pageParam,
+      })
     },
     initialPageParam: undefined as RQPageParam,
     getNextPageParam: lastPage => lastPage.cursor,
