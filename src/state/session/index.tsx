@@ -19,7 +19,13 @@ import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {emitSessionDropped} from '../events'
-import {agentToLexClient, getPublicLexClient} from './clients'
+import {
+  agentToAppviewClient,
+  agentToChatClient,
+  agentToPdsClient,
+  getPublicAppviewClient,
+  getUnauthenticatedThrowingClient,
+} from './clients'
 import {createSessionBundleAndCreateAccount} from './create-account'
 import {pickExpiryRescueCandidate} from './expiry-rescue'
 import {type Action, getInitialState, reducer, type State} from './reducer'
@@ -711,20 +717,70 @@ export function useAgent(): AtpAgent {
 }
 
 /**
- * The lex client for the active session, or for the public agent when logged
- * out.
+ * Client for appview reads.
+ *
+ * When logged out the bundle's agent is the public agent built by
+ * `createPublicAgent`, which is configured with the appview proxy and dispatches
+ * unauthenticated, so the logged-out fallback is the agent itself - there is no
+ * separate public branch here.
  */
-export function useLexClient(): Client {
+export function useAppviewClient(): Client {
   const bundle = useContext(BundleContext)
   if (!bundle) {
-    throw Error('useLexClient() must be below <SessionProvider>.')
+    throw Error('useAppviewClient() must be below <SessionProvider>.')
   }
-  return agentToLexClient(bundle.agent)
+  return agentToAppviewClient(bundle.agent)
 }
 
 /**
- * The unauthenticated lex client for public reads.
+ * Client for account-host requests. It shares the active session's auth
+ * lifecycle but sets no proxy or labeler headers, so calls target the PDS.
+ * Logged out, calls throw `NotAuthenticatedError` before network I/O. Use
+ * {@link useMaybePdsClient} when the caller must branch on authentication.
  */
-export function usePublicLexClient(): Client {
-  return getPublicLexClient()
+export function usePdsClient(): Client {
+  const bundle = useContext(BundleContext)
+  if (!bundle) {
+    throw Error('usePdsClient() must be below <SessionProvider>.')
+  }
+  return bundle.session
+    ? agentToPdsClient(bundle.agent)
+    : getUnauthenticatedThrowingClient()
+}
+
+/**
+ * Client for `chat.bsky.*` calls. Logged-out calls throw
+ * `NotAuthenticatedError`; use {@link useMaybeChatClient} to branch on auth.
+ */
+export function useChatClient(): Client {
+  const bundle = useContext(BundleContext)
+  if (!bundle) {
+    throw Error('useChatClient() must be below <SessionProvider>.')
+  }
+  return bundle.session
+    ? agentToChatClient(bundle.agent)
+    : getUnauthenticatedThrowingClient()
+}
+
+/**
+ * Account-host client for the active session, or `null` when logged out.
+ */
+export function useMaybePdsClient(): Client | null {
+  const bundle = useContext(BundleContext)
+  return bundle?.session ? agentToPdsClient(bundle.agent) : null
+}
+
+/**
+ * Chat client for the active session, or `null` when logged out.
+ */
+export function useMaybeChatClient(): Client | null {
+  const bundle = useContext(BundleContext)
+  return bundle?.session ? agentToChatClient(bundle.agent) : null
+}
+
+/**
+ * The unauthenticated client for public appview reads.
+ */
+export function usePublicAppviewClient(): Client {
+  return getPublicAppviewClient()
 }

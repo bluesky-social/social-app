@@ -13,9 +13,16 @@ jest.mock('jwt-decode', () => ({
   },
 }))
 
-import {app} from '#/lexicons'
+import {CHAT_PROXY_SERVICE} from '#/lib/constants'
+import {app, chat, com} from '#/lexicons'
 import {BskyAppAgent, PasswordSessionManager} from '../bridge-agent'
-import {agentToLexClient} from '../clients'
+import {
+  agentToAppviewClient,
+  agentToChatClient,
+  agentToPdsClient,
+  getUnauthenticatedThrowingClient,
+  NotAuthenticatedError,
+} from '../clients'
 import {sessionAccountToSessionData} from '../session-data'
 import {
   asFetch,
@@ -26,6 +33,7 @@ import {
   makeMockFetch,
   type MockFetch,
   SERVICE,
+  urlsOf,
 } from './mock-fetch'
 
 const PROFILE_BODY = {
@@ -70,7 +78,7 @@ function initFor(mock: MockFetch, nsid: string): RequestInit | undefined {
   return call?.[1]
 }
 
-describe('agentToLexClient', () => {
+describe('agentToAppviewClient', () => {
   let fetchMock: MockFetch
 
   beforeEach(() => {
@@ -81,9 +89,9 @@ describe('agentToLexClient', () => {
     const {agent: agentA} = setup(fetchMock)
     const {agent: agentB} = setup(fetchMock)
 
-    const clientA1 = agentToLexClient(agentA)
-    const clientA2 = agentToLexClient(agentA)
-    const clientB = agentToLexClient(agentB)
+    const clientA1 = agentToAppviewClient(agentA)
+    const clientA2 = agentToAppviewClient(agentA)
+    const clientB = agentToAppviewClient(agentB)
 
     expect(clientA1).toBeInstanceOf(Client)
     expect(clientA1).toBe(clientA2)
@@ -92,20 +100,23 @@ describe('agentToLexClient', () => {
 
   it('passes through the agent did', () => {
     const {agent} = setup(fetchMock)
-    expect(agentToLexClient(agent).did).toBe(DID)
+    expect(agentToAppviewClient(agent).did).toBe(DID)
   })
 
   it('reflects an undefined did on a logged-out agent', () => {
     const {agent} = setupPublic(fetchMock)
-    expect(agentToLexClient(agent).did).toBeUndefined()
+    expect(agentToAppviewClient(agent).did).toBeUndefined()
   })
 
   it('routes client.call through the agent to the network', async () => {
     const {agent} = setup(fetchMock)
 
-    const body = await agentToLexClient(agent).call(app.bsky.actor.getProfile, {
-      actor: HANDLE,
-    })
+    const body = await agentToAppviewClient(agent).call(
+      app.bsky.actor.getProfile,
+      {
+        actor: HANDLE,
+      },
+    )
 
     expect(body.handle).toBe(HANDLE)
     const call = fetchMock.mock.calls.find(c => {
@@ -121,7 +132,7 @@ describe('agentToLexClient', () => {
     const {agent} = setup(fetchMock)
     agent.configureProxy('did:web:api.bsky.app#bsky_appview')
 
-    await agentToLexClient(agent).call(app.bsky.actor.getProfile, {
+    await agentToAppviewClient(agent).call(app.bsky.actor.getProfile, {
       actor: HANDLE,
     })
 
@@ -135,7 +146,7 @@ describe('agentToLexClient', () => {
     const {agent} = setup(fetchMock)
     agent.configureLabelersHeader(['did:plc:labeler'])
 
-    await agentToLexClient(agent).call(app.bsky.actor.getProfile, {
+    await agentToAppviewClient(agent).call(app.bsky.actor.getProfile, {
       actor: HANDLE,
     })
 
@@ -155,7 +166,7 @@ describe('agentToLexClient', () => {
   it('sends the session access token', async () => {
     const {agent} = setup(fetchMock)
 
-    await agentToLexClient(agent).call(app.bsky.actor.getProfile, {
+    await agentToAppviewClient(agent).call(app.bsky.actor.getProfile, {
       actor: HANDLE,
     })
 
@@ -167,7 +178,7 @@ describe('agentToLexClient', () => {
 
   it('falls back to unauthenticated requests once the agent is disposed', async () => {
     const {agent} = setup(fetchMock)
-    const client = agentToLexClient(agent)
+    const client = agentToAppviewClient(agent)
     agent.dispose()
 
     await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
@@ -175,5 +186,160 @@ describe('agentToLexClient', () => {
     const init = initFor(fetchMock, 'app.bsky.actor.getProfile')
     expect(new Headers(init?.headers).has('authorization')).toBe(false)
     expect(client.did).toBeUndefined()
+  })
+})
+
+describe('agentToPdsClient', () => {
+  let fetchMock: MockFetch
+
+  beforeEach(() => {
+    fetchMock = makeProfileFetch()
+  })
+
+  it('memoizes one client per agent', () => {
+    const {agent: agentA} = setup(fetchMock)
+    const {agent: agentB} = setup(fetchMock)
+
+    const clientA1 = agentToPdsClient(agentA)
+    const clientA2 = agentToPdsClient(agentA)
+
+    expect(clientA1).toBeInstanceOf(Client)
+    expect(clientA1).toBe(clientA2)
+    expect(clientA1).not.toBe(agentToPdsClient(agentB))
+  })
+
+  it('is a distinct client from the appview client for the same agent', () => {
+    const {agent} = setup(fetchMock)
+    expect(agentToPdsClient(agent)).not.toBe(agentToAppviewClient(agent))
+  })
+
+  it('passes through the agent did', () => {
+    const {agent} = setup(fetchMock)
+    expect(agentToPdsClient(agent).did).toBe(DID)
+  })
+
+  it('sends the session access token', async () => {
+    const {agent} = setup(fetchMock)
+
+    await agentToPdsClient(agent).call(com.atproto.server.getSession, {})
+
+    const init = initFor(fetchMock, 'com.atproto.server.getSession')
+    expect(new Headers(init?.headers).get('authorization')).toBe(
+      'Bearer access-jwt',
+    )
+  })
+
+  it('emits neither the proxy nor the labeler header the agent is configured with', async () => {
+    /*
+     * The load-bearing difference from the appview client: this client wraps the
+     * session manager, below the agent layer that sets both headers, so a
+     * request reaches the account's PDS instead of being proxied onward.
+     */
+    const {agent} = setup(fetchMock)
+    agent.configureProxy('did:web:api.bsky.app#bsky_appview')
+    agent.configureLabelersHeader(['did:plc:labeler'])
+
+    await agentToPdsClient(agent).call(com.atproto.server.getSession, {})
+
+    const headers = new Headers(
+      initFor(fetchMock, 'com.atproto.server.getSession')?.headers,
+    )
+    expect(headers.get('atproto-proxy')).toBeNull()
+    expect(headers.get('atproto-accept-labelers')).toBeNull()
+  })
+
+  it('resolves the relative xrpc path against the account host', async () => {
+    /*
+     * lex-client hands its fetchHandler an origin-less `/xrpc/<nsid>` path; the
+     * session manager absolutizes it against dispatchUrl.
+     */
+    const {agent} = setup(fetchMock)
+
+    await agentToPdsClient(agent).call(com.atproto.server.getSession, {})
+
+    expect(urlsOf(fetchMock)).toContain(
+      `${SERVICE}/xrpc/com.atproto.server.getSession`,
+    )
+  })
+})
+
+describe('agentToChatClient', () => {
+  let fetchMock: MockFetch
+
+  beforeEach(() => {
+    fetchMock = makeProfileFetch()
+  })
+
+  it('memoizes one client per agent, distinct from the pds client', () => {
+    const {agent} = setup(fetchMock)
+
+    const client = agentToChatClient(agent)
+
+    expect(client).toBeInstanceOf(Client)
+    expect(client).toBe(agentToChatClient(agent))
+    expect(client).not.toBe(agentToPdsClient(agent))
+  })
+
+  it('emits the chat proxy header exactly once, with the session token', async () => {
+    const {agent} = setup(fetchMock)
+
+    /* the stub body fails listConvos output validation; headers are recorded pre-parse */
+    await agentToChatClient(agent)
+      .call(chat.bsky.convo.listConvos, {})
+      .catch(() => {})
+
+    const headers = new Headers(
+      initFor(fetchMock, 'chat.bsky.convo.listConvos')?.headers,
+    )
+    /*
+     * An exact match, not `toContain`: `Headers` comma-joins repeated entries
+     * for the same name, so a second contributor would show up here.
+     */
+    expect(headers.get('atproto-proxy')).toBe(CHAT_PROXY_SERVICE)
+    expect(headers.get('authorization')).toBe('Bearer access-jwt')
+  })
+
+  it('does not emit the agent labeler header', async () => {
+    const {agent} = setup(fetchMock)
+    agent.configureLabelersHeader(['did:plc:labeler'])
+
+    await agentToChatClient(agent)
+      .call(chat.bsky.convo.listConvos, {})
+      .catch(() => {})
+
+    const headers = new Headers(
+      initFor(fetchMock, 'chat.bsky.convo.listConvos')?.headers,
+    )
+    expect(headers.get('atproto-accept-labelers')).toBeNull()
+  })
+})
+
+describe('getUnauthenticatedThrowingClient', () => {
+  it('is a stable singleton with no did', () => {
+    const client = getUnauthenticatedThrowingClient()
+
+    expect(client.did).toBeUndefined()
+    /* identity is stable so it is safe in React Query keys */
+    expect(getUnauthenticatedThrowingClient()).toBe(client)
+  })
+
+  it('rejects any call with NotAuthenticatedError as the cause, with no fetch', async () => {
+    /*
+     * The throwing fetchHandler fires before any network I/O. lex-client wraps a
+     * fetchHandler throw in an internal error whose `cause` is the original, so
+     * the NotAuthenticatedError surfaces there.
+     */
+    const fetchMock = makeProfileFetch()
+    const err = await getUnauthenticatedThrowingClient()
+      .call(com.atproto.server.getSession, {})
+      .then(() => undefined)
+      .catch((e: unknown) => e)
+
+    expect((err as Error).cause).toBeInstanceOf(NotAuthenticatedError)
+    expect(((err as Error).cause as Error).name).toBe('NotAuthenticatedError')
+    expect(((err as Error).cause as Error).message).toBe(
+      'Not authenticated: this operation requires an active session',
+    )
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 })
