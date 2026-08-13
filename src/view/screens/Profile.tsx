@@ -29,9 +29,11 @@ import {colors} from '#/lib/styles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {listenSoftReset} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
+import {useFeaturedFeedUri} from '#/state/queries/profile-featured-feed'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useAgent, useSession} from '#/state/session'
 import {ProfileFeedgens} from '#/view/com/feeds/ProfileFeedgens'
@@ -193,6 +195,7 @@ function ProfileScreenLoaded({
 
   const [scrollViewTag, setScrollViewTag] = useState<number | null>(null)
 
+  const featuredSectionRef = useRef<SectionRef>(null)
   const postsSectionRef = useRef<SectionRef>(null)
   const repliesSectionRef = useRef<SectionRef>(null)
   const mediaSectionRef = useRef<SectionRef>(null)
@@ -216,6 +219,21 @@ function ProfileScreenLoaded({
 
   const isMe = profile.did === currentAccount?.did
   const hasLabeler = !!profile.associated?.labeler
+  /*
+   * Accounts can designate a feed they created as their "featured" feed. When
+   * set, it becomes the first tab so visitors land on a curated feed instead of
+   * the reverse-chronological post list. Labelers do not have post tabs, so we
+   * skip it for them.
+   */
+  const featuredFeedUri = useFeaturedFeedUri({
+    did: profile.did,
+    enabled: !hasLabeler,
+  })
+  const {data: featuredFeedInfo} = useFeedSourceInfoQuery({
+    uri: featuredFeedUri ?? '',
+    enabled: !!featuredFeedUri,
+  })
+  const showFeaturedTab = !!featuredFeedUri
   const showFiltersTab = hasLabeler
   const showPostsTab = true
   const showRepliesTab = hasSession
@@ -231,6 +249,9 @@ function ProfileScreenLoaded({
   const showListsTab = hasSession && (isMe || listCount > 0)
 
   const sectionTitles = [
+    showFeaturedTab
+      ? featuredFeedInfo?.displayName || _(msg`Featured`)
+      : undefined,
     showFiltersTab ? _(msg`Labels`) : undefined,
     showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
     showPostsTab ? _(msg`Posts`) : undefined,
@@ -244,6 +265,7 @@ function ProfileScreenLoaded({
   ].filter(Boolean) as string[]
 
   let nextIndex = 0
+  let featuredIndex: number | null = null
   let filtersIndex: number | null = null
   let postsIndex: number | null = null
   let repliesIndex: number | null = null
@@ -253,6 +275,9 @@ function ProfileScreenLoaded({
   let feedsIndex: number | null = null
   let starterPacksIndex: number | null = null
   let listsIndex: number | null = null
+  if (showFeaturedTab) {
+    featuredIndex = nextIndex++
+  }
   if (showFiltersTab) {
     filtersIndex = nextIndex++
   }
@@ -283,7 +308,9 @@ function ProfileScreenLoaded({
 
   const scrollSectionToTop = useCallback(
     (index: number) => {
-      if (index === filtersIndex) {
+      if (index === featuredIndex) {
+        featuredSectionRef.current?.scrollToTop()
+      } else if (index === filtersIndex) {
         labelsSectionRef.current?.scrollToTop()
       } else if (index === postsIndex) {
         postsSectionRef.current?.scrollToTop()
@@ -304,6 +331,7 @@ function ProfileScreenLoaded({
       }
     },
     [
+      featuredIndex,
       filtersIndex,
       postsIndex,
       repliesIndex,
@@ -403,6 +431,19 @@ function ProfileScreenLoaded({
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}
         allowHeaderOverScroll>
+        {showFeaturedTab && featuredFeedUri
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileFeedSection
+                ref={featuredSectionRef}
+                feed={`feedgen|${featuredFeedUri}`}
+                headerHeight={headerHeight}
+                isFocused={isFocused}
+                scrollElRef={scrollElRef as ListRef}
+                setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`This feed is empty.`)}
+              />
+            )
+          : null}
         {showFiltersTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLabelsSection

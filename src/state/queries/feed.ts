@@ -182,11 +182,18 @@ export function getAvatarTypeFromUri(uri: string) {
   return getFeedTypeFromUri(uri) === 'feed' ? 'algo' : 'list'
 }
 
-export function useFeedSourceInfoQuery({uri}: {uri: string}) {
+export function useFeedSourceInfoQuery({
+  uri,
+  enabled = true,
+}: {
+  uri: string
+  enabled?: boolean
+}) {
   const type = getFeedTypeFromUri(uri)
   const agent = useAgent()
 
   return useQuery({
+    enabled: enabled && !!uri,
     staleTime: STALE.INFINITY,
     queryKey: feedSourceInfoQueryKey({uri}),
     queryFn: async () => {
