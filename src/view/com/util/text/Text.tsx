@@ -5,7 +5,7 @@ import {UITextView} from '@bsky.app/react-native-uitextview'
 import {lh, s} from '#/lib/styles'
 import {type TypographyVariant, useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {applyFonts, useAlf} from '#/alf'
+import {applyFonts, type MutableTextStyle, useAlf} from '#/alf'
 import {
   childHasEmoji,
   renderChildrenWithEmoji,
@@ -61,12 +61,10 @@ function Text_DEPRECATED({
     const typography = theme.typography[type]
     const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
 
-    const flattened = StyleSheet.flatten([
-      s.black,
-      typography,
-      lineHeightStyle,
-      style,
-    ])
+    const flattened: MutableTextStyle = {
+      ...(StyleSheet.flatten([s.black, typography, lineHeightStyle, style]) ??
+        {}),
+    }
 
     applyFonts(flattened, fonts.family)
 

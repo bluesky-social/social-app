@@ -1,5 +1,5 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {TextInput, View, type ViewToken} from 'react-native'
+import {type ListViewToken as ViewToken, TextInput, View} from 'react-native'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -139,7 +139,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const [searchText, setSearchText] = useState(lastSearchText)
   const moderationOpts = useModerationOpts()
   const listRef = useRef<ListMethods>(null)
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const [headerHeight, setHeaderHeight] = useState(0)
   const {currentAccount} = useSession()
 
@@ -374,7 +374,7 @@ let Header = ({
   interestsDisplayNames,
 }: {
   guide?: Follow10ProgressGuide
-  inputRef: React.RefObject<TextInput | null>
+  inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null>
   listRef: React.RefObject<ListMethods | null>
   onSelectTab: (v: string) => void
   searchText: string
@@ -679,7 +679,7 @@ function SearchInput({
 }: {
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInput | null>
+  inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null>
   defaultValue: string
 }) {
   const t = useTheme()

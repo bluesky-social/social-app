@@ -39,6 +39,9 @@ import {
 import {Span, Text} from '#/components/Typography'
 import {IS_IOS, IS_WEB, IS_WEB_TOUCH_DEVICE} from '#/env'
 
+type TextInputInstance = React.ComponentRef<typeof TextInput>
+type ViewInstance = React.ComponentRef<typeof View>
+
 export type SubmitRequest =
   | {
       platform: 'web'
@@ -60,7 +63,7 @@ export type ComposerInternalApi = {
   input?: ReturnType<typeof useTapper>['input']
   clear: () => void
   insert(text: string): void
-  setAutocompleteAnchor: (node: View | null) => void
+  setAutocompleteAnchor: (node: ViewInstance | null) => void
 }
 
 export function useComposerInternalApiRef() {
@@ -82,7 +85,7 @@ export type ComposerProps = Omit<
   | 'onSubmitEditing'
 > & {
   label: string
-  ref?: React.RefObject<TextInput>
+  ref?: React.RefObject<TextInputInstance>
   internalApiRef?: React.Ref<ComposerInternalApi>
   outerStyle?: ViewStyleProp['style']
   contentTextStyle?: TextStyleProp['style']
@@ -139,6 +142,11 @@ export function Composer({
     placement: autocompletePlacement,
     dynamicWidth: IS_WEB,
   })
+  const inputRef = mergeRefs<TextInputInstance>([
+    ref,
+    tapper.inputProps.ref as React.Ref<TextInputInstance>,
+    sift.targetProps.ref as React.Ref<TextInputInstance>,
+  ])
 
   /*
    * Active facet state for controlling the visibility of the Autocomplete.
@@ -345,7 +353,7 @@ export function Composer({
           {...rest}
           {...tapper.inputProps}
           {...sift.targetProps}
-          ref={mergeRefs([ref, tapper.inputProps.ref, sift.targetProps.ref])}
+          ref={inputRef}
           rawValue={tapper.state.text}
           onBlur={e => {
             rest.onBlur?.(e)

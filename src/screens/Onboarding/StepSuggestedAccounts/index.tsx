@@ -378,7 +378,7 @@ function SuggestedProfileCard({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const cardRef = useRef<View>(null)
+  const cardRef = useRef<React.ComponentRef<typeof View>>(null)
   const hasTrackedRef = useRef(false)
 
   useEffect(() => {

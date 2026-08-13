@@ -82,7 +82,7 @@ const ImageItem = ({
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
       'worklet'
-      const nextIsScaled = e.zoomScale > 1
+      const nextIsScaled = (e.zoomScale ?? 1) > 1
       if (scaled !== nextIsScaled) {
         scheduleOnRN(handleZoom, nextIsScaled)
       }

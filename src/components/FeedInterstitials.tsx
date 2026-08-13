@@ -217,7 +217,7 @@ export function ProfileGrid({
 
   // Track seen profiles
   const seenProfilesRef = useRef<Set<string>>(new Set())
-  const containerRef = useRef<View>(null)
+  const containerRef = useRef<React.ComponentRef<typeof View>>(null)
   const hasTrackedRef = useRef(false)
   const logContext: Metrics['suggestedUser:seen']['logContext'] = isFeedContext
     ? 'DiscoverInterstitial'

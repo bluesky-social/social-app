@@ -193,7 +193,6 @@ export function Inner({
         aria-label={label}
         aria-labelledby={accessibilityLabelledBy}
         aria-describedby={accessibilityDescribedBy}
-        // @ts-expect-error web only -prf
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}
         onTouchEnd={stopPropagation}
@@ -239,7 +238,9 @@ export function Inner({
 export function ScrollableInner({
   ref: _ref,
   ...props
-}: DialogInnerProps & {ref?: React.Ref<ScrollView>}) {
+}: DialogInnerProps & {
+  ref?: React.Ref<React.ComponentRef<typeof ScrollView>>
+}) {
   return <Inner {...props} />
 }
 
