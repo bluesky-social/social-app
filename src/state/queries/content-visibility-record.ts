@@ -1,11 +1,11 @@
+import {AppBskyActorContentVisibilityDeclaration} from '@atproto/api'
+
 export const CONTENT_VISIBILITY_COLLECTION =
   'app.bsky.actor.contentVisibilityDeclaration' as const
 export const CONTENT_VISIBILITY_RKEY = 'self'
 
-export type ContentVisibilityRecord = {
-  $type: typeof CONTENT_VISIBILITY_COLLECTION
-  hideFromAlgorithmicRecommendations: boolean
-}
+export type ContentVisibilityRecord =
+  AppBskyActorContentVisibilityDeclaration.Record
 
 export function createContentVisibilityRecord(
   hideFromAlgorithmicRecommendations: boolean,
@@ -19,16 +19,11 @@ export function createContentVisibilityRecord(
 export function parseContentVisibilityRecord(
   value: unknown,
 ): ContentVisibilityRecord {
-  if (
-    typeof value !== 'object' ||
-    value === null ||
-    !('$type' in value) ||
-    value.$type !== CONTENT_VISIBILITY_COLLECTION ||
-    !('hideFromAlgorithmicRecommendations' in value) ||
-    typeof value.hideFromAlgorithmicRecommendations !== 'boolean'
-  ) {
-    throw new Error('Invalid content visibility record')
+  const result = AppBskyActorContentVisibilityDeclaration.validateRecord(value)
+  if (!result.success) {
+    throw new Error('Invalid content visibility record', {
+      cause: result.error,
+    })
   }
-
-  return value as ContentVisibilityRecord
+  return result.value
 }
