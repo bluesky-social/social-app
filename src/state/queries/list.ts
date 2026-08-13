@@ -1,5 +1,5 @@
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {type $Typed, type Client, type l} from '@atproto/lex'
+import {type $Typed, type Client} from '@atproto/lex'
 import {
   type AtIdentifierString,
   AtUri,
@@ -56,7 +56,6 @@ export interface ListCreateMutateParams {
 export function useListCreateMutation() {
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
-  const agent = useAgent()
   const appviewClient = useAppviewClient()
   const pdsClient = usePdsClient()
   return useMutation<{uri: string; cid: string}, Error, ListCreateMutateParams>(
@@ -86,12 +85,8 @@ export function useListCreateMutation() {
           createdAt: toDatetimeString(new Date()),
         }
         if (avatar) {
-          const blobRes = await uploadBlob(agent, avatar.path, avatar.mime)
-          /*
-           * `uploadBlob` still returns the legacy `BlobRef` class instance;
-           * it moves to the client with the rest of the blob pipeline.
-           */
-          record.avatar = blobRes.data.blob as unknown as l.BlobRef
+          const blobRes = await uploadBlob(pdsClient, avatar.path, avatar.mime)
+          record.avatar = blobRes.blob
         }
         const res = await pdsClient.create(app.bsky.graph.list, record)
 
@@ -120,7 +115,6 @@ export interface ListMetadataMutateParams {
 }
 export function useListMetadataMutation() {
   const {currentAccount} = useSession()
-  const agent = useAgent()
   const appviewClient = useAppviewClient()
   const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
@@ -149,8 +143,8 @@ export function useListMetadataMutation() {
       record.description = description
       record.descriptionFacets = descriptionFacets
       if (avatar) {
-        const blobRes = await uploadBlob(agent, avatar.path, avatar.mime)
-        record.avatar = blobRes.data.blob as unknown as l.BlobRef
+        const blobRes = await uploadBlob(pdsClient, avatar.path, avatar.mime)
+        record.avatar = blobRes.blob
       } else if (avatar === null) {
         record.avatar = undefined
       }

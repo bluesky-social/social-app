@@ -15,6 +15,7 @@ import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
+import {toLegacyBlobRef} from '#/lib/api/legacy-blob'
 import {
   BSKY_APP_ACCOUNT_DID,
   DISCOVER_SAVED_FEED,
@@ -153,7 +154,7 @@ export function StepFinished() {
           const {imageUri, imageMime} = profileStepResults
           const blobPromise =
             imageUri && imageMime
-              ? uploadBlob(agent, imageUri, imageMime)
+              ? uploadBlob(pdsClient, imageUri, imageMime)
               : undefined
 
           await agent.upsertProfile(async existing => {
@@ -161,8 +162,8 @@ export function StepFinished() {
 
             if (blobPromise) {
               const res = await blobPromise
-              if (res.data.blob) {
-                next.avatar = res.data.blob
+              if (res.blob) {
+                next.avatar = toLegacyBlobRef(res.blob)
               }
             }
 
