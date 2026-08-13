@@ -238,14 +238,12 @@ function GroupSettings({
       : []),
   ]
   items.push(
-    ...groupMembers.map(
-      (profile): Item => ({
-        type: 'CHAT_MEMBER',
-        key: profile.did,
-        profile,
-        status: primaryMember?.did === profile.did ? 'owner' : 'standard',
-      }),
-    ),
+    ...groupMembers.map((profile): Item => ({
+      type: 'CHAT_MEMBER',
+      key: profile.did,
+      profile,
+      status: primaryMember?.did === profile.did ? 'owner' : 'standard',
+    })),
   )
   const placeholderCount = Math.max(
     0,

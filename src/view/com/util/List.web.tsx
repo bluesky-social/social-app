@@ -521,9 +521,7 @@ let Row = function RowImpl<ItemT>({
   item: ItemT
   index: number
   renderItem:
-    | null
-    | undefined
-    | ((info: ListRenderItemInfo<ItemT>) => React.ReactNode)
+    null | undefined | ((info: ListRenderItemInfo<ItemT>) => React.ReactNode)
   extraData: unknown
   onItemSeen: ((item: ItemT) => void) | undefined
   registerRowNode: (index: number, node: HTMLElement | null) => void
@@ -604,9 +602,7 @@ Row = memo(Row) as <ItemT>(props: {
   item: ItemT
   index: number
   renderItem:
-    | null
-    | undefined
-    | ((info: ListRenderItemInfo<ItemT>) => React.ReactNode)
+    null | undefined | ((info: ListRenderItemInfo<ItemT>) => React.ReactNode)
   extraData: unknown
   onItemSeen: ((item: ItemT) => void) | undefined
   registerRowNode: (index: number, node: HTMLElement | null) => void

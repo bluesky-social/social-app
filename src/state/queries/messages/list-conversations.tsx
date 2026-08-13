@@ -38,10 +38,7 @@ export const RQKEY = (
   readState: 'all' | 'unread' = 'all',
   kind: 'all' | 'group' | 'direct' = 'all',
   lockStatus:
-    | 'unlocked'
-    | 'locked'
-    | 'locked-permanently'
-    | undefined = undefined,
+    'unlocked' | 'locked' | 'locked-permanently' | undefined = undefined,
   limit?: number,
 ) => [RQKEY_ROOT, status, readState, kind, lockStatus, limit] as const
 
@@ -255,9 +252,9 @@ export function ListConvosProviderInner({
           // memberCount bump to avoid double-counting.
           const alreadyKnownMember =
             queryClient
-              .getQueryData<
-                chat.bsky.actor.defs.ProfileViewBasic[]
-              >(listConvoMembersQueryKey(convoId))
+              .getQueryData<chat.bsky.actor.defs.ProfileViewBasic[]>(
+                listConvoMembersQueryKey(convoId),
+              )
               ?.some(m => m.did === did) ?? false
           mutateMembers(convoId, list =>
             list.some(m => m.did === did) ? list : list.concat(newMember),
@@ -279,9 +276,9 @@ export function ListConvosProviderInner({
           // list, skip the memberCount decrement to avoid double-counting.
           const alreadyRemovedMember =
             queryClient
-              .getQueryData<
-                chat.bsky.actor.defs.ProfileViewBasic[]
-              >(listConvoMembersQueryKey(convoId))
+              .getQueryData<chat.bsky.actor.defs.ProfileViewBasic[]>(
+                listConvoMembersQueryKey(convoId),
+              )
               ?.some(m => m.did === did) === false
           mutateMembers(convoId, list => list.filter(m => m.did !== did))
           mutateConvoView(

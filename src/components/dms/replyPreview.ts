@@ -11,9 +11,7 @@ import * as bsky from '#/types/bsky'
  * record (post/feed/list/etc.) so the caller can render a translated label.
  */
 type ReplyEmbedSummary =
-  | {type: 'external'; uri: string}
-  | {type: 'post'}
-  | {type: 'unknown'}
+  {type: 'external'; uri: string} | {type: 'post'} | {type: 'unknown'}
 
 function summarizeReplyEmbed(
   embed: chat.bsky.convo.defs.MessageView['embed'],

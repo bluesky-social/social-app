@@ -89,9 +89,7 @@ export function createMaybeDetachedQuoteEmbed({
       quoteUri: AtUriString
       detached: true
     }):
-  | app.bsky.embed.record.View
-  | app.bsky.embed.recordWithMedia.View
-  | undefined {
+  app.bsky.embed.record.View | app.bsky.embed.recordWithMedia.View | undefined {
   if (bsky.isType(app.bsky.embed.record.view, post.embed)) {
     if (detached) {
       return createEmbedViewDetachedRecord({uri: quoteUri})

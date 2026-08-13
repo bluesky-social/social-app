@@ -29,5 +29,4 @@ export function isView(v: unknown): v is app.bsky.graph.defs.StarterPackView {
  * Matches any starter pack view exported by our SDK.
  */
 export type AnyStarterPackView =
-  | app.bsky.graph.defs.StarterPackViewBasic
-  | app.bsky.graph.defs.StarterPackView
+  app.bsky.graph.defs.StarterPackViewBasic | app.bsky.graph.defs.StarterPackView

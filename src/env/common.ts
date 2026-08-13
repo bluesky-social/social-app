@@ -14,11 +14,7 @@ export const RELEASE_VERSION: string =
  * The env the app is running in e.g. development, testflight, production, e2e
  */
 export const ENV: string = process.env.EXPO_PUBLIC_ENV as
-  | 'production'
-  | 'testflight'
-  | 'development'
-  | 'e2e'
-  | (string & {})
+  'production' | 'testflight' | 'development' | 'e2e' | (string & {})
 
 /**
  * Indicates whether the app is running in TestFlight
@@ -62,10 +58,7 @@ export const BUNDLE_DATE: number =
  * The log level for the app.
  */
 export const LOG_LEVEL = (process.env.EXPO_PUBLIC_LOG_LEVEL || 'info') as
-  | 'debug'
-  | 'info'
-  | 'warn'
-  | 'error'
+  'debug' | 'info' | 'warn' | 'error'
 
 /**
  * Enable debug logs for specific logger instances

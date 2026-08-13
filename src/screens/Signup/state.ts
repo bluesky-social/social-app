@@ -31,11 +31,7 @@ type SubmitTask = {
 }
 
 type ErrorField =
-  | 'invite-code'
-  | 'email'
-  | 'handle'
-  | 'password'
-  | 'date-of-birth'
+  'invite-code' | 'email' | 'handle' | 'password' | 'date-of-birth'
 
 export type SignupState = {
   analytics?: AnalyticsContextType

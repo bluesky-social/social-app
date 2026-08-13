@@ -307,7 +307,7 @@ let UserAvatar = ({
   }, [size, style])
 
   return avatar &&
-    !((moderation?.blur && IS_ANDROID) /* android crashes with blur */) ? (
+    !(moderation?.blur && IS_ANDROID /* android crashes with blur */) ? (
     <View style={containerStyle}>
       {usePlainRNImage ? (
         <RNImage

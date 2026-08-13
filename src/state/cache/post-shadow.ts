@@ -25,9 +25,7 @@ export interface PostShadow {
   repostUri: AtUriString | 'pending' | undefined
   isDeleted: boolean
   embed:
-    | app.bsky.embed.record.View
-    | app.bsky.embed.recordWithMedia.View
-    | undefined
+    app.bsky.embed.record.View | app.bsky.embed.recordWithMedia.View | undefined
   pinned: boolean
   optimisticReplyCount: number | undefined
   bookmarked: boolean | undefined

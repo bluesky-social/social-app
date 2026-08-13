@@ -3,8 +3,7 @@ import {type app} from '#/lexicons'
 export type Notification = app.bsky.notification.listNotifications.Notification
 
 export type NotificationType =
-  | StarterPackNotificationType
-  | OtherNotificationType
+  StarterPackNotificationType | OtherNotificationType
 
 export type FeedNotification =
   | (FeedNotificationBase & {
@@ -56,6 +55,5 @@ type FeedNotificationBase = {
   additional?: Notification[]
   subjectUri?: string
   subject?:
-    | app.bsky.feed.defs.PostView
-    | app.bsky.graph.defs.StarterPackViewBasic
+    app.bsky.feed.defs.PostView | app.bsky.graph.defs.StarterPackViewBasic
 }

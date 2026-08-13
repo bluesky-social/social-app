@@ -16,11 +16,6 @@ export type UsePreferencesQueryResponse = Omit<
 
 export type ThreadViewPreferences = {
   sort:
-    | 'hotness'
-    | 'oldest'
-    | 'newest'
-    | 'most-likes'
-    | 'random'
-    | (string & {})
+    'hotness' | 'oldest' | 'newest' | 'most-likes' | 'random' | (string & {})
   lab_treeViewEnabled?: boolean
 }

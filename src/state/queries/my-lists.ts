@@ -6,10 +6,7 @@ import {useAppviewClient, useSession} from '#/state/session'
 import {app} from '#/lexicons'
 
 export type MyListsFilter =
-  | 'all'
-  | 'curate'
-  | 'mod'
-  | 'all-including-subscribed'
+  'all' | 'curate' | 'mod' | 'all-including-subscribed'
 
 const RQKEY_ROOT = 'my-lists'
 export const RQKEY = (filter: MyListsFilter) => [RQKEY_ROOT, filter]

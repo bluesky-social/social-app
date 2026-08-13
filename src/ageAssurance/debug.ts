@@ -29,8 +29,7 @@ export const otherRequiredData: OtherRequiredData = {
 
 const serverStateEnabled = false || IS_E2E
 export const serverState:
-  | app.bsky.ageassurance.getState.$OutputBody
-  | undefined = serverStateEnabled
+  app.bsky.ageassurance.getState.$OutputBody | undefined = serverStateEnabled
   ? {
       state: {
         lastInitiatedAt: undefined, // new Date(2025, 1, 1).toISOString(),

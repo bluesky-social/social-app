@@ -47,8 +47,7 @@ export interface ProfileShadow {
   verification: app.bsky.actor.defs.VerificationState
   status: app.bsky.actor.defs.StatusView | undefined
   activitySubscription:
-    | app.bsky.notification.defs.ActivitySubscription
-    | undefined
+    app.bsky.notification.defs.ActivitySubscription | undefined
 }
 
 const shadows: WeakMap<

@@ -167,8 +167,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         sessionEvent === 'update' &&
         sessionData &&
         (store.getState().currentBundleState.bundle as unknown as
-          | SessionBundle
-          | PublicSessionBundle) === bundle
+          SessionBundle | PublicSessionBundle) === bundle
       ) {
         failedExpiryTokensRef.current.get(accountDid)?.clear()
       }
@@ -200,8 +199,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (sessionEvent === 'expired') {
         const current = store.getState()
         const currentBundle = current.currentBundleState.bundle as unknown as
-          | SessionBundle
-          | PublicSessionBundle
+          SessionBundle | PublicSessionBundle
         const dyingRefreshJwt = sessionData?.refreshJwt
         // Stale bundle events are handled by the reducer's identity guard.
         if (
@@ -509,8 +507,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     SessionApiContext['refreshSession']
   >(async () => {
     const bundle = store.getState().currentBundleState.bundle as unknown as
-      | SessionBundle
-      | PublicSessionBundle
+      SessionBundle | PublicSessionBundle
     if (!bundle.session) return undefined // logged out: nothing to refresh
     const before = bundle.session.session
     const after = await bundle.session.refresh()
@@ -595,8 +592,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
            * the leader already refreshed, then dispose the previous bundle.
            */
           const prevBundle = state.currentBundleState.bundle as unknown as
-            | SessionBundle
-            | PublicSessionBundle
+            SessionBundle | PublicSessionBundle
           // Avoid replacing the live bundle for an unrelated account update.
           const live =
             prevBundle.session && !prevBundle.session.destroyed
@@ -685,8 +681,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const bundle = state.currentBundleState.bundle as unknown as
-    | SessionBundle
-    | PublicSessionBundle
+    SessionBundle | PublicSessionBundle
 
   // @ts-expect-error window type is not declared, debug only
   // eslint-disable-next-line react-hooks/immutability

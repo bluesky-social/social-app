@@ -62,9 +62,7 @@ export function resolveAllowGroupInvites(
   chat: {allowIncoming?: string; allowGroupInvites?: string} | undefined,
 ): 'all' | 'none' | 'following' {
   return (chat?.allowGroupInvites ?? chat?.allowIncoming ?? 'following') as
-    | 'all'
-    | 'none'
-    | 'following'
+    'all' | 'none' | 'following'
 }
 
 export function localDateString(date: Date) {

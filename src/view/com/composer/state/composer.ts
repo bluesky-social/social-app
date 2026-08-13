@@ -157,8 +157,7 @@ export type ComposerAction =
   | {
       type: 'clear'
       initInteractionSettings:
-        | app.bsky.actor.defs.PostInteractionSettingsPref
-        | undefined
+        app.bsky.actor.defs.PostInteractionSettingsPref | undefined
     }
   | {
       type: 'mark_saved'
@@ -632,8 +631,7 @@ export function createComposerState({
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
   initInteractionSettings:
-    | app.bsky.actor.defs.PostInteractionSettingsPref
-    | undefined
+    app.bsky.actor.defs.PostInteractionSettingsPref | undefined
 }): ComposerState {
   let media: ImagesMedia | GalleryMedia | undefined
   if (initImageUris?.length) {

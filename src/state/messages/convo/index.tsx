@@ -153,8 +153,7 @@ export function ConvoProvider({
       const queryKey = event.query.queryKey as string[]
       if (queryKey[0] === root && queryKey[1] === id) {
         const data = event.query.state.data as
-          | chat.bsky.convo.defs.ConvoView
-          | undefined
+          chat.bsky.convo.defs.ConvoView | undefined
         if (data && convo.convo && data.muted !== convo.convo.view.muted) {
           convo.updateMuted(data.muted)
         }

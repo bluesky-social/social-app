@@ -206,12 +206,13 @@ function mergeList(a?: string[], b?: string[]): string[] | undefined {
  * than re-validated here. `q`, `limit`, `cursor` and `sort` are the caller's.
  */
 type SearchPostsV2FilterParams = {
-  [K in Exclude<
-    keyof app.bsky.feed.searchPostsV2.$Params,
-    'query' | 'limit' | 'cursor' | 'sort'
-  >]?: app.bsky.feed.searchPostsV2.$Params[K] extends
-    | readonly (infer _E)[]
-    | undefined
+  [
+    K in Exclude<
+      keyof app.bsky.feed.searchPostsV2.$Params,
+      'query' | 'limit' | 'cursor' | 'sort'
+    >
+  ]?: app.bsky.feed.searchPostsV2.$Params[K] extends
+    readonly (infer _E)[] | undefined
     ? string[]
     : app.bsky.feed.searchPostsV2.$Params[K] extends string | undefined
       ? string

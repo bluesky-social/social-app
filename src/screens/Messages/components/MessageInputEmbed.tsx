@@ -40,8 +40,7 @@ import * as bsky from '#/types/bsky'
  * embed: either a quoted post or a group chat invite link.
  */
 export type MessageEmbedState =
-  | {type: 'post'; uri: string}
-  | {type: 'invite'; code: string}
+  {type: 'post'; uri: string} | {type: 'invite'; code: string}
 
 export function useMessageEmbed() {
   const route =

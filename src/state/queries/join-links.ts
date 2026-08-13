@@ -142,8 +142,7 @@ export function invalidateJoinLinkPreviewsForConvo(
       const [root] = query.queryKey
       if (root !== joinLinkPreviewQueryKeyRoot) return false
       const data = query.state.data as
-        | chat.bsky.group.getJoinLinkPreviews.$OutputBody
-        | undefined
+        chat.bsky.group.getJoinLinkPreviews.$OutputBody | undefined
       return (
         data?.joinLinkPreviews.some(
           preview =>

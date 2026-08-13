@@ -44,12 +44,7 @@ export type StartUploadResponse = {
 }
 
 export type UploadState =
-  | 'created'
-  | 'finishing'
-  | 'completed'
-  | 'failed'
-  | 'aborted'
-  | 'expired'
+  'created' | 'finishing' | 'completed' | 'failed' | 'aborted' | 'expired'
 
 export type UploadStatusResponse = {
   jobId: string
