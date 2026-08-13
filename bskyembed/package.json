@@ -28,9 +28,9 @@
     "format": "prettier -w src"
   },
   "dependencies": {
-    "@atproto/lex": "^0.3.5",
+    "@atproto/lex": "^0.3.6",
     "@atproto/syntax": "^0.7.4",
-    "@bsky/sdk": "0.1.0-next.1",
+    "@bsky/sdk": "1.0.0",
     "preact": "^10.29.7"
   },
   "devDependencies": {
