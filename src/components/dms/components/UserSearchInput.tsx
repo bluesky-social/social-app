@@ -38,7 +38,6 @@ export function UserSearchInput({
         fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}
       />
       <TextInput
-        // @ts-ignore bottom sheet input types issue - esb
         ref={inputRef}
         placeholder={l`Search for people`}
         value={value}

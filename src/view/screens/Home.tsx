@@ -223,7 +223,7 @@ function HomeScreenReady({
             {...props}
             testID="homeScreenFeedTabs"
             onPressSelected={onPressSelected}
-            // @ts-ignore
+            // @ts-expect-error
             feeds={[{displayName: 'Following'}, {displayName: 'Discover'}]}
           />
         )

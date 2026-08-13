@@ -577,7 +577,6 @@ export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
         role="button"
         accessibilityHint={undefined} // optional
         {...rest}
-        // @ts-ignore - this will always be a pressable
         ref={ref}
         aria-label={label}
         aria-pressed={state.pressed}

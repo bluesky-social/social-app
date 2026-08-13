@@ -39,11 +39,8 @@ function getThemeName(
 }
 
 function updateDocument(theme: ThemeName) {
-  // @ts-ignore web only
   if (IS_WEB && typeof window !== 'undefined') {
-    // @ts-ignore web only
     const html = window.document.documentElement
-    // @ts-ignore web only
     const meta = window.document.querySelector('meta[name="theme-color"]')
 
     // remove any other color mode classes
