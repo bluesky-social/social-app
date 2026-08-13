@@ -28,7 +28,7 @@ export function ClearableInput({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const [showClear, setShowClear] = useState(defaultValue.length > 0)
 
   return (

@@ -267,7 +267,7 @@ function TranslationResult({
     ? codeToLanguageName(resultSourceLanguage, i18n.locale)
     : undefined
 
-  const flattenedStyle = flatten(postTextStyle) ?? {}
+  const flattenedStyle = flatten(postTextStyle)
   const fontSize = flattenedStyle.fontSize
 
   return (

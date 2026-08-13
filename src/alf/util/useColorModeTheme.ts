@@ -24,7 +24,7 @@ export function useThemeName(): ThemeName {
 }
 
 function getThemeName(
-  colorScheme: ColorSchemeName,
+  colorScheme: ColorSchemeName | null | undefined,
   colorMode: 'system' | 'light' | 'dark',
   darkTheme?: ThemeName,
 ) {

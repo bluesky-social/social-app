@@ -407,7 +407,7 @@ function ListImpl<ItemT>(
           overflowY: isWithinSplitView ? 'auto' : 'scroll',
         },
       ]}
-      ref={nativeRef as unknown as React.RefObject<View>}>
+      ref={nativeRef as unknown as React.Ref<React.ComponentRef<typeof View>>}>
       <Visibility
         onVisibleChange={setIsInsideVisibleTree}
         style={

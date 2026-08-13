@@ -14,7 +14,7 @@ export function UserSearchInput({
   value: string
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInput | null>
+  inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null>
 }) {
   const t = useTheme()
   const {t: l} = useLingui()

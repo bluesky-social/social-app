@@ -93,7 +93,7 @@ export function RichText({
 
   if (!facets?.length) {
     if (isOnlyEmoji(text)) {
-      const flattenedStyle = flatten(style) ?? {}
+      const flattenedStyle = flatten(style)
       const fontSize =
         (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
       return (

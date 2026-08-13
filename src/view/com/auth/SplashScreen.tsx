@@ -15,10 +15,10 @@ import {Button, ButtonText} from '#/components/Button'
 import splashImagePointer from '../../../../assets/illustrations/illustration-mobile.png'
 // @ts-ignore
 import darkSplashImagePointer from '../../../../assets/illustrations/illustration-mobile-dark.png'
-const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
+const splashImageUri = RNImage.resolveAssetSource(splashImagePointer)!.uri
 const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
-).uri
+)!.uri
 
 export const SplashScreen = ({
   onPressSignin,
