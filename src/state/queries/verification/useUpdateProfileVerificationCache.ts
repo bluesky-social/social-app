@@ -20,8 +20,12 @@ export function useUpdateProfileVerificationCache() {
   return useCallback(
     async ({profile}: {profile: bsky.profile.AnyProfileView}) => {
       try {
+        if (!profile.did) {
+          logger.warn(`useUpdateProfileVerificationCache: no did`, {profile})
+          return
+        }
         const updated = await client.call(app.bsky.actor.getProfile, {
-          actor: (profile.did ?? '') as DidString,
+          actor: profile.did as DidString,
         })
         updateProfileShadow(qc, profile.did, {
           verification: updated.verification,
