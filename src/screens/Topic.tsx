@@ -177,7 +177,6 @@ function TopicScreenTab({
           onEndReached={onEndReached}
           onEndReachedThreshold={4}
           onItemSeen={trackPostView}
-          // @ts-ignore web only -prf
           desktopFixedHeight
           ListFooterComponent={
             <ListFooter

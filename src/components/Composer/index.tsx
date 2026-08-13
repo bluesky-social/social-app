@@ -314,7 +314,7 @@ export function Composer({
             style={[a.absolute, a.inset_0, a.z_10, {overflow: 'hidden'}]}
             ref={node => {
               if (IS_WEB && node) {
-                // @ts-ignore web only a11y
+                // @ts-expect-error web only a11y
                 node.setAttribute('inert', '')
               }
             }}>
@@ -367,11 +367,10 @@ export function Composer({
               inputScrollSharedValue.value = e.nativeEvent.contentOffset.y
             }
           }}
-          // @ts-ignore web only
+          // @ts-expect-error web only
           onCompositionStart={() => {
             isComposing.current = true
           }}
-          // @ts-ignore web only
           onCompositionEnd={() => {
             isComposing.current = false
           }}

@@ -20,9 +20,9 @@ import * as SplashScreen from 'expo-splash-screen'
 
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a} from '#/alf'
-// @ts-ignore
+// @ts-expect-error
 import splashImagePointer from '../assets/splash/splash.png'
-// @ts-ignore
+// @ts-expect-error
 import darkSplashImagePointer from '../assets/splash/splash-dark.png'
 
 const splashImageUri = RNImage.resolveAssetSource(splashImagePointer)!.uri
@@ -36,7 +36,7 @@ export const Logo = forwardRef(function LogoImpl(props: SvgProps, ref) {
   return (
     <Svg
       fill="none"
-      // @ts-ignore it's fiiiiine
+      // @ts-expect-error it's fiiiiine
       ref={ref}
       viewBox="0 0 64 66"
       style={[{width, height}, props.style]}>

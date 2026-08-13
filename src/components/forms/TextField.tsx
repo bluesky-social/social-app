@@ -245,12 +245,8 @@ export function createInput(Component: typeof TextInput) {
 
     applyFonts(flattened, fonts.family)
 
-    // should always be defined on `typography`
-    // @ts-ignore
     if (flattened.fontSize) {
-      // @ts-ignore
       flattened.fontSize = Math.round(
-        // @ts-ignore
         flattened.fontSize * fonts.scaleMultiplier,
       )
     }

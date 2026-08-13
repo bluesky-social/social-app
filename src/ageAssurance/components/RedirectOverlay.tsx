@@ -149,7 +149,6 @@ export function RedirectOverlay() {
           t.atoms.bg,
           gtMobile ? a.p_2xl : a.p_xl,
           a.align_center,
-          // @ts-ignore
           platform({
             web: {
               paddingTop: '35vh',

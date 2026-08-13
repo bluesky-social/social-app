@@ -318,11 +318,10 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 
   return (
     <View
-      // @ts-ignore View is being used as div
       ref={refs.setReference}
       onPointerMove={onPointerMoveTarget}
       onPointerLeave={onPointerLeaveTarget}
-      // @ts-ignore web only prop
+      // @ts-expect-error web only prop
       onMouseUp={onPress}
       style={[a.flex_shrink, props.inline && a.inline]}>
       {props.children}

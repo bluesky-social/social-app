@@ -45,7 +45,7 @@ export function useNuxs():
   //   const queryClient = useQueryClient()
   //   const pdsClient = usePdsClient()
 
-  //   // @ts-ignore
+  //   // @ts-expect-error
   //   window.clearNux = async (ids: string[]) => {
   //     await pdsClient.call(removeNuxs, ids)
   //     // triggers a refetch

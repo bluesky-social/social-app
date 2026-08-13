@@ -276,7 +276,7 @@ export function ProfileGrid({
         },
         {threshold: 0.5},
       )
-      // @ts-ignore - web only
+      // @ts-expect-error - web only
       observer.observe(node)
       return () => observer.disconnect()
     } else {
