@@ -106,6 +106,12 @@ export type Account = {
   followingFeedPosition?: {
     anchorUri: string
     savedAt: number
+    /**
+     * The newest post the user has actually seen at the top of the feed.
+     * Used after a restore to decide whether there is anything new above
+     * worth pointing out.
+     */
+    seenHeadUri?: string
   }
 
   /**

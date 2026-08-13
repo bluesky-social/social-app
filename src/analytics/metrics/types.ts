@@ -199,17 +199,11 @@ export type Events = {
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
   'feed:resume:toggle': {
-    /** The state the user switched the setting to. */
     enabled: boolean
   }
+  'feed:resume:seeNewPostsPressed': {}
   'feed:positionRestored': {
-    /**
-     * `restored` means we scrolled to the anchor post; `not-found` means the
-     * anchor never showed up within the page cap; `aborted` means the user
-     * scrolled or refreshed before the restore could complete.
-     */
     outcome: 'restored' | 'not-found' | 'aborted'
-    /** Number of rows above the restored anchor, when restored. */
     depth?: number
     pagesFetched: number
   }

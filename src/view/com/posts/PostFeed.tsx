@@ -224,6 +224,18 @@ const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
  */
 const RESTORE_MAX_PAGES = 6
 
+/**
+ * URI of the first post in the feed, i.e. the newest loaded post.
+ */
+function getHeadUri(feedItems: FeedRow[]): string | undefined {
+  for (const row of feedItems) {
+    if (row.type === 'sliceItem') {
+      return row.slice.items[row.indexInSlice].uri
+    }
+  }
+  return undefined
+}
+
 let PostFeed = ({
   feed,
   description,
@@ -236,6 +248,7 @@ let PostFeed = ({
   scrollElRef,
   onScrolledDownChange,
   onHasNew,
+  onPositionRestored,
   renderEmptyState,
   renderEndOfFeed,
   testID,
@@ -260,6 +273,11 @@ let PostFeed = ({
   scrollElRef?: ListRef
   onHasNew?: (v: boolean) => void
   onScrolledDownChange?: (isScrolledDown: boolean) => void
+  /**
+   * Called after the feed successfully scrolled back to the last read
+   * position on cold start.
+   */
+  onPositionRestored?: () => void
   renderEmptyState: () => React.ReactElement
   renderEndOfFeed?: () => React.ReactElement
   testID?: string
@@ -379,13 +397,20 @@ let PostFeed = ({
    * overwritten before we've scrolled to it.
    */
   // oxlint-disable-next-line react/hook-use-state
-  const [restoreAnchorUri] = useState(() =>
+  const [restorePosition] = useState(() =>
     feed === 'following' && resumeEnabled && currentAccount
       ? getFollowingFeedPosition(currentAccount.did)
       : undefined,
   )
+  const restoreAnchorUri = restorePosition?.anchorUri
   const restorePendingRef = useRef(restoreAnchorUri != null)
   const restoreScrollRetriesRef = useRef(0)
+  /**
+   * The newest post the user has actually seen at the top of the feed,
+   * carried over from the saved position and updated whenever the head post
+   * comes into view.
+   */
+  const seenHeadUriRef = useRef(restorePosition?.seenHeadUri)
 
   const myDid = currentAccount?.did || ''
   const onPostCreated = useCallback(() => {
@@ -794,7 +819,8 @@ let PostFeed = ({
      */
     if (
       isScrolledDownRef.current ||
-      getFollowingFeedPosition(currentAccount.did) !== restoreAnchorUri
+      getFollowingFeedPosition(currentAccount.did)?.anchorUri !==
+        restoreAnchorUri
     ) {
       restorePendingRef.current = false
       ax.metric('feed:positionRestored', {
@@ -820,6 +846,15 @@ let PostFeed = ({
         depth: index,
         pagesFetched: data.pages.length,
       })
+      /*
+       * Only announce the restore (which surfaces the "See new posts" pill)
+       * if the feed's head post is one the user hasn't seen - otherwise
+       * everything above the anchor was already read.
+       */
+      const headUri = getHeadUri(feedItems)
+      if (headUri && headUri !== seenHeadUriRef.current) {
+        onPositionRestored?.()
+      }
     } else if (
       isError ||
       !hasNextPage ||
@@ -846,6 +881,7 @@ let PostFeed = ({
     scrollElRef,
     headerOffset,
     ax,
+    onPositionRestored,
   ])
 
   const onScrollToIndexFailed = useCallback(
@@ -1166,9 +1202,14 @@ let PostFeed = ({
         currentAccount &&
         !restorePendingRef.current
       ) {
+        const uri = item.slice.items[item.indexInSlice].uri
+        if (uri === getHeadUri(feedItems)) {
+          seenHeadUriRef.current = uri
+        }
         saveFollowingFeedPosition(
           currentAccount.did,
-          item.slice.items[item.indexInSlice].uri,
+          uri,
+          seenHeadUriRef.current,
         )
       }
 
@@ -1283,6 +1324,7 @@ let PostFeed = ({
       ax,
       resumeEnabled,
       currentAccount,
+      feedItems,
     ],
   )
 

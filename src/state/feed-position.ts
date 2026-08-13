@@ -32,25 +32,33 @@ export function useFollowingFeedResumeEnabled() {
 
 /**
  * Save the most recently viewed post in the Following feed as the anchor to
- * restore to on next cold start.
+ * restore to on next cold start, along with the newest post the user has
+ * seen at the top of the feed (if known).
  */
-export function saveFollowingFeedPosition(did: string, anchorUri: string) {
+export function saveFollowingFeedPosition(
+  did: string,
+  anchorUri: string,
+  seenHeadUri?: string,
+) {
   account.set([did, 'followingFeedPosition'], {
     anchorUri,
+    seenHeadUri,
     savedAt: Date.now(),
   })
 }
 
 /**
- * Returns the saved anchor post URI, or undefined if nothing was saved or the
+ * Returns the saved feed position, or undefined if nothing was saved or the
  * saved position has expired.
  */
-export function getFollowingFeedPosition(did: string): string | undefined {
+export function getFollowingFeedPosition(
+  did: string,
+): {anchorUri: string; seenHeadUri?: string} | undefined {
   const position = account.get([did, 'followingFeedPosition'])
   if (!position || Date.now() - position.savedAt > MAX_POSITION_AGE) {
     return undefined
   }
-  return position.anchorUri
+  return position
 }
 
 export function clearFollowingFeedPosition(did: string) {

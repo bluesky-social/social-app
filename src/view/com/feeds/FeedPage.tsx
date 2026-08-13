@@ -35,6 +35,7 @@ import {type ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {useTheme} from '#/alf'
+import {SeeNewPostsPill} from '#/components/feeds/SeeNewPostsPill'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {useAnalytics} from '#/analytics'
@@ -74,6 +75,13 @@ export function FeedPage({
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useRef<ListMethods>(null)
   const [hasNew, setHasNew] = useState(false)
+  /**
+   * Whether to show the "See new posts" pill after the feed was restored to
+   * the last read position. Cleared once the user returns to the top, either
+   * by pressing the pill or by scrolling up on their own.
+   */
+  const [showResumePill, setShowResumePill] = useState(false)
+  const wasScrolledDownRef = useRef(false)
   const setHomeBadge = useSetHomeBadge()
   const isVideoFeed = useMemo(() => {
     const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
@@ -96,6 +104,23 @@ export function FeedPage({
       offset: -headerOffset,
     })
   }, [headerOffset])
+
+  /*
+   * The pill renders only while scrolled down, but it should not come back
+   * on later scroll-downs, so clear it for good once the user has scrolled
+   * back up to the top.
+   */
+  useEffect(() => {
+    if (isScrolledDown) {
+      wasScrolledDownRef.current = true
+    } else if (wasScrolledDownRef.current) {
+      setShowResumePill(false)
+    }
+  }, [isScrolledDown])
+
+  const onPositionRestored = useCallback(() => {
+    setShowResumePill(true)
+  }, [])
 
   const onSoftReset = useCallback(() => {
     const isScreenFocused =
@@ -150,8 +175,34 @@ export function FeedPage({
     })
   }, [ax, scrollToTop, feed, queryClient, currentAccount])
 
+  /*
+   * In the restore case the posts above are already loaded, so pressing the
+   * pill only needs to scroll up. In the hasNew case they are not loaded
+   * yet, so it must refetch like the "Load new posts" button.
+   */
+  const onPressSeeNewPosts = useCallback(() => {
+    setShowResumePill(false)
+    if (hasNew) {
+      onPressLoadLatest()
+    } else {
+      scrollToTop()
+      ax.metric('feed:resume:seeNewPostsPressed', {})
+    }
+  }, [ax, hasNew, onPressLoadLatest, scrollToTop])
+
   const shouldPrefetch = IS_NATIVE && isPageAdjacent
   const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI
+  const isFollowingFeed = feed === 'following'
+  /*
+   * On the Following feed the pill takes over signaling new posts from the
+   * LoadLatestBtn indicator, both when new posts arrive while reading
+   * (hasNew) and after restoring the last read position. Other feeds keep
+   * the LoadLatestBtn indicator. Only shown while scrolled down - once the
+   * top of the feed is in view the pill would just be noise, so it hides
+   * even if hasNew is still set.
+   */
+  const showSeeNewPostsPill =
+    isFollowingFeed && isScrolledDown && (hasNew || showResumePill)
   return (
     <View
       testID={testID}
@@ -169,6 +220,7 @@ export function FeedPage({
             scrollElRef={scrollElRef}
             onScrolledDownChange={setIsScrolledDown}
             onHasNew={setHasNew}
+            onPositionRestored={onPositionRestored}
             renderEmptyState={renderEmptyState}
             renderEndOfFeed={renderEndOfFeed}
             headerOffset={headerOffset}
@@ -177,11 +229,17 @@ export function FeedPage({
           />
         </FeedFeedbackProvider>
       </MainScrollProvider>
-      {(isScrolledDown || hasNew) && (
+      {showSeeNewPostsPill && (
+        <SeeNewPostsPill
+          onPress={onPressSeeNewPosts}
+          topOffset={headerOffset}
+        />
+      )}
+      {(isScrolledDown || (hasNew && !isFollowingFeed)) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}
           label={_(msg`Load new posts`)}
-          showIndicator={hasNew}
+          showIndicator={hasNew && !isFollowingFeed}
         />
       )}
 
