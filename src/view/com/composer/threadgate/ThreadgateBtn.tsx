@@ -90,14 +90,12 @@ export function ThreadgateBtn({
      * Preferences are still typed against the legacy client, so the stored
      * rules arrive unbranded. Wave B migrates `getPreferences`.
      */
-    allow: preferences?.postInteractionSettings
-      .threadgateAllowRules as app.bsky.feed.threadgate.Main['allow'],
+    allow: preferences?.postInteractionSettings.threadgateAllowRules,
   })
   const prefPostgate = createPostgateRecord({
     post: '',
-    embeddingRules: (preferences?.postInteractionSettings
-      ?.postgateEmbeddingRules ||
-      []) as app.bsky.feed.postgate.Main['embeddingRules'],
+    embeddingRules:
+      preferences?.postInteractionSettings?.postgateEmbeddingRules || [],
   })
 
   const isDirty = useMemo(() => {

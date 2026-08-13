@@ -1,18 +1,17 @@
 import {useMemo} from 'react'
+import {AtpAgent, type ComAtprotoLabelDefs} from '@atproto/api'
 import {
-  type AppBskyLabelerDefs,
-  AtpAgent,
-  type ComAtprotoLabelDefs,
   type InterpretedLabelValueDefinition,
   LABELS,
   type ModerationCause,
   type ModerationOpts,
   type ModerationUI,
-} from '@atproto/api'
+} from '@bsky.app/sdk/moderation'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {type AppModerationCause} from '#/components/Pills'
+import {type app} from '#/lexicons'
 
 export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const
 export const OTHER_SELF_LABELS = ['graphic-media'] as const
@@ -102,8 +101,8 @@ export function lookupLabelValueDefinition(
 export function isAppLabeler(
   labeler:
     | string
-    | AppBskyLabelerDefs.LabelerView
-    | AppBskyLabelerDefs.LabelerViewDetailed,
+    | app.bsky.labeler.defs.LabelerView
+    | app.bsky.labeler.defs.LabelerViewDetailed,
 ): boolean {
   if (typeof labeler === 'string') {
     return AtpAgent.appLabelers.includes(labeler)
@@ -114,8 +113,8 @@ export function isAppLabeler(
 export function isLabelerSubscribed(
   labeler:
     | string
-    | AppBskyLabelerDefs.LabelerView
-    | AppBskyLabelerDefs.LabelerViewDetailed,
+    | app.bsky.labeler.defs.LabelerView
+    | app.bsky.labeler.defs.LabelerViewDetailed,
   modOpts: ModerationOpts,
 ) {
   labeler = typeof labeler === 'string' ? labeler : labeler.creator.did

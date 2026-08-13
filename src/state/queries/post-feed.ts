@@ -5,12 +5,13 @@ import {
   AppBskyFeedDefs,
   type AppBskyFeedPost,
   AtUri,
-  moderatePost,
-  type ModerationDecision,
-  type ModerationPrefs,
 } from '@atproto/api'
 import {type Client} from '@atproto/lex'
 import {type AtIdentifierString, type AtUriString} from '@atproto/syntax'
+import {
+  type ModerationDecision,
+  type ModerationPrefs,
+} from '@bsky.app/sdk/moderation'
 import {
   type InfiniteData,
   type QueryClient,
@@ -31,6 +32,7 @@ import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {moderatePost} from '#/lib/moderation/subjects'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'

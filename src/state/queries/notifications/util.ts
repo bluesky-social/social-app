@@ -6,16 +6,15 @@ import {
   type AppBskyGraphDefs,
   AppBskyGraphStarterpack,
   type AppBskyNotificationListNotifications,
-  hasMutedWord,
-  moderateNotification,
-  type ModerationOpts,
 } from '@atproto/api'
 import {type Client} from '@atproto/lex'
 import {type AtUriString} from '@atproto/syntax'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {type QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
+import {hasMutedWord, moderateNotification} from '#/lib/moderation/subjects'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {precacheProfile} from '../profile'

@@ -1,11 +1,8 @@
 import {useRef} from 'react'
 import {type ListRenderItemInfo} from 'react-native'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyFeedDefs} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

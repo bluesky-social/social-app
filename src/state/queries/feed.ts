@@ -4,7 +4,6 @@ import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
   AtUri,
-  moderateFeedGenerator,
 } from '@atproto/api'
 import {type AtUriString} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
@@ -20,6 +19,7 @@ import {
 } from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
+import {moderateFeedGenerator} from '#/lib/moderation/subjects'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {asSdkFacets} from '#/lib/strings/rich-text-helpers'

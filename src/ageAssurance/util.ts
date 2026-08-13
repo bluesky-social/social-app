@@ -4,8 +4,8 @@ import {
   AppBskyAgeassuranceDefs,
   computeAgeAssuranceRegionAccess,
   getAgeAssuranceRegionConfig,
-  type ModerationPrefs,
 } from '@atproto/api'
+import {type ModerationPrefs} from '@bsky.app/sdk/moderation'
 
 import {getAge} from '#/lib/strings/time'
 import {regionName} from '#/locale/helpers'

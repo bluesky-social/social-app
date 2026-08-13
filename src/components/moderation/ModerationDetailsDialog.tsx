@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {type ModerationCause} from '@atproto/api'
+import {type ModerationCause} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

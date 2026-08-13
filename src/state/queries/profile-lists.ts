@@ -1,4 +1,3 @@
-import {moderateUserList} from '@atproto/api'
 import {type DidString} from '@atproto/syntax'
 import {
   type InfiniteData,
@@ -6,6 +5,7 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
+import {moderateUserList} from '#/lib/moderation/subjects'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 import {useModerationOpts} from '../preferences/moderation-opts'

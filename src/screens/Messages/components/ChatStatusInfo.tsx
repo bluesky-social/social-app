@@ -1,10 +1,10 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
-import {moderateProfile} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {moderateProfile} from '#/lib/moderation/subjects'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type ActiveConvoStates} from '#/state/messages/convo'

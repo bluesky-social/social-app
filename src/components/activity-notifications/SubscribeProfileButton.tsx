@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react'
-import {type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'

@@ -5,10 +5,10 @@ import {
   type AppBskyUnspeccedDefs,
   type AppBskyUnspeccedGetPostThreadV2,
   AtUri,
-  moderatePost,
-  type ModerationOpts,
 } from '@atproto/api'
+import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 
+import {moderatePost} from '#/lib/moderation/subjects'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
   type ApiThreadItem,

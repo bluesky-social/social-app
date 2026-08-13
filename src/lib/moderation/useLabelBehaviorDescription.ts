@@ -1,7 +1,7 @@
 import {
   type InterpretedLabelValueDefinition,
   type LabelPreference,
-} from '@atproto/api'
+} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
