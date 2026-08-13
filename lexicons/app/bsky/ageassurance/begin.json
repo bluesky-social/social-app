@@ -1,0 +1,61 @@
+{
+  "id": "app.bsky.ageassurance.begin",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "email",
+            "language",
+            "countryCode"
+          ],
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "The user's email address to receive Age Assurance instructions."
+            },
+            "language": {
+              "type": "string",
+              "description": "The user's preferred language for communication during the Age Assurance process."
+            },
+            "regionCode": {
+              "type": "string",
+              "description": "An optional ISO 3166-2 code of the user's region or state within the country."
+            },
+            "countryCode": {
+              "type": "string",
+              "description": "An ISO 3166-1 alpha-2 code of the user's location."
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "InvalidEmail"
+        },
+        {
+          "name": "DidTooLong"
+        },
+        {
+          "name": "InvalidInitiation"
+        },
+        {
+          "name": "RegionNotSupported"
+        }
+      ],
+      "output": {
+        "schema": {
+          "ref": "app.bsky.ageassurance.defs#state",
+          "type": "ref"
+        },
+        "encoding": "application/json"
+      },
+      "description": "Initiate Age Assurance for an account."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

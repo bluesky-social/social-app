@@ -1,0 +1,49 @@
+{
+  "id": "chat.bsky.convo.listConvoRequests",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "requests"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "requests": {
+              "type": "array",
+              "items": {
+                "refs": [
+                  "chat.bsky.convo.defs#convoView",
+                  "chat.bsky.group.defs#joinRequestConvoView"
+                ],
+                "type": "union"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Returns a page of incoming conversation requests for the user. Direct convo requests are returned as convoView; group join requests made by the user are returned as joinRequestConvoView."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

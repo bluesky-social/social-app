@@ -1,0 +1,76 @@
+{
+  "id": "chat.bsky.group.createGroup",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "members",
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "maxLength": 500,
+              "minLength": 1,
+              "maxGraphemes": 50
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "did"
+              },
+              "maxLength": 10000,
+              "description": "The members to add to the group. The owner is automatically added. Implementations may enforce a lower maximum than the 10,000-item schema limit; Bluesky currently supports up to 100 total members. If the owner is included in this list, the list may contain up to the implementation's total member limit. Otherwise, it may contain one fewer."
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "AccountSuspended"
+        },
+        {
+          "name": "BlockedActor"
+        },
+        {
+          "name": "BlockedSubject"
+        },
+        {
+          "name": "NewAccountCannotCreateGroup"
+        },
+        {
+          "name": "NotFollowedBySender"
+        },
+        {
+          "name": "RecipientNotFound"
+        },
+        {
+          "name": "UserForbidsGroups"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convo"
+          ],
+          "properties": {
+            "convo": {
+              "ref": "chat.bsky.convo.defs#convoView",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Creates a group convo, specifying the members to be added to it. Unlike getConvoForMembers, this isn't idempotent. It will create new groups even if the membership is identical to pre-existing groups. Will create 'request' membership for all members, except the owner who is 'accepted'."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}
