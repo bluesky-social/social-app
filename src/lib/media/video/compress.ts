@@ -21,11 +21,22 @@ export async function compressVideo(
 ): Promise<CompressedVideo> {
   const {onProgress, signal, onProbe} = opts || {}
 
-  // Probe data is purely informational - fired into telemetry to validate
-  // future smart-skip thresholds. Failures must not block the upload.
-  if (onProbe && file.mimeType !== 'image/gif') {
+  const isAcceptableFormat = SUPPORTED_MIME_TYPES.includes(
+    file.mimeType as SupportedMimeTypes,
+  )
+  const isBelowByteThreshold =
+    isAcceptableFormat &&
+    file.fileSize != null &&
+    file.fileSize < MIN_SIZE_FOR_COMPRESSION_BYTES
+  let metadata: ProbedMetadata | undefined
+
+  // Probe data feeds telemetry and lets small HDR inputs bypass the normal
+  // size-based skip so they are transcoded instead of looking washed out.
+  // Failures must not block the upload.
+  if ((onProbe || isBelowByteThreshold) && file.mimeType !== 'image/gif') {
     try {
-      onProbe(toProbedMetadata(await probe(file.uri)))
+      metadata = toProbedMetadata(await probe(file.uri))
+      onProbe?.(metadata)
     } catch (e) {
       logger.debug('video probe failed', {safeMessage: e})
     }
@@ -46,17 +57,10 @@ export async function compressVideo(
   // Pre-check the threshold ourselves so we can label the skip in telemetry.
   // rnc would do the same skip internally via minimumFileSizeForCompress, but
   // that path is invisible to us.
-  const isAcceptableFormat = SUPPORTED_MIME_TYPES.includes(
-    file.mimeType as SupportedMimeTypes,
-  )
-  if (
-    isAcceptableFormat &&
-    file.fileSize != null &&
-    file.fileSize < MIN_SIZE_FOR_COMPRESSION_BYTES
-  ) {
+  if (isBelowByteThreshold && !metadata?.isHDR) {
     return {
       uri: file.uri,
-      size: file.fileSize,
+      size: file.fileSize!,
       mimeType: file.mimeType ?? 'video/mp4',
       passthroughReason: 'below-byte-threshold',
     }

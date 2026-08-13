@@ -50,9 +50,15 @@ export async function compressVideo(
   // decision. Fires before doCompression so the probed event lands ahead of
   // compressCompleted/compressSkipped in the funnel. GIFs and missing
   // WebCodecs both skip - mediabunny needs a parseable container + decoder.
-  if (onProbe && !isGif && hasCodecs) {
+  let metadata: ProbedMetadata | undefined
+  if (
+    (onProbe || blob.size < COMPRESSION_MIN_SIZE_BYTES) &&
+    !isGif &&
+    hasCodecs
+  ) {
     try {
-      onProbe(await probeWithMediaBunny(blob))
+      metadata = await probeWithMediaBunny(blob)
+      onProbe?.(metadata)
     } catch (e) {
       logger.debug('video probe failed', {safeMessage: e})
     }
@@ -73,7 +79,7 @@ export async function compressVideo(
     fallbackReason = 'gif'
   } else if (!hasCodecs) {
     fallbackReason = 'no-webcodecs'
-  } else if (blob.size < COMPRESSION_MIN_SIZE_BYTES) {
+  } else if (blob.size < COMPRESSION_MIN_SIZE_BYTES && !metadata?.isHDR) {
     fallbackReason = 'below-byte-threshold'
   } else {
     try {
