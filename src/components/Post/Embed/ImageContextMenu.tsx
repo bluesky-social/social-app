@@ -45,7 +45,7 @@ export function ImageContextMenu({
   }
 
   const handleSave = () => {
-    void saveImage(fullsizeUri)
+    void saveImage({uri: fullsizeUri})
   }
   const handleShare = () => {
     void shareImageModal({uri: fullsizeUri})

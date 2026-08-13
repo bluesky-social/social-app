@@ -226,7 +226,7 @@ function PeekableImageItem({image}: {image: AppBskyEmbedImages.ViewImage}) {
       <PeekMenu.Menu>
         <PeekMenu.MenuItem
           id="save"
-          onSelect={() => void saveImage(image.fullsize)}>
+          onSelect={() => void saveImage({uri: image.fullsize})}>
           <PeekMenu.MenuItemIcon icon={DownloadIcon} />
           <PeekMenu.MenuItemText>{l`Save image`}</PeekMenu.MenuItemText>
         </PeekMenu.MenuItem>
