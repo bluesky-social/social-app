@@ -28,8 +28,8 @@ import {
   ChatBskyConvoDefs,
   ChatBskyEmbedJoinLink,
   moderateProfile,
-  RichText as RichTextAPI,
 } from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -37,6 +37,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {type ConvoItem} from '#/state/messages/convo/types'
@@ -245,7 +246,10 @@ let MessageItem = ({
     ? t.palette.primary_300
     : t.palette.primary_100
 
-  const rt = new RichTextAPI({text: message.text, facets: message.facets})
+  const rt = new RichTextAPI({
+    text: message.text,
+    facets: asSdkFacets(message.facets),
+  })
 
   const isEmojiOnly = isOnlyEmoji(message.text)
 

@@ -1,12 +1,14 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
+import {AppBskyGraphDefs} from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {makeListLink} from '#/lib/routes/links'
+import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {logger} from '#/logger'
 import {useListBlockMutation, useListMuteMutation} from '#/state/queries/list'
 import {
@@ -128,7 +130,7 @@ export function Header({
       list.description
         ? new RichTextAPI({
             text: list.description,
-            facets: list.descriptionFacets,
+            facets: asSdkFacets(list.descriptionFacets),
           })
         : undefined,
     [list],

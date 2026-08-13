@@ -5,8 +5,8 @@ import {
   type AppBskyLabelerDefs,
   moderateProfile,
   type ModerationOpts,
-  type RichText as RichTextAPI,
 } from '@atproto/api'
+import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'

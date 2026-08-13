@@ -1,8 +1,10 @@
-import {type AppBskyRichtextFacet, type RichText} from '@atproto/api'
+import {type RichText} from '@bsky.app/sdk/richtext'
+
+import {type app} from '#/lexicons'
 
 export type LinkFacetMatch = {
   rt: RichText
-  facet: AppBskyRichtextFacet.Main
+  facet: app.bsky.richtext.facet.Main
 }
 
 export function suggestLinkCardUri(
