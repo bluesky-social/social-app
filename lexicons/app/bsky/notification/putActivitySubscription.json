@@ -1,0 +1,50 @@
+{
+  "id": "app.bsky.notification.putActivitySubscription",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "subject",
+            "activitySubscription"
+          ],
+          "properties": {
+            "subject": {
+              "type": "string",
+              "format": "did"
+            },
+            "activitySubscription": {
+              "ref": "app.bsky.notification.defs#activitySubscription",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "subject"
+          ],
+          "properties": {
+            "subject": {
+              "type": "string",
+              "format": "did"
+            },
+            "activitySubscription": {
+              "ref": "app.bsky.notification.defs#activitySubscription",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Puts an activity subscription entry. The key should be omitted for creation and provided for updates. Requires auth."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

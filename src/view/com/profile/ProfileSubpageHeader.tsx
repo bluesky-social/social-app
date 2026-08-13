@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {useAnimatedRef} from 'react-native-reanimated'
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -17,9 +16,10 @@ import {TextLink} from '#/view/com/util/Link'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar, type UserAvatarType} from '#/view/com/util/UserAvatar'
-import {StarterPack} from '#/components/icons/StarterPack'
+import {StarterPackMultiPathLarge as StarterPackIcon} from '#/components/icons/StarterPack'
 import * as Layout from '#/components/Layout'
 import {useLightboxControls} from '#/components/Lightbox/state'
+import {type app} from '#/lexicons'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -37,7 +37,7 @@ export function ProfileSubpageHeader({
   title: string | undefined
   avatar: string | undefined
   isOwner: boolean | undefined
-  purpose: AppBskyGraphDefs.ListPurpose | undefined
+  purpose: app.bsky.graph.defs.ListPurpose | undefined
   creator:
     | {
         did: string
@@ -109,7 +109,7 @@ export function ProfileSubpageHeader({
             accessibilityHint=""
             style={{width: 58}}>
             {avatarType === 'starter-pack' ? (
-              <StarterPack width={58} gradient="sky" />
+              <StarterPackIcon width={58} gradient="sky" />
             ) : (
               <UserAvatar type={avatarType} size={58} avatar={avatar} />
             )}

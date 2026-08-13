@@ -244,25 +244,6 @@
       "count": 3
     }
   },
-  "src/components/Post/Embed/ImageEmbed.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 2
-    },
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 2
-    },
-    "typescript/no-unsafe-enum-comparison": {
-      "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
   "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils.tsx": {
     "typescript/no-explicit-any": {
       "count": 2
@@ -288,19 +269,6 @@
   "src/components/PostControls/DiscoverDebug.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
-    }
-  },
-  "src/components/PostControls/ShareMenu/ShareMenuItems.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 3
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 3
     }
   },
   "src/components/PostControls/ShareMenu/index.tsx": {
@@ -617,11 +585,6 @@
       "count": 1
     }
   },
-  "src/components/interstitials/TrendingVideos.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/components/verification/VerificationCreatePrompt.tsx": {
     "typescript/no-misused-promises": {
       "count": 1
@@ -733,7 +696,7 @@
       "count": 1
     },
     "typescript/no-misused-promises": {
-      "count": 4
+      "count": 3
     }
   },
   "src/lib/hooks/usePermissions.ts": {
@@ -885,9 +848,6 @@
     },
     "typescript/no-misused-promises": {
       "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 1
     }
   },
   "src/screens/E2E/SharedPreferencesTesterScreen.tsx": {
@@ -959,17 +919,6 @@
       "count": 1
     }
   },
-  "src/screens/Onboarding/StepInterests/index.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
-    },
-    "typescript/require-await": {
-      "count": 1
-    }
-  },
   "src/screens/Onboarding/StepProfile/index.tsx": {
     "typescript/no-floating-promises": {
       "count": 2
@@ -1029,11 +978,6 @@
       "count": 3
     }
   },
-  "src/screens/Profile/Header/Shell.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/screens/Profile/KnownFollowers.tsx": {
     "typescript/no-misused-promises": {
       "count": 2
@@ -1053,11 +997,6 @@
     },
     "typescript/no-unsafe-member-access": {
       "count": 1
-    }
-  },
-  "src/screens/Profile/components/ProfileFeedHeader.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 5
     }
   },
   "src/screens/ProfileList/FeedSection.tsx": {
@@ -1157,12 +1096,6 @@
     },
     "typescript/no-misused-promises": {
       "count": 2
-    },
-    "typescript/no-unsafe-call": {
-      "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 2
     }
   },
   "src/screens/Settings/components/CopyButton.tsx": {
@@ -1243,11 +1176,6 @@
     }
   },
   "src/screens/StarterPack/Wizard/StepFeeds.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/screens/StarterPack/Wizard/StepProfiles.tsx": {
     "typescript/no-misused-promises": {
       "count": 1
     }
@@ -1406,11 +1334,6 @@
       "count": 2
     }
   },
-  "src/state/queries/feed.ts": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/state/queries/handle.ts": {
     "typescript/no-floating-promises": {
       "count": 1
@@ -1474,16 +1397,13 @@
   },
   "src/state/queries/postgate/index.ts": {
     "typescript/no-explicit-any": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-floating-promises": {
       "count": 1
     },
-    "typescript/no-unsafe-call": {
-      "count": 2
-    },
     "typescript/no-unsafe-member-access": {
-      "count": 3
+      "count": 1
     },
     "typescript/require-await": {
       "count": 2
@@ -1500,17 +1420,8 @@
     }
   },
   "src/state/queries/threadgate/index.ts": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    },
     "typescript/no-floating-promises": {
       "count": 3
-    },
-    "typescript/no-unsafe-call": {
-      "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 2
     },
     "typescript/require-await": {
       "count": 3
@@ -1521,11 +1432,6 @@
       "count": 1
     },
     "typescript/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
-  "src/state/session/agent.ts": {
-    "typescript/no-explicit-any": {
       "count": 1
     }
   },
@@ -1617,14 +1523,6 @@
       "count": 1
     }
   },
-  "src/view/com/composer/text-input/TextInput.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/view/com/composer/text-input/TextInput.web.tsx": {
     "typescript/no-misused-promises": {
       "count": 1
@@ -1687,31 +1585,6 @@
       "count": 2
     }
   },
-  "src/view/com/notifications/NotificationFeed.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 2
-    },
-    "typescript/no-floating-promises": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 6
-    }
-  },
-  "src/view/com/notifications/NotificationFeedItem.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 3
-    },
-    "typescript/no-misused-promises": {
-      "count": 3
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 2
-    }
-  },
   "src/view/com/pager/Pager.tsx": {
     "typescript/no-explicit-any": {
       "count": 4
@@ -1764,11 +1637,6 @@
       "count": 2
     }
   },
-  "src/view/com/posts/PostFeed.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/view/com/posts/PostFeedErrorMessage.tsx": {
     "typescript/no-explicit-any": {
       "count": 1
@@ -1777,17 +1645,7 @@
       "count": 8
     },
     "typescript/no-unsafe-member-access": {
-      "count": 9
-    }
-  },
-  "src/view/com/profile/ProfileFollowers.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 2
-    }
-  },
-  "src/view/com/profile/ProfileFollows.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 2
+      "count": 8
     }
   },
   "src/view/com/util/EmptyState.tsx": {

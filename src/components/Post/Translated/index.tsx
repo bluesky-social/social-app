@@ -1,6 +1,5 @@
 import {useCallback, useMemo} from 'react'
 import {Platform, type StyleProp, type TextStyle, View} from 'react-native'
-import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
@@ -28,6 +27,7 @@ import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const X_ICON_OFFSET = 16
@@ -38,7 +38,7 @@ export function TranslatedPost({
   postTextStyle = a.text_md,
 }: {
   hideTranslateLink?: boolean
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   postTextStyle?: StyleProp<TextStyle>
 }) {
   const langPrefs = useLanguagePrefs()
@@ -46,11 +46,8 @@ export function TranslatedPost({
     key: post.uri,
   })
 
-  const record = useMemo<AppBskyFeedPost.Record | undefined>(() => {
-    return bsky.dangerousIsType<AppBskyFeedPost.Record>(
-      post.record,
-      AppBskyFeedPost.isRecord,
-    )
+  const record = useMemo<app.bsky.feed.post.Main | undefined>(() => {
+    return bsky.isType(app.bsky.feed.post, post.record)
       ? post.record
       : undefined
   }, [post])
@@ -150,10 +147,10 @@ function TranslationLink({
         label={l`Translate`}
         hoverStyle={[
           native({opacity: 0.5}),
-          web([a.underline, {textDecorationColor: t.palette.primary_500}]),
+          web([a.underline, {textDecorationColor: t.atoms.text_link.color}]),
         ]}
         hitSlop={HITSLOP_30}>
-        <Text style={[a.text_sm, {color: t.palette.primary_500}]}>
+        <Text style={[a.text_sm, t.atoms.text_link]}>
           <Trans>Translate</Trans>
         </Text>
       </Link>
@@ -229,7 +226,7 @@ function TranslationError({
           label={l`Try Google Translate`}
           hoverStyle={[
             native({opacity: 0.5}),
-            web([a.underline, {textDecorationColor: t.palette.primary_500}]),
+            web([a.underline, {textDecorationColor: t.atoms.text_link.color}]),
           ]}
           hitSlop={HITSLOP_30}>
           <Text
@@ -237,7 +234,7 @@ function TranslationError({
               a.text_xs,
               a.font_medium,
               a.leading_snug,
-              {color: t.palette.primary_500},
+              t.atoms.text_link,
             ]}>
             <Trans>Try Google Translate</Trans>
           </Text>

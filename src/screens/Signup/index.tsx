@@ -1,9 +1,8 @@
-import {useEffect, useReducer, useState} from 'react'
+import {type PropsWithChildren, useEffect, useReducer, useState} from 'react'
 import {AppState, type AppStateStatus, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
-import {AppBskyGraphStarterpack} from '@atproto/api'
 import {tokens} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -32,6 +31,7 @@ import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {GCP_PROJECT_ID, IS_ANDROID} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
@@ -132,10 +132,8 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   return (
     <Animated.View exiting={native(FadeIn.duration(90))} style={a.flex_1}>
       <SignupContext.Provider value={{state, dispatch}}>
-        <KeyboardAvoidingView
-          behavior="padding"
-          style={a.flex_1}
-          automaticOffset>
+        <SignupKeyboardAvoidingView
+          enabled={state.activeStep !== SignupStep.CAPTCHA}>
           <LoggedOutLayout
             leadin=""
             title={l`Create account`}
@@ -143,10 +141,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
             scrollable>
             <View testID="createAccount" style={a.flex_1}>
               {showStarterPackCard &&
-              bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-                starterPack.record,
-                AppBskyGraphStarterpack.isRecord,
-              ) ? (
+              bsky.isType(app.bsky.graph.starterpack, starterPack.record) ? (
                 <Animated.View
                   entering={!isFetchedAtMount ? FadeIn : undefined}>
                   <LinearGradientBackground
@@ -174,14 +169,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               <LayoutAnimationConfig skipEntering>
                 <ScreenTransition
                   key={state.activeStep}
-                  direction={state.screenTransitionDirection}>
-                  <View
-                    style={[
-                      a.flex_1,
-                      a.px_xl,
-                      a.pt_2xl,
-                      !gtMobile && {paddingBottom: 100},
-                    ]}>
+                  direction={state.screenTransitionDirection}
+                  style={a.flex_1}>
+                  <View style={[a.flex_1, a.px_xl, a.pt_2xl]}>
                     <View style={[a.gap_sm, a.pb_3xl]}>
                       <Text
                         style={[
@@ -260,8 +250,23 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               </LayoutAnimationConfig>
             </View>
           </LoggedOutLayout>
-        </KeyboardAvoidingView>
+        </SignupKeyboardAvoidingView>
       </SignupContext.Provider>
     </Animated.View>
+  )
+}
+
+function SignupKeyboardAvoidingView({
+  children,
+  enabled,
+}: PropsWithChildren<{enabled: boolean}>) {
+  if (!enabled) {
+    return <View style={a.flex_1}>{children}</View>
+  }
+
+  return (
+    <KeyboardAvoidingView behavior="padding" style={a.flex_1} automaticOffset>
+      {children}
+    </KeyboardAvoidingView>
   )
 }

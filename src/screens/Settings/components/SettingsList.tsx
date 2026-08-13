@@ -311,7 +311,7 @@ export function BadgeButton({
             a.text_md,
             a.font_normal,
             a.text_right,
-            {color: pressed ? t.palette.contrast_300 : t.palette.primary_500},
+            {color: pressed ? t.palette.contrast_300 : t.atoms.text_link.color},
           ]}>
           {label}
         </Button.ButtonText>

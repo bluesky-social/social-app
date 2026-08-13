@@ -12,9 +12,9 @@ import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 // @ts-ignore
-import splashImagePointer from '../../../../assets/splash/illustration-mobile.png'
+import splashImagePointer from '../../../../assets/illustrations/illustration-mobile.png'
 // @ts-ignore
-import darkSplashImagePointer from '../../../../assets/splash/illustration-mobile-dark.png'
+import darkSplashImagePointer from '../../../../assets/illustrations/illustration-mobile-dark.png'
 const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
 const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
@@ -39,9 +39,9 @@ export const SplashScreen = ({
       logoFill,
       logoShadow: isDarkMode
         ? [
-            t.atoms.shadow_md,
             {
               shadowColor: logoFill,
+              shadowRadius: 8,
               shadowOpacity: 0.5,
               shadowOffset: {
                 width: 0,
@@ -93,13 +93,15 @@ export const SplashScreen = ({
             size="large"
             color={isDarkMode ? 'secondary_inverted' : 'secondary'}
             style={[
-              t.atoms.shadow_md,
               {
+                shadowColor: t.palette.black,
+                shadowRadius: 8,
                 shadowOpacity: 0.1,
                 shadowOffset: {
                   width: 0,
                   height: 5,
                 },
+                elevation: 16,
               },
             ]}>
             <ButtonText>

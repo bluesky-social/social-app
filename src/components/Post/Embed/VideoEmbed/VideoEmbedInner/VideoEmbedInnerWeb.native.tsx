@@ -1,6 +1,7 @@
 import {type VideoEmbedInnerWebProps} from './VideoEmbedInnerWeb.shared'
 
 export {
+  HLSFatalError,
   HLSUnsupportedError,
   VideoNotFoundError,
 } from './VideoEmbedInnerWeb.shared'

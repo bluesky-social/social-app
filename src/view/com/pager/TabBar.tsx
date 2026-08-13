@@ -7,8 +7,6 @@ import {
 } from 'react-native'
 import Animated, {
   interpolate,
-  runOnJS,
-  runOnUI,
   scrollTo,
   type SharedValue,
   useAnimatedReaction,
@@ -16,6 +14,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import {scheduleOnRN, scheduleOnUI} from 'react-native-worklets'
 
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
@@ -126,7 +125,7 @@ export function TabBar({
           const progress = dragProgress.get()
           const offset = progressToOffset(progress)
           // It's unclear why we need to go back to JS here. It seems iOS-specific.
-          runOnJS(scrollToOffsetJS)(offset)
+          scheduleOnRN(scrollToOffsetJS, offset)
         }
       }
     },
@@ -303,7 +302,7 @@ export function TabBar({
 
   const onPressItem = useCallback(
     (index: number) => {
-      runOnUI(onPressUIThread)(index)
+      scheduleOnUI(onPressUIThread, index)
       onSelect?.(index)
       if (index === selectedPage) {
         onPressSelected?.(index)
@@ -409,14 +408,14 @@ function TabBarItem({
 
   const handleLayout = useCallback(
     (e: LayoutChangeEvent) => {
-      runOnUI(onItemLayout)(index, e.nativeEvent.layout)
+      scheduleOnUI(onItemLayout, index, e.nativeEvent.layout)
     },
     [index, onItemLayout],
   )
 
   const handleTextLayout = useCallback(
     (e: LayoutChangeEvent) => {
-      runOnUI(onTextLayout)(index, e.nativeEvent.layout)
+      scheduleOnUI(onTextLayout, index, e.nativeEvent.layout)
     },
     [index, onTextLayout],
   )
