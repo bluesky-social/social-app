@@ -17,7 +17,7 @@ import {TextLink} from '#/view/com/util/Link'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar, type UserAvatarType} from '#/view/com/util/UserAvatar'
-import {StarterPack} from '#/components/icons/StarterPack'
+import {StarterPackMultiPathLarge as StarterPackIcon} from '#/components/icons/StarterPack'
 import * as Layout from '#/components/Layout'
 import {useLightboxControls} from '#/components/Lightbox/state'
 
@@ -109,7 +109,7 @@ export function ProfileSubpageHeader({
             accessibilityHint=""
             style={{width: 58}}>
             {avatarType === 'starter-pack' ? (
-              <StarterPack width={58} gradient="sky" />
+              <StarterPackIcon width={58} gradient="sky" />
             ) : (
               <UserAvatar type={avatarType} size={58} avatar={avatar} />
             )}

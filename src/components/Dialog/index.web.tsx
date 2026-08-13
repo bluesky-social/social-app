@@ -52,6 +52,7 @@ const preventDefault = (e: any) => e.preventDefault()
 export function Outer({
   children,
   control,
+  onOpen,
   onClose,
   webOptions,
 }: React.PropsWithChildren<DialogOuterProps>) {
@@ -61,9 +62,10 @@ export function Outer({
   const {setDialogIsOpen} = useDialogStateControlContext()
 
   const open = useCallback(() => {
+    onOpen?.()
     setDialogIsOpen(control.id, true)
     setIsOpen(true)
-  }, [setIsOpen, setDialogIsOpen, control.id])
+  }, [setIsOpen, setDialogIsOpen, control.id, onOpen])
 
   const close = useCallback<DialogControlProps['close']>(
     cb => {

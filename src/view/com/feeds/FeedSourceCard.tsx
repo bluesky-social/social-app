@@ -193,7 +193,7 @@ export function FeedSourceCardLoaded({
               )
         }
         to={{
-          screen: feed.type === 'feed' ? 'ProfileFeed' : 'ProfileList',
+          screen: feed.type === 'feed' ? 'CustomFeed' : 'ProfileList',
           params: {name: feed.creatorDid, rkey: new AtUri(feed.uri).rkey},
         }}
         style={[

@@ -97,6 +97,7 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import * as Hider from '#/components/moderation/Hider'
+import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
@@ -112,7 +113,7 @@ function createThreeVideoPlayers(
   const eventInterval = platform({
     ios: 0.2,
     android: 0.5,
-    default: 0,
+    default: 0.2,
   })
   const p1 = createVideoPlayer(sources?.[0] ?? '')
   p1.loop = true
@@ -528,7 +529,7 @@ let VideoItem = ({
   // we can't distinguish between them
   const shouldRenderVideo = active || ios(adjacent)
 
-  return (
+  const content = (
     <View style={[a.relative, {height, width}]}>
       {postShadow === POST_TOMBSTONE ? (
         <View
@@ -573,6 +574,12 @@ let VideoItem = ({
       )}
     </View>
   )
+
+  return (
+    <ReportDialogMetadataContext.Provider key={post.uri}>
+      {content}
+    </ReportDialogMetadataContext.Provider>
+  )
 }
 VideoItem = memo(VideoItem)
 
@@ -587,12 +594,27 @@ function VideoItemInner({
 }) {
   const {bottom} = useSafeAreaInsets()
   const [isReady, setIsReady] = useState(!IS_ANDROID)
+  const reportDialogMetadata =
+    ReportDialogMetadataContext.useReportDialogMetadataContext()
 
   usePlaybackTelemetry({player, active, playlist: embed.playlist})
 
   useEventListener(player, 'timeUpdate', evt => {
     if (IS_ANDROID && !isReady && evt.currentTime >= 0.05) {
       setIsReady(true)
+    }
+    /*
+     * Players are pooled and reassigned as the user swipes. Only trust the item
+     * that's actually on screen.
+     */
+    if (
+      active &&
+      embed.presentation !== 'gif' &&
+      reportDialogMetadata &&
+      Number.isFinite(evt.currentTime) &&
+      evt.currentTime >= 0
+    ) {
+      reportDialogMetadata.current.videoTimestampSeconds = evt.currentTime
     }
   })
 

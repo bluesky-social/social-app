@@ -3,7 +3,7 @@ import {type StyleProp, type TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 
 import {toShortUrl} from '#/lib/strings/url-helpers'
-import {atoms as a, flatten, type TextStyleProp} from '#/alf'
+import {android, atoms as a, flatten, type TextStyleProp} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {InlineLinkText, type LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -28,6 +28,17 @@ export type RichTextProps = TextStyleProp &
     emojiMultiplier?: number
     shouldProxyLinks?: boolean
     suffix?: React.ReactNode
+    /**
+     * How far below the text baseline `suffix` extends, in px.
+     *
+     * Android clips inline views that are translated below the measured text
+     * bounds. Reserve matching room there and cancel it with a negative margin
+     * so content following the text does not move. iOS allows inline attachment
+     * overflow through `RNUITextView` and does not need this compensation.
+     *
+     * Overrides any `paddingBottom`/`marginBottom` set via `style` on Android.
+     */
+    suffixOffset?: number
     /**
      * DANGEROUS: Disable facet lexicon validation
      *
@@ -56,6 +67,7 @@ export function RichText({
   onTextLayout,
   shouldProxyLinks,
   suffix,
+  suffixOffset = 0,
   disableMentionFacetValidation,
 }: RichTextProps) {
   const richText = useMemo(() => {
@@ -69,6 +81,10 @@ export function RichText({
   }, [value])
 
   const plainStyles = style
+  const suffixStyles =
+    suffix && suffixOffset
+      ? android({paddingBottom: suffixOffset, marginBottom: -suffixOffset})
+      : null
   const interactiveStyles = [plainStyles, interactiveStyle]
 
   const {text, facets} = richText
@@ -83,7 +99,7 @@ export function RichText({
           emoji
           selectable={selectable}
           testID={testID}
-          style={[plainStyles, {fontSize}]}
+          style={[plainStyles, {fontSize}, suffixStyles]}
           onLayout={onLayout}
           onTextLayout={onTextLayout}
           // @ts-ignore web only -prf
@@ -99,7 +115,7 @@ export function RichText({
         emoji
         selectable={selectable}
         testID={testID}
-        style={plainStyles}
+        style={[plainStyles, suffixStyles]}
         numberOfLines={numberOfLines}
         onLayout={onLayout}
         onTextLayout={onTextLayout}
@@ -187,7 +203,7 @@ export function RichText({
       emoji
       selectable={selectable}
       testID={testID}
-      style={plainStyles}
+      style={[plainStyles, suffixStyles]}
       numberOfLines={numberOfLines}
       onLayout={onLayout}
       onTextLayout={onTextLayout}

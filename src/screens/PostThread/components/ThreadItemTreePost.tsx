@@ -23,8 +23,9 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {
-  hasThreadItemPostNumber,
+  POST_NUMBER_INLINE_OFFSET,
   ThreadItemPostNumber,
+  useHasThreadItemPostNumber,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
 import {
   OUTER_SPACE,
@@ -39,6 +40,7 @@ import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Tra
 import {GalleryBleed} from '#/components/images/Gallery'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
+import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
@@ -75,15 +77,15 @@ export function ThreadItemTreePost({
   }
 
   return (
-    <ThreadItemTreePostInner
-      // Safeguard from clobbering per-post state below:
-      key={postShadow.uri}
-      item={item}
-      postShadow={postShadow}
-      threadgateRecord={threadgateRecord}
-      overrides={overrides}
-      onPostSuccess={onPostSuccess}
-    />
+    <ReportDialogMetadataContext.Provider key={postShadow.uri}>
+      <ThreadItemTreePostInner
+        item={item}
+        postShadow={postShadow}
+        threadgateRecord={threadgateRecord}
+        overrides={overrides}
+        onPostSuccess={onPostSuccess}
+      />
+    </ReportDialogMetadataContext.Provider>
   )
 }
 
@@ -263,6 +265,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
   const post = item.value.post
   const record = item.value.post.record
   const postNumbering = item.value
+  const showPostNumber = useHasThreadItemPostNumber(postNumbering)
   const moderation = item.moderation
   const richText = useMemo(
     () =>
@@ -359,9 +362,9 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                         numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                         authorHandle={post.author.handle}
                         shouldProxyLinks={true}
+                        suffixOffset={POST_NUMBER_INLINE_OFFSET}
                         suffix={
-                          !limitLines &&
-                          hasThreadItemPostNumber(postNumbering) ? (
+                          !limitLines && showPostNumber ? (
                             <ThreadItemPostNumber value={postNumbering} />
                           ) : undefined
                         }

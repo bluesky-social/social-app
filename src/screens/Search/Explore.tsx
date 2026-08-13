@@ -59,7 +59,7 @@ import {
   type Props as SVGIconProps,
 } from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
-import {StarterPack} from '#/components/icons/StarterPack'
+import {StarterPackMultiPathLarge as StarterPackIcon} from '#/components/icons/StarterPack'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {boostInterests} from '#/components/InterestTabs'
 import {Loader} from '#/components/Loader'
@@ -659,7 +659,7 @@ export function Explore({
       type: 'header',
       key: 'suggested-starterPacks-header',
       title: l`Starter Packs`,
-      icon: StarterPack,
+      icon: StarterPackIcon,
       iconSize: 'md',
     })
 

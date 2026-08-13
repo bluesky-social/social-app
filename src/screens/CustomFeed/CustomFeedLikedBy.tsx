@@ -8,13 +8,13 @@ import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {PostLikedBy as PostLikedByComponent} from '#/view/com/post-thread/PostLikedBy'
 import * as Layout from '#/components/Layout'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeedLikedBy'>
-export const ProfileFeedLikedByScreen = ({route}: Props) => {
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'CustomFeedLikedBy'>
+export const CustomFeedLikedByScreen = ({route}: Props) => {
   const {name, rkey} = route.params
   const uri = makeRecordUri(name, 'app.bsky.feed.generator', rkey)
 
   return (
-    <Layout.Screen testID="postLikedByScreen">
+    <Layout.Screen testID="customFeedLikedByScreen">
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content>

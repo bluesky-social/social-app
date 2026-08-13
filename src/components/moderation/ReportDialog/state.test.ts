@@ -108,3 +108,43 @@ describe('reducer NCII qualification', () => {
     expect(reducer(state, {type: 'clearCategory'}).ncii).toBeUndefined()
   })
 })
+
+describe('reducer video timestamp', () => {
+  const labeler = {} as AppBskyLabelerDefs.LabelerViewDetailed
+  const opted: ReportState = {...initialState, includeVideoTimestamp: true}
+
+  it('is off by default', () => {
+    expect(initialState.includeVideoTimestamp).toBe(false)
+  })
+
+  it('toggles on and back off', () => {
+    let state = reducer(initialState, {
+      type: 'setIncludeVideoTimestamp',
+      include: true,
+    })
+    expect(state.includeVideoTimestamp).toBe(true)
+    state = reducer(state, {type: 'setIncludeVideoTimestamp', include: false})
+    expect(state.includeVideoTimestamp).toBe(false)
+  })
+
+  it('clears when the moderation service is cleared', () => {
+    expect(reducer(opted, {type: 'clearLabeler'}).includeVideoTimestamp).toBe(
+      false,
+    )
+  })
+
+  it('clears when a moderation service is selected', () => {
+    expect(
+      reducer(opted, {type: 'selectLabeler', labeler}).includeVideoTimestamp,
+    ).toBe(false)
+  })
+
+  it('clears when the reason or category is cleared', () => {
+    expect(reducer(opted, {type: 'clearOption'}).includeVideoTimestamp).toBe(
+      false,
+    )
+    expect(reducer(opted, {type: 'clearCategory'}).includeVideoTimestamp).toBe(
+      false,
+    )
+  })
+})

@@ -22,8 +22,8 @@ import {scheduleOnRN, scheduleOnUI} from 'react-native-worklets'
 import {useEventListener} from 'expo'
 import {type VideoPlayer} from 'expo-video'
 
+import {formatTime} from '#/lib/media/video/formatTime'
 import {atoms as a, tokens} from '#/alf'
-import {formatTime} from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils'
 import {Text} from '#/components/Typography'
 
 // magic number that is roughly the min height of the write reply button

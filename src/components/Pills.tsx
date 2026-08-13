@@ -1,12 +1,13 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {BSKY_LABELER_DID, type ModerationCause} from '@atproto/api'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
+import {RepostStrike_Stroke2_Corner0_Rounded as RepostStrikeIcon} from '#/components/icons/Repost'
 import {
   ModerationDetailsDialog,
   useModerationDetailsDialogControl,
@@ -213,5 +214,27 @@ export function FollowsYou({size = 'sm'}: CommonProps) {
         <Trans>Follows you</Trans>
       </Text>
     </View>
+  )
+}
+
+export function MutedOnlyReposts(props: CommonProps) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  const size = props.size === 'lg' ? 16 : 12
+
+  return (
+    <LabelBase
+      {...props}
+      label={l`Reposts Hidden`}
+      icon={
+        <RepostStrikeIcon
+          width={size}
+          fill={t.atoms.text_contrast_medium.color}
+        />
+      }
+      disabled={true}
+      onPress={() => {}}
+    />
   )
 }
