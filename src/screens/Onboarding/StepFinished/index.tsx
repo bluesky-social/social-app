@@ -3,11 +3,7 @@ import {View} from 'react-native'
 import {TID} from '@atproto/common-web'
 import {type Un$Typed} from '@atproto/lex'
 import {type AtUriString, toDatetimeString} from '@atproto/syntax'
-import {
-  overwriteSavedFeeds,
-  setInterestsPref,
-  upsertProfile,
-} from '@bsky.app/sdk'
+import {overwriteSavedFeeds, setInterestsPref, upsertProfile} from '@bsky/sdk'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

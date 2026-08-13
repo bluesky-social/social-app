@@ -1,7 +1,7 @@
 import {useCallback} from 'react'
 import {type Client} from '@atproto/lex'
 import {AtUri, type AtUriString, type HandleString} from '@atproto/syntax'
-import {deleteLike, deletePost, deleteRepost, like, repost} from '@bsky.app/sdk'
+import {deleteLike, deletePost, deleteRepost, like, repost} from '@bsky/sdk'
 import {
   type QueryClient,
   useMutation,

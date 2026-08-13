@@ -2,7 +2,7 @@ import {useEffect} from 'react'
 import {View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {type ThemeName} from '@bsky.app/alf'
-import {moderateProfile} from '@bsky.app/sdk/moderation'
+import {moderateProfile} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'

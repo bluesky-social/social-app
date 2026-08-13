@@ -1,5 +1,5 @@
 import {useEffect} from 'react'
-import {getPreferences, updateLiveEventPreferences} from '@bsky.app/sdk'
+import {getPreferences, updateLiveEventPreferences} from '@bsky/sdk'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {

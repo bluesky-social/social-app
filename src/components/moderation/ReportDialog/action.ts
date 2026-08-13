@@ -1,5 +1,5 @@
 import {type AtUriString, type DidString} from '@atproto/syntax'
-import {api} from '@bsky.app/sdk'
+import {api} from '@bsky/sdk'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'

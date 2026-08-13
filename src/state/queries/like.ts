@@ -1,5 +1,5 @@
 import {type AtUriString} from '@atproto/syntax'
-import {deleteLike, like} from '@bsky.app/sdk'
+import {deleteLike, like} from '@bsky/sdk'
 import {useMutation} from '@tanstack/react-query'
 
 import {usePdsClient} from '#/state/session'

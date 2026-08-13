@@ -1,4 +1,4 @@
-import {type BskyFeedViewPreference, type BskyPreferences} from '@bsky.app/sdk'
+import {type BskyFeedViewPreference, type BskyPreferences} from '@bsky/sdk'
 
 export type UsePreferencesQueryResponse = Omit<
   BskyPreferences,

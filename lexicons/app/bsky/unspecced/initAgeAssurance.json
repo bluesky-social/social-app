@@ -34,15 +34,9 @@
         }
       },
       "errors": [
-        {
-          "name": "InvalidEmail"
-        },
-        {
-          "name": "DidTooLong"
-        },
-        {
-          "name": "InvalidInitiation"
-        }
+        { "name": "InvalidEmail" },
+        { "name": "DidTooLong" },
+        { "name": "InvalidInitiation" }
       ]
     }
   }

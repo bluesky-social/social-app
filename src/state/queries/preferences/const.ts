@@ -1,4 +1,4 @@
-import {DEFAULT_LABEL_SETTINGS} from '@bsky.app/sdk/moderation'
+import {DEFAULT_LABEL_SETTINGS} from '@bsky/sdk/moderation'
 
 import {
   type ThreadViewPreferences,

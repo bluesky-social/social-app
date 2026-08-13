@@ -1,7 +1,7 @@
 import {forwardRef, useCallback, useImperativeHandle, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
-import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {
   type InfiniteData,
   type UseInfiniteQueryResult,

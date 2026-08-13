@@ -13,7 +13,7 @@ import {
   muteActor,
   unmuteActor,
   upsertProfile,
-} from '@bsky.app/sdk'
+} from '@bsky/sdk'
 import {
   type InfiniteData,
   keepPreviousData,
@@ -548,7 +548,6 @@ function useProfileMuteRepostsMutation() {
     mutationFn: async ({did}: {did: DidString}) => {
       await appviewClient.call(muteActor, {
         actor: did,
-        // @ts-expect-error missing from this SDK version, remove this
         onlyReposts: true,
       })
     },

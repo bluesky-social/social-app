@@ -1,5 +1,5 @@
 import {type PressableProps, type StyleProp, type ViewStyle} from 'react-native'
-import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 
 import {type Shadow} from '#/state/cache/post-shadow'
 import {type app} from '#/lexicons'

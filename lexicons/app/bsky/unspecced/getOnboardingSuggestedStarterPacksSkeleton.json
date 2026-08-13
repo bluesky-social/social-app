@@ -1,10 +1,10 @@
 {
   "lexicon": 1,
-  "id": "app.bsky.unspecced.getTrendsSkeleton",
+  "id": "app.bsky.unspecced.getOnboardingSuggestedStarterPacksSkeleton",
   "defs": {
     "main": {
       "type": "query",
-      "description": "Get the skeleton of trends on the network. Intended to be called and then hydrated through app.bsky.unspecced.getTrends",
+      "description": "Get a skeleton of suggested starterpacks for onboarding. Intended to be called and hydrated by app.bsky.unspecced.getOnboardingSuggestedStarterPacks",
       "parameters": {
         "type": "params",
         "properties": {
@@ -25,18 +25,14 @@
         "encoding": "application/json",
         "schema": {
           "type": "object",
-          "required": ["trends"],
+          "required": ["starterPacks"],
           "properties": {
-            "trends": {
+            "starterPacks": {
               "type": "array",
               "items": {
-                "type": "ref",
-                "ref": "app.bsky.unspecced.defs#skeletonTrend"
+                "type": "string",
+                "format": "at-uri"
               }
-            },
-            "recIdStr": {
-              "type": "string",
-              "description": "Snowflake for this recommendation, use when submitting recommendation events."
             }
           }
         }

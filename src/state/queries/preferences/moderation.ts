@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {Client} from '@atproto/lex'
-import {interpretLabelValueDefinitions} from '@bsky.app/sdk/moderation'
+import {interpretLabelValueDefinitions} from '@bsky/sdk/moderation'
 
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useLabelersDetailedInfoQuery} from '../labeler'

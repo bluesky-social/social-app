@@ -1,8 +1,8 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
-import {moderateProfile} from '@bsky.app/sdk/moderation'
-import {RichText as RichTextApi} from '@bsky.app/sdk/richtext'
+import {moderateProfile} from '@bsky/sdk/moderation'
+import {RichText as RichTextApi} from '@bsky/sdk/richtext'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'

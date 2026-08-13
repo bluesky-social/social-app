@@ -10,8 +10,8 @@ import {
   type ModerationBehavior,
   type ModerationDecision,
   type ModerationOpts,
-} from '@bsky.app/sdk/moderation'
-import {RichText} from '@bsky.app/sdk/richtext'
+} from '@bsky/sdk/moderation'
+import {RichText} from '@bsky/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 

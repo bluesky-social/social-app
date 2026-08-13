@@ -1,7 +1,7 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {type DatetimeString, toDatetimeString} from '@atproto/syntax'
-import {sanitizeMutedWordValue} from '@bsky.app/sdk/utils'
+import {sanitizeMutedWordValue} from '@bsky/sdk/utils'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

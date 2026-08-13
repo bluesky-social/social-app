@@ -284,9 +284,6 @@ importers:
       '@bsky.app/react-native-uitextview':
         specifier: ^2.7.0
         version: 2.7.0(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.1.17)(react@19.1.0)(supports-color@8.1.1))(react@19.1.0)
-      '@bsky.app/sdk':
-        specifier: npm:bsky-sdk-preview@0.0.1-preview.2
-        version: bsky-sdk-preview@0.0.1-preview.2(@atproto/lex@0.3.6)
       '@bsky.app/sift':
         specifier: ^0.3.9
         version: 0.3.9(2d5c14016450c7e55c8cd0dffcca6f69)
@@ -299,6 +296,9 @@ importers:
       '@bsky.app/video-compressor':
         specifier: 0.2.0
         version: 0.2.0(83e0f64f4281e4798012214ad5b2d72d)
+      '@bsky/sdk':
+        specifier: 1.0.0
+        version: 1.0.0(@atproto/lex@0.3.6)
       '@emoji-mart/data':
         specifier: ^1.2.1
         version: 1.2.1
@@ -1770,6 +1770,12 @@ packages:
       expo: '*'
       react: '*'
       react-native: '*'
+
+  '@bsky/sdk@1.0.0':
+    resolution: {integrity: sha512-nnVYpbESETN5R/dyBLWE+5u52HkJO0+EWMv+bLDRZUkHEQtHV2RX3kLMqXaEWVJgijagziLPXb6179mkml8WZA==}
+    engines: {node: '>=22.12.0'}
+    peerDependencies:
+      '@atproto/lex': ^0.3.0
 
   '@crowdin/cli@4.14.2':
     resolution: {integrity: sha512-JRrHvitc0w+r/h6XXSOq917HxsjRoxPEtyNYSmylKirjiPNrRx84VKtqFlOIWIFCOZI5BoXg6hNpE0Zq7CwVBA==}
@@ -4493,12 +4499,6 @@ packages:
 
   bser@2.1.1:
     resolution: {integrity: sha512-gQxTNE/GAfIIrmHLUE3oJyp5FO6HRBfhjnw4/wMmA63ZGDJnWBmgY/lyQBpnDUkGmAhbSe39tx2d/iTOAfglwQ==}
-
-  bsky-sdk-preview@0.0.1-preview.2:
-    resolution: {integrity: sha512-LOcuvzc6UASiI5os1BUIo9dxAeVPIFiplcVSYbaDCgpH+tkpv2mqSqqsCRTP0g2CaVCwozqaTVy+jnsTO6/9BQ==}
-    engines: {node: '>=22.12.0'}
-    peerDependencies:
-      '@atproto/lex': ^0.3.0
 
   buffer-crc32@0.2.13:
     resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
@@ -10840,6 +10840,13 @@ snapshots:
       react: 19.1.0
       react-native: 0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.1.17)(react@19.1.0)(supports-color@8.1.1)
 
+  '@bsky/sdk@1.0.0(@atproto/lex@0.3.6)':
+    dependencies:
+      '@atproto-labs/handle-resolver': 0.4.8
+      '@atproto/lex': 0.3.6
+      '@atproto/syntax': 0.7.4
+      tlds: 1.261.0
+
   '@crowdin/cli@4.14.2':
     dependencies:
       command-exists-promise: 2.0.2
@@ -14039,13 +14046,6 @@ snapshots:
   bser@2.1.1:
     dependencies:
       node-int64: 0.4.0
-
-  bsky-sdk-preview@0.0.1-preview.2(@atproto/lex@0.3.6):
-    dependencies:
-      '@atproto-labs/handle-resolver': 0.4.8
-      '@atproto/lex': 0.3.6
-      '@atproto/syntax': 0.7.4
-      tlds: 1.261.0
 
   buffer-crc32@0.2.13: {}
 
