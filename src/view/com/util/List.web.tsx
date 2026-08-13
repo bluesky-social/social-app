@@ -25,6 +25,7 @@ import {addStyle} from '#/lib/styles'
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
 import {useTheme, web} from '#/alf'
 import * as Layout from '#/components/Layout'
+import {useAnalytics} from '#/analytics'
 
 export type ListMethods = {
   scrollToTop: () => void
@@ -68,6 +69,13 @@ const ON_ITEM_SEEN_WAIT_DURATION = 0.5e3 // when we consider post to  be "seen"
 const ON_ITEM_SEEN_INTERSECTION_OPTS = {
   rootMargin: '-200px 0px -200px 0px',
 } // post must be 200px visible to be "seen"
+
+const PAGE_STARTED_AT = Date.now()
+const LARGE_LIST_MILESTONES = [100, 250, 500, 1000] as const
+const LONG_TASK_REPORT_INTERVAL = 60e3
+// This is diagnostic telemetry, so a session-level sample is sufficient and
+// prevents popular feed surfaces from producing an event for every user.
+const ENABLE_WEB_LIST_TELEMETRY = Math.random() < 0.1
 
 function ListImpl<ItemT>(
   {
@@ -294,6 +302,12 @@ function ListImpl<ItemT>(
 
   // --- onScroll ---
   const [isInsideVisibleTree, setIsInsideVisibleTree] = useState(false)
+  useWebListTelemetry({
+    containerRef: nativeRef,
+    enabled: isInsideVisibleTree,
+    itemCount: data?.length ?? 0,
+    rowNodesRef,
+  })
   const handleScroll = useNonReactiveCallback(() => {
     if (!isInsideVisibleTree) return
 
@@ -454,6 +468,118 @@ function ListImpl<ItemT>(
       </Layout.Center>
     </View>
   )
+}
+
+type ChromiumPerformance = Performance & {
+  memory?: {
+    usedJSHeapSize: number
+    jsHeapSizeLimit: number
+  }
+}
+
+function getWebListDiagnostics(
+  containerRef: React.RefObject<HTMLDivElement | null>,
+  rowNodesRef: React.RefObject<Map<number, HTMLElement>>,
+) {
+  const memory = (performance as ChromiumPerformance).memory
+  return {
+    renderedRowCount: rowNodesRef.current.size,
+    contentHeight: containerRef.current?.scrollHeight ?? 0,
+    sessionAgeMs: Date.now() - PAGE_STARTED_AT,
+    ...(memory && {
+      heapUsedBytes: memory.usedJSHeapSize,
+      heapLimitBytes: memory.jsHeapSizeLimit,
+    }),
+  }
+}
+
+/**
+ * APP-2859 diagnostic telemetry. Web List currently mounts every loaded row;
+ * these events let us correlate list growth and browser main-thread stalls by
+ * route without including any row content. Remove after the investigation.
+ */
+function useWebListTelemetry({
+  containerRef,
+  enabled,
+  itemCount,
+  rowNodesRef,
+}: {
+  containerRef: React.RefObject<HTMLDivElement | null>
+  enabled: boolean
+  itemCount: number
+  rowNodesRef: React.RefObject<Map<number, HTMLElement>>
+}) {
+  const ax = useAnalytics()
+  const reportedMilestones = useRef(new Set<number>())
+  const itemCountRef = useRef(itemCount)
+  itemCountRef.current = itemCount
+  const isLargeList = itemCount >= LARGE_LIST_MILESTONES[0]
+
+  useEffect(() => {
+    if (!ENABLE_WEB_LIST_TELEMETRY || !enabled) return
+
+    for (const milestone of LARGE_LIST_MILESTONES) {
+      if (itemCount < milestone || reportedMilestones.current.has(milestone)) {
+        continue
+      }
+      reportedMilestones.current.add(milestone)
+      ax.metric('web:list:size', {
+        itemCount,
+        milestone,
+        ...getWebListDiagnostics(containerRef, rowNodesRef),
+      })
+    }
+  }, [ax, containerRef, enabled, itemCount, rowNodesRef])
+
+  useEffect(() => {
+    if (
+      !ENABLE_WEB_LIST_TELEMETRY ||
+      !enabled ||
+      !isLargeList ||
+      !('PerformanceObserver' in globalThis)
+    ) {
+      return
+    }
+
+    let taskCount = 0
+    let totalDurationMs = 0
+    let maxDurationMs = 0
+    const observer = new PerformanceObserver(list => {
+      for (const entry of list.getEntries()) {
+        taskCount++
+        totalDurationMs += entry.duration
+        maxDurationMs = Math.max(maxDurationMs, entry.duration)
+      }
+    })
+
+    try {
+      observer.observe({type: 'longtask'})
+    } catch {
+      // Long Tasks API is not available in all browsers.
+      return
+    }
+
+    const report = () => {
+      if (taskCount === 0) return
+      ax.metric('web:list:longTasks', {
+        itemCount: itemCountRef.current,
+        taskCount,
+        totalDurationMs: Math.round(totalDurationMs),
+        maxDurationMs: Math.round(maxDurationMs),
+        intervalMs: LONG_TASK_REPORT_INTERVAL,
+        ...getWebListDiagnostics(containerRef, rowNodesRef),
+      })
+      taskCount = 0
+      totalDurationMs = 0
+      maxDurationMs = 0
+    }
+    const interval = setInterval(report, LONG_TASK_REPORT_INTERVAL)
+    return () => {
+      clearInterval(interval)
+      observer.disconnect()
+      report()
+    }
+  }, [ax, containerRef, enabled, isLargeList, rowNodesRef])
 }
 
 function EdgeVisibility({
