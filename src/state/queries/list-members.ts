@@ -61,7 +61,7 @@ export function useAllListMembersQuery(uri?: string) {
 export async function getAllListMembers(client: Client, uri: string) {
   let hasMore = true
   let cursor: string | undefined
-  const listItems: AppBskyGraphDefs.ListItemView[] = []
+  const listItems: app.bsky.graph.defs.ListItemView[] = []
   // We want to cap this at 6 pages, just for anything weird happening with the api
   let i = 0
   while (hasMore && i < 6) {

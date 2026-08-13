@@ -6,7 +6,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import * as Toast from '#/components/Toast'
-import {app} from '#/lexicons'
+import {app, type com} from '#/lexicons'
 import {updatePostShadow} from '../cache/post-shadow'
 import {useAppviewClient, useSession} from '../session'
 import {useProfileUpdateMutation} from './profile'
@@ -47,7 +47,11 @@ export function usePinnedPostMutation() {
           profile,
           updates: existing => {
             existing.pinnedPost = pinCurrentPost
-              ? {uri: postUri, cid: postCid}
+              ? // the caller's uri/cid are unbranded strings
+                ({
+                  uri: postUri,
+                  cid: postCid,
+                } as com.atproto.repo.strongRef.Main)
               : undefined
             return existing
           },

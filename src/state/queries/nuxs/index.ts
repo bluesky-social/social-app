@@ -1,3 +1,4 @@
+import {removeNuxs, upsertNux} from '@bsky.app/sdk'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {type AppNux, type Nux} from '#/state/queries/nuxs/definitions'
@@ -6,7 +7,8 @@ import {
   preferencesQueryKey,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import {usePdsClient} from '#/state/session'
+import {type app} from '#/lexicons'
 
 export {Nux} from '#/state/queries/nuxs/definitions'
 
@@ -42,11 +44,11 @@ export function useNuxs():
 
   // if (__DEV__) {
   //   const queryClient = useQueryClient()
-  //   const agent = useAgent()
+  //   const pdsClient = usePdsClient()
 
   //   // @ts-ignore
   //   window.clearNux = async (ids: string[]) => {
-  //     await agent.bskyAppRemoveNuxs(ids)
+  //     await pdsClient.call(removeNuxs, ids)
   //     // triggers a refetch
   //     await queryClient.invalidateQueries({
   //       queryKey: preferencesQueryKey,
@@ -97,12 +99,19 @@ export function useNux<T extends Nux>(
 
 export function useSaveNux() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
 
   return useMutation({
     retry: 3,
     mutationFn: async (nux: AppNux) => {
-      await agent.bskyAppUpsertNux(serializeAppNux(nux))
+      /*
+       * `serializeAppNux` still returns the legacy `Nux`, whose strings are
+       * unbranded; it is validated against the same schema the action expects.
+       */
+      await pdsClient.call(
+        upsertNux,
+        serializeAppNux(nux) as app.bsky.actor.defs.Nux,
+      )
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -113,12 +122,12 @@ export function useSaveNux() {
 
 export function useResetNuxs() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
 
   return useMutation({
     retry: 3,
     mutationFn: async (ids: string[]) => {
-      await agent.bskyAppRemoveNuxs(ids)
+      await pdsClient.call(removeNuxs, ids)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

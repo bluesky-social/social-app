@@ -6,7 +6,6 @@ import {
   type AtIdentifierString,
   AtUri,
   type AtUriString,
-  type DidString,
   toDatetimeString,
 } from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
@@ -86,8 +85,7 @@ export function CreateListFromStarterPackDialog({
               items.map(item => {
                 const listitemRecord: $Typed<app.bsky.graph.listitem.Main> = {
                   $type: 'app.bsky.graph.listitem',
-                  // the list view is still legacy-typed, so its strings are unbranded
-                  subject: item.subject.did as DidString,
+                  subject: item.subject.did,
                   list: listUri as AtUriString,
                   createdAt: toDatetimeString(new Date()),
                 }

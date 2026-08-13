@@ -1,7 +1,12 @@
-import {type AppBskyActorProfile, type Un$Typed} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import {type Client} from '@atproto/lex'
 import {PasswordSession} from '@atproto/lex-password-session'
+import {toDatetimeString} from '@atproto/syntax'
+import {
+  overwriteSavedFeeds,
+  setPersonalDetails,
+  upsertProfile,
+} from '@bsky.app/sdk'
 
 import {networkRetry} from '#/lib/async/retry'
 import {
@@ -21,8 +26,8 @@ import {
 } from '#/ageAssurance/data'
 import {unsafeGetAndComputeAgeAssurance} from '#/ageAssurance/state'
 import {features} from '#/analytics'
-import {type BskyAppAgent} from './bridge-agent'
-import {agentToPdsClient} from './clients'
+import {type app} from '#/lexicons'
+import {agentToAppviewClient, agentToPdsClient} from './clients'
 import {configureModerationForAccount} from './moderation'
 import {
   buildBundle,
@@ -88,7 +93,7 @@ export async function createSessionBundleAndCreateAccount(
   const gates = features.refresh({strategy: 'prefer-fresh-gates'})
   configureModerationForAccount(bundle.agent, earlyAccount)
 
-  const createdAt = new Date().toISOString()
+  const createdAt = toDatetimeString(new Date())
   const birthdate = birthDate.toISOString()
 
   /*
@@ -100,22 +105,23 @@ export async function createSessionBundleAndCreateAccount(
   setCreatedAtForDid({did: earlyAccount.did, createdAt})
   setBirthdateForDid({did: earlyAccount.did, birthdate})
   snoozeBirthdateUpdateAllowedForDid(earlyAccount.did)
+  // Post-signup writes all target the account's own repo and actor store.
+  const pdsClient = agentToPdsClient(bundle.agent)
   // Start the prefetch after seeding its synchronous birthdate inputs.
-  const aa = prefetchAgeAssuranceServerData({agent: bundle.agent})
+  const aa = prefetchAgeAssuranceServerData({
+    appviewClient: agentToAppviewClient(bundle.agent),
+    accountClient: pdsClient,
+  })
 
   const isProd = Boolean(IS_PROD_SERVICE(service))
   const postSignupTasks: Promise<unknown>[] = [
-    savePersonalDetails(bundle.agent, birthdate),
-    initializeProfile(bundle.agent, {handle, createdAt, isProd}),
+    savePersonalDetails(pdsClient, birthDate),
+    initializeProfile(pdsClient, {handle, createdAt, isProd}),
   ]
   if (isProd) {
     postSignupTasks.push(
-      initializeSavedFeeds(bundle.agent),
-      restrictChatAfterAgeAssurance(
-        aa,
-        agentToPdsClient(bundle.agent),
-        earlyAccount.did,
-      ),
+      initializeSavedFeeds(pdsClient),
+      restrictChatAfterAgeAssurance(aa, pdsClient, earlyAccount.did),
     )
   }
   // Post-signup writes are not required to enter onboarding.
@@ -170,41 +176,41 @@ function snapshotNewAccount(
   }
 }
 
-function savePersonalDetails(agent: BskyAppAgent, birthDate: string) {
+function savePersonalDetails(client: Client, birthDate: Date) {
   return retryPostSignupTask('set birthDate', 3, () =>
-    agent.setPersonalDetails({birthDate}),
+    client.call(setPersonalDetails, {birthDate}),
   )
 }
 
 function initializeProfile(
-  agent: BskyAppAgent,
+  client: Client,
   {
     handle,
     createdAt,
     isProd,
   }: {
     handle: string
-    createdAt: string
+    createdAt: ReturnType<typeof toDatetimeString>
     isProd: boolean
   },
 ) {
   return retryPostSignupTask('set initial profile', 3, () =>
-    agent.upsertProfile(prev => {
-      const next: Un$Typed<AppBskyActorProfile.Record> = prev || {}
+    client.call(upsertProfile, prev => {
+      const next: Partial<app.bsky.actor.profile.Main> = prev || {}
       if (isProd) {
         next.displayName = handle
         next.createdAt = createdAt
       } else {
-        next.createdAt = prev?.createdAt || new Date().toISOString()
+        next.createdAt = prev?.createdAt || toDatetimeString(new Date())
       }
       return next
     }),
   )
 }
 
-function initializeSavedFeeds(agent: BskyAppAgent) {
+function initializeSavedFeeds(client: Client) {
   return retryPostSignupTask('set initial feeds', 1, () =>
-    agent.overwriteSavedFeeds([
+    client.call(overwriteSavedFeeds, [
       {...DISCOVER_SAVED_FEED, id: TID.nextStr()},
       {...TIMELINE_SAVED_FEED, id: TID.nextStr()},
     ]),
