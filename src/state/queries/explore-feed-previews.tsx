@@ -5,6 +5,7 @@ import {
   AtUri,
   moderatePost,
 } from '@atproto/api'
+import {type AtUriString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -28,7 +29,7 @@ import {
   embedViewRecordToPostView,
   getEmbeddedPost,
 } from '#/state/queries/util'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 
 const RQKEY_ROOT = 'feed-previews'
 const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds]
@@ -121,7 +122,7 @@ export function useFeedPreviews(
 
   const uris = feeds.map(feed => feed.uri)
   const {_} = useLingui()
-  const agent = useAgent()
+  const client = useAppviewClient()
   const {data: preferences} = usePreferencesQuery()
   const userInterests = aggregateUserInterests(preferences)
   const moderationOpts = useModerationOpts()
@@ -143,8 +144,8 @@ export function useFeedPreviews(
     queryFn: async ({pageParam}) => {
       const feed = feeds[pageParam]
       const api = new CustomFeedAPI({
-        agent,
-        feedParams: {feed: feed.uri},
+        client,
+        feedParams: {feed: feed.uri as AtUriString},
         userInterests,
       })
       const data = await api.fetch({cursor: undefined, limit: LIMIT})

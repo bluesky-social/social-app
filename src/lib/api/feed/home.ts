@@ -1,4 +1,6 @@
-import {type AppBskyFeedDefs, type AtpAgent} from '@atproto/api'
+import {type AppBskyFeedDefs} from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {type AtUriString} from '@atproto/syntax'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {CustomFeedAPI} from './custom'
@@ -27,7 +29,7 @@ export const FALLBACK_MARKER_POST: AppBskyFeedDefs.FeedViewPost = {
 }
 
 export class HomeFeedAPI implements FeedAPI {
-  agent: AtpAgent
+  client: Client
   following: FollowingFeedAPI
   discover: CustomFeedAPI
   usingDiscover = false
@@ -36,25 +38,25 @@ export class HomeFeedAPI implements FeedAPI {
 
   constructor({
     userInterests,
-    agent,
+    client,
   }: {
     userInterests?: string
-    agent: AtpAgent
+    client: Client
   }) {
-    this.agent = agent
-    this.following = new FollowingFeedAPI({agent})
+    this.client = client
+    this.following = new FollowingFeedAPI({client})
     this.discover = new CustomFeedAPI({
-      agent,
-      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
+      client,
+      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot') as AtUriString},
     })
     this.userInterests = userInterests
   }
 
   reset() {
-    this.following = new FollowingFeedAPI({agent: this.agent})
+    this.following = new FollowingFeedAPI({client: this.client})
     this.discover = new CustomFeedAPI({
-      agent: this.agent,
-      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
+      client: this.client,
+      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot') as AtUriString},
       userInterests: this.userInterests,
     })
     this.usingDiscover = false
