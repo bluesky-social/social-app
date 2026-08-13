@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
+import {moderateFeedGenerator} from '@bsky.app/sdk/moderation'
 
-import {moderateFeedGenerator} from '#/lib/moderation/subjects'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'

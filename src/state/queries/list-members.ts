@@ -1,4 +1,3 @@
-import {type AppBskyActorDefs, type AppBskyGraphDefs} from '@atproto/api'
 import {type Client} from '@atproto/lex'
 import {type AtUriString} from '@atproto/syntax'
 import {
@@ -91,7 +90,7 @@ export async function invalidateListMembersQuery({
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<app.bsky.graph.getList.$OutputBody>
   >({
@@ -114,7 +113,7 @@ export function* findAllProfilesInQueryData(
   }
 
   const allQueryData = queryClient.getQueriesData<
-    AppBskyGraphDefs.ListItemView[]
+    app.bsky.graph.defs.ListItemView[]
   >({
     queryKey: [RQKEY_ROOT_ALL],
   })

@@ -1,4 +1,3 @@
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {type Client, type XrpcRequestParams} from '@atproto/lex'
 
 import {logger} from '#/logger'
@@ -10,7 +9,7 @@ type GetPostsParams = XrpcRequestParams<typeof app.bsky.feed.getPosts.main>
 export class PostListFeedAPI implements FeedAPI {
   client: Client
   params: GetPostsParams
-  peek: AppBskyFeedDefs.FeedViewPost | null = null
+  peek: app.bsky.feed.defs.FeedViewPost | null = null
 
   constructor({
     client,
@@ -30,7 +29,7 @@ export class PostListFeedAPI implements FeedAPI {
     }
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
     if (this.peek) return this.peek
     throw new Error('Has not fetched yet')
   }

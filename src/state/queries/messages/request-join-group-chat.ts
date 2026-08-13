@@ -1,4 +1,3 @@
-import {type ChatBskyGroupRequestJoin} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -10,7 +9,7 @@ export function useRequestJoinGroupChat({
   onSuccess,
   onError,
 }: {
-  onSuccess?: (data: ChatBskyGroupRequestJoin.OutputSchema) => void
+  onSuccess?: (data: chat.bsky.group.requestJoin.$OutputBody) => void
   onError?: (error: Error) => void
 } = {}) {
   const client = useChatClient()

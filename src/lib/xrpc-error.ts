@@ -1,13 +1,45 @@
 import {
   getMain,
   type InferMethodError,
+  LexError,
   type Main,
   type Procedure,
   type Query,
+  XrpcError,
   XrpcResponseError,
 } from '@atproto/lex'
 
 import {com} from '#/lexicons'
+
+/**
+ * True for an XRPC error from a lex `Client` (`XrpcError` is the abstract base
+ * of `XrpcResponseError`/`XrpcInvalidResponseError`/`XrpcInternalError`).
+ */
+export function isXrpcError(e: unknown): e is XrpcError {
+  return e instanceof XrpcError
+}
+
+/**
+ * HTTP status, or undefined when `e` is not an XRPC error carrying a response.
+ * Only `XrpcResponseError` (a genuine server response) has a status; the
+ * internal/fetch lex errors do not.
+ */
+export function getErrorStatus(e: unknown): number | undefined {
+  return e instanceof XrpcResponseError ? e.status : undefined
+}
+
+/**
+ * The lexicon error code (`err.error`), or undefined when `e` carries none.
+ * Gated on `LexError` (the base of every `XrpcError`) rather than `XrpcError`,
+ * so the non-XRPC lex errors are covered too.
+ *
+ * Prefer {@link matchXrpcError} where the method that threw is known: it
+ * constrains the compared name to that method's declared errors. Use this only
+ * where the source method is genuinely ambiguous.
+ */
+export function getErrorName(e: unknown): string | undefined {
+  return e instanceof LexError ? e.error : undefined
+}
 
 /**
  * Same nsid means `e` was thrown for this method schema, so `e` can be

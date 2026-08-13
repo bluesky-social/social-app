@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {BSKY_LABELER_DID} from '@atproto/api'
+import {api} from '@bsky.app/sdk'
 import {type ModerationCause} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -67,7 +67,7 @@ export function Label({
   const desc = useModerationCauseDescription(cause)
   const isLabeler = Boolean(desc.sourceType && desc.sourceDid)
   const isBlueskyLabel =
-    desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID
+    desc.sourceType === 'labeler' && desc.sourceDid === api.moderation.did
   const avi = size === 'lg' ? 16 : 12
 
   return (

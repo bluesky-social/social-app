@@ -1,4 +1,4 @@
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {parse} from 'psl'
 import TLDs from 'tlds'
 

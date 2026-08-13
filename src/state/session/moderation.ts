@@ -1,6 +1,6 @@
-import {BSKY_LABELER_DID} from '@atproto/api'
 import {type Client} from '@atproto/lex'
 import {type DidString} from '@atproto/syntax'
+import {api} from '@bsky.app/sdk'
 
 import {IS_TEST_USER} from '#/lib/constants'
 import {com} from '#/lexicons'
@@ -53,7 +53,7 @@ export function applyLabelersToClient(
   subscribedDids: string[],
 ) {
   client.setLabelers(
-    subscribedDids.filter(did => did !== BSKY_LABELER_DID) as DidString[],
+    subscribedDids.filter(did => did !== api.moderation.did) as DidString[],
   )
 }
 
@@ -94,7 +94,7 @@ export function configureModerationForAccount(
 }
 
 function switchToBskyAppLabeler() {
-  configureGlobalAppLabelers([BSKY_LABELER_DID])
+  configureGlobalAppLabelers([api.moderation.did])
 }
 
 /** Resolve and install the test environment's moderation authority. */

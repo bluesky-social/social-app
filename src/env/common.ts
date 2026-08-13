@@ -1,4 +1,4 @@
-import {type Did} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 
 import packageJson from '#/../package.json'
 
@@ -75,14 +75,16 @@ export const LOG_DEBUG: string = process.env.EXPO_PUBLIC_LOG_DEBUG || ''
 /**
  * The DID of the Bluesky appview to proxy to
  */
-export const BLUESKY_PROXY_DID: Did =
-  process.env.EXPO_PUBLIC_BLUESKY_PROXY_DID || 'did:web:api.bsky.app'
+export const BLUESKY_PROXY_DID: DidString =
+  (process.env.EXPO_PUBLIC_BLUESKY_PROXY_DID as DidString) ||
+  'did:web:api.bsky.app'
 
 /**
  * The DID of the chat service to proxy to
  */
-export const CHAT_PROXY_DID: Did =
-  process.env.EXPO_PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat'
+export const CHAT_PROXY_DID: DidString =
+  (process.env.EXPO_PUBLIC_CHAT_PROXY_DID as DidString) ||
+  'did:web:api.bsky.chat'
 
 /**
  * Metrics API host

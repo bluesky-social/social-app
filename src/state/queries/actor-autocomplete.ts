@@ -1,10 +1,8 @@
 import {useCallback} from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
-import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {keepPreviousData, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
-import {moderateProfile} from '#/lib/moderation/subjects'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'
@@ -34,7 +32,7 @@ export function useActorAutocompleteQuery(
     prefix = prefix.slice(0, -1)
   }
 
-  return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
+  return useQuery<app.bsky.actor.defs.ProfileViewBasic[]>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(prefix || ''),
     async queryFn() {
@@ -47,7 +45,7 @@ export function useActorAutocompleteQuery(
       return data?.actors || []
     },
     select: useCallback(
-      (data: AppBskyActorDefs.ProfileViewBasic[]) => {
+      (data: app.bsky.actor.defs.ProfileViewBasic[]) => {
         return computeSuggestions({
           q: prefix,
           searched: data,
@@ -104,10 +102,10 @@ function computeSuggestions({
   moderationOpts,
 }: {
   q?: string
-  searched?: AppBskyActorDefs.ProfileViewBasic[]
+  searched?: app.bsky.actor.defs.ProfileViewBasic[]
   moderationOpts: ModerationOpts
 }) {
-  let items: AppBskyActorDefs.ProfileViewBasic[] = []
+  let items: app.bsky.actor.defs.ProfileViewBasic[] = []
   for (const item of searched) {
     if (!items.find(item2 => item2.handle === item.handle)) {
       items.push(item)

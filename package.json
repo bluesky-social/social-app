@@ -100,7 +100,6 @@
     "prettier": "prettier --check ."
   },
   "dependencies": {
-    "@atproto/api": "0.20.39",
     "@atproto/common-web": "0.5.9",
     "@atproto/lex": "0.3.6",
     "@atproto/lex-password-session": "0.2.0",

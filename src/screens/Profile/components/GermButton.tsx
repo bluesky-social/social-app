@@ -1,6 +1,5 @@
 import {Platform, View} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type Client} from '@atproto/lex'
 import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
@@ -29,7 +28,7 @@ export function GermButton({
   germ,
   profile,
 }: {
-  germ: AppBskyActorDefs.ProfileAssociatedGerm
+  germ: app.bsky.actor.defs.ProfileAssociatedGerm
   profile: bsky.profile.AnyProfileView
 }) {
   const t = useTheme()
@@ -279,7 +278,7 @@ function GermSelfButton({did}: {did: string}) {
 }
 
 function constructGermUrl(
-  declaration: AppBskyActorDefs.ProfileAssociatedGerm,
+  declaration: app.bsky.actor.defs.ProfileAssociatedGerm,
   profile: bsky.profile.AnyProfileView,
   viewerDid?: string,
 ) {

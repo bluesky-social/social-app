@@ -1,4 +1,3 @@
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {type $Typed, type Client} from '@atproto/lex'
 import {
   type AtIdentifierString,
@@ -30,7 +29,7 @@ export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 
 export function useListQuery(uri?: string) {
   const client = useAppviewClient()
-  return useQuery<AppBskyGraphDefs.ListView, Error>({
+  return useQuery<app.bsky.graph.defs.ListView, Error>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
     async queryFn() {

@@ -1,10 +1,6 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {
-  type $Typed,
-  AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  AtUri,
-} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -22,13 +18,15 @@ import {atoms as a, useTheme} from '#/alf'
 import {Link} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {MissingFeed} from './MissingFeed'
 
 type FeedSourceCardProps = {
   feedUri: string
   feedData?:
-    | $Typed<AppBskyFeedDefs.GeneratorView>
-    | $Typed<AppBskyGraphDefs.ListView>
+    | $Typed<app.bsky.feed.defs.GeneratorView>
+    | $Typed<app.bsky.graph.defs.ListView>
   style?: StyleProp<ViewStyle>
   showSaveBtn?: boolean
   showDescription?: boolean
@@ -46,7 +44,7 @@ export function FeedSourceCard({
 }: FeedSourceCardProps) {
   if (feedData) {
     let feed: FeedSourceInfo
-    if (AppBskyFeedDefs.isGeneratorView(feedData)) {
+    if (bsky.isType(app.bsky.feed.defs.generatorView, feedData)) {
       feed = hydrateFeedGenerator(feedData)
     } else {
       feed = hydrateList(feedData)

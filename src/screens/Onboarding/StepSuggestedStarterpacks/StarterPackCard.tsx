@@ -1,7 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {type AtUriString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -22,6 +20,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const IGNORED_ACCOUNT = 'did:plc:pifkcjimdcfwaxkanzhwxufp'
@@ -29,7 +28,7 @@ const IGNORED_ACCOUNT = 'did:plc:pifkcjimdcfwaxkanzhwxufp'
 export function StarterPackCard({
   view,
 }: {
-  view: AppBskyGraphDefs.StarterPackView
+  view: app.bsky.graph.defs.StarterPackView
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -48,7 +47,7 @@ export function StarterPackCard({
 
     setIsProcessing(true)
 
-    let listItems: AppBskyGraphDefs.ListItemView[] = []
+    let listItems: app.bsky.graph.defs.ListItemView[] = []
     try {
       listItems = await getAllListMembers(appviewClient, view.list.uri)
     } catch (e) {
@@ -77,7 +76,7 @@ export function StarterPackCard({
     try {
       followUris = await bulkWriteFollows(pdsClient, appviewClient, dids, {
         // the starter pack view is still legacy-typed
-        uri: view.uri as AtUriString,
+        uri: view.uri,
         cid: view.cid,
       })
     } catch (e) {
@@ -105,12 +104,7 @@ export function StarterPackCard({
     })
   }
 
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
   }
 

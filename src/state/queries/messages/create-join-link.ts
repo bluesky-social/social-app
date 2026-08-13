@@ -1,13 +1,10 @@
-import {
-  ChatBskyConvoDefs,
-  type ChatBskyGroupCreateJoinLink,
-  type ChatBskyGroupDefs,
-} from '@atproto/api'
+import {toDatetimeString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useChatClient} from '#/state/session'
 import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   rollbackConvoOptimistic,
   updateConvoOptimistic,
@@ -19,7 +16,7 @@ export function useCreateJoinLink(
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: ChatBskyGroupCreateJoinLink.OutputSchema) => void
+    onSuccess?: (data: chat.bsky.group.createJoinLink.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -31,7 +28,7 @@ export function useCreateJoinLink(
       joinRule,
       requireApproval,
     }: {
-      joinRule: ChatBskyGroupDefs.JoinRule
+      joinRule: chat.bsky.group.defs.JoinRule
       requireApproval: boolean
     }) => {
       if (!convoId) throw new Error('No convoId provided')
@@ -44,7 +41,8 @@ export function useCreateJoinLink(
     onMutate: ({joinRule, requireApproval}) => {
       if (!convoId) return
       return updateConvoOptimistic(queryClient, convoId, prev => {
-        if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined
+        if (!bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind))
+          return undefined
         return {
           ...prev,
           kind: {
@@ -55,7 +53,7 @@ export function useCreateJoinLink(
               enabledStatus: 'enabled',
               joinRule,
               requireApproval,
-              createdAt: new Date().toISOString(),
+              createdAt: toDatetimeString(new Date()),
             },
           },
         }
@@ -64,7 +62,8 @@ export function useCreateJoinLink(
     onSuccess: data => {
       if (convoId) {
         updateConvoOptimistic(queryClient, convoId, prev => {
-          if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined
+          if (!bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind))
+            return undefined
           return {
             ...prev,
             kind: {...prev.kind, joinLink: data.joinLink},

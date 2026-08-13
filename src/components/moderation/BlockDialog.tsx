@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -27,7 +26,7 @@ import {Text} from '#/components/Typography'
 import {chat} from '#/lexicons'
 import {type AnyProfileView} from '#/types/bsky/profile'
 
-type Item = ChatBskyConvoDefs.ConvoView
+type Item = chat.bsky.convo.defs.ConvoView
 
 type BlockDialogProps = {
   control: DialogControlProps
@@ -252,7 +251,7 @@ function MutualGroupChat({
   onOptimisticallyRemoveConvo,
   onRestoreConvo,
 }: {
-  view: ChatBskyConvoDefs.ConvoView
+  view: chat.bsky.convo.defs.ConvoView
   profileDid: string
   currentConvoId?: string
   onOptimisticallyRemoveConvo: (convoId: string) => void

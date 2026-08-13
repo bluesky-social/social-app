@@ -1,8 +1,8 @@
 import {useState} from 'react'
 import {Alert, LayoutAnimation, Linking, Pressable, View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {removeNuxs} from '@bsky.app/sdk'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -10,7 +10,6 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {HELP_DESK_URL, HITSLOP_10} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useApplyPullRequestOTAUpdate} from '#/lib/hooks/useOTAUpdates'
-import {moderateProfile} from '#/lib/moderation/subjects'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
@@ -69,6 +68,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL, IS_IOS, IS_NATIVE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
+import {type app} from '#/lexicons'
 import {device, useStorage} from '#/storage'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 
@@ -321,7 +321,7 @@ export function SettingsScreen({}: Props) {
 function ProfilePreview({
   profile,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -608,7 +608,7 @@ function AccountRow({
   pendingDid,
   onPressSwitchAccount,
 }: {
-  profile?: AppBskyActorDefs.ProfileViewDetailed
+  profile?: app.bsky.actor.defs.ProfileViewDetailed
   account: SessionAccount
   pendingDid: string | null
   onPressSwitchAccount: (

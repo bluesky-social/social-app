@@ -1,6 +1,7 @@
-import {XRPCError} from '@atproto/api'
 import {LexError} from '@atproto/lex'
 import {t} from '@lingui/core/macro'
+
+import {isXrpcError} from '#/lib/xrpc-error'
 
 /**
  * The text to show the user when no special case applies.
@@ -39,7 +40,7 @@ export function cleanError(e: unknown): string {
     return t`Unable to connect. Please check your internet connection and try again.`
   }
   /*
-   * `@atproto/api` names these with spaces ("Upstream Failure"); lexicon error
+   * The legacy client named these with spaces ("Upstream Failure"); lexicon error
    * codes are space-free ("UpstreamFailure"). Match both while the app throws
    * both shapes.
    */
@@ -97,9 +98,20 @@ export function isNetworkError(e: unknown) {
   return false
 }
 
+/**
+ * The PDS answers an app-password-scope rejection with the lexicon code
+ * `InvalidToken` and a message of 'Bad token scope' or 'Bad token method'
+ * (pipethrough), so the typed path matches the code AND the message. The
+ * pre-migration check compared against 'TokenInvalid', which the PDS never
+ * sends - the string fallback was doing all the work.
+ */
 export function isErrorMaybeAppPasswordPermissions(e: unknown) {
-  if (e instanceof XRPCError && e.error === 'TokenInvalid') {
-    return true
+  if (isXrpcError(e)) {
+    return (
+      e.error === 'InvalidToken' &&
+      (e.message.includes('Bad token scope') ||
+        e.message.includes('Bad token method'))
+    )
   }
   const str = String(e)
   return str.includes('Bad token scope') || str.includes('Bad token method')
@@ -124,5 +136,5 @@ export function isRetryableHttpStatus(status: number) {
 }
 
 export function shouldRetryError(e: unknown) {
-  return e instanceof XRPCError && isRetryableHttpStatus(e.status)
+  return isXrpcError(e) && e.shouldRetry()
 }

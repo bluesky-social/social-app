@@ -1,5 +1,6 @@
 import {useCallback, useMemo, useRef} from 'react'
-import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {moderatePost} from '@bsky.app/sdk/moderation'
 import {
   type InfiniteData,
   type QueryClient,
@@ -7,7 +8,6 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {moderatePost} from '#/lib/moderation/subjects'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useAppviewClient} from '#/state/session'
 import {type SearchFilters} from '#/screens/Search/searchParams'
@@ -180,7 +180,7 @@ export function useSearchPostsV2Query({
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.PostView, undefined> {
+): Generator<app.bsky.feed.defs.PostView, undefined> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<app.bsky.feed.searchPostsV2.$OutputBody>
   >({

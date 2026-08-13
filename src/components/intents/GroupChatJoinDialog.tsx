@@ -1,12 +1,11 @@
 import {useEffect} from 'react'
 import {View} from 'react-native'
-import {ChatBskyGroupDefs} from '@atproto/api'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {moderateProfile} from '#/lib/moderation/subjects'
 import {useCallOnce} from '#/lib/once'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -47,6 +46,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {ProfileBadges} from '../ProfileBadges'
 
 export function GroupChatJoinDialog() {
@@ -163,7 +163,10 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
               errorMessage = l`The member limit has been reached.`
               const preview = data?.joinLinkPreviews[0]
               if (
-                ChatBskyGroupDefs.isJoinLinkPreviewView(preview) &&
+                bsky.isType(
+                  chat.bsky.group.defs.joinLinkPreviewView,
+                  preview,
+                ) &&
                 preview.convo?.id
               ) {
                 ax.metric('groupchat:join:memberLimitReached', {
@@ -254,7 +257,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
 
   const joinLinkPreview = data.joinLinkPreviews[0]
 
-  if (!ChatBskyGroupDefs.isJoinLinkPreviewView(joinLinkPreview)) {
+  if (!bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, joinLinkPreview)) {
     return (
       <>
         <View style={[a.py_lg, a.align_center]}>

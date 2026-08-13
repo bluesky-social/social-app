@@ -1,4 +1,3 @@
-import {type AppBskyActorDefs} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,
@@ -37,7 +36,7 @@ export function useMyBlockedAccountsQuery() {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<app.bsky.graph.getBlocks.$OutputBody>
   >({

@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {ToolsOzoneReportDefs} from '@atproto/api'
 import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -18,7 +17,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {logger} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
-import {com} from '#/lexicons'
+import {com, tools} from '#/lexicons'
 
 export function AgeAssuranceAppealDialog({
   control,
@@ -60,7 +59,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
       await client.call(
         com.atproto.moderation.createReport,
         {
-          reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
+          reasonType: tools.ozone.report.defs.reasonAppeal.value,
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
             // the persisted account did is already resolved

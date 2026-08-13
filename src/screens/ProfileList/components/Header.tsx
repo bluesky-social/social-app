@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {AppBskyGraphDefs} from '@atproto/api'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -8,7 +7,6 @@ import {Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {makeListLink} from '#/lib/routes/links'
-import {asSdkFacets} from '#/lib/strings/rich-text-helpers'
 import {logger} from '#/logger'
 import {useListBlockMutation, useListMuteMutation} from '#/state/queries/list'
 import {
@@ -25,6 +23,7 @@ import {Loader} from '#/components/Loader'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import {MoreOptionsMenu} from './MoreOptionsMenu'
 import {SubscribeMenu} from './SubscribeMenu'
 
@@ -34,14 +33,14 @@ export function Header({
   preferences,
 }: {
   rkey: string
-  list: AppBskyGraphDefs.ListView
+  list: app.bsky.graph.defs.ListView
   preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST
-  const isModList = list.purpose === AppBskyGraphDefs.MODLIST
+  const isCurateList = list.purpose === app.bsky.graph.defs.curatelist.value
+  const isModList = list.purpose === app.bsky.graph.defs.modlist.value
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const playHaptic = useHaptics()
@@ -130,7 +129,7 @@ export function Header({
       list.description
         ? new RichTextAPI({
             text: list.description,
-            facets: asSdkFacets(list.descriptionFacets),
+            facets: list.descriptionFacets,
           })
         : undefined,
     [list],

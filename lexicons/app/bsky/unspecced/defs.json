@@ -6,48 +6,31 @@
       "type": "object",
       "required": ["uri"],
       "properties": {
-        "uri": {
-          "type": "string",
-          "format": "at-uri"
-        }
+        "uri": { "type": "string", "format": "at-uri" }
       }
     },
     "skeletonSearchActor": {
       "type": "object",
       "required": ["did"],
       "properties": {
-        "did": {
-          "type": "string",
-          "format": "did"
-        }
+        "did": { "type": "string", "format": "did" }
       }
     },
     "skeletonSearchStarterPack": {
       "type": "object",
       "required": ["uri"],
       "properties": {
-        "uri": {
-          "type": "string",
-          "format": "at-uri"
-        }
+        "uri": { "type": "string", "format": "at-uri" }
       }
     },
     "trendingTopic": {
       "type": "object",
       "required": ["topic", "link"],
       "properties": {
-        "topic": {
-          "type": "string"
-        },
-        "displayName": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "link": {
-          "type": "string"
-        }
+        "topic": { "type": "string" },
+        "displayName": { "type": "string" },
+        "description": { "type": "string" },
+        "link": { "type": "string" }
       }
     },
     "skeletonTrend": {
@@ -61,32 +44,14 @@
         "dids"
       ],
       "properties": {
-        "topic": {
-          "type": "string"
-        },
-        "displayName": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "link": {
-          "type": "string"
-        },
-        "startedAt": {
-          "type": "string",
-          "format": "datetime"
-        },
-        "postCount": {
-          "type": "integer"
-        },
-        "status": {
-          "type": "string",
-          "knownValues": ["hot"]
-        },
-        "category": {
-          "type": "string"
-        },
+        "topic": { "type": "string" },
+        "displayName": { "type": "string" },
+        "description": { "type": "string" },
+        "link": { "type": "string" },
+        "startedAt": { "type": "string", "format": "datetime" },
+        "postCount": { "type": "integer" },
+        "status": { "type": "string", "knownValues": ["hot"] },
+        "category": { "type": "string" },
         "dids": {
           "type": "array",
           "items": {
@@ -107,32 +72,14 @@
         "actors"
       ],
       "properties": {
-        "topic": {
-          "type": "string"
-        },
-        "displayName": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "link": {
-          "type": "string"
-        },
-        "startedAt": {
-          "type": "string",
-          "format": "datetime"
-        },
-        "postCount": {
-          "type": "integer"
-        },
-        "status": {
-          "type": "string",
-          "knownValues": ["hot"]
-        },
-        "category": {
-          "type": "string"
-        },
+        "topic": { "type": "string" },
+        "displayName": { "type": "string" },
+        "description": { "type": "string" },
+        "link": { "type": "string" },
+        "startedAt": { "type": "string", "format": "datetime" },
+        "postCount": { "type": "integer" },
+        "status": { "type": "string", "knownValues": ["hot"] },
+        "category": { "type": "string" },
         "actors": {
           "type": "array",
           "items": {
@@ -153,10 +100,7 @@
         "mutedByViewer"
       ],
       "properties": {
-        "post": {
-          "type": "ref",
-          "ref": "app.bsky.feed.defs#postView"
-        },
+        "post": { "type": "ref", "ref": "app.bsky.feed.defs#postView" },
         "moreParents": {
           "type": "boolean",
           "description": "This post has more parents that were not present in the response. This is just a boolean, without the number of parents."
@@ -167,7 +111,15 @@
         },
         "opThread": {
           "type": "boolean",
-          "description": "This post is part of a contiguous thread by the OP from the thread root. Many different OP threads can happen in the same thread."
+          "description": "This post is part of a contiguous thread by the OP from the thread root. Sub-threads by OP deeper in the tree are not considered an OP thread."
+        },
+        "opThreadPostIndex": {
+          "type": "integer",
+          "description": "The 1-indexed position of this post within the contiguous OP thread. Only present when this post is part of the OP thread (see `opThread`)."
+        },
+        "opThreadPostCount": {
+          "type": "integer",
+          "description": "The total number of posts in the contiguous OP thread that this post belongs to. Only present when this post is part of the OP thread (see `opThread`)."
         },
         "hiddenByThreadgate": {
           "type": "boolean",
@@ -191,10 +143,7 @@
       "type": "object",
       "required": ["author"],
       "properties": {
-        "author": {
-          "type": "ref",
-          "ref": "app.bsky.feed.defs#blockedAuthor"
-        }
+        "author": { "type": "ref", "ref": "app.bsky.feed.defs#blockedAuthor" }
       }
     },
     "ageAssuranceState": {

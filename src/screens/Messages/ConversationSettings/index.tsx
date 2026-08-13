@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -171,15 +170,12 @@ function keyExtractor(item: Item) {
 }
 
 function isGroupMember(
-  member: ChatBskyActorDefs.ProfileViewBasic,
+  member: chat.bsky.actor.defs.ProfileViewBasic,
 ): member is GroupConvoMember {
   // Kind is missing when the account has been deleted.
   return (
     member.kind === undefined ||
-    bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
-      member.kind,
-      ChatBskyActorDefs.isGroupConvoMember,
-    )
+    bsky.isType(chat.bsky.actor.defs.groupConvoMember, member.kind)
   )
 }
 
@@ -415,7 +411,7 @@ function SettingsHeader({
     isPending: isLocking,
   } = useLockConvo(convoId, {
     onSuccess: (data, {silent}) => {
-      if (!ChatBskyConvoDefs.isGroupConvo(data.convo.kind)) return
+      if (!bsky.isType(chat.bsky.convo.defs.groupConvo, data.convo.kind)) return
       if (silent) return
       if (data.convo.kind.lockStatus === 'locked') {
         ax.metric('groupchat:owner:lock', {convoId})

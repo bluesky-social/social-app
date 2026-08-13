@@ -1,5 +1,4 @@
-import {type AppBskyActorDefs} from '@atproto/api'
-import {type AtIdentifierString, AtUri} from '@atproto/syntax'
+import {AtUri} from '@atproto/syntax'
 import {useMutation} from '@tanstack/react-query'
 
 import {until} from '#/lib/async/until'
@@ -22,7 +21,7 @@ export function useVerificationsRemoveMutation() {
       verifications,
     }: {
       profile: bsky.profile.AnyProfileView
-      verifications: AppBskyActorDefs.VerificationView[]
+      verifications: app.bsky.actor.defs.VerificationView[]
     }) {
       if (!currentAccount) {
         throw new Error('User not logged in')
@@ -52,7 +51,7 @@ export function useVerificationsRemoveMutation() {
         () => {
           return appviewClient.call(app.bsky.actor.getProfile, {
             // the profile view is still legacy-typed, so its did is unbranded
-            actor: (profile.did ?? '') as AtIdentifierString,
+            actor: profile.did ?? '',
           })
         },
       )

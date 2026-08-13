@@ -1,4 +1,3 @@
-import {type ChatBskyActorDefs} from '@atproto/api'
 import {type QueryClient, useQuery} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
@@ -18,7 +17,7 @@ export function useListConvoMembersQuery({
   placeholderData,
 }: {
   convoId: string
-  placeholderData?: ChatBskyActorDefs.ProfileViewBasic[]
+  placeholderData?: chat.bsky.actor.defs.ProfileViewBasic[]
 }) {
   const client = useChatClient()
 
@@ -32,7 +31,7 @@ export function useListConvoMembersQuery({
        * `members` with the exported profile type also keeps the hook's result
        * type unchanged for consumers.
        */
-      const members: ChatBskyActorDefs.ProfileViewBasic[] = []
+      const members: chat.bsky.actor.defs.ProfileViewBasic[] = []
       let cursor: string | undefined
 
       do {
@@ -55,9 +54,9 @@ export function useListConvoMembersQuery({
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<ChatBskyActorDefs.ProfileViewBasic, void> {
+): Generator<chat.bsky.actor.defs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<
-    ChatBskyActorDefs.ProfileViewBasic[]
+    chat.bsky.actor.defs.ProfileViewBasic[]
   >({
     queryKey: [RQKEY_ROOT],
   })

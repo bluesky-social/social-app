@@ -1,4 +1,3 @@
-import {type ChatBskyGroupCreateGroup} from '@atproto/api'
 import {type DidString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
@@ -11,7 +10,7 @@ export function useCreateGroupChat({
   onSuccess,
   onError,
 }: {
-  onSuccess?: (data: ChatBskyGroupCreateGroup.OutputSchema) => void
+  onSuccess?: (data: chat.bsky.group.createGroup.$OutputBody) => void
   onError?: (error: Error) => void
 }) {
   const queryClient = useQueryClient()

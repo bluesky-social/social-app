@@ -1,6 +1,5 @@
 import {useMemo, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -14,6 +13,7 @@ import {
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {type TriggerProps} from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
+import {type chat} from '#/lexicons'
 import {EmojiPopup} from './EmojiPopup'
 import {hasAlreadyReacted, hasReachedReactionLimit} from './util'
 
@@ -21,7 +21,7 @@ export function EmojiReactionPicker({
   message,
   onEmojiSelect,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  message: chat.bsky.convo.defs.MessageView
   children?: TriggerProps['children']
   onEmojiSelect: (emoji: string) => void
 }) {

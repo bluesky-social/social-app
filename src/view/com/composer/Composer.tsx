@@ -44,14 +44,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnUI} from 'react-native-worklets'
 import * as FileSystem from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {
-  AppBskyDraftCreateDraft,
-  AppBskyUnspeccedDefs,
-  AtUri,
-  ChatBskyGroupDefs,
-} from '@atproto/api'
-import {type Client} from '@atproto/lex'
-import {type AtUriString} from '@atproto/syntax'
+import {type Client, type UriString} from '@atproto/lex'
+import {AtUri, type AtUriString} from '@atproto/syntax'
 import {type RichText} from '@bsky.app/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -78,6 +72,7 @@ import {useCallOnce} from '#/lib/once'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
@@ -149,7 +144,8 @@ import {
   IS_WEB_SAFARI,
 } from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
-import {app} from '#/lexicons'
+import {app, chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   draftToComposerPosts,
@@ -771,7 +767,9 @@ export const ComposePost = ({
 
   const getDraftSaveError = useCallback(
     (e: unknown): string => {
-      if (e instanceof AppBskyDraftCreateDraft.DraftLimitReachedError) {
+      if (
+        matchXrpcError(e, app.bsky.draft.createDraft) === 'DraftLimitReached'
+      ) {
         return l`You've reached the maximum number of drafts`
       }
       return l`Failed to save draft`
@@ -1010,7 +1008,7 @@ export const ComposePost = ({
   const hasUnavailableChatInvite = linkQueries.some(
     q =>
       q.data?.type === 'chat-invite' &&
-      !ChatBskyGroupDefs.isJoinLinkPreviewView(q.data.view),
+      !bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, q.data.view),
   )
 
   const canPost =
@@ -1140,7 +1138,7 @@ export const ComposePost = ({
               }
               if (
                 !res.thread.every(p =>
-                  AppBskyUnspeccedDefs.isThreadItemPost(p.value),
+                  bsky.isType(app.bsky.unspecced.defs.threadItemPost, p.value),
                 )
               ) {
                 throw new Error(`composer: app view returned non-post items`)
@@ -1212,7 +1210,7 @@ export const ComposePost = ({
           const resolved = q.data
           if (
             resolved?.type === 'chat-invite' &&
-            ChatBskyGroupDefs.isJoinLinkPreviewView(resolved.view)
+            bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, resolved.view)
           ) {
             ax.metric('groupchat:inviteLink:shared', {
               convoId: resolved.view.convoId,
@@ -1251,7 +1249,7 @@ export const ComposePost = ({
       void whenAppViewReady(client, initQuote.uri, res => {
         const anchor = res.thread.at(0)
         if (
-          AppBskyUnspeccedDefs.isThreadItemPost(anchor?.value) &&
+          bsky.isType(app.bsky.unspecced.defs.threadItemPost, anchor?.value) &&
           anchor.value.post.quoteCount !== initQuote.quoteCount
         ) {
           onPost?.(postUri)
@@ -1681,7 +1679,7 @@ let ComposerPost = memo(function ComposerPost({
 
   const onNewLink = useCallback(
     (uri: string) => {
-      dispatchPost({type: 'embed_add_uri', uri})
+      dispatchPost({type: 'embed_add_uri', uri: uri as UriString})
     },
     [dispatchPost],
   )

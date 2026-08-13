@@ -1,6 +1,5 @@
 import {memo, useCallback} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type ModerationDecision} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -21,11 +20,12 @@ import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
+import {type app} from '#/lexicons'
 import {TimeElapsed} from './TimeElapsed'
 import {PreviewableUserAvatar} from './UserAvatar'
 
 interface PostMetaOpts {
-  author: AppBskyActorDefs.ProfileViewBasic
+  author: app.bsky.actor.defs.ProfileViewBasic
   moderation: ModerationDecision | undefined
   postHref: string
   timestamp: string

@@ -1,13 +1,12 @@
 import {useEffect, useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppBskyGraphDefs, AtUri} from '@atproto/api'
-import {type ModerationUI} from '@bsky.app/sdk/moderation'
+import {AtUri} from '@atproto/syntax'
+import {moderateUserList, type ModerationUI} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {moderateUserList} from '#/lib/moderation/subjects'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {precacheList} from '#/state/queries/feed'
@@ -23,6 +22,7 @@ import {
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 /*
@@ -44,7 +44,7 @@ const CURATELIST = 'app.bsky.graph.defs#curatelist'
 const MODLIST = 'app.bsky.graph.defs#modlist'
 
 type Props = {
-  view: AppBskyGraphDefs.ListView
+  view: app.bsky.graph.defs.ListView
   showPinButton?: boolean
 }
 
@@ -108,7 +108,7 @@ export function TitleAndByline({
 }: {
   title: string
   creator?: bsky.profile.AnyProfileView
-  purpose?: AppBskyGraphDefs.ListView['purpose']
+  purpose?: app.bsky.graph.defs.ListView['purpose']
   modUi?: ModerationUI
 }) {
   const t = useTheme()
@@ -157,7 +157,7 @@ export function TitleAndByline({
 export function createProfileListHref({
   list,
 }: {
-  list: AppBskyGraphDefs.ListView
+  list: app.bsky.graph.defs.ListView
 }) {
   const urip = new AtUri(list.uri)
   const handleOrDid = list.creator.handle || list.creator.did

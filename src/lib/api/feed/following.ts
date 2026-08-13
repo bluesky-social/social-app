@@ -1,4 +1,3 @@
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {type Client} from '@atproto/lex'
 
 import {app} from '#/lexicons'
@@ -11,7 +10,7 @@ export class FollowingFeedAPI implements FeedAPI {
     this.client = client
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
     const data = await this.client.call(app.bsky.feed.getTimeline, {
       limit: 1,
     })

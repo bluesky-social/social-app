@@ -8,8 +8,8 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
+import {moderateProfile} from '@bsky.app/sdk/moderation'
 
-import {moderateProfile} from '#/lib/moderation/subjects'
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'

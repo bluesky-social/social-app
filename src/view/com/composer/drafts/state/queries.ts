@@ -1,4 +1,3 @@
-import {AppBskyDraftDefs} from '@atproto/api'
 import {
   useInfiniteQuery,
   useMutation,
@@ -12,6 +11,7 @@ import {type ComposerState} from '#/view/com/composer/state/composer'
 import {useAnalytics} from '#/analytics'
 import {getDeviceId} from '#/analytics/identifiers'
 import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {composerStateToDraft, draftViewToSummary} from './api'
 import {logger} from './logger'
 import * as storage from './storage'
@@ -52,7 +52,9 @@ export function useDraftsQuery() {
  * Load a draft's local media for editing.
  * Takes the full Draft object (from DraftSummary) to avoid re-fetching.
  */
-export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
+export async function loadDraftMedia(
+  draft: app.bsky.draft.defs.Draft,
+): Promise<{
   loadedMedia: Map<string, string>
 }> {
   // Load local media files
@@ -81,7 +83,7 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
     // Load gallery
     if (post.embedGallery) {
       for (const item of post.embedGallery.items) {
-        if (!AppBskyDraftDefs.isDraftEmbedImage(item)) continue
+        if (!bsky.isType(app.bsky.draft.defs.draftEmbedImage, item)) continue
         try {
           const url = await storage.loadMediaFromLocal(item.localRef.path)
           loadedMedia.set(item.localRef.path, url)
@@ -142,11 +144,10 @@ export function useSaveDraftMutation() {
         composerState,
       )
       /*
-       * `composerStateToDraft` builds the draft against the `@atproto/api`
-       * types, whose string fields are unbranded, so it is asserted once here
-       * to the vendored input type.
+       * `composerStateToDraft` builds the draft with unbranded string fields,
+       * so it is asserted once here to the generated input type.
        */
-      const draft = apiDraft as unknown as app.bsky.draft.defs.Draft
+      const draft = apiDraft
 
       logger.debug('saving draft', {
         existingDraftId,
@@ -242,7 +243,7 @@ export function useDeleteDraftMutation() {
       draftId,
     }: {
       draftId: string
-      draft: AppBskyDraftDefs.Draft
+      draft: app.bsky.draft.defs.Draft
     }) => {
       // Delete from server first - if this fails, we keep local media for retry
       await client.call(app.bsky.draft.deleteDraft, {id: draftId})
@@ -257,7 +258,8 @@ export function useDeleteDraftMutation() {
         }
         if (post.embedGallery) {
           for (const item of post.embedGallery.items) {
-            if (!AppBskyDraftDefs.isDraftEmbedImage(item)) continue
+            if (!bsky.isType(app.bsky.draft.defs.draftEmbedImage, item))
+              continue
             await storage.deleteMediaFromLocal(item.localRef.path)
           }
         }

@@ -1,5 +1,4 @@
 import {useMemo} from 'react'
-import {type ComAtprotoLabelDefs} from '@atproto/api'
 import {Client} from '@atproto/lex'
 import {type DidString} from '@atproto/syntax'
 import {
@@ -13,7 +12,7 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {type AppModerationCause} from '#/components/Pills'
-import {type app} from '#/lexicons'
+import {type app, type com} from '#/lexicons'
 
 export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const
 export const OTHER_SELF_LABELS = ['graphic-media'] as const
@@ -54,7 +53,7 @@ export function moduiContainsHideableOffense(modui: ModerationUI): boolean {
 }
 
 export function labelIsHideableOffense(
-  label: ComAtprotoLabelDefs.Label,
+  label: com.atproto.label.defs.Label,
 ): boolean {
   return ['!hide', '!takedown'].includes(label.val)
 }
@@ -64,9 +63,9 @@ export function labelIsHideableOffense(
  * with `!`) and the user's own "bot" self-label.
  */
 export function filterUserFacingLabels(
-  labels: ComAtprotoLabelDefs.Label[],
+  labels: com.atproto.label.defs.Label[],
   currentAccountDid: string | undefined,
-): ComAtprotoLabelDefs.Label[] {
+): com.atproto.label.defs.Label[] {
   return labels.filter(
     label =>
       !label.val.startsWith('!') &&
@@ -135,7 +134,11 @@ export type Subject =
       did: string
     }
 
-export function useLabelSubject({label}: {label: ComAtprotoLabelDefs.Label}): {
+export function useLabelSubject({
+  label,
+}: {
+  label: com.atproto.label.defs.Label
+}): {
   subject: Subject
 } {
   return useMemo(() => {

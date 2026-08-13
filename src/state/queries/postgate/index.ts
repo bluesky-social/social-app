@@ -1,11 +1,6 @@
 import {useRef} from 'react'
-import {
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  type AppBskyFeedDefs,
-} from '@atproto/api'
 import {type Client} from '@atproto/lex'
-import {AtUri, type HandleString} from '@atproto/syntax'
+import {AtUri, type AtUriString, type HandleString} from '@atproto/syntax'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry, retry} from '#/lib/async/retry'
@@ -173,7 +168,7 @@ export function useToggleQuoteDetachmentMutation() {
   const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const getPosts = useGetPosts()
-  const prevEmbed = useRef<AppBskyFeedDefs.PostView['embed']>(undefined)
+  const prevEmbed = useRef<app.bsky.feed.defs.PostView['embed']>(undefined)
 
   return useMutation({
     mutationFn: async ({
@@ -181,8 +176,8 @@ export function useToggleQuoteDetachmentMutation() {
       quoteUri,
       action,
     }: {
-      post: AppBskyFeedDefs.PostView
-      quoteUri: string
+      post: app.bsky.feed.defs.PostView
+      quoteUri: AtUriString
       action: 'detach' | 'reattach'
     }) => {
       // cache here since post shadow mutates original object
@@ -247,8 +242,8 @@ export function useToggleQuoteDetachmentMutation() {
       if (action === 'detach' && prevEmbed.current) {
         // detach failed, add the embed back
         if (
-          AppBskyEmbedRecord.isView(prevEmbed.current) ||
-          AppBskyEmbedRecordWithMedia.isView(prevEmbed.current)
+          bsky.isType(app.bsky.embed.record.view, prevEmbed.current) ||
+          bsky.isType(app.bsky.embed.recordWithMedia.view, prevEmbed.current)
         ) {
           updatePostShadow(queryClient, post.uri, {
             embed: prevEmbed.current,

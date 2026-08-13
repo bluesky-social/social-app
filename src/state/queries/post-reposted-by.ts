@@ -1,4 +1,3 @@
-import {type AppBskyActorDefs} from '@atproto/api'
 import {type AtUriString} from '@atproto/syntax'
 import {
   type InfiniteData,
@@ -44,7 +43,7 @@ export function usePostRepostedByQuery(resolvedUri: string | undefined) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<app.bsky.feed.getRepostedBy.$OutputBody>
   >({

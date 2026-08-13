@@ -1,5 +1,5 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {type AppBskyActorDefs, type AppBskyDraftDefs} from '@atproto/api'
+import {type UriString} from '@atproto/lex'
 import {type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {nanoid} from 'nanoid/non-secure'
@@ -56,7 +56,12 @@ type GifMedia = {
 
 type Link = {
   type: 'link'
-  uri: string
+  /*
+   * A URL the user typed or pasted, validated by the link resolver rather than
+   * at construction, so it carries lex's `uri` brand for the record and view
+   * slots it flows into.
+   */
+  uri: UriString
 }
 
 // This structure doesn't exactly correspond to the data model.
@@ -91,7 +96,7 @@ export type PostAction =
     }
   | {type: 'embed_remove_video'}
   | {type: 'embed_update_video'; videoAction: VideoAction}
-  | {type: 'embed_add_uri'; uri: string}
+  | {type: 'embed_add_uri'; uri: UriString}
   | {type: 'embed_remove_quote'}
   | {type: 'embed_remove_link'}
   | {type: 'embed_add_gif'; gif: Gif}
@@ -141,8 +146,8 @@ export type ComposerAction =
       type: 'restore_from_draft'
       draftId: string
       posts: PostDraft[]
-      threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow']
-      postgateEmbeddingRules: AppBskyDraftDefs.Draft['postgateEmbeddingRules']
+      threadgateAllow: app.bsky.draft.defs.Draft['threadgateAllow']
+      postgateEmbeddingRules: app.bsky.draft.defs.Draft['postgateEmbeddingRules']
 
       /** Map of localRefPath -> loaded media path/URL */
       loadedMedia: Map<string, string>
@@ -152,7 +157,7 @@ export type ComposerAction =
   | {
       type: 'clear'
       initInteractionSettings:
-        | AppBskyActorDefs.PostInteractionSettingsPref
+        | app.bsky.actor.defs.PostInteractionSettingsPref
         | undefined
     }
   | {
@@ -320,14 +325,13 @@ export function composerReducer(
              * Draft records are still typed against the legacy client, so the
              * stored rules arrive unbranded. Wave B migrates the draft types.
              */
-            embeddingRules:
-              postgateEmbeddingRules as app.bsky.feed.postgate.Main['embeddingRules'],
+            embeddingRules: postgateEmbeddingRules,
           }),
           threadgate: threadgateRecordToAllowUISetting({
             $type: 'app.bsky.feed.threadgate',
             post: '' as AtUriString,
             createdAt: toDatetimeString(new Date()),
-            allow: threadgateAllow as app.bsky.feed.threadgate.Main['allow'],
+            allow: threadgateAllow,
           }),
         },
       }
@@ -632,7 +636,7 @@ export function createComposerState({
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
   initInteractionSettings:
-    | AppBskyActorDefs.PostInteractionSettingsPref
+    | app.bsky.actor.defs.PostInteractionSettingsPref
     | undefined
 }): ComposerState {
   let media: ImagesMedia | GalleryMedia | undefined
@@ -646,7 +650,7 @@ export function createComposerState({
     if (path) {
       quote = {
         type: 'link',
-        uri: toBskyAppUrl(path),
+        uri: toBskyAppUrl(path) as UriString,
       }
     }
   }
@@ -700,7 +704,7 @@ export function createComposerState({
     if (suggestedExtUri) {
       link = {
         type: 'link',
-        uri: suggestedExtUri,
+        uri: suggestedExtUri as UriString,
       }
     }
     const suggestedPostUri = suggestLinkCardUri(
@@ -717,7 +721,7 @@ export function createComposerState({
       if (!quote) {
         quote = {
           type: 'link',
-          uri: suggestedPostUri,
+          uri: suggestedPostUri as UriString,
         }
       }
     }
@@ -750,15 +754,13 @@ export function createComposerState({
          * Preferences are still typed against the legacy client, so the stored
          * rules arrive unbranded. Wave B migrates `getPreferences`.
          */
-        embeddingRules: (initInteractionSettings?.postgateEmbeddingRules ||
-          []) as app.bsky.feed.postgate.Main['embeddingRules'],
+        embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
       }),
       threadgate: threadgateRecordToAllowUISetting({
         $type: 'app.bsky.feed.threadgate',
         post: '' as AtUriString,
         createdAt: toDatetimeString(new Date()),
-        allow:
-          initInteractionSettings?.threadgateAllowRules as app.bsky.feed.threadgate.Main['allow'],
+        allow: initInteractionSettings?.threadgateAllowRules,
       }),
     },
   }

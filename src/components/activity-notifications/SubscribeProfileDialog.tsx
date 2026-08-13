@@ -1,7 +1,6 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyNotificationDefs, type Un$Typed} from '@atproto/api'
-import {type DidString} from '@atproto/syntax'
+import {type Un$Typed} from '@atproto/lex'
 import {type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -118,11 +117,10 @@ function DialogInner({
     error,
   } = useMutation({
     mutationFn: async (
-      activitySubscription: Un$Typed<AppBskyNotificationDefs.ActivitySubscription>,
+      activitySubscription: Un$Typed<app.bsky.notification.defs.ActivitySubscription>,
     ) => {
       await client.call(app.bsky.notification.putActivitySubscription, {
-        // the profile view carries an already-resolved did
-        subject: profile.did as DidString,
+        subject: profile.did,
         activitySubscription,
       })
     },
@@ -307,8 +305,8 @@ function DialogInner({
 }
 
 function parseActivitySubscription(
-  sub?: AppBskyNotificationDefs.ActivitySubscription,
-): Un$Typed<AppBskyNotificationDefs.ActivitySubscription> {
+  sub?: app.bsky.notification.defs.ActivitySubscription,
+): Un$Typed<app.bsky.notification.defs.ActivitySubscription> {
   if (!sub) return {post: false, reply: false}
   const {post, reply} = sub
   return {post, reply}

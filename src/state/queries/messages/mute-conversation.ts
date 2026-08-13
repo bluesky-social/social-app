@@ -1,4 +1,3 @@
-import {type ChatBskyConvoMuteConvo} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {useChatClient} from '#/state/session'
@@ -14,7 +13,7 @@ export function useMuteConvo(
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: ChatBskyConvoMuteConvo.OutputSchema) => void
+    onSuccess?: (data: chat.bsky.convo.muteConvo.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {

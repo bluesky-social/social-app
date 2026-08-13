@@ -1,7 +1,6 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
-import {type ModerationOpts} from '@bsky.app/sdk/moderation'
+import {moderateProfile, type ModerationOpts} from '@bsky.app/sdk/moderation'
 import {type RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -11,7 +10,6 @@ import {Plural, Trans} from '@lingui/react/macro'
 import {MAX_LABELERS} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
-import {moderateProfile} from '#/lib/moderation/subjects'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
@@ -42,7 +40,7 @@ import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderShell} from './Shell'
 
 interface Props {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   labeler: app.bsky.labeler.defs.LabelerViewDetailed
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
@@ -58,7 +56,7 @@ let ProfileHeaderLabeler = ({
   hideBackButton = false,
   isPlaceholderProfile,
 }: Props): React.ReactNode => {
-  const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
+  const profile: Shadow<app.bsky.actor.defs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const t = useTheme()
   const ax = useAnalytics()
@@ -232,7 +230,7 @@ export function HeaderLabelerButtons({
   profile,
   minimal = false,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<app.bsky.actor.defs.ProfileViewDetailed>
   /** disable the subscribe button */
   minimal?: boolean
 }) {

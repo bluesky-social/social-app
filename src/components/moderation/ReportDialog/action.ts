@@ -1,5 +1,5 @@
-import {BSKY_LABELER_DID} from '@atproto/api'
 import {type AtUriString, type DidString} from '@atproto/syntax'
+import {api} from '@bsky.app/sdk'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
@@ -121,7 +121,7 @@ export function useSubmitReportMutation() {
         state.includeVideoTimestamp &&
         videoTimestampSeconds != null &&
         subject.type === 'post' &&
-        labeler.creator.did === BSKY_LABELER_DID
+        labeler.creator.did === api.moderation.did
           ? {videoTimestampSeconds}
           : undefined
 
