@@ -1,5 +1,5 @@
 import {useEffect, useId, useState} from 'react'
-import {AtUri} from '@atproto/syntax'
+import {type AtIdentifierString, AtUri} from '@atproto/syntax'
 
 import {Logger} from '#/logger'
 import {type FeedSourceInfo} from '#/state/queries/feed'
@@ -82,8 +82,8 @@ export function useUnstablePostSource(key: string) {
  */
 export function buildPostSourceKey(key: string, handle: string) {
   const urip = new AtUri(key)
-  // @ts-expect-error TODO new-sdk-migration
-  urip.host = handle
+  // the handle arrives as a plain string
+  urip.host = handle as AtIdentifierString
   return urip.toString()
 }
 

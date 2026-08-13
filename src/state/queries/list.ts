@@ -1,10 +1,5 @@
 import {type $Typed, type Client} from '@atproto/lex'
-import {
-  type AtIdentifierString,
-  AtUri,
-  type AtUriString,
-  toDatetimeString,
-} from '@atproto/syntax'
+import {AtUri, type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {
   blockActorList,
   muteActorList,
@@ -194,8 +189,7 @@ export function useListDeleteMutation() {
       let listitemRecordUris: string[] = []
       for (let i = 0; i < 100; i++) {
         const res = await pdsClient.list(app.bsky.graph.listitem, {
-          // the session account is still legacy-typed, so its did is unbranded
-          repo: currentAccount.did as AtIdentifierString,
+          repo: currentAccount.did,
           cursor,
           limit: 100,
         })
@@ -228,7 +222,7 @@ export function useListDeleteMutation() {
       // apply in chunks
       for (const writesChunk of chunk(writes, 10)) {
         await pdsClient.call(com.atproto.repo.applyWrites, {
-          repo: currentAccount.did as AtIdentifierString,
+          repo: currentAccount.did,
           writes: writesChunk,
         })
       }

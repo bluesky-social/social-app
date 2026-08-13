@@ -1,6 +1,5 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {type DidString} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {saveBytesToDisk} from '#/lib/media/manip'
@@ -34,7 +33,7 @@ export function ExportCarDialog({
     }
     try {
       setLoading('repo')
-      const did = currentAccount.did as DidString
+      const did = currentAccount.did
       const data = await pdsClient.call(com.atproto.sync.getRepo, {did})
       /*
        * getRepo declares `application/vnd.ipld.car`, so lex-client hands back

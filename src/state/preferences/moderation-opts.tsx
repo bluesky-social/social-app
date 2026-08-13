@@ -39,11 +39,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       return undefined
     }
     return {
-      /*
-       * `did`/`hiddenPosts` come from persisted storage typed as plain
-       * `string`, so brand them to the SDK's `DidString`/`AtUriString` slots.
-       */
-      userDid: userDid as ModerationOpts['userDid'],
+      userDid,
       prefs: {
         ...moderationPrefs,
         labelers: moderationPrefs.labelers.length
@@ -52,6 +48,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               did,
               labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
             })),
+        /*
+         * `hiddenPosts` comes from persisted storage typed as plain `string`,
+         * so brand it to the SDK's `AtUriString` slot.
+         */
         hiddenPosts: (hiddenPosts ||
           []) as ModerationOpts['prefs']['hiddenPosts'],
       },

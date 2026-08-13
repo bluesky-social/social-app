@@ -567,10 +567,6 @@ export function MessagesList({
           if (post) {
             embed = {
               $type: 'app.bsky.embed.record',
-              /*
-               * `getPost` hands back `uri` and `cid` as plain strings rather
-               * than the branded syntax types the lexicon input declares.
-               */
               record: {
                 uri: post.uri,
                 cid: post.cid,

@@ -40,8 +40,7 @@ export function useUpdateActorDeclaration({
           current?.associated?.chat?.allowGroupInvites,
       })
       const result = await pdsClient.call(com.atproto.repo.putRecord, {
-        // the session account is still legacy-typed, so its did is unbranded
-        repo: currentAccount.did as DidString,
+        repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
         record: {
@@ -106,7 +105,7 @@ export function useDeleteActorDeclaration() {
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not signed in')
       const result = await pdsClient.call(com.atproto.repo.deleteRecord, {
-        repo: currentAccount.did as DidString,
+        repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
       })

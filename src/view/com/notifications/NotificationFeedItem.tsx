@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native'
 import {TID} from '@atproto/common-web'
-import {AtUri, type DidString} from '@atproto/syntax'
+import {AtUri} from '@atproto/syntax'
 import {
   moderateProfile,
   type ModerationDecision,
@@ -913,9 +913,7 @@ function SayHelloBtn({profile}: {profile: app.bsky.actor.defs.ProfileView}) {
     try {
       setIsLoading(true)
       const data = await client.call(chat.bsky.convo.getConvoForMembers, {
-        // both dids are already resolved - one from the profile view, one from
-        // the active session
-        members: [profile.did, currentAccount!.did] as DidString[],
+        members: [profile.did, currentAccount!.did],
       })
       navigation.navigate('MessagesConversation', {
         conversation: data.convo.id,

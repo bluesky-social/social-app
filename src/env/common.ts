@@ -76,15 +76,13 @@ export const LOG_DEBUG: string = process.env.EXPO_PUBLIC_LOG_DEBUG || ''
  * The DID of the Bluesky appview to proxy to
  */
 export const BLUESKY_PROXY_DID: DidString =
-  (process.env.EXPO_PUBLIC_BLUESKY_PROXY_DID as DidString) ||
-  'did:web:api.bsky.app'
+  process.env.EXPO_PUBLIC_BLUESKY_PROXY_DID || 'did:web:api.bsky.app'
 
 /**
  * The DID of the chat service to proxy to
  */
 export const CHAT_PROXY_DID: DidString =
-  (process.env.EXPO_PUBLIC_CHAT_PROXY_DID as DidString) ||
-  'did:web:api.bsky.chat'
+  process.env.EXPO_PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat'
 
 /**
  * Metrics API host

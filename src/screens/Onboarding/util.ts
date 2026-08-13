@@ -21,7 +21,7 @@ export async function bulkWriteFollows(
   const followRecords: $Typed<app.bsky.graph.follow.Main>[] = dids.map(did => {
     return {
       $type: 'app.bsky.graph.follow',
-      // callers hold plain dids read off legacy-typed views
+      // the helper takes the dids as plain strings
       subject: did as DidString,
       createdAt: toDatetimeString(new Date()),
       via,

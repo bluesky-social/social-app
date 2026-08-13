@@ -69,7 +69,7 @@ export function sessionAccountToSessionData(
   return {
     accessJwt: account.accessJwt ?? '',
     active: account.active ?? true,
-    did: account.did as SessionData['did'],
+    did: account.did,
     email: account.email,
     emailAuthFactor: account.emailAuthFactor,
     emailConfirmed: account.emailConfirmed,

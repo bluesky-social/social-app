@@ -5,10 +5,8 @@ import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 /*
- * Threadgate VIEWS stay on the legacy client types: they are read-only inputs
- * from the appview, and branding them here would ripple through every post
- * component. Only the threadgate RECORD is migrated, because it is written
- * through `com.atproto.repo.putRecord`, whose body is typed as a lex `LexMap`.
+ * The view's `record` is typed as an opaque lex `LexMap`, so it is validated
+ * against the threadgate record schema before its `allow` rules are read.
  */
 export function threadgateViewToAllowUISetting(
   threadgateView: app.bsky.feed.defs.ThreadgateView | undefined,

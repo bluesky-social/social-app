@@ -86,10 +86,6 @@ export function ThreadgateBtn({
     $type: 'app.bsky.feed.threadgate',
     post: '' as AtUriString,
     createdAt: toDatetimeString(new Date()),
-    /*
-     * Preferences are still typed against the legacy client, so the stored
-     * rules arrive unbranded. Wave B migrates `getPreferences`.
-     */
     allow: preferences?.postInteractionSettings.threadgateAllowRules,
   })
   const prefPostgate = createPostgateRecord({

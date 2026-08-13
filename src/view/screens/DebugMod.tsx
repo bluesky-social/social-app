@@ -341,7 +341,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
         blockingByList: undefined,
       }),
     })
-    mockedProfile.did = did as app.bsky.actor.defs.ProfileViewBasic['did']
+    mockedProfile.did = did
     mockedProfile.avatar = 'https://bsky.social/about/images/favicon-32x32.png'
     // @ts-expect-error ProfileViewBasic is close enough -esb
     mockedProfile.banner =
