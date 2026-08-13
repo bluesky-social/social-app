@@ -16,7 +16,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {until} from '#/lib/async/until'
-import {wait} from '#/lib/async/wait'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {getAllListMembers} from '#/state/queries/list-members'
@@ -25,7 +24,6 @@ import {atoms as a, platform, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -46,7 +44,6 @@ export function CreateListFromStarterPackDialog({
   const navigation = useNavigation<NavigationProp>()
   const queryClient = useQueryClient()
   const createDialogControl = Dialog.useDialogControl()
-  const loadingDialogControl = Dialog.useDialogControl()
 
   const record = starterPack.record as AppBskyGraphStarterpack.Record
 
@@ -54,73 +51,54 @@ export function CreateListFromStarterPackDialog({
     control.close(() => createDialogControl.open())
   }
 
-  const addMembersAndNavigate = async (listUri: string) => {
-    const navigateToList = () => {
-      const urip = new AtUri(listUri)
-      navigation.navigate('ProfileList', {
-        name: urip.hostname,
-        rkey: urip.rkey,
-      })
-    }
-
-    if (!starterPack.list || !currentAccount) {
-      loadingDialogControl.close(navigateToList)
-      return
-    }
+  const addMembersToList = async (listUri: string) => {
+    if (!starterPack.list || !currentAccount) return
 
     try {
-      // Fetch all members and add them, with minimum 3s duration for UX
-      const listItems = await wait(
-        3000,
-        (async () => {
-          const items = await getAllListMembers(agent, starterPack.list!.uri)
+      const items = await getAllListMembers(agent, starterPack.list.uri)
 
-          if (items.length > 0) {
-            const listitemWrites: $Typed<ComAtprotoRepoApplyWrites.Create>[] =
-              items.map(item => {
-                const listitemRecord: $Typed<AppBskyGraphListitem.Record> = {
-                  $type: 'app.bsky.graph.listitem',
-                  subject: item.subject.did,
-                  list: listUri,
-                  createdAt: new Date().toISOString(),
-                }
-                return {
-                  $type: 'com.atproto.repo.applyWrites#create',
-                  collection: 'app.bsky.graph.listitem',
-                  rkey: TID.nextStr(),
-                  value: listitemRecord,
-                }
-              })
-
-            const chunks = chunk(listitemWrites, 50)
-            for (const c of chunks) {
-              await agent.com.atproto.repo.applyWrites({
-                repo: currentAccount.did,
-                writes: c,
-              })
+      if (items.length > 0) {
+        const listitemWrites: $Typed<ComAtprotoRepoApplyWrites.Create>[] =
+          items.map(item => {
+            const listitemRecord: $Typed<AppBskyGraphListitem.Record> = {
+              $type: 'app.bsky.graph.listitem',
+              subject: item.subject.did,
+              list: listUri,
+              createdAt: new Date().toISOString(),
             }
+            return {
+              $type: 'com.atproto.repo.applyWrites#create',
+              collection: 'app.bsky.graph.listitem',
+              rkey: TID.nextStr(),
+              value: listitemRecord,
+            }
+          })
 
-            await until(
-              5,
-              1e3,
-              (res: {data: {items: unknown[]}}) => res.data.items.length > 0,
-              () =>
-                agent.app.bsky.graph.getList({
-                  list: listUri,
-                  limit: 1,
-                }),
-            )
-          }
+        const chunks = chunk(listitemWrites, 50)
+        for (const c of chunks) {
+          await agent.com.atproto.repo.applyWrites({
+            repo: currentAccount.did,
+            writes: c,
+          })
+        }
 
-          return items
-        })(),
-      )
+        await until(
+          5,
+          1e3,
+          (res: {data: {items: unknown[]}}) => res.data.items.length > 0,
+          () =>
+            agent.app.bsky.graph.getList({
+              list: listUri,
+              limit: 1,
+            }),
+        )
+      }
 
       queryClient.invalidateQueries({queryKey: ['list-members', listUri]})
 
       ax.metric('starterPack:convertToList', {
         starterPack: starterPack.uri,
-        memberCount: listItems.length,
+        memberCount: items.length,
       })
     } catch (e) {
       logger.error('Failed to add members to list', {safeMessage: e})
@@ -128,13 +106,15 @@ export function CreateListFromStarterPackDialog({
         type: 'error',
       })
     }
-
-    loadingDialogControl.close(navigateToList)
   }
 
   const onListCreated = (listUri: string) => {
-    loadingDialogControl.open()
-    addMembersAndNavigate(listUri)
+    const urip = new AtUri(listUri)
+    navigation.navigate('ProfileList', {
+      name: urip.hostname,
+      rkey: urip.rkey,
+    })
+    addMembersToList(listUri)
   }
 
   return (
@@ -216,22 +196,6 @@ export function CreateListFromStarterPackDialog({
           avatar: starterPack.list?.avatar,
         }}
       />
-
-      <Dialog.Outer
-        control={loadingDialogControl}
-        nativeOptions={{preventDismiss: true}}>
-        <Dialog.Handle />
-        <Dialog.ScrollableInner
-          label={_(msg`Adding members to list...`)}
-          style={web({maxWidth: 400})}>
-          <View style={[a.align_center, a.gap_lg, a.py_5xl]}>
-            <Loader size="xl" />
-            <Text style={[a.text_lg, t.atoms.text_contrast_high]}>
-              <Trans>Adding members to list...</Trans>
-            </Text>
-          </View>
-        </Dialog.ScrollableInner>
-      </Dialog.Outer>
     </>
   )
 }
