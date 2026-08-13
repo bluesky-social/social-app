@@ -10,6 +10,7 @@ import {
   useSyncExternalStore,
 } from 'react'
 import {type AtpAgent} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 import {type SessionData} from '@atproto/lex-password-session'
 
 import * as persisted from '#/state/persisted'
@@ -18,6 +19,7 @@ import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {emitSessionDropped} from '../events'
+import {agentToLexClient, getPublicLexClient} from './clients'
 import {createSessionBundleAndCreateAccount} from './create-account'
 import {pickExpiryRescueCandidate} from './expiry-rescue'
 import {type Action, getInitialState, reducer, type State} from './reducer'
@@ -706,4 +708,23 @@ export function useAgent(): AtpAgent {
     throw Error('useAgent() must be below <SessionProvider>.')
   }
   return bundle.agent
+}
+
+/**
+ * The lex client for the active session, or for the public agent when logged
+ * out.
+ */
+export function useLexClient(): Client {
+  const bundle = useContext(BundleContext)
+  if (!bundle) {
+    throw Error('useLexClient() must be below <SessionProvider>.')
+  }
+  return agentToLexClient(bundle.agent)
+}
+
+/**
+ * The unauthenticated lex client for public reads.
+ */
+export function usePublicLexClient(): Client {
+  return getPublicLexClient()
 }
