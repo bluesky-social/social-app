@@ -32,7 +32,6 @@ import {app, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {createGIFDescription} from '../gif-alt-text'
 import {computeCid} from './computeCid'
-import {fromLegacyBlobRef} from './legacy-blob'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
@@ -410,10 +409,11 @@ async function resolveMedia(
     return {
       $type: 'app.bsky.embed.video',
       /*
-       * The video pipeline still reads its blob off the legacy agent, so
-       * normalize it to the lex shape before it reaches the lex write.
+       * The video blob is a plain lex blob from the video pipeline
+       * (getJobStatus, in composer state/video). Its structural shape matches
+       * the lexicon blob field and the CID hasher (see computeCid).
        */
-      video: fromLegacyBlobRef(videoDraft.pendingPublish.blobRef),
+      video: videoDraft.pendingPublish.blobRef,
       alt: videoDraft.altText || undefined,
       captions: captions.length === 0 ? undefined : captions,
       aspectRatio,

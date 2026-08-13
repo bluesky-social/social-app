@@ -14,18 +14,3 @@ import {type BlobRef as LexBlobRef} from '@atproto/lex'
 export function toLegacyBlobRef(blob: LexBlobRef): BlobRef {
   return BlobRef.fromJsonRef(blob as Parameters<typeof BlobRef.fromJsonRef>[0])
 }
-
-/**
- * Normalize a legacy `BlobRef` class instance to the plain-JSON lex blob shape.
- *
- * Required for any blob that reaches a lex write: the lex serializer walks
- * plain objects, so a class instance goes on the wire with its internal
- * `original` field and no `$type`. `ipld()` yields exactly the lex shape, and
- * hashes identically (see `computeCid.test.ts` case 2b).
- *
- * Only the video pipeline still needs this - it reads its blob off the legacy
- * agent (`app.bsky.video.getJobStatus`). Drop it when the video client moves.
- */
-export function fromLegacyBlobRef(blob: BlobRef): LexBlobRef {
-  return blob.ipld()
-}
