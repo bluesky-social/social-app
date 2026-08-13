@@ -29,6 +29,14 @@ const config = getSentryExpoConfig(import.meta.dirname, {
     }
 
     const resolver: CustomResolver = (context, moduleName, platform) => {
+      if (
+        platform === 'web' &&
+        /^react-native-gesture-handler(\/|$)/.test(moduleName)
+      ) {
+        throw new Error(
+          `react-native-gesture-handler must not be imported on web (requested from ${context.originModulePath})`,
+        )
+      }
       /*
        * react-native-webview has no web implementation (its fallback renders
        * "does not support this platform"), so swap in react-native-web-webview
