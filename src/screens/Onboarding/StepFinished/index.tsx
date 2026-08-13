@@ -26,7 +26,7 @@ import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-p
 import {getAllListMembers} from '#/state/queries/list-members'
 import {preferencesQueryKey} from '#/state/queries/preferences'
 import {RQKEY as profileRQKey} from '#/state/queries/profile'
-import {useAgent} from '#/state/session'
+import {useAgent, useAppviewClient} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {
   useActiveStarterPack,
@@ -58,6 +58,7 @@ export function StepFinished() {
   const [saving, setSaving] = useState(false)
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
@@ -82,7 +83,10 @@ export function StepFinished() {
       }
       try {
         if (starterPack?.list) {
-          listItems = await getAllListMembers(agent, starterPack.list.uri)
+          listItems = await getAllListMembers(
+            appviewClient,
+            starterPack.list.uri,
+          )
         }
       } catch (e) {
         logger.error('Failed to fetch starter pack list items', {
@@ -231,6 +235,7 @@ export function StepFinished() {
     ax,
     queryClient,
     agent,
+    appviewClient,
     dispatch,
     onboardDispatch,
     activeStarterPack,
