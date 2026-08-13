@@ -6,6 +6,7 @@ import {
 } from '@atproto/lex-password-session'
 
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {canParseUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {prefetchAgeAssuranceServerData} from '#/ageAssurance/data'
 import {features} from '#/analytics'
@@ -102,7 +103,7 @@ export function buildBundle(
    * and let the session route against its own service instead.
    */
   const agent =
-    storedPdsUrl && URL.canParse(storedPdsUrl)
+    storedPdsUrl && canParseUrl(storedPdsUrl)
       ? routeSessionToPds(session, storedPdsUrl)
       : session
   return {
