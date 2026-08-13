@@ -1,9 +1,7 @@
 import {createContext, useCallback, useContext} from 'react'
 import {LayoutAnimation} from 'react-native'
-import {
-  ComAtprotoServerCreateAccount,
-  type ComAtprotoServerDescribeServer,
-} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
+import {XrpcResponseError} from '@atproto/lex-client'
 import {useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
@@ -260,14 +258,35 @@ export const useSignupContext = () => useContext(SignupContext)
  * failure is unexpected and should be reported to Sentry.
  */
 function classifyExpectedSignupError(e: unknown): string | undefined {
-  if (e instanceof ComAtprotoServerCreateAccount.InvalidHandleError)
-    return 'InvalidHandle'
-  if (e instanceof ComAtprotoServerCreateAccount.HandleNotAvailableError)
-    return 'HandleNotAvailable'
-  if (e instanceof ComAtprotoServerCreateAccount.InvalidPasswordError)
-    return 'InvalidPassword'
-  if (e instanceof ComAtprotoServerCreateAccount.UnsupportedDomainError)
-    return 'UnsupportedDomain'
+  /*
+   * TODO: `XrpcResponseError.error` is the open `LexErrorCode` union, so these
+   * codes are compared as plain strings and a typo silently never matches.
+   * Once the generated lexicons land, replace this (and every multi-code error
+   * site) with a shared helper that narrows against the method schema:
+   *
+   *   function matchXrpcError<M extends Procedure | Query>(
+   *     e: unknown,
+   *     method: Main<M>,
+   *   ): InferMethodError<M> | undefined
+   *
+   *   switch (matchXrpcError(e, com.atproto.server.createAccount)) {
+   *     case 'InvalidHandle': ...
+   *   }
+   *
+   * The return type is the method's declared-errors union, so a typo'd case is
+   * a compile error, and undeclared codes fall through to `undefined`. The
+   * helper should also match `e.method.nsid` so a declared code from a
+   * different call cannot match, mirroring the old per-method error classes.
+   */
+  if (e instanceof XrpcResponseError) {
+    switch (e.error) {
+      case 'InvalidHandle':
+      case 'HandleNotAvailable':
+      case 'InvalidPassword':
+      case 'UnsupportedDomain':
+        return e.error
+    }
+  }
   /* the server sends no typed error for this case */
   if (String(e).includes('Email already taken')) return 'EmailTaken'
   if (isNetworkError(e)) return 'NetworkError'
@@ -357,7 +376,7 @@ export function useSubmitSignup() {
       } catch (err) {
         const e = err as Error
         let errMsg = e.toString()
-        if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
+        if (e instanceof XrpcResponseError && e.error === 'InvalidInviteCode') {
           dispatch({
             type: 'setError',
             value: l`Invite code not accepted. Check that you input it correctly and try again.`,
