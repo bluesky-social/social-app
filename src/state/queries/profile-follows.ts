@@ -9,6 +9,7 @@ import {
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
 import {useAnalytics} from '#/analytics'
+import {useAutoPagination} from './util'
 
 const DEFAULT_SORT = 'latest'
 const PAGE_SIZE = 30
@@ -38,7 +39,7 @@ export function useProfileFollowsQuery(
 
   const sortParam = isSortEnabled ? sort || DEFAULT_SORT : undefined
 
-  return useInfiniteQuery<
+  const query = useInfiniteQuery<
     AppBskyGraphGetFollows.OutputSchema,
     Error,
     InfiniteData<AppBskyGraphGetFollows.OutputSchema>,
@@ -60,6 +61,11 @@ export function useProfileFollowsQuery(
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: !!did,
   })
+  const itemCount =
+    query.data?.pages.reduce((count, page) => count + page.follows.length, 0) ??
+    0
+  useAutoPagination(query, itemCount, limit || PAGE_SIZE)
+  return query
 }
 
 export function* findAllProfilesInQueryData(

@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {createQueryKey} from '#/state/queries/util'
+import {createQueryKey, useAutoPagination} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
 
 const PAGE_SIZE = 30
@@ -20,7 +20,7 @@ export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function useLikedByQuery(resolvedUri: string | undefined) {
   const agent = useAgent()
-  return useInfiniteQuery<
+  const query = useInfiniteQuery<
     AppBskyFeedGetLikes.OutputSchema,
     Error,
     InfiniteData<AppBskyFeedGetLikes.OutputSchema>,
@@ -40,6 +40,10 @@ export function useLikedByQuery(resolvedUri: string | undefined) {
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: !!resolvedUri,
   })
+  const itemCount =
+    query.data?.pages.reduce((count, page) => count + page.likes.length, 0) ?? 0
+  useAutoPagination(query, itemCount, PAGE_SIZE)
+  return query
 }
 
 /**

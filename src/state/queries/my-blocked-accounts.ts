@@ -7,14 +7,16 @@ import {
 } from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
+import {useAutoPagination} from './util'
 
 const RQKEY_ROOT = 'my-blocked-accounts'
+const PAGE_SIZE = 30
 export const RQKEY = () => [RQKEY_ROOT]
 type RQPageParam = string | undefined
 
 export function useMyBlockedAccountsQuery() {
   const agent = useAgent()
-  return useInfiniteQuery<
+  const query = useInfiniteQuery<
     AppBskyGraphGetBlocks.OutputSchema,
     Error,
     InfiniteData<AppBskyGraphGetBlocks.OutputSchema>,
@@ -24,7 +26,7 @@ export function useMyBlockedAccountsQuery() {
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await agent.app.bsky.graph.getBlocks({
-        limit: 30,
+        limit: PAGE_SIZE,
         cursor: pageParam,
       })
       return res.data
@@ -32,6 +34,11 @@ export function useMyBlockedAccountsQuery() {
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
+  const itemCount =
+    query.data?.pages.reduce((count, page) => count + page.blocks.length, 0) ??
+    0
+  useAutoPagination(query, itemCount, PAGE_SIZE)
+  return query
 }
 
 export function* findAllProfilesInQueryData(

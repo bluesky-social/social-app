@@ -24,6 +24,7 @@ import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
   getEmbeddedPost,
+  useAutoPagination,
 } from './util'
 
 const searchPostsQueryKeyRoot = 'search-posts'
@@ -64,7 +65,7 @@ export function useSearchPostsV2Query({
     result: InfiniteData<AppBskyFeedSearchPostsV2.OutputSchema>
   } | null>(null)
 
-  return useInfiniteQuery<
+  const result = useInfiniteQuery<
     AppBskyFeedSearchPostsV2.OutputSchema,
     Error,
     InfiniteData<AppBskyFeedSearchPostsV2.OutputSchema>,
@@ -170,6 +171,11 @@ export function useSearchPostsV2Query({
       [selectArgs],
     ),
   })
+  const uris = new Set(
+    result.data?.pages.flatMap(page => page.posts.map(post => post.uri)),
+  )
+  useAutoPagination(result, uris.size, 25)
+  return result
 }
 
 export function* findAllPostsInQueryData(

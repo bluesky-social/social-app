@@ -13,6 +13,7 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
+import {useAutoPagination} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
 
 const PAGE_SIZE = 30
@@ -25,7 +26,7 @@ export const RQKEY_ALL = (uri: string) => [RQKEY_ROOT_ALL, uri]
 
 export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
   const agent = useAgent()
-  return useInfiniteQuery<
+  const query = useInfiniteQuery<
     AppBskyGraphGetList.OutputSchema,
     Error,
     InfiniteData<AppBskyGraphGetList.OutputSchema>,
@@ -46,6 +47,10 @@ export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: Boolean(uri),
   })
+  const itemCount =
+    query.data?.pages.reduce((count, page) => count + page.items.length, 0) ?? 0
+  useAutoPagination(query, itemCount, limit)
+  return query
 }
 
 export function useAllListMembersQuery(uri?: string) {

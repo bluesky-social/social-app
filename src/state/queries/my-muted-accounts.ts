@@ -7,14 +7,16 @@ import {
 } from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
+import {useAutoPagination} from './util'
 
 const RQKEY_ROOT = 'my-muted-accounts'
+const PAGE_SIZE = 30
 export const RQKEY = () => [RQKEY_ROOT]
 type RQPageParam = string | undefined
 
 export function useMyMutedAccountsQuery() {
   const agent = useAgent()
-  return useInfiniteQuery<
+  const query = useInfiniteQuery<
     AppBskyGraphGetMutes.OutputSchema,
     Error,
     InfiniteData<AppBskyGraphGetMutes.OutputSchema>,
@@ -24,7 +26,7 @@ export function useMyMutedAccountsQuery() {
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await agent.app.bsky.graph.getMutes({
-        limit: 30,
+        limit: PAGE_SIZE,
         cursor: pageParam,
       })
       return res.data
@@ -32,6 +34,10 @@ export function useMyMutedAccountsQuery() {
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
+  const itemCount =
+    query.data?.pages.reduce((count, page) => count + page.mutes.length, 0) ?? 0
+  useAutoPagination(query, itemCount, PAGE_SIZE)
+  return query
 }
 
 export function* findAllProfilesInQueryData(

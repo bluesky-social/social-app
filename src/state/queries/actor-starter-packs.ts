@@ -1,6 +1,9 @@
 import {type QueryClient, useInfiniteQuery} from '@tanstack/react-query'
 
+import {useAutoPagination} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
+
+const PAGE_SIZE = 10
 
 export const RQKEY_ROOT = 'actor-starter-packs'
 export const RQKEY_WITH_MEMBERSHIP_ROOT = 'actor-starter-packs-with-membership'
@@ -19,12 +22,12 @@ export function useActorStarterPacksQuery({
 }) {
   const agent = useAgent()
 
-  return useInfiniteQuery({
+  const query = useInfiniteQuery({
     queryKey: RQKEY(did),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
       const res = await agent.app.bsky.graph.getActorStarterPacks({
         actor: did!,
-        limit: 10,
+        limit: PAGE_SIZE,
         cursor: pageParam,
       })
       return res.data
@@ -33,6 +36,13 @@ export function useActorStarterPacksQuery({
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
+  const itemCount =
+    query.data?.pages.reduce(
+      (count, page) => count + page.starterPacks.length,
+      0,
+    ) ?? 0
+  useAutoPagination(query, itemCount, PAGE_SIZE)
+  return query
 }
 
 export function useActorStarterPacksWithMembershipsQuery({
@@ -44,12 +54,12 @@ export function useActorStarterPacksWithMembershipsQuery({
 }) {
   const agent = useAgent()
 
-  return useInfiniteQuery({
+  const query = useInfiniteQuery({
     queryKey: RQKEY_WITH_MEMBERSHIP(did),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
       const res = await agent.app.bsky.graph.getStarterPacksWithMembership({
         actor: did!,
-        limit: 10,
+        limit: PAGE_SIZE,
         cursor: pageParam,
       })
       return res.data
@@ -58,6 +68,13 @@ export function useActorStarterPacksWithMembershipsQuery({
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
+  const itemCount =
+    query.data?.pages.reduce(
+      (count, page) => count + page.starterPacksWithMembership.length,
+      0,
+    ) ?? 0
+  useAutoPagination(query, itemCount, PAGE_SIZE)
+  return query
 }
 
 export async function invalidateActorStarterPacksQuery({
