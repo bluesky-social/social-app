@@ -326,6 +326,10 @@
                   "default"
                 ],
                 "message": "React is already in the global type namespace. Use named imports for runtime modules."
+              },
+              {
+                "name": "@sentry/react-native",
+                "message": "Import {Sentry} from '#/logger/sentry/lib' instead. Importing @sentry/react-native directly (especially as `import * as Sentry`) defeats Metro tree-shaking and pulls ~180KB of dead weight into the web bundle."
               }
             ]
           }
@@ -399,6 +403,15 @@
       ],
       "env": {
         "jest": true
+      }
+    },
+    {
+      "files": [
+        "src/logger/sentry/**/*.ts",
+        "src/logger/__tests__/logger.test.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
       }
     }
   ]
