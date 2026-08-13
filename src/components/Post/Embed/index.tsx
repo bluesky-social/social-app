@@ -68,7 +68,11 @@ export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
     }
     case 'post_with_media': {
       return (
-        <View style={rest.style}>
+        <View
+          style={[
+            rest.style,
+            rest.viewContext === PostEmbedViewContext.ChatMessage && a.gap_sm,
+          ]}>
           <MediaEmbed embed={embed.media} {...rest} />
           <RecordEmbed embed={embed.view} {...rest} />
         </View>

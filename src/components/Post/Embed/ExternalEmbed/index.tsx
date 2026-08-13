@@ -92,7 +92,7 @@ export const ExternalEmbed = ({
       style={[a.rounded_md]}
       onPress={onPress}
       onLongPress={onShareExternal}>
-      {({hovered}) => (
+      {({hovered, pressed}) => (
         <View
           style={[
             a.transition_color,
@@ -101,7 +101,7 @@ export const ExternalEmbed = ({
             a.overflow_hidden,
             a.w_full,
             a.border,
-            t.atoms.bg,
+            pressed && t.atoms.bg,
             style,
             hovered
               ? t.atoms.border_contrast_high
