@@ -1,9 +1,6 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {
-  type AppBskyActorDefs,
-  type AppBskyDraftDefs,
-  type AppBskyFeedPostgate,
-} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyDraftDefs} from '@atproto/api'
+import {type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {RichText} from '@bsky.app/sdk/richtext'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -103,7 +100,7 @@ export type PostAction =
 
 export type ThreadDraft = {
   posts: PostDraft[]
-  postgate: AppBskyFeedPostgate.Record
+  postgate: app.bsky.feed.postgate.Main
   threadgate: ThreadgateAllowUISetting[]
 }
 
@@ -122,7 +119,7 @@ export type ComposerState = {
 }
 
 export type ComposerAction =
-  | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
+  | {type: 'update_postgate'; postgate: app.bsky.feed.postgate.Main}
   | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
   | {
       type: 'update_post'
@@ -319,13 +316,18 @@ export function composerReducer(
           posts,
           postgate: createPostgateRecord({
             post: '',
-            embeddingRules: postgateEmbeddingRules,
+            /*
+             * Draft records are still typed against the legacy client, so the
+             * stored rules arrive unbranded. Wave B migrates the draft types.
+             */
+            embeddingRules:
+              postgateEmbeddingRules as app.bsky.feed.postgate.Main['embeddingRules'],
           }),
           threadgate: threadgateRecordToAllowUISetting({
             $type: 'app.bsky.feed.threadgate',
-            post: '',
-            createdAt: new Date().toString(),
-            allow: threadgateAllow,
+            post: '' as AtUriString,
+            createdAt: toDatetimeString(new Date()),
+            allow: threadgateAllow as app.bsky.feed.threadgate.Main['allow'],
           }),
         },
       }
@@ -744,13 +746,19 @@ export function createComposerState({
       ],
       postgate: createPostgateRecord({
         post: '',
-        embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
+        /*
+         * Preferences are still typed against the legacy client, so the stored
+         * rules arrive unbranded. Wave B migrates `getPreferences`.
+         */
+        embeddingRules: (initInteractionSettings?.postgateEmbeddingRules ||
+          []) as app.bsky.feed.postgate.Main['embeddingRules'],
       }),
       threadgate: threadgateRecordToAllowUISetting({
         $type: 'app.bsky.feed.threadgate',
-        post: '',
-        createdAt: new Date().toString(),
-        allow: initInteractionSettings?.threadgateAllowRules,
+        post: '' as AtUriString,
+        createdAt: toDatetimeString(new Date()),
+        allow:
+          initInteractionSettings?.threadgateAllowRules as app.bsky.feed.threadgate.Main['allow'],
       }),
     },
   }

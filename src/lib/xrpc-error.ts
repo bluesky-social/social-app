@@ -7,6 +7,8 @@ import {
   XrpcResponseError,
 } from '@atproto/lex'
 
+import {com} from '#/lexicons'
+
 /**
  * Same nsid means `e` was thrown for this method schema, so `e` can be
  * treated as an `XrpcResponseError<M>` - which is what lets the SDK's
@@ -56,4 +58,22 @@ export function matchXrpcError<M extends Procedure | Query>(
     return e.error
   }
   return undefined
+}
+
+/**
+ * Whether `e` is a `com.atproto.repo.getRecord` failure meaning the record is
+ * absent, so the caller can treat the read as "no record" instead of an error.
+ *
+ * `getRecord` declares `RecordNotFound` and both the PDS and the appview throw
+ * it by that name, so the declared code is the primary check. The message
+ * substring is kept as a fallback because that is what the pre-SDK call sites
+ * matched on, and an older PDS in the network may still answer with an
+ * unnamed error whose message carries the text. Dropping it would silently
+ * turn a previously-handled absence into a thrown error.
+ */
+export function isRecordNotFoundError(e: unknown): boolean {
+  if (matchXrpcError(e, com.atproto.repo.getRecord) === 'RecordNotFound') {
+    return true
+  }
+  return e instanceof Error && e.message.includes('Could not locate record:')
 }
