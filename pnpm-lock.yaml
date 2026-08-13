@@ -215,6 +215,8 @@ overrides:
   '@types/psl': 1.1.1
   react-native-screens: 4.24.0
 
+packageExtensionsChecksum: sha256-KbeCj471Qk3TA758q8nLPkiGCPDA0TX18iO/Coy89lo=
+
 patchedDependencies:
   '@sentry/expo-upload-sourcemaps@8.18.0': 2368e1e1986165e7ead3c60017b78b2f9ade1b6a6b2f5ad27cd428608c6f12ae
   expo-age-range@0.2.18: c325225749993424461eeece1d97a99b19c00da2ebc958a73c12e4eca0c39306
@@ -802,14 +804,8 @@ importers:
         specifier: ~54.0.10
         version: 54.0.10(@babel/core@7.29.0(supports-color@8.1.1))(@babel/runtime@7.29.2)(expo@54.0.35(@babel/core@7.29.0(supports-color@8.1.1))(react-native-webview@13.15.0(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.1.17)(react@19.1.0)(supports-color@8.1.1))(react@19.1.0))(react-native@0.81.5(patch_hash=91fd85363059530dea649a5ca6012b933f79c8491737fbfdc685abc727e48403)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.1.17)(react@19.1.0)(supports-color@8.1.1))(react@19.1.0)(supports-color@8.1.1))(react-refresh@0.14.2)(supports-color@8.1.1)
       eslint-plugin-bsky-internal:
-        specifier: link:eslint
-        version: link:eslint
-      eslint-plugin-react-compiler:
-        specifier: 19.1.0-rc.2
-        version: 19.1.0-rc.2(eslint@8.57.1(supports-color@8.1.1))(supports-color@8.1.1)
-      eslint-plugin-react-native:
-        specifier: ^5.0.0
-        version: 5.0.0(eslint@8.57.1(supports-color@8.1.1))
+        specifier: link:lint-rules
+        version: link:lint-rules
       eslint-plugin-react-native-a11y:
         specifier: ^3.5.1
         version: 3.5.1(eslint@8.57.1(supports-color@8.1.1))
@@ -1134,13 +1130,6 @@ packages:
   '@babel/plugin-proposal-export-default-from@7.27.1':
     resolution: {integrity: sha512-hjlsMBl1aJc5lp8MoCDEZCiYzlgdRAShOjAfRw6X+GlpLpUPU7c3XNLsKFZbQk/1cRzBlJ7CXg3xJAJMrFa1Uw==}
     engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
-  '@babel/plugin-proposal-private-methods@7.18.6':
-    resolution: {integrity: sha512-nutsvktDItsNn4rpGItSNV2sz1XwS+nfU0Rg8aCx3W3NOKVzdMjJRu0O5OkgDp3ZGICSTbgRpxZoWsxoKRvbeA==}
-    engines: {node: '>=6.9.0'}
-    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-private-methods instead.
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
@@ -5276,30 +5265,22 @@ packages:
     engines: {node: '>=6.0'}
     hasBin: true
 
-  eslint-plugin-react-compiler@19.1.0-rc.2:
-    resolution: {integrity: sha512-oKalwDGcD+RX9mf3NEO4zOoUMeLvjSvcbbEOpquzmzqEEM2MQdp7/FY/Hx9NzmUwFzH1W9SKTz5fihfMldpEYw==}
-    engines: {node: ^14.17.0 || ^16.0.0 || >= 18.0.0}
-    peerDependencies:
-      eslint: '>=7'
-
   eslint-plugin-react-native-a11y@3.5.1:
     resolution: {integrity: sha512-vqnXZpAiov0lxYNfEYgwABpkiBYRrt0dbtOafPkw6QaFeA0uZ+s3w9opeEMoFmV36WFxLiCxHb9fvOJ+EUc2xQ==}
     engines: {node: '>=12.0'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
-
-  eslint-plugin-react-native-globals@0.1.2:
-    resolution: {integrity: sha512-9aEPf1JEpiTjcFAmmyw8eiIXmcNZOqaZyHO77wgm0/dWfT/oxC1SrIq8ET38pMxHYrcB6Uew+TzUVsBeczF88g==}
-
-  eslint-plugin-react-native@5.0.0:
-    resolution: {integrity: sha512-VyWlyCC/7FC/aONibOwLkzmyKg4j9oI8fzrk9WYNs4I8/m436JuOTAFwLvEn1CVvc7La4cPfbCyspP4OYpP52Q==}
-    peerDependencies:
-      eslint: ^3.17.0 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9
+    peerDependenciesMeta:
+      eslint:
+        optional: true
 
   eslint-plugin-simple-import-sort@13.0.0:
     resolution: {integrity: sha512-McAc+/Nlvcg4byY/CABGH8kqnefWBj8s3JA2okEtz8ixbECQgU46p0HkTUKa4YS7wvgGceimlc34p1nXqbWqtA==}
     peerDependencies:
       eslint: '>=5.0.0'
+    peerDependenciesMeta:
+      eslint:
+        optional: true
 
   eslint-scope@5.1.1:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}
@@ -6043,9 +6024,6 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
 
-  hermes-estree@0.25.1:
-    resolution: {integrity: sha512-0wUoCcLp+5Ev5pDW2OriHC2MJCbwLwuRx+gAqMTOkGKJJiBCLjtrvy4PWUGn6MIVefecRpzoOZ/UV6iGdOr+Cw==}
-
   hermes-estree@0.29.1:
     resolution: {integrity: sha512-jl+x31n4/w+wEqm0I2r4CMimukLbLQEYpisys5oCre611CI5fc9TxhqkBBCJ1edDG4Kza0f7CgNz8xVMLZQOmQ==}
 
@@ -6057,9 +6035,6 @@ packages:
 
   hermes-estree@0.36.0:
     resolution: {integrity: sha512-A1+8zn5oss2CFP7pKsOaxorQG6FNIz1WU1VDqruLPPZl3LVgeE2C5xfFg8Ow6/Ow4mSslLLtYP1J3n38eKyW9w==}
-
-  hermes-parser@0.25.1:
-    resolution: {integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==}
 
   hermes-parser@0.29.1:
     resolution: {integrity: sha512-xBHWmUtRC5e/UL0tI7Ivt2riA/YBq9+SiYFU7C1oBa/j2jYGlIF9043oak1F47ihuDIxQ5nbsKueYJDRY02UgA==}
@@ -9694,12 +9669,6 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  zod-validation-error@3.5.4:
-    resolution: {integrity: sha512-+hEiRIiPobgyuFlEojnqjJnhFvg4r/i3cqgcm67eehZf/WBaK3g6cD02YU9mtdVxZjv8CzCA9n/Rhrs3yAAvAw==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      zod: ^3.24.4
-
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
@@ -10087,14 +10056,6 @@ snapshots:
     dependencies:
       '@babel/core': 7.29.0(supports-color@8.1.1)
       '@babel/helper-plugin-utils': 7.28.6
-
-  '@babel/plugin-proposal-private-methods@7.18.6(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1)':
-    dependencies:
-      '@babel/core': 7.29.0(supports-color@8.1.1)
-      '@babel/helper-create-class-features-plugin': 7.29.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1)
-      '@babel/helper-plugin-utils': 7.28.6
-    transitivePeerDependencies:
-      - supports-color
 
   '@babel/plugin-proposal-private-property-in-object@7.21.0-placeholder-for-preset-env.2(@babel/core@7.29.0(supports-color@8.1.1))':
     dependencies:
@@ -10952,8 +10913,10 @@ snapshots:
     dependencies:
       eslint: 8.57.1(supports-color@8.1.1)
       eslint-visitor-keys: 3.4.3
+    optional: true
 
-  '@eslint-community/regexpp@4.12.2': {}
+  '@eslint-community/regexpp@4.12.2':
+    optional: true
 
   '@eslint/eslintrc@2.1.4(supports-color@8.1.1)':
     dependencies:
@@ -10968,8 +10931,10 @@ snapshots:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
-  '@eslint/js@8.57.1': {}
+  '@eslint/js@8.57.1':
+    optional: true
 
   '@expo/cli@54.0.25(c1408f750868568d2dc75671b50084a7)':
     dependencies:
@@ -11420,10 +11385,13 @@ snapshots:
       minimatch: 3.1.5
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
-  '@humanwhocodes/module-importer@1.0.1': {}
+  '@humanwhocodes/module-importer@1.0.1':
+    optional: true
 
-  '@humanwhocodes/object-schema@2.0.3': {}
+  '@humanwhocodes/object-schema@2.0.3':
+    optional: true
 
   '@ide/backoff@1.0.0': {}
 
@@ -13577,6 +13545,7 @@ snapshots:
   acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:
       acorn: 8.16.0
+    optional: true
 
   acorn-walk@8.3.5:
     dependencies:
@@ -14580,7 +14549,8 @@ snapshots:
 
   deep-extend@0.6.0: {}
 
-  deep-is@0.1.4: {}
+  deep-is@0.1.4:
+    optional: true
 
   deepmerge@4.3.1: {}
 
@@ -14649,6 +14619,7 @@ snapshots:
   doctrine@3.0.0:
     dependencies:
       esutils: 2.0.3
+    optional: true
 
   dom-converter@0.2.0:
     dependencies:
@@ -14893,34 +14864,16 @@ snapshots:
     optionalDependencies:
       source-map: 0.6.1
 
-  eslint-plugin-react-compiler@19.1.0-rc.2(eslint@8.57.1(supports-color@8.1.1))(supports-color@8.1.1):
-    dependencies:
-      '@babel/core': 7.29.0(supports-color@8.1.1)
-      '@babel/parser': 7.29.3
-      '@babel/plugin-proposal-private-methods': 7.18.6(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1)
-      eslint: 8.57.1(supports-color@8.1.1)
-      hermes-parser: 0.25.1
-      zod: 3.25.76
-      zod-validation-error: 3.5.4(zod@3.25.76)
-    transitivePeerDependencies:
-      - supports-color
-
   eslint-plugin-react-native-a11y@3.5.1(eslint@8.57.1(supports-color@8.1.1)):
     dependencies:
       '@babel/runtime': 7.29.2
       ast-types-flow: 0.0.7
-      eslint: 8.57.1(supports-color@8.1.1)
       jsx-ast-utils: 3.3.5
-
-  eslint-plugin-react-native-globals@0.1.2: {}
-
-  eslint-plugin-react-native@5.0.0(eslint@8.57.1(supports-color@8.1.1)):
-    dependencies:
+    optionalDependencies:
       eslint: 8.57.1(supports-color@8.1.1)
-      eslint-plugin-react-native-globals: 0.1.2
 
   eslint-plugin-simple-import-sort@13.0.0(eslint@8.57.1(supports-color@8.1.1)):
-    dependencies:
+    optionalDependencies:
       eslint: 8.57.1(supports-color@8.1.1)
 
   eslint-scope@5.1.1:
@@ -14932,8 +14885,10 @@ snapshots:
     dependencies:
       esrecurse: 4.3.0
       estraverse: 5.3.0
+    optional: true
 
-  eslint-visitor-keys@3.4.3: {}
+  eslint-visitor-keys@3.4.3:
+    optional: true
 
   eslint@8.57.1(supports-color@8.1.1):
     dependencies:
@@ -14977,6 +14932,7 @@ snapshots:
       text-table: 0.2.0
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   esm@3.2.25:
     optional: true
@@ -14986,12 +14942,14 @@ snapshots:
       acorn: 8.16.0
       acorn-jsx: 5.3.2(acorn@8.16.0)
       eslint-visitor-keys: 3.4.3
+    optional: true
 
   esprima@4.0.1: {}
 
   esquery@1.7.0:
     dependencies:
       estraverse: 5.3.0
+    optional: true
 
   esrecurse@4.3.0:
     dependencies:
@@ -15466,7 +15424,8 @@ snapshots:
       json-schema-ref-resolver: 3.0.0
       rfdc: 1.4.1
 
-  fast-levenshtein@2.0.6: {}
+  fast-levenshtein@2.0.6:
+    optional: true
 
   fast-text-encoding@1.0.6: {}
 
@@ -15505,6 +15464,7 @@ snapshots:
   file-entry-cache@6.0.1:
     dependencies:
       flat-cache: 3.2.0
+    optional: true
 
   file-loader@6.2.0(webpack@5.106.2(clean-css@5.3.3)(cssnano@5.1.15(postcss@8.5.14))(csso@5.0.5)(esbuild@0.25.12)(html-minifier-terser@6.1.0)(lightningcss@1.32.0)(postcss@8.5.14)):
     dependencies:
@@ -15575,8 +15535,10 @@ snapshots:
       flatted: 3.4.4
       keyv: 4.5.4
       rimraf: 3.0.2
+    optional: true
 
-  flatted@3.4.4: {}
+  flatted@3.4.4:
+    optional: true
 
   flow-enums-runtime@0.0.6: {}
 
@@ -15732,6 +15694,7 @@ snapshots:
   globals@13.24.0:
     dependencies:
       type-fest: 0.20.2
+    optional: true
 
   globals@17.6.0: {}
 
@@ -15761,7 +15724,8 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
-  graphemer@1.4.0: {}
+  graphemer@1.4.0:
+    optional: true
 
   gzip-size@6.0.0:
     dependencies:
@@ -15795,8 +15759,6 @@ snapshots:
 
   he@1.2.0: {}
 
-  hermes-estree@0.25.1: {}
-
   hermes-estree@0.29.1: {}
 
   hermes-estree@0.32.0: {}
@@ -15804,10 +15766,6 @@ snapshots:
   hermes-estree@0.35.0: {}
 
   hermes-estree@0.36.0: {}
-
-  hermes-parser@0.25.1:
-    dependencies:
-      hermes-estree: 0.25.1
 
   hermes-parser@0.29.1:
     dependencies:
@@ -16137,7 +16095,8 @@ snapshots:
     dependencies:
       path-is-inside: 1.0.2
 
-  is-path-inside@3.0.3: {}
+  is-path-inside@3.0.3:
+    optional: true
 
   is-plain-obj@2.1.0: {}
 
@@ -16731,7 +16690,8 @@ snapshots:
 
   jsesc@3.1.0: {}
 
-  json-buffer@3.0.1: {}
+  json-buffer@3.0.1:
+    optional: true
 
   json-parse-even-better-errors@2.3.1: {}
 
@@ -16743,7 +16703,8 @@ snapshots:
 
   json-schema-traverse@1.0.0: {}
 
-  json-stable-stringify-without-jsonify@1.0.1: {}
+  json-stable-stringify-without-jsonify@1.0.1:
+    optional: true
 
   json5@2.2.3: {}
 
@@ -16765,6 +16726,7 @@ snapshots:
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
+    optional: true
 
   kleur@3.0.3: {}
 
@@ -16785,6 +16747,7 @@ snapshots:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+    optional: true
 
   libphonenumber-js@1.13.1: {}
 
@@ -16896,7 +16859,8 @@ snapshots:
 
   lodash.memoize@4.1.2: {}
 
-  lodash.merge@4.6.2: {}
+  lodash.merge@4.6.2:
+    optional: true
 
   lodash.shuffle@4.2.0: {}
 
@@ -17595,6 +17559,7 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
       word-wrap: 1.2.5
+    optional: true
 
   ora@3.4.0:
     dependencies:
@@ -18002,7 +17967,8 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  prelude-ls@1.2.1: {}
+  prelude-ls@1.2.1:
+    optional: true
 
   prettier@3.8.3: {}
 
@@ -19320,7 +19286,8 @@ snapshots:
     dependencies:
       utrie: 1.0.2
 
-  text-table@0.2.0: {}
+  text-table@0.2.0:
+    optional: true
 
   thenify-all@1.6.0:
     dependencies:
@@ -19412,10 +19379,12 @@ snapshots:
   type-check@0.4.0:
     dependencies:
       prelude-ls: 1.2.1
+    optional: true
 
   type-detect@4.0.8: {}
 
-  type-fest@0.20.2: {}
+  type-fest@0.20.2:
+    optional: true
 
   type-fest@0.21.3: {}
 
@@ -19868,7 +19837,8 @@ snapshots:
 
   wonka@6.3.6: {}
 
-  word-wrap@1.2.5: {}
+  word-wrap@1.2.5:
+    optional: true
 
   wrap-ansi@10.0.0:
     dependencies:
@@ -19997,9 +19967,5 @@ snapshots:
       pend: 1.2.0
 
   yocto-queue@0.1.0: {}
-
-  zod-validation-error@3.5.4(zod@3.25.76):
-    dependencies:
-      zod: 3.25.76
 
   zod@3.25.76: {}
