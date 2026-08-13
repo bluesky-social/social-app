@@ -40,7 +40,12 @@ export function createLexClient(
  * Requests use PLAIN `fetch`, not `networkAwareFetch`: the host is untrusted
  * input, and a typo'd or dead service must not be reported as the app losing
  * network reachability.
+ *
+ * `appLabelers: null` suppresses the global `Client.appLabelers` static: these
+ * are `com.atproto.server` calls to a host the user typed, which have no use
+ * for moderation labels, and the header would disclose the app's configured
+ * moderation authorities to an arbitrary third-party server.
  */
 export function createServiceClient(service: string): Client {
-  return createLexClient({service})
+  return createLexClient({service}, {appLabelers: null})
 }

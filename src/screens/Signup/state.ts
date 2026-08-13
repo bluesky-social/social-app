@@ -354,7 +354,6 @@ export function useSubmitSignup() {
         onboardingDispatch({type: 'start'})
       } catch (err) {
         const e = err as Error
-        let errMsg = e.toString()
         if (
           matchXrpcError(e, com.atproto.server.createAccount) ===
           'InvalidInviteCode'
@@ -368,7 +367,9 @@ export function useSubmitSignup() {
           return
         }
 
-        const error = cleanError(errMsg)
+        /* the error object, not its stringification: cleanError only extracts
+         * the clean server message from a live LexError */
+        const error = cleanError(e)
         const isHandleError = error.toLowerCase().includes('handle')
 
         dispatch({type: 'setIsLoading', value: false})

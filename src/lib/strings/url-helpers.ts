@@ -27,6 +27,15 @@ const TRUSTED_REGEX = new RegExp(
   )})|/|#)`,
 )
 
+export function canParseUrl(url: string | URL, base?: string | URL): boolean {
+  try {
+    new URL(url, base)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export function isValidDomain(str: string): boolean {
   return !!TLDs.find(tld => {
     let i = str.lastIndexOf(tld)
