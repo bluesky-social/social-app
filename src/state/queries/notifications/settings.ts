@@ -10,10 +10,10 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useAppviewClient, useChatClient} from '#/state/session'
 import * as Toast from '#/components/Toast'
+import {app, chat} from '#/lexicons'
 
 const RQKEY_ROOT = 'notification-settings'
 const RQKEY_APP = [RQKEY_ROOT, 'app']
@@ -67,13 +67,13 @@ type ChatNotificationSettingsUpdate =
 export function useNotificationSettingsQuery({
   enabled,
 }: {enabled?: boolean} = {}) {
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   return useQuery({
     queryKey: RQKEY_APP,
     queryFn: async (): Promise<AppNotificationSettingsPreferences> => {
-      const res = await agent.app.bsky.notification.getPreferences()
-      return appPreferencesWithoutChat(res.data.preferences)
+      const data = await client.call(app.bsky.notification.getPreferences)
+      return appPreferencesWithoutChat(data.preferences)
     },
     enabled,
   })
@@ -82,21 +82,24 @@ export function useNotificationSettingsQuery({
 export function useChatNotificationSettingsQuery({
   enabled,
 }: {enabled?: boolean} = {}) {
-  const agent = useAgent()
+  const client = useChatClient()
 
   return useQuery({
     queryKey: RQKEY_CHAT,
     queryFn: async (): Promise<ChatNotificationSettingsPreferences> => {
-      const res = await agent.chat.bsky.notification.getPreferences(undefined, {
-        headers: DM_SERVICE_HEADERS,
-      })
-      return chatPreferencesForSettings(res.data.preferences)
+      const data = await client.call(chat.bsky.notification.getPreferences)
+      return chatPreferencesForSettings(data.preferences)
     },
     enabled,
   })
 }
 export function useNotificationSettingsUpdateMutation() {
-  const agent = useAgent()
+  /*
+   * App preferences live on the appview and chat preferences on the chat
+   * service, so a combined update fans out over both clients.
+   */
+  const appviewClient = useAppviewClient()
+  const chatClient = useChatClient()
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -104,13 +107,13 @@ export function useNotificationSettingsUpdateMutation() {
       const {appUpdate, chatUpdate} = splitNotificationSettingsUpdate(update)
       await Promise.all([
         hasUpdates(appUpdate)
-          ? agent.app.bsky.notification.putPreferencesV2(appUpdate)
+          ? appviewClient.call(
+              app.bsky.notification.putPreferencesV2,
+              appUpdate,
+            )
           : undefined,
         hasUpdates(chatUpdate)
-          ? agent.chat.bsky.notification.putPreferences(chatUpdate, {
-              headers: DM_SERVICE_HEADERS,
-              encoding: 'application/json',
-            })
+          ? chatClient.call(chat.bsky.notification.putPreferences, chatUpdate)
           : undefined,
       ])
     },

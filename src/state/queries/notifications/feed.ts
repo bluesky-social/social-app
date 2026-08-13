@@ -33,7 +33,7 @@ import {
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
 import type * as bsky from '#/types/bsky'
 import {
@@ -60,7 +60,7 @@ export function useNotificationFeedQuery(opts: {
   enabled?: boolean
   filter: 'all' | 'mentions'
 }) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const unreads = useUnreadNotificationsApi()
@@ -106,7 +106,7 @@ export function useNotificationFeedQuery(opts: {
           ]
         }
         const {page: fetchedPage} = await fetchPage({
-          agent,
+          client,
           limit: PAGE_SIZE,
           cursor: pageParam,
           queryClient,
