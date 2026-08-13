@@ -2,9 +2,12 @@ import {memo, useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {type AppBskyFeedDefs, type AppBskyGraphDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useIsFocused} from '@react-navigation/native'
 
 import {urls} from '#/lib/constants'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
+import {useFeedKeyboardNav} from '#/lib/hotkeys'
+import * as KeyboardActivation from '#/lib/hotkeys/KeyboardActivation'
 import {useCallOnce} from '#/lib/once'
 import {
   cleanError,
@@ -35,6 +38,7 @@ import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {SearchError} from '#/components/SearchError'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
@@ -66,10 +70,10 @@ let SearchResults = ({
   const hasPostFilters = hasPostOnlyFilters(filters) || fromMe
   const activePage = hasPostFilters && activeTab > 1 ? 0 : activeTab
   const tabShape = hasPostFilters ? 'filtered' : 'plain'
-
   const isStarterPacksEnabled = ax.features.enabled(
     ax.features.SearchStarterPacksV2Enable,
   )
+  const isScreenFocused = useIsFocused()
 
   const sections = useMemo(() => {
     if (!query && !hasFilters) return []
@@ -87,7 +91,7 @@ let SearchResults = ({
             query={query}
             filters={filters}
             sort="top"
-            active={activePage === 0}
+            active={isScreenFocused && activePage === 0}
           />
         ),
       },
@@ -99,20 +103,26 @@ let SearchResults = ({
             query={query}
             filters={filters}
             sort="latest"
-            active={activePage === 1}
+            active={isScreenFocused && activePage === 1}
           />
         ),
       },
       noFilters && {
         title: l`People`,
         component: (
-          <SearchScreenUserResults query={query} active={activePage === 2} />
+          <SearchScreenUserResults
+            query={query}
+            active={isScreenFocused && activePage === 2}
+          />
         ),
       },
       noFilters && {
         title: l`Feeds`,
         component: (
-          <SearchScreenFeedsResults query={query} active={activePage === 3} />
+          <SearchScreenFeedsResults
+            query={query}
+            active={isScreenFocused && activePage === 3}
+          />
         ),
       },
       noFilters &&
@@ -121,7 +131,7 @@ let SearchResults = ({
           component: (
             <SearchScreenStarterPackResults
               query={query}
-              active={activePage === 4}
+              active={isScreenFocused && activePage === 4}
             />
           ),
         },
@@ -137,6 +147,7 @@ let SearchResults = ({
     hasPostFilters,
     activePage,
     isStarterPacksEnabled,
+    isScreenFocused,
   ])
 
   // There may be fewer tabs after changing the search options.
@@ -405,6 +416,20 @@ let SearchScreenPostResults = ({
     requestSwitchToAccount({requestedAccount: 'new'})
   }
 
+  const focusableIndices = useMemo(() => {
+    const indices: number[] = []
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type === 'post') {
+        indices.push(i)
+      }
+    }
+    return indices
+  }, [items])
+  const {focusedIndex, itemRef, itemActivation} = useFeedKeyboardNav({
+    focusableIndices,
+    active,
+  })
+
   if (!hasSession) {
     return (
       <SearchError title={l`Search is currently unavailable when logged out`}>
@@ -456,7 +481,18 @@ let SearchScreenPostResults = ({
               }) => {
                 if (item.type === 'post') {
                   return (
-                    <SearchPost from={sort} position={index} post={item.post} />
+                    <View>
+                      <SubtleHover hover={index === focusedIndex} />
+                      <KeyboardActivation.Boundary
+                        register={itemActivation(index)}>
+                        <SearchPost
+                          from={sort}
+                          ref={itemRef(index)}
+                          position={index}
+                          post={item.post}
+                        />
+                      </KeyboardActivation.Boundary>
+                    </View>
                   )
                 } else {
                   return null
@@ -501,10 +537,12 @@ function SearchPost({
   from,
   position,
   post,
+  ref,
 }: {
   from: Metrics['search:result:press']['tab']
   position: Metrics['search:result:press']['position']
   post: AppBskyFeedDefs.PostView
+  ref?: React.Ref<View>
 }) {
   const ax = useAnalytics()
 
@@ -517,7 +555,7 @@ function SearchPost({
     })
   }, [ax, from, position, post])
 
-  return <Post post={post} onBeforePress={onBeforePress} />
+  return <Post post={post} onBeforePress={onBeforePress} ref={ref} />
 }
 
 let SearchScreenUserResults = ({
@@ -571,6 +609,14 @@ let SearchScreenUserResults = ({
     fireTracking()
   }
 
+  const focusableIndices = useMemo(() => {
+    return profiles.map((_: bsky.profile.AnyProfileView, i: number) => i)
+  }, [profiles])
+  const {focusedIndex, itemRef, itemActivation} = useFeedKeyboardNav({
+    focusableIndices,
+    active,
+  })
+
   if (error) {
     return (
       <EmptyState
@@ -595,7 +641,14 @@ let SearchScreenUserResults = ({
           }: {
             item: bsky.profile.AnyProfileView
             index: number
-          }) => <SearchScreenProfileButton position={index} profile={item} />}
+          }) => (
+            <View ref={itemRef(index)}>
+              <SubtleHover hover={index === focusedIndex} />
+              <KeyboardActivation.Boundary register={itemActivation(index)}>
+                <SearchScreenProfileButton position={index} profile={item} />
+              </KeyboardActivation.Boundary>
+            </View>
+          )}
           keyExtractor={(item: bsky.profile.AnyProfileView) => item.did}
           refreshing={isPTR}
           onRefresh={() => void onPullToRefresh()}
@@ -663,6 +716,16 @@ let SearchScreenFeedsResults = ({
     fireTracking()
   }
 
+  const focusableIndices = useMemo(() => {
+    return (results ?? []).map(
+      (_: AppBskyFeedDefs.GeneratorView, i: number) => i,
+    )
+  }, [results])
+  const {focusedIndex, itemRef, itemActivation} = useFeedKeyboardNav({
+    focusableIndices,
+    active,
+  })
+
   return isFetched && results ? (
     <>
       {results.length ? (
@@ -676,13 +739,18 @@ let SearchScreenFeedsResults = ({
             index: number
           }) => (
             <View
+              ref={itemRef(index)}
               style={[
                 a.border_t,
                 t.atoms.border_contrast_low,
                 a.px_lg,
                 a.py_lg,
+                a.relative,
               ]}>
-              <SearchFeedCard position={index} view={item} />
+              <SubtleHover hover={index === focusedIndex} />
+              <KeyboardActivation.Boundary register={itemActivation(index)}>
+                <SearchFeedCard position={index} view={item} />
+              </KeyboardActivation.Boundary>
             </View>
           )}
           keyExtractor={(item: AppBskyFeedDefs.GeneratorView) => item.uri}

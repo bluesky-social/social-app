@@ -48,14 +48,9 @@ export function ExploreInterestsCard() {
         onConfirm={onConfirmClose}
       />
 
-      <View style={[a.pb_2xs]}>
+      <View>
         <View
-          style={[
-            a.p_lg,
-            a.border_b,
-            a.gap_md,
-            t.atoms.border_contrast_medium,
-          ]}>
+          style={[a.p_lg, a.border_b, a.gap_md, t.atoms.border_contrast_low]}>
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>
             <ShapesIcon fill={t.atoms.text.color} />
             <Text style={[a.text_lg, a.font_semi_bold]}>
