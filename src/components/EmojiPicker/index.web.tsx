@@ -1,6 +1,6 @@
 import {createContext, useContext, useEffect, useMemo, useRef} from 'react'
 import EmojiPicker from '@emoji-mart/react'
-import {DropdownMenu} from 'radix-ui'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import {useA11y} from '#/state/a11y'
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
