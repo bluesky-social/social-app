@@ -3,7 +3,7 @@ import {LogBox, Pressable, TextInput, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {BLUESKY_PROXY_HEADER} from '#/lib/constants'
-import {useAgent, useSessionApi} from '#/state/session'
+import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useOnboardingDispatch} from '#/state/shell/onboarding'
 import {navigate} from '../../../Navigation'
@@ -31,7 +31,6 @@ const BTN = {height: 1, width: 1, backgroundColor: 'red'}
 let hasConfiguredProxy = false
 
 export function TestCtrls() {
-  const agent = useAgent()
   const queryClient = useQueryClient()
   const {logoutEveryAccount, login} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
@@ -74,8 +73,13 @@ export function TestCtrls() {
         autoCapitalize="none"
         onSubmitEditing={() => {
           const header = `${proxyHeader}#bsky_appview`
+          /*
+           * The appview client reads `BLUESKY_PROXY_HEADER.get()` when the
+           * bundle builds it (see clients.ts), so setting the mutable constant
+           * retargets the proxy for the sign-ins below without reconfiguring
+           * anything: the gate above means no bundle exists yet.
+           */
           BLUESKY_PROXY_HEADER.set(header)
-          agent.configureProxy(header as any)
           hasConfiguredProxy = true
           setIsProxyConfigured(true)
         }}

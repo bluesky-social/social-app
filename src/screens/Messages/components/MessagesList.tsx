@@ -70,7 +70,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import {app, type chat, type com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {groupSystemMessages, type RenderItem} from './groupSystemMessages'
@@ -537,10 +537,7 @@ export function MessagesList({
        */
       rt.detectFacetsWithoutResolution()
 
-      let embed:
-        | $Typed<AppBskyEmbedRecord.Main>
-        | $Typed<ChatBskyEmbedJoinLink.Main>
-        | undefined
+      let embed: chat.bsky.convo.defs.MessageInput['embed']
       let embedView:
         | $Typed<AppBskyEmbedRecord.View>
         | $Typed<ChatBskyEmbedJoinLink.View>
@@ -576,10 +573,15 @@ export function MessagesList({
           if (post) {
             embed = {
               $type: 'app.bsky.embed.record',
+              /*
+               * `getPost` still returns an `@atproto/api` view, whose `uri` and
+               * `cid` are plain strings rather than the branded syntax types
+               * the lexicon input declares.
+               */
               record: {
                 uri: post.uri,
                 cid: post.cid,
-              },
+              } as com.atproto.repo.strongRef.Main,
             }
 
             embedView = {

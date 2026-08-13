@@ -10,7 +10,6 @@ import {
 
 import {networkRetry} from '#/lib/async/retry'
 import {
-  BLUESKY_PROXY_HEADER,
   DISCOVER_SAVED_FEED,
   IS_PROD_SERVICE,
   TIMELINE_SAVED_FEED,
@@ -27,7 +26,6 @@ import {
 import {unsafeGetAndComputeAgeAssurance} from '#/ageAssurance/state'
 import {features} from '#/analytics'
 import {type app} from '#/lexicons'
-import {agentToAppviewClient, agentToPdsClient} from './clients'
 import {configureModerationForAccount} from './moderation'
 import {
   buildBundle,
@@ -106,10 +104,10 @@ export async function createSessionBundleAndCreateAccount(
   setBirthdateForDid({did: earlyAccount.did, birthdate})
   snoozeBirthdateUpdateAllowedForDid(earlyAccount.did)
   // Post-signup writes all target the account's own repo and actor store.
-  const pdsClient = agentToPdsClient(bundle.agent)
+  const pdsClient = bundle.pdsClient
   // Start the prefetch after seeding its synchronous birthdate inputs.
   const aa = prefetchAgeAssuranceServerData({
-    appviewClient: agentToAppviewClient(bundle.agent),
+    appviewClient: bundle.appviewClient,
     accountClient: pdsClient,
   })
 
@@ -135,8 +133,6 @@ export async function createSessionBundleAndCreateAccount(
       message: `session: failed snoozeEmailConfirmationPrompt`,
     })
   }
-
-  bundle.agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   // Preparation may auto-refresh the session while hooks are still disarmed.
   const account = await finishPreparation(

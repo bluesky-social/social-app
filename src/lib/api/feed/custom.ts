@@ -1,5 +1,5 @@
-import {type AppBskyFeedDefs, AtpAgent, jsonStringToLex} from '@atproto/api'
-import {type Client, type XrpcRequestParams} from '@atproto/lex'
+import {type AppBskyFeedDefs, jsonStringToLex} from '@atproto/api'
+import {Client, type XrpcRequestParams} from '@atproto/lex'
 
 import {
   getAppLanguageAsContentLanguage,
@@ -115,12 +115,12 @@ async function loggedOutFetch({
 }): Promise<app.bsky.feed.getFeed.$OutputBody | null> {
   let contentLangs = getAppLanguageAsContentLanguage()
 
-  /**
-   * Copied from our root `Agent` class
-   * @see https://github.com/bluesky-social/atproto/blob/60df3fc652b00cdff71dd9235d98a7a4bb828f05/packages/api/src/agent.ts#L120
+  /*
+   * This request is hand-rolled rather than issued through a client, so it has
+   * to reproduce the header lex would have emitted from the global static.
    */
   const labelersHeader = {
-    'atproto-accept-labelers': AtpAgent.appLabelers
+    'atproto-accept-labelers': Client.appLabelers
       .map(l => `${l};redact`)
       .join(', '),
   }

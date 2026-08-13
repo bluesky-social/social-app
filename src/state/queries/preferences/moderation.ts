@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {AtpAgent} from '@atproto/api'
+import {Client} from '@atproto/lex'
 import {interpretLabelValueDefinitions} from '@bsky.app/sdk/moderation'
 
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
@@ -14,7 +14,7 @@ export function useMyLabelersQuery({
   const prefs = usePreferencesQuery()
   let dids = Array.from(
     new Set(
-      AtpAgent.appLabelers.concat(
+      (Client.appLabelers as readonly string[]).concat(
         prefs.data?.moderationPrefs.labelers.map(l => l.did) || [],
       ),
     ),

@@ -27,7 +27,7 @@ import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
-import {useAgent, useSession, useSessionApi} from '#/state/session'
+import {useSession, useSessionApi} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -63,12 +63,12 @@ export function ChangeHandleDialog({
 function ChangeHandleDialogInner() {
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
-  const agent = useAgent()
+  const {currentAccount} = useSession()
   const {
     data: serviceInfo,
     error: serviceInfoError,
     refetch,
-  } = useServiceQuery(agent.serviceUrl.toString())
+  } = useServiceQuery(currentAccount?.service ?? '')
 
   const [page, setPage] = useState<'provided-handle' | 'own-handle'>(
     'provided-handle',

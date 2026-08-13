@@ -1,6 +1,7 @@
 import {useCallback} from 'react'
 import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
-import {type AtUriString} from '@atproto/syntax'
+import {type Client} from '@atproto/lex'
+import {type AtUriString, type HandleString} from '@atproto/syntax'
 import {deleteLike, deletePost, deleteRepost, like, repost} from '@bsky.app/sdk'
 import {
   type QueryClient,
@@ -12,16 +13,11 @@ import {
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {type Shadow} from '#/state/cache/types'
-import {
-  useAgent,
-  useAppviewClient,
-  usePdsClient,
-  useSession,
-} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {useAnalytics} from '#/analytics'
 import {type Metrics, toClout} from '#/analytics/metrics'
-import {app} from '#/lexicons'
+import {app, com} from '#/lexicons'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
 import {findProfileQueryData} from './profile'
 
@@ -29,31 +25,48 @@ const RQKEY_ROOT = 'post'
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
 
 export function usePostQuery(uri: string | undefined) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useQuery<AppBskyFeedDefs.PostView>({
     queryKey: RQKEY(uri || ''),
     queryFn: async () => {
       if (!uri) throw new Error('[unreachable] No URI provided')
 
-      const urip = new AtUri(uri)
-
-      if (!urip.host.startsWith('did:')) {
-        const res = await agent.resolveHandle({
-          handle: urip.host,
-        })
-        // @ts-expect-error TODO new-sdk-migration
-        urip.host = res.data.did
-      }
-
-      const res = await agent.getPosts({uris: [urip.toString()]})
-      if (res.success && res.data.posts[0]) {
-        return res.data.posts[0]
+      const post = await fetchPost(client, uri)
+      if (post) {
+        return post
       }
 
       throw new Error('No data')
     },
     enabled: !!uri,
   })
+}
+
+/**
+ * Read one post by AT-URI, resolving a handle authority first when the URI
+ * carries one.
+ *
+ * The appview still answers with `@atproto/api`-shaped views for the callers of
+ * these hooks, so the generated view is asserted across at this single
+ * boundary rather than at every consumer.
+ */
+async function fetchPost(
+  client: Client,
+  uri: string,
+): Promise<AppBskyFeedDefs.PostView | undefined> {
+  const urip = new AtUri(uri)
+
+  if (!urip.host.startsWith('did:')) {
+    const data = await client.call(com.atproto.identity.resolveHandle, {
+      handle: urip.host as HandleString,
+    })
+    urip.host = data.did
+  }
+
+  const data = await client.call(app.bsky.feed.getPosts, {
+    uris: [urip.toString()],
+  })
+  return data.posts[0]
 }
 
 export function precachePost(
@@ -66,59 +79,42 @@ export function precachePost(
 
 export function useGetPost() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useCallback(
     async ({uri}: {uri: string}) => {
       return queryClient.fetchQuery({
         queryKey: RQKEY(uri || ''),
         async queryFn() {
-          const urip = new AtUri(uri)
-
-          if (!urip.host.startsWith('did:')) {
-            const res = await agent.resolveHandle({
-              handle: urip.host,
-            })
-            // @ts-expect-error TODO new-sdk-migration
-            urip.host = res.data.did
-          }
-
-          const res = await agent.getPosts({
-            uris: [urip.toString()],
-          })
-
-          if (res.success && res.data.posts[0]) {
-            return res.data.posts[0]
+          const post = await fetchPost(client, uri)
+          if (post) {
+            return post
           }
 
           throw new Error('useGetPost: post not found')
         },
       })
     },
-    [queryClient, agent],
+    [queryClient, client],
   )
 }
 
 export function useGetPosts() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useCallback(
     async ({uris}: {uris: string[]}) => {
       return queryClient.fetchQuery({
         queryKey: RQKEY(uris.join(',') || ''),
         async queryFn() {
-          const res = await agent.getPosts({
-            uris,
+          const data = await client.call(app.bsky.feed.getPosts, {
+            uris: uris as AtUriString[],
           })
-
-          if (res.success) {
-            return res.data.posts
-          } else {
-            throw new Error('useGetPosts failed')
-          }
+          // See the note on `fetchPost` about the view shapes.
+          return data.posts as AppBskyFeedDefs.PostView[]
         },
       })
     },
-    [queryClient, agent],
+    [queryClient, client],
   )
 }
 

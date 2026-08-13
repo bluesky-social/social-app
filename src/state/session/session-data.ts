@@ -1,4 +1,3 @@
-import {type AtpSessionData} from '@atproto/api'
 import {getPdsEndpoint, isValidDidDoc} from '@atproto/common-web'
 import {type SessionData} from '@atproto/lex-password-session'
 import {jwtDecode} from 'jwt-decode'
@@ -78,27 +77,6 @@ export function sessionAccountToSessionData(
     refreshJwt: account.refreshJwt ?? '',
     status: account.status,
     service: account.service,
-  }
-}
-
-/** Convert a persisted account into data suitable for `AtpAgent`. */
-export function sessionAccountToSession(
-  account: SessionAccount,
-): AtpSessionData {
-  return {
-    // Sorted in the same property order as when returned by BskyAgent (alphabetical).
-    accessJwt: account.accessJwt ?? '',
-    did: account.did,
-    email: account.email,
-    emailAuthFactor: account.emailAuthFactor,
-    emailConfirmed: account.emailConfirmed,
-    handle: account.handle,
-    refreshJwt: account.refreshJwt ?? '',
-    /**
-     * @see https://github.com/bluesky-social/atproto/blob/c5d36d5ba2a2c2a5c4f366a5621c06a5608e361e/packages/api/src/agent.ts#L188
-     */
-    active: account.active ?? true,
-    status: account.status,
   }
 }
 

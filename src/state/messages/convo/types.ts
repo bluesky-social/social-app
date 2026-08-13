@@ -1,19 +1,20 @@
 import {
   type $Typed,
   type AppBskyEmbedRecord,
-  type AtpAgent,
   type ChatBskyActorDefs,
   type ChatBskyConvoDefs,
-  type ChatBskyConvoSendMessage,
   type ChatBskyEmbedJoinLink,
 } from '@atproto/api'
+import {type Client} from '@atproto/lex'
 
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type ConvoWithDetails} from '#/components/dms/util'
+import {type chat} from '#/lexicons'
 
 export type ConvoParams = {
   convoId: string
-  agent: AtpAgent
+  /** The chat client, which proxies `chat.bsky.*` to the chat service. */
+  chatClient: Client
   events: MessagesEventBus
   placeholderData?: {
     convo: ChatBskyConvoDefs.ConvoView
@@ -108,7 +109,7 @@ export type ConvoItem =
 
 type DeleteMessage = (messageId: string) => Promise<void>
 type SendMessage = (
-  message: ChatBskyConvoSendMessage.InputSchema['message'],
+  message: chat.bsky.convo.defs.MessageInput,
   optimisticEmbedView:
     | $Typed<AppBskyEmbedRecord.View>
     | $Typed<ChatBskyEmbedJoinLink.View>
