@@ -3,6 +3,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
 import {
   CONTENT_VISIBILITY_COLLECTION,
   CONTENT_VISIBILITY_RKEY,
@@ -46,6 +47,7 @@ export function useContentVisibilityQuery() {
 }
 
 export function useContentVisibilityMutation() {
+  const ax = useAnalytics()
   const agent = useAgent()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
@@ -80,6 +82,9 @@ export function useContentVisibilityMutation() {
     onError: (_error, _variables, context) => {
       queryClient.setQueryData(queryKey, context?.previous)
       Toast.show(t`Failed to update content visibility`)
+    },
+    onSuccess: (_record, hide) => {
+      ax.metric('contentVisibility:algorithmicRecommendations:change', {hide})
     },
     onSettled: () => {
       void queryClient.invalidateQueries({queryKey})

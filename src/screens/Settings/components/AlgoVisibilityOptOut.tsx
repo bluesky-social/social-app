@@ -10,12 +10,10 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 
 export function AlgoVisibilityOptOut() {
   const t = useTheme()
   const {_} = useLingui()
-  const ax = useAnalytics()
   const {data, isPending: isQueryPending} = useContentVisibilityQuery()
   const updateContentVisibility = useContentVisibilityMutation()
 
@@ -23,7 +21,6 @@ export function AlgoVisibilityOptOut() {
   const canToggle = !isQueryPending && !updateContentVisibility.isPending
 
   const onToggleOptOut = (hide: boolean) => {
-    ax.metric('contentVisibility:algorithmicRecommendations:change', {hide})
     updateContentVisibility.mutate(hide)
   }
 

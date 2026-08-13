@@ -18,6 +18,7 @@ import {MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon} from '#/
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
+import {useAnalytics} from '#/analytics'
 import {AlgoVisibilityOptOut} from './components/AlgoVisibilityOptOut'
 import {Email2FAToggle} from './components/Email2FAToggle'
 import {PwiOptOut} from './components/PwiOptOut'
@@ -30,6 +31,10 @@ type Props = NativeStackScreenProps<
 export function PrivacyAndSecuritySettingsScreen({}: Props) {
   const {_} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
+  const isContentVisibilityEnabled = ax.features.enabled(
+    ax.features.ContentVisibilitySettingsEnable,
+  )
   const {data: appPasswords} = useAppPasswordsQuery()
   const {currentAccount} = useSession()
   const {
@@ -103,10 +108,12 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
             />
           </SettingsList.LinkItem>
           <SettingsList.Divider />
-          <SettingsList.Item style={[a.align_start]}>
-            <SettingsList.ItemIcon icon={MagnifyingGlassIcon} />
-            <AlgoVisibilityOptOut />
-          </SettingsList.Item>
+          {isContentVisibilityEnabled && (
+            <SettingsList.Item style={[a.align_start]}>
+              <SettingsList.ItemIcon icon={MagnifyingGlassIcon} />
+              <AlgoVisibilityOptOut />
+            </SettingsList.Item>
+          )}
           <SettingsList.Item style={[a.align_start]}>
             <SettingsList.ItemIcon icon={EyeSlashIcon} />
             <PwiOptOut />
