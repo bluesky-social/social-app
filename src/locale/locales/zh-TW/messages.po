@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-07 16:10\n"
+"PO-Revision-Date: 2026-08-13 17:05\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -570,7 +570,7 @@ msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, one {其他 {forma
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:355
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via starter pack {starterPackName}"
-msgstr ""
+msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}}透過新手包 {starterPackName} 跟隨了您"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:393
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
@@ -614,11 +614,11 @@ msgstr "{firstAuthorName} 回跟了您"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:349
 msgid "{firstAuthorName} followed you back via starter pack {starterPackName}"
-msgstr ""
+msgstr "{firstAuthorName} 透過新手包 {starterPackName} 回跟了您"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:359
 msgid "{firstAuthorName} followed you via starter pack {starterPackName}"
-msgstr ""
+msgstr "{firstAuthorName} 透過新手包 {starterPackName} 跟隨了您"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:397
 msgid "{firstAuthorName} liked your custom feed"
@@ -661,7 +661,7 @@ msgstr "{following} 個跟隨中"
 #: src/components/interstitials/FeedTrendingTopics.tsx:245
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:192
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "{formattedPostCount} {postCount, plural, other {則貼文}}"
 
 #: src/components/dms/components/GroupChatProfileCard.tsx:62
 #: src/components/dms/InitiateChatFlow.tsx:1158
@@ -685,10 +685,10 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, other {# 小時}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:83
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:84
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
-msgstr ""
+msgstr "{index}/{count}"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/RequestStatus.tsx:69
@@ -1140,7 +1140,7 @@ msgstr "來自其他人的動態"
 
 #: src/Navigation.tsx:459
 msgid "Activity notifications"
-msgstr ""
+msgstr "動態通知"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:191
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:319
@@ -1205,7 +1205,7 @@ msgstr "新增其他帳號"
 msgid "Add another post"
 msgstr "加入另一則貼文"
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2304
 msgid "Add another post to thread"
 msgstr "新增另一則貼文至討論串"
 
@@ -1587,7 +1587,7 @@ msgstr "發生錯誤"
 msgid "An error occurred"
 msgstr "發生錯誤"
 
-#: src/view/com/composer/state/video.ts:486
+#: src/view/com/composer/state/video.ts:508
 msgid "An error occurred while compressing the video."
 msgstr "壓縮影片時發生錯誤。"
 
@@ -1633,11 +1633,11 @@ msgstr "儲存 QR Code 時發生錯誤！"
 msgid "An error occurred while trying to follow all"
 msgstr "跟隨所有帳號時發生錯誤"
 
-#: src/view/com/composer/state/video.ts:538
+#: src/view/com/composer/state/video.ts:560
 msgid "An error occurred while uploading the video. {message}"
 msgstr "上傳影片時發生錯誤。{message}"
 
-#: src/view/com/composer/state/video.ts:530
+#: src/view/com/composer/state/video.ts:552
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "上傳影片時發生錯誤，請檢查您的網路連線狀態，然後再試一次。"
 
@@ -1682,7 +1682,7 @@ msgstr "開始對話時發生問題，請再試一次。"
 #: src/components/dms/dialogs/NewChatDialog.tsx:92
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:108
 msgid "An issue occurred starting the group chat, please try again."
-msgstr ""
+msgstr "開始群組對話時發生問題，請再試一次。"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:52
@@ -1955,7 +1955,7 @@ msgstr "您確定嗎？"
 
 #: src/components/moderation/ReportDialog/index.tsx:928
 msgid "Are you the person depicted, or an authorized representative acting on behalf of the person depicted?"
-msgstr ""
+msgstr "您是否為影像中之當事人，或為代表該當事人之獲授權代理人？"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:349
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
@@ -1990,7 +1990,7 @@ msgstr "極光"
 #. Filter search results by a specific post author
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:408
 msgid "Author"
-msgstr ""
+msgstr "作者"
 
 #: src/components/BotAccountAlert.tsx:32
 #: src/components/BotBadge.tsx:65
@@ -2026,7 +2026,7 @@ msgstr "可用"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:326
 msgid "Avatar creator"
-msgstr ""
+msgstr "大頭貼照建立工具"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -2139,7 +2139,7 @@ msgid "Beta Feature"
 msgstr "測試功能"
 
 #: src/Navigation.tsx:414
-#: src/screens/Settings/BetaFeaturesSettings.tsx:108
+#: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:249
 #: src/screens/Settings/Settings.tsx:252
 msgid "Beta features"
@@ -2149,14 +2149,14 @@ msgstr "測試功能"
 #: src/components/BetaBadge.tsx:99
 #: src/components/BetaBadge.tsx:100
 msgid "Beta features enabled"
-msgstr ""
+msgstr "已啟用測試功能"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:144
+#: src/screens/Settings/BetaFeaturesSettings.tsx:152
 msgctxt "web"
 msgid "Beta features may be unstable. Some changes may require reloading the app."
 msgstr "測試功能可能不穩定，某些變更可能需要重新載入應用程式。"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:149
+#: src/screens/Settings/BetaFeaturesSettings.tsx:157
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app."
 msgstr "測試功能可能不穩定，某些變更可能需要重新啟動應用程式。"
@@ -2795,7 +2795,7 @@ msgstr "對話"
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr "在下方輸入傳送至 <0>{currentEmail}</0> 的驗證碼："
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:182
+#: src/screens/Settings/BetaFeaturesSettings.tsx:190
 msgid "Check back later!"
 msgstr "請晚點再回來看看！"
 
@@ -2820,20 +2820,20 @@ msgstr "兒少性剝削內容 (CSAM)"
 #: src/screens/Onboarding/StepInterests/index.tsx:85
 #: src/screens/Onboarding/StepInterests/index.tsx:139
 msgid "Choose an interest"
-msgstr ""
+msgstr "選擇一項興趣"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:140
 msgid "Choose at least one interest to continue"
-msgstr ""
+msgstr "請至少選擇一項興趣以繼續"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:150
 #: src/screens/Onboarding/StepInterests/index.tsx:151
 msgid "Choose at least one interest."
-msgstr ""
+msgstr "請至少選擇一項興趣。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:102
 msgid "Choose at least one. We'll use this to customize your experience. You can change these anytime."
-msgstr ""
+msgstr "請至少選擇一項興趣。我們將以此為您量身打造使用體驗，您隨時可以變更這些設定。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:401
 msgid "Choose domain verification method"
@@ -3166,11 +3166,11 @@ msgstr "撰寫最多 {0, plural,other {# 個字元}}的貼文"
 msgid "Compose reply"
 msgstr "撰寫回覆"
 
-#: src/view/com/composer/Composer.tsx:2705
+#: src/view/com/composer/Composer.tsx:2687
 msgid "Compressing GIF..."
 msgstr "正在壓縮 GIF……"
 
-#: src/view/com/composer/Composer.tsx:2707
+#: src/view/com/composer/Composer.tsx:2689
 msgid "Compressing video..."
 msgstr "正在壓縮影片……"
 
@@ -3741,7 +3741,7 @@ msgstr "已封鎖此列表的建立者"
 msgid "Culture"
 msgstr "文化"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:188
+#: src/screens/Settings/BetaFeaturesSettings.tsx:196
 msgid "Current beta features"
 msgstr "目前的測試功能"
 
@@ -4084,7 +4084,7 @@ msgstr "防止應用程式向未登入的使用者顯示我的帳號"
 
 #: src/screens/Search/Explore.tsx:448
 msgid "Discover feeds"
-msgstr ""
+msgstr "探索動態源"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:64
 #: src/view/com/posts/FollowingEmptyState.tsx:69
@@ -4106,7 +4106,7 @@ msgstr "跳過"
 msgid "Dismiss banner"
 msgstr "關閉提示橫幅"
 
-#: src/view/com/composer/Composer.tsx:2626
+#: src/view/com/composer/Composer.tsx:2629
 msgid "Dismiss error"
 msgstr "跳過錯誤"
 
@@ -4413,7 +4413,7 @@ msgstr "編輯名稱"
 #. placeholder {0}: createSanitizedDisplayName( profile, )
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:242
 msgid "Edit notifications from {0}"
-msgstr ""
+msgstr "編輯來自 {0} 的通知"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:114
 msgid "Edit People"
@@ -4533,12 +4533,17 @@ msgstr "啟用"
 msgid "Enable {0} only"
 msgstr "僅啟用 {0}"
 
+#. Description of a feature flag (10-minute video uploads)
+#: src/analytics/features/index.ts:90
+msgid "Enable 10-minute video uploads."
+msgstr ""
+
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
 msgstr "顯示成人內容"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:117
-#: src/screens/Settings/BetaFeaturesSettings.tsx:124
+#: src/screens/Settings/BetaFeaturesSettings.tsx:125
+#: src/screens/Settings/BetaFeaturesSettings.tsx:132
 msgid "Enable beta features"
 msgstr "啟用測試功能"
 
@@ -4664,7 +4669,7 @@ msgstr "進入全螢幕"
 msgid "Entertainment"
 msgstr "娛樂"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2707
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "錯誤"
@@ -5294,7 +5299,7 @@ msgstr "依語言篩選搜尋（目前：{currentLanguageLabel}）"
 
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:32
 msgid "Filter search by media (currently: {currentLabel})"
-msgstr ""
+msgstr "依媒體篩選搜尋（目前：{currentLabel}）"
 
 #. placeholder {0}: lang.name
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:88
@@ -5705,7 +5710,7 @@ msgstr "Germ DM 連結"
 msgid "Germ DM reconnected"
 msgstr "重新連結 Germ DM"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:132
+#: src/screens/Settings/BetaFeaturesSettings.tsx:140
 msgid "Get early access to experimental features we’re testing."
 msgstr "搶先體驗我們正在測試的實驗性功能。"
 
@@ -5764,7 +5769,7 @@ msgstr "在貼文發布時收到通知"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:106
 msgid "Get notified about posts and replies from accounts you choose."
-msgstr ""
+msgstr "在您選擇的帳號發布貼文或回覆時收到通知。"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:226
 msgid "Get notified of new posts from {name}"
@@ -5794,7 +5799,7 @@ msgstr "開始吧"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2730
+#: src/view/com/composer/Composer.tsx:2712
 msgid "GIF uploaded"
 msgstr "GIF 上傳成功"
 
@@ -6022,7 +6027,7 @@ msgstr "群組對話名稱太長了，{MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, o
 
 #: src/screens/Settings/Settings.tsx:467
 msgid "GrowthBook"
-msgstr ""
+msgstr "GrowthBook"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:219
 msgid "Hacking or system attacks"
@@ -6203,7 +6208,7 @@ msgstr "為我隱藏回覆"
 #: src/view/com/profile/ProfileMenu.tsx:488
 #: src/view/com/profile/ProfileMenu.tsx:495
 msgid "Hide reposts in feeds"
-msgstr ""
+msgstr "在動態中隱藏轉發貼文"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:105
 msgid "Hide this card"
@@ -6298,7 +6303,7 @@ msgstr "抱歉，載入這些資料時似乎遇到了一點問題，更多資訊
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "抱歉，我們無法載入該內容管理服務。"
 
-#: src/view/com/composer/state/video.ts:500
+#: src/view/com/composer/state/video.ts:522
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "等一下！我們正在逐步開放上傳影片功能。您還在等候名單中，請稍後再回來看看！"
 
@@ -6595,7 +6600,7 @@ msgstr "包含在此日期之前發布的貼文"
 #. Checkbox shown when reporting a video. The value is the current playback position, formatted as minutes:seconds.
 #: src/components/moderation/ReportDialog/index.tsx:701
 msgid "Include video timestamp ({videoTimestamp})"
-msgstr ""
+msgstr "包含影片時間戳記（{videoTimestamp}）"
 
 #: src/screens/Login/LoginForm.tsx:165
 msgid "Incorrect username or password"
@@ -6782,7 +6787,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "現在新手包裡只有您一個人！使用上面的搜尋功能，將更多人新增到您的新手包中。"
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2645
+#: src/view/com/composer/Composer.tsx:2648
 msgid "Job ID: {0}"
 msgstr "作業 ID：{0}"
 
@@ -7123,7 +7128,7 @@ msgstr "{0, plural, one {# 個使用者} other {# 個使用者}}表示喜歡"
 #: src/screens/PostThread/components/LikesStat.tsx:132
 #: src/screens/PostThread/components/LikesStat.tsx:173
 msgid "Liked by {0}"
-msgstr ""
+msgstr "由 {0} 表示喜歡"
 
 #. Social proof below the post stats; the bolded names are people the viewer follows who liked the post
 #. placeholder {0}: nameLink(names[0])
@@ -7133,7 +7138,7 @@ msgstr ""
 #: src/screens/PostThread/components/LikesStat.tsx:131
 #: src/screens/PostThread/components/LikesStat.tsx:169
 msgid "Liked by {0} and {1}"
-msgstr ""
+msgstr "由 {0} 和 {1} 表示喜歡"
 
 #: src/components/LabelingServiceCard/index.tsx:96
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:540
@@ -7386,6 +7391,11 @@ msgstr "網站標誌由 <0>@sawaratsuki.bsky.social</0> 繪製"
 msgid "Long press to open tag menu for {0}"
 msgstr "長按以開啟 {0} 的標籤選單"
 
+#. Name for a feature flag (longer videos)
+#: src/analytics/features/index.ts:84
+msgid "Longer videos"
+msgstr ""
+
 #: src/screens/Login/SetNewPasswordForm.tsx:114
 msgid "Looks like XXXXX-XXXXX"
 msgstr "看起來像是 XXXXX-XXXXX"
@@ -7482,7 +7492,7 @@ msgstr "之後再說"
 
 #: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:27
 msgid "Me"
-msgstr ""
+msgstr "我"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:375
 #: src/view/screens/Profile.tsx:238
@@ -8088,7 +8098,7 @@ msgstr "夜晚"
 #: src/components/moderation/ReportDialog/index.tsx:1019
 msgctxt "Answer to a yes/no question"
 msgid "No"
-msgstr ""
+msgstr "否"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:42
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
@@ -8101,9 +8111,9 @@ msgstr "目前還沒有應用程式專用密碼"
 #: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
 #: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:30
 msgid "No author filter"
-msgstr ""
+msgstr "無篩選作者"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:177
+#: src/screens/Settings/BetaFeaturesSettings.tsx:185
 msgid "No beta features at the moment."
 msgstr "目前沒有測試功能。"
 
@@ -8158,7 +8168,7 @@ msgstr "沒有圖片"
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:91
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:93
 msgid "No language filter"
-msgstr ""
+msgstr "無篩選語言"
 
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
@@ -8182,7 +8192,7 @@ msgstr "成功取消跟隨 {0}"
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
 msgid "No media filter"
-msgstr ""
+msgstr "無篩選媒體"
 
 #: src/view/screens/Profile.tsx:485
 msgid "No media yet"
@@ -8232,7 +8242,7 @@ msgstr "沒有人可以傳送訊息"
 #: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:22
 #: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:27
 msgid "No post filter"
-msgstr ""
+msgstr "無篩選貼文"
 
 #: src/screens/Notifications/ActivityList.tsx:43
 msgid "No posts here"
@@ -8350,11 +8360,11 @@ msgstr "非色情裸露"
 
 #: src/components/OTAChannelNotice.tsx:37
 msgid "Non-standard OTA channel"
-msgstr ""
+msgstr "非標準 OTA 頻道"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:220
 msgid "None"
-msgstr ""
+msgstr "無"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:263
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:266
@@ -8570,7 +8580,7 @@ msgstr "只有群組擁有者跟隨的人可以加入"
 
 #: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:23
 msgid "Only posts"
-msgstr ""
+msgstr "僅貼文"
 
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:23
 msgid "Only posts with media"
@@ -8640,7 +8650,7 @@ msgid "Open drawer menu"
 msgstr "開啟側邊選單"
 
 #: src/screens/Messages/components/MessageComposer.tsx:213
-#: src/view/com/composer/Composer.tsx:2278
+#: src/view/com/composer/Composer.tsx:2281
 msgid "Open emoji picker"
 msgstr "開啟表情符號選擇器"
 
@@ -9195,7 +9205,7 @@ msgstr "請檢視我們剛剛傳送的郵件，並打開其中包含的連結來
 msgid "Please complete the verification captcha."
 msgstr "請完成人機驗證 (Captcha)。"
 
-#: src/view/com/composer/state/video.ts:524
+#: src/view/com/composer/state/video.ts:546
 msgid "Please confirm your email address to upload videos."
 msgstr "請先驗證您的電子郵件地址以上傳影片。"
 
@@ -9312,7 +9322,7 @@ msgstr "請以 @{0} 的身分登入"
 #: src/components/moderation/ReportDialog/index.tsx:961
 msgctxt "english-only-resource"
 msgid "Please submit your report through the Report non-consensual intimate imagery (NCII) form."
-msgstr ""
+msgstr "請透過「檢舉非自願親密影像 (NCII)」表單提交您的檢舉。"
 
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:40
 msgid "Please use the Bluesky mobile app to scan a QR code."
@@ -9354,10 +9364,10 @@ msgid "Post"
 msgstr "貼文"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:68
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:69
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
-msgstr ""
+msgstr "第 {index} 則貼文（共 {count} 則）"
 
 #: src/view/screens/Profile.tsx:489
 #: src/view/screens/Profile.tsx:490
@@ -9452,7 +9462,7 @@ msgstr "成功釘選貼文"
 #. Include search results with or without replies
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
 msgid "Post type"
-msgstr ""
+msgstr "貼文類型"
 
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
@@ -9478,7 +9488,7 @@ msgstr "已隱藏貼文"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:214
 msgid "Posts, Replies"
-msgstr ""
+msgstr "貼文、回覆"
 
 #: src/components/dialogs/LinkWarning.tsx:89
 msgid "Potentially misleading link"
@@ -9558,11 +9568,11 @@ msgstr "隱私權政策"
 msgid "Privacy violation of a minor"
 msgstr "侵犯未成年者隱私"
 
-#: src/view/com/composer/Composer.tsx:2719
+#: src/view/com/composer/Composer.tsx:2701
 msgid "Processing GIF..."
 msgstr "正在處理 GIF……"
 
-#: src/view/com/composer/Composer.tsx:2721
+#: src/view/com/composer/Composer.tsx:2703
 msgid "Processing video..."
 msgstr "正在處理影片……"
 
@@ -10294,7 +10304,7 @@ msgstr "轉發"
 
 #: src/components/Pills.tsx:229
 msgid "Reposts Hidden"
-msgstr ""
+msgstr "已隱藏轉發貼文"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:460
 msgid "Reposts of this post"
@@ -10309,12 +10319,12 @@ msgstr "轉發您轉發的貼文"
 #: src/view/com/profile/ProfileMenu.tsx:192
 msgctxt "toast"
 msgid "Reposts will be hidden in feeds"
-msgstr ""
+msgstr "轉發貼文將在動態中隱藏"
 
 #: src/view/com/profile/ProfileMenu.tsx:177
 msgctxt "toast"
 msgid "Reposts will be shown in feeds"
-msgstr ""
+msgstr "轉發貼文將顯示於動態中"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:463
 msgid "Request access to group chat"
@@ -10431,11 +10441,11 @@ msgstr "透過傳送驗證碼至您的電子郵件來重設密碼"
 
 #: src/components/OTAChannelNotice.tsx:58
 msgid "Restore default"
-msgstr ""
+msgstr "還原預設值"
 
 #: src/components/OTAChannelNotice.tsx:54
 msgid "Restore the {defaultChannel} deployment"
-msgstr ""
+msgstr "還原 {defaultChannel} 部署"
 
 #: src/screens/Settings/FindContactsSettings.tsx:544
 #: src/screens/Settings/FindContactsSettings.tsx:560
@@ -10823,12 +10833,12 @@ msgstr "檢視更多建議個人檔案"
 #: src/components/interstitials/FeedTrendingTopics.tsx:98
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
 msgid "See more trending topics"
-msgstr ""
+msgstr "檢視更多流行趨勢"
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:91
+#: src/analytics/features/index.ts:107
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
-msgstr ""
+msgstr "在同一作者的討論串貼文上顯示編號標籤（1/3、2/3 等）。"
 
 #: src/view/com/profile/ProfileFollows.tsx:204
 #: src/view/com/profile/ProfileFollows.tsx:205
@@ -11084,7 +11094,7 @@ msgstr "傳送驗證電子郵件"
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:103
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:109
 msgid "Send via chat"
-msgstr ""
+msgstr "透過對話傳送"
 
 #. placeholder {0}: i18n.date(new Date(message.sentAt), { timeStyle: 'short', })
 #: src/components/dms/MessageContextMenu.tsx:175
@@ -11236,8 +11246,8 @@ msgstr "仍然分享"
 msgid "Share author DID"
 msgstr "分享作者 DID"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:158
-#: src/screens/Settings/BetaFeaturesSettings.tsx:165
+#: src/screens/Settings/BetaFeaturesSettings.tsx:166
+#: src/screens/Settings/BetaFeaturesSettings.tsx:173
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:93
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:98
 msgid "Share feedback"
@@ -11392,7 +11402,7 @@ msgstr "顯示可供選擇的使用者列表"
 
 #: src/components/Post/ShowMoreTextButton.tsx:50
 msgid "Show more"
-msgstr ""
+msgstr "顯示更多"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:594
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
@@ -11434,7 +11444,7 @@ msgstr "顯示轉發貼文"
 #: src/view/com/profile/ProfileMenu.tsx:487
 #: src/view/com/profile/ProfileMenu.tsx:493
 msgid "Show reposts in feeds"
-msgstr ""
+msgstr "在動態中顯示轉發貼文"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:133
 #: src/screens/Settings/FollowingFeedPreferences.tsx:143
@@ -11710,7 +11720,7 @@ msgstr "發生錯誤，請再試一次"
 
 #: src/screens/Moderation/index.tsx:112
 #: src/screens/Profile/Sections/Labels.tsx:185
-#: src/screens/Settings/BetaFeaturesSettings.tsx:80
+#: src/screens/Settings/BetaFeaturesSettings.tsx:85
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:84
 msgid "Something went wrong, please try again."
 msgstr "發生錯誤，請再試一次。"
@@ -11828,7 +11838,7 @@ msgstr "無效的新手包"
 
 #: src/screens/Search/SearchResults.tsx:120
 msgid "Starter packs"
-msgstr ""
+msgstr "新手包"
 
 #: src/screens/Search/Explore.tsx:661
 #: src/view/screens/Profile.tsx:242
@@ -11913,7 +11923,7 @@ msgstr "提交檢舉"
 #: src/components/moderation/ReportDialog/index.tsx:941
 msgctxt "english-only-resource"
 msgid "Submit your report through the Report non-consensual intimate imagery (NCII) form"
-msgstr ""
+msgstr "透過「檢舉非自願親密影像 (NCII)」表單提交您的檢舉"
 
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:75
 msgid "Subscribe"
@@ -12318,7 +12328,7 @@ msgstr "已達到群組成員上限。"
 
 #: src/components/moderation/ReportDialog/index.tsx:314
 msgid "The moderation service is temporarily unavailable. Please try again later."
-msgstr ""
+msgstr "內容管理服務暫時無法使用，請稍後再試。"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:400
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
@@ -12328,34 +12338,34 @@ msgstr "您正在回覆的貼文已被發佈者標示為使用 {suggestedLanguag
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "隱私權政策已移動到 <0/>"
 
-#: src/view/com/composer/state/video.ts:471
+#: src/view/com/composer/state/video.ts:493
 msgid "The processed video is too large. Please try again with a smaller file."
-msgstr ""
+msgstr "處理後的影片太大，請使用較小的檔案再試一次。"
 
-#: src/view/com/composer/state/video.ts:446
+#: src/view/com/composer/state/video.ts:468
 msgid "The selected video could not be encoded."
-msgstr ""
+msgstr "無法編碼所選的影片。"
 
-#: src/view/com/composer/state/video.ts:436
+#: src/view/com/composer/state/video.ts:458
 msgid "The selected video could not be processed."
-msgstr ""
+msgstr "無法處理所選的影片。"
 
-#: src/view/com/composer/state/video.ts:466
+#: src/view/com/composer/state/video.ts:488
 msgid "The selected video has an unsupported aspect ratio."
-msgstr ""
+msgstr "不支援所選影片的長寬比。"
 
-#: src/view/com/composer/state/video.ts:482
-#: src/view/com/composer/state/video.ts:521
+#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:543
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "您選擇的影片檔案大小大於 {VIDEO_MAX_SIZE_MB} MB。請使用較小的檔案再試一次。"
 
-#: src/view/com/composer/state/video.ts:464
+#: src/view/com/composer/state/video.ts:486
 msgid "The selected video is too long."
-msgstr ""
+msgstr "所選的影片過長。"
 
-#: src/view/com/composer/state/video.ts:468
+#: src/view/com/composer/state/video.ts:490
 msgid "The selected video uses an unsupported format."
-msgstr ""
+msgstr "所選影片使用不支援的格式。"
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:18
@@ -12388,9 +12398,9 @@ msgstr "您所使用的驗證碼無效。請檢查您是否使用了正確的驗
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "驗證服務提供者無法向您的電話號碼傳送驗證碼。請檢查您的電話號碼後再試一次。"
 
-#: src/view/com/composer/state/video.ts:449
+#: src/view/com/composer/state/video.ts:471
 msgid "The video could not be uploaded to your hosting provider. Please try again."
-msgstr ""
+msgstr "影片無法上傳到您的託管服務提供者，請再試一次。"
 
 #: src/screens/Settings/AppearanceSettings.tsx:137
 msgid "Theme"
@@ -12578,7 +12588,7 @@ msgstr "此動作可隨時撤回。"
 
 #: src/components/OTAChannelNotice.tsx:40
 msgid "This app is running a deployment of <0>{currentChannel}</0>. Restore the {defaultChannel} deployment to get back to a standard build."
-msgstr ""
+msgstr "此應用程式正在執行 <0>{currentChannel}</0> 的部署。請還原至 {defaultChannel} 以回到標準組建。"
 
 #: src/components/moderation/AppealForm.tsx:96
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -12793,7 +12803,7 @@ msgstr "此訊息已隱藏，因為您封鎖了此使用者。"
 
 #: src/components/moderation/ReportDialog/index.tsx:312
 msgid "This moderation service does not support that report reason. Please choose a different reason or moderation service."
-msgstr ""
+msgstr "此內容管理服務不支援該檢舉原因，請選擇其他原因或內容管理服務。"
 
 #: src/screens/Profile/ErrorState.tsx:41
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
@@ -12934,9 +12944,9 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "您的貼文將從這則引用貼文中刪除，並取代為一個佔位標記。"
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:84
+#: src/analytics/features/index.ts:100
 msgid "Thread numbering"
-msgstr ""
+msgstr "討論串編號"
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:25
 #: src/screens/PostThread/components/HeaderDropdown.tsx:28
@@ -13083,7 +13093,7 @@ msgstr "流行趨勢選項"
 
 #: src/components/interstitials/TrendingVideos.tsx:86
 msgid "Trending videos"
-msgstr ""
+msgstr "熱門影片"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:103
 msgid "Trolling"
@@ -13532,7 +13542,7 @@ msgstr "從檔案上傳"
 msgid "Upload from Library"
 msgstr "從相簿上傳"
 
-#: src/view/com/composer/Composer.tsx:2712
+#: src/view/com/composer/Composer.tsx:2694
 msgid "Uploading GIF..."
 msgstr "正在上傳 GIF……"
 
@@ -13546,7 +13556,7 @@ msgstr "正在上傳圖片……"
 msgid "Uploading link thumbnail..."
 msgstr "正在上傳連結縮圖……"
 
-#: src/view/com/composer/Composer.tsx:2714
+#: src/view/com/composer/Composer.tsx:2696
 msgid "Uploading video..."
 msgstr "正在上傳影片……"
 
@@ -13789,14 +13799,14 @@ msgstr "版本 {0}"
 #. When the source of a follow is a starter pack, i.e., 'via starter pack {starterPackName}'.
 #: src/view/com/notifications/NotificationFeedItem.tsx:746
 msgid "via starter pack <0/><1>{starterPackName}</1>"
-msgstr ""
+msgstr "透過新手包 <0/><1>{starterPackName}</1>"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:112
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:178
 msgid "Video"
 msgstr "影片"
 
-#: src/view/com/composer/state/video.ts:457
+#: src/view/com/composer/state/video.ts:479
 msgid "Video failed to process"
 msgstr "影片處理失敗"
 
@@ -13835,7 +13845,7 @@ msgstr "找不到影片。"
 msgid "Video settings"
 msgstr "影片設定"
 
-#: src/view/com/composer/Composer.tsx:2732
+#: src/view/com/composer/Composer.tsx:2714
 msgid "Video uploaded"
 msgstr "影片上傳成功"
 
@@ -13852,7 +13862,7 @@ msgstr "影片"
 #: src/view/com/composer/Composer.tsx:596
 #: src/view/com/composer/SelectMediaButton.tsx:452
 msgid "Videos must be 10 minutes or less."
-msgstr ""
+msgstr "影片長度必須在 10 分鐘以內。"
 
 #: src/view/com/composer/Composer.tsx:454
 #: src/view/com/composer/Composer.tsx:597
@@ -13924,7 +13934,7 @@ msgstr "檢視完整討論串"
 
 #: src/screens/Settings/Settings.tsx:465
 msgid "View GrowthBook information"
-msgstr ""
+msgstr "檢視 GrowthBook 資訊"
 
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:48
 msgid "View incoming group chat requests"
@@ -14162,7 +14172,7 @@ msgstr "我們建議至少選擇兩個感興趣的主題。"
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "我們已向 <0>{0}</0> 傳送了一封包含連結的郵件。請打開郵件中的連結以完成電子信箱的驗證程序。"
 
-#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:526
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "我們無法確定您是否有上傳影片的權限。請稍後再試。"
 
@@ -14455,7 +14465,7 @@ msgstr "live.example.com"
 #: src/components/moderation/ReportDialog/index.tsx:1003
 msgctxt "Answer to a yes/no question"
 msgid "Yes"
-msgstr ""
+msgstr "是"
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to affirmation/agreement GIFs.
 #: src/features/gifPicker/components/GifCategoryPills.tsx:95
@@ -14538,7 +14548,7 @@ msgstr "您已開始直播"
 msgid "You are no longer live"
 msgstr "您已停止直播"
 
-#: src/view/com/composer/state/video.ts:497
+#: src/view/com/composer/state/video.ts:519
 msgid "You are not allowed to upload videos."
 msgstr "您沒有上傳影片的權限。"
 
@@ -15010,11 +15020,11 @@ msgstr "您已達到 {MAX_FILTERS, plural, other {# 個篩選條件}}的上限�
 msgid "You've reached the start of the active content."
 msgstr "您已到達內容的開頭。"
 
-#: src/view/com/composer/state/video.ts:508
+#: src/view/com/composer/state/video.ts:530
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "您已達到每日影片上傳限制（位元組過多）"
 
-#: src/view/com/composer/state/video.ts:512
+#: src/view/com/composer/state/video.ts:534
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "您已達到每日影片上傳限制（影片數過多）"
 
@@ -15028,7 +15038,7 @@ msgstr "您的帳號"
 
 #: src/components/moderation/ReportDialog/index.tsx:310
 msgid "Your account cannot submit reports while it is suspended."
-msgstr ""
+msgstr "您的帳號在停權期間無法提交檢舉。"
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:128
 msgid "Your account has been deleted, see ya! ✌️"
@@ -15038,7 +15048,7 @@ msgstr "您的帳號已被刪除，有緣再見！✌️"
 msgid "Your account has been suspended"
 msgstr "您的帳號已被停權"
 
-#: src/view/com/composer/state/video.ts:516
+#: src/view/com/composer/state/video.ts:538
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "您的帳號註冊時間太短，暫時無法上傳影片。請稍後再試。"
 
@@ -15133,9 +15143,9 @@ msgstr "您的完整帳號代碼將修改為 <0>@{0}</0>"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "無法從電子郵件地址判斷您的託管服務提供者，因此將使用預設的 Bluesky 服務。請改為輸入您的使用者名稱，或手動選擇您的服務提供者。"
 
-#: src/view/com/composer/state/video.ts:453
+#: src/view/com/composer/state/video.ts:475
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
-msgstr ""
+msgstr "您的託管服務提供者不支援這麼大的影片，請使用較小的檔案再試一次。"
 
 #: src/screens/Login/components/HostingProviderDialog.tsx:188
 msgid "Your hosting provider is detected automatically from the username you enter."

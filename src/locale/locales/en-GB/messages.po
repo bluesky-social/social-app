@@ -8,7 +8,7 @@ msgstr ""
 "Language: en_GB\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-07 16:10\n"
+"PO-Revision-Date: 2026-08-13 17:05\n"
 "Last-Translator: \n"
 "Language-Team: English, United Kingdom\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -685,7 +685,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# hour} other {# hours}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:83
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:84
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -1205,7 +1205,7 @@ msgstr "Add another account"
 msgid "Add another post"
 msgstr "Add another post"
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2304
 msgid "Add another post to thread"
 msgstr "Add another post to thread"
 
@@ -1587,7 +1587,7 @@ msgstr "An error has occurred"
 msgid "An error occurred"
 msgstr "An error occurred"
 
-#: src/view/com/composer/state/video.ts:486
+#: src/view/com/composer/state/video.ts:508
 msgid "An error occurred while compressing the video."
 msgstr "An error occurred while compressing the video."
 
@@ -1633,11 +1633,11 @@ msgstr "An error occurred while saving the QR code!"
 msgid "An error occurred while trying to follow all"
 msgstr "An error occurred while trying to follow all"
 
-#: src/view/com/composer/state/video.ts:538
+#: src/view/com/composer/state/video.ts:560
 msgid "An error occurred while uploading the video. {message}"
 msgstr "An error occurred while uploading the video. {message}"
 
-#: src/view/com/composer/state/video.ts:530
+#: src/view/com/composer/state/video.ts:552
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "An error occurred while uploading the video. Please check your internet connection and try again."
 
@@ -2139,7 +2139,7 @@ msgid "Beta Feature"
 msgstr "Beta Feature"
 
 #: src/Navigation.tsx:414
-#: src/screens/Settings/BetaFeaturesSettings.tsx:108
+#: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:249
 #: src/screens/Settings/Settings.tsx:252
 msgid "Beta features"
@@ -2151,12 +2151,12 @@ msgstr "Beta features"
 msgid "Beta features enabled"
 msgstr "Beta features enabled"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:144
+#: src/screens/Settings/BetaFeaturesSettings.tsx:152
 msgctxt "web"
 msgid "Beta features may be unstable. Some changes may require reloading the app."
 msgstr "Beta features may be unstable. Some changes may require reloading the app."
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:149
+#: src/screens/Settings/BetaFeaturesSettings.tsx:157
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app."
 msgstr "Beta features may be unstable. Some changes may require restarting the app."
@@ -2795,7 +2795,7 @@ msgstr "Chats"
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:182
+#: src/screens/Settings/BetaFeaturesSettings.tsx:190
 msgid "Check back later!"
 msgstr "Check back later!"
 
@@ -3166,11 +3166,11 @@ msgstr "Compose posts up to {0, plural, other {# characters}} in length"
 msgid "Compose reply"
 msgstr "Compose reply"
 
-#: src/view/com/composer/Composer.tsx:2705
+#: src/view/com/composer/Composer.tsx:2687
 msgid "Compressing GIF..."
 msgstr "Compressing GIF..."
 
-#: src/view/com/composer/Composer.tsx:2707
+#: src/view/com/composer/Composer.tsx:2689
 msgid "Compressing video..."
 msgstr "Compressing video..."
 
@@ -3741,7 +3741,7 @@ msgstr "Creator has been blocked"
 msgid "Culture"
 msgstr "Culture"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:188
+#: src/screens/Settings/BetaFeaturesSettings.tsx:196
 msgid "Current beta features"
 msgstr "Current beta features"
 
@@ -4106,7 +4106,7 @@ msgstr "Dismiss"
 msgid "Dismiss banner"
 msgstr "Dismiss banner"
 
-#: src/view/com/composer/Composer.tsx:2626
+#: src/view/com/composer/Composer.tsx:2629
 msgid "Dismiss error"
 msgstr "Dismiss error"
 
@@ -4533,12 +4533,17 @@ msgstr "Enable"
 msgid "Enable {0} only"
 msgstr "Enable {0} only"
 
+#. Description of a feature flag (10-minute video uploads)
+#: src/analytics/features/index.ts:90
+msgid "Enable 10-minute video uploads."
+msgstr ""
+
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
 msgstr "Enable adult content"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:117
-#: src/screens/Settings/BetaFeaturesSettings.tsx:124
+#: src/screens/Settings/BetaFeaturesSettings.tsx:125
+#: src/screens/Settings/BetaFeaturesSettings.tsx:132
 msgid "Enable beta features"
 msgstr "Enable beta features"
 
@@ -4664,7 +4669,7 @@ msgstr "Enters fullscreen"
 msgid "Entertainment"
 msgstr "Entertainment"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2707
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Error"
@@ -5705,7 +5710,7 @@ msgstr "Germ DM Link"
 msgid "Germ DM reconnected"
 msgstr "Germ DM reconnected"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:132
+#: src/screens/Settings/BetaFeaturesSettings.tsx:140
 msgid "Get early access to experimental features we’re testing."
 msgstr "Get early access to experimental features we’re testing."
 
@@ -5794,7 +5799,7 @@ msgstr "Get started"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2730
+#: src/view/com/composer/Composer.tsx:2712
 msgid "GIF uploaded"
 msgstr "GIF uploaded"
 
@@ -6298,7 +6303,7 @@ msgstr "Hmm, it seems we're having trouble loading this data. See below for more
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "Hmm, we couldn't load that moderation service."
 
-#: src/view/com/composer/state/video.ts:500
+#: src/view/com/composer/state/video.ts:522
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Hold up! We’re gradually giving access to video and you’re still waiting in line. Check back soon!"
 
@@ -6782,7 +6787,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "It's just you right now! Add more people to your starter pack by searching above."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2645
+#: src/view/com/composer/Composer.tsx:2648
 msgid "Job ID: {0}"
 msgstr "Job ID: {0}"
 
@@ -7385,6 +7390,11 @@ msgstr "Logo by <0>@sawaratsuki.bsky.social</0>"
 #: src/components/RichTextTag.tsx:55
 msgid "Long press to open tag menu for {0}"
 msgstr "Long press to open tag menu for {0}"
+
+#. Name for a feature flag (longer videos)
+#: src/analytics/features/index.ts:84
+msgid "Longer videos"
+msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:114
 msgid "Looks like XXXXX-XXXXX"
@@ -8103,7 +8113,7 @@ msgstr "No app passwords yet"
 msgid "No author filter"
 msgstr "No author filter"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:177
+#: src/screens/Settings/BetaFeaturesSettings.tsx:185
 msgid "No beta features at the moment."
 msgstr "No beta features at the moment."
 
@@ -8640,7 +8650,7 @@ msgid "Open drawer menu"
 msgstr "Open drawer menu"
 
 #: src/screens/Messages/components/MessageComposer.tsx:213
-#: src/view/com/composer/Composer.tsx:2278
+#: src/view/com/composer/Composer.tsx:2281
 msgid "Open emoji picker"
 msgstr "Open emoji picker"
 
@@ -9195,7 +9205,7 @@ msgstr "Please click on the link in the email we just sent you to verify your ne
 msgid "Please complete the verification captcha."
 msgstr "Please complete the verification captcha."
 
-#: src/view/com/composer/state/video.ts:524
+#: src/view/com/composer/state/video.ts:546
 msgid "Please confirm your email address to upload videos."
 msgstr "Please confirm your email address to upload videos."
 
@@ -9354,7 +9364,7 @@ msgid "Post"
 msgstr "Post"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:68
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:69
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "Post {index} of {count}"
@@ -9558,11 +9568,11 @@ msgstr "Privacy Policy"
 msgid "Privacy violation of a minor"
 msgstr "Privacy violation of a minor"
 
-#: src/view/com/composer/Composer.tsx:2719
+#: src/view/com/composer/Composer.tsx:2701
 msgid "Processing GIF..."
 msgstr "Processing GIF..."
 
-#: src/view/com/composer/Composer.tsx:2721
+#: src/view/com/composer/Composer.tsx:2703
 msgid "Processing video..."
 msgstr "Processing video..."
 
@@ -10826,7 +10836,7 @@ msgid "See more trending topics"
 msgstr "See more trending topics"
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:91
+#: src/analytics/features/index.ts:107
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
 msgstr "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
 
@@ -11236,8 +11246,8 @@ msgstr "Share anyway"
 msgid "Share author DID"
 msgstr "Share author DID"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:158
-#: src/screens/Settings/BetaFeaturesSettings.tsx:165
+#: src/screens/Settings/BetaFeaturesSettings.tsx:166
+#: src/screens/Settings/BetaFeaturesSettings.tsx:173
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:93
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:98
 msgid "Share feedback"
@@ -11710,7 +11720,7 @@ msgstr "Something went wrong, please try again"
 
 #: src/screens/Moderation/index.tsx:112
 #: src/screens/Profile/Sections/Labels.tsx:185
-#: src/screens/Settings/BetaFeaturesSettings.tsx:80
+#: src/screens/Settings/BetaFeaturesSettings.tsx:85
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:84
 msgid "Something went wrong, please try again."
 msgstr "Something went wrong, please try again."
@@ -12328,32 +12338,32 @@ msgstr "The post you’re replying to was marked as being written in {suggestedL
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "The Privacy Policy has been moved to <0/>"
 
-#: src/view/com/composer/state/video.ts:471
+#: src/view/com/composer/state/video.ts:493
 msgid "The processed video is too large. Please try again with a smaller file."
 msgstr "The processed video is too large. Please try again with a smaller file."
 
-#: src/view/com/composer/state/video.ts:446
+#: src/view/com/composer/state/video.ts:468
 msgid "The selected video could not be encoded."
 msgstr "The selected video could not be encoded."
 
-#: src/view/com/composer/state/video.ts:436
+#: src/view/com/composer/state/video.ts:458
 msgid "The selected video could not be processed."
 msgstr "The selected video could not be processed."
 
-#: src/view/com/composer/state/video.ts:466
+#: src/view/com/composer/state/video.ts:488
 msgid "The selected video has an unsupported aspect ratio."
 msgstr "The selected video has an unsupported aspect ratio."
 
-#: src/view/com/composer/state/video.ts:482
-#: src/view/com/composer/state/video.ts:521
+#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:543
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 
-#: src/view/com/composer/state/video.ts:464
+#: src/view/com/composer/state/video.ts:486
 msgid "The selected video is too long."
 msgstr "The selected video is too long."
 
-#: src/view/com/composer/state/video.ts:468
+#: src/view/com/composer/state/video.ts:490
 msgid "The selected video uses an unsupported format."
 msgstr "The selected video uses an unsupported format."
 
@@ -12388,7 +12398,7 @@ msgstr "The verification code you have provided is invalid. Please make sure tha
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 
-#: src/view/com/composer/state/video.ts:449
+#: src/view/com/composer/state/video.ts:471
 msgid "The video could not be uploaded to your hosting provider. Please try again."
 msgstr "The video could not be uploaded to your hosting provider. Please try again."
 
@@ -12934,7 +12944,7 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "This will remove your post from this quote post for all users, and replace it with a placeholder."
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:84
+#: src/analytics/features/index.ts:100
 msgid "Thread numbering"
 msgstr "Thread numbering"
 
@@ -13532,7 +13542,7 @@ msgstr "Upload from Files"
 msgid "Upload from Library"
 msgstr "Upload from Library"
 
-#: src/view/com/composer/Composer.tsx:2712
+#: src/view/com/composer/Composer.tsx:2694
 msgid "Uploading GIF..."
 msgstr "Uploading GIF..."
 
@@ -13546,7 +13556,7 @@ msgstr "Uploading images..."
 msgid "Uploading link thumbnail..."
 msgstr "Uploading link thumbnail..."
 
-#: src/view/com/composer/Composer.tsx:2714
+#: src/view/com/composer/Composer.tsx:2696
 msgid "Uploading video..."
 msgstr "Uploading video..."
 
@@ -13796,7 +13806,7 @@ msgstr "via starter pack <0/><1>{starterPackName}</1>"
 msgid "Video"
 msgstr "Video"
 
-#: src/view/com/composer/state/video.ts:457
+#: src/view/com/composer/state/video.ts:479
 msgid "Video failed to process"
 msgstr "Video failed to process"
 
@@ -13835,7 +13845,7 @@ msgstr "Video not found."
 msgid "Video settings"
 msgstr "Video settings"
 
-#: src/view/com/composer/Composer.tsx:2732
+#: src/view/com/composer/Composer.tsx:2714
 msgid "Video uploaded"
 msgstr "Video uploaded"
 
@@ -14162,7 +14172,7 @@ msgstr "We recommend selecting at least two interests."
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 
-#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:526
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "We were unable to determine if you are allowed to upload videos. Please try again."
 
@@ -14538,7 +14548,7 @@ msgstr "You are Live"
 msgid "You are no longer live"
 msgstr "You are no longer live"
 
-#: src/view/com/composer/state/video.ts:497
+#: src/view/com/composer/state/video.ts:519
 msgid "You are not allowed to upload videos."
 msgstr "You are not allowed to upload videos."
 
@@ -15010,11 +15020,11 @@ msgstr "You’ve reached the maximum of {MAX_FILTERS, plural, one {# filter} oth
 msgid "You've reached the start of the active content."
 msgstr "You've reached the start of the active content."
 
-#: src/view/com/composer/state/video.ts:508
+#: src/view/com/composer/state/video.ts:530
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "You've reached your daily limit for video uploads (too many bytes)"
 
-#: src/view/com/composer/state/video.ts:512
+#: src/view/com/composer/state/video.ts:534
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "You've reached your daily limit for video uploads (too many videos)"
 
@@ -15038,7 +15048,7 @@ msgstr "Your account has been deleted, see ya! ✌️"
 msgid "Your account has been suspended"
 msgstr "Your account has been suspended"
 
-#: src/view/com/composer/state/video.ts:516
+#: src/view/com/composer/state/video.ts:538
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Your account is not yet old enough to upload videos. Please try again later."
 
@@ -15133,7 +15143,7 @@ msgstr "Your full handle will be <0>@{0}</0>"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Please enter your username instead, or set your provider manually."
 
-#: src/view/com/composer/state/video.ts:453
+#: src/view/com/composer/state/video.ts:475
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
 msgstr "Your hosting provider does not support videos this large. Please try again with a smaller file."
 

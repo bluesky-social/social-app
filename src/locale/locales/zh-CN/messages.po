@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-07 16:10\n"
+"PO-Revision-Date: 2026-08-13 17:05\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -685,7 +685,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# 小时} other {# 小时}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:83
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:84
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -1205,7 +1205,7 @@ msgstr "添加其他账户"
 msgid "Add another post"
 msgstr "添加另一则帖文"
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2304
 msgid "Add another post to thread"
 msgstr "添加另一则帖文至帖文串"
 
@@ -1587,7 +1587,7 @@ msgstr "发生错误"
 msgid "An error occurred"
 msgstr "发生错误"
 
-#: src/view/com/composer/state/video.ts:486
+#: src/view/com/composer/state/video.ts:508
 msgid "An error occurred while compressing the video."
 msgstr "压缩视频时发生错误。"
 
@@ -1633,11 +1633,11 @@ msgstr "保存二维码时发生错误！"
 msgid "An error occurred while trying to follow all"
 msgstr "关注全部账户时发生错误"
 
-#: src/view/com/composer/state/video.ts:538
+#: src/view/com/composer/state/video.ts:560
 msgid "An error occurred while uploading the video. {message}"
 msgstr "上传视频时发生错误。{message}"
 
-#: src/view/com/composer/state/video.ts:530
+#: src/view/com/composer/state/video.ts:552
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "上传视频时发生错误。请检查网络连接并重试。"
 
@@ -2139,7 +2139,7 @@ msgid "Beta Feature"
 msgstr "测试功能"
 
 #: src/Navigation.tsx:414
-#: src/screens/Settings/BetaFeaturesSettings.tsx:108
+#: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:249
 #: src/screens/Settings/Settings.tsx:252
 msgid "Beta features"
@@ -2151,12 +2151,12 @@ msgstr "测试功能"
 msgid "Beta features enabled"
 msgstr "测试功能已启用"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:144
+#: src/screens/Settings/BetaFeaturesSettings.tsx:152
 msgctxt "web"
 msgid "Beta features may be unstable. Some changes may require reloading the app."
 msgstr "测试功能可能不稳定，部分更改可能需要重新加载应用。"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:149
+#: src/screens/Settings/BetaFeaturesSettings.tsx:157
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app."
 msgstr "测试功能可能不稳定，部分更改可能需要重新启动应用。"
@@ -2795,7 +2795,7 @@ msgstr "对话"
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr "请在下方输入发送到你电子邮箱 <0>{currentEmail}</0> 的验证码："
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:182
+#: src/screens/Settings/BetaFeaturesSettings.tsx:190
 msgid "Check back later!"
 msgstr "请过段时间再来查看！"
 
@@ -3166,11 +3166,11 @@ msgstr "撰写最多 {0, plural,other {# 个字符}} 的帖文"
 msgid "Compose reply"
 msgstr "撰写回复"
 
-#: src/view/com/composer/Composer.tsx:2705
+#: src/view/com/composer/Composer.tsx:2687
 msgid "Compressing GIF..."
 msgstr "正在压缩 GIF……"
 
-#: src/view/com/composer/Composer.tsx:2707
+#: src/view/com/composer/Composer.tsx:2689
 msgid "Compressing video..."
 msgstr "正在压缩视频……"
 
@@ -3741,7 +3741,7 @@ msgstr "已屏蔽此列表的创建者"
 msgid "Culture"
 msgstr "文化"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:188
+#: src/screens/Settings/BetaFeaturesSettings.tsx:196
 msgid "Current beta features"
 msgstr "当前测试功能"
 
@@ -4106,7 +4106,7 @@ msgstr "跳过"
 msgid "Dismiss banner"
 msgstr "忽略横幅提示"
 
-#: src/view/com/composer/Composer.tsx:2626
+#: src/view/com/composer/Composer.tsx:2629
 msgid "Dismiss error"
 msgstr "忽略错误"
 
@@ -4533,12 +4533,17 @@ msgstr "启用"
 msgid "Enable {0} only"
 msgstr "仅启用 {0}"
 
+#. Description of a feature flag (10-minute video uploads)
+#: src/analytics/features/index.ts:90
+msgid "Enable 10-minute video uploads."
+msgstr ""
+
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
 msgstr "启用成人内容显示"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:117
-#: src/screens/Settings/BetaFeaturesSettings.tsx:124
+#: src/screens/Settings/BetaFeaturesSettings.tsx:125
+#: src/screens/Settings/BetaFeaturesSettings.tsx:132
 msgid "Enable beta features"
 msgstr "启用测试功能"
 
@@ -4664,7 +4669,7 @@ msgstr "进入全屏模式"
 msgid "Entertainment"
 msgstr "娱乐"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2707
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "错误"
@@ -5705,7 +5710,7 @@ msgstr "Germ DM 链接"
 msgid "Germ DM reconnected"
 msgstr "重新连接 Germ DM"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:132
+#: src/screens/Settings/BetaFeaturesSettings.tsx:140
 msgid "Get early access to experimental features we’re testing."
 msgstr "抢先体验我们正在测试的功能。"
 
@@ -5794,7 +5799,7 @@ msgstr "开始吧"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2730
+#: src/view/com/composer/Composer.tsx:2712
 msgid "GIF uploaded"
 msgstr "已上传 GIF"
 
@@ -6203,7 +6208,7 @@ msgstr "仅为我隐藏回复"
 #: src/view/com/profile/ProfileMenu.tsx:488
 #: src/view/com/profile/ProfileMenu.tsx:495
 msgid "Hide reposts in feeds"
-msgstr ""
+msgstr "在动态中隐藏转发帖文"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:105
 msgid "Hide this card"
@@ -6298,7 +6303,7 @@ msgstr "抱歉，看起来在加载数据时遇到了问题。请查看下方获
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "抱歉，我们无法加载该内容审核提供服务方。"
 
-#: src/view/com/composer/state/video.ts:500
+#: src/view/com/composer/state/video.ts:522
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "请稍等！我们正在逐步开放上传视频的权限。你目前仍在等待队伍中，请稍后再回来查看！"
 
@@ -6595,7 +6600,7 @@ msgstr "包含自此日期之前发布的帖文"
 #. Checkbox shown when reporting a video. The value is the current playback position, formatted as minutes:seconds.
 #: src/components/moderation/ReportDialog/index.tsx:701
 msgid "Include video timestamp ({videoTimestamp})"
-msgstr ""
+msgstr "包含视频时间戳（{videoTimestamp}）"
 
 #: src/screens/Login/LoginForm.tsx:165
 msgid "Incorrect username or password"
@@ -6782,7 +6787,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "现在只有你一个！通过上面的列表将更多人添加到你的新手包里面。"
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2645
+#: src/view/com/composer/Composer.tsx:2648
 msgid "Job ID: {0}"
 msgstr "作业 ID：{0}"
 
@@ -7385,6 +7390,11 @@ msgstr "网站标志由 <0>@sawaratsuki.bsky.social</0> 绘制"
 #: src/components/RichTextTag.tsx:55
 msgid "Long press to open tag menu for {0}"
 msgstr "长按以开启 {0} 的标签菜单"
+
+#. Name for a feature flag (longer videos)
+#: src/analytics/features/index.ts:84
+msgid "Longer videos"
+msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:114
 msgid "Looks like XXXXX-XXXXX"
@@ -8103,7 +8113,7 @@ msgstr "目前还没有应用密码"
 msgid "No author filter"
 msgstr "无作者筛选"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:177
+#: src/screens/Settings/BetaFeaturesSettings.tsx:185
 msgid "No beta features at the moment."
 msgstr "目前没有测试功能。"
 
@@ -8640,7 +8650,7 @@ msgid "Open drawer menu"
 msgstr "开启抽屉菜单"
 
 #: src/screens/Messages/components/MessageComposer.tsx:213
-#: src/view/com/composer/Composer.tsx:2278
+#: src/view/com/composer/Composer.tsx:2281
 msgid "Open emoji picker"
 msgstr "开启表情符号选择器"
 
@@ -9195,7 +9205,7 @@ msgstr "请点击我们发送给你电子邮件中的链接来验证你的新电
 msgid "Please complete the verification captcha."
 msgstr "请完成 CAPTCHA（人机验证）。"
 
-#: src/view/com/composer/state/video.ts:524
+#: src/view/com/composer/state/video.ts:546
 msgid "Please confirm your email address to upload videos."
 msgstr "请先验证你的电子邮箱地址以上传视频。"
 
@@ -9354,7 +9364,7 @@ msgid "Post"
 msgstr "帖文"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:68
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:69
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "第 {index} 则帖文，共 {count} 则"
@@ -9558,11 +9568,11 @@ msgstr "隐私政策"
 msgid "Privacy violation of a minor"
 msgstr "侵犯未成年隐私"
 
-#: src/view/com/composer/Composer.tsx:2719
+#: src/view/com/composer/Composer.tsx:2701
 msgid "Processing GIF..."
 msgstr "正在处理 GIF……"
 
-#: src/view/com/composer/Composer.tsx:2721
+#: src/view/com/composer/Composer.tsx:2703
 msgid "Processing video..."
 msgstr "正在处理视频……"
 
@@ -10294,7 +10304,7 @@ msgstr "转发"
 
 #: src/components/Pills.tsx:229
 msgid "Reposts Hidden"
-msgstr ""
+msgstr "已隐藏转发帖文"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:460
 msgid "Reposts of this post"
@@ -10309,12 +10319,12 @@ msgstr "转发你转发的帖文"
 #: src/view/com/profile/ProfileMenu.tsx:192
 msgctxt "toast"
 msgid "Reposts will be hidden in feeds"
-msgstr ""
+msgstr "转发帖文将在动态中隐藏"
 
 #: src/view/com/profile/ProfileMenu.tsx:177
 msgctxt "toast"
 msgid "Reposts will be shown in feeds"
-msgstr ""
+msgstr "转发帖文将在动态中显示"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:463
 msgid "Request access to group chat"
@@ -10826,9 +10836,9 @@ msgid "See more trending topics"
 msgstr "查看更多热门话题"
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:91
+#: src/analytics/features/index.ts:107
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
-msgstr ""
+msgstr "在同一作者的讨论串帖文上显示编号标签（1/3、2/3 等）。"
 
 #: src/view/com/profile/ProfileFollows.tsx:204
 #: src/view/com/profile/ProfileFollows.tsx:205
@@ -11236,8 +11246,8 @@ msgstr "仍然分享"
 msgid "Share author DID"
 msgstr "分享作者 DID"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:158
-#: src/screens/Settings/BetaFeaturesSettings.tsx:165
+#: src/screens/Settings/BetaFeaturesSettings.tsx:166
+#: src/screens/Settings/BetaFeaturesSettings.tsx:173
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:93
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:98
 msgid "Share feedback"
@@ -11434,7 +11444,7 @@ msgstr "显示转发"
 #: src/view/com/profile/ProfileMenu.tsx:487
 #: src/view/com/profile/ProfileMenu.tsx:493
 msgid "Show reposts in feeds"
-msgstr ""
+msgstr "在动态中显示转发帖文"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:133
 #: src/screens/Settings/FollowingFeedPreferences.tsx:143
@@ -11710,7 +11720,7 @@ msgstr "出了点问题，请重试"
 
 #: src/screens/Moderation/index.tsx:112
 #: src/screens/Profile/Sections/Labels.tsx:185
-#: src/screens/Settings/BetaFeaturesSettings.tsx:80
+#: src/screens/Settings/BetaFeaturesSettings.tsx:85
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:84
 msgid "Something went wrong, please try again."
 msgstr "出了点问题，请重试。"
@@ -12328,32 +12338,32 @@ msgstr "你正在回复的帖文已被发布者标记为使用 {suggestedLanguag
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "隐私政策已移动到 <0/>"
 
-#: src/view/com/composer/state/video.ts:471
+#: src/view/com/composer/state/video.ts:493
 msgid "The processed video is too large. Please try again with a smaller file."
 msgstr "处理后的视频过大，请尝试使用较小的文件。"
 
-#: src/view/com/composer/state/video.ts:446
+#: src/view/com/composer/state/video.ts:468
 msgid "The selected video could not be encoded."
 msgstr "所选视频无法编码。"
 
-#: src/view/com/composer/state/video.ts:436
+#: src/view/com/composer/state/video.ts:458
 msgid "The selected video could not be processed."
 msgstr "无法处理所选视频。"
 
-#: src/view/com/composer/state/video.ts:466
+#: src/view/com/composer/state/video.ts:488
 msgid "The selected video has an unsupported aspect ratio."
 msgstr "所选视频的宽高比不受支持。"
 
-#: src/view/com/composer/state/video.ts:482
-#: src/view/com/composer/state/video.ts:521
+#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:543
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "你所选择的视频大小大于 {VIDEO_MAX_SIZE_MB} MB，请选择其他较小的视频文件。"
 
-#: src/view/com/composer/state/video.ts:464
+#: src/view/com/composer/state/video.ts:486
 msgid "The selected video is too long."
 msgstr "所选视频时长过长。"
 
-#: src/view/com/composer/state/video.ts:468
+#: src/view/com/composer/state/video.ts:490
 msgid "The selected video uses an unsupported format."
 msgstr "所选视频使用了不受支持的格式。"
 
@@ -12388,9 +12398,9 @@ msgstr "你提供的验证码无效。请检查你使用的验证链接是否正
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "验证服务提供商无法向你的电话号码发送代码，请检查你的电话号码并重试。"
 
-#: src/view/com/composer/state/video.ts:449
+#: src/view/com/composer/state/video.ts:471
 msgid "The video could not be uploaded to your hosting provider. Please try again."
-msgstr ""
+msgstr "视频无法上传到你的托管服务提供商，请重试。"
 
 #: src/screens/Settings/AppearanceSettings.tsx:137
 msgid "Theme"
@@ -12934,9 +12944,9 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "你的帖文将从这则引用中删除，并替换为一个占位符。"
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:84
+#: src/analytics/features/index.ts:100
 msgid "Thread numbering"
-msgstr ""
+msgstr "讨论串编号"
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:25
 #: src/screens/PostThread/components/HeaderDropdown.tsx:28
@@ -13532,7 +13542,7 @@ msgstr "从文件上传"
 msgid "Upload from Library"
 msgstr "从照片图库上传"
 
-#: src/view/com/composer/Composer.tsx:2712
+#: src/view/com/composer/Composer.tsx:2694
 msgid "Uploading GIF..."
 msgstr "正在上传 GIF……"
 
@@ -13546,7 +13556,7 @@ msgstr "正在上传图片……"
 msgid "Uploading link thumbnail..."
 msgstr "正在上传链接缩略图……"
 
-#: src/view/com/composer/Composer.tsx:2714
+#: src/view/com/composer/Composer.tsx:2696
 msgid "Uploading video..."
 msgstr "正在上传视频……"
 
@@ -13796,7 +13806,7 @@ msgstr "通过新手包 <0/><1>{starterPackName}</1>"
 msgid "Video"
 msgstr "视频"
 
-#: src/view/com/composer/state/video.ts:457
+#: src/view/com/composer/state/video.ts:479
 msgid "Video failed to process"
 msgstr "视频处理失败"
 
@@ -13835,7 +13845,7 @@ msgstr "无法找到视频。"
 msgid "Video settings"
 msgstr "视频设置"
 
-#: src/view/com/composer/Composer.tsx:2732
+#: src/view/com/composer/Composer.tsx:2714
 msgid "Video uploaded"
 msgstr "已上传视频"
 
@@ -14162,7 +14172,7 @@ msgstr "我们建议至少选择两个感兴趣的主题。"
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "我们将向 <0>{0}</0> 发送一封含有链接的电子邮件，请点击邮件内容来完成电子邮箱的验证流程。"
 
-#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:526
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "我们无法确定你是否有权上传视频，请重试。"
 
@@ -14538,7 +14548,7 @@ msgstr "你已开始直播"
 msgid "You are no longer live"
 msgstr "你已停止直播"
 
-#: src/view/com/composer/state/video.ts:497
+#: src/view/com/composer/state/video.ts:519
 msgid "You are not allowed to upload videos."
 msgstr "你目前无法上传视频。"
 
@@ -15010,11 +15020,11 @@ msgstr "你已达到 {MAX_FILTERS, plural,one {# 个筛选条件}other {# 个筛
 msgid "You've reached the start of the active content."
 msgstr "你已到达内容的开头。"
 
-#: src/view/com/composer/state/video.ts:508
+#: src/view/com/composer/state/video.ts:530
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "你已达到每日上传视频上限（文件太大）"
 
-#: src/view/com/composer/state/video.ts:512
+#: src/view/com/composer/state/video.ts:534
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "你已达到每日上传视频上限（数量太多）"
 
@@ -15028,7 +15038,7 @@ msgstr "你的账户"
 
 #: src/components/moderation/ReportDialog/index.tsx:310
 msgid "Your account cannot submit reports while it is suspended."
-msgstr ""
+msgstr "你的账号在被暂停期间无法提交举报。"
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:128
 msgid "Your account has been deleted, see ya! ✌️"
@@ -15038,7 +15048,7 @@ msgstr "你的账户已删除，有缘再会! ✌️"
 msgid "Your account has been suspended"
 msgstr "你的账户已被冻结"
 
-#: src/view/com/composer/state/video.ts:516
+#: src/view/com/composer/state/video.ts:538
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "你的账户注册时间过短，暂时无法上传视频。请稍后再试。"
 
@@ -15133,9 +15143,9 @@ msgstr "你的完整账户代码将修改为 <0>@{0}</0>"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "无法通过电子邮件地址检测你的托管服务提供商，因此将使用默认的 Bluesky 服务。请改为输入你的用户名，或手动设置您的托管服务提供商。"
 
-#: src/view/com/composer/state/video.ts:453
+#: src/view/com/composer/state/video.ts:475
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
-msgstr ""
+msgstr "你的托管服务提供商不支持这么大的视频，请尝试使用较小的文件重试。"
 
 #: src/screens/Login/components/HostingProviderDialog.tsx:188
 msgid "Your hosting provider is detected automatically from the username you enter."

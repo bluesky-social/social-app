@@ -8,7 +8,7 @@ msgstr ""
 "Language: cy\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-07 16:10\n"
+"PO-Revision-Date: 2026-08-13 17:05\n"
 "Last-Translator: \n"
 "Language-Team: Welsh\n"
 "Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n == 3) ? 3 : ((n == 6) ? 4 : 5))));\n"
@@ -685,7 +685,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, zero {}one {# awr} two {# awr} few {# awr} many {# hours} other {# awr}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:83
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:84
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -1205,7 +1205,7 @@ msgstr "Ychwanegu cyfrif arall"
 msgid "Add another post"
 msgstr "Ychwanegu postiad arall"
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2304
 msgid "Add another post to thread"
 msgstr "Ychwanegu postiad arall i edefyn"
 
@@ -1587,7 +1587,7 @@ msgstr "Digwyddodd gwall"
 msgid "An error occurred"
 msgstr "Digwyddodd gwall"
 
-#: src/view/com/composer/state/video.ts:486
+#: src/view/com/composer/state/video.ts:508
 msgid "An error occurred while compressing the video."
 msgstr "Digwyddodd gwall wrth gywasgu'r fideo."
 
@@ -1633,11 +1633,11 @@ msgstr "Digwyddodd gwall wrth gadw'r cod QR!"
 msgid "An error occurred while trying to follow all"
 msgstr "Digwyddodd gwall wrth geisio dilyn pob un"
 
-#: src/view/com/composer/state/video.ts:538
+#: src/view/com/composer/state/video.ts:560
 msgid "An error occurred while uploading the video. {message}"
 msgstr "Digwyddodd gwall wrth lwytho'r fideo i fyny. {message}"
 
-#: src/view/com/composer/state/video.ts:530
+#: src/view/com/composer/state/video.ts:552
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "Bu anhawster wrth ddileu'r llwytho'r fideo. Gwiriwch eich cysylltiad rhyngwyd a cheisio eto."
 
@@ -2139,7 +2139,7 @@ msgid "Beta Feature"
 msgstr "Nodwedd Beta"
 
 #: src/Navigation.tsx:414
-#: src/screens/Settings/BetaFeaturesSettings.tsx:108
+#: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:249
 #: src/screens/Settings/Settings.tsx:252
 msgid "Beta features"
@@ -2151,12 +2151,12 @@ msgstr "Nodweddion beta"
 msgid "Beta features enabled"
 msgstr "Nodweddion beta wedi'u galluogi"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:144
+#: src/screens/Settings/BetaFeaturesSettings.tsx:152
 msgctxt "web"
 msgid "Beta features may be unstable. Some changes may require reloading the app."
 msgstr "Gall nodweddion beta fod yn ansad. Efallai y bydd angen ail-lwytho'r ap ar gyfer rhai newidiadau."
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:149
+#: src/screens/Settings/BetaFeaturesSettings.tsx:157
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app."
 msgstr "Efallai y bydd nodweddion beta yn ansad. Efallai y bydd angen ailgychwyn yr ap ar gyfer rhai newidiadau."
@@ -2795,7 +2795,7 @@ msgstr "Sgyrsiau"
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr "Gwiriwch <0>{currentEmail}</0> am e-bost gyda'r cod cadarnhau i'w roi isod:"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:182
+#: src/screens/Settings/BetaFeaturesSettings.tsx:190
 msgid "Check back later!"
 msgstr "Dewch nôl yn nes ymlaen!"
 
@@ -3166,11 +3166,11 @@ msgstr "Cyfansoddwch bostiadau hyd at {0, plural, zero {} one {# nod} two {# nod
 msgid "Compose reply"
 msgstr "Ysgrifennu ateb"
 
-#: src/view/com/composer/Composer.tsx:2705
+#: src/view/com/composer/Composer.tsx:2687
 msgid "Compressing GIF..."
 msgstr "Yn cywasgu GIF..."
 
-#: src/view/com/composer/Composer.tsx:2707
+#: src/view/com/composer/Composer.tsx:2689
 msgid "Compressing video..."
 msgstr "Yn cywasgu fideo..."
 
@@ -3741,7 +3741,7 @@ msgstr "Mae'r crëwr wedi'i rwystro"
 msgid "Culture"
 msgstr "Diwylliant"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:188
+#: src/screens/Settings/BetaFeaturesSettings.tsx:196
 msgid "Current beta features"
 msgstr "Nodweddion beta cyfredol"
 
@@ -4106,7 +4106,7 @@ msgstr "Cau"
 msgid "Dismiss banner"
 msgstr "Cau'r faner"
 
-#: src/view/com/composer/Composer.tsx:2626
+#: src/view/com/composer/Composer.tsx:2629
 msgid "Dismiss error"
 msgstr "Cau'r gwall"
 
@@ -4533,12 +4533,17 @@ msgstr "Galluogi"
 msgid "Enable {0} only"
 msgstr "Galluogi dim ond {0}"
 
+#. Description of a feature flag (10-minute video uploads)
+#: src/analytics/features/index.ts:90
+msgid "Enable 10-minute video uploads."
+msgstr ""
+
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
 msgstr "Galluogi cynnwys oedolion"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:117
-#: src/screens/Settings/BetaFeaturesSettings.tsx:124
+#: src/screens/Settings/BetaFeaturesSettings.tsx:125
+#: src/screens/Settings/BetaFeaturesSettings.tsx:132
 msgid "Enable beta features"
 msgstr "Galluogi nodweddion beta"
 
@@ -4664,7 +4669,7 @@ msgstr "Yn mynd i'r sgrin lawn"
 msgid "Entertainment"
 msgstr "Adloniant"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2707
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Gwall"
@@ -5705,7 +5710,7 @@ msgstr "Dolen Germ DM"
 msgid "Germ DM reconnected"
 msgstr "Germ DM wedi'i ail gysylltu"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:132
+#: src/screens/Settings/BetaFeaturesSettings.tsx:140
 msgid "Get early access to experimental features we’re testing."
 msgstr "Cael mynediad cynnar at nodweddion arbrofol rydym yn eu profi."
 
@@ -5794,7 +5799,7 @@ msgstr "Cychwyn arni"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2730
+#: src/view/com/composer/Composer.tsx:2712
 msgid "GIF uploaded"
 msgstr "GIF wedi'i lwytho i fyny"
 
@@ -6298,7 +6303,7 @@ msgstr "Hmmm, mae'n ymddangos ein bod yn cael trafferth llwytho'r data hwn. Gwel
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "Hmmmm, dydyn ni ddim wedi gallu llwytho'r gwasanaeth cymedroli hwnnw."
 
-#: src/view/com/composer/state/video.ts:500
+#: src/view/com/composer/state/video.ts:522
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Daliwch ati! Rydyn ni'n rhoi mynediad i fideo yn raddol, ac rydych chi'n dal i aros yn unol. Dewch nôl cyn hir!"
 
@@ -6782,7 +6787,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Dim ond chi ar hyn o bryd! Ychwanegwch fwy o bobl at eich pecyn cychwyn trwy chwilio uchod."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2645
+#: src/view/com/composer/Composer.tsx:2648
 msgid "Job ID: {0}"
 msgstr "ID gwaith: {0}"
 
@@ -7385,6 +7390,11 @@ msgstr "Logo gan <0>@sawaratsuki.bsky.social</0>"
 #: src/components/RichTextTag.tsx:55
 msgid "Long press to open tag menu for {0}"
 msgstr "Pwyso'n hir i agor y ddewislen tagiau: {0}"
+
+#. Name for a feature flag (longer videos)
+#: src/analytics/features/index.ts:84
+msgid "Longer videos"
+msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:114
 msgid "Looks like XXXXX-XXXXX"
@@ -8103,7 +8113,7 @@ msgstr "Dim cyfrineiriau apiau eto"
 msgid "No author filter"
 msgstr "Dim hidlydd awdur"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:177
+#: src/screens/Settings/BetaFeaturesSettings.tsx:185
 msgid "No beta features at the moment."
 msgstr "Dim nodweddion beta ar hyn o bryd."
 
@@ -8640,7 +8650,7 @@ msgid "Open drawer menu"
 msgstr "Agor dewislen drôr"
 
 #: src/screens/Messages/components/MessageComposer.tsx:213
-#: src/view/com/composer/Composer.tsx:2278
+#: src/view/com/composer/Composer.tsx:2281
 msgid "Open emoji picker"
 msgstr "Agor y dewisydd emojis"
 
@@ -9195,7 +9205,7 @@ msgstr "Cliciwch ar y ddolen yn yr e-bost a anfonwyd atoch i wirio'ch cyfeiriad 
 msgid "Please complete the verification captcha."
 msgstr "Cwblhewch y captcha dilysu."
 
-#: src/view/com/composer/state/video.ts:524
+#: src/view/com/composer/state/video.ts:546
 msgid "Please confirm your email address to upload videos."
 msgstr "Cadarnhewch eich cyfeiriad e-bost i lwytho fideos."
 
@@ -9354,7 +9364,7 @@ msgid "Post"
 msgstr "Postio"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:68
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:69
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "Postiad {index} o {count}"
@@ -9558,11 +9568,11 @@ msgstr "Polisi Preifatwydd"
 msgid "Privacy violation of a minor"
 msgstr "Torri ar breifatrwydd plentyn dan oed"
 
-#: src/view/com/composer/Composer.tsx:2719
+#: src/view/com/composer/Composer.tsx:2701
 msgid "Processing GIF..."
 msgstr "Yn prosesu GIF..."
 
-#: src/view/com/composer/Composer.tsx:2721
+#: src/view/com/composer/Composer.tsx:2703
 msgid "Processing video..."
 msgstr "Yn prosesu fideo..."
 
@@ -10826,7 +10836,7 @@ msgid "See more trending topics"
 msgstr "Gweld mwy o bynciau sy'n trendio"
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:91
+#: src/analytics/features/index.ts:107
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
 msgstr "Gweld bathodynnau wedi'u rhifo (1/3, 2/3, ac ati) ar bostiadau mewn edefyn gan yr un awdur."
 
@@ -11236,8 +11246,8 @@ msgstr "Rhannwch beth bynnag"
 msgid "Share author DID"
 msgstr "Rhanwch DID awdur"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:158
-#: src/screens/Settings/BetaFeaturesSettings.tsx:165
+#: src/screens/Settings/BetaFeaturesSettings.tsx:166
+#: src/screens/Settings/BetaFeaturesSettings.tsx:173
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:93
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:98
 msgid "Share feedback"
@@ -11710,7 +11720,7 @@ msgstr "Aeth rhywbeth o'i le, ceisiwch eto"
 
 #: src/screens/Moderation/index.tsx:112
 #: src/screens/Profile/Sections/Labels.tsx:185
-#: src/screens/Settings/BetaFeaturesSettings.tsx:80
+#: src/screens/Settings/BetaFeaturesSettings.tsx:85
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:84
 msgid "Something went wrong, please try again."
 msgstr "Aeth rhywbeth o'i le, ceisiwch eto."
@@ -12328,32 +12338,32 @@ msgstr "Mae'r postiad rydych yn ateb iddo wedi ei farcio fel wedi ei ysgrifennu 
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Mae'r Polisi Preifatrwydd wedi'i symud i <0/>"
 
-#: src/view/com/composer/state/video.ts:471
+#: src/view/com/composer/state/video.ts:493
 msgid "The processed video is too large. Please try again with a smaller file."
 msgstr "Mae'r fideo wedi'i brosesu yn rhy fawr. Ceisiwch eto gyda ffeil lai."
 
-#: src/view/com/composer/state/video.ts:446
+#: src/view/com/composer/state/video.ts:468
 msgid "The selected video could not be encoded."
 msgstr "Doedd dim modd amgodio'r fideo a ddewiswyd."
 
-#: src/view/com/composer/state/video.ts:436
+#: src/view/com/composer/state/video.ts:458
 msgid "The selected video could not be processed."
 msgstr "Doedd dim modd prosesu'r fideo a ddewiswyd."
 
-#: src/view/com/composer/state/video.ts:466
+#: src/view/com/composer/state/video.ts:488
 msgid "The selected video has an unsupported aspect ratio."
 msgstr "Mae gan y fideo dewiswyd gymhareb agwedd sydd ddim yn cael ei gefnogi."
 
-#: src/view/com/composer/state/video.ts:482
-#: src/view/com/composer/state/video.ts:521
+#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:543
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "Mae'r fideo a ddewiswyd yn fwy na {VIDEO_MAX_SIZE_MB} MB. Ceisiwch eto gyda ffeil lai."
 
-#: src/view/com/composer/state/video.ts:464
+#: src/view/com/composer/state/video.ts:486
 msgid "The selected video is too long."
 msgstr "Mae'r fideo yma'n rhy hir."
 
-#: src/view/com/composer/state/video.ts:468
+#: src/view/com/composer/state/video.ts:490
 msgid "The selected video uses an unsupported format."
 msgstr "Mae gan y fideo yma gymhareb agwedd sydd ddim yn cael ei gefnogi."
 
@@ -12388,7 +12398,7 @@ msgstr "Mae'r cod dilysu darparwyd gennych yn annilys. Gwnewch yn siŵr eich bod
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "Doedd y darparwr gwirio ddim yn gallu anfon cod i'ch rhif ffôn. Gwiriwch eich rhif ffôn a cheisiwch eto."
 
-#: src/view/com/composer/state/video.ts:449
+#: src/view/com/composer/state/video.ts:471
 msgid "The video could not be uploaded to your hosting provider. Please try again."
 msgstr "Doedd dim modd llwytho'r fideo i'ch darparwr gwesteia. Rhowch gynnig arall arni."
 
@@ -12934,7 +12944,7 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "Bydd hyn yn tynnu'ch postiad o'r postiad dyfynnu hwn ar gyfer pob defnyddiwr, ac yn rhoi dalfan yn ei le."
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:84
+#: src/analytics/features/index.ts:100
 msgid "Thread numbering"
 msgstr "Rhifo edefynnau"
 
@@ -13532,7 +13542,7 @@ msgstr "Llwytho i fyny o'r Ffeiliau"
 msgid "Upload from Library"
 msgstr "Llwytho i fyny o'r Llyfrgell"
 
-#: src/view/com/composer/Composer.tsx:2712
+#: src/view/com/composer/Composer.tsx:2694
 msgid "Uploading GIF..."
 msgstr "Yn llwytho'r GIF..."
 
@@ -13546,7 +13556,7 @@ msgstr "Wrthi'n lwytho lluniau i fyny..."
 msgid "Uploading link thumbnail..."
 msgstr "Wrthi'n lwytho dolen llun bach i fyny..."
 
-#: src/view/com/composer/Composer.tsx:2714
+#: src/view/com/composer/Composer.tsx:2696
 msgid "Uploading video..."
 msgstr "Wrthi'n llwytho fideo i fyny..."
 
@@ -13796,7 +13806,7 @@ msgstr "drwy'r pecyn cychwyn <0/><1>{starterPackName}</1>"
 msgid "Video"
 msgstr "Fideo"
 
-#: src/view/com/composer/state/video.ts:457
+#: src/view/com/composer/state/video.ts:479
 msgid "Video failed to process"
 msgstr "Methodd y fideo â phrosesu"
 
@@ -13835,7 +13845,7 @@ msgstr "Fideo heb ei ganfod."
 msgid "Video settings"
 msgstr "Gosodiadau fideo"
 
-#: src/view/com/composer/Composer.tsx:2732
+#: src/view/com/composer/Composer.tsx:2714
 msgid "Video uploaded"
 msgstr "Fideo wedi'i lwytho i fyny"
 
@@ -14162,7 +14172,7 @@ msgstr "Rydym yn argymell dewis o leiaf ddau ddiddordeb."
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Anfonwyd e-bost at <0>{0}</0> sy'n cynnwys dolen. Cliciwch arno i gwblhau'r broses dilysu e-bost."
 
-#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:526
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Doedden ni ddim yn gallu penderfynu a ydych yn cael llwytho fideos i fyny. Ceisiwch eto."
 
@@ -14538,7 +14548,7 @@ msgstr "Rydych chi'n Fyw"
 msgid "You are no longer live"
 msgstr "Dydych chi ddim yn fyw mwyach"
 
-#: src/view/com/composer/state/video.ts:497
+#: src/view/com/composer/state/video.ts:519
 msgid "You are not allowed to upload videos."
 msgstr "Does dim caniatâd i chi lwytho fideos i fyny."
 
@@ -15010,11 +15020,11 @@ msgstr "Rydych wedi cyrraedd yr uchafswm o {MAX_FILTERS, plural, zero {# hidlydd
 msgid "You've reached the start of the active content."
 msgstr "Rydych wedi dod i ddechrau'r cynnwys gweithredol."
 
-#: src/view/com/composer/state/video.ts:508
+#: src/view/com/composer/state/video.ts:530
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "Rydych wedi cyrraedd terfyn dyddiol llwytho fideos i fyny (gormod o feitiau)"
 
-#: src/view/com/composer/state/video.ts:512
+#: src/view/com/composer/state/video.ts:534
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Rydych wedi cyrraedd terfyn dyddiol llwytho fideos i fyny (gormod o fideos)"
 
@@ -15038,7 +15048,7 @@ msgstr "Mae eich cyfrif wedi'i ddileu, hwyl! ✌️"
 msgid "Your account has been suspended"
 msgstr "Mae eich cyfrif wedi'i atal"
 
-#: src/view/com/composer/state/video.ts:516
+#: src/view/com/composer/state/video.ts:538
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Nid yw eich cyfrif yn ddigon hen eto i lwytho fideos i fyny. Ceisiwch eto yn nes ymlaen."
 
@@ -15133,7 +15143,7 @@ msgstr "Eich enw dangos llawn fydd <0>@{0}</0>"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "Does dim modd canfod eich darparwr gwesteia o gyfeiriad e-bost, felly bydd gwasanaeth rhagosodedig Bluesky yn cael ei ddefnyddio. Rhowch eich enw defnyddiwr yn lle hynny, neu gosodwch eich darparwr â llaw."
 
-#: src/view/com/composer/state/video.ts:453
+#: src/view/com/composer/state/video.ts:475
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
 msgstr ""
 

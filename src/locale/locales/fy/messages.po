@@ -8,7 +8,7 @@ msgstr ""
 "Language: fy\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-07 16:10\n"
+"PO-Revision-Date: 2026-08-13 17:05\n"
 "Last-Translator: \n"
 "Language-Team: Frisian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -685,7 +685,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# oere} other {# oeren}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:83
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:84
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr ""
@@ -1205,7 +1205,7 @@ msgstr "Noch in account tafoegje"
 msgid "Add another post"
 msgstr "Noch in berjocht tafoegje"
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2304
 msgid "Add another post to thread"
 msgstr ""
 
@@ -1587,7 +1587,7 @@ msgstr "Der is in flater bard"
 msgid "An error occurred"
 msgstr "Der is in flater bard"
 
-#: src/view/com/composer/state/video.ts:486
+#: src/view/com/composer/state/video.ts:508
 msgid "An error occurred while compressing the video."
 msgstr "Der is in flater bard wylst it komprimearjen fan de fideo."
 
@@ -1633,11 +1633,11 @@ msgstr "Der is in flater bard by it bewarjen fan de QR-koade!"
 msgid "An error occurred while trying to follow all"
 msgstr "Der is in flater bard wylst it besykjen om elkenien te folgjen"
 
-#: src/view/com/composer/state/video.ts:538
+#: src/view/com/composer/state/video.ts:560
 msgid "An error occurred while uploading the video. {message}"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:530
+#: src/view/com/composer/state/video.ts:552
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr ""
 
@@ -2139,7 +2139,7 @@ msgid "Beta Feature"
 msgstr ""
 
 #: src/Navigation.tsx:414
-#: src/screens/Settings/BetaFeaturesSettings.tsx:108
+#: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:249
 #: src/screens/Settings/Settings.tsx:252
 msgid "Beta features"
@@ -2151,12 +2151,12 @@ msgstr ""
 msgid "Beta features enabled"
 msgstr ""
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:144
+#: src/screens/Settings/BetaFeaturesSettings.tsx:152
 msgctxt "web"
 msgid "Beta features may be unstable. Some changes may require reloading the app."
 msgstr ""
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:149
+#: src/screens/Settings/BetaFeaturesSettings.tsx:157
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app."
 msgstr ""
@@ -2795,7 +2795,7 @@ msgstr "Chats"
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr ""
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:182
+#: src/screens/Settings/BetaFeaturesSettings.tsx:190
 msgid "Check back later!"
 msgstr ""
 
@@ -3166,11 +3166,11 @@ msgstr "Do kinst berjochten opstelle mei in lingte fan maksimaal {0, plural, oth
 msgid "Compose reply"
 msgstr "Antwurd opstelle"
 
-#: src/view/com/composer/Composer.tsx:2705
+#: src/view/com/composer/Composer.tsx:2687
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2707
+#: src/view/com/composer/Composer.tsx:2689
 msgid "Compressing video..."
 msgstr "Fideo komprimearje…"
 
@@ -3741,7 +3741,7 @@ msgstr "Makker is blokkearre"
 msgid "Culture"
 msgstr "Kultuer"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:188
+#: src/screens/Settings/BetaFeaturesSettings.tsx:196
 msgid "Current beta features"
 msgstr ""
 
@@ -4106,7 +4106,7 @@ msgstr "Slute"
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2626
+#: src/view/com/composer/Composer.tsx:2629
 msgid "Dismiss error"
 msgstr "Flater negearje"
 
@@ -4533,12 +4533,17 @@ msgstr "Ynskeakelje"
 msgid "Enable {0} only"
 msgstr "Allinnich {0} ynskeakelje"
 
+#. Description of a feature flag (10-minute video uploads)
+#: src/analytics/features/index.ts:90
+msgid "Enable 10-minute video uploads."
+msgstr ""
+
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
 msgstr "Ynhâld foar folwoeksenen ynskeakelje"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:117
-#: src/screens/Settings/BetaFeaturesSettings.tsx:124
+#: src/screens/Settings/BetaFeaturesSettings.tsx:125
+#: src/screens/Settings/BetaFeaturesSettings.tsx:132
 msgid "Enable beta features"
 msgstr ""
 
@@ -4664,7 +4669,7 @@ msgstr "Iepenet folslein skerm"
 msgid "Entertainment"
 msgstr "Ferdivedaasje"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2707
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Flater"
@@ -5705,7 +5710,7 @@ msgstr ""
 msgid "Germ DM reconnected"
 msgstr ""
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:132
+#: src/screens/Settings/BetaFeaturesSettings.tsx:140
 msgid "Get early access to experimental features we’re testing."
 msgstr ""
 
@@ -5794,7 +5799,7 @@ msgstr "Oan de slach"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2730
+#: src/view/com/composer/Composer.tsx:2712
 msgid "GIF uploaded"
 msgstr ""
 
@@ -6298,7 +6303,7 @@ msgstr "Hmm, it liket derop dat wy problemen hawwe mei it laden fan dizze gegeve
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "Hmm, wy koene dy moderaasjetsjinst net lade."
 
-#: src/view/com/composer/state/video.ts:500
+#: src/view/com/composer/state/video.ts:522
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Wachtsje even! Wy jouwe stadichoan tagong ta fideo en do stiest noch hieltyd yn de rige. Kom fluch werom!"
 
@@ -6782,7 +6787,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Do bist no noch de iennige! Foegje mear persoanen ta oan dyn startpakket troch hjirboppe te sykjen."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2645
+#: src/view/com/composer/Composer.tsx:2648
 msgid "Job ID: {0}"
 msgstr "Taak-ID: {0}"
 
@@ -7384,6 +7389,11 @@ msgstr "Logo troch <0>@sawaratsuki.bsky.social</0>"
 #. placeholder {0}: isCashtag ? tag : `#${tag}`
 #: src/components/RichTextTag.tsx:55
 msgid "Long press to open tag menu for {0}"
+msgstr ""
+
+#. Name for a feature flag (longer videos)
+#: src/analytics/features/index.ts:84
+msgid "Longer videos"
 msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:114
@@ -8103,7 +8113,7 @@ msgstr "Noch gjin app-wachtwurden"
 msgid "No author filter"
 msgstr ""
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:177
+#: src/screens/Settings/BetaFeaturesSettings.tsx:185
 msgid "No beta features at the moment."
 msgstr ""
 
@@ -8640,7 +8650,7 @@ msgid "Open drawer menu"
 msgstr "Menu iepenje"
 
 #: src/screens/Messages/components/MessageComposer.tsx:213
-#: src/view/com/composer/Composer.tsx:2278
+#: src/view/com/composer/Composer.tsx:2281
 msgid "Open emoji picker"
 msgstr "Emoji-kiezer iepenje"
 
@@ -9195,7 +9205,7 @@ msgstr "Klik op de keppeling yn it e-mailberjocht dat wy sakrekt ferstjoerd haww
 msgid "Please complete the verification captcha."
 msgstr "Fier de ferifikaasje-captcha yn."
 
-#: src/view/com/composer/state/video.ts:524
+#: src/view/com/composer/state/video.ts:546
 msgid "Please confirm your email address to upload videos."
 msgstr ""
 
@@ -9354,7 +9364,7 @@ msgid "Post"
 msgstr "Berjocht"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:68
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:69
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr ""
@@ -9558,11 +9568,11 @@ msgstr "Privacybelied"
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2719
+#: src/view/com/composer/Composer.tsx:2701
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2721
+#: src/view/com/composer/Composer.tsx:2703
 msgid "Processing video..."
 msgstr "Fideo ferwurkje…"
 
@@ -10826,7 +10836,7 @@ msgid "See more trending topics"
 msgstr ""
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:91
+#: src/analytics/features/index.ts:107
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
 msgstr ""
 
@@ -11236,8 +11246,8 @@ msgstr "Dochs diele"
 msgid "Share author DID"
 msgstr "Auteurs-DID diele"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:158
-#: src/screens/Settings/BetaFeaturesSettings.tsx:165
+#: src/screens/Settings/BetaFeaturesSettings.tsx:166
+#: src/screens/Settings/BetaFeaturesSettings.tsx:173
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:93
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:98
 msgid "Share feedback"
@@ -11710,7 +11720,7 @@ msgstr "Der is wat misgien, probearje it nochris"
 
 #: src/screens/Moderation/index.tsx:112
 #: src/screens/Profile/Sections/Labels.tsx:185
-#: src/screens/Settings/BetaFeaturesSettings.tsx:80
+#: src/screens/Settings/BetaFeaturesSettings.tsx:85
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:84
 msgid "Something went wrong, please try again."
 msgstr "Der is wat misgien, probearje it nochris."
@@ -12328,32 +12338,32 @@ msgstr ""
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "It privacybelied is ferpleatst nei <0/>"
 
-#: src/view/com/composer/state/video.ts:471
+#: src/view/com/composer/state/video.ts:493
 msgid "The processed video is too large. Please try again with a smaller file."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:446
+#: src/view/com/composer/state/video.ts:468
 msgid "The selected video could not be encoded."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:436
+#: src/view/com/composer/state/video.ts:458
 msgid "The selected video could not be processed."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:466
+#: src/view/com/composer/state/video.ts:488
 msgid "The selected video has an unsupported aspect ratio."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:482
-#: src/view/com/composer/state/video.ts:521
+#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:543
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:464
+#: src/view/com/composer/state/video.ts:486
 msgid "The selected video is too long."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:468
+#: src/view/com/composer/state/video.ts:490
 msgid "The selected video uses an unsupported format."
 msgstr ""
 
@@ -12388,7 +12398,7 @@ msgstr "De ferifikaasjekoade dy’tsto opjûn hast is ûnjildich. Kontrolearje o
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:449
+#: src/view/com/composer/state/video.ts:471
 msgid "The video could not be uploaded to your hosting provider. Please try again."
 msgstr ""
 
@@ -12934,7 +12944,7 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "Hjirmei wurdt dyn berjocht foar alle brûkers út it sitaat fuortsmiten en ferfongen troch in plakhâlder."
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:84
+#: src/analytics/features/index.ts:100
 msgid "Thread numbering"
 msgstr ""
 
@@ -13532,7 +13542,7 @@ msgstr "Fan bestannen út oplade"
 msgid "Upload from Library"
 msgstr "Fan bibloteek út oplade"
 
-#: src/view/com/composer/Composer.tsx:2712
+#: src/view/com/composer/Composer.tsx:2694
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -13546,7 +13556,7 @@ msgstr "Ofbyldingen oplade…"
 msgid "Uploading link thumbnail..."
 msgstr "Keppelingminiatuer oplade…"
 
-#: src/view/com/composer/Composer.tsx:2714
+#: src/view/com/composer/Composer.tsx:2696
 msgid "Uploading video..."
 msgstr "Fideo oplade…"
 
@@ -13796,7 +13806,7 @@ msgstr ""
 msgid "Video"
 msgstr "Fideo"
 
-#: src/view/com/composer/state/video.ts:457
+#: src/view/com/composer/state/video.ts:479
 msgid "Video failed to process"
 msgstr "Fideo kin net ferwurke wurde"
 
@@ -13835,7 +13845,7 @@ msgstr "Fideo net fûn."
 msgid "Video settings"
 msgstr "Fideo-ynstellingen"
 
-#: src/view/com/composer/Composer.tsx:2732
+#: src/view/com/composer/Composer.tsx:2714
 msgid "Video uploaded"
 msgstr "Fideo opladen"
 
@@ -14162,7 +14172,7 @@ msgstr "Wy rekommandearje oan om op syn minst twa ynteressen te selektearjen."
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Wy hawwe in e-mailberjocht nei <0>{0}</0> mei in keppeling ferstjoerd. Klik derop om it e-mailferifikaasjeproses te foltôgjen."
 
-#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:526
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Wy hawwe net bepale kinnen oftsto fideo’s oplade meist. Probearj it opnij."
 
@@ -14538,7 +14548,7 @@ msgstr "Do bist live"
 msgid "You are no longer live"
 msgstr "Do bist net langer live"
 
-#: src/view/com/composer/state/video.ts:497
+#: src/view/com/composer/state/video.ts:519
 msgid "You are not allowed to upload videos."
 msgstr "Do meist gjin fideo’s oplade."
 
@@ -15010,11 +15020,11 @@ msgstr ""
 msgid "You've reached the start of the active content."
 msgstr "Do hast it begjin fan de aktive ynhâld berikt."
 
-#: src/view/com/composer/state/video.ts:508
+#: src/view/com/composer/state/video.ts:530
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "Do bist oer dyn deistige limyt foar fideo-oplaads (te folle bytes)"
 
-#: src/view/com/composer/state/video.ts:512
+#: src/view/com/composer/state/video.ts:534
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Do bist oer dyn deistige limyt foar fideo-oplaads (te folle fideo’s)"
 
@@ -15038,7 +15048,7 @@ msgstr ""
 msgid "Your account has been suspended"
 msgstr "Dyn account is opskoarten"
 
-#: src/view/com/composer/state/video.ts:516
+#: src/view/com/composer/state/video.ts:538
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Dyn account is noch net âld genôch om fideo’s op te laden. Probearje it letter nochris."
 
@@ -15133,7 +15143,7 @@ msgstr "Dyn folsleine handle wurdt <0>@{0}</0>"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:453
+#: src/view/com/composer/state/video.ts:475
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
 msgstr ""
 

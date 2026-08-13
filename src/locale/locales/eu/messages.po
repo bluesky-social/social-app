@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-07 16:10\n"
+"PO-Revision-Date: 2026-08-13 17:05\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -685,7 +685,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {ordu #} other {# ordu}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:83
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:84
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{count}-tik {index}"
@@ -1205,7 +1205,7 @@ msgstr "Gehitu beste kontu bat"
 msgid "Add another post"
 msgstr "Gehitu beste post bat"
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2304
 msgid "Add another post to thread"
 msgstr "Gehitu beste post bat harira"
 
@@ -1587,7 +1587,7 @@ msgstr "Errore bat gertatu da"
 msgid "An error occurred"
 msgstr "Errore bat gertatu da"
 
-#: src/view/com/composer/state/video.ts:486
+#: src/view/com/composer/state/video.ts:508
 msgid "An error occurred while compressing the video."
 msgstr "Errore bat gertatu da bideoa konprimitzean."
 
@@ -1633,11 +1633,11 @@ msgstr "Errore bat gertatu da QR kodea gordetzean!"
 msgid "An error occurred while trying to follow all"
 msgstr "Errore bat gertatu da guztiak jarraitzen saiatzean"
 
-#: src/view/com/composer/state/video.ts:538
+#: src/view/com/composer/state/video.ts:560
 msgid "An error occurred while uploading the video. {message}"
 msgstr "Errore bat gertatu da bideoa igotzean. {message}"
 
-#: src/view/com/composer/state/video.ts:530
+#: src/view/com/composer/state/video.ts:552
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "Errore bat gertatu da bideoa igotzean. Egiaztatu Interneteko konexioa eta saiatu berriro."
 
@@ -2139,7 +2139,7 @@ msgid "Beta Feature"
 msgstr "Beta Ezaugarria"
 
 #: src/Navigation.tsx:414
-#: src/screens/Settings/BetaFeaturesSettings.tsx:108
+#: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:249
 #: src/screens/Settings/Settings.tsx:252
 msgid "Beta features"
@@ -2151,12 +2151,12 @@ msgstr "Beta ezaugarriak"
 msgid "Beta features enabled"
 msgstr "Beta ezaugarriak gaituta"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:144
+#: src/screens/Settings/BetaFeaturesSettings.tsx:152
 msgctxt "web"
 msgid "Beta features may be unstable. Some changes may require reloading the app."
 msgstr "Beta ezaugarriak ezegonkorrak izan daitezke. Aldaketa batzuek aplikazioa berriro kargatzea eska dezakete."
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:149
+#: src/screens/Settings/BetaFeaturesSettings.tsx:157
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app."
 msgstr "Beta ezaugarriak ezegonkorrak izan daitezke. Aldaketa batzuek aplikazioa berrabiaraztea eska dezakete."
@@ -2795,7 +2795,7 @@ msgstr "Txatak"
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr "Egiaztatu <0>{currentEmail}</0> baieztapen kodea duen mezua hartu eta sartu hemen:"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:182
+#: src/screens/Settings/BetaFeaturesSettings.tsx:190
 msgid "Check back later!"
 msgstr "Itzuli geroago!"
 
@@ -3166,11 +3166,11 @@ msgstr "Idatzi {0, plural, other {# karaktere}} gehienezko postak"
 msgid "Compose reply"
 msgstr "Idatzi erantzuna"
 
-#: src/view/com/composer/Composer.tsx:2705
+#: src/view/com/composer/Composer.tsx:2687
 msgid "Compressing GIF..."
 msgstr "GIFa konprimitzen..."
 
-#: src/view/com/composer/Composer.tsx:2707
+#: src/view/com/composer/Composer.tsx:2689
 msgid "Compressing video..."
 msgstr "Bideoa konprimitzen..."
 
@@ -3741,7 +3741,7 @@ msgstr "Sortzailea blokeatu egin da"
 msgid "Culture"
 msgstr "Kultura"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:188
+#: src/screens/Settings/BetaFeaturesSettings.tsx:196
 msgid "Current beta features"
 msgstr "Uneko beta ezaugarriak"
 
@@ -4106,7 +4106,7 @@ msgstr "Baztertu"
 msgid "Dismiss banner"
 msgstr "Baztertu bannerra"
 
-#: src/view/com/composer/Composer.tsx:2626
+#: src/view/com/composer/Composer.tsx:2629
 msgid "Dismiss error"
 msgstr "Baztertu errorea"
 
@@ -4533,12 +4533,17 @@ msgstr "Gaitu"
 msgid "Enable {0} only"
 msgstr "Gaitu {0} soilik"
 
+#. Description of a feature flag (10-minute video uploads)
+#: src/analytics/features/index.ts:90
+msgid "Enable 10-minute video uploads."
+msgstr "Gaitu 10 minutuko bideo-igoerak."
+
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
 msgstr "Gaitu helduentzako edukia"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:117
-#: src/screens/Settings/BetaFeaturesSettings.tsx:124
+#: src/screens/Settings/BetaFeaturesSettings.tsx:125
+#: src/screens/Settings/BetaFeaturesSettings.tsx:132
 msgid "Enable beta features"
 msgstr "Gaitu beta ezaugarriak"
 
@@ -4664,7 +4669,7 @@ msgstr "Pantaila osora sartzen da"
 msgid "Entertainment"
 msgstr "Entretenimendua"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2707
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Errorea"
@@ -5705,7 +5710,7 @@ msgstr "Germen DM Esteka"
 msgid "Germ DM reconnected"
 msgstr "Germen DM berriro konektatuta"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:132
+#: src/screens/Settings/BetaFeaturesSettings.tsx:140
 msgid "Get early access to experimental features we’re testing."
 msgstr "Lortu probatzen ari garen ezaugarri esperimentaletarako sarbide goiztiarra."
 
@@ -5794,7 +5799,7 @@ msgstr "Hasi"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2730
+#: src/view/com/composer/Composer.tsx:2712
 msgid "GIF uploaded"
 msgstr "GIFa igo da"
 
@@ -6203,7 +6208,7 @@ msgstr "Ezkutatu erantzuna niretzat"
 #: src/view/com/profile/ProfileMenu.tsx:488
 #: src/view/com/profile/ProfileMenu.tsx:495
 msgid "Hide reposts in feeds"
-msgstr ""
+msgstr "Ezkutatu berpostak feedetan"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:105
 msgid "Hide this card"
@@ -6298,7 +6303,7 @@ msgstr "Mmmmm, badirudi arazoak ditugula datu hauek kargatzeko. Ikus behean xehe
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "Mmmmm, ezin izan dugu kargatu moderazio-zerbitzu hori."
 
-#: src/view/com/composer/state/video.ts:500
+#: src/view/com/composer/state/video.ts:522
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Eutsi! Pixkanaka bideorako sarbidea ematen ari gara, eta ilaran zain zaude oraindik. Begiratu berriro laster!"
 
@@ -6595,7 +6600,7 @@ msgstr "Sartu data honetara arte egindako postak"
 #. Checkbox shown when reporting a video. The value is the current playback position, formatted as minutes:seconds.
 #: src/components/moderation/ReportDialog/index.tsx:701
 msgid "Include video timestamp ({videoTimestamp})"
-msgstr ""
+msgstr "Sartu bideoaren denbora-marka ({videoTimestamp})"
 
 #: src/screens/Login/LoginForm.tsx:165
 msgid "Incorrect username or password"
@@ -6782,7 +6787,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Oraintxe bakarrik zaude! Gehitu jende gehiago zure abio multzoari goiko bilaketan."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2645
+#: src/view/com/composer/Composer.tsx:2648
 msgid "Job ID: {0}"
 msgstr "Lan ID: {0}"
 
@@ -7385,6 +7390,11 @@ msgstr "<0>@sawaratsuki.bsky.social</0>-ren logotipoa"
 #: src/components/RichTextTag.tsx:55
 msgid "Long press to open tag menu for {0}"
 msgstr "Luze sakatu {0} etiketa-menua irekitzeko"
+
+#. Name for a feature flag (longer videos)
+#: src/analytics/features/index.ts:84
+msgid "Longer videos"
+msgstr "Bideo luzeagoak"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:114
 msgid "Looks like XXXXX-XXXXX"
@@ -8103,7 +8113,7 @@ msgstr "Oraindik ez dago aplikazioen pasahitzik"
 msgid "No author filter"
 msgstr "Egilearen iragazkirik ez"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:177
+#: src/screens/Settings/BetaFeaturesSettings.tsx:185
 msgid "No beta features at the moment."
 msgstr "Momentuz ez dago beta ezaugarririk."
 
@@ -8640,7 +8650,7 @@ msgid "Open drawer menu"
 msgstr "Ireki marrazki menua"
 
 #: src/screens/Messages/components/MessageComposer.tsx:213
-#: src/view/com/composer/Composer.tsx:2278
+#: src/view/com/composer/Composer.tsx:2281
 msgid "Open emoji picker"
 msgstr "Ireki emoji-hautatzailea"
 
@@ -9195,7 +9205,7 @@ msgstr "Mesedez, egin klik bidali dizugun mezu elektronikoan dagoen estekan zure
 msgid "Please complete the verification captcha."
 msgstr "Mesedez, bete egiaztapen-captcha."
 
-#: src/view/com/composer/state/video.ts:524
+#: src/view/com/composer/state/video.ts:546
 msgid "Please confirm your email address to upload videos."
 msgstr "Mesedez, berretsi zure helbide elektronikoa bideoak kargatzeko."
 
@@ -9354,7 +9364,7 @@ msgid "Post"
 msgstr "Posteatu"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:68
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:69
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "{count}-tik {index}. posta"
@@ -9558,11 +9568,11 @@ msgstr "Pribatutasun Politika"
 msgid "Privacy violation of a minor"
 msgstr "Adingabe baten pribatutasun urraketa"
 
-#: src/view/com/composer/Composer.tsx:2719
+#: src/view/com/composer/Composer.tsx:2701
 msgid "Processing GIF..."
 msgstr "GIFa prozesatzen..."
 
-#: src/view/com/composer/Composer.tsx:2721
+#: src/view/com/composer/Composer.tsx:2703
 msgid "Processing video..."
 msgstr "Bideoa prozesatzen..."
 
@@ -10294,7 +10304,7 @@ msgstr "Berpostak"
 
 #: src/components/Pills.tsx:229
 msgid "Reposts Hidden"
-msgstr ""
+msgstr "Berpost Ezkutuak"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:460
 msgid "Reposts of this post"
@@ -10309,12 +10319,12 @@ msgstr "Zure berposten berpostak"
 #: src/view/com/profile/ProfileMenu.tsx:192
 msgctxt "toast"
 msgid "Reposts will be hidden in feeds"
-msgstr ""
+msgstr "Berpostak feedetan ezkutatuko dira"
 
 #: src/view/com/profile/ProfileMenu.tsx:177
 msgctxt "toast"
 msgid "Reposts will be shown in feeds"
-msgstr ""
+msgstr "Berpostak feedetan erakutsiko dira"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:463
 msgid "Request access to group chat"
@@ -10826,9 +10836,9 @@ msgid "See more trending topics"
 msgstr "Ikusi joera-gai gehiago"
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:91
+#: src/analytics/features/index.ts:107
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
-msgstr ""
+msgstr "Ikusi zenbakidun bereizgarriak (3/1, 3/2, etab.) egile berak hari bateko postetan."
 
 #: src/view/com/profile/ProfileFollows.tsx:204
 #: src/view/com/profile/ProfileFollows.tsx:205
@@ -11236,8 +11246,8 @@ msgstr "Partekatu hala ere"
 msgid "Share author DID"
 msgstr "Partekatu egilearen DID"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:158
-#: src/screens/Settings/BetaFeaturesSettings.tsx:165
+#: src/screens/Settings/BetaFeaturesSettings.tsx:166
+#: src/screens/Settings/BetaFeaturesSettings.tsx:173
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:93
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:98
 msgid "Share feedback"
@@ -11434,7 +11444,7 @@ msgstr "Erakutsi berpostak"
 #: src/view/com/profile/ProfileMenu.tsx:487
 #: src/view/com/profile/ProfileMenu.tsx:493
 msgid "Show reposts in feeds"
-msgstr ""
+msgstr "Erakutsi berpostak feedetan"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:133
 #: src/screens/Settings/FollowingFeedPreferences.tsx:143
@@ -11710,7 +11720,7 @@ msgstr "Arazoren bat izan da. Mesedez, saiatu berriro"
 
 #: src/screens/Moderation/index.tsx:112
 #: src/screens/Profile/Sections/Labels.tsx:185
-#: src/screens/Settings/BetaFeaturesSettings.tsx:80
+#: src/screens/Settings/BetaFeaturesSettings.tsx:85
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:84
 msgid "Something went wrong, please try again."
 msgstr "Arazoren bat izan da. Mesedez, saiatu berriro."
@@ -12328,32 +12338,32 @@ msgstr "Erantzuten ari zaren posta {suggestedLanguageName} hizkuntzan idatzita d
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Pribatutasun-politika <0/>-ra eraman da"
 
-#: src/view/com/composer/state/video.ts:471
+#: src/view/com/composer/state/video.ts:493
 msgid "The processed video is too large. Please try again with a smaller file."
 msgstr "Prozesatutako bideoa handiegia da. Mesedez, saiatu berriro fitxategi txikiago batekin."
 
-#: src/view/com/composer/state/video.ts:446
+#: src/view/com/composer/state/video.ts:468
 msgid "The selected video could not be encoded."
 msgstr "Ezin izan da hautatutako bideoa kodetu."
 
-#: src/view/com/composer/state/video.ts:436
+#: src/view/com/composer/state/video.ts:458
 msgid "The selected video could not be processed."
 msgstr "Ezin izan da hautatutako bideoa prozesatu."
 
-#: src/view/com/composer/state/video.ts:466
+#: src/view/com/composer/state/video.ts:488
 msgid "The selected video has an unsupported aspect ratio."
 msgstr "Hautatutako bideoak onartzen ez den aspektu-erlazioa du."
 
-#: src/view/com/composer/state/video.ts:482
-#: src/view/com/composer/state/video.ts:521
+#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:543
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "Hautatutako bideoa {VIDEO_MAX_SIZE_MB} MB baino handiagoa da. Mesedez, saiatu berriro fitxategi txikiago batekin."
 
-#: src/view/com/composer/state/video.ts:464
+#: src/view/com/composer/state/video.ts:486
 msgid "The selected video is too long."
 msgstr "Hautatutako bideoa luzeegia da."
 
-#: src/view/com/composer/state/video.ts:468
+#: src/view/com/composer/state/video.ts:490
 msgid "The selected video uses an unsupported format."
 msgstr "Hautatutako bideoak onartzen ez den formatu bat erabiltzen du."
 
@@ -12388,9 +12398,9 @@ msgstr "Eman duzun egiaztapen-kodea ez da zuzena. Mesedez, ziurtatu egiaztapen-e
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "Egiaztapen-hornitzaileak ezin izan du kodea bidali zure telefono-zenbakira. Mesedez, egiaztatu zure telefono-zenbakia eta saiatu berriro."
 
-#: src/view/com/composer/state/video.ts:449
+#: src/view/com/composer/state/video.ts:471
 msgid "The video could not be uploaded to your hosting provider. Please try again."
-msgstr ""
+msgstr "Bideoa ezin izan da zure ostatatze-hornitzailera igo. Mesedez, saiatu berriro."
 
 #: src/screens/Settings/AppearanceSettings.tsx:137
 msgid "Theme"
@@ -12934,9 +12944,9 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "Honek zure posta aipatutako post honetatik kenduko du erabiltzaile guztientzat, eta leku-marka batekin ordezkatuko du."
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:84
+#: src/analytics/features/index.ts:100
 msgid "Thread numbering"
-msgstr ""
+msgstr "Hari-zenbaketa"
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:25
 #: src/screens/PostThread/components/HeaderDropdown.tsx:28
@@ -13532,7 +13542,7 @@ msgstr "Kargatu Fitxategietatik"
 msgid "Upload from Library"
 msgstr "Kargatu Liburutegitik"
 
-#: src/view/com/composer/Composer.tsx:2712
+#: src/view/com/composer/Composer.tsx:2694
 msgid "Uploading GIF..."
 msgstr "GIFa kargatzen..."
 
@@ -13546,7 +13556,7 @@ msgstr "Irudiak kargatzen..."
 msgid "Uploading link thumbnail..."
 msgstr "Estekaren miniatura kargatzen..."
 
-#: src/view/com/composer/Composer.tsx:2714
+#: src/view/com/composer/Composer.tsx:2696
 msgid "Uploading video..."
 msgstr "Bideoa kargatzen..."
 
@@ -13796,7 +13806,7 @@ msgstr "<0/><1>{starterPackName}</1> abio multzoaren bidez"
 msgid "Video"
 msgstr "Bideoa"
 
-#: src/view/com/composer/state/video.ts:457
+#: src/view/com/composer/state/video.ts:479
 msgid "Video failed to process"
 msgstr "Ezin izan da prozesatu bideoa"
 
@@ -13835,7 +13845,7 @@ msgstr "Ez da bideoa aurkitu."
 msgid "Video settings"
 msgstr "Bideo ezarpenak"
 
-#: src/view/com/composer/Composer.tsx:2732
+#: src/view/com/composer/Composer.tsx:2714
 msgid "Video uploaded"
 msgstr "Bideoa kargatuta"
 
@@ -14162,7 +14172,7 @@ msgstr "Gutxienez bi interes hautatzea gomendatzen dugu."
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Esteka bat duen mezu elektroniko bat bidali dugu <0>{0}</0> helbidera. Egin klik gainean helbide elektronikoaren egiaztapen prozesua osatzeko."
 
-#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:526
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Ezin izan dugu zehaztu bideoak kargatzeko baimena duzun ala ez. Mesedez, saiatu berriro."
 
@@ -14538,7 +14548,7 @@ msgstr "Zuzenean zaude"
 msgid "You are no longer live"
 msgstr "Jada ez zaude zuzenean"
 
-#: src/view/com/composer/state/video.ts:497
+#: src/view/com/composer/state/video.ts:519
 msgid "You are not allowed to upload videos."
 msgstr "Ezin dituzu bideoak kargatu."
 
@@ -15010,11 +15020,11 @@ msgstr "Gehienezko {MAX_FILTERS, plural, one {iragazki #} other {# iragazki}} ko
 msgid "You've reached the start of the active content."
 msgstr "Eduki aktiboaren hasierara iritsi zara."
 
-#: src/view/com/composer/state/video.ts:508
+#: src/view/com/composer/state/video.ts:530
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "Bideoak kargatzeko eguneko mugara iritsi zara (byte gehiegi)"
 
-#: src/view/com/composer/state/video.ts:512
+#: src/view/com/composer/state/video.ts:534
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Bideoak kargatzeko eguneko mugara iritsi zara (bideo gehiegi)"
 
@@ -15028,7 +15038,7 @@ msgstr "Zure kontua"
 
 #: src/components/moderation/ReportDialog/index.tsx:310
 msgid "Your account cannot submit reports while it is suspended."
-msgstr ""
+msgstr "Zure kontuak ezin ditu salaketak bidali esekita dagoen bitartean."
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:128
 msgid "Your account has been deleted, see ya! ✌️"
@@ -15038,7 +15048,7 @@ msgstr "Zure kontua ezabatu da, ikusi arte! ✌️"
 msgid "Your account has been suspended"
 msgstr "Zure kontua bertan behera utzi da"
 
-#: src/view/com/composer/state/video.ts:516
+#: src/view/com/composer/state/video.ts:538
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Zure kontuak ez du oraindik bideoak kargatzeko adina. Mesedez, saiatu berriro geroago."
 
@@ -15133,9 +15143,9 @@ msgstr "Zure handle osoa <0>@{0}</0> da"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "Zure ostataze-hornitzailea ezin da helbide elektroniko batetik atzeman, beraz, Bluesky zerbitzu lehenetsia erabiliko da. Sartu zure erabiltzaile-izena horren ordez, edo ezarri hornitzailea eskuz."
 
-#: src/view/com/composer/state/video.ts:453
+#: src/view/com/composer/state/video.ts:475
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
-msgstr ""
+msgstr "Zure ostatatze-hornitzaileak ez ditu horren bideo handiak onartzen. Mesedez, saiatu berriro fitxategi txikiago batekin."
 
 #: src/screens/Login/components/HostingProviderDialog.tsx:188
 msgid "Your hosting provider is detected automatically from the username you enter."

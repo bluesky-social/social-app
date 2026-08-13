@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-07 16:10\n"
+"PO-Revision-Date: 2026-08-13 17:05\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -685,10 +685,10 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, other {# saat}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:83
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:84
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
-msgstr ""
+msgstr "{index}/{count}"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/RequestStatus.tsx:69
@@ -1205,7 +1205,7 @@ msgstr "Başka hesap ekle"
 msgid "Add another post"
 msgstr "Başka gönderi ekle"
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2304
 msgid "Add another post to thread"
 msgstr "Konuya yeni bir gönderi ekle"
 
@@ -1587,7 +1587,7 @@ msgstr "Bir hata oluştu"
 msgid "An error occurred"
 msgstr "Bir hata oluştu"
 
-#: src/view/com/composer/state/video.ts:486
+#: src/view/com/composer/state/video.ts:508
 msgid "An error occurred while compressing the video."
 msgstr "Video sıkıştırılırken bir hata oluştu."
 
@@ -1633,11 +1633,11 @@ msgstr "QR kod kaydedilirken bir hata oluştu!"
 msgid "An error occurred while trying to follow all"
 msgstr "Tümü takip edilmeye çalışılırken bir hata oluştu"
 
-#: src/view/com/composer/state/video.ts:538
+#: src/view/com/composer/state/video.ts:560
 msgid "An error occurred while uploading the video. {message}"
 msgstr "Video yüklerken bir hata oluştu. {message}"
 
-#: src/view/com/composer/state/video.ts:530
+#: src/view/com/composer/state/video.ts:552
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "Video yüklerken bir hata oluştu. Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin."
 
@@ -2139,7 +2139,7 @@ msgid "Beta Feature"
 msgstr "Beta Özellik"
 
 #: src/Navigation.tsx:414
-#: src/screens/Settings/BetaFeaturesSettings.tsx:108
+#: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:249
 #: src/screens/Settings/Settings.tsx:252
 msgid "Beta features"
@@ -2151,12 +2151,12 @@ msgstr "Beta özellikler"
 msgid "Beta features enabled"
 msgstr "Beta özellikler etkinleştirildi"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:144
+#: src/screens/Settings/BetaFeaturesSettings.tsx:152
 msgctxt "web"
 msgid "Beta features may be unstable. Some changes may require reloading the app."
 msgstr "Beta özellikler sağlam olmayabilir. Bazı değişiklikler uygulamayı yeniden yüklemeyi gerektirebilir."
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:149
+#: src/screens/Settings/BetaFeaturesSettings.tsx:157
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app."
 msgstr "Beta özellikler sağlam olmayabilir. Bazı değişiklikler uygulamayı yeniden başlatmayı gerektirebilir."
@@ -2795,7 +2795,7 @@ msgstr "Sohbetler"
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr "Aşağıya girilecek onay kodunu barındıran e-posta için <0>{currentEmail}</0> e-posta hesabınızı kontrol edin:"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:182
+#: src/screens/Settings/BetaFeaturesSettings.tsx:190
 msgid "Check back later!"
 msgstr "Daha sonra tekrar kontrol edin!"
 
@@ -2820,20 +2820,20 @@ msgstr "Çocuk Cinsel İstismarı Materyali (CSAM)"
 #: src/screens/Onboarding/StepInterests/index.tsx:85
 #: src/screens/Onboarding/StepInterests/index.tsx:139
 msgid "Choose an interest"
-msgstr ""
+msgstr "Bir ilgi alanı seçin"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:140
 msgid "Choose at least one interest to continue"
-msgstr ""
+msgstr "Devam etmek için en az bir ilgi alanı seçin"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:150
 #: src/screens/Onboarding/StepInterests/index.tsx:151
 msgid "Choose at least one interest."
-msgstr ""
+msgstr "En az bir ilgi alanı seçin."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:102
 msgid "Choose at least one. We'll use this to customize your experience. You can change these anytime."
-msgstr ""
+msgstr "En az bir tane seçin. Deneyiminizi kişiselleştirmek için bunu kullanacağız. Bunları istediğiniz zaman değiştirebilirsiniz."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:401
 msgid "Choose domain verification method"
@@ -3166,11 +3166,11 @@ msgstr "{0, plural, other {# karakter}} uzunluğuna kadar gönderiler oluşturun
 msgid "Compose reply"
 msgstr "Yanıt oluştur"
 
-#: src/view/com/composer/Composer.tsx:2705
+#: src/view/com/composer/Composer.tsx:2687
 msgid "Compressing GIF..."
 msgstr "GIF sıkıştırılıyor..."
 
-#: src/view/com/composer/Composer.tsx:2707
+#: src/view/com/composer/Composer.tsx:2689
 msgid "Compressing video..."
 msgstr "Video sıkıştırılıyor..."
 
@@ -3741,7 +3741,7 @@ msgstr "Oluşturucu engellendi"
 msgid "Culture"
 msgstr "Kültür"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:188
+#: src/screens/Settings/BetaFeaturesSettings.tsx:196
 msgid "Current beta features"
 msgstr "Güncel beta özellikler"
 
@@ -4106,7 +4106,7 @@ msgstr "Yok say"
 msgid "Dismiss banner"
 msgstr "Bildirimi gizle"
 
-#: src/view/com/composer/Composer.tsx:2626
+#: src/view/com/composer/Composer.tsx:2629
 msgid "Dismiss error"
 msgstr "Hatayı yok say"
 
@@ -4533,12 +4533,17 @@ msgstr "Etkinleştir"
 msgid "Enable {0} only"
 msgstr "Yalnızca {0} etkinleştir"
 
+#. Description of a feature flag (10-minute video uploads)
+#: src/analytics/features/index.ts:90
+msgid "Enable 10-minute video uploads."
+msgstr ""
+
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
 msgstr "Yetişkin içeriği etkinleştirin"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:117
-#: src/screens/Settings/BetaFeaturesSettings.tsx:124
+#: src/screens/Settings/BetaFeaturesSettings.tsx:125
+#: src/screens/Settings/BetaFeaturesSettings.tsx:132
 msgid "Enable beta features"
 msgstr "Beta özellikleri etkinleştir"
 
@@ -4664,7 +4669,7 @@ msgstr "Tam ekrana geçer"
 msgid "Entertainment"
 msgstr "Eğlence"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2707
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Hata"
@@ -5705,7 +5710,7 @@ msgstr "Germ DM Bağlantısı"
 msgid "Germ DM reconnected"
 msgstr "Germ DM yeniden bağlandı"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:132
+#: src/screens/Settings/BetaFeaturesSettings.tsx:140
 msgid "Get early access to experimental features we’re testing."
 msgstr "Test etmekte olduğumuz deneysel özelliklere erken erişim edinin."
 
@@ -5794,7 +5799,7 @@ msgstr "Başla"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2730
+#: src/view/com/composer/Composer.tsx:2712
 msgid "GIF uploaded"
 msgstr "GIF yüklendi"
 
@@ -6203,7 +6208,7 @@ msgstr "Yanıtı benden gizle"
 #: src/view/com/profile/ProfileMenu.tsx:488
 #: src/view/com/profile/ProfileMenu.tsx:495
 msgid "Hide reposts in feeds"
-msgstr ""
+msgstr "Akışlarda yeniden gönderileri gizle"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:105
 msgid "Hide this card"
@@ -6298,7 +6303,7 @@ msgstr "Hmmm, bu verileri yüklemekte sorun yaşıyoruz gibi görünüyor. Daha 
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "Hmmmm, o moderasyon hizmetini yükleyemedik."
 
-#: src/view/com/composer/state/video.ts:500
+#: src/view/com/composer/state/video.ts:522
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Bekleyin! Videoya kademeli olarak erişim veriyoruz ve siz hâlâ sıradasınız. Birazdan tekrar kontrol edin!"
 
@@ -6595,7 +6600,7 @@ msgstr "Bu tarihe kadar yapılan gönderileri dahil et"
 #. Checkbox shown when reporting a video. The value is the current playback position, formatted as minutes:seconds.
 #: src/components/moderation/ReportDialog/index.tsx:701
 msgid "Include video timestamp ({videoTimestamp})"
-msgstr ""
+msgstr "Video zaman damgasını ({videoTimestamp}) dahil et"
 
 #: src/screens/Login/LoginForm.tsx:165
 msgid "Incorrect username or password"
@@ -6782,7 +6787,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Şu anda yalnızca siz varsınız! Yukarıdan arama yaparak başlangıç ​​paketinize daha çok kişi ekleyin."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2645
+#: src/view/com/composer/Composer.tsx:2648
 msgid "Job ID: {0}"
 msgstr "İş ID: {0}"
 
@@ -7385,6 +7390,11 @@ msgstr "Logo: <0>@sawaratsuki.bsky.social</0>"
 #: src/components/RichTextTag.tsx:55
 msgid "Long press to open tag menu for {0}"
 msgstr "{0} etiket menüsünü açmak için uzun basın"
+
+#. Name for a feature flag (longer videos)
+#: src/analytics/features/index.ts:84
+msgid "Longer videos"
+msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:114
 msgid "Looks like XXXXX-XXXXX"
@@ -8103,7 +8113,7 @@ msgstr "Henüz hiç uygulama şifresi yok"
 msgid "No author filter"
 msgstr "Yazar filtresi yok"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:177
+#: src/screens/Settings/BetaFeaturesSettings.tsx:185
 msgid "No beta features at the moment."
 msgstr "Şu anda hiç beta özellik yok."
 
@@ -8640,7 +8650,7 @@ msgid "Open drawer menu"
 msgstr "Çekmece menüyü aç"
 
 #: src/screens/Messages/components/MessageComposer.tsx:213
-#: src/view/com/composer/Composer.tsx:2278
+#: src/view/com/composer/Composer.tsx:2281
 msgid "Open emoji picker"
 msgstr "Emoji seçiciyi aç"
 
@@ -9195,7 +9205,7 @@ msgstr "Yeni e-posta adresinizi doğrulamak için lütfen size şimdi yolladığ
 msgid "Please complete the verification captcha."
 msgstr "Lütfen doğrulama captcha'sını tamamlayın."
 
-#: src/view/com/composer/state/video.ts:524
+#: src/view/com/composer/state/video.ts:546
 msgid "Please confirm your email address to upload videos."
 msgstr "Video yüklemek için lütfen e-posta adresinizi onaylayın."
 
@@ -9354,10 +9364,10 @@ msgid "Post"
 msgstr "Gönderi"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:68
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:69
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
-msgstr ""
+msgstr "Gönderi {index} / {count}"
 
 #: src/view/screens/Profile.tsx:489
 #: src/view/screens/Profile.tsx:490
@@ -9558,11 +9568,11 @@ msgstr "Gizlilik Politikası"
 msgid "Privacy violation of a minor"
 msgstr "Bir küçüğün gizliliğini ihlal"
 
-#: src/view/com/composer/Composer.tsx:2719
+#: src/view/com/composer/Composer.tsx:2701
 msgid "Processing GIF..."
 msgstr "GIF işleniyor..."
 
-#: src/view/com/composer/Composer.tsx:2721
+#: src/view/com/composer/Composer.tsx:2703
 msgid "Processing video..."
 msgstr "Video işleniyor..."
 
@@ -10294,7 +10304,7 @@ msgstr "Yeniden gönderiler"
 
 #: src/components/Pills.tsx:229
 msgid "Reposts Hidden"
-msgstr ""
+msgstr "Yeniden Gönderiler Gizlendi"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:460
 msgid "Reposts of this post"
@@ -10309,12 +10319,12 @@ msgstr "Yeniden gönderilerinizin yeniden gönderileri"
 #: src/view/com/profile/ProfileMenu.tsx:192
 msgctxt "toast"
 msgid "Reposts will be hidden in feeds"
-msgstr ""
+msgstr "Yeniden gönderiler akışlarda gizlenecek"
 
 #: src/view/com/profile/ProfileMenu.tsx:177
 msgctxt "toast"
 msgid "Reposts will be shown in feeds"
-msgstr ""
+msgstr "Yeniden gönderiler akışlarda görüntülenecek"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:463
 msgid "Request access to group chat"
@@ -10826,9 +10836,9 @@ msgid "See more trending topics"
 msgstr "Daha fazla gündem başlığı gör"
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:91
+#: src/analytics/features/index.ts:107
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
-msgstr ""
+msgstr "Aynı yazara ait bir konudaki gönderilerde numaralı rozetleri (1/3, 2/3 vb.) göster."
 
 #: src/view/com/profile/ProfileFollows.tsx:204
 #: src/view/com/profile/ProfileFollows.tsx:205
@@ -11236,8 +11246,8 @@ msgstr "Yine de paylaş"
 msgid "Share author DID"
 msgstr "Yazar DID'ini paylaş"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:158
-#: src/screens/Settings/BetaFeaturesSettings.tsx:165
+#: src/screens/Settings/BetaFeaturesSettings.tsx:166
+#: src/screens/Settings/BetaFeaturesSettings.tsx:173
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:93
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:98
 msgid "Share feedback"
@@ -11434,7 +11444,7 @@ msgstr "Yeniden gönderileri göster"
 #: src/view/com/profile/ProfileMenu.tsx:487
 #: src/view/com/profile/ProfileMenu.tsx:493
 msgid "Show reposts in feeds"
-msgstr ""
+msgstr "Yeniden gönderileri akışlarda göster"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:133
 #: src/screens/Settings/FollowingFeedPreferences.tsx:143
@@ -11710,7 +11720,7 @@ msgstr "Bir şeyler ters gitti, lütfen tekrar deneyin"
 
 #: src/screens/Moderation/index.tsx:112
 #: src/screens/Profile/Sections/Labels.tsx:185
-#: src/screens/Settings/BetaFeaturesSettings.tsx:80
+#: src/screens/Settings/BetaFeaturesSettings.tsx:85
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:84
 msgid "Something went wrong, please try again."
 msgstr "Bir şeyler ters gitti, lütfen tekrar deneyin."
@@ -12318,7 +12328,7 @@ msgstr "Üye sınırına ulaşıldı."
 
 #: src/components/moderation/ReportDialog/index.tsx:314
 msgid "The moderation service is temporarily unavailable. Please try again later."
-msgstr ""
+msgstr "Moderasyon hizmeti geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin."
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:400
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
@@ -12328,32 +12338,32 @@ msgstr "Yanıtlamakta olduğunuz gönderi, yazarı tarafından {suggestedLanguag
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Gizlilik Politikası <0/> konumuna taşındı"
 
-#: src/view/com/composer/state/video.ts:471
+#: src/view/com/composer/state/video.ts:493
 msgid "The processed video is too large. Please try again with a smaller file."
-msgstr ""
+msgstr "İşlenen video çok büyük. Lütfen daha küçük bir dosyayla yeniden deneyin."
 
-#: src/view/com/composer/state/video.ts:446
+#: src/view/com/composer/state/video.ts:468
 msgid "The selected video could not be encoded."
-msgstr ""
+msgstr "Seçilen video kodlanamadı."
 
-#: src/view/com/composer/state/video.ts:436
+#: src/view/com/composer/state/video.ts:458
 msgid "The selected video could not be processed."
-msgstr ""
+msgstr "Seçilen video işlenemedi."
 
-#: src/view/com/composer/state/video.ts:466
+#: src/view/com/composer/state/video.ts:488
 msgid "The selected video has an unsupported aspect ratio."
 msgstr "Seçilen videonun en-boy oranı desteklenmiyor."
 
-#: src/view/com/composer/state/video.ts:482
-#: src/view/com/composer/state/video.ts:521
+#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:543
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "Seçili video {VIDEO_MAX_SIZE_MB} MB'tan büyük. Lütfen daha küçük bir dosyayla yeniden deneyin."
 
-#: src/view/com/composer/state/video.ts:464
+#: src/view/com/composer/state/video.ts:486
 msgid "The selected video is too long."
 msgstr "Seçilen video çok uzun."
 
-#: src/view/com/composer/state/video.ts:468
+#: src/view/com/composer/state/video.ts:490
 msgid "The selected video uses an unsupported format."
 msgstr "Seçilen video desteklenmeyen bir format kullanıyor."
 
@@ -12388,9 +12398,9 @@ msgstr "Verdiğiniz onay kodu geçersiz. Lütfen doğru onay bağlantısını ku
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "Doğrulama sağlayıcısı telefon numaranıza kodu yollayamadı. Lütfen telefon numaranızı kontrol edip tekrar deneyin."
 
-#: src/view/com/composer/state/video.ts:449
+#: src/view/com/composer/state/video.ts:471
 msgid "The video could not be uploaded to your hosting provider. Please try again."
-msgstr ""
+msgstr "Video, yer sağlayıcınıza yüklenemedi. Lütfen tekrar deneyin."
 
 #: src/screens/Settings/AppearanceSettings.tsx:137
 msgid "Theme"
@@ -12793,7 +12803,7 @@ msgstr "Bu mesaj gizli çünkü bu kullanıcıyı engelliyorsunuz."
 
 #: src/components/moderation/ReportDialog/index.tsx:312
 msgid "This moderation service does not support that report reason. Please choose a different reason or moderation service."
-msgstr ""
+msgstr "Bu moderasyon hizmeti bu rapor nedenini desteklemiyor. Lütfen farklı bir neden veya moderasyon hizmeti seçin."
 
 #: src/screens/Profile/ErrorState.tsx:41
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
@@ -12934,9 +12944,9 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "Bu işlem, gönderinizin bu alıntıyla ilişiğini tüm kullanıcılar için kesecek ve yerine bir yer tutucu koyacaktır."
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:84
+#: src/analytics/features/index.ts:100
 msgid "Thread numbering"
-msgstr ""
+msgstr "Konu numaralandırma"
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:25
 #: src/screens/PostThread/components/HeaderDropdown.tsx:28
@@ -13532,7 +13542,7 @@ msgstr "Dosyalardan Yükle"
 msgid "Upload from Library"
 msgstr "Kütüphaneden Yükle"
 
-#: src/view/com/composer/Composer.tsx:2712
+#: src/view/com/composer/Composer.tsx:2694
 msgid "Uploading GIF..."
 msgstr "GIF yükleniyor..."
 
@@ -13546,7 +13556,7 @@ msgstr "Görseller yükleniyor..."
 msgid "Uploading link thumbnail..."
 msgstr "Web bağlantısının görseli gönderiliyor..."
 
-#: src/view/com/composer/Composer.tsx:2714
+#: src/view/com/composer/Composer.tsx:2696
 msgid "Uploading video..."
 msgstr "Video yükleniyor..."
 
@@ -13796,7 +13806,7 @@ msgstr "<0/><1>{starterPackName}</1> başlangıç paketi aracılığıyla"
 msgid "Video"
 msgstr "Video"
 
-#: src/view/com/composer/state/video.ts:457
+#: src/view/com/composer/state/video.ts:479
 msgid "Video failed to process"
 msgstr "Video işlenemedi"
 
@@ -13835,7 +13845,7 @@ msgstr "Video bulunamadı."
 msgid "Video settings"
 msgstr "Video ayarları"
 
-#: src/view/com/composer/Composer.tsx:2732
+#: src/view/com/composer/Composer.tsx:2714
 msgid "Video uploaded"
 msgstr "Video yüklendi"
 
@@ -13852,7 +13862,7 @@ msgstr "Videolar"
 #: src/view/com/composer/Composer.tsx:596
 #: src/view/com/composer/SelectMediaButton.tsx:452
 msgid "Videos must be 10 minutes or less."
-msgstr ""
+msgstr "Videolar 10 dakika veya daha kısa olmalıdır."
 
 #: src/view/com/composer/Composer.tsx:454
 #: src/view/com/composer/Composer.tsx:597
@@ -14162,7 +14172,7 @@ msgstr "En az iki ilgi alanı seçmenizi öneririz."
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "<0>{0}</0> adresine bir bağlantı içeren bir e-posta yolladık. Lütfen e-posta doğrulama sürecini tamamlamak için o bağlantıya tıklayın."
 
-#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:526
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Video yüklemenize izin verilip verilmediğini belirleyemedik. Lütfen tekrar deneyin."
 
@@ -14538,7 +14548,7 @@ msgstr "Canlı yayındasınız"
 msgid "You are no longer live"
 msgstr "Artık canlı yayında değilsiniz"
 
-#: src/view/com/composer/state/video.ts:497
+#: src/view/com/composer/state/video.ts:519
 msgid "You are not allowed to upload videos."
 msgstr "Video yükleme izniniz yok."
 
@@ -15010,11 +15020,11 @@ msgstr "Maksimum {MAX_FILTERS, plural, other {# filtre}} sayısına ulaştınız
 msgid "You've reached the start of the active content."
 msgstr "Aktif içeriğin başına ulaştınız."
 
-#: src/view/com/composer/state/video.ts:508
+#: src/view/com/composer/state/video.ts:530
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "Günlük video yükleme limitinize ulaştınız (çok fazla bayt)"
 
-#: src/view/com/composer/state/video.ts:512
+#: src/view/com/composer/state/video.ts:534
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Günlük video yükleme limitinize ulaştınız (çok sayıda video)"
 
@@ -15028,7 +15038,7 @@ msgstr "Hesabınız"
 
 #: src/components/moderation/ReportDialog/index.tsx:310
 msgid "Your account cannot submit reports while it is suspended."
-msgstr ""
+msgstr "Hesabınız askıya alınmışken rapor gönderemez."
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:128
 msgid "Your account has been deleted, see ya! ✌️"
@@ -15038,7 +15048,7 @@ msgstr "Hesabınız silindi, görüşmek üzere! ✌️"
 msgid "Your account has been suspended"
 msgstr "Hesabınız askıya alındı"
 
-#: src/view/com/composer/state/video.ts:516
+#: src/view/com/composer/state/video.ts:538
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Hesabınız video yüklemek için yeterince eski değil. Lütfen daha sonra tekrar deneyin."
 
@@ -15133,9 +15143,9 @@ msgstr "Tam kullanıcı adınız <0>@{0}</0> olacak"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "Yer sağlayıcınız bir e-posta adresinden tespit edilemez, bu yüzden varsayılan Bluesky servisi kullanılacaktır. Bunun yerine kullanıcı adınızı girin veya sağlayıcınızı kendiniz ayarlayın."
 
-#: src/view/com/composer/state/video.ts:453
+#: src/view/com/composer/state/video.ts:475
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
-msgstr ""
+msgstr "Yer sağlayıcınız bu kadar büyük videoları desteklemiyor. Lütfen daha küçük bir dosyayla tekrar deneyin."
 
 #: src/screens/Login/components/HostingProviderDialog.tsx:188
 msgid "Your hosting provider is detected automatically from the username you enter."

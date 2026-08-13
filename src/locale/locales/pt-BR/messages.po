@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-07 16:10\n"
+"PO-Revision-Date: 2026-08-13 17:05\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -685,10 +685,10 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# hora} other {# horas}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:83
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:84
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
-msgstr ""
+msgstr "{index}/{count}"
 
 #. Displayed when the number of requests is greater than 20
 #: src/screens/Messages/components/RequestStatus.tsx:69
@@ -1205,9 +1205,9 @@ msgstr "Adicionar outra conta"
 msgid "Add another post"
 msgstr "Adicionar outra postagem"
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2304
 msgid "Add another post to thread"
-msgstr "Adicionar outra postagem ao tópico"
+msgstr "Adicionar outra postagem ao fio"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:439
 msgid "Add another search filter"
@@ -1587,7 +1587,7 @@ msgstr "Ocorreu um erro"
 msgid "An error occurred"
 msgstr "Ocorreu um erro"
 
-#: src/view/com/composer/state/video.ts:486
+#: src/view/com/composer/state/video.ts:508
 msgid "An error occurred while compressing the video."
 msgstr "Ocorreu um erro ao compactar o vídeo."
 
@@ -1633,11 +1633,11 @@ msgstr "Ocorreu um erro ao salvar o QR code!"
 msgid "An error occurred while trying to follow all"
 msgstr "Ocorreu um erro ao tentar seguir todos"
 
-#: src/view/com/composer/state/video.ts:538
+#: src/view/com/composer/state/video.ts:560
 msgid "An error occurred while uploading the video. {message}"
 msgstr "Ocorreu um erro ao enviar o vídeo. {message}"
 
-#: src/view/com/composer/state/video.ts:530
+#: src/view/com/composer/state/video.ts:552
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "Ocorreu um erro ao carregar o vídeo. Por favor, verifique sua conexão de internet e tente novamente."
 
@@ -2139,7 +2139,7 @@ msgid "Beta Feature"
 msgstr "Recurso em Teste"
 
 #: src/Navigation.tsx:414
-#: src/screens/Settings/BetaFeaturesSettings.tsx:108
+#: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:249
 #: src/screens/Settings/Settings.tsx:252
 msgid "Beta features"
@@ -2151,12 +2151,12 @@ msgstr "Recursos em teste"
 msgid "Beta features enabled"
 msgstr "Recursos em teste ativados"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:144
+#: src/screens/Settings/BetaFeaturesSettings.tsx:152
 msgctxt "web"
 msgid "Beta features may be unstable. Some changes may require reloading the app."
 msgstr "Recursos em teste podem ser instáveis. Algumas alterações podem exigir recarregar o aplicativo."
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:149
+#: src/screens/Settings/BetaFeaturesSettings.tsx:157
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app."
 msgstr "Recursos em teste podem ser instáveis. Algumas alterações podem exigir reiniciar o aplicativo."
@@ -2260,11 +2260,11 @@ msgstr "Contas bloqueadas"
 
 #: src/components/moderation/BlockDialog.tsx:163
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "Contas bloqueadas não podem te responder, mencionar ou interagir."
+msgstr "Contas bloqueadas não podem te responder, te mencionar ou interagir com você."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:181
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
-msgstr "Contas bloqueadas não podem responder aos seus tópicos, te mencionar, ou interagir com você. Você não verá seus conteúdos e eles não conseguirão ver os seus."
+msgstr "Contas bloqueadas não podem responder aos seus fios, nem mencionar ou interagir com você. Você não poderá ver seu conteúdo e eles serão impedidos de ver o seu."
 
 #: src/screens/Profile/Sections/Labels.tsx:204
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -2272,7 +2272,7 @@ msgstr "Bloquear o rotulador não impede que ele adicione rótulos a sua conta."
 
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:116
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "Os bloqueios são públicos. Contas bloqueadas não podem te responder, mencionar ou interagir com você."
+msgstr "Os bloqueios são públicos. Contas bloqueadas não podem te responder, te mencionar ou interagir com você."
 
 #: src/components/moderation/BlockDialog.tsx:157
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
@@ -2795,7 +2795,7 @@ msgstr "Conversas"
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr "Acesse <0>{currentEmail}</0> e procure um email com o código de confirmação para inserir abaixo:"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:182
+#: src/screens/Settings/BetaFeaturesSettings.tsx:190
 msgid "Check back later!"
 msgstr "Volte mais tarde!"
 
@@ -2820,16 +2820,16 @@ msgstr "Material de abuso sexual infantil"
 #: src/screens/Onboarding/StepInterests/index.tsx:85
 #: src/screens/Onboarding/StepInterests/index.tsx:139
 msgid "Choose an interest"
-msgstr ""
+msgstr "Escolha um interesse"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:140
 msgid "Choose at least one interest to continue"
-msgstr ""
+msgstr "Escolha pelo menos um interesse para continuar"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:150
 #: src/screens/Onboarding/StepInterests/index.tsx:151
 msgid "Choose at least one interest."
-msgstr ""
+msgstr "Escolha pelo menos um interesse."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:102
 msgid "Choose at least one. We'll use this to customize your experience. You can change these anytime."
@@ -3166,11 +3166,11 @@ msgstr "Escreva postagens de até {0, plural, other {# caracteres}}"
 msgid "Compose reply"
 msgstr "Escrever resposta"
 
-#: src/view/com/composer/Composer.tsx:2705
+#: src/view/com/composer/Composer.tsx:2687
 msgid "Compressing GIF..."
 msgstr "Comprimindo GIF..."
 
-#: src/view/com/composer/Composer.tsx:2707
+#: src/view/com/composer/Composer.tsx:2689
 msgid "Compressing video..."
 msgstr "Comprimindo vídeo..."
 
@@ -3321,11 +3321,11 @@ msgstr "Continuar registrando"
 
 #: src/screens/PostThread/components/ThreadItemReadMoreUp.tsx:28
 msgid "Continue thread"
-msgstr "Continuar tópico"
+msgstr "Continuar fio"
 
 #: src/screens/PostThread/components/ThreadItemReadMoreUp.tsx:64
 msgid "Continue thread..."
-msgstr "Continuar tópico..."
+msgstr "Continuar fio..."
 
 #: src/components/dms/AddMembersFlow.tsx:324
 #: src/components/dms/InitiateChatFlow.tsx:598
@@ -3741,7 +3741,7 @@ msgstr "O criador foi bloqueado"
 msgid "Culture"
 msgstr "Cultura"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:188
+#: src/screens/Settings/BetaFeaturesSettings.tsx:196
 msgid "Current beta features"
 msgstr "Recursos em teste atuais"
 
@@ -4106,7 +4106,7 @@ msgstr "Dispensar"
 msgid "Dismiss banner"
 msgstr "Dispensar banner"
 
-#: src/view/com/composer/Composer.tsx:2626
+#: src/view/com/composer/Composer.tsx:2629
 msgid "Dismiss error"
 msgstr "Dispensar erro"
 
@@ -4533,12 +4533,17 @@ msgstr "Ativar"
 msgid "Enable {0} only"
 msgstr "Ativar somente {0}"
 
+#. Description of a feature flag (10-minute video uploads)
+#: src/analytics/features/index.ts:90
+msgid "Enable 10-minute video uploads."
+msgstr ""
+
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
 msgstr "Habilitar conteúdo adulto"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:117
-#: src/screens/Settings/BetaFeaturesSettings.tsx:124
+#: src/screens/Settings/BetaFeaturesSettings.tsx:125
+#: src/screens/Settings/BetaFeaturesSettings.tsx:132
 msgid "Enable beta features"
 msgstr "Ativar recursos em teste"
 
@@ -4664,7 +4669,7 @@ msgstr "Entra em tela cheia"
 msgid "Entertainment"
 msgstr "Entretenimento"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2707
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Erro"
@@ -5147,7 +5152,7 @@ msgstr "Falha ao enviar o recurso, tente novamente."
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:252
 msgid "Failed to toggle thread mute, please try again"
-msgstr "Falha ao alterar o silenciamento do tópico, tente novamente"
+msgstr "Falha ao alterar o silenciamento do fio, tente novamente"
 
 #: src/screens/Messages/components/ChatLocked.tsx:51
 #: src/screens/Messages/ConversationSettings/index.tsx:442
@@ -5705,7 +5710,7 @@ msgstr "Link do Germ DM"
 msgid "Germ DM reconnected"
 msgstr "Germ DM reconectado"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:132
+#: src/screens/Settings/BetaFeaturesSettings.tsx:140
 msgid "Get early access to experimental features we’re testing."
 msgstr "Obtenha acesso antecipado a recursos experimentais que estamos testando."
 
@@ -5794,7 +5799,7 @@ msgstr "Vamos começar"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2730
+#: src/view/com/composer/Composer.tsx:2712
 msgid "GIF uploaded"
 msgstr "GIF enviado"
 
@@ -6298,7 +6303,7 @@ msgstr "Hmmmm, parece que estamos com problemas pra carregar os dados. Veja mais
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "Hmmmm, não foi possível carregar este serviço de moderação."
 
-#: src/view/com/composer/state/video.ts:500
+#: src/view/com/composer/state/video.ts:522
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Espere! Estamos gradualmente dando acesso ao vídeo, e você ainda está esperando na fila. Volte em breve!"
 
@@ -6782,7 +6787,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "É só você por enquanto! Adicione mais pessoas ao seu pacote inicial pesquisando acima."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2645
+#: src/view/com/composer/Composer.tsx:2648
 msgid "Job ID: {0}"
 msgstr "ID da requisição: {0}"
 
@@ -7386,6 +7391,11 @@ msgstr "Logo por <0>@sawaratsuki.bsky.social</0>"
 msgid "Long press to open tag menu for {0}"
 msgstr "Toque e segure para abrir o menu de tag para {0}"
 
+#. Name for a feature flag (longer videos)
+#: src/analytics/features/index.ts:84
+msgid "Longer videos"
+msgstr ""
+
 #: src/screens/Login/SetNewPasswordForm.tsx:114
 msgid "Looks like XXXXX-XXXXX"
 msgstr "Tem este formato: XXXXX-XXXXX"
@@ -7795,7 +7805,7 @@ msgstr "Silenciar esta palavra até que você a reative"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:630
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:633
 msgid "Mute thread"
-msgstr "Silenciar tópico"
+msgstr "Silenciar fio"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:643
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:645
@@ -8088,7 +8098,7 @@ msgstr "Noite"
 #: src/components/moderation/ReportDialog/index.tsx:1019
 msgctxt "Answer to a yes/no question"
 msgid "No"
-msgstr ""
+msgstr "Não"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:42
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
@@ -8103,7 +8113,7 @@ msgstr "Sem senhas de aplicativo no momento"
 msgid "No author filter"
 msgstr "Sem filtro de autor"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:177
+#: src/screens/Settings/BetaFeaturesSettings.tsx:185
 msgid "No beta features at the moment."
 msgstr "Nenhum recurso em teste no momento."
 
@@ -8640,7 +8650,7 @@ msgid "Open drawer menu"
 msgstr "Abrir menu"
 
 #: src/screens/Messages/components/MessageComposer.tsx:213
-#: src/view/com/composer/Composer.tsx:2278
+#: src/view/com/composer/Composer.tsx:2281
 msgid "Open emoji picker"
 msgstr "Abrir seletor de emoji"
 
@@ -9195,7 +9205,7 @@ msgstr "Por favor, clique no link do email que acabamos de enviar para verificar
 msgid "Please complete the verification captcha."
 msgstr "Por favor, complete o captcha de verificação."
 
-#: src/view/com/composer/state/video.ts:524
+#: src/view/com/composer/state/video.ts:546
 msgid "Please confirm your email address to upload videos."
 msgstr "Confirme o seu endereço de email para enviar vídeos."
 
@@ -9354,10 +9364,10 @@ msgid "Post"
 msgstr "Postagem"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:68
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:69
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
-msgstr ""
+msgstr "Postagem {index} de {count}"
 
 #: src/view/screens/Profile.tsx:489
 #: src/view/screens/Profile.tsx:490
@@ -9558,11 +9568,11 @@ msgstr "Política de Privacidade"
 msgid "Privacy violation of a minor"
 msgstr "Violação da privacidade de um menor"
 
-#: src/view/com/composer/Composer.tsx:2719
+#: src/view/com/composer/Composer.tsx:2701
 msgid "Processing GIF..."
 msgstr "Processando GIF..."
 
-#: src/view/com/composer/Composer.tsx:2721
+#: src/view/com/composer/Composer.tsx:2703
 msgid "Processing video..."
 msgstr "Processando vídeo..."
 
@@ -10131,7 +10141,7 @@ msgstr "Responder ({0, plural, one {# resposta} other {# respostas}})"
 #: src/components/moderation/ModerationDetailsDialog.tsx:136
 #: src/lib/moderation/useModerationCauseDescription.ts:126
 msgid "Reply Hidden by Thread Author"
-msgstr "Resposta Ocultada pelo Autor do Tópico"
+msgstr "Resposta Ocultada pelo Autor do Fio"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:135
 #: src/lib/moderation/useModerationCauseDescription.ts:125
@@ -10140,7 +10150,7 @@ msgstr "Resposta ocultada por você"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
 msgid "Reply settings are chosen by the author of the thread"
-msgstr "Configurações de resposta são escolhidas pelo autor do tópico"
+msgstr "Configurações de resposta são escolhidas pelo autor do fio"
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:71
 msgid "Reply sorting"
@@ -10826,7 +10836,7 @@ msgid "See more trending topics"
 msgstr "Ver mais tópicos em alta"
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:91
+#: src/analytics/features/index.ts:107
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
 msgstr ""
 
@@ -11236,8 +11246,8 @@ msgstr "Compartilhar mesmo assim"
 msgid "Share author DID"
 msgstr "Compartilhar DID do autor"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:158
-#: src/screens/Settings/BetaFeaturesSettings.tsx:165
+#: src/screens/Settings/BetaFeaturesSettings.tsx:166
+#: src/screens/Settings/BetaFeaturesSettings.tsx:173
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:93
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:98
 msgid "Share feedback"
@@ -11405,7 +11415,7 @@ msgstr "Mostrar mais respostas"
 
 #: src/screens/Settings/ThreadPreferences.tsx:99
 msgid "Show post replies in a threaded tree view"
-msgstr "Mostrar respostas como árvore de tópicos"
+msgstr "Mostrar respostas como árvore de fios"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:108
 #: src/screens/Settings/FollowingFeedPreferences.tsx:118
@@ -11710,7 +11720,7 @@ msgstr "Algo deu errado, tente novamente"
 
 #: src/screens/Moderation/index.tsx:112
 #: src/screens/Profile/Sections/Labels.tsx:185
-#: src/screens/Settings/BetaFeaturesSettings.tsx:80
+#: src/screens/Settings/BetaFeaturesSettings.tsx:85
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:84
 msgid "Something went wrong, please try again."
 msgstr "Algo deu errado. Por favor, tente novamente."
@@ -12257,7 +12267,7 @@ msgstr "O aplicativo vai ser reiniciado"
 #: src/components/moderation/ModerationDetailsDialog.tsx:139
 #: src/lib/moderation/useModerationCauseDescription.ts:129
 msgid "The author of this thread has hidden this reply."
-msgstr "O autor deste tópico ocultou esta resposta."
+msgstr "O autor deste fio ocultou esta resposta."
 
 #: src/components/dialogs/BirthDateSettings.tsx:169
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
@@ -12318,7 +12328,7 @@ msgstr "O limite de membros foi atingido."
 
 #: src/components/moderation/ReportDialog/index.tsx:314
 msgid "The moderation service is temporarily unavailable. Please try again later."
-msgstr ""
+msgstr "O serviço de moderação está temporariamente indisponível. Tente novamente mais tarde."
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:400
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
@@ -12328,34 +12338,34 @@ msgstr "A postagem que você está respondendo foi marcada como sido escrita em 
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "A Política de Privacidade foi movida para <0/>"
 
-#: src/view/com/composer/state/video.ts:471
+#: src/view/com/composer/state/video.ts:493
 msgid "The processed video is too large. Please try again with a smaller file."
-msgstr ""
+msgstr "O vídeo processado é muito grande. Tente novamente com um arquivo menor."
 
-#: src/view/com/composer/state/video.ts:446
+#: src/view/com/composer/state/video.ts:468
 msgid "The selected video could not be encoded."
-msgstr ""
+msgstr "O vídeo selecionado não pôde ser codificado."
 
-#: src/view/com/composer/state/video.ts:436
+#: src/view/com/composer/state/video.ts:458
 msgid "The selected video could not be processed."
-msgstr ""
+msgstr "O vídeo selecionado não pôde ser processado."
 
-#: src/view/com/composer/state/video.ts:466
+#: src/view/com/composer/state/video.ts:488
 msgid "The selected video has an unsupported aspect ratio."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:482
-#: src/view/com/composer/state/video.ts:521
+#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:543
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "O vídeo selecionado é maior que {VIDEO_MAX_SIZE_MB} MB. Tente novamente com um arquivo menor."
 
-#: src/view/com/composer/state/video.ts:464
+#: src/view/com/composer/state/video.ts:486
 msgid "The selected video is too long."
-msgstr ""
+msgstr "O vídeo selecionado é muito longo."
 
-#: src/view/com/composer/state/video.ts:468
+#: src/view/com/composer/state/video.ts:490
 msgid "The selected video uses an unsupported format."
-msgstr ""
+msgstr "O vídeo selecionado usa um formato não suportado."
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:18
@@ -12388,7 +12398,7 @@ msgstr "O código de verificação que você forneceu é inválido. Certifique-s
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "O provedor de verificação não conseguiu enviar um código para o seu número de telefone. Por favor, verifique o seu número de telefone e tente novamente."
 
-#: src/view/com/composer/state/video.ts:449
+#: src/view/com/composer/state/video.ts:471
 msgid "The video could not be uploaded to your hosting provider. Please try again."
 msgstr ""
 
@@ -12823,7 +12833,7 @@ msgstr "Esta postagem foi excluída pelo autor"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:818
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
-msgstr "Esta postagem será ocultada dos feeds e tópicos. Isso não pode ser desfeito."
+msgstr "Esta postagem será ocultada dos feeds e dos fios. Isso não pode ser desfeito."
 
 #: src/view/com/composer/Composer.tsx:1155
 msgid "This post's author has disabled quote posts."
@@ -12835,7 +12845,7 @@ msgstr "Este perfil será visível apenas para usuários registrados. Ele não s
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:853
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
-msgstr "Esta resposta será classificada em uma seção oculta na parte inferior do seu tópico e silenciará as notificações para respostas subsequentes, tanto para você quanto para outras pessoas."
+msgstr "Esta resposta será inserida em uma seção oculta na parte inferior do seu tópico e silenciará as notificações para respostas subsequentes, tanto para você quanto para outras pessoas."
 
 #: src/screens/Messages/ConversationSettings/index.tsx:156
 #: src/screens/Messages/JoinRequests.tsx:111
@@ -12934,32 +12944,32 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "Isso removerá sua postagem desta postagem de citação para todos os usuários e a substituirá por um espaço reservado."
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:84
+#: src/analytics/features/index.ts:100
 msgid "Thread numbering"
 msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:25
 #: src/screens/PostThread/components/HeaderDropdown.tsx:28
 msgid "Thread options"
-msgstr "Opções de tópicos"
+msgstr "Opções dos fios"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:70
 #: src/screens/Settings/ContentAndMediaSettings.tsx:73
 msgid "Thread preferences"
-msgstr "Preferências dos tópicos"
+msgstr "Preferências dos fios"
 
 #: src/screens/Settings/ThreadPreferences.tsx:35
 msgid "Thread Preferences"
-msgstr "Preferências dos Tópicos"
+msgstr "Preferências dos Fios"
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:59
 #: src/screens/PostThread/components/HeaderDropdown.tsx:64
 msgid "Threaded"
-msgstr "Aninhado"
+msgstr "Alinhado"
 
 #: src/Navigation.tsx:376
 msgid "Threads Preferences"
-msgstr "Preferências dos Tópicos"
+msgstr "Preferências dos Fios"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:134
 msgid "Threats or incitement"
@@ -13367,7 +13377,7 @@ msgstr "Dessilenciar esta conversa em grupo"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:630
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:633
 msgid "Unmute thread"
-msgstr "Dessilenciar tópico"
+msgstr "Dessilenciar fio"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:331
 msgid "Unmute video"
@@ -13532,7 +13542,7 @@ msgstr "Carregar um arquivo"
 msgid "Upload from Library"
 msgstr "Carregar da galeria"
 
-#: src/view/com/composer/Composer.tsx:2712
+#: src/view/com/composer/Composer.tsx:2694
 msgid "Uploading GIF..."
 msgstr "Enviando GIF..."
 
@@ -13546,7 +13556,7 @@ msgstr "Enviando imagens..."
 msgid "Uploading link thumbnail..."
 msgstr "Enviando prévia de link..."
 
-#: src/view/com/composer/Composer.tsx:2714
+#: src/view/com/composer/Composer.tsx:2696
 msgid "Uploading video..."
 msgstr "Enviando vídeo..."
 
@@ -13796,7 +13806,7 @@ msgstr ""
 msgid "Video"
 msgstr "Vídeo"
 
-#: src/view/com/composer/state/video.ts:457
+#: src/view/com/composer/state/video.ts:479
 msgid "Video failed to process"
 msgstr "Falha no processamento do vídeo"
 
@@ -13835,7 +13845,7 @@ msgstr "Vídeo não encontrado."
 msgid "Video settings"
 msgstr "Configurações de vídeo"
 
-#: src/view/com/composer/Composer.tsx:2732
+#: src/view/com/composer/Composer.tsx:2714
 msgid "Video uploaded"
 msgstr "Vídeo enviado"
 
@@ -13852,7 +13862,7 @@ msgstr "Vídeos"
 #: src/view/com/composer/Composer.tsx:596
 #: src/view/com/composer/SelectMediaButton.tsx:452
 msgid "Videos must be 10 minutes or less."
-msgstr ""
+msgstr "Os vídeos devem ter 10 minutos ou menos."
 
 #: src/view/com/composer/Composer.tsx:454
 #: src/view/com/composer/Composer.tsx:597
@@ -13920,7 +13930,7 @@ msgstr "Ver detalhes"
 #: src/view/com/posts/ViewFullThread.tsx:31
 #: src/view/com/posts/ViewFullThread.tsx:65
 msgid "View full thread"
-msgstr "Ver tópico completo"
+msgstr "Ver fio completo"
 
 #: src/screens/Settings/Settings.tsx:465
 msgid "View GrowthBook information"
@@ -14162,7 +14172,7 @@ msgstr "Recomendamos a escolha de pelo menos dois interesses."
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Enviamos um email para <0>{0}</0> contendo um link. Clique nele para concluir o processo de verificação de email."
 
-#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:526
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Não conseguimos determinar se você tem permissão para enviar vídeos. Tente novamente."
 
@@ -14455,7 +14465,7 @@ msgstr "p. ex. www.minhalive.tv"
 #: src/components/moderation/ReportDialog/index.tsx:1003
 msgctxt "Answer to a yes/no question"
 msgid "Yes"
-msgstr ""
+msgstr "Sim"
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to affirmation/agreement GIFs.
 #: src/features/gifPicker/components/GifCategoryPills.tsx:95
@@ -14538,7 +14548,7 @@ msgstr "Você está ao vivo"
 msgid "You are no longer live"
 msgstr "Você não está mais ao vivo"
 
-#: src/view/com/composer/state/video.ts:497
+#: src/view/com/composer/state/video.ts:519
 msgid "You are not allowed to upload videos."
 msgstr "Você não tem permissão para enviar vídeos."
 
@@ -14899,11 +14909,11 @@ msgstr "Você não receberá mais notificações de {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:246
 msgid "You will no longer receive notifications for this thread"
-msgstr "Você não vai mais receber notificações deste tópico"
+msgstr "Você não vai mais receber notificações deste fio"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:237
 msgid "You will now receive notifications for this thread"
-msgstr "Você vai receber notificações deste tópico"
+msgstr "Você vai receber notificações deste fio"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:101
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
@@ -15010,11 +15020,11 @@ msgstr "Você alcançou o limite máximo de {MAX_FILTERS, plural, one {# filtro}
 msgid "You've reached the start of the active content."
 msgstr "Você chegou ao início do conteúdo ativo."
 
-#: src/view/com/composer/state/video.ts:508
+#: src/view/com/composer/state/video.ts:530
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "Você atingiu seu limite diário de uploads de vídeo (muitos bytes)"
 
-#: src/view/com/composer/state/video.ts:512
+#: src/view/com/composer/state/video.ts:534
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Você atingiu seu limite diário de uploads de vídeos (muitos vídeos)"
 
@@ -15038,7 +15048,7 @@ msgstr "Sua conta foi excluída. Até mais✌️"
 msgid "Your account has been suspended"
 msgstr "Sua conta foi suspensa"
 
-#: src/view/com/composer/state/video.ts:516
+#: src/view/com/composer/state/video.ts:538
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Sua conta ainda não tem idade suficiente para enviar vídeos. Por favor, tente novamente mais tarde."
 
@@ -15133,7 +15143,7 @@ msgstr "Seu nome de usuário completo será <0>@{0}</0>"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "Seu provedor de hospedagem não pode ser detectado a partir de um endereço de email, portanto o serviço Bluesky padrão será usado. Ao invés disso, insira seu nome de usuário ou defina seu provedor manualmente."
 
-#: src/view/com/composer/state/video.ts:453
+#: src/view/com/composer/state/video.ts:475
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
 msgstr ""
 
@@ -15218,7 +15228,7 @@ msgstr "Seus interesses escolhidos nos ajudam a entregar o conteúdo que interes
 
 #: src/view/com/composer/Composer.tsx:1581
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
-msgstr "Seu tópico tem postagens vazias que serão ignoradas. As postagens restantes serão publicadas como um tópico."
+msgstr "Seu fio tem postagens vazias que serão ignoradas. As postagens restantes serão publicadas como um fio."
 
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:80
 msgid "Your username and password will be shared with <0>{host}</0>. If you don’t recognize this provider, double-check your username."

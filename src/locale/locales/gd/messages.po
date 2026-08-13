@@ -8,7 +8,7 @@ msgstr ""
 "Language: gd\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-07 16:10\n"
+"PO-Revision-Date: 2026-08-13 17:05\n"
 "Last-Translator: \n"
 "Language-Team: Scottish Gaelic\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n>2 && n<20) ? 2 : 3;\n"
@@ -685,7 +685,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# uair a thìde} two {# uair a thìde} few {# uairean a thìde} other {# uair a thìde}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:83
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:84
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr ""
@@ -1205,7 +1205,7 @@ msgstr "Cuir cunntas eile ris"
 msgid "Add another post"
 msgstr "Cuir post eile ris"
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2304
 msgid "Add another post to thread"
 msgstr "Cuir post eile ris an t-snàithlean"
 
@@ -1587,7 +1587,7 @@ msgstr "Thachair mearachd"
 msgid "An error occurred"
 msgstr "Thachair mearachd"
 
-#: src/view/com/composer/state/video.ts:486
+#: src/view/com/composer/state/video.ts:508
 msgid "An error occurred while compressing the video."
 msgstr "Dh’èirich mearachd rè dùmhlachadh a’ video."
 
@@ -1633,11 +1633,11 @@ msgstr "Dh’èirich mearachd rè sàbhaladh a’ chòd QR!"
 msgid "An error occurred while trying to follow all"
 msgstr "Dh’èirich mearachd nuair a bha sinn airson na h-uile a leantainn"
 
-#: src/view/com/composer/state/video.ts:538
+#: src/view/com/composer/state/video.ts:560
 msgid "An error occurred while uploading the video. {message}"
 msgstr "Dh’èirich mearachd fhad ’s a bha sinn a’ luchdadh suas a’ video. {message}"
 
-#: src/view/com/composer/state/video.ts:530
+#: src/view/com/composer/state/video.ts:552
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "Dh’èirich mearachd fhad ’s a bha sinn a’ luchdadh suas a’ video. Thoir sùil air a’ cheangal agad ris an eadar-lìon is feuch ris a-rithist."
 
@@ -2139,7 +2139,7 @@ msgid "Beta Feature"
 msgstr "Gleus beta"
 
 #: src/Navigation.tsx:414
-#: src/screens/Settings/BetaFeaturesSettings.tsx:108
+#: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:249
 #: src/screens/Settings/Settings.tsx:252
 msgid "Beta features"
@@ -2151,12 +2151,12 @@ msgstr ""
 msgid "Beta features enabled"
 msgstr ""
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:144
+#: src/screens/Settings/BetaFeaturesSettings.tsx:152
 msgctxt "web"
 msgid "Beta features may be unstable. Some changes may require reloading the app."
 msgstr ""
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:149
+#: src/screens/Settings/BetaFeaturesSettings.tsx:157
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app."
 msgstr ""
@@ -2795,7 +2795,7 @@ msgstr "Cabadaich"
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr "Thoir sùil air <0>{currentEmail}</0> feuch an d’fhuair thu am post-d sa bheil an còd dearbhaidh a chuireas tu a-steach gu h-ìosal:"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:182
+#: src/screens/Settings/BetaFeaturesSettings.tsx:190
 msgid "Check back later!"
 msgstr ""
 
@@ -3166,11 +3166,11 @@ msgstr "Sgrìobh puist a bhios suas ri {0, plural, one {# charactar} two {# char
 msgid "Compose reply"
 msgstr "Sgrìobh freagairt"
 
-#: src/view/com/composer/Composer.tsx:2705
+#: src/view/com/composer/Composer.tsx:2687
 msgid "Compressing GIF..."
 msgstr "A’ co-dhlùthachadh an GIF…"
 
-#: src/view/com/composer/Composer.tsx:2707
+#: src/view/com/composer/Composer.tsx:2689
 msgid "Compressing video..."
 msgstr "A’ dùmhlachadh a’ video…"
 
@@ -3741,7 +3741,7 @@ msgstr "Chaidh an cruthadair a bhacadh"
 msgid "Culture"
 msgstr "Cultar"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:188
+#: src/screens/Settings/BetaFeaturesSettings.tsx:196
 msgid "Current beta features"
 msgstr ""
 
@@ -4106,7 +4106,7 @@ msgstr "Leig seachad"
 msgid "Dismiss banner"
 msgstr "Leig seachad a’ bhratach"
 
-#: src/view/com/composer/Composer.tsx:2626
+#: src/view/com/composer/Composer.tsx:2629
 msgid "Dismiss error"
 msgstr "Leig seachad a’ mhearachd"
 
@@ -4533,12 +4533,17 @@ msgstr "Cuir an comas"
 msgid "Enable {0} only"
 msgstr "Na cuir an comas ach {0}"
 
+#. Description of a feature flag (10-minute video uploads)
+#: src/analytics/features/index.ts:90
+msgid "Enable 10-minute video uploads."
+msgstr ""
+
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
 msgstr "Cuir comas inbheach an comas"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:117
-#: src/screens/Settings/BetaFeaturesSettings.tsx:124
+#: src/screens/Settings/BetaFeaturesSettings.tsx:125
+#: src/screens/Settings/BetaFeaturesSettings.tsx:132
 msgid "Enable beta features"
 msgstr ""
 
@@ -4664,7 +4669,7 @@ msgstr "Fosglaidh seo an làn-sgrìn"
 msgid "Entertainment"
 msgstr "Dibhearsan"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2707
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Mearachd"
@@ -5705,7 +5710,7 @@ msgstr "Ceangal Germ DM"
 msgid "Germ DM reconnected"
 msgstr "Chaidh Germ DM a cheangal ris as ùr"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:132
+#: src/screens/Settings/BetaFeaturesSettings.tsx:140
 msgid "Get early access to experimental features we’re testing."
 msgstr ""
 
@@ -5794,7 +5799,7 @@ msgstr "Dèan toiseach-tòiseachaidh"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2730
+#: src/view/com/composer/Composer.tsx:2712
 msgid "GIF uploaded"
 msgstr "Chaidh an GIF a luchdadh suas"
 
@@ -6298,7 +6303,7 @@ msgstr "Hm, tha coltas nach urrainn dhuinn an dàta seo a luchdadh. Chì thu bar
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "Hm, cha b’ urrainn dhuinn an t-seirbheis modarataireachd sin a luchdadh."
 
-#: src/view/com/composer/state/video.ts:500
+#: src/view/com/composer/state/video.ts:522
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Air do shocair! Tha sinn a’ toirt comas air video mean air mhean – glacaidh foighidinn iasg. Na bi fada gun tilleadh!"
 
@@ -6782,7 +6787,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Chan eil ann ach thu fhèin an-dràsta fhèin! Cuir barrachd dhaoine ris a’ phacaid tòiseachaidh agad le bhith a’ dèanamh lorg gu h-àrd."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2645
+#: src/view/com/composer/Composer.tsx:2648
 msgid "Job ID: {0}"
 msgstr "ID na h-obrach: {0}"
 
@@ -7385,6 +7390,11 @@ msgstr "An suaicheantas le <0>@sawaratsuki.bsky.social</0>"
 #: src/components/RichTextTag.tsx:55
 msgid "Long press to open tag menu for {0}"
 msgstr "Dèan brùthadh fada airson clàr-taice nan tagaichean airson {0} fhosgladh"
+
+#. Name for a feature flag (longer videos)
+#: src/analytics/features/index.ts:84
+msgid "Longer videos"
+msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:114
 msgid "Looks like XXXXX-XXXXX"
@@ -8103,7 +8113,7 @@ msgstr "Chan eil facal-faire aplacaid sam bith agad aig an ìre-sa"
 msgid "No author filter"
 msgstr ""
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:177
+#: src/screens/Settings/BetaFeaturesSettings.tsx:185
 msgid "No beta features at the moment."
 msgstr ""
 
@@ -8640,7 +8650,7 @@ msgid "Open drawer menu"
 msgstr "Fosgail an clàr-taice air an taobh"
 
 #: src/screens/Messages/components/MessageComposer.tsx:213
-#: src/view/com/composer/Composer.tsx:2278
+#: src/view/com/composer/Composer.tsx:2281
 msgid "Open emoji picker"
 msgstr "Fosgail ròghnaichear nan emoji"
 
@@ -9195,7 +9205,7 @@ msgstr "Briog air a’ cheangal sa phost-d a chuir sinn thugad airson an seòlad
 msgid "Please complete the verification captcha."
 msgstr "Coilean an Captcha airson dearbhadh a dhèanamh."
 
-#: src/view/com/composer/state/video.ts:524
+#: src/view/com/composer/state/video.ts:546
 msgid "Please confirm your email address to upload videos."
 msgstr "Dearbh an seòladh puist-d agad mus luchdaich thu suas videothan."
 
@@ -9354,7 +9364,7 @@ msgid "Post"
 msgstr "Postaich"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:68
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:69
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr ""
@@ -9558,11 +9568,11 @@ msgstr "Am poileasaidh prìobhaideachd"
 msgid "Privacy violation of a minor"
 msgstr "Briseadh a-steach air prìobhaideachd mion-aoisich"
 
-#: src/view/com/composer/Composer.tsx:2719
+#: src/view/com/composer/Composer.tsx:2701
 msgid "Processing GIF..."
 msgstr "A’ pròiseasadh an GIF…"
 
-#: src/view/com/composer/Composer.tsx:2721
+#: src/view/com/composer/Composer.tsx:2703
 msgid "Processing video..."
 msgstr "A’ pròiseasadh a’ video…"
 
@@ -10826,7 +10836,7 @@ msgid "See more trending topics"
 msgstr ""
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:91
+#: src/analytics/features/index.ts:107
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
 msgstr ""
 
@@ -11236,8 +11246,8 @@ msgstr "Co-roinn e co-dhiù"
 msgid "Share author DID"
 msgstr "Co-roinn DID an ùghdair"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:158
-#: src/screens/Settings/BetaFeaturesSettings.tsx:165
+#: src/screens/Settings/BetaFeaturesSettings.tsx:166
+#: src/screens/Settings/BetaFeaturesSettings.tsx:173
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:93
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:98
 msgid "Share feedback"
@@ -11710,7 +11720,7 @@ msgstr "Chaidh rudeigin ceàrr, feuch ris a-rithist"
 
 #: src/screens/Moderation/index.tsx:112
 #: src/screens/Profile/Sections/Labels.tsx:185
-#: src/screens/Settings/BetaFeaturesSettings.tsx:80
+#: src/screens/Settings/BetaFeaturesSettings.tsx:85
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:84
 msgid "Something went wrong, please try again."
 msgstr "Chaidh rudeigin ceàrr, feuch ris a-rithist."
@@ -12328,32 +12338,32 @@ msgstr ""
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Chaidh poileasaidh na prìobhaideachd a ghluasad gu <0/>"
 
-#: src/view/com/composer/state/video.ts:471
+#: src/view/com/composer/state/video.ts:493
 msgid "The processed video is too large. Please try again with a smaller file."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:446
+#: src/view/com/composer/state/video.ts:468
 msgid "The selected video could not be encoded."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:436
+#: src/view/com/composer/state/video.ts:458
 msgid "The selected video could not be processed."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:466
+#: src/view/com/composer/state/video.ts:488
 msgid "The selected video has an unsupported aspect ratio."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:482
-#: src/view/com/composer/state/video.ts:521
+#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:543
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:464
+#: src/view/com/composer/state/video.ts:486
 msgid "The selected video is too long."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:468
+#: src/view/com/composer/state/video.ts:490
 msgid "The selected video uses an unsupported format."
 msgstr ""
 
@@ -12388,7 +12398,7 @@ msgstr "Tha an còd dearbhaidh a thug thu seachad mì-dhligheach. Dèan cinnteac
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "Cha b’ urrainn dhan t-solaraiche dearbhaidh còd a chur chun na h-àireimh fòn agad. Dèan cinnteach gu bheil an àireamh ceart is feuch ris a-rithist."
 
-#: src/view/com/composer/state/video.ts:449
+#: src/view/com/composer/state/video.ts:471
 msgid "The video could not be uploaded to your hosting provider. Please try again."
 msgstr ""
 
@@ -12934,7 +12944,7 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "Bheir seo air falbh am post agad on luaidh seo air post mu choinneamh an luchd-chleachdaidh air fad agus cuiridh e glèidheadair-àite na àite."
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:84
+#: src/analytics/features/index.ts:100
 msgid "Thread numbering"
 msgstr ""
 
@@ -13532,7 +13542,7 @@ msgstr "Luchdaich suas o na faidhlichean"
 msgid "Upload from Library"
 msgstr "Luchdaich suas on leabhar-lann"
 
-#: src/view/com/composer/Composer.tsx:2712
+#: src/view/com/composer/Composer.tsx:2694
 msgid "Uploading GIF..."
 msgstr "A’ luchdadh suas an GIF…"
 
@@ -13546,7 +13556,7 @@ msgstr "A’ luchdadh suas nan dealbhan…"
 msgid "Uploading link thumbnail..."
 msgstr "A’ luchdadh suas dealbhag a’ cheangail…"
 
-#: src/view/com/composer/Composer.tsx:2714
+#: src/view/com/composer/Composer.tsx:2696
 msgid "Uploading video..."
 msgstr "A’ luchdadh suas a’ video…"
 
@@ -13796,7 +13806,7 @@ msgstr ""
 msgid "Video"
 msgstr "Video"
 
-#: src/view/com/composer/state/video.ts:457
+#: src/view/com/composer/state/video.ts:479
 msgid "Video failed to process"
 msgstr "Cha b’ urrainn dhuinn a’ video a phròiseasadh"
 
@@ -13835,7 +13845,7 @@ msgstr "Cha deach a’ video a lorg."
 msgid "Video settings"
 msgstr "Roghainnean a’ video"
 
-#: src/view/com/composer/Composer.tsx:2732
+#: src/view/com/composer/Composer.tsx:2714
 msgid "Video uploaded"
 msgstr "Chaidh a’ video a luchdadh suas"
 
@@ -14162,7 +14172,7 @@ msgstr "Mholamaid dhut co-dhiù dà rud a thaghadh sa bheil ùidh agad."
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Chuir sinn post-d gu <0>{0}</0> sa bheil ceangal. Briog air a’ cheangal airson dearbhadh a’ phuist-d a choileanadh."
 
-#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:526
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Cha b’ urrainn dhuinn dearbhadh a bheil cead agad videothan a luchdadh suas. Feuch ris a-rithist."
 
@@ -14538,7 +14548,7 @@ msgstr "Tha thu ri sruthadh beò"
 msgid "You are no longer live"
 msgstr "Chan eil thu ri sruthadh beò tuilleadh"
 
-#: src/view/com/composer/state/video.ts:497
+#: src/view/com/composer/state/video.ts:519
 msgid "You are not allowed to upload videos."
 msgstr "Chan eil cead agad videothan a luchdadh."
 
@@ -15010,11 +15020,11 @@ msgstr ""
 msgid "You've reached the start of the active content."
 msgstr "Seo toiseach na susbainte ghnìomhach."
 
-#: src/view/com/composer/state/video.ts:508
+#: src/view/com/composer/state/video.ts:530
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "Luchdaich thu suas na tha ceadaichte dhut de videothan an-diugh (cus dàta)"
 
-#: src/view/com/composer/state/video.ts:512
+#: src/view/com/composer/state/video.ts:534
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Luchdaich thu suas na tha ceadaichte dhut de videothan an-diugh (cus videothan)"
 
@@ -15038,7 +15048,7 @@ msgstr "Chaidh an cunntas agad a sguabadh às. Slàn leat, a charaid! ✌️"
 msgid "Your account has been suspended"
 msgstr "Chaidh an cunntas agad a chur na dhàil"
 
-#: src/view/com/composer/state/video.ts:516
+#: src/view/com/composer/state/video.ts:538
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Chan eil an cunntas agad aosta gu leòr fhathast airson videothan a luchdadh suas. Feuch ris a-rithist an ceann greis."
 
@@ -15133,7 +15143,7 @@ msgstr "’S e <0>@{0}</0> an làmhrachan slàn a bhios agad"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:453
+#: src/view/com/composer/state/video.ts:475
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
 msgstr ""
 

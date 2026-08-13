@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-07 16:10\n"
+"PO-Revision-Date: 2026-08-13 17:05\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -570,7 +570,7 @@ msgstr "{firstAuthorName} és {additionalAuthorsCount, plural, one {{formattedAu
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:355
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via starter pack {starterPackName}"
-msgstr ""
+msgstr "{firstAuthorName} és {additionalAuthorsCount, plural, one {{formattedAuthorsCount}} other {{formattedAuthorsCount}}} további személy mostantól követ Téged a(z) {starterPackName} kezdőcsomag alapján"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:393
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
@@ -614,11 +614,11 @@ msgstr "{firstAuthorName} kölcsönözte a követésedet"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:349
 msgid "{firstAuthorName} followed you back via starter pack {starterPackName}"
-msgstr ""
+msgstr "{firstAuthorName} kölcsönözte a követésedet a(z) {starterPackName} kezdőcsomag alapján"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:359
 msgid "{firstAuthorName} followed you via starter pack {starterPackName}"
-msgstr ""
+msgstr "{firstAuthorName} mostantól követ Téged a(z) {starterPackName} kezdőcsomag alapján"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:397
 msgid "{firstAuthorName} liked your custom feed"
@@ -685,7 +685,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# óra} other {# óra}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:83
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:84
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{count}/{index}"
@@ -1205,7 +1205,7 @@ msgstr "Fiók felvétele a listára"
 msgid "Add another post"
 msgstr "Válaszlánc folytatása"
 
-#: src/view/com/composer/Composer.tsx:2301
+#: src/view/com/composer/Composer.tsx:2304
 msgid "Add another post to thread"
 msgstr "Válaszlánc bővítése"
 
@@ -1587,7 +1587,7 @@ msgstr "Hiba történt"
 msgid "An error occurred"
 msgstr "Hiba történt"
 
-#: src/view/com/composer/state/video.ts:486
+#: src/view/com/composer/state/video.ts:508
 msgid "An error occurred while compressing the video."
 msgstr "A videó tömörítése meghiúsult."
 
@@ -1633,11 +1633,11 @@ msgstr "A QR-kód mentése meghiúsult!"
 msgid "An error occurred while trying to follow all"
 msgstr "Az összes felhasználó követése meghiúsult"
 
-#: src/view/com/composer/state/video.ts:538
+#: src/view/com/composer/state/video.ts:560
 msgid "An error occurred while uploading the video. {message}"
 msgstr "A videó feltöltése meghiúsult. {message}"
 
-#: src/view/com/composer/state/video.ts:530
+#: src/view/com/composer/state/video.ts:552
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "A videó feltöltése meghiúsult. Ellenőrizd az internetkapcsolatot, majd próbáld újra."
 
@@ -1955,7 +1955,7 @@ msgstr "Biztos vagy benne?"
 
 #: src/components/moderation/ReportDialog/index.tsx:928
 msgid "Are you the person depicted, or an authorized representative acting on behalf of the person depicted?"
-msgstr ""
+msgstr "Te vagy a megjelenített személy vagy az ő törvényes képviselője?"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:349
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
@@ -2139,7 +2139,7 @@ msgid "Beta Feature"
 msgstr "Kísérleti funkció"
 
 #: src/Navigation.tsx:414
-#: src/screens/Settings/BetaFeaturesSettings.tsx:108
+#: src/screens/Settings/BetaFeaturesSettings.tsx:116
 #: src/screens/Settings/Settings.tsx:249
 #: src/screens/Settings/Settings.tsx:252
 msgid "Beta features"
@@ -2151,12 +2151,12 @@ msgstr "Kísérleti funkciók"
 msgid "Beta features enabled"
 msgstr "Kísérleti funkciók bekapcsolva"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:144
+#: src/screens/Settings/BetaFeaturesSettings.tsx:152
 msgctxt "web"
 msgid "Beta features may be unstable. Some changes may require reloading the app."
 msgstr "Az alábbi kísérleti funkciók csiszolatlanok lehetnek. Bizonyos változtatások érvénybeléptetéséhez az oldal újratöltése szükséges."
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:149
+#: src/screens/Settings/BetaFeaturesSettings.tsx:157
 msgctxt "native"
 msgid "Beta features may be unstable. Some changes may require restarting the app."
 msgstr "Az alábbi kísérleti funkciók csiszolatlanok lehetnek. Bizonyos változtatások érvénybeléptetéséhez az alkalmazás újramegnyitása szükséges."
@@ -2795,7 +2795,7 @@ msgstr "Csevegések"
 msgid "Check <0>{currentEmail}</0> for an email with the confirmation code to enter below:"
 msgstr "Küldtünk egy levelet a(z) <0>{currentEmail}</0> e-mail-címre. Add meg a benne található ellenőrzőkódot:"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:182
+#: src/screens/Settings/BetaFeaturesSettings.tsx:190
 msgid "Check back later!"
 msgstr "Talán majd legközelebb."
 
@@ -3166,11 +3166,11 @@ msgstr "Egy bejegyzés legfeljebb {0, plural, other{#}} karakter hosszú lehet"
 msgid "Compose reply"
 msgstr "Válaszírás"
 
-#: src/view/com/composer/Composer.tsx:2705
+#: src/view/com/composer/Composer.tsx:2687
 msgid "Compressing GIF..."
 msgstr "GIF tömörítése folyamatban…"
 
-#: src/view/com/composer/Composer.tsx:2707
+#: src/view/com/composer/Composer.tsx:2689
 msgid "Compressing video..."
 msgstr "Videó tömörítése folyamatban…"
 
@@ -3741,7 +3741,7 @@ msgstr "Letiltott szerző"
 msgid "Culture"
 msgstr "Kultúra"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:188
+#: src/screens/Settings/BetaFeaturesSettings.tsx:196
 msgid "Current beta features"
 msgstr "Jelenleg elérhető kísérleti funkciók"
 
@@ -4106,7 +4106,7 @@ msgstr "Bezárás"
 msgid "Dismiss banner"
 msgstr "Reklámcsík bezárása"
 
-#: src/view/com/composer/Composer.tsx:2626
+#: src/view/com/composer/Composer.tsx:2629
 msgid "Dismiss error"
 msgstr "Hiba bezárása"
 
@@ -4533,12 +4533,17 @@ msgstr "Engedélyezés"
 msgid "Enable {0} only"
 msgstr "Csak a(z) {0} engedélyezése"
 
+#. Description of a feature flag (10-minute video uploads)
+#: src/analytics/features/index.ts:90
+msgid "Enable 10-minute video uploads."
+msgstr "Tízperces videófeltöltés engedélyezése."
+
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
 msgstr "Felnőtt tartalmak megjelenítése"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:117
-#: src/screens/Settings/BetaFeaturesSettings.tsx:124
+#: src/screens/Settings/BetaFeaturesSettings.tsx:125
+#: src/screens/Settings/BetaFeaturesSettings.tsx:132
 msgid "Enable beta features"
 msgstr "Kísérleti funkciók engedélyezése"
 
@@ -4664,7 +4669,7 @@ msgstr "Teljes képernyős mód"
 msgid "Entertainment"
 msgstr "Szórakozás"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2707
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Hiba"
@@ -5705,7 +5710,7 @@ msgstr "Germ DM-hivatkozás"
 msgid "Germ DM reconnected"
 msgstr "A Germ DM újra összekapcsolva"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:132
+#: src/screens/Settings/BetaFeaturesSettings.tsx:140
 msgid "Get early access to experimental features we’re testing."
 msgstr "Korai hozzáférést szerezhetsz bizonyos próba alatt álló újabb funkciókhoz."
 
@@ -5794,7 +5799,7 @@ msgstr "Rendben"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2730
+#: src/view/com/composer/Composer.tsx:2712
 msgid "GIF uploaded"
 msgstr "GIF sikeresen feltöltve"
 
@@ -6022,7 +6027,7 @@ msgstr "A csoportbeszélgetés címe túl hosszú. {MAX_GROUP_NAME_GRAPHEME_LENG
 
 #: src/screens/Settings/Settings.tsx:467
 msgid "GrowthBook"
-msgstr ""
+msgstr "GrowthBook"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:219
 msgid "Hacking or system attacks"
@@ -6298,7 +6303,7 @@ msgstr "Hmmmm… Az adatok betöltése meghiúsult. A részleteket alább látha
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "Hmmmm… Ez a moderálási szolgáltatás nem található."
 
-#: src/view/com/composer/state/video.ts:500
+#: src/view/com/composer/state/video.ts:522
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Egy pillanat! A videófeltöltés lehetősége még nem mindenki számára elérhető. Próbáld újra később."
 
@@ -6782,7 +6787,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Még csak Te szerepelsz a kezdőcsomagban. A fenti keresővel másokat is hozzáadhatsz."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2645
+#: src/view/com/composer/Composer.tsx:2648
 msgid "Job ID: {0}"
 msgstr "Állásazonosító: {0}"
 
@@ -7386,6 +7391,11 @@ msgstr "A logó szerzője: <0>@sawaratsuki.bsky.social</0>"
 msgid "Long press to open tag menu for {0}"
 msgstr "Tartsd lenyomva a(z) {0} címkét a menü megnyitásához"
 
+#. Name for a feature flag (longer videos)
+#: src/analytics/features/index.ts:84
+msgid "Longer videos"
+msgstr "Hosszabb videók"
+
 #: src/screens/Login/SetNewPasswordForm.tsx:114
 msgid "Looks like XXXXX-XXXXX"
 msgstr "Minta: XXXXX-XXXXX"
@@ -7482,7 +7492,7 @@ msgstr "Talán később"
 
 #: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:27
 msgid "Me"
-msgstr ""
+msgstr "Saját bejegyzések"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:375
 #: src/view/screens/Profile.tsx:238
@@ -8088,7 +8098,7 @@ msgstr "Éjfél"
 #: src/components/moderation/ReportDialog/index.tsx:1019
 msgctxt "Answer to a yes/no question"
 msgid "No"
-msgstr ""
+msgstr "Nem"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:42
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
@@ -8103,7 +8113,7 @@ msgstr "Még nem hoztál létre alkalmazásjelszavakat"
 msgid "No author filter"
 msgstr "Nincs szerzőszűrés"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:177
+#: src/screens/Settings/BetaFeaturesSettings.tsx:185
 msgid "No beta features at the moment."
 msgstr "Jelenleg nincsenek elérhető kísérletek."
 
@@ -8342,7 +8352,7 @@ msgstr "Nincs találat. Próbálj rákeresni valaki másra."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:80
 msgid "Non-consensual intimate imagery"
-msgstr "Intim területeket ábrázoló nem szexuális képek"
+msgstr "Beleegyezés nélkül kibocsátott, intim területeket ábrázoló képek"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
@@ -8640,7 +8650,7 @@ msgid "Open drawer menu"
 msgstr "Oldalsó menü megnyitása"
 
 #: src/screens/Messages/components/MessageComposer.tsx:213
-#: src/view/com/composer/Composer.tsx:2278
+#: src/view/com/composer/Composer.tsx:2281
 msgid "Open emoji picker"
 msgstr "Emojiválasztó megnyitása"
 
@@ -9021,7 +9031,7 @@ msgstr "Az őt követő személyek: @{0}"
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:180
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:184
 msgid "People I follow"
-msgstr ""
+msgstr "Követett személyektől"
 
 #: src/screens/Messages/Settings.tsx:97
 msgctxt "allow group chat invites from"
@@ -9195,7 +9205,7 @@ msgstr "Kérjük, kattints a tőlünk kapott e-mailben található hivatkozásra
 msgid "Please complete the verification captcha."
 msgstr "Végezd el a captchás ellenőrzést."
 
-#: src/view/com/composer/state/video.ts:524
+#: src/view/com/composer/state/video.ts:546
 msgid "Please confirm your email address to upload videos."
 msgstr "A videófeltöltéshez először hitelesítened kell az e-mail-címedet."
 
@@ -9312,7 +9322,7 @@ msgstr "Jelentkezz be, mint @{0}."
 #: src/components/moderation/ReportDialog/index.tsx:961
 msgctxt "english-only-resource"
 msgid "Please submit your report through the Report non-consensual intimate imagery (NCII) form."
-msgstr ""
+msgstr "Ezt a jelentést a „Beleegyezés nélkül kibocsátott, intim területeket ábrázoló képek jelentése” c. űrlapon lehet jelenteni (angol nyelven)."
 
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:40
 msgid "Please use the Bluesky mobile app to scan a QR code."
@@ -9354,7 +9364,7 @@ msgid "Post"
 msgstr "Bejegyzés"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:68
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:69
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "{count}/{index}. bejegyzés"
@@ -9558,11 +9568,11 @@ msgstr "Adatvédelmi irányelvek"
 msgid "Privacy violation of a minor"
 msgstr "Kiskorúak személyes jogainak megsértése"
 
-#: src/view/com/composer/Composer.tsx:2719
+#: src/view/com/composer/Composer.tsx:2701
 msgid "Processing GIF..."
 msgstr "GIF feldolgozása folyamatban…"
 
-#: src/view/com/composer/Composer.tsx:2721
+#: src/view/com/composer/Composer.tsx:2703
 msgid "Processing video..."
 msgstr "Videó feldolgozása folyamatban…"
 
@@ -10826,7 +10836,7 @@ msgid "See more trending topics"
 msgstr "További felkapott témakörök megjelenítése"
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:91
+#: src/analytics/features/index.ts:107
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
 msgstr "Az ugyanazon szerzőtől származó, válaszláncokba szétbontott bejegyzések számozása (3/1, 3/2, stb.)."
 
@@ -11236,8 +11246,8 @@ msgstr "Továbbítás mégis"
 msgid "Share author DID"
 msgstr "Szerző DID-jének továbbítása"
 
-#: src/screens/Settings/BetaFeaturesSettings.tsx:158
-#: src/screens/Settings/BetaFeaturesSettings.tsx:165
+#: src/screens/Settings/BetaFeaturesSettings.tsx:166
+#: src/screens/Settings/BetaFeaturesSettings.tsx:173
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:93
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:98
 msgid "Share feedback"
@@ -11710,7 +11720,7 @@ msgstr "Valami balul sült el. Próbáld újra"
 
 #: src/screens/Moderation/index.tsx:112
 #: src/screens/Profile/Sections/Labels.tsx:185
-#: src/screens/Settings/BetaFeaturesSettings.tsx:80
+#: src/screens/Settings/BetaFeaturesSettings.tsx:85
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:84
 msgid "Something went wrong, please try again."
 msgstr "Valami balul sült el. Próbáld újra."
@@ -11913,7 +11923,7 @@ msgstr "Jelentés küldése"
 #: src/components/moderation/ReportDialog/index.tsx:941
 msgctxt "english-only-resource"
 msgid "Submit your report through the Report non-consensual intimate imagery (NCII) form"
-msgstr ""
+msgstr "Jelentés a „Beleegyezés nélkül kibocsátott, intim területeket ábrázoló képek jelentése” c. űrlapon (angol nyelven)"
 
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:75
 msgid "Subscribe"
@@ -12330,34 +12340,34 @@ msgstr "Az eredeti bejegyzést a szerzője <0>{suggestedLanguageName}</0> nyelv�
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Az adatvédelmi irányelvek elköltöztek: <0/>"
 
-#: src/view/com/composer/state/video.ts:471
+#: src/view/com/composer/state/video.ts:493
 msgid "The processed video is too large. Please try again with a smaller file."
 msgstr "A kiválasztott videófájl túl nagy. Válassz ki egy kisebb videót."
 
-#: src/view/com/composer/state/video.ts:446
+#: src/view/com/composer/state/video.ts:468
 msgid "The selected video could not be encoded."
 msgstr "A kiválasztott videófájl kódolása meghiúsult."
 
-#: src/view/com/composer/state/video.ts:436
+#: src/view/com/composer/state/video.ts:458
 msgid "The selected video could not be processed."
 msgstr "A kiválasztott videófájl feldolgozása meghiúsult."
 
-#: src/view/com/composer/state/video.ts:466
+#: src/view/com/composer/state/video.ts:488
 msgid "The selected video has an unsupported aspect ratio."
-msgstr ""
+msgstr "A videó képaránya nem támogatott."
 
-#: src/view/com/composer/state/video.ts:482
-#: src/view/com/composer/state/video.ts:521
+#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:543
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "A kiválasztott fájl meghaladja {VIDEO_MAX_SIZE_MB, selectordinal, one {az #} other {a #}} MB-os korlátot. Válassz ki egy kisebb videót."
 
-#: src/view/com/composer/state/video.ts:464
+#: src/view/com/composer/state/video.ts:486
 msgid "The selected video is too long."
-msgstr ""
+msgstr "A videó túl hosszú."
 
-#: src/view/com/composer/state/video.ts:468
+#: src/view/com/composer/state/video.ts:490
 msgid "The selected video uses an unsupported format."
-msgstr ""
+msgstr "A videó formátuma nem támogatott."
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:18
@@ -12390,7 +12400,7 @@ msgstr "A megadott ellenőrzőkód érvénytelen. Nézd meg, hogy helyes kódot 
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "A hitelesítési szolgáltató képtelen volt kódot küldeni a telefonszámodra. Ellenőrizd a megadott telefonszámot, majd próbáld újra."
 
-#: src/view/com/composer/state/video.ts:449
+#: src/view/com/composer/state/video.ts:471
 msgid "The video could not be uploaded to your hosting provider. Please try again."
 msgstr "A tárhelyszolgáltató nem tudta fogadni a videófájlt. Próbáld újra később."
 
@@ -12936,7 +12946,7 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "Ezzel el fogod távolítani a bejegyzést az idézésből mindenki számára, ami egy helyőrzővel lesz helyettesítve."
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:84
+#: src/analytics/features/index.ts:100
 msgid "Thread numbering"
 msgstr "Szétbontott bejegyzések számozása"
 
@@ -13534,7 +13544,7 @@ msgstr "Feltöltés a fájlkezelőből"
 msgid "Upload from Library"
 msgstr "Feltöltés a galériából"
 
-#: src/view/com/composer/Composer.tsx:2712
+#: src/view/com/composer/Composer.tsx:2694
 msgid "Uploading GIF..."
 msgstr "GIF feltöltése folyamatban…"
 
@@ -13548,7 +13558,7 @@ msgstr "Képek feltöltése folyamatban…"
 msgid "Uploading link thumbnail..."
 msgstr "Hivatkozás indexképének feltöltése folyamatban…"
 
-#: src/view/com/composer/Composer.tsx:2714
+#: src/view/com/composer/Composer.tsx:2696
 msgid "Uploading video..."
 msgstr "Videó feltöltése folyamatban…"
 
@@ -13791,14 +13801,14 @@ msgstr "Verziószám: {0}"
 #. When the source of a follow is a starter pack, i.e., 'via starter pack {starterPackName}'.
 #: src/view/com/notifications/NotificationFeedItem.tsx:746
 msgid "via starter pack <0/><1>{starterPackName}</1>"
-msgstr ""
+msgstr "a(z) <0/><1>{starterPackName}</1> kezdőcsomag alapján"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:112
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:178
 msgid "Video"
 msgstr "Videó"
 
-#: src/view/com/composer/state/video.ts:457
+#: src/view/com/composer/state/video.ts:479
 msgid "Video failed to process"
 msgstr "A videó feldolgozása meghiúsult"
 
@@ -13837,7 +13847,7 @@ msgstr "A videó nem található."
 msgid "Video settings"
 msgstr "Videóbeállítások"
 
-#: src/view/com/composer/Composer.tsx:2732
+#: src/view/com/composer/Composer.tsx:2714
 msgid "Video uploaded"
 msgstr "A videó feltöltése sikeresen befejeződött"
 
@@ -13926,7 +13936,7 @@ msgstr "Teljes válaszlánc megtekintése"
 
 #: src/screens/Settings/Settings.tsx:465
 msgid "View GrowthBook information"
-msgstr ""
+msgstr "GrowthBook-információ megtekintése"
 
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:48
 msgid "View incoming group chat requests"
@@ -14164,7 +14174,7 @@ msgstr "Legalább két érdeklődési kör megadása ajánlott."
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Küldtünk egy e-mailt a(z) <0>{0}</0> címre. Kattints rá a benne található hivatkozásra a visszaigazoláshoz."
 
-#: src/view/com/composer/state/video.ts:504
+#: src/view/com/composer/state/video.ts:526
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "A videófeltöltési jogosultságod ellenőrzése meghiúsult. Próbáld újra."
 
@@ -14457,7 +14467,7 @@ msgstr "www.sajátélőadás.tv"
 #: src/components/moderation/ReportDialog/index.tsx:1003
 msgctxt "Answer to a yes/no question"
 msgid "Yes"
-msgstr ""
+msgstr "Igen"
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to affirmation/agreement GIFs.
 #: src/features/gifPicker/components/GifCategoryPills.tsx:95
@@ -14540,7 +14550,7 @@ msgstr "Élő adásban vagy"
 msgid "You are no longer live"
 msgstr "Az élő adásod véget ért"
 
-#: src/view/com/composer/state/video.ts:497
+#: src/view/com/composer/state/video.ts:519
 msgid "You are not allowed to upload videos."
 msgstr "Nincs jogosultságod a videófeltöltésre."
 
@@ -15012,11 +15022,11 @@ msgstr "Legfeljebb {MAX_FILTERS, plural, other {#}} különböző szűrőt lehet
 msgid "You've reached the start of the active content."
 msgstr "Elérted az aktív tartalom elejét."
 
-#: src/view/com/composer/state/video.ts:508
+#: src/view/com/composer/state/video.ts:530
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "Elérted a napi videófeltöltési korlátot (bájthatár meghaladva)"
 
-#: src/view/com/composer/state/video.ts:512
+#: src/view/com/composer/state/video.ts:534
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Elérted a napi videófeltöltési korlátot (videómennyiség meghaladva)"
 
@@ -15040,7 +15050,7 @@ msgstr "A fiókod törölve. Viszlát! ✌️"
 msgid "Your account has been suspended"
 msgstr "A fiókod felfüggesztésre került"
 
-#: src/view/com/composer/state/video.ts:516
+#: src/view/com/composer/state/video.ts:538
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "A fiókod még nem elég idős a videók feltöltéséhez. Próbáld újra később."
 
@@ -15135,7 +15145,7 @@ msgstr "A teljes felhasználóneved: <0>@{0}</0>"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "E-mail-cím alapján nem lehet megállapítani a tárhelyszolgáltatót, ezért ehhez a Blueskyt feltételezzük. Ellenkező esetben add meg az e-mail-címedet vagy válassz tárhelyszolgáltatót kézileg."
 
-#: src/view/com/composer/state/video.ts:453
+#: src/view/com/composer/state/video.ts:475
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
 msgstr "A kiválasztott videófájl meghaladja a tárhelyszolgáltatót korlátját. Válassz ki egy kisebb videót."
 
