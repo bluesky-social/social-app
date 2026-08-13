@@ -8,6 +8,7 @@ import {
 } from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
+import {type AtUriString, type DidString} from '@atproto/syntax'
 import throttle from 'lodash.throttle'
 
 import {PROD_FEEDS, STAGING_FEEDS} from '#/lib/constants'
@@ -22,7 +23,8 @@ import {
 } from '#/state/queries/post-feed'
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {useAnalytics} from '#/analytics'
-import {useAgent} from './session'
+import {app} from '#/lexicons'
+import {useAppviewClient} from './session'
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
@@ -65,7 +67,7 @@ export function useFeedFeedback(
 ) {
   const ax = useAnalytics()
   const logger = ax.logger.useChild(ax.logger.Context.FeedFeedback)
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   const feed =
     !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo)
@@ -150,16 +152,19 @@ export function useFeedFeedback(
       return
     }
 
-    // Send to the feed
-    agent.app.bsky.feed
-      .sendInteractions(
-        {interactions: interactionsToSend, feed: feed?.uri},
+    /*
+     * Send to the feed. Interactions go to the feed generator rather than the
+     * appview, which the agent did by setting `atproto-proxy` by hand; the
+     * client's per-call `service` option writes that same header.
+     */
+    client
+      .call(
+        app.bsky.feed.sendInteractions,
         {
-          encoding: 'application/json',
-          headers: {
-            'atproto-proxy': `${proxyDid}#bsky_fg`,
-          },
+          interactions: interactionsToSend,
+          feed: feed?.uri as AtUriString | undefined,
         },
+        {service: `${proxyDid as DidString}#bsky_fg`},
       )
       .catch(() => {}) // ignore upstream errors
 
@@ -172,7 +177,7 @@ export function useFeedFeedback(
     )
     throttledFlushAggregatedStats()
     logger.debug('flushed')
-  }, [agent, throttledFlushAggregatedStats, proxyDid, enabled, feed])
+  }, [client, throttledFlushAggregatedStats, proxyDid, enabled, feed])
 
   const sendToFeed = useMemo(
     () =>
@@ -283,9 +288,13 @@ function toString(interaction: AppBskyFeedDefs.Interaction): string {
   }|${interaction.reqId || ''}`
 }
 
-function toInteraction(str: string): AppBskyFeedDefs.Interaction {
+function toInteraction(str: string): app.bsky.feed.defs.Interaction {
   const [item, event, feedContext, reqId] = str.split('|')
-  return {item, event, feedContext, reqId}
+  /*
+   * The fields come from splitting an internally-built key, so neither the
+   * at-uri nor the event token is narrowed by the compiler here.
+   */
+  return {item, event, feedContext, reqId} as app.bsky.feed.defs.Interaction
 }
 
 type AggregatedStats = {

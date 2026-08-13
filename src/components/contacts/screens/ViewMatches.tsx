@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as SMS from 'expo-sms'
 import {type ModerationOpts} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -20,7 +21,7 @@ import {
   optimisticRemoveMatch,
   useMatchesPassthroughQuery,
 } from '#/state/queries/find-contacts'
-import {useAgent, useSession} from '#/state/session'
+import {useAgent, useAppviewClient, useSession} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {OnboardingPosition} from '#/screens/Onboarding/Layout'
@@ -41,6 +42,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {InviteInfo} from '../components/InviteInfo'
 import {type Action, type Contact, type Match, type State} from '../state'
@@ -90,6 +92,7 @@ export function ViewMatches({
   const moderationOpts = useModerationOpts()
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const client = useAppviewClient()
   const insets = useSafeAreaInsets()
   const listRef = useRef<ListMethods>(null)
 
@@ -218,7 +221,9 @@ export function ViewMatches({
 
   const {mutate: dismissMatch} = useMutation({
     mutationFn: async (did: string) => {
-      await agent.app.bsky.contact.dismissMatch({subject: did})
+      await client.call(app.bsky.contact.dismissMatch, {
+        subject: did as DidString,
+      })
     },
     onMutate: did => {
       ax.metric('contacts:matches:dismiss', {entryPoint: context})
