@@ -8,6 +8,7 @@ import {
   type Un$Typed,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
+import {type AtUriString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -26,7 +27,7 @@ import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-p
 import {getAllListMembers} from '#/state/queries/list-members'
 import {preferencesQueryKey} from '#/state/queries/preferences'
 import {RQKEY as profileRQKey} from '#/state/queries/profile'
-import {useAgent, useAppviewClient} from '#/state/session'
+import {useAgent, useAppviewClient, usePdsClient} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {
   useActiveStarterPack,
@@ -59,6 +60,7 @@ export function StepFinished() {
   const queryClient = useQueryClient()
   const agent = useAgent()
   const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
@@ -102,10 +104,15 @@ export function StepFinished() {
 
       await Promise.all([
         bulkWriteFollows(
-          agent,
+          pdsClient,
+          appviewClient,
           [BSKY_APP_ACCOUNT_DID, ...(listItems?.map(i => i.subject.did) ?? [])],
           starterPack
-            ? {uri: starterPack.uri, cid: starterPack.cid}
+            ? // the starter pack view is still legacy-typed
+              {
+                uri: starterPack.uri as AtUriString,
+                cid: starterPack.cid,
+              }
             : undefined,
         ),
         (async () => {
@@ -236,6 +243,7 @@ export function StepFinished() {
     queryClient,
     agent,
     appviewClient,
+    pdsClient,
     dispatch,
     onboardDispatch,
     activeStarterPack,

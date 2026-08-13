@@ -7,6 +7,7 @@ import {
   AtUri,
   type ModerationOpts,
 } from '@atproto/api'
+import {type AtUriString} from '@atproto/syntax'
 import {RichText as RichTextAPI} from '@bsky.app/sdk/richtext'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -37,7 +38,7 @@ import {
   useDeleteStarterPackMutation,
   useStarterPackQuery,
 } from '#/state/queries/starter-packs'
-import {useAgent, useAppviewClient, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {useSetActiveStarterPack} from '#/state/shell/landing'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {
@@ -311,8 +312,8 @@ function Header({
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount, hasSession} = useSession()
-  const agent = useAgent()
   const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const setActiveStarterPack = useSetActiveStarterPack()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
@@ -379,8 +380,9 @@ function Header({
 
     let followUris: Map<string, string>
     try {
-      followUris = await bulkWriteFollows(agent, dids, {
-        uri: starterPack.uri,
+      followUris = await bulkWriteFollows(pdsClient, appviewClient, dids, {
+        // the starter pack view is still legacy-typed
+        uri: starterPack.uri as AtUriString,
         cid: starterPack.cid,
       })
     } catch (e) {

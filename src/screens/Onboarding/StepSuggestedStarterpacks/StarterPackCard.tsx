@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {type AtUriString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -11,7 +12,7 @@ import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {getAllListMembers} from '#/state/queries/list-members'
-import {useAgent, useAppviewClient, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {AvatarStack} from '#/screens/Search/components/StarterPackCard'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -35,8 +36,8 @@ export function StarterPackCard({
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
-  const agent = useAgent()
   const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const record = view.record
   const [isProcessing, setIsProcessing] = useState(false)
@@ -74,8 +75,9 @@ export function StarterPackCard({
 
     let followUris: Map<string, string>
     try {
-      followUris = await bulkWriteFollows(agent, dids, {
-        uri: view.uri,
+      followUris = await bulkWriteFollows(pdsClient, appviewClient, dids, {
+        // the starter pack view is still legacy-typed
+        uri: view.uri as AtUriString,
         cid: view.cid,
       })
     } catch (e) {
