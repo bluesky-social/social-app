@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useMemo, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
@@ -16,6 +16,7 @@ import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
+import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardListCard'
@@ -64,9 +65,11 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
     fetchNextPage: fetchNextSearchedFeedsPage,
     hasNextPage: hasNextSearchedFeedsPage,
     isFetching: isFetchingSearchedFeeds,
+    isFetchingNextPage: isFetchingNextSearchedFeedsPage,
   } = usePopularFeedsSearch({query: throttledQuery})
-  const searchedFeeds =
-    searchedFeedsPages?.pages.flatMap(page => page.feeds) ?? []
+  const searchedFeeds = useMemo(() => {
+    return searchedFeedsPages?.pages.flatMap(page => page.feeds) ?? []
+  }, [searchedFeedsPages])
 
   const isLoading =
     !isFetchedSavedFeeds || isLoadingPopularFeeds || isFetchingSearchedFeeds
@@ -123,6 +126,14 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
         disableFullWindowScroll={true}
         sideBorders={false}
         style={{flex: 1}}
+        ListFooterComponent={
+          query ? (
+            <ListFooter
+              hasNextPage={hasNextSearchedFeedsPage}
+              isFetchingNextPage={isFetchingNextSearchedFeedsPage}
+            />
+          ) : undefined
+        }
         ListEmptyComponent={
           <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
             {isLoading ? (
