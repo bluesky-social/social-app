@@ -1,7 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {
   useContentVisibilityMutation,
@@ -13,7 +11,7 @@ import {Text} from '#/components/Typography'
 
 export function AlgoVisibilityOptOut() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data, isPending: isQueryPending} = useContentVisibilityQuery()
   const updateContentVisibility = useContentVisibilityMutation()
 
@@ -31,9 +29,7 @@ export function AlgoVisibilityOptOut() {
         disabled={!canToggle}
         value={isOptedOut}
         onChange={onToggleOptOut}
-        label={_(
-          msg`Ask apps to hide my posts from algorithmic recommendations`,
-        )}
+        label={l`Ask apps to hide my posts from algorithmic recommendations`}
         style={[a.w_full]}>
         <Toggle.LabelText style={[a.flex_1]}>
           <Trans>

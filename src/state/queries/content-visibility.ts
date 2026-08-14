@@ -6,12 +6,6 @@ import {usePdsClient, useSession} from '#/state/session'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
-import {
-  CONTENT_VISIBILITY_RKEY,
-  type ContentVisibilityRecord,
-  createContentVisibilityRecord,
-  parseContentVisibilityRecord,
-} from './content-visibility-record'
 
 export const contentVisibilityQueryKey = (did: string) => [
   'content-visibility',
@@ -31,13 +25,17 @@ export function useContentVisibilityQuery() {
           app.bsky.actor.contentVisibilityDeclaration,
           {
             repo: did!,
-            rkey: CONTENT_VISIBILITY_RKEY,
+            rkey: 'self',
           },
         )
-        return parseContentVisibilityRecord(response.value)
+        return app.bsky.actor.contentVisibilityDeclaration.$parse(
+          response.value,
+        )
       } catch (error) {
         if (isRecordNotFoundError(error)) {
-          return createContentVisibilityRecord(false)
+          return app.bsky.actor.contentVisibilityDeclaration.$build({
+            hideFromAlgorithmicRecommendations: false,
+          })
         }
         throw error
       }
@@ -58,22 +56,26 @@ export function useContentVisibilityMutation() {
     mutationFn: async (hideFromAlgorithmicRecommendations: boolean) => {
       if (!did) throw new Error('Not signed in')
 
-      const record = createContentVisibilityRecord(
+      const record = app.bsky.actor.contentVisibilityDeclaration.$build({
         hideFromAlgorithmicRecommendations,
-      )
+      })
       await client.put(app.bsky.actor.contentVisibilityDeclaration, record, {
         repo: did,
-        rkey: CONTENT_VISIBILITY_RKEY,
+        rkey: 'self',
       })
       return record
     },
     onMutate: async hideFromAlgorithmicRecommendations => {
       await queryClient.cancelQueries({queryKey})
       const previous =
-        queryClient.getQueryData<ContentVisibilityRecord>(queryKey)
+        queryClient.getQueryData<app.bsky.actor.contentVisibilityDeclaration.Main>(
+          queryKey,
+        )
       queryClient.setQueryData(
         queryKey,
-        createContentVisibilityRecord(hideFromAlgorithmicRecommendations),
+        app.bsky.actor.contentVisibilityDeclaration.$build({
+          hideFromAlgorithmicRecommendations,
+        }),
       )
       return {previous}
     },
