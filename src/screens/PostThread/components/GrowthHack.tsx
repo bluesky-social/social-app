@@ -4,8 +4,8 @@ import {PrivacySensitive} from 'expo-privacy-sensitive'
 
 import {useAppState} from '#/lib/appState'
 import {atoms as a, useTheme} from '#/alf'
+import {Mark as Logo} from '#/components/icons/brands/Mark'
 import {sizes as iconSizes} from '#/components/icons/common'
-import {Mark as Logo} from '#/components/icons/Logo'
 import {IS_IOS} from '#/env'
 
 const ICON_SIZE = 'xl' as const
