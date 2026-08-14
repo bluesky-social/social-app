@@ -1,10 +1,7 @@
 import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 
 export type VideoProgressPhase =
-  | 'compressing'
-  | 'uploading'
-  | 'uploadingWithoutCompression'
-  | 'processing'
+  'compressing' | 'uploading' | 'uploadingWithoutCompression' | 'processing'
 
 // Keep progress monotonic across the full client pipeline instead of showing
 // three separate 0 -> 100 cycles. Backend processing progress covers the

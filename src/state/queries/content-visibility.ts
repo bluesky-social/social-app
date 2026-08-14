@@ -1,11 +1,12 @@
 import {t} from '@lingui/core/macro'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {useAgent, useSession} from '#/state/session'
+import {isRecordNotFoundError} from '#/lib/xrpc-error'
+import {usePdsClient, useSession} from '#/state/session'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import {
-  CONTENT_VISIBILITY_COLLECTION,
   CONTENT_VISIBILITY_RKEY,
   type ContentVisibilityRecord,
   createContentVisibilityRecord,
@@ -18,7 +19,7 @@ export const contentVisibilityQueryKey = (did: string) => [
 ]
 
 export function useContentVisibilityQuery() {
-  const agent = useAgent()
+  const client = usePdsClient()
   const {currentAccount} = useSession()
   const did = currentAccount?.did
 
@@ -26,17 +27,16 @@ export function useContentVisibilityQuery() {
     queryKey: contentVisibilityQueryKey(did ?? ''),
     queryFn: async () => {
       try {
-        const response = await agent.com.atproto.repo.getRecord({
+        const response = await client.get(
+          app.bsky.actor.contentVisibilityDeclaration,
+          {
           repo: did!,
-          collection: CONTENT_VISIBILITY_COLLECTION,
           rkey: CONTENT_VISIBILITY_RKEY,
-        })
-        return parseContentVisibilityRecord(response.data.value)
+          },
+        )
+        return parseContentVisibilityRecord(response.value)
       } catch (error) {
-        if (
-          error instanceof Error &&
-          error.message.startsWith('Could not locate record')
-        ) {
+        if (isRecordNotFoundError(error)) {
           return createContentVisibilityRecord(false)
         }
         throw error
@@ -48,7 +48,7 @@ export function useContentVisibilityQuery() {
 
 export function useContentVisibilityMutation() {
   const ax = useAnalytics()
-  const agent = useAgent()
+  const client = usePdsClient()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   const did = currentAccount?.did
@@ -61,11 +61,9 @@ export function useContentVisibilityMutation() {
       const record = createContentVisibilityRecord(
         hideFromAlgorithmicRecommendations,
       )
-      await agent.com.atproto.repo.putRecord({
+      await client.put(app.bsky.actor.contentVisibilityDeclaration, record, {
         repo: did,
-        collection: CONTENT_VISIBILITY_COLLECTION,
         rkey: CONTENT_VISIBILITY_RKEY,
-        record,
       })
       return record
     },

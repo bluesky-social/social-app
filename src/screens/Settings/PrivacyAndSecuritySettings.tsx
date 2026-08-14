@@ -1,4 +1,3 @@
-import {type AppBskyNotificationDeclaration} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -19,6 +18,7 @@ import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/ic
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import {AlgoVisibilityOptOut} from './components/AlgoVisibilityOptOut'
 import {Email2FAToggle} from './components/Email2FAToggle'
 import {PwiOptOut} from './components/PwiOptOut'
@@ -155,7 +155,7 @@ function NotificationDeclaration({
   isError,
 }: {
   data?: {
-    value: AppBskyNotificationDeclaration.Record
+    value: app.bsky.notification.declaration.Main
   }
   isError?: boolean
 }) {

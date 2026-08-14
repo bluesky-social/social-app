@@ -3,10 +3,7 @@
 // on the `video:upload:compressSkipped` analytics event, so the two stay in
 // sync.
 export type VideoCompressSkipReason =
-  | 'gif'
-  | 'below-byte-threshold'
-  | 'no-webcodecs'
-  | 'compress-error-fallback'
+  'gif' | 'below-byte-threshold' | 'no-webcodecs' | 'compress-error-fallback'
 
 export type VideoUploadTransport = 'multipart' | 'legacy' | 'legacy-fallback'
 

@@ -1,11 +1,11 @@
-import {AppBskyActorContentVisibilityDeclaration} from '@atproto/api'
+import {app} from '#/lexicons'
 
 export const CONTENT_VISIBILITY_COLLECTION =
   'app.bsky.actor.contentVisibilityDeclaration' as const
 export const CONTENT_VISIBILITY_RKEY = 'self'
 
 export type ContentVisibilityRecord =
-  AppBskyActorContentVisibilityDeclaration.Record
+  app.bsky.actor.contentVisibilityDeclaration.Main
 
 export function createContentVisibilityRecord(
   hideFromAlgorithmicRecommendations: boolean,
@@ -19,10 +19,11 @@ export function createContentVisibilityRecord(
 export function parseContentVisibilityRecord(
   value: unknown,
 ): ContentVisibilityRecord {
-  const result = AppBskyActorContentVisibilityDeclaration.validateRecord(value)
+  const result =
+    app.bsky.actor.contentVisibilityDeclaration.main.safeParse(value)
   if (!result.success) {
     throw new Error('Invalid content visibility record', {
-      cause: result.error,
+      cause: result.reason,
     })
   }
   return result.value

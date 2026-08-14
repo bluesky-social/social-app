@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {type AppBskyUnspeccedGetTrends, hasMutedWord} from '@atproto/api'
+import {hasMutedWord} from '@bsky/sdk/moderation'
 import {useQuery} from '@tanstack/react-query'
 
 import {
@@ -10,7 +10,8 @@ import {logger} from '#/logger'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 export const DEFAULT_LIMIT = 5
 
@@ -32,7 +33,7 @@ export const createGetTrendsQueryKey = (limit?: number) =>
   limit === undefined ? ['trends'] : ['trends', {limit}]
 
 export function useGetTrendsQuery(props: QueryProps = {}) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   const {data: preferences} = usePreferencesQuery()
   const limit = props.limit ?? DEFAULT_LIMIT
   const mutedWords = useMemo(() => {
@@ -46,7 +47,8 @@ export function useGetTrendsQuery(props: QueryProps = {}) {
     queryKey: createGetTrendsQueryKey(limit),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
-      const {data} = await agent.app.bsky.unspecced.getTrends(
+      const data = await client.call(
+        app.bsky.unspecced.getTrends,
         {
           limit,
         },
@@ -63,7 +65,7 @@ export function useGetTrendsQuery(props: QueryProps = {}) {
       return data
     },
     select: useCallback(
-      (data: AppBskyUnspeccedGetTrends.OutputSchema) => {
+      (data: app.bsky.unspecced.getTrends.$OutputBody) => {
         return {
           recId: data.recIdStr,
           trends: dedupe(

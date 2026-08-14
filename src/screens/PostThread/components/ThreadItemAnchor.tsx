@@ -1,12 +1,7 @@
 import {memo, useMemo} from 'react'
 import {Text as RNText, View} from 'react-native'
-import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
-  AtUri,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -64,6 +59,7 @@ import {Text} from '#/components/Typography'
 import {WhoCanReply} from '#/components/WhoCanReply'
 import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function ThreadItemAnchor({
@@ -74,7 +70,7 @@ export function ThreadItemAnchor({
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
   postSource?: PostSource
 }) {
   const postShadow = usePostShadow(item.value.post)
@@ -175,9 +171,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
   isRoot: boolean
-  postShadow: Shadow<AppBskyFeedDefs.PostView>
+  postShadow: Shadow<app.bsky.feed.defs.PostView>
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
   postSource?: PostSource
 }) {
   const t = useTheme()
@@ -243,7 +239,11 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const viaRepost = useMemo(() => {
     const reason = postSource?.post.reason
 
-    if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
+    if (
+      bsky.isType(app.bsky.feed.defs.reasonRepost, reason) &&
+      reason.uri &&
+      reason.cid
+    ) {
       return {
         uri: reason.uri,
         cid: reason.cid,
@@ -573,16 +573,13 @@ function ExpandedPostDetails({
   )
 }
 
-function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
+function BackdatedPostIndicator({post}: {post: app.bsky.feed.defs.PostView}) {
   const t = useTheme()
   const {t: l, i18n} = useLingui()
   const control = Prompt.usePromptControl()
 
   const indexedAt = new Date(post.indexedAt)
-  const createdAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(
-    post.record,
-    AppBskyFeedPost.isRecord,
-  )
+  const createdAt = bsky.isType(app.bsky.feed.post, post.record)
     ? new Date(post.record.createdAt)
     : new Date(post.indexedAt)
 
@@ -663,8 +660,8 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
 }
 
 function getThreadAuthor(
-  post: AppBskyFeedDefs.PostView,
-  record: AppBskyFeedPost.Record,
+  post: app.bsky.feed.defs.PostView,
+  record: app.bsky.feed.post.Main,
 ): string {
   if (!record.reply) {
     return post.author.did
