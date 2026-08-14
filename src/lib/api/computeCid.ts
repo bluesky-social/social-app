@@ -123,14 +123,9 @@ function isPlainObject(v: any): boolean {
 /**
  * Load `@ipld/dag-cbor` on demand. The dynamic `import()` lets web bundlers
  * emit it (and its ~190KB `cborg` dependency) as a separate chunk that only
- * loads when posting a thread. Under jest (which runs without
- * `--experimental-vm-modules`) dynamic import throws, so we fall back to a
- * lazy `require`, which resolves through the test moduleNameMapper.
+ * loads when posting a thread. Under jest this compiles down to a require
+ * that resolves through the test moduleNameMapper.
  */
 function importDagCbor(): Promise<typeof import('@ipld/dag-cbor')> {
-  if (process.env.NODE_ENV === 'test') {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    return Promise.resolve(require('@ipld/dag-cbor'))
-  }
   return import('@ipld/dag-cbor')
 }
