@@ -20,9 +20,8 @@ SVG files under `assets/icons/` are the source of truth. Generated components un
 3. Run `pnpm icons:generate` and commit both the SVG and generated TypeScript.
 
 `pnpm icons:check` verifies that optimized SVGs and generated TypeScript are current.
-`pnpm icons:test` runs the focused generator tests. `pnpm icons:optimize` remains an alias for
-generation during the workflow transition. Generation warns, but does not fail, when a generated
-icon uses a viewBox other than 24×24 or 64×64.
+`pnpm icons:test` runs the focused generator tests. Generation warns, but does not fail, when a
+generated icon uses a viewBox other than 24×24 or 64×64.
 
 ## Output grouping
 
