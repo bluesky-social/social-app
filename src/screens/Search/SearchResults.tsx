@@ -680,7 +680,7 @@ let SearchScreenFeedsResults = ({
 
   return isFetched ? (
     <>
-      {feeds.length ? (
+      {feeds.length || hasNextPage ? (
         <List
           data={feeds}
           renderItem={({
