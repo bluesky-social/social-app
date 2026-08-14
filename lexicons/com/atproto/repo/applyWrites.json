@@ -1,0 +1,196 @@
+{
+  "id": "com.atproto.repo.applyWrites",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "repo",
+            "writes"
+          ],
+          "properties": {
+            "repo": {
+              "type": "string",
+              "format": "at-identifier",
+              "description": "The handle or DID of the repo (aka, current account)."
+            },
+            "writes": {
+              "type": "array",
+              "items": {
+                "refs": [
+                  "#create",
+                  "#update",
+                  "#delete"
+                ],
+                "type": "union",
+                "closed": true
+              }
+            },
+            "validate": {
+              "type": "boolean",
+              "description": "Can be set to 'false' to skip Lexicon schema validation of record data across all operations, 'true' to require it, or leave unset to validate only for known Lexicons."
+            },
+            "swapCommit": {
+              "type": "string",
+              "format": "cid",
+              "description": "If provided, the entire operation will fail if the current repo commit CID does not match this value. Used to prevent conflicting repo mutations."
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "InvalidSwap",
+          "description": "Indicates that the 'swapCommit' parameter did not match current commit."
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "commit": {
+              "ref": "com.atproto.repo.defs#commitMeta",
+              "type": "ref"
+            },
+            "results": {
+              "type": "array",
+              "items": {
+                "refs": [
+                  "#createResult",
+                  "#updateResult",
+                  "#deleteResult"
+                ],
+                "type": "union",
+                "closed": true
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Apply a batch transaction of repository creates, updates, and deletes. Requires auth, implemented by PDS."
+    },
+    "create": {
+      "type": "object",
+      "required": [
+        "collection",
+        "value"
+      ],
+      "properties": {
+        "rkey": {
+          "type": "string",
+          "format": "record-key",
+          "maxLength": 512,
+          "description": "NOTE: maxLength is redundant with record-key format. Keeping it temporarily to ensure backwards compatibility."
+        },
+        "value": {
+          "type": "unknown"
+        },
+        "collection": {
+          "type": "string",
+          "format": "nsid"
+        }
+      },
+      "description": "Operation which creates a new record."
+    },
+    "delete": {
+      "type": "object",
+      "required": [
+        "collection",
+        "rkey"
+      ],
+      "properties": {
+        "rkey": {
+          "type": "string",
+          "format": "record-key"
+        },
+        "collection": {
+          "type": "string",
+          "format": "nsid"
+        }
+      },
+      "description": "Operation which deletes an existing record."
+    },
+    "update": {
+      "type": "object",
+      "required": [
+        "collection",
+        "rkey",
+        "value"
+      ],
+      "properties": {
+        "rkey": {
+          "type": "string",
+          "format": "record-key"
+        },
+        "value": {
+          "type": "unknown"
+        },
+        "collection": {
+          "type": "string",
+          "format": "nsid"
+        }
+      },
+      "description": "Operation which updates an existing record."
+    },
+    "createResult": {
+      "type": "object",
+      "required": [
+        "uri",
+        "cid"
+      ],
+      "properties": {
+        "cid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "validationStatus": {
+          "type": "string",
+          "knownValues": [
+            "valid",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "deleteResult": {
+      "type": "object",
+      "required": [],
+      "properties": {}
+    },
+    "updateResult": {
+      "type": "object",
+      "required": [
+        "uri",
+        "cid"
+      ],
+      "properties": {
+        "cid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "validationStatus": {
+          "type": "string",
+          "knownValues": [
+            "valid",
+            "unknown"
+          ]
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

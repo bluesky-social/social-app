@@ -1,8 +1,4 @@
-import {
-  type AppBskyLabelerDefs,
-  ToolsOzoneReportDefs as OzoneReportDefs,
-} from '@atproto/api'
-
+import {type app, tools} from '#/lexicons'
 import {
   getNciiQualificationOutcome,
   initialState,
@@ -12,12 +8,12 @@ import {
 
 const nciiOption = {
   title: 'Non-consensual intimate imagery',
-  reason: OzoneReportDefs.REASONSEXUALNCII,
+  reason: tools.ozone.report.defs.reasonSexualNCII.value,
 }
 
 const otherOption = {
   title: 'Unlabeled adult content',
-  reason: OzoneReportDefs.REASONSEXUALUNLABELED,
+  reason: tools.ozone.report.defs.reasonSexualUnlabeled.value,
 }
 
 function selectNciiOption(state: ReportState = initialState) {
@@ -83,7 +79,7 @@ describe('reducer NCII qualification', () => {
     let state = selectNciiOption()
     state = reducer(state, {
       type: 'selectLabeler',
-      labeler: {} as AppBskyLabelerDefs.LabelerViewDetailed,
+      labeler: {} as app.bsky.labeler.defs.LabelerViewDetailed,
     })
     expect(state.activeStepIndex1).toBe(2)
   })
@@ -92,7 +88,7 @@ describe('reducer NCII qualification', () => {
     let state = selectNciiOption()
     state = reducer(state, {
       type: 'selectLabeler',
-      labeler: {} as AppBskyLabelerDefs.LabelerViewDetailed,
+      labeler: {} as app.bsky.labeler.defs.LabelerViewDetailed,
     })
     state = reducer(state, {
       type: 'answerNciiQuestion',
@@ -110,7 +106,7 @@ describe('reducer NCII qualification', () => {
 })
 
 describe('reducer video timestamp', () => {
-  const labeler = {} as AppBskyLabelerDefs.LabelerViewDetailed
+  const labeler = {} as app.bsky.labeler.defs.LabelerViewDetailed
   const opted: ReportState = {...initialState, includeVideoTimestamp: true}
 
   it('is off by default', () => {

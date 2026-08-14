@@ -1,0 +1,37 @@
+{
+  "id": "app.bsky.notification.getUnreadCount",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "count"
+          ],
+          "properties": {
+            "count": {
+              "type": "integer"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "seenAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "priority": {
+            "type": "boolean"
+          }
+        }
+      },
+      "description": "Count the number of unread notifications for the requesting account. Requires auth."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

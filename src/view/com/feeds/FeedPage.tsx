@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -49,6 +48,7 @@ import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons
 import {Portal} from '#/components/Portal'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -70,7 +70,7 @@ export function FeedPage({
   isPageAdjacent: boolean
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: app.bsky.actor.defs.SavedFeed
   feedInfo: FeedSourceInfo
 }) {
   const ax = useAnalytics()
@@ -103,7 +103,7 @@ export function FeedPage({
   const isVideoFeed = useMemo(() => {
     const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
     const feedIsVideoMode =
-      feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
+      feedInfo.contentMode === app.bsky.feed.defs.contentModeVideo.value
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
     return IS_NATIVE && _isVideoFeed
   }, [feedInfo])

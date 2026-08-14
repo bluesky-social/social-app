@@ -5,14 +5,15 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import * as Toast from '#/components/Toast'
+import {app, type com} from '#/lexicons'
 import {updatePostShadow} from '../cache/post-shadow'
-import {useAgent, useSession} from '../session'
+import {useAppviewClient, useSession} from '../session'
 import {useProfileUpdateMutation} from './profile'
 
 export function usePinnedPostMutation() {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const client = useAppviewClient()
   const queryClient = useQueryClient()
   const {mutateAsync: profileUpdateMutate} = useProfileUpdateMutation()
 
@@ -33,7 +34,7 @@ export function usePinnedPostMutation() {
 
         // get the currently pinned post so we can optimistically remove the pin from it
         if (!currentAccount) throw new Error('Not signed in')
-        const {data: profile} = await agent.getProfile({
+        const profile = await client.call(app.bsky.actor.getProfile, {
           actor: currentAccount.did,
         })
         prevPinnedPost = profile.pinnedPost?.uri
@@ -45,14 +46,18 @@ export function usePinnedPostMutation() {
           profile,
           updates: existing => {
             existing.pinnedPost = pinCurrentPost
-              ? {uri: postUri, cid: postCid}
+              ? // the mutation takes the uri/cid as plain strings
+                ({
+                  uri: postUri,
+                  cid: postCid,
+                } as com.atproto.repo.strongRef.Main)
               : undefined
             return existing
           },
-          checkCommitted: res =>
+          checkCommitted: profile =>
             pinCurrentPost
-              ? res.data.pinnedPost?.uri === postUri
-              : !res.data.pinnedPost,
+              ? profile.pinnedPost?.uri === postUri
+              : !profile.pinnedPost,
         })
 
         if (pinCurrentPost) {

@@ -1,0 +1,29 @@
+{
+  "id": "app.bsky.notification.declaration",
+  "defs": {
+    "main": {
+      "key": "literal:self",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "required": [
+          "allowSubscriptions"
+        ],
+        "properties": {
+          "allowSubscriptions": {
+            "type": "string",
+            "description": "A declaration of the user's preference for allowing activity subscriptions from other users. Absence of a record implies 'followers'.",
+            "knownValues": [
+              "followers",
+              "mutuals",
+              "none"
+            ]
+          }
+        }
+      },
+      "description": "A declaration of the user's choices related to notifications that can be produced by them."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

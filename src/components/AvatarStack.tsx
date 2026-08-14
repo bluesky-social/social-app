@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@bsky/sdk/moderation'
 
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'

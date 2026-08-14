@@ -1,0 +1,47 @@
+{
+  "id": "com.atproto.identity.refreshIdentity",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "identifier"
+          ],
+          "properties": {
+            "identifier": {
+              "type": "string",
+              "format": "at-identifier"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "HandleNotFound",
+          "description": "The resolution process confirmed that the handle does not resolve to any DID."
+        },
+        {
+          "name": "DidNotFound",
+          "description": "The DID resolution process confirmed that there is no current DID."
+        },
+        {
+          "name": "DidDeactivated",
+          "description": "The DID previously existed, but has been deactivated."
+        }
+      ],
+      "output": {
+        "schema": {
+          "ref": "com.atproto.identity.defs#identityInfo",
+          "type": "ref"
+        },
+        "encoding": "application/json"
+      },
+      "description": "Request that the server re-resolve an identity (DID and handle). The server may ignore this request, or require authentication, depending on the role, implementation, and policy of the server."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}
