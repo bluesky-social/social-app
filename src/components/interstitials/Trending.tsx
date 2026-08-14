@@ -19,8 +19,6 @@ import {TrendingTopicLink} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
-const TRENDING_LIMIT = 14
-
 export function TrendingInterstitial() {
   const {enabled} = useTrendingConfig()
   const {trendingDisabled} = useTrendingSettings()
@@ -39,7 +37,6 @@ export function Inner() {
     error,
     isLoading,
   } = useGetTrendsQuery({
-    limit: TRENDING_LIMIT,
     refetchOnWindowFocus: true,
   })
   const noTopics = !isLoading && !error && !trending?.trends?.length
