@@ -10,7 +10,11 @@ import {View} from 'react-native'
 import {type AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {type NavigationProp, useNavigation} from '@react-navigation/native'
+import {
+  type NavigationProp,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, VIDEO_FEED_URIS} from '#/lib/constants'
@@ -29,17 +33,22 @@ import {
 } from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
+import {Portal as HomeHeaderPortal} from '#/view/com/home/HomeHeaderPortal'
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
-import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
-import {useTheme} from '#/alf'
+import {
+  MainScrollProvider,
+  useHomeHeaderMode,
+} from '#/view/com/util/MainScrollProvider'
+import {useBreakpoints, useTheme} from '#/alf'
 import {SeeNewPostsPill} from '#/components/feeds/SeeNewPostsPill'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
+import {Portal} from '#/components/Portal'
 import {useAnalytics} from '#/analytics'
-import {IS_NATIVE} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -66,6 +75,9 @@ export function FeedPage({
 }) {
   const ax = useAnalytics()
   const {hasSession, currentAccount} = useSession()
+  const headerMode = useHomeHeaderMode()
+  const isScreenFocused = useIsFocused()
+  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
   const queryClient = useQueryClient()
@@ -81,6 +93,11 @@ export function FeedPage({
    * by pressing the pill or by scrolling up on their own.
    */
   const [showResumePill, setShowResumePill] = useState(false)
+  /**
+   * How many unseen posts are above the user, from either the restore path
+   * or the new-posts poll. Shown in the pill.
+   */
+  const [newPostsCount, setNewPostsCount] = useState(0)
   const wasScrolledDownRef = useRef(false)
   const setHomeBadge = useSetHomeBadge()
   const isVideoFeed = useMemo(() => {
@@ -118,8 +135,9 @@ export function FeedPage({
     }
   }, [isScrolledDown])
 
-  const onPositionRestored = useCallback(() => {
+  const onPositionRestored = useCallback((unseenCount: number) => {
     setShowResumePill(true)
+    setNewPostsCount(unseenCount)
   }, [])
 
   const onSoftReset = useCallback(() => {
@@ -204,9 +222,17 @@ export function FeedPage({
    * reaching the top fulfills it and the pill hides. When hasNew is set the
    * posts are not loaded yet, so the pill persists at any scroll position
    * until it is pressed or the feed is refreshed.
+   *
+   * Gated on isPageFocused (the pager tab) and isScreenFocused (the Home
+   * screen itself) because the pill renders in a Portal outside this
+   * page's subtree, so it would otherwise stay visible on other feed tabs
+   * and on entirely different screens like Notifications.
    */
   const showSeeNewPostsPill =
-    isFollowingFeed && (hasNew || (showResumePill && isScrolledDown))
+    isFollowingFeed &&
+    isPageFocused &&
+    isScreenFocused &&
+    (hasNew || (showResumePill && isScrolledDown))
   return (
     <View
       testID={testID}
@@ -220,10 +246,15 @@ export function FeedPage({
             feed={feed}
             feedParams={feedParams}
             pollInterval={POLL_FREQ}
-            disablePoll={hasNew || !isPageFocused}
+            /*
+             * On the Following feed, keep polling after hasNew so the pill's
+             * new-post count stays up to date.
+             */
+            disablePoll={!isPageFocused || (hasNew && !isFollowingFeed)}
             scrollElRef={scrollElRef}
             onScrolledDownChange={setIsScrolledDown}
             onHasNew={setHasNew}
+            onHasNewCount={isFollowingFeed ? setNewPostsCount : undefined}
             onPositionRestored={onPositionRestored}
             renderEmptyState={renderEmptyState}
             renderEndOfFeed={renderEndOfFeed}
@@ -233,12 +264,30 @@ export function FeedPage({
           />
         </FeedFeedbackProvider>
       </MainScrollProvider>
-      {showSeeNewPostsPill && (
-        <SeeNewPostsPill
-          onPress={onPressSeeNewPosts}
-          topOffset={headerOffset}
-        />
-      )}
+      {showSeeNewPostsPill &&
+        (IS_WEB && gtMobile ? (
+          /*
+           * Larger web layouts anchor the pill inside the home header,
+           * directly below the sticky tab bar.
+           */
+          <HomeHeaderPortal>
+            <SeeNewPostsPill
+              attached
+              count={newPostsCount}
+              onPress={onPressSeeNewPosts}
+              headerMode={headerMode}
+            />
+          </HomeHeaderPortal>
+        ) : (
+          <Portal>
+            <SeeNewPostsPill
+              count={newPostsCount}
+              onPress={onPressSeeNewPosts}
+              topOffset={headerOffset}
+              headerMode={headerMode}
+            />
+          </Portal>
+        ))}
       {(isScrolledDown || (hasNew && !isFollowingFeed)) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}

@@ -54,6 +54,7 @@ import {
   type FeedPostSlice,
   type FeedPostSliceItem,
   pollLatest,
+  pollLatestCount,
   RQKEY,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
@@ -248,6 +249,7 @@ let PostFeed = ({
   scrollElRef,
   onScrolledDownChange,
   onHasNew,
+  onHasNewCount,
   onPositionRestored,
   renderEmptyState,
   renderEndOfFeed,
@@ -272,12 +274,18 @@ let PostFeed = ({
   disablePoll?: boolean
   scrollElRef?: ListRef
   onHasNew?: (v: boolean) => void
+  /**
+   * When provided, the new-posts poll also reports how many posts would
+   * appear above the current head of the feed (capped at one fetch).
+   */
+  onHasNewCount?: (count: number) => void
   onScrolledDownChange?: (isScrolledDown: boolean) => void
   /**
    * Called after the feed successfully scrolled back to the last read
-   * position on cold start.
+   * position on cold start and there are posts above that the user has not
+   * seen, with the number of unseen posts.
    */
-  onPositionRestored?: () => void
+  onPositionRestored?: (unseenCount: number) => void
   renderEmptyState: () => React.ReactElement
   renderEndOfFeed?: () => React.ReactElement
   testID?: string
@@ -369,7 +377,17 @@ let PostFeed = ({
     }
 
     try {
-      if (await pollLatest(data.pages[0])) {
+      if (onHasNewCount) {
+        const count = await pollLatestCount(data.pages[0])
+        if (count > 0) {
+          if (isEmpty) {
+            void refetch()
+          } else {
+            onHasNew(true)
+            onHasNewCount(count)
+          }
+        }
+      } else if (await pollLatest(data.pages[0])) {
         if (isEmpty) {
           void refetch()
         } else {
@@ -847,13 +865,21 @@ let PostFeed = ({
         pagesFetched: data.pages.length,
       })
       /*
-       * Only announce the restore (which surfaces the "See new posts" pill)
-       * if the feed's head post is one the user hasn't seen - otherwise
-       * everything above the anchor was already read.
+       * Only announce the restore (which surfaces the "N new posts" pill)
+       * if there are posts above that the user hasn't seen - i.e. rows
+       * between the fresh head and the newest post they'd seen last time.
        */
-      const headUri = getHeadUri(feedItems)
-      if (headUri && headUri !== seenHeadUriRef.current) {
-        onPositionRestored?.()
+      let unseenCount = 0
+      for (const row of feedItems.slice(0, index)) {
+        if (row.type !== 'sliceItem') continue
+        const uri = row.slice.items[row.indexInSlice].uri
+        if (uri === seenHeadUriRef.current) {
+          break
+        }
+        unseenCount++
+      }
+      if (unseenCount > 0) {
+        onPositionRestored?.(unseenCount)
       }
     } else if (
       isError ||
