@@ -60,7 +60,13 @@ export function ThreadItemPostNumber({
         inline
           ? platform({
               native: {transform: [{translateY: POST_NUMBER_INLINE_OFFSET}]},
-              web: {top: -2, marginBottom: -2},
+              web: {
+                top: -2,
+                marginBottom: -2,
+                // Inline views inherit the surrounding line height on web. Keep
+                // the badge at its usual size when emoji-only text enlarges it.
+                lineHeight: a.text_xs.fontSize * a.leading_normal.lineHeight,
+              },
             })
           : {top: -2, marginBottom: -2},
       ]}>
