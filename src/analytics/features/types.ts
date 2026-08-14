@@ -19,6 +19,16 @@ export enum Features {
   PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
   PostThreadKnownLikersFetchEnable = 'post_thread:known_likers:fetch:enable',
   CustomLogoJapanEnable = 'custom_logo:japan:enable',
+  VideoAllow10MinuteEnable = 'video:allow-10-minute:enable',
+  VideoMultipartUploadEnable = 'video:multipart_upload:enable',
+  SearchStarterPacksV2Enable = 'search_starter_packs_v2:enable',
+  FollowSortEnable = 'follow_sort:enable',
+  OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
+  CanonicalPostNumberingEnable = 'canonical_post_numbering:enable',
+
+  // values
+  TrendingDiscoverValues = 'trending_discover:values',
+  TrendingExploreTopicsCountValue = 'trending_explore_topics_count:value',
 
   AATest = 'aa-test',
 }

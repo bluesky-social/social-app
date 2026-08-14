@@ -1,32 +1,33 @@
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedGetActorLikes as GetActorLikes,
-  type AtpAgent,
-} from '@atproto/api'
+import {type Client, type XrpcRequestParams} from '@atproto/lex'
 
+import {app} from '#/lexicons'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
+type GetActorLikesParams = XrpcRequestParams<
+  typeof app.bsky.feed.getActorLikes.main
+>
+
 export class LikesFeedAPI implements FeedAPI {
-  agent: AtpAgent
-  params: GetActorLikes.QueryParams
+  client: Client
+  params: GetActorLikesParams
 
   constructor({
-    agent,
+    client,
     feedParams,
   }: {
-    agent: AtpAgent
-    feedParams: GetActorLikes.QueryParams
+    client: Client
+    feedParams: GetActorLikesParams
   }) {
-    this.agent = agent
+    this.client = client
     this.params = feedParams
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await this.agent.getActorLikes({
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
+    const data = await this.client.call(app.bsky.feed.getActorLikes, {
       ...this.params,
       limit: 1,
     })
-    return res.data.feed[0]
+    return data.feed[0]
   }
 
   async fetch({
@@ -36,21 +37,22 @@ export class LikesFeedAPI implements FeedAPI {
     cursor: string | undefined
     limit: number
   }): Promise<FeedAPIResponse> {
-    const res = await this.agent.getActorLikes({
+    /*
+     * A failed request rejects rather than resolving, so the error propagates
+     * to the query and drives the feed error UI. The agent behaved the same
+     * way - its `success` flag was only ever true - so the empty-page branch
+     * this replaces was unreachable.
+     */
+    const data = await this.client.call(app.bsky.feed.getActorLikes, {
       ...this.params,
       cursor,
       limit,
     })
-    if (res.success) {
-      // HACKFIX: the API incorrectly returns a cursor when there are no items -sfn
-      const isEmptyPage = res.data.feed.length === 0
-      return {
-        cursor: isEmptyPage ? undefined : res.data.cursor,
-        feed: res.data.feed,
-      }
-    }
+    // HACKFIX: the API incorrectly returns a cursor when there are no items -sfn
+    const isEmptyPage = data.feed.length === 0
     return {
-      feed: [],
+      cursor: isEmptyPage ? undefined : data.cursor,
+      feed: data.feed,
     }
   }
 }

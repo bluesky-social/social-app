@@ -1,6 +1,5 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import {type AppBskyFeedDefs, type AppBskyGraphDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
@@ -37,12 +36,14 @@ import {ListFooter} from '#/components/Lists'
 import {SearchError} from '#/components/SearchError'
 import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 let SearchResults = ({
   query,
   filters,
   hasFilters,
+  fromMe,
   activeTab,
   onPageSelected,
   headerHeight,
@@ -50,19 +51,25 @@ let SearchResults = ({
   query: string
   filters: SearchFilters
   hasFilters: boolean
+  fromMe: boolean
   activeTab: number
   onPageSelected: (page: number) => void
   headerHeight: number
 }): React.ReactNode => {
+  const ax = useAnalytics()
   const {t: l} = useLingui()
   /*
    * People/Feeds visibility keys off post-only filters: a `lang` filter applies
    * to people and feeds too, so it must not hide those tabs (which would also
    * regress the non-v2 legacy language dropdown). Other filters are post-only.
    */
-  const hasPostFilters = hasPostOnlyFilters(filters)
+  const hasPostFilters = hasPostOnlyFilters(filters) || fromMe
   const activePage = hasPostFilters && activeTab > 1 ? 0 : activeTab
   const tabShape = hasPostFilters ? 'filtered' : 'plain'
+
+  const isStarterPacksEnabled = ax.features.enabled(
+    ax.features.SearchStarterPacksV2Enable,
+  )
 
   const sections = useMemo(() => {
     if (!query && !hasFilters) return []
@@ -108,20 +115,29 @@ let SearchResults = ({
           <SearchScreenFeedsResults query={query} active={activePage === 3} />
         ),
       },
-      noFilters && {
-        title: l`Starter packs`,
-        component: (
-          <SearchScreenStarterPackResults
-            query={query}
-            active={activePage === 4}
-          />
-        ),
-      },
+      noFilters &&
+        isStarterPacksEnabled && {
+          title: l`Starter packs`,
+          component: (
+            <SearchScreenStarterPackResults
+              query={query}
+              active={activePage === 4}
+            />
+          ),
+        },
     ].filter(Boolean) as {
       title: string
       component: React.ReactNode
     }[]
-  }, [l, query, filters, hasFilters, hasPostFilters, activePage])
+  }, [
+    l,
+    query,
+    filters,
+    hasFilters,
+    hasPostFilters,
+    activePage,
+    isStarterPacksEnabled,
+  ])
 
   // There may be fewer tabs after changing the search options.
   const selectedPage = activePage > sections.length - 1 ? 0 : activePage
@@ -276,7 +292,7 @@ type SearchResultSlice =
   | {
       type: 'post'
       key: string
-      post: AppBskyFeedDefs.PostView
+      post: app.bsky.feed.defs.PostView
     }
   | {
       type: 'loadingMore'
@@ -488,7 +504,7 @@ function SearchPost({
 }: {
   from: Metrics['search:result:press']['tab']
   position: Metrics['search:result:press']['position']
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
 }) {
   const ax = useAnalytics()
 
@@ -656,7 +672,7 @@ let SearchScreenFeedsResults = ({
             item,
             index,
           }: {
-            item: AppBskyFeedDefs.GeneratorView
+            item: app.bsky.feed.defs.GeneratorView
             index: number
           }) => (
             <View
@@ -669,7 +685,7 @@ let SearchScreenFeedsResults = ({
               <SearchFeedCard position={index} view={item} />
             </View>
           )}
-          keyExtractor={(item: AppBskyFeedDefs.GeneratorView) => item.uri}
+          keyExtractor={(item: app.bsky.feed.defs.GeneratorView) => item.uri}
           desktopFixedHeight
           ListFooterComponent={<ListFooter />}
         />
@@ -688,7 +704,7 @@ function SearchFeedCard({
   view,
 }: {
   position: number
-  view: AppBskyFeedDefs.GeneratorView
+  view: app.bsky.feed.defs.GeneratorView
 }) {
   const ax = useAnalytics()
 
@@ -774,14 +790,14 @@ let SearchScreenStarterPackResults = ({
             item,
             index,
           }: {
-            item: AppBskyGraphDefs.StarterPackView
+            item: app.bsky.graph.defs.StarterPackView
             index: number
           }) => (
             <View style={[a.px_lg, a.pb_lg, index === 0 && a.pt_lg]}>
               <SearchStarterPack position={index} view={item} />
             </View>
           )}
-          keyExtractor={(item: AppBskyGraphDefs.StarterPackView) => item.uri}
+          keyExtractor={(item: app.bsky.graph.defs.StarterPackView) => item.uri}
           refreshing={isPTR}
           onRefresh={() => void onPullToRefresh()}
           onEndReached={onEndReached}
@@ -808,7 +824,7 @@ function SearchStarterPack({
   view,
 }: {
   position: number
-  view: AppBskyGraphDefs.StarterPackView
+  view: app.bsky.graph.defs.StarterPackView
 }) {
   const ax = useAnalytics()
 

@@ -1,7 +1,7 @@
-import {type AppBskyEmbedVideo} from '@atproto/api'
+import {type app} from '#/lexicons'
 
 export type VideoEmbedInnerWebProps = {
-  embed: AppBskyEmbedVideo.View
+  embed: app.bsky.embed.video.View
   active: boolean
   setActive: () => void
   onScreen: boolean
@@ -27,8 +27,22 @@ export class VideoNotFoundError extends Error {
  */
 export class HLSFatalError extends Error {
   detail: string
-  constructor(detail: string, cause: Error) {
+  type: string
+  diagnostics: Record<string, unknown>
+  constructor({
+    detail,
+    type,
+    cause,
+    diagnostics,
+  }: {
+    detail: string
+    type: string
+    cause: Error
+    diagnostics: Record<string, unknown>
+  }) {
     super(cause.message, {cause})
     this.detail = detail
+    this.type = type
+    this.diagnostics = diagnostics
   }
 }

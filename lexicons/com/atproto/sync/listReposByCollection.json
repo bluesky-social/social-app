@@ -1,0 +1,66 @@
+{
+  "id": "com.atproto.sync.listReposByCollection",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "repos"
+          ],
+          "properties": {
+            "repos": {
+              "type": "array",
+              "items": {
+                "ref": "#repo",
+                "type": "ref"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "collection"
+        ],
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 500,
+            "maximum": 2000,
+            "minimum": 1,
+            "description": "Maximum size of response set. Recommend setting a large maximum (1000+) when enumerating large DID lists."
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "collection": {
+            "type": "string",
+            "format": "nsid"
+          }
+        }
+      },
+      "description": "Enumerates all the DIDs which have records with the given collection NSID."
+    },
+    "repo": {
+      "type": "object",
+      "required": [
+        "did"
+      ],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did"
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

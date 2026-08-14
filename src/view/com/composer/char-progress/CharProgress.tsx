@@ -4,10 +4,10 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-// @ts-ignore no type definition -prf
-import ProgressCircle from 'react-native-progress/Circle'
-// @ts-ignore no type definition -prf
-import ProgressPie from 'react-native-progress/Pie'
+import {
+  Circle as ProgressCircle,
+  Pie as ProgressPie,
+} from 'react-native-progress'
 
 import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {atoms as a, useTheme} from '#/alf'

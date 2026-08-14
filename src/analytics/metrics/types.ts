@@ -5,7 +5,10 @@
 import {type Platform} from 'react-native'
 
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
-import {type VideoCompressSkipReason} from '#/lib/media/video/types'
+import {
+  type VideoCompressSkipReason,
+  type VideoUploadTransport,
+} from '#/lib/media/video/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
@@ -103,6 +106,10 @@ export type Events = {
   }
   'signup:captchaSuccess': {}
   'signup:captchaFailure': {}
+  'signup:captchaBackPress': {}
+  'signup:createAccountFailure': {
+    reason: string
+  }
   'signup:fieldError': {
     field: string
     errorCount: number
@@ -136,6 +143,7 @@ export type Events = {
     selectedInterests: string[]
     selectedInterestsLength: number
   }
+  'onboarding:interests:disabledNextPressed': {}
   'onboarding:suggestedAccounts:tabPressed': {
     tab: string
   }
@@ -268,12 +276,7 @@ export type Events = {
   }
   'composer:open': {
     logContext:
-      | 'Fab'
-      | 'PostReply'
-      | 'QuotePost'
-      | 'ProfileFeed'
-      | 'Deeplink'
-      | 'Other'
+      'Fab' | 'PostReply' | 'QuotePost' | 'ProfileFeed' | 'Deeplink' | 'Other'
     isReply: boolean
     hasQuote: boolean
     hasDraft: boolean
@@ -475,28 +478,35 @@ export type Events = {
   'profile:followers:view': {
     contextProfileDid: string
     isOwnProfile: boolean
+    sort?: 'latest' | 'top'
   }
   'profile:followers:paginate': {
     contextProfileDid: string
     itemCount: number
     page: number
+    sort?: 'latest' | 'top'
   }
   'profile:following:view': {
     contextProfileDid: string
     isOwnProfile: boolean
+    sort?: 'latest' | 'top'
   }
   'profile:following:paginate': {
     contextProfileDid: string
     itemCount: number
     page: number
+    sort?: 'latest' | 'top'
   }
   'profileCard:seen': {
     contextProfileDid?: string
     profileDid: string
     position?: number
+    sort?: 'latest' | 'top'
   }
   'profile:mute': {}
   'profile:unmute': {}
+  'profile:muteReposts': {}
+  'profile:unmuteReposts': {}
   'profile:block': {}
   'profile:unblock': {}
   'suggestedUser:follow': {
@@ -510,7 +520,7 @@ export type Events = {
       | 'ProgressGuide'
     location: 'Card' | 'Profile' | 'FollowAll'
     recSource?: 'Search'
-    recId?: number | string
+    recId?: string
     position: number
     suggestedDid: string
     category: string | null
@@ -523,7 +533,7 @@ export type Events = {
       | 'ProfileHeader'
       | 'Onboarding'
       | 'SeeMoreSuggestedUsers'
-    recId?: number | string
+    recId?: string
     position: number
     suggestedDid: string
     category: string | null
@@ -538,7 +548,7 @@ export type Events = {
       | 'SeeMoreSuggestedUsers'
       | 'ProgressGuide'
     recSource?: 'Search'
-    recId?: number | string
+    recId?: string
     position: number
     suggestedDid: string
     category: string | null
@@ -550,11 +560,11 @@ export type Events = {
       | 'ProfileInterstitial'
       | 'ProfileHeader'
       | 'Onboarding'
-    recId?: number | string
+    recId?: string
   }
   'suggestedUser:dismiss': {
     logContext: 'DiscoverInterstitial' | 'ProfileInterstitial' | 'ProfileHeader'
-    recId?: number | string
+    recId?: string
     position: number
     suggestedDid: string
   }
@@ -581,10 +591,7 @@ export type Events = {
   }
   'chat:create': {
     logContext:
-      | 'ProfileHeader'
-      | 'NewChatDialog'
-      | 'SendViaChatDialog'
-      | 'ConvoSettings'
+      'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog' | 'ConvoSettings'
   }
   'chat:open': {
     logContext:
@@ -605,7 +612,7 @@ export type Events = {
 
   // Group chat adoption
   'groupchat:create': {
-    logContext: 'NewChatDialog'
+    logContext: 'NewChatDialog' | 'SendViaChatDialog'
   }
   'groupchat:landingPage:view': {
     hasSession: boolean
@@ -741,11 +748,17 @@ export type Events = {
   'trendingTopics:hide': {
     context: 'settings' | 'sidebar' | 'interstitial' | 'explore:trending'
   }
+  'trendingTopic:seen': {
+    context: 'sidebar' | 'interstitial' | 'explore'
+    recId?: string
+    rank: number
+    feedSliceIndex?: number
+  }
   'trendingTopic:click': {
     context: 'sidebar' | 'interstitial' | 'explore'
-  }
-  'recommendedTopic:click': {
-    context: 'explore'
+    recId?: string
+    rank: number
+    feedSliceIndex?: number
   }
   'trendingVideos:show': {
     context: 'settings'
@@ -836,6 +849,7 @@ export type Events = {
     reason: string
     labeler: string
     details: boolean
+    videoTimestamp: boolean
   }
   'reportDialog:failure': {}
 
@@ -1318,10 +1332,7 @@ export type Events = {
   // invite friends dialog opened, with the surface that triggered it
   'invite:dialog:open': {
     logContext:
-      | 'ProfileHeader'
-      | 'Drawer'
-      | 'FindContactsSettings'
-      | 'NuxAnnouncement'
+      'ProfileHeader' | 'Drawer' | 'FindContactsSettings' | 'NuxAnnouncement'
   }
   // user copied the invite link to clipboard
   'invite:action:copy': {}
@@ -1369,7 +1380,7 @@ export type Events = {
   // === Video upload funnel (Frontend Spec section D) ===
   // Every event carries uploadId (client-generated UUID, ties one upload
   // session end-to-end) + engine (compression engine id, e.g.
-  // native:react-native-compressor@1.13.0). jobId is added once the server
+  // native:@bsky.app/video-compressor@0.2.0). jobId is added once the server
   // returns it. Sizes / codecs / dimensions / timings only - never content.
   'video:upload:picked': {
     uploadId: string
@@ -1388,7 +1399,7 @@ export type Events = {
   // Native-only. Raw container metadata returned by the new module's probe()
   // (bitrate, codec, HDR, frame rate, rotation, etc.). Fires once per upload
   // between compressStarted and the compressSkipped/compressCompleted decision.
-  // The web (mediabunny) and legacy rn-compressor engines do not surface this.
+  // The web mediabunny engine also emits this from its own probe.
   'video:upload:probed': {
     uploadId: string
     engine: string
@@ -1440,6 +1451,7 @@ export type Events = {
     bytes: number
     elapsedMs: number
     throughputBytesPerSec: number
+    transport: VideoUploadTransport
   }
   'video:upload:uploadFailed': {
     uploadId: string
@@ -1447,6 +1459,7 @@ export type Events = {
     bytes: number
     errorClass: string
     elapsedMs: number
+    transport: VideoUploadTransport
   }
   'video:upload:processingStarted': {
     uploadId: string
@@ -1483,4 +1496,25 @@ export type Events = {
   }
 
   'post:likedBy:click': {}
+
+  /*
+   * Beta features settings screen
+   */
+
+  // user toggled "Enable beta features"; fired only after the preference
+  // write succeeds
+  'betaFeatures:toggle': {
+    enabled: boolean
+    /** Gate keys of beta features active for this user at toggle time */
+    betaFeatureKeys: string[]
+  }
+  // user pressed the "Share feedback" button, opening the dialog
+  'betaFeatures:feedback:open': {
+    betaFeatureKeys: string[]
+  }
+  // user submitted feedback and it was sent successfully
+  'betaFeatures:feedback:submit': {
+    betaFeatureKeys: string[]
+    feedbackLength: number
+  }
 }

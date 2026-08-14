@@ -1,8 +1,9 @@
 import {type Insets, Platform} from 'react-native'
-import {type AppBskyActorDefs, BSKY_LABELER_DID} from '@atproto/api'
+import {type Service} from '@atproto/lex'
+import {api} from '@bsky/sdk'
 
-import {type ProxyHeaderValue} from '#/state/session/agent'
 import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
+import {type app} from '#/lexicons'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
@@ -146,6 +147,9 @@ export const BSKY_FEED_OWNER_DIDS = [
   'did:plc:q6gjnaw2blty4crticxkmujt',
 ]
 
+export const TRENDING_DID = 'did:plc:qrz3lhbyuxbeilrc6nekdqme'
+export const TRENDING_HANDLE = 'trending.bsky.app'
+
 export const DISCOVER_FEED_URI =
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
 export const VIDEO_FEED_URI =
@@ -170,7 +174,7 @@ export const VIDEO_SAVED_FEED = {
 }
 
 export const RECOMMENDED_SAVED_FEEDS: Pick<
-  AppBskyActorDefs.SavedFeed,
+  app.bsky.actor.defs.SavedFeed,
   'type' | 'value' | 'pinned'
 >[] = [DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED]
 
@@ -191,6 +195,7 @@ export const VIDEO_SERVICE = 'https://video.bsky.app'
 export const VIDEO_SERVICE_DID = 'did:web:video.bsky.app'
 
 export const VIDEO_MAX_DURATION_MS = 3 * 60 * 1000 // 3 minutes in milliseconds
+export const VIDEO_10_MINUTE_MAX_DURATION_MS = 10 * 60 * 1000
 /**
  * Maximum size of a video in megabytes, _not_ mebibytes. Backend uses
  * ISO megabytes.
@@ -236,24 +241,45 @@ export const DEV_ENV_APPVIEW_DID = `did:plc:dw4kbjf5mn7nhenabiqpkyh3` // always 
 export const BLUESKY_PROXY_HEADER = {
   value: `${BLUESKY_PROXY_DID}#bsky_appview`,
   get() {
-    return this.value as ProxyHeaderValue
+    return this.value as Service
   },
   set(value: string) {
     this.value = value
   },
 }
 
-export const DM_SERVICE_HEADERS = {
-  'atproto-proxy': `${CHAT_PROXY_DID}#bsky_chat`,
-}
+/**
+ * The chat service's proxy target, in the `did#service_id` form a lex client's
+ * `service` option takes. A client constructed with it emits `atproto-proxy:
+ * <this value>` on every request, which is what routes `chat.bsky.*` calls to
+ * the chat service.
+ *
+ * The DID comes from the env-configurable `CHAT_PROXY_DID` (via
+ * `EXPO_PUBLIC_CHAT_PROXY_DID`) rather than a hard-coded constant, so the
+ * target can be retargeted per environment.
+ */
+export const CHAT_PROXY_SERVICE: Service = `${CHAT_PROXY_DID}#bsky_chat`
 
-export const BLUESKY_MOD_SERVICE_HEADERS = {
-  'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
-}
+/**
+ * Bluesky's own moderation service, in the `did#service_id` form a lex client's
+ * per-call `service` option takes. Passing it emits `atproto-proxy: <this
+ * value>` on that one request, routing a `com.atproto.moderation.*` call to
+ * Bluesky's labeler.
+ *
+ * Reports and appeals aimed at a DIFFERENT labeler build their own value from
+ * that labeler's creator did instead, so this is a per-call option rather than a
+ * client-level one like {@link CHAT_PROXY_SERVICE}.
+ */
+export const MOD_PROXY_SERVICE: Service = `${api.moderation.did}#atproto_labeler`
 
-export const BLUESKY_NOTIF_SERVICE_HEADERS = {
-  'atproto-proxy': `${BLUESKY_PROXY_DID}#bsky_notif`,
-}
+/**
+ * The notification service's proxy target, in the `did#service_id` form a lex
+ * client's per-call `service` option takes. Passing it emits `atproto-proxy:
+ * <this value>` on that one request, which is what routes push registration to
+ * the notification service (replaces the old
+ * `BLUESKY_NOTIF_SERVICE_HEADERS`).
+ */
+export const NOTIF_SERVICE: Service = `${BLUESKY_PROXY_DID}#bsky_notif`
 
 export const webLinks = {
   tos: `https://bsky.social/about/support/tos`,

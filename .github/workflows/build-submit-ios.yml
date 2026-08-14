@@ -18,6 +18,11 @@ on:
           - QA Team
           - Software Mansion
         default: none
+      changelog:
+        type: string
+        description: TestFlight "What to Test" notes (only applied when a group is selected)
+        required: false
+        default: ''
   workflow_call:
     inputs:
       profile:
@@ -81,7 +86,7 @@ jobs:
       build-number: ${{ steps.ipa-build-number.outputs.build-number }}
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 5
 
@@ -211,6 +216,16 @@ jobs:
             ${{ env.BUILD_DIR }}/Bluesky.ipa
             ${{ env.BUILD_DIR }}/Bluesky.app.dSYM.zip
 
+      - name: 📝 Write build summary
+        env:
+          REMOTE_BUILD_NUMBER: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}
+        run: |
+          {
+            echo "### iOS build number"
+            echo
+            echo "\`$REMOTE_BUILD_NUMBER\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
   submit:
     name: Submit iOS
     # Submission and dSYM upload are I/O bound and don't need the xlarge builder.
@@ -218,7 +233,7 @@ jobs:
     needs: [build]
     steps:
       - name: ⬇️ Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # eas submit reads the app config from the repo
           fetch-depth: 5
@@ -246,29 +261,13 @@ jobs:
 
       - name: 🔔 Notify Slack of Production Build
         if: ${{ inputs.profile == 'production' }}
-        uses: slackapi/slack-github-action@0d95c9a7becc1e6e297d76df9bc735c44f4cbcbc # v3.0.5
+        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
         with:
           webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           webhook-type: incoming-webhook
           payload-templated: true
           payload: |
             {"text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ needs.build.outputs.package-version }}\nBuild Number: ${{ needs.build.outputs.build-number }}```"}
-
-      # Record the commit only after a successful submit, so a failed submit doesn't advance
-      # the baseline used for the next testflight build's changelog.
-      - name: ⬇️ Restore Cache
-        id: get-base-commit
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        if: ${{ inputs.profile == 'testflight' }}
-        with:
-          path: most-recent-testflight-commit.txt
-          key: most-recent-testflight-commit
-
-      - name: ✏️ Write commit hash to cache
-        env:
-          GITHUB_SHA: ${{ github.sha }}
-        if: ${{ inputs.profile == 'testflight' }}
-        run: echo $GITHUB_SHA > most-recent-testflight-commit.txt
 
   distribute:
     name: Assign build to TestFlight group
@@ -286,6 +285,7 @@ jobs:
       - name: 🧪 Assign build to TestFlight group
         env:
           TESTFLIGHT_GROUP: ${{ inputs.testFlightGroup }}
+          CHANGELOG: ${{ inputs.changelog }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
@@ -304,6 +304,12 @@ jobs:
             --arg key "$key_content" \
             '{key_id: $key_id, issuer_id: $issuer_id, key: $key, in_house: false}' \
             > asc_api_key.json
+          # changelog is optional, and passing it empty would blank out whatever "What to
+          # Test" notes the build already has, so only include the flag when it is set.
+          changelog_arg=()
+          if [ -n "$CHANGELOG" ]; then
+            changelog_arg=(changelog:"$CHANGELOG")
+          fi
           # app_platform is required in non-interactive mode: distribute_only otherwise
           # calls fetch_app_platform, which prompts for input and crashes without a TTY.
           fastlane run upload_to_testflight \
@@ -314,4 +320,5 @@ jobs:
             app_version:"$APP_VERSION" \
             build_number:"$BUILD_NUMBER" \
             groups:"$TESTFLIGHT_GROUP" \
-            notify_external_testers:true
+            notify_external_testers:true \
+            "${changelog_arg[@]}"

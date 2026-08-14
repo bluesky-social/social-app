@@ -1,13 +1,12 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {ToolsOzoneReportDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
-import {BLUESKY_MOD_SERVICE_HEADERS} from '#/lib/constants'
-import {useAgent, useSession} from '#/state/session'
+import {MOD_PROXY_SERVICE} from '#/lib/constants'
+import {useAppviewClient, useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, web} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -17,6 +16,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {logger} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
+import {com, tools} from '#/lexicons'
 
 export function AgeAssuranceAppealDialog({
   control,
@@ -42,7 +42,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   const [details, setDetails] = useState('')
   const isInvalid = details.length > 1000
@@ -51,19 +51,21 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
     mutationFn: async () => {
       ax.metric('ageAssurance:appealDialogSubmit', {})
 
-      await agent.createModerationReport(
+      if (!currentAccount) {
+        throw new Error('No current account, should be unreachable')
+      }
+
+      await client.call(
+        com.atproto.moderation.createReport,
         {
-          reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
+          reasonType: tools.ozone.report.defs.reasonAppeal.value,
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
-            did: currentAccount?.did,
+            did: currentAccount.did,
           },
           reason: `AGE_ASSURANCE_INQUIRY: ` + details,
         },
-        {
-          encoding: 'application/json',
-          headers: BLUESKY_MOD_SERVICE_HEADERS,
-        },
+        {service: MOD_PROXY_SERVICE},
       )
     },
     onError: err => {

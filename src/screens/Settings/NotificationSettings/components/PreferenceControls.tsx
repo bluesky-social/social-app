@@ -156,7 +156,9 @@ export function Inner({
         <>
           <Divider />
           <Text style={[a.font_semi_bold, a.text_md]}>
-            <Trans>From</Trans>
+            <Trans comment="Filter who you receive notifications from">
+              From
+            </Trans>
           </Text>
           <Toggle.Group
             type="radio"
