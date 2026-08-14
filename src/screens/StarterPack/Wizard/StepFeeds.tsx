@@ -59,8 +59,14 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
         : savedFeeds
       : undefined
 
-  const {data: searchedFeeds, isFetching: isFetchingSearchedFeeds} =
-    usePopularFeedsSearch({query: throttledQuery})
+  const {
+    data: searchedFeedsPages,
+    fetchNextPage: fetchNextSearchedFeedsPage,
+    hasNextPage: hasNextSearchedFeedsPage,
+    isFetching: isFetchingSearchedFeeds,
+  } = usePopularFeedsSearch({query: throttledQuery})
+  const searchedFeeds =
+    searchedFeedsPages?.pages.flatMap(page => page.feeds) ?? []
 
   const isLoading =
     !isFetchedSavedFeeds || isLoadingPopularFeeds || isFetchingSearchedFeeds
@@ -98,7 +104,17 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onEndReached={
-          !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
+          !screenReaderEnabled
+            ? () => {
+                if (query) {
+                  if (hasNextSearchedFeedsPage) {
+                    void fetchNextSearchedFeedsPage()
+                  }
+                } else {
+                  void fetchNextPage()
+                }
+              }
+            : undefined
         }
         onEndReachedThreshold={2}
         keyboardDismissMode="on-drag"
