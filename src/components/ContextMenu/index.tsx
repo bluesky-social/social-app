@@ -712,7 +712,7 @@ export function Outer({
                   t.atoms.bg_contrast_25,
                   a.w_full,
                   // @ts-ignore react-native-web expects string, and this file is platform-split -sfn
-                  // note: above @ts-expect-error cannot be a @ts-expect-error because this does not cause an error
+                  // note: above @ts-ignore cannot be a @ts-expect-error because this does not cause an error
                   // in the typecheck CI - presumably because of RNW overriding the types
                   {
                     transformOrigin:
