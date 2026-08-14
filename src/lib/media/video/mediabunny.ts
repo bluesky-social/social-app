@@ -9,12 +9,10 @@ let promise: Promise<MediaBunnyModule> | undefined
  * retry the load.
  */
 export function loadMediaBunny(): Promise<MediaBunnyModule> {
-  promise ??= import('mediabunny').catch(
-    e => {
-      // reset so a later attempt can retry after a transient chunk-load failure
-      promise = undefined
-      throw e
-    },
-  )
+  promise ??= import('mediabunny').catch(e => {
+    // reset so a later attempt can retry after a transient chunk-load failure
+    promise = undefined
+    throw e
+  })
   return promise
 }
