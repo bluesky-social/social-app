@@ -35,7 +35,13 @@ module.exports = function (api) {
       // cannot use `env` field because it will put them after
       // the `react-native-worklets/plugin` plugin
       ...(api.env('test')
-        ? ['@babel/plugin-transform-class-static-block']
+        ? [
+            '@babel/plugin-transform-class-static-block',
+            // Compile `import()` to require so jest (which runs without
+            // `--experimental-vm-modules`) can execute lazily-loaded modules
+            // like `@ipld/dag-cbor` via its moduleNameMapper.
+            '@babel/plugin-transform-dynamic-import',
+          ]
         : []),
       ...(api.env('production') ? ['transform-remove-console'] : []),
 
