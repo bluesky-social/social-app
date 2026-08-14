@@ -7,7 +7,41 @@ import {
   PUBLIC_BSKY_SERVICE,
 } from '#/lib/constants'
 import {createLexClient} from '#/lib/lexClient'
+import {account} from '#/storage'
 import {networkAwareFetch} from './network'
+
+const IS_BETA_USER_HEADER = 'X-Bsky-Is-Beta-User'
+
+/** Read the cached beta preference without letting corrupt storage block requests. */
+function readIsBetaUser(did: string): boolean | undefined {
+  try {
+    return account.get([did, 'isBetaUser'])
+  } catch {
+    return undefined
+  }
+}
+
+/**
+ * Add account-scoped headers to appview requests.
+ *
+ * Values are read per request so preference changes are reflected immediately
+ * without rebuilding the session bundle.
+ */
+function withAppviewRequestHeaders(agent: Agent): Agent {
+  return {
+    get did() {
+      return agent.did
+    },
+    fetchHandler(path, init) {
+      const headers = new Headers(init?.headers)
+      const isBetaUser = agent.did ? readIsBetaUser(agent.did) : undefined
+      if (isBetaUser !== undefined) {
+        headers.set(IS_BETA_USER_HEADER, String(isBetaUser))
+      }
+      return agent.fetchHandler(path, {...init, headers})
+    },
+  }
+}
 
 /**
  * Build the signed-in appview {@link Client}.
@@ -28,7 +62,9 @@ import {networkAwareFetch} from './network'
  * fetch, which is `networkAwareFetch` wrapped in the disposal kill switch.
  */
 export function buildAppviewClient(agent: Agent): Client {
-  return createLexClient(agent, {service: BLUESKY_PROXY_HEADER.get()})
+  return createLexClient(withAppviewRequestHeaders(agent), {
+    service: BLUESKY_PROXY_HEADER.get(),
+  })
 }
 
 /**
