@@ -99,8 +99,7 @@ export async function getConfig() {
   return await getPublicAppviewClient().call(app.bsky.ageassurance.getConfig)
 }
 export function getConfigFromCache():
-  | app.bsky.ageassurance.getConfig.$OutputBody
-  | undefined {
+  app.bsky.ageassurance.getConfig.$OutputBody | undefined {
   return qc.getQueryData<app.bsky.ageassurance.getConfig.$OutputBody>(
     configQueryKey,
   )

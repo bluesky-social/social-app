@@ -148,11 +148,7 @@ type DoneState = {
 }
 
 export type VideoState =
-  | ErrorState
-  | CompressingState
-  | UploadingState
-  | ProcessingState
-  | DoneState
+  ErrorState | CompressingState | UploadingState | ProcessingState | DoneState
 
 export function createVideoState(
   asset: ImagePickerAsset,

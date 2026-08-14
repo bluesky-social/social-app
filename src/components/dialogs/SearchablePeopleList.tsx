@@ -66,11 +66,7 @@ type ErrorItem = {
 }
 
 type Item =
-  | ProfileItem
-  | ExistingChatItem
-  | EmptyItem
-  | PlaceholderItem
-  | ErrorItem
+  ProfileItem | ExistingChatItem | EmptyItem | PlaceholderItem | ErrorItem
 
 export function SearchablePeopleList({
   title,

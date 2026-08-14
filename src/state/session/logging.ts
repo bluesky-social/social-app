@@ -139,21 +139,13 @@ type Log =
   | {
       type: 'method:start'
       method:
-        | 'createAccount'
-        | 'login'
-        | 'logout'
-        | 'resumeSession'
-        | 'removeAccount'
+        'createAccount' | 'login' | 'logout' | 'resumeSession' | 'removeAccount'
       account?: RedactedAccount
     }
   | {
       type: 'method:end'
       method:
-        | 'createAccount'
-        | 'login'
-        | 'logout'
-        | 'resumeSession'
-        | 'removeAccount'
+        'createAccount' | 'login' | 'logout' | 'resumeSession' | 'removeAccount'
       account?: RedactedAccount
     }
   | {

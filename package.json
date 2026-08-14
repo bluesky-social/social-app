@@ -288,9 +288,7 @@
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-compiler": "19.1.0-rc.3",
     "babel-preset-expo": "~54.0.10",
-    "eslint-plugin-bsky-internal": "link:eslint",
-    "eslint-plugin-react-compiler": "19.1.0-rc.2",
-    "eslint-plugin-react-native": "^5.0.0",
+    "eslint-plugin-bsky-internal": "link:lint-rules",
     "eslint-plugin-react-native-a11y": "^3.5.1",
     "eslint-plugin-simple-import-sort": "^13.0.0",
     "file-loader": "6.2.0",
@@ -303,7 +301,7 @@
     "lint-staged": "^17.0.8",
     "oxlint": "^1.73.0",
     "oxlint-tsgolint": "^7.0.2001",
-    "prettier": "^3.8.3",
+    "prettier": "3.9.6",
     "react-native-dotenv": "^3.4.11",
     "react-refresh": "^0.14.0",
     "svgo": "^4.0.2",
@@ -376,7 +374,7 @@
   },
   "lint-staged": {
     "*{.js,.jsx,.ts,.tsx}": [
-      "oxlint --fix"
+      "oxlint --fix --no-error-on-unmatched-pattern"
     ],
     "*{.js,.jsx,.ts,.tsx,.css}": [
       "prettier --cache --write --ignore-unknown"

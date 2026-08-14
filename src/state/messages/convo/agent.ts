@@ -709,8 +709,7 @@ export class Convo {
   }
 
   private pendingFetchConvo:
-    | Promise<{convo: chat.bsky.convo.defs.ConvoView}>
-    | undefined
+    Promise<{convo: chat.bsky.convo.defs.ConvoView}> | undefined
   async fetchConvo() {
     if (this.pendingFetchConvo) return this.pendingFetchConvo
 

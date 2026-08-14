@@ -38,9 +38,9 @@ export function GermButton({
   const linkWarningControl = Dialog.useDialogControl()
 
   // exclude `none` and all unknown values
-  if (
-    !(germ.showButtonTo === 'everyone' || germ.showButtonTo === 'usersIFollow')
-  ) {
+  if (!(
+    germ.showButtonTo === 'everyone' || germ.showButtonTo === 'usersIFollow'
+  )) {
     return null
   }
 

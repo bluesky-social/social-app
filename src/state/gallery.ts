@@ -52,8 +52,7 @@ type ComposerImageWithTransformation = ComposerImageBase & {
 }
 
 export type ComposerImage =
-  | ComposerImageWithoutTransformation
-  | ComposerImageWithTransformation
+  ComposerImageWithoutTransformation | ComposerImageWithTransformation
 
 let _imageCacheDirectory: string
 

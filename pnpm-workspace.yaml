@@ -1,6 +1,15 @@
 nodeLinker: 'hoisted'
 autoInstallPeers: true # default: true
 strictPeerDependencies: false # default: false
+packageExtensions:
+  eslint-plugin-react-native-a11y:
+    peerDependenciesMeta:
+      eslint:
+        optional: true
+  eslint-plugin-simple-import-sort:
+    peerDependenciesMeta:
+      eslint:
+        optional: true
 trustPolicy: 'no-downgrade' # default: off
 trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
 overrides:

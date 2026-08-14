@@ -13,8 +13,7 @@ export function useManageEmail2FA() {
       enabled,
       token,
     }:
-      | {enabled: true; token?: undefined}
-      | {enabled: false; token: string}) => {
+      {enabled: true; token?: undefined} | {enabled: false; token: string}) => {
       if (!currentAccount?.email) {
         throw new Error('No email found for the current account')
       }
