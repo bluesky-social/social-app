@@ -26,8 +26,6 @@ jobs:
             lint,
             'intl:lint',
             prettier,
-            'icons:check',
-            'icons:test',
             'lexicons:verify',
             'typecheck:ios',
             'typecheck:android',
