@@ -30,8 +30,8 @@ export function useContentVisibilityQuery() {
         const response = await client.get(
           app.bsky.actor.contentVisibilityDeclaration,
           {
-          repo: did!,
-          rkey: CONTENT_VISIBILITY_RKEY,
+            repo: did!,
+            rkey: CONTENT_VISIBILITY_RKEY,
           },
         )
         return parseContentVisibilityRecord(response.value)
