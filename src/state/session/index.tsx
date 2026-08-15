@@ -13,6 +13,7 @@ import {type Client} from '@atproto/lex'
 import {type SessionData} from '@atproto/lex-password-session'
 
 import * as persisted from '#/state/persisted'
+import {mirrorSessionSnapshot} from '#/state/session/storage'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
@@ -119,6 +120,7 @@ class SessionStore {
         data: redactPersistedSession(persistedData),
       })
       void persisted.write('session', persistedData)
+      mirrorSessionSnapshot(persistedData)
     }
     this.listeners.forEach(listener => listener())
   }
