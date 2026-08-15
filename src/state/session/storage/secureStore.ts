@@ -207,10 +207,17 @@ export function writeSessions(
   for (const account of next.accounts) {
     const prior = previousByDid.get(account.did)
     const keys = accountKeys(account.did)
-    if (prior?.refreshJwt !== account.refreshJwt) {
+    /*
+     * The absent-prior case must write, not skip. A caller that distrusts its
+     * baseline passes an empty `previous` to force a full rewrite, and there
+     * `undefined !== undefined` would skip an account whose token is absent -
+     * leaving whatever the keychain still holds under that key to be read back
+     * as a live credential under an index that names the did.
+     */
+    if (!prior || prior.refreshJwt !== account.refreshJwt) {
       SecureStore.setItem(keys.refresh, account.refreshJwt ?? '', WRITE_OPTIONS)
     }
-    if (prior?.accessJwt !== account.accessJwt) {
+    if (!prior || prior.accessJwt !== account.accessJwt) {
       SecureStore.setItem(keys.access, account.accessJwt ?? '', WRITE_OPTIONS)
     }
     const descriptor = canonicalJson(toDescriptor(account))

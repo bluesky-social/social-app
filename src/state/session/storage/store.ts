@@ -10,9 +10,8 @@ import {eraseSessions, writeSessions} from './secureStore'
 const RETRY_DELAY = 5_000
 
 /**
- * Pending work is a union so the sticky-clear rule reads as one guard: while a
- * clear is pending, a write is dropped rather than risk resurrecting a session
- * after a requested wipe.
+ * Pending work is a union: a failed write and a failed clear retry the same
+ * way, and only the newest of them is ever outstanding.
  */
 type PendingWork =
   {type: 'write'; snapshot: SessionSnapshot} | {type: 'clear'; dids: string[]}
@@ -45,6 +44,14 @@ export type SessionStorageStore = {
 export function createSessionStorageStore(): SessionStorageStore {
   let durableSnapshot: SessionSnapshot = EMPTY_SNAPSHOT
   let pending: PendingWork | undefined
+  /**
+   * Sticky: once a clear is requested, every later write is dropped for the
+   * rest of the process, including after the erase succeeds. Clearing storage
+   * does not stop the session, so an in-flight token refresh would otherwise
+   * mirror the credentials straight back into the keychain. The user is told to
+   * restart the app, and the next boot lifts the latch via `setDurable`.
+   */
+  let clearRequested = false
   let retryTimer: ReturnType<typeof setTimeout> | undefined
   let retryTriggersAttached = false
   const maybeOrphanedDids = new Set<string>()
@@ -57,15 +64,17 @@ export function createSessionStorageStore(): SessionStorageStore {
     durableSnapshot = snapshot
     maybeOrphanedDids.clear()
     pending = undefined
+    clearRequested = false
     cancelRetry()
   }
 
   function write(next: SessionSnapshot) {
-    if (pending?.type === 'clear') return
+    if (clearRequested) return
     persist(next, 'write')
   }
 
   function clear() {
+    clearRequested = true
     const dids = [
       ...new Set([
         ...durableSnapshot.accounts.map(account => account.did),
@@ -93,9 +102,26 @@ export function createSessionStorageStore(): SessionStorageStore {
     operation: SessionStorageErrorOperation,
   ) {
     trackMaybeOrphaned(next)
+    /*
+     * A pending write means the last attempt threw, and a throw can land
+     * anywhere in the write ordering - including after a journaled index was
+     * published. The baseline is then a guess, so it is thrown away: diffing
+     * from empty rewrites every account in `next` in full, retires everything
+     * else the store might still name, and force-publishes a clean index over
+     * any journal the failure left behind.
+     */
+    const rebaseline = pending !== undefined
+    const previous = rebaseline ? EMPTY_SNAPSHOT : durableSnapshot
+    const alsoRetire = rebaseline
+      ? [
+          ...durableSnapshot.accounts.map(account => account.did),
+          ...maybeOrphanedDids,
+        ]
+      : [...maybeOrphanedDids]
     try {
-      writeSessions(durableSnapshot, next, {
-        alsoRetire: [...maybeOrphanedDids],
+      writeSessions(previous, next, {
+        alsoRetire,
+        forceIndex: rebaseline,
       })
       durableSnapshot = next
       maybeOrphanedDids.clear()

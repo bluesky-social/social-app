@@ -46,8 +46,9 @@ let bootReport: SessionStorageBootReport | undefined
  * Call once during bootstrap, after `persisted.init()` has resolved and before
  * anything reads the session.
  *
- * When the secure store wins, its snapshot is adopted by writing it back into
- * the persisted state. `persisted.write` updates its in-memory copy
+ * When the secure store wins, its snapshot - merged per account with the blob,
+ * see `decideBootSource` - is adopted by writing it back into the persisted
+ * state. `persisted.write` updates its in-memory copy
  * synchronously before awaiting storage, so every existing reader - the
  * session store constructor, the last-active-account lookup, the expiry rescue
  * path - sees the adopted data with no seam of its own. It also means the
@@ -90,10 +91,17 @@ export function initSessionStorage(): void {
       legacy,
     })
 
+    store.setDurable(secure.status === 'ok' ? secure.snapshot : EMPTY_SNAPSHOT)
     if (decision.adopt) {
       adopt(decision.adopt)
+      /*
+       * The adopted snapshot is a merge, so it can hold credentials the
+       * keychain does not. The write diffs against the durable snapshot set
+       * just above - the secure store as it was read - so it no-ops when the
+       * merge took nothing from the blob, and retries if it fails.
+       */
+      store.write(decision.adopt)
     }
-    store.setDurable(secure.status === 'ok' ? secure.snapshot : EMPTY_SNAPSHOT)
     if (decision.backfill === 'secure-from-legacy') {
       backfill(legacy, decision, installId)
     }

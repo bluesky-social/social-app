@@ -3,12 +3,23 @@ import {afterEach, beforeEach, describe, expect, it, jest} from '@jest/globals'
 jest.mock('expo-secure-store', () => {
   const values = new Map<string, string>()
   const writes: [key: string, value: string][] = []
-  const control: {failKey?: string} = {}
+  /*
+   * `failAfter` lets a key succeed that many times before it starts failing,
+   * which is how a write is made to fail on its second index write - the one
+   * that cleans up a journal it already published.
+   */
+  const control: {failKey?: string; failAfter?: number} = {}
   return {
     AFTER_FIRST_UNLOCK: 0,
     getItem: (key: string) => values.get(key) ?? null,
     setItem: (key: string, value: string) => {
-      if (key === control.failKey) throw new Error('disk full')
+      if (key === control.failKey) {
+        if (control.failAfter) {
+          control.failAfter -= 1
+        } else {
+          throw new Error('disk full')
+        }
+      }
       writes.push([key, value])
       values.set(key, value)
     },
@@ -49,13 +60,14 @@ jest.mock('#/logger', () => {
 import {type SessionAccount} from '#/state/session/types'
 import {accountKeys, SESSION_INDEX_KEY} from '../keys'
 import {EMPTY_SNAPSHOT, type SessionSnapshot} from '../schema'
+import {readSessions} from '../secureStore'
 import {createSessionStorageStore} from '../store'
 
 const {__mock: secure} = jest.requireMock('expo-secure-store') as {
   __mock: {
     values: Map<string, string>
     writes: [key: string, value: string][]
-    control: {failKey?: string}
+    control: {failKey?: string; failAfter?: number}
   }
 }
 const {__listeners: appStateListeners} = jest.requireMock('#/lib/appState') as {
@@ -82,6 +94,7 @@ beforeEach(() => {
   secure.values.clear()
   secure.writes.length = 0
   secure.control.failKey = undefined
+  secure.control.failAfter = undefined
   appStateListeners.length = 0
   loggedErrors.length = 0
 })
@@ -190,6 +203,101 @@ describe('createSessionStorageStore', () => {
     expect(secure.values.get(aliceKeys.access)).toBe('')
     expect(secure.values.get(aliceKeys.descriptor)).toBe('')
     expect(storedIndex()).toEqual({version: 1, dids: []})
+  })
+
+  it('drops writes for the rest of the process once a clear succeeds', () => {
+    const store = createSessionStorageStore()
+    store.write(active)
+
+    store.clear()
+    const writesAfterClear = secure.writes.length
+
+    /*
+     * Clearing storage does not end the session, so a token refresh already in
+     * flight will still ask for a mirror write.
+     */
+    store.write(active)
+
+    expect(secure.writes.length).toBe(writesAfterClear)
+    expect(secure.values.get(aliceKeys.refresh)).toBe('')
+    expect(secure.values.get(aliceKeys.access)).toBe('')
+    expect(readSessions()).toEqual(EMPTY_SNAPSHOT)
+  })
+
+  it('force-publishes a clean index over a journal left by a failed write', () => {
+    const store = createSessionStorageStore()
+    store.write(active)
+
+    /*
+     * Removing alice fails on the final index write: the journaled index that
+     * names her as retired is already published and her keys are tombstoned.
+     */
+    secure.control.failKey = SESSION_INDEX_KEY
+    secure.control.failAfter = 1
+    store.write(EMPTY_SNAPSHOT)
+    expect(storedIndex()).toMatchObject({dids: [], retiredDids: [alice.did]})
+    expect(secure.values.get(aliceKeys.refresh)).toBe('')
+
+    // alice is back, byte-identical to the snapshot still believed durable.
+    secure.control.failKey = undefined
+    secure.control.failAfter = undefined
+    store.write(active)
+
+    expect(secure.values.get(aliceKeys.refresh)).toBe(alice.refreshJwt)
+    expect(secure.values.get(aliceKeys.access)).toBe(alice.accessJwt)
+    expect(storedIndex()).toEqual({
+      version: 1,
+      currentDid: alice.did,
+      dids: [alice.did],
+    })
+    expect(readSessions()).toEqual(active)
+    expect(store.getDurable()).toEqual(active)
+  })
+
+  it('rewrites credentials after a failure even when the snapshot is unchanged', () => {
+    const store = createSessionStorageStore()
+    store.write(active)
+
+    secure.control.failKey = SESSION_INDEX_KEY
+    store.write({
+      accounts: [{...alice, refreshJwt: 'rotated-refresh'}],
+      currentDid: alice.did,
+    })
+    secure.control.failKey = undefined
+
+    /*
+     * A throw can land anywhere in the write ordering, so the keychain may hold
+     * something the baseline does not describe.
+     */
+    secure.values.set(aliceKeys.refresh, 'partially-applied')
+    store.write(active)
+
+    expect(secure.values.get(aliceKeys.refresh)).toBe(alice.refreshJwt)
+    expect(secure.values.get(aliceKeys.access)).toBe(alice.accessJwt)
+    expect(readSessions()).toEqual(active)
+  })
+
+  it('tombstones absent credentials when rewriting from an unknown baseline', () => {
+    const store = createSessionStorageStore()
+    store.write(active)
+
+    secure.control.failKey = SESSION_INDEX_KEY
+    store.write({
+      accounts: [{...alice, accessJwt: 'rotated-access'}],
+      currentDid: alice.did,
+    })
+    secure.control.failKey = undefined
+
+    // The user logs out: the account is kept, its credentials are not.
+    const loggedOut: SessionSnapshot = {
+      accounts: [{...alice, refreshJwt: undefined, accessJwt: undefined}],
+      currentDid: undefined,
+    }
+    store.write(loggedOut)
+
+    expect(secure.values.get(aliceKeys.refresh)).toBe('')
+    expect(secure.values.get(aliceKeys.access)).toBe('')
+    expect(readSessions()).toEqual(loggedOut)
   })
 
   it('retries when the app returns to the foreground', () => {

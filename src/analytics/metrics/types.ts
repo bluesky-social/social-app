@@ -64,6 +64,7 @@ export type Events = {
     divergence: 'none' | 'legacy-lost' | 'secure-behind'
     secureAccountsWithCreds: number
     legacyAccountsWithCreds: number
+    adoptTokensFromLegacy: number
   }
   'notifications:openApp': {
     reason: NotificationReason
