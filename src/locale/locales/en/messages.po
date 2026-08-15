@@ -25,7 +25,7 @@ msgstr "(blocked message hidden)"
 
 #. A reply summary in chat
 #: src/components/dms/getMessageInfo.ts:118
-#: src/components/dms/replyPreview.ts:92
+#: src/components/dms/replyPreview.ts:90
 msgid "(chat invite link)"
 msgstr "(chat invite link)"
 
@@ -39,12 +39,12 @@ msgid "(deleted message)"
 msgstr "(deleted message)"
 
 #. A reply summary in chat
-#: src/components/dms/replyPreview.ts:70
+#: src/components/dms/replyPreview.ts:68
 msgid "(disabled chat invite link)"
 msgstr "(disabled chat invite link)"
 
 #. A reply summary in chat
-#: src/components/dms/replyPreview.ts:84
+#: src/components/dms/replyPreview.ts:82
 msgid "(invalid chat invite link)"
 msgstr "(invalid chat invite link)"
 
@@ -58,12 +58,12 @@ msgid "(no email)"
 msgstr ""
 
 #. A reply summary in chat
-#: src/components/dms/replyPreview.ts:114
+#: src/components/dms/replyPreview.ts:112
 msgid "(no text)"
 msgstr "(no text)"
 
 #. A reply summary in chat
-#: src/components/dms/replyPreview.ts:106
+#: src/components/dms/replyPreview.ts:104
 msgid "(quoted post)"
 msgstr "(quoted post)"
 
@@ -113,7 +113,7 @@ msgid "{0, plural, one {# like} other {# likes}}"
 msgstr ""
 
 #. placeholder {0}: convo.details.memberCount
-#: src/components/dialogs/SearchablePeopleList.tsx:555
+#: src/components/dialogs/SearchablePeopleList.tsx:551
 #: src/components/dms/InitiateChatFlow.tsx:1038
 msgid "{0, plural, one {# member} other {# members}}"
 msgstr "{0, plural, one {# member} other {# members}}"
@@ -663,7 +663,7 @@ msgstr "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgid "{handle} can’t be added"
 msgstr "{handle} can’t be added"
 
-#: src/components/dialogs/SearchablePeopleList.tsx:459
+#: src/components/dialogs/SearchablePeopleList.tsx:455
 msgid "{handle} can't be messaged"
 msgstr ""
 
@@ -680,7 +680,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr ""
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:83
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:89
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -1582,7 +1582,7 @@ msgstr ""
 msgid "An error occurred"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:513
+#: src/view/com/composer/state/video.ts:509
 msgid "An error occurred while compressing the video."
 msgstr ""
 
@@ -1628,11 +1628,11 @@ msgstr ""
 msgid "An error occurred while trying to follow all"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:565
+#: src/view/com/composer/state/video.ts:561
 msgid "An error occurred while uploading the video. {message}"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:557
+#: src/view/com/composer/state/video.ts:553
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr ""
 
@@ -2577,7 +2577,7 @@ msgstr "Cancels signing in so you can check your username"
 #: src/components/PostControls/index.tsx:104
 #: src/components/PostControls/index.tsx:134
 #: src/components/PostControls/index.tsx:162
-#: src/state/shell/composer/index.tsx:101
+#: src/state/shell/composer/index.tsx:96
 msgid "Cannot interact with a blocked user"
 msgstr ""
 
@@ -2992,7 +2992,7 @@ msgstr ""
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:192
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:200
-#: src/components/dialogs/SearchablePeopleList.tsx:340
+#: src/components/dialogs/SearchablePeopleList.tsx:336
 #: src/components/dialogs/StarterPackDialog.tsx:184
 #: src/components/dms/AddMembersFlow.tsx:384
 #: src/components/dms/AfterReportConversationDialog.tsx:91
@@ -3512,7 +3512,7 @@ msgstr "Could not copy – please try again"
 msgid "Could not download – please try again"
 msgstr "Could not download – please try again"
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:191
+#: src/screens/Messages/components/MessageInputEmbed.tsx:190
 msgid "Could not fetch post"
 msgstr "Could not fetch post"
 
@@ -3699,7 +3699,7 @@ msgstr ""
 msgid "Create new account"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:549
+#: src/screens/Messages/ConversationSettings/index.tsx:547
 msgid "Create or modify an invite link for this group chat"
 msgstr "Create or modify an invite link for this group chat"
 
@@ -3723,7 +3723,7 @@ msgstr ""
 #. placeholder {0}: i18n.date(createdAt, { dateStyle: 'long', timeStyle: 'short', })
 #. placeholder {0}: i18n.date(createdAt, { month: 'long', day: 'numeric', year: 'numeric', })
 #: src/screens/Messages/components/InviteLinkDialog.tsx:352
-#: src/screens/Messages/ConversationSettings/index.tsx:504
+#: src/screens/Messages/ConversationSettings/index.tsx:502
 #: src/screens/Settings/AppPasswords.tsx:174
 msgid "Created {0}"
 msgstr ""
@@ -4401,7 +4401,7 @@ msgstr ""
 msgid "Edit My Feeds"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:539
+#: src/screens/Messages/ConversationSettings/index.tsx:537
 msgid "Edit name"
 msgstr "Edit name"
 
@@ -4435,8 +4435,8 @@ msgstr ""
 msgid "Edit starter pack"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:488
-#: src/screens/Messages/ConversationSettings/index.tsx:538
+#: src/screens/Messages/ConversationSettings/index.tsx:486
+#: src/screens/Messages/ConversationSettings/index.tsx:536
 msgid "Edit this group chat’s name"
 msgstr "Edit this group chat’s name"
 
@@ -4945,7 +4945,7 @@ msgstr "Failed to disable invite link"
 msgid "Failed to disconnect Germ DM. Error: {0}"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:375
+#: src/screens/Messages/ConversationSettings/index.tsx:373
 msgid "Failed to edit group chat name"
 msgstr "Failed to edit group chat name"
 
@@ -4979,7 +4979,7 @@ msgstr ""
 
 #: src/screens/Messages/components/ChatEnded.tsx:41
 #: src/screens/Messages/components/ChatLocked.tsx:65
-#: src/screens/Messages/ConversationSettings/index.tsx:402
+#: src/screens/Messages/ConversationSettings/index.tsx:400
 msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Failed to leave group chat"
@@ -5019,7 +5019,7 @@ msgstr ""
 msgid "Failed to load preference."
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:292
+#: src/components/dialogs/SearchablePeopleList.tsx:288
 msgid "Failed to load profiles"
 msgstr "Failed to load profiles"
 
@@ -5034,7 +5034,7 @@ msgstr ""
 msgid "Failed to load suggested follows"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:427
+#: src/screens/Messages/ConversationSettings/index.tsx:425
 msgid "Failed to lock group chat"
 msgstr "Failed to lock group chat"
 
@@ -5049,7 +5049,7 @@ msgstr "Failed to mark all chats as read"
 msgid "Failed to mark all requests as read"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:391
+#: src/screens/Messages/ConversationSettings/index.tsx:389
 msgid "Failed to mute group chat"
 msgstr "Failed to mute group chat"
 
@@ -5150,7 +5150,7 @@ msgid "Failed to toggle thread mute, please try again"
 msgstr ""
 
 #: src/screens/Messages/components/ChatLocked.tsx:55
-#: src/screens/Messages/ConversationSettings/index.tsx:437
+#: src/screens/Messages/ConversationSettings/index.tsx:435
 msgid "Failed to unlock group chat"
 msgstr "Failed to unlock group chat"
 
@@ -5444,7 +5444,7 @@ msgstr "Follow {displayName}"
 msgid "Follow {handle}"
 msgstr ""
 
-#: src/state/shell/progress-guide.tsx:232
+#: src/state/shell/progress-guide.tsx:230
 msgid "Follow 10 accounts"
 msgstr ""
 
@@ -5960,17 +5960,17 @@ msgstr "Group chat"
 msgid "Group chat invite link dialog"
 msgstr "Group chat invite link dialog"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:418
+#: src/screens/Messages/ConversationSettings/index.tsx:416
 msgctxt "toast"
 msgid "Group chat locked"
 msgstr "Group chat locked"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:383
+#: src/screens/Messages/ConversationSettings/index.tsx:381
 msgctxt "toast"
 msgid "Group chat muted"
 msgstr "Group chat muted"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:370
+#: src/screens/Messages/ConversationSettings/index.tsx:368
 msgctxt "toast"
 msgid "Group chat name updated"
 msgstr "Group chat name updated"
@@ -5981,12 +5981,12 @@ msgid "Group chat settings"
 msgstr "Group chat settings"
 
 #: src/screens/Messages/components/ChatLocked.tsx:42
-#: src/screens/Messages/ConversationSettings/index.tsx:421
+#: src/screens/Messages/ConversationSettings/index.tsx:419
 msgctxt "toast"
 msgid "Group chat unlocked"
 msgstr "Group chat unlocked"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:386
+#: src/screens/Messages/ConversationSettings/index.tsx:384
 msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "Group chat unmuted"
@@ -6004,7 +6004,7 @@ msgstr "Group chats are only available to users 18 and over."
 msgid "Group chats can only have a maximum of {0, plural, other {# people}}."
 msgstr "Group chats can only have a maximum of {0, plural, other {# people}}."
 
-#: src/components/dialogs/SearchablePeopleList.tsx:565
+#: src/components/dialogs/SearchablePeopleList.tsx:561
 #: src/components/dms/InitiateChatFlow.tsx:1048
 msgid "Group is locked"
 msgstr "Group is locked"
@@ -6028,8 +6028,8 @@ msgstr "GrowthBook"
 msgid "Hacking or system attacks"
 msgstr ""
 
-#: src/state/shell/progress-guide.tsx:221
-#: src/state/shell/progress-guide.tsx:231
+#: src/state/shell/progress-guide.tsx:219
+#: src/state/shell/progress-guide.tsx:229
 msgid "Half way there!"
 msgstr ""
 
@@ -6298,7 +6298,7 @@ msgstr ""
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:527
+#: src/view/com/composer/state/video.ts:523
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr ""
 
@@ -6689,7 +6689,7 @@ msgstr ""
 msgid "Invite code"
 msgstr ""
 
-#: src/screens/Signup/state.ts:363
+#: src/screens/Signup/state.ts:359
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr ""
 
@@ -6712,7 +6712,7 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:332
 #: src/screens/Messages/components/InviteLinkDialog.tsx:511
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:149
-#: src/screens/Messages/ConversationSettings/index.tsx:552
+#: src/screens/Messages/ConversationSettings/index.tsx:550
 msgid "Invite link"
 msgstr "Invite link"
 
@@ -6992,7 +6992,7 @@ msgid "Learn more."
 msgstr ""
 
 #: src/components/dms/LeaveConvoPrompt.tsx:63
-#: src/screens/Messages/ConversationSettings/index.tsx:586
+#: src/screens/Messages/ConversationSettings/index.tsx:584
 msgid "Leave"
 msgstr ""
 
@@ -7032,7 +7032,7 @@ msgstr "Leave conversation"
 msgid "Leave group chat"
 msgstr "Leave group chat"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:585
+#: src/screens/Messages/ConversationSettings/index.tsx:583
 msgid "Leave this group chat"
 msgstr "Leave this group chat"
 
@@ -7091,8 +7091,8 @@ msgstr ""
 msgid "Like 10 posts"
 msgstr ""
 
-#: src/state/shell/progress-guide.tsx:217
-#: src/state/shell/progress-guide.tsx:222
+#: src/state/shell/progress-guide.tsx:215
+#: src/state/shell/progress-guide.tsx:220
 msgid "Like 10 posts to train the Discover feed"
 msgstr ""
 
@@ -7345,7 +7345,7 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:566
+#: src/screens/Messages/ConversationSettings/index.tsx:564
 msgid "Lock"
 msgstr "Lock"
 
@@ -7357,11 +7357,11 @@ msgstr "Lock group chat"
 msgid "Lock group chat?"
 msgstr "Lock group chat?"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:564
+#: src/screens/Messages/ConversationSettings/index.tsx:562
 msgid "Lock this group chat"
 msgstr "Lock this group chat"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:566
+#: src/screens/Messages/ConversationSettings/index.tsx:564
 msgid "Locked"
 msgstr "Locked"
 
@@ -7729,7 +7729,7 @@ msgstr ""
 msgid "Music"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:531
+#: src/screens/Messages/ConversationSettings/index.tsx:529
 msgid "Mute"
 msgstr "Mute"
 
@@ -7774,7 +7774,7 @@ msgstr ""
 msgid "Mute these accounts?"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:529
+#: src/screens/Messages/ConversationSettings/index.tsx:527
 msgid "Mute this group chat"
 msgstr "Mute this group chat"
 
@@ -7816,7 +7816,7 @@ msgstr ""
 msgid "Mute, leave, or remove people anytime. It’s your chat."
 msgstr "Mute, leave, or remove people anytime. It’s your chat."
 
-#: src/screens/Messages/ConversationSettings/index.tsx:531
+#: src/screens/Messages/ConversationSettings/index.tsx:529
 msgid "Muted"
 msgstr "Muted"
 
@@ -8275,7 +8275,7 @@ msgstr ""
 msgid "No result"
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:250
+#: src/components/dialogs/SearchablePeopleList.tsx:246
 #: src/components/dms/AddMembersFlow.tsx:257
 #: src/components/dms/InitiateChatFlow.tsx:469
 #: src/components/ProgressGuide/FollowDialog.tsx:221
@@ -9188,11 +9188,11 @@ msgstr ""
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr ""
 
-#: src/screens/Signup/state.ts:311
+#: src/screens/Signup/state.ts:307
 msgid "Please choose your handle."
 msgstr ""
 
-#: src/screens/Signup/state.ts:303
+#: src/screens/Signup/state.ts:299
 #: src/screens/Signup/StepInfo/index.tsx:149
 msgid "Please choose your password."
 msgstr ""
@@ -9201,11 +9201,11 @@ msgstr ""
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr ""
 
-#: src/screens/Signup/state.ts:323
+#: src/screens/Signup/state.ts:319
 msgid "Please complete the verification captcha."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:551
+#: src/view/com/composer/state/video.ts:547
 msgid "Please confirm your email address to upload videos."
 msgstr ""
 
@@ -9258,7 +9258,7 @@ msgstr ""
 msgid "Please enter the security code we sent to your previous email address."
 msgstr ""
 
-#: src/screens/Signup/state.ts:287
+#: src/screens/Signup/state.ts:283
 #: src/screens/Signup/StepInfo/index.tsx:122
 msgid "Please enter your email."
 msgstr ""
@@ -9364,7 +9364,7 @@ msgid "Post"
 msgstr ""
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:68
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:74
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "Post {index} of {count}"
@@ -9909,9 +9909,9 @@ msgstr ""
 msgid "Remove caption file"
 msgstr "Remove caption file"
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:225
-#: src/screens/Messages/components/MessageInputEmbed.tsx:280
-#: src/screens/Messages/components/MessageInputEmbed.tsx:335
+#: src/screens/Messages/components/MessageInputEmbed.tsx:224
+#: src/screens/Messages/components/MessageInputEmbed.tsx:279
+#: src/screens/Messages/components/MessageInputEmbed.tsx:334
 msgid "Remove embed"
 msgstr ""
 
@@ -10167,7 +10167,7 @@ msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:218
 #: src/features/liveNow/components/LiveStatusDialog.tsx:264
-#: src/screens/Messages/ConversationSettings/index.tsx:578
+#: src/screens/Messages/ConversationSettings/index.tsx:576
 msgid "Report"
 msgstr ""
 
@@ -10232,7 +10232,7 @@ msgstr ""
 msgid "Report this feed"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:577
+#: src/screens/Messages/ConversationSettings/index.tsx:575
 msgid "Report this group chat"
 msgstr "Report this group chat"
 
@@ -10671,7 +10671,7 @@ msgstr "Scroll to the message this is replying to"
 msgid "Scroll to top"
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:667
+#: src/components/dialogs/SearchablePeopleList.tsx:663
 #: src/components/forms/SearchInput.tsx:51
 #: src/components/forms/SearchInput.tsx:53
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:218
@@ -10765,7 +10765,7 @@ msgstr ""
 msgid "Search posts"
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:687
+#: src/components/dialogs/SearchablePeopleList.tsx:683
 #: src/components/dms/components/UserSearchInput.tsx:63
 #: src/components/ProgressGuide/FollowDialog.tsx:727
 msgid "Search profiles"
@@ -10779,7 +10779,7 @@ msgstr "Search query"
 msgid "Search..."
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:688
+#: src/components/dialogs/SearchablePeopleList.tsx:684
 #: src/components/dms/components/UserSearchInput.tsx:64
 #: src/components/ProgressGuide/FollowDialog.tsx:728
 msgid "Searches for profiles"
@@ -10909,7 +10909,7 @@ msgstr ""
 msgid "Select caption file (.vtt)"
 msgstr "Select caption file (.vtt)"
 
-#: src/components/dialogs/SearchablePeopleList.tsx:501
+#: src/components/dialogs/SearchablePeopleList.tsx:497
 #: src/components/dms/InitiateChatFlow.tsx:984
 msgid "Select chat \"{name}\""
 msgstr "Select chat \"{name}\""
@@ -11807,7 +11807,7 @@ msgstr ""
 msgid "Start chat"
 msgstr "Start chat"
 
-#: src/components/dialogs/SearchablePeopleList.tsx:428
+#: src/components/dialogs/SearchablePeopleList.tsx:424
 #: src/components/dms/InitiateChatFlow.tsx:1087
 msgid "Start chat with {displayName}"
 msgstr ""
@@ -12156,11 +12156,11 @@ msgstr "Tap to view reactions"
 msgid "Targeted harassment"
 msgstr ""
 
-#: src/state/shell/progress-guide.tsx:236
+#: src/state/shell/progress-guide.tsx:234
 msgid "Task complete - 10 follows!"
 msgstr ""
 
-#: src/state/shell/progress-guide.tsx:226
+#: src/state/shell/progress-guide.tsx:224
 msgid "Task complete - 10 likes!"
 msgstr ""
 
@@ -12289,7 +12289,7 @@ msgstr ""
 msgid "The Discover feed"
 msgstr ""
 
-#: src/state/shell/progress-guide.tsx:227
+#: src/state/shell/progress-guide.tsx:225
 msgid "The Discover feed now knows what you like"
 msgstr ""
 
@@ -12338,32 +12338,32 @@ msgstr "The post you’re replying to was marked as being written in {suggestedL
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:498
+#: src/view/com/composer/state/video.ts:494
 msgid "The processed video is too large. Please try again with a smaller file."
 msgstr "The processed video is too large. Please try again with a smaller file."
 
-#: src/view/com/composer/state/video.ts:473
+#: src/view/com/composer/state/video.ts:469
 msgid "The selected video could not be encoded."
 msgstr "The selected video could not be encoded."
 
-#: src/view/com/composer/state/video.ts:463
+#: src/view/com/composer/state/video.ts:459
 msgid "The selected video could not be processed."
 msgstr "The selected video could not be processed."
 
-#: src/view/com/composer/state/video.ts:493
+#: src/view/com/composer/state/video.ts:489
 msgid "The selected video has an unsupported aspect ratio."
 msgstr "The selected video has an unsupported aspect ratio."
 
-#: src/view/com/composer/state/video.ts:509
-#: src/view/com/composer/state/video.ts:548
+#: src/view/com/composer/state/video.ts:505
+#: src/view/com/composer/state/video.ts:544
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 
-#: src/view/com/composer/state/video.ts:491
+#: src/view/com/composer/state/video.ts:487
 msgid "The selected video is too long."
 msgstr "The selected video is too long."
 
-#: src/view/com/composer/state/video.ts:495
+#: src/view/com/composer/state/video.ts:491
 msgid "The selected video uses an unsupported format."
 msgstr "The selected video uses an unsupported format."
 
@@ -12398,7 +12398,7 @@ msgstr ""
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:476
+#: src/view/com/composer/state/video.ts:472
 msgid "The video could not be uploaded to your hosting provider. Please try again."
 msgstr "The video could not be uploaded to your hosting provider. Please try again."
 
@@ -12623,7 +12623,7 @@ msgid "This chat is locked"
 msgstr "This chat is locked"
 
 #: src/screens/Messages/components/ChatLocked.tsx:49
-#: src/screens/Messages/ConversationSettings/index.tsx:432
+#: src/screens/Messages/ConversationSettings/index.tsx:430
 msgid "This chat is locked by a moderation action"
 msgstr "This chat is locked by a moderation action"
 
@@ -13333,7 +13333,7 @@ msgstr ""
 msgid "Unlock chat"
 msgstr "Unlock chat"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:563
+#: src/screens/Messages/ConversationSettings/index.tsx:561
 msgid "Unlock this group chat"
 msgstr "Unlock this group chat"
 
@@ -13370,7 +13370,7 @@ msgstr ""
 msgid "Unmute list"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:528
+#: src/screens/Messages/ConversationSettings/index.tsx:526
 msgid "Unmute this group chat"
 msgstr "Unmute this group chat"
 
@@ -13806,7 +13806,7 @@ msgstr "via starter pack <0/><1>{starterPackName}</1>"
 msgid "Video"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:484
+#: src/view/com/composer/state/video.ts:480
 msgid "Video failed to process"
 msgstr ""
 
@@ -13991,7 +13991,7 @@ msgstr "View publication"
 msgid "View the avatar"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:550
+#: src/screens/Messages/ConversationSettings/index.tsx:548
 msgid "View the invite link for this group chat"
 msgstr "View the invite link for this group chat"
 
@@ -14172,7 +14172,7 @@ msgstr ""
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:531
+#: src/view/com/composer/state/video.ts:527
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr ""
 
@@ -14231,7 +14231,7 @@ msgstr ""
 msgid "We're having issues initializing the age assurance process for your account. Please <0>contact support</0> for assistance."
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:127
+#: src/components/dialogs/SearchablePeopleList.tsx:123
 #: src/components/ProgressGuide/FollowDialog.tsx:195
 msgid "We're having network issues, try again"
 msgstr ""
@@ -14548,7 +14548,7 @@ msgstr ""
 msgid "You are no longer live"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:524
+#: src/view/com/composer/state/video.ts:520
 msgid "You are not allowed to upload videos."
 msgstr ""
 
@@ -14992,7 +14992,7 @@ msgstr ""
 msgid "You've denied access to your contacts"
 msgstr ""
 
-#: src/state/shell/progress-guide.tsx:237
+#: src/state/shell/progress-guide.tsx:235
 msgid "You've found some people to follow"
 msgstr ""
 
@@ -15020,11 +15020,11 @@ msgstr "You’ve reached the maximum of {MAX_FILTERS, plural, one {# filter} oth
 msgid "You've reached the start of the active content."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:535
+#: src/view/com/composer/state/video.ts:531
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:539
+#: src/view/com/composer/state/video.ts:535
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr ""
 
@@ -15048,7 +15048,7 @@ msgstr ""
 msgid "Your account has been suspended"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:543
+#: src/view/com/composer/state/video.ts:539
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr ""
 
@@ -15113,7 +15113,7 @@ msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:84
-#: src/screens/Signup/state.ts:295
+#: src/screens/Signup/state.ts:291
 #: src/screens/Signup/StepInfo/index.tsx:129
 msgid "Your email appears to be invalid."
 msgstr ""
@@ -15122,7 +15122,7 @@ msgstr ""
 msgid "Your email has not yet been verified. Please verify your email in order to enjoy all the features of Bluesky."
 msgstr ""
 
-#: src/state/shell/progress-guide.tsx:216
+#: src/state/shell/progress-guide.tsx:214
 msgid "Your first like!"
 msgstr ""
 
@@ -15143,7 +15143,7 @@ msgstr ""
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 
-#: src/view/com/composer/state/video.ts:480
+#: src/view/com/composer/state/video.ts:476
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
 msgstr "Your hosting provider does not support videos this large. Please try again with a smaller file."
 
