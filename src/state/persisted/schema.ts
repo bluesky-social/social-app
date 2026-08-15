@@ -12,7 +12,7 @@ const externalEmbedOptions = ['show', 'hide'] as const
  * A account persisted to storage. Stored in the `accounts[]` array. Contains
  * base account info and access tokens.
  */
-const accountSchema = z.object({
+export const accountSchema = z.object({
   service: z.string(),
   /**
    * Genuinely validated, not just branded: the refinement rejects malformed

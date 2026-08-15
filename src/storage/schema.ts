@@ -74,6 +74,20 @@ export type Device = {
   inviteFriendsThemeKey?: InviteThemeKey
 
   /**
+   * Whether the app may boot its session from the secure session store, cached
+   * from the feature gate of the same name. The gate is not evaluable during
+   * bootstrap, so each run caches it here for the next one. Absent means off.
+   */
+  sessionSecureStorageReadEnabled?: boolean
+  /**
+   * Random marker identifying this install to the secure session store. Device
+   * storage dies with the app container while the iOS keychain does not, so a
+   * marker that disagrees with the stored one means those sessions belong to a
+   * previous install and must not be resurrected.
+   */
+  sessionSecureStorageInstallId?: string
+
+  /**
    * Policy update overlays. New IDs are required for each new announcement.
    */
   policyUpdateDebugOverride?: boolean

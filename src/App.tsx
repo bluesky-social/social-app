@@ -44,6 +44,8 @@ import {
   useSession,
   useSessionApi,
 } from '#/state/session'
+import {initSessionStorage} from '#/state/session/storage'
+import {SecureSessionStorageGateSync} from '#/state/session/storage/gate-sync'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
@@ -152,6 +154,7 @@ function InnerApp() {
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
                 <AnalyticsFeaturesContext>
+                  <SecureSessionStorageGateSync />
                   <QueryProvider currentDid={currentAccount?.did}>
                     <BetaUserStorageSync />
                     <PolicyUpdateOverlayProvider>
@@ -218,9 +221,15 @@ function App() {
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
-    void Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(
-      () => setIsReady(true),
-    )
+    void Promise.all([
+      /*
+       * `initSessionStorage` reads the persisted session blob, so it has to
+       * follow `initPersistedState`. The rest stay parallel.
+       */
+      initPersistedState().then(() => initSessionStorage()),
+      Geo.resolve(),
+      setupDeviceId,
+    ]).then(() => setIsReady(true))
   }, [])
 
   if (!isReady) {

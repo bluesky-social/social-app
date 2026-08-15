@@ -25,6 +25,7 @@ export enum Features {
   FollowSortEnable = 'follow_sort:enable',
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
   CanonicalPostNumberingEnable = 'canonical_post_numbering:enable',
+  SessionSecureStorageReadEnable = 'session:secure_storage:read:enable',
 
   // values
   TrendingDiscoverValues = 'trending_discover:values',
