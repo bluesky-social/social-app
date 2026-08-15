@@ -50,6 +50,21 @@ export type Events = {
       | 'AgeAssuranceNoAccessScreen'
     scope: 'current' | 'every'
   }
+  /**
+   * Emitted once per native launch, describing what the secure session store
+   * held relative to the persisted blob and which of the two the app booted
+   * from. `divergence` is the point of it: `legacy-lost` means the persisted
+   * blob lost credentials the secure store still had.
+   */
+  'sessionStorage:boot': {
+    source: 'secure' | 'legacy'
+    gateEnabled: boolean
+    secureStatus:
+      'ok' | 'missing' | 'invalid' | 'unavailable' | 'foreign-install'
+    divergence: 'none' | 'legacy-lost' | 'secure-behind'
+    secureAccountsWithCreds: number
+    legacyAccountsWithCreds: number
+  }
   'notifications:openApp': {
     reason: NotificationReason
     causedBoot: boolean
