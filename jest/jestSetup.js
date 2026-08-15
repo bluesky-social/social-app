@@ -28,6 +28,36 @@ jest.mock('react-native-safe-area-context', () => {
   }
 })
 
+jest.mock('react-native-mmkv', () => ({
+  MMKV: class MMKV {
+    _store = new Map()
+
+    set(key, value) {
+      this._store.set(key, value)
+    }
+
+    getString(key) {
+      return this._store.get(key)
+    }
+
+    delete(key) {
+      this._store.delete(key)
+    }
+
+    clearAll() {
+      this._store.clear()
+    }
+
+    getAllKeys() {
+      return Array.from(this._store.keys())
+    }
+
+    addOnValueChangedListener() {
+      return {remove: () => {}}
+    }
+  },
+}))
+
 jest.mock('expo-file-system/legacy', () => ({
   getInfoAsync: jest.fn().mockResolvedValue({exists: true, size: 100}),
   deleteAsync: jest.fn(),
@@ -56,6 +86,24 @@ jest.mock('expo-media-library', () => ({
   default: jest.fn(),
   usePermissions: jest.fn(() => [true]),
 }))
+
+// the real module reads its constants off the native module at import time
+jest.mock('expo-secure-store', () => {
+  const store = new Map()
+  return {
+    getItem: jest.fn(key => store.get(key) ?? null),
+    setItem: jest.fn((key, value) => {
+      store.set(key, value)
+    }),
+    AFTER_FIRST_UNLOCK: 0,
+    AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY: 1,
+    ALWAYS: 2,
+    WHEN_PASSCODE_SET_THIS_DEVICE_ONLY: 3,
+    ALWAYS_THIS_DEVICE_ONLY: 4,
+    WHEN_UNLOCKED: 5,
+    WHEN_UNLOCKED_THIS_DEVICE_ONLY: 6,
+  }
+})
 
 jest.mock('@bsky.app/expo-guess-language', () => ({
   guessLanguageSync: jest

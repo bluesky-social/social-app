@@ -240,6 +240,7 @@ module.exports = function (_config) {
       plugins: [
         'expo-video',
         'expo-localization',
+        'expo-secure-store',
         'expo-web-browser',
         [
           'react-native-edge-to-edge',
