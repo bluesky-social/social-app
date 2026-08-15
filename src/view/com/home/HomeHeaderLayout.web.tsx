@@ -7,6 +7,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
+import {Outlet as HomeHeaderPortalOutlet} from '#/view/com/home/HomeHeaderPortal'
 import {Logo} from '#/view/icons/Logo'
 import {useLogoVariant} from '#/view/icons/useLogoVariant'
 import {atoms as a, useBreakpoints, useGutters, useTheme} from '#/alf'
@@ -85,6 +86,7 @@ function HomeHeaderLayoutDesktopAndTablet({
           headerHeight.set(e.nativeEvent.layout.height)
         }}>
         {children}
+        <HomeHeaderPortalOutlet />
       </Layout.Center>
     </>
   )

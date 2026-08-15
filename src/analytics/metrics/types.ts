@@ -198,6 +198,15 @@ export type Events = {
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
+  'feed:resume:toggle': {
+    enabled: boolean
+  }
+  'feed:resume:seeNewPostsPressed': {}
+  'feed:positionRestored': {
+    outcome: 'restored' | 'not-found' | 'aborted'
+    depth?: number
+    pagesFetched: number
+  }
   'feed:save': {
     feedUrl: string
   }

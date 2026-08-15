@@ -28,6 +28,7 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {FeedPage} from '#/view/com/feeds/FeedPage'
 import {HomeHeader} from '#/view/com/home/HomeHeader'
+import {Provider as HomeHeaderPortalProvider} from '#/view/com/home/HomeHeaderPortal'
 import {
   Pager,
   type PagerRef,
@@ -88,11 +89,13 @@ export function HomeScreen(props: Props) {
     return (
       <Layout.Screen testID="HomeScreen" noInsetTop={IS_LIQUID_GLASS}>
         <HomeHeaderModeProvider>
-          <HomeScreenReady
-            {...props}
-            preferences={preferences}
-            pinnedFeedInfos={pinnedFeedInfos}
-          />
+          <HomeHeaderPortalProvider>
+            <HomeScreenReady
+              {...props}
+              preferences={preferences}
+              pinnedFeedInfos={pinnedFeedInfos}
+            />
+          </HomeHeaderPortalProvider>
         </HomeHeaderModeProvider>
       </Layout.Screen>
     )

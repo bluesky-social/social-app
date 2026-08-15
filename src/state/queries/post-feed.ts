@@ -416,6 +416,44 @@ export function usePostFeedQuery(
   return query
 }
 
+/**
+ * Like pollLatest, but returns how many new posts would appear above the
+ * current head of the feed, capped at the size of a single fetch. Used by
+ * the Following feed's "N new posts" pill.
+ */
+export async function pollLatestCount(
+  page: FeedPage | undefined,
+): Promise<number> {
+  if (!page) {
+    return 0
+  }
+  if (AppState.currentState !== 'active') {
+    return 0
+  }
+
+  const headUri = page.slices[0]?.items[0]?.uri
+  if (!headUri) {
+    return 0
+  }
+
+  logger.debug('usePostFeedQuery: pollLatestCount')
+  const res = await page.api.fetch({cursor: undefined, limit: 30})
+  const newPosts = []
+  for (const post of res.feed) {
+    if (post.post.uri === headUri) {
+      break
+    }
+    newPosts.push(post)
+  }
+  if (newPosts.length === 0) {
+    return 0
+  }
+  const slices = page.tuner.tune(newPosts, {
+    dryRun: true,
+  })
+  return slices.reduce((count, slice) => count + slice.items.length, 0)
+}
+
 export async function pollLatest(page: FeedPage | undefined) {
   if (!page) {
     return false

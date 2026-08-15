@@ -93,6 +93,28 @@ export type Account = {
   lastSelectedHomeFeed?: string
 
   /**
+   * Whether the Following feed restores the last read position on cold start.
+   * Toggled in the Following feed preferences screen. On by default, but the
+   * feature also requires the FollowingFeedResumeEnable gate.
+   */
+  followingFeedResumeEnabled?: boolean
+
+  /**
+   * The most recently viewed post in the Following feed, used to restore the
+   * feed position on cold start when `followingFeedResumeEnabled` is set.
+   */
+  followingFeedPosition?: {
+    anchorUri: string
+    savedAt: number
+    /**
+     * The newest post the user has actually seen at the top of the feed.
+     * Used after a restore to decide whether there is anything new above
+     * worth pointing out.
+     */
+    seenHeadUri?: string
+  }
+
+  /**
    * Recently selected GIFs in the GIF picker. Most recent first, capped at 20.
    */
   recentGifs?: Gif[]
