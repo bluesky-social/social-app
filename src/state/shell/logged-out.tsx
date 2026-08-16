@@ -27,11 +27,7 @@ type Controls = {
      * The did of the account to populate the login form with.
      */
     requestedAccount?:
-      | (string & {})
-      | 'none'
-      | 'new'
-      | 'starterpack'
-      | 'groupchat'
+      (string & {}) | 'none' | 'new' | 'starterpack' | 'groupchat'
   }) => void
   /**
    * Clears the requested account so that next time the logged out view is

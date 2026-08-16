@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
-import {type AppBskyActorDefs, type AppBskyNotificationDefs} from '@atproto/api'
+import {type AtUriString} from '@atproto/lex'
 import {type QueryClient} from '@tanstack/react-query'
 import {EventEmitter} from 'eventemitter3'
 
@@ -33,6 +33,7 @@ import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForDiscover
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForExploreQueryData} from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForSeeMoreQueryData} from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery'
 import {findAllProfilesInQueryData as findAllProfilesInPostThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {castAsShadow, type Shadow} from './types'
 
@@ -43,9 +44,10 @@ export interface ProfileShadow {
   muted: boolean | undefined
   mutedOnlyReposts: boolean | undefined
   blockingUri: string | undefined
-  verification: AppBskyActorDefs.VerificationState
-  status: AppBskyActorDefs.StatusView | undefined
-  activitySubscription: AppBskyNotificationDefs.ActivitySubscription | undefined
+  verification: app.bsky.actor.defs.VerificationState
+  status: app.bsky.actor.defs.StatusView | undefined
+  activitySubscription:
+    app.bsky.notification.defs.ActivitySubscription | undefined
 }
 
 const shadows: WeakMap<
@@ -277,7 +279,7 @@ export function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
       ...(profile.viewer || {}),
       following:
         'followingUri' in shadow
-          ? shadow.followingUri
+          ? (shadow.followingUri as AtUriString)
           : profile.viewer?.following,
       muted: 'muted' in shadow ? shadow.muted : profile.viewer?.muted,
       mutedOnlyReposts:
@@ -285,12 +287,14 @@ export function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
           ? shadow.mutedOnlyReposts
           : profile.viewer?.mutedOnlyReposts,
       blocking:
-        'blockingUri' in shadow ? shadow.blockingUri : profile.viewer?.blocking,
+        'blockingUri' in shadow
+          ? (shadow.blockingUri as AtUriString)
+          : profile.viewer?.blocking,
       activitySubscription:
         'activitySubscription' in shadow
           ? shadow.activitySubscription
           : profile.viewer?.activitySubscription,
-    } satisfies AppBskyActorDefs.ViewerState,
+    } satisfies app.bsky.actor.defs.ViewerState,
     verification:
       'verification' in shadow ? shadow.verification : profile.verification,
     status:

@@ -37,8 +37,7 @@ import {PressableWithHover} from './PressableWithHover'
 import {Text} from './text/Text'
 
 type Event =
-  | React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  | GestureResponderEvent
+  React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
 
 interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   testID?: string

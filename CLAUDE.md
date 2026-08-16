@@ -224,6 +224,7 @@ return conditional styles inline in a style array: `web({cursor: 'pointer'})`,
 - Prefer prop destructuring via parameters over a const within the component.
 - Prefer inline types over `Props` types or interfaces.
 - Set reasonable defaults for optional props.
+- Prefer the implicit global `React` for types over `type` imports.
 
 ```tsx
 import {Fragment} from 'react'
@@ -232,7 +233,13 @@ import {Trans} from '@lingui/react/macro'
 
 import {Text} from '#/components/Typography'
 
-function MyComponent({items = []}: {items?: string[]}) {
+function MyComponent({
+  items = [],
+  children,
+}: {
+  items?: string[]
+  children: React.ReactNode
+}) {
   return (
     <>
       <View>
@@ -247,6 +254,7 @@ function MyComponent({items = []}: {items?: string[]}) {
             <Text>{item}</Text>
           </Fragment>
         ))}
+        {children}
       </View>
     </>
   )

@@ -1,5 +1,6 @@
 import {View} from 'react-native'
-import {type AppBskyFeedDefs, AtUri, moderateProfile} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {moderateProfile} from '@bsky/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -14,6 +15,7 @@ import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 
 const AVI_SIZE = 20
 
@@ -21,7 +23,7 @@ const AVI_SIZE = 20
  * The plain "N likes" stat for the expanded anchor post, linking to the likes
  * list. Renders nothing when the post has no likes.
  */
-export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
+export function LikesStat({post}: {post: app.bsky.feed.defs.PostView}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const formatPostStatCount = useFormatPostStatCount()
@@ -61,7 +63,7 @@ export function LikesStat({post}: {post: AppBskyFeedDefs.PostView}) {
  * likes, the API max per page), so they are a sample of the most recent
  * likers, not an exhaustive list.
  */
-export function KnownLikers({post}: {post: AppBskyFeedDefs.PostView}) {
+export function KnownLikers({post}: {post: app.bsky.feed.defs.PostView}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const {hasSession, currentAccount} = useSession()
