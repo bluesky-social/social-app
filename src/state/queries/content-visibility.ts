@@ -2,15 +2,14 @@ import {t} from '@lingui/core/macro'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {isRecordNotFoundError} from '#/lib/xrpc-error'
+import {createQueryKey} from '#/state/queries/util'
 import {usePdsClient, useSession} from '#/state/session'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
 
-export const contentVisibilityQueryKey = (did: string) => [
-  'content-visibility',
-  did,
-]
+export const contentVisibilityQueryKey = (did: string) =>
+  createQueryKey('content-visibility', {did})
 
 export function useContentVisibilityQuery() {
   const client = usePdsClient()
