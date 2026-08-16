@@ -6,12 +6,7 @@
  * follows handleColor.
  */
 export type InviteThemeKey =
-  | 'dawn'
-  | 'sunlight'
-  | 'day'
-  | 'dusk'
-  | 'twilight'
-  | 'night'
+  'dawn' | 'sunlight' | 'day' | 'dusk' | 'twilight' | 'night'
 
 export type InviteThemeVariant = {
   /** QR data + eye color */

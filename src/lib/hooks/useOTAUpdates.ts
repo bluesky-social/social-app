@@ -60,8 +60,7 @@ function getRunningChannel(
    * entirely from embedded manifests, so narrow it ourselves.
    */
   const manifest = currentlyRunning?.manifest as
-    | {metadata?: {channel?: unknown}}
-    | undefined
+    {metadata?: {channel?: unknown}} | undefined
   const channel = manifest?.metadata?.channel
   if (typeof channel === 'string' && channel) {
     return channel

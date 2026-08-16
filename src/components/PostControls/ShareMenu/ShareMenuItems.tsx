@@ -1,6 +1,6 @@
 import {memo, useMemo} from 'react'
 import * as ExpoClipboard from 'expo-clipboard'
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'

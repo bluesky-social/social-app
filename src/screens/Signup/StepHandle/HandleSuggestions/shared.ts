@@ -1,10 +1,11 @@
-import {type ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
 import {type UseSiftReturn} from '@bsky.app/sift'
 
+import {type com} from '#/lexicons'
+
 export type HandleSuggestionsProps = {
-  suggestions: ComAtprotoTempCheckHandleAvailability.Suggestion[]
+  suggestions: com.atproto.temp.checkHandleAvailability.Suggestion[]
   onSelect: (
-    suggestion: ComAtprotoTempCheckHandleAvailability.Suggestion,
+    suggestion: com.atproto.temp.checkHandleAvailability.Suggestion,
   ) => void
   /**
    * Web only: the Sift instance shared with the handle input. It carries the

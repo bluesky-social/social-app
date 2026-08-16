@@ -1,6 +1,15 @@
 nodeLinker: 'hoisted'
 autoInstallPeers: true # default: true
 strictPeerDependencies: false # default: false
+packageExtensions:
+  eslint-plugin-react-native-a11y:
+    peerDependenciesMeta:
+      eslint:
+        optional: true
+  eslint-plugin-simple-import-sort:
+    peerDependenciesMeta:
+      eslint:
+        optional: true
 trustPolicy: 'no-downgrade' # default: off
 trustPolicyIgnoreAfter: 10080 # 7 days, default: undefined
 overrides:
@@ -16,8 +25,9 @@ overrides:
   'react-native-screens': '4.24.0'
 allowBuilds:
   '@sentry/cli': true
-  'core-js-pure': true
-  'esbuild': true
+  'core-js': false
+  'core-js-pure': false
+  'esbuild': false
   'unrs-resolver': true
 patchedDependencies:
   '@sentry/expo-upload-sourcemaps@8.18.0': patches/@sentry__expo-upload-sourcemaps@8.18.0.patch
@@ -43,12 +53,6 @@ patchedDependencies:
   'react-native@0.81.5': patches/react-native@0.81.5.patch
 minimumReleaseAgeExclude:
   - '@atproto/*'
+  - '@atproto-labs/*'
   - '@bsky.app/*'
-  # todo: remove when old enough
-  - '@oxlint-tsgolint/darwin-arm64@7.0.2001'
-  - '@oxlint-tsgolint/darwin-x64@7.0.2001'
-  - '@oxlint-tsgolint/linux-arm64@7.0.2001'
-  - '@oxlint-tsgolint/linux-x64@7.0.2001'
-  - '@oxlint-tsgolint/win32-arm64@7.0.2001'
-  - '@oxlint-tsgolint/win32-x64@7.0.2001'
-  - oxlint-tsgolint@7.0.2001
+  - '@bsky/*'

@@ -3,7 +3,7 @@
   "version": "1.131.0",
   "private": true,
   "engines": {
-    "node": ">=24.18.0"
+    "node": ">=24.19.0"
   },
   "devEngines": {
     "packageManager": {
@@ -13,7 +13,7 @@
     },
     "runtime": {
       "name": "node",
-      "version": "^24.18.0",
+      "version": "^24.19.0",
       "onFail": "download"
     }
   },
@@ -38,7 +38,7 @@
   },
   "scripts": {
     "prepare": "is-ci || husky",
-    "postinstall": "pnpm intl:compile-if-needed",
+    "postinstall": "pnpm lexicons:generate && pnpm intl:compile-if-needed",
     "prebuild": "EXPO_NO_GIT_STATUS=1 expo prebuild --clean",
     "android": "expo run:android --variant debugOptimized",
     "android:prod": "expo run:android --variant release",
@@ -62,6 +62,10 @@
     "lint": "oxlint --quiet src modules",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
+    "lexicons:generate": "lex build --clear --index-file --import-ext ''",
+    "lexicons:install": "lex install",
+    "lexicons:update": "lex install --update",
+    "lexicons:verify": "lex install --ci",
     "typecheck": "pnpm run typecheck:ios && pnpm run typecheck:android && pnpm run typecheck:web",
     "typecheck:ios": "tsc --project ./tsconfig.check.ios.json",
     "typecheck:android": "tsc --project ./tsconfig.check.android.json",
@@ -96,9 +100,10 @@
     "prettier": "prettier --check ."
   },
   "dependencies": {
-    "@atproto/api": "0.20.37",
-    "@atproto/common-web": "0.5.7",
-    "@atproto/syntax": "0.7.2",
+    "@atproto/common-web": "0.5.9",
+    "@atproto/lex": "0.3.6",
+    "@atproto/lex-password-session": "0.2.0",
+    "@atproto/syntax": "0.7.4",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.15",
@@ -108,11 +113,12 @@
     "@bsky.app/expo-scroll-edge-effect": "^0.1.9",
     "@bsky.app/expo-translate-text": "^0.2.9",
     "@bsky.app/peek-menu": "^0.3.2",
-    "@bsky.app/react-native-uitextview": "^2.6.0",
+    "@bsky.app/react-native-uitextview": "^2.7.0",
     "@bsky.app/sift": "^0.3.9",
     "@bsky.app/tapper": "^0.6.1",
     "@bsky.app/video": "0.3.6",
     "@bsky.app/video-compressor": "0.2.0",
+    "@bsky/sdk": "1.0.1",
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.12.5",
@@ -282,9 +288,7 @@
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-compiler": "19.1.0-rc.3",
     "babel-preset-expo": "~54.0.10",
-    "eslint-plugin-bsky-internal": "link:eslint",
-    "eslint-plugin-react-compiler": "19.1.0-rc.2",
-    "eslint-plugin-react-native": "^5.0.0",
+    "eslint-plugin-bsky-internal": "link:lint-rules",
     "eslint-plugin-react-native-a11y": "^3.5.1",
     "eslint-plugin-simple-import-sort": "^13.0.0",
     "file-loader": "6.2.0",
@@ -297,7 +301,7 @@
     "lint-staged": "^17.0.8",
     "oxlint": "^1.73.0",
     "oxlint-tsgolint": "^7.0.2001",
-    "prettier": "^3.8.3",
+    "prettier": "3.9.6",
     "react-native-dotenv": "^3.4.11",
     "react-refresh": "^0.14.0",
     "svgo": "^4.0.2",
@@ -326,14 +330,17 @@
       "^multiformats/cid$": "<rootDir>/node_modules/multiformats/dist/src/cid.js",
       "^multiformats/bases/base32$": "<rootDir>/node_modules/multiformats/dist/src/bases/base32.js",
       "^multiformats/hashes/digest$": "<rootDir>/node_modules/multiformats/dist/src/hashes/digest.js",
+      "^multiformats/hashes/hasher$": "<rootDir>/node_modules/multiformats/dist/src/hashes/hasher.js",
       "^multiformats/hashes/sha2$": "<rootDir>/node_modules/multiformats/dist/src/hashes/sha2.js",
       "^uint8arrays/from-string$": "<rootDir>/node_modules/uint8arrays/dist/src/from-string.js",
       "^uint8arrays/to-string$": "<rootDir>/node_modules/uint8arrays/dist/src/to-string.js",
       "^unicode-segmenter/grapheme$": "<rootDir>/node_modules/unicode-segmenter/grapheme.cjs",
-      "^await-lock$": "<rootDir>/node_modules/await-lock/build/AwaitLock.js"
+      "^await-lock$": "<rootDir>/node_modules/await-lock/build/AwaitLock.js",
+      "^@ipld/dag-cbor$": "<rootDir>/node_modules/@ipld/dag-cbor/src/index.js",
+      "^cborg$": "<rootDir>/node_modules/cborg/cborg.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|multiformats|uint8arrays|@ipld/.*|cborg|await-lock)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|@bsky/sdk|tlds|multiformats|uint8arrays|@ipld/.*|cborg|await-lock)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",
@@ -367,7 +374,7 @@
   },
   "lint-staged": {
     "*{.js,.jsx,.ts,.tsx}": [
-      "oxlint --fix"
+      "oxlint --fix --no-error-on-unmatched-pattern"
     ],
     "*{.js,.jsx,.ts,.tsx,.css}": [
       "prettier --cache --write --ignore-unknown"

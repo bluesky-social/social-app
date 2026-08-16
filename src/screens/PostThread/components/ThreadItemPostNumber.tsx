@@ -1,19 +1,18 @@
 import {Text, View} from 'react-native'
-import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, ios, platform, useTheme} from '#/alf'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 
 /**
- * How far the inline badge is nudged below the text baseline to optically
- * center it. The containing `RichText` must reserve matching room via
- * `suffixOffset`, or native clips the overflow.
+ * How far the inline badge is nudged below the text baseline. Android's
+ * containing `RichText` reserves matching room via `suffixOffset`.
  */
 export const POST_NUMBER_INLINE_OFFSET = 6
 
 export function useHasThreadItemPostNumber(
-  value: AppBskyUnspeccedDefs.ThreadItemPost,
+  value: app.bsky.unspecced.defs.ThreadItemPost,
 ) {
   const ax = useAnalytics()
   const index = value.opThreadPostIndex
@@ -33,7 +32,7 @@ export function ThreadItemPostNumber({
   value,
   inline = true,
 }: {
-  value: AppBskyUnspeccedDefs.ThreadItemPost
+  value: app.bsky.unspecced.defs.ThreadItemPost
   inline?: boolean
 }) {
   const t = useTheme()
@@ -61,7 +60,13 @@ export function ThreadItemPostNumber({
         inline
           ? platform({
               native: {transform: [{translateY: POST_NUMBER_INLINE_OFFSET}]},
-              web: {top: -2, marginBottom: -2},
+              web: {
+                top: -2,
+                marginBottom: -2,
+                // Inline views inherit the surrounding line height on web. Keep
+                // the badge at its usual size when emoji-only text enlarges it.
+                lineHeight: a.text_xs.fontSize * a.leading_normal.lineHeight,
+              },
             })
           : {top: -2, marginBottom: -2},
       ]}>

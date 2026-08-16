@@ -1,8 +1,7 @@
-import {type AppBskyEmbedExternal, type AtpAgent} from '@atproto/api'
-
 import {LINK_META_PROXY} from '#/lib/constants'
 import {getGiphyMetaUri} from '#/lib/strings/embed-player'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
+import {type app} from '#/lexicons'
 import {isBskyAppUrl} from '../strings/url-helpers'
 
 export enum LikelyType {
@@ -26,12 +25,11 @@ export interface LinkMeta {
    * The AT-URI of the Atmosphere record representing this external content, if
    * it exists. Example: a site.standard.document record.
    */
-  associatedRefs?: AppBskyEmbedExternal.External['associatedRefs']
-  view?: AppBskyEmbedExternal.View
+  associatedRefs?: app.bsky.embed.external.External['associatedRefs']
+  view?: app.bsky.embed.external.View
 }
 
 export async function getLinkMeta(
-  agent: AtpAgent,
   url: string,
   timeout = 15e3,
 ): Promise<LinkMeta> {
@@ -80,9 +78,7 @@ export async function getLinkMeta(
 
   try {
     const response = await fetch(
-      `${LINK_META_PROXY(agent.serviceUrl.toString() || '')}${encodeURIComponent(
-        url,
-      )}`,
+      `${LINK_META_PROXY('')}${encodeURIComponent(url)}`,
       {signal: controller.signal},
     )
 

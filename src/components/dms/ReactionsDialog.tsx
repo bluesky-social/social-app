@@ -6,7 +6,6 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import {type ChatBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -23,12 +22,13 @@ import {filterBlockedReactions} from '#/components/dms/util'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {type chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 type Reaction = {
   key: string
   value: string
-  senders: ChatBskyConvoDefs.ReactionViewSender[]
+  senders: chat.bsky.convo.defs.ReactionViewSender[]
   count: number
 }
 
@@ -41,8 +41,8 @@ export function ReactionsDialog({
   onClose,
 }: {
   control: Dialog.DialogControlProps
-  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>
-  message: ChatBskyConvoDefs.MessageView
+  relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic>
+  message: chat.bsky.convo.defs.MessageView
   onClose?: () => void
 }) {
   const {t: l} = useLingui()
@@ -142,10 +142,10 @@ function ReactionRow({
   control: Dialog.DialogControlProps
   convo: ActiveConvoStates
   currentAccount?: SessionAccount
-  message: ChatBskyConvoDefs.MessageView
+  message: chat.bsky.convo.defs.MessageView
   profile: bsky.profile.AnyProfileView
-  reaction: ChatBskyConvoDefs.ReactionView
-  allReactions: ChatBskyConvoDefs.ReactionView[]
+  reaction: chat.bsky.convo.defs.ReactionView
+  allReactions: chat.bsky.convo.defs.ReactionView[]
   selected: string
   setSelected: React.Dispatch<React.SetStateAction<string>>
 }) {
@@ -398,7 +398,7 @@ function ReactionTab({
 }
 
 export function groupReactions(
-  reactions: ChatBskyConvoDefs.ReactionView[] | undefined,
+  reactions: chat.bsky.convo.defs.ReactionView[] | undefined,
 ): Reaction[] {
   const grouped = new Map<string, Reaction>()
   for (const reaction of reactions ?? []) {

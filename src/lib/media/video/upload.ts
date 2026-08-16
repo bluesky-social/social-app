@@ -1,5 +1,5 @@
 import {createUploadTask, FileSystemUploadType} from 'expo-file-system/legacy'
-import {type AppBskyVideoDefs, type AtpAgent} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 import {nanoid} from 'nanoid/non-secure'
@@ -11,13 +11,15 @@ import {
   type VideoUploadTransport,
 } from '#/lib/media/video/types'
 import {Features, features} from '#/analytics/features'
+import {type app} from '#/lexicons'
 import {MultipartFallbackError, uploadVideoMultipart} from './multipart/upload'
 import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
 import {createVideoEndpointUrl, mimeToExt} from './util'
 
 export async function uploadVideo({
   video,
-  agent,
+  client,
+  dispatchUrl,
   did,
   setProgress,
   signal,
@@ -25,7 +27,9 @@ export async function uploadVideo({
   onTransport,
 }: {
   video: CompressedVideo
-  agent: AtpAgent
+  client: Client
+  /** The account's PDS/dispatch URL, for the uploadBlob service-auth token. */
+  dispatchUrl: string | URL
   did: string
   setProgress: (progress: number) => void
   signal: AbortSignal
@@ -35,13 +39,14 @@ export async function uploadVideo({
   if (signal.aborted) {
     throw new AbortError()
   }
-  await getVideoUploadLimits(agent, i18n)
+  await getVideoUploadLimits(client, i18n)
 
   if (features.isOn(Features.VideoMultipartUploadEnable)) {
     try {
       return await uploadVideoMultipart({
         video,
-        agent,
+        client,
+        dispatchUrl,
         setProgress,
         signal,
         onStarted: () => onTransport?.('multipart'),
@@ -64,7 +69,8 @@ export async function uploadVideo({
     throw new AbortError()
   }
   const token = await getServiceAuthToken({
-    agent,
+    client,
+    dispatchUrl,
     lxm: 'com.atproto.repo.uploadBlob',
     exp: Date.now() / 1000 + 60 * 30, // 30 minutes
   })
@@ -91,7 +97,7 @@ export async function uploadVideo({
     throw new Error('No response')
   }
 
-  const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus
+  const responseBody = JSON.parse(res.body) as app.bsky.video.defs.JobStatus
 
   if (!responseBody.jobId) {
     throw new ServerError(

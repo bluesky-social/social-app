@@ -1,0 +1,63 @@
+{
+  "id": "com.atproto.repo.listMissingBlobs",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "blobs"
+          ],
+          "properties": {
+            "blobs": {
+              "type": "array",
+              "items": {
+                "ref": "#recordBlob",
+                "type": "ref"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 500,
+            "maximum": 1000,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Returns a list of missing blobs for the requesting account. Intended to be used in the account migration flow."
+    },
+    "recordBlob": {
+      "type": "object",
+      "required": [
+        "cid",
+        "recordUri"
+      ],
+      "properties": {
+        "cid": {
+          "type": "string",
+          "format": "cid"
+        },
+        "recordUri": {
+          "type": "string",
+          "format": "at-uri"
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}
