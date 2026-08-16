@@ -1075,6 +1075,8 @@ export type Events = {
   'bot:label:toggle': {state: 'add' | 'remove'}
   'bot:badge:click': {}
 
+  'contentVisibility:algorithmicRecommendations:change': {hide: boolean}
+
   'live:create': {duration: number}
   'live:edit': {}
   'live:remove': {}
