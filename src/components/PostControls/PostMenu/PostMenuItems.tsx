@@ -124,7 +124,7 @@ let PostMenuItems = ({
   timestamp: string
   threadgateRecord?: app.bsky.feed.threadgate.Main
   onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
-  reposter?: AppBskyActorDefs.ProfileViewBasic
+  reposter?: app.bsky.actor.defs.ProfileViewBasic
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   forceGoogleTranslate: boolean
 }): React.ReactNode => {

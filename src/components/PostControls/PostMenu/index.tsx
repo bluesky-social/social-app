@@ -38,7 +38,7 @@ let PostMenuButton = ({
   timestamp: string
   threadgateRecord?: app.bsky.feed.threadgate.Main
   onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
-  reposter?: AppBskyActorDefs.ProfileViewBasic
+  reposter?: app.bsky.actor.defs.ProfileViewBasic
   hitSlop?: Insets
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   forceGoogleTranslate: boolean

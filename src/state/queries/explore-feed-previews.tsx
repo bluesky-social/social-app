@@ -424,7 +424,7 @@ export function* findAllProfilesInQueryData(
           yield item.post.author
         }
         if (
-          AppBskyFeedDefs.isReasonRepost(item.reason) &&
+          bsky.isType(app.bsky.feed.defs.reasonRepost, item.reason) &&
           item.reason.by.did === did
         ) {
           yield item.reason.by

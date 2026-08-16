@@ -66,7 +66,7 @@ let PostControls = ({
   threadgateRecord?: app.bsky.feed.threadgate.Main
   onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
   viaRepost?: {uri: string; cid: string}
-  reposter?: AppBskyActorDefs.ProfileViewBasic
+  reposter?: app.bsky.actor.defs.ProfileViewBasic
   variant?: 'compact' | 'normal' | 'large'
   forceGoogleTranslate?: boolean
 }): React.ReactNode => {

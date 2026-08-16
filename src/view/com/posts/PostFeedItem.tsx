@@ -316,7 +316,7 @@ let FeedItemInner = ({
   }, [reason])
 
   const reposter =
-    !isAuthorFeed && AppBskyFeedDefs.isReasonRepost(reason)
+    !isAuthorFeed && bsky.isType(app.bsky.feed.defs.reasonRepost, reason)
       ? reason.by
       : undefined
 
