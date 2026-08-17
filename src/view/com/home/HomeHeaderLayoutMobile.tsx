@@ -1,4 +1,4 @@
-import {View} from 'react-native'
+import {View, Text} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/core/macro'
@@ -75,6 +75,24 @@ export function HomeHeaderLayoutMobile({
             }}>
             <Logo width={logoVariant === 'japan' ? 34 : 30} />
           </PressableScale>
+
+          {/* TODO: Remove this before merging */}
+          <View
+            pointerEvents="none"
+            style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
+            <View
+              style={[
+                a.px_xs,
+                a.py_2xs,
+                a.rounded_full,
+                {backgroundColor: t.palette.pink},
+              ]}>
+              <Text style={[a.text_xs, a.font_bold, {color: t.palette.white}]}>
+                Metro migration
+              </Text>
+            </View>
+          </View>
+          {/* TODO: Remove this before merging */}
         </View>
 
         <Layout.Header.Slot>
