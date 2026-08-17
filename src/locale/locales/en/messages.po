@@ -1489,7 +1489,7 @@ msgid "Allow location access"
 msgstr ""
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:53
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
 msgid "Allow others to be notified of your posts"
 msgstr ""
 
@@ -1754,7 +1754,7 @@ msgstr "Anyone can request to join"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:172
 msgid "Anyone who follows me"
 msgstr ""
 
@@ -1795,8 +1795,8 @@ msgstr "App password names can only contain letters, numbers, spaces, hyphens, a
 msgid "App password names must be at least 4 characters long"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:75
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:79
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:82
 msgid "App passwords"
 msgstr ""
 
@@ -1963,6 +1963,16 @@ msgstr ""
 #: src/view/com/composer/labels/LabelsBtn.tsx:167
 msgid "Artistic or non-erotic nudity."
 msgstr ""
+
+#: src/screens/Settings/components/PwiOptOut.tsx:89
+#: src/screens/Settings/components/PwiOptOut.tsx:93
+msgid "Ask apps and sites not to show my account to logged-out users"
+msgstr "Ask apps and sites not to show my account to logged-out users"
+
+#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:32
+#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:35
+msgid "Ask apps to hide my posts from algorithmic recommendations"
+msgstr "Ask apps to hide my posts from algorithmic recommendations"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:619
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:621
@@ -2343,8 +2353,12 @@ msgid "Bluesky will choose a set of recommended accounts from people in your net
 msgstr ""
 
 #: src/screens/Settings/components/PwiOptOut.tsx:101
-msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr ""
+msgid "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
+msgstr "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
+
+#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
+msgid "Bluesky will not show your posts in the Discover feed (except to your followers) and will ask other apps not to show your posts in their own algorithmic recommendations."
+msgstr "Bluesky will not show your posts in the Discover feed (except to your followers) and will ask other apps not to show your posts in their own algorithmic recommendations."
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:136
 msgid "Bluesky will proactively verify notable and authentic accounts."
@@ -4072,11 +4086,6 @@ msgstr ""
 msgid "Disconnect Germ DM"
 msgstr ""
 
-#: src/screens/Settings/components/PwiOptOut.tsx:89
-#: src/screens/Settings/components/PwiOptOut.tsx:93
-msgid "Discourage apps from showing my account to logged-out users"
-msgstr ""
-
 #: src/screens/Search/Explore.tsx:444
 msgid "Discover feeds"
 msgstr "Discover feeds"
@@ -4470,7 +4479,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:63
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
 msgid "Email 2FA enabled"
 msgstr ""
 
@@ -4677,7 +4686,7 @@ msgstr ""
 msgid "Error loading post"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:154
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
 msgid "Error loading preference"
 msgstr ""
 
@@ -5157,6 +5166,10 @@ msgstr "Failed to unlock group chat"
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:108
 msgid "Failed to unpin list"
 msgstr ""
+
+#: src/state/queries/content-visibility.ts:83
+msgid "Failed to update content visibility"
+msgstr "Failed to update content visibility"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:148
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:82
@@ -6972,8 +6985,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:128
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:131
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:137
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:140
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
@@ -7371,10 +7384,6 @@ msgstr ""
 
 #: src/components/AccountList.tsx:189
 msgid "Logged out"
-msgstr ""
-
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:107
-msgid "Logged-out visibility"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:142
@@ -8226,7 +8235,7 @@ msgstr ""
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:130
 #: src/screens/Settings/ActivityPrivacySettings.tsx:135
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:169
 msgctxt "enable for"
 msgid "No one"
 msgstr ""
@@ -8397,9 +8406,9 @@ msgstr ""
 msgid "Note about sharing"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:117
-msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr ""
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
+msgstr "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:133
 msgid "Note: This post is only visible to logged-in users."
@@ -8560,7 +8569,7 @@ msgstr "Only followers can join this group chat."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:167
 msgid "Only followers who I follow"
 msgstr ""
 
@@ -9544,7 +9553,7 @@ msgstr ""
 #: src/Navigation.tsx:430
 #: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:45
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:52
 msgid "Privacy and Security"
 msgstr ""
 
@@ -11158,7 +11167,7 @@ msgstr ""
 msgid "Settings for activity from others"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:85
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
 msgid "Settings for allowing others to be notified of your posts"
 msgstr ""
 
@@ -13143,7 +13152,7 @@ msgstr ""
 msgid "Twilight"
 msgstr "Twilight"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
 msgid "Two-factor authentication (2FA)"
 msgstr ""
 
