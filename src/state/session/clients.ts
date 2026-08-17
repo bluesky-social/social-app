@@ -7,25 +7,16 @@ import {
   PUBLIC_BSKY_SERVICE,
 } from '#/lib/constants'
 import {createLexClient} from '#/lib/lexClient'
-import {account} from '#/storage'
+import {getCachedIsBetaUser} from '#/state/preferences/beta-user-cache'
 import {networkAwareFetch} from './network'
 
 const IS_BETA_USER_HEADER = 'X-Bsky-Is-Beta-User'
 
-/** Read the cached beta preference without letting corrupt storage block requests. */
-function readIsBetaUser(did: string): boolean | undefined {
-  try {
-    return account.get([did, 'isBetaUser'])
-  } catch {
-    return undefined
-  }
-}
-
 /**
  * Add account-scoped headers to appview requests.
  *
- * Values are read per request so preference changes are reflected immediately
- * without rebuilding the session bundle.
+ * Values are read from memory per request so preference changes are reflected
+ * immediately without rebuilding the session bundle.
  */
 function withAppviewRequestHeaders(agent: Agent): Agent {
   return {
@@ -34,7 +25,7 @@ function withAppviewRequestHeaders(agent: Agent): Agent {
     },
     fetchHandler(path, init) {
       const headers = new Headers(init?.headers)
-      const isBetaUser = agent.did ? readIsBetaUser(agent.did) : undefined
+      const isBetaUser = agent.did ? getCachedIsBetaUser(agent.did) : undefined
       if (isBetaUser !== undefined) {
         headers.set(IS_BETA_USER_HEADER, String(isBetaUser))
       }

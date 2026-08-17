@@ -14,6 +14,10 @@ jest.mock('jwt-decode', () => ({
 }))
 
 import {BLUESKY_PROXY_HEADER, CHAT_PROXY_SERVICE} from '#/lib/constants'
+import {
+  invalidateCachedIsBetaUser,
+  setCachedIsBetaUser,
+} from '#/state/preferences/beta-user-cache'
 import {app, chat, com} from '#/lexicons'
 import {account} from '#/storage'
 import {configureGlobalAppLabelers} from '../additional-moderation-authorities'
@@ -86,6 +90,7 @@ describe('buildAppviewClient', () => {
     fetchMock = makeProfileFetch()
     configureGlobalAppLabelers([])
     account.remove([DID, 'isBetaUser'])
+    invalidateCachedIsBetaUser(DID)
   })
 
   it('passes through the session did', () => {
@@ -117,7 +122,7 @@ describe('buildAppviewClient', () => {
     'emits the current beta user header when the cached value is %s',
     async isBetaUser => {
       const client = buildAppviewClient(makeSession(fetchMock))
-      account.set([DID, 'isBetaUser'], isBetaUser)
+      setCachedIsBetaUser(DID, isBetaUser)
 
       await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
 
@@ -139,6 +144,18 @@ describe('buildAppviewClient', () => {
         'x-bsky-is-beta-user',
       ),
     ).toBeNull()
+  })
+
+  it('reads the persisted beta preference only once', async () => {
+    account.set([DID, 'isBetaUser'], true)
+    const getSpy = jest.spyOn(account, 'get')
+    const client = buildAppviewClient(makeSession(fetchMock))
+
+    await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
+    await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
+
+    expect(getSpy).toHaveBeenCalledTimes(1)
+    getSpy.mockRestore()
   })
 
   it('emits an account subscription exactly once', async () => {
