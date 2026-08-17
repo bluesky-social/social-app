@@ -94,6 +94,8 @@ let ProfileHeader = ({setMinimumHeight, ...props}: Props): React.ReactNode => {
 ProfileHeader = memo(ProfileHeader)
 export {ProfileHeader}
 
+const HEADER_THRESHOLD = 97
+
 const MinimalHeader = memo(function MinimalHeader({
   onLayout,
   profile: profileUnshadowed,
@@ -127,7 +129,7 @@ const MinimalHeader = memo(function MinimalHeader({
         opacity: 0,
       }
     }
-    const pastThreshold = scrollY.get() > 100
+    const pastThreshold = scrollY.get() > HEADER_THRESHOLD
     return {
       opacity: pastThreshold
         ? withTiming(1, {duration: 75})
@@ -144,7 +146,7 @@ const MinimalHeader = memo(function MinimalHeader({
   })
 
   useAnimatedReaction(
-    () => scrollY.get() > 100,
+    () => scrollY.get() > HEADER_THRESHOLD,
     (value, prev) => {
       if (prev !== value) {
         scheduleOnRN(setVisible, value)
