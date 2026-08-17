@@ -5,7 +5,7 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {BlueskyVideoView} from '@bsky.app/video'
 
 import {type CompressedVideo} from '#/lib/media/video/types'
-import {useAutoplayDisabled} from '#/state/preferences'
+import {useAutoplayDisabledPref} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a} from '#/alf'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
@@ -24,7 +24,7 @@ export function VideoPreview({
   clear: () => void
 }) {
   const playerRef = useRef<BlueskyVideoView>(null)
-  const autoplayDisabled = useAutoplayDisabled()
+  const {videoAutoplayDisabled} = useAutoplayDisabledPref()
 
   let aspectRatio: number | undefined
   if (asset.width && asset.height) {
@@ -54,7 +54,7 @@ export function VideoPreview({
               {video.mimeType === 'image/gif' ? (
                 <Image
                   style={[a.flex_1]}
-                  autoplay={!autoplayDisabled}
+                  autoplay={!videoAutoplayDisabled}
                   source={{uri: video.uri}}
                   accessibilityIgnoresInvertColors
                   cachePolicy="none"
@@ -63,7 +63,7 @@ export function VideoPreview({
               ) : (
                 <BlueskyVideoView
                   url={video.uri}
-                  autoplay={!autoplayDisabled}
+                  autoplay={!videoAutoplayDisabled}
                   beginMuted={true}
                   forceTakeover={true}
                   ref={playerRef}
@@ -72,7 +72,7 @@ export function VideoPreview({
             </>
           )}
           <ExternalEmbedRemoveBtn onRemove={clear} />
-          {autoplayDisabled && (
+          {videoAutoplayDisabled && (
             <View
               style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
               <PlayButtonIcon />
