@@ -9,6 +9,8 @@ export type BaseMetadata = {
   bundleDate: number
   referrerSrc: string
   referrerUrl: string
+  fbclid: string
+  fbclidTimestamp: number
   isBetaUser?: boolean
 }
 

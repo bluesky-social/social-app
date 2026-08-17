@@ -117,6 +117,8 @@ const Context = createContext<AnalyticsBaseContextType>({
       bundleDate: env.BUNDLE_DATE,
       referrerSrc: refParams.src,
       referrerUrl: refParams.url,
+      fbclid: refParams.fbclid,
+      fbclidTimestamp: refParams.fbclidTimestamp,
     },
     geolocation: device.get(['geolocationServiceResponse']) || {
       countryCode: '',
