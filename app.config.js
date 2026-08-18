@@ -216,6 +216,7 @@ module.exports = function (_config) {
         ],
       },
       web: {
+        bundler: 'metro',
         favicon: './assets/favicon.png',
       },
       updates: {
