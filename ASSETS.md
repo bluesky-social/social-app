@@ -117,8 +117,8 @@ These marks belong to other companies. We include them to identify their service
 - `assets/icons/brands/AppleLogo.svg` — **Apple Inc.**
 - `assets/icons/brands/AndroidLogo.svg` — **Google LLC**
 - `assets/icons/community/Leaflet.svg` — **Leaflet**
-- `assets/icons/community/offprint.svg` — **Offprint**
-- `assets/icons/community/pckt.svg` and `assets/icons/community/PcktFull.svg` — **pckt**
+- `assets/icons/community/Offprint.svg` — **Offprint**
+- `assets/icons/community/Pckt.svg` and `assets/icons/community/PcktFull.svg` — **pckt**
 - `assets/icons/community/StandardSite.svg` — **Standard.site**
 - `assets/icons/community/germ_logo.webp` — **Germ Network**
 
