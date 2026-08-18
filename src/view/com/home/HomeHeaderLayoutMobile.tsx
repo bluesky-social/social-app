@@ -20,7 +20,6 @@ import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
-import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_DEV, IS_LIQUID_GLASS} from '#/env'
 
@@ -76,24 +75,6 @@ export function HomeHeaderLayoutMobile({
             }}>
             <Logo width={logoVariant === 'japan' ? 34 : 30} />
           </PressableScale>
-
-          {/* TODO: Remove this before merging */}
-          <View
-            pointerEvents="none"
-            style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
-            <View
-              style={[
-                a.px_xs,
-                a.py_2xs,
-                a.rounded_full,
-                {backgroundColor: t.palette.black},
-              ]}>
-              <Text style={[a.text_xs, a.font_bold, {color: t.palette.white}]}>
-                Expo 57
-              </Text>
-            </View>
-          </View>
-          {/* TODO: Remove this before merging */}
         </View>
 
         <Layout.Header.Slot>
