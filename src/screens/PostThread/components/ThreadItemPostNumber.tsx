@@ -2,6 +2,7 @@ import {Text, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, ios, platform, useTheme} from '#/alf'
+import {isOnlyEmoji} from '#/alf/typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
 
@@ -10,6 +11,10 @@ import {type app} from '#/lexicons'
  * containing `RichText` reserves matching room via `suffixOffset`.
  */
 export const POST_NUMBER_INLINE_OFFSET = 6
+
+export function getPostNumberInlineOffset(text: string) {
+  return isOnlyEmoji(text) ? 0 : POST_NUMBER_INLINE_OFFSET
+}
 
 export function useHasThreadItemPostNumber(
   value: app.bsky.unspecced.defs.ThreadItemPost,
@@ -31,9 +36,11 @@ export function useHasThreadItemPostNumber(
 export function ThreadItemPostNumber({
   value,
   inline = true,
+  inlineOffset = POST_NUMBER_INLINE_OFFSET,
 }: {
   value: app.bsky.unspecced.defs.ThreadItemPost
   inline?: boolean
+  inlineOffset?: number
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -59,7 +66,7 @@ export function ThreadItemPostNumber({
         },
         inline
           ? platform({
-              native: {transform: [{translateY: POST_NUMBER_INLINE_OFFSET}]},
+              native: {transform: [{translateY: inlineOffset}]},
               web: {
                 top: -2,
                 marginBottom: -2,

@@ -20,7 +20,7 @@ import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replie
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {
-  POST_NUMBER_INLINE_OFFSET,
+  getPostNumberInlineOffset,
   ThreadItemPostNumber,
   useHasThreadItemPostNumber,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
@@ -212,6 +212,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
       }),
     [record],
   )
+  const postNumberInlineOffset = getPostNumberInlineOffset(richText.text)
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
@@ -331,10 +332,13 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}
                     shouldProxyLinks={true}
-                    suffixOffset={POST_NUMBER_INLINE_OFFSET}
+                    suffixOffset={postNumberInlineOffset}
                     suffix={
                       !limitLines && showPostNumber ? (
-                        <ThreadItemPostNumber value={postNumbering} />
+                        <ThreadItemPostNumber
+                          value={postNumbering}
+                          inlineOffset={postNumberInlineOffset}
+                        />
                       ) : undefined
                     }
                   />

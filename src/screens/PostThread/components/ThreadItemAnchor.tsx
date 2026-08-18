@@ -26,7 +26,7 @@ import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {KnownLikers, LikesStat} from '#/screens/PostThread/components/LikesStat'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
-  POST_NUMBER_INLINE_OFFSET,
+  getPostNumberInlineOffset,
   ThreadItemPostNumber,
   useHasThreadItemPostNumber,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
@@ -199,6 +199,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       }),
     [record],
   )
+  const postNumberInlineOffset = getPostNumberInlineOffset(richText.text)
 
   const threadRootUri = record.reply?.root?.uri || post.uri
   const authorHref = makeProfileLink(post.author)
@@ -408,10 +409,13 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   style={[a.flex_1, a.text_lg]}
                   authorHandle={post.author.handle}
                   shouldProxyLinks={true}
-                  suffixOffset={POST_NUMBER_INLINE_OFFSET}
+                  suffixOffset={postNumberInlineOffset}
                   suffix={
                     showPostNumber ? (
-                      <ThreadItemPostNumber value={postNumbering} />
+                      <ThreadItemPostNumber
+                        value={postNumbering}
+                        inlineOffset={postNumberInlineOffset}
+                      />
                     ) : undefined
                   }
                 />

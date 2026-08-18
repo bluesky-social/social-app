@@ -19,7 +19,7 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {
-  POST_NUMBER_INLINE_OFFSET,
+  getPostNumberInlineOffset,
   ThreadItemPostNumber,
   useHasThreadItemPostNumber,
 } from '#/screens/PostThread/components/ThreadItemPostNumber'
@@ -272,6 +272,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
       }),
     [record],
   )
+  const postNumberInlineOffset = getPostNumberInlineOffset(richText.text)
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
@@ -359,10 +360,13 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                         numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                         authorHandle={post.author.handle}
                         shouldProxyLinks={true}
-                        suffixOffset={POST_NUMBER_INLINE_OFFSET}
+                        suffixOffset={postNumberInlineOffset}
                         suffix={
                           !limitLines && showPostNumber ? (
-                            <ThreadItemPostNumber value={postNumbering} />
+                            <ThreadItemPostNumber
+                              value={postNumbering}
+                              inlineOffset={postNumberInlineOffset}
+                            />
                           ) : undefined
                         }
                       />
