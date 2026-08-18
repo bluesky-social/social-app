@@ -181,9 +181,6 @@ module.exports = function (_config) {
           ],
         },
       },
-      androidStatusBar: {
-        barStyle: 'light-content',
-      },
       android: {
         icon: './assets/app-icons/android_icon_default_next.png',
         adaptiveIcon: {
