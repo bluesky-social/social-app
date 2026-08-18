@@ -122,7 +122,7 @@ module.exports = async function (env, argv) {
         release: {
           // fallback needed for Render.com deployments
           name: process.env.SENTRY_RELEASE || version,
-          dist: process.env.SENTRY_DIST,
+          dist: process.env.SENTRY_DIST,  
         },
       }),
     )
