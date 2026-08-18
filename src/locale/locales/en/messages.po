@@ -8151,7 +8151,7 @@ msgstr ""
 msgid "No expiry set"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/StepFeeds.tsx:123
+#: src/screens/StarterPack/Wizard/StepFeeds.tsx:150
 msgid "No feeds found. Try searching for something else."
 msgstr ""
 
@@ -14277,13 +14277,13 @@ msgstr ""
 
 #: src/screens/Search/SearchResults.tsx:439
 #: src/screens/Search/SearchResults.tsx:580
-#: src/screens/Search/SearchResults.tsx:777
+#: src/screens/Search/SearchResults.tsx:798
 msgid "We’re sorry, but your search could not be completed."
 msgstr "We’re sorry, but your search could not be completed."
 
 #: src/screens/Search/SearchResults.tsx:438
 #: src/screens/Search/SearchResults.tsx:579
-#: src/screens/Search/SearchResults.tsx:776
+#: src/screens/Search/SearchResults.tsx:797
 msgid "We’re sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "We’re sorry, but your search could not be completed. Please try again in a few minutes."
 
