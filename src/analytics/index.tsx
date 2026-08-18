@@ -10,6 +10,10 @@ import {type Result, type WidenPrimitives} from '@growthbook/growthbook-react'
 
 import {Logger} from '#/logger'
 import {
+  getCachedIsBetaUser,
+  subscribeToCachedIsBetaUser,
+} from '#/state/preferences/beta-user-cache'
+import {
   Features,
   features as feats,
   init,
@@ -33,7 +37,7 @@ import {type Metrics, metrics} from '#/analytics/metrics'
 import * as refParams from '#/analytics/misc/refParams'
 import * as env from '#/env'
 import {useGeolocationServiceResponse} from '#/geolocation/service'
-import {account, device} from '#/storage'
+import {device} from '#/storage'
 
 export * as utils from '#/analytics/utils'
 export const features = {init, refresh}
@@ -131,7 +135,7 @@ export const setupDeviceId = getAndMigrateDeviceId()
 
 /**
  * Reads the per-account cached `isBetaUser` flag for `did`, kept in sync with
- * writes from `BetaUserStorageSync` and the beta settings toggle.
+ * PDS preference query results and the beta settings toggle.
  *
  * This deliberately does not use `useStorage`, whose `useState` seeds once and
  * only updates via the change listener. The consuming `AnalyticsContext` lives
@@ -146,17 +150,13 @@ function useAccountIsBetaUser(did: string | undefined): boolean | undefined {
   const subscribe = useCallback(
     (onChange: () => void) => {
       if (!did) return () => {}
-      const sub = account.addOnValueChangedListener(
-        [did, 'isBetaUser'],
-        onChange,
-      )
-      return () => sub.remove()
+      return subscribeToCachedIsBetaUser(did, onChange)
     },
     [did],
   )
   const getSnapshot = useCallback(() => {
     if (!did) return undefined
-    return account.get([did, 'isBetaUser'])
+    return getCachedIsBetaUser(did)
   }, [did])
   return useSyncExternalStore(subscribe, getSnapshot)
 }
