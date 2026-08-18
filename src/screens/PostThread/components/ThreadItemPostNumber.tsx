@@ -1,17 +1,25 @@
 import {Text, View} from 'react-native'
-import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {atoms as a, native, platform, useTheme} from '#/alf'
+import {atoms as a, ios, platform, useTheme} from '#/alf'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 
-export function hasThreadItemPostNumber(
-  value: AppBskyUnspeccedDefs.ThreadItemPost,
+/**
+ * How far the inline badge is nudged below the text baseline. Android's
+ * containing `RichText` reserves matching room via `suffixOffset`.
+ */
+export const POST_NUMBER_INLINE_OFFSET = 6
+
+export function useHasThreadItemPostNumber(
+  value: app.bsky.unspecced.defs.ThreadItemPost,
 ) {
+  const ax = useAnalytics()
   const index = value.opThreadPostIndex
   const count = value.opThreadPostCount
 
   return (
+    ax.features.enabled(ax.features.CanonicalPostNumberingEnable) &&
     index !== undefined &&
     count !== undefined &&
     index >= 1 &&
@@ -24,20 +32,16 @@ export function ThreadItemPostNumber({
   value,
   inline = true,
 }: {
-  value: AppBskyUnspeccedDefs.ThreadItemPost
+  value: app.bsky.unspecced.defs.ThreadItemPost
   inline?: boolean
 }) {
-  const ax = useAnalytics()
   const t = useTheme()
   const {t: l} = useLingui()
+  const shouldRender = useHasThreadItemPostNumber(value)
   const index = value.opThreadPostIndex
   const count = value.opThreadPostCount
 
-  const isEnabled = ax.features.enabled(
-    ax.features.CanonicalPostNumberingEnable,
-  )
-
-  if (!isEnabled || !hasThreadItemPostNumber(value)) {
+  if (!shouldRender) {
     return null
   }
 
@@ -47,17 +51,24 @@ export function ThreadItemPostNumber({
         a.flex_shrink_0,
         a.rounded_full,
         t.atoms.bg_contrast_50,
-        native(a.py_2xs),
+        !inline && a.self_start,
+        ios(a.py_2xs),
         {
           paddingLeft: 5,
           paddingRight: 5,
         },
         inline
           ? platform({
-              native: {transform: [{translateY: 6}]},
-              web: {top: -2},
+              native: {transform: [{translateY: POST_NUMBER_INLINE_OFFSET}]},
+              web: {
+                top: -2,
+                marginBottom: -2,
+                // Inline views inherit the surrounding line height on web. Keep
+                // the badge at its usual size when emoji-only text enlarges it.
+                lineHeight: a.text_xs.fontSize * a.leading_normal.lineHeight,
+              },
             })
-          : {top: -2},
+          : {top: -2, marginBottom: -2},
       ]}>
       <Text
         accessibilityLabel={l({
@@ -70,7 +81,7 @@ export function ThreadItemPostNumber({
         style={[
           a.text_xs,
           a.font_medium,
-          t.atoms.text_contrast_high,
+          t.atoms.text_contrast_medium,
           {
             fontVariant: ['tabular-nums'],
           },

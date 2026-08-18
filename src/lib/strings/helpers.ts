@@ -1,4 +1,4 @@
-import {type RichText} from '@atproto/api'
+import {type RichText} from '@bsky/sdk/richtext'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {shortenLinks} from './rich-text-manip'

@@ -1,29 +1,28 @@
-import {type ChatBskyGroupCreateGroup} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
 import {precacheConvoQuery} from './conversation'
 
 export function useCreateGroupChat({
   onSuccess,
   onError,
 }: {
-  onSuccess?: (data: ChatBskyGroupCreateGroup.OutputSchema) => void
+  onSuccess?: (data: chat.bsky.group.createGroup.$OutputBody) => void
   onError?: (error: Error) => void
 }) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = useChatClient()
 
   return useMutation({
     mutationFn: async ({name, members}: {name: string; members: string[]}) => {
-      const {data} = await agent.chat.bsky.group.createGroup(
-        {name, members},
-        {headers: DM_SERVICE_HEADERS},
-      )
-
-      return data
+      return await client.call(chat.bsky.group.createGroup, {
+        name,
+        // callers pass already-resolved actor dids
+        members: members as DidString[],
+      })
     },
     onSuccess: data => {
       precacheConvoQuery(queryClient, data.convo)

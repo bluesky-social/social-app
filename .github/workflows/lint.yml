@@ -22,7 +22,14 @@ jobs:
       fail-fast: false
       matrix:
         job:
-          [lint, prettier, 'typecheck:ios', 'typecheck:android', 'typecheck:web']
+          [
+            lint,
+            prettier,
+            'lexicons:verify',
+            'typecheck:ios',
+            'typecheck:android',
+            'typecheck:web',
+          ]
     steps:
       - name: ⬇️ Check out Git repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -51,7 +58,7 @@ jobs:
           v=$(grep -oE '"node":[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"' eas.json | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
           check "eas.json" "$v"
           exit $rc
-      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
       - name: 🔧 Install node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -89,7 +96,7 @@ jobs:
     steps:
       - name: ⬇️ Check out Git repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
       - name: 🔧 Install node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:

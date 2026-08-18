@@ -1,4 +1,4 @@
-import {type BskyFeedViewPreference, type BskyPreferences} from '@atproto/api'
+import {type BskyFeedViewPreference, type BskyPreferences} from '@bsky/sdk'
 
 export type UsePreferencesQueryResponse = Omit<
   BskyPreferences,
@@ -16,11 +16,6 @@ export type UsePreferencesQueryResponse = Omit<
 
 export type ThreadViewPreferences = {
   sort:
-    | 'hotness'
-    | 'oldest'
-    | 'newest'
-    | 'most-likes'
-    | 'random'
-    | (string & {})
+    'hotness' | 'oldest' | 'newest' | 'most-likes' | 'random' | (string & {})
   lab_treeViewEnabled?: boolean
 }

@@ -1,0 +1,46 @@
+{
+  "id": "app.bsky.bookmark.getBookmarks",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "bookmarks"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "bookmarks": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.bookmark.defs#bookmarkView",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Gets views of records bookmarked by the authenticated user. Requires authentication."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

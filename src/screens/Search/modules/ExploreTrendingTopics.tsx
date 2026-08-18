@@ -1,11 +1,8 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
-import {
-  type AppBskyUnspeccedDefs,
-  moderateProfile,
-  RichText as RichTextApi,
-} from '@atproto/api'
+import {moderateProfile} from '@bsky/sdk/moderation'
+import {RichText as RichTextApi} from '@bsky/sdk/richtext'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -30,6 +27,7 @@ import {SubtleHover} from '#/components/SubtleHover'
 import {useTrendingTopicSeen} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import * as ModuleHeader from '../components/ModuleHeader'
 
 const IMAGE_SIZE = 56
@@ -120,7 +118,7 @@ export function TrendRow({
   children,
   onPress,
 }: ViewStyleProp & {
-  trend: AppBskyUnspeccedDefs.TrendView
+  trend: app.bsky.unspecced.defs.TrendView
   rank: number
   recId?: string
   children?: React.ReactNode
@@ -231,7 +229,7 @@ export function TrendRow({
 
 // Unused atm, but leaving here so we don't lose localization. -dsb
 export function useCategoryDisplayName(
-  category: AppBskyUnspeccedDefs.TrendView['category'],
+  category: app.bsky.unspecced.defs.TrendView['category'],
 ) {
   const {t: l} = useLingui()
 
@@ -299,7 +297,7 @@ export function TrendingTopicRowSkeleton() {
 }
 
 function useModerateTrendingActors(
-  actors: AppBskyUnspeccedDefs.TrendView['actors'],
+  actors: app.bsky.unspecced.defs.TrendView['actors'],
 ) {
   const moderationOpts = useModerationOpts()
 

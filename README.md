@@ -57,6 +57,15 @@ Please be sure to:
 - Change all branding in the repository and UI to clearly differentiate from Bluesky.
 - Change any support links (feedback, email, terms of service, etc) to your own systems.
 - Replace any analytics or error-collection systems with your own so we don't get super confused.
+- Replace the landing-screen illustration in `assets/illustrations/`. It is commissioned artwork licensed to Bluesky alone, and our MIT license does not cover it.
+- Source your own UI icons. The glyph set in `assets/icons/` is licensed to us by a third party for our own use, and that license does not extend to you.
+- Replace the Bluesky logo, app icons, and other brand assets. Our trademarks are not licensed with the code.
+
+Please read [./ASSETS.md](./ASSETS.md) before you ship. Not every file in this repository is
+covered by our MIT license — some of the artwork, icons, fonts, and brand assets are licensed to
+us by third parties or are trademarks, and `ASSETS.md` says which ones and what to do about them.
+That file is new. Its absence is why some forks have shipped assets they did not have rights to,
+and that was our omission rather than theirs.
 
 ## Security disclosures
 
@@ -68,7 +77,11 @@ Bluesky is an open social network built on the AT Protocol, a flexible technolog
 
 ## License (MIT)
 
-See [./LICENSE](./LICENSE) for the full license.
+See [./LICENSE](./LICENSE) for the full license, which covers the source code in this repository.
+
+It does not cover every file. Certain images, icons, fonts, and brand assets are licensed to us
+by third parties, or are trademarks, and are carved out — see [./ASSETS.md](./ASSETS.md). Required
+third-party attribution notices are collected in [./NOTICE.md](./NOTICE.md).
 
 Bluesky Social PBC has committed to a software patent non-aggression pledge. For details see [the original announcement](https://bsky.social/about/blog/10-01-2025-patent-pledge).
 

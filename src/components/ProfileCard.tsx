@@ -6,11 +6,8 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {
-  moderateProfile,
-  type ModerationOpts,
-  RichText as RichTextApi,
-} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
+import {RichText as RichTextApi} from '@bsky/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 
 import {getModerationCauseKey} from '#/lib/moderation'
@@ -623,8 +620,9 @@ export function Labels({
   const moderation = moderateProfile(profile, moderationOpts)
   const modui = moderation.ui('profileList')
   const followedBy = profile.viewer?.followedBy
+  const mutedOnlyReposts = profile.viewer?.mutedOnlyReposts
 
-  if (!followedBy && !modui.inform && !modui.alert) {
+  if (!followedBy && !mutedOnlyReposts && !modui.inform && !modui.alert) {
     return null
   }
 
@@ -637,6 +635,7 @@ export function Labels({
       {modui.informs.map(inform => (
         <Pills.Label key={getModerationCauseKey(inform)} cause={inform} />
       ))}
+      {mutedOnlyReposts && <Pills.MutedOnlyReposts />}
     </Pills.Row>
   )
 }

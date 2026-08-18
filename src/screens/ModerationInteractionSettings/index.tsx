@@ -1,5 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
+import {type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -68,8 +69,8 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
   const allowUI = useMemo(() => {
     return threadgateRecordToAllowUISetting({
       $type: 'app.bsky.feed.threadgate',
-      post: '',
-      createdAt: new Date().toString(),
+      post: '' as AtUriString,
+      createdAt: toDatetimeString(new Date()),
       allow: preferences.postInteractionSettings.threadgateAllowRules,
     })
   }, [preferences.postInteractionSettings.threadgateAllowRules])
