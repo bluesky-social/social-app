@@ -186,7 +186,7 @@ jobs:
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
         timeout-minutes: 5
-        uses: bluesky-social/github-actions/fingerprint-native@2138c118d1b0758859a43f0599dba03700531f9e
+        uses: bluesky-social/github-actions/fingerprint-native@2138c118d1b0838c406c97cfafbad9215a1ee0b1
         with:
           profile: pull-request
 
