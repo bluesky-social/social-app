@@ -254,7 +254,7 @@ importers:
         specifier: ^17.7.0
         version: 17.7.0
       node:
-        specifier: runtime:^24.18.0
+        specifier: runtime:^24.19.0
         version: runtime:24.19.0
       postcss:
         specifier: ^8.5.20
