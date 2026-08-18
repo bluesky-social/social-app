@@ -67,6 +67,9 @@ jobs:
   webpack-analyzer:
     runs-on: ubuntu-24.04
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
+    env:
+      # Temporary workaround while bundle-size-diff still targets Node.js 20.
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: "true"
     permissions:
       contents: read
       pull-requests: write
