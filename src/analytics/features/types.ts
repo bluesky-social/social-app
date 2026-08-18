@@ -17,7 +17,6 @@ export enum Features {
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
   PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
-  CustomLogoJapanEnable = 'custom_logo:japan:enable',
   SearchStarterPacksV2Enable = 'search_starter_packs_v2:enable',
   FollowSortEnable = 'follow_sort:enable',
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
