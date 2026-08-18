@@ -1175,11 +1175,6 @@
       "count": 1
     }
   },
-  "src/screens/StarterPack/Wizard/StepFeeds.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/screens/StarterPack/Wizard/index.tsx": {
     "typescript/no-floating-promises": {
       "count": 2
@@ -1502,7 +1497,7 @@
   },
   "src/view/com/composer/drafts/state/storage.ts": {
     "typescript/require-await": {
-      "count": 3
+      "count": 2
     }
   },
   "src/view/com/composer/photos/EditImageDialog.web.tsx": {

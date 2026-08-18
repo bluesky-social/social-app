@@ -69,6 +69,26 @@ export type Events = {
   'router:navigate': {
     from?: string
   }
+  'web:list:size': {
+    itemCount: number
+    renderedRowCount: number
+    contentHeight: number
+    sessionAgeMs: number
+    milestone: 100 | 250 | 500 | 1000
+    heapUsedBytes?: number
+    heapLimitBytes?: number
+  }
+  'web:list:longTasks': {
+    itemCount: number
+    renderedRowCount: number
+    taskCount: number
+    totalDurationMs: number
+    maxDurationMs: number
+    intervalMs: number
+    sessionAgeMs: number
+    heapUsedBytes?: number
+    heapLimitBytes?: number
+  }
   'nav:click': {
     item:
       | 'home'
@@ -1086,6 +1106,8 @@ export type Events = {
 
   'bot:label:toggle': {state: 'add' | 'remove'}
   'bot:badge:click': {}
+
+  'contentVisibility:algorithmicRecommendations:change': {hide: boolean}
 
   'live:create': {duration: number}
   'live:edit': {}

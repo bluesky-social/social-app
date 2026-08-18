@@ -6,18 +6,62 @@ Patching `RCTRefreshControl.mm` temporarily to play an impact haptic on refresh 
 17.4, there has been a regression somewhere causing haptics to not play on iOS on refresh. Should monitor for an update
 in the RN repo: https://github.com/facebook/react-native/issues/43388
 
-## RCTPullToRefreshViewComponentView.mm Patch - RefreshControl initial props dropped on New Arch
+## RCTPullToRefreshViewComponentView.mm Patch - iOS 17.4+ haptic regression and iOS 26 progressViewOffset cancellation on New Arch
 
-**TODO: Remove after bumping React Native to 0.82+** (fixed upstream by facebook/react-native#52615, #52584
-and #53231).
+Both bugs share one root cause, established by instrumented frame-logging runs on the iOS 26
+simulator (Aug 2026): **writes to a detached `UIRefreshControl` are hazardous, because the
+control's `_UIRefreshControlModernContentView` bakes in the state it observes at its own
+creation.** Facts proven by the logs:
 
-On Fabric, `updateProps` diffs against `_props`, but the initial-layout replay in `layoutSubviews` passes
-`_props` as the new props too, so the diff is a no-op and `tintColor`/`progressViewOffset`/`title` are never
-applied on mount. This hides the pull-to-refresh spinner behind the floating home header (it stays at offset
-0 instead of `headerOffset`). We diff against the `oldProps` argument instead, null-guarded with default
-props for the create-mutation path.
+- `scrollView.refreshControl` assignment inserts the control and creates its content view
+  **synchronously** on iOS 26 (the "UIKit inserts lazily on a later layout pass" folklore is
+  false there).
+- The content view can also be materialized **earlier** by a pre-attach property write (observed
+  with `tintColor`) while the control is still detached.
+- The content view positions itself at whatever `bounds.origin` exists at its creation and keeps
+  that y forever - width tracks on later layouts, y never re-pins.
 
-Issue: https://github.com/facebook/react-native/issues/56343
+Consequences:
+
+**1. progressViewOffset.** Stock Fabric writes the offset as a `bounds.origin` shift in
+`updateProps`, pre-attach. The content view is then created (at insertion) already inside the
+shifted bounds, pins to it, and cancels the shift exactly - spinner hidden behind the floating
+home header (home is the only screen passing a non-zero offset). Stock RN appeared to work only
+by accident: its own pre-attach `tintColor` write materialized the content view at origin 0
+*before* the offset write. Possibly related upstream: react-native#54183.
+
+**2. Haptic (react-native#43388).** The Paper fix above does not cover Fabric: `updateProps`
+writes `tintColor` pre-attach, and a tint write on a detached control materializes the content
+view outside the scroll view, permanently suppressing the trigger haptic on iOS 17.4+ (the
+creation-time-state story likely explains this too, though the haptic wiring itself is not
+observable in logs).
+
+**The fix**: both `tintColor` and `progressViewOffset` are parked in the component view
+(`_pendingTintColor` / `_pendingProgressViewOffset`, no `UIRefreshControl` subclass) and applied
+only once `_refreshControl.superview` is the scroll view - by then the content view exists,
+was created at origin 0, and a bounds shift lands visibly. Application points: immediately in
+`_updateX` for runtime changes while attached; in `_attach` right after the assignment (insertion
+is synchronous); and from `layoutSubviews` with a `setNeedsLayout` re-arm as a fallback should
+insertion ever be deferred.
+
+Supporting changes:
+
+- `shouldBeRecycled = NO`: recycled instances get all props force-applied in `updateProps` before
+  the new control is attached, which would re-trigger the pre-attach hazards; opting out keeps
+  every mount on the untouched-before-attach path.
+- `_updateTitle` no longer writes `attributedTitle = nil` when there is nothing to clear - even a
+  nil write before attach suppresses the haptic.
+
+History: an earlier iteration fixed the offset by porting Paper's frame-offset trick into an
+`RCTHapticCompatibleRefreshControl` subclass (worked, verified on device) - replaced by the
+deferral once the root cause was understood. The control's `didMoveToSuperview` appeared broken
+as a tint application point in early non-rigorous testing; unproven, not disproven.
+
+Upstream issue #43388 still open as of Aug 2026. Haptics cannot be verified on the simulator -
+physical device only. Spinner position verified via frame logs; haptic on this variant NOT yet
+device-verified.
+
+Opened issue in RN repo: https://github.com/react/react-native/issues/57843
 
 ## RCTEnhancedScrollView.mm / RCTScrollViewComponentView.mm Patch - centerContent insets stale after content resize on New Arch
 
@@ -85,6 +129,16 @@ active in production releases. Local dev builds prebuilt in a non-production env
 the prebuilt AAR from Maven Central instead, where this hunk (like any ReactAndroid
 source change) has no effect - do not expect to see the fix in a local debug build unless
 you prebuild with EXPO_PUBLIC_ENV=production or add the substitution block manually.
+
+## RCTFontUtils.mm Patch - Custom font weights render as the heaviest face on New Arch
+
+**TODO: Remove after bumping React Native to a release that contains facebook/react-native#57483**
+(commit 918fb15bfe5f, on `main`; not in 0.86 and not yet released).
+
+Backport of the upstream one-liner: use a real ternary so the numeric weight is returned instead of
+the boolean. For a double, `(A != 0.0) ? A : B` is exactly equivalent to the original `A ?: B`.
+
+PR: https://github.com/facebook/react-native/pull/57483
 
 ## RCTTextLayoutManager.mm Patch - Text overflows instead of wrapping on the last line
 

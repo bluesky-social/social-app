@@ -18,27 +18,42 @@ declare module '*.css'
 /*
  * expo-file-system's declarations build File/Directory on top of
  * `./ExpoFileSystem`, which remaps to a web shim whose classes are empty.
- * The fully-typed base classes live in ExpoFileSystem.types (no .web
- * sibling), so mirror the FileSystem.d.ts wrapper classes on top of those.
+ * As of SDK 57 the fully-typed base classes live in
+ * internal/NativeFileSystem.types (no .web sibling), so mirror the File.d.ts
+ * and Directory.d.ts wrapper classes on top of those.
  */
 declare module 'expo-file-system' {
   import {
-    Directory as ExpoFileSystemDirectory,
-    File as ExpoFileSystemFile,
-  } from 'expo-file-system/build/ExpoFileSystem.types'
+    NativeFileSystemDirectory as ExpoFileSystemDirectory,
+    NativeFileSystemFile as ExpoFileSystemFile,
+  } from 'expo-file-system/build/internal/NativeFileSystem.types'
   export {
     type DirectoryCreateOptions,
     type DirectoryInfo,
     type DownloadOptions,
     EncodingType,
     type FileCreateOptions,
-    FileHandle,
+    type FileHandle,
     type FileInfo,
     type FileWriteOptions,
     type InfoOptions,
     type PathInfo,
-  } from 'expo-file-system/build/ExpoFileSystem.types'
-  import {type PathInfo as ExpoPathInfo} from 'expo-file-system/build/ExpoFileSystem.types'
+  } from 'expo-file-system/build/FileSystem.types'
+  import {type PathInfo as ExpoPathInfo} from 'expo-file-system/build/FileSystem.types'
+  import {
+    type WatchEvent,
+    type WatchOptions,
+    type WatchSubscription,
+  } from 'expo-file-system/build/FileSystemWatcher.types'
+  import {
+    type DownloadTask,
+    type UploadTask,
+  } from 'expo-file-system/build/NetworkTasks'
+  import {
+    type DownloadTaskOptions,
+    type UploadOptions,
+    type UploadResult,
+  } from 'expo-file-system/build/NetworkTasks.types'
   import {PathUtilities} from 'expo-file-system/build/pathUtilities'
 
   export class Paths extends PathUtilities {
@@ -59,8 +74,21 @@ declare module 'expo-file-system' {
     readableStream(): ReadableStream<Uint8Array<ArrayBuffer>>
     writableStream(): WritableStream<Uint8Array<ArrayBufferLike>>
     arrayBuffer(): Promise<ArrayBuffer>
+    json(): Promise<unknown>
+    formData(): ReturnType<Response['formData']>
     stream(): ReadableStream<Uint8Array<ArrayBuffer>>
     slice(start?: number, end?: number, contentType?: string): Blob
+    upload(url: string, options?: UploadOptions): Promise<UploadResult>
+    createUploadTask(url: string, options?: UploadOptions): UploadTask
+    static createDownloadTask(
+      url: string,
+      destination: File | Directory,
+      options?: DownloadTaskOptions,
+    ): DownloadTask
+    watch(
+      callback: (event: WatchEvent<File>) => void,
+      options?: WatchOptions,
+    ): WatchSubscription
   }
 
   export class Directory extends ExpoFileSystemDirectory {
@@ -70,6 +98,10 @@ declare module 'expo-file-system' {
     get name(): string
     createFile(name: string, mimeType: string | null): File
     createDirectory(name: string): Directory
+    watch(
+      callback: (event: WatchEvent<File | Directory>) => void,
+      options?: WatchOptions,
+    ): WatchSubscription
   }
 }
 

@@ -567,7 +567,7 @@ export const ComposePost = ({
               FileSystem.Paths.cache,
               tempFileName,
             )
-            sourceFile.copy(tempFile)
+            await sourceFile.copy(tempFile)
             logger.debug('restoreVideo: copied to temp file', {
               source: videoInfo.uri,
               temp: tempFile.uri,

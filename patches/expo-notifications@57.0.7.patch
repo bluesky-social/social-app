@@ -1,9 +1,9 @@
 diff --git a/android/build.gradle b/android/build.gradle
-index 7db47bdf190b0790c7bf867fbcfeb594005861be..0f868153edd6ec557730531f61dba7bf26a71742 100644
+index 18a1c56507a1c0da7eb3b6e1f80a1f25a0a8f171..305e10998b99d0c0256930de669e51b5ba4c98c4 100644
 --- a/android/build.gradle
 +++ b/android/build.gradle
-@@ -42,6 +42,7 @@ dependencies {
-   implementation 'com.google.firebase:firebase-messaging:24.0.1'
+@@ -43,6 +43,7 @@ dependencies {
+   implementation 'com.google.firebase:firebase-messaging:25.0.1'
  
    implementation 'me.leolin:ShortcutBadger:1.1.22@aar'
 +  implementation project(':expo-background-notification-handler')
@@ -124,7 +124,7 @@ index 610d3039cefd589647538ad8ba14587d29fab338..3655fc3121ebc0a97820d9653b61a90b
      builder.setContentText(content.text)
      builder.setSubText(content.subText)
 diff --git a/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt b/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt
-index 90ca4ff35132b33dcccb80b90d68572506fef603..9d4cb09b35844805d543acff54772380c732c02c 100644
+index eecdae82e99d2997687e3f3e199c94c3aeffbfe0..216891213fb2eac5a9a382b4f075eadccdcfeb5a 100644
 --- a/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt
 +++ b/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt
 @@ -3,6 +3,9 @@ package expo.modules.notifications.service.delegates
@@ -137,16 +137,16 @@ index 90ca4ff35132b33dcccb80b90d68572506fef603..9d4cb09b35844805d543acff54772380
  import expo.modules.interfaces.taskManager.TaskServiceProviderHelper
  import expo.modules.notifications.notifications.RemoteMessageSerializer
  import expo.modules.notifications.notifications.background.BackgroundRemoteNotificationTaskConsumer
-@@ -18,7 +21,7 @@ import expo.modules.notifications.tokens.interfaces.FirebaseTokenListener
- import java.lang.ref.WeakReference
+@@ -17,7 +20,7 @@ import expo.modules.notifications.service.interfaces.FirebaseMessagingDelegate
+ import expo.modules.notifications.tokens.interfaces.FirebaseTokenListener
  import java.util.*
  
 -open class FirebaseMessagingDelegate(protected val context: Context) : FirebaseMessagingDelegate {
 +open class FirebaseMessagingDelegate(protected val context: Context) : FirebaseMessagingDelegate, BackgroundNotificationHandlerInterface{
    companion object {
      // Unfortunately we cannot save state between instances of a service other way
-     // than by static properties. Fortunately, using weak references we can
-@@ -105,8 +108,19 @@ open class FirebaseMessagingDelegate(protected val context: Context) : FirebaseM
+     // than by static properties.
+@@ -109,8 +112,19 @@ open class FirebaseMessagingDelegate(protected val context: Context) : FirebaseM
      DebugLogging.logRemoteMessage("FirebaseMessagingDelegate.onMessageReceived: message", remoteMessage)
      val notification = createNotification(remoteMessage)
      DebugLogging.logNotification("FirebaseMessagingDelegate.onMessageReceived: notification", notification)

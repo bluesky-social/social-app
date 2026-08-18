@@ -380,26 +380,35 @@ export function usePopularFeedsSearch({
   const moderationOpts = useModerationOpts()
   const enabledInner = enabled ?? Boolean(moderationOpts)
 
-  return useQuery({
+  return useInfiniteQuery({
     enabled: enabledInner,
     queryKey: createPopularFeedsSearchQueryKey(query),
-    queryFn: async () => {
+    queryFn: async ({pageParam}) => {
       const data = await client.call(
         app.bsky.unspecced.getPopularFeedGenerators,
         {
           limit: 15,
           query: query,
+          cursor: pageParam,
         },
       )
 
-      return data.feeds
+      return data
     },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: lastPage => lastPage.cursor,
     placeholderData: keepPreviousData,
     select(data) {
-      return data.filter(feed => {
-        const decision = moderateFeedGenerator(feed, moderationOpts!)
-        return !decision.ui('contentMedia').blur
-      })
+      return {
+        ...data,
+        pages: data.pages.map(page => ({
+          ...page,
+          feeds: page.feeds.filter(feed => {
+            const decision = moderateFeedGenerator(feed, moderationOpts!)
+            return !decision.ui('contentMedia').blur
+          }),
+        })),
+      }
     },
   })
 }

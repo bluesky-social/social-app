@@ -648,26 +648,41 @@ let SearchScreenFeedsResults = ({
   const ax = useAnalytics()
   const t = useTheme()
 
-  const {data: results, isFetched} = usePopularFeedsSearch({
+  const {
+    data: results,
+    isFetched,
+    isFetching,
+    error,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = usePopularFeedsSearch({
     query,
     enabled: active,
   })
+  const feeds = useMemo(() => {
+    return results?.pages.flatMap(page => page.feeds) || []
+  }, [results])
+  const onEndReached = useCallback(() => {
+    if (isFetching || !hasNextPage || error) return
+    void fetchNextPage()
+  }, [isFetching, error, hasNextPage, fetchNextPage])
 
   const fireTracking = useCallOnce(() => {
     ax.metric('search:results:loaded', {
       tab: 'feeds',
-      initialCount: results?.length ?? 0,
+      initialCount: feeds.length,
     })
   })
   if (isFetched) {
     fireTracking()
   }
 
-  return isFetched && results ? (
+  return isFetched ? (
     <>
-      {results.length ? (
+      {feeds.length || hasNextPage ? (
         <List
-          data={results}
+          data={feeds}
           renderItem={({
             item,
             index,
@@ -686,8 +701,14 @@ let SearchScreenFeedsResults = ({
             </View>
           )}
           keyExtractor={(item: app.bsky.feed.defs.GeneratorView) => item.uri}
+          onEndReached={onEndReached}
           desktopFixedHeight
-          ListFooterComponent={<ListFooter />}
+          ListFooterComponent={
+            <ListFooter
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+            />
+          }
         />
       ) : (
         <EmptyState messageText={<NoResultsText query={query} />} />
