@@ -2,7 +2,6 @@ import {useRef} from 'react'
 import {InteractionManager, View} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {AppBskyEmbedGallery, type AppBskyEmbedImages} from '@atproto/api'
 
 import {atoms as a, tokens} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
@@ -16,6 +15,8 @@ import {type Dimensions} from '#/components/Lightbox/types'
 import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
 
@@ -29,14 +30,16 @@ export function ImageEmbed({
 }) {
   const ax = useAnalytics()
   const {openLightbox} = useLightboxControls()
-  const images: AppBskyEmbedImages.ViewImage[] =
+  const images: app.bsky.embed.images.ViewImage[] =
     embed.type === 'gallery'
-      ? embed.view.items.filter(AppBskyEmbedGallery.isViewImage).map(item => ({
-          thumb: item.thumbnail,
-          fullsize: item.fullsize,
-          alt: item.alt,
-          aspectRatio: item.aspectRatio,
-        }))
+      ? embed.view.items
+          .filter(item => bsky.isType(app.bsky.embed.gallery.viewImage, item))
+          .map(item => ({
+            thumb: item.thumbnail,
+            fullsize: item.fullsize,
+            alt: item.alt,
+            aspectRatio: item.aspectRatio,
+          }))
       : embed.view.images
   const useExpandedLayout =
     embed.type === 'gallery'
@@ -59,7 +62,7 @@ export function ImageEmbed({
 
   // Captured from AutoSizedImage so the peek-commit handler can reuse the same
   // ref + dims that a tap would — keeps the lightbox's return animation intact.
-  const singleContainerRef = useRef<AnimatedRef<any> | null>(null)
+  const singleContainerRef = useRef<AnimatedRef | null>(null)
   const singleDimsRef = useRef<Dimensions | null>(null)
 
   if (images.length > 0) {
@@ -71,7 +74,7 @@ export function ImageEmbed({
     }))
     const onPress = (
       index: number,
-      refs: AnimatedRef<any>[],
+      refs: AnimatedRef[],
       fetchedDims: (Dimensions | null)[],
     ) => {
       if (postContext) {
@@ -97,7 +100,7 @@ export function ImageEmbed({
     }
     const onPressIn = (_: number) => {
       InteractionManager.runAfterInteractions(() => {
-        Image.prefetch(
+        void Image.prefetch(
           items.map(i => i.uri),
           'memory',
         )
@@ -115,6 +118,7 @@ export function ImageEmbed({
           onPress(0, [singleContainerRef.current], [singleDimsRef.current])
         }
       }
+
       return (
         <View style={[a.mt_sm, rest.style]}>
           <ImageContextMenu
@@ -127,9 +131,7 @@ export function ImageEmbed({
               crop={
                 rest.viewContext === PostEmbedViewContext.ThreadHighlighted
                   ? 'none'
-                  : rest.isWithinQuote
-                    ? 'square'
-                    : 'constrained'
+                  : 'constrained'
               }
               image={image}
               onContainerRef={ref => {
@@ -142,7 +144,6 @@ export function ImageEmbed({
                 onPress(0, [containerRef], [dims])
               }
               onPressIn={() => onPressIn(0)}
-              hideBadge={rest.isWithinQuote}
             />
           </ImageContextMenu>
         </View>

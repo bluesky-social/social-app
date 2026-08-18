@@ -60,6 +60,7 @@ export type DialogControlOpenOptions = {
 
 export type DialogOuterProps = {
   control: DialogControlProps
+  onOpen?: () => void
   onClose?: () => void
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
   webOptions?: {

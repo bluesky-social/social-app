@@ -1,6 +1,6 @@
 import {useCallback, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {type ChatBskyConvoDefs, type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
@@ -13,9 +13,14 @@ import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
 import {EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import * as Toast from '#/components/Toast'
+import {type chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
-import {canReact, hasReachedReactionLimit} from './util'
+import {
+  canReact,
+  hasReachedReactionLimit,
+  MESSAGE_BUBBLE_MAX_WIDTH,
+} from './util'
 
 export function ActionsWrapper({
   message,
@@ -24,7 +29,7 @@ export function ActionsWrapper({
   moderationOpts,
   children,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  message: chat.bsky.convo.defs.MessageView
   isFromSelf: boolean
   senderProfile?: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts | undefined
@@ -163,7 +168,10 @@ export function ActionsWrapper({
         </MessageContextMenu>
       </View>
       <View
-        style={[{maxWidth: '80%'}, isFromSelf ? a.align_end : a.align_start]}>
+        style={[
+          {maxWidth: MESSAGE_BUBBLE_MAX_WIDTH},
+          isFromSelf ? a.align_end : a.align_start,
+        ]}>
         {children}
       </View>
     </View>

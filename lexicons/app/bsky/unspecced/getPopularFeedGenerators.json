@@ -1,0 +1,40 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.unspecced.getPopularFeedGenerators",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "An unspecced view of globally popular feed generators.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": { "type": "string" },
+          "query": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["feeds"],
+          "properties": {
+            "cursor": { "type": "string" },
+            "feeds": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "app.bsky.feed.defs#generatorView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

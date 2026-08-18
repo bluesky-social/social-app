@@ -30,7 +30,6 @@ import {KeyboardEvents} from 'react-native-keyboard-controller'
 import Animated, {
   clamp,
   interpolate,
-  runOnJS,
   type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -44,6 +43,7 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
+import {scheduleOnRN} from 'react-native-worklets'
 import {Image, type ImageErrorEventData} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -89,14 +89,12 @@ const SPRING_IN: WithSpringConfig = {
   mass: 0.75,
   damping: 300,
   stiffness: 1200,
-  restDisplacementThreshold: 0.01,
 }
 
 const SPRING_OUT: WithSpringConfig = {
   mass: IS_IOS ? 1.25 : 0.75,
   damping: 150,
   stiffness: 1000,
-  restDisplacementThreshold: 0.01,
 }
 
 /**
@@ -132,7 +130,7 @@ export function Root({children}: {children: React.ReactNode}) {
   const onHoverableTouchUp = useCallback((id: string) => {
     const hoverable = hoverables.current.get(id)
     if (!hoverable) {
-      logger.warn(`No such hoverable with id ${id}`)
+      logger.warn(`No such hoverable`, {id})
       return
     }
     hoverable.onTouchUp()
@@ -168,7 +166,7 @@ export function Root({children}: {children: React.ReactNode}) {
                 // note: return location has to be reset on open,
                 // rather than on close, otherwise there's a flicker
                 // where the reanimated update is faster than the react render
-                runOnJS(onCompletedClose)()
+                scheduleOnRN(onCompletedClose)
               }
             }),
           )
@@ -241,6 +239,7 @@ export function Trigger({
   contentLabel,
   style,
   onTap,
+  swipeGesture,
 }: TriggerProps) {
   const context = useContextMenuContext()
   const playHaptic = useHaptics()
@@ -332,7 +331,7 @@ export function Trigger({
     () => hoveredItemSV.get(),
     (hovered, prev) => {
       if (hovered !== prev) {
-        runOnJS(setHoveredMenuItem)(hovered)
+        scheduleOnRN(setHoveredMenuItem, hovered)
       }
     },
   )
@@ -344,7 +343,7 @@ export function Trigger({
       .averageTouches(true)
       .onStart(() => {
         'worklet'
-        runOnJS(open)('full')
+        scheduleOnRN(open, 'full')
       })
       .onUpdate(evt => {
         'worklet'
@@ -358,17 +357,25 @@ export function Trigger({
         // as the menu may have slid into place beneath their finger
         const item = hoveredItemSV.get()
         if (item) {
-          runOnJS(onTouchUpMenuItem)(item)
+          scheduleOnRN(onTouchUpMenuItem, item)
         }
       })
   }, [open, hoverablesSV, onTouchUpMenuItem, hoveredItemSV, translationSV])
 
   // Order matters here: doubleTapGesture must come before tapGesture.
-  const composedGestures = Gesture.Exclusive(
+  const tapAndHoldGestures = Gesture.Exclusive(
     doubleTapGesture,
     tapGesture,
     pressAndHoldGesture,
   )
+
+  // An optional swipe gesture (e.g. swipe-to-reply) races against the tap/hold
+  // group: whichever activates first wins and cancels the rest, so they're
+  // mutually exclusive. Race (not Exclusive) avoids a held-but-not-yet-moved
+  // swipe Pan blocking the long-press from firing.
+  const composedGestures = swipeGesture
+    ? Gesture.Race(swipeGesture, tapAndHoldGestures)
+    : tapAndHoldGestures
 
   const measurement = context.measurement || pendingMeasurement?.measurement
 
@@ -606,6 +613,8 @@ export function Outer({
   label?: string
   style?: StyleProp<ViewStyle>
   align?: 'left' | 'right'
+  /** Web only. Native restores focus differently. */
+  onCloseAutoFocus?: (event: Event) => void
 }) {
   const t = useTheme()
   const context = useContextMenuContext()
@@ -850,10 +859,11 @@ export function Item({
         !unstyled && [
           a.flex_row,
           a.align_center,
-          a.px_2xl,
+          a.px_lg,
+          a.gap_sm,
           a.rounded_md,
           t.atoms.bg_contrast_25,
-          {gap: 6, minHeight: 44, paddingVertical: 10},
+          {minHeight: 44, paddingVertical: 10},
           (focused || pressed || context.hoveredMenuItem === id) &&
             !rest.disabled &&
             t.atoms.bg_contrast_50,
@@ -882,8 +892,7 @@ export function ItemText({children, style}: ItemTextProps) {
       style={[
         a.flex_1,
         a.text_md,
-        a.font_semi_bold,
-        t.atoms.text_contrast_high,
+        a.font_medium,
         style,
         destructive && {color: t.palette.negative_500},
         disabled && t.atoms.text_contrast_low,
@@ -898,13 +907,13 @@ export function ItemIcon({icon: Comp}: ItemIconProps) {
   const {disabled, destructive} = useContextMenuItemContext()
   return (
     <Comp
-      size="lg"
+      size="md"
       fill={
         disabled
           ? t.atoms.text_contrast_low.color
           : destructive
             ? t.palette.negative_500
-            : t.atoms.text_contrast_medium.color
+            : t.atoms.text.color
       }
     />
   )

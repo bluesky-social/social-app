@@ -5,8 +5,8 @@ import Animated, {
   useAnimatedRef,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
+import {type ModerationDecision} from '@bsky/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -31,12 +31,13 @@ import {useActorStatus} from '#/features/liveNow'
 import {EditLiveDialog} from '#/features/liveNow/components/EditLiveDialog'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
 import {LiveStatusDialog} from '#/features/liveNow/components/LiveStatusDialog'
+import {type app} from '#/lexicons'
 import {GrowableAvatar} from './GrowableAvatar'
 import {GrowableBanner} from './GrowableBanner'
 import {StatusBarShadow} from './StatusBarShadow'
 
 interface Props {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<app.bsky.actor.defs.ProfileViewDetailed>
   moderation: ModerationDecision
   hideBackButton?: boolean
   isPlaceholderProfile?: boolean
@@ -60,7 +61,7 @@ let ProfileHeaderShell = ({
   const liveStatusControl = useDialogControl()
 
   const aviRef = useAnimatedRef()
-  const bannerRef = useAnimatedRef<Animated.View>()
+  const bannerRef = useAnimatedRef()
 
   const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
@@ -73,7 +74,7 @@ let ProfileHeaderShell = ({
   const _openLightbox = useCallback(
     (
       uri: string,
-      thumbRef: AnimatedRef<any>,
+      thumbRef: AnimatedRef,
       type: 'circle-avi' | 'rect-avi' | 'image' = 'circle-avi',
     ) => {
       openLightbox({
@@ -228,7 +229,6 @@ let ProfileHeaderShell = ({
       {!isPlaceholderProfile &&
         (isMe ? (
           <LabelsOnMe
-            type="account"
             labels={profile.labels}
             style={[
               a.px_lg,
@@ -240,6 +240,7 @@ let ProfileHeaderShell = ({
         ) : (
           <ProfileHeaderAlerts
             moderation={moderation}
+            profile={profile}
             style={[
               a.px_lg,
               a.pt_xs,

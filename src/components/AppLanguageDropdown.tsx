@@ -7,9 +7,10 @@ import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {resetPostsFeedQueries} from '#/state/queries/post-feed'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme, web} from '#/alf'
 import * as Select from '#/components/Select'
-import {Button} from './Button'
+import {Button, ButtonIcon} from './Button'
+import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from './icons/Globe'
 
 export function AppLanguageDropdown() {
   const t = useTheme()
@@ -57,6 +58,7 @@ export function AppLanguageDropdown() {
                 native: [a.gap_xs],
               }),
             ]}>
+            <ButtonIcon icon={EarthIcon} size="md" />
             <Select.ValueText
               placeholder={_(msg`Select an app language`)}
               style={[t.atoms.text_contrast_medium]}
@@ -68,7 +70,7 @@ export function AppLanguageDropdown() {
       <Select.Content
         label={_(msg`Select language`)}
         renderItem={({label, value}) => (
-          <Select.Item value={value} label={label}>
+          <Select.Item value={value} label={label} style={web([a.pointer])}>
             <Select.ItemIndicator />
             <Select.ItemText>{label}</Select.ItemText>
           </Select.Item>

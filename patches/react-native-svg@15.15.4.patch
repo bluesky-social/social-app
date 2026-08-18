@@ -1,0 +1,69 @@
+diff --git a/android/src/main/java/com/horcrux/svg/PathView.java b/android/src/main/java/com/horcrux/svg/PathView.java
+index 06829bd00dbded262e1871aaf6db3ae0cfa9d1b1..1b158185a6d7e907aa18ddc806902fcc2bd51027 100644
+--- a/android/src/main/java/com/horcrux/svg/PathView.java
++++ b/android/src/main/java/com/horcrux/svg/PathView.java
+@@ -14,17 +14,33 @@ import android.graphics.Paint;
+ import android.graphics.Path;
+ import com.facebook.react.bridge.ReactContext;
+ 
++import java.util.ArrayList;
++import java.util.HashMap;
++
++class ParsedPath {
++  final Path path;
++  final ArrayList<PathElement> elements;
++
++  ParsedPath(Path path, ArrayList<PathElement> elements) {
++    this.path = path;
++    this.elements = elements;
++  }
++}
++
+ @SuppressLint("ViewConstructor")
+ class PathView extends RenderableView {
+   private Path mPath;
+ 
++  // This grows forever but for our use case (static icons) it's ok.
++  private static final HashMap<String, ParsedPath> sPathCache = new HashMap<>();
++
+   public PathView(ReactContext reactContext) {
+     super(reactContext);
+     PathParser.mScale = mScale;
+     mPath = new Path();
+   }
+ 
+-  public void setD(String d) {
++  void setDByParsing(String d) {
+     mPath = PathParser.parse(d);
+     elements = PathParser.elements;
+     for (PathElement elem : elements) {
+@@ -33,6 +49,17 @@ class PathView extends RenderableView {
+         point.y *= mScale;
+       }
+     }
++  }
++
++  public void setD(String d) {
++    ParsedPath cached = sPathCache.get(d);
++    if (cached != null) {
++      mPath = cached.path;
++      elements = cached.elements;
++    } else {
++      setDByParsing(d);
++      sPathCache.put(d, new ParsedPath(mPath, elements));
++    }
+     invalidate();
+   }
+ 
+diff --git a/lib/typescript/ReactNativeSVG.web.d.ts b/lib/typescript/ReactNativeSVG.web.d.ts
+deleted file mode 100644
+index e2001975fa97398fb159d2f85f45d067200f575b..0000000000000000000000000000000000000000
+diff --git a/lib/typescript/ReactNativeSVG.web.d.ts.map b/lib/typescript/ReactNativeSVG.web.d.ts.map
+deleted file mode 100644
+index c81af4416af5ee3eaca77b51bfc2952b30d49c8a..0000000000000000000000000000000000000000
+diff --git a/lib/typescript/elements.web.d.ts b/lib/typescript/elements.web.d.ts
+deleted file mode 100644
+index cf4083fbf749b2b002fb649d80b33ac74763847b..0000000000000000000000000000000000000000
+diff --git a/lib/typescript/elements.web.d.ts.map b/lib/typescript/elements.web.d.ts.map
+deleted file mode 100644
+index 29602aa47ad903bc7aaa111462a61dd862c4476d..0000000000000000000000000000000000000000

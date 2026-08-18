@@ -55,10 +55,10 @@ module.exports = function (_config) {
       icon: './assets/app-icons/ios_icon_default_next.png',
       userInterfaceStyle: 'automatic',
       primaryColor: '#006AFF',
-      newArchEnabled: false,
       ios: {
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
+        appleTeamId: process.env.EXPO_APPLE_TEAM_ID,
         config: {
           usesNonExemptEncryption: false,
         },
@@ -81,6 +81,7 @@ module.exports = function (_config) {
             'an',
             'ast',
             'ca',
+            'cs',
             'cy',
             'da',
             'de',
@@ -126,6 +127,7 @@ module.exports = function (_config) {
           'com.apple.security.application-groups': 'group.app.bsky',
           'com.apple.developer.usernotifications.communication': true,
           // 'com.apple.developer.device-information.user-assigned-device-name': true,
+          'com.apple.developer.declared-age-range': true,
         },
         privacyManifests: {
           NSPrivacyCollectedDataTypes: [
@@ -180,10 +182,6 @@ module.exports = function (_config) {
         },
       },
       androidStatusBar: {
-        barStyle: 'light-content',
-      },
-      // Dark nav bar in light mode is better than light nav bar in dark mode
-      androidNavigationBar: {
         barStyle: 'light-content',
       },
       android: {
@@ -259,7 +257,7 @@ module.exports = function (_config) {
           'expo-build-properties',
           {
             ios: {
-              deploymentTarget: '15.1',
+              deploymentTarget: '16.4',
               buildReactNativeFromSource: true,
               ccacheEnabled: IS_DEV,
               cxxLanguageStandard: 'c++23',

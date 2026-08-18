@@ -24,9 +24,9 @@ import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {MessagesProvider} from '#/state/messages'
-import {Provider as ModalStateProvider} from '#/state/modals'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as PrefsStateProvider} from '#/state/preferences'
+import {BetaUserStorageSync} from '#/state/preferences/beta-user-sync'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
 import {Provider as UnreadNotifsProvider} from '#/state/queries/notifications/unread'
@@ -104,7 +104,7 @@ function InnerApp() {
           await features.init
         }
       } catch (e) {
-        logger.error('session: resumeSession failed', {message: e})
+        logger.warn('session: resumeSession failed', {message: e})
       } finally {
         setIsReady(true)
       }
@@ -133,6 +133,7 @@ function InnerApp() {
                   key={currentAccount?.did}>
                   <AnalyticsFeaturesContext>
                     <QueryProvider currentDid={currentAccount?.did}>
+                      <BetaUserStorageSync />
                       <PolicyUpdateOverlayProvider>
                         <LiveEventsProvider>
                           <AgeAssuranceV2Provider>
@@ -220,17 +221,15 @@ function App() {
                   <PrefsStateProvider>
                     <I18nProvider>
                       <ShellStateProvider>
-                        <ModalStateProvider>
-                          <DialogStateProvider>
-                            <LightboxStateProvider>
-                              <PortalProvider>
-                                <LandingProvider>
-                                  <InnerApp />
-                                </LandingProvider>
-                              </PortalProvider>
-                            </LightboxStateProvider>
-                          </DialogStateProvider>
-                        </ModalStateProvider>
+                        <DialogStateProvider>
+                          <LightboxStateProvider>
+                            <PortalProvider>
+                              <LandingProvider>
+                                <InnerApp />
+                              </LandingProvider>
+                            </PortalProvider>
+                          </LightboxStateProvider>
+                        </DialogStateProvider>
                       </ShellStateProvider>
                     </I18nProvider>
                   </PrefsStateProvider>

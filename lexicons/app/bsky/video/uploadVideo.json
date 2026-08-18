@@ -1,0 +1,29 @@
+{
+  "id": "app.bsky.video.uploadVideo",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "encoding": "video/mp4"
+      },
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "jobStatus"
+          ],
+          "properties": {
+            "jobStatus": {
+              "ref": "app.bsky.video.defs#jobStatus",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Upload a video to be processed then stored on the PDS."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

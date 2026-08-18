@@ -1,24 +1,24 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
-import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
+import {
+  DEFAULT_LIMIT,
+  useGetTrendsQuery,
+} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/service-config'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
-import {DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
+import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {TrendingTopicLink} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-
-const TRENDING_LIMIT = 5
 
 export function SidebarTrendingTopics() {
   const {enabled} = useTrendingConfig()
@@ -28,12 +28,25 @@ export function SidebarTrendingTopics() {
 
 function Inner() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
+
+  const exploreTopicCount = ax.features.getValue(
+    ax.features.TrendingExploreTopicsCountValue,
+    DEFAULT_LIMIT,
+  )
+
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
-  const {data: trending, error, isLoading} = useTrendingTopics()
-  const noTopics = !isLoading && !error && !trending?.topics?.length
+  const {
+    data: trending,
+    error,
+    isLoading,
+  } = useGetTrendsQuery({
+    limit: DEFAULT_LIMIT,
+    refetchOnWindowFocus: true,
+  })
+  const noTopics = !isLoading && !error && !trending?.trends?.length
 
   const onConfirmHide = () => {
     ax.metric('trendingTopics:hide', {context: 'sidebar'})
@@ -46,24 +59,44 @@ function Inner() {
         style={[a.p_lg, a.rounded_md, a.border, t.atoms.border_contrast_low]}>
         <View style={[a.flex_row, a.align_center, a.gap_xs, a.pb_md]}>
           <TrendingIcon width={16} height={16} fill={t.atoms.text.color} />
-          <Text style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
+          <Text style={[a.flex_1, a.text_md, a.font_semi_bold]}>
             <Trans>Trending</Trans>
           </Text>
+          {exploreTopicCount > DEFAULT_LIMIT ? (
+            <Link label={l`See more trending topics`} to="/search">
+              {({hovered, pressed}) => (
+                <Text
+                  style={[
+                    a.text_sm,
+                    a.font_medium,
+                    {
+                      color:
+                        hovered || pressed
+                          ? t.palette.contrast_800
+                          : t.palette.contrast_500,
+                    },
+                  ]}
+                  numberOfLines={1}>
+                  <Trans>See more</Trans>
+                </Text>
+              )}
+            </Link>
+          ) : null}
           <Button
             variant="ghost"
             size="tiny"
             color="secondary"
             shape="round"
-            label={_(msg`Trending options`)}
+            label={l`Trending options`}
             onPress={() => trendingPrompt.open()}
-            style={[a.bg_transparent, {marginTop: -6, marginRight: -6}]}>
-            <ButtonIcon icon={Ellipsis} size="xs" />
+            style={[a.bg_transparent]}>
+            <ButtonIcon icon={EllipsisIcon} size="xs" />
           </Button>
         </View>
 
         <View style={[a.gap_xs]}>
           {isLoading ? (
-            Array(TRENDING_LIMIT)
+            Array(DEFAULT_LIMIT)
               .fill(0)
               .map((_n, i) => (
                 <View key={i} style={[a.flex_row, a.align_center, a.gap_sm]}>
@@ -84,51 +117,60 @@ function Inner() {
                   />
                 </View>
               ))
-          ) : !trending?.topics ? null : (
+          ) : !trending?.trends ? null : (
             <>
-              {trending.topics.slice(0, TRENDING_LIMIT).map((topic, i) => (
-                <TrendingTopicLink
-                  key={topic.link}
-                  topic={topic}
-                  style={[a.self_start]}
-                  onPress={() => {
-                    ax.metric('trendingTopic:click', {context: 'sidebar'})
-                  }}>
-                  {({hovered}) => (
-                    <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                      <Text
-                        style={[
-                          a.text_sm,
-                          a.leading_snug,
-                          t.atoms.text_contrast_low,
-                          {minWidth: 16},
-                        ]}>
-                        {i + 1}.
-                      </Text>
-                      <Text
-                        style={[
-                          a.text_sm,
-                          a.leading_snug,
-                          hovered
-                            ? [t.atoms.text, a.underline]
-                            : t.atoms.text_contrast_medium,
-                        ]}
-                        numberOfLines={1}>
-                        {topic.displayName ?? topic.topic}
-                      </Text>
-                    </View>
-                  )}
-                </TrendingTopicLink>
-              ))}
+              {trending.trends.slice(0, DEFAULT_LIMIT).map((topic, i) => {
+                const rank = i + 1
+                return (
+                  <TrendingTopicLink
+                    key={topic.link}
+                    topic={topic}
+                    metricContext="sidebar"
+                    rank={rank}
+                    recId={trending.recId}
+                    onPress={() => {
+                      ax.metric('trendingTopic:click', {
+                        context: 'sidebar',
+                        rank,
+                        recId: trending.recId,
+                      })
+                    }}>
+                    {({hovered}) => (
+                      <View style={[a.flex_1, a.flex_row, a.gap_xs]}>
+                        <Text
+                          style={[
+                            a.text_sm,
+                            a.leading_snug,
+                            t.atoms.text_contrast_low,
+                            {minWidth: 16},
+                          ]}>
+                          {rank}.
+                        </Text>
+                        <Text
+                          style={[
+                            a.flex_1,
+                            a.text_sm,
+                            a.leading_snug,
+                            hovered
+                              ? [t.atoms.text, a.underline]
+                              : t.atoms.text_contrast_medium,
+                          ]}>
+                          {topic.displayName ?? topic.topic}
+                        </Text>
+                      </View>
+                    )}
+                  </TrendingTopicLink>
+                )
+              })}
             </>
           )}
         </View>
       </View>
       <Prompt.Basic
         control={trendingPrompt}
-        title={_(msg`Hide trending topics?`)}
-        description={_(msg`You can update this later from your settings.`)}
-        confirmButtonCta={_(msg`Hide`)}
+        title={l`Hide trending topics?`}
+        description={l`You can update this later from your settings.`}
+        confirmButtonCta={l`Hide`}
         onConfirm={onConfirmHide}
       />
     </>

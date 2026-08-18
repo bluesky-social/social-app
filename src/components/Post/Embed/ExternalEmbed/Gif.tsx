@@ -66,19 +66,7 @@ export function GifEmbed({
           a.overflow_hidden,
           {backgroundColor: t.palette.black},
         ]}>
-        <View
-          style={[
-            a.absolute,
-            /*
-             * Aspect ratio was being clipped weirdly on web -esb
-             */
-            {
-              top: -2,
-              bottom: -2,
-              left: -2,
-              right: -2,
-            },
-          ]}>
+        <View style={[a.absolute, a.inset_0]}>
           <MediaInsetBorder />
           <GifPresentationControls
             onPress={onPress}

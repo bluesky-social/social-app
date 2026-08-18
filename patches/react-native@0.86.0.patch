@@ -1,0 +1,373 @@
+diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
+index 1b02e8b2d39672063551411d5c403a69b671a869..b3481c1b98b45dea769035140dc2fd8d9b088b24 100644
+--- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
++++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
+@@ -102,6 +102,20 @@ - (void)setContentOffset:(CGPoint)contentOffset
+       RCTSanitizeNaNValue(contentOffset.y, @"scrollView.contentOffset.y"));
+ }
+ 
++- (void)setCenterContent:(BOOL)centerContent
++{
++  if (_centerContent != centerContent) {
++    _centerContent = centerContent;
++    [self centerContentIfNeeded];
++  }
++}
++
++- (void)setContentSize:(CGSize)contentSize
++{
++  [super setContentSize:contentSize];
++  [self centerContentIfNeeded];
++}
++
+ - (void)setFrame:(CGRect)frame
+ {
+   [super setFrame:frame];
+diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
+index a087536f3af0d33b13fe38d8abd1bc6d7935def2..01f5c884ea4772350c0ebe6263723d97632f2b74 100644
+--- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
+@@ -396,7 +396,15 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+ 
+   MAP_SCROLL_VIEW_PROP(zoomScale);
+ 
+-  if (oldScrollViewProps.contentInset != newScrollViewProps.contentInset) {
++  // When disabling centerContent, reset inset to prop value
++  // (enabling is handled automatically by the setCenterContent: setter)
++  if (oldScrollViewProps.centerContent && !newScrollViewProps.centerContent) {
++    _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
++  }
++
++  // Only apply contentInset from props if centerContent is disabled
++  // When centerContent is enabled, the inset is calculated by centerContentIfNeeded
++  if (oldScrollViewProps.contentInset != newScrollViewProps.contentInset && !newScrollViewProps.centerContent) {
+     _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
+   }
+ 
+@@ -523,7 +531,7 @@ - (UIView *)betterHitTest:(CGPoint)point withEvent:(UIEvent *)event
+     }
+   }
+ 
+-  return isPointInside ? self : nil;
++  return isPointInside ? _scrollView : nil;
+ }
+ 
+ /*
+@@ -1133,6 +1141,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
+   return _virtualViewContainerState;
+ }
+ 
+++ (BOOL)shouldBeRecycled
++{
++  return NO;
++}
++
+ @end
+ 
+ Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
+diff --git a/React/Views/RefreshControl/RCTRefreshControl.h b/React/Views/RefreshControl/RCTRefreshControl.h
+index ed306d7cadbf36a2fed79be8bd9d68b5dca135bd..d447dad534fefa9fcbdbbde6dcbbdcddadd5a824 100644
+--- a/React/Views/RefreshControl/RCTRefreshControl.h
++++ b/React/Views/RefreshControl/RCTRefreshControl.h
+@@ -18,6 +18,7 @@ __attribute__((deprecated("This API will be removed along with the legacy archit
+ @property (nonatomic, copy) NSString *title;
+ @property (nonatomic, copy) RCTDirectEventBlock onRefresh;
+ @property (nonatomic, weak) UIScrollView *scrollView;
++@property (nonatomic, copy) UIColor *customTintColor;
+ 
+ @end
+ 
+diff --git a/React/Views/RefreshControl/RCTRefreshControl.m b/React/Views/RefreshControl/RCTRefreshControl.m
+index 2dc86e464264c9450eef18d7b153d35bf6a5cc55..6661dc69a04766afa0284d6e83839b219e98cf57 100644
+--- a/React/Views/RefreshControl/RCTRefreshControl.m
++++ b/React/Views/RefreshControl/RCTRefreshControl.m
+@@ -25,6 +25,7 @@ @implementation RCTRefreshControl {
+   UIColor *_titleColor;
+   CGFloat _progressViewOffset;
+   BOOL _hasMovedToWindow;
++  UIColor *_customTintColor;
+ }
+ 
+ - (instancetype)init
+@@ -60,6 +61,12 @@ - (void)layoutSubviews
+   _isInitialRender = false;
+ }
+ 
++- (void)didMoveToSuperview
++{
++  [super didMoveToSuperview];
++  [self setTintColor:_customTintColor];
++}
++
+ - (void)didMoveToWindow
+ {
+   [super didMoveToWindow];
+@@ -225,6 +232,18 @@ - (void)refreshControlValueChanged
+   }
+ }
+ 
++// Fix for https://github.com/facebook/react-native/issues/43388
++// A bug in iOS 17.4 causes the haptic to not play when refreshing if the tintColor
++// is set before the refresh control gets added to the scrollview. We'll call this
++// function whenever the superview changes. We'll also call it if the value of customTintColor
++// changes.
++- (void)setTintColor:(UIColor *)tintColor
++{
++  if ([self.superview isKindOfClass:[UIScrollView class]] && self.tintColor != tintColor) {
++    [super setTintColor:tintColor];
++  }
++}
++
+ @end
+ 
+ #endif // RCT_REMOVE_LEGACY_ARCH
+diff --git a/React/Views/RefreshControl/RCTRefreshControlManager.m b/React/Views/RefreshControl/RCTRefreshControlManager.m
+index 1e9ff527f4e6691d716da624031113a397876981..44329c5422c6f24d8a437fa35c6f2bad6bf8622b 100644
+--- a/React/Views/RefreshControl/RCTRefreshControlManager.m
++++ b/React/Views/RefreshControl/RCTRefreshControlManager.m
+@@ -24,11 +24,12 @@ - (UIView *)view
+ 
+ RCT_EXPORT_VIEW_PROPERTY(onRefresh, RCTDirectEventBlock)
+ RCT_EXPORT_VIEW_PROPERTY(refreshing, BOOL)
+-RCT_EXPORT_VIEW_PROPERTY(tintColor, UIColor)
+ RCT_EXPORT_VIEW_PROPERTY(title, NSString)
+ RCT_EXPORT_VIEW_PROPERTY(titleColor, UIColor)
+ RCT_EXPORT_VIEW_PROPERTY(progressViewOffset, CGFloat)
+ 
++RCT_REMAP_VIEW_PROPERTY(tintColor, customTintColor, UIColor)
++
+ RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
+ {
+   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
+index 59775241c80bec99ad3ec080f2425aacc8900c24..426de3aa77cda2032d7b0991e2ca3f8482a438d3 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
+@@ -459,6 +459,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
+     inSubviewClippingLoop = true
+     var clippedSoFar = 0
+     for (i in 0..<allChildrenCount) {
++      // Reentrant child removal during this loop can compact allChildren and leave a null at
++      // an index below allChildrenCount. A null entry means the view is already detached, so
++      // treat it as clipped instead of crashing.
++      if (childArray[i] == null) {
++        clippedSoFar++
++        continue
++      }
+       try {
+         updateSubviewClipStatus(clippingRect, i, clippedSoFar, excludedViewsSet)
+       } catch (ex: IndexOutOfBoundsException) {
+@@ -496,7 +503,9 @@ public open class ReactViewGroup public constructor(context: Context?) :
+   ) {
+     assertOnUiThread()
+ 
+-    val child = checkNotNull(allChildren?.get(idx))
++    // allChildren can be mutated reentrantly while a clipping pass is running, so a stale
++    // index can point at a null slot. Skip it instead of crashing.
++    val child = allChildren?.get(idx) ?: return
+     val intersects = clippingRect.intersects(child.left, child.top, child.right, child.bottom)
+     var needUpdateClippingRecursive = false
+ 
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
+index 9b04cadc22f5ae7b105f9f9875a242b53188cf03..b2b27626edc46625ac2372a13977d700948835b6 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
+@@ -361,7 +361,7 @@ static UIFontDescriptorSystemDesign RCTGetFontDescriptorSystemDesign(NSString *f
+       font = [UIFont fontWithName:fontProperties.family size:effectiveFontSize];
+       if (font != nullptr) {
+         fontNames = [UIFont fontNamesForFamilyName:font.familyName];
+-        fontWeight = (fontWeight != 0.0) ?: RCTGetFontWeight(font);
++        fontWeight = (fontWeight != 0.0) ? fontWeight : RCTGetFontWeight(font);
+       } else {
+         // Failback to system font.
+         font = RCTDefaultFontWithFontProperties(fontProperties);
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
+index ac553045a9c0ce77e288277912538d9e131ebc01..d99c8f4db5a07f1e4ffe7e03ff23adce9c63137b 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
+@@ -389,8 +389,9 @@ - (TextMeasurement)_measureTextStorage:(NSTextStorage *)textStorage
+     size.height = enumeratedLinesHeight;
+   }
+ 
+-  size = (CGSize){ceil(size.width * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
+-                  ceil(size.height * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
++  CGFloat epsilon = 0.001;
++  size = (CGSize){ceil((size.width + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
++                  ceil((size.height + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
+ 
+   NSRange visibleGlyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+ 
+diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
+index 60160efb163d91813fa2ca7ca758b51afcf261e1..fb646fe945ffe4aa4a386f80a1e42a90180691f1 100644
+--- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
+@@ -42,6 +42,32 @@ - (void)setRefreshing:(BOOL)refreshing
+ @implementation RCTPullToRefreshViewComponentView {
+   UIRefreshControl *_refreshControl;
+   RCTScrollViewComponentView *__weak _scrollViewComponentView;
++  /*
++   * Deferred props: updateProps runs during the Create mount mutation, before
++   * _attach puts the control on the scroll view, and writes to a detached
++   * UIRefreshControl are hazardous:
++   *
++   * - tintColor: writing it to a detached control permanently suppresses the
++   *   pull-to-refresh trigger haptic on iOS 17.4+
++   *   (https://github.com/facebook/react-native/issues/43388).
++   *
++   * - progressViewOffset (the bounds.origin shift): on iOS 26 the control's
++   *   _UIRefreshControlModernContentView positions itself at whatever
++   *   bounds.origin it observes when it is CREATED - at insertion into the
++   *   scroll view, or earlier if a pre-attach property write materializes it -
++   *   and keeps that y forever (width tracks, y never re-pins; verified via
++   *   on-device frame logging, Aug 2026). A pre-attach shift is therefore
++   *   baked into the content view's own frame and cancelled exactly, hiding
++   *   the spinner. Applied post-attach, the content view has already been
++   *   created at origin 0 and the same bounds shift works as intended.
++   *
++   * Both props are parked here and applied only once the control is inside
++   * the scroll view.
++   */
++  UIColor *_pendingTintColor;
++  BOOL _hasPendingTintColor;
++  CGFloat _pendingProgressViewOffset;
++  BOOL _hasPendingProgressViewOffset;
+   // This variable keeps track of whether the view is recycled or not. Once the view is recycled, the component
+   // creates a new instance of UIRefreshControl, resetting the native props to the default values.
+   // However, when recycling, we are keeping around the old _props. The flag is used to force the application
+@@ -79,10 +105,25 @@ + (ComponentDescriptorProvider)componentDescriptorProvider
+   return concreteComponentDescriptorProvider<PullToRefreshViewComponentDescriptor>();
+ }
+ 
++// Recycled instances get all props force-applied in updateProps, which runs
++// before the new UIRefreshControl is inserted into the scroll view hierarchy;
++// touching the control that early suppresses the pull-to-refresh haptic on
++// iOS 17.4+ (react-native#43388). Opting out of recycling keeps every mount on
++// the untouched-before-attach path. Refresh controls are rare and cheap, so
++// losing recycling for them is negligible.
+++ (BOOL)shouldBeRecycled
++{
++  return NO;
++}
++
+ - (void)prepareForRecycle
+ {
+   [super prepareForRecycle];
+   _scrollViewComponentView = nil;
++  _pendingTintColor = nil;
++  _hasPendingTintColor = NO;
++  _pendingProgressViewOffset = 0;
++  _hasPendingProgressViewOffset = NO;
+   [self _initializeUIRefreshControl];
+   _recycled = YES;
+ }
+@@ -93,7 +134,8 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+   const auto &newConcreteProps = static_cast<const PullToRefreshViewProps &>(*props);
+ 
+   if (_recycled || newConcreteProps.tintColor != oldConcreteProps.tintColor) {
+-    _refreshControl.tintColor = RCTUIColorFromSharedColor(newConcreteProps.tintColor);
++    // Deferred until the control is inside the scroll view (#43388).
++    [self _updateTintColor:RCTUIColorFromSharedColor(newConcreteProps.tintColor)];
+   }
+ 
+   if (_recycled || newConcreteProps.progressViewOffset != oldConcreteProps.progressViewOffset) {
+@@ -141,11 +183,50 @@ - (void)handleUIControlEventValueChanged
+ 
+ - (void)_updateProgressViewOffset:(Float)progressViewOffset
+ {
++  _pendingProgressViewOffset = progressViewOffset;
++  _hasPendingProgressViewOffset = YES;
++  // Applies immediately for runtime changes while the control is attached;
++  // pre-attach sets wait until the control is inside the scroll view (see the
++  // _pendingProgressViewOffset declaration).
++  [self _applyPendingProgressViewOffsetIfPossible];
++  if (_hasPendingProgressViewOffset) {
++    [self setNeedsLayout];
++  }
++}
++
++- (void)_applyPendingProgressViewOffsetIfPossible
++{
++  if (!_hasPendingProgressViewOffset || ![_refreshControl.superview isKindOfClass:[UIScrollView class]]) {
++    return;
++  }
+   _refreshControl.bounds = CGRectMake(
+       _refreshControl.bounds.origin.x,
+-      -progressViewOffset,
++      -_pendingProgressViewOffset,
+       _refreshControl.bounds.size.width,
+       _refreshControl.bounds.size.height);
++  _hasPendingProgressViewOffset = NO;
++}
++
++- (void)_updateTintColor:(UIColor *)tintColor
++{
++  _pendingTintColor = tintColor;
++  _hasPendingTintColor = YES;
++  // Applies immediately for runtime changes while the control is attached;
++  // pre-attach sets wait until the control is inside the scroll view.
++  [self _applyPendingTintColorIfPossible];
++  if (_hasPendingTintColor) {
++    [self setNeedsLayout];
++  }
++}
++
++- (void)_applyPendingTintColorIfPossible
++{
++  if (!_hasPendingTintColor || ![_refreshControl.superview isKindOfClass:[UIScrollView class]]) {
++    return;
++  }
++  _refreshControl.tintColor = _pendingTintColor;
++  _pendingTintColor = nil;
++  _hasPendingTintColor = NO;
+ }
+ 
+ - (void)_updateTitle
+@@ -153,7 +234,12 @@ - (void)_updateTitle
+   const auto &concreteProps = static_cast<const PullToRefreshViewProps &>(*_props);
+ 
+   if (concreteProps.title.empty()) {
+-    _refreshControl.attributedTitle = nil;
++    // Avoid touching the control when there is nothing to clear - writing
++    // attributedTitle (even nil) before the control is in the scroll view
++    // hierarchy can suppress the pull-to-refresh haptic (#43388).
++    if (_refreshControl.attributedTitle != nil) {
++      _refreshControl.attributedTitle = nil;
++    }
+     return;
+   }
+ 
+@@ -172,6 +258,18 @@ - (void)layoutSubviews
+ {
+   [super layoutSubviews];
+ 
++  /*
++   * Fallback for the pending props: _attach applies them right after the
++   * refreshControl assignment (insertion is synchronous there on current iOS),
++   * but should UIKit ever defer the insertion to a later layout pass, re-arm
++   * and retry until the control is actually inside the scroll view.
++   */
++  [self _applyPendingTintColorIfPossible];
++  [self _applyPendingProgressViewOffsetIfPossible];
++  if ((_hasPendingTintColor || _hasPendingProgressViewOffset) && _scrollViewComponentView != nil) {
++    [self setNeedsLayout];
++  }
++
+   // Attempts to begin refreshing before the initial layout are ignored by _refreshControl. So if the control is
+   // refreshing when mounted, we need to call beginRefreshing in layoutSubviews or it won't work.
+   if (self.window) {
+@@ -209,6 +307,15 @@ - (void)_attach
+ 
+     // This ensures that layoutSubviews is called. Without this, recycled instances won't refresh on mount
+     [self setNeedsLayout];
++
++    /*
++     * The assignment above inserts the control (and creates its content view)
++     * synchronously on current iOS - verified via frame logging - so the
++     * pending props can be applied immediately. layoutSubviews is the fallback
++     * if insertion is ever deferred.
++     */
++    [self _applyPendingTintColorIfPossible];
++    [self _applyPendingProgressViewOffsetIfPossible];
+   }
+ }
+ 

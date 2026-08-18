@@ -1,10 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {
-  ChatBskyConvoDefs,
-  type ChatBskyConvoListConvoRequests,
-  ChatBskyGroupDefs,
-} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {
@@ -23,6 +18,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
+import {useUnreadCountsQuery} from '#/state/queries/messages/get-unread-counts'
 import {useListConvoRequests} from '#/state/queries/messages/list-conversation-requests'
 import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {EmptyState} from '#/view/com/util/EmptyState'
@@ -43,6 +39,8 @@ import {ListFooter} from '#/components/Lists'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {IncomingRequestListItem} from './components/IncomingRequestListItem'
 import {OutgoingRequestListItem} from './components/OutgoingRequestListItem'
 import {useIsWithinSplitView} from './components/splitView/context'
@@ -50,8 +48,8 @@ import {useIsWithinSplitView} from './components/splitView/context'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>
 
 type RequestItem =
-  | {type: 'incoming'; view: ChatBskyConvoDefs.ConvoView}
-  | {type: 'outgoing'; view: ChatBskyGroupDefs.JoinRequestConvoView}
+  | {type: 'incoming'; view: chat.bsky.convo.defs.ConvoView}
+  | {type: 'outgoing'; view: chat.bsky.group.defs.JoinRequestConvoView}
 
 export function MessagesInboxScreen(props: Props) {
   const {t: l} = useLingui()
@@ -74,9 +72,11 @@ export function MessagesInboxScreenInner({}: Props) {
     const items: RequestItem[] = []
     for (const page of data.pages) {
       for (const item of page.requests) {
-        if (ChatBskyConvoDefs.isConvoView(item)) {
+        if (bsky.isType(chat.bsky.convo.defs.convoView, item)) {
           items.push({type: 'incoming', view: item})
-        } else if (ChatBskyGroupDefs.isJoinRequestConvoView(item)) {
+        } else if (
+          bsky.isType(chat.bsky.group.defs.joinRequestConvoView, item)
+        ) {
           items.push({type: 'outgoing', view: item})
         }
       }
@@ -84,16 +84,8 @@ export function MessagesInboxScreenInner({}: Props) {
     return items
   }, [data])
 
-  const hasUnreadConvos = useMemo(() => {
-    return conversations.some(
-      item =>
-        item.type === 'incoming' &&
-        item.view.members.every(
-          member => member.handle !== 'missing.invalid',
-        ) &&
-        item.view.unreadCount > 0,
-    )
-  }, [conversations])
+  const {data: unreadCounts} = useUnreadCountsQuery()
+  const hasUnreadConvos = (unreadCounts?.unreadRequestConvos ?? 0) > 0
 
   return (
     <Layout.Screen testID="messagesInboxScreen">
@@ -119,7 +111,7 @@ function RequestList({
   conversations,
 }: {
   listConvosQuery: UseInfiniteQueryResult<
-    InfiniteData<ChatBskyConvoListConvoRequests.OutputSchema>,
+    InfiniteData<chat.bsky.convo.listConvoRequests.$OutputBody>,
     Error
   >
   conversations: RequestItem[]

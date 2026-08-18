@@ -6,7 +6,7 @@ import {type CountryCode} from '#/lib/international-telephone-codes'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {AutosizedTextarea} from '#/components/forms/AutosizedTextarea'
-import {DateField, LabelText} from '#/components/forms/DateField'
+import {DateField, LabelText, utils} from '#/components/forms/DateField'
 import * as SegmentedControl from '#/components/forms/SegmentedControl'
 import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
@@ -28,6 +28,8 @@ export function Forms() {
 
   const [value, setValue] = useState('')
   const [date, setDate] = useState('2001-01-01')
+  const [emptyDate, setEmptyDate] = useState('')
+  const [confirmDate, setConfirmDate] = useState('2001-01-01')
   const [countryCode, setCountryCode] = useState<CountryCode>('US')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [lang, setLang] = useState('en')
@@ -175,17 +177,63 @@ export function Forms() {
         <H3>DateField</H3>
 
         <View style={[a.w_full]}>
-          <LabelText>Date</LabelText>
+          <LabelText>1. Date</LabelText>
           <DateField
             testID="date"
             value={date}
             onChangeDate={date => {
-              console.log(date)
+              console.log('[1] changed', date)
               setDate(date)
             }}
             label="Input"
           />
         </View>
+
+        <View style={[a.w_full]}>
+          <LabelText>2. Empty value with placeholder</LabelText>
+          <DateField
+            testID="dateEmpty"
+            value={emptyDate}
+            onChangeDate={date => {
+              console.log('[2] changed', date)
+              setEmptyDate(date)
+            }}
+            placeholder="Select a date"
+            label="Birthday"
+          />
+        </View>
+
+        <View style={[a.w_full]}>
+          <LabelText>3. Empty value with placeholder and maximumDate</LabelText>
+          <DateField
+            testID="dateEmptyMax"
+            value={emptyDate}
+            onChangeDate={date => {
+              console.log('[3] changed', date)
+              setEmptyDate(date)
+            }}
+            placeholder="Select a date"
+            maximumDate={utils.toSimpleDateString(new Date())}
+            label="Date of birth"
+          />
+        </View>
+
+        <View style={[a.w_full]}>
+          <LabelText>
+            4. onConfirm vs onChangeDate (check the console)
+          </LabelText>
+          <DateField
+            testID="dateConfirm"
+            value={confirmDate}
+            onChangeDate={date => {
+              console.log('[4] changed', date)
+              setConfirmDate(date)
+            }}
+            onConfirm={date => console.log('[4] confirmed', date)}
+            label="Input"
+          />
+        </View>
+
         <H3>InternationalPhoneCodeSelect</H3>
 
         <View style={[a.flex_row, a.gap_sm, a.align_center]}>

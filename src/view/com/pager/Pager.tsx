@@ -18,12 +18,12 @@ import PagerView, {
   type PageScrollStateChangedNativeEventData,
 } from 'react-native-pager-view'
 import Animated, {
-  runOnJS,
   type SharedValue,
   useEvent,
   useHandler,
   useSharedValue,
 } from 'react-native-reanimated'
+import {scheduleOnRN} from 'react-native-worklets'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
@@ -125,7 +125,7 @@ export function Pager({
       },
       onPageScrollStateChanged(e: PageScrollStateChangedNativeEventData) {
         'worklet'
-        runOnJS(setIsIdle)(e.pageScrollState === 'idle')
+        scheduleOnRN(setIsIdle, e.pageScrollState === 'idle')
         if (dragState.get() === 'idle' && e.pageScrollState === 'settling') {
           // This is a programmatic scroll on Android.
           // Stay "idle" to match iOS and avoid confusing downstream code.
@@ -137,7 +137,7 @@ export function Pager({
       onPageSelected(e: PagerViewOnPageSelectedEventData) {
         'worklet'
         didInit.set(true)
-        runOnJS(onPageSelectedJSThread)(e.position)
+        scheduleOnRN(onPageSelectedJSThread, e.position)
       },
     },
     [parentOnPageScrollStateChanged],

@@ -1,0 +1,16 @@
+diff --git a/ios/AgeRangeModule.swift b/ios/AgeRangeModule.swift
+index faf1089f4ddfb290105e959bb1f96a7250586f54..dafd2addb0c8d39a4a453bdeecbe27f7278e20f7 100644
+--- a/ios/AgeRangeModule.swift
++++ b/ios/AgeRangeModule.swift
+@@ -11,8 +11,9 @@ public class AgeRangeModule: Module {
+         return AgeRangeResponse()
+       }
+ 
+-      let currentVc: UIViewController? = await MainActor.run { [appContext] in
+-        appContext?.utilities?.currentViewController()
++      nonisolated(unsafe) let utilities = appContext?.utilities
++      let currentVc: UIViewController? = await MainActor.run {
++        utilities?.currentViewController()
+       }
+ 
+       guard let currentVc else {

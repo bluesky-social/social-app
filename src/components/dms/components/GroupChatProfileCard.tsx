@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {Trans} from '@lingui/react/macro'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -48,7 +48,7 @@ export function GroupChatProfileCard({
                 size={44}
                 disabledPreview
               />
-              <View>
+              <View style={[a.flex_1]}>
                 <ProfileCard.Name
                   profile={profile}
                   moderationOpts={moderationOpts}

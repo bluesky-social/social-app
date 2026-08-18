@@ -1,7 +1,7 @@
 import {useCallback, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
-import {type ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -58,14 +58,14 @@ export function UserBanner({
     if (!(await requestCameraAccessIfNeeded())) {
       return
     }
-    onSelectNewBanner?.(
-      await compressIfNeeded(
-        await openCamera({
-          aspect: [3, 1],
-        }),
-        IMAGE_SIZE_CONFIG_2K_1MB,
-      ),
-    )
+    const image = await openCamera({
+      aspect: [3, 1],
+    })
+    if (!image) {
+      return
+    }
+
+    onSelectNewBanner?.(await compressIfNeeded(image, IMAGE_SIZE_CONFIG_2K_1MB))
   }, [onSelectNewBanner, requestCameraAccessIfNeeded])
 
   const onOpenLibrary = useCallback(async () => {
@@ -212,7 +212,7 @@ export function UserBanner({
       />
     </>
   ) : banner &&
-    !((moderation?.blur && IS_ANDROID) /* android crashes with blur */) ? (
+    !(moderation?.blur && IS_ANDROID /* android crashes with blur */) ? (
     <Image
       style={[styles.bannerImage, t.atoms.bg_contrast_25]}
       contentFit="cover"

@@ -1,8 +1,11 @@
-import {MMKV} from '@bsky.app/react-native-mmkv'
+import {MMKV} from 'react-native-mmkv'
 import {setPolyfills} from '@growthbook/growthbook'
 import {GrowthBook} from '@growthbook/growthbook-react'
+import {type I18n} from '@lingui/core'
+import {msg} from '@lingui/core/macro'
 
 import {Logger} from '#/logger'
+import {Features} from '#/analytics/features/types'
 import {getNavigationMetadata, type Metadata} from '#/analytics/metadata'
 import * as env from '#/env'
 
@@ -11,12 +14,14 @@ export {Features} from '#/analytics/features/types'
 const logger = Logger.create(Logger.Context.Growthbook)
 const CACHE = new MMKV({id: 'bsky_features_cache'})
 
+const BETA_USER_ATTRIBUTE = 'isBetaUser'
+
 setPolyfills({
   localStorage: {
     getItem: key => {
       return CACHE.getString(key) ?? null
     },
-    setItem: async (key, value) => {
+    setItem: (key, value) => {
       CACHE.set(key, value)
     },
   },
@@ -35,6 +40,7 @@ const TIMEOUT_PREFER_FRESH_GATES = 1500
 export const features = new GrowthBook({
   apiHost: env.GROWTHBOOK_API_HOST,
   clientKey: env.GROWTHBOOK_CLIENT_KEY,
+  enableDevMode: env.IS_INTERNAL,
 })
 
 /**
@@ -44,20 +50,17 @@ export const features = new GrowthBook({
  * that case, we may see a flash of uncustomized content until the
  * initialization completes.
  */
-export const init = new Promise<void>(async y => {
-  const res = await features.init({timeout: TIMEOUT_INIT})
+export const init = features.init({timeout: TIMEOUT_INIT}).then(res => {
   if (!res.success) {
     logger.warn('GrowthBook initialization failed or timed out', {
       source: res.source,
       safeMessage: res.error?.toString(),
     })
   }
-  y()
 })
 
 /**
- * Refresh feature gates from GrowthBook. Updates attributes based on the
- * provided account, if any.
+ * Refresh feature gates from GrowthBook.
  */
 export async function refresh({strategy}: {strategy: FeatureFetchStrategy}) {
   await features.refreshFeatures({
@@ -66,6 +69,107 @@ export async function refresh({strategy}: {strategy: FeatureFetchStrategy}) {
         ? TIMEOUT_PREFER_LOW_LATENCY
         : TIMEOUT_PREFER_FRESH_GATES,
   })
+}
+
+export function getFeatures() {
+  return features.getFeatures()
+}
+
+export function getFeatureDescription(feature: Features, i18n: I18n) {
+  switch (feature) {
+    case Features.VideoAllow10MinuteEnable:
+      return {
+        key: feature,
+        name: i18n._(
+          msg({
+            message: 'Longer videos',
+            comment: 'Name for a feature flag (longer videos)',
+          }),
+        ),
+        description: i18n._(
+          msg({
+            message: 'Enable 10-minute video uploads.',
+            comment: 'Description of a feature flag (10-minute video uploads)',
+          }),
+        ),
+      }
+    case Features.CanonicalPostNumberingEnable:
+      return {
+        key: feature,
+        name: i18n._(
+          msg({
+            message: 'Thread numbering',
+            comment:
+              'Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)',
+          }),
+        ),
+        description: i18n._(
+          msg({
+            message:
+              'See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.',
+            comment: 'Description of a feature flag (Thread numbering)',
+          }),
+        ),
+      }
+    default:
+      return null
+  }
+}
+
+/**
+ * Walks a GrowthBook condition tree to determine whether it targets the given
+ * attribute. Conditions can nest via the logical operators `$and`, `$or`,
+ * `$nor` (arrays of sub-conditions) and `$not` (a single sub-condition), so a
+ * flat scan of the top-level keys would miss e.g.
+ * `{$and: [{isBetaUser: true}, ...]}`. Dot-notation access (e.g.
+ * `isBetaUser.foo`) counts as targeting the attribute as well.
+ */
+function conditionTargetsAttribute(
+  condition: unknown,
+  attribute: string,
+): boolean {
+  if (!condition || typeof condition !== 'object') return false
+
+  for (const [key, value] of Object.entries(condition)) {
+    if (key === attribute || key.startsWith(`${attribute}.`)) return true
+
+    if (key === '$and' || key === '$or' || key === '$nor') {
+      if (
+        Array.isArray(value) &&
+        value.some(sub => conditionTargetsAttribute(sub, attribute))
+      ) {
+        return true
+      }
+    } else if (key === '$not') {
+      if (conditionTargetsAttribute(value, attribute)) return true
+    }
+  }
+
+  return false
+}
+
+export function getTargetedFeatures(i18n: I18n) {
+  const allFeatures = features.getFeatures()
+  const targetedFeatures: {key: Features; name: string; description: string}[] =
+    []
+  for (const [featureKey, feature] of Object.entries(allFeatures)) {
+    // Check if the feature contains any rules
+    if (!feature.rules) continue
+
+    // Determine if any rule targets the beta user attribute
+    const hasTargeting = feature.rules.some(rule =>
+      conditionTargetsAttribute(rule.condition, BETA_USER_ATTRIBUTE),
+    )
+
+    if (hasTargeting) {
+      const featureName = getFeatureDescription(featureKey as Features, i18n)
+      if (featureName) {
+        targetedFeatures.push(featureName)
+      }
+    }
+  }
+
+  return targetedFeatures
 }
 
 /**
@@ -80,7 +184,7 @@ export function setAttributes({
   session,
   preferences,
 }: Metadata) {
-  features.setAttributes({
+  void features.setAttributes({
     deviceId: base.deviceId,
     sessionId: base.sessionId,
     platform: base.platform,
@@ -92,5 +196,6 @@ export function setAttributes({
     appLanguage: preferences?.appLanguage,
     contentLanguages: preferences?.contentLanguages,
     currentScreen: getNavigationMetadata()?.currentScreen,
+    isBetaUser: base.isBetaUser,
   })
 }

@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.check.json",
+  "compilerOptions": {
+    /*
+     * Mirrors Metro's resolution order for platform=android.
+     */
+    "moduleSuffixes": [".android", ".native", ""]
+  },
+  /*
+   * Narrows the base exclude so the *.android-check.d.ts ambient shims
+   * apply to this pass.
+   */
+  "exclude": ["src/platform/*.web-check.d.ts"]
+}

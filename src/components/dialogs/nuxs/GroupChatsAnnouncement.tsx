@@ -168,7 +168,7 @@ export function GroupChatsAnnouncement() {
                   a.font_medium,
                   {color: t.palette.primary_500},
                 ]}>
-                <Trans>New</Trans>
+                <Trans context="nux-description">New</Trans>
               </Text>
             </View>
             <Text

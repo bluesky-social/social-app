@@ -1,13 +1,8 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AtUri,
-  moderatePost,
-  type ModerationDecision,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {moderatePost, type ModerationDecision} from '@bsky/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
@@ -30,8 +25,8 @@ import {
   maybeApplyGalleryOffsetStyles,
 } from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
-import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
+import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {PostRepliedTo} from '#/components/Post/PostRepliedTo'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
@@ -39,6 +34,7 @@ import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function Post({
@@ -48,18 +44,16 @@ export function Post({
   style,
   onBeforePress,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   showReplyLine?: boolean
   hideTopBorder?: boolean
   style?: StyleProp<ViewStyle>
   onBeforePress?: () => void
 }) {
   const moderationOpts = useModerationOpts()
-  const record = useMemo<AppBskyFeedPost.Record | undefined>(
+  const record = useMemo<app.bsky.feed.post.Main | undefined>(
     () =>
-      bsky.validate(post.record, AppBskyFeedPost.validateRecord)
-        ? post.record
-        : undefined,
+      bsky.matches(app.bsky.feed.post, post.record) ? post.record : undefined,
     [post],
   )
   const postShadowed = usePostShadow(post)
@@ -82,16 +76,18 @@ export function Post({
   }
   if (record && richText && moderation) {
     return (
-      <PostInner
-        post={postShadowed}
-        record={record}
-        richText={richText}
-        moderation={moderation}
-        showReplyLine={showReplyLine}
-        hideTopBorder={hideTopBorder}
-        style={style}
-        onBeforePress={onBeforePress}
-      />
+      <ReportDialogMetadataContext.Provider key={postShadowed.uri}>
+        <PostInner
+          post={postShadowed}
+          record={record}
+          richText={richText}
+          moderation={moderation}
+          showReplyLine={showReplyLine}
+          hideTopBorder={hideTopBorder}
+          style={style}
+          onBeforePress={onBeforePress}
+        />
+      </ReportDialogMetadataContext.Provider>
     )
   }
   return null
@@ -107,8 +103,8 @@ function PostInner({
   style,
   onBeforePress: outerOnBeforePress,
 }: {
-  post: Shadow<AppBskyFeedDefs.PostView>
-  record: AppBskyFeedPost.Record
+  post: Shadow<app.bsky.feed.defs.PostView>
+  record: app.bsky.feed.post.Main
   richText: RichTextAPI
   moderation: ModerationDecision
   showReplyLine?: boolean
@@ -215,12 +211,12 @@ function PostInner({
             {replyAuthorDid !== '' && (
               <PostRepliedTo parentAuthor={replyAuthorDid} />
             )}
-            <LabelsOnMyPost post={post} />
             <ContentHider
               modui={moderation.ui('contentView')}
               style={styles.contentHider}
               childContainerStyle={styles.contentHiderChild}>
               <PostAlerts
+                post={post}
                 modui={moderation.ui('contentView')}
                 style={[a.pb_xs]}
               />

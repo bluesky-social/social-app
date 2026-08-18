@@ -5,7 +5,6 @@ import Animated, {
   useAnimatedRef,
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -18,6 +17,7 @@ import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/compone
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 
 export function ConstrainedImage({
   aspectRatio,
@@ -65,16 +65,14 @@ export function ConstrainedImage({
 export function AutoSizedImage({
   image,
   crop = 'constrained',
-  hideBadge,
   onPress,
   onLongPress,
   onPressIn,
   onContainerRef,
   onDimsChange,
 }: {
-  image: AppBskyEmbedImages.ViewImage
+  image: app.bsky.embed.images.ViewImage
   crop?: 'none' | 'square' | 'constrained'
-  hideBadge?: boolean
   onPress?: (
     containerRef: AnimatedRef<any>,
     fetchedDims: Dimensions | null,
@@ -146,7 +144,7 @@ export function AutoSizedImage({
       />
       <MediaInsetBorder />
 
-      {(hasAlt || isCropped) && !hideBadge ? (
+      {hasAlt || isCropped ? (
         <View
           accessible={false}
           style={[
@@ -165,8 +163,10 @@ export function AutoSizedImage({
           ]}>
           {isCropped && (
             <View
+              accessible={false}
               style={[
-                a.rounded_xs,
+                a.rounded_sm,
+                a.p_xs,
                 t.atoms.bg_contrast_25,
                 {
                   padding: 3,
@@ -186,17 +186,18 @@ export function AutoSizedImage({
           )}
           {hasAlt && (
             <View
+              accessible={false}
               style={[
                 a.justify_center,
-                a.rounded_xs,
+                a.rounded_sm,
+                a.p_xs,
                 t.atoms.bg_contrast_25,
                 {
-                  padding: 3,
                   opacity: 0.8,
                 },
                 largeAlt && [
                   {
-                    padding: 5,
+                    padding: 6,
                   },
                 ],
               ]}>

@@ -3,8 +3,15 @@ import {describe, expect, it} from '@jest/globals'
 import {getInviteTheme, INVITE_THEME_KEYS, INVITE_THEMES} from './themes'
 
 describe('invite themes', () => {
-  it('exposes four themes in canonical order', () => {
-    expect(INVITE_THEME_KEYS).toEqual(['dawn', 'day', 'dusk', 'night'])
+  it('exposes six themes in canonical order', () => {
+    expect(INVITE_THEME_KEYS).toEqual([
+      'dawn',
+      'sunlight',
+      'day',
+      'dusk',
+      'twilight',
+      'night',
+    ])
   })
 
   it('has light and dark variants for every theme', () => {

@@ -2,7 +2,7 @@ import {useEffect, useMemo, useRef} from 'react'
 import {WebView, type WebViewNavigation} from 'react-native-webview'
 import {type ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
 
-import {type SignupState} from '#/screens/Signup/state'
+import {type CaptchaWebViewProps} from './CaptchaWebView.shared'
 
 const ALLOWED_HOSTS = [
   'bsky.social',
@@ -24,14 +24,7 @@ export function CaptchaWebView({
   onComplete,
   onSuccess,
   onError,
-}: {
-  url: string
-  stateParam: string
-  state?: SignupState
-  onComplete: () => void
-  onSuccess: (code: string) => void
-  onError: (error: unknown) => void
-}) {
+}: CaptchaWebViewProps) {
   const startedAt = useRef(Date.now())
   const successTo = useRef<NodeJS.Timeout>(undefined)
 

@@ -49,13 +49,25 @@ Every night, a GitHub action will run `pnpm intl:extract` to update the english 
 1. Pull main and create a branch.
 1. Run `pnpm intl:release` to fetch all translation updates from Crowdin and extract all `.po` files so that they're synced with the latest code. Commit that.
 1. Create a PR, ensure the translations all look correct, and merge.
-1. If needed:
-  1. Merge all approved translation PRs (contributions from outside crowdin).
-  1. Run `pnpm intl:push` to sync Crowdin with the state of the repo.
+1. If needed, merge all approved translation PRs (contributions from outside crowdin).
 
 ### Testing the translations in Crowdin
 
 You can run `pnpm intl:pull` to pull the currently-approved translations from Crowdin.
+
+### Pushing translations to Crowdin
+
+Run `pnpm intl:push-sources` to push the current state of the english source file to Crowdin. Extract the latest strings first!
+
+If necessary, you can also push translations to Crowdin manually using `pnpm intl:dangerously-push-translations`. **DO NOT DO THIS WITHOUT A GOOD REASON** - it overrides the translator's work and is very confusing. You're probably better off tweaking strings in Crowdin itself.
+
+### Adding new languages
+
+When a new language is added to Crowdin, it gets synced down the next time `pnpm intl:pull` is run. You then need to add the language in a few places - the AppLanguages array, `date-fns`, Intl polyfills etc.
+
+Importantly, we use a two-letter language code (e.g. `en`, `fr`). Crowdin uses a full locale (e.g. `pt-BR`) and maps them to the two-letter code. This can become ambiguous if we have multiple languages that share a two-letter code (e.g. `fr-FR` and `fr-CA`), so we need to manually override the two-letter code into an unambiguous locale. This is done in the Crowdin language settings (*not* the `crowdin.yml` file!). When a new ambiguous language is added, go to https://bluesky.crowdin.com/u/projects/1/languages and map the language's two-letter code to it's locale. If not, the two languages may silently overwrite each other.
+
+![crowdin language mapping config](./img/language-mapping.png)
 
 ## Developers
 

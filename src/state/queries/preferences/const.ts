@@ -1,4 +1,4 @@
-import {DEFAULT_LABEL_SETTINGS} from '@atproto/api'
+import {DEFAULT_LABEL_SETTINGS} from '@bsky/sdk/moderation'
 
 import {
   type ThreadViewPreferences,
@@ -50,6 +50,7 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
     queuedNudges: [],
     activeProgressGuide: undefined,
     nuxs: [],
+    isBetaUser: undefined,
   },
   postInteractionSettings: {
     threadgateAllowRules: undefined,

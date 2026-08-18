@@ -26,7 +26,6 @@ import {
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
-import {useModalControls} from '#/state/modals'
 import {useInAppBrowser} from '#/state/preferences/in-app-browser'
 import {atoms as a, flatten, type TextStyleProp, useTheme, web} from '#/alf'
 import {Button, type ButtonProps} from '#/components/Button'
@@ -140,7 +139,6 @@ export function useLink({
   }
 
   const isExternal = isExternalUrl(href)
-  const {closeModal} = useModalControls()
   const {linkWarningDialogControl} = useGlobalDialogsControlContext()
   const openLink = useOpenLink()
   const groupChatJoinIntent = useGroupChatJoinIntent()
@@ -188,8 +186,6 @@ export function useLink({
           ) {
             void openLink(href)
           } else {
-            closeModal() // close any active modals
-
             const [screen, params] = router.matchPath(href) as [
               screen: keyof AllNavigatorParams,
               params?: RouteParams,
@@ -242,7 +238,6 @@ export function useLink({
       isExternal,
       href,
       openLink,
-      closeModal,
       action,
       navigation,
       overridePresentation,
@@ -420,7 +415,7 @@ function LinkPeek({
           // dialog can show.
           useInAppBrowser: useInAppBrowserPref === true,
           browserToolbarColor: t.atoms.bg.backgroundColor,
-          browserControlsColor: t.palette.primary_500,
+          browserControlsColor: t.atoms.text_link.color,
         }}
         borderRadius={borderRadius}
         // Fires only when not morphing natively (in-app browser off/unset).
@@ -492,14 +487,14 @@ export function InlineLinkText({
       accessibilityLabel={label}
       {...rest}
       style={[
-        {color: t.palette.primary_500},
+        t.atoms.text_link,
         interacted &&
           !disableUnderline && {
             ...web({
               outline: 0,
               textDecorationLine: 'underline',
               textDecorationColor:
-                flattenedStyle.color ?? t.palette.primary_500,
+                flattenedStyle.color ?? t.atoms.text_link.color,
             }),
           },
         flattenedStyle,
@@ -596,14 +591,14 @@ export function SimpleInlineLinkText({
       accessibilityLabel={label}
       {...rest}
       style={[
-        {color: t.palette.primary_500},
+        t.atoms.text_link,
         interacted &&
           !disableUnderline && {
             ...web({
               outline: 0,
               textDecorationLine: 'underline',
               textDecorationColor:
-                flattenedStyle.color ?? t.palette.primary_500,
+                flattenedStyle.color ?? t.atoms.text_link.color,
             }),
           },
         flattenedStyle,

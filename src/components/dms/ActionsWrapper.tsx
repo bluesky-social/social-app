@@ -1,9 +1,11 @@
 import {View} from 'react-native'
-import {type ChatBskyConvoDefs, type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a} from '#/alf'
 import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
+import {useMessageReplies} from '#/components/dms/MessageReplies'
+import {SwipeToReply} from '#/components/dms/SwipeToReply'
+import {type chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function ActionsWrapper({
@@ -13,40 +15,38 @@ export function ActionsWrapper({
   moderationOpts,
   children,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  message: chat.bsky.convo.defs.MessageView
   isFromSelf: boolean
   senderProfile?: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts | undefined
   children: React.ReactNode
 }) {
   const {t: l} = useLingui()
+  const {setReply} = useMessageReplies()
 
   return (
-    <MessageContextMenu
-      message={message}
-      senderProfile={senderProfile}
-      moderationOpts={moderationOpts}>
-      {trigger =>
-        // will always be true, since this file is platform split
-        trigger.IS_NATIVE && (
-          <View style={[a.flex_1, a.relative]}>
-            <View
-              style={[
-                {maxWidth: '80%'},
-                isFromSelf
-                  ? [a.self_end, a.align_end]
-                  : [a.self_start, a.align_start],
-              ]}
-              accessible={true}
-              accessibilityActions={[
-                {name: 'activate', label: l`Open message options`},
-              ]}
-              onAccessibilityAction={() => trigger.control.open('full')}>
-              {children}
-            </View>
-          </View>
-        )
-      }
-    </MessageContextMenu>
+    <SwipeToReply isFromSelf={isFromSelf} onReply={() => setReply(message)}>
+      {swipeGesture => (
+        <MessageContextMenu
+          message={message}
+          senderProfile={senderProfile}
+          moderationOpts={moderationOpts}
+          swipeGesture={swipeGesture}>
+          {trigger =>
+            // will always be true, since this file is platform split
+            trigger.IS_NATIVE && (
+              <View
+                accessible={true}
+                accessibilityActions={[
+                  {name: 'activate', label: l`Open message options`},
+                ]}
+                onAccessibilityAction={() => trigger.control.open('full')}>
+                {children}
+              </View>
+            )
+          }
+        </MessageContextMenu>
+      )}
+    </SwipeToReply>
   )
 }

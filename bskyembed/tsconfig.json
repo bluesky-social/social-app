@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2015",
     "lib": ["DOM", "ESNext"],
-    "types": ["vite/client"],
+    "types": ["node", "vite/client"],
     "allowJs": false,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,

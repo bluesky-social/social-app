@@ -1,8 +1,12 @@
 import {View} from 'react-native'
-import {type AppBskyNotificationDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
+import {
+  isChatPreferenceName,
+  type NotificationSettingsPreferenceName,
+  useChatNotificationSettingsQuery,
+  useNotificationSettingsQuery,
+} from '#/state/queries/notifications/settings'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {PreferenceControls} from '#/screens/Settings/NotificationSettings/components/PreferenceControls'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -15,8 +19,8 @@ import {IS_NATIVE} from '#/env'
 
 type NotificationSettingsDialogProps = {
   control: Dialog.DialogControlProps
-  name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>
-  syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
+  name: NotificationSettingsPreferenceName
+  syncOthers?: NotificationSettingsPreferenceName[]
   icon: React.ComponentType<SVGIconProps>
   titleText: React.ReactNode
   subtitleText: React.ReactNode
@@ -55,7 +59,11 @@ function NotificationSettingsDialogInner({
 }: Omit<NotificationSettingsDialogProps, 'icon'>) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {data: preferences, isError} = useNotificationSettingsQuery()
+  const isChat = isChatPreferenceName(name)
+  const appQuery = useNotificationSettingsQuery({enabled: !isChat})
+  const chatQuery = useChatNotificationSettingsQuery({enabled: isChat})
+  const isError = isChat ? chatQuery.isError : appQuery.isError
+  const preference = isChat ? chatQuery.data?.[name] : appQuery.data?.[name]
 
   return (
     <>
@@ -81,7 +89,7 @@ function NotificationSettingsDialogInner({
             <PreferenceControls
               name={name}
               syncOthers={syncOthers}
-              preference={preferences?.[name]}
+              preference={preference}
               allowDisableInApp={allowDisableInApp}
             />
           )}
@@ -89,7 +97,7 @@ function NotificationSettingsDialogInner({
         <Dialog.Close />
         {IS_NATIVE && (
           <Button
-            color="secondary"
+            color="primary"
             size="large"
             label={l`Close dialog`}
             onPress={() => control.close()}

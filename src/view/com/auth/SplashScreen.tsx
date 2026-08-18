@@ -12,9 +12,9 @@ import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 // @ts-ignore
-import splashImagePointer from '../../../../assets/splash/illustration-mobile.png'
+import splashImagePointer from '../../../../assets/illustrations/illustration-mobile.png'
 // @ts-ignore
-import darkSplashImagePointer from '../../../../assets/splash/illustration-mobile-dark.png'
+import darkSplashImagePointer from '../../../../assets/illustrations/illustration-mobile-dark.png'
 const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
 const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
@@ -39,9 +39,9 @@ export const SplashScreen = ({
       logoFill,
       logoShadow: isDarkMode
         ? [
-            t.atoms.shadow_md,
             {
               shadowColor: logoFill,
+              shadowRadius: 8,
               shadowOpacity: 0.5,
               shadowOffset: {
                 width: 0,
@@ -80,34 +80,34 @@ export const SplashScreen = ({
         <View
           testID="signinOrCreateAccount"
           style={[a.px_5xl, a.gap_md, a.pb_sm]}>
-          <View
+          <Button
+            testID="createAccountButton"
+            onPress={() => {
+              onPressCreateAccount()
+              playHaptic('Light')
+            }}
+            label={_(msg`Create new account`)}
+            accessibilityHint={_(
+              msg`Opens flow to create a new Bluesky account`,
+            )}
+            size="large"
+            color={isDarkMode ? 'secondary_inverted' : 'secondary'}
             style={[
-              t.atoms.shadow_md,
               {
+                shadowColor: t.palette.black,
+                shadowRadius: 8,
                 shadowOpacity: 0.1,
                 shadowOffset: {
                   width: 0,
                   height: 5,
                 },
+                elevation: 16,
               },
             ]}>
-            <Button
-              testID="createAccountButton"
-              onPress={() => {
-                onPressCreateAccount()
-                playHaptic('Light')
-              }}
-              label={_(msg`Create new account`)}
-              accessibilityHint={_(
-                msg`Opens flow to create a new Bluesky account`,
-              )}
-              size="large"
-              color={isDarkMode ? 'secondary_inverted' : 'secondary'}>
-              <ButtonText>
-                <Trans>Create account</Trans>
-              </ButtonText>
-            </Button>
-          </View>
+            <ButtonText>
+              <Trans>Create account</Trans>
+            </ButtonText>
+          </Button>
 
           <Button
             testID="signInButton"
@@ -119,7 +119,8 @@ export const SplashScreen = ({
             accessibilityHint={_(
               msg`Opens flow to sign in to your existing Bluesky account`,
             )}
-            size="large">
+            size="large"
+            hoverStyle={{opacity: 0.5}}>
             <ButtonText style={{color: 'white'}}>
               <Trans>Sign in</Trans>
             </ButtonText>

@@ -1,7 +1,7 @@
 import {Platform} from 'react-native'
 import {requireNativeModule} from 'expo-modules-core'
 
-import {AudioCategory} from './types'
+import {type AudioCategory} from './types'
 
 const NativeModule = requireNativeModule('ExpoPlatformInfo')
 

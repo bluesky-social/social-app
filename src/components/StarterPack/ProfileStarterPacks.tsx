@@ -1,13 +1,11 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {
-  findNodeHandle,
   type ListRenderItemInfo,
   type StyleProp,
   useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
-import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -26,6 +24,7 @@ import {
   type EmptyStateButtonProps,
 } from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
+import {findListNativeTag} from '#/view/com/util/listNativeTag'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -37,6 +36,7 @@ import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
+import {type app} from '#/lexicons'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -57,7 +57,7 @@ interface ProfileFeedgensProps {
   emptyStateIcon?: React.ComponentType<any> | React.ReactElement
 }
 
-function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
+function keyExtractor(item: app.bsky.graph.defs.StarterPackViewBasic) {
   return item.uri
 }
 
@@ -138,13 +138,16 @@ export function ProfileStarterPacks({
 
   useEffect(() => {
     if (IS_IOS && enabled && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
+      const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
   }, [enabled, scrollElRef, setScrollViewTag])
 
   const renderItem = useCallback(
-    ({item, index}: ListRenderItemInfo<AppBskyGraphDefs.StarterPackView>) => {
+    ({
+      item,
+      index,
+    }: ListRenderItemInfo<app.bsky.graph.defs.StarterPackViewBasic>) => {
       return (
         <View
           style={[

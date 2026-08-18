@@ -1,5 +1,4 @@
-import {View} from 'react-native'
-import {type ComAtprotoLabelDefs} from '@atproto/api'
+import {type Insets, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -8,11 +7,12 @@ import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {Bot_Filled as RobotIcon} from '#/components/icons/Bot'
 import {useAnalytics} from '#/analytics'
+import {type com} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function isBotAccount(profile: {
   did: string
-  labels?: ComAtprotoLabelDefs.Label[]
+  labels?: com.atproto.label.defs.Label[]
 }): boolean {
   return (
     profile.labels?.some(l => l.val === 'bot' && l.src === profile.did) ?? false
@@ -44,9 +44,11 @@ export function BotBadge({
 export function BotBadgeButton({
   profile,
   width,
+  hitSlop,
 }: {
   profile: bsky.profile.AnyProfileView
   width: number
+  hitSlop: Insets
 }) {
   const t = useTheme()
   const ax = useAnalytics()
@@ -61,7 +63,7 @@ export function BotBadgeButton({
     <>
       <Button
         label={l`Automated account`}
-        hitSlop={20}
+        hitSlop={hitSlop}
         onPress={evt => {
           evt.preventDefault()
           ax.metric('bot:badge:click', {})

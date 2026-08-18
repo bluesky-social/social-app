@@ -1,6 +1,5 @@
 import {memo} from 'react'
 import {type Insets} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -15,6 +14,7 @@ import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import {PostControlButton, PostControlButtonIcon} from './PostControlButton'
 
 export const BookmarkButton = memo(function BookmarkButton({
@@ -23,7 +23,7 @@ export const BookmarkButton = memo(function BookmarkButton({
   logContext,
   hitSlop,
 }: {
-  post: Shadow<AppBskyFeedDefs.PostView>
+  post: Shadow<app.bsky.feed.defs.PostView>
   big?: boolean
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   hitSlop?: Insets
@@ -46,7 +46,7 @@ export const BookmarkButton = memo(function BookmarkButton({
     }),
   )
 
-  const save = async ({disableUndo}: {disableUndo?: boolean} = {}) => {
+  const save = async () => {
     try {
       await bookmark({
         action: 'create',
@@ -59,25 +59,6 @@ export const BookmarkButton = memo(function BookmarkButton({
         logContext,
         feedDescriptor,
       })
-
-      toast.show(
-        <toast.Outer>
-          <toast.Icon />
-          <toast.Text>
-            <Trans>Post saved</Trans>
-          </toast.Text>
-          {!disableUndo && (
-            <toast.Action
-              label={undoLabel}
-              onPress={() => remove({disableUndo: true})}>
-              {undoLabel}
-            </toast.Action>
-          )}
-        </toast.Outer>,
-        {
-          type: 'success',
-        },
-      )
     } catch (e: any) {
       const {raw, clean} = cleanError(e)
       toast.show(clean || raw || e, {
@@ -86,7 +67,7 @@ export const BookmarkButton = memo(function BookmarkButton({
     }
   }
 
-  const remove = async ({disableUndo}: {disableUndo?: boolean} = {}) => {
+  const remove = async () => {
     try {
       await bookmark({
         action: 'delete',
@@ -106,13 +87,9 @@ export const BookmarkButton = memo(function BookmarkButton({
           <toast.Text>
             <Trans>Removed from saved posts</Trans>
           </toast.Text>
-          {!disableUndo && (
-            <toast.Action
-              label={undoLabel}
-              onPress={() => save({disableUndo: true})}>
-              {undoLabel}
-            </toast.Action>
-          )}
+          <toast.Action label={undoLabel} onPress={() => save()}>
+            {undoLabel}
+          </toast.Action>
         </toast.Outer>,
       )
     } catch (e: any) {

@@ -2,6 +2,31 @@ import {type I18n} from '@lingui/core'
 import {plural} from '@lingui/core/macro'
 import psl from 'psl'
 
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
+
+/**
+ * Validates a raw status record and returns the typed record, or null if the
+ * value is not a valid `app.bsky.actor.status` record.
+ */
+export function getValidLiveStatusRecord(
+  statusRecord: unknown,
+): app.bsky.actor.status.Main | null {
+  if (!bsky.matches(app.bsky.actor.status, statusRecord)) return null
+  return statusRecord
+}
+
+/**
+ * Extracts the external link URI from a status record, if present. Returns an
+ * empty string when the record is invalid or has no external embed.
+ */
+export function getLiveLinkFromStatusRecord(statusRecord: unknown): string {
+  const record = getValidLiveStatusRecord(statusRecord)
+  if (!record) return ''
+  if (!bsky.isType(app.bsky.embed.external.main, record.embed)) return ''
+  return record.embed.external.uri
+}
+
 export function displayDuration(i18n: I18n, durationInMinutes: number) {
   const roundedDurationInMinutes = Math.round(durationInMinutes)
   const hours = Math.floor(roundedDurationInMinutes / 60)

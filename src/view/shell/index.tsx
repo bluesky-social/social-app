@@ -9,6 +9,7 @@ import {useNavigation, useNavigationState} from '@react-navigation/native'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
+import {useOTAUpdateRecovery} from '#/lib/hooks/useOTAUpdates'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {useDialogFullyExpandedCountContext} from '#/state/dialogs'
@@ -19,7 +20,6 @@ import {
   useSetDrawerOpen,
 } from '#/state/shell'
 import {useCloseAnyActiveElement} from '#/state/util'
-import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
 import {Takendown} from '#/screens/Takendown'
@@ -108,7 +108,6 @@ function ShellInner() {
         </ErrorBoundary>
       </View>
       <Composer />
-      <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />
@@ -218,6 +217,7 @@ export function Shell() {
   const fullyExpandedCount = useDialogFullyExpandedCountContext()
 
   useIntentHandler()
+  useOTAUpdateRecovery()
 
   useEffect(() => {
     setSystemUITheme('theme', t)

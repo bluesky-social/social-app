@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import Svg, {Circle, Line} from 'react-native-svg'
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -58,7 +58,8 @@ export function ViewFullThread({uri}: {uri: string}) {
           <Text
             style={[
               a.text_md,
-              {color: t.palette.primary_500, paddingTop: 18, paddingBottom: 4},
+              t.atoms.text_link,
+              {paddingTop: 18, paddingBottom: 4},
             ]}>
             {/* HACKFIX: Trans isn't working after SDK 53 upgrade -sfn */}
             {l`View full thread`}

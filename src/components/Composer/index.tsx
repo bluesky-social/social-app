@@ -286,7 +286,7 @@ export function Composer({
                 ref={IS_WEB ? sift.refs.setAnchor : undefined}
                 style={
                   node.type === 'facet' && {
-                    color: t.palette.primary_500,
+                    color: t.atoms.text_link.color,
                   }
                 }>
                 {node.raw}
@@ -332,10 +332,10 @@ export function Composer({
             contentPaddingStyle,
             a.z_20,
             {
-              color: 'transparent',
               background: 'transparent',
             },
             web({
+              color: 'transparent',
               caretColor: textStyle.color ?? 'black',
               overscrollBehavior: 'none',
               scrollbarWidth: 'thin',
@@ -346,6 +346,7 @@ export function Composer({
           {...tapper.inputProps}
           {...sift.targetProps}
           ref={mergeRefs([ref, tapper.inputProps.ref, sift.targetProps.ref])}
+          rawValue={tapper.state.text}
           onBlur={e => {
             rest.onBlur?.(e)
             setActiveFacet(null)

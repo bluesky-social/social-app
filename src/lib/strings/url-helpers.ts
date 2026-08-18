@@ -1,4 +1,4 @@
-import {AtUri} from '@atproto/api'
+import {type AtIdentifierString, AtUri} from '@atproto/syntax'
 import {parse} from 'psl'
 import TLDs from 'tlds'
 
@@ -8,6 +8,7 @@ import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
+export const BSKY_HOSTING_ENDSWITH = '.host.bsky.network'
 const BSKY_TRUSTED_HOSTS = [
   'bsky\\.app',
   'bsky\\.social',
@@ -26,6 +27,15 @@ const TRUSTED_REGEX = new RegExp(
   )})|/|#)`,
 )
 
+export function canParseUrl(url: string | URL, base?: string | URL): boolean {
+  try {
+    new URL(url, base)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export function isValidDomain(str: string): boolean {
   return !!TLDs.find(tld => {
     let i = str.lastIndexOf(tld)
@@ -42,8 +52,8 @@ export function makeRecordUri(
   rkey: string,
 ) {
   const urip = new AtUri('at://placeholder.placeholder/')
-  // @ts-expect-error TODO new-sdk-migration
-  urip.host = didOrName
+  // the helper takes the did or handle as a plain string
+  urip.host = didOrName as AtIdentifierString
   urip.collection = collection
   urip.rkey = rkey
   return urip.toString()
@@ -89,6 +99,35 @@ export function toShareUrl(url: string): string {
 
 export function toBskyAppUrl(url: string): string {
   return new URL(url, BSKY_APP_HOST).toString()
+}
+
+export function toNiceHostingUrl(url: string): string {
+  try {
+    const urlp = new URL(url)
+    if (urlp.host.endsWith(BSKY_HOSTING_ENDSWITH)) {
+      return 'Bluesky'
+    }
+    return urlp.host
+  } catch {
+    return url
+  }
+}
+
+/**
+ * Whether the given service URL points at a Bluesky-operated PDS. True when the
+ * host is `bsky.social` (the {@link BSKY_SERVICE} host) or ends with
+ * `.host.bsky.network`. Returns false if the URL can't be parsed.
+ */
+export function isBlueskyHostedUrl(url: string): boolean {
+  try {
+    const {host} = new URL(url)
+    return (
+      host === new URL(BSKY_SERVICE).host ||
+      host.endsWith(BSKY_HOSTING_ENDSWITH)
+    )
+  } catch {
+    return false
+  }
 }
 
 export function isBskyAppUrl(url: string): boolean {

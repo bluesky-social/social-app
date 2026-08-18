@@ -10,7 +10,7 @@ import {logger} from '#/logger'
 import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
-import {FormError} from '#/components/forms/FormError'
+import {Admonition} from '#/components/Admonition'
 import {useAnalytics} from '#/analytics'
 import {GCP_PROJECT_ID, IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {BackNextButtons} from '../BackNextButtons'
@@ -127,23 +127,17 @@ function StepCaptchaInner({
         value: _(msg`Error receiving captcha response.`),
       })
       ax.metric('signup:captchaFailure', {})
-      logger.error('Signup Flow Error', {
-        registrationHandle: state.handle,
-        error,
+      logger.error('Signup: captcha response error', {
+        safeMessage: error,
       })
     },
-    [_, ax, dispatch, state.handle],
+    [_, ax, dispatch],
   )
 
   const onBackPress = useCallback(() => {
-    logger.error('Signup Flow Error', {
-      errorMessage:
-        'User went back from captcha step. Possibly encountered an error.',
-      registrationHandle: state.handle,
-    })
-
+    ax.metric('signup:captchaBackPress', {})
     dispatch({type: 'prev'})
-  }, [dispatch, state.handle])
+  }, [ax, dispatch])
 
   return (
     <>
@@ -168,7 +162,7 @@ function StepCaptchaInner({
             <ActivityIndicator size="large" />
           )}
         </View>
-        <FormError error={state.error} />
+        {state.error && <Admonition type="error">{state.error}</Admonition>}
       </View>
       <BackNextButtons
         hideNext

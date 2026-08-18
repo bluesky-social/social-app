@@ -6,7 +6,7 @@
   },
   "build": {
     "base": {
-      "node": "24.15.0"
+      "node": "24.19.0"
     },
     "development": {
       "extends": "base",
@@ -19,6 +19,17 @@
       },
       "env": {
         "EXPO_PUBLIC_ENV": "production"
+      }
+    },
+    "e2e": {
+      "extends": "development",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_ENV": "e2e",
+        "NODE_ENV": "development",
+        "RN_SRC_EXT": "e2e.ts,e2e.tsx"
       }
     },
     "preview": {
@@ -47,21 +58,6 @@
         "EXPO_PUBLIC_ENV": "production"
       }
     },
-    "production-apk": {
-      "extends": "base",
-      "distribution": "internal",
-      "ios": {
-        "autoIncrement": false,
-        "buildArtifactPaths": ["ios/build/*"]
-      },
-      "android": {
-        "autoIncrement": false
-      },
-      "channel": "production",
-      "env": {
-        "EXPO_PUBLIC_ENV": "production"
-      }
-    },
     "testflight": {
       "extends": "base",
       "ios": {
@@ -78,7 +74,6 @@
     },
     "testflight-android": {
       "extends": "base",
-      "distribution": "internal",
       "ios": {
         "autoIncrement": true,
         "buildArtifactPaths": ["ios/build/*"]
@@ -96,6 +91,14 @@
     "production": {
       "ios": {
         "ascAppId": "6444370199"
+      },
+      "android": {
+        "track": "production"
+      }
+    },
+    "testflight-android": {
+      "android": {
+        "track": "internal"
       }
     }
   }

@@ -13,7 +13,6 @@ import {
   ActivityIndicator,
   BackHandler,
   Keyboard,
-  KeyboardAvoidingView,
   type LayoutChangeEvent,
   ScrollView,
   type StyleProp,
@@ -21,40 +20,33 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-// @ts-expect-error no type definition
-import ProgressCircle from 'react-native-progress/Circle'
+import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
+import {Circle as ProgressCircle} from 'react-native-progress'
 import Animated, {
   type AnimatedRef,
-  Easing,
+  type AnimatedStyle,
   FadeIn,
   FadeOut,
   interpolateColor,
   LayoutAnimationConfig,
   LinearTransition,
-  runOnUI,
   scrollTo,
   useAnimatedRef,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  withRepeat,
   withTiming,
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnUI} from 'react-native-worklets'
 import * as FileSystem from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {
-  AppBskyDraftCreateDraft,
-  AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
-  type AtpAgent,
-  AtUri,
-  ChatBskyGroupDefs,
-  type RichText,
-} from '@atproto/api'
+import {type Client, type UriString} from '@atproto/lex'
+import {AtUri, type AtUriString} from '@atproto/syntax'
+import {type RichText} from '@bsky/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -70,14 +62,17 @@ import {
   MAX_GRAPHEME_LENGTH,
   SUPPORTED_MIME_TYPES,
   type SupportedMimeTypes,
+  VIDEO_10_MINUTE_MAX_DURATION_MS,
+  VIDEO_MAX_DURATION_MS,
 } from '#/lib/constants'
-import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {mimeToExt} from '#/lib/media/video/util'
 import {useCallOnce} from '#/lib/once'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
@@ -86,7 +81,6 @@ import {
   createComposerImage,
   pasteImage,
 } from '#/state/gallery'
-import {useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   fromPostLanguages,
@@ -97,7 +91,12 @@ import {
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
-import {useAgent, useSession} from '#/state/session'
+import {
+  useAppviewClient,
+  useChatClient,
+  usePdsClient,
+  useSession,
+} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
@@ -126,6 +125,7 @@ import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as EmojiPicker from '#/components/EmojiPicker'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
@@ -144,6 +144,8 @@ import {
   IS_WEB_SAFARI,
 } from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
+import {app, chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   draftToComposerPosts,
@@ -179,8 +181,9 @@ import {
   processVideo,
   type VideoState,
 } from './state/video'
+import {videoProgressWithinPhase} from './state/videoProgress'
 import {type TextInputRef} from './text-input/TextInput.types'
-import {getVideoMetadata} from './videos/pickVideo'
+import {getVideoMetadata} from './videos/metadata'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
 type CancelRef = {
@@ -267,9 +270,23 @@ export const ComposePost = ({
   const {currentAccount} = useSession()
   const t = useTheme()
   const ax = useAnalytics()
-  const agent = useAgent()
+  const allow10MinuteVideos = ax.features.enabled(
+    ax.features.VideoAllow10MinuteEnable,
+  )
+  const videoMaxDurationMs = allow10MinuteVideos
+    ? VIDEO_10_MINUTE_MAX_DURATION_MS
+    : VIDEO_MAX_DURATION_MS
+  const client = useAppviewClient()
+  const chatClient = useChatClient()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
+  /*
+   * The host the video service-auth token is minted for. This is the same value
+   * that seeds the session's PDS routing, so the audience always matches the host
+   * the upload actually reaches; a mismatch would 401 the upload.
+   */
+  const currentDispatchUrl = currentAccount!.pdsUrl ?? currentAccount!.service
   const {closeComposer} = useComposerControls()
   const {t: l, i18n} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -283,11 +300,9 @@ export const ComposePost = ({
     useSaveDraftMutation()
   const {mutate: cleanupPublishedDraft} = useCleanupPublishedDraftMutation()
   const {closeAllDialogs} = useDialogStateControlContext()
-  const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
   const navigation = useNavigation<NavigationProp>()
 
-  const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
@@ -387,8 +402,40 @@ export const ComposePost = ({
   )
 
   const selectVideo = useCallback(
-    (postId: string, asset: ImagePickerAsset) => {
+    async (postId: string, asset: ImagePickerAsset) => {
+      /*
+       * Share-extension deeplinks deliver a video URI without duration, so
+       * probe before we decide whether to compress. The picker and web paste
+       * paths already populate duration upstream. GIFs must skip the probe:
+       * they have no video track, so the iOS prober never resolves or rejects
+       * and the await below would hang forever.
+       */
+      if (
+        asset.duration == null &&
+        IS_NATIVE &&
+        asset.mimeType !== 'image/gif'
+      ) {
+        try {
+          const probed = await getVideoMetadata(asset.uri)
+          asset = {
+            ...asset,
+            mimeType: probed.mimeType ?? asset.mimeType,
+            width: probed.width ?? asset.width,
+            height: probed.height ?? asset.height,
+            duration: probed.duration,
+          }
+        } catch (e) {
+          logger.warn('selectVideo: duration probe failed', {safeMessage: e})
+        }
+      }
+
       const abortController = new AbortController()
+      const telemetry = createVideoTelemetry({
+        asset,
+        signal: abortController.signal,
+        metric: ax.metric,
+      })
+      telemetry.picked()
       composerDispatch({
         type: 'update_post',
         postId: postId,
@@ -396,8 +443,32 @@ export const ComposePost = ({
           type: 'embed_add_video',
           asset,
           abortController,
+          telemetry,
         },
       })
+
+      /*
+       * Fail early on duration so we don't spend time compressing a video the
+       * server would reject anyway.
+       */
+      if (asset.duration != null && asset.duration > videoMaxDurationMs) {
+        composerDispatch({
+          type: 'update_post',
+          postId: postId,
+          postAction: {
+            type: 'embed_update_video',
+            videoAction: {
+              type: 'to_error',
+              error: allow10MinuteVideos
+                ? l`Videos must be 10 minutes or less.`
+                : l`Videos must be less than 3 minutes long.`,
+              signal: abortController.signal,
+            },
+          },
+        })
+        return
+      }
+
       void processVideo(
         asset,
         videoAction => {
@@ -410,18 +481,30 @@ export const ComposePost = ({
             },
           })
         },
-        agent,
+        pdsClient,
+        currentDispatchUrl,
         currentDid,
         abortController.signal,
         i18n,
+        telemetry,
       )
     },
-    [i18n, agent, currentDid, composerDispatch],
+    [
+      l,
+      i18n,
+      pdsClient,
+      currentDispatchUrl,
+      currentDid,
+      composerDispatch,
+      ax.metric,
+      videoMaxDurationMs,
+      allow10MinuteVideos,
+    ],
   )
 
   const onInitVideo = useNonReactiveCallback(() => {
     if (initVideoUri) {
-      selectVideo(activePost.id, initVideoUri)
+      void selectVideo(activePost.id, initVideoUri)
     }
   })
 
@@ -484,7 +567,7 @@ export const ComposePost = ({
               FileSystem.Paths.cache,
               tempFileName,
             )
-            sourceFile.copy(tempFile)
+            await sourceFile.copy(tempFile)
             logger.debug('restoreVideo: copied to temp file', {
               source: videoInfo.uri,
               temp: tempFile.uri,
@@ -496,6 +579,12 @@ export const ComposePost = ({
 
         // Start video processing using existing flow
         const abortController = new AbortController()
+        const telemetry = createVideoTelemetry({
+          asset,
+          signal: abortController.signal,
+          metric: ax.metric,
+        })
+        telemetry.picked()
         composerDispatch({
           type: 'update_post',
           postId,
@@ -503,8 +592,27 @@ export const ComposePost = ({
             type: 'embed_add_video',
             asset,
             abortController,
+            telemetry,
           },
         })
+
+        if (asset.duration != null && asset.duration > videoMaxDurationMs) {
+          composerDispatch({
+            type: 'update_post',
+            postId,
+            postAction: {
+              type: 'embed_update_video',
+              videoAction: {
+                type: 'to_error',
+                error: allow10MinuteVideos
+                  ? l`Videos must be 10 minutes or less.`
+                  : l`Videos must be less than 3 minutes long.`,
+                signal: abortController.signal,
+              },
+            },
+          })
+          return
+        }
 
         // Restore alt text immediately
         if (videoInfo.altText) {
@@ -557,10 +665,12 @@ export const ComposePost = ({
               },
             })
           },
-          agent,
+          pdsClient,
+          currentDispatchUrl,
           currentDid,
           abortController.signal,
           i18n,
+          telemetry,
         )
       } catch (e) {
         logger.error('Failed to restore video from draft', {
@@ -569,7 +679,17 @@ export const ComposePost = ({
         })
       }
     },
-    [i18n, agent, currentDid, composerDispatch],
+    [
+      l,
+      i18n,
+      pdsClient,
+      currentDispatchUrl,
+      currentDid,
+      composerDispatch,
+      ax.metric,
+      videoMaxDurationMs,
+      allow10MinuteVideos,
+    ],
   )
 
   const handleSelectDraft = useCallback(
@@ -626,7 +746,7 @@ export const ComposePost = ({
       // This is async but we don't await - videos process in the background
       for (const [postIndex, videoInfo] of restoredVideos) {
         const postId = posts[postIndex].id
-        restoreVideo(postId, videoInfo)
+        void restoreVideo(postId, videoInfo)
       }
     },
     [composerDispatch, restoreVideo, ax],
@@ -635,6 +755,11 @@ export const ComposePost = ({
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
   const onClose = useCallback(() => {
+    // HACKFIX: Android keyboard doesn't consistently dismiss IME
+    // TODO: investigate the root cause and fix properly -sfn
+    if (IS_ANDROID) {
+      Keyboard.dismiss()
+    }
     closeComposer()
     clearThumbnailCache(queryClient)
     revokeAllMediaUrls()
@@ -642,7 +767,9 @@ export const ComposePost = ({
 
   const getDraftSaveError = useCallback(
     (e: unknown): string => {
-      if (e instanceof AppBskyDraftCreateDraft.DraftLimitReachedError) {
+      if (
+        matchXrpcError(e, app.bsky.draft.createDraft) === 'DraftLimitReached'
+      ) {
         return l`You've reached the maximum number of drafts`
       }
       return l`Failed to save draft`
@@ -783,17 +910,9 @@ export const ComposePost = ({
   const viewStyles = useMemo(
     () => ({
       paddingTop: IS_ANDROID ? insets.top : 0,
-      paddingBottom:
-        // iOS - when keyboard is closed, keep the bottom bar in the safe area
-        (IS_IOS && !isKeyboardVisible) ||
-        // Android - Android >=35 KeyboardAvoidingView adds double padding when
-        // keyboard is closed, so we subtract that in the offset and add it back
-        // here when the keyboard is open
-        (IS_ANDROID && isKeyboardVisible)
-          ? insets.bottom
-          : 0,
+      paddingBottom: insets.bottom,
     }),
-    [insets, isKeyboardVisible],
+    [insets.top, insets.bottom],
   )
 
   const onPressCancel = useCallback(() => {
@@ -835,7 +954,7 @@ export const ComposePost = ({
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
-        if (closeAllDialogs() || closeAllModals()) {
+        if (closeAllDialogs()) {
           return true
         }
         onPressCancel()
@@ -845,7 +964,7 @@ export const ComposePost = ({
     return () => {
       backHandler.remove()
     }
-  }, [onPressCancel, closeAllDialogs, closeAllModals])
+  }, [onPressCancel, closeAllDialogs])
 
   const missingAltError = useMemo(() => {
     if (!requireAltTextEnabled) {
@@ -882,14 +1001,14 @@ export const ComposePost = ({
     .map(post => post.embed.link!.uri)
   const linkQueries = useQueries({
     queries: linkUris.map(uri => ({
-      ...resolveLinkQueryOptions(agent, uri),
+      ...resolveLinkQueryOptions({appviewClient: client, chatClient}, uri),
       enabled: false,
     })),
   })
   const hasUnavailableChatInvite = linkQueries.some(
     q =>
       q.data?.type === 'chat-invite' &&
-      !ChatBskyGroupDefs.isJoinLinkPreviewView(q.data.view),
+      !bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, q.data.view),
   )
 
   const canPost =
@@ -973,13 +1092,25 @@ export const ComposePost = ({
     try {
       logger.info(`composer: posting...`)
       postUri = (
-        await apilib.post(agent, queryClient, {
+        await apilib.post(queryClient, {
           thread: filteredThread,
           replyTo: replyTo?.uri,
           onStateChange: setPublishingStage,
           langs: currentLanguages,
+          appviewClient: client,
+          chatClient,
+          pdsClient,
         })
       ).uris[0]
+
+      // Fire published event for every video that made it into the post.
+      // The status guard upstream ensures each video.telemetry is present and
+      // processing has completed by this point.
+      for (const post of filteredThread.posts) {
+        if (post.embed.media?.type === 'video') {
+          post.embed.media.video.telemetry?.published()
+        }
+      }
 
       /*
        * Wait for app view to have received the post(s). If this fails, it's
@@ -993,23 +1124,26 @@ export const ComposePost = ({
             5,
             _e => true,
             async () => {
-              const res = await agent.app.bsky.unspecced.getPostThreadV2({
-                anchor: postUri!,
-                above: false,
-                below: filteredThread.posts.length - 1,
-                branchingFactor: 1,
-              })
-              if (res.data.thread.length !== filteredThread.posts.length) {
+              const res = await client.call(
+                app.bsky.unspecced.getPostThreadV2,
+                {
+                  anchor: postUri! as AtUriString,
+                  above: false,
+                  below: filteredThread.posts.length - 1,
+                  branchingFactor: 1,
+                },
+              )
+              if (res.thread.length !== filteredThread.posts.length) {
                 throw new Error(`composer: app view is not ready`)
               }
               if (
-                !res.data.thread.every(p =>
-                  AppBskyUnspeccedDefs.isThreadItemPost(p.value),
+                !res.thread.every(p =>
+                  bsky.isType(app.bsky.unspecced.defs.threadItemPost, p.value),
                 )
               ) {
                 throw new Error(`composer: app view returned non-post items`)
               }
-              return res.data.thread
+              return res.thread
             },
             1e3,
           )
@@ -1018,13 +1152,13 @@ export const ComposePost = ({
             posts,
           }
         }
-      } catch (waitErr: any) {
+      } catch (waitErr) {
         logger.info(`composer: waiting for app view failed`, {
           safeMessage: waitErr,
         })
       }
-    } catch (e: any) {
-      logger.error(e, {
+    } catch (e) {
+      logger.error(e instanceof Error ? e : String(e), {
         message: `Composer: create post failed`,
         hasImages: filteredThread.posts.some(
           p =>
@@ -1033,7 +1167,7 @@ export const ComposePost = ({
         ),
       })
 
-      let err = cleanError(e.message)
+      let err = e instanceof Error ? cleanError(e.message) : String(e)
       if (
         e instanceof apilib.ReplyDeletedError ||
         err.includes('not locate record')
@@ -1076,7 +1210,7 @@ export const ComposePost = ({
           const resolved = q.data
           if (
             resolved?.type === 'chat-invite' &&
-            ChatBskyGroupDefs.isJoinLinkPreviewView(resolved.view)
+            bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, resolved.view)
           ) {
             ax.metric('groupchat:inviteLink:shared', {
               convoId: resolved.view.convoId,
@@ -1112,10 +1246,10 @@ export const ComposePost = ({
     setLangPrefs.savePostLanguageToHistory()
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-      void whenAppViewReady(agent, initQuote.uri, res => {
-        const anchor = res.data.thread.at(0)
+      void whenAppViewReady(client, initQuote.uri, res => {
+        const anchor = res.thread.at(0)
         if (
-          AppBskyUnspeccedDefs.isThreadItemPost(anchor?.value) &&
+          bsky.isType(app.bsky.unspecced.defs.threadItemPost, anchor?.value) &&
           anchor.value.post.quoteCount !== initQuote.quoteCount
         ) {
           onPost?.(postUri)
@@ -1159,7 +1293,9 @@ export const ComposePost = ({
   }, [
     l,
     ax,
-    agent,
+    client,
+    chatClient,
+    pdsClient,
     canPost,
     isPublishing,
     currentLanguages,
@@ -1335,8 +1471,8 @@ export const ComposePost = ({
             publishingStage={publishingStage}
             topBarAnimatedStyle={topBarAnimatedStyle}
             onCancel={onPressCancel}
-            onPublish={onPressPublish}
-            onSelectDraft={handleSelectDraft}
+            onPublish={() => void onPressPublish()}
+            onSelectDraft={draft => void handleSelectDraft(draft)}
             onSaveDraft={saveCurrentDraft}
             onDiscard={handleClearComposer}
             isEmpty={isComposerEmpty}
@@ -1449,7 +1585,7 @@ export const ComposePost = ({
               {allPostsWithinLimit && (
                 <Prompt.Action
                   cta={composerState.draftId ? l`Save changes` : l`Save draft`}
-                  onPress={handleSaveDraft}
+                  onPress={() => void handleSaveDraft()}
                   color="primary"
                 />
               )}
@@ -1503,7 +1639,10 @@ let ComposerPost = memo(function ComposerPost({
   canRemovePost: boolean
   canRemoveQuote: boolean
   onClearVideo: (postId: string) => void
-  onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
+  onSelectVideo: (
+    postId: string,
+    asset: ImagePickerAsset,
+  ) => void | Promise<void>
   onError: (error: string) => void
   onPublish: (richtext: RichText) => void
 }) {
@@ -1540,7 +1679,7 @@ let ComposerPost = memo(function ComposerPost({
 
   const onNewLink = useCallback(
     (uri: string) => {
-      dispatchPost({type: 'embed_add_uri', uri})
+      dispatchPost({type: 'embed_add_uri', uri: uri as UriString})
     },
     [dispatchPost],
   )
@@ -1563,7 +1702,7 @@ let ComposerPost = memo(function ComposerPost({
         const file = await fetch(uri)
           .then(res => res.blob())
           .then(blob => new File([blob], name, {type: mimeType}))
-        onSelectVideo(post.id, await getVideoMetadata(file))
+        void onSelectVideo(post.id, await getVideoMetadata(file))
       } else {
         const res = await pasteImage(uri)
         onImageAdd([res])
@@ -1609,7 +1748,7 @@ let ComposerPost = memo(function ComposerPost({
               postId: post.id,
             })
           }}
-          onPhotoPasted={onPhotoPasted}
+          onPhotoPasted={uri => void onPhotoPasted(uri)}
           onNewLink={onNewLink}
           onError={onError}
           onPressPublish={onPublish}
@@ -1713,7 +1852,7 @@ function ComposerTopBar({
   isEditingDraft: boolean
   canSaveDraft: boolean
   textLength: number
-  topBarAnimatedStyle: StyleProp<ViewStyle>
+  topBarAnimatedStyle: AnimatedStyle<ViewStyle>
   children?: React.ReactNode
 }) {
   const t = useTheme()
@@ -1881,7 +2020,10 @@ function ComposerEmbeds({
               (video.status === 'compressing' ? (
                 <VideoTranscodeProgress
                   asset={video.asset}
-                  progress={video.progress}
+                  progress={videoProgressWithinPhase(
+                    'compressing',
+                    video.progress,
+                  )}
                   clear={clearVideo}
                 />
               ) : video.video ? (
@@ -1948,7 +2090,7 @@ function ComposerPills({
   thread: ThreadDraft
   post: PostDraft
   dispatch: (action: ComposerAction) => void
-  bottomBarAnimatedStyle: StyleProp<ViewStyle>
+  bottomBarAnimatedStyle: AnimatedStyle<ViewStyle>
 }) {
   const t = useTheme()
   const media = post.embed.media
@@ -2025,7 +2167,10 @@ function ComposerFooter({
   dispatch: (action: PostAction) => void
   showAddButton: boolean
   onError: (error: string) => void
-  onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
+  onSelectVideo: (
+    postId: string,
+    asset: ImagePickerAsset,
+  ) => void | Promise<void>
   onAddPost: () => void
   currentLanguages: string[]
   onSelectLanguage?: (language: string) => void
@@ -2100,15 +2245,15 @@ function ComposerFooter({
             }),
           ).catch(e => {
             logger.error(`createComposerImage failed`, {
-              safeMessage: e.message,
+              safeMessage: e instanceof Error ? e.message : String(e),
             })
           })
 
           onImageAdd(selectedImages)
         } else if (type === 'video') {
-          onSelectVideo(post.id, assets[0])
+          void onSelectVideo(post.id, assets[0])
         } else if (type === 'gif') {
-          onSelectVideo(post.id, assets[0])
+          void onSelectVideo(post.id, assets[0])
         }
       }
 
@@ -2292,7 +2437,7 @@ function useScrollTracker({
 
   const onScrollViewContentSizeChange = useCallback(
     (_width: number, height: number) => {
-      runOnUI(onScrollViewContentSizeChangeUIThread)(height)
+      scheduleOnUI(onScrollViewContentSizeChangeUIThread, height)
     },
     [onScrollViewContentSizeChangeUIThread],
   )
@@ -2337,38 +2482,45 @@ function useScrollTracker({
 }
 
 function useKeyboardVerticalOffset() {
-  const {top, bottom} = useSafeAreaInsets()
+  const insets = useSafeAreaInsets()
 
-  // Android etc
-  if (!IS_IOS) {
-    // need to account for the edge-to-edge nav bar
-    return bottom * -1
+  // the keyboardavoidingview has bottom padding to avoid being obscured by the safe area when keyboard is closed.
+  // however, this leads to a gap when the keyboard is open. we account for that by subtracting the bottom inset when open.
+  let keyboardVerticalOffset = insets.bottom * -1
+
+  // iOS requires a bit of extra offset to account for the native sheet not being at the top of the screen
+  if (IS_IOS) {
+    // they ditched the gap behaviour on 26
+    if (IS_LIQUID_GLASS) {
+      keyboardVerticalOffset += insets.top
+    }
+
+    // iPhone SE
+    else if (insets.top === 20) {
+      keyboardVerticalOffset += 40
+    }
+
+    // all other iPhones on <26
+    else {
+      keyboardVerticalOffset += insets.top + 10
+    }
   }
 
-  // they ditched the gap behaviour on 26
-  if (IS_LIQUID_GLASS) {
-    return top
-  }
-
-  // iPhone SE
-  if (top === 20) return 40
-
-  // all other iPhones on <26
-  return top + 10
+  return keyboardVerticalOffset
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  client: Client,
   uri: string,
-  fn: (res: AppBskyUnspeccedGetPostThreadV2.Response) => boolean,
+  fn: (res: app.bsky.unspecced.getPostThreadV2.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
     () =>
-      agent.app.bsky.unspecced.getPostThreadV2({
-        anchor: uri,
+      client.call(app.bsky.unspecced.getPostThreadV2, {
+        anchor: uri as AtUriString,
         above: false,
         below: 0,
         branchingFactor: 0,
@@ -2547,28 +2699,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const progress = state.progress
-  const shouldRotate =
-    state.status === 'processing' && (progress === 0 || progress === 1)
-  let wheelProgress = shouldRotate ? 0.33 : progress
-
-  const rotate = useDerivedValue(() => {
-    if (shouldRotate) {
-      return withRepeat(
-        withTiming(360, {
-          duration: 2500,
-          easing: Easing.out(Easing.cubic),
-        }),
-        -1,
-      )
-    }
-    return 0
-  })
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{rotateZ: `${rotate.get()}deg`}],
-    }
-  })
+  let wheelProgress = progress
 
   let text = ''
 
@@ -2598,7 +2729,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
       break
     case 'error':
       text = l`Error`
-      wheelProgress = 100
+      wheelProgress = 1
       break
     case 'done':
       if (isGif) {
@@ -2611,7 +2742,13 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
 
   return (
     <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
-      <Animated.View style={[animatedStyle]}>
+      {state.status === 'done' ? (
+        <Animated.View
+          entering={ZoomIn.duration(300)}
+          style={[a.align_center, a.justify_center, {height: 30, width: 30}]}>
+          <CircleCheckIcon size="lg" fill={t.palette.primary_500} />
+        </Animated.View>
+      ) : (
         <ProgressCircle
           size={30}
           borderWidth={1}
@@ -2623,7 +2760,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
           }
           progress={wheelProgress}
         />
-      </Animated.View>
+      )}
       <Text style={[a.font_semi_bold, a.ml_sm]}>{text}</Text>
     </ToolbarWrapper>
   )

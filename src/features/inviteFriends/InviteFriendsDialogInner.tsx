@@ -1,8 +1,11 @@
-import {Suspense, useRef, useState} from 'react'
+import {Suspense, useRef} from 'react'
 import {Pressable, View} from 'react-native'
-import type ViewShot from 'react-native-view-shot'
+import {type ViewShotRef} from 'react-native-view-shot'
 import {setStringAsync} from 'expo-clipboard'
-import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
+import {
+  requestPermissionsAsync,
+  saveToLibraryAsync,
+} from 'expo-media-library/legacy'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -25,6 +28,7 @@ import {IS_NATIVE} from '#/env'
 import {ActionButtons} from './components/ActionButtons'
 import {ThemedQrCard} from './components/ThemedQrCard'
 import {ThemePicker} from './components/ThemePicker'
+import {useInviteThemeKey} from './hooks/useInviteThemeKey'
 import {getInviteTheme, type InviteThemeKey} from './themes'
 import {getInviteDisplayUrl, getInviteShareUrl} from './urls'
 
@@ -39,8 +43,8 @@ export function InviteFriendsDialogInner({
   const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
   const profileQuery = useProfileQuery({did: currentAccount?.did})
-  const [themeKey, setThemeKey] = useState<InviteThemeKey>('day')
-  const captureRef = useRef<ViewShot>(null)
+  const [themeKey, setThemeKey] = useInviteThemeKey()
+  const captureRef = useRef<ViewShotRef>(null)
 
   const theme = getInviteTheme(themeKey)
   const variant = t.name === 'light' ? theme.light : theme.dark
@@ -137,7 +141,7 @@ export function InviteFriendsDialogInner({
 
   return (
     <Dialog.ScrollableInner
-      label={l`Invite friends`}
+      label={l`Share Profile`}
       contentContainerStyle={[a.pt_0, a.px_0]}
       header={
         <Dialog.Header
@@ -152,7 +156,7 @@ export function InviteFriendsDialogInner({
               <ButtonText style={[a.text_md]}>{l`Done`}</ButtonText>
             </Button>
           )}>
-          <Dialog.HeaderText>{l`Invite Friends`}</Dialog.HeaderText>
+          <Dialog.HeaderText>{l`Share Profile`}</Dialog.HeaderText>
         </Dialog.Header>
       }>
       <View style={[a.align_center, a.pt_xl, a.px_xl]}>

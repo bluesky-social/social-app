@@ -10,6 +10,7 @@ import {useLingui} from '@lingui/react'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
+import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -200,42 +201,44 @@ export function InterestTabs({
 
   return (
     <View style={[a.relative, a.flex_row]}>
-      <DraggableScrollView
-        ref={listRef}
-        contentContainerStyle={[
-          a.gap_sm,
-          {paddingHorizontal: gutterWidth},
-          contentContainerStyle,
-        ]}
-        showsHorizontalScrollIndicator={false}
-        decelerationRate="fast"
-        snapToOffsets={
-          tabOffsets.filter(o => !!o).length === interests.length
-            ? tabOffsets.map(o => o.x - tokens.space.xl)
-            : undefined
-        }
-        onLayout={evt => setTotalWidth(evt.nativeEvent.layout.width)}
-        onContentSizeChange={width => setContentWidth(width)}
-        onScroll={evt => {
-          const newScrollX = evt.nativeEvent.contentOffset.x
-          setScrollX(newScrollX)
-        }}
-        scrollEventThrottle={16}>
-        {interests.map((interest, i) => {
-          const active = interest === selectedInterest && !disabled
-          return (
-            <TabComponent
-              key={interest}
-              onSelectTab={handleSelectTab}
-              active={active}
-              index={i}
-              interest={interest}
-              interestsDisplayName={interestsDisplayNames[interest]}
-              onLayout={handleTabLayout}
-            />
-          )
-        })}
-      </DraggableScrollView>
+      <BlockDrawerGesture>
+        <DraggableScrollView
+          ref={listRef}
+          contentContainerStyle={[
+            a.gap_sm,
+            {paddingHorizontal: gutterWidth},
+            contentContainerStyle,
+          ]}
+          showsHorizontalScrollIndicator={false}
+          decelerationRate="fast"
+          snapToOffsets={
+            tabOffsets.filter(o => !!o).length === interests.length
+              ? tabOffsets.map(o => o.x - tokens.space.xl)
+              : undefined
+          }
+          onLayout={evt => setTotalWidth(evt.nativeEvent.layout.width)}
+          onContentSizeChange={width => setContentWidth(width)}
+          onScroll={evt => {
+            const newScrollX = evt.nativeEvent.contentOffset.x
+            setScrollX(newScrollX)
+          }}
+          scrollEventThrottle={16}>
+          {interests.map((interest, i) => {
+            const active = interest === selectedInterest && !disabled
+            return (
+              <TabComponent
+                key={interest}
+                onSelectTab={handleSelectTab}
+                active={active}
+                index={i}
+                interest={interest}
+                interestsDisplayName={interestsDisplayNames[interest]}
+                onLayout={handleTabLayout}
+              />
+            )
+          })}
+        </DraggableScrollView>
+      </BlockDrawerGesture>
       {IS_WEB && canScrollLeft && (
         <View
           style={[

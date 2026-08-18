@@ -10,6 +10,7 @@ This module consolidates several native features into a single Expo module:
 - **Referrer**: Tracking how users arrive at the app (web referrers, app referrers, Google Play install referrer)
 - **SharedPrefs**: Shared preferences storage using native platform APIs (UserDefaults on iOS, SharedPreferences on Android)
 - **VisibilityView**: A native view component that tracks which view is currently visible on screen
+- **NotificationSettings**: iOS handler that routes the system "notification settings" intent into the app
 
 ## Modules
 
@@ -123,9 +124,24 @@ This is useful for features like video autoplay, where you want to know which vi
 - Android: Full support using View position tracking
 - Web: Passthrough component (renders children without tracking)
 
-## Architecture
+### NotificationSettings
 
-### TypeScript Layer
+iOS only. Has no JavaScript surface - it is a pure native side effect registered
+at app launch.
+
+When push permissions are requested with `provideAppNotificationSettings: true`,
+iOS adds an in-app notification settings button to the system Settings screen for
+Bluesky. Tapping it launches the app and triggers
+`userNotificationCenter(_:openSettingsFor:)`. expo-notifications owns the
+`UNUserNotificationCenter` delegate and fans this callback out to registered
+`NotificationDelegate`s. This module registers one and converts the callback into
+a `bluesky://settings/notifications` deep link, which the app's existing linking
+config routes to the notification settings screen.
+
+**Platform Support:**
+- iOS: Full support
+- Android: Not applicable (Android opens the system notification settings directly)
+- Web: Not applicable
 
 The module uses platform-specific file extensions to provide appropriate implementations:
 
@@ -170,7 +186,9 @@ The module uses platform-specific file extensions to provide appropriate impleme
 
 ### Expo Module Config
 
-The module is registered in `expo-module.config.json` with all four sub-modules for both iOS and Android.
+The module is registered in `expo-module.config.json`. The PlatformInfo,
+Referrer, SharedPrefs, and VisibilityView sub-modules are registered for both iOS
+and Android; NotificationSettings is iOS only.
 
 ### iOS
 

@@ -1,7 +1,6 @@
 import {useContext} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {Logomark} from '#/view/icons/Logomark'
@@ -60,7 +59,7 @@ export function Logo() {
 }
 
 export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useContext(AuthLayoutNavigationContext)
 
   const onPressBack = (evt: GestureResponderEvent) => {
@@ -72,7 +71,7 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
   return (
     <Slot>
       <Button
-        label={_(msg`Go back`)}
+        label={l`Go back`}
         onPress={onPressBack}
         size="small"
         variant="ghost"

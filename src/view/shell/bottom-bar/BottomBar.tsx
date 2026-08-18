@@ -242,12 +242,18 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityLabel={l`Chat`}
               accessibilityHint={
                 !aa.flags.chatDisabled && numUnreadMessages.count > 0
-                  ? l({
-                      message: plural(numUnreadMessages.numUnread ?? 0, {
-                        one: '# unread item',
-                        other: '# unread items',
-                      }),
-                    })
+                  ? numUnreadMessages.numUnread?.includes('+')
+                    ? l({
+                        message: `${numUnreadMessages.numUnread} unread items`,
+                        comment:
+                          'Accessibility hint for the bottom bar chat icon when the number of unread messages exceeds the cap, with the + symbol already included – for example, 99+ unread items',
+                      })
+                    : l({
+                        message: plural(numUnreadMessages.numUnread ?? 0, {
+                          one: '# unread item',
+                          other: '# unread items',
+                        }),
+                      })
                   : ''
               }
             />
@@ -333,7 +339,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               }}>
               <View
                 style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
-                <Logo width={28} />
+                <Logo allowVariants={false} width={28} />
                 <View style={{paddingTop: 4}}>
                   <Logotype width={80} fill={t.atoms.text.color} />
                 </View>
