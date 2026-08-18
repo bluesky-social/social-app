@@ -108,7 +108,8 @@ module.exports = async function (env, argv) {
         statsFilename: '../stats.json',
         analyzerMode: OPEN_ANALYZER ? 'server' : 'json',
         defaultSizes: 'parsed',
-        statsOptions: {reasons: false},
+        // reasons balloon stats.json past Node's max string length, breaking bundle-size-diff in CI
+        statsOptions: OPEN_ANALYZER ? null : {reasons: false},
       }),
     )
   }
