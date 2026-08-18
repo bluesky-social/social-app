@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native'
+import {Text, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/core/macro'
