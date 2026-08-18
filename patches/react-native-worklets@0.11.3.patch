@@ -1,16 +1,16 @@
 diff --git a/lib/module/threads.js b/lib/module/threads.js
-index dd3a7f1ab12e5a8030af7f17b6a7a891e0b645d2..7d48ccbf95f00724db6b083a7155f25aadd6b8f5 100644
+index c17e314..71f3cf7 100644
 --- a/lib/module/threads.js
 +++ b/lib/module/threads.js
-@@ -2,7 +2,6 @@
+@@ -1,7 +1,6 @@
+ 'use strict';
  
- import { WorkletsError } from './debug/WorkletsError';
  import { IS_JEST } from './platformChecker';
--import { mockedRequestAnimationFrame } from './runLoop/uiRuntime/mockedRequestAnimationFrame';
+-import { mockedRequestAnimationFrame } from "./runLoop/uiRuntime/mockedRequestAnimationFrame.js";
  export function scheduleOnUI(worklet, ...args) {
    enqueueUI(worklet, args);
  }
-@@ -24,38 +23,50 @@ export function scheduleOnRN(fun, ...args) {
+@@ -23,38 +22,50 @@ export function scheduleOnRN(fun, ...args) {
    queueMicrotask(args.length ? () => fun(...args) : fun);
  }
  export function runOnUIAsync(worklet, ...args) {
@@ -73,6 +73,8 @@ index dd3a7f1ab12e5a8030af7f17b6a7a891e0b645d2..7d48ccbf95f00724db6b083a7155f25a
    });
  }
 -const requestAnimationFrameImpl = !globalThis.requestAnimationFrame ? mockedRequestAnimationFrame : globalThis.requestAnimationFrame;
+-//# sourceMappingURL=threads.js.map
+\ No newline at end of file
 +function drainUIQueue(queue) {
 +  while (queue.length > offset) {
 +    const [workletFunction, workletArgs, jobResolve] = queue[offset];
@@ -83,4 +85,4 @@ index dd3a7f1ab12e5a8030af7f17b6a7a891e0b645d2..7d48ccbf95f00724db6b083a7155f25a
 +    }
 +  }
 +}
- //# sourceMappingURL=threads.js.map
++//# sourceMappingURL=threads.js.map

@@ -2,7 +2,7 @@ import {lazy, useState} from 'react'
 import {View} from 'react-native'
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
-import type ViewShot from 'react-native-view-shot'
+import {type ViewShotRef} from 'react-native-view-shot'
 import {Trans} from '@lingui/react/macro'
 
 import {Logo} from '#/view/icons/Logo'
@@ -14,10 +14,7 @@ import {IS_WEB} from '#/env'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
-const LazyViewShot = lazy(
-  // @ts-expect-error dynamic import
-  () => import('react-native-view-shot/src/index'),
-)
+const LazyViewShot = lazy(() => import('react-native-view-shot'))
 
 export function QrCode({
   starterPack,
@@ -26,7 +23,7 @@ export function QrCode({
 }: {
   starterPack: app.bsky.graph.defs.StarterPackView
   link: string
-  ref: React.Ref<ViewShot>
+  ref: React.Ref<ViewShotRef>
 }) {
   const {record} = starterPack
 

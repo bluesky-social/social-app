@@ -1497,7 +1497,7 @@
   },
   "src/view/com/composer/drafts/state/storage.ts": {
     "typescript/require-await": {
-      "count": 3
+      "count": 2
     }
   },
   "src/view/com/composer/photos/EditImageDialog.web.tsx": {

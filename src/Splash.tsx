@@ -2,7 +2,6 @@ import {forwardRef, useCallback, useEffect, useState} from 'react'
 import {
   AccessibilityInfo,
   Image as RNImage,
-  StyleSheet,
   useColorScheme,
   View,
 } from 'react-native'
@@ -20,6 +19,7 @@ import {Image} from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
 
 import {Logotype} from '#/view/icons/Logotype'
+import {atoms as a} from '#/alf'
 // @ts-ignore
 import splashImagePointer from '../assets/splash/splash.png'
 // @ts-ignore
@@ -170,12 +170,12 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   return (
     <View style={{flex: 1}} onLayout={onLayout}>
       {!isAnimationComplete && (
-        <View style={StyleSheet.absoluteFillObject}>
+        <View style={[a.absolute, a.inset_0]}>
           <Image
             accessibilityIgnoresInvertColors
             onLoadEnd={onLoadEnd}
             source={{uri: isDarkMode ? darkSplashImageUri : splashImageUri}}
-            style={StyleSheet.absoluteFillObject}
+            style={[a.absolute, a.inset_0]}
           />
 
           <Animated.View
@@ -205,7 +205,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           {!isAnimationComplete && (
             <Animated.View
               style={[
-                StyleSheet.absoluteFillObject,
+                a.absolute,
+                a.inset_0,
                 logoAnimation,
                 {
                   flex: 1,
