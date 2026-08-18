@@ -1,11 +1,13 @@
 import {useCallback, useImperativeHandle, useState} from 'react'
 import {Keyboard} from 'react-native'
-import DatePicker from 'react-native-date-picker'
-import {useLingui} from '@lingui/react'
+import {DatePickerDialog, Host} from '@expo/ui/jetpack-compose'
 
 import {useTheme} from '#/alf'
 import {type DateFieldProps} from '#/components/forms/DateField/types'
-import {toSimpleDateString} from '#/components/forms/DateField/utils'
+import {
+  toLocalMidnight,
+  toSimpleDateString,
+} from '#/components/forms/DateField/utils'
 import * as TextField from '#/components/forms/TextField'
 import {DateFieldButton} from './index.shared'
 
@@ -20,20 +22,18 @@ export function DateField({
   placeholder,
   label,
   isInvalid,
-  testID,
   accessibilityHint,
   maximumDate,
   minimumDate,
 }: DateFieldProps) {
-  const {i18n} = useLingui()
   const t = useTheme()
   const [open, setOpen] = useState(false)
 
   /*
    * The picker requires a valid date, so when value is empty we open at
    * maximumDate (if set) or today. Normalize through toSimpleDateString so a
-   * date-only value is parsed as UTC midnight, consistent with the picker's
-   * timeZoneOffsetInMinutes={0} and the maximumDate below.
+   * date-only value is parsed as UTC midnight, which is what the Material 3
+   * picker expects for its selected date (it works in UTC day millis).
    */
   const initialDate =
     value === ''
@@ -41,6 +41,19 @@ export function DateField({
         ? new Date(toSimpleDateString(maximumDate))
         : new Date()
       : new Date(toSimpleDateString(value))
+
+  /*
+   * Unlike the selection, the selectable range is resolved by the native side
+   * in the device time zone, so pass local midnight to keep the intended
+   * calendar day for devices west of UTC.
+   */
+  const selectableDates =
+    minimumDate || maximumDate
+      ? {
+          start: minimumDate ? toLocalMidnight(minimumDate) : undefined,
+          end: maximumDate ? toLocalMidnight(maximumDate) : undefined,
+        }
+      : undefined
 
   const onChangeInternal = useCallback(
     (date: Date) => {
@@ -86,31 +99,15 @@ export function DateField({
         accessibilityHint={accessibilityHint}
       />
       {open && (
-        // Android implementation of DatePicker currently does not change default button colors according to theme and only takes hex values for buttonColor
-        // Can remove the buttonColor setting if/when this PR is merged: https://github.com/henninghall/react-native-date-picker/pull/871
-        <DatePicker
-          modal
-          open
-          timeZoneOffsetInMinutes={0}
-          theme={t.scheme}
-          buttonColor={t.name === 'light' ? '#000000' : '#ffffff'}
-          date={initialDate}
-          onConfirm={onChangeInternal}
-          onCancel={onCancel}
-          mode="date"
-          locale={i18n.locale}
-          is24hourSource="locale"
-          testID={`${testID}-datepicker`}
-          aria-label={label}
-          accessibilityLabel={label}
-          accessibilityHint={accessibilityHint}
-          maximumDate={
-            maximumDate ? new Date(toSimpleDateString(maximumDate)) : undefined
-          }
-          minimumDate={
-            minimumDate ? new Date(toSimpleDateString(minimumDate)) : undefined
-          }
-        />
+        <Host colorScheme={t.scheme}>
+          <DatePickerDialog
+            initialDate={initialDate.toISOString()}
+            selectableDates={selectableDates}
+            showVariantToggle={false}
+            onDateSelected={onChangeInternal}
+            onDismissRequest={onCancel}
+          />
+        </Host>
       )}
     </>
   )
