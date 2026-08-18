@@ -108,7 +108,7 @@ module.exports = async function (env, argv) {
         statsFilename: '../stats.json',
         analyzerMode: OPEN_ANALYZER ? 'server' : 'json',
         defaultSizes: 'parsed',
-        statsOptions: {reasons: false}
+        statsOptions: {reasons: false},
       }),
     )
   }
