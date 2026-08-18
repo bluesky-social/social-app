@@ -227,7 +227,6 @@ patchedDependencies:
   expo-updates@57.0.10: 04f28cb005b770e9ae8f0065eab96e43cbb1e58107f5f6ad1bdd18f6deb66487
   expo@57.0.8: 1722861d12907a2d412d04230545b2fcbfa5547a79f99d763cb3e8de6f3a6f2a
   react-native-compressor@1.13.0: 58379dfaace6ced8590cb341c77f2ca8099dfa8f7df6297032ec51de767a9925
-  react-native-date-picker@5.0.13: 92943fb79d17d7342a29bbb12b0d8ee3cf6f7bca12ed322dc8d124a3e9fb75bd
   react-native-drawer-layout@4.2.3: 74f2c043cc22ab87054f219e7c7373a509b779b18bfa79d27e7d051d73355130
   react-native-keyboard-controller@1.21.9: ac52bf7502ff3ad34a8594b5e1a916b96bf87a2523b6abc87c31f03607d52271
   react-native-pager-view@6.8.0: c8316acd33c9aef6531e8c272c2bfab7bd02af1255969eeaab2bad5ab48531cc
@@ -307,6 +306,9 @@ importers:
       '@expo/html-elements':
         specifier: ^0.12.5
         version: 0.12.5
+      '@expo/ui':
+        specifier: ~57.0.11
+        version: 57.0.11(5e39ccdb2c9b6846e98011192ff90a58)
       '@expo/webpack-config':
         specifier: ^19.0.1
         version: 19.0.1(clean-css@5.3.3)(cssnano@5.1.15(postcss@8.5.14))(csso@5.0.5)(debug@4.4.3(supports-color@8.1.1))(esbuild@0.25.12)(expo@57.0.8)(html-minifier-terser@6.1.0)(lightningcss@1.32.0)(postcss@8.5.14)(supports-color@8.1.1)
@@ -634,9 +636,6 @@ importers:
       react-native-compressor:
         specifier: 1.13.0
         version: 1.13.0(patch_hash=58379dfaace6ced8590cb341c77f2ca8099dfa8f7df6297032ec51de767a9925)(react-native@0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
-      react-native-date-picker:
-        specifier: ^5.0.13
-        version: 5.0.13(patch_hash=92943fb79d17d7342a29bbb12b0d8ee3cf6f7bca12ed322dc8d124a3e9fb75bd)(react-native@0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       react-native-device-attest:
         specifier: ^0.1.6
         version: 0.1.6(expo@57.0.8)(react-native@0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
@@ -2115,6 +2114,23 @@ packages:
 
   '@expo/sudo-prompt@9.3.2':
     resolution: {integrity: sha512-HHQigo3rQWKMDzYDLkubN5WQOYXJJE2eNqIQC2axC2iO3mHdwnIR7FgZVvHWtBwAdzBgAP0ECp8KqS8TiMKvgw==}
+
+  '@expo/ui@57.0.11':
+    resolution: {integrity: sha512-m1BSq15sg4sCmoFwOsMxBpETgyFhGlCbVPUyjdJ6Y00Ve0Fb4sueaFLRyeYRbZ8DC1z3Hgp5LNCYzBBBdMhxMg==}
+    peerDependencies:
+      '@babel/core': '*'
+      expo: '*'
+      react: '*'
+      react-dom: '*'
+      react-native: '*'
+      react-native-worklets: 0.11.3
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      react-dom:
+        optional: true
+      react-native-worklets:
+        optional: true
 
   '@expo/webpack-config@19.0.1':
     resolution: {integrity: sha512-5bSxXTUd/DCF44+1dSyU23YKLOOYCr9pMJ+C5Vw7PAi6v6OEyNp4uOVMk2x5DAEpXtvOsJCxvNZdmtY/IqmO/A==}
@@ -8178,12 +8194,6 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-date-picker@5.0.13:
-    resolution: {integrity: sha512-qCLUODZVsJetO5zuoXjw1D39K527XWqBG8sOfhWdHyPzf13h8RXR1/RSKd1N0fdRDi5GdyizYmB0lPAK12/hbw==}
-    peerDependencies:
-      react: '>= 17.0.1'
-      react-native: '>= 0.64.3'
-
   react-native-device-attest@0.1.6:
     resolution: {integrity: sha512-oTgBu6il+czHIMLs2IVWv2+WZ6a/vUtVLQ40q6/Dgns7NuG69mwmR8lS0e2Sl/yOtpD9YZXc8cYzBDKHAyV5MA==}
     peerDependencies:
@@ -9371,6 +9381,12 @@ packages:
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
+
+  vaul@1.1.2:
+    resolution: {integrity: sha512-ZFkClGpWyI2WUQjdLJ/BaGuV6AVQiJ3uELGk3OYtP+B6yCO7Cmn9vPFXVJkRaGkOJu3m8bQMgtyzNHixULceQA==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
 
   vlq@1.0.1:
     resolution: {integrity: sha512-gQpnTgkubC6hQgdIcRdYGDSDc+SaujOdyesZQMv6JlfQee/9Mp0Qhnys6WxDWvQnL5WZdT7o2Ul187aSt0Rq+w==}
@@ -11280,6 +11296,21 @@ snapshots:
       cross-spawn: 7.0.6
 
   '@expo/sudo-prompt@9.3.2': {}
+
+  '@expo/ui@57.0.11(5e39ccdb2c9b6846e98011192ff90a58)':
+    dependencies:
+      expo: 57.0.8(patch_hash=1722861d12907a2d412d04230545b2fcbfa5547a79f99d763cb3e8de6f3a6f2a)(b32afa45429c882ad113a248f683620a)
+      react: 19.2.3
+      react-native: 0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1)
+      sf-symbols-typescript: 2.2.0
+      vaul: 1.1.2(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+    optionalDependencies:
+      '@babel/core': 7.29.0(supports-color@8.1.1)
+      react-dom: 19.2.3(react@19.2.3)
+      react-native-worklets: 0.11.3(patch_hash=8ebbcf528fc731459ac4a4eff612a50dfb7e24462a9df201e4aaa81a201343f0)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(react-native@0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
 
   '@expo/webpack-config@19.0.1(clean-css@5.3.3)(cssnano@5.1.15(postcss@8.5.14))(csso@5.0.5)(debug@4.4.3(supports-color@8.1.1))(esbuild@0.25.12)(expo@57.0.8)(html-minifier-terser@6.1.0)(lightningcss@1.32.0)(postcss@8.5.14)(supports-color@8.1.1)':
     dependencies:
@@ -18186,11 +18217,6 @@ snapshots:
       react: 19.2.3
       react-native: 0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1)
 
-  react-native-date-picker@5.0.13(patch_hash=92943fb79d17d7342a29bbb12b0d8ee3cf6f7bca12ed322dc8d124a3e9fb75bd)(react-native@0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3):
-    dependencies:
-      react: 19.2.3
-      react-native: 0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1)
-
   react-native-device-attest@0.1.6(expo@57.0.8)(react-native@0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3):
     dependencies:
       expo: 57.0.8(patch_hash=1722861d12907a2d412d04230545b2fcbfa5547a79f99d763cb3e8de6f3a6f2a)(b32afa45429c882ad113a248f683620a)
@@ -19459,6 +19485,15 @@ snapshots:
   varint@6.0.0: {}
 
   vary@1.1.2: {}
+
+  vaul@1.1.2(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+    dependencies:
+      '@radix-ui/react-dialog': 1.1.15(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
 
   vlq@1.0.1: {}
 

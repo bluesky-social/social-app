@@ -1,6 +1,6 @@
 import {useCallback, useImperativeHandle, useState} from 'react'
 import {Keyboard, View} from 'react-native'
-import DatePicker from 'react-native-date-picker'
+import {DateTimePicker} from '@expo/ui/community/datetime-picker'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -15,6 +15,15 @@ import {DateFieldButton} from './index.shared'
 
 export * as utils from '#/components/forms/DateField/utils'
 export const LabelText = TextField.LabelText
+
+/**
+ * SwiftUI only accepts identifiers from `Locale.availableIdentifiers`, which
+ * use underscores (`pt_BR`) rather than BCP 47 hyphens (`pt-BR`). Unknown
+ * identifiers make the picker fall back to the system locale.
+ */
+function toAppleLocale(locale: string): string {
+  return locale.replace(/-/g, '_')
+}
 
 /**
  * Date-only input. Accepts a string in the format YYYY-MM-DD, or a Date object.
@@ -78,6 +87,7 @@ export function DateField({
     }),
     [control, value, fallbackDate],
   )
+  console.log('locale===', i18n.locale, toAppleLocale(i18n.locale))
 
   return (
     <>
@@ -101,17 +111,16 @@ export function DateField({
         <Dialog.ScrollableInner label={label}>
           <View style={a.gap_lg}>
             <View style={[a.relative, a.w_full, a.align_center]}>
-              <DatePicker
-                timeZoneOffsetInMinutes={0}
-                theme={t.scheme}
-                date={new Date(draft)}
-                onDateChange={onChangeInternal}
+              <DateTimePicker
+                style={a.w_full}
+                value={new Date(draft)}
+                onValueChange={(_event, date) => onChangeInternal(date)}
                 mode="date"
-                locale={i18n.locale}
+                display="spinner"
+                timeZoneName="UTC"
+                themeVariant={t.scheme}
+                locale={toAppleLocale(i18n.locale)}
                 testID={`${testID}-datepicker`}
-                aria-label={label}
-                accessibilityLabel={label}
-                accessibilityHint={accessibilityHint}
                 maximumDate={
                   maximumDate
                     ? new Date(toSimpleDateString(maximumDate))
