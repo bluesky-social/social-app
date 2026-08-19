@@ -1,4 +1,5 @@
 import assert from 'assert'
+import {performance} from 'node:perf_hooks'
 import {
   Kysely,
   type KyselyPlugin,
@@ -99,6 +100,27 @@ export class Database {
 
   get isTransaction() {
     return this.db.isTransaction
+  }
+
+  async observeQuery<T>(operation: string, query: () => Promise<T>): Promise<T> {
+    const startedAt = performance.now()
+    try {
+      return await query()
+    } finally {
+      const durationMs = Math.round(performance.now() - startedAt)
+      if (durationMs >= 1000) {
+        log.warn(
+          {
+            durationMs,
+            operation,
+            poolIdleConnections: this.cfg.pool.idleCount,
+            poolTotalConnections: this.cfg.pool.totalCount,
+            poolWaitingRequests: this.cfg.pool.waitingCount,
+          },
+          'slow database query',
+        )
+      }
+    }
   }
 
   assertTransaction() {
