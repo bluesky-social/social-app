@@ -1,0 +1,47 @@
+{
+  "id": "app.bsky.bookmark.defs",
+  "defs": {
+    "bookmark": {
+      "type": "object",
+      "required": [
+        "subject"
+      ],
+      "properties": {
+        "subject": {
+          "ref": "com.atproto.repo.strongRef",
+          "type": "ref",
+          "description": "A strong ref to the record to be bookmarked. Currently, only `app.bsky.feed.post` records are supported."
+        }
+      },
+      "description": "Object used to store bookmark data in stash."
+    },
+    "bookmarkView": {
+      "type": "object",
+      "required": [
+        "subject",
+        "item"
+      ],
+      "properties": {
+        "item": {
+          "refs": [
+            "app.bsky.feed.defs#blockedPost",
+            "app.bsky.feed.defs#notFoundPost",
+            "app.bsky.feed.defs#postView"
+          ],
+          "type": "union"
+        },
+        "subject": {
+          "ref": "com.atproto.repo.strongRef",
+          "type": "ref",
+          "description": "A strong ref to the bookmarked record."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

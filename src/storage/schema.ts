@@ -98,14 +98,24 @@ export type Account = {
   recentGifs?: Gif[]
 
   /**
-   * Cached from preferences (`bskyAppState.isBetaUser`) so the GrowthBook
-   * `isBetaUser` attribute can be set synchronously at analytics init, before
-   * beta-gated features (e.g. SearchV2Enable) are first evaluated. Written back
-   * when preferences load.
+   * Persistent cold-start snapshot of `bskyAppState.isBetaUser`. Hydrates the
+   * runtime cache so the GrowthBook attribute and request header are available
+   * synchronously before preferences load. Written back when preferences load.
    *
    * Scoped per account, since `isBetaUser` is account-specific preference data.
    * Reading it globally would let a beta account's value leak into a non-beta
    * account after a switch, until that account's preferences loaded.
    */
   isBetaUser?: boolean
+
+  /**
+   * The account's subscribed labeler DIDs, cached from preferences so the
+   * `atproto-accept-labelers` header can be configured synchronously at
+   * session start, before preferences load. Eventually consistent: rewritten
+   * on every preferences fetch (see `saveLabelers` in
+   * `#/state/session/moderation`). Until the first fetch lands there is
+   * simply no cache entry and initial requests go out without per-account
+   * labeler headers.
+   */
+  labelers?: string[]
 }

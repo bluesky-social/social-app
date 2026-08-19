@@ -5,7 +5,6 @@ import Animated, {
   useAnimatedRef,
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -18,6 +17,7 @@ import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/compone
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 
 export function ConstrainedImage({
   aspectRatio,
@@ -71,7 +71,7 @@ export function AutoSizedImage({
   onContainerRef,
   onDimsChange,
 }: {
-  image: AppBskyEmbedImages.ViewImage
+  image: app.bsky.embed.images.ViewImage
   crop?: 'none' | 'square' | 'constrained'
   onPress?: (
     containerRef: AnimatedRef<any>,

@@ -1,0 +1,47 @@
+{
+  "id": "app.bsky.notification.registerPush",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "serviceDid",
+            "token",
+            "platform",
+            "appId"
+          ],
+          "properties": {
+            "appId": {
+              "type": "string"
+            },
+            "token": {
+              "type": "string"
+            },
+            "platform": {
+              "type": "string",
+              "knownValues": [
+                "ios",
+                "android",
+                "web"
+              ]
+            },
+            "serviceDid": {
+              "type": "string",
+              "format": "did"
+            },
+            "ageRestricted": {
+              "type": "boolean",
+              "description": "Set to true when the actor is age restricted"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Register to receive push notifications, via a specified service, for the requesting account. Requires auth."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

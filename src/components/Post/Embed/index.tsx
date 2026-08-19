@@ -1,13 +1,9 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {
-  type $Typed,
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AtUri,
-  moderatePost,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
+import {AtUri} from '@atproto/syntax'
+import {moderatePost} from '@bsky/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -29,6 +25,7 @@ import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/uti
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {
   type Embed as TEmbed,
@@ -68,7 +65,11 @@ export function Embed({embed: rawEmbed, ...rest}: EmbedProps) {
     }
     case 'post_with_media': {
       return (
-        <View style={rest.style}>
+        <View
+          style={[
+            rest.style,
+            rest.viewContext === PostEmbedViewContext.ChatMessage && a.gap_sm,
+          ]}>
           <MediaEmbed embed={embed.media} {...rest} />
           <RecordEmbed embed={embed.view} {...rest} />
         </View>
@@ -262,7 +263,7 @@ export function QuoteEmbed({
   linkDisabled?: boolean
 }) {
   const moderationOpts = useModerationOpts()
-  const quote = useMemo<$Typed<AppBskyFeedDefs.PostView>>(
+  const quote = useMemo<$Typed<app.bsky.feed.defs.PostView>>(
     () => ({
       ...embed.view,
       $type: 'app.bsky.feed.defs#postView',
@@ -282,13 +283,7 @@ export function QuoteEmbed({
   const itemTitle = `Post by ${quote.author.handle}`
 
   const richText = useMemo(() => {
-    if (
-      !bsky.dangerousIsType<AppBskyFeedPost.Record>(
-        quote.record,
-        AppBskyFeedPost.isRecord,
-      )
-    )
-      return undefined
+    if (!bsky.isType(app.bsky.feed.post, quote.record)) return undefined
     const {text, facets} = quote.record
     return text.trim()
       ? new RichTextAPI({text: text, facets: facets})

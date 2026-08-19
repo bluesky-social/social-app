@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {type $Typed, ComAtprotoLabelDefs} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -13,6 +13,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
+import {com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function PwiOptOut() {
@@ -35,9 +36,9 @@ export function PwiOptOut() {
       profile,
       updates: existing => {
         // create labels attr if needed
-        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.validate(
+        const labels: $Typed<com.atproto.label.defs.SelfLabels> = bsky.matches(
+          com.atproto.label.defs.selfLabels,
           existing.labels,
-          ComAtprotoLabelDefs.validateSelfLabels,
         )
           ? existing.labels
           : {
@@ -68,8 +69,8 @@ export function PwiOptOut() {
 
         return existing
       },
-      checkCommitted: res => {
-        const exists = !!res.data.labels?.some(
+      checkCommitted: profile => {
+        const exists = !!profile.labels?.some(
           l => l.val === '!no-unauthenticated',
         )
         return exists === wasAdded
@@ -85,12 +86,12 @@ export function PwiOptOut() {
         value={isOptedOut}
         onChange={onToggleOptOut}
         label={_(
-          msg`Discourage apps from showing my account to logged-out users`,
+          msg`Ask apps and sites not to show my account to logged-out users`,
         )}
         style={[a.w_full]}>
         <Toggle.LabelText style={[a.flex_1]}>
           <Trans>
-            Discourage apps from showing my account to logged-out users
+            Ask apps and sites not to show my account to logged-out users
           </Trans>
         </Toggle.LabelText>
         <Toggle.Platform />
@@ -98,9 +99,9 @@ export function PwiOptOut() {
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_high]}>
         <Trans>
-          Bluesky will not show your profile and posts to logged-out users.
-          Other apps may not honor this request. This does not make your account
-          private.
+          Bluesky will not show your account to logged-out users and will ask
+          other apps to do the same. Other apps may not honor this request. It
+          doesn't make your account private.
         </Trans>
       </Text>
     </View>

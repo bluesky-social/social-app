@@ -1,0 +1,46 @@
+{
+  "id": "chat.bsky.group.rejectJoinRequest",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convoId",
+            "member"
+          ],
+          "properties": {
+            "member": {
+              "type": "string",
+              "format": "did"
+            },
+            "convoId": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        },
+        {
+          "name": "InsufficientRole"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [],
+          "properties": {}
+        },
+        "encoding": "application/json"
+      },
+      "description": "Rejects a request to join a group (via join link) the user owns. Action taken by the group owner."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

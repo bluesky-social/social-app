@@ -1,0 +1,51 @@
+{
+  "id": "chat.bsky.convo.unlockConvo",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convoId"
+          ],
+          "properties": {
+            "convoId": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        },
+        {
+          "name": "InsufficientRole"
+        },
+        {
+          "name": "ConvoLockedByModeration"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convo"
+          ],
+          "properties": {
+            "convo": {
+              "ref": "chat.bsky.convo.defs#convoView",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Unlocks a group convo so it is able to receive new content."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}
