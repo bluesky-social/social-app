@@ -602,7 +602,12 @@ function RevealPasswordButton({
   const {t: l} = useLingui()
   const context = TextField.useTextFieldContext()
 
-  const Icon = !active ? EyeSlashIcon : EyeIcon
+  /*
+   * The icon shows the action the button performs, not the current state: an
+   * open eye when the password is hidden (tap to reveal), a crossed-out eye
+   * when it is visible (tap to hide).
+   */
+  const Icon = active ? EyeSlashIcon : EyeIcon
 
   if (!hasPassword && !context.focused) return null
 
