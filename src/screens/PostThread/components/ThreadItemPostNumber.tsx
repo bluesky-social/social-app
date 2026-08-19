@@ -64,7 +64,7 @@ export function ThreadItemPostNumber({
         },
         inline
           ? platform({
-              native: {transform: [{translateY: POST_NUMBER_INLINE_OFFSET}]},
+              android: {transform: [{translateY: POST_NUMBER_INLINE_OFFSET}]},
               web: {
                 top: -2,
                 marginBottom: -2,
