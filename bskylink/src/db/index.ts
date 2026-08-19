@@ -102,7 +102,10 @@ export class Database {
     return this.db.isTransaction
   }
 
-  async observeQuery<T>(operation: string, query: () => Promise<T>): Promise<T> {
+  async observeQuery<T>(
+    operation: string,
+    query: () => Promise<T>,
+  ): Promise<T> {
     const startedAt = performance.now()
     try {
       return await query()
