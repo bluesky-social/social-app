@@ -87,7 +87,6 @@ export function DateField({
     }),
     [control, value, fallbackDate],
   )
-  console.log('locale===', i18n.locale, toAppleLocale(i18n.locale))
 
   return (
     <>
