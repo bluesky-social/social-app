@@ -17,7 +17,6 @@
     "cors": "^2.8.5",
     "escape-html": "^1.0.3",
     "express": "^4.19.2",
-    "express-prom-bundle": "^7.0.0",
     "http-terminator": "^3.2.0",
     "i18n": "^0.15.1",
     "kysely": "^0.27.3",

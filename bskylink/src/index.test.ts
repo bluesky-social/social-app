@@ -2,37 +2,22 @@ import assert from 'node:assert'
 import {type AddressInfo} from 'node:net'
 import {test} from 'node:test'
 
-import express from 'express'
-import {Gauge, register} from 'prom-client'
-
-import {type AppContext} from './context.js'
+import {envToCfg} from './config.js'
 import {LinkService} from './index.js'
 
-void test('serves and terminates the Prometheus listener', async () => {
-  const metricName = 'bskylink_metrics_listener_test'
-  const gauge = new Gauge({
-    name: metricName,
-    help: 'Test metric for the Blink Prometheus listener',
+const testConfig = () =>
+  envToCfg({
+    dbPostgresUrl: 'postgres://localhost:1/blink',
+    hostnames: ['go.bsky.app'],
+    metricsPort: 0,
+    port: 0,
+    safelinkAgentIdentifier: 'test',
+    safelinkAgentPass: 'test',
+    safelinkPdsUrl: 'https://example.com',
   })
-  gauge.set(1)
 
-  const ctx = {
-    abortController: new AbortController(),
-    cfg: {
-      service: {
-        metricsPort: 0,
-        port: 0,
-      },
-    },
-    db: {
-      close: async () => {},
-    },
-    metrics: {
-      start: () => {},
-      stop: () => {},
-    },
-  } as unknown as AppContext
-  const service = new LinkService(express(), ctx)
+void test('serves and terminates the Prometheus listener', async () => {
+  const service = await LinkService.create(testConfig())
 
   try {
     await service.start()
@@ -41,11 +26,24 @@ void test('serves and terminates the Prometheus listener', async () => {
 
     assert.strictEqual(res.status, 200)
     assert.match(res.headers.get('content-type') ?? '', /text\/plain/)
-    assert.match(await res.text(), new RegExp(`${metricName} 1`))
+    const metrics = await res.text()
+    assert.match(metrics, /process_cpu_user_seconds_total/)
+    assert.match(metrics, /nodejs_eventloop_lag_max_seconds/)
+    assert.match(metrics, /bskylink_db_pool_connections\{state="idle"\} 0/)
+    assert.match(metrics, /bskylink_db_pool_connections\{state="in_use"\} 0/)
+    assert.match(metrics, /bskylink_db_pool_max_connections 10/)
+    assert.match(metrics, /bskylink_db_pool_waiting_requests 0/)
+    assert.doesNotMatch(metrics, /http_request_duration_seconds/)
   } finally {
     await service.destroy()
-    register.removeSingleMetric(metricName)
   }
 
   assert.strictEqual(service.metricsServer?.listening, false)
+})
+
+void test('isolates the Prometheus registry per service', async () => {
+  const first = await LinkService.create(testConfig())
+  const second = await LinkService.create(testConfig())
+
+  await Promise.all([first.destroy(), second.destroy()])
 })

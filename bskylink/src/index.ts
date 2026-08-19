@@ -3,13 +3,13 @@ import type http from 'node:http'
 
 import cors from 'cors'
 import express from 'express'
-import promBundle from 'express-prom-bundle'
 import {createHttpTerminator, type HttpTerminator} from 'http-terminator'
-import {register} from 'prom-client'
+import {type Registry} from 'prom-client'
 
 import {type Config} from './config.js'
 import {AppContext} from './context.js'
 import i18n from './i18n.js'
+import {createPrometheusRegistry} from './prometheus.js'
 import {default as routes, errorHandler} from './routes/index.js'
 
 export * from './config.js'
@@ -21,33 +21,19 @@ export class LinkService {
   public metricsServer?: http.Server
   private terminator?: HttpTerminator
   private metricsTerminator?: HttpTerminator
+  private metricsRegistry: Registry
 
   constructor(
     public app: express.Application,
     public ctx: AppContext,
-  ) {}
+  ) {
+    this.metricsRegistry = createPrometheusRegistry(ctx)
+  }
 
   static async create(cfg: Config): Promise<LinkService> {
     let app = express()
     app.use(cors())
     app.use(i18n.init)
-
-    app.use(
-      promBundle({
-        autoregister: false,
-        includeMethod: true,
-        includePath: true,
-        includeStatusCode: true,
-        includeUp: true,
-        normalizePath: req => {
-          const route = req.route as {path?: unknown} | undefined
-          return typeof route?.path === 'string' ? route.path : '<unmatched>'
-        },
-        promClient: {
-          collectDefaultMetrics: {},
-        },
-      }),
-    )
 
     const ctx = await AppContext.fromConfig(cfg)
     app = routes(ctx, app)
@@ -65,8 +51,8 @@ export class LinkService {
 
     const metricsApp = express()
     metricsApp.get('/metrics', (_req, res, next) => {
-      res.set('Content-Type', register.contentType)
-      register.metrics().then(metrics => res.end(metrics), next)
+      res.set('Content-Type', this.metricsRegistry.contentType)
+      this.metricsRegistry.metrics().then(metrics => res.end(metrics), next)
     })
     this.metricsServer = metricsApp.listen(this.ctx.cfg.service.metricsPort)
     this.metricsTerminator = createHttpTerminator({
