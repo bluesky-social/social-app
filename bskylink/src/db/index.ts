@@ -106,6 +106,9 @@ export class Database {
     operation: string,
     query: () => Promise<T>,
   ): Promise<T> {
+    const poolIdleConnectionsAtStart = this.cfg.pool.idleCount
+    const poolTotalConnectionsAtStart = this.cfg.pool.totalCount
+    const poolWaitingRequestsAtStart = this.cfg.pool.waitingCount
     const startedAt = performance.now()
     try {
       return await query()
@@ -116,9 +119,12 @@ export class Database {
           {
             durationMs,
             operation,
-            poolIdleConnections: this.cfg.pool.idleCount,
-            poolTotalConnections: this.cfg.pool.totalCount,
-            poolWaitingRequests: this.cfg.pool.waitingCount,
+            poolIdleConnectionsAtEnd: this.cfg.pool.idleCount,
+            poolIdleConnectionsAtStart,
+            poolTotalConnectionsAtEnd: this.cfg.pool.totalCount,
+            poolTotalConnectionsAtStart,
+            poolWaitingRequestsAtEnd: this.cfg.pool.waitingCount,
+            poolWaitingRequestsAtStart,
           },
           'slow database query',
         )
