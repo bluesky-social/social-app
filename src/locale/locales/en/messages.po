@@ -2104,7 +2104,7 @@ msgstr ""
 #: src/components/dialogs/StarterPackDialog.tsx:69
 #: src/components/StarterPack/ProfileStarterPacks.tsx:267
 #: src/components/StarterPack/ProfileStarterPacks.tsx:277
-#: src/view/screens/Profile.tsx:349
+#: src/view/screens/Profile.tsx:351
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr ""
 
@@ -2642,7 +2642,7 @@ msgstr ""
 msgid "Change Handle"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:645
+#: src/screens/Login/LoginForm.tsx:650
 msgid "Change hosting provider"
 msgstr "Change hosting provider"
 
@@ -3641,8 +3641,8 @@ msgstr ""
 msgid "Create a starter pack"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:573
-#: src/view/screens/Profile.tsx:574
+#: src/view/screens/Profile.tsx:575
+#: src/view/screens/Profile.tsx:576
 msgid "Create a Starter Pack"
 msgstr ""
 
@@ -5266,7 +5266,7 @@ msgstr ""
 #: src/screens/Search/SearchResults.tsx:113
 #: src/screens/StarterPack/StarterPackScreen.tsx:193
 #: src/view/screens/Feeds.tsx:504
-#: src/view/screens/Profile.tsx:238
+#: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:712
 #: src/view/shell/Drawer.tsx:592
 msgid "Feeds"
@@ -6194,7 +6194,7 @@ msgstr "Hide group chat updates"
 msgid "Hide lists"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:614
+#: src/screens/Login/LoginForm.tsx:619
 msgid "Hide password"
 msgstr "Hide password"
 
@@ -6330,16 +6330,16 @@ msgstr ""
 #: src/components/dialogs/ServerInput.tsx:138
 #: src/screens/Login/components/HostingProviderDialog.tsx:159
 #: src/screens/Login/ForgotPasswordForm.tsx:84
-#: src/screens/Login/LoginForm.tsx:660
+#: src/screens/Login/LoginForm.tsx:665
 msgid "Hosting provider"
 msgstr ""
 
 #. placeholder {0}: toNiceHostingUrl(state.pdsUrl)
-#: src/screens/Login/LoginForm.tsx:656
+#: src/screens/Login/LoginForm.tsx:661
 msgid "Hosting provider: {0}"
 msgstr "Hosting provider: {0}"
 
-#: src/screens/Login/LoginForm.tsx:658
+#: src/screens/Login/LoginForm.tsx:663
 msgid "Hosting provider: Bluesky"
 msgstr "Hosting provider: Bluesky"
 
@@ -6864,7 +6864,7 @@ msgid "Labeled by the author."
 msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:70
-#: src/view/screens/Profile.tsx:231
+#: src/view/screens/Profile.tsx:233
 msgid "Labels"
 msgstr ""
 
@@ -7163,7 +7163,7 @@ msgstr ""
 #: src/lib/hooks/useNotificationHandler.ts:158
 #: src/screens/Settings/NotificationSettings/index.tsx:159
 #: src/screens/Settings/NotificationSettings/index.tsx:314
-#: src/view/screens/Profile.tsx:237
+#: src/view/screens/Profile.tsx:239
 msgid "Likes"
 msgstr ""
 
@@ -7274,8 +7274,8 @@ msgstr ""
 
 #: src/Navigation.tsx:174
 #: src/view/screens/Lists.tsx:60
-#: src/view/screens/Profile.tsx:232
-#: src/view/screens/Profile.tsx:240
+#: src/view/screens/Profile.tsx:234
+#: src/view/screens/Profile.tsx:242
 #: src/view/shell/desktop/LeftNav.tsx:722
 #: src/view/shell/Drawer.tsx:607
 msgid "Lists"
@@ -7504,7 +7504,7 @@ msgid "Me"
 msgstr "Me"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:375
-#: src/view/screens/Profile.tsx:235
+#: src/view/screens/Profile.tsx:237
 msgid "Media"
 msgstr ""
 
@@ -8033,7 +8033,7 @@ msgstr ""
 #: src/screens/ProfileList/index.tsx:277
 #: src/view/screens/Feeds.tsx:545
 #: src/view/screens/Notifications.tsx:165
-#: src/view/screens/Profile.tsx:604
+#: src/view/screens/Profile.tsx:606
 msgid "New post"
 msgstr ""
 
@@ -8181,7 +8181,7 @@ msgstr "No language filter"
 
 #: src/components/LikedByList.tsx:90
 #: src/view/com/post-thread/PostLikedBy.tsx:90
-#: src/view/screens/Profile.tsx:536
+#: src/view/screens/Profile.tsx:538
 msgid "No likes yet"
 msgstr ""
 
@@ -8203,7 +8203,7 @@ msgstr ""
 msgid "No media filter"
 msgstr "No media filter"
 
-#: src/view/screens/Profile.tsx:482
+#: src/view/screens/Profile.tsx:484
 msgid "No media yet"
 msgstr ""
 
@@ -8258,7 +8258,7 @@ msgid "No posts here"
 msgstr ""
 
 #: src/screens/Profile/Sections/Feed.tsx:84
-#: src/view/screens/Profile.tsx:440
+#: src/view/screens/Profile.tsx:442
 msgid "No posts yet"
 msgstr ""
 
@@ -8271,7 +8271,7 @@ msgstr ""
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "No recent GIFs yet. Pick one to see it here."
 
-#: src/view/screens/Profile.tsx:467
+#: src/view/screens/Profile.tsx:469
 msgid "No replies yet"
 msgstr ""
 
@@ -8321,7 +8321,7 @@ msgstr "No results found for your query with advanced search filters applied."
 msgid "No results."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:568
+#: src/view/screens/Profile.tsx:570
 msgid "No Starter Packs yet"
 msgstr ""
 
@@ -8334,7 +8334,7 @@ msgstr ""
 msgid "No translation received from your device."
 msgstr "No translation received from your device."
 
-#: src/view/screens/Profile.tsx:509
+#: src/view/screens/Profile.tsx:511
 msgid "No video posts yet"
 msgstr ""
 
@@ -8394,7 +8394,7 @@ msgid "Not followed by anyone you’re following"
 msgstr "Not followed by anyone you’re following"
 
 #: src/Navigation.tsx:169
-#: src/view/screens/Profile.tsx:130
+#: src/view/screens/Profile.tsx:132
 msgid "Not Found"
 msgstr ""
 
@@ -8620,7 +8620,7 @@ msgstr "Oops, this profile doesn't exist. Try scanning another one."
 #: src/components/StarterPack/ProfileStarterPacks.tsx:375
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:108
-#: src/view/screens/Profile.tsx:130
+#: src/view/screens/Profile.tsx:132
 msgid "Oops!"
 msgstr ""
 
@@ -8763,7 +8763,7 @@ msgstr ""
 msgid "Opens a dialog to add a content warning to your post"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:646
+#: src/screens/Login/LoginForm.tsx:651
 msgid "Opens a dialog to change the hosting provider you sign in to"
 msgstr "Opens a dialog to change the hosting provider you sign in to"
 
@@ -9378,13 +9378,13 @@ msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "Post {index} of {count}"
 
-#: src/view/screens/Profile.tsx:486
-#: src/view/screens/Profile.tsx:487
+#: src/view/screens/Profile.tsx:488
+#: src/view/screens/Profile.tsx:489
 msgid "Post a photo"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:513
-#: src/view/screens/Profile.tsx:514
+#: src/view/screens/Profile.tsx:515
+#: src/view/screens/Profile.tsx:516
 msgid "Post a video"
 msgstr ""
 
@@ -9483,7 +9483,7 @@ msgstr ""
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:216
 #: src/screens/StarterPack/StarterPackScreen.tsx:194
-#: src/view/screens/Profile.tsx:233
+#: src/view/screens/Profile.tsx:235
 msgid "Posts"
 msgstr ""
 
@@ -10119,7 +10119,7 @@ msgstr "Replied-to message, tap to scroll to it"
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:218
 #: src/screens/Settings/NotificationSettings/index.tsx:181
 #: src/screens/Settings/NotificationSettings/index.tsx:330
-#: src/view/screens/Profile.tsx:234
+#: src/view/screens/Profile.tsx:236
 msgid "Replies"
 msgstr ""
 
@@ -10525,7 +10525,7 @@ msgstr ""
 msgid "Returns to the previous step"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:614
+#: src/screens/Login/LoginForm.tsx:619
 msgid "Reveal password"
 msgstr "Reveal password"
 
@@ -11850,7 +11850,7 @@ msgid "Starter packs"
 msgstr "Starter packs"
 
 #: src/screens/Search/Explore.tsx:657
-#: src/view/screens/Profile.tsx:239
+#: src/view/screens/Profile.tsx:241
 msgid "Starter Packs"
 msgstr ""
 
@@ -11862,7 +11862,7 @@ msgstr ""
 msgid "Starter packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:566
+#: src/view/screens/Profile.tsx:568
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
@@ -12457,7 +12457,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:1011
-#: src/view/com/posts/PostFeed.tsx:828
+#: src/view/com/posts/PostFeed.tsx:830
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -13604,7 +13604,7 @@ msgstr ""
 msgid "Use your account email address, or another real email address you control, in case KWS or Bluesky needs to contact you."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:393
+#: src/view/screens/Profile.tsx:395
 msgid "user"
 msgstr "user"
 
@@ -13863,7 +13863,7 @@ msgstr ""
 msgid "Video: {0}"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:236
+#: src/view/screens/Profile.tsx:238
 msgid "Videos"
 msgstr ""
 
@@ -14437,8 +14437,8 @@ msgstr ""
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:444
-#: src/view/screens/Profile.tsx:445
+#: src/view/screens/Profile.tsx:446
+#: src/view/screens/Profile.tsx:447
 msgid "Write a post"
 msgstr ""
 
