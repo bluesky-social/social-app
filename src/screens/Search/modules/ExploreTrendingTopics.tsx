@@ -11,6 +11,7 @@ import {
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
 import {
+  DEFAULT_FETCH_LIMIT,
   DEFAULT_LIMIT,
   useGetTrendsQuery,
 } from '#/state/queries/trending/useGetTrendsQuery'
@@ -55,7 +56,7 @@ function Inner() {
     isLoading,
     isRefetching,
   } = useGetTrendsQuery({
-    fetchLimit: topicCount + 10,
+    fetchLimit: Math.min(topicCount * 2, DEFAULT_FETCH_LIMIT),
     limit: topicCount,
   })
   const noTopics = !isLoading && !error && !trending?.trends?.length
