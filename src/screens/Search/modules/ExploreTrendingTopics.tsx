@@ -55,7 +55,7 @@ function Inner() {
     isLoading,
     isRefetching,
   } = useGetTrendsQuery({
-    fetchLimit: topicCount,
+    fetchLimit: topicCount + 10,
     limit: topicCount,
   })
   const noTopics = !isLoading && !error && !trending?.trends?.length
