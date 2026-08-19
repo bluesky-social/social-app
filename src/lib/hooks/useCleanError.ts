@@ -1,6 +1,8 @@
 import {useCallback} from 'react'
 import {useLingui} from '@lingui/react/macro'
 
+import {NETWORK_ERRORS} from '#/lib/strings/errors'
+
 type CleanedError = {
   raw: string | undefined
   clean: string | undefined
@@ -81,14 +83,6 @@ export function useCleanError() {
     [l],
   )
 }
-
-const NETWORK_ERRORS = [
-  'Abort',
-  'Network request failed',
-  'Failed to fetch',
-  'Load failed',
-  'Upstream service unreachable',
-]
 
 export function isNetworkError(e: unknown) {
   const str = String(e)
