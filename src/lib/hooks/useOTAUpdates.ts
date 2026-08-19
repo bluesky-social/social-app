@@ -177,12 +177,6 @@ export function useApplyPullRequestOTAUpdate() {
             updateId: fetchedUpdate.manifest.id,
           })
           try {
-            /*
-             * TODO: once expo-linking is upgraded to >= 57, enable this so the
-             * re-delivered initial URL doesn't trigger a redundant silent check
-             * after the reload.
-             */
-            // Linking.clearInitialURL()
             await reloadAsync({
               reloadScreenOptions: splash(t.scheme),
             })
