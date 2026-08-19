@@ -208,7 +208,7 @@ msgid "{0, plural, other {+# more}}"
 msgstr ""
 
 #. placeholder {0}: aaRegionConfig.minAccessAge
-#: src/screens/Signup/StepInfo/index.tsx:314
+#: src/screens/Signup/StepInfo/index.tsx:313
 msgid "{0, plural, other {You must be # years of age or older to create an account in your region.}}"
 msgstr ""
 
@@ -1175,9 +1175,9 @@ msgstr ""
 msgid "Add account"
 msgstr ""
 
-#: src/view/com/composer/GifAltText.tsx:76
-#: src/view/com/composer/GifAltText.tsx:150
-#: src/view/com/composer/GifAltText.tsx:216
+#: src/view/com/composer/GifAltText.tsx:77
+#: src/view/com/composer/GifAltText.tsx:151
+#: src/view/com/composer/GifAltText.tsx:217
 #: src/view/com/composer/photos/Gallery.tsx:201
 #: src/view/com/composer/photos/Gallery.tsx:236
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:95
@@ -1239,7 +1239,7 @@ msgid "Add image"
 msgstr ""
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:531
+#: src/view/com/composer/SelectMediaButton.tsx:534
 msgid "Add media to post"
 msgstr ""
 
@@ -1537,13 +1537,13 @@ msgstr ""
 #: src/components/images/AutoSizedImage.tsx:205
 #: src/components/images/Gallery/index.tsx:596
 #: src/components/images/ImageLayoutGridItem.tsx:135
-#: src/view/com/composer/GifAltText.tsx:100
+#: src/view/com/composer/GifAltText.tsx:101
 #: src/view/com/composer/photos/Gallery.tsx:211
 msgid "ALT"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:55
-#: src/view/com/composer/GifAltText.tsx:160
+#: src/view/com/composer/GifAltText.tsx:161
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:128
 #: src/view/com/composer/videos/SubtitleDialog.tsx:41
 #: src/view/com/composer/videos/SubtitleDialog.tsx:59
@@ -1556,13 +1556,13 @@ msgstr ""
 msgid "Alt Text"
 msgstr ""
 
-#: src/view/com/composer/GifAltText.tsx:105
+#: src/view/com/composer/GifAltText.tsx:106
 #: src/view/com/composer/photos/Gallery.tsx:130
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr ""
 
 #. placeholder {0}: i18n.number(MAX_ALT_TEXT)
-#: src/view/com/composer/GifAltText.tsx:184
+#: src/view/com/composer/GifAltText.tsx:185
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:148
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
 msgstr ""
@@ -1616,8 +1616,8 @@ msgstr ""
 msgid "An error occurred while loading your lists :/"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:81
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:104
+#: src/components/StarterPack/QrCodeDialog.tsx:84
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:107
 msgid "An error occurred while saving the QR code!"
 msgstr ""
 
@@ -2029,7 +2029,7 @@ msgstr ""
 msgid "Available"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:326
+#: src/screens/Onboarding/StepProfile/index.tsx:327
 msgid "Avatar creator"
 msgstr "Avatar creator"
 
@@ -2890,7 +2890,7 @@ msgstr "Choose your hosting provider"
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:271
+#: src/screens/Signup/StepInfo/index.tsx:270
 msgid "Choose your password"
 msgstr ""
 
@@ -3313,7 +3313,7 @@ msgstr ""
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:149
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:152
 #: src/screens/Onboarding/StepInterests/index.tsx:87
-#: src/screens/Onboarding/StepProfile/index.tsx:301
+#: src/screens/Onboarding/StepProfile/index.tsx:302
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:309
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:117
 msgid "Continue"
@@ -3342,7 +3342,7 @@ msgid "Continue to group name"
 msgstr "Continue to group name"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:80
-#: src/screens/Onboarding/StepProfile/index.tsx:298
+#: src/screens/Onboarding/StepProfile/index.tsx:299
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:306
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:114
 #: src/screens/Signup/BackNextButtons.tsx:61
@@ -3403,12 +3403,12 @@ msgstr ""
 msgid "Copies build version to clipboard"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:256
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:259
 msgid "Copies the canonical profile URL to the clipboard"
 msgstr "Copies the canonical profile URL to the clipboard"
 
-#: src/components/StarterPack/QrCodeDialog.tsx:193
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:266
+#: src/components/StarterPack/QrCodeDialog.tsx:196
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:269
 msgid "Copy"
 msgstr ""
 
@@ -3441,7 +3441,7 @@ msgstr ""
 msgid "Copy host"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:255
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:258
 msgid "Copy invite link"
 msgstr "Copy invite link"
 
@@ -3491,7 +3491,7 @@ msgstr ""
 msgid "Copy post text"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:179
+#: src/components/StarterPack/QrCodeDialog.tsx:182
 msgid "Copy QR code"
 msgstr ""
 
@@ -3506,7 +3506,7 @@ msgstr ""
 msgid "Copyright Policy"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:80
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:83
 msgid "Could not capture QR code"
 msgstr "Could not capture QR code"
 
@@ -3518,11 +3518,11 @@ msgstr ""
 msgid "Could not connect to feed service"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:121
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:124
 msgid "Could not copy – please try again"
 msgstr "Could not copy – please try again"
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:75
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:78
 msgid "Could not download – please try again"
 msgstr "Could not download – please try again"
 
@@ -3565,7 +3565,7 @@ msgstr ""
 msgid "Could not load list"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:170
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:173
 msgid "Could not load profile"
 msgstr "Could not load profile"
 
@@ -3582,7 +3582,7 @@ msgstr "Could not remove member."
 msgid "Could not save changes: {0}"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:61
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:64
 msgid "Could not share – please try again"
 msgstr "Could not share – please try again"
 
@@ -3631,7 +3631,7 @@ msgstr ""
 msgid "Create a list from this starter pack"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:164
+#: src/components/StarterPack/QrCodeDialog.tsx:167
 msgid "Create a QR code for a starter pack"
 msgstr ""
 
@@ -3677,7 +3677,7 @@ msgstr ""
 msgid "Create an account without using this starter pack"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:314
+#: src/screens/Onboarding/StepProfile/index.tsx:315
 msgid "Create an avatar instead"
 msgstr ""
 
@@ -3795,7 +3795,7 @@ msgstr ""
 msgid "Dark theme"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:299
+#: src/screens/Signup/StepInfo/index.tsx:298
 msgid "Date of birth"
 msgstr ""
 
@@ -3959,7 +3959,7 @@ msgstr ""
 msgid "Description (1000 characters max)"
 msgstr "Description (1000 characters max)"
 
-#: src/view/com/composer/GifAltText.tsx:156
+#: src/view/com/composer/GifAltText.tsx:157
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:124
 msgid "Descriptive alt text"
 msgstr ""
@@ -4207,13 +4207,13 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:145
 #: src/components/forms/DateField/index.tsx:128
 #: src/components/forms/DateField/index.tsx:145
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:147
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:153
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:150
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:156
 #: src/lib/media/picker.tsx:37
 #: src/screens/Login/components/HostingProviderDialog.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:255
-#: src/screens/Onboarding/StepProfile/index.tsx:353
-#: src/screens/Onboarding/StepProfile/index.tsx:356
+#: src/screens/Onboarding/StepProfile/index.tsx:354
+#: src/screens/Onboarding/StepProfile/index.tsx:357
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:214
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:221
 #: src/view/com/composer/labels/LabelsBtn.tsx:219
@@ -4470,7 +4470,7 @@ msgid "Either the creator of this list has blocked you or you have blocked the c
 msgstr ""
 
 #: src/screens/Settings/AccountSettings.tsx:69
-#: src/screens/Signup/StepInfo/index.tsx:223
+#: src/screens/Signup/StepInfo/index.tsx:222
 msgid "Email"
 msgstr ""
 
@@ -4652,7 +4652,7 @@ msgid "Enter your birthdate"
 msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:100
-#: src/screens/Signup/StepInfo/index.tsx:243
+#: src/screens/Signup/StepInfo/index.tsx:242
 msgid "Enter your email address"
 msgstr ""
 
@@ -4904,7 +4904,7 @@ msgid "Failed to change handle. Please try again."
 msgstr ""
 
 #: src/components/Lightbox/Lightbox.web.tsx:302
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:130
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:133
 #: src/screens/Search/Shell.tsx:513
 msgid "Failed to copy link"
 msgstr "Failed to copy link"
@@ -5811,7 +5811,7 @@ msgstr ""
 msgid "GIF uploaded"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:256
+#: src/screens/Onboarding/StepProfile/index.tsx:257
 msgid "Give your profile a face"
 msgstr ""
 
@@ -6107,7 +6107,7 @@ msgstr ""
 msgid "Have a code? <0>Click here.</0>"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:323
+#: src/screens/Signup/StepInfo/index.tsx:322
 msgid "Have we got your location wrong? <0>Tap here to update your location with GPS.</0>"
 msgstr "Have we got your location wrong? <0>Tap here to update your location with GPS.</0>"
 
@@ -6127,7 +6127,7 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:259
+#: src/screens/Onboarding/StepProfile/index.tsx:260
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr ""
 
@@ -6395,7 +6395,7 @@ msgstr ""
 msgid "If you are 18 years of age or older and want to try again, click the button below and use a different verification method if one is available in your region. If you have questions or concerns, <0>our support team can help.</0>"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:340
+#: src/screens/Signup/StepInfo/index.tsx:339
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr ""
 
@@ -6698,7 +6698,7 @@ msgstr ""
 msgid "Invite {name} to join Bluesky"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:193
+#: src/screens/Signup/StepInfo/index.tsx:192
 msgid "Invite code"
 msgstr ""
 
@@ -6730,12 +6730,12 @@ msgid "Invite link"
 msgstr "Invite link"
 
 #. Link that invites someone to follow your profile, distinct from a group chat invite link
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:214
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:217
 msgctxt "profile invite"
 msgid "Invite link"
 msgstr "Invite link"
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:127
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:130
 msgid "Invite link copied"
 msgstr "Invite link copied"
 
@@ -6781,7 +6781,7 @@ msgstr ""
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:373
+#: src/screens/Signup/StepInfo/index.tsx:372
 msgid "It's correct"
 msgstr ""
 
@@ -6826,7 +6826,7 @@ msgstr "Join group chat"
 msgid "Join request rescinded."
 msgstr "Join request rescinded."
 
-#: src/components/StarterPack/QrCode.tsx:67
+#: src/components/StarterPack/QrCode.tsx:64
 #: src/view/shell/NavSignupCard.tsx:41
 msgid "Join the conversation"
 msgstr ""
@@ -8500,7 +8500,7 @@ msgstr ""
 msgid "On"
 msgstr "On"
 
-#: src/components/StarterPack/QrCode.tsx:81
+#: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"
 msgstr ""
 
@@ -8526,11 +8526,11 @@ msgstr ""
 msgid "One or more images is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:435
+#: src/view/com/composer/SelectMediaButton.tsx:438
 msgid "One or more of your selected files are not supported."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:458
+#: src/view/com/composer/SelectMediaButton.tsx:461
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 
@@ -8628,7 +8628,7 @@ msgstr ""
 msgid "Open advanced search options"
 msgstr "Open advanced search options"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:308
+#: src/screens/Onboarding/StepProfile/index.tsx:309
 msgid "Open avatar creator"
 msgstr ""
 
@@ -8804,7 +8804,7 @@ msgid "Opens device camera"
 msgstr ""
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post.
-#: src/view/com/composer/SelectMediaButton.tsx:537
+#: src/view/com/composer/SelectMediaButton.tsx:540
 msgid "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other {# images}}, or a single video or GIF."
 
@@ -8980,7 +8980,7 @@ msgstr "Party GIFs"
 #: src/screens/Settings/AccountSettings.tsx:124
 #: src/screens/Settings/AccountSettings.tsx:128
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:290
-#: src/screens/Signup/StepInfo/index.tsx:258
+#: src/screens/Signup/StepInfo/index.tsx:257
 msgid "Password"
 msgstr ""
 
@@ -9202,7 +9202,7 @@ msgid "Please choose your handle."
 msgstr ""
 
 #: src/screens/Signup/state.ts:299
-#: src/screens/Signup/StepInfo/index.tsx:149
+#: src/screens/Signup/StepInfo/index.tsx:148
 msgid "Please choose your password."
 msgstr ""
 
@@ -9219,7 +9219,7 @@ msgid "Please confirm your email address to upload videos."
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:104
-#: src/screens/Signup/StepInfo/index.tsx:139
+#: src/screens/Signup/StepInfo/index.tsx:138
 msgid "Please double-check that you have entered your email address correctly."
 msgstr ""
 
@@ -9268,11 +9268,11 @@ msgid "Please enter the security code we sent to your previous email address."
 msgstr ""
 
 #: src/screens/Signup/state.ts:283
-#: src/screens/Signup/StepInfo/index.tsx:122
+#: src/screens/Signup/StepInfo/index.tsx:121
 msgid "Please enter your email."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:115
+#: src/screens/Signup/StepInfo/index.tsx:114
 msgid "Please enter your invite code."
 msgstr ""
 
@@ -9663,16 +9663,16 @@ msgstr "Push, everyone"
 msgid "Push, people you follow"
 msgstr "Push, people you follow"
 
-#: src/components/StarterPack/QrCodeDialog.tsx:138
+#: src/components/StarterPack/QrCodeDialog.tsx:141
 msgid "QR code copied to your clipboard!"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:116
+#: src/components/StarterPack/QrCodeDialog.tsx:119
 msgid "QR code has been downloaded!"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:117
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:101
+#: src/components/StarterPack/QrCodeDialog.tsx:120
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:104
 msgid "QR code saved to your camera roll!"
 msgstr ""
 
@@ -10381,7 +10381,7 @@ msgstr ""
 msgid "Require an email code to sign in to your account."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:207
+#: src/screens/Signup/StepInfo/index.tsx:206
 msgid "Required for this provider"
 msgstr ""
 
@@ -10539,7 +10539,7 @@ msgstr "Sad GIFs"
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:332
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:665
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:670
-#: src/components/StarterPack/QrCodeDialog.tsx:205
+#: src/components/StarterPack/QrCodeDialog.tsx:208
 #: src/features/liveNow/components/EditLiveDialog.tsx:199
 #: src/features/liveNow/components/EditLiveDialog.tsx:206
 #: src/screens/Messages/ConversationSettings/prompts.tsx:82
@@ -10548,8 +10548,8 @@ msgstr "Sad GIFs"
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:315
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:269
-#: src/view/com/composer/GifAltText.tsx:198
-#: src/view/com/composer/GifAltText.tsx:207
+#: src/view/com/composer/GifAltText.tsx:199
+#: src/view/com/composer/GifAltText.tsx:208
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:63
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:76
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:162
@@ -10599,7 +10599,7 @@ msgstr ""
 msgid "Save new handle"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:197
+#: src/components/StarterPack/QrCodeDialog.tsx:200
 msgid "Save QR code"
 msgstr ""
 
@@ -11023,7 +11023,7 @@ msgstr ""
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:300
+#: src/screens/Signup/StepInfo/index.tsx:299
 msgid "Select your date of birth"
 msgstr ""
 
@@ -11040,7 +11040,7 @@ msgstr ""
 msgid "Select your preferred notification channels"
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:438
+#: src/view/com/composer/SelectMediaButton.tsx:441
 msgid "Selecting multiple media types is not supported."
 msgstr ""
 
@@ -11233,7 +11233,7 @@ msgstr ""
 #: src/components/Link.tsx:428
 #: src/components/MediaPreview.tsx:243
 #: src/components/Post/Embed/ImageContextMenu.tsx:74
-#: src/components/StarterPack/QrCodeDialog.tsx:193
+#: src/components/StarterPack/QrCodeDialog.tsx:196
 #: src/screens/Hashtag.tsx:132
 #: src/screens/Messages/components/InviteLinkDialog.tsx:412
 #: src/screens/Messages/components/InviteLinkDialog.tsx:423
@@ -11294,8 +11294,8 @@ msgstr "Share my profile"
 msgid "Share post at:// URI"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:141
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:156
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:144
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:159
 msgid "Share Profile"
 msgstr "Share Profile"
 
@@ -12099,7 +12099,7 @@ msgid "Tap for more information"
 msgstr ""
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:213
-#: src/screens/Signup/StepInfo/index.tsx:326
+#: src/screens/Signup/StepInfo/index.tsx:325
 msgid "Tap here to update your location with GPS."
 msgstr "Tap here to update your location with GPS."
 
@@ -12733,7 +12733,7 @@ msgstr "This group is locked by a moderation action on the owner"
 msgid "This handle is reserved. Please try a different one."
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:140
+#: src/screens/Onboarding/StepProfile/index.tsx:141
 msgid "This image could not be used. Try a different format like .jpg or .png."
 msgstr "This image could not be used. Try a different format like .jpg or .png."
 
@@ -13130,7 +13130,7 @@ msgctxt "action"
 msgid "Try again"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:171
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:174
 msgid "Try again in a moment."
 msgstr "Try again in a moment."
 
@@ -13524,7 +13524,7 @@ msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:312
+#: src/screens/Onboarding/StepProfile/index.tsx:313
 msgid "Upload a photo instead"
 msgstr ""
 
@@ -13869,13 +13869,13 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:463
 #: src/view/com/composer/Composer.tsx:608
-#: src/view/com/composer/SelectMediaButton.tsx:452
+#: src/view/com/composer/SelectMediaButton.tsx:455
 msgid "Videos must be 10 minutes or less."
 msgstr "Videos must be 10 minutes or less."
 
 #: src/view/com/composer/Composer.tsx:464
 #: src/view/com/composer/Composer.tsx:609
-#: src/view/com/composer/SelectMediaButton.tsx:453
+#: src/view/com/composer/SelectMediaButton.tsx:456
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
@@ -14637,11 +14637,11 @@ msgstr ""
 msgid "You can only save drafts up to 1000 characters. Would you like to discard this post before viewing your drafts?"
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:455
+#: src/view/com/composer/SelectMediaButton.tsx:458
 msgid "You can only select one GIF at a time."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:449
+#: src/view/com/composer/SelectMediaButton.tsx:452
 msgid "You can only select one video at a time."
 msgstr ""
 
@@ -14654,7 +14654,7 @@ msgid "You can read chat history but can’t send new messages."
 msgstr "You can read chat history but can’t send new messages."
 
 #. Error message for maximum number of images that can be selected to add to a post.
-#: src/view/com/composer/SelectMediaButton.tsx:441
+#: src/view/com/composer/SelectMediaButton.tsx:444
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 
@@ -14848,12 +14848,12 @@ msgstr ""
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:69
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:89
+#: src/components/StarterPack/QrCodeDialog.tsx:72
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:92
 msgid "You must grant access to your photo library to save a QR code"
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:491
+#: src/view/com/composer/SelectMediaButton.tsx:494
 msgid "You need to allow access to your media library."
 msgstr ""
 
@@ -15081,7 +15081,7 @@ msgstr ""
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:287
+#: src/screens/Signup/StepInfo/index.tsx:286
 msgid "Your birth date"
 msgstr ""
 
@@ -15123,7 +15123,7 @@ msgstr ""
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:84
 #: src/screens/Signup/state.ts:291
-#: src/screens/Signup/StepInfo/index.tsx:129
+#: src/screens/Signup/StepInfo/index.tsx:128
 msgid "Your email appears to be invalid."
 msgstr ""
 
@@ -15177,7 +15177,7 @@ msgstr ""
 msgid "Your interests help us find what you like!"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:356
+#: src/screens/Signup/StepInfo/index.tsx:355
 msgid "Your location has been updated."
 msgstr ""
 
@@ -15193,7 +15193,7 @@ msgstr "Your name, avatar, the name of the group chat, and the number of members
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:156
+#: src/screens/Signup/StepInfo/index.tsx:155
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
