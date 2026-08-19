@@ -115,7 +115,9 @@ function ProfileScreenInner({route}: Props) {
   }, [queryClient, profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isDidPending || isProfilePending) {
+  // A disabled dependent query remains pending, so only consider the profile
+  // pending once handle resolution has produced a DID.
+  if (isDidPending || (!!resolvedDid && isProfilePending)) {
     return (
       <Layout.Content>
         <ProfileHeaderLoading />
