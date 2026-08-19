@@ -98,13 +98,15 @@ export class SafelinkClient {
     url: string,
     pattern: ToolsOzoneSafelinkDefs.PatternType,
   ): Promise<SafelinkRule> {
-    return db.db
-      .selectFrom('safelink_rule')
-      .selectAll()
-      .where('url', '=', url)
-      .where('pattern', '=', pattern)
-      .orderBy('createdAt', 'desc')
-      .executeTakeFirstOrThrow()
+    return db.observeQuery(`resolve_safelink_${pattern}_rule`, () =>
+      db.db
+        .selectFrom('safelink_rule')
+        .selectAll()
+        .where('url', '=', url)
+        .where('pattern', '=', pattern)
+        .orderBy('createdAt', 'desc')
+        .executeTakeFirstOrThrow(),
+    )
   }
 
   private async addRule(db: Database, rule: SafelinkRule) {
