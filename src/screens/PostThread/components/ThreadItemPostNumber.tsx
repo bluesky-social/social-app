@@ -65,6 +65,7 @@ export function ThreadItemPostNumber({
         inline
           ? platform({
               android: {transform: [{translateY: POST_NUMBER_INLINE_OFFSET}]},
+              ios: {transform: [{translateY: a.py_2xs.paddingBottom}]},
               web: {
                 top: -2,
                 marginBottom: -2,
