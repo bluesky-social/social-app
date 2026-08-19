@@ -16,12 +16,12 @@ import {
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
 import {openUnifiedPicker} from '#/lib/media/picker'
-import {extractDataUriMime} from '#/lib/media/util'
+import {blobToDataUri, extractDataUriMime} from '#/lib/media/util'
 import {MAX_GALLERY_IMAGES} from '#/view/com/composer/state/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
+import {Image_Stroke2_Corner2_Rounded as ImageIcon} from '#/components/icons/Image'
 import * as toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
@@ -331,18 +331,21 @@ async function processImagePickerAssets(
     /*
      * All validations passed, we have an asset!
      */
+    let uri = asset.uri
+    if (IS_WEB && type === 'image' && asset.file) {
+      uri = await blobToDataUri(asset.file)
+    }
+
     supportedAssets.push({
       mimeType,
       ...asset,
       /*
        * In `expo-image-picker` >= v17, `uri` is now a `blob:` URL, not a
        * data-uri. Our handling elsewhere in the app (for web) relies on the
-       * base64 data-uri, so we construct it here for web only.
+       * data-uri, so read images only after their type has been validated.
+       * Videos retain their File/blob URL and avoid an expensive base64 read.
        */
-      uri:
-        IS_WEB && asset.base64
-          ? `data:${mimeType};base64,${asset.base64}`
-          : asset.uri,
+      uri,
     })
   }
 

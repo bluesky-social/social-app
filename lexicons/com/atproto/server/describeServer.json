@@ -1,0 +1,73 @@
+{
+  "id": "com.atproto.server.describeServer",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "did",
+            "availableUserDomains"
+          ],
+          "properties": {
+            "did": {
+              "type": "string",
+              "format": "did"
+            },
+            "links": {
+              "ref": "#links",
+              "type": "ref",
+              "description": "URLs of service policy documents."
+            },
+            "contact": {
+              "ref": "#contact",
+              "type": "ref",
+              "description": "Contact information"
+            },
+            "inviteCodeRequired": {
+              "type": "boolean",
+              "description": "If true, an invite code must be supplied to create an account on this instance."
+            },
+            "availableUserDomains": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of domain suffixes that can be used in account handles."
+            },
+            "phoneVerificationRequired": {
+              "type": "boolean",
+              "description": "If true, a phone verification token must be supplied to create an account on this instance."
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Describes the server's account creation requirements and capabilities. Implemented by PDS."
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "privacyPolicy": {
+          "type": "string",
+          "format": "uri"
+        },
+        "termsOfService": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

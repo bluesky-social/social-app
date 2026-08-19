@@ -3,13 +3,11 @@
  * a free-text query. Kept free of React Native imports so it can be unit
  * tested in isolation (the search-posts query hook re-exports these).
  */
-
-import {type AppBskyFeedSearchPostsV2} from '@atproto/api'
-
 import {
   filtersToApiParams,
   type SearchFilters,
 } from '#/screens/Search/searchParams'
+import {type app} from '#/lexicons'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}/
 
@@ -201,12 +199,32 @@ function mergeList(a?: string[], b?: string[]): string[] | undefined {
  * operator. v2 renames v1's singular operators to plural arrays, and `lang` to
  * `language`.
  */
+/**
+ * The filter subset of the `searchPostsV2` params, with the format-constrained
+ * strings (uri, at-identifier, language, datetime) left unbranded: every value
+ * here is parsed from user input, so the brand is asserted by the caller rather
+ * than re-validated here. `q`, `limit`, `cursor` and `sort` are the caller's.
+ */
+type SearchPostsV2FilterParams = {
+  [
+    K in Exclude<
+      keyof app.bsky.feed.searchPostsV2.$Params,
+      'query' | 'limit' | 'cursor' | 'sort'
+    >
+  ]?: app.bsky.feed.searchPostsV2.$Params[K] extends
+    readonly (infer _E)[] | undefined
+    ? string[]
+    : app.bsky.feed.searchPostsV2.$Params[K] extends string | undefined
+      ? string
+      : app.bsky.feed.searchPostsV2.$Params[K]
+}
+
 export function buildSearchPostsV2Filters(
   embedded: Omit<ExtractedSearchParams, 'q'>,
   filters?: SearchFilters,
-): AppBskyFeedSearchPostsV2.QueryParams {
+): SearchPostsV2FilterParams {
   const apiFilters = filters ? filtersToApiParams(filters) : {}
-  const params: AppBskyFeedSearchPostsV2.QueryParams = {}
+  const params: SearchPostsV2FilterParams = {}
 
   const authors = mergeList(
     embedded.author ? [embedded.author] : undefined,
@@ -269,7 +287,7 @@ export function buildSearchPostsV2Filters(
 }
 
 /**
- * Consistent with timestamp parsing in @atproto/api. Only the date is used; the
+ * Only the date is used; the
  * time is appended here since the lexicon expects a datetime value.
  */
 const parseTimestamp = (value: string | undefined): string | undefined => {

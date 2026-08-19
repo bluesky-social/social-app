@@ -25,7 +25,6 @@ import {Circle as ProgressCircle} from 'react-native-progress'
 import Animated, {
   type AnimatedRef,
   type AnimatedStyle,
-  Easing,
   FadeIn,
   FadeOut,
   interpolateColor,
@@ -37,7 +36,6 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  withRepeat,
   withTiming,
   ZoomIn,
   ZoomOut,
@@ -46,15 +44,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnUI} from 'react-native-worklets'
 import * as FileSystem from 'expo-file-system'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {
-  AppBskyDraftCreateDraft,
-  AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
-  type AtpAgent,
-  AtUri,
-  ChatBskyGroupDefs,
-  type RichText,
-} from '@atproto/api'
+import {type Client, type UriString} from '@atproto/lex'
+import {AtUri, type AtUriString} from '@atproto/syntax'
+import {type RichText} from '@bsky/sdk/richtext'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -80,6 +72,7 @@ import {useCallOnce} from '#/lib/once'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
@@ -98,7 +91,12 @@ import {
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {resolveLinkQueryOptions} from '#/state/queries/resolve-link'
-import {useAgent, useSession} from '#/state/session'
+import {
+  useAppviewClient,
+  useChatClient,
+  usePdsClient,
+  useSession,
+} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
@@ -127,6 +125,7 @@ import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as EmojiPicker from '#/components/EmojiPicker'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
@@ -145,6 +144,8 @@ import {
   IS_WEB_SAFARI,
 } from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
+import {app, chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   draftToComposerPosts,
@@ -180,6 +181,7 @@ import {
   processVideo,
   type VideoState,
 } from './state/video'
+import {videoProgressWithinPhase} from './state/videoProgress'
 import {type TextInputRef} from './text-input/TextInput.types'
 import {getVideoMetadata} from './videos/metadata'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
@@ -274,9 +276,17 @@ export const ComposePost = ({
   const videoMaxDurationMs = allow10MinuteVideos
     ? VIDEO_10_MINUTE_MAX_DURATION_MS
     : VIDEO_MAX_DURATION_MS
-  const agent = useAgent()
+  const client = useAppviewClient()
+  const chatClient = useChatClient()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
+  /*
+   * The host the video service-auth token is minted for. This is the same value
+   * that seeds the session's PDS routing, so the audience always matches the host
+   * the upload actually reaches; a mismatch would 401 the upload.
+   */
+  const currentDispatchUrl = currentAccount!.pdsUrl ?? currentAccount!.service
   const {closeComposer} = useComposerControls()
   const {t: l, i18n} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -471,7 +481,8 @@ export const ComposePost = ({
             },
           })
         },
-        agent,
+        pdsClient,
+        currentDispatchUrl,
         currentDid,
         abortController.signal,
         i18n,
@@ -481,7 +492,8 @@ export const ComposePost = ({
     [
       l,
       i18n,
-      agent,
+      pdsClient,
+      currentDispatchUrl,
       currentDid,
       composerDispatch,
       ax.metric,
@@ -653,7 +665,8 @@ export const ComposePost = ({
               },
             })
           },
-          agent,
+          pdsClient,
+          currentDispatchUrl,
           currentDid,
           abortController.signal,
           i18n,
@@ -669,7 +682,8 @@ export const ComposePost = ({
     [
       l,
       i18n,
-      agent,
+      pdsClient,
+      currentDispatchUrl,
       currentDid,
       composerDispatch,
       ax.metric,
@@ -753,7 +767,9 @@ export const ComposePost = ({
 
   const getDraftSaveError = useCallback(
     (e: unknown): string => {
-      if (e instanceof AppBskyDraftCreateDraft.DraftLimitReachedError) {
+      if (
+        matchXrpcError(e, app.bsky.draft.createDraft) === 'DraftLimitReached'
+      ) {
         return l`You've reached the maximum number of drafts`
       }
       return l`Failed to save draft`
@@ -985,14 +1001,14 @@ export const ComposePost = ({
     .map(post => post.embed.link!.uri)
   const linkQueries = useQueries({
     queries: linkUris.map(uri => ({
-      ...resolveLinkQueryOptions(agent, uri),
+      ...resolveLinkQueryOptions({appviewClient: client, chatClient}, uri),
       enabled: false,
     })),
   })
   const hasUnavailableChatInvite = linkQueries.some(
     q =>
       q.data?.type === 'chat-invite' &&
-      !ChatBskyGroupDefs.isJoinLinkPreviewView(q.data.view),
+      !bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, q.data.view),
   )
 
   const canPost =
@@ -1076,11 +1092,14 @@ export const ComposePost = ({
     try {
       logger.info(`composer: posting...`)
       postUri = (
-        await apilib.post(agent, queryClient, {
+        await apilib.post(queryClient, {
           thread: filteredThread,
           replyTo: replyTo?.uri,
           onStateChange: setPublishingStage,
           langs: currentLanguages,
+          appviewClient: client,
+          chatClient,
+          pdsClient,
         })
       ).uris[0]
 
@@ -1105,23 +1124,26 @@ export const ComposePost = ({
             5,
             _e => true,
             async () => {
-              const res = await agent.app.bsky.unspecced.getPostThreadV2({
-                anchor: postUri!,
-                above: false,
-                below: filteredThread.posts.length - 1,
-                branchingFactor: 1,
-              })
-              if (res.data.thread.length !== filteredThread.posts.length) {
+              const res = await client.call(
+                app.bsky.unspecced.getPostThreadV2,
+                {
+                  anchor: postUri! as AtUriString,
+                  above: false,
+                  below: filteredThread.posts.length - 1,
+                  branchingFactor: 1,
+                },
+              )
+              if (res.thread.length !== filteredThread.posts.length) {
                 throw new Error(`composer: app view is not ready`)
               }
               if (
-                !res.data.thread.every(p =>
-                  AppBskyUnspeccedDefs.isThreadItemPost(p.value),
+                !res.thread.every(p =>
+                  bsky.isType(app.bsky.unspecced.defs.threadItemPost, p.value),
                 )
               ) {
                 throw new Error(`composer: app view returned non-post items`)
               }
-              return res.data.thread
+              return res.thread
             },
             1e3,
           )
@@ -1188,7 +1210,7 @@ export const ComposePost = ({
           const resolved = q.data
           if (
             resolved?.type === 'chat-invite' &&
-            ChatBskyGroupDefs.isJoinLinkPreviewView(resolved.view)
+            bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, resolved.view)
           ) {
             ax.metric('groupchat:inviteLink:shared', {
               convoId: resolved.view.convoId,
@@ -1224,10 +1246,10 @@ export const ComposePost = ({
     setLangPrefs.savePostLanguageToHistory()
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-      void whenAppViewReady(agent, initQuote.uri, res => {
-        const anchor = res.data.thread.at(0)
+      void whenAppViewReady(client, initQuote.uri, res => {
+        const anchor = res.thread.at(0)
         if (
-          AppBskyUnspeccedDefs.isThreadItemPost(anchor?.value) &&
+          bsky.isType(app.bsky.unspecced.defs.threadItemPost, anchor?.value) &&
           anchor.value.post.quoteCount !== initQuote.quoteCount
         ) {
           onPost?.(postUri)
@@ -1271,7 +1293,9 @@ export const ComposePost = ({
   }, [
     l,
     ax,
-    agent,
+    client,
+    chatClient,
+    pdsClient,
     canPost,
     isPublishing,
     currentLanguages,
@@ -1655,7 +1679,7 @@ let ComposerPost = memo(function ComposerPost({
 
   const onNewLink = useCallback(
     (uri: string) => {
-      dispatchPost({type: 'embed_add_uri', uri})
+      dispatchPost({type: 'embed_add_uri', uri: uri as UriString})
     },
     [dispatchPost],
   )
@@ -1996,7 +2020,10 @@ function ComposerEmbeds({
               (video.status === 'compressing' ? (
                 <VideoTranscodeProgress
                   asset={video.asset}
-                  progress={video.progress}
+                  progress={videoProgressWithinPhase(
+                    'compressing',
+                    video.progress,
+                  )}
                   clear={clearVideo}
                 />
               ) : video.video ? (
@@ -2483,17 +2510,17 @@ function useKeyboardVerticalOffset() {
 }
 
 async function whenAppViewReady(
-  agent: AtpAgent,
+  client: Client,
   uri: string,
-  fn: (res: AppBskyUnspeccedGetPostThreadV2.Response) => boolean,
+  fn: (res: app.bsky.unspecced.getPostThreadV2.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
     () =>
-      agent.app.bsky.unspecced.getPostThreadV2({
-        anchor: uri,
+      client.call(app.bsky.unspecced.getPostThreadV2, {
+        anchor: uri as AtUriString,
         above: false,
         below: 0,
         branchingFactor: 0,
@@ -2672,28 +2699,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
   const t = useTheme()
   const {t: l} = useLingui()
   const progress = state.progress
-  const shouldRotate =
-    state.status === 'processing' && (progress === 0 || progress === 1)
-  let wheelProgress = shouldRotate ? 0.33 : progress
-
-  const rotate = useDerivedValue(() => {
-    if (shouldRotate) {
-      return withRepeat(
-        withTiming(360, {
-          duration: 2500,
-          easing: Easing.out(Easing.cubic),
-        }),
-        -1,
-      )
-    }
-    return 0
-  })
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{rotateZ: `${rotate.get()}deg`}],
-    }
-  })
+  let wheelProgress = progress
 
   let text = ''
 
@@ -2723,7 +2729,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
       break
     case 'error':
       text = l`Error`
-      wheelProgress = 100
+      wheelProgress = 1
       break
     case 'done':
       if (isGif) {
@@ -2736,7 +2742,13 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
 
   return (
     <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
-      <Animated.View style={[animatedStyle]}>
+      {state.status === 'done' ? (
+        <Animated.View
+          entering={ZoomIn.duration(300)}
+          style={[a.align_center, a.justify_center, {height: 30, width: 30}]}>
+          <CircleCheckIcon size="lg" fill={t.palette.primary_500} />
+        </Animated.View>
+      ) : (
         <ProgressCircle
           size={30}
           borderWidth={1}
@@ -2748,7 +2760,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
           }
           progress={wheelProgress}
         />
-      </Animated.View>
+      )}
       <Text style={[a.font_semi_bold, a.ml_sm]}>{text}</Text>
     </ToolbarWrapper>
   )

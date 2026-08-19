@@ -46,7 +46,7 @@ function patchSourceMapFilter(rules, pathPattern) {
 
 module.exports = async function (env, argv) {
   env.babel = {
-    dangerouslyAddModulePathsToTranspile: ['@bsky.app/expo', '@atproto/api'],
+    dangerouslyAddModulePathsToTranspile: ['@bsky.app/expo'],
   }
   let config = await createExpoWebpackConfigAsync(env, argv)
   /*
@@ -145,6 +145,8 @@ module.exports = async function (env, argv) {
         statsFilename: '../stats.json',
         analyzerMode: OPEN_ANALYZER ? 'server' : 'json',
         defaultSizes: 'parsed',
+        // reasons balloon stats.json past Node's max string length, breaking bundle-size-diff in CI
+        statsOptions: OPEN_ANALYZER ? null : {reasons: false},
       }),
     )
   }

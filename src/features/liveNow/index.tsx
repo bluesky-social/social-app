@@ -1,14 +1,8 @@
 import {useMemo} from 'react'
-import {
-  type $Typed,
-  type AppBskyActorDefs,
-  type AppBskyActorStatus,
-  AppBskyEmbedExternal,
-  AtUri,
-  ComAtprotoRepoPutRecord,
-  moderateStatus,
-} from '@atproto/api'
 import {retry} from '@atproto/common-web'
+import {type $Typed, type l, type UriString} from '@atproto/lex'
+import {AtUri, toDatetimeString} from '@atproto/syntax'
+import {moderateStatus} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
@@ -17,19 +11,21 @@ import {isAfter, parseISO} from 'date-fns'
 import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {useAppConfig} from '#/state/appConfig'
 import {
   updateProfileShadow,
   useMaybeProfileShadow,
 } from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useAgent, useSession} from '#/state/session'
+import {usePdsClient, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
 import {useDialogContext} from '#/components/Dialog'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {getLiveNowHost, getLiveServiceNames} from '#/features/liveNow/utils'
-import type * as bsky from '#/types/bsky'
+import {app, com} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export * from '#/features/liveNow/utils'
 
@@ -47,7 +43,7 @@ const DEFAULT_STATE = {
   isDisabled: false,
   isActive: false,
   record: {},
-} satisfies AppBskyActorDefs.StatusView
+} satisfies app.bsky.actor.defs.StatusView
 
 export type LiveNowConfig = {
   canGoLive: boolean
@@ -97,7 +93,13 @@ export function useLiveNowConfig(): LiveNowConfig {
 
 export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
   const shadowed = useMaybeProfileShadow(actor)
-  const tick = useTickEveryMinute()
+  /*
+   * The minute tick only exists to re-validate an existing status's expiry,
+   * so actors without a status record skip the subscription entirely. This
+   * keeps the every-minute tick from re-rendering every post in a feed.
+   */
+  const hasStatus = !!(shadowed && 'status' in shadowed && shadowed.status)
+  const tick = useTickEveryMinute(hasStatus)
   const config = useLiveNowConfig()
   const moderationOpts = useModerationOpts()
 
@@ -128,10 +130,10 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
           isDisabled: false,
           isActive: true,
           status: 'app.bsky.actor.status#live',
-          embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
+          embed: shadowed.status.embed as $Typed<app.bsky.embed.external.View>, // temp_isStatusValid asserts this
           expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
           record: shadowed.status.record,
-        } satisfies AppBskyActorDefs.StatusView
+        } satisfies app.bsky.actor.defs.StatusView
       }
       return {
         uri: shadowed.status.uri,
@@ -139,10 +141,10 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
         isDisabled,
         isActive: false,
         status: 'app.bsky.actor.status#live',
-        embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
+        embed: shadowed.status.embed as $Typed<app.bsky.embed.external.View>, // temp_isStatusValid asserts this
         expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
         record: shadowed.status.record,
-      } satisfies AppBskyActorDefs.StatusView
+      } satisfies app.bsky.actor.defs.StatusView
     } else {
       return DEFAULT_STATE
     }
@@ -162,14 +164,14 @@ export function isStatusStillActive(timeStr: string | undefined) {
  * validate if the status is valid for the acting user e.g. as they go live.
  */
 export function isStatusValidForViewers(
-  status: AppBskyActorDefs.StatusView,
+  status: app.bsky.actor.defs.StatusView,
   config: LiveNowConfig,
 ) {
   if (status.status !== 'app.bsky.actor.status#live') return false
   if (!status.uri) return false // should not happen, just backwards compat
   try {
     const {host: liveDid} = new AtUri(status.uri)
-    if (AppBskyEmbedExternal.isView(status.embed)) {
+    if (bsky.isType(app.bsky.embed.external.view, status.embed)) {
       const host = getLiveNowHost(status.embed.external.uri)
       const exception = config.allowedHostsExceptionsByDid.get(liveDid)
       const isValidException = exception ? exception.has(host) : false
@@ -187,7 +189,6 @@ export function useLiveLinkMetaQuery(url: string | null) {
   const liveNowConfig = useLiveNowConfig()
   const {_} = useLingui()
 
-  const agent = useAgent()
   return useQuery({
     enabled: !!url,
     queryKey: ['link-meta', url],
@@ -205,7 +206,7 @@ export function useLiveLinkMetaQuery(url: string | null) {
         )
       }
 
-      return await getLinkMeta(agent, url)
+      return await getLinkMeta(url)
     },
   })
 }
@@ -217,7 +218,7 @@ export function useUpsertLiveStatusMutation(
 ) {
   const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const control = useDialogContext()
   const {_} = useLingui()
@@ -226,21 +227,21 @@ export function useUpsertLiveStatusMutation(
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not logged in')
 
-      let embed: $Typed<AppBskyEmbedExternal.Main> | undefined
+      let embed: $Typed<app.bsky.embed.external.Main> | undefined
 
       if (linkMeta) {
-        let thumb
+        let thumb: l.BlobRef | undefined
 
         if (linkMeta.image) {
           try {
             const img = await imageToThumb(linkMeta.image)
             if (img) {
               const blob = await uploadBlob(
-                agent,
+                pdsClient,
                 img.source.path,
                 img.source.mime,
               )
-              thumb = blob.data.blob
+              thumb = blob.blob
             }
           } catch (e: any) {
             ax.logger.error(`Failed to upload thumbnail for live status`, {
@@ -257,7 +258,8 @@ export function useUpsertLiveStatusMutation(
             $type: 'app.bsky.embed.external#external',
             title: linkMeta.title ?? '',
             description: linkMeta.description ?? '',
-            uri: linkMeta.url,
+            // `getLinkMeta` returns a plain url string
+            uri: linkMeta.url as l.UriString,
             thumb,
           },
         }
@@ -265,32 +267,40 @@ export function useUpsertLiveStatusMutation(
 
       const record = {
         $type: 'app.bsky.actor.status',
-        createdAt: createdAt ?? new Date().toISOString(),
+        createdAt: toDatetimeString(
+          createdAt ? new Date(createdAt) : new Date(),
+        ),
         status: 'app.bsky.actor.status#live',
         durationMinutes: duration,
         embed,
-      } satisfies AppBskyActorStatus.Record
+      } satisfies app.bsky.actor.status.Main
 
       const upsert = async () => {
         const repo = currentAccount.did
         const collection = 'app.bsky.actor.status'
 
-        const existing = await agent.com.atproto.repo
-          .getRecord({repo, collection, rkey: 'self'})
+        const existing = await pdsClient
+          .call(com.atproto.repo.getRecord, {repo, collection, rkey: 'self'})
           .catch(_e => undefined)
 
-        await agent.com.atproto.repo.putRecord({
+        /*
+         * Stays on the raw `putRecord`, not `pdsClient.put`: the lexicon lets
+         * `swapRecord` be null (meaning "must not already exist"), while the
+         * record-helper option type is `string | undefined`.
+         */
+        await pdsClient.call(com.atproto.repo.putRecord, {
           repo,
           collection,
           rkey: 'self',
           record,
-          swapRecord: existing?.data.cid || null,
+          swapRecord: existing?.cid || null,
         })
       }
 
       await retry(upsert, {
         maxRetries: 5,
-        retryable: e => e instanceof ComAtprotoRepoPutRecord.InvalidSwapError,
+        retryable: e =>
+          matchXrpcError(e, com.atproto.repo.putRecord) === 'InvalidSwap',
       })
 
       return {
@@ -324,7 +334,7 @@ export function useUpsertLiveStatusMutation(
             $type: 'app.bsky.actor.defs#statusView',
             status: 'app.bsky.actor.status#live',
             isActive: true,
-            expiresAt: expiresAt.toISOString(),
+            expiresAt: toDatetimeString(expiresAt),
             embed:
               record.embed && image
                 ? {
@@ -332,7 +342,8 @@ export function useUpsertLiveStatusMutation(
                     external: {
                       ...record.embed.external,
                       $type: 'app.bsky.embed.external#viewExternal',
-                      thumb: image,
+                      // an opengraph image URL from link resolution
+                      thumb: image as UriString,
                     },
                   }
                 : undefined,
@@ -347,7 +358,7 @@ export function useUpsertLiveStatusMutation(
 export function useRemoveLiveStatusMutation() {
   const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const control = useDialogContext()
   const {_} = useLingui()
@@ -356,7 +367,7 @@ export function useRemoveLiveStatusMutation() {
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not logged in')
 
-      await agent.app.bsky.actor.status.delete({
+      await pdsClient.delete(app.bsky.actor.status, {
         repo: currentAccount.did,
         rkey: 'self',
       })

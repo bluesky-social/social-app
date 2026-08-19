@@ -1,4 +1,3 @@
-import {type AppBskyNotificationDeclaration} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -14,9 +13,13 @@ import * as Admonition from '#/components/Admonition'
 import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon} from '#/components/icons/EyeSlash'
 import {Key_Stroke2_Corner2_Rounded as KeyIcon} from '#/components/icons/Key'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon} from '#/components/icons/MagnifyingGlass'
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
+import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
+import {AlgoVisibilityOptOut} from './components/AlgoVisibilityOptOut'
 import {Email2FAToggle} from './components/Email2FAToggle'
 import {PwiOptOut} from './components/PwiOptOut'
 import {ItemTextWithSubtitle} from './NotificationSettings/components/ItemTextWithSubtitle'
@@ -28,6 +31,10 @@ type Props = NativeStackScreenProps<
 export function PrivacyAndSecuritySettingsScreen({}: Props) {
   const {_} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
+  const isContentVisibilityEnabled = ax.features.enabled(
+    ax.features.ContentVisibilitySettingsEnable,
+  )
   const {data: appPasswords} = useAppPasswordsQuery()
   const {currentAccount} = useSession()
   const {
@@ -101,13 +108,16 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
             />
           </SettingsList.LinkItem>
           <SettingsList.Divider />
-          <SettingsList.Group>
+          {isContentVisibilityEnabled && (
+            <SettingsList.Item style={[a.align_start]}>
+              <SettingsList.ItemIcon icon={MagnifyingGlassIcon} />
+              <AlgoVisibilityOptOut />
+            </SettingsList.Item>
+          )}
+          <SettingsList.Item style={[a.align_start]}>
             <SettingsList.ItemIcon icon={EyeSlashIcon} />
-            <SettingsList.ItemText>
-              <Trans>Logged-out visibility</Trans>
-            </SettingsList.ItemText>
             <PwiOptOut />
-          </SettingsList.Group>
+          </SettingsList.Item>
           <SettingsList.Item>
             <Admonition.Outer type="tip" style={[a.flex_1]}>
               <Admonition.Row>
@@ -115,11 +125,10 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
                 <Admonition.Content>
                   <Admonition.Text>
                     <Trans>
-                      Note: Bluesky is an open and public network. This setting
-                      only limits the visibility of your content on the Bluesky
-                      app and website, and other apps may not respect this
-                      setting. Your content may still be shown to logged-out
-                      users by other apps and websites.
+                      Note: Bluesky is part of the Atmosphere, an open public
+                      network. These settings ask other apps and websites to
+                      limit your visibility, but they can choose not to. Your
+                      public content may still appear elsewhere.
                     </Trans>
                   </Admonition.Text>
                   <Admonition.Text>
@@ -146,7 +155,7 @@ function NotificationDeclaration({
   isError,
 }: {
   data?: {
-    value: AppBskyNotificationDeclaration.Record
+    value: app.bsky.notification.declaration.Main
   }
   isError?: boolean
 }) {

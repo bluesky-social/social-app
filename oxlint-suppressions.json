@@ -848,9 +848,6 @@
     },
     "typescript/no-misused-promises": {
       "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 1
     }
   },
   "src/screens/E2E/SharedPreferencesTesterScreen.tsx": {
@@ -1099,12 +1096,6 @@
     },
     "typescript/no-misused-promises": {
       "count": 2
-    },
-    "typescript/no-unsafe-call": {
-      "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 2
     }
   },
   "src/screens/Settings/components/CopyButton.tsx": {
@@ -1181,11 +1172,6 @@
       "count": 2
     },
     "typescript/require-await": {
-      "count": 1
-    }
-  },
-  "src/screens/StarterPack/Wizard/StepFeeds.tsx": {
-    "typescript/no-misused-promises": {
       "count": 1
     }
   },
@@ -1406,16 +1392,13 @@
   },
   "src/state/queries/postgate/index.ts": {
     "typescript/no-explicit-any": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-floating-promises": {
       "count": 1
     },
-    "typescript/no-unsafe-call": {
-      "count": 2
-    },
     "typescript/no-unsafe-member-access": {
-      "count": 3
+      "count": 1
     },
     "typescript/require-await": {
       "count": 2
@@ -1432,17 +1415,8 @@
     }
   },
   "src/state/queries/threadgate/index.ts": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    },
     "typescript/no-floating-promises": {
       "count": 3
-    },
-    "typescript/no-unsafe-call": {
-      "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 2
     },
     "typescript/require-await": {
       "count": 3
@@ -1453,11 +1427,6 @@
       "count": 1
     },
     "typescript/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
-  "src/state/session/agent.ts": {
-    "typescript/no-explicit-any": {
       "count": 1
     }
   },
@@ -1671,7 +1640,7 @@
       "count": 8
     },
     "typescript/no-unsafe-member-access": {
-      "count": 9
+      "count": 8
     }
   },
   "src/view/com/util/EmptyState.tsx": {
