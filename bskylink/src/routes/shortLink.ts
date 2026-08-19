@@ -4,12 +4,12 @@ import {DAY, SECOND} from '@atproto/common'
 import {Express} from 'express'
 
 import {AppContext} from '../context.js'
-import {handler} from './util.js'
+import {observedHandler} from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
   return app.get(
     '/:linkId',
-    handler(async (req, res) => {
+    observedHandler('short_link', async (req, res) => {
       const linkId = req.params.linkId
       const contentType = req.accepts(['html', 'json'])
       assert(
