@@ -1,4 +1,11 @@
-import {Database, envToCfg, httpLogger, LinkService, readEnv} from './index.js'
+import {
+  Database,
+  envToCfg,
+  FORCE_SHUTDOWN_TIMEOUT_MS,
+  httpLogger,
+  LinkService,
+  readEnv,
+} from './index.js'
 
 async function main() {
   try {
@@ -40,13 +47,30 @@ async function main() {
     await link.start()
     httpLogger.info('Link service is running')
 
-    process.on('SIGTERM', () => {
+    const shutdown = (signal: NodeJS.Signals) => {
+      const forceExitTimer = setTimeout(() => {
+        httpLogger.error(
+          {signal},
+          'Link service exceeded its shutdown deadline; forcing exit',
+        )
+        process.exit(1)
+      }, FORCE_SHUTDOWN_TIMEOUT_MS)
+      forceExitTimer.unref()
+
       void (async () => {
-        httpLogger.info('Link service is stopping')
-        await link.destroy()
-        httpLogger.info('Link service is stopped')
+        httpLogger.info({signal}, 'Link service is stopping')
+        try {
+          await link.destroy()
+          httpLogger.info({signal}, 'Link service is stopped')
+        } catch (err) {
+          process.exitCode = 1
+          httpLogger.error({err, signal}, 'Failed to stop link service cleanly')
+        }
       })()
-    })
+    }
+
+    process.once('SIGTERM', shutdown)
+    process.once('SIGINT', shutdown)
   } catch (error) {
     httpLogger.error(
       {
