@@ -33,6 +33,7 @@ describe('getMentionAt', () => {
     ['alice@alice', 0, undefined],
     ['alice@alice', 6, undefined],
     ['hello @alice-com goodbye', 8, 'alice-com'],
+    ['@йцугшщзфіплджєґюбьчя hello', 6, 'йцугшщзфіплджєґюбьчя'],
   ]
 
   it.each(cases)(
