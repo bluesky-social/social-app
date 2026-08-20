@@ -7,14 +7,16 @@ const createClient = (getAgent: () => Promise<unknown>) => {
   const client: SafelinkClient = Object.create(SafelinkClient.prototype)
   Reflect.set(client, 'stopped', false)
   Reflect.set(client, 'ozoneAgent', {getAgent})
+  Reflect.set(client, 'domainCache', {delete: () => {}})
+  Reflect.set(client, 'urlCache', {delete: () => {}})
   return client
 }
 
-describe('Safelink shutdown', () => {
-  it('clears a scheduled retry and cannot restart after stop', async () => {
-    const client = createClient(async () => {
-      throw new Error('Ozone unavailable')
-    })
+void describe('Safelink shutdown', () => {
+  void it('clears a scheduled retry and cannot restart after stop', async () => {
+    const client = createClient(() =>
+      Promise.reject(new Error('Ozone unavailable')),
+    )
 
     await client.runFetchEvents()
     assert.ok(Reflect.get(client, 'fetchEventsTimeout'))
@@ -27,7 +29,7 @@ describe('Safelink shutdown', () => {
     assert.strictEqual(Reflect.get(client, 'fetchEventsTimeout'), undefined)
   })
 
-  it('waits for an active poll to finish before stopping', async () => {
+  void it('waits for an active poll to finish before stopping', async () => {
     let pollStarted = () => {}
     const started = new Promise<void>(resolve => {
       pollStarted = () => resolve(undefined)
@@ -57,7 +59,7 @@ describe('Safelink shutdown', () => {
     assert.strictEqual(stopped, true)
   })
 
-  it(
+  void it(
     'bounds the wait for a poll that never finishes',
     {timeout: 1_000},
     async () => {
@@ -70,40 +72,44 @@ describe('Safelink shutdown', () => {
     },
   )
 
-  it('retries a failed rule write without advancing the cursor', async () => {
-    const client = createClient(async () => ({
-      tools: {
-        ozone: {
-          safelink: {
-            queryEvents: async () => ({
-              data: {
-                cursor: 'next',
-                events: [
-                  {
-                    action: 'block',
-                    createdAt: new Date().toISOString(),
-                    eventType: 'addRule',
-                    id: 1,
-                    pattern: 'domain',
-                    url: 'example.com',
+  void it('retries a failed rule write without advancing the cursor', async () => {
+    const client = createClient(() =>
+      Promise.resolve({
+        tools: {
+          ozone: {
+            safelink: {
+              queryEvents: () =>
+                Promise.resolve({
+                  data: {
+                    cursor: 'next',
+                    events: [
+                      {
+                        action: 'block',
+                        createdAt: new Date().toISOString(),
+                        eventType: 'addRule',
+                        id: 1,
+                        pattern: 'domain',
+                        url: 'example.com',
+                      },
+                    ],
                   },
-                ],
-              },
-            }),
+                }),
+            },
           },
         },
-      },
-    }))
+      }),
+    )
     Reflect.set(client, 'cursor', 'current')
     Reflect.set(client, 'db', {
-      transaction: async (run: (db: unknown) => Promise<void>) =>
+      transaction: (run: (db: unknown) => Promise<void>) =>
         run({
           db: {
             insertInto: () => ({
               values: () => ({
-                execute: async () => {
-                  throw new Error('database unavailable')
-                },
+                onConflict: () => ({
+                  execute: () =>
+                    Promise.reject(new Error('database unavailable')),
+                }),
               }),
             }),
           },
@@ -114,5 +120,70 @@ describe('Safelink shutdown', () => {
     assert.ok(Reflect.get(client, 'fetchEventsTimeout'))
     assert.strictEqual(Reflect.get(client, 'cursor'), 'current')
     await client.stop(1_000)
+  })
+
+  void it('advances the cursor after replaying an existing rule event', async () => {
+    const client = createClient(() =>
+      Promise.resolve({
+        tools: {
+          ozone: {
+            safelink: {
+              queryEvents: () =>
+                Promise.resolve({
+                  data: {
+                    cursor: 'next',
+                    events: [
+                      {
+                        action: 'block',
+                        createdAt: new Date().toISOString(),
+                        eventType: 'addRule',
+                        id: 1,
+                        pattern: 'domain',
+                        url: 'example.com',
+                      },
+                    ],
+                  },
+                }),
+            },
+          },
+        },
+      }),
+    )
+    Reflect.set(client, 'cursor', 'current')
+    let storedCursor = 'current'
+    Reflect.set(client, 'db', {
+      transaction: (run: (db: unknown) => Promise<void>) =>
+        run({
+          db: {
+            insertInto: () => ({
+              values: () => ({
+                onConflict: () => ({
+                  execute: () => Promise.resolve(),
+                }),
+              }),
+            }),
+          },
+        }),
+      db: {
+        insertInto: () => ({
+          values: ({cursor}: {cursor: string}) => ({
+            onConflict: () => ({
+              execute: () => {
+                storedCursor = cursor
+                return Promise.resolve()
+              },
+            }),
+          }),
+        }),
+      },
+    })
+
+    await client.runFetchEvents()
+    try {
+      assert.strictEqual(storedCursor, 'next')
+      assert.strictEqual(Reflect.get(client, 'cursor'), 'next')
+    } finally {
+      await client.stop(1_000)
+    }
   })
 })
