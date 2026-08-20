@@ -10,6 +10,7 @@ async function main() {
     httpLogger.info(
       {
         port: cfg.service.port,
+        metricsPort: cfg.service.metricsPort,
         safelinkEnabled: cfg.service.safelinkEnabled,
         hasDbUrl: !!cfg.db.url,
         hasDbMigrationUrl: !!cfg.db.migrationUrl,
@@ -33,16 +34,18 @@ async function main() {
 
     if (link.ctx.cfg.service.safelinkEnabled) {
       httpLogger.info('Starting Safelink client')
-      link.ctx.safelinkClient.runFetchEvents()
+      void link.ctx.safelinkClient.runFetchEvents()
     }
 
     await link.start()
     httpLogger.info('Link service is running')
 
-    process.on('SIGTERM', async () => {
-      httpLogger.info('Link service is stopping')
-      await link.destroy()
-      httpLogger.info('Link service is stopped')
+    process.on('SIGTERM', () => {
+      void (async () => {
+        httpLogger.info('Link service is stopping')
+        await link.destroy()
+        httpLogger.info('Link service is stopped')
+      })()
     })
   } catch (error) {
     httpLogger.error(
