@@ -104,12 +104,13 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const setMode = useCallback(
     (v: boolean) => {
       'worklet'
-      headerMode.set(() =>
-        withSpring(v ? 1 : 0, {
+      headerMode.set(() => {
+        'worklet'
+        return withSpring(v ? 1 : 0, {
           ...Reanimated3DefaultSpringConfig,
           overshootClamping: true,
-        }),
-      )
+        })
+      })
     },
     [headerMode],
   )

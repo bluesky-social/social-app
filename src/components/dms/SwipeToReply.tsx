@@ -78,12 +78,13 @@ export function SwipeToReply({
     const runPop = () => {
       'worklet'
       if (isReducedMotion) return
-      iconScale.set(() =>
-        withSequence(
+      iconScale.set(() => {
+        'worklet'
+        return withSequence(
           withTiming(1.2, {duration: 175}),
           withTiming(1, {duration: 100}),
-        ),
-      )
+        )
+      })
     }
 
     return (

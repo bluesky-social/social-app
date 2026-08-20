@@ -150,12 +150,13 @@ function HomeScreenReady({
   const headerMode = useHomeHeaderMode()
   const showHeader = useCallback(() => {
     'worklet'
-    headerMode.set(() =>
-      withSpring(0, {
+    headerMode.set(() => {
+      'worklet'
+      return withSpring(0, {
         ...Reanimated3DefaultSpringConfig,
         overshootClamping: true,
-      }),
-    )
+      })
+    })
   }, [headerMode])
 
   useFocusEffect(

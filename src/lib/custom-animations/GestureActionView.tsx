@@ -63,12 +63,13 @@ export function GestureActionView({
       return
     }
 
-    iconScale.set(() =>
-      withSequence(
+    iconScale.set(() => {
+      'worklet'
+      return withSequence(
         withTiming(1.2, {duration: 175}),
         withTiming(1, {duration: 100}),
-      ),
-    )
+      )
+    })
   }
 
   useAnimatedReaction(
@@ -205,7 +206,10 @@ export function GestureActionView({
           scheduleOnRN(actions.rightFirst.action)
         }
       }
-      transX.set(() => withTiming(0, {duration: 200}))
+      transX.set(() => {
+        'worklet'
+        return withTiming(0, {duration: 200})
+      })
       hitFirst.set(false)
       hitSecond.set(false)
       isActive.set(false)
