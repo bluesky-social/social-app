@@ -72,7 +72,7 @@ export function AvatarBubbles({
     if (!animate) return
     const animateBubble = (p: SharedValue<number>, i: number) => {
       p.set(0)
-      p.set(() =>
+      p.set(
         withDelay(
           500 + i * 100,
           withTiming(1, {

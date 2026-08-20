@@ -33,13 +33,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const setModeWorklet = useCallback(
     (v: boolean) => {
       'worklet'
-      footerMode.set(() => {
-        'worklet'
-        return withSpring(v ? 1 : 0, {
+      footerMode.set(
+        withSpring(v ? 1 : 0, {
           ...Reanimated3DefaultSpringConfig,
           overshootClamping: true,
-        })
-      })
+        }),
+      )
     },
     [footerMode],
   )
