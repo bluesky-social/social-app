@@ -1,0 +1,41 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/java
+{
+	"name": "Bluesky",
+	"build": {
+		// Path is relative to the devcontainer.json file.
+		"dockerfile": "Dockerfile",
+		"context": "../"
+	},
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/devcontainers/features/docker-outside-of-docker": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {}
+	},
+
+	"workspaceMount": "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind",
+	"workspaceFolder": "${localWorkspaceFolder}",
+
+	// Needed to mount the .ssh folder so that we get the config and ssh files
+	"mounts": ["source=${localEnv:HOME}/.ssh,target=/home/bluesky/.ssh,type=bind,consistency=cached,readonly"],
+
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"[shellscript]": {
+					"files.eol": "\n",
+					"editor.insertSpaces": true,
+					"editor.tabSize": 2
+				}
+			},
+			"extensions": [
+				"ms-azuretools.vscode-docker",
+				"timonwong.shellcheck"
+			]
+		}
+	},
+
+	"remoteUser": "bluesky",
+	"updateRemoteUserUID": true
+}
