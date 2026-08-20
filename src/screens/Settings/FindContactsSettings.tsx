@@ -49,7 +49,11 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
-import {app} from '#/lexicons'
+import type * as AppBskyContactDefs from '#/lexicons/app/bsky/contact/defs'
+import * as AppBskyContactDismissMatch from '#/lexicons/app/bsky/contact/dismissMatch'
+import * as AppBskyContactGetMatches from '#/lexicons/app/bsky/contact/getMatches'
+import type * as AppBskyContactGetSyncStatus from '#/lexicons/app/bsky/contact/getSyncStatus'
+import * as AppBskyContactRemoveData from '#/lexicons/app/bsky/contact/removeData'
 import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../Onboarding/util'
 
@@ -188,7 +192,7 @@ function SyncStatus({
   info,
   refetchStatus,
 }: {
-  info: app.bsky.contact.defs.SyncStatus
+  info: AppBskyContactDefs.SyncStatus
   refetchStatus: () => Promise<any>
 }) {
   const ax = useAnalytics()
@@ -217,7 +221,7 @@ function SyncStatus({
 
   const {mutate: dismissMatch} = useMutation({
     mutationFn: async (did: string) => {
-      await client.call(app.bsky.contact.dismissMatch, {
+      await client.call(AppBskyContactDismissMatch, {
         subject: did as DidString,
       })
     },
@@ -385,7 +389,7 @@ function StatusHeader({
 
       let cursor: string | undefined
       do {
-        const page = await client.call(app.bsky.contact.getMatches, {
+        const page = await client.call(AppBskyContactGetMatches, {
           limit: 100,
           cursor,
         })
@@ -496,12 +500,12 @@ function StatusFooter({syncedAt}: {syncedAt: string}) {
 
   const {mutate: removeData, isPending} = useMutation({
     mutationFn: async () => {
-      await client.call(app.bsky.contact.removeData, {})
+      await client.call(AppBskyContactRemoveData, {})
     },
     onMutate: () => ax.metric('contacts:settings:removeData', {}),
     onSuccess: () => {
       Toast.show(_(msg`Contacts removed`))
-      queryClient.setQueryData<app.bsky.contact.getSyncStatus.$OutputBody>(
+      queryClient.setQueryData<AppBskyContactGetSyncStatus.$OutputBody>(
         findContactsStatusQueryKey,
         {syncStatus: undefined},
       )

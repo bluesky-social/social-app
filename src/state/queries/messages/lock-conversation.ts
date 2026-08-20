@@ -1,7 +1,9 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import * as ChatBskyConvoLockConvo from '#/lexicons/chat/bsky/convo/lockConvo'
+import * as ChatBskyConvoUnlockConvo from '#/lexicons/chat/bsky/convo/unlockConvo'
 import * as bsky from '#/types/bsky'
 import {
   rollbackConvoOptimistic,
@@ -15,7 +17,7 @@ export function useLockConvo(
     onError,
   }: {
     onSuccess?: (
-      data: chat.bsky.convo.lockConvo.$OutputBody,
+      data: ChatBskyConvoLockConvo.$OutputBody,
       variables: {lock: boolean; silent?: boolean},
     ) => void
     onError?: (
@@ -31,15 +33,15 @@ export function useLockConvo(
     mutationFn: async ({lock}: {lock: boolean; silent?: boolean}) => {
       if (!convoId) throw new Error('No convoId provided')
       if (lock) {
-        return await client.call(chat.bsky.convo.lockConvo, {convoId})
+        return await client.call(ChatBskyConvoLockConvo, {convoId})
       } else {
-        return await client.call(chat.bsky.convo.unlockConvo, {convoId})
+        return await client.call(ChatBskyConvoUnlockConvo, {convoId})
       }
     },
     onMutate: ({lock}) => {
       if (!convoId) return
       return updateConvoOptimistic(queryClient, convoId, prev => {
-        if (!bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind))
+        if (!bsky.isType(ChatBskyConvoDefs.groupConvo, prev.kind))
           return undefined
         return {
           ...prev,

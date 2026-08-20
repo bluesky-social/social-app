@@ -7,7 +7,8 @@ import {
 
 import {useAppviewClient} from '#/state/session'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyGraphGetFollowers from '#/lexicons/app/bsky/graph/getFollowers'
 
 const DEFAULT_SORT = 'latest'
 const PAGE_SIZE = 30
@@ -35,9 +36,9 @@ export function useProfileFollowersQuery(
   const sortParam = isSortEnabled ? sort || DEFAULT_SORT : undefined
 
   return useInfiniteQuery<
-    app.bsky.graph.getFollowers.$OutputBody,
+    AppBskyGraphGetFollowers.$OutputBody,
     Error,
-    InfiniteData<app.bsky.graph.getFollowers.$OutputBody>,
+    InfiniteData<AppBskyGraphGetFollowers.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
@@ -49,12 +50,12 @@ export function useProfileFollowersQuery(
        * undeclared params verbatim but rejects an undeclared key whose value
        * is `undefined`, hence the conditional spread.
        */
-      return await client.call(app.bsky.graph.getFollowers, {
+      return await client.call(AppBskyGraphGetFollowers, {
         actor: did || '',
         limit: PAGE_SIZE,
         cursor: pageParam,
         ...(sortParam ? {sort: sortParam} : {}),
-      } as app.bsky.graph.getFollowers.$Params)
+      } as AppBskyGraphGetFollowers.$Params)
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -65,9 +66,9 @@ export function useProfileFollowersQuery(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<app.bsky.actor.defs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<app.bsky.graph.getFollowers.$OutputBody>
+    InfiniteData<AppBskyGraphGetFollowers.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })

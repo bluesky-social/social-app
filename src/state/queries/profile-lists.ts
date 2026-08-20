@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query'
 
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyGraphGetLists from '#/lexicons/app/bsky/graph/getLists'
 import {useModerationOpts} from '../preferences/moderation-opts'
 
 const PAGE_SIZE = 30
@@ -21,15 +21,15 @@ export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
   const enabled = opts?.enabled !== false && Boolean(moderationOpts)
   const client = useAppviewClient()
   return useInfiniteQuery<
-    app.bsky.graph.getLists.$OutputBody,
+    AppBskyGraphGetLists.$OutputBody,
     Error,
-    InfiniteData<app.bsky.graph.getLists.$OutputBody>,
+    InfiniteData<AppBskyGraphGetLists.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      return await client.call(app.bsky.graph.getLists, {
+      return await client.call(AppBskyGraphGetLists, {
         actor: did as DidString,
         limit: PAGE_SIZE,
         cursor: pageParam,

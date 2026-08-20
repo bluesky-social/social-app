@@ -9,7 +9,7 @@ import {InlineLinkText, type LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichTextTag} from '#/components/RichTextTag'
 import {Text, type TextProps} from '#/components/Typography'
-import {app} from '#/lexicons'
+import * as AppBskyRichtextFacet from '#/lexicons/app/bsky/richtext/facet'
 import * as bsky from '#/types/bsky'
 
 const WORD_WRAP = {wordWrap: 1}
@@ -141,7 +141,7 @@ export function RichText({
     if (
       mention &&
       (disableMentionFacetValidation ||
-        bsky.matches(app.bsky.richtext.facet.mention, mention)) &&
+        bsky.matches(AppBskyRichtextFacet.mention, mention)) &&
       !disableLinks
     ) {
       els.push(
@@ -158,7 +158,7 @@ export function RichText({
           </InlineLinkText>
         </ProfileHoverCard>,
       )
-    } else if (link && bsky.matches(app.bsky.richtext.facet.link, link)) {
+    } else if (link && bsky.matches(AppBskyRichtextFacet.link, link)) {
       const isValidLink = URL_REGEX.test(link.uri)
       if (!isValidLink || disableLinks) {
         els.push(toShortUrl(segment.text))
@@ -183,7 +183,7 @@ export function RichText({
       !disableLinks &&
       enableTags &&
       tag &&
-      bsky.matches(app.bsky.richtext.facet.tag, tag)
+      bsky.matches(AppBskyRichtextFacet.tag, tag)
     ) {
       els.push(
         <RichTextTag

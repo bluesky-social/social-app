@@ -43,7 +43,8 @@ import {applyLabelersToClient, saveLabelers} from '#/state/session/moderation'
 import {useAgeAssurance} from '#/ageAssurance'
 import {makeAgeRestrictedModerationPrefs} from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyActorPutPreferences from '#/lexicons/app/bsky/actor/putPreferences'
 
 export * from '#/state/queries/preferences/const'
 export * from '#/state/queries/preferences/moderation'
@@ -155,7 +156,7 @@ export function useClearPreferencesMutation() {
 
   return useMutation({
     mutationFn: async () => {
-      await client.call(app.bsky.actor.putPreferences, {preferences: []})
+      await client.call(AppBskyActorPutPreferences, {preferences: []})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -277,7 +278,7 @@ export function useOverwriteSavedFeedsMutation() {
   const queryClient = useQueryClient()
   const client = usePdsClient()
 
-  return useMutation<void, unknown, app.bsky.actor.defs.SavedFeed[]>({
+  return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
     mutationFn: async savedFeeds => {
       await client.call(overwriteSavedFeeds, savedFeeds)
       // triggers a refetch
@@ -295,7 +296,7 @@ export function useAddSavedFeedsMutation() {
   return useMutation<
     void,
     unknown,
-    Pick<app.bsky.actor.defs.SavedFeed, 'type' | 'value' | 'pinned'>[]
+    Pick<AppBskyActorDefs.SavedFeed, 'type' | 'value' | 'pinned'>[]
   >({
     mutationFn: async savedFeeds => {
       await client.call(addSavedFeeds, savedFeeds)
@@ -311,7 +312,7 @@ export function useRemoveFeedMutation() {
   const queryClient = useQueryClient()
   const client = usePdsClient()
 
-  return useMutation<void, unknown, Pick<app.bsky.actor.defs.SavedFeed, 'id'>>({
+  return useMutation<void, unknown, Pick<AppBskyActorDefs.SavedFeed, 'id'>>({
     mutationFn: async savedFeed => {
       await client.call(removeSavedFeeds, [savedFeed.id])
       // triggers a refetch
@@ -331,8 +332,8 @@ export function useReplaceForYouWithDiscoverFeedMutation() {
       forYouFeedConfig,
       discoverFeedConfig,
     }: {
-      forYouFeedConfig: app.bsky.actor.defs.SavedFeed | undefined
-      discoverFeedConfig: app.bsky.actor.defs.SavedFeed | undefined
+      forYouFeedConfig: AppBskyActorDefs.SavedFeed | undefined
+      discoverFeedConfig: AppBskyActorDefs.SavedFeed | undefined
     }) => {
       if (forYouFeedConfig) {
         await client.call(removeSavedFeeds, [forYouFeedConfig.id])
@@ -365,7 +366,7 @@ export function useUpdateSavedFeedsMutation() {
   const queryClient = useQueryClient()
   const client = usePdsClient()
 
-  return useMutation<void, unknown, app.bsky.actor.defs.SavedFeed[]>({
+  return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
     mutationFn: async feeds => {
       await client.call(updateSavedFeeds, feeds)
 
@@ -382,7 +383,7 @@ export function useUpsertMutedWordsMutation() {
   const client = usePdsClient()
 
   return useMutation({
-    mutationFn: async (mutedWords: app.bsky.actor.defs.MutedWord[]) => {
+    mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
       await client.call(upsertMutedWords, mutedWords)
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -397,7 +398,7 @@ export function useUpdateMutedWordMutation() {
   const client = usePdsClient()
 
   return useMutation({
-    mutationFn: async (mutedWord: app.bsky.actor.defs.MutedWord) => {
+    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
       await client.call(updateMutedWord, mutedWord)
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -412,7 +413,7 @@ export function useRemoveMutedWordMutation() {
   const client = usePdsClient()
 
   return useMutation({
-    mutationFn: async (mutedWord: app.bsky.actor.defs.MutedWord) => {
+    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
       await client.call(removeMutedWord, mutedWord)
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -427,7 +428,7 @@ export function useRemoveMutedWordsMutation() {
   const client = usePdsClient()
 
   return useMutation({
-    mutationFn: async (mutedWords: app.bsky.actor.defs.MutedWord[]) => {
+    mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
       await client.call(removeMutedWords, mutedWords)
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -476,7 +477,7 @@ export function useSetActiveProgressGuideMutation() {
 
   return useMutation({
     mutationFn: async (
-      guide: app.bsky.actor.defs.BskyAppProgressGuide | undefined,
+      guide: AppBskyActorDefs.BskyAppProgressGuide | undefined,
     ) => {
       await client.call(setActiveProgressGuide, guide)
       // triggers a refetch
@@ -507,7 +508,7 @@ export function useSetVerificationPrefsMutation() {
   const queryClient = useQueryClient()
   const client = usePdsClient()
 
-  return useMutation<void, unknown, app.bsky.actor.defs.VerificationPrefs>({
+  return useMutation<void, unknown, AppBskyActorDefs.VerificationPrefs>({
     mutationFn: async prefs => {
       await client.call(setVerificationPrefs, prefs)
       if (prefs.hideBadges) {

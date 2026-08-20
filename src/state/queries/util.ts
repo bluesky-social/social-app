@@ -5,7 +5,11 @@ import {
   type QueryKey,
 } from '@tanstack/react-query'
 
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyEmbedRecord from '#/lexicons/app/bsky/embed/record'
+import * as AppBskyEmbedRecordWithMedia from '#/lexicons/app/bsky/embed/recordWithMedia'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
 import * as bsky from '#/types/bsky'
 
 export type StructuredQueryKey<T extends Record<string, unknown>> = readonly [
@@ -87,7 +91,7 @@ export async function truncateAndInvalidate<T = any>(
 // of the currentUri that is being checked.
 export function didOrHandleUriMatches(
   atUri: AtUri,
-  record: {uri: string; author: app.bsky.actor.defs.ProfileViewBasic},
+  record: {uri: string; author: AppBskyActorDefs.ProfileViewBasic},
 ) {
   if (atUri.host.startsWith('did:')) {
     return atUri.href === record.uri
@@ -98,19 +102,19 @@ export function didOrHandleUriMatches(
 
 export function getEmbeddedPost(
   v: unknown,
-): app.bsky.embed.record.ViewRecord | undefined {
-  if (bsky.isType(app.bsky.embed.record.view, v)) {
+): AppBskyEmbedRecord.ViewRecord | undefined {
+  if (bsky.isType(AppBskyEmbedRecord.view, v)) {
     if (
-      bsky.isType(app.bsky.embed.record.viewRecord, v.record) &&
-      bsky.isType(app.bsky.feed.post, v.record.value)
+      bsky.isType(AppBskyEmbedRecord.viewRecord, v.record) &&
+      bsky.isType(AppBskyFeedPost, v.record.value)
     ) {
       return v.record
     }
   }
-  if (bsky.isType(app.bsky.embed.recordWithMedia.view, v)) {
+  if (bsky.isType(AppBskyEmbedRecordWithMedia.view, v)) {
     if (
-      bsky.isType(app.bsky.embed.record.viewRecord, v.record.record) &&
-      bsky.isType(app.bsky.feed.post, v.record.record.value)
+      bsky.isType(AppBskyEmbedRecord.viewRecord, v.record.record) &&
+      bsky.isType(AppBskyFeedPost, v.record.record.value)
     ) {
       return v.record.record
     }
@@ -118,8 +122,8 @@ export function getEmbeddedPost(
 }
 
 export function embedViewRecordToPostView(
-  v: app.bsky.embed.record.ViewRecord,
-): app.bsky.feed.defs.PostView {
+  v: AppBskyEmbedRecord.ViewRecord,
+): AppBskyFeedDefs.PostView {
   return {
     uri: v.uri,
     cid: v.cid,

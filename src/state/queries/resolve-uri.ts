@@ -4,7 +4,7 @@ import {type QueryClient, queryOptions, useQuery} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'
-import {com} from '#/lexicons'
+import * as ComAtprotoIdentityResolveHandle from '#/lexicons/com/atproto/identity/resolveHandle'
 import {useUnstableProfileViewCache} from './profile'
 
 const RQKEY_ROOT = 'resolved-did'
@@ -28,7 +28,7 @@ const resolvedDidQueryOptions = (
        * to the appview, and the PDS implementation is not equivalent for
        * handles hosted elsewhere.
        */
-      const data = await client.call(com.atproto.identity.resolveHandle, {
+      const data = await client.call(ComAtprotoIdentityResolveHandle, {
         handle: didOrHandle as HandleString,
       })
       return data.did

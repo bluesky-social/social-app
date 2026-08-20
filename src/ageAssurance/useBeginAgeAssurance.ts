@@ -15,7 +15,8 @@ import {logger} from '#/ageAssurance/logger'
 import {useAnalytics} from '#/analytics'
 import {BLUESKY_PROXY_DID} from '#/env'
 import {useGeolocation} from '#/geolocation'
-import {app, com} from '#/lexicons'
+import * as AppBskyAgeassuranceBegin from '#/lexicons/app/bsky/ageassurance/begin'
+import * as ComAtprotoServerGetServiceAuth from '#/lexicons/com/atproto/server/getServiceAuth'
 
 const IS_DEV_ENV = BLUESKY_PROXY_DID !== PUBLIC_APPVIEW_DID
 const APPVIEW = IS_DEV_ENV ? DEV_ENV_APPVIEW : PUBLIC_APPVIEW
@@ -29,7 +30,7 @@ export function useBeginAgeAssurance() {
   return useMutation({
     async mutationFn(
       props: Omit<
-        app.bsky.ageassurance.begin.$InputBody,
+        AppBskyAgeassuranceBegin.$InputBody,
         'countryCode' | 'regionCode'
       >,
     ) {
@@ -39,7 +40,7 @@ export function useBeginAgeAssurance() {
         throw new Error(`Geolocation not available, cannot init age assurance.`)
       }
 
-      const {token} = await pdsClient.call(com.atproto.server.getServiceAuth, {
+      const {token} = await pdsClient.call(ComAtprotoServerGetServiceAuth, {
         aud: BLUESKY_PROXY_DID,
         lxm: `app.bsky.ageassurance.begin`,
       })
@@ -68,7 +69,7 @@ export function useBeginAgeAssurance() {
        */
       const data = await wait(
         2e3,
-        scopedClient.call(app.bsky.ageassurance.begin, {
+        scopedClient.call(AppBskyAgeassuranceBegin, {
           ...props,
           countryCode,
           regionCode,

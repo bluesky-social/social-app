@@ -2,7 +2,10 @@ import {
   type ParsedReportSubject,
   type ReportSubject,
 } from '#/components/moderation/ReportDialog/types'
-import {app} from '#/lexicons'
+import * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
+import * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
 import * as bsky from '#/types/bsky'
 
 export function parseReportSubject(
@@ -25,16 +28,16 @@ export function parseReportSubject(
   }
 
   if (
-    bsky.isType(app.bsky.actor.defs.profileViewBasic, subject) ||
-    bsky.isType(app.bsky.actor.defs.profileView, subject) ||
-    bsky.isType(app.bsky.actor.defs.profileViewDetailed, subject)
+    bsky.isType(AppBskyActorDefs.profileViewBasic, subject) ||
+    bsky.isType(AppBskyActorDefs.profileView, subject) ||
+    bsky.isType(AppBskyActorDefs.profileViewDetailed, subject)
   ) {
     return {
       type: 'account',
       did: subject.did,
       nsid: 'app.bsky.actor.profile',
     }
-  } else if (bsky.isType(app.bsky.actor.defs.statusView, subject)) {
+  } else if (bsky.isType(AppBskyActorDefs.statusView, subject)) {
     if (!subject.uri || !subject.cid) return
     return {
       type: 'status',
@@ -42,31 +45,31 @@ export function parseReportSubject(
       cid: subject.cid,
       nsid: 'app.bsky.actor.status',
     }
-  } else if (bsky.isType(app.bsky.graph.defs.listView, subject)) {
+  } else if (bsky.isType(AppBskyGraphDefs.listView, subject)) {
     return {
       type: 'list',
       uri: subject.uri,
       cid: subject.cid,
       nsid: 'app.bsky.graph.list',
     }
-  } else if (bsky.isType(app.bsky.feed.defs.generatorView, subject)) {
+  } else if (bsky.isType(AppBskyFeedDefs.generatorView, subject)) {
     return {
       type: 'feed',
       uri: subject.uri,
       cid: subject.cid,
       nsid: 'app.bsky.feed.generator',
     }
-  } else if (bsky.isType(app.bsky.graph.defs.starterPackView, subject)) {
+  } else if (bsky.isType(AppBskyGraphDefs.starterPackView, subject)) {
     return {
       type: 'starterPack',
       uri: subject.uri,
       cid: subject.cid,
       nsid: 'app.bsky.graph.starterPack',
     }
-  } else if (bsky.isType(app.bsky.feed.defs.postView, subject)) {
+  } else if (bsky.isType(AppBskyFeedDefs.postView, subject)) {
     const record = subject.record
     const embed = bsky.post.parseEmbed(subject.embed)
-    if (bsky.isType(app.bsky.feed.post, record)) {
+    if (bsky.isType(AppBskyFeedPost, record)) {
       return {
         type: 'post',
         uri: subject.uri,

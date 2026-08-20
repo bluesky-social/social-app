@@ -11,7 +11,9 @@ import {
 import {isRecordNotFoundError} from '#/lib/xrpc-error'
 import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import * as Toast from '#/components/Toast'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyNotificationDeclaration from '#/lexicons/app/bsky/notification/declaration'
+import * as AppBskyNotificationListActivitySubscriptions from '#/lexicons/app/bsky/notification/listActivitySubscriptions'
 
 export const RQKEY_getActivitySubscriptions = ['activity-subscriptions']
 export const RQKEY_getNotificationDeclaration = ['notification-declaration']
@@ -22,10 +24,9 @@ export function useActivitySubscriptionsQuery() {
   return useInfiniteQuery({
     queryKey: RQKEY_getActivitySubscriptions,
     queryFn: async ({pageParam}) => {
-      return await client.call(
-        app.bsky.notification.listActivitySubscriptions,
-        {cursor: pageParam},
-      )
+      return await client.call(AppBskyNotificationListActivitySubscriptions, {
+        cursor: pageParam,
+      })
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: prev => prev.cursor,
@@ -39,7 +40,7 @@ export function useNotificationDeclarationQuery() {
     queryKey: RQKEY_getNotificationDeclaration,
     queryFn: async () => {
       try {
-        const response = await client.get(app.bsky.notification.declaration, {
+        const response = await client.get(AppBskyNotificationDeclaration, {
           repo: currentAccount!.did,
           rkey: 'self',
         })
@@ -50,7 +51,7 @@ export function useNotificationDeclarationQuery() {
             value: {
               $type: 'app.bsky.notification.declaration',
               allowSubscriptions: 'followers',
-            } satisfies app.bsky.notification.declaration.Main,
+            } satisfies AppBskyNotificationDeclaration.Main,
           }
         } else {
           throw err
@@ -65,9 +66,9 @@ export function useNotificationDeclarationMutation() {
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (record: app.bsky.notification.declaration.Main) => {
+    mutationFn: async (record: AppBskyNotificationDeclaration.Main) => {
       const response = await client.put(
-        app.bsky.notification.declaration,
+        AppBskyNotificationDeclaration,
         record,
         {
           repo: currentAccount!.did,
@@ -82,7 +83,7 @@ export function useNotificationDeclarationMutation() {
         (old?: {
           uri: string
           cid: string
-          value: app.bsky.notification.declaration.Main
+          value: AppBskyNotificationDeclaration.Main
         }) => {
           if (!old) return old
           return {
@@ -103,9 +104,9 @@ export function useNotificationDeclarationMutation() {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<app.bsky.actor.defs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<app.bsky.notification.listActivitySubscriptions.$OutputBody>
+    InfiniteData<AppBskyNotificationListActivitySubscriptions.$OutputBody>
   >({
     queryKey: RQKEY_getActivitySubscriptions,
   })

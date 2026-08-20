@@ -45,7 +45,9 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {chat} from '#/lexicons'
+import * as ChatBskyGroupDefs from '#/lexicons/chat/bsky/group/defs'
+import * as ChatBskyGroupRequestJoin from '#/lexicons/chat/bsky/group/requestJoin'
+import * as ChatBskyGroupWithdrawJoinRequest from '#/lexicons/chat/bsky/group/withdrawJoinRequest'
 import * as bsky from '#/types/bsky'
 import {ProfileBadges} from '../ProfileBadges'
 
@@ -146,7 +148,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
         if (isNetworkError(error)) {
           errorMessage = l`There was a problem with your internet connection, please try again`
         } else {
-          switch (matchXrpcError(error, chat.bsky.group.requestJoin)) {
+          switch (matchXrpcError(error, ChatBskyGroupRequestJoin)) {
             case 'ConvoLocked':
               errorMessage = l`This conversation is locked.`
               break
@@ -163,10 +165,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
               errorMessage = l`The member limit has been reached.`
               const preview = data?.joinLinkPreviews[0]
               if (
-                bsky.isType(
-                  chat.bsky.group.defs.joinLinkPreviewView,
-                  preview,
-                ) &&
+                bsky.isType(ChatBskyGroupDefs.joinLinkPreviewView, preview) &&
                 preview.convo?.id
               ) {
                 ax.metric('groupchat:join:memberLimitReached', {
@@ -199,7 +198,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
         if (isNetworkError(error)) {
           errorMessage = l`There was a problem with your internet connection, please try again`
         } else if (
-          matchXrpcError(error, chat.bsky.group.withdrawJoinRequest) ===
+          matchXrpcError(error, ChatBskyGroupWithdrawJoinRequest) ===
           'InvalidJoinRequest'
         ) {
           errorMessage = l`Invalid rescind request.`
@@ -257,7 +256,7 @@ function GroupChatJoinDialogContent({code}: {code?: string}) {
 
   const joinLinkPreview = data.joinLinkPreviews[0]
 
-  if (!bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, joinLinkPreview)) {
+  if (!bsky.isType(ChatBskyGroupDefs.joinLinkPreviewView, joinLinkPreview)) {
     return (
       <>
         <View style={[a.py_lg, a.align_center]}>

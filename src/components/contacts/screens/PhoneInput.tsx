@@ -34,7 +34,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {useGeolocation} from '#/geolocation'
-import {app} from '#/lexicons'
+import * as AppBskyContactStartPhoneVerification from '#/lexicons/app/bsky/contact/startPhoneVerification'
 import {isFindContactsFeatureEnabled} from '../country-allowlist'
 import {
   constructFullPhoneNumber,
@@ -79,7 +79,7 @@ export function PhoneInput({
       phoneNumber: string
     }) => {
       // sends a onetime code to the user's phone number
-      await client.call(app.bsky.contact.startPhoneVerification, {
+      await client.call(AppBskyContactStartPhoneVerification, {
         phone: constructFullPhoneNumber(phoneCountryCode, phoneNumber),
       })
     },
@@ -105,7 +105,7 @@ export function PhoneInput({
         )
         return
       }
-      switch (matchXrpcError(err, app.bsky.contact.startPhoneVerification)) {
+      switch (matchXrpcError(err, AppBskyContactStartPhoneVerification)) {
         case 'RateLimitExceeded':
           setError(_(msg`Rate limit exceeded. Please try again later.`))
           return

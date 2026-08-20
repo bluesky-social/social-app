@@ -5,7 +5,9 @@ import {until} from '#/lib/async/until'
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
 import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyActorGetProfile from '#/lexicons/app/bsky/actor/getProfile'
+import * as AppBskyGraphVerification from '#/lexicons/app/bsky/graph/verification'
 import type * as bsky from '#/types/bsky'
 
 export function useVerificationsRemoveMutation() {
@@ -21,7 +23,7 @@ export function useVerificationsRemoveMutation() {
       verifications,
     }: {
       profile: bsky.profile.AnyProfileView
-      verifications: app.bsky.actor.defs.VerificationView[]
+      verifications: AppBskyActorDefs.VerificationView[]
     }) {
       if (!currentAccount) {
         throw new Error('User not logged in')
@@ -31,7 +33,7 @@ export function useVerificationsRemoveMutation() {
 
       await Promise.all(
         uris.map(uri => {
-          return pdsClient.delete(app.bsky.graph.verification, {
+          return pdsClient.delete(AppBskyGraphVerification, {
             rkey: new AtUri(uri).rkeySafe,
           })
         }),
@@ -40,7 +42,7 @@ export function useVerificationsRemoveMutation() {
       await until(
         5,
         1e3,
-        (profile: app.bsky.actor.getProfile.$OutputBody) => {
+        (profile: AppBskyActorGetProfile.$OutputBody) => {
           if (
             !profile.verification?.verifications.some(v => uris.includes(v.uri))
           ) {
@@ -49,7 +51,7 @@ export function useVerificationsRemoveMutation() {
           return false
         },
         () => {
-          return appviewClient.call(app.bsky.actor.getProfile, {
+          return appviewClient.call(AppBskyActorGetProfile, {
             actor: profile.did ?? '',
           })
         },

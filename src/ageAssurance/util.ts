@@ -24,7 +24,7 @@ import {
 } from '#/ageAssurance/types'
 import {type Geolocation, useGeolocation} from '#/geolocation'
 import {USRegionNameToRegionCode} from '#/geolocation/util'
-import {app} from '#/lexicons'
+import * as AppBskyAgeassuranceDefs from '#/lexicons/app/bsky/ageassurance/defs'
 import * as bsky from '#/types/bsky'
 
 /**
@@ -42,9 +42,9 @@ import * as bsky from '#/types/bsky'
  * risk desyncing the write and read keys and silently losing grants.
  */
 export function getAgeAssuranceRegionConfigForGeolocation(
-  config: app.bsky.ageassurance.defs.Config,
+  config: AppBskyAgeassuranceDefs.Config,
   geolocation: Geolocation,
-): app.bsky.ageassurance.defs.ConfigRegion | undefined {
+): AppBskyAgeassuranceDefs.ConfigRegion | undefined {
   return getAgeAssuranceRegionConfig(config, {
     countryCode: geolocation.countryCode ?? '',
     regionCode: geolocation.regionCode,
@@ -60,9 +60,9 @@ export function getAgeAssuranceRegionConfigForGeolocation(
  * which can return undefined if the geolocation does not match any AA region.
  */
 export function getAgeAssuranceRegionConfigWithFallback(
-  config: app.bsky.ageassurance.defs.Config,
+  config: AppBskyAgeassuranceDefs.Config,
   geolocation: Geolocation,
-): app.bsky.ageassurance.defs.ConfigRegion {
+): AppBskyAgeassuranceDefs.ConfigRegion {
   return (
     getAgeAssuranceRegionConfigForGeolocation(config, geolocation) ||
     FALLBACK_REGION_CONFIG
@@ -75,9 +75,9 @@ export function getAgeAssuranceRegionConfigWithFallback(
  * historical KWS-only behavior).
  */
 export function getRegionAdditionalVerificationMethods(
-  region: app.bsky.ageassurance.defs.ConfigRegion,
+  region: AppBskyAgeassuranceDefs.ConfigRegion,
 ): NonNullable<
-  app.bsky.ageassurance.defs.ConfigRegion['additionalVerificationMethods']
+  AppBskyAgeassuranceDefs.ConfigRegion['additionalVerificationMethods']
 > {
   return region.additionalVerificationMethods ?? []
 }
@@ -87,7 +87,7 @@ export function getRegionAdditionalVerificationMethods(
  * age APIs (Apple Declared Age Range / Google Play Age Signals).
  */
 export function regionAllowsDeviceVerification(
-  region: app.bsky.ageassurance.defs.ConfigRegion,
+  region: AppBskyAgeassuranceDefs.ConfigRegion,
 ): boolean {
   return getRegionAdditionalVerificationMethods(region).includes('device')
 }
@@ -123,7 +123,7 @@ export function createRegionKey(region: {
  * usable data.
  */
 export function getAgeAssuranceDataFromDeviceSignals(
-  region: app.bsky.ageassurance.defs.ConfigRegion,
+  region: AppBskyAgeassuranceDefs.ConfigRegion,
   deviceSignals: AgeRange.AgeRangeResponse | undefined,
 ): {
   assuredAge?: number
@@ -184,7 +184,7 @@ export function canBirthdateUpdateIncreaseAccess({
   metadata,
   deviceSignals,
 }: {
-  region: app.bsky.ageassurance.defs.ConfigRegion
+  region: AppBskyAgeassuranceDefs.ConfigRegion
   metadata?: AgeAssuranceMetadata
   deviceSignals?: AgeRange.AgeRangeResponse
 }): boolean {
@@ -214,11 +214,11 @@ export function canBirthdateUpdateIncreaseAccess({
   for (const rule of region.rules) {
     if (
       bsky.isType(
-        app.bsky.ageassurance.defs.configRegionRuleIfDeclaredOverAge,
+        AppBskyAgeassuranceDefs.configRegionRuleIfDeclaredOverAge,
         rule,
       ) ||
       bsky.isType(
-        app.bsky.ageassurance.defs.configRegionRuleIfDeclaredUnderAge,
+        AppBskyAgeassuranceDefs.configRegionRuleIfDeclaredUnderAge,
         rule,
       )
     ) {
@@ -310,7 +310,7 @@ export function computeAgeAssuranceFlags({
   deviceSignals,
 }: {
   state: AgeAssuranceState
-  regionConfig: app.bsky.ageassurance.defs.ConfigRegion
+  regionConfig: AppBskyAgeassuranceDefs.ConfigRegion
   metadata?: AgeAssuranceMetadata
   deviceSignals?: AgeRange.AgeRangeResponse
 }): AgeAssuranceFlags {

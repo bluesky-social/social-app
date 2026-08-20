@@ -22,7 +22,7 @@ import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {useAnalytics} from '#/analytics'
-import {com} from '#/lexicons'
+import * as ComAtprotoLabelDefs from '#/lexicons/com/atproto/label/defs'
 import * as bsky from '#/types/bsky'
 
 type Props = NativeStackScreenProps<
@@ -54,13 +54,15 @@ export function AutomationLabelSettingsScreen({}: Props) {
       {
         profile,
         updates: existing => {
-          const labels: $Typed<com.atproto.label.defs.SelfLabels> =
-            bsky.matches(com.atproto.label.defs.selfLabels, existing.labels)
-              ? existing.labels
-              : {
-                  $type: 'com.atproto.label.defs#selfLabels',
-                  values: [],
-                }
+          const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.matches(
+            ComAtprotoLabelDefs.selfLabels,
+            existing.labels,
+          )
+            ? existing.labels
+            : {
+                $type: 'com.atproto.label.defs#selfLabels',
+                values: [],
+              }
 
           const hasLabel = labels.values.some(l => l.val === 'bot')
           if (hasLabel) {

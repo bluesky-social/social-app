@@ -6,7 +6,8 @@ import {
 } from '@tanstack/react-query'
 
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyGraphGetMutes from '#/lexicons/app/bsky/graph/getMutes'
 
 const RQKEY_ROOT = 'my-muted-accounts'
 export const RQKEY = () => [RQKEY_ROOT]
@@ -15,15 +16,15 @@ type RQPageParam = string | undefined
 export function useMyMutedAccountsQuery() {
   const client = useAppviewClient()
   return useInfiniteQuery<
-    app.bsky.graph.getMutes.$OutputBody,
+    AppBskyGraphGetMutes.$OutputBody,
     Error,
-    InfiniteData<app.bsky.graph.getMutes.$OutputBody>,
+    InfiniteData<AppBskyGraphGetMutes.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      return await client.call(app.bsky.graph.getMutes, {
+      return await client.call(AppBskyGraphGetMutes, {
         limit: 30,
         cursor: pageParam,
       })
@@ -36,9 +37,9 @@ export function useMyMutedAccountsQuery() {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<app.bsky.actor.defs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<app.bsky.graph.getMutes.$OutputBody>
+    InfiniteData<AppBskyGraphGetMutes.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })

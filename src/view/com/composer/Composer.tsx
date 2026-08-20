@@ -144,7 +144,10 @@ import {
   IS_WEB_SAFARI,
 } from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
-import {app, chat} from '#/lexicons'
+import * as AppBskyDraftCreateDraft from '#/lexicons/app/bsky/draft/createDraft'
+import * as AppBskyUnspeccedDefs from '#/lexicons/app/bsky/unspecced/defs'
+import * as AppBskyUnspeccedGetPostThreadV2 from '#/lexicons/app/bsky/unspecced/getPostThreadV2'
+import * as ChatBskyGroupDefs from '#/lexicons/chat/bsky/group/defs'
 import * as bsky from '#/types/bsky'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
@@ -767,9 +770,7 @@ export const ComposePost = ({
 
   const getDraftSaveError = useCallback(
     (e: unknown): string => {
-      if (
-        matchXrpcError(e, app.bsky.draft.createDraft) === 'DraftLimitReached'
-      ) {
+      if (matchXrpcError(e, AppBskyDraftCreateDraft) === 'DraftLimitReached') {
         return l`You've reached the maximum number of drafts`
       }
       return l`Failed to save draft`
@@ -1008,7 +1009,7 @@ export const ComposePost = ({
   const hasUnavailableChatInvite = linkQueries.some(
     q =>
       q.data?.type === 'chat-invite' &&
-      !bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, q.data.view),
+      !bsky.isType(ChatBskyGroupDefs.joinLinkPreviewView, q.data.view),
   )
 
   const canPost =
@@ -1124,21 +1125,18 @@ export const ComposePost = ({
             5,
             _e => true,
             async () => {
-              const res = await client.call(
-                app.bsky.unspecced.getPostThreadV2,
-                {
-                  anchor: postUri! as AtUriString,
-                  above: false,
-                  below: filteredThread.posts.length - 1,
-                  branchingFactor: 1,
-                },
-              )
+              const res = await client.call(AppBskyUnspeccedGetPostThreadV2, {
+                anchor: postUri! as AtUriString,
+                above: false,
+                below: filteredThread.posts.length - 1,
+                branchingFactor: 1,
+              })
               if (res.thread.length !== filteredThread.posts.length) {
                 throw new Error(`composer: app view is not ready`)
               }
               if (
                 !res.thread.every(p =>
-                  bsky.isType(app.bsky.unspecced.defs.threadItemPost, p.value),
+                  bsky.isType(AppBskyUnspeccedDefs.threadItemPost, p.value),
                 )
               ) {
                 throw new Error(`composer: app view returned non-post items`)
@@ -1210,7 +1208,7 @@ export const ComposePost = ({
           const resolved = q.data
           if (
             resolved?.type === 'chat-invite' &&
-            bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, resolved.view)
+            bsky.isType(ChatBskyGroupDefs.joinLinkPreviewView, resolved.view)
           ) {
             ax.metric('groupchat:inviteLink:shared', {
               convoId: resolved.view.convoId,
@@ -1249,7 +1247,7 @@ export const ComposePost = ({
       void whenAppViewReady(client, initQuote.uri, res => {
         const anchor = res.thread.at(0)
         if (
-          bsky.isType(app.bsky.unspecced.defs.threadItemPost, anchor?.value) &&
+          bsky.isType(AppBskyUnspeccedDefs.threadItemPost, anchor?.value) &&
           anchor.value.post.quoteCount !== initQuote.quoteCount
         ) {
           onPost?.(postUri)
@@ -2512,14 +2510,14 @@ function useKeyboardVerticalOffset() {
 async function whenAppViewReady(
   client: Client,
   uri: string,
-  fn: (res: app.bsky.unspecced.getPostThreadV2.$OutputBody) => boolean,
+  fn: (res: AppBskyUnspeccedGetPostThreadV2.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
     () =>
-      client.call(app.bsky.unspecced.getPostThreadV2, {
+      client.call(AppBskyUnspeccedGetPostThreadV2, {
         anchor: uri as AtUriString,
         above: false,
         below: 0,

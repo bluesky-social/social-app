@@ -6,7 +6,8 @@ import {
 } from '@tanstack/react-query'
 
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyGraphGetBlocks from '#/lexicons/app/bsky/graph/getBlocks'
 
 const RQKEY_ROOT = 'my-blocked-accounts'
 export const RQKEY = () => [RQKEY_ROOT]
@@ -15,15 +16,15 @@ type RQPageParam = string | undefined
 export function useMyBlockedAccountsQuery() {
   const client = useAppviewClient()
   return useInfiniteQuery<
-    app.bsky.graph.getBlocks.$OutputBody,
+    AppBskyGraphGetBlocks.$OutputBody,
     Error,
-    InfiniteData<app.bsky.graph.getBlocks.$OutputBody>,
+    InfiniteData<AppBskyGraphGetBlocks.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      return await client.call(app.bsky.graph.getBlocks, {
+      return await client.call(AppBskyGraphGetBlocks, {
         limit: 30,
         cursor: pageParam,
       })
@@ -36,9 +37,9 @@ export function useMyBlockedAccountsQuery() {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<app.bsky.actor.defs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<app.bsky.graph.getBlocks.$OutputBody>
+    InfiniteData<AppBskyGraphGetBlocks.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })

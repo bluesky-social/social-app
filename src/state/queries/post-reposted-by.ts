@@ -7,7 +7,8 @@ import {
 } from '@tanstack/react-query'
 
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyFeedGetRepostedBy from '#/lexicons/app/bsky/feed/getRepostedBy'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -19,15 +20,15 @@ export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 export function usePostRepostedByQuery(resolvedUri: string | undefined) {
   const client = useAppviewClient()
   return useInfiniteQuery<
-    app.bsky.feed.getRepostedBy.$OutputBody,
+    AppBskyFeedGetRepostedBy.$OutputBody,
     Error,
-    InfiniteData<app.bsky.feed.getRepostedBy.$OutputBody>,
+    InfiniteData<AppBskyFeedGetRepostedBy.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(resolvedUri || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      return await client.call(app.bsky.feed.getRepostedBy, {
+      return await client.call(AppBskyFeedGetRepostedBy, {
         // the enabled flag prevents this from running until resolvedUri is set
         uri: (resolvedUri || '') as AtUriString,
         limit: PAGE_SIZE,
@@ -43,9 +44,9 @@ export function usePostRepostedByQuery(resolvedUri: string | undefined) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<app.bsky.actor.defs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<app.bsky.feed.getRepostedBy.$OutputBody>
+    InfiniteData<AppBskyFeedGetRepostedBy.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })

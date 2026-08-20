@@ -9,7 +9,9 @@ import {
 
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import type * as AppBskyActorGetSuggestions from '#/lexicons/app/bsky/actor/getSuggestions'
+import * as AppBskyGraphGetSuggestedFollowsByActor from '#/lexicons/app/bsky/graph/getSuggestedFollowsByActor'
 import type * as bsky from '#/types/bsky'
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows'
@@ -34,12 +36,9 @@ export function useSuggestedFollowsByActorQuery({
     staleTime,
     queryKey: suggestedFollowsByActorQueryKey(did),
     queryFn: async () => {
-      const data = await client.call(
-        app.bsky.graph.getSuggestedFollowsByActor,
-        {
-          actor: did as DidString,
-        },
-      )
+      const data = await client.call(AppBskyGraphGetSuggestedFollowsByActor, {
+        actor: did as DidString,
+      })
       const suggestions = data.suggestions.filter(
         profile => !profile.viewer?.following,
       )
@@ -102,7 +101,7 @@ export function useSuggestedFollowsByActorWithDismiss({
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<app.bsky.actor.defs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileView, void> {
   yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did)
   yield* findAllProfilesInSuggestedFollowsByActorQueryData(queryClient, did)
 }
@@ -112,7 +111,7 @@ function* findAllProfilesInSuggestedFollowsQueryData(
   did: string,
 ) {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<app.bsky.actor.getSuggestions.$OutputBody>
+    InfiniteData<AppBskyActorGetSuggestions.$OutputBody>
   >({
     queryKey: [suggestedFollowsQueryKeyRoot],
   })
@@ -135,7 +134,7 @@ function* findAllProfilesInSuggestedFollowsByActorQueryData(
   did: string,
 ) {
   const queryDatas =
-    queryClient.getQueriesData<app.bsky.graph.getSuggestedFollowsByActor.$OutputBody>(
+    queryClient.getQueriesData<AppBskyGraphGetSuggestedFollowsByActor.$OutputBody>(
       {
         queryKey: [suggestedFollowsByActorQueryKeyRoot],
       },

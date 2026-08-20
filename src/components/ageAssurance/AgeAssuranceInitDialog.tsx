@@ -34,7 +34,7 @@ import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useBeginAgeAssurance} from '#/ageAssurance/useBeginAgeAssurance'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import * as AppBskyAgeassuranceBegin from '#/lexicons/app/bsky/ageassurance/begin'
 
 export {useDialogControl} from '#/components/Dialog/context'
 
@@ -142,7 +142,7 @@ function Inner() {
       )
 
       if (e instanceof XrpcResponseError) {
-        switch (matchXrpcError(e, app.bsky.ageassurance.begin)) {
+        switch (matchXrpcError(e, AppBskyAgeassuranceBegin)) {
           case 'InvalidEmail':
             error = _(
               msg`Please enter a valid, non-temporary email address. You may need to access this email in the future.`,

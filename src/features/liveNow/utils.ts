@@ -2,7 +2,8 @@ import {type I18n} from '@lingui/core'
 import {plural} from '@lingui/core/macro'
 import psl from 'psl'
 
-import {app} from '#/lexicons'
+import * as AppBskyActorStatus from '#/lexicons/app/bsky/actor/status'
+import * as AppBskyEmbedExternal from '#/lexicons/app/bsky/embed/external'
 import * as bsky from '#/types/bsky'
 
 /**
@@ -11,8 +12,8 @@ import * as bsky from '#/types/bsky'
  */
 export function getValidLiveStatusRecord(
   statusRecord: unknown,
-): app.bsky.actor.status.Main | null {
-  if (!bsky.matches(app.bsky.actor.status, statusRecord)) return null
+): AppBskyActorStatus.Main | null {
+  if (!bsky.matches(AppBskyActorStatus, statusRecord)) return null
   return statusRecord
 }
 
@@ -23,7 +24,7 @@ export function getValidLiveStatusRecord(
 export function getLiveLinkFromStatusRecord(statusRecord: unknown): string {
   const record = getValidLiveStatusRecord(statusRecord)
   if (!record) return ''
-  if (!bsky.isType(app.bsky.embed.external.main, record.embed)) return ''
+  if (!bsky.isType(AppBskyEmbedExternal.main, record.embed)) return ''
   return record.embed.external.uri
 }
 

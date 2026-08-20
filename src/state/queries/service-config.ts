@@ -2,7 +2,7 @@ import {useQuery} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyUnspeccedGetConfig from '#/lexicons/app/bsky/unspecced/getConfig'
 
 type ServiceConfig = {
   checkEmailConfirmed: boolean
@@ -21,7 +21,7 @@ export function useServiceConfigQuery() {
     queryKey: ['service-config'],
     queryFn: async () => {
       try {
-        const data = await client.call(app.bsky.unspecced.getConfig)
+        const data = await client.call(AppBskyUnspeccedGetConfig)
         return {
           checkEmailConfirmed: Boolean(data.checkEmailConfirmed),
           // @ts-expect-error not included in the lexicon atm

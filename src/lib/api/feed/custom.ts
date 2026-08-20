@@ -10,11 +10,12 @@ import {
   getAppLanguageAsContentLanguage,
   getContentLanguages,
 } from '#/state/preferences/languages'
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedGetFeed from '#/lexicons/app/bsky/feed/getFeed'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
-type GetCustomFeedParams = XrpcRequestParams<typeof app.bsky.feed.getFeed.main>
+type GetCustomFeedParams = XrpcRequestParams<typeof AppBskyFeedGetFeed.main>
 
 export class CustomFeedAPI implements FeedAPI {
   client: Client
@@ -35,10 +36,10 @@ export class CustomFeedAPI implements FeedAPI {
     this.userInterests = userInterests
   }
 
-  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
+  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
     const contentLangs = getContentLanguages().join(',')
     const data = await this.client.call(
-      app.bsky.feed.getFeed,
+      AppBskyFeedGetFeed,
       {
         ...this.params,
         limit: 1,
@@ -66,7 +67,7 @@ export class CustomFeedAPI implements FeedAPI {
      */
     const data = this.client.did
       ? await this.client.call(
-          app.bsky.feed.getFeed,
+          AppBskyFeedGetFeed,
           {
             ...this.params,
             cursor,
@@ -144,7 +145,7 @@ function getLoggedOutAppviewClient(): Client {
  */
 async function loggedOutFetch(
   params: GetCustomFeedParams,
-): Promise<app.bsky.feed.getFeed.$OutputBody | null> {
+): Promise<AppBskyFeedGetFeed.$OutputBody | null> {
   const contentLangs = getAppLanguageAsContentLanguage()
 
   let data = await getFeedOrNull(params, contentLangs)
@@ -172,13 +173,11 @@ async function loggedOutFetch(
 async function getFeedOrNull(
   params: GetCustomFeedParams,
   contentLangs: string,
-): Promise<app.bsky.feed.getFeed.$OutputBody | null> {
+): Promise<AppBskyFeedGetFeed.$OutputBody | null> {
   try {
-    return await getLoggedOutAppviewClient().call(
-      app.bsky.feed.getFeed,
-      params,
-      {headers: {'Accept-Language': contentLangs}},
-    )
+    return await getLoggedOutAppviewClient().call(AppBskyFeedGetFeed, params, {
+      headers: {'Accept-Language': contentLangs},
+    })
   } catch (e) {
     if (e instanceof XrpcResponseError) {
       return null

@@ -17,7 +17,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import * as Toast from '#/components/Toast'
-import {chat} from '#/lexicons'
+import * as ChatBskyGroupDefs from '#/lexicons/chat/bsky/group/defs'
 import * as bsky from '#/types/bsky'
 import {
   type ChatInviteAction,
@@ -72,7 +72,7 @@ export function Root({
     status = 'loading'
   } else if (error) {
     status = 'error'
-  } else if (bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, preview)) {
+  } else if (bsky.isType(ChatBskyGroupDefs.joinLinkPreviewView, preview)) {
     status = 'available'
   } else {
     // Resolved to a disabled/invalid/unrecognized preview - nothing to join.
@@ -80,7 +80,7 @@ export function Root({
   }
 
   let action: ChatInviteAction | undefined
-  if (bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, preview)) {
+  if (bsky.isType(ChatBskyGroupDefs.joinLinkPreviewView, preview)) {
     const convoId = preview.convo?.id
     const isFollowing = preview.owner.viewer?.followedBy ?? false
     const hasRequested = !convoId && preview.viewer?.requestedAt != null

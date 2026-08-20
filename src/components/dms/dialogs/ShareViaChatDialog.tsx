@@ -11,7 +11,8 @@ import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
 import {InitiateChatFlow} from '#/components/dms/InitiateChatFlow'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoGetConvoForMembers from '#/lexicons/chat/bsky/convo/getConvoForMembers'
+import * as ChatBskyGroupCreateGroup from '#/lexicons/chat/bsky/group/createGroup'
 
 export function SendViaChatDialog({
   control,
@@ -68,7 +69,7 @@ function SendViaChatDialogInner({
       if (isNetworkError(error)) {
         errorMessage = l`A network error occurred. Please check your internet connection.`
       } else {
-        switch (matchXrpcError(error, chat.bsky.convo.getConvoForMembers)) {
+        switch (matchXrpcError(error, ChatBskyConvoGetConvoForMembers)) {
           case 'AccountSuspended':
             errorMessage = l`Suspended accounts cannot participate in chat.`
             break
@@ -104,7 +105,7 @@ function SendViaChatDialogInner({
       if (isNetworkError(error)) {
         errorMessage = l`A network error occurred. Please check your internet connection.`
       } else {
-        switch (matchXrpcError(error, chat.bsky.group.createGroup)) {
+        switch (matchXrpcError(error, ChatBskyGroupCreateGroup)) {
           case 'AccountSuspended':
             errorMessage = l`Suspended accounts cannot participate in a group chat.`
             break

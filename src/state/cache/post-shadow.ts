@@ -11,7 +11,9 @@ import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/qu
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts-v2'
 import {findAllPostsInQueryData as findAllPostsInThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
-import {app} from '#/lexicons'
+import * as AppBskyEmbedRecord from '#/lexicons/app/bsky/embed/record'
+import * as AppBskyEmbedRecordWithMedia from '#/lexicons/app/bsky/embed/recordWithMedia'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
 import * as bsky from '#/types/bsky'
 import {castAsShadow, type Shadow} from './types'
 export type {Shadow} from './types'
@@ -24,8 +26,7 @@ export interface PostShadow {
   likeUri: AtUriString | 'pending' | undefined
   repostUri: AtUriString | 'pending' | undefined
   isDeleted: boolean
-  embed:
-    app.bsky.embed.record.View | app.bsky.embed.recordWithMedia.View | undefined
+  embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined
   pinned: boolean
   optimisticReplyCount: number | undefined
   bookmarked: boolean | undefined
@@ -35,7 +36,7 @@ export const POST_TOMBSTONE = Symbol('PostTombstone')
 
 const emitter = new EventEmitter()
 const shadows: WeakMap<
-  app.bsky.feed.defs.PostView,
+  AppBskyFeedDefs.PostView,
   Partial<PostShadow>
 > = new WeakMap()
 
@@ -43,13 +44,13 @@ const shadows: WeakMap<
  * Use with caution! This function returns the raw shadow data for a post.
  * Prefer using `usePostShadow`.
  */
-export function dangerousGetPostShadow(post: app.bsky.feed.defs.PostView) {
+export function dangerousGetPostShadow(post: AppBskyFeedDefs.PostView) {
   return shadows.get(post)
 }
 
 export function usePostShadow(
-  post: app.bsky.feed.defs.PostView,
-): Shadow<app.bsky.feed.defs.PostView> | typeof POST_TOMBSTONE {
+  post: AppBskyFeedDefs.PostView,
+): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
   const [shadow, setShadow] = useState(() => shadows.get(post))
   const [prevPost, setPrevPost] = useState(post)
   if (post !== prevPost) {
@@ -77,9 +78,9 @@ export function usePostShadow(
 }
 
 function mergeShadow(
-  post: app.bsky.feed.defs.PostView,
+  post: AppBskyFeedDefs.PostView,
   shadow: Partial<PostShadow>,
-): Shadow<app.bsky.feed.defs.PostView> | typeof POST_TOMBSTONE {
+): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
   if (shadow.isDeleted) {
     return POST_TOMBSTONE
   }
@@ -128,10 +129,10 @@ function mergeShadow(
   let embed: typeof post.embed
   if ('embed' in shadow) {
     if (
-      (bsky.isType(app.bsky.embed.record.view, post.embed) &&
-        bsky.isType(app.bsky.embed.record.view, shadow.embed)) ||
-      (bsky.isType(app.bsky.embed.recordWithMedia.view, post.embed) &&
-        bsky.isType(app.bsky.embed.recordWithMedia.view, shadow.embed))
+      (bsky.isType(AppBskyEmbedRecord.view, post.embed) &&
+        bsky.isType(AppBskyEmbedRecord.view, shadow.embed)) ||
+      (bsky.isType(AppBskyEmbedRecordWithMedia.view, post.embed) &&
+        bsky.isType(AppBskyEmbedRecordWithMedia.view, shadow.embed))
     ) {
       /*
        * `isType` asserts a present, matching `$type` at runtime but narrows to
@@ -184,7 +185,7 @@ export function updatePostShadow(
 function* findPostsInCache(
   queryClient: QueryClient,
   uri: string,
-): Generator<app.bsky.feed.defs.PostView, void> {
+): Generator<AppBskyFeedDefs.PostView, void> {
   for (let post of findAllPostsInFeedQueryData(queryClient, uri)) {
     yield post
   }

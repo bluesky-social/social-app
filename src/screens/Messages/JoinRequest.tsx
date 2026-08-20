@@ -20,7 +20,7 @@ import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/componen
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {chat} from '#/lexicons'
+import * as ChatBskyGroupDefs from '#/lexicons/chat/bsky/group/defs'
 import * as bsky from '#/types/bsky'
 
 const desktopDarkBg = require('../../../assets/images/chat-desktop-bg-dark.webp')
@@ -86,7 +86,7 @@ export function JoinRequest({setScreenState}: Props) {
           {error ||
           (data &&
             !bsky.isType(
-              chat.bsky.group.defs.joinLinkPreviewView,
+              ChatBskyGroupDefs.joinLinkPreviewView,
               joinLinkPreview,
             )) ? (
             <Wrapper>
@@ -106,7 +106,7 @@ export function JoinRequest({setScreenState}: Props) {
           ) : data &&
             moderationOpts &&
             bsky.isType(
-              chat.bsky.group.defs.joinLinkPreviewView,
+              ChatBskyGroupDefs.joinLinkPreviewView,
               joinLinkPreview,
             ) ? (
             <Wrapper>

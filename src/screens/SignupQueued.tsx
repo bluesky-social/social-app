@@ -15,7 +15,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
 import {IS_IOS, IS_LIQUID_GLASS, IS_WEB} from '#/env'
-import {com} from '#/lexicons'
+import * as ComAtprotoTempCheckSignupQueue from '#/lexicons/com/atproto/temp/checkSignupQueue'
 
 const COL_WIDTH = 400
 
@@ -39,7 +39,7 @@ export function SignupQueued() {
   const checkStatus = useCallback(async () => {
     setProcessing(true)
     try {
-      const res = await pdsClient.call(com.atproto.temp.checkSignupQueue)
+      const res = await pdsClient.call(ComAtprotoTempCheckSignupQueue)
       if (res.activated) {
         /*
          * Ready to go, exchange the access token for a usable one and kick off

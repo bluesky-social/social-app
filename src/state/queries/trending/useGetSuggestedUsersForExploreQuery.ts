@@ -9,7 +9,8 @@ import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyUnspeccedGetSuggestedUsersForExplore from '#/lexicons/app/bsky/unspecced/getSuggestedUsersForExplore'
 
 export type QueryProps = {
   category?: string | null
@@ -34,7 +35,7 @@ export function useGetSuggestedUsersForExploreQuery(props: QueryProps = {}) {
       const userInterests = aggregateUserInterests(preferences)
 
       const data = await client.call(
-        app.bsky.unspecced.getSuggestedUsersForExplore,
+        AppBskyUnspeccedGetSuggestedUsersForExplore,
         {
           category: props.category ?? undefined,
           limit: props.limit || 10,
@@ -58,9 +59,9 @@ export function useGetSuggestedUsersForExploreQuery(props: QueryProps = {}) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<app.bsky.actor.defs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileView, void> {
   const responses =
-    queryClient.getQueriesData<app.bsky.unspecced.getSuggestedUsersForExplore.$OutputBody>(
+    queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedUsersForExplore.$OutputBody>(
       {
         queryKey: [getSuggestedUsersForExploreQueryKeyRoot],
       },

@@ -9,7 +9,12 @@ import {
 import {logger} from '#/logger'
 import {useAppviewClient, useChatClient} from '#/state/session'
 import * as Toast from '#/components/Toast'
-import {app, chat} from '#/lexicons'
+import type * as AppBskyNotificationDefs from '#/lexicons/app/bsky/notification/defs'
+import * as AppBskyNotificationGetPreferences from '#/lexicons/app/bsky/notification/getPreferences'
+import * as AppBskyNotificationPutPreferencesV2 from '#/lexicons/app/bsky/notification/putPreferencesV2'
+import type * as ChatBskyNotificationDefs from '#/lexicons/chat/bsky/notification/defs'
+import * as ChatBskyNotificationGetPreferences from '#/lexicons/chat/bsky/notification/getPreferences'
+import * as ChatBskyNotificationPutPreferences from '#/lexicons/chat/bsky/notification/putPreferences'
 
 const RQKEY_ROOT = 'notification-settings'
 const RQKEY_APP = [RQKEY_ROOT, 'app']
@@ -20,18 +25,18 @@ const RQKEY_CHAT = [RQKEY_ROOT, 'chat']
 // fetched and cached separately. This combined type names every preference for
 // the generic settings dialog, but it is never the shape of a query response.
 export type NotificationSettingsPreferences = Omit<
-  app.bsky.notification.defs.Preferences,
+  AppBskyNotificationDefs.Preferences,
   'chat'
 > &
-  Partial<Pick<chat.bsky.notification.defs.Preferences, 'chat' | 'chatRequest'>>
+  Partial<Pick<ChatBskyNotificationDefs.Preferences, 'chat' | 'chatRequest'>>
 
 export type AppNotificationSettingsPreferences = Omit<
-  app.bsky.notification.defs.Preferences,
+  AppBskyNotificationDefs.Preferences,
   'chat'
 >
 
 export type ChatNotificationSettingsPreferences = Pick<
-  chat.bsky.notification.defs.Preferences,
+  ChatBskyNotificationDefs.Preferences,
   'chat' | 'chatRequest'
 >
 
@@ -41,9 +46,9 @@ export type NotificationSettingsPreferenceName = Exclude<
 >
 
 export type NotificationSettingsPreference =
-  | app.bsky.notification.defs.Preference
-  | app.bsky.notification.defs.FilterablePreference
-  | chat.bsky.notification.defs.ChatPreference
+  | AppBskyNotificationDefs.Preference
+  | AppBskyNotificationDefs.FilterablePreference
+  | ChatBskyNotificationDefs.ChatPreference
 
 export function isChatPreferenceName(
   name: NotificationSettingsPreferenceName,
@@ -54,7 +59,7 @@ export function isChatPreferenceName(
 type NotificationSettingsUpdate = Partial<NotificationSettingsPreferences>
 
 type AppNotificationSettingsUpdate = Partial<
-  Omit<app.bsky.notification.defs.Preferences, '$type' | 'chat'>
+  Omit<AppBskyNotificationDefs.Preferences, '$type' | 'chat'>
 >
 
 type ChatNotificationSettingsUpdate =
@@ -68,7 +73,7 @@ export function useNotificationSettingsQuery({
   return useQuery({
     queryKey: RQKEY_APP,
     queryFn: async (): Promise<AppNotificationSettingsPreferences> => {
-      const data = await client.call(app.bsky.notification.getPreferences)
+      const data = await client.call(AppBskyNotificationGetPreferences)
       return appPreferencesWithoutChat(data.preferences)
     },
     enabled,
@@ -83,7 +88,7 @@ export function useChatNotificationSettingsQuery({
   return useQuery({
     queryKey: RQKEY_CHAT,
     queryFn: async (): Promise<ChatNotificationSettingsPreferences> => {
-      const data = await client.call(chat.bsky.notification.getPreferences)
+      const data = await client.call(ChatBskyNotificationGetPreferences)
       return chatPreferencesForSettings(data.preferences)
     },
     enabled,
@@ -103,13 +108,10 @@ export function useNotificationSettingsUpdateMutation() {
       const {appUpdate, chatUpdate} = splitNotificationSettingsUpdate(update)
       await Promise.all([
         hasUpdates(appUpdate)
-          ? appviewClient.call(
-              app.bsky.notification.putPreferencesV2,
-              appUpdate,
-            )
+          ? appviewClient.call(AppBskyNotificationPutPreferencesV2, appUpdate)
           : undefined,
         hasUpdates(chatUpdate)
-          ? chatClient.call(chat.bsky.notification.putPreferences, chatUpdate)
+          ? chatClient.call(ChatBskyNotificationPutPreferences, chatUpdate)
           : undefined,
       ])
     },
@@ -155,15 +157,15 @@ function optimisticUpdateNotificationSettings(
 }
 
 function appPreferencesWithoutChat(
-  preferences: app.bsky.notification.defs.Preferences,
-): Omit<app.bsky.notification.defs.Preferences, 'chat'> {
+  preferences: AppBskyNotificationDefs.Preferences,
+): Omit<AppBskyNotificationDefs.Preferences, 'chat'> {
   const {chat: _ignoredChat, ...appPreferences} = preferences
   return appPreferences
 }
 
 function chatPreferencesForSettings(
-  preferences: chat.bsky.notification.defs.Preferences,
-): Pick<chat.bsky.notification.defs.Preferences, 'chat' | 'chatRequest'> {
+  preferences: ChatBskyNotificationDefs.Preferences,
+): Pick<ChatBskyNotificationDefs.Preferences, 'chat' | 'chatRequest'> {
   return {
     chat: preferences.chat,
     chatRequest: preferences.chatRequest,

@@ -21,11 +21,11 @@ export * as starterPack from '#/types/bsky/starterPack'
  * schema, so these helpers take the schema object itself:
  *
  * ```ts
- * import {app} from '#/lexicons'
+ * import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
  * import * as bsky from '#/types/bsky'
  *
- * bsky.isType(app.bsky.feed.post, v)
- * bsky.matches(app.bsky.feed.post, v)
+ * bsky.isType(AppBskyFeedPost, v)
+ * bsky.matches(AppBskyFeedPost, v)
  * ```
  *
  * Every generated namespace module (e.g. `app.bsky.feed.post`) re-exports its
@@ -53,10 +53,10 @@ type TypedSchema = RecordSchema | TypedObjectSchema
  *
  * Usage:
  * ```ts
- * import {app} from '#/lexicons'
+ * import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
  * import * as bsky from '#/types/bsky'
  *
- * if (bsky.isType(app.bsky.feed.post, item)) {
+ * if (bsky.isType(AppBskyFeedPost, item)) {
  *   // `item` is narrowed to the post record type here
  * }
  * ```
@@ -89,10 +89,10 @@ export function isType<S extends TypedSchema>(
  *
  * Usage:
  * ```ts
- * import {app} from '#/lexicons'
+ * import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
  * import * as bsky from '#/types/bsky'
  *
- * if (bsky.matches(app.bsky.feed.post, item)) {
+ * if (bsky.matches(AppBskyFeedPost, item)) {
  *   // `item` is narrowed to the post record type here
  * }
  * ```
@@ -115,10 +115,10 @@ export function matches<S extends Schema>(
  *
  * Usage:
  * ```ts
- * import {app} from '#/lexicons'
+ * import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
  * import * as bsky from '#/types/bsky'
  *
- * const record = bsky.parse(app.bsky.feed.post, item) // typed, or throws
+ * const record = bsky.parse(AppBskyFeedPost, item) // typed, or throws
  * ```
  */
 export function parse<S extends Schema>(
@@ -136,10 +136,10 @@ export function parse<S extends Schema>(
  *
  * Usage:
  * ```ts
- * import {app} from '#/lexicons'
+ * import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
  * import * as bsky from '#/types/bsky'
  *
- * const result = bsky.safeParse(app.bsky.feed.post, item)
+ * const result = bsky.safeParse(AppBskyFeedPost, item)
  * if (result.success) {
  *   // `result.value` is the typed post record
  * } else {

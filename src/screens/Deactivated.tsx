@@ -26,7 +26,7 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
-import {com} from '#/lexicons'
+import * as ComAtprotoServerActivateAccount from '#/lexicons/com/atproto/server/activateAccount'
 
 const COL_WIDTH = 400
 
@@ -72,7 +72,7 @@ export function Deactivated() {
   const handleActivate = useCallback(async () => {
     try {
       setPending(true)
-      await pdsClient.call(com.atproto.server.activateAccount)
+      await pdsClient.call(ComAtprotoServerActivateAccount)
       await queryClient.resetQueries()
       await refreshSession()
     } catch (e: any) {

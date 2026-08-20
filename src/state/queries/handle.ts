@@ -4,7 +4,9 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {useAppviewClient, usePdsClient} from '#/state/session'
-import {app, com} from '#/lexicons'
+import * as AppBskyActorGetProfile from '#/lexicons/app/bsky/actor/getProfile'
+import * as ComAtprotoIdentityResolveHandle from '#/lexicons/com/atproto/identity/resolveHandle'
+import * as ComAtprotoIdentityUpdateHandle from '#/lexicons/com/atproto/identity/updateHandle'
 
 const handleQueryKeyRoot = 'handle'
 const fetchHandleQueryKey = (handleOrDid: string) => [
@@ -25,7 +27,7 @@ export function useFetchHandle() {
           staleTime: STALE.MINUTES.FIVE,
           queryKey: fetchHandleQueryKey(handleOrDid),
           queryFn: () =>
-            client.call(app.bsky.actor.getProfile, {
+            client.call(AppBskyActorGetProfile, {
               actor: handleOrDid as DidString,
             }),
         })
@@ -45,7 +47,7 @@ export function useUpdateHandleMutation(opts?: {
 
   return useMutation({
     mutationFn: async ({handle}: {handle: string}) => {
-      await client.call(com.atproto.identity.updateHandle, {
+      await client.call(ComAtprotoIdentityUpdateHandle, {
         // callers validate the handle before submitting
         handle: handle as HandleString,
       })
@@ -71,7 +73,7 @@ export function useFetchDid() {
         queryFn: async () => {
           let identifier = handleOrDid
           if (!identifier.startsWith('did:')) {
-            const data = await client.call(com.atproto.identity.resolveHandle, {
+            const data = await client.call(ComAtprotoIdentityResolveHandle, {
               handle: identifier as HandleString,
             })
             identifier = data.did

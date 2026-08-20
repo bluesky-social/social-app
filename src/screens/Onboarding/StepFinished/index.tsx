@@ -44,7 +44,11 @@ import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/ico
 import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import type * as AppBskyActorProfile from '#/lexicons/app/bsky/actor/profile'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphGetStarterPack from '#/lexicons/app/bsky/graph/getStarterPack'
+import * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
 import * as bsky from '#/types/bsky'
 import {ValuePropositionPager} from './ValuePropositionPager'
 
@@ -65,12 +69,12 @@ export function StepFinished() {
   const finishOnboarding = useCallback(async () => {
     setSaving(true)
 
-    let starterPack: app.bsky.graph.defs.StarterPackView | undefined
-    let listItems: app.bsky.graph.defs.ListItemView[] | undefined
+    let starterPack: AppBskyGraphDefs.StarterPackView | undefined
+    let listItems: AppBskyGraphDefs.ListItemView[] | undefined
 
     if (activeStarterPack?.uri) {
       try {
-        const spRes = await appviewClient.call(app.bsky.graph.getStarterPack, {
+        const spRes = await appviewClient.call(AppBskyGraphGetStarterPack, {
           starterPack: activeStarterPack.uri as AtUriString,
         })
         starterPack = spRes.starterPack
@@ -111,7 +115,7 @@ export function StepFinished() {
           await pdsClient.call(setInterestsPref, {tags: selectedInterests})
 
           // Default feeds that every user should have pinned when landing in the app
-          const feedsToSave: app.bsky.actor.defs.SavedFeed[] = [
+          const feedsToSave: AppBskyActorDefs.SavedFeed[] = [
             {
               ...DISCOVER_SAVED_FEED,
               id: TID.nextStr(),
@@ -148,7 +152,7 @@ export function StepFinished() {
               : undefined
 
           await pdsClient.call(upsertProfile, async existing => {
-            let next: Un$Typed<app.bsky.actor.profile.Main> = existing ?? {}
+            let next: Un$Typed<AppBskyActorProfile.Main> = existing ?? {}
 
             if (blobPromise) {
               const res = await blobPromise
@@ -210,8 +214,7 @@ export function StepFinished() {
     ax.metric('onboarding:finished:nextPressed', {
       usedStarterPack: Boolean(starterPack),
       starterPackName:
-        starterPack &&
-        bsky.isType(app.bsky.graph.starterpack, starterPack.record)
+        starterPack && bsky.isType(AppBskyGraphStarterpack, starterPack.record)
           ? starterPack.record.name
           : undefined,
       starterPackCreator: starterPack?.creator.did,

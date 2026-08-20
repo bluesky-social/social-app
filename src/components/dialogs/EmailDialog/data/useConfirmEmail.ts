@@ -1,7 +1,7 @@
 import {useMutation} from '@tanstack/react-query'
 
 import {usePdsClient, useSession, useSessionApi} from '#/state/session'
-import {com} from '#/lexicons'
+import * as ComAtprotoServerConfirmEmail from '#/lexicons/com/atproto/server/confirmEmail'
 
 export function useConfirmEmail({
   onSuccess,
@@ -17,7 +17,7 @@ export function useConfirmEmail({
         throw new Error('No email found for the current account')
       }
 
-      await pdsClient.call(com.atproto.server.confirmEmail, {
+      await pdsClient.call(ComAtprotoServerConfirmEmail, {
         email: currentAccount.email.trim(),
         token: token.trim(),
       })

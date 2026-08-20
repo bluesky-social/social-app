@@ -6,7 +6,8 @@ import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyUnspeccedGetSuggestedOnboardingUsers from '#/lexicons/app/bsky/unspecced/getSuggestedOnboardingUsers'
 
 export type QueryProps = {
   category?: string | null
@@ -40,7 +41,7 @@ export function useGetSuggestedOnboardingUsersQuery(props: QueryProps) {
       const overrideInterests = props.overrideInterests.join(',')
 
       const data = await client.call(
-        app.bsky.unspecced.getSuggestedOnboardingUsers,
+        AppBskyUnspeccedGetSuggestedOnboardingUsers,
         {
           category: props.category ?? undefined,
           limit: props.limit || 10,
@@ -64,9 +65,9 @@ export function useGetSuggestedOnboardingUsersQuery(props: QueryProps) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<app.bsky.actor.defs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileView, void> {
   const responses =
-    queryClient.getQueriesData<app.bsky.unspecced.getSuggestedOnboardingUsers.$OutputBody>(
+    queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedOnboardingUsers.$OutputBody>(
       {
         queryKey: [getSuggestedOnboardingUsersQueryKeyRoot],
       },

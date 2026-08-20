@@ -9,7 +9,7 @@ import {type DialogOuterProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {IS_NATIVE} from '#/env'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoLeaveConvo from '#/lexicons/chat/bsky/convo/leaveConvo'
 
 export function LeaveConvoPrompt({
   control,
@@ -38,7 +38,7 @@ export function LeaveConvoPrompt({
       if (isNetworkError(error)) {
         errorMessage = l`A network error occurred. Please check your internet connection.`
       } else {
-        switch (matchXrpcError(error, chat.bsky.convo.leaveConvo)) {
+        switch (matchXrpcError(error, ChatBskyConvoLeaveConvo)) {
           case 'InvalidConvo':
             errorMessage = l`Conversation not found.`
             break

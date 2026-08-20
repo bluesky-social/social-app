@@ -1,11 +1,12 @@
 import {type Client, type XrpcRequestParams} from '@atproto/lex'
 
-import {app} from '#/lexicons'
+import * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedGetAuthorFeed from '#/lexicons/app/bsky/feed/getAuthorFeed'
 import * as bsky from '#/types/bsky'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 type GetAuthorFeedParams = XrpcRequestParams<
-  typeof app.bsky.feed.getAuthorFeed.main
+  typeof AppBskyFeedGetAuthorFeed.main
 >
 
 export class AuthorFeedAPI implements FeedAPI {
@@ -29,8 +30,8 @@ export class AuthorFeedAPI implements FeedAPI {
     return params
   }
 
-  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
-    const data = await this.client.call(app.bsky.feed.getAuthorFeed, {
+  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+    const data = await this.client.call(AppBskyFeedGetAuthorFeed, {
       ...this.params,
       limit: 1,
     })
@@ -50,7 +51,7 @@ export class AuthorFeedAPI implements FeedAPI {
      * The agent behaved the same way - its `success` flag was only ever true -
      * so the empty-page branch this replaces was unreachable.
      */
-    const data = await this.client.call(app.bsky.feed.getAuthorFeed, {
+    const data = await this.client.call(AppBskyFeedGetAuthorFeed, {
       ...this.params,
       cursor,
       limit,
@@ -61,15 +62,12 @@ export class AuthorFeedAPI implements FeedAPI {
     }
   }
 
-  _filter(feed: app.bsky.feed.defs.FeedViewPost[]) {
+  _filter(feed: AppBskyFeedDefs.FeedViewPost[]) {
     if (this.params.filter === 'posts_and_author_threads') {
       return feed.filter(post => {
         const isReply = post.reply
-        const isRepost = bsky.isType(
-          app.bsky.feed.defs.reasonRepost,
-          post.reason,
-        )
-        const isPin = bsky.isType(app.bsky.feed.defs.reasonPin, post.reason)
+        const isRepost = bsky.isType(AppBskyFeedDefs.reasonRepost, post.reason)
+        const isPin = bsky.isType(AppBskyFeedDefs.reasonPin, post.reason)
         if (!isReply) return true
         if (isRepost || isPin) return true
         return isReply && isAuthorReplyChain(this.params.actor, post, feed)
@@ -82,15 +80,15 @@ export class AuthorFeedAPI implements FeedAPI {
 
 function isAuthorReplyChain(
   actor: string,
-  post: app.bsky.feed.defs.FeedViewPost,
-  posts: app.bsky.feed.defs.FeedViewPost[],
+  post: AppBskyFeedDefs.FeedViewPost,
+  posts: AppBskyFeedDefs.FeedViewPost[],
 ): boolean {
   // current post is by a different user (shouldn't happen)
   if (post.post.author.did !== actor) return false
 
   const replyParent = post.reply?.parent
 
-  if (bsky.isType(app.bsky.feed.defs.postView, replyParent)) {
+  if (bsky.isType(AppBskyFeedDefs.postView, replyParent)) {
     // reply parent is by a different user
     if (replyParent.author.did !== actor) return false
 

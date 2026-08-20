@@ -15,7 +15,9 @@ import {
   RQKEY_ALL as LIST_MEMBERS_ALL_RQKEY,
 } from '#/state/queries/list-members'
 import {usePdsClient, useSession} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import type * as AppBskyGraphGetStarterPacksWithMembership from '#/lexicons/app/bsky/graph/getStarterPacksWithMembership'
+import * as AppBskyGraphListitem from '#/lexicons/app/bsky/graph/listitem'
 import type * as bsky from '#/types/bsky'
 import {RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY} from './actor-starter-packs'
 
@@ -47,7 +49,7 @@ export function useListMembershipAddMutation({
        * The mutation takes the list uri and actor did as plain strings, so they
        * are asserted to their branded forms here.
        */
-      const res = await pdsClient.create(app.bsky.graph.listitem, {
+      const res = await pdsClient.create(AppBskyGraphListitem, {
         subject: actorDid as DidString,
         list: listUri as AtUriString,
         createdAt: toDatetimeString(new Date()),
@@ -69,7 +71,7 @@ export function useListMembershipAddMutation({
       // update WITH_MEMBERSHIPS query for starter packs
       if (subject) {
         queryClient.setQueryData<
-          InfiniteData<app.bsky.graph.getStarterPacksWithMembership.$OutputBody>
+          InfiniteData<AppBskyGraphGetStarterPacksWithMembership.$OutputBody>
         >(STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid), old => {
           if (!old) return old
 
@@ -90,7 +92,7 @@ export function useListMembershipAddMutation({
                         listItemsSample: [
                           {
                             uri: data.uri,
-                            subject: subject as app.bsky.actor.defs.ProfileView,
+                            subject: subject as AppBskyActorDefs.ProfileView,
                           },
                           ...(spWithMembership.starterPack.listItemsSample?.filter(
                             item => item.subject.did !== variables.actorDid,
@@ -105,7 +107,7 @@ export function useListMembershipAddMutation({
                       },
                       listItem: {
                         uri: data.uri,
-                        subject: subject as app.bsky.actor.defs.ProfileView,
+                        subject: subject as AppBskyActorDefs.ProfileView,
                       },
                     }
                   }
@@ -144,7 +146,7 @@ export function useListMembershipRemoveMutation({
         throw new Error('Not signed in')
       }
       const membershipUrip = new AtUri(membershipUri)
-      await pdsClient.delete(app.bsky.graph.listitem, {
+      await pdsClient.delete(AppBskyGraphListitem, {
         repo: currentAccount.did,
         rkey: membershipUrip.rkeySafe,
       })
@@ -163,7 +165,7 @@ export function useListMembershipRemoveMutation({
 
       // update WITH_MEMBERSHIPS query for starter packs
       queryClient.setQueryData<
-        InfiniteData<app.bsky.graph.getStarterPacksWithMembership.$OutputBody>
+        InfiniteData<AppBskyGraphGetStarterPacksWithMembership.$OutputBody>
       >(STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid), old => {
         if (!old) return old
 

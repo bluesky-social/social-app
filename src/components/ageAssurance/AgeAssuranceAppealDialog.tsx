@@ -16,7 +16,8 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {logger} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
-import {com, tools} from '#/lexicons'
+import * as ComAtprotoModerationCreateReport from '#/lexicons/com/atproto/moderation/createReport'
+import * as ToolsOzoneReportDefs from '#/lexicons/tools/ozone/report/defs'
 
 export function AgeAssuranceAppealDialog({
   control,
@@ -56,9 +57,9 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
       }
 
       await client.call(
-        com.atproto.moderation.createReport,
+        ComAtprotoModerationCreateReport,
         {
-          reasonType: tools.ozone.report.defs.reasonAppeal.value,
+          reasonType: ToolsOzoneReportDefs.reasonAppeal.value,
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
             did: currentAccount.did,

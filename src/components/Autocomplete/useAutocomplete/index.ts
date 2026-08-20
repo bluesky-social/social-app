@@ -13,7 +13,7 @@ import {
   type AutocompleteItemType,
   type AutocompleteProfile,
 } from '#/components/Autocomplete/types'
-import {app} from '#/lexicons'
+import * as AppBskyActorSearchActorsTypeahead from '#/lexicons/app/bsky/actor/searchActorsTypeahead'
 import {useEmojiSearch} from './useEmojiSearch'
 
 const DEFAULT_MOD_OPTS = {
@@ -53,7 +53,7 @@ export function useAutocomplete({
         // Going from "foo" to "foo." should not clear matches.
         q = q.toLowerCase().trim().replace(/\.$/, '')
 
-        const data = await client.call(app.bsky.actor.searchActorsTypeahead, {
+        const data = await client.call(AppBskyActorSearchActorsTypeahead, {
           q,
           limit: limit || 8,
         })

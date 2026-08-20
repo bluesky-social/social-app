@@ -23,7 +23,8 @@ import {QrCode} from '#/components/StarterPack/QrCode'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
 import * as bsky from '#/types/bsky'
 
 export function QrCodeDialog({
@@ -31,7 +32,7 @@ export function QrCodeDialog({
   link,
   control,
 }: {
-  starterPack: app.bsky.graph.defs.StarterPackView
+  starterPack: AppBskyGraphDefs.StarterPackView
   link?: string
   control: DialogControlProps
 }) {
@@ -90,7 +91,7 @@ export function QrCodeDialog({
       } else {
         setIsSaveProcessing(true)
 
-        if (!bsky.matches(app.bsky.graph.starterpack, starterPack.record)) {
+        if (!bsky.matches(AppBskyGraphStarterpack, starterPack.record)) {
           return
         }
 

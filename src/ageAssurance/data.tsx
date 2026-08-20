@@ -32,7 +32,10 @@ import {
 } from '#/ageAssurance/util'
 import {IS_DEV} from '#/env'
 import {useGeolocation} from '#/geolocation'
-import {app, type chat} from '#/lexicons'
+import {type chat} from '#/lexicons'
+import type * as AppBskyAgeassuranceDefs from '#/lexicons/app/bsky/ageassurance/defs'
+import * as AppBskyAgeassuranceGetConfig from '#/lexicons/app/bsky/ageassurance/getConfig'
+import * as AppBskyAgeassuranceGetState from '#/lexicons/app/bsky/ageassurance/getState'
 import {device} from '#/storage'
 
 /**
@@ -96,11 +99,11 @@ export async function getConfig() {
    * before there is any session (and while logged out), so it goes through the
    * process-wide public client rather than a bundle one.
    */
-  return await getPublicAppviewClient().call(app.bsky.ageassurance.getConfig)
+  return await getPublicAppviewClient().call(AppBskyAgeassuranceGetConfig)
 }
 export function getConfigFromCache():
-  app.bsky.ageassurance.getConfig.$OutputBody | undefined {
-  return qc.getQueryData<app.bsky.ageassurance.getConfig.$OutputBody>(
+  AppBskyAgeassuranceGetConfig.$OutputBody | undefined {
+  return qc.getQueryData<AppBskyAgeassuranceGetConfig.$OutputBody>(
     configQueryKey,
   )
 }
@@ -121,7 +124,7 @@ export function prefetchConfig() {
       try {
         logger.debug(`prefetchAgeAssuranceConfig: resolving...`)
         const res = await networkRetry(3, () => getConfig())
-        qc.setQueryData<app.bsky.ageassurance.getConfig.$OutputBody>(
+        qc.setQueryData<AppBskyAgeassuranceGetConfig.$OutputBody>(
           configQueryKey,
           res,
         )
@@ -137,10 +140,7 @@ export function prefetchConfig() {
 export async function refetchConfig() {
   logger.debug(`refetchConfig: fetching...`)
   const res = await getConfig()
-  qc.setQueryData<app.bsky.ageassurance.getConfig.$OutputBody>(
-    configQueryKey,
-    res,
-  )
+  qc.setQueryData<AppBskyAgeassuranceGetConfig.$OutputBody>(configQueryKey, res)
   return res
 }
 export function useConfigQuery() {
@@ -185,7 +185,7 @@ export async function getServerState({appviewClient}: {appviewClient: Client}) {
     logger.error(`getServerState: missing geolocation countryCode`)
     return null
   }
-  const data = await appviewClient.call(app.bsky.ageassurance.getState, {
+  const data = await appviewClient.call(AppBskyAgeassuranceGetState, {
     countryCode: geolocation.countryCode,
     regionCode: geolocation.regionCode,
   })
@@ -207,8 +207,8 @@ export function getServerStateFromCache({
   did,
 }: {
   did: string
-}): app.bsky.ageassurance.getState.$OutputBody | undefined {
-  return qc.getQueryData<app.bsky.ageassurance.getState.$OutputBody>(
+}): AppBskyAgeassuranceGetState.$OutputBody | undefined {
+  return qc.getQueryData<AppBskyAgeassuranceGetState.$OutputBody>(
     createServerStateQueryKey({did}),
   )
 }
@@ -234,7 +234,7 @@ export async function prefetchServerState({
     logger.debug(`prefetchServerState: resolving...`)
     const res = await networkRetry(3, () => getServerState({appviewClient}))
     if (res) {
-      qc.setQueryData<app.bsky.ageassurance.getState.$OutputBody>(qk, res)
+      qc.setQueryData<AppBskyAgeassuranceGetState.$OutputBody>(qk, res)
     }
   } catch (err) {
     const e = err as Error
@@ -253,7 +253,7 @@ export async function refetchServerState({
   logger.debug(`refetchServerState: fetching...`)
   const res = await networkRetry(3, () => getServerState({appviewClient}))
   if (res) {
-    qc.setQueryData<app.bsky.ageassurance.getState.$OutputBody>(
+    qc.setQueryData<AppBskyAgeassuranceGetState.$OutputBody>(
       createServerStateQueryKey({did}),
       res,
     )
@@ -263,16 +263,16 @@ export async function refetchServerState({
 export function usePatchServerState() {
   const {currentAccount} = useSession()
   return useCallback(
-    (next: app.bsky.ageassurance.defs.State) => {
+    (next: AppBskyAgeassuranceDefs.State) => {
       if (!currentAccount) return
       const did = currentAccount.did
       const prev = getServerStateFromCache({did})
-      const merged: app.bsky.ageassurance.getState.$OutputBody = {
+      const merged: AppBskyAgeassuranceGetState.$OutputBody = {
         metadata: {},
         ...(prev || {}),
         state: next,
       }
-      qc.setQueryData<app.bsky.ageassurance.getState.$OutputBody>(
+      qc.setQueryData<AppBskyAgeassuranceGetState.$OutputBody>(
         createServerStateQueryKey({did}),
         merged,
       )
@@ -555,7 +555,7 @@ export function getDeviceSignalsFromCacheForRegion({
   region,
 }: {
   did: string
-  region: app.bsky.ageassurance.defs.ConfigRegion
+  region: AppBskyAgeassuranceDefs.ConfigRegion
 }): AgeRange.AgeRangeResponse | undefined {
   const regionKey = createRegionKey(region)
   return getDeviceSignalsMapFromCache({did})?.[regionKey]
@@ -709,11 +709,11 @@ export type AgeAssuranceServerData = {
   /**
    * The raw config from the appview.
    */
-  config: app.bsky.ageassurance.defs.Config | undefined
+  config: AppBskyAgeassuranceDefs.Config | undefined
   /**
    * The raw state from the appview. Must be further processed before being useful.
    */
-  state: app.bsky.ageassurance.defs.State | undefined
+  state: AppBskyAgeassuranceDefs.State | undefined
   metadata: AgeAssuranceMetadata | undefined
   /**
    * The native on-device age signals for the region the user is currently in,

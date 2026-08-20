@@ -3,14 +3,14 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoGetConvoForMembers from '#/lexicons/chat/bsky/convo/getConvoForMembers'
 import {precacheConvoQuery} from './conversation'
 
 export function useGetConvoForMembers({
   onSuccess,
   onError,
 }: {
-  onSuccess?: (data: chat.bsky.convo.getConvoForMembers.$OutputBody) => void
+  onSuccess?: (data: ChatBskyConvoGetConvoForMembers.$OutputBody) => void
   onError?: (error: Error) => void
 }) {
   const queryClient = useQueryClient()
@@ -18,7 +18,7 @@ export function useGetConvoForMembers({
 
   return useMutation({
     mutationFn: async (members: string[]) => {
-      return await client.call(chat.bsky.convo.getConvoForMembers, {
+      return await client.call(ChatBskyConvoGetConvoForMembers, {
         // callers pass already-resolved actor dids
         members: members as DidString[],
       })

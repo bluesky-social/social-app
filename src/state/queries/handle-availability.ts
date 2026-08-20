@@ -10,7 +10,8 @@ import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {createServiceClient} from '#/lib/lexClient'
 import {createFullHandle} from '#/lib/strings/handles'
 import {useAnalytics} from '#/analytics'
-import {com} from '#/lexicons'
+import * as ComAtprotoIdentityResolveHandle from '#/lexicons/com/atproto/identity/resolveHandle'
+import * as ComAtprotoTempCheckHandleAvailability from '#/lexicons/com/atproto/temp/checkHandleAvailability'
 import * as bsky from '#/types/bsky'
 
 export const RQKEY_handleAvailability = (
@@ -88,7 +89,7 @@ export async function checkHandleAvailability(
      */
     const client = createServiceClient(BSKY_SERVICE)
     // entryway has a special API for handle availability
-    const data = await client.call(com.atproto.temp.checkHandleAvailability, {
+    const data = await client.call(ComAtprotoTempCheckHandleAvailability, {
       // the caller assembles this from a validated username and domain
       handle: handle as HandleString,
       // callers pass an ISO date string built from the birth-date picker
@@ -98,14 +99,14 @@ export async function checkHandleAvailability(
 
     if (
       bsky.isType(
-        com.atproto.temp.checkHandleAvailability.resultAvailable,
+        ComAtprotoTempCheckHandleAvailability.resultAvailable,
         data.result,
       )
     ) {
       return {available: true} as const
     } else if (
       bsky.isType(
-        com.atproto.temp.checkHandleAvailability.resultUnavailable,
+        ComAtprotoTempCheckHandleAvailability.resultUnavailable,
         data.result,
       )
     ) {
@@ -126,7 +127,7 @@ export async function checkHandleAvailability(
      */
     const client = createServiceClient(PUBLIC_BSKY_SERVICE)
     try {
-      const data = await client.call(com.atproto.identity.resolveHandle, {
+      const data = await client.call(ComAtprotoIdentityResolveHandle, {
         handle: handle as HandleString,
       })
 

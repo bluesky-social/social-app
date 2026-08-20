@@ -24,7 +24,10 @@ import {
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
 import {type Gif} from '#/features/gifPicker/types'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import type * as AppBskyDraftDefs from '#/lexicons/app/bsky/draft/defs'
+import type * as AppBskyFeedPostgate from '#/lexicons/app/bsky/feed/postgate'
+import * as AppBskyRichtextFacet from '#/lexicons/app/bsky/richtext/facet'
 import * as bsky from '#/types/bsky'
 import {
   createVideoState,
@@ -105,7 +108,7 @@ export type PostAction =
 
 export type ThreadDraft = {
   posts: PostDraft[]
-  postgate: app.bsky.feed.postgate.Main
+  postgate: AppBskyFeedPostgate.Main
   threadgate: ThreadgateAllowUISetting[]
 }
 
@@ -124,7 +127,7 @@ export type ComposerState = {
 }
 
 export type ComposerAction =
-  | {type: 'update_postgate'; postgate: app.bsky.feed.postgate.Main}
+  | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Main}
   | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
   | {
       type: 'update_post'
@@ -146,8 +149,8 @@ export type ComposerAction =
       type: 'restore_from_draft'
       draftId: string
       posts: PostDraft[]
-      threadgateAllow: app.bsky.draft.defs.Draft['threadgateAllow']
-      postgateEmbeddingRules: app.bsky.draft.defs.Draft['postgateEmbeddingRules']
+      threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow']
+      postgateEmbeddingRules: AppBskyDraftDefs.Draft['postgateEmbeddingRules']
 
       /** Map of localRefPath -> loaded media path/URL */
       loadedMedia: Map<string, string>
@@ -157,7 +160,7 @@ export type ComposerAction =
   | {
       type: 'clear'
       initInteractionSettings:
-        app.bsky.actor.defs.PostInteractionSettingsPref | undefined
+        AppBskyActorDefs.PostInteractionSettingsPref | undefined
     }
   | {
       type: 'mark_saved'
@@ -631,7 +634,7 @@ export function createComposerState({
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
   initInteractionSettings:
-    app.bsky.actor.defs.PostInteractionSettingsPref | undefined
+    AppBskyActorDefs.PostInteractionSettingsPref | undefined
 }): ComposerState {
   let media: ImagesMedia | GalleryMedia | undefined
   if (initImageUris?.length) {
@@ -678,7 +681,7 @@ export function createComposerState({
     if (initRichText.facets) {
       for (const facet of initRichText.facets) {
         for (const feature of facet.features) {
-          if (bsky.isType(app.bsky.richtext.facet.link, feature)) {
+          if (bsky.isType(AppBskyRichtextFacet.link, feature)) {
             if (isBskyPostUrl(feature.uri)) {
               detectedPostUris.set(feature.uri, {facet, rt: initRichText})
             } else {

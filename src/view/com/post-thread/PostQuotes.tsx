@@ -12,7 +12,8 @@ import {usePostQuotesQuery} from '#/state/queries/post-quotes'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {Post} from '#/view/com/post/Post'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
 import * as bsky from '#/types/bsky'
 import {List} from '../util/List'
 
@@ -21,9 +22,9 @@ function renderItem({
   index,
 }: {
   item: {
-    post: app.bsky.feed.defs.PostView
+    post: AppBskyFeedDefs.PostView
     moderation: ModerationDecision
-    record: app.bsky.feed.post.Main
+    record: AppBskyFeedPost.Main
   }
   index: number
 }) {
@@ -31,9 +32,9 @@ function renderItem({
 }
 
 function keyExtractor(item: {
-  post: app.bsky.feed.defs.PostView
+  post: AppBskyFeedDefs.PostView
   moderation: ModerationDecision
-  record: app.bsky.feed.post.Main
+  record: AppBskyFeedPost.Main
 }) {
   return item.post.uri
 }
@@ -67,10 +68,7 @@ export function PostQuotes({uri}: {uri: string}) {
     data?.pages
       .flatMap(page =>
         page.posts.map(post => {
-          if (
-            !bsky.isType(app.bsky.feed.post, post.record) ||
-            !moderationOpts
-          ) {
+          if (!bsky.isType(AppBskyFeedPost, post.record) || !moderationOpts) {
             return null
           }
           const moderation = moderatePost(post, moderationOpts)

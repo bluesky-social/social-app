@@ -33,7 +33,9 @@ import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAppviewClient, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import type * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
 import * as bsky from '#/types/bsky'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
@@ -79,10 +81,10 @@ export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
 export interface FeedPostSliceItem {
   _reactKey: string
   uri: AtUriString
-  post: app.bsky.feed.defs.PostView
-  record: app.bsky.feed.post.Main
+  post: AppBskyFeedDefs.PostView
+  record: AppBskyFeedPost.Main
   moderation: ModerationDecision
-  parentAuthor?: app.bsky.actor.defs.ProfileViewBasic
+  parentAuthor?: AppBskyActorDefs.ProfileViewBasic
   isParentBlocked?: boolean
   isParentNotFound?: boolean
 }
@@ -97,8 +99,8 @@ export interface FeedPostSlice {
   reqId: string | undefined
   feedPostUri: string
   reason?:
-    | app.bsky.feed.defs.ReasonRepost
-    | app.bsky.feed.defs.ReasonPin
+    | AppBskyFeedDefs.ReasonRepost
+    | AppBskyFeedDefs.ReasonPin
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
 }
@@ -106,7 +108,7 @@ export interface FeedPostSlice {
 export interface FeedPageUnselected {
   api: FeedAPI
   cursor: string | undefined
-  feed: app.bsky.feed.defs.FeedViewPost[]
+  feed: AppBskyFeedDefs.FeedViewPost[]
   fetchedAt: number
 }
 
@@ -511,7 +513,7 @@ function createApi({
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<app.bsky.feed.defs.PostView, undefined> {
+): Generator<AppBskyFeedDefs.PostView, undefined> {
   const atUri = new AtUri(uri)
 
   const queryDatas = queryClient.getQueriesData<
@@ -534,7 +536,7 @@ export function* findAllPostsInQueryData(
           yield embedViewRecordToPostView(quotedPost)
         }
 
-        if (bsky.isType(app.bsky.feed.defs.postView, item.reply?.parent)) {
+        if (bsky.isType(AppBskyFeedDefs.postView, item.reply?.parent)) {
           if (didOrHandleUriMatches(atUri, item.reply.parent)) {
             yield item.reply.parent
           }
@@ -548,7 +550,7 @@ export function* findAllPostsInQueryData(
           }
         }
 
-        if (bsky.isType(app.bsky.feed.defs.postView, item.reply?.root)) {
+        if (bsky.isType(AppBskyFeedDefs.postView, item.reply?.root)) {
           if (didOrHandleUriMatches(atUri, item.reply.root)) {
             yield item.reply.root
           }
@@ -566,7 +568,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<app.bsky.actor.defs.ProfileViewBasic, undefined> {
+): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<FeedPageUnselected>
   >({
@@ -586,13 +588,13 @@ export function* findAllProfilesInQueryData(
           yield quotedPost.author
         }
         if (
-          bsky.isType(app.bsky.feed.defs.postView, item.reply?.parent) &&
+          bsky.isType(AppBskyFeedDefs.postView, item.reply?.parent) &&
           item.reply?.parent?.author.did === did
         ) {
           yield item.reply.parent.author
         }
         if (
-          bsky.isType(app.bsky.feed.defs.postView, item.reply?.root) &&
+          bsky.isType(AppBskyFeedDefs.postView, item.reply?.root) &&
           item.reply?.root?.author.did === did
         ) {
           yield item.reply.root.author
@@ -603,7 +605,7 @@ export function* findAllProfilesInQueryData(
 }
 
 function assertSomePostsPassModeration(
-  feed: app.bsky.feed.defs.FeedViewPost[],
+  feed: AppBskyFeedDefs.FeedViewPost[],
   moderationPrefs: ModerationPrefs,
 ) {
   // no posts in this feed

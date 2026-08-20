@@ -2,7 +2,8 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoAcceptConvo from '#/lexicons/chat/bsky/convo/acceptConvo'
+import type * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
 import {
   type ConvoRequestListQueryData,
   optimisticDelete as optimisticDeleteRequest,
@@ -25,7 +26,7 @@ export function useAcceptConversation(
     onError,
   }: {
     onMutate?: () => void
-    onSuccess?: (data: chat.bsky.convo.acceptConvo.$OutputBody) => void
+    onSuccess?: (data: ChatBskyConvoAcceptConvo.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -34,7 +35,7 @@ export function useAcceptConversation(
 
   return useMutation({
     mutationFn: async () => {
-      return await client.call(chat.bsky.convo.acceptConvo, {convoId})
+      return await client.call(ChatBskyConvoAcceptConvo, {convoId})
     },
     onMutate: () => {
       // snapshot every convo-list cache up front so onError can restore them
@@ -43,7 +44,7 @@ export function useAcceptConversation(
         queryClient.getQueriesData<ConvoListQueryData>({
           queryKey: [CONVO_LIST_ROOT_KEY],
         })
-      let convoBeingAccepted: chat.bsky.convo.defs.ConvoView | null = null
+      let convoBeingAccepted: ChatBskyConvoDefs.ConvoView | null = null
       for (const [_key, data] of queryClient.getQueriesData<ConvoListQueryData>(
         {queryKey: CONVO_LIST_PARTIAL_KEY('request')},
       )) {
@@ -56,7 +57,7 @@ export function useAcceptConversation(
         (old?: ConvoListQueryData) => optimisticDelete(convoId, old),
       )
       if (convoBeingAccepted) {
-        const acceptedConvo: chat.bsky.convo.defs.ConvoView = {
+        const acceptedConvo: ChatBskyConvoDefs.ConvoView = {
           ...convoBeingAccepted,
           status: 'accepted',
         }

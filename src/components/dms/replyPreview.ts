@@ -1,7 +1,11 @@
 import {useLingui} from '@lingui/react/macro'
 
 import {BSKY_APP_HOST, toShortUrl} from '#/lib/strings/url-helpers'
-import {app, chat} from '#/lexicons'
+import * as AppBskyEmbedExternal from '#/lexicons/app/bsky/embed/external'
+import * as AppBskyEmbedRecord from '#/lexicons/app/bsky/embed/record'
+import type * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import * as ChatBskyEmbedJoinLink from '#/lexicons/chat/bsky/embed/joinLink'
+import * as ChatBskyGroupDefs from '#/lexicons/chat/bsky/group/defs'
 import * as bsky from '#/types/bsky'
 
 /**
@@ -14,13 +18,13 @@ type ReplyEmbedSummary =
   {type: 'external'; uri: string} | {type: 'post'} | {type: 'unknown'}
 
 function summarizeReplyEmbed(
-  embed: chat.bsky.convo.defs.MessageView['embed'],
+  embed: ChatBskyConvoDefs.MessageView['embed'],
 ): ReplyEmbedSummary {
-  if (!bsky.isType(app.bsky.embed.record.view, embed)) return {type: 'unknown'}
+  if (!bsky.isType(AppBskyEmbedRecord.view, embed)) return {type: 'unknown'}
   const {record} = embed
-  if (bsky.isType(app.bsky.embed.record.viewRecord, record)) {
+  if (bsky.isType(AppBskyEmbedRecord.viewRecord, record)) {
     const inner = record.embeds?.[0]
-    if (bsky.isType(app.bsky.embed.external.view, inner)) {
+    if (bsky.isType(AppBskyEmbedExternal.view, inner)) {
       return {type: 'external', uri: inner.external.uri}
     }
     return {type: 'post'}
@@ -38,21 +42,19 @@ function summarizeReplyEmbed(
  * callers can render it in a muted/italic style.
  */
 export function useReplyPreviewText(): (
-  message: chat.bsky.convo.defs.MessageView,
+  message: ChatBskyConvoDefs.MessageView,
 ) => {text: string; subtle: boolean} {
   const {t: l} = useLingui()
 
-  return (message: chat.bsky.convo.defs.MessageView) => {
+  return (message: ChatBskyConvoDefs.MessageView) => {
     const text = message.text
     if (text.trim()) {
       return {text, subtle: false}
     }
 
-    if (bsky.isType(chat.bsky.embed.joinLink.view, message.embed)) {
+    if (bsky.isType(ChatBskyEmbedJoinLink.view, message.embed)) {
       const {joinLinkPreview} = message.embed
-      if (
-        bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, joinLinkPreview)
-      ) {
+      if (bsky.isType(ChatBskyGroupDefs.joinLinkPreviewView, joinLinkPreview)) {
         return {
           text: `${BSKY_APP_HOST}/chat/${joinLinkPreview.code}`,
           subtle: true,
@@ -60,7 +62,7 @@ export function useReplyPreviewText(): (
       }
       if (
         bsky.isType(
-          chat.bsky.group.defs.disabledJoinLinkPreviewView,
+          ChatBskyGroupDefs.disabledJoinLinkPreviewView,
           joinLinkPreview,
         )
       ) {
@@ -74,7 +76,7 @@ export function useReplyPreviewText(): (
       }
       if (
         bsky.isType(
-          chat.bsky.group.defs.invalidJoinLinkPreviewView,
+          ChatBskyGroupDefs.invalidJoinLinkPreviewView,
           joinLinkPreview,
         )
       ) {

@@ -2,7 +2,8 @@ import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 
 import {hasProp} from '#/lib/type-guards'
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
 import * as bsky from '#/types/bsky'
 import {
   AppLanguage,
@@ -62,8 +63,8 @@ function getLocalizedLanguage(
   }
 }
 
-export function getPostLanguageTags(post: app.bsky.feed.defs.PostView) {
-  return bsky.isType(app.bsky.feed.post, post.record) &&
+export function getPostLanguageTags(post: AppBskyFeedDefs.PostView) {
+  return bsky.isType(AppBskyFeedPost, post.record) &&
     hasProp(post.record, 'langs') &&
     Array.isArray(post.record.langs)
     ? post.record.langs
@@ -87,7 +88,7 @@ export function codeToLanguageName(lang2or3: string, appLang: string): string {
 }
 
 export function getPostLanguage(
-  post: app.bsky.feed.defs.PostView,
+  post: AppBskyFeedDefs.PostView,
 ): string | undefined {
   let candidates: string[] = getPostLanguageTags(post)
   let postText: string = ''
@@ -122,7 +123,7 @@ export function getPostLanguage(
 }
 
 export function isPostInLanguage(
-  post: app.bsky.feed.defs.PostView,
+  post: AppBskyFeedDefs.PostView,
   targetLangs: string[],
 ): boolean {
   const lang = getPostLanguage(post)

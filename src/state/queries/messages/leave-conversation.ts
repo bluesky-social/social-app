@@ -3,7 +3,8 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {invalidateJoinLinkPreviewsForConvo} from '#/state/queries/join-links'
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoLeaveConvo from '#/lexicons/chat/bsky/convo/leaveConvo'
+import type * as ChatBskyConvoListConvos from '#/lexicons/chat/bsky/convo/listConvos'
 import {
   type ConvoRequestListQueryData,
   optimisticDelete as optimisticDeleteRequest,
@@ -18,7 +19,7 @@ export function RQKEY(convoId: string | undefined) {
 
 type ConvoListQueryData = {
   pageParams: Array<string | undefined>
-  pages: Array<chat.bsky.convo.listConvos.$OutputBody>
+  pages: Array<ChatBskyConvoListConvos.$OutputBody>
 }
 
 export function useLeaveConvo(
@@ -29,7 +30,7 @@ export function useLeaveConvo(
     onError,
   }: {
     onMutate?: () => void
-    onSuccess?: (data: chat.bsky.convo.leaveConvo.$OutputBody) => void
+    onSuccess?: (data: ChatBskyConvoLeaveConvo.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -41,7 +42,7 @@ export function useLeaveConvo(
     mutationFn: async () => {
       if (!convoId) throw new Error('No convoId provided')
 
-      return await client.call(chat.bsky.convo.leaveConvo, {convoId})
+      return await client.call(ChatBskyConvoLeaveConvo, {convoId})
     },
     onMutate: () => {
       const prevConvoListQueries =

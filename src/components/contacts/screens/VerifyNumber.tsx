@@ -22,7 +22,8 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import * as AppBskyContactStartPhoneVerification from '#/lexicons/app/bsky/contact/startPhoneVerification'
+import * as AppBskyContactVerifyPhone from '#/lexicons/app/bsky/contact/verifyPhone'
 import {OTPInput} from '../components/OTPInput'
 import {constructFullPhoneNumber, prettyPhoneNumber} from '../phone-number'
 import {type Action, type State, useOnPressBackButton} from '../state'
@@ -70,7 +71,7 @@ export function VerifyNumber({
     isSuccess,
   } = useMutation({
     mutationFn: async (code: string) => {
-      const data = await client.call(app.bsky.contact.verifyPhone, {
+      const data = await client.call(AppBskyContactVerifyPhone, {
         code,
         phone,
       })
@@ -102,7 +103,7 @@ export function VerifyNumber({
         })
         return
       }
-      switch (matchXrpcError(err, app.bsky.contact.verifyPhone)) {
+      switch (matchXrpcError(err, AppBskyContactVerifyPhone)) {
         case 'InvalidCode':
           setError({
             retryable: true,
@@ -140,7 +141,7 @@ export function VerifyNumber({
 
   const {mutate: resendCode, isPending: isResendingCode} = useMutation({
     mutationFn: async () => {
-      await client.call(app.bsky.contact.startPhoneVerification, {phone: phone})
+      await client.call(AppBskyContactStartPhoneVerification, {phone: phone})
     },
     onSuccess: () => {
       dispatch({type: 'RESEND_VERIFICATION_CODE'})
@@ -161,7 +162,7 @@ export function VerifyNumber({
         })
         return
       }
-      switch (matchXrpcError(err, app.bsky.contact.startPhoneVerification)) {
+      switch (matchXrpcError(err, AppBskyContactStartPhoneVerification)) {
         case 'InvalidPhone':
           setError({
             retryable: false,

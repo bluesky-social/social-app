@@ -6,7 +6,7 @@ import {
   IS_IOS,
   IS_WEB,
 } from '#/env'
-import {app} from '#/lexicons'
+import * as AppBskyAgeassuranceDefs from '#/lexicons/app/bsky/ageassurance/defs'
 
 /**
  * Minimum age required to access the app at all.
@@ -40,16 +40,16 @@ export const AGE_ASSURANCE_PLATFORM: 'web' | 'ios' | 'android' = IS_WEB
 export const DEVICE_SIGNALS_SUPPORTED: boolean =
   (IS_IOS && IOS_MAJOR_VERSION >= 26) || (IS_ANDROID && ANDROID_API_LEVEL >= 23)
 
-export const FALLBACK_REGION_CONFIG: app.bsky.ageassurance.defs.ConfigRegion = {
+export const FALLBACK_REGION_CONFIG: AppBskyAgeassuranceDefs.ConfigRegion = {
   countryCode: '*',
   regionCode: undefined,
   minAccessAge: MIN_ACCESS_AGE,
   rules: [
-    app.bsky.ageassurance.defs.configRegionRuleIfDeclaredOverAge.build({
+    AppBskyAgeassuranceDefs.configRegionRuleIfDeclaredOverAge.build({
       age: MIN_ACCESS_AGE,
       access: AgeAssuranceAccess.Full,
     }),
-    app.bsky.ageassurance.defs.configRegionRuleDefault.build({
+    AppBskyAgeassuranceDefs.configRegionRuleDefault.build({
       access: AgeAssuranceAccess.None,
     }),
   ],

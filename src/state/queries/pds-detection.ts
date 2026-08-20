@@ -9,7 +9,7 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {getPublicAppviewClient} from '#/state/session/clients'
-import {com} from '#/lexicons'
+import * as ComAtprotoIdentityResolveHandle from '#/lexicons/com/atproto/identity/resolveHandle'
 
 const RQKEY_ROOT = 'pds-detection'
 export const RQKEY = (identifier: string) => [RQKEY_ROOT, identifier]
@@ -162,7 +162,7 @@ export async function resolvePdsForIdentifier(
     } else {
       const data = await withResolveTimeout(signal =>
         client.call(
-          com.atproto.identity.resolveHandle,
+          ComAtprotoIdentityResolveHandle,
           {handle: norm as HandleString},
           {signal},
         ),

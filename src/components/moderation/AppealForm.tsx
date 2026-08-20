@@ -22,14 +22,16 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID} from '#/env'
-import {com, tools} from '#/lexicons'
+import type * as ComAtprotoLabelDefs from '#/lexicons/com/atproto/label/defs'
+import * as ComAtprotoModerationCreateReport from '#/lexicons/com/atproto/moderation/createReport'
+import * as ToolsOzoneReportDefs from '#/lexicons/tools/ozone/report/defs'
 
 export function AppealForm({
   label,
   control,
   onPressBack,
 }: {
-  label: com.atproto.label.defs.Label
+  label: ComAtprotoLabelDefs.Label
   control: Dialog.DialogOuterProps['control']
   onPressBack: () => void
 }) {
@@ -48,9 +50,9 @@ export function AppealForm({
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
       await client.call(
-        com.atproto.moderation.createReport,
+        ComAtprotoModerationCreateReport,
         {
-          reasonType: tools.ozone.report.defs.reasonAppeal.value,
+          reasonType: ToolsOzoneReportDefs.reasonAppeal.value,
           /*
            * `useLabelSubject` derives one shape or the other from the label's
            * `cid`: an at-uri plus cid for a record, or the label's `uri` reused

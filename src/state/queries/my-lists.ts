@@ -3,7 +3,10 @@ import {type QueryClient, useQuery} from '@tanstack/react-query'
 import {accumulate} from '#/lib/async/accumulate'
 import {STALE} from '#/state/queries'
 import {useAppviewClient, useSession} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphGetListBlocks from '#/lexicons/app/bsky/graph/getListBlocks'
+import * as AppBskyGraphGetListMutes from '#/lexicons/app/bsky/graph/getListMutes'
+import * as AppBskyGraphGetLists from '#/lexicons/app/bsky/graph/getLists'
 
 export type MyListsFilter =
   'all' | 'curate' | 'mod' | 'all-including-subscribed'
@@ -14,15 +17,15 @@ export const RQKEY = (filter: MyListsFilter) => [RQKEY_ROOT, filter]
 export function useMyListsQuery(filter: MyListsFilter) {
   const {currentAccount} = useSession()
   const client = useAppviewClient()
-  return useQuery<app.bsky.graph.defs.ListView[]>({
+  return useQuery<AppBskyGraphDefs.ListView[]>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(filter),
     async queryFn() {
-      let lists: app.bsky.graph.defs.ListView[] = []
+      let lists: AppBskyGraphDefs.ListView[] = []
       const promises = [
         accumulate(cursor =>
           client
-            .call(app.bsky.graph.getLists, {
+            .call(AppBskyGraphGetLists, {
               actor: currentAccount!.did,
               cursor,
               limit: 50,
@@ -37,7 +40,7 @@ export function useMyListsQuery(filter: MyListsFilter) {
         promises.push(
           accumulate(cursor =>
             client
-              .call(app.bsky.graph.getListMutes, {
+              .call(AppBskyGraphGetListMutes, {
                 cursor,
                 limit: 50,
               })
@@ -50,7 +53,7 @@ export function useMyListsQuery(filter: MyListsFilter) {
         promises.push(
           accumulate(cursor =>
             client
-              .call(app.bsky.graph.getListBlocks, {
+              .call(AppBskyGraphGetListBlocks, {
                 cursor,
                 limit: 50,
               })

@@ -32,7 +32,8 @@ import {useAppviewClient, useSession} from '#/state/session'
 import {useMergeThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {useBreakpoints} from '#/alf'
 import {IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import * as AppBskyUnspeccedGetPostThreadOtherV2 from '#/lexicons/app/bsky/unspecced/getPostThreadOtherV2'
+import * as AppBskyUnspeccedGetPostThreadV2 from '#/lexicons/app/bsky/unspecced/getPostThreadV2'
 
 export * from '#/state/queries/usePostThread/context'
 export {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread/queryCache'
@@ -73,7 +74,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
     queryKey: postThreadQueryKey,
     async queryFn(ctx) {
-      const data = await client.call(app.bsky.unspecced.getPostThreadV2, {
+      const data = await client.call(AppBskyUnspeccedGetPostThreadV2, {
         anchor: anchor! as AtUriString,
         branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
         below,
@@ -169,7 +170,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     enabled: additionalQueryEnabled,
     queryKey: postThreadOtherQueryKey,
     async queryFn() {
-      return await client.call(app.bsky.unspecced.getPostThreadOtherV2, {
+      return await client.call(AppBskyUnspeccedGetPostThreadOtherV2, {
         anchor: anchor! as AtUriString,
       })
     },

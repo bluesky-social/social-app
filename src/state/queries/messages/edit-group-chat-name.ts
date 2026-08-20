@@ -2,7 +2,8 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import * as ChatBskyGroupEditGroup from '#/lexicons/chat/bsky/group/editGroup'
 import * as bsky from '#/types/bsky'
 import {
   rollbackConvoOptimistic,
@@ -15,7 +16,7 @@ export function useEditGroupChatName(
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: chat.bsky.group.editGroup.$OutputBody) => void
+    onSuccess?: (data: ChatBskyGroupEditGroup.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -25,7 +26,7 @@ export function useEditGroupChatName(
   return useMutation({
     mutationFn: async ({name: groupName}: {name: string}) => {
       if (!convoId) throw new Error('No convoId provided')
-      return await client.call(chat.bsky.group.editGroup, {
+      return await client.call(ChatBskyGroupEditGroup, {
         convoId,
         name: groupName,
       })
@@ -33,7 +34,7 @@ export function useEditGroupChatName(
     onMutate: ({name: groupName}) => {
       if (!convoId) return
       return updateConvoOptimistic(queryClient, convoId, prev => {
-        if (!bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind))
+        if (!bsky.isType(ChatBskyConvoDefs.groupConvo, prev.kind))
           return undefined
         return {
           ...prev,

@@ -38,7 +38,7 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Hider from '#/components/moderation/Hider'
 import {IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
 import {AboutSection} from './AboutSection'
 import {ErrorScreen} from './components/ErrorScreen'
 import {Header} from './components/Header'
@@ -143,7 +143,7 @@ function ProfileListScreenLoaded({
   preferences,
 }: Props & {
   uri: string
-  list: app.bsky.graph.defs.ListView
+  list: AppBskyGraphDefs.ListView
   moderationOpts: ModerationOpts
   preferences: UsePreferencesQueryResponse
 }) {
@@ -155,7 +155,7 @@ function ProfileListScreenLoaded({
   const {rkey} = route.params
   const feedSectionRef = useRef<SectionRef>(null)
   const aboutSectionRef = useRef<SectionRef>(null)
-  const isCurateList = list.purpose === app.bsky.graph.defs.curatelist.value
+  const isCurateList = list.purpose === AppBskyGraphDefs.curatelist.value
   const isScreenFocused = useIsFocused()
   const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
   const isOwner = currentAccount?.did === list.creator.did

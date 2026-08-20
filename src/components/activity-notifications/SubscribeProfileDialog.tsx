@@ -33,7 +33,9 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import type * as AppBskyNotificationDefs from '#/lexicons/app/bsky/notification/defs'
+import type * as AppBskyNotificationListActivitySubscriptions from '#/lexicons/app/bsky/notification/listActivitySubscriptions'
+import * as AppBskyNotificationPutActivitySubscription from '#/lexicons/app/bsky/notification/putActivitySubscription'
 import type * as bsky from '#/types/bsky'
 
 export function SubscribeProfileDialog({
@@ -117,9 +119,9 @@ function DialogInner({
     error,
   } = useMutation({
     mutationFn: async (
-      activitySubscription: Un$Typed<app.bsky.notification.defs.ActivitySubscription>,
+      activitySubscription: Un$Typed<AppBskyNotificationDefs.ActivitySubscription>,
     ) => {
-      await client.call(app.bsky.notification.putActivitySubscription, {
+      await client.call(AppBskyNotificationPutActivitySubscription, {
         subject: profile.did,
         activitySubscription,
       })
@@ -145,7 +147,7 @@ function DialogInner({
           queryClient.setQueryData(
             RQKEY_getActivitySubscriptions,
             (
-              old?: InfiniteData<app.bsky.notification.listActivitySubscriptions.$OutputBody>,
+              old?: InfiniteData<AppBskyNotificationListActivitySubscriptions.$OutputBody>,
             ) => {
               if (!old) return old
               return {
@@ -305,8 +307,8 @@ function DialogInner({
 }
 
 function parseActivitySubscription(
-  sub?: app.bsky.notification.defs.ActivitySubscription,
-): Un$Typed<app.bsky.notification.defs.ActivitySubscription> {
+  sub?: AppBskyNotificationDefs.ActivitySubscription,
+): Un$Typed<AppBskyNotificationDefs.ActivitySubscription> {
   if (!sub) return {post: false, reply: false}
   const {post, reply} = sub
   return {post, reply}

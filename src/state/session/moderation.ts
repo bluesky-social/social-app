@@ -3,7 +3,7 @@ import {type DidString} from '@atproto/syntax'
 import {api} from '@bsky/sdk'
 
 import {IS_TEST_USER} from '#/lib/constants'
-import {com} from '#/lexicons'
+import * as ComAtprotoIdentityResolveHandle from '#/lexicons/com/atproto/identity/resolveHandle'
 import {account as accountStorage} from '#/storage'
 import {
   configureAdditionalModerationAuthorities,
@@ -101,7 +101,7 @@ function switchToBskyAppLabeler() {
 async function trySwitchToTestAppLabeler(client: Client) {
   const did = (
     await client
-      .call(com.atproto.identity.resolveHandle, {
+      .call(ComAtprotoIdentityResolveHandle, {
         handle: 'mod-authority.test',
       })
       .catch(_ => undefined)

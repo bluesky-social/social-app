@@ -1,7 +1,8 @@
 import {type AtUriString, toDatetimeString} from '@atproto/syntax'
 
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedThreadgate from '#/lexicons/app/bsky/feed/threadgate'
 import * as bsky from '#/types/bsky'
 
 /*
@@ -9,12 +10,11 @@ import * as bsky from '#/types/bsky'
  * against the threadgate record schema before its `allow` rules are read.
  */
 export function threadgateViewToAllowUISetting(
-  threadgateView: app.bsky.feed.defs.ThreadgateView | undefined,
+  threadgateView: AppBskyFeedDefs.ThreadgateView | undefined,
 ): ThreadgateAllowUISetting[] {
   // Validate the record for clarity, since backwards compat code is a little confusing
   const threadgate =
-    threadgateView &&
-    bsky.matches(app.bsky.feed.threadgate, threadgateView.record)
+    threadgateView && bsky.matches(AppBskyFeedThreadgate, threadgateView.record)
       ? threadgateView.record
       : undefined
   return threadgateRecordToAllowUISetting(threadgate)
@@ -25,7 +25,7 @@ export function threadgateViewToAllowUISetting(
  * {@link ThreadgateAllowUISetting}, for use by app UI.
  */
 export function threadgateRecordToAllowUISetting(
-  threadgate: app.bsky.feed.threadgate.Main | undefined,
+  threadgate: AppBskyFeedThreadgate.Main | undefined,
 ): ThreadgateAllowUISetting[] {
   /*
    * If `threadgate` doesn't exist (default), or if `threadgate.allow === undefined`, it means
@@ -45,13 +45,13 @@ export function threadgateRecordToAllowUISetting(
   const settings: ThreadgateAllowUISetting[] = threadgate.allow
     .map(allow => {
       let setting: ThreadgateAllowUISetting | undefined
-      if (bsky.isType(app.bsky.feed.threadgate.mentionRule, allow)) {
+      if (bsky.isType(AppBskyFeedThreadgate.mentionRule, allow)) {
         setting = {type: 'mention'}
-      } else if (bsky.isType(app.bsky.feed.threadgate.followingRule, allow)) {
+      } else if (bsky.isType(AppBskyFeedThreadgate.followingRule, allow)) {
         setting = {type: 'following'}
-      } else if (bsky.isType(app.bsky.feed.threadgate.listRule, allow)) {
+      } else if (bsky.isType(AppBskyFeedThreadgate.listRule, allow)) {
         setting = {type: 'list', list: allow.list}
-      } else if (bsky.isType(app.bsky.feed.threadgate.followerRule, allow)) {
+      } else if (bsky.isType(AppBskyFeedThreadgate.followerRule, allow)) {
         setting = {type: 'followers'}
       }
       return setting
@@ -70,12 +70,12 @@ export function threadgateRecordToAllowUISetting(
  */
 export function threadgateAllowUISettingToAllowRecordValue(
   threadgate: ThreadgateAllowUISetting[],
-): app.bsky.feed.threadgate.Main['allow'] {
+): AppBskyFeedThreadgate.Main['allow'] {
   if (threadgate.find(v => v.type === 'everybody')) {
     return undefined
   }
 
-  let allow: Exclude<app.bsky.feed.threadgate.Main['allow'], undefined> = []
+  let allow: Exclude<AppBskyFeedThreadgate.Main['allow'], undefined> = []
 
   if (!threadgate.find(v => v.type === 'nobody')) {
     for (const rule of threadgate) {
@@ -105,13 +105,13 @@ export function threadgateAllowUISettingToAllowRecordValue(
  * to an empty array. See other comments in this file.
  */
 export function mergeThreadgateRecords(
-  prev: app.bsky.feed.threadgate.Main,
-  next: Omit<Partial<app.bsky.feed.threadgate.Main>, 'hiddenReplies'> & {
+  prev: AppBskyFeedThreadgate.Main,
+  next: Omit<Partial<AppBskyFeedThreadgate.Main>, 'hiddenReplies'> & {
     hiddenReplies?: string[]
   },
-): app.bsky.feed.threadgate.Main {
+): AppBskyFeedThreadgate.Main {
   // can be undefined if everyone can reply!
-  const allow: app.bsky.feed.threadgate.Main['allow'] | undefined =
+  const allow: AppBskyFeedThreadgate.Main['allow'] | undefined =
     prev.allow || next.allow
       ? [...(prev.allow || []), ...(next.allow || [])].filter(
           (v, i, a) => a.findIndex(t => t.$type === v.$type) === i,
@@ -135,13 +135,13 @@ export function mergeThreadgateRecords(
  */
 export function createThreadgateRecord(
   threadgate: Omit<
-    Partial<app.bsky.feed.threadgate.Main>,
+    Partial<AppBskyFeedThreadgate.Main>,
     'post' | 'hiddenReplies'
   > & {
     post?: string
     hiddenReplies?: string[]
   },
-): app.bsky.feed.threadgate.Main {
+): AppBskyFeedThreadgate.Main {
   if (!threadgate.post) {
     throw new Error('Cannot create a threadgate record without a post URI')
   }

@@ -6,7 +6,7 @@ import {createQueryKey} from '#/state/queries/util'
 import {usePdsClient, useSession} from '#/state/session'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import * as AppBskyActorContentVisibilityDeclaration from '#/lexicons/app/bsky/actor/contentVisibilityDeclaration'
 
 export const contentVisibilityQueryKey = (did: string) =>
   createQueryKey('content-visibility', {did})
@@ -21,18 +21,16 @@ export function useContentVisibilityQuery() {
     queryFn: async () => {
       try {
         const response = await client.get(
-          app.bsky.actor.contentVisibilityDeclaration,
+          AppBskyActorContentVisibilityDeclaration,
           {
             repo: did!,
             rkey: 'self',
           },
         )
-        return app.bsky.actor.contentVisibilityDeclaration.$parse(
-          response.value,
-        )
+        return AppBskyActorContentVisibilityDeclaration.$parse(response.value)
       } catch (error) {
         if (isRecordNotFoundError(error)) {
-          return app.bsky.actor.contentVisibilityDeclaration.$build({
+          return AppBskyActorContentVisibilityDeclaration.$build({
             hideFromAlgorithmicRecommendations: false,
           })
         }
@@ -55,10 +53,10 @@ export function useContentVisibilityMutation() {
     mutationFn: async (hideFromAlgorithmicRecommendations: boolean) => {
       if (!did) throw new Error('Not signed in')
 
-      const record = app.bsky.actor.contentVisibilityDeclaration.$build({
+      const record = AppBskyActorContentVisibilityDeclaration.$build({
         hideFromAlgorithmicRecommendations,
       })
-      await client.put(app.bsky.actor.contentVisibilityDeclaration, record, {
+      await client.put(AppBskyActorContentVisibilityDeclaration, record, {
         repo: did,
         rkey: 'self',
       })
@@ -67,12 +65,12 @@ export function useContentVisibilityMutation() {
     onMutate: async hideFromAlgorithmicRecommendations => {
       await queryClient.cancelQueries({queryKey})
       const previous =
-        queryClient.getQueryData<app.bsky.actor.contentVisibilityDeclaration.Main>(
+        queryClient.getQueryData<AppBskyActorContentVisibilityDeclaration.Main>(
           queryKey,
         )
       queryClient.setQueryData(
         queryKey,
-        app.bsky.actor.contentVisibilityDeclaration.$build({
+        AppBskyActorContentVisibilityDeclaration.$build({
           hideFromAlgorithmicRecommendations,
         }),
       )

@@ -12,7 +12,9 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as PeekMenu from '#/components/PeekMenu'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
-import {app} from '#/lexicons'
+import * as AppBskyEmbedGallery from '#/lexicons/app/bsky/embed/gallery'
+import type * as AppBskyEmbedImages from '#/lexicons/app/bsky/embed/images'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
 import * as bsky from '#/types/bsky'
 
 /**
@@ -23,7 +25,7 @@ export function Embed({
   style,
   peekable = false,
 }: {
-  embed: app.bsky.feed.defs.PostView['embed']
+  embed: AppBskyFeedDefs.PostView['embed']
   style?: StyleProp<ViewStyle>
   peekable?: boolean
 }) {
@@ -55,9 +57,9 @@ export function Embed({
     const tiles: React.ReactNode[] = []
     for (const item of e.view.items) {
       if (tiles.length >= 4) break
-      if (!bsky.isType(app.bsky.embed.gallery.viewImage, item)) continue
+      if (!bsky.isType(AppBskyEmbedGallery.viewImage, item)) continue
       if (peekable) {
-        const image: app.bsky.embed.images.ViewImage = {
+        const image: AppBskyEmbedImages.ViewImage = {
           thumb: item.thumbnail,
           fullsize: item.fullsize,
           alt: item.alt,
@@ -110,7 +112,7 @@ export function Embed({
      */
     return (
       <Embed
-        embed={e.media.view as app.bsky.feed.defs.PostView['embed']}
+        embed={e.media.view as AppBskyFeedDefs.PostView['embed']}
         style={style}
       />
     )
@@ -208,7 +210,7 @@ export function VideoItem({
   )
 }
 
-function PeekableImageItem({image}: {image: app.bsky.embed.images.ViewImage}) {
+function PeekableImageItem({image}: {image: AppBskyEmbedImages.ViewImage}) {
   const {t: l} = useLingui()
   const saveImage = useSaveImageToMediaLibrary()
 

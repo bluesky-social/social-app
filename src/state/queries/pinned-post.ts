@@ -5,7 +5,8 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import * as Toast from '#/components/Toast'
-import {app, type com} from '#/lexicons'
+import {type com} from '#/lexicons'
+import * as AppBskyActorGetProfile from '#/lexicons/app/bsky/actor/getProfile'
 import {updatePostShadow} from '../cache/post-shadow'
 import {useAppviewClient, useSession} from '../session'
 import {useProfileUpdateMutation} from './profile'
@@ -34,7 +35,7 @@ export function usePinnedPostMutation() {
 
         // get the currently pinned post so we can optimistically remove the pin from it
         if (!currentAccount) throw new Error('Not signed in')
-        const profile = await client.call(app.bsky.actor.getProfile, {
+        const profile = await client.call(AppBskyActorGetProfile, {
           actor: currentAccount.did,
         })
         prevPinnedPost = profile.pinnedPost?.uri

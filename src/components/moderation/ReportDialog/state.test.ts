@@ -1,4 +1,5 @@
-import {type app, tools} from '#/lexicons'
+import {type app} from '#/lexicons'
+import * as ToolsOzoneReportDefs from '#/lexicons/tools/ozone/report/defs'
 import {
   getNciiQualificationOutcome,
   initialState,
@@ -8,12 +9,12 @@ import {
 
 const nciiOption = {
   title: 'Non-consensual intimate imagery',
-  reason: tools.ozone.report.defs.reasonSexualNCII.value,
+  reason: ToolsOzoneReportDefs.reasonSexualNCII.value,
 }
 
 const otherOption = {
   title: 'Unlabeled adult content',
-  reason: tools.ozone.report.defs.reasonSexualUnlabeled.value,
+  reason: ToolsOzoneReportDefs.reasonSexualUnlabeled.value,
 }
 
 function selectNciiOption(state: ReportState = initialState) {

@@ -1,11 +1,10 @@
 import {type Client, type XrpcRequestParams} from '@atproto/lex'
 
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedGetListFeed from '#/lexicons/app/bsky/feed/getListFeed'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
-type GetListFeedParams = XrpcRequestParams<
-  typeof app.bsky.feed.getListFeed.main
->
+type GetListFeedParams = XrpcRequestParams<typeof AppBskyFeedGetListFeed.main>
 
 export class ListFeedAPI implements FeedAPI {
   client: Client
@@ -22,8 +21,8 @@ export class ListFeedAPI implements FeedAPI {
     this.params = feedParams
   }
 
-  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
-    const data = await this.client.call(app.bsky.feed.getListFeed, {
+  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+    const data = await this.client.call(AppBskyFeedGetListFeed, {
       ...this.params,
       limit: 1,
     })
@@ -43,7 +42,7 @@ export class ListFeedAPI implements FeedAPI {
      * way - its `success` flag was only ever true - so the empty-page branch
      * this replaces was unreachable.
      */
-    const data = await this.client.call(app.bsky.feed.getListFeed, {
+    const data = await this.client.call(AppBskyFeedGetListFeed, {
       ...this.params,
       cursor,
       limit,
