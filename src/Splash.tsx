@@ -124,14 +124,14 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     if (isReady) {
       SplashScreen.hideAsync()
         .then(() => {
-          intro.set(() =>
+          intro.set(
             withTiming(
               1,
               {duration: 400, easing: Easing.out(Easing.cubic)},
               () => {
                 'worklet'
                 // set these values to check animation at specific point
-                outroLogo.set(() =>
+                outroLogo.set(
                   withTiming(
                     1,
                     {duration: 1200, easing: Easing.in(Easing.cubic)},
@@ -140,13 +140,13 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                     },
                   ),
                 )
-                outroApp.set(() =>
+                outroApp.set(
                   withTiming(1, {
                     duration: 1200,
                     easing: Easing.inOut(Easing.cubic),
                   }),
                 )
-                outroAppOpacity.set(() =>
+                outroAppOpacity.set(
                   withTiming(1, {
                     duration: 1200,
                     easing: Easing.in(Easing.cubic),
