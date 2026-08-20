@@ -6,7 +6,8 @@ import {msg} from '@lingui/core/macro'
 import {VIDEO_SERVICE_DID} from '#/lib/constants'
 import {UploadLimitError} from '#/lib/media/video/errors'
 import {getServiceAuthAudFromUrl} from '#/lib/strings/url-helpers'
-import {app, com} from '#/lexicons'
+import * as AppBskyVideoGetUploadLimits from '#/lexicons/app/bsky/video/getUploadLimits'
+import * as ComAtprotoServerGetServiceAuth from '#/lexicons/com/atproto/server/getServiceAuth'
 import {createVideoServiceClient} from './util'
 
 export async function getServiceAuthToken({
@@ -40,7 +41,7 @@ export async function getServiceAuthToken({
     }
     resolvedAud = pdsAud
   }
-  const {token} = await client.call(com.atproto.server.getServiceAuth, {
+  const {token} = await client.call(ComAtprotoServerGetServiceAuth, {
     aud: resolvedAud as DidString,
     lxm,
     exp,
@@ -56,7 +57,7 @@ export async function getVideoUploadLimits(client: Client, i18n: I18n) {
   })
   const videoClient = createVideoServiceClient(token)
   const limits = await videoClient
-    .call(app.bsky.video.getUploadLimits)
+    .call(AppBskyVideoGetUploadLimits)
     .catch(err => {
       if (err instanceof Error) {
         throw new UploadLimitError(err.message)

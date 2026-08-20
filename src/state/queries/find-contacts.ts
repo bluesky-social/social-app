@@ -7,7 +7,8 @@ import {
 
 import {useAppviewClient} from '#/state/session'
 import {type Match} from '#/components/contacts/state'
-import {app} from '#/lexicons'
+import * as AppBskyContactGetMatches from '#/lexicons/app/bsky/contact/getMatches'
+import * as AppBskyContactGetSyncStatus from '#/lexicons/app/bsky/contact/getSyncStatus'
 import type * as bsky from '#/types/bsky'
 import {STALE} from '.'
 
@@ -20,7 +21,7 @@ export function useContactsSyncStatusQuery() {
   return useQuery({
     queryKey: findContactsStatusQueryKey,
     queryFn: async () => {
-      return await client.call(app.bsky.contact.getSyncStatus, {})
+      return await client.call(AppBskyContactGetSyncStatus, {})
     },
     staleTime: STALE.SECONDS.THIRTY,
   })
@@ -34,7 +35,7 @@ export function useContactsMatchesQuery() {
   return useInfiniteQuery({
     queryKey: findContactsGetMatchesQueryKey,
     queryFn: async ({pageParam}) => {
-      return await client.call(app.bsky.contact.getMatches, {
+      return await client.call(AppBskyContactGetMatches, {
         cursor: pageParam,
       })
     },
@@ -45,19 +46,20 @@ export function useContactsMatchesQuery() {
 }
 
 export function optimisticRemoveMatch(queryClient: QueryClient, did: string) {
-  queryClient.setQueryData<
-    InfiniteData<app.bsky.contact.getMatches.$OutputBody>
-  >(findContactsGetMatchesQueryKey, old => {
-    if (!old) return old
+  queryClient.setQueryData<InfiniteData<AppBskyContactGetMatches.$OutputBody>>(
+    findContactsGetMatchesQueryKey,
+    old => {
+      if (!old) return old
 
-    return {
-      ...old,
-      pages: old.pages.map(page => ({
-        ...page,
-        matches: page.matches.filter(match => match.did !== did),
-      })),
-    }
-  })
+      return {
+        ...old,
+        pages: old.pages.map(page => ({
+          ...page,
+          matches: page.matches.filter(match => match.did !== did),
+        })),
+      }
+    },
+  )
 }
 
 export const findContactsMatchesPassthroughQueryKey = (dids: string[]) => [
@@ -92,7 +94,7 @@ export function* findAllProfilesInQueryData(
   did: string,
 ): Generator<bsky.profile.AnyProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<app.bsky.contact.getMatches.$OutputBody>
+    InfiniteData<AppBskyContactGetMatches.$OutputBody>
   >({
     queryKey: findContactsGetMatchesQueryKey,
   })

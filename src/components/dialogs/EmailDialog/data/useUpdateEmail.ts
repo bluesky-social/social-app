@@ -3,7 +3,7 @@ import {useMutation} from '@tanstack/react-query'
 
 import {usePdsClient, useSessionApi} from '#/state/session'
 import {useRequestEmailUpdate} from '#/components/dialogs/EmailDialog/data/useRequestEmailUpdate'
-import {com} from '#/lexicons'
+import * as ComAtprotoServerUpdateEmail from '#/lexicons/com/atproto/server/updateEmail'
 
 async function updateEmailAndRefreshSession(
   pdsClient: Client,
@@ -11,7 +11,7 @@ async function updateEmailAndRefreshSession(
   email: string,
   token?: string,
 ) {
-  await pdsClient.call(com.atproto.server.updateEmail, {
+  await pdsClient.call(ComAtprotoServerUpdateEmail, {
     email: email.trim(),
     token,
   })

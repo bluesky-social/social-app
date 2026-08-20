@@ -8,7 +8,7 @@ import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyUnspeccedGetOnboardingSuggestedStarterPacks from '#/lexicons/app/bsky/unspecced/getOnboardingSuggestedStarterPacks'
 
 export const createOnboardingSuggestedStarterPacksQueryKey = (
   interests?: string[],
@@ -31,7 +31,7 @@ export function useOnboardingSuggestedStarterPacksQuery({
     queryKey: createOnboardingSuggestedStarterPacksQueryKey(overrideInterests),
     queryFn: async () => {
       return await client.call(
-        app.bsky.unspecced.getOnboardingSuggestedStarterPacks,
+        AppBskyUnspeccedGetOnboardingSuggestedStarterPacks,
         {limit: 6},
         {
           headers: {

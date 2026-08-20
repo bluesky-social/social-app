@@ -7,7 +7,10 @@ import {
 } from '@tanstack/react-query'
 
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyEmbedRecord from '#/lexicons/app/bsky/embed/record'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedGetQuotes from '#/lexicons/app/bsky/feed/getQuotes'
 import * as bsky from '#/types/bsky'
 import {
   didOrHandleUriMatches,
@@ -24,15 +27,15 @@ export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 export function usePostQuotesQuery(resolvedUri: string | undefined) {
   const client = useAppviewClient()
   return useInfiniteQuery<
-    app.bsky.feed.getQuotes.$OutputBody,
+    AppBskyFeedGetQuotes.$OutputBody,
     Error,
-    InfiniteData<app.bsky.feed.getQuotes.$OutputBody>,
+    InfiniteData<AppBskyFeedGetQuotes.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(resolvedUri || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      return await client.call(app.bsky.feed.getQuotes, {
+      return await client.call(AppBskyFeedGetQuotes, {
         // the enabled flag prevents this from running until resolvedUri is set
         uri: (resolvedUri || '') as AtUriString,
         limit: PAGE_SIZE,
@@ -51,11 +54,11 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
             posts: page.posts.filter(post => {
               if (
                 post.embed &&
-                bsky.isType(app.bsky.embed.record.view, post.embed)
+                bsky.isType(AppBskyEmbedRecord.view, post.embed)
               ) {
                 if (
                   bsky.isType(
-                    app.bsky.embed.record.viewDetached,
+                    AppBskyEmbedRecord.viewDetached,
                     post.embed.record,
                   )
                 ) {
@@ -74,9 +77,9 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<app.bsky.actor.defs.ProfileViewBasic, void> {
+): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<app.bsky.feed.getQuotes.$OutputBody>
+    InfiniteData<AppBskyFeedGetQuotes.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })
@@ -101,9 +104,9 @@ export function* findAllProfilesInQueryData(
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<app.bsky.feed.defs.PostView, undefined> {
+): Generator<AppBskyFeedDefs.PostView, undefined> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<app.bsky.feed.getQuotes.$OutputBody>
+    InfiniteData<AppBskyFeedGetQuotes.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })

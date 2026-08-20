@@ -10,7 +10,9 @@ import {
 
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphGetList from '#/lexicons/app/bsky/graph/getList'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -23,16 +25,16 @@ export const RQKEY_ALL = (uri: string) => [RQKEY_ROOT_ALL, uri]
 export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
   const client = useAppviewClient()
   return useInfiniteQuery<
-    app.bsky.graph.getList.$OutputBody,
+    AppBskyGraphGetList.$OutputBody,
     Error,
-    InfiniteData<app.bsky.graph.getList.$OutputBody>,
+    InfiniteData<AppBskyGraphGetList.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri ?? ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      return await client.call(app.bsky.graph.getList, {
+      return await client.call(AppBskyGraphGetList, {
         // the enabled flag will prevent this from running until uri is set
         list: uri! as AtUriString,
         limit,
@@ -60,11 +62,11 @@ export function useAllListMembersQuery(uri?: string) {
 export async function getAllListMembers(client: Client, uri: string) {
   let hasMore = true
   let cursor: string | undefined
-  const listItems: app.bsky.graph.defs.ListItemView[] = []
+  const listItems: AppBskyGraphDefs.ListItemView[] = []
   // We want to cap this at 6 pages, just for anything weird happening with the api
   let i = 0
   while (hasMore && i < 6) {
-    const res = await client.call(app.bsky.graph.getList, {
+    const res = await client.call(AppBskyGraphGetList, {
       list: uri as AtUriString,
       limit: 50,
       cursor,
@@ -90,9 +92,9 @@ export async function invalidateListMembersQuery({
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<app.bsky.actor.defs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<app.bsky.graph.getList.$OutputBody>
+    InfiniteData<AppBskyGraphGetList.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })
@@ -113,7 +115,7 @@ export function* findAllProfilesInQueryData(
   }
 
   const allQueryData = queryClient.getQueriesData<
-    app.bsky.graph.defs.ListItemView[]
+    AppBskyGraphDefs.ListItemView[]
   >({
     queryKey: [RQKEY_ROOT_ALL],
   })

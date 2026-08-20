@@ -8,7 +8,7 @@ import {
 
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyActorSearchActors from '#/lexicons/app/bsky/actor/searchActors'
 
 export const RQKEY_ROOT = 'actor-search'
 export const RQKEY = (query: string, limit?: number) => [
@@ -30,16 +30,16 @@ export function useActorSearch({
 }) {
   const client = useAppviewClient()
   return useInfiniteQuery<
-    app.bsky.actor.searchActors.$OutputBody,
+    AppBskyActorSearchActors.$OutputBody,
     Error,
-    InfiniteData<app.bsky.actor.searchActors.$OutputBody>,
+    InfiniteData<AppBskyActorSearchActors.$OutputBody>,
     QueryKey,
     string | undefined
   >({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(query, limit),
     queryFn: async ({pageParam}) => {
-      return await client.call(app.bsky.actor.searchActors, {
+      return await client.call(AppBskyActorSearchActors, {
         q: query,
         limit,
         cursor: pageParam,
@@ -53,7 +53,7 @@ export function useActorSearch({
   })
 }
 
-function select(data: InfiniteData<app.bsky.actor.searchActors.$OutputBody>) {
+function select(data: InfiniteData<AppBskyActorSearchActors.$OutputBody>) {
   // enforce uniqueness
   const dids = new Set()
 
@@ -76,7 +76,7 @@ export function* findAllProfilesInQueryData(
   did: string,
 ) {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<app.bsky.actor.searchActors.$OutputBody>
+    InfiniteData<AppBskyActorSearchActors.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })

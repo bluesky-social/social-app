@@ -13,7 +13,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
-import {com} from '#/lexicons'
+import * as ComAtprotoLabelDefs from '#/lexicons/com/atproto/label/defs'
 import * as bsky from '#/types/bsky'
 
 export function PwiOptOut() {
@@ -36,8 +36,8 @@ export function PwiOptOut() {
       profile,
       updates: existing => {
         // create labels attr if needed
-        const labels: $Typed<com.atproto.label.defs.SelfLabels> = bsky.matches(
-          com.atproto.label.defs.selfLabels,
+        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.matches(
+          ComAtprotoLabelDefs.selfLabels,
           existing.labels,
         )
           ? existing.labels

@@ -40,7 +40,7 @@ import {normalizeTextStyles} from '#/alf/typography'
 import {type Emoji} from '#/components/EmojiPicker'
 import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import * as AppBskyRichtextFacet from '#/lexicons/app/bsky/richtext/facet'
 import * as bsky from '#/types/bsky'
 import {type TextInputProps} from './TextInput.types'
 import {type AutocompleteRef, createSuggestion} from './web/Autocomplete'
@@ -267,7 +267,7 @@ export function TextInput({
         if (newRt.facets) {
           for (const facet of newRt.facets) {
             for (const feature of facet.features) {
-              if (bsky.isType(app.bsky.richtext.facet.link, feature)) {
+              if (bsky.isType(AppBskyRichtextFacet.link, feature)) {
                 nextDetectedUris.set(feature.uri, {facet, rt: newRt})
               }
             }

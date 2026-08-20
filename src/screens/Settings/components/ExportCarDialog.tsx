@@ -13,7 +13,8 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {chat, com} from '#/lexicons'
+import * as ChatBskyActorExportAccountData from '#/lexicons/chat/bsky/actor/exportAccountData'
+import * as ComAtprotoSyncGetRepo from '#/lexicons/com/atproto/sync/getRepo'
 
 export function ExportCarDialog({
   control,
@@ -34,7 +35,7 @@ export function ExportCarDialog({
     try {
       setLoading('repo')
       const did = currentAccount.did
-      const data = await pdsClient.call(com.atproto.sync.getRepo, {did})
+      const data = await pdsClient.call(ComAtprotoSyncGetRepo, {did})
       /*
        * getRepo declares `application/vnd.ipld.car`, so lex-client hands back
        * the raw bytes unparsed and does not surface the response content-type.
@@ -71,7 +72,7 @@ export function ExportCarDialog({
        * fetchHandler workaround, and the chat client emits the proxy header
        * itself, so the per-call DM headers go away too.
        */
-      const data = await chatClient.call(chat.bsky.actor.exportAccountData)
+      const data = await chatClient.call(ChatBskyActorExportAccountData)
       const saveRes = await saveBytesToDisk(
         'chat.jsonl',
         data,

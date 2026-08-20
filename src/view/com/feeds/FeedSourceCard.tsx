@@ -18,15 +18,15 @@ import {atoms as a, useTheme} from '#/alf'
 import {Link} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
 import * as bsky from '#/types/bsky'
 import {MissingFeed} from './MissingFeed'
 
 type FeedSourceCardProps = {
   feedUri: string
   feedData?:
-    | $Typed<app.bsky.feed.defs.GeneratorView>
-    | $Typed<app.bsky.graph.defs.ListView>
+    $Typed<AppBskyFeedDefs.GeneratorView> | $Typed<AppBskyGraphDefs.ListView>
   style?: StyleProp<ViewStyle>
   showSaveBtn?: boolean
   showDescription?: boolean
@@ -44,7 +44,7 @@ export function FeedSourceCard({
 }: FeedSourceCardProps) {
   if (feedData) {
     let feed: FeedSourceInfo
-    if (bsky.isType(app.bsky.feed.defs.generatorView, feedData)) {
+    if (bsky.isType(AppBskyFeedDefs.generatorView, feedData)) {
       feed = hydrateFeedGenerator(feedData)
     } else {
       feed = hydrateList(feedData)

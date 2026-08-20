@@ -9,7 +9,15 @@ import {type QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedGetPosts from '#/lexicons/app/bsky/feed/getPosts'
+import * as AppBskyFeedLike from '#/lexicons/app/bsky/feed/like'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
+import * as AppBskyFeedRepost from '#/lexicons/app/bsky/feed/repost'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphGetStarterPacks from '#/lexicons/app/bsky/graph/getStarterPacks'
+import * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
+import * as AppBskyNotificationListNotifications from '#/lexicons/app/bsky/notification/listNotifications'
 import * as bsky from '#/types/bsky'
 import {precacheProfile} from '../profile'
 import {
@@ -53,7 +61,7 @@ export async function fetchPage({
   page: FeedPage
   indexedAt: string | undefined
 }> {
-  const data = await client.call(app.bsky.notification.listNotifications, {
+  const data = await client.call(AppBskyNotificationListNotifications, {
     limit,
     cursor,
     reasons,
@@ -124,7 +132,7 @@ export function shouldFilterNotif(
   }
   if (
     notif.reason === 'subscribed-post' &&
-    bsky.isType(app.bsky.feed.post, notif.record) &&
+    bsky.isType(AppBskyFeedPost, notif.record) &&
     hasMutedWord({
       mutedWords: moderationOpts.prefs.mutedWords,
       text: notif.record.text,
@@ -201,8 +209,8 @@ async function fetchSubjects(
   client: Client,
   groupedNotifs: FeedNotification[],
 ): Promise<{
-  posts: Map<string, app.bsky.feed.defs.PostView>
-  starterPacks: Map<string, app.bsky.graph.defs.StarterPackViewBasic>
+  posts: Map<string, AppBskyFeedDefs.PostView>
+  starterPacks: Map<string, AppBskyGraphDefs.StarterPackViewBasic>
 }> {
   const postUris = new Set<string>()
   const packUris = new Set<string>()
@@ -223,25 +231,25 @@ async function fetchSubjects(
   const packUriChunks = chunk(Array.from(packUris) as AtUriString[], 25)
   const postsChunks = await Promise.all(
     postUriChunks.map(uris =>
-      client.call(app.bsky.feed.getPosts, {uris}).then(data => data.posts),
+      client.call(AppBskyFeedGetPosts, {uris}).then(data => data.posts),
     ),
   )
   const packsChunks = await Promise.all(
     packUriChunks.map(uris =>
       client
-        .call(app.bsky.graph.getStarterPacks, {uris})
+        .call(AppBskyGraphGetStarterPacks, {uris})
         .then(data => data.starterPacks),
     ),
   )
-  const postsMap = new Map<string, app.bsky.feed.defs.PostView>()
-  const packsMap = new Map<string, app.bsky.graph.defs.StarterPackViewBasic>()
+  const postsMap = new Map<string, AppBskyFeedDefs.PostView>()
+  const packsMap = new Map<string, AppBskyGraphDefs.StarterPackViewBasic>()
   for (const post of postsChunks.flat()) {
-    if (bsky.isType(app.bsky.feed.post, post.record)) {
+    if (bsky.isType(AppBskyFeedPost, post.record)) {
       postsMap.set(post.uri, post)
     }
   }
   for (const pack of packsChunks.flat()) {
-    if (bsky.isType(app.bsky.graph.starterpack, pack.record)) {
+    if (bsky.isType(AppBskyGraphStarterpack, pack.record)) {
       packsMap.set(pack.uri, pack)
     }
   }
@@ -295,8 +303,8 @@ function getSubjectUri(
     type === 'repost-via-repost'
   ) {
     if (
-      bsky.isType(app.bsky.feed.repost, notif.record) ||
-      bsky.isType(app.bsky.feed.like, notif.record)
+      bsky.isType(AppBskyFeedRepost, notif.record) ||
+      bsky.isType(AppBskyFeedLike, notif.record)
     ) {
       return typeof notif.record.subject?.uri === 'string'
         ? notif.record.subject?.uri

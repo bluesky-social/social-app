@@ -1,7 +1,8 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoMuteConvo from '#/lexicons/chat/bsky/convo/muteConvo'
+import * as ChatBskyConvoUnmuteConvo from '#/lexicons/chat/bsky/convo/unmuteConvo'
 import {
   rollbackConvoOptimistic,
   updateConvoOptimistic,
@@ -13,7 +14,7 @@ export function useMuteConvo(
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: chat.bsky.convo.muteConvo.$OutputBody) => void
+    onSuccess?: (data: ChatBskyConvoMuteConvo.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -24,9 +25,9 @@ export function useMuteConvo(
     mutationFn: async ({mute}: {mute: boolean}) => {
       if (!convoId) throw new Error('No convoId provided')
       if (mute) {
-        return await client.call(chat.bsky.convo.muteConvo, {convoId})
+        return await client.call(ChatBskyConvoMuteConvo, {convoId})
       } else {
-        return await client.call(chat.bsky.convo.unmuteConvo, {convoId})
+        return await client.call(ChatBskyConvoUnmuteConvo, {convoId})
       }
     },
     onMutate: ({mute}) => {

@@ -36,14 +36,15 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
 
 export function MoreOptionsMenu({
   list,
   savedFeedConfig,
 }: {
-  list: app.bsky.graph.defs.ListView
-  savedFeedConfig?: app.bsky.actor.defs.SavedFeed
+  list: AppBskyGraphDefs.ListView
+  savedFeedConfig?: AppBskyActorDefs.SavedFeed
 }) {
   const {_} = useLingui()
   const ax = useAnalytics()
@@ -58,8 +59,8 @@ export function MoreOptionsMenu({
   const {mutateAsync: muteList} = useListMuteMutation()
   const {mutateAsync: blockList} = useListBlockMutation()
 
-  const isCurateList = list.purpose === app.bsky.graph.defs.curatelist.value
-  const isModList = list.purpose === app.bsky.graph.defs.modlist.value
+  const isCurateList = list.purpose === AppBskyGraphDefs.curatelist.value
+  const isModList = list.purpose === AppBskyGraphDefs.modlist.value
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const isPinned = Boolean(savedFeedConfig?.pinned)

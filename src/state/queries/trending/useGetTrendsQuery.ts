@@ -11,7 +11,7 @@ import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyUnspeccedGetTrends from '#/lexicons/app/bsky/unspecced/getTrends'
 
 export const DEFAULT_LIMIT = 5
 
@@ -48,7 +48,7 @@ export function useGetTrendsQuery(props: QueryProps = {}) {
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
       const data = await client.call(
-        app.bsky.unspecced.getTrends,
+        AppBskyUnspeccedGetTrends,
         {
           limit,
         },
@@ -65,7 +65,7 @@ export function useGetTrendsQuery(props: QueryProps = {}) {
       return data
     },
     select: useCallback(
-      (data: app.bsky.unspecced.getTrends.$OutputBody) => {
+      (data: AppBskyUnspeccedGetTrends.$OutputBody) => {
         return {
           recId: data.recIdStr,
           trends: dedupe(

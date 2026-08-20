@@ -8,7 +8,7 @@ import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyUnspeccedGetSuggestedStarterPacks from '#/lexicons/app/bsky/unspecced/getSuggestedStarterPacks'
 
 export const createSuggestedStarterPacksQueryKey = (interests?: string[]) => [
   'suggested-starter-packs',
@@ -32,7 +32,7 @@ export function useSuggestedStarterPacksQuery({
     queryKey: createSuggestedStarterPacksQueryKey(overrideInterests),
     queryFn: async () => {
       return await client.call(
-        app.bsky.unspecced.getSuggestedStarterPacks,
+        AppBskyUnspeccedGetSuggestedStarterPacks,
         {},
         {
           headers: {

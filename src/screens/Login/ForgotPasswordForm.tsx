@@ -15,10 +15,11 @@ import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
-import {com} from '#/lexicons'
+import type * as ComAtprotoServerDescribeServer from '#/lexicons/com/atproto/server/describeServer'
+import * as ComAtprotoServerRequestPasswordReset from '#/lexicons/com/atproto/server/requestPasswordReset'
 import {FormContainer} from './FormContainer'
 
-type ServiceDescription = com.atproto.server.describeServer.$OutputBody
+type ServiceDescription = ComAtprotoServerDescribeServer.$OutputBody
 
 export const ForgotPasswordForm = ({
   error,
@@ -60,7 +61,7 @@ export const ForgotPasswordForm = ({
        * one-off service client rather than a session-scoped one.
        */
       const client = createServiceClient(serviceUrl)
-      await client.call(com.atproto.server.requestPasswordReset, {email})
+      await client.call(ComAtprotoServerRequestPasswordReset, {email})
       onEmailSent()
     } catch (err) {
       logger.warn('Failed to request password reset', {error: err})

@@ -16,7 +16,11 @@ import {
 import {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread'
 import {usePdsClient} from '#/state/session'
 import {useThreadgateHiddenReplyUrisAPI} from '#/state/threadgate-hidden-replies'
-import {app, com} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedThreadgate from '#/lexicons/app/bsky/feed/threadgate'
+import * as ComAtprotoIdentityResolveHandle from '#/lexicons/com/atproto/identity/resolveHandle'
+import * as ComAtprotoRepoGetRecord from '#/lexicons/com/atproto/repo/getRecord'
+import * as ComAtprotoRepoPutRecord from '#/lexicons/com/atproto/repo/putRecord'
 import * as bsky from '#/types/bsky'
 
 export * from '#/state/queries/threadgate/types'
@@ -38,7 +42,7 @@ export function useThreadgateRecordQuery({
   initialData,
 }: {
   postUri?: string
-  initialData?: app.bsky.feed.threadgate.Main
+  initialData?: AppBskyFeedThreadgate.Main
 } = {}) {
   const pdsClient = usePdsClient()
 
@@ -66,7 +70,7 @@ export function useThreadgateViewQuery({
   initialData,
 }: {
   postUri?: string
-  initialData?: app.bsky.feed.defs.ThreadgateView
+  initialData?: AppBskyFeedDefs.ThreadgateView
 } = {}) {
   const getPost = useGetPost()
 
@@ -88,11 +92,11 @@ export async function getThreadgateRecord({
 }: {
   pdsClient: Client
   postUri: string
-}): Promise<app.bsky.feed.threadgate.Main | null> {
+}): Promise<AppBskyFeedThreadgate.Main | null> {
   const urip = new AtUri(postUri)
 
   if (!urip.host.startsWith('did:')) {
-    const {did} = await pdsClient.call(com.atproto.identity.resolveHandle, {
+    const {did} = await pdsClient.call(ComAtprotoIdentityResolveHandle, {
       handle: urip.host as HandleString,
     })
     urip.host = did
@@ -113,14 +117,14 @@ export async function getThreadgateRecord({
         return true
       },
       () =>
-        pdsClient.call(com.atproto.repo.getRecord, {
+        pdsClient.call(ComAtprotoRepoGetRecord, {
           repo: urip.host,
           collection: 'app.bsky.feed.threadgate',
           rkey: urip.rkeySafe,
         }),
     )
 
-    if (data.value && bsky.matches(app.bsky.feed.threadgate, data.value)) {
+    if (data.value && bsky.matches(AppBskyFeedThreadgate, data.value)) {
       return data.value
     } else {
       return null
@@ -146,7 +150,7 @@ export async function writeThreadgateRecord({
 }: {
   pdsClient: Client
   postUri: string
-  threadgate: app.bsky.feed.threadgate.Main
+  threadgate: AppBskyFeedThreadgate.Main
 }) {
   const postUrip = new AtUri(postUri)
   const record = createThreadgateRecord({
@@ -156,7 +160,7 @@ export async function writeThreadgateRecord({
   })
 
   await networkRetry(2, () =>
-    pdsClient.call(com.atproto.repo.putRecord, {
+    pdsClient.call(ComAtprotoRepoPutRecord, {
       repo: pdsClient.assertDid,
       collection: 'app.bsky.feed.threadgate',
       rkey: postUrip.rkeySafe,
@@ -174,8 +178,8 @@ export async function upsertThreadgate(
     postUri: string
   },
   callback: (
-    threadgate: app.bsky.feed.threadgate.Main | null,
-  ) => Promise<app.bsky.feed.threadgate.Main | undefined>,
+    threadgate: AppBskyFeedThreadgate.Main | null,
+  ) => Promise<AppBskyFeedThreadgate.Main | undefined>,
 ) {
   const prev = await getThreadgateRecord({
     pdsClient,
@@ -247,7 +251,7 @@ export function useSetThreadgateAllowMutation() {
       })
     },
     async onSuccess(_, {postUri, allow}) {
-      const data = await retry<app.bsky.feed.defs.ThreadgateView | undefined>(
+      const data = await retry<AppBskyFeedDefs.ThreadgateView | undefined>(
         5, // 5 tries
         _e => true,
         async () => {
@@ -357,9 +361,9 @@ export class InvalidInteractionSettingsError extends Error {
 }
 
 export function validateThreadgateRecordOrThrow(
-  record: app.bsky.feed.threadgate.Main,
+  record: AppBskyFeedThreadgate.Main,
 ) {
-  const result = bsky.safeParse(app.bsky.feed.threadgate, record)
+  const result = bsky.safeParse(AppBskyFeedThreadgate, record)
 
   if (result.success) {
     if ((result.value.hiddenReplies?.length ?? 0) > MAX_HIDDEN_REPLIES) {

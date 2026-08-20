@@ -7,7 +7,7 @@ import {
 
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyGraphSearchStarterPacksV2 from '#/lexicons/app/bsky/graph/searchStarterPacksV2'
 
 export const RQKEY_ROOT = 'starter-pack-search'
 export const RQKEY = (query: string, limit?: number) => [
@@ -29,16 +29,16 @@ export function useStarterPackSearch({
 }) {
   const client = useAppviewClient()
   return useInfiniteQuery<
-    app.bsky.graph.searchStarterPacksV2.$OutputBody,
+    AppBskyGraphSearchStarterPacksV2.$OutputBody,
     Error,
-    InfiniteData<app.bsky.graph.searchStarterPacksV2.$OutputBody>,
+    InfiniteData<AppBskyGraphSearchStarterPacksV2.$OutputBody>,
     QueryKey,
     string | undefined
   >({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(query, limit),
     queryFn: async ({pageParam}) => {
-      return await client.call(app.bsky.graph.searchStarterPacksV2, {
+      return await client.call(AppBskyGraphSearchStarterPacksV2, {
         q: query,
         limit,
         cursor: pageParam,
@@ -53,7 +53,7 @@ export function useStarterPackSearch({
 }
 
 function select(
-  data: InfiniteData<app.bsky.graph.searchStarterPacksV2.$OutputBody>,
+  data: InfiniteData<AppBskyGraphSearchStarterPacksV2.$OutputBody>,
 ) {
   // enforce uniqueness
   const uris = new Set()

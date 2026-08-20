@@ -31,7 +31,8 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'
 import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
-import {app} from '#/lexicons'
+import * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
 import * as bsky from '#/types/bsky'
 import {
   didOrHandleUriMatches,
@@ -196,9 +197,7 @@ export function useNotificationFeedQuery(opts: {
                        * a `$type` field on the `subject`. But if the nested
                        * `record` is a post, we know it's a post view.
                        */
-                      if (
-                        bsky.isType(app.bsky.feed.post, item.subject?.record)
-                      ) {
+                      if (bsky.isType(AppBskyFeedPost, item.subject?.record)) {
                         const mod = moderatePost(item.subject, moderationOpts!)
                         if (mod.ui('contentList').filter) {
                           return false
@@ -275,7 +274,7 @@ export function useNotificationFeedQuery(opts: {
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<app.bsky.feed.defs.PostView, void> {
+): Generator<AppBskyFeedDefs.PostView, void> {
   const atUri = new AtUri(uri)
 
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
@@ -294,7 +293,7 @@ export function* findAllPostsInQueryData(
           }
         }
 
-        if (bsky.isType(app.bsky.feed.defs.postView, item.subject)) {
+        if (bsky.isType(AppBskyFeedDefs.postView, item.subject)) {
           const quotedPost = getEmbeddedPost(item.subject?.embed)
           if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
             yield embedViewRecordToPostView(quotedPost)
@@ -332,7 +331,7 @@ export function* findAllProfilesInQueryData(
         ) {
           yield item.subject.author
         }
-        if (bsky.isType(app.bsky.feed.defs.postView, item.subject)) {
+        if (bsky.isType(AppBskyFeedDefs.postView, item.subject)) {
           const quotedPost = getEmbeddedPost(item.subject?.embed)
           if (quotedPost?.author.did === did) {
             yield quotedPost.author

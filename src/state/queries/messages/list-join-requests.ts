@@ -4,7 +4,8 @@ import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {createQueryKey} from '#/state/queries/util'
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import * as ChatBskyGroupListJoinRequests from '#/lexicons/chat/bsky/group/listJoinRequests'
 import * as bsky from '#/types/bsky'
 import {STALE} from '..'
 
@@ -35,9 +36,9 @@ export function useListJoinRequestsQuery({
         if (event.type !== 'logs') return
         for (const log of event.logs) {
           if (
-            bsky.isType(chat.bsky.convo.defs.logIncomingJoinRequest, log) ||
-            bsky.isType(chat.bsky.convo.defs.logApproveJoinRequest, log) ||
-            bsky.isType(chat.bsky.convo.defs.logRejectJoinRequest, log)
+            bsky.isType(ChatBskyConvoDefs.logIncomingJoinRequest, log) ||
+            bsky.isType(ChatBskyConvoDefs.logApproveJoinRequest, log) ||
+            bsky.isType(ChatBskyConvoDefs.logRejectJoinRequest, log)
           ) {
             void queryClient.invalidateQueries({
               queryKey: createListJoinRequestsQueryKey({convoId}),
@@ -54,7 +55,7 @@ export function useListJoinRequestsQuery({
     enabled: isEnabled,
     queryKey: createListJoinRequestsQueryKey({convoId: convoId ?? ''}),
     queryFn: async ({pageParam}) => {
-      return await client.call(chat.bsky.group.listJoinRequests, {
+      return await client.call(ChatBskyGroupListJoinRequests, {
         // guarded by `isEnabled`
         convoId: convoId!,
         cursor: pageParam,

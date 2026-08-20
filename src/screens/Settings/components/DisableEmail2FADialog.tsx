@@ -17,7 +17,8 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {P, Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
-import {com} from '#/lexicons'
+import * as ComAtprotoServerRequestEmailUpdate from '#/lexicons/com/atproto/server/requestEmailUpdate'
+import * as ComAtprotoServerUpdateEmail from '#/lexicons/com/atproto/server/updateEmail'
 
 enum Stages {
   Email,
@@ -45,7 +46,7 @@ export function DisableEmail2FADialog({
     setError('')
     setIsProcessing(true)
     try {
-      await pdsClient.call(com.atproto.server.requestEmailUpdate)
+      await pdsClient.call(ComAtprotoServerRequestEmailUpdate)
       setStage(Stages.ConfirmCode)
     } catch (e) {
       setError(cleanError(String(e)))
@@ -59,7 +60,7 @@ export function DisableEmail2FADialog({
     setIsProcessing(true)
     try {
       if (currentAccount?.email) {
-        await pdsClient.call(com.atproto.server.updateEmail, {
+        await pdsClient.call(ComAtprotoServerUpdateEmail, {
           email: currentAccount.email,
           token: confirmationCode.trim(),
           emailAuthFactor: false,
@@ -73,9 +74,7 @@ export function DisableEmail2FADialog({
        * The old check matched the PDS message "Token is invalid"; the lexicon
        * declares that case as `InvalidToken`, so match the code instead.
        */
-      if (
-        matchXrpcError(e, com.atproto.server.updateEmail) === 'InvalidToken'
-      ) {
+      if (matchXrpcError(e, ComAtprotoServerUpdateEmail) === 'InvalidToken') {
         setError(_(msg`Invalid 2FA confirmation code.`))
       } else {
         setError(cleanError(e))

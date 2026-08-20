@@ -23,7 +23,7 @@ import {atoms as a, native, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import * as AppBskyActorGetProfiles from '#/lexicons/app/bsky/actor/getProfiles'
 import {SplashScreen} from './SplashScreen'
 
 enum ScreenState {
@@ -74,7 +74,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
       queryKey: profilesQueryKey(actors),
       staleTime: STALE.MINUTES.FIVE,
       queryFn: async () => {
-        return await client.call(app.bsky.actor.getProfiles, {actors})
+        return await client.call(AppBskyActorGetProfiles, {actors})
       },
     })
   }, [accounts, client, queryClient])

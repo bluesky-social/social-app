@@ -6,12 +6,12 @@ import {useMutation} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useAppviewClient} from '#/state/session'
-import {com} from '#/lexicons'
+import * as ComAtprotoModerationCreateReport from '#/lexicons/com/atproto/moderation/createReport'
 import {NEW_TO_OLD_REASONS_MAP, REPORT_MOD_TOOL_NAME} from './const'
 import {type ReportState} from './state'
 import {type ParsedReportSubject} from './types'
 
-type ReportInput = com.atproto.moderation.createReport.$InputBody
+type ReportInput = ComAtprotoModerationCreateReport.$InputBody
 
 export function useSubmitReportMutation() {
   const {_} = useLingui()
@@ -144,7 +144,7 @@ export function useSubmitReportMutation() {
          * Reports go to the labeler the user selected rather than Bluesky's, so
          * the proxy target is built per call from that labeler's creator did.
          */
-        await client.call(com.atproto.moderation.createReport, report, {
+        await client.call(ComAtprotoModerationCreateReport, report, {
           service: `${labeler.creator.did}#atproto_labeler`,
         })
       }

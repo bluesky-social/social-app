@@ -16,7 +16,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {com} from '#/lexicons'
+import * as ComAtprotoServerResetPassword from '#/lexicons/com/atproto/server/resetPassword'
 import {FormContainer} from './FormContainer'
 
 export const SetNewPasswordForm = ({
@@ -67,7 +67,7 @@ export const SetNewPasswordForm = ({
        * one-off service client rather than a session-scoped one.
        */
       const client = createServiceClient(serviceUrl)
-      await client.call(com.atproto.server.resetPassword, {
+      await client.call(ComAtprotoServerResetPassword, {
         token: formattedCode,
         password,
       })

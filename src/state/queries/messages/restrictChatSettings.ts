@@ -6,7 +6,7 @@ import {
   getOtherRequiredDataFromCache,
   setOtherRequiredDataActorDeclarationCache,
 } from '#/ageAssurance/data'
-import {chat} from '#/lexicons'
+import * as ChatBskyActorDeclaration from '#/lexicons/chat/bsky/actor/declaration'
 
 /**
  * Updates the chat actor declaration record to restrict who can contact the
@@ -48,7 +48,7 @@ export async function restrictChatSettings({
     )
   }
 
-  const record: chat.bsky.actor.declaration.Main = {
+  const record: ChatBskyActorDeclaration.Main = {
     $type: 'chat.bsky.actor.declaration',
     allowIncoming: restrictIncoming
       ? 'none'
@@ -73,7 +73,7 @@ export async function restrictChatSettings({
        * `service: null` on record helpers, so the write lands on the account's
        * PDS even though the collection is `chat.bsky.*`.
        */
-      client.put(chat.bsky.actor.declaration, record, {
+      client.put(ChatBskyActorDeclaration, record, {
         repo: did,
         rkey: 'self',
       }),

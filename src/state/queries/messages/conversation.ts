@@ -8,7 +8,11 @@ import {
 import {STALE} from '#/state/queries'
 import {useOnMarkAsRead} from '#/state/queries/messages/list-conversations'
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import type * as ChatBskyActorDefs from '#/lexicons/chat/bsky/actor/defs'
+import type * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import * as ChatBskyConvoGetConvo from '#/lexicons/chat/bsky/convo/getConvo'
+import type * as ChatBskyConvoGetUnreadCounts from '#/lexicons/chat/bsky/convo/getUnreadCounts'
+import * as ChatBskyConvoUpdateRead from '#/lexicons/chat/bsky/convo/updateRead'
 import {
   RQKEY_PARTIAL as UNREAD_COUNTS_PARTIAL_KEY,
   UNREAD_ACCEPTED_CAP,
@@ -29,7 +33,7 @@ export function useConvoQuery({convoId}: {convoId: string}) {
   return useQuery({
     queryKey: RQKEY(convoId),
     queryFn: async () => {
-      const data = await client.call(chat.bsky.convo.getConvo, {convoId})
+      const data = await client.call(ChatBskyConvoGetConvo, {convoId})
       return data.convo
     },
     staleTime: STALE.INFINITY,
@@ -38,7 +42,7 @@ export function useConvoQuery({convoId}: {convoId: string}) {
 
 export function precacheConvoQuery(
   queryClient: QueryClient,
-  convo: chat.bsky.convo.defs.ConvoView,
+  convo: ChatBskyConvoDefs.ConvoView,
 ) {
   queryClient.setQueryData(RQKEY(convo.id), convo)
 }
@@ -58,7 +62,7 @@ export function useMarkAsReadMutation() {
     }) => {
       if (!convoId) throw new Error('No convoId provided')
 
-      await client.call(chat.bsky.convo.updateRead, {
+      await client.call(ChatBskyConvoUpdateRead, {
         convoId,
         messageId,
       })
@@ -75,7 +79,7 @@ export function useMarkAsReadMutation() {
       // find the convo so we know which badge counter (if any) to decrement.
       // keep scanning past a stale unreadCount === 0 cache so another cache
       // holding the true unread state still drives the decrement
-      let unreadStatus: chat.bsky.convo.defs.ConvoView['status'] | undefined
+      let unreadStatus: ChatBskyConvoDefs.ConvoView['status'] | undefined
       for (const [, data] of prevListQueries) {
         if (!data) continue
         const convo = getConvoFromQueryData(convoId, data)
@@ -90,13 +94,11 @@ export function useMarkAsReadMutation() {
       // the badge count query is a separate server query that the list caches
       // don't feed, so decrement it here to keep the badge in sync
       const prevUnreadCountsQueries =
-        queryClient.getQueriesData<chat.bsky.convo.getUnreadCounts.$OutputBody>(
-          {
-            queryKey: UNREAD_COUNTS_PARTIAL_KEY,
-          },
-        )
+        queryClient.getQueriesData<ChatBskyConvoGetUnreadCounts.$OutputBody>({
+          queryKey: UNREAD_COUNTS_PARTIAL_KEY,
+        })
       if (unreadStatus) {
-        queryClient.setQueriesData<chat.bsky.convo.getUnreadCounts.$OutputBody>(
+        queryClient.setQueriesData<ChatBskyConvoGetUnreadCounts.$OutputBody>(
           {queryKey: UNREAD_COUNTS_PARTIAL_KEY},
           old => {
             if (!old) return old
@@ -180,9 +182,9 @@ export function useMarkAsReadMutation() {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<chat.bsky.actor.defs.ProfileViewBasic, void> {
+): Generator<ChatBskyActorDefs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<
-    chat.bsky.convo.getConvo.$OutputBody['convo']
+    ChatBskyConvoGetConvo.$OutputBody['convo']
   >({
     queryKey: [RQKEY_ROOT],
   })

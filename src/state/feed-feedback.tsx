@@ -22,13 +22,14 @@ import {
 } from '#/state/queries/post-feed'
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedSendInteractions from '#/lexicons/app/bsky/feed/sendInteractions'
 import {useAppviewClient} from './session'
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
 export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<
-  app.bsky.feed.defs.Interaction['event']
+  AppBskyFeedDefs.Interaction['event']
 >([
   // These are explicit actions and are therefore fine to send.
   'app.bsky.feed.defs#requestLess',
@@ -46,7 +47,7 @@ export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<
 export type StateContext = {
   enabled: boolean
   onItemSeen: (item: any) => void
-  sendInteraction: (interaction: app.bsky.feed.defs.Interaction) => void
+  sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void
   feedDescriptor: FeedDescriptor | undefined
   feedSourceInfo: FeedSourceInfo | undefined
 }
@@ -54,7 +55,7 @@ export type StateContext = {
 const stateContext = createContext<StateContext>({
   enabled: false,
   onItemSeen: (_item: any) => {},
-  sendInteraction: (_interaction: app.bsky.feed.defs.Interaction) => {},
+  sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
   feedDescriptor: undefined,
   feedSourceInfo: undefined,
 })
@@ -83,7 +84,7 @@ export function useFeedFeedback(
   const history = useRef<
     // Use a WeakSet so that we don't need to clear it.
     // This assumes that referential identity of slice items maps 1:1 to feed (re)fetches.
-    WeakSet<FeedPostSliceItem | app.bsky.feed.defs.Interaction>
+    WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
   >(new WeakSet())
 
   const flushEvents = useCallback(
@@ -158,7 +159,7 @@ export function useFeedFeedback(
      */
     client
       .call(
-        app.bsky.feed.sendInteractions,
+        AppBskyFeedSendInteractions,
         {
           interactions: interactionsToSend,
           feed: feed?.uri as AtUriString | undefined,
@@ -224,7 +225,7 @@ export function useFeedFeedback(
   )
 
   const sendInteraction = useCallback(
-    (interaction: app.bsky.feed.defs.Interaction) => {
+    (interaction: AppBskyFeedDefs.Interaction) => {
       if (!enabled) {
         return
       }
@@ -272,7 +273,7 @@ export function isDiscoverFeed(feed?: FeedDescriptor) {
 function isInteractionAllowed(
   enabled: boolean,
   feed: FeedSourceFeedInfo | undefined,
-  interaction: app.bsky.feed.defs.Interaction['event'],
+  interaction: AppBskyFeedDefs.Interaction['event'],
 ) {
   if (!enabled || !feed) {
     return false
@@ -281,19 +282,19 @@ function isInteractionAllowed(
   return isDiscover ? true : THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction)
 }
 
-function toString(interaction: app.bsky.feed.defs.Interaction): string {
+function toString(interaction: AppBskyFeedDefs.Interaction): string {
   return `${interaction.item}|${interaction.event}|${
     interaction.feedContext || ''
   }|${interaction.reqId || ''}`
 }
 
-function toInteraction(str: string): app.bsky.feed.defs.Interaction {
+function toInteraction(str: string): AppBskyFeedDefs.Interaction {
   const [item, event, feedContext, reqId] = str.split('|')
   /*
    * The fields come from splitting an internally-built key, so neither the
    * at-uri nor the event token is narrowed by the compiler here.
    */
-  return {item, event, feedContext, reqId} as app.bsky.feed.defs.Interaction
+  return {item, event, feedContext, reqId} as AppBskyFeedDefs.Interaction
 }
 
 type AggregatedStats = {
@@ -312,7 +313,7 @@ function createAggregatedStats(): AggregatedStats {
 
 function sendOrAggregateInteractionsForStats(
   stats: AggregatedStats,
-  interactions: app.bsky.feed.defs.Interaction[],
+  interactions: AppBskyFeedDefs.Interaction[],
 ) {
   for (let interaction of interactions) {
     switch (interaction.event) {

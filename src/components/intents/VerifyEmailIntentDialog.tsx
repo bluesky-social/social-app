@@ -16,7 +16,7 @@ import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
-import {com} from '#/lexicons'
+import * as ComAtprotoServerRequestEmailConfirmation from '#/lexicons/com/atproto/server/requestEmailConfirmation'
 
 export function VerifyEmailIntentDialog() {
   const {verifyEmailDialogControl: control} = useIntentDialogs()
@@ -53,7 +53,7 @@ function Inner({}: {control: DialogControlProps}) {
 
   const onPressResendEmail = async () => {
     setSending(true)
-    await client.call(com.atproto.server.requestEmailConfirmation)
+    await client.call(ComAtprotoServerRequestEmailConfirmation)
     setSending(false)
     setStatus('resent')
   }

@@ -9,7 +9,7 @@ import {
   VideoPostCardPlaceholder,
 } from '#/components/VideoPostCard'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import * as AppBskyEmbedVideo from '#/lexicons/app/bsky/embed/video'
 import * as bsky from '#/types/bsky'
 
 export function PostFeedVideoGridRow({
@@ -22,7 +22,7 @@ export function PostFeedVideoGridRow({
   const ax = useAnalytics()
   const gutters = useGutters(['base', 'base', 0, 'base'])
   const posts = slices
-    .filter(slice => bsky.isType(app.bsky.embed.video.view, slice.post.embed))
+    .filter(slice => bsky.isType(AppBskyEmbedVideo.view, slice.post.embed))
     .map(slice => ({
       post: slice.post,
       moderation: slice.moderation,

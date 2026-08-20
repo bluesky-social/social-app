@@ -1,14 +1,14 @@
 import {useMutation} from '@tanstack/react-query'
 
 import {usePdsClient} from '#/state/session'
-import {com} from '#/lexicons'
+import * as ComAtprotoServerRequestEmailConfirmation from '#/lexicons/com/atproto/server/requestEmailConfirmation'
 
 export function useRequestEmailVerification() {
   const client = usePdsClient()
 
   return useMutation({
     mutationFn: async () => {
-      await client.call(com.atproto.server.requestEmailConfirmation)
+      await client.call(ComAtprotoServerRequestEmailConfirmation)
     },
   })
 }

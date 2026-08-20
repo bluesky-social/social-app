@@ -14,7 +14,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
-import {com} from '#/lexicons'
+import * as ComAtprotoServerDeactivateAccount from '#/lexicons/com/atproto/server/deactivateAccount'
 
 export function DeactivateAccountDialog({
   control,
@@ -43,7 +43,7 @@ function DeactivateAccountDialogInner({
   const handleDeactivate = useCallback(async () => {
     try {
       setPending(true)
-      await client.call(com.atproto.server.deactivateAccount, {})
+      await client.call(ComAtprotoServerDeactivateAccount, {})
       control.close(() => {
         logoutCurrentAccount('Deactivated')
       })

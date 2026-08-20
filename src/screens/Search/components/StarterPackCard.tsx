@@ -18,14 +18,15 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useStarterPackLink} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
 import * as bsky from '#/types/bsky'
 
 export function StarterPackCard({
   view,
   onPress,
 }: {
-  view: app.bsky.graph.defs.StarterPackView
+  view: AppBskyGraphDefs.StarterPackView
   onPress?: () => void
 }) {
   const t = useTheme()
@@ -35,7 +36,7 @@ export function StarterPackCard({
   const link = useStarterPackLink({view})
   const record = view.record
 
-  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
+  if (!bsky.isType(AppBskyGraphStarterpack, record)) {
     return null
   }
 

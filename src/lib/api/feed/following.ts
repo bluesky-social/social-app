@@ -1,6 +1,7 @@
 import {type Client} from '@atproto/lex'
 
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedGetTimeline from '#/lexicons/app/bsky/feed/getTimeline'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class FollowingFeedAPI implements FeedAPI {
@@ -10,8 +11,8 @@ export class FollowingFeedAPI implements FeedAPI {
     this.client = client
   }
 
-  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
-    const data = await this.client.call(app.bsky.feed.getTimeline, {
+  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+    const data = await this.client.call(AppBskyFeedGetTimeline, {
       limit: 1,
     })
     return data.feed[0]
@@ -30,7 +31,7 @@ export class FollowingFeedAPI implements FeedAPI {
      * way - its `success` flag was only ever true - so the empty-page branch
      * this replaces was unreachable.
      */
-    const data = await this.client.call(app.bsky.feed.getTimeline, {
+    const data = await this.client.call(AppBskyFeedGetTimeline, {
       cursor,
       limit,
     })

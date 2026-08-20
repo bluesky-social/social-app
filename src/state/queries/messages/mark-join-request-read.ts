@@ -2,7 +2,8 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import * as ChatBskyGroupUpdateJoinRequestsRead from '#/lexicons/chat/bsky/group/updateJoinRequestsRead'
 import * as bsky from '#/types/bsky'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {
@@ -17,19 +18,18 @@ export function useMarkJoinRequestsRead(convoId: string | undefined) {
   return useMutation({
     mutationFn: async () => {
       if (!convoId) throw new Error('No convoId provided')
-      await client.call(chat.bsky.group.updateJoinRequestsRead, {convoId})
+      await client.call(ChatBskyGroupUpdateJoinRequestsRead, {convoId})
     },
     onMutate: () => {
       if (!convoId) return
 
-      const prevConvo =
-        queryClient.getQueryData<chat.bsky.convo.defs.ConvoView>(
-          CONVO_KEY(convoId),
-        )
-      queryClient.setQueryData<chat.bsky.convo.defs.ConvoView | undefined>(
+      const prevConvo = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
+        CONVO_KEY(convoId),
+      )
+      queryClient.setQueryData<ChatBskyConvoDefs.ConvoView | undefined>(
         CONVO_KEY(convoId),
         old => {
-          if (!old || !bsky.isType(chat.bsky.convo.defs.groupConvo, old.kind))
+          if (!old || !bsky.isType(ChatBskyConvoDefs.groupConvo, old.kind))
             return old
           return {
             ...old,
@@ -52,7 +52,7 @@ export function useMarkJoinRequestsRead(convoId: string | undefined) {
               convos: page.convos.map(convo => {
                 if (
                   convo.id !== convoId ||
-                  !bsky.isType(chat.bsky.convo.defs.groupConvo, convo.kind)
+                  !bsky.isType(ChatBskyConvoDefs.groupConvo, convo.kind)
                 ) {
                   return convo
                 }

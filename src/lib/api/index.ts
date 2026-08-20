@@ -28,7 +28,16 @@ import {
   type PostDraft,
   type ThreadDraft,
 } from '#/view/com/composer/state/composer'
-import {app, chat, com} from '#/lexicons'
+import type * as AppBskyEmbedExternal from '#/lexicons/app/bsky/embed/external'
+import type * as AppBskyEmbedGallery from '#/lexicons/app/bsky/embed/gallery'
+import type * as AppBskyEmbedImages from '#/lexicons/app/bsky/embed/images'
+import type * as AppBskyEmbedVideo from '#/lexicons/app/bsky/embed/video'
+import * as AppBskyFeedGetPosts from '#/lexicons/app/bsky/feed/getPosts'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
+import * as ChatBskyGroupDefs from '#/lexicons/chat/bsky/group/defs'
+import type * as ComAtprotoLabelDefs from '#/lexicons/com/atproto/label/defs'
+import * as ComAtprotoRepoApplyWrites from '#/lexicons/com/atproto/repo/applyWrites'
+import type * as ComAtprotoRepoStrongRef from '#/lexicons/com/atproto/repo/strongRef'
 import * as bsky from '#/types/bsky'
 import {createGIFDescription} from '../gif-alt-text'
 import {computeCid} from './computeCid'
@@ -65,8 +74,8 @@ export async function post(queryClient: QueryClient, opts: PostOpts) {
   opts.onStateChange?.(t`Processing...`)
 
   let replyPromise:
-    | Promise<app.bsky.feed.post.Main['reply']>
-    | app.bsky.feed.post.Main['reply']
+    | Promise<AppBskyFeedPost.Main['reply']>
+    | AppBskyFeedPost.Main['reply']
     | undefined
   if (opts.replyTo) {
     // Not awaited to avoid waterfalls.
@@ -80,7 +89,7 @@ export async function post(queryClient: QueryClient, opts: PostOpts) {
   }
 
   const did = opts.pdsClient.assertDid
-  const writes: com.atproto.repo.applyWrites.$InputBody['writes'] = []
+  const writes: ComAtprotoRepoApplyWrites.$InputBody['writes'] = []
   const uris: string[] = []
 
   let now = new Date()
@@ -99,7 +108,7 @@ export async function post(queryClient: QueryClient, opts: PostOpts) {
       draft,
       opts.onStateChange,
     )
-    let labels: $Typed<com.atproto.label.defs.SelfLabels> | undefined
+    let labels: $Typed<ComAtprotoLabelDefs.SelfLabels> | undefined
     if (draft.labels.length) {
       labels = {
         $type: 'com.atproto.label.defs#selfLabels',
@@ -118,7 +127,7 @@ export async function post(queryClient: QueryClient, opts: PostOpts) {
     const rt = await rtPromise
     const embed = await embedPromise
     const reply = await replyPromise
-    const record: app.bsky.feed.post.Main = {
+    const record: AppBskyFeedPost.Main = {
       // IMPORTANT: $type has to exist, CID is calculated with the `$type` field
       // present and will produce the wrong CID if you omit it.
       $type: 'app.bsky.feed.post',
@@ -179,7 +188,7 @@ export async function post(queryClient: QueryClient, opts: PostOpts) {
   }
 
   try {
-    await opts.pdsClient.call(com.atproto.repo.applyWrites, {
+    await opts.pdsClient.call(ComAtprotoRepoApplyWrites, {
       repo: did,
       writes: writes,
       validate: true,
@@ -222,7 +231,7 @@ export class ReplyDeletedError extends Error {
 }
 
 async function resolveReply(appviewClient: Client, replyTo: string) {
-  const data = await appviewClient.call(app.bsky.feed.getPosts, {
+  const data = await appviewClient.call(AppBskyFeedGetPosts, {
     uris: [replyTo as AtUriString],
   })
   const parentPost = data.posts[0]
@@ -234,9 +243,9 @@ async function resolveReply(appviewClient: Client, replyTo: string) {
     uri: parentPost.uri,
     cid: parentPost.cid,
   }
-  let rootRef: com.atproto.repo.strongRef.Main = parentRef
+  let rootRef: ComAtprotoRepoStrongRef.Main = parentRef
 
-  if (bsky.isType(app.bsky.feed.post, parentPost.record)) {
+  if (bsky.isType(AppBskyFeedPost, parentPost.record)) {
     if (parentPost.record.reply) {
       rootRef = parentPost.record.reply.root
     }
@@ -255,7 +264,7 @@ async function resolveEmbed(
   queryClient: QueryClient,
   draft: PostDraft,
   onStateChange: ((state: string) => void) | undefined,
-): Promise<app.bsky.feed.post.Main['embed']> {
+): Promise<AppBskyFeedPost.Main['embed']> {
   if (draft.embed.quote) {
     const [resolvedMedia, resolvedQuote] = await Promise.all([
       resolveMedia(
@@ -322,10 +331,10 @@ async function resolveMedia(
   embedDraft: EmbedDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
-  | $Typed<app.bsky.embed.external.Main>
-  | $Typed<app.bsky.embed.images.Main>
-  | $Typed<app.bsky.embed.gallery.Main>
-  | $Typed<app.bsky.embed.video.Main>
+  | $Typed<AppBskyEmbedExternal.Main>
+  | $Typed<AppBskyEmbedImages.Main>
+  | $Typed<AppBskyEmbedGallery.Main>
+  | $Typed<AppBskyEmbedVideo.Main>
   | undefined
 > {
   if (embedDraft.media?.type === 'images') {
@@ -334,7 +343,7 @@ async function resolveMedia(
       count: imagesDraft.length,
     })
     onStateChange?.(t`Uploading images...`)
-    const images: app.bsky.embed.images.Image[] = await Promise.all(
+    const images: AppBskyEmbedImages.Image[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
         const {path, width, height, mime} = await compressImage(
@@ -361,7 +370,7 @@ async function resolveMedia(
       count: imagesDraft.length,
     })
     onStateChange?.(t`Uploading images...`)
-    const items: $Typed<app.bsky.embed.gallery.Image>[] = await Promise.all(
+    const items: $Typed<AppBskyEmbedGallery.Image>[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
         const {path, width, height, mime} = await compressImage(
@@ -431,7 +440,7 @@ async function resolveMedia(
   if (embedDraft.media?.type === 'gif') {
     const gifDraft = embedDraft.media
     const resolvedGif = await fetchResolveGifQuery(queryClient, gifDraft.gif)
-    let blob: app.bsky.embed.external.External['thumb']
+    let blob: AppBskyEmbedExternal.External['thumb']
     if (resolvedGif.thumb) {
       onStateChange?.(t`Uploading link thumbnail...`)
       const {path, mime} = resolvedGif.thumb.source
@@ -455,7 +464,7 @@ async function resolveMedia(
       embedDraft.link.uri,
     )
     if (resolvedLink.type === 'external') {
-      let blob: app.bsky.embed.external.External['thumb']
+      let blob: AppBskyEmbedExternal.External['thumb']
       if (resolvedLink.thumb) {
         onStateChange?.(t`Uploading link thumbnail...`)
         const {path, mime} = resolvedLink.thumb.source
@@ -475,7 +484,7 @@ async function resolveMedia(
     }
     if (
       resolvedLink.type === 'chat-invite' &&
-      bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, resolvedLink.view)
+      bsky.isType(ChatBskyGroupDefs.joinLinkPreviewView, resolvedLink.view)
     ) {
       return {
         $type: 'app.bsky.embed.external',
@@ -494,7 +503,7 @@ async function resolveRecord(
   clients: LinkResolvers,
   queryClient: QueryClient,
   uri: string,
-): Promise<com.atproto.repo.strongRef.Main> {
+): Promise<ComAtprotoRepoStrongRef.Main> {
   const resolvedLink = await fetchResolveLinkQuery(queryClient, clients, uri)
   if (resolvedLink.type !== 'record') {
     throw Error(t`Expected uri to resolve to a record`)

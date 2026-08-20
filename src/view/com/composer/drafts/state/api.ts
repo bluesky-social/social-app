@@ -23,7 +23,7 @@ import {type VideoState} from '#/view/com/composer/state/video'
 import {type AnalyticsContextType} from '#/analytics'
 import {getDeviceId} from '#/analytics/identifiers'
 import {type Gif} from '#/features/gifPicker/types'
-import {app} from '#/lexicons'
+import * as AppBskyDraftDefs from '#/lexicons/app/bsky/draft/defs'
 import * as bsky from '#/types/bsky'
 import {logger} from './logger'
 import {type DraftPostDisplay, type DraftSummary} from './schema'
@@ -66,18 +66,18 @@ export async function composerStateToDraft(
   clients: LinkResolvers,
   state: ComposerState,
 ): Promise<{
-  draft: app.bsky.draft.defs.Draft
+  draft: AppBskyDraftDefs.Draft
   localRefPaths: Map<string, string>
 }> {
   const localRefPaths = new Map<string, string>()
 
-  const posts: app.bsky.draft.defs.DraftPost[] = await Promise.all(
+  const posts: AppBskyDraftDefs.DraftPost[] = await Promise.all(
     state.thread.posts.map(post => {
       return postDraftToServerPost(clients, post, localRefPaths)
     }),
   )
 
-  const draft: app.bsky.draft.defs.Draft = {
+  const draft: AppBskyDraftDefs.Draft = {
     $type: 'app.bsky.draft.defs#draft',
     deviceId: getDeviceId(),
     deviceName: getDeviceName().slice(0, 100), // max length of 100 in lex
@@ -102,8 +102,8 @@ async function postDraftToServerPost(
   clients: LinkResolvers,
   post: PostDraft,
   localRefPaths: Map<string, string>,
-): Promise<app.bsky.draft.defs.DraftPost> {
-  const draftPost: app.bsky.draft.defs.DraftPost = {
+): Promise<AppBskyDraftDefs.DraftPost> {
+  const draftPost: AppBskyDraftDefs.DraftPost = {
     $type: 'app.bsky.draft.defs#draftPost',
     text: post.richtext.text,
   }
@@ -179,7 +179,7 @@ async function postDraftToServerPost(
 function serializeImages(
   images: ComposerImage[],
   localRefPaths: Map<string, string>,
-): app.bsky.draft.defs.DraftEmbedGalleryItems {
+): AppBskyDraftDefs.DraftEmbedGalleryItems {
   return images.map(image => {
     const sourcePath = image.transformed?.path || image.source.path
     // Reuse existing localRefPath if present (editing draft), otherwise generate new
@@ -211,7 +211,7 @@ function serializeImages(
 async function serializeVideo(
   videoState: VideoState,
   localRefPaths: Map<string, string>,
-): Promise<app.bsky.draft.defs.DraftEmbedVideo | undefined> {
+): Promise<AppBskyDraftDefs.DraftEmbedVideo | undefined> {
   // Only save videos that have been compressed (have a video file)
   if (!videoState.video) {
     return undefined
@@ -224,7 +224,7 @@ async function serializeVideo(
   localRefPaths.set(localRefPath, videoState.video.uri)
 
   // Read caption file contents as text
-  const captions: app.bsky.draft.defs.DraftEmbedCaption[] = []
+  const captions: AppBskyDraftDefs.DraftEmbedCaption[] = []
   for (const caption of videoState.captions) {
     if (caption.lang) {
       const content = await caption.file.text()
@@ -255,7 +255,7 @@ function serializeGif(gifMedia: {
   type: 'gif'
   gif: Gif
   alt: string
-}): app.bsky.draft.defs.DraftEmbedExternal | undefined {
+}): AppBskyDraftDefs.DraftEmbedExternal | undefined {
   const gif = gifMedia.gif
   const gifFormat = gif.media_formats.gif || gif.media_formats.tinygif
 
@@ -285,7 +285,7 @@ function serializeGif(gifMedia: {
  * both the `embedImages` and `embedGallery` paths in draftToComposerPosts.
  */
 async function restoreDraftImages(
-  draftImages: app.bsky.draft.defs.DraftEmbedImage[],
+  draftImages: AppBskyDraftDefs.DraftEmbedImage[],
   loadedMedia: Map<string, string>,
 ): Promise<ComposerImage[]> {
   const imagePromises = draftImages.map(async img => {
@@ -341,7 +341,7 @@ export function draftViewToSummary({
   view,
   analytics,
 }: {
-  view: app.bsky.draft.defs.DraftView
+  view: AppBskyDraftDefs.DraftView
   analytics: AnalyticsContextType
 }): DraftSummary {
   const meta = {
@@ -381,7 +381,7 @@ export function draftViewToSummary({
     // Process gallery
     if (post.embedGallery) {
       for (const item of post.embedGallery.items) {
-        if (!bsky.isType(app.bsky.draft.defs.draftEmbedImage, item)) continue
+        if (!bsky.isType(AppBskyDraftDefs.draftEmbedImage, item)) continue
         meta.mediaCount++
         meta.hasMedia = true
         const exists = storage.mediaExists(item.localRef.path)
@@ -497,7 +497,7 @@ function parseGifFromUrl(
  * by initiating video processing for each entry.
  */
 export async function draftToComposerPosts(
-  draft: app.bsky.draft.defs.Draft,
+  draft: AppBskyDraftDefs.Draft,
   loadedMedia: Map<string, string>,
 ): Promise<{posts: PostDraft[]; restoredVideos: Map<number, RestoredVideo>}> {
   const restoredVideos = new Map<number, RestoredVideo>()
@@ -527,7 +527,7 @@ export async function draftToComposerPosts(
       }
       if (post.embedGallery && post.embedGallery.items.length > 0) {
         const galleryImages = post.embedGallery.items.filter(item =>
-          bsky.isType(app.bsky.draft.defs.draftEmbedImage, item),
+          bsky.isType(AppBskyDraftDefs.draftEmbedImage, item),
         )
         restoredImages.push(
           ...(await restoreDraftImages(galleryImages, loadedMedia)),
@@ -647,7 +647,7 @@ export async function draftToComposerPosts(
  * Convert server threadgate rules back to UI settings.
  */
 export function threadgateToUISettings(
-  threadgateAllow?: app.bsky.draft.defs.Draft['threadgateAllow'],
+  threadgateAllow?: AppBskyDraftDefs.Draft['threadgateAllow'],
 ): Array<{type: string; list?: string}> {
   if (!threadgateAllow) {
     return []
@@ -681,9 +681,7 @@ export function threadgateToUISettings(
  * Extract all localRef paths from a draft.
  * Used to identify which media files belong to a draft for cleanup.
  */
-export function extractLocalRefs(
-  draft: app.bsky.draft.defs.Draft,
-): Set<string> {
+export function extractLocalRefs(draft: AppBskyDraftDefs.Draft): Set<string> {
   const refs = new Set<string>()
   for (const post of draft.posts) {
     if (post.embedImages) {
@@ -693,7 +691,7 @@ export function extractLocalRefs(
     }
     if (post.embedGallery) {
       for (const item of post.embedGallery.items) {
-        if (!bsky.isType(app.bsky.draft.defs.draftEmbedImage, item)) continue
+        if (!bsky.isType(AppBskyDraftDefs.draftEmbedImage, item)) continue
         refs.add(item.localRef.path)
       }
     }

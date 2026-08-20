@@ -8,13 +8,16 @@ import {
   toBskyAppUrl,
   toShortUrl,
 } from '#/lib/strings/url-helpers'
-import {app, chat} from '#/lexicons'
+import * as AppBskyEmbedRecord from '#/lexicons/app/bsky/embed/record'
+import type * as ChatBskyActorDefs from '#/lexicons/chat/bsky/actor/defs'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import * as ChatBskyEmbedJoinLink from '#/lexicons/chat/bsky/embed/joinLink'
 import * as bsky from '#/types/bsky'
 
 export type UserMessageInfo = {
   message: string | null
   sentAt: string
-  reportableMessage?: chat.bsky.convo.defs.MessageView
+  reportableMessage?: ChatBskyConvoDefs.MessageView
   isBlockedMessage: boolean
 }
 
@@ -31,7 +34,7 @@ export function isDidBlockedInConvo({
   primaryProfile,
 }: {
   did: string | undefined
-  members: chat.bsky.actor.defs.ProfileViewBasic[]
+  members: ChatBskyActorDefs.ProfileViewBasic[]
   primaryProfile?: bsky.profile.AnyProfileView
 }): boolean {
   if (!did) return false
@@ -48,12 +51,12 @@ export function getMessageInfo({
   primaryProfile,
   i18n,
 }: {
-  convo: chat.bsky.convo.defs.ConvoView
+  convo: ChatBskyConvoDefs.ConvoView
   currentAccountDid: string | undefined
   primaryProfile?: bsky.profile.AnyProfileView
   i18n: I18n
 }): UserMessageInfo | null {
-  if (!bsky.isType(chat.bsky.convo.defs.messageView, convo.lastMessage)) {
+  if (!bsky.isType(ChatBskyConvoDefs.messageView, convo.lastMessage)) {
     return null
   }
 
@@ -62,7 +65,7 @@ export function getMessageInfo({
   const senderDid = lastMessage.sender?.did
   const sender = convo.members.find(m => m.did === senderDid)
   const name = sender ? createSanitizedDisplayName(sender) : null
-  const isGroup = bsky.isType(chat.bsky.convo.defs.groupConvo, convo.kind)
+  const isGroup = bsky.isType(ChatBskyConvoDefs.groupConvo, convo.kind)
 
   const reportableMessage = isFromMe ? undefined : lastMessage
   const isBlockedMessage = isDidBlockedInConvo({
@@ -100,10 +103,10 @@ export function getMessageInfo({
       msg`(contains embedded content)`,
     )
 
-    if (bsky.isType(app.bsky.embed.record.view, lastMessage.embed)) {
+    if (bsky.isType(AppBskyEmbedRecord.view, lastMessage.embed)) {
       const embed = lastMessage.embed
 
-      if (bsky.isType(app.bsky.embed.record.viewRecord, embed.record)) {
+      if (bsky.isType(AppBskyEmbedRecord.viewRecord, embed.record)) {
         const record = embed.record
         const path = postUriToRelativePath(record.uri, {
           handle: record.author.handle,
@@ -114,7 +117,7 @@ export function getMessageInfo({
       } else {
         message = prefix(defaultEmbeddedContentMessage)
       }
-    } else if (bsky.isType(chat.bsky.embed.joinLink.view, lastMessage.embed)) {
+    } else if (bsky.isType(ChatBskyEmbedJoinLink.view, lastMessage.embed)) {
       message = prefix(i18n._(msg`(chat invite link)`))
     } else {
       message = prefix(defaultEmbeddedContentMessage)

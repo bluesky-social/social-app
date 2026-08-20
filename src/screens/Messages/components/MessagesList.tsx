@@ -64,7 +64,11 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
-import {app, chat} from '#/lexicons'
+import type * as AppBskyEmbedRecord from '#/lexicons/app/bsky/embed/record'
+import * as AppBskyRichtextFacet from '#/lexicons/app/bsky/richtext/facet'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import type * as ChatBskyEmbedJoinLink from '#/lexicons/chat/bsky/embed/joinLink'
+import * as ChatBskyGroupDefs from '#/lexicons/chat/bsky/group/defs'
 import * as bsky from '#/types/bsky'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {groupSystemMessages, type RenderItem} from './groupSystemMessages'
@@ -111,8 +115,8 @@ function getNeighborMessage(
     neighbor.type === 'deleted-message'
   ) {
     if (
-      bsky.isType(chat.bsky.convo.defs.messageView, neighbor.message) ||
-      bsky.isType(chat.bsky.convo.defs.deletedMessageView, neighbor.message)
+      bsky.isType(ChatBskyConvoDefs.messageView, neighbor.message) ||
+      bsky.isType(ChatBskyConvoDefs.deletedMessageView, neighbor.message)
     ) {
       return neighbor.message
     }
@@ -519,7 +523,7 @@ export function MessagesList({
     async (
       text: string,
       embedState?: MessageEmbedState,
-      reply?: $Typed<chat.bsky.convo.defs.MessageView>,
+      reply?: $Typed<ChatBskyConvoDefs.MessageView>,
     ) => {
       let rt = new RichText({text: text.trimEnd()}, {cleanNewlines: true})
 
@@ -531,12 +535,12 @@ export function MessagesList({
        */
       rt.detectFacetsWithoutResolution()
 
-      let embed: chat.bsky.convo.defs.MessageInput['embed']
+      let embed: ChatBskyConvoDefs.MessageInput['embed']
       let embedView:
-        | $Typed<app.bsky.embed.record.View>
-        | $Typed<chat.bsky.embed.joinLink.View>
+        | $Typed<AppBskyEmbedRecord.View>
+        | $Typed<ChatBskyEmbedJoinLink.View>
         | undefined
-      let replyTo: chat.bsky.convo.defs.ReplyRef | undefined
+      let replyTo: ChatBskyConvoDefs.ReplyRef | undefined
 
       /**
        * Find the embedded link facet and, if it's at the start or end of the
@@ -546,7 +550,7 @@ export function MessagesList({
         const linkFacet = rt.facets?.find(facet =>
           facet.features.find(
             feature =>
-              bsky.isType(app.bsky.richtext.facet.link, feature) &&
+              bsky.isType(AppBskyRichtextFacet.link, feature) &&
               predicate(feature.uri),
           ),
         )
@@ -656,7 +660,7 @@ export function MessagesList({
       if (
         embedView?.$type === 'chat.bsky.embed.joinLink#view' &&
         bsky.isType(
-          chat.bsky.group.defs.joinLinkPreviewView,
+          ChatBskyGroupDefs.joinLinkPreviewView,
           embedView.joinLinkPreview,
         )
       ) {
@@ -896,7 +900,7 @@ function Composer({
   onSendMessage: (
     message: string,
     embed?: MessageEmbedState,
-    replyTo?: $Typed<chat.bsky.convo.defs.MessageView>,
+    replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
   ) => Promise<void>
   messageEmbed: MessageEmbedState | undefined
   setEmbed: (embedUrl: string | undefined) => void
@@ -906,7 +910,7 @@ function Composer({
     (
       message: string,
       embed?: MessageEmbedState,
-      replyTo?: $Typed<chat.bsky.convo.defs.MessageView>,
+      replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
     ) => {
       void onSendMessage(message, embed, replyTo)
     },

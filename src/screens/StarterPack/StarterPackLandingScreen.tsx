@@ -34,7 +34,8 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB, IS_WEB_MOBILE_ANDROID} from '#/env'
-import {app} from '#/lexicons'
+import * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
 import * as bsky from '#/types/bsky'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
@@ -69,8 +70,8 @@ export function LandingScreen({
   const isValid =
     starterPack &&
     starterPack.list &&
-    bsky.matches(app.bsky.graph.defs.starterPackView, starterPack) &&
-    bsky.matches(app.bsky.graph.starterpack, starterPack.record)
+    bsky.matches(AppBskyGraphDefs.starterPackView, starterPack) &&
+    bsky.matches(AppBskyGraphStarterpack, starterPack.record)
 
   useEffect(() => {
     if (isErrorStarterPack || (starterPack && !isValid)) {
@@ -83,7 +84,7 @@ export function LandingScreen({
   }
 
   // Just for types, this cannot be hit
-  if (!bsky.isType(app.bsky.graph.starterpack, starterPack.record)) {
+  if (!bsky.isType(AppBskyGraphStarterpack, starterPack.record)) {
     return null
   }
 
@@ -105,8 +106,8 @@ function LandingScreenLoaded({
 
   moderationOpts,
 }: {
-  starterPack: app.bsky.graph.defs.StarterPackView
-  starterPackRecord: app.bsky.graph.starterpack.Main
+  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPackRecord: AppBskyGraphStarterpack.Main
   setScreenState: (state: LoggedOutScreenState) => void
   moderationOpts: ModerationOpts
 }) {

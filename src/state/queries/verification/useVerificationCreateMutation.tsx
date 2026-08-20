@@ -5,7 +5,8 @@ import {until} from '#/lib/async/until'
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
 import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import * as AppBskyActorGetProfile from '#/lexicons/app/bsky/actor/getProfile'
+import * as AppBskyGraphVerification from '#/lexicons/app/bsky/graph/verification'
 import type * as bsky from '#/types/bsky'
 
 export function useVerificationCreateMutation() {
@@ -21,7 +22,7 @@ export function useVerificationCreateMutation() {
         throw new Error('User not logged in')
       }
 
-      const {uri} = await pdsClient.create(app.bsky.graph.verification, {
+      const {uri} = await pdsClient.create(AppBskyGraphVerification, {
         subject: profile.did,
         createdAt: toDatetimeString(new Date()),
         handle: profile.handle,
@@ -31,7 +32,7 @@ export function useVerificationCreateMutation() {
       await until(
         5,
         1e3,
-        (profile: app.bsky.actor.getProfile.$OutputBody) => {
+        (profile: AppBskyActorGetProfile.$OutputBody) => {
           if (
             profile.verification &&
             profile.verification.verifications.find(v => v.uri === uri)
@@ -41,7 +42,7 @@ export function useVerificationCreateMutation() {
           return false
         },
         () => {
-          return appviewClient.call(app.bsky.actor.getProfile, {
+          return appviewClient.call(AppBskyActorGetProfile, {
             actor: profile.did ?? '',
           })
         },

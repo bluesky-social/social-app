@@ -39,7 +39,9 @@ import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {chat} from '#/lexicons'
+import * as ChatBskyGroupApproveJoinRequest from '#/lexicons/chat/bsky/group/approveJoinRequest'
+import type * as ChatBskyGroupListJoinRequests from '#/lexicons/chat/bsky/group/listJoinRequests'
+import * as ChatBskyGroupRejectJoinRequest from '#/lexicons/chat/bsky/group/rejectJoinRequest'
 import type * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from './components/InviteLinkDialog'
 
@@ -139,7 +141,7 @@ function JoinRequestsList({
 
   const getRemainingRequestCount = () => {
     const data = queryClient.getQueryData<
-      InfiniteData<chat.bsky.group.listJoinRequests.$OutputBody>
+      InfiniteData<ChatBskyGroupListJoinRequests.$OutputBody>
     >(createListJoinRequestsQueryKey({convoId}))
     return data?.pages.reduce((sum, page) => sum + page.requests.length, 0) ?? 0
   }
@@ -188,7 +190,7 @@ function JoinRequestsList({
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
         } else {
-          switch (matchXrpcError(error, chat.bsky.group.approveJoinRequest)) {
+          switch (matchXrpcError(error, ChatBskyGroupApproveJoinRequest)) {
             case 'InvalidConvo':
               errorMessage = l`Conversation not found.`
               break
@@ -220,7 +222,7 @@ function JoinRequestsList({
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
         } else {
-          switch (matchXrpcError(error, chat.bsky.group.rejectJoinRequest)) {
+          switch (matchXrpcError(error, ChatBskyGroupRejectJoinRequest)) {
             case 'InvalidConvo':
               errorMessage = l`Conversation not found.`
               break

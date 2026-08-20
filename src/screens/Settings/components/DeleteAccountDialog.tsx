@@ -28,7 +28,9 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as toast from '#/components/Toast'
 import {Span, Text} from '#/components/Typography'
-import {chat, com} from '#/lexicons'
+import * as ChatBskyActorDeleteAccount from '#/lexicons/chat/bsky/actor/deleteAccount'
+import * as ComAtprotoServerDeleteAccount from '#/lexicons/com/atproto/server/deleteAccount'
+import * as ComAtprotoServerRequestAccountDelete from '#/lexicons/com/atproto/server/requestAccountDelete'
 import {resetToTab} from '#/Navigation'
 
 const WHITESPACE_RE = /\s/gu
@@ -95,7 +97,7 @@ function DeleteAccountDialogInner({
     }
     try {
       setEmailState(EmailState.PENDING)
-      await client.call(com.atproto.server.requestAccountDelete)
+      await client.call(ComAtprotoServerRequestAccountDelete)
       setError('')
       setEmailSentCount(prevCount => prevCount + 1)
       setStep(Step.VERIFY_CODE)
@@ -123,8 +125,8 @@ function DeleteAccountDialogInner({
        * throws, so reaching the next line means the chat service accepted it -
        * the agent's `success` flag has no client-side equivalent.
        */
-      await chatClient.call(chat.bsky.actor.deleteAccount)
-      await client.call(com.atproto.server.deleteAccount, {
+      await chatClient.call(ChatBskyActorDeleteAccount)
+      await client.call(ComAtprotoServerDeleteAccount, {
         did: currentAccount.did,
         password,
         token,

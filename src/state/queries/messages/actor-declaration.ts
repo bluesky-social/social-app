@@ -5,7 +5,10 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {usePdsClient, useSession} from '#/state/session'
 import {resolveAllowGroupInvites} from '#/components/dms/util'
-import {type app, chat, com} from '#/lexicons'
+import {type app} from '#/lexicons'
+import * as ChatBskyActorDeclaration from '#/lexicons/chat/bsky/actor/declaration'
+import * as ComAtprotoRepoDeleteRecord from '#/lexicons/com/atproto/repo/deleteRecord'
+import * as ComAtprotoRepoPutRecord from '#/lexicons/com/atproto/repo/putRecord'
 import {RQKEY as PROFILE_RKEY} from '../profile'
 
 export function useUpdateActorDeclaration({
@@ -39,7 +42,7 @@ export function useUpdateActorDeclaration({
           update.allowGroupInvites ??
           current?.associated?.chat?.allowGroupInvites,
       })
-      const result = await pdsClient.call(com.atproto.repo.putRecord, {
+      const result = await pdsClient.call(ComAtprotoRepoPutRecord, {
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
@@ -104,7 +107,7 @@ export function useDeleteActorDeclaration() {
   return useMutation({
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not signed in')
-      const result = await pdsClient.call(com.atproto.repo.deleteRecord, {
+      const result = await pdsClient.call(ComAtprotoRepoDeleteRecord, {
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
@@ -123,7 +126,7 @@ export async function fetchActorDeclarationRecord({
 }) {
   if (!did) return
   const res = await client
-    .get(chat.bsky.actor.declaration, {repo: did as DidString, rkey: 'self'})
+    .get(ChatBskyActorDeclaration, {repo: did as DidString, rkey: 'self'})
     .catch(_e => undefined)
   return res?.value
 }

@@ -26,13 +26,13 @@ import {Loader} from '#/components/Loader'
 import {useHider} from '#/components/moderation/Hider'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
 
 export function ListHiddenScreen({
   list,
   preferences,
 }: {
-  list: app.bsky.graph.defs.ListView
+  list: AppBskyGraphDefs.ListView
   preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()
@@ -43,7 +43,7 @@ export function ListHiddenScreen({
   const goBack = useGoBack()
   const queryClient = useQueryClient()
 
-  const isModList = list.purpose === app.bsky.graph.defs.modlist.value
+  const isModList = list.purpose === AppBskyGraphDefs.modlist.value
 
   const [isProcessing, setIsProcessing] = useState(false)
   const listBlockMutation = useListBlockMutation()

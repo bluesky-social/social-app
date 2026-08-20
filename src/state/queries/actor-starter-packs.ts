@@ -2,7 +2,8 @@ import {type DidString} from '@atproto/syntax'
 import {type QueryClient, useInfiniteQuery} from '@tanstack/react-query'
 
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyGraphGetActorStarterPacks from '#/lexicons/app/bsky/graph/getActorStarterPacks'
+import * as AppBskyGraphGetStarterPacksWithMembership from '#/lexicons/app/bsky/graph/getStarterPacksWithMembership'
 
 export const RQKEY_ROOT = 'actor-starter-packs'
 export const RQKEY_WITH_MEMBERSHIP_ROOT = 'actor-starter-packs-with-membership'
@@ -24,7 +25,7 @@ export function useActorStarterPacksQuery({
   return useInfiniteQuery({
     queryKey: RQKEY(did),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
-      return await client.call(app.bsky.graph.getActorStarterPacks, {
+      return await client.call(AppBskyGraphGetActorStarterPacks, {
         // the enabled flag prevents this from running until did is set
         actor: did! as DidString,
         limit: 10,
@@ -49,7 +50,7 @@ export function useActorStarterPacksWithMembershipsQuery({
   return useInfiniteQuery({
     queryKey: RQKEY_WITH_MEMBERSHIP(did),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
-      return await client.call(app.bsky.graph.getStarterPacksWithMembership, {
+      return await client.call(AppBskyGraphGetStarterPacksWithMembership, {
         // the enabled flag prevents this from running until did is set
         actor: did! as DidString,
         limit: 10,

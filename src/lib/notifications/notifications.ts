@@ -17,7 +17,8 @@ import BackgroundNotificationHandler from '#/../modules/expo-background-notifica
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {IS_DEV, IS_NATIVE} from '#/env'
-import {app} from '#/lexicons'
+import * as AppBskyNotificationRegisterPush from '#/lexicons/app/bsky/notification/registerPush'
+import * as AppBskyNotificationUnregisterPush from '#/lexicons/app/bsky/notification/unregisterPush'
 
 /**
  * A resumed single-use account client paired with the account's service origin
@@ -50,7 +51,7 @@ async function _registerPushToken({
   }
 }) {
   try {
-    const payload: app.bsky.notification.registerPush.$InputBody = {
+    const payload: AppBskyNotificationRegisterPush.$InputBody = {
       serviceDid: currentAccount.service?.includes('staging')
         ? PUBLIC_STAGING_APPVIEW_DID
         : PUBLIC_APPVIEW_DID,
@@ -62,7 +63,7 @@ async function _registerPushToken({
 
     notyLogger.debug(`registerPushToken: registering`, {...payload})
 
-    await client.call(app.bsky.notification.registerPush, payload, {
+    await client.call(AppBskyNotificationRegisterPush, payload, {
       service: NOTIF_SERVICE,
     })
 
@@ -348,7 +349,7 @@ export async function unregisterPushToken(clients: TemporaryPushClient[]) {
     if (token) {
       for (const {client, service, handle} of clients) {
         await client.call(
-          app.bsky.notification.unregisterPush,
+          AppBskyNotificationUnregisterPush,
           {
             serviceDid: service.includes('staging')
               ? PUBLIC_STAGING_APPVIEW_DID

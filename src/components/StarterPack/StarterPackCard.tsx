@@ -19,7 +19,7 @@ import {
   type LinkProps as BaseLinkProps,
 } from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
 import * as bsky from '#/types/bsky'
 
 export function Default({
@@ -63,7 +63,7 @@ export function Card({
   const t = useTheme()
   const {currentAccount} = useSession()
 
-  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
+  if (!bsky.isType(AppBskyGraphStarterpack, record)) {
     return null
   }
 
@@ -123,7 +123,7 @@ export function useStarterPackLink({
 
   return {
     to: `/starter-pack/${handleOrDid}/${rkey}`,
-    label: bsky.isType(app.bsky.graph.starterpack, view.record)
+    label: bsky.isType(AppBskyGraphStarterpack, view.record)
       ? _(msg`Navigate to ${view.record.name}`)
       : _(msg`Navigate to starter pack`),
     precache,
@@ -147,7 +147,7 @@ export function Link({
     return {rkey, handleOrDid: creator.handle || creator.did}
   }, [starterPack])
 
-  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
+  if (!bsky.isType(AppBskyGraphStarterpack, record)) {
     return null
   }
 

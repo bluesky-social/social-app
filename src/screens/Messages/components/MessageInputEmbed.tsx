@@ -32,7 +32,8 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
+import * as AppBskyRichtextFacet from '#/lexicons/app/bsky/richtext/facet'
 import * as bsky from '#/types/bsky'
 
 /**
@@ -102,7 +103,7 @@ export function useExtractEmbedFromFacets(
   for (const facet of rt.facets ?? []) {
     for (const feature of facet.features) {
       if (
-        bsky.isType(app.bsky.richtext.facet.link, feature) &&
+        bsky.isType(AppBskyRichtextFacet.link, feature) &&
         (isBskyPostUrl(feature.uri) || isBskyChatInviteUrl(feature.uri))
       ) {
         uriFromFacet = feature.uri
@@ -162,7 +163,7 @@ function MessageInputPostEmbed({
   )
 
   const {rt, record} = useMemo(() => {
-    if (post && bsky.isType(app.bsky.feed.post, post.record)) {
+    if (post && bsky.isType(AppBskyFeedPost, post.record)) {
       return {
         rt: new RichTextAPI({
           text: post.record.text,

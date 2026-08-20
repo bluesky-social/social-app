@@ -14,7 +14,13 @@ import {until} from '#/lib/async/until'
 import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
 import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
-import {app, com} from '#/lexicons'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphGetList from '#/lexicons/app/bsky/graph/getList'
+import * as AppBskyGraphList from '#/lexicons/app/bsky/graph/list'
+import * as AppBskyGraphListitem from '#/lexicons/app/bsky/graph/listitem'
+import type * as AppBskyRichtextFacet from '#/lexicons/app/bsky/richtext/facet'
+import * as ComAtprotoRepoApplyWrites from '#/lexicons/com/atproto/repo/applyWrites'
+import * as ComAtprotoRepoPutRecord from '#/lexicons/com/atproto/repo/putRecord'
 import {FEED_INFO_RQKEY_ROOT} from './feed'
 import {invalidate as invalidateMyLists} from './my-lists'
 import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
@@ -24,14 +30,14 @@ export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 
 export function useListQuery(uri?: string) {
   const client = useAppviewClient()
-  return useQuery<app.bsky.graph.defs.ListView, Error>({
+  return useQuery<AppBskyGraphDefs.ListView, Error>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       if (!uri) {
         throw new Error('URI not provided')
       }
-      const res = await client.call(app.bsky.graph.getList, {
+      const res = await client.call(AppBskyGraphGetList, {
         list: uri as AtUriString,
         limit: 1,
       })
@@ -45,7 +51,7 @@ export interface ListCreateMutateParams {
   purpose: string
   name: string
   description: string
-  descriptionFacets: app.bsky.richtext.facet.Main[] | undefined
+  descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
   avatar: ImageMeta | null | undefined
 }
 export function useListCreateMutation() {
@@ -71,7 +77,7 @@ export function useListCreateMutation() {
         ) {
           throw new Error('Invalid list purpose: must be curatelist or modlist')
         }
-        const record: Omit<app.bsky.graph.list.Main, '$type'> = {
+        const record: Omit<AppBskyGraphList.Main, '$type'> = {
           purpose,
           name,
           description,
@@ -83,7 +89,7 @@ export function useListCreateMutation() {
           const blobRes = await uploadBlob(pdsClient, avatar.path, avatar.mime)
           record.avatar = blobRes.blob
         }
-        const res = await pdsClient.create(app.bsky.graph.list, record)
+        const res = await pdsClient.create(AppBskyGraphList, record)
 
         // wait for the appview to update
         await whenAppViewReady(appviewClient, res.uri, v => {
@@ -105,7 +111,7 @@ export interface ListMetadataMutateParams {
   uri: string
   name: string
   description: string
-  descriptionFacets: app.bsky.richtext.facet.Main[] | undefined
+  descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
   avatar: ImageMeta | null | undefined
 }
 export function useListMetadataMutation() {
@@ -128,7 +134,7 @@ export function useListMetadataMutation() {
       }
 
       // get the current record
-      const {value: record} = await pdsClient.get(app.bsky.graph.list, {
+      const {value: record} = await pdsClient.get(AppBskyGraphList, {
         repo: currentAccount.did,
         rkey,
       })
@@ -143,7 +149,7 @@ export function useListMetadataMutation() {
       } else if (avatar === null) {
         record.avatar = undefined
       }
-      const res = await pdsClient.call(com.atproto.repo.putRecord, {
+      const res = await pdsClient.call(ComAtprotoRepoPutRecord, {
         repo: currentAccount.did,
         collection: 'app.bsky.graph.list',
         rkey,
@@ -188,7 +194,7 @@ export function useListDeleteMutation() {
       let cursor: string | undefined
       let listitemRecordUris: string[] = []
       for (let i = 0; i < 100; i++) {
-        const res = await pdsClient.list(app.bsky.graph.listitem, {
+        const res = await pdsClient.list(AppBskyGraphListitem, {
           repo: currentAccount.did,
           cursor,
           limit: 100,
@@ -207,7 +213,7 @@ export function useListDeleteMutation() {
       // batch delete the list and listitem records
       const createDel = (
         uri: string,
-      ): $Typed<com.atproto.repo.applyWrites.Delete> => {
+      ): $Typed<ComAtprotoRepoApplyWrites.Delete> => {
         const urip = new AtUri(uri)
         return {
           $type: 'com.atproto.repo.applyWrites#delete',
@@ -221,7 +227,7 @@ export function useListDeleteMutation() {
 
       // apply in chunks
       for (const writesChunk of chunk(writes, 10)) {
-        await pdsClient.call(com.atproto.repo.applyWrites, {
+        await pdsClient.call(ComAtprotoRepoApplyWrites, {
           repo: currentAccount.did,
           writes: writesChunk,
         })
@@ -299,14 +305,14 @@ export function useListBlockMutation() {
 async function whenAppViewReady(
   client: Client,
   uri: string,
-  fn: (res: app.bsky.graph.getList.$OutputBody) => boolean,
+  fn: (res: AppBskyGraphGetList.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
     () =>
-      client.call(app.bsky.graph.getList, {
+      client.call(AppBskyGraphGetList, {
         list: uri as AtUriString,
         limit: 1,
       }),

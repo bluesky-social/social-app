@@ -1,7 +1,7 @@
 import {useQuery} from '@tanstack/react-query'
 
 import {createServiceClient} from '#/lib/lexClient'
-import {com} from '#/lexicons'
+import * as ComAtprotoServerDescribeServer from '#/lexicons/com/atproto/server/describeServer'
 
 const RQKEY_ROOT = 'service'
 export const RQKEY = (serviceUrl: string) => [RQKEY_ROOT, serviceUrl]
@@ -15,7 +15,7 @@ export function useServiceQuery(serviceUrl: string) {
        * through a one-off service client rather than a session-scoped one.
        */
       const client = createServiceClient(serviceUrl)
-      return await client.call(com.atproto.server.describeServer)
+      return await client.call(ComAtprotoServerDescribeServer)
     },
     enabled: isValidUrl(serviceUrl),
   })

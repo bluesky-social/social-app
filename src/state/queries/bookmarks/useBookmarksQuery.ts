@@ -13,7 +13,9 @@ import {
   getEmbeddedPost,
 } from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyBookmarkDefs from '#/lexicons/app/bsky/bookmark/defs'
+import * as AppBskyBookmarkGetBookmarks from '#/lexicons/app/bsky/bookmark/getBookmarks'
+import * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
 import * as bsky from '#/types/bsky'
 
 export const bookmarksQueryKeyRoot = 'bookmarks'
@@ -23,15 +25,15 @@ export function useBookmarksQuery() {
   const client = useAppviewClient()
 
   return useInfiniteQuery<
-    app.bsky.bookmark.getBookmarks.$OutputBody,
+    AppBskyBookmarkGetBookmarks.$OutputBody,
     Error,
-    InfiniteData<app.bsky.bookmark.getBookmarks.$OutputBody>,
+    InfiniteData<AppBskyBookmarkGetBookmarks.$OutputBody>,
     QueryKey,
     string | undefined
   >({
     queryKey: createBookmarksQueryKey(),
     async queryFn({pageParam}) {
-      return await client.call(app.bsky.bookmark.getBookmarks, {
+      return await client.call(AppBskyBookmarkGetBookmarks, {
         cursor: pageParam,
       })
     },
@@ -41,7 +43,7 @@ export function useBookmarksQuery() {
 }
 
 export async function truncateAndInvalidate(qc: QueryClient) {
-  qc.setQueriesData<InfiniteData<app.bsky.bookmark.getBookmarks.$OutputBody>>(
+  qc.setQueriesData<InfiniteData<AppBskyBookmarkGetBookmarks.$OutputBody>>(
     {queryKey: [bookmarksQueryKeyRoot]},
     data => {
       if (data) {
@@ -58,9 +60,9 @@ export async function truncateAndInvalidate(qc: QueryClient) {
 
 export async function optimisticallySaveBookmark(
   qc: QueryClient,
-  post: app.bsky.feed.defs.PostView,
+  post: AppBskyFeedDefs.PostView,
 ) {
-  qc.setQueriesData<InfiniteData<app.bsky.bookmark.getBookmarks.$OutputBody>>(
+  qc.setQueriesData<InfiniteData<AppBskyBookmarkGetBookmarks.$OutputBody>>(
     {
       queryKey: [bookmarksQueryKeyRoot],
     },
@@ -71,13 +73,13 @@ export async function optimisticallySaveBookmark(
         pages: data.pages.map((page, index) => {
           if (index === 0) {
             post.$type = 'app.bsky.feed.defs#postView'
-            const bookmark: app.bsky.bookmark.defs.BookmarkView = {
+            const bookmark: AppBskyBookmarkDefs.BookmarkView = {
               createdAt: toDatetimeString(new Date()),
               subject: {
                 uri: post.uri,
                 cid: post.cid,
               },
-              item: post as $Typed<app.bsky.feed.defs.PostView>,
+              item: post as $Typed<AppBskyFeedDefs.PostView>,
             }
             return {
               ...page,
@@ -95,7 +97,7 @@ export async function optimisticallyDeleteBookmark(
   qc: QueryClient,
   {uri}: {uri: string},
 ) {
-  qc.setQueriesData<InfiniteData<app.bsky.bookmark.getBookmarks.$OutputBody>>(
+  qc.setQueriesData<InfiniteData<AppBskyBookmarkGetBookmarks.$OutputBody>>(
     {
       queryKey: [bookmarksQueryKeyRoot],
     },
@@ -117,9 +119,9 @@ export async function optimisticallyDeleteBookmark(
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<app.bsky.feed.defs.PostView, undefined> {
+): Generator<AppBskyFeedDefs.PostView, undefined> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<app.bsky.bookmark.getBookmarks.$OutputBody>
+    InfiniteData<AppBskyBookmarkGetBookmarks.$OutputBody>
   >({
     queryKey: [bookmarksQueryKeyRoot],
   })
@@ -131,7 +133,7 @@ export function* findAllPostsInQueryData(
     }
     for (const page of queryData?.pages) {
       for (const bookmark of page.bookmarks) {
-        if (!bsky.isType(app.bsky.feed.defs.postView, bookmark.item)) continue
+        if (!bsky.isType(AppBskyFeedDefs.postView, bookmark.item)) continue
 
         if (didOrHandleUriMatches(atUri, bookmark.item)) {
           yield bookmark.item

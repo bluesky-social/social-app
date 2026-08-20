@@ -16,7 +16,12 @@ import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {useAnalytics} from '#/analytics'
 import {type Metrics, toClout} from '#/analytics/metrics'
-import {app, com} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedGetPosts from '#/lexicons/app/bsky/feed/getPosts'
+import * as AppBskyGraphMuteThread from '#/lexicons/app/bsky/graph/muteThread'
+import * as AppBskyGraphUnmuteThread from '#/lexicons/app/bsky/graph/unmuteThread'
+import * as ComAtprotoIdentityResolveHandle from '#/lexicons/com/atproto/identity/resolveHandle'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
 import {findProfileQueryData} from './profile'
 
@@ -25,7 +30,7 @@ export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
 
 export function usePostQuery(uri: string | undefined) {
   const client = useAppviewClient()
-  return useQuery<app.bsky.feed.defs.PostView>({
+  return useQuery<AppBskyFeedDefs.PostView>({
     queryKey: RQKEY(uri || ''),
     queryFn: async () => {
       if (!uri) throw new Error('[unreachable] No URI provided')
@@ -51,17 +56,17 @@ export function usePostQuery(uri: string | undefined) {
 async function fetchPost(
   client: Client,
   uri: string,
-): Promise<app.bsky.feed.defs.PostView | undefined> {
+): Promise<AppBskyFeedDefs.PostView | undefined> {
   const urip = new AtUri(uri)
 
   if (!urip.host.startsWith('did:')) {
-    const data = await client.call(com.atproto.identity.resolveHandle, {
+    const data = await client.call(ComAtprotoIdentityResolveHandle, {
       handle: urip.host as HandleString,
     })
     urip.host = data.did
   }
 
-  const data = await client.call(app.bsky.feed.getPosts, {
+  const data = await client.call(AppBskyFeedGetPosts, {
     uris: [urip.toString()],
   })
   return data.posts[0]
@@ -70,7 +75,7 @@ async function fetchPost(
 export function precachePost(
   queryClient: QueryClient,
   uri: string,
-  post: app.bsky.feed.defs.PostView,
+  post: AppBskyFeedDefs.PostView,
 ) {
   queryClient.setQueryData(RQKEY(uri), post)
 }
@@ -104,7 +109,7 @@ export function useGetPosts() {
       return queryClient.fetchQuery({
         queryKey: RQKEY(uris.join(',') || ''),
         async queryFn() {
-          const data = await client.call(app.bsky.feed.getPosts, {
+          const data = await client.call(AppBskyFeedGetPosts, {
             uris: uris as AtUriString[],
           })
           // See the note on `fetchPost` about the view shapes.
@@ -117,7 +122,7 @@ export function useGetPosts() {
 }
 
 export function usePostLikeMutationQueue(
-  post: Shadow<app.bsky.feed.defs.PostView>,
+  post: Shadow<AppBskyFeedDefs.PostView>,
   viaRepost: {uri: string; cid: string} | undefined,
   feedDescriptor: string | undefined,
   logContext: Metrics['post:like']['logContext'],
@@ -181,7 +186,7 @@ export function usePostLikeMutationQueue(
 function usePostLikeMutation(
   feedDescriptor: string | undefined,
   logContext: Metrics['post:like']['logContext'],
-  post: Shadow<app.bsky.feed.defs.PostView>,
+  post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
@@ -194,7 +199,7 @@ function usePostLikeMutation(
     {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({
     mutationFn: ({uri, cid, via}) => {
-      let ownProfile: app.bsky.actor.defs.ProfileViewDetailed | undefined
+      let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
       if (currentAccount) {
         ownProfile = findProfileQueryData(queryClient, currentAccount.did)
       }
@@ -229,7 +234,7 @@ function usePostLikeMutation(
 function usePostUnlikeMutation(
   feedDescriptor: string | undefined,
   logContext: Metrics['post:unlike']['logContext'],
-  post: Shadow<app.bsky.feed.defs.PostView>,
+  post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const pdsClient = usePdsClient()
   const ax = useAnalytics()
@@ -247,7 +252,7 @@ function usePostUnlikeMutation(
 }
 
 export function usePostRepostMutationQueue(
-  post: Shadow<app.bsky.feed.defs.PostView>,
+  post: Shadow<AppBskyFeedDefs.PostView>,
   viaRepost: {uri: string; cid: string} | undefined,
   feedDescriptor: string | undefined,
   logContext: Metrics['post:repost']['logContext'],
@@ -313,7 +318,7 @@ export function usePostRepostMutationQueue(
 function usePostRepostMutation(
   feedDescriptor: string | undefined,
   logContext: Metrics['post:repost']['logContext'],
-  post: Shadow<app.bsky.feed.defs.PostView>,
+  post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const pdsClient = usePdsClient()
   const ax = useAnalytics()
@@ -341,7 +346,7 @@ function usePostRepostMutation(
 function usePostUnrepostMutation(
   feedDescriptor: string | undefined,
   logContext: Metrics['post:unrepost']['logContext'],
-  post: Shadow<app.bsky.feed.defs.PostView>,
+  post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const pdsClient = usePdsClient()
   const ax = useAnalytics()
@@ -372,7 +377,7 @@ export function usePostDeleteMutation() {
 }
 
 export function useThreadMuteMutationQueue(
-  post: Shadow<app.bsky.feed.defs.PostView>,
+  post: Shadow<AppBskyFeedDefs.PostView>,
   rootUri: string,
 ) {
   const threadMuteMutation = useThreadMuteMutation()
@@ -424,7 +429,7 @@ function useThreadMuteMutation() {
     {uri: string} // the root post's uri
   >({
     mutationFn: async ({uri}) => {
-      await appviewClient.call(app.bsky.graph.muteThread, {
+      await appviewClient.call(AppBskyGraphMuteThread, {
         root: uri as AtUriString,
       })
       return {}
@@ -436,7 +441,7 @@ function useThreadUnmuteMutation() {
   const appviewClient = useAppviewClient()
   return useMutation<{}, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await appviewClient.call(app.bsky.graph.unmuteThread, {
+      await appviewClient.call(AppBskyGraphUnmuteThread, {
         root: uri as AtUriString,
       })
       return {}

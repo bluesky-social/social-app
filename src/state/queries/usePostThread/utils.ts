@@ -5,20 +5,24 @@ import {
   type ThreadItem,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
+import * as AppBskyFeedThreadgate from '#/lexicons/app/bsky/feed/threadgate'
+import * as AppBskyUnspeccedDefs from '#/lexicons/app/bsky/unspecced/defs'
+import type * as AppBskyUnspeccedGetPostThreadV2 from '#/lexicons/app/bsky/unspecced/getPostThreadV2'
 import {isDevMode} from '#/storage/hooks/dev-mode'
 import * as bsky from '#/types/bsky'
 
 export function getThreadgateRecord(
-  view: app.bsky.unspecced.getPostThreadV2.$OutputBody['threadgate'],
+  view: AppBskyUnspeccedGetPostThreadV2.$OutputBody['threadgate'],
 ) {
-  return bsky.isType(app.bsky.feed.threadgate, view?.record)
+  return bsky.isType(AppBskyFeedThreadgate, view?.record)
     ? view?.record
     : undefined
 }
 
-export function getRootPostAtUri(post: app.bsky.feed.defs.PostView) {
-  if (bsky.isType(app.bsky.feed.post, post.record)) {
+export function getRootPostAtUri(post: AppBskyFeedDefs.PostView) {
+  if (bsky.isType(AppBskyFeedPost, post.record)) {
     /**
      * If the record has no `reply` field, it is a root post.
      */
@@ -31,8 +35,8 @@ export function getRootPostAtUri(post: app.bsky.feed.defs.PostView) {
   }
 }
 
-export function getPostRecord(post: app.bsky.feed.defs.PostView) {
-  return post.record as app.bsky.feed.post.Main
+export function getPostRecord(post: AppBskyFeedDefs.PostView) {
+  return post.record as AppBskyFeedPost.Main
 }
 
 export function getTraversalMetadata({
@@ -46,7 +50,7 @@ export function getTraversalMetadata({
   nextItem?: ApiThreadItem
   parentMetadata?: TraversalMetadata
 }): TraversalMetadata {
-  if (!bsky.isType(app.bsky.unspecced.defs.threadItemPost, item.value)) {
+  if (!bsky.isType(AppBskyUnspeccedDefs.threadItemPost, item.value)) {
     throw new Error(`Expected thread item to be a post`)
   }
   const repliesCount = item.value.post.replyCount || 0

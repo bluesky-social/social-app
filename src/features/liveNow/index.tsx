@@ -24,7 +24,11 @@ import {useDialogContext} from '#/components/Dialog'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {getLiveNowHost, getLiveServiceNames} from '#/features/liveNow/utils'
-import {app, com} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyActorStatus from '#/lexicons/app/bsky/actor/status'
+import * as AppBskyEmbedExternal from '#/lexicons/app/bsky/embed/external'
+import * as ComAtprotoRepoGetRecord from '#/lexicons/com/atproto/repo/getRecord'
+import * as ComAtprotoRepoPutRecord from '#/lexicons/com/atproto/repo/putRecord'
 import * as bsky from '#/types/bsky'
 
 export * from '#/features/liveNow/utils'
@@ -43,7 +47,7 @@ const DEFAULT_STATE = {
   isDisabled: false,
   isActive: false,
   record: {},
-} satisfies app.bsky.actor.defs.StatusView
+} satisfies AppBskyActorDefs.StatusView
 
 export type LiveNowConfig = {
   canGoLive: boolean
@@ -130,10 +134,10 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
           isDisabled: false,
           isActive: true,
           status: 'app.bsky.actor.status#live',
-          embed: shadowed.status.embed as $Typed<app.bsky.embed.external.View>, // temp_isStatusValid asserts this
+          embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
           expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
           record: shadowed.status.record,
-        } satisfies app.bsky.actor.defs.StatusView
+        } satisfies AppBskyActorDefs.StatusView
       }
       return {
         uri: shadowed.status.uri,
@@ -141,10 +145,10 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
         isDisabled,
         isActive: false,
         status: 'app.bsky.actor.status#live',
-        embed: shadowed.status.embed as $Typed<app.bsky.embed.external.View>, // temp_isStatusValid asserts this
+        embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
         expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
         record: shadowed.status.record,
-      } satisfies app.bsky.actor.defs.StatusView
+      } satisfies AppBskyActorDefs.StatusView
     } else {
       return DEFAULT_STATE
     }
@@ -164,14 +168,14 @@ export function isStatusStillActive(timeStr: string | undefined) {
  * validate if the status is valid for the acting user e.g. as they go live.
  */
 export function isStatusValidForViewers(
-  status: app.bsky.actor.defs.StatusView,
+  status: AppBskyActorDefs.StatusView,
   config: LiveNowConfig,
 ) {
   if (status.status !== 'app.bsky.actor.status#live') return false
   if (!status.uri) return false // should not happen, just backwards compat
   try {
     const {host: liveDid} = new AtUri(status.uri)
-    if (bsky.isType(app.bsky.embed.external.view, status.embed)) {
+    if (bsky.isType(AppBskyEmbedExternal.view, status.embed)) {
       const host = getLiveNowHost(status.embed.external.uri)
       const exception = config.allowedHostsExceptionsByDid.get(liveDid)
       const isValidException = exception ? exception.has(host) : false
@@ -227,7 +231,7 @@ export function useUpsertLiveStatusMutation(
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not logged in')
 
-      let embed: $Typed<app.bsky.embed.external.Main> | undefined
+      let embed: $Typed<AppBskyEmbedExternal.Main> | undefined
 
       if (linkMeta) {
         let thumb: l.BlobRef | undefined
@@ -273,14 +277,14 @@ export function useUpsertLiveStatusMutation(
         status: 'app.bsky.actor.status#live',
         durationMinutes: duration,
         embed,
-      } satisfies app.bsky.actor.status.Main
+      } satisfies AppBskyActorStatus.Main
 
       const upsert = async () => {
         const repo = currentAccount.did
         const collection = 'app.bsky.actor.status'
 
         const existing = await pdsClient
-          .call(com.atproto.repo.getRecord, {repo, collection, rkey: 'self'})
+          .call(ComAtprotoRepoGetRecord, {repo, collection, rkey: 'self'})
           .catch(_e => undefined)
 
         /*
@@ -288,7 +292,7 @@ export function useUpsertLiveStatusMutation(
          * `swapRecord` be null (meaning "must not already exist"), while the
          * record-helper option type is `string | undefined`.
          */
-        await pdsClient.call(com.atproto.repo.putRecord, {
+        await pdsClient.call(ComAtprotoRepoPutRecord, {
           repo,
           collection,
           rkey: 'self',
@@ -300,7 +304,7 @@ export function useUpsertLiveStatusMutation(
       await retry(upsert, {
         maxRetries: 5,
         retryable: e =>
-          matchXrpcError(e, com.atproto.repo.putRecord) === 'InvalidSwap',
+          matchXrpcError(e, ComAtprotoRepoPutRecord) === 'InvalidSwap',
       })
 
       return {
@@ -367,7 +371,7 @@ export function useRemoveLiveStatusMutation() {
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not logged in')
 
-      await pdsClient.delete(app.bsky.actor.status, {
+      await pdsClient.delete(AppBskyActorStatus, {
         repo: currentAccount.did,
         rkey: 'self',
       })

@@ -8,10 +8,11 @@ import {
 
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyGraphGetListsWithMembership from '#/lexicons/app/bsky/graph/getListsWithMembership'
 
 export type ListWithMembership =
-  app.bsky.graph.getListsWithMembership.ListWithMembership
+  AppBskyGraphGetListsWithMembership.ListWithMembership
 
 const listsWithMembershipQueryKeyRoot = 'lists-with-membership'
 export const createListsWithMembershipQueryKey = (args: {actor: string}) =>
@@ -27,15 +28,15 @@ export function useListsWithMembershipQuery({
   const client = useAppviewClient()
 
   return useInfiniteQuery<
-    app.bsky.graph.getListsWithMembership.$OutputBody,
+    AppBskyGraphGetListsWithMembership.$OutputBody,
     Error,
-    InfiniteData<app.bsky.graph.getListsWithMembership.$OutputBody>,
+    InfiniteData<AppBskyGraphGetListsWithMembership.$OutputBody>,
     QueryKey,
     string | undefined
   >({
     queryKey: createListsWithMembershipQueryKey({actor: actor ?? ''}),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
-      return await client.call(app.bsky.graph.getListsWithMembership, {
+      return await client.call(AppBskyGraphGetListsWithMembership, {
         // the enabled flag prevents this from running until actor is set
         actor: actor! as AtIdentifierString,
         limit: 50,
@@ -59,10 +60,10 @@ export function updateListMembershipOptimistically({
   actor: string
   listUri: string
   membershipUri: string
-  subject: app.bsky.actor.defs.ProfileView
+  subject: AppBskyActorDefs.ProfileView
 }) {
   queryClient.setQueryData<
-    InfiniteData<app.bsky.graph.getListsWithMembership.$OutputBody>
+    InfiniteData<AppBskyGraphGetListsWithMembership.$OutputBody>
   >(createListsWithMembershipQueryKey({actor}), old => {
     if (!old) return old
 
@@ -98,7 +99,7 @@ export function removeListMembershipOptimistically({
   listUri: string
 }) {
   queryClient.setQueryData<
-    InfiniteData<app.bsky.graph.getListsWithMembership.$OutputBody>
+    InfiniteData<AppBskyGraphGetListsWithMembership.$OutputBody>
   >(createListsWithMembershipQueryKey({actor}), old => {
     if (!old) return old
 

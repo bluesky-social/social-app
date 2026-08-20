@@ -17,7 +17,7 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {com} from '#/lexicons'
+import * as ComAtprotoServerGetSession from '#/lexicons/com/atproto/server/getSession'
 import {emitSessionDropped} from '../events'
 import {getPublicAppviewClient} from './clients'
 import {createSessionBundleAndCreateAccount} from './create-account'
@@ -462,7 +462,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       .bundle as unknown as SessionBundle
     const signal = cancelPendingTask()
     /* getSession targets the PDS; only the persisted account fields are patched. */
-    const data = await bundle.pdsClient.call(com.atproto.server.getSession, {})
+    const data = await bundle.pdsClient.call(ComAtprotoServerGetSession, {})
     if (signal.aborted) return
     store.dispatch({
       type: 'partial-refresh-session',

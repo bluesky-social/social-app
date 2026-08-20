@@ -1,6 +1,6 @@
 import {XrpcResponseError} from '@atproto/lex'
 
-import {com} from '#/lexicons'
+import * as ComAtprotoModerationCreateReport from '#/lexicons/com/atproto/moderation/createReport'
 import {classifyReportError} from './errors'
 
 /**
@@ -9,7 +9,7 @@ import {classifyReportError} from './errors'
  */
 function xrpcError(status: number, error: string, message: string) {
   return new XrpcResponseError(
-    com.atproto.moderation.createReport.main,
+    ComAtprotoModerationCreateReport.main,
     new Response(null, {status}),
     {encoding: 'application/json', body: {error, message}},
   )

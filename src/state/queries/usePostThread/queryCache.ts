@@ -29,7 +29,11 @@ import {
   embedViewRecordToPostView,
   getEmbeddedPost,
 } from '#/state/queries/util'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyUnspeccedDefs from '#/lexicons/app/bsky/unspecced/defs'
+import type * as AppBskyUnspeccedGetPostThreadOtherV2 from '#/lexicons/app/bsky/unspecced/getPostThreadOtherV2'
+import type * as AppBskyUnspeccedGetPostThreadV2 from '#/lexicons/app/bsky/unspecced/getPostThreadV2'
 import * as bsky from '#/types/bsky'
 
 export function createCacheMutator({
@@ -46,18 +50,18 @@ export function createCacheMutator({
   return {
     insertReplies(
       parentUri: string,
-      replies: app.bsky.unspecced.getPostThreadV2.ThreadItem[],
+      replies: AppBskyUnspeccedGetPostThreadV2.ThreadItem[],
     ) {
       /*
        * Main thread query mutator.
        */
-      queryClient.setQueryData<app.bsky.unspecced.getPostThreadV2.$OutputBody>(
+      queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.$OutputBody>(
         postThreadQueryKey,
         data => {
           if (!data) return
           return {
             ...data,
-            thread: mutator<app.bsky.unspecced.getPostThreadV2.ThreadItem>([
+            thread: mutator<AppBskyUnspeccedGetPostThreadV2.ThreadItem>([
               ...data.thread,
             ]),
           }
@@ -67,15 +71,15 @@ export function createCacheMutator({
       /*
        * Additional replies query mutator.
        */
-      queryClient.setQueryData<app.bsky.unspecced.getPostThreadOtherV2.$OutputBody>(
+      queryClient.setQueryData<AppBskyUnspeccedGetPostThreadOtherV2.$OutputBody>(
         postThreadOtherQueryKey,
         data => {
           if (!data) return
           return {
             ...data,
-            thread: mutator<app.bsky.unspecced.getPostThreadOtherV2.ThreadItem>(
-              [...data.thread],
-            ),
+            thread: mutator<AppBskyUnspeccedGetPostThreadOtherV2.ThreadItem>([
+              ...data.thread,
+            ]),
           }
         },
       )
@@ -84,9 +88,7 @@ export function createCacheMutator({
         for (let i = 0; i < thread.length; i++) {
           const parent = thread[i]
 
-          if (
-            !bsky.isType(app.bsky.unspecced.defs.threadItemPost, parent.value)
-          )
+          if (!bsky.isType(AppBskyUnspeccedDefs.threadItemPost, parent.value))
             continue
           if (parent.uri !== parentUri) continue
 
@@ -123,7 +125,7 @@ export function createCacheMutator({
           const isParentBelowRoot = parent.depth > 0
           const optimisticReply = replies.at(0)
           const opIsReplier = bsky.isType(
-            app.bsky.unspecced.defs.threadItemPost,
+            AppBskyUnspeccedDefs.threadItemPost,
             optimisticReply?.value,
           )
             ? opDid === optimisticReply.value.post.author.did
@@ -171,8 +173,8 @@ export function createCacheMutator({
      * Unused atm, post shadow does the trick, but it would be nice to clean up
      * the whole sub-tree on deletes.
      */
-    deletePost(post: app.bsky.unspecced.getPostThreadV2.ThreadItem) {
-      queryClient.setQueryData<app.bsky.unspecced.getPostThreadV2.$OutputBody>(
+    deletePost(post: AppBskyUnspeccedGetPostThreadV2.ThreadItem) {
+      queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.$OutputBody>(
         postThreadQueryKey,
         queryData => {
           if (!queryData) return
@@ -181,9 +183,7 @@ export function createCacheMutator({
 
           for (let i = 0; i < thread.length; i++) {
             const existingPost = thread[i]
-            if (
-              !bsky.isType(app.bsky.unspecced.defs.threadItemPost, post.value)
-            )
+            if (!bsky.isType(AppBskyUnspeccedDefs.threadItemPost, post.value))
               continue
 
             if (existingPost.uri === post.uri) {
@@ -206,7 +206,7 @@ export function createCacheMutator({
 export function getThreadPlaceholder(
   queryClient: QueryClient,
   uri: string,
-): $Typed<app.bsky.unspecced.getPostThreadV2.ThreadItem> | void {
+): $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItem> | void {
   let partial
   for (let item of getThreadPlaceholderCandidates(queryClient, uri)) {
     /*
@@ -233,8 +233,8 @@ export function* getThreadPlaceholderCandidates(
   uri: string,
 ): Generator<
   $Typed<
-    Omit<app.bsky.unspecced.getPostThreadV2.ThreadItem, 'value'> & {
-      value: $Typed<app.bsky.unspecced.defs.ThreadItemPost>
+    Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
+      value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>
     }
   >,
   void
@@ -278,10 +278,10 @@ export function* getThreadPlaceholderCandidates(
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<app.bsky.feed.defs.PostView, void> {
+): Generator<AppBskyFeedDefs.PostView, void> {
   const atUri = new AtUri(uri)
   const queryDatas =
-    queryClient.getQueriesData<app.bsky.unspecced.getPostThreadV2.$OutputBody>({
+    queryClient.getQueriesData<AppBskyUnspeccedGetPostThreadV2.$OutputBody>({
       queryKey: [postThreadQueryKeyRoot],
     })
 
@@ -291,7 +291,7 @@ export function* findAllPostsInQueryData(
     const {thread} = queryData
 
     for (const item of thread) {
-      if (bsky.isType(app.bsky.unspecced.defs.threadItemPost, item.value)) {
+      if (bsky.isType(AppBskyUnspeccedDefs.threadItemPost, item.value)) {
         if (didOrHandleUriMatches(atUri, item.value.post)) {
           yield item.value.post
         }
@@ -308,9 +308,9 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<app.bsky.actor.defs.ProfileViewBasic, void> {
+): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
   const queryDatas =
-    queryClient.getQueriesData<app.bsky.unspecced.getPostThreadV2.$OutputBody>({
+    queryClient.getQueriesData<AppBskyUnspeccedGetPostThreadV2.$OutputBody>({
       queryKey: [postThreadQueryKeyRoot],
     })
 
@@ -320,7 +320,7 @@ export function* findAllProfilesInQueryData(
     const {thread} = queryData
 
     for (const item of thread) {
-      if (bsky.isType(app.bsky.unspecced.defs.threadItemPost, item.value)) {
+      if (bsky.isType(AppBskyUnspeccedDefs.threadItemPost, item.value)) {
         if (item.value.post.author.did === did) {
           yield item.value.post.author
         }
@@ -339,14 +339,14 @@ export function useUpdatePostThreadThreadgateQueryCache() {
   const context = usePostThreadContext()
 
   return useCallback(
-    (threadgate: app.bsky.feed.defs.ThreadgateView) => {
+    (threadgate: AppBskyFeedDefs.ThreadgateView) => {
       if (!context) return
 
       function mutator<T>(thread: ApiThreadItem[]): T[] {
         for (let i = 0; i < thread.length; i++) {
           const item = thread[i]
 
-          if (!bsky.isType(app.bsky.unspecced.defs.threadItemPost, item.value))
+          if (!bsky.isType(AppBskyUnspeccedDefs.threadItemPost, item.value))
             continue
 
           if (item.depth === 0) {
@@ -366,13 +366,13 @@ export function useUpdatePostThreadThreadgateQueryCache() {
         return thread as T[]
       }
 
-      qc.setQueryData<app.bsky.unspecced.getPostThreadV2.$OutputBody>(
+      qc.setQueryData<AppBskyUnspeccedGetPostThreadV2.$OutputBody>(
         context.postThreadQueryKey,
         data => {
           if (!data) return
           return {
             ...data,
-            thread: mutator<app.bsky.unspecced.getPostThreadV2.ThreadItem>([
+            thread: mutator<AppBskyUnspeccedGetPostThreadV2.ThreadItem>([
               ...data.thread,
             ]),
           }

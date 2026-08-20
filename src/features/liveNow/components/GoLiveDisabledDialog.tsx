@@ -14,7 +14,9 @@ import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {type app, com, tools} from '#/lexicons'
+import {type app} from '#/lexicons'
+import * as ComAtprotoModerationCreateReport from '#/lexicons/com/atproto/moderation/createReport'
+import * as ToolsOzoneReportDefs from '#/lexicons/tools/ozone/report/defs'
 
 export function GoLiveDisabledDialog({
   control,
@@ -57,9 +59,9 @@ export function DialogInner({
         })
       } else {
         await client.call(
-          com.atproto.moderation.createReport,
+          ComAtprotoModerationCreateReport,
           {
-            reasonType: tools.ozone.report.defs.reasonAppeal.value,
+            reasonType: ToolsOzoneReportDefs.reasonAppeal.value,
             subject: {
               $type: 'com.atproto.repo.strongRef',
               // a status view's uri is an at-uri produced by the appview

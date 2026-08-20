@@ -3,7 +3,9 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import * as ChatBskyGroupCreateJoinLink from '#/lexicons/chat/bsky/group/createJoinLink'
+import type * as ChatBskyGroupDefs from '#/lexicons/chat/bsky/group/defs'
 import * as bsky from '#/types/bsky'
 import {
   rollbackConvoOptimistic,
@@ -16,7 +18,7 @@ export function useCreateJoinLink(
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: chat.bsky.group.createJoinLink.$OutputBody) => void
+    onSuccess?: (data: ChatBskyGroupCreateJoinLink.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -28,11 +30,11 @@ export function useCreateJoinLink(
       joinRule,
       requireApproval,
     }: {
-      joinRule: chat.bsky.group.defs.JoinRule
+      joinRule: ChatBskyGroupDefs.JoinRule
       requireApproval: boolean
     }) => {
       if (!convoId) throw new Error('No convoId provided')
-      return await client.call(chat.bsky.group.createJoinLink, {
+      return await client.call(ChatBskyGroupCreateJoinLink, {
         convoId,
         joinRule,
         requireApproval,
@@ -41,7 +43,7 @@ export function useCreateJoinLink(
     onMutate: ({joinRule, requireApproval}) => {
       if (!convoId) return
       return updateConvoOptimistic(queryClient, convoId, prev => {
-        if (!bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind))
+        if (!bsky.isType(ChatBskyConvoDefs.groupConvo, prev.kind))
           return undefined
         return {
           ...prev,
@@ -62,7 +64,7 @@ export function useCreateJoinLink(
     onSuccess: data => {
       if (convoId) {
         updateConvoOptimistic(queryClient, convoId, prev => {
-          if (!bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind))
+          if (!bsky.isType(ChatBskyConvoDefs.groupConvo, prev.kind))
             return undefined
           return {
             ...prev,

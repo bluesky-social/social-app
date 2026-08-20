@@ -1,4 +1,5 @@
-import {app} from '#/lexicons'
+import * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
 import * as bsky from '#/types/bsky'
 
 const now = () => new Date().toISOString()
@@ -34,11 +35,11 @@ const wrongType = {
 describe('types/bsky lexicon schema helpers (#/lexicons)', () => {
   describe('isType (fast, $type-only)', () => {
     it('accepts a valid record', () => {
-      expect(bsky.isType(app.bsky.feed.post, validPost)).toBe(true)
+      expect(bsky.isType(AppBskyFeedPost, validPost)).toBe(true)
     })
 
     it('rejects a $type mismatch', () => {
-      expect(bsky.isType(app.bsky.feed.post, wrongType)).toBe(false)
+      expect(bsky.isType(AppBskyFeedPost, wrongType)).toBe(false)
     })
 
     it('accepts an invalid body that has the right $type (dangerous semantics)', () => {
@@ -46,18 +47,18 @@ describe('types/bsky lexicon schema helpers (#/lexicons)', () => {
        * Mirrors `dangerousIsType`: only the `$type` is checked, so a
        * structurally invalid record still passes.
        */
-      expect(bsky.isType(app.bsky.feed.post, invalidPost)).toBe(true)
+      expect(bsky.isType(AppBskyFeedPost, invalidPost)).toBe(true)
     })
 
     it('rejects a record with no $type at all', () => {
-      expect(
-        bsky.isType(app.bsky.feed.post, {text: 'hi', createdAt: now()}),
-      ).toBe(false)
+      expect(bsky.isType(AppBskyFeedPost, {text: 'hi', createdAt: now()})).toBe(
+        false,
+      )
     })
 
     it('accepts a schema passed as its namespace module or its main schema', () => {
-      expect(bsky.isType(app.bsky.feed.post, validPost)).toBe(true)
-      expect(bsky.isType(app.bsky.feed.post.main, validPost)).toBe(true)
+      expect(bsky.isType(AppBskyFeedPost, validPost)).toBe(true)
+      expect(bsky.isType(AppBskyFeedPost.main, validPost)).toBe(true)
     })
 
     it('returns false (does not throw) for null, undefined and non-objects', () => {
@@ -65,9 +66,9 @@ describe('types/bsky lexicon schema helpers (#/lexicons)', () => {
        * Mirrors the `dangerousIsType`/`is$typed` behavior - call sites pass
        * e.g. `post.record` which may be undefined.
        */
-      expect(bsky.isType(app.bsky.feed.post, null)).toBe(false)
-      expect(bsky.isType(app.bsky.feed.post, undefined)).toBe(false)
-      expect(bsky.isType(app.bsky.feed.post, 'string')).toBe(false)
+      expect(bsky.isType(AppBskyFeedPost, null)).toBe(false)
+      expect(bsky.isType(AppBskyFeedPost, undefined)).toBe(false)
+      expect(bsky.isType(AppBskyFeedPost, 'string')).toBe(false)
     })
 
     it('requires a present $type for typed-object def schemas', () => {
@@ -77,10 +78,10 @@ describe('types/bsky lexicon schema helpers (#/lexicons)', () => {
        * discriminating unions by $type, an object without $type would
        * otherwise satisfy every branch.
        */
-      expect(bsky.isType(app.bsky.feed.defs.postView, {foo: 1})).toBe(false)
-      expect(bsky.isType(app.bsky.feed.defs.postView, {})).toBe(false)
+      expect(bsky.isType(AppBskyFeedDefs.postView, {foo: 1})).toBe(false)
+      expect(bsky.isType(AppBskyFeedDefs.postView, {})).toBe(false)
       expect(
-        bsky.isType(app.bsky.feed.defs.postView, {
+        bsky.isType(AppBskyFeedDefs.postView, {
           $type: 'app.bsky.feed.defs#postView',
         }),
       ).toBe(true)
@@ -92,9 +93,9 @@ describe('types/bsky lexicon schema helpers (#/lexicons)', () => {
        * `isType`. If either of these expectations starts failing, upstream has
        * changed and `isType` can consider delegating to `isTypeOf`.
        */
-      expect(app.bsky.feed.defs.postView.isTypeOf({})).toBe(true)
+      expect(AppBskyFeedDefs.postView.isTypeOf({})).toBe(true)
       expect(() =>
-        app.bsky.feed.post.main.isTypeOf(
+        AppBskyFeedPost.main.isTypeOf(
           null as unknown as {$type?: 'app.bsky.feed.post'},
         ),
       ).toThrow()
@@ -103,31 +104,31 @@ describe('types/bsky lexicon schema helpers (#/lexicons)', () => {
 
   describe('matches (full validation guard)', () => {
     it('accepts a valid record', () => {
-      expect(bsky.matches(app.bsky.feed.post, validPost)).toBe(true)
+      expect(bsky.matches(AppBskyFeedPost, validPost)).toBe(true)
     })
 
     it('accepts a schema passed as its namespace module or its main schema', () => {
-      expect(bsky.matches(app.bsky.feed.post, validPost)).toBe(true)
-      expect(bsky.matches(app.bsky.feed.post.main, validPost)).toBe(true)
+      expect(bsky.matches(AppBskyFeedPost, validPost)).toBe(true)
+      expect(bsky.matches(AppBskyFeedPost.main, validPost)).toBe(true)
     })
 
     it('rejects a $type mismatch', () => {
-      expect(bsky.matches(app.bsky.feed.post, wrongType)).toBe(false)
+      expect(bsky.matches(AppBskyFeedPost, wrongType)).toBe(false)
     })
 
     it('rejects an invalid body even though the $type matches', () => {
-      expect(bsky.matches(app.bsky.feed.post, invalidPost)).toBe(false)
+      expect(bsky.matches(AppBskyFeedPost, invalidPost)).toBe(false)
     })
 
     it('rejects null and undefined', () => {
-      expect(bsky.matches(app.bsky.feed.post, null)).toBe(false)
-      expect(bsky.matches(app.bsky.feed.post, undefined)).toBe(false)
+      expect(bsky.matches(AppBskyFeedPost, null)).toBe(false)
+      expect(bsky.matches(AppBskyFeedPost, undefined)).toBe(false)
     })
   })
 
   describe('safeParse (full validation, no throw)', () => {
     it('succeeds and returns the value for a valid record', () => {
-      const result = bsky.safeParse(app.bsky.feed.post, validPost)
+      const result = bsky.safeParse(AppBskyFeedPost, validPost)
       expect(result.success).toBe(true)
       if (result.success) {
         expect(result.value.text).toBe('hello world')
@@ -135,7 +136,7 @@ describe('types/bsky lexicon schema helpers (#/lexicons)', () => {
     })
 
     it('fails with a reason for an invalid record', () => {
-      const result = bsky.safeParse(app.bsky.feed.post, invalidPost)
+      const result = bsky.safeParse(AppBskyFeedPost, invalidPost)
       expect(result.success).toBe(false)
       if (!result.success) {
         expect(result.reason).toBeDefined()
@@ -143,23 +144,23 @@ describe('types/bsky lexicon schema helpers (#/lexicons)', () => {
     })
 
     it('accepts a schema passed as its main schema', () => {
-      const result = bsky.safeParse(app.bsky.feed.post.main, validPost)
+      const result = bsky.safeParse(AppBskyFeedPost.main, validPost)
       expect(result.success).toBe(true)
     })
   })
 
   describe('parse (full validation, throws)', () => {
     it('returns the typed value for a valid record', () => {
-      const record = bsky.parse(app.bsky.feed.post, validPost)
+      const record = bsky.parse(AppBskyFeedPost, validPost)
       expect(record.text).toBe('hello world')
     })
 
     it('throws for an invalid record', () => {
-      expect(() => bsky.parse(app.bsky.feed.post, invalidPost)).toThrow()
+      expect(() => bsky.parse(AppBskyFeedPost, invalidPost)).toThrow()
     })
 
     it('accepts a schema passed as its main schema', () => {
-      expect(bsky.parse(app.bsky.feed.post.main, validPost).text).toBe(
+      expect(bsky.parse(AppBskyFeedPost.main, validPost).text).toBe(
         'hello world',
       )
     })
