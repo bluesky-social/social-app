@@ -137,6 +137,7 @@ export class SafelinkClient {
         action: rule.action,
         createdAt: rule.createdAt,
       })
+      .onConflict(oc => oc.column('id').doNothing())
       .execute()
       .catch(err => {
         redirectLogger.error(
