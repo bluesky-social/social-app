@@ -5,7 +5,7 @@ import {AbortError} from '#/lib/async/cancelable'
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {shouldRetryError} from '#/lib/strings/errors'
 import {type app} from '#/lexicons'
-import {getServiceAuthToken} from '../upload.shared'
+import {getServiceAuthToken, serviceAuthExp} from '../upload.shared'
 import {mimeToExt} from '../util'
 import {
   abortUpload,
@@ -280,7 +280,7 @@ function createTokenProvider(
   async function get(forceRefresh = false) {
     if (!forceRefresh && token && Date.now() < expiresAt - 60_000) return token
     if (!refresh) {
-      const exp = Math.floor(Date.now() / 1000) + 60 * 30
+      const exp = serviceAuthExp()
       refresh = getServiceAuthTokenWithRetry(client, dispatchUrl, exp, signal)
         .then(nextToken => {
           token = nextToken
