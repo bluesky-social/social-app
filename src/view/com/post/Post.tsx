@@ -19,7 +19,7 @@ import {unstableCacheProfileView} from '#/state/queries/profile'
 import {Link} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, select, useTheme} from '#/alf'
+import {atoms as a, select, useBreakpoints, useTheme} from '#/alf'
 import {
   GalleryBleed,
   maybeApplyGalleryOffsetStyles,
@@ -112,6 +112,7 @@ function PostInner({
   style?: StyleProp<ViewStyle>
   onBeforePress?: () => void
 }) {
+  const {gtMobile} = useBreakpoints()
   const queryClient = useQueryClient()
   const t = useTheme()
   const {openComposer} = useOpenComposer()
@@ -157,7 +158,10 @@ function PostInner({
       <Link
         href={itemHref}
         style={[
-          styles.outer,
+          gtMobile ? a.pl_sm : a.pl_xs,
+          gtMobile ? a.pr_lg : a.pr_md,
+          gtMobile ? a.pt_lg : a.pt_md,
+          gtMobile ? a.pb_sm : a.pb_xs,
           t.atoms.border_contrast_low,
           !hideTopBorder && a.border_t,
           style,
@@ -271,14 +275,6 @@ function PostInner({
 }
 
 const styles = StyleSheet.create({
-  outer: {
-    paddingTop: 10,
-    paddingRight: 15,
-    paddingBottom: 5,
-    paddingLeft: 10,
-    // @ts-ignore web only -prf
-    cursor: 'pointer',
-  },
   layout: {
     flexDirection: 'row',
     gap: 10,

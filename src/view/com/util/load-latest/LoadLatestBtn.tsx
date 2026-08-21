@@ -6,14 +6,20 @@ import {useMediaQuery} from 'react-responsive'
 import {HITSLOP_20} from '#/lib/constants'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {useSession} from '#/state/session'
-import {atoms as a, useLayoutBreakpoints, useTheme, web} from '#/alf'
+import {
+  atoms as a,
+  useBreakpoints,
+  useLayoutBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon} from '#/components/icons/Arrow'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {SubtleHover} from '#/components/SubtleHover'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 export function LoadLatestBtn({
   onPress,
@@ -25,8 +31,8 @@ export function LoadLatestBtn({
   showIndicator: boolean
 }) {
   const {hasSession} = useSession()
-  const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {centerColumnOffset} = useLayoutBreakpoints()
+  const {gtMobile, gtTablet} = useBreakpoints()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
   const insets = useSafeAreaInsets()
   const t = useTheme()
@@ -41,11 +47,19 @@ export function LoadLatestBtn({
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
-  const showBottomBar = hasSession ? isMobile : isTabletOrMobile
+  const showBottomBar = IS_NATIVE || (hasSession ? !gtMobile : !gtTablet)
 
-  const bottomPosition = isTablet
-    ? {bottom: 50}
-    : {bottom: clamp(insets.bottom, 15, 60) + 15}
+  const isTablet = gtMobile && !gtTablet
+  const isMobileWeb = IS_WEB && !gtMobile
+  const bottomInset = gtMobile ? a.pb_lg.paddingBottom : a.pb_md.paddingBottom
+  const bottomGutter = isMobileWeb ? a.pb_lg.paddingBottom : bottomInset
+  const shouldAccountForBottomBar =
+    IS_NATIVE || !gtMobile || (isTablet && showBottomBar)
+  const bottomPosition = {
+    bottom: shouldAccountForBottomBar
+      ? clamp(insets.bottom, bottomInset, 60) + bottomGutter
+      : bottomInset,
+  }
 
   return (
     <Animated.View
@@ -53,12 +67,13 @@ export function LoadLatestBtn({
       style={[
         a.fixed,
         a.z_20,
-        {left: 18},
-        isDesktop &&
+        {left: gtMobile ? a.pl_lg.paddingLeft : a.pl_md.paddingLeft},
+        gtTablet &&
           (isTallViewport
             ? styles.loadLatestOutOfLine
             : styles.loadLatestInline),
-        isTablet &&
+        gtMobile &&
+          !gtTablet &&
           (centerColumnOffset
             ? styles.loadLatestInlineOffset
             : styles.loadLatestInline),
@@ -102,10 +117,10 @@ export function LoadLatestBtn({
 
 const styles = StyleSheet.create({
   loadLatestInline: {
-    left: web('calc(50vw - 282px)'),
+    left: web('calc(50vw - 292px)'),
   },
   loadLatestInlineOffset: {
-    left: web(`calc(50vw - 282px + ${CENTER_COLUMN_OFFSET}px)`),
+    left: web(`calc(50vw - 292px + ${CENTER_COLUMN_OFFSET}px)`),
   },
   loadLatestOutOfLine: {
     left: web('calc(50vw - 382px)'),
