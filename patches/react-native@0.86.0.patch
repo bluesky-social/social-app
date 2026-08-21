@@ -371,3 +371,25 @@ index 60160efb163d91813fa2ca7ca758b51afcf261e1..fb646fe945ffe4aa4a386f80a1e42a90
    }
  }
  
+diff --git a/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
+--- a/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
+@@ -827,9 +827,17 @@
+   } else {
+     CGSize imageSize = image.size;
+     UIEdgeInsets imageCapInsets = image.capInsets;
++    // The stretchable middle is whatever lies between the cap insets. The image
++    // may be larger than capInsets + 1 (its size is ceil'd to whole points), so
++    // deriving the middle from the caps rather than assuming a 1pt band keeps
++    // the bottom/right caps at their true size. A phantom cap here makes the
++    // caps overflow sub-pixel-sized layers (e.g. hairline borders), and the
++    // squeezed mesh + nearest-neighbor filtering drops the stroke entirely.
+     CGRect contentsCenter = CGRect{
+         CGPoint{imageCapInsets.left / imageSize.width, imageCapInsets.top / imageSize.height},
+-        CGSize{(CGFloat)1.0 / imageSize.width, (CGFloat)1.0 / imageSize.height}};
++        CGSize{
++            (imageSize.width - imageCapInsets.left - imageCapInsets.right) / imageSize.width,
++            (imageSize.height - imageCapInsets.top - imageCapInsets.bottom) / imageSize.height}};
+     layer.contents = (id)image.CGImage;
+     layer.contentsScale = image.scale;
+ 
