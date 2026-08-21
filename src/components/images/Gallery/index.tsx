@@ -11,7 +11,11 @@ import {
 import {FlatList, Pressable, useWindowDimensions, View} from 'react-native'
 import Animated, {
   type AnimatedRef,
+  type SharedValue,
   useAnimatedRef,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {utils} from '@bsky.app/alf'
@@ -27,9 +31,12 @@ import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {
+  BADGE_OPACITY,
   ITEM_GAP,
   MAX_ASPECT_RATIO,
   MIN_ASPECT_RATIO,
+  REST_DELAY,
+  REST_FADE_DURATION,
 } from '#/components/images/Gallery/const'
 import {useKeyboardHandlers} from '#/components/images/Gallery/useKeyboardHandlers'
 import {usePointerHandlers} from '#/components/images/Gallery/usePointerHandlers'
@@ -197,6 +204,47 @@ export function Gallery({
     }
   }
 
+  /*
+   * The position badge only makes sense once the carousel has settled on an
+   * image, so we hide it while the carousel is moving. Motion is inferred from
+   * scroll events rather than from drag state alone - that way momentum, the
+   * web settle/keyboard tweens, and trackpad scrolling all count as motion.
+   */
+  const isScrolling = useSharedValue(false)
+  const isDraggingRef = useRef(false)
+  const restTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const scheduleRest = () => {
+    if (restTimeoutRef.current) {
+      clearTimeout(restTimeoutRef.current)
+    }
+    restTimeoutRef.current = setTimeout(() => {
+      restTimeoutRef.current = null
+      isScrolling.set(false)
+    }, REST_DELAY)
+  }
+  const onScrollActivity = () => {
+    isScrolling.set(true)
+    if (restTimeoutRef.current) {
+      clearTimeout(restTimeoutRef.current)
+      restTimeoutRef.current = null
+    }
+    /*
+     * A finger held still mid-drag stops producing scroll events, but the
+     * carousel isn't at rest yet - wait for the drag to end before scheduling.
+     */
+    if (!isDraggingRef.current) {
+      scheduleRest()
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      if (restTimeoutRef.current) {
+        clearTimeout(restTimeoutRef.current)
+      }
+    }
+  }, [])
+
   const scrollTo = (offset: number) => {
     flatListRef.current?.scrollToOffset({offset, animated: false})
   }
@@ -306,6 +354,7 @@ export function Gallery({
                 contentHeight={contentHeight}
                 index={index}
                 imageCount={images.length}
+                isScrolling={isScrolling}
                 onWidthChange={(i, w) => {
                   itemWidthsRef.current.set(i, w)
                 }}
@@ -328,7 +377,20 @@ export function Gallery({
               />
             )
           }}
+          onScrollBeginDrag={() => {
+            isDraggingRef.current = true
+            onScrollActivity()
+          }}
+          onScrollEndDrag={() => {
+            isDraggingRef.current = false
+            /*
+             * Momentum, if there is any, keeps firing scroll events and pushes
+             * this out.
+             */
+            scheduleRest()
+          }}
           onScroll={e => {
+            onScrollActivity()
             // web handles via onSettle in the web hooks
             if (IS_WEB) return
             const offsetX = e.nativeEvent.contentOffset.x
@@ -394,6 +456,7 @@ function GalleryImage({
   image,
   index,
   imageCount,
+  isScrolling,
   onWidthChange,
   itemRef,
   largeAltBadge,
@@ -407,6 +470,8 @@ function GalleryImage({
   image: app.bsky.embed.images.ViewImage
   index: number
   imageCount: number
+  /** True while the carousel is moving, which hides the position badge. */
+  isScrolling: SharedValue<boolean>
   onWidthChange: (index: number, width: number) => void
   itemRef: (node: View | null) => void
   largeAltBadge?: boolean
@@ -425,6 +490,12 @@ function GalleryImage({
   )
   const {isCropped, ...dims} = computeDims({height, aspectRatio})
   const hasAlt = !!image.alt
+
+  const positionBadgeStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(isScrolling.get() ? 0 : BADGE_OPACITY, {
+      duration: REST_FADE_DURATION,
+    }),
+  }))
 
   useEffect(() => {
     onWidthChange(index, dims.width)
@@ -506,7 +577,7 @@ function GalleryImage({
           />
 
           {imageCount > 1 ? (
-            <View
+            <Animated.View
               accessible={false}
               pointerEvents="none"
               style={[
@@ -518,11 +589,11 @@ function GalleryImage({
                 {
                   top: a.p_xs.padding,
                   right: a.p_xs.padding,
-                  opacity: 0.8,
                 },
                 largeAltBadge && {
                   padding: 6,
                 },
+                positionBadgeStyle,
               ]}>
               <Text
                 style={[
@@ -535,7 +606,7 @@ function GalleryImage({
                   {index + 1}/{imageCount}
                 </Trans>
               </Text>
-            </View>
+            </Animated.View>
           ) : null}
 
           {hasAlt || isCropped ? (
