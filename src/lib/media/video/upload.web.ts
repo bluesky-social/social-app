@@ -9,7 +9,6 @@ import {
   type CompressedVideo,
   type VideoUploadTransport,
 } from '#/lib/media/video/types'
-import {Features, features} from '#/analytics/features'
 import {type app} from '#/lexicons'
 import {MultipartFallbackError, uploadVideoMultipart} from './multipart/upload'
 import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
@@ -40,23 +39,19 @@ export async function uploadVideo({
   }
   await getVideoUploadLimits(client, i18n)
 
-  if (features.isOn(Features.VideoMultipartUploadEnable)) {
-    try {
-      return await uploadVideoMultipart({
-        video,
-        client,
-        dispatchUrl,
-        setProgress,
-        signal,
-        onStarted: () => onTransport?.('multipart'),
-      })
-    } catch (err) {
-      if (!(err instanceof MultipartFallbackError)) throw err
-      onTransport?.('legacy-fallback')
-      setProgress(0)
-    }
-  } else {
-    onTransport?.('legacy')
+  try {
+    return await uploadVideoMultipart({
+      video,
+      client,
+      dispatchUrl,
+      setProgress,
+      signal,
+      onStarted: () => onTransport?.('multipart'),
+    })
+  } catch (err) {
+    if (!(err instanceof MultipartFallbackError)) throw err
+    onTransport?.('legacy-fallback')
+    setProgress(0)
   }
 
   const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {

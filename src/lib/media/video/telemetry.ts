@@ -72,7 +72,7 @@ export function createVideoTelemetry({
   let phaseStartedAt = startedAt
   let jobId: string | undefined
   let uploadBytes: number | undefined
-  let uploadTransport: VideoUploadTransport = 'legacy'
+  let uploadTransport: VideoUploadTransport = 'multipart'
   let txnEnded = false
   let abortBound = true
 
