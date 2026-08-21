@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type ModerationCause, type ModerationUI} from '@bsky/sdk/moderation'
 import {plural} from '@lingui/core/macro'
@@ -9,13 +10,30 @@ import {
   unique,
 } from '#/lib/moderation'
 import {useSession} from '#/state/session'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {
   LabelsOnMeDialog,
   useLabelsOnMeDialogControl,
 } from '#/components/moderation/LabelsOnMeDialog'
+import {
+  ModerationDetailsDialog,
+  useModerationDetailsDialogControl,
+} from '#/components/moderation/ModerationDetailsDialog'
+import {
+  PostLabelsDialog,
+  usePostLabelsDialogControl,
+} from '#/components/moderation/PostLabelsDialog'
 import * as Pills from '#/components/Pills'
 import {type app, type com} from '#/lexicons'
+
+/**
+ * Labels past this many collapse into a chip that opens the full list, so a
+ * heavily labeled account cannot push the post off the screen. Hiding a single
+ * label is not worth it - the chip is no smaller than the pill it replaces -
+ * so the row only collapses once two or more would be hidden.
+ */
+const MAX_VISIBLE_LABELS = 2
 
 export function PostAlerts({
   post,
@@ -88,9 +106,27 @@ export function PostAlerts({
     return null
   }
 
+  const causes: Pills.AppModerationCause[] = [
+    ...alerts,
+    ...informs,
+    ...(additionalCauses ?? []),
+  ]
+  /*
+   * Only labels collapse. The remaining causes (a hidden reply, a mute) are
+   * viewer-specific state rather than labels, and there are never enough of
+   * them to crowd the post.
+   */
+  const labelCauses = causes.filter(cause => cause.type === 'label')
+  const otherCauses = causes.filter(cause => cause.type !== 'label')
+  const hiddenLabelCount = labelCauses.length - MAX_VISIBLE_LABELS
+  const collapse = hiddenLabelCount > 1
+  const visibleLabels = collapse
+    ? labelCauses.slice(0, MAX_VISIBLE_LABELS)
+    : labelCauses
+
   return (
     <Pills.Row size={size} style={[size === 'sm' && {marginLeft: -3}, style]}>
-      {alerts.map(cause => (
+      {visibleLabels.map(cause => (
         <Pills.Label
           key={getModerationCauseKey(cause)}
           cause={cause}
@@ -98,15 +134,14 @@ export function PostAlerts({
           noBg={size === 'sm'}
         />
       ))}
-      {informs.map(cause => (
-        <Pills.Label
-          key={getModerationCauseKey(cause)}
-          cause={cause}
+      {collapse ? (
+        <CollapsedLabels
+          causes={labelCauses}
+          hiddenCount={hiddenLabelCount}
           size={size}
-          noBg={size === 'sm'}
         />
-      ))}
-      {additionalCauses?.map(cause => (
+      ) : null}
+      {otherCauses.map(cause => (
         <Pills.Label
           key={getModerationCauseKey(cause)}
           cause={cause}
@@ -118,14 +153,68 @@ export function PostAlerts({
         <AdditionalLabels
           labels={additionalLabels}
           size={size}
-          hasPrecedingPills={
-            alerts.length > 0 ||
-            informs.length > 0 ||
-            (additionalCauses?.length ?? 0) > 0
-          }
+          hasPrecedingPills={causes.length > 0}
         />
       ) : null}
     </Pills.Row>
+  )
+}
+
+function CollapsedLabels({
+  causes,
+  hiddenCount,
+  size,
+}: {
+  /** Every label on the post, including the ones still shown as pills. */
+  causes: Pills.AppModerationCause[]
+  hiddenCount: number
+  size?: Pills.CommonProps['size']
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const listControl = usePostLabelsDialogControl()
+  const detailsControl = useModerationDetailsDialogControl()
+  const [selectedCause, setSelectedCause] = useState<
+    Pills.AppModerationCause | undefined
+  >(undefined)
+
+  return (
+    <View style={[a.flex_row]}>
+      <PostLabelsDialog
+        control={listControl}
+        causes={causes}
+        onPressCause={cause => {
+          setSelectedCause(cause)
+          detailsControl.open()
+        }}
+      />
+      <ModerationDetailsDialog
+        control={detailsControl}
+        modcause={selectedCause}
+      />
+
+      <Pills.LabelBase
+        label={l`${plural(causes.length, {
+          one: '# label on this post',
+          other: '# labels on this post',
+        })}`}
+        cta={l`${plural(hiddenCount, {
+          one: '# more label',
+          other: '# more labels',
+        })}`}
+        size={size}
+        noBg={size === 'sm'}
+        icon={
+          <CircleInfo
+            width={size === 'lg' ? 16 : 12}
+            fill={t.atoms.text_contrast_medium.color}
+          />
+        }
+        onPress={() => {
+          listControl.open()
+        }}
+      />
+    </View>
   )
 }
 
