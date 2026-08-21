@@ -62,7 +62,6 @@ import {
   PostFeedVideoGridRowPlaceholder,
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {FeedTrendingTopicsInterstitial} from '#/components/interstitials/FeedTrendingTopics'
-import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {RichText} from '#/components/RichText'
@@ -144,10 +143,6 @@ type FeedRow =
     }
   | {
       type: 'interstitialProgressGuide'
-      key: string
-    }
-  | {
-      type: 'interstitialTrending'
       key: string
     }
   | {
@@ -853,8 +848,6 @@ let PostFeed = ({
         return <ProgressGuide />
       } else if (row.type === 'ageAssuranceBanner') {
         return <AgeAssuranceDismissibleFeedBanner />
-      } else if (row.type === 'interstitialTrending') {
-        return <TrendingInterstitial />
       } else if (row.type === 'interstitialFeedTrendingTopics') {
         return (
           <FeedTrendingTopicsInterstitial feedSliceIndex={row.feedSliceIndex} />
