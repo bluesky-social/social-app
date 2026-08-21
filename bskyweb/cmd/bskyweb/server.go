@@ -765,6 +765,8 @@ func (srv *Server) WebStarterPack(c echo.Context) error {
 		return c.Render(http.StatusOK, "starterpack.html", data)
 	}
 	data["title"] = rec.Name
+	data["starterPackURI"] = spv.StarterPack.Uri;
+	
 	if srv.cfg.ogcardHost != "" {
 		data["imgThumbUrl"] = fmt.Sprintf("%s/start/%s/%s", srv.cfg.ogcardHost, identifier, rkey)
 	}
