@@ -57,6 +57,13 @@ const persister = createAsyncStoragePersister({
 const [, cacheHydrationPromise] = persistQueryClient({
   queryClient: qc,
   persister,
+  /*
+   * Device signals are local-only and cannot be recovered without prompting
+   * the user again, so they must survive the persister's default 24-hour
+   * expiration. Server-backed queries still use their own stale times and
+   * refetch normally after hydration.
+   */
+  maxAge: Infinity,
 })
 
 /*
