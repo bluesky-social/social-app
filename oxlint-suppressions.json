@@ -1762,13 +1762,5 @@
     "typescript/no-unsafe-call": {
       "count": 1
     }
-  },
-  "src/view/shell/desktop/Search.tsx": {
-    "typescript/no-unsafe-call": {
-      "count": 3
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 3
-    }
   }
 }
