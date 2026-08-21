@@ -395,11 +395,13 @@ export function CustomFeedHeader({
           ) : null}
         </Layout.Header.Outer>
       </Layout.Center>
-      <Dialog.Outer control={infoControl}>
+      <Dialog.Outer
+        control={infoControl}
+        nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <Dialog.ScrollableInner
           label={l`Feed menu`}
-          style={[gtMobile ? {width: 'auto', minWidth: 450} : a.w_full]}>
+          style={[a.w_full, gtMobile && web({width: 'auto', minWidth: 450})]}>
           <DialogInner
             info={info}
             likeUri={likeUri}
