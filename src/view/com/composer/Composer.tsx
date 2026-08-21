@@ -273,7 +273,6 @@ export const ComposePost = ({
   const chatClient = useChatClient()
   const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
-  const currentDid = currentAccount!.did
   /*
    * The host the video service-auth token is minted for. This is the same value
    * that seeds the session's PDS routing, so the audience always matches the host
@@ -474,21 +473,12 @@ export const ComposePost = ({
         },
         pdsClient,
         currentDispatchUrl,
-        currentDid,
         abortController.signal,
         i18n,
         telemetry,
       )
     },
-    [
-      l,
-      i18n,
-      pdsClient,
-      currentDispatchUrl,
-      currentDid,
-      composerDispatch,
-      ax.metric,
-    ],
+    [l, i18n, pdsClient, currentDispatchUrl, composerDispatch, ax.metric],
   )
 
   const onInitVideo = useNonReactiveCallback(() => {
@@ -654,7 +644,6 @@ export const ComposePost = ({
           },
           pdsClient,
           currentDispatchUrl,
-          currentDid,
           abortController.signal,
           i18n,
           telemetry,
@@ -666,15 +655,7 @@ export const ComposePost = ({
         })
       }
     },
-    [
-      l,
-      i18n,
-      pdsClient,
-      currentDispatchUrl,
-      currentDid,
-      composerDispatch,
-      ax.metric,
-    ],
+    [l, i18n, pdsClient, currentDispatchUrl, composerDispatch, ax.metric],
   )
 
   const handleSelectDraft = useCallback(
