@@ -20,7 +20,8 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
 import * as bsky from '#/types/bsky'
 
 const IGNORED_ACCOUNT = 'did:plc:pifkcjimdcfwaxkanzhwxufp'
@@ -28,7 +29,7 @@ const IGNORED_ACCOUNT = 'did:plc:pifkcjimdcfwaxkanzhwxufp'
 export function StarterPackCard({
   view,
 }: {
-  view: app.bsky.graph.defs.StarterPackView
+  view: AppBskyGraphDefs.StarterPackView
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -47,7 +48,7 @@ export function StarterPackCard({
 
     setIsProcessing(true)
 
-    let listItems: app.bsky.graph.defs.ListItemView[] = []
+    let listItems: AppBskyGraphDefs.ListItemView[] = []
     try {
       listItems = await getAllListMembers(appviewClient, view.list.uri)
     } catch (e) {
@@ -103,7 +104,7 @@ export function StarterPackCard({
     })
   }
 
-  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
+  if (!bsky.isType(AppBskyGraphStarterpack, record)) {
     return null
   }
 

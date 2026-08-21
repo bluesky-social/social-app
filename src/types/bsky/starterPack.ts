@@ -1,4 +1,4 @@
-import {app} from '#/lexicons'
+import * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
 
 /*
  * The generated `$type`-only guards. These match on a present, matching
@@ -8,20 +8,20 @@ import {app} from '#/lexicons'
  */
 export function isBasicView(
   v: unknown,
-): v is app.bsky.graph.defs.StarterPackViewBasic {
+): v is AppBskyGraphDefs.StarterPackViewBasic {
   return (
     v != null &&
     typeof v === 'object' &&
     (v as {$type?: unknown}).$type ===
-      app.bsky.graph.defs.starterPackViewBasic.$type
+      AppBskyGraphDefs.starterPackViewBasic.$type
   )
 }
 
-export function isView(v: unknown): v is app.bsky.graph.defs.StarterPackView {
+export function isView(v: unknown): v is AppBskyGraphDefs.StarterPackView {
   return (
     v != null &&
     typeof v === 'object' &&
-    (v as {$type?: unknown}).$type === app.bsky.graph.defs.starterPackView.$type
+    (v as {$type?: unknown}).$type === AppBskyGraphDefs.starterPackView.$type
   )
 }
 
@@ -29,4 +29,4 @@ export function isView(v: unknown): v is app.bsky.graph.defs.StarterPackView {
  * Matches any starter pack view exported by our SDK.
  */
 export type AnyStarterPackView =
-  app.bsky.graph.defs.StarterPackViewBasic | app.bsky.graph.defs.StarterPackView
+  AppBskyGraphDefs.StarterPackViewBasic | AppBskyGraphDefs.StarterPackView

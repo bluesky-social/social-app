@@ -2,7 +2,8 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import type * as ChatBskyConvoGetUnreadCounts from '#/lexicons/chat/bsky/convo/getUnreadCounts'
+import * as ChatBskyConvoUpdateAllRead from '#/lexicons/chat/bsky/convo/updateAllRead'
 import {RQKEY_PARTIAL as UNREAD_COUNTS_PARTIAL_KEY} from './get-unread-counts'
 import {
   type ConvoRequestListQueryData,
@@ -32,7 +33,7 @@ export function useUpdateAllRead(
 
   return useMutation({
     mutationFn: async () => {
-      return await client.call(chat.bsky.convo.updateAllRead, {status})
+      return await client.call(ChatBskyConvoUpdateAllRead, {status})
     },
     onMutate: () => {
       // snapshot every convo-list cache up front so onError can restore them
@@ -93,12 +94,10 @@ export function useUpdateAllRead(
       // zero out the badge count query that actually drives the unread badge,
       // since it's a separate server query that the list caches don't feed
       const prevUnreadCountsQueries =
-        queryClient.getQueriesData<chat.bsky.convo.getUnreadCounts.$OutputBody>(
-          {
-            queryKey: UNREAD_COUNTS_PARTIAL_KEY,
-          },
-        )
-      queryClient.setQueriesData<chat.bsky.convo.getUnreadCounts.$OutputBody>(
+        queryClient.getQueriesData<ChatBskyConvoGetUnreadCounts.$OutputBody>({
+          queryKey: UNREAD_COUNTS_PARTIAL_KEY,
+        })
+      queryClient.setQueriesData<ChatBskyConvoGetUnreadCounts.$OutputBody>(
         {queryKey: UNREAD_COUNTS_PARTIAL_KEY},
         old => {
           if (!old) return old

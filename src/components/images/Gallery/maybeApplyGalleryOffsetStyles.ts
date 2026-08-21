@@ -3,7 +3,11 @@ import {type ModerationCause, type ModerationUI} from '@bsky/sdk/moderation'
 import {unique} from '#/lib/moderation'
 import {type AppModerationCause} from '#/components/Pills'
 import {Features, features} from '#/analytics/features'
-import {app} from '#/lexicons'
+import * as AppBskyEmbedGallery from '#/lexicons/app/bsky/embed/gallery'
+import * as AppBskyEmbedImages from '#/lexicons/app/bsky/embed/images'
+import * as AppBskyEmbedRecordWithMedia from '#/lexicons/app/bsky/embed/recordWithMedia'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
 import * as bsky from '#/types/bsky'
 
 export const POST_META_NO_CONTENT_OFFSET = {paddingTop: 10}
@@ -16,12 +20,12 @@ export function maybeApplyGalleryOffsetStyles(
     modui,
     additionalCauses,
   }: {
-    post: app.bsky.feed.defs.PostView
+    post: AppBskyFeedDefs.PostView
     modui: ModerationUI
     additionalCauses?: ModerationCause[] | AppModerationCause[]
   },
 ) {
-  if (!bsky.isType(app.bsky.feed.post, post.record)) {
+  if (!bsky.isType(AppBskyFeedPost, post.record)) {
     return
   }
 
@@ -36,11 +40,10 @@ export function maybeApplyGalleryOffsetStyles(
    * First check if we even have images
    */
   const embed = post.record.embed
-  const isImageEmbed = embed && bsky.isType(app.bsky.embed.images.main, embed)
-  const isGalleryEmbed =
-    embed && bsky.isType(app.bsky.embed.gallery.main, embed)
+  const isImageEmbed = embed && bsky.isType(AppBskyEmbedImages.main, embed)
+  const isGalleryEmbed = embed && bsky.isType(AppBskyEmbedGallery.main, embed)
   const isRecordWithMedia =
-    embed && bsky.isType(app.bsky.embed.recordWithMedia.main, embed)
+    embed && bsky.isType(AppBskyEmbedRecordWithMedia.main, embed)
   let hasImages = false
   if (isImageEmbed) {
     if (!isPostGalleryEmbedEnabled) return
@@ -54,13 +57,13 @@ export function maybeApplyGalleryOffsetStyles(
     hasImages = true
   }
   if (isRecordWithMedia) {
-    if (bsky.isType(app.bsky.embed.images.main, embed.media)) {
+    if (bsky.isType(AppBskyEmbedImages.main, embed.media)) {
       if (!isPostGalleryEmbedEnabled) return
       // one image, not a gallery
       if (embed.media.images.length === 1) return
       hasImages = true
     }
-    if (bsky.isType(app.bsky.embed.gallery.main, embed.media)) {
+    if (bsky.isType(AppBskyEmbedGallery.main, embed.media)) {
       // single (or empty) gallery - no offset needed
       if (embed.media.items.length <= 1) return
       hasImages = true

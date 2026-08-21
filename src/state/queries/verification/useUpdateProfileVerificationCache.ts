@@ -4,7 +4,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyActorGetProfile from '#/lexicons/app/bsky/actor/getProfile'
 import type * as bsky from '#/types/bsky'
 
 /**
@@ -23,7 +23,7 @@ export function useUpdateProfileVerificationCache() {
           logger.warn(`useUpdateProfileVerificationCache: no did`, {profile})
           return
         }
-        const updated = await client.call(app.bsky.actor.getProfile, {
+        const updated = await client.call(AppBskyActorGetProfile, {
           actor: profile.did,
         })
         updateProfileShadow(qc, profile.did, {

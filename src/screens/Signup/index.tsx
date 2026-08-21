@@ -31,7 +31,7 @@ import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {GCP_PROJECT_ID, IS_ANDROID} from '#/env'
-import {app} from '#/lexicons'
+import * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
 import * as bsky from '#/types/bsky'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
@@ -141,7 +141,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
             scrollable>
             <View testID="createAccount" style={a.flex_1}>
               {showStarterPackCard &&
-              bsky.isType(app.bsky.graph.starterpack, starterPack.record) ? (
+              bsky.isType(AppBskyGraphStarterpack, starterPack.record) ? (
                 <Animated.View
                   entering={!isFetchedAtMount ? FadeIn : undefined}>
                   <LinearGradientBackground

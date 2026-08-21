@@ -9,10 +9,12 @@ import {
   optimisticallySaveBookmark,
 } from '#/state/queries/bookmarks/useBookmarksQuery'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyBookmarkCreateBookmark from '#/lexicons/app/bsky/bookmark/createBookmark'
+import * as AppBskyBookmarkDeleteBookmark from '#/lexicons/app/bsky/bookmark/deleteBookmark'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
 
 type MutationArgs =
-  | {action: 'create'; post: app.bsky.feed.defs.PostView}
+  | {action: 'create'; post: AppBskyFeedDefs.PostView}
   | {
       action: 'delete'
       /**
@@ -30,13 +32,13 @@ export function useBookmarkMutation() {
     async mutationFn(args: MutationArgs) {
       if (args.action === 'create') {
         updatePostShadow(qc, args.post.uri, {bookmarked: true})
-        await client.call(app.bsky.bookmark.createBookmark, {
+        await client.call(AppBskyBookmarkCreateBookmark, {
           uri: args.post.uri,
           cid: args.post.cid,
         })
       } else if (args.action === 'delete') {
         updatePostShadow(qc, args.uri, {bookmarked: false})
-        await client.call(app.bsky.bookmark.deleteBookmark, {
+        await client.call(AppBskyBookmarkDeleteBookmark, {
           uri: args.uri as AtUriString,
         })
       }

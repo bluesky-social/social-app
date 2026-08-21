@@ -45,7 +45,7 @@ import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {Error} from '#/components/Error'
 import * as Layout from '#/components/Layout'
 import {IS_LIQUID_GLASS} from '#/env'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
 import * as bsky from '#/types/bsky'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatEnded} from './components/ChatEnded'
@@ -181,7 +181,7 @@ function InnerReady({
 
   const unreadRequestCount =
     convo?.kind === 'group' &&
-    bsky.isType(chat.bsky.convo.defs.groupConvo, convo.view.kind)
+    bsky.isType(ChatBskyConvoDefs.groupConvo, convo.view.kind)
       ? (convo.view.kind.unreadJoinRequestCount ?? 0)
       : 0
   const {mutate: markJoinRequestsRead} = useMarkJoinRequestsRead(convo?.view.id)

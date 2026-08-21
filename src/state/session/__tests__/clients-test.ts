@@ -18,7 +18,9 @@ import {
   invalidateCachedIsBetaUser,
   setCachedIsBetaUser,
 } from '#/state/preferences/beta-user-cache'
-import {app, chat, com} from '#/lexicons'
+import * as AppBskyActorGetProfile from '#/lexicons/app/bsky/actor/getProfile'
+import * as ChatBskyConvoListConvos from '#/lexicons/chat/bsky/convo/listConvos'
+import * as ComAtprotoServerGetSession from '#/lexicons/com/atproto/server/getSession'
 import {account} from '#/storage'
 import {configureGlobalAppLabelers} from '../additional-moderation-authorities'
 import {
@@ -102,7 +104,7 @@ describe('buildAppviewClient', () => {
   it('routes client.call through the session to the network', async () => {
     const client = buildAppviewClient(makeSession(fetchMock))
 
-    const body = await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
+    const body = await client.call(AppBskyActorGetProfile, {actor: HANDLE})
 
     expect(body.handle).toBe(HANDLE)
     expect(urlsOf(fetchMock).join()).toContain(`actor=${HANDLE}`)
@@ -111,7 +113,7 @@ describe('buildAppviewClient', () => {
   it('emits the appview proxy header', async () => {
     const client = buildAppviewClient(makeSession(fetchMock))
 
-    await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
+    await client.call(AppBskyActorGetProfile, {actor: HANDLE})
 
     expect(
       headersFor(fetchMock, 'app.bsky.actor.getProfile').get('atproto-proxy'),
@@ -124,7 +126,7 @@ describe('buildAppviewClient', () => {
       const client = buildAppviewClient(makeSession(fetchMock))
       setCachedIsBetaUser(DID, isBetaUser)
 
-      await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
+      await client.call(AppBskyActorGetProfile, {actor: HANDLE})
 
       expect(
         headersFor(fetchMock, 'app.bsky.actor.getProfile').get(
@@ -137,7 +139,7 @@ describe('buildAppviewClient', () => {
   it('omits the beta user header when the preference is not cached', async () => {
     const client = buildAppviewClient(makeSession(fetchMock))
 
-    await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
+    await client.call(AppBskyActorGetProfile, {actor: HANDLE})
 
     expect(
       headersFor(fetchMock, 'app.bsky.actor.getProfile').get(
@@ -151,8 +153,8 @@ describe('buildAppviewClient', () => {
     const getSpy = jest.spyOn(account, 'get')
     const client = buildAppviewClient(makeSession(fetchMock))
 
-    await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
-    await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
+    await client.call(AppBskyActorGetProfile, {actor: HANDLE})
+    await client.call(AppBskyActorGetProfile, {actor: HANDLE})
 
     expect(getSpy).toHaveBeenCalledTimes(1)
     getSpy.mockRestore()
@@ -162,7 +164,7 @@ describe('buildAppviewClient', () => {
     const client = buildAppviewClient(makeSession(fetchMock))
     client.setLabelers(['did:plc:labeler'])
 
-    await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
+    await client.call(AppBskyActorGetProfile, {actor: HANDLE})
 
     const labelers = headersFor(fetchMock, 'app.bsky.actor.getProfile').get(
       'atproto-accept-labelers',
@@ -187,7 +189,7 @@ describe('buildAppviewClient', () => {
     configureGlobalAppLabelers(['did:plc:global-labeler'])
     const client = buildAppviewClient(makeSession(fetchMock))
 
-    await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
+    await client.call(AppBskyActorGetProfile, {actor: HANDLE})
 
     const labelers = headersFor(fetchMock, 'app.bsky.actor.getProfile').get(
       'atproto-accept-labelers',
@@ -202,7 +204,7 @@ describe('buildAppviewClient', () => {
   it('sends the session access token', async () => {
     const client = buildAppviewClient(makeSession(fetchMock))
 
-    await client.call(app.bsky.actor.getProfile, {actor: HANDLE})
+    await client.call(AppBskyActorGetProfile, {actor: HANDLE})
 
     expect(
       headersFor(fetchMock, 'app.bsky.actor.getProfile').get('authorization'),
@@ -225,7 +227,7 @@ describe('buildPdsClient', () => {
 
   it('sends the session access token', async () => {
     await buildPdsClient(makeSession(fetchMock)).call(
-      com.atproto.server.getSession,
+      ComAtprotoServerGetSession,
       {},
     )
 
@@ -245,7 +247,7 @@ describe('buildPdsClient', () => {
     configureGlobalAppLabelers(['did:plc:global-labeler'])
 
     await buildPdsClient(makeSession(fetchMock)).call(
-      com.atproto.server.getSession,
+      ComAtprotoServerGetSession,
       {},
     )
 
@@ -260,7 +262,7 @@ describe('buildPdsClient', () => {
      * absolutizes it against its didDoc endpoint or, absent one, its service.
      */
     await buildPdsClient(makeSession(fetchMock)).call(
-      com.atproto.server.getSession,
+      ComAtprotoServerGetSession,
       {},
     )
 
@@ -286,7 +288,7 @@ describe('buildChatClient', () => {
   it('emits the chat proxy header exactly once, with the session token', async () => {
     /* the stub body fails listConvos output validation; headers are recorded pre-parse */
     await buildChatClient(makeSession(fetchMock))
-      .call(chat.bsky.convo.listConvos, {})
+      .call(ChatBskyConvoListConvos, {})
       .catch(() => {})
 
     const headers = headersFor(fetchMock, 'chat.bsky.convo.listConvos')
@@ -303,7 +305,7 @@ describe('buildChatClient', () => {
     configureGlobalAppLabelers(['did:plc:global-labeler'])
 
     await buildChatClient(makeSession(fetchMock))
-      .call(chat.bsky.convo.listConvos, {})
+      .call(ChatBskyConvoListConvos, {})
       .catch(() => {})
 
     expect(
@@ -332,7 +334,7 @@ describe('routeSessionToPds', () => {
     const session = makeSession(fetchMock)
     const client = buildPdsClient(routeSessionToPds(session, PDS_HOST))
 
-    await client.call(com.atproto.server.getSession, {})
+    await client.call(ComAtprotoServerGetSession, {})
 
     expect(urlsOf(fetchMock)).toEqual([
       `${PDS_HOST}/xrpc/com.atproto.server.getSession`,
@@ -343,7 +345,7 @@ describe('routeSessionToPds', () => {
     const session = makeSession(fetchMock)
     const client = buildPdsClient(routeSessionToPds(session, PDS_HOST))
 
-    await client.call(com.atproto.server.getSession, {})
+    await client.call(ComAtprotoServerGetSession, {})
 
     expect(
       headersFor(fetchMock, 'com.atproto.server.getSession').get(
@@ -369,7 +371,7 @@ describe('routeSessionToPds', () => {
     const session = makeSession(fetchMock, DIDDOC_PDS_HOST)
     const client = buildPdsClient(routeSessionToPds(session, PDS_HOST))
 
-    await client.call(com.atproto.server.getSession, {})
+    await client.call(ComAtprotoServerGetSession, {})
 
     expect(urlsOf(fetchMock)).toEqual([
       `${PDS_HOST}/xrpc/com.atproto.server.getSession`,
@@ -383,7 +385,7 @@ describe('routeSessionToPds', () => {
      */
     const client = buildPdsClient(makeSession(fetchMock, DIDDOC_PDS_HOST))
 
-    await client.call(com.atproto.server.getSession, {})
+    await client.call(ComAtprotoServerGetSession, {})
 
     expect(urlsOf(fetchMock)).toEqual([
       `${DIDDOC_PDS_HOST}/xrpc/com.atproto.server.getSession`,
@@ -408,7 +410,7 @@ describe('getUnauthenticatedThrowingClient', () => {
      */
     const fetchMock = makeProfileFetch()
     const err = await getUnauthenticatedThrowingClient()
-      .call(com.atproto.server.getSession, {})
+      .call(ComAtprotoServerGetSession, {})
       .then(() => undefined)
       .catch((e: unknown) => e)
 

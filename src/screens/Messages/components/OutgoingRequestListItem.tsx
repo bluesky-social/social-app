@@ -11,12 +11,13 @@ import {createStaticClick, Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {chat} from '#/lexicons'
+import type * as ChatBskyGroupDefs from '#/lexicons/chat/bsky/group/defs'
+import * as ChatBskyGroupWithdrawJoinRequest from '#/lexicons/chat/bsky/group/withdrawJoinRequest'
 
 export function OutgoingRequestListItem({
   convo: convoView,
 }: {
-  convo: chat.bsky.group.defs.JoinRequestConvoView
+  convo: ChatBskyGroupDefs.JoinRequestConvoView
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -33,7 +34,7 @@ export function OutgoingRequestListItem({
         if (isNetworkError(error)) {
           errorMessage = l`There was a problem with your internet connection, please try again`
         } else if (
-          matchXrpcError(error, chat.bsky.group.withdrawJoinRequest) ===
+          matchXrpcError(error, ChatBskyGroupWithdrawJoinRequest) ===
           'InvalidJoinRequest'
         ) {
           errorMessage = l`Invalid rescind request.`

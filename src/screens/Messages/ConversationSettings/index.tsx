@@ -55,7 +55,9 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {chat} from '#/lexicons'
+import * as ChatBskyActorDefs from '#/lexicons/chat/bsky/actor/defs'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import * as ChatBskyConvoUnlockConvo from '#/lexicons/chat/bsky/convo/unlockConvo'
 import * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from '../components/InviteLinkDialog'
 import {AddMembersLink} from './AddMembersLink'
@@ -170,12 +172,12 @@ function keyExtractor(item: Item) {
 }
 
 function isGroupMember(
-  member: chat.bsky.actor.defs.ProfileViewBasic,
+  member: ChatBskyActorDefs.ProfileViewBasic,
 ): member is GroupConvoMember {
   // Kind is missing when the account has been deleted.
   return (
     member.kind === undefined ||
-    bsky.isType(chat.bsky.actor.defs.groupConvoMember, member.kind)
+    bsky.isType(ChatBskyActorDefs.groupConvoMember, member.kind)
   )
 }
 
@@ -409,7 +411,7 @@ function SettingsHeader({
     isPending: isLocking,
   } = useLockConvo(convoId, {
     onSuccess: (data, {silent}) => {
-      if (!bsky.isType(chat.bsky.convo.defs.groupConvo, data.convo.kind)) return
+      if (!bsky.isType(ChatBskyConvoDefs.groupConvo, data.convo.kind)) return
       if (silent) return
       if (data.convo.kind.lockStatus === 'locked') {
         ax.metric('groupchat:owner:lock', {convoId})
@@ -424,7 +426,7 @@ function SettingsHeader({
         logger.error('Failed to lock group chat', {message: e})
         Toast.show(l`Failed to lock group chat`, {type: 'error'})
       } else if (
-        matchXrpcError(e, chat.bsky.convo.unlockConvo) ===
+        matchXrpcError(e, ChatBskyConvoUnlockConvo) ===
         'ConvoLockedByModeration'
       ) {
         Toast.show(l`This chat is locked by a moderation action`, {

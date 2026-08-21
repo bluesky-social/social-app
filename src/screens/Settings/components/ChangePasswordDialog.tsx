@@ -18,7 +18,8 @@ import * as TextField from '#/components/forms/TextField'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
-import {com} from '#/lexicons'
+import * as ComAtprotoServerRequestPasswordReset from '#/lexicons/com/atproto/server/requestPasswordReset'
+import * as ComAtprotoServerResetPassword from '#/lexicons/com/atproto/server/resetPassword'
 
 enum Stages {
   RequestCode = 'RequestCode',
@@ -87,7 +88,7 @@ function Inner() {
     setError('')
     setIsProcessing(true)
     try {
-      await client.call(com.atproto.server.requestPasswordReset, {
+      await client.call(ComAtprotoServerRequestPasswordReset, {
         email: currentAccount.email,
       })
       setStage(Stages.ChangePassword)
@@ -131,7 +132,7 @@ function Inner() {
     setError('')
     setIsProcessing(true)
     try {
-      await client.call(com.atproto.server.resetPassword, {
+      await client.call(ComAtprotoServerResetPassword, {
         token: formattedCode,
         password: newPassword,
       })
@@ -144,7 +145,7 @@ function Inner() {
           ),
         )
       } else if (
-        matchXrpcError(e, com.atproto.server.resetPassword) === 'InvalidToken'
+        matchXrpcError(e, ComAtprotoServerResetPassword) === 'InvalidToken'
       ) {
         setError(_(msg`This confirmation code is not valid. Please try again.`))
       } else {

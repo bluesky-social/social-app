@@ -326,6 +326,63 @@
                   "default"
                 ],
                 "message": "React is already in the global type namespace. Use named imports for runtime modules."
+              },
+              {
+                "name": "@sentry/react-native",
+                "message": "Import {Sentry} from '#/logger/sentry/lib' instead. Importing @sentry/react-native directly (especially as `import * as Sentry`) defeats Metro tree-shaking and pulls ~180KB of dead weight into the web bundle."
+              }
+            ],
+            "patterns": [
+              {
+                "group": [
+                  "#/lexicons",
+                  "#/lexicons/app",
+                  "#/lexicons/app/bsky",
+                  "#/lexicons/app/bsky/actor",
+                  "#/lexicons/app/bsky/ageassurance",
+                  "#/lexicons/app/bsky/bookmark",
+                  "#/lexicons/app/bsky/contact",
+                  "#/lexicons/app/bsky/draft",
+                  "#/lexicons/app/bsky/embed",
+                  "#/lexicons/app/bsky/feed",
+                  "#/lexicons/app/bsky/graph",
+                  "#/lexicons/app/bsky/labeler",
+                  "#/lexicons/app/bsky/notification",
+                  "#/lexicons/app/bsky/richtext",
+                  "#/lexicons/app/bsky/unspecced",
+                  "#/lexicons/app/bsky/video",
+                  "#/lexicons/chat",
+                  "#/lexicons/chat/bsky",
+                  "#/lexicons/chat/bsky/actor",
+                  "#/lexicons/chat/bsky/convo",
+                  "#/lexicons/chat/bsky/embed",
+                  "#/lexicons/chat/bsky/group",
+                  "#/lexicons/chat/bsky/moderation",
+                  "#/lexicons/chat/bsky/notification",
+                  "#/lexicons/com",
+                  "#/lexicons/com/atproto",
+                  "#/lexicons/com/atproto/admin",
+                  "#/lexicons/com/atproto/identity",
+                  "#/lexicons/com/atproto/label",
+                  "#/lexicons/com/atproto/lexicon",
+                  "#/lexicons/com/atproto/moderation",
+                  "#/lexicons/com/atproto/repo",
+                  "#/lexicons/com/atproto/server",
+                  "#/lexicons/com/atproto/sync",
+                  "#/lexicons/com/atproto/temp",
+                  "#/lexicons/com/germnetwork",
+                  "#/lexicons/tools",
+                  "#/lexicons/tools/ozone",
+                  "#/lexicons/tools/ozone/report"
+                ],
+                "allowTypeImports": true,
+                "message": "Import the leaf module directly (e.g. `import * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'`). Value imports of lexicon namespace barrels pin the whole generated tree and defeat Metro tree-shaking; type-only imports are fine. Regenerate this list when lexicon namespaces change."
+              },
+              {
+                "group": [
+                  "#/lexicons/**/*.defs"
+                ],
+                "message": "Do not import internal `*.defs` lexicon modules; import the public leaf module (e.g. '#/lexicons/app/bsky/feed/defs') instead."
               }
             ]
           }
@@ -400,6 +457,15 @@
       ],
       "env": {
         "jest": true
+      }
+    },
+    {
+      "files": [
+        "src/logger/sentry/**/*.ts",
+        "src/logger/__tests__/logger.test.ts"
+      ],
+      "rules": {
+        "no-restricted-imports": "off"
       }
     }
   ]

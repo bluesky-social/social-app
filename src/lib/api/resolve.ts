@@ -24,7 +24,15 @@ import {type ComposerImage} from '#/state/gallery'
 import {createComposerImage} from '#/state/gallery'
 import {type ChatInvitePreview} from '#/state/queries/join-links'
 import {type Gif} from '#/features/gifPicker/types'
-import {app, chat, com} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedGetFeedGenerator from '#/lexicons/app/bsky/feed/getFeedGenerator'
+import * as AppBskyFeedGetPosts from '#/lexicons/app/bsky/feed/getPosts'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphGetList from '#/lexicons/app/bsky/graph/getList'
+import * as AppBskyGraphGetStarterPack from '#/lexicons/app/bsky/graph/getStarterPack'
+import * as ChatBskyGroupGetJoinLinkPreviews from '#/lexicons/chat/bsky/group/getJoinLinkPreviews'
+import * as ComAtprotoIdentityResolveHandle from '#/lexicons/com/atproto/identity/resolveHandle'
+import type * as ComAtprotoRepoStrongRef from '#/lexicons/com/atproto/repo/strongRef'
 import {createGIFDescription} from '../gif-alt-text'
 
 type ResolvedExternalLink = {
@@ -43,30 +51,30 @@ type ResolvedExternalLink = {
 
 type ResolvedPostRecord = {
   type: 'record'
-  record: com.atproto.repo.strongRef.Main
+  record: ComAtprotoRepoStrongRef.Main
   kind: 'post'
-  view: app.bsky.feed.defs.PostView
+  view: AppBskyFeedDefs.PostView
 }
 
 type ResolvedFeedRecord = {
   type: 'record'
-  record: com.atproto.repo.strongRef.Main
+  record: ComAtprotoRepoStrongRef.Main
   kind: 'feed'
-  view: app.bsky.feed.defs.GeneratorView
+  view: AppBskyFeedDefs.GeneratorView
 }
 
 type ResolvedListRecord = {
   type: 'record'
-  record: com.atproto.repo.strongRef.Main
+  record: ComAtprotoRepoStrongRef.Main
   kind: 'list'
-  view: app.bsky.graph.defs.ListView
+  view: AppBskyGraphDefs.ListView
 }
 
 type ResolvedStarterPackRecord = {
   type: 'record'
-  record: com.atproto.repo.strongRef.Main
+  record: ComAtprotoRepoStrongRef.Main
   kind: 'starter-pack'
-  view: app.bsky.graph.defs.StarterPackView
+  view: AppBskyGraphDefs.StarterPackView
 }
 
 type ResolvedChatInvite = {
@@ -133,7 +141,7 @@ export async function resolveLink(
     const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
     const did = await fetchDid(handleOrDid)
     const feed = makeRecordUri(did, 'app.bsky.feed.generator', rkey)
-    const data = await appviewClient.call(app.bsky.feed.getFeedGenerator, {
+    const data = await appviewClient.call(AppBskyFeedGetFeedGenerator, {
       feed: feed,
     })
     return {
@@ -151,7 +159,7 @@ export async function resolveLink(
     const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
     const did = await fetchDid(handleOrDid)
     const list = makeRecordUri(did, 'app.bsky.graph.list', rkey)
-    const data = await appviewClient.call(app.bsky.graph.getList, {
+    const data = await appviewClient.call(AppBskyGraphGetList, {
       list: list,
     })
     return {
@@ -166,7 +174,7 @@ export async function resolveLink(
   }
   const chatInviteCode = getChatInviteCodeFromUrl(uri)
   if (chatInviteCode) {
-    const data = await chatClient.call(chat.bsky.group.getJoinLinkPreviews, {
+    const data = await chatClient.call(ChatBskyGroupGetJoinLinkPreviews, {
       codes: [chatInviteCode],
     })
     return {
@@ -185,7 +193,7 @@ export async function resolveLink(
     }
     const did = await fetchDid(parsed.name)
     const starterPack = createStarterPackUri({did, rkey: parsed.rkey})
-    const data = await appviewClient.call(app.bsky.graph.getStarterPack, {
+    const data = await appviewClient.call(AppBskyGraphGetStarterPack, {
       starterPack: starterPack as AtUriString,
     })
     return {
@@ -204,13 +212,12 @@ export async function resolveLink(
   async function getPost({uri}: {uri: string}) {
     const urip = new AtUri(uri)
     if (!urip.host.startsWith('did:')) {
-      const data = await appviewClient.call(
-        com.atproto.identity.resolveHandle,
-        {handle: urip.host as HandleString},
-      )
+      const data = await appviewClient.call(ComAtprotoIdentityResolveHandle, {
+        handle: urip.host as HandleString,
+      })
       urip.host = data.did
     }
-    const data = await appviewClient.call(app.bsky.feed.getPosts, {
+    const data = await appviewClient.call(AppBskyFeedGetPosts, {
       uris: [urip.toString()],
     })
     if (data.posts[0]) {
@@ -223,10 +230,9 @@ export async function resolveLink(
   async function fetchDid(handleOrDid: string) {
     let identifier = handleOrDid
     if (!identifier.startsWith('did:')) {
-      const data = await appviewClient.call(
-        com.atproto.identity.resolveHandle,
-        {handle: identifier as HandleString},
-      )
+      const data = await appviewClient.call(ComAtprotoIdentityResolveHandle, {
+        handle: identifier as HandleString,
+      })
       identifier = data.did
     }
     return identifier

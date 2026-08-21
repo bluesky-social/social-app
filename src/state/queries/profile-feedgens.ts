@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query'
 
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyFeedGetActorFeeds from '#/lexicons/app/bsky/feed/getActorFeeds'
 import {useModerationOpts} from '../preferences/moderation-opts'
 
 const PAGE_SIZE = 50
@@ -25,15 +25,15 @@ export function useProfileFeedgensQuery(
   const enabled = opts?.enabled !== false && Boolean(moderationOpts)
   const client = useAppviewClient()
   return useInfiniteQuery<
-    app.bsky.feed.getActorFeeds.$OutputBody,
+    AppBskyFeedGetActorFeeds.$OutputBody,
     Error,
-    InfiniteData<app.bsky.feed.getActorFeeds.$OutputBody>,
+    InfiniteData<AppBskyFeedGetActorFeeds.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const data = await client.call(app.bsky.feed.getActorFeeds, {
+      const data = await client.call(AppBskyFeedGetActorFeeds, {
         actor: did as DidString,
         limit: PAGE_SIZE,
         cursor: pageParam,

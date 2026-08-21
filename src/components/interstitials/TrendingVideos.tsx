@@ -21,7 +21,7 @@ import {
   CompactVideoPostCardPlaceholder,
 } from '#/components/VideoPostCard'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import * as AppBskyEmbedVideo from '#/lexicons/app/bsky/embed/video'
 import * as bsky from '#/types/bsky'
 
 const CARD_WIDTH = 108
@@ -155,7 +155,7 @@ function VideoCards({
       .flatMap(page => page.slices)
       .map(slice => slice.items[0])
       .filter(Boolean)
-      .filter(item => bsky.isType(app.bsky.embed.video.view, item.post.embed))
+      .filter(item => bsky.isType(AppBskyEmbedVideo.view, item.post.embed))
       .slice(0, 8)
   }, [data])
 

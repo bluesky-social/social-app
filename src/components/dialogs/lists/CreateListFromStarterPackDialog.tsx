@@ -23,7 +23,11 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {app, com} from '#/lexicons'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphGetList from '#/lexicons/app/bsky/graph/getList'
+import type * as AppBskyGraphListitem from '#/lexicons/app/bsky/graph/listitem'
+import type * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
+import * as ComAtprotoRepoApplyWrites from '#/lexicons/com/atproto/repo/applyWrites'
 import {CreateOrEditListDialog} from './CreateOrEditListDialog'
 
 export function CreateListFromStarterPackDialog({
@@ -31,7 +35,7 @@ export function CreateListFromStarterPackDialog({
   starterPack,
 }: {
   control: Dialog.DialogControlProps
-  starterPack: app.bsky.graph.defs.StarterPackView
+  starterPack: AppBskyGraphDefs.StarterPackView
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -44,7 +48,7 @@ export function CreateListFromStarterPackDialog({
   const createDialogControl = Dialog.useDialogControl()
   const loadingDialogControl = Dialog.useDialogControl()
 
-  const record = starterPack.record as app.bsky.graph.starterpack.Main
+  const record = starterPack.record as AppBskyGraphStarterpack.Main
 
   const onPressCreate = () => {
     control.close(() => createDialogControl.open())
@@ -75,9 +79,9 @@ export function CreateListFromStarterPackDialog({
           )
 
           if (items.length > 0) {
-            const listitemWrites: $Typed<com.atproto.repo.applyWrites.Create>[] =
+            const listitemWrites: $Typed<ComAtprotoRepoApplyWrites.Create>[] =
               items.map(item => {
-                const listitemRecord: $Typed<app.bsky.graph.listitem.Main> = {
+                const listitemRecord: $Typed<AppBskyGraphListitem.Main> = {
                   $type: 'app.bsky.graph.listitem',
                   subject: item.subject.did,
                   list: listUri as AtUriString,
@@ -93,7 +97,7 @@ export function CreateListFromStarterPackDialog({
 
             const chunks = chunk(listitemWrites, 50)
             for (const c of chunks) {
-              await pdsClient.call(com.atproto.repo.applyWrites, {
+              await pdsClient.call(ComAtprotoRepoApplyWrites, {
                 repo: currentAccount.did,
                 writes: c,
               })
@@ -104,7 +108,7 @@ export function CreateListFromStarterPackDialog({
               1e3,
               (res: {items: unknown[]}) => res.items.length > 0,
               () =>
-                appviewClient.call(app.bsky.graph.getList, {
+                appviewClient.call(AppBskyGraphGetList, {
                   list: listUri as AtUriString,
                   limit: 1,
                 }),

@@ -20,7 +20,7 @@ import {resetBadgeCount} from '#/lib/notifications/notifications'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyNotificationUpdateSeen from '#/lexicons/app/bsky/notification/updateSeen'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
 import {type CachedFeedPage, type FeedPage} from './types'
 import {fetchPage} from './util'
@@ -122,7 +122,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return {
       async markAllRead() {
         // update server
-        await client.call(app.bsky.notification.updateSeen, {
+        await client.call(AppBskyNotificationUpdateSeen, {
           // toISOString always emits the Z-suffixed form the format requires
           seenAt: cacheRef.current.syncedAt.toISOString() as ISODatetimeString,
         })

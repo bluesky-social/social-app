@@ -23,7 +23,8 @@ import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
-import {com, tools} from '#/lexicons'
+import * as ComAtprotoModerationCreateReport from '#/lexicons/com/atproto/moderation/createReport'
+import * as ToolsOzoneReportDefs from '#/lexicons/tools/ozone/report/defs'
 
 const COL_WIDTH = 400
 
@@ -51,9 +52,9 @@ export function Takendown() {
     mutationFn: async (appealText: string) => {
       if (!currentAccount) throw new Error('No session')
       await client.call(
-        com.atproto.moderation.createReport,
+        ComAtprotoModerationCreateReport,
         {
-          reasonType: tools.ozone.report.defs.reasonAppeal.value,
+          reasonType: ToolsOzoneReportDefs.reasonAppeal.value,
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
             did: currentAccount.did,

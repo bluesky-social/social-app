@@ -27,7 +27,8 @@ import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
 import * as bsky from '#/types/bsky'
 
 const X_ICON_OFFSET = 16
@@ -38,7 +39,7 @@ export function TranslatedPost({
   postTextStyle = a.text_md,
 }: {
   hideTranslateLink?: boolean
-  post: app.bsky.feed.defs.PostView
+  post: AppBskyFeedDefs.PostView
   postTextStyle?: StyleProp<TextStyle>
 }) {
   const langPrefs = useLanguagePrefs()
@@ -46,10 +47,8 @@ export function TranslatedPost({
     key: post.uri,
   })
 
-  const record = useMemo<app.bsky.feed.post.Main | undefined>(() => {
-    return bsky.isType(app.bsky.feed.post, post.record)
-      ? post.record
-      : undefined
+  const record = useMemo<AppBskyFeedPost.Main | undefined>(() => {
+    return bsky.isType(AppBskyFeedPost, post.record) ? post.record : undefined
   }, [post])
   const initialTranslationParams = useMemo<TranslationFunctionParams>(() => {
     return {

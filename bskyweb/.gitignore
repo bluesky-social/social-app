@@ -16,7 +16,10 @@ static/css/*.css.LICENSE.txt
 static/css/empty.txt
 static/media/*.png
 static/media/empty.txt
+static/_expo/
+static/assets/
 templates/scripts.html
+templates/fonts.html
 templates/*-embed.html
 static/embed/*.html
 static/embed/assets/*.js

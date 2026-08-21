@@ -3,7 +3,7 @@ import {useInfiniteQuery} from '@tanstack/react-query'
 
 import {createQueryKey} from '#/state/queries/util'
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyGroupListMutualGroups from '#/lexicons/chat/bsky/group/listMutualGroups'
 
 const listMutualGroupsQueryKeyRoot = 'list-mutual-groups'
 
@@ -28,7 +28,7 @@ export function useListMutualGroupsQuery({
     enabled: isEnabled,
     queryKey: createListMutualGroupsQueryKey({subject: subject ?? ''}),
     queryFn: async ({pageParam}) => {
-      return await client.call(chat.bsky.group.listMutualGroups, {
+      return await client.call(ChatBskyGroupListMutualGroups, {
         // guarded by `enabled`, and callers pass a resolved actor did
         subject: subject as DidString,
         cursor: pageParam,

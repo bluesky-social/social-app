@@ -15,7 +15,7 @@ import {Lock_Stroke2_Corner0_Rounded as LockIcon} from '#/components/icons/Lock'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoUnlockConvo from '#/lexicons/chat/bsky/convo/unlockConvo'
 import {LeaveChatPrompt} from '../ConversationSettings/prompts'
 import {ChatFooter} from './ChatFooter'
 
@@ -43,7 +43,7 @@ export function ChatLocked({
     },
     onError: e => {
       if (
-        matchXrpcError(e, chat.bsky.convo.unlockConvo) ===
+        matchXrpcError(e, ChatBskyConvoUnlockConvo) ===
         'ConvoLockedByModeration'
       ) {
         Toast.show(l`This chat is locked by a moderation action`, {

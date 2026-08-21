@@ -4,7 +4,8 @@ import {toDatetimeString} from '@atproto/syntax'
 import {type OtherRequiredData} from '#/ageAssurance/data'
 import {IS_DEV, IS_E2E} from '#/env'
 import {type Geolocation} from '#/geolocation'
-import {app} from '#/lexicons'
+import * as AppBskyAgeassuranceDefs from '#/lexicons/app/bsky/ageassurance/defs'
+import type * as AppBskyAgeassuranceGetState from '#/lexicons/app/bsky/ageassurance/getState'
 
 export const enabled = (IS_DEV && false) || IS_E2E
 
@@ -28,28 +29,28 @@ export const otherRequiredData: OtherRequiredData = {
 }
 
 const serverStateEnabled = false || IS_E2E
-export const serverState:
-  app.bsky.ageassurance.getState.$OutputBody | undefined = serverStateEnabled
-  ? {
-      state: {
-        lastInitiatedAt: undefined, // new Date(2025, 1, 1).toISOString(),
-        status: 'unknown',
-        access: 'unknown',
-      },
-      metadata: {
-        accountCreatedAt: toDatetimeString(new Date(2023, 1, 1)),
-      },
-    }
-  : undefined
+export const serverState: AppBskyAgeassuranceGetState.$OutputBody | undefined =
+  serverStateEnabled
+    ? {
+        state: {
+          lastInitiatedAt: undefined, // new Date(2025, 1, 1).toISOString(),
+          status: 'unknown',
+          access: 'unknown',
+        },
+        metadata: {
+          accountCreatedAt: toDatetimeString(new Date(2023, 1, 1)),
+        },
+      }
+    : undefined
 
-export const config: app.bsky.ageassurance.defs.Config = {
+export const config: AppBskyAgeassuranceDefs.Config = {
   regions: [
     {
       countryCode: 'AA',
       regionCode: undefined,
       minAccessAge: 13,
       rules: [
-        app.bsky.ageassurance.defs.configRegionRuleDefault.build({
+        AppBskyAgeassuranceDefs.configRegionRuleDefault.build({
           access: 'full',
         }),
       ],
@@ -64,11 +65,11 @@ export const config: app.bsky.ageassurance.defs.Config = {
       minAccessAge: 18,
       additionalVerificationMethods: ['device'],
       rules: [
-        app.bsky.ageassurance.defs.configRegionRuleIfAssuredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfAssuredOverAge.build({
           age: 18,
           access: 'full',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleDefault.build({
+        AppBskyAgeassuranceDefs.configRegionRuleDefault.build({
           access: 'none',
         }),
       ],
@@ -77,15 +78,15 @@ export const config: app.bsky.ageassurance.defs.Config = {
       countryCode: 'GB',
       minAccessAge: 13,
       rules: [
-        app.bsky.ageassurance.defs.configRegionRuleIfAssuredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfAssuredOverAge.build({
           age: 18,
           access: 'full',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleIfDeclaredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfDeclaredOverAge.build({
           age: 13,
           access: 'safe',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleDefault.build({
+        AppBskyAgeassuranceDefs.configRegionRuleDefault.build({
           access: 'none',
         }),
       ],
@@ -94,23 +95,23 @@ export const config: app.bsky.ageassurance.defs.Config = {
       countryCode: 'AU',
       minAccessAge: 16,
       rules: [
-        app.bsky.ageassurance.defs.configRegionRuleIfAccountNewerThan.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfAccountNewerThan.build({
           date: '2025-12-10T00:00:00Z',
           access: 'none',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleIfAssuredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfAssuredOverAge.build({
           age: 18,
           access: 'full',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleIfAssuredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfAssuredOverAge.build({
           age: 16,
           access: 'safe',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleIfDeclaredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfDeclaredOverAge.build({
           age: 16,
           access: 'safe',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleDefault.build({
+        AppBskyAgeassuranceDefs.configRegionRuleDefault.build({
           access: 'none',
         }),
       ],
@@ -120,15 +121,15 @@ export const config: app.bsky.ageassurance.defs.Config = {
       regionCode: 'SD',
       minAccessAge: 13,
       rules: [
-        app.bsky.ageassurance.defs.configRegionRuleIfAssuredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfAssuredOverAge.build({
           age: 18,
           access: 'full',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleIfDeclaredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfDeclaredOverAge.build({
           age: 13,
           access: 'safe',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleDefault.build({
+        AppBskyAgeassuranceDefs.configRegionRuleDefault.build({
           access: 'none',
         }),
       ],
@@ -138,15 +139,15 @@ export const config: app.bsky.ageassurance.defs.Config = {
       regionCode: 'WY',
       minAccessAge: 13,
       rules: [
-        app.bsky.ageassurance.defs.configRegionRuleIfAssuredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfAssuredOverAge.build({
           age: 18,
           access: 'full',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleIfDeclaredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfDeclaredOverAge.build({
           age: 13,
           access: 'safe',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleDefault.build({
+        AppBskyAgeassuranceDefs.configRegionRuleDefault.build({
           access: 'none',
         }),
       ],
@@ -156,15 +157,15 @@ export const config: app.bsky.ageassurance.defs.Config = {
       regionCode: 'OH',
       minAccessAge: 13,
       rules: [
-        app.bsky.ageassurance.defs.configRegionRuleIfAssuredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfAssuredOverAge.build({
           age: 18,
           access: 'full',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleIfDeclaredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfDeclaredOverAge.build({
           age: 13,
           access: 'safe',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleDefault.build({
+        AppBskyAgeassuranceDefs.configRegionRuleDefault.build({
           access: 'none',
         }),
       ],
@@ -174,11 +175,11 @@ export const config: app.bsky.ageassurance.defs.Config = {
       regionCode: 'MS',
       minAccessAge: 18,
       rules: [
-        app.bsky.ageassurance.defs.configRegionRuleIfAssuredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfAssuredOverAge.build({
           age: 18,
           access: 'full',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleDefault.build({
+        AppBskyAgeassuranceDefs.configRegionRuleDefault.build({
           access: 'none',
         }),
       ],
@@ -188,15 +189,15 @@ export const config: app.bsky.ageassurance.defs.Config = {
       regionCode: 'VA',
       minAccessAge: 16,
       rules: [
-        app.bsky.ageassurance.defs.configRegionRuleIfAssuredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfAssuredOverAge.build({
           age: 16,
           access: 'full',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleIfDeclaredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfDeclaredOverAge.build({
           age: 16,
           access: 'full',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleDefault.build({
+        AppBskyAgeassuranceDefs.configRegionRuleDefault.build({
           access: 'none',
         }),
       ],
@@ -206,15 +207,15 @@ export const config: app.bsky.ageassurance.defs.Config = {
       regionCode: 'TN',
       minAccessAge: 18,
       rules: [
-        app.bsky.ageassurance.defs.configRegionRuleIfAssuredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfAssuredOverAge.build({
           age: 18,
           access: 'full',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleIfDeclaredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfDeclaredOverAge.build({
           age: 18,
           access: 'full',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleDefault.build({
+        AppBskyAgeassuranceDefs.configRegionRuleDefault.build({
           access: 'none',
         }),
       ],
@@ -223,19 +224,19 @@ export const config: app.bsky.ageassurance.defs.Config = {
       countryCode: 'BR',
       minAccessAge: 13,
       rules: [
-        app.bsky.ageassurance.defs.configRegionRuleIfAssuredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfAssuredOverAge.build({
           age: 18,
           access: 'full',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleIfDeclaredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfDeclaredOverAge.build({
           age: 18,
           access: 'full',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleIfDeclaredOverAge.build({
+        AppBskyAgeassuranceDefs.configRegionRuleIfDeclaredOverAge.build({
           age: 13,
           access: 'safe',
         }),
-        app.bsky.ageassurance.defs.configRegionRuleDefault.build({
+        AppBskyAgeassuranceDefs.configRegionRuleDefault.build({
           access: 'none',
         }),
       ],

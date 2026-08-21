@@ -1,6 +1,6 @@
 import {type RichText, UnicodeString} from '@bsky/sdk/richtext'
 
-import {app} from '#/lexicons'
+import * as AppBskyRichtextFacet from '#/lexicons/app/bsky/richtext/facet'
 import * as bsky from '#/types/bsky'
 import {toShortUrl} from './url-helpers'
 
@@ -13,7 +13,7 @@ export function shortenLinks(rt: RichText): RichText {
   if (rt.facets) {
     for (const facet of rt.facets) {
       const isLink = !!facet.features.find(f =>
-        bsky.isType(app.bsky.richtext.facet.link, f),
+        bsky.isType(AppBskyRichtextFacet.link, f),
       )
       if (!isLink) {
         continue
@@ -45,7 +45,7 @@ export function stripInvalidMentions(rt: RichText): RichText {
   if (rt.facets) {
     rt.facets = rt.facets?.filter(facet => {
       const mention = facet.features.find(f =>
-        bsky.isType(app.bsky.richtext.facet.mention, f),
+        bsky.isType(AppBskyRichtextFacet.mention, f),
       )
       if (mention && !mention.did) {
         return false

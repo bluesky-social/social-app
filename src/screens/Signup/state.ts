@@ -11,9 +11,10 @@ import {matchXrpcError} from '#/lib/xrpc-error'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {type AnalyticsContextType, useAnalytics} from '#/analytics'
-import {com} from '#/lexicons'
+import * as ComAtprotoServerCreateAccount from '#/lexicons/com/atproto/server/createAccount'
+import type * as ComAtprotoServerDescribeServer from '#/lexicons/com/atproto/server/describeServer'
 
-export type ServiceDescription = com.atproto.server.describeServer.$OutputBody
+export type ServiceDescription = ComAtprotoServerDescribeServer.$OutputBody
 
 const date = new Date()
 date.setFullYear(date.getFullYear() - 20) // default to 20 years ago
@@ -254,7 +255,7 @@ export const useSignupContext = () => useContext(SignupContext)
  * failure is unexpected and should be reported to Sentry.
  */
 function classifyExpectedSignupError(e: unknown): string | undefined {
-  const code = matchXrpcError(e, com.atproto.server.createAccount)
+  const code = matchXrpcError(e, ComAtprotoServerCreateAccount)
   switch (code) {
     case 'InvalidHandle':
     case 'HandleNotAvailable':
@@ -351,7 +352,7 @@ export function useSubmitSignup() {
       } catch (err) {
         const e = err as Error
         if (
-          matchXrpcError(e, com.atproto.server.createAccount) ===
+          matchXrpcError(e, ComAtprotoServerCreateAccount) ===
           'InvalidInviteCode'
         ) {
           dispatch({

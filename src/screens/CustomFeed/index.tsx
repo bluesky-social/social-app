@@ -38,7 +38,7 @@ import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {IS_NATIVE} from '#/env'
-import {app} from '#/lexicons'
+import * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
 import {
   CustomFeedHeader,
   CustomFeedHeaderSkeleton,
@@ -175,7 +175,7 @@ export function CustomFeedScreenInner({
   const isVideoFeed = useMemo(() => {
     const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
     const feedIsVideoMode =
-      feedInfo.contentMode === app.bsky.feed.defs.contentModeVideo.value
+      feedInfo.contentMode === AppBskyFeedDefs.contentModeVideo.value
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
     return IS_NATIVE && _isVideoFeed
   }, [feedInfo])

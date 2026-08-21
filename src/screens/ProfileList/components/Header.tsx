@@ -23,7 +23,7 @@ import {Loader} from '#/components/Loader'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
 import {MoreOptionsMenu} from './MoreOptionsMenu'
 import {SubscribeMenu} from './SubscribeMenu'
 
@@ -33,14 +33,14 @@ export function Header({
   preferences,
 }: {
   rkey: string
-  list: app.bsky.graph.defs.ListView
+  list: AppBskyGraphDefs.ListView
   preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
-  const isCurateList = list.purpose === app.bsky.graph.defs.curatelist.value
-  const isModList = list.purpose === app.bsky.graph.defs.modlist.value
+  const isCurateList = list.purpose === AppBskyGraphDefs.curatelist.value
+  const isModList = list.purpose === AppBskyGraphDefs.modlist.value
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const playHaptic = useHaptics()

@@ -1,10 +1,14 @@
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyEmbedRecord from '#/lexicons/app/bsky/embed/record'
+import * as AppBskyEmbedRecordWithMedia from '#/lexicons/app/bsky/embed/recordWithMedia'
+import * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
 import * as bsky from '#/types/bsky'
 import {isPostInLanguage} from '../../locale/helpers'
 import {FALLBACK_MARKER_POST} from './feed/home'
 import {type ReasonFeedSource} from './feed/types'
 
-type FeedViewPost = app.bsky.feed.defs.FeedViewPost
+type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 
 export type FeedTunerFn = (
   tuner: FeedTuner,
@@ -13,18 +17,18 @@ export type FeedTunerFn = (
 ) => FeedViewPostsSlice[]
 
 type FeedSliceItem = {
-  post: app.bsky.feed.defs.PostView
-  record: app.bsky.feed.post.Main
-  parentAuthor: app.bsky.actor.defs.ProfileViewBasic | undefined
+  post: AppBskyFeedDefs.PostView
+  record: AppBskyFeedPost.Main
+  parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
   isParentBlocked: boolean
   isParentNotFound: boolean
 }
 
 type AuthorContext = {
-  author: app.bsky.actor.defs.ProfileViewBasic
-  parentAuthor: app.bsky.actor.defs.ProfileViewBasic | undefined
-  grandparentAuthor: app.bsky.actor.defs.ProfileViewBasic | undefined
-  rootAuthor: app.bsky.actor.defs.ProfileViewBasic | undefined
+  author: AppBskyActorDefs.ProfileViewBasic
+  parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  grandparentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  rootAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
 }
 
 export class FeedViewPostsSlice {
@@ -46,7 +50,7 @@ export class FeedViewPostsSlice {
     this.isOrphan = false
     this.isThreadMuted = post.viewer?.threadMuted ?? false
     this.feedPostUri = post.uri
-    if (bsky.isType(app.bsky.feed.defs.postView, reply?.root)) {
+    if (bsky.isType(AppBskyFeedDefs.postView, reply?.root)) {
       this.rootUri = reply.root.uri
     } else {
       this.rootUri = post.uri
@@ -62,19 +66,16 @@ export class FeedViewPostsSlice {
       return
     }
     if (
-      !bsky.isType(app.bsky.feed.post, post.record) ||
-      !bsky.matches(app.bsky.feed.post, post.record)
+      !bsky.isType(AppBskyFeedPost, post.record) ||
+      !bsky.matches(AppBskyFeedPost, post.record)
     ) {
       return
     }
     const parent = reply?.parent
-    const isParentBlocked = bsky.isType(app.bsky.feed.defs.blockedPost, parent)
-    const isParentNotFound = bsky.isType(
-      app.bsky.feed.defs.notFoundPost,
-      parent,
-    )
-    let parentAuthor: app.bsky.actor.defs.ProfileViewBasic | undefined
-    if (bsky.isType(app.bsky.feed.defs.postView, parent)) {
+    const isParentBlocked = bsky.isType(AppBskyFeedDefs.blockedPost, parent)
+    const isParentNotFound = bsky.isType(AppBskyFeedDefs.notFoundPost, parent)
+    let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+    if (bsky.isType(AppBskyFeedDefs.postView, parent)) {
       parentAuthor = parent.author
     }
     this.items.push({
@@ -96,18 +97,18 @@ export class FeedViewPostsSlice {
       return
     }
     if (
-      !bsky.isType(app.bsky.feed.defs.postView, parent) ||
-      !bsky.isType(app.bsky.feed.post, parent.record) ||
-      !bsky.matches(app.bsky.feed.post, parent.record)
+      !bsky.isType(AppBskyFeedDefs.postView, parent) ||
+      !bsky.isType(AppBskyFeedPost, parent.record) ||
+      !bsky.matches(AppBskyFeedPost, parent.record)
     ) {
       this.isOrphan = true
       return
     }
     const root = reply.root
     const rootIsView =
-      bsky.isType(app.bsky.feed.defs.postView, root) ||
-      bsky.isType(app.bsky.feed.defs.blockedPost, root) ||
-      bsky.isType(app.bsky.feed.defs.notFoundPost, root)
+      bsky.isType(AppBskyFeedDefs.postView, root) ||
+      bsky.isType(AppBskyFeedDefs.blockedPost, root) ||
+      bsky.isType(AppBskyFeedDefs.notFoundPost, root)
     /*
      * If the parent is also the root, we just so happen to have the data we
      * need to compute if the parent's parent (grandparent) is blocked. This
@@ -120,10 +121,10 @@ export class FeedViewPostsSlice {
         : undefined
     const grandparentAuthor = reply.grandparentAuthor
     const isGrandparentBlocked = Boolean(
-      grandparent && bsky.isType(app.bsky.feed.defs.blockedPost, grandparent),
+      grandparent && bsky.isType(AppBskyFeedDefs.blockedPost, grandparent),
     )
     const isGrandparentNotFound = Boolean(
-      grandparent && bsky.isType(app.bsky.feed.defs.notFoundPost, grandparent),
+      grandparent && bsky.isType(AppBskyFeedDefs.notFoundPost, grandparent),
     )
     this.items.unshift({
       post: parent,
@@ -138,9 +139,9 @@ export class FeedViewPostsSlice {
       // de-deduping
     }
     if (
-      !bsky.isType(app.bsky.feed.defs.postView, root) ||
-      !bsky.isType(app.bsky.feed.post, root.record) ||
-      !bsky.matches(app.bsky.feed.post, root.record)
+      !bsky.isType(AppBskyFeedDefs.postView, root) ||
+      !bsky.isType(AppBskyFeedPost, root.record) ||
+      !bsky.matches(AppBskyFeedPost, root.record)
     ) {
       this.isOrphan = true
       return
@@ -163,14 +164,14 @@ export class FeedViewPostsSlice {
   get isQuotePost() {
     const embed = this._feedPost.post.embed
     return (
-      bsky.isType(app.bsky.embed.record.view, embed) ||
-      bsky.isType(app.bsky.embed.recordWithMedia.view, embed)
+      bsky.isType(AppBskyEmbedRecord.view, embed) ||
+      bsky.isType(AppBskyEmbedRecordWithMedia.view, embed)
     )
   }
 
   get isReply() {
     return (
-      bsky.isType(app.bsky.feed.post, this._feedPost.post.record) &&
+      bsky.isType(AppBskyFeedPost, this._feedPost.post.record) &&
       !!this._feedPost.post.record.reply
     )
   }
@@ -191,7 +192,7 @@ export class FeedViewPostsSlice {
 
   get isRepost() {
     const reason = this._feedPost.reason
-    return bsky.isType(app.bsky.feed.defs.reasonRepost, reason)
+    return bsky.isType(AppBskyFeedDefs.reasonRepost, reason)
   }
 
   get likeCount() {
@@ -204,18 +205,18 @@ export class FeedViewPostsSlice {
 
   getAuthors(): AuthorContext {
     const feedPost = this._feedPost
-    let author: app.bsky.actor.defs.ProfileViewBasic = feedPost.post.author
-    let parentAuthor: app.bsky.actor.defs.ProfileViewBasic | undefined
-    let grandparentAuthor: app.bsky.actor.defs.ProfileViewBasic | undefined
-    let rootAuthor: app.bsky.actor.defs.ProfileViewBasic | undefined
+    let author: AppBskyActorDefs.ProfileViewBasic = feedPost.post.author
+    let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+    let grandparentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+    let rootAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
     if (feedPost.reply) {
-      if (bsky.isType(app.bsky.feed.defs.postView, feedPost.reply.parent)) {
+      if (bsky.isType(AppBskyFeedDefs.postView, feedPost.reply.parent)) {
         parentAuthor = feedPost.reply.parent.author
       }
       if (feedPost.reply.grandparentAuthor) {
         grandparentAuthor = feedPost.reply.grandparentAuthor
       }
-      if (bsky.isType(app.bsky.feed.defs.postView, feedPost.reply.root)) {
+      if (bsky.isType(AppBskyFeedDefs.postView, feedPost.reply.root)) {
         rootAuthor = feedPost.reply.root.author
       }
     }
@@ -510,7 +511,7 @@ function shouldDisplayReplyInFollowing(
 }
 
 function isSelfOrFollowing(
-  profile: app.bsky.actor.defs.ProfileViewBasic,
+  profile: AppBskyActorDefs.ProfileViewBasic,
   userDid: string,
 ) {
   return Boolean(profile.did === userDid || profile.viewer?.following)

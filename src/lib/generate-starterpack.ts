@@ -9,7 +9,14 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
 import {useAppviewClient, usePdsClient} from '#/state/session'
-import {app, com} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyActorGetProfile from '#/lexicons/app/bsky/actor/getProfile'
+import * as AppBskyActorSearchActors from '#/lexicons/app/bsky/actor/searchActors'
+import * as AppBskyGraphGetStarterPack from '#/lexicons/app/bsky/graph/getStarterPack'
+import * as AppBskyGraphList from '#/lexicons/app/bsky/graph/list'
+import * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
+import type * as AppBskyRichtextFacet from '#/lexicons/app/bsky/richtext/facet'
+import * as ComAtprotoRepoApplyWrites from '#/lexicons/com/atproto/repo/applyWrites'
 import type * as bsky from '#/types/bsky'
 
 export const createStarterPackList = async ({
@@ -21,13 +28,13 @@ export const createStarterPackList = async ({
 }: {
   name: string
   description?: string
-  descriptionFacets?: app.bsky.richtext.facet.Main[]
+  descriptionFacets?: AppBskyRichtextFacet.Main[]
   profiles: bsky.profile.AnyProfileView[]
   client: Client
 }): Promise<{uri: string; cid: string}> => {
   if (profiles.length === 0) throw new Error('No profiles given')
 
-  const list = await client.create(app.bsky.graph.list, {
+  const list = await client.create(AppBskyGraphList, {
     name,
     description,
     descriptionFacets,
@@ -36,7 +43,7 @@ export const createStarterPackList = async ({
     purpose: 'app.bsky.graph.defs#referencelist',
   })
   if (!list) throw new Error('List creation failed')
-  await client.call(com.atproto.repo.applyWrites, {
+  await client.call(ComAtprotoRepoApplyWrites, {
     repo: client.assertDid,
     writes: profiles.map(p => createListItem({did: p.did, listUri: list.uri})),
   })
@@ -57,18 +64,18 @@ export function useGenerateStarterPackMutation({
 
   return useMutation<{uri: string; cid: string}, Error, void>({
     mutationFn: async () => {
-      let profile: app.bsky.actor.defs.ProfileViewDetailed | undefined
-      let profiles: app.bsky.actor.defs.ProfileView[] | undefined
+      let profile: AppBskyActorDefs.ProfileViewDetailed | undefined
+      let profiles: AppBskyActorDefs.ProfileView[] | undefined
 
       await Promise.all([
         (async () => {
-          profile = await appviewClient.call(app.bsky.actor.getProfile, {
+          profile = await appviewClient.call(AppBskyActorGetProfile, {
             actor: pdsClient.assertDid,
           })
         })(),
         (async () => {
           profiles = (
-            await appviewClient.call(app.bsky.actor.searchActors, {
+            await appviewClient.call(AppBskyActorSearchActors, {
               q: encodeURIComponent('*'),
               limit: 49,
             })
@@ -100,7 +107,7 @@ export function useGenerateStarterPackMutation({
         client: pdsClient,
       })
 
-      return await pdsClient.create(app.bsky.graph.starterpack, {
+      return await pdsClient.create(AppBskyGraphStarterpack, {
         name: starterPackName,
         // `create` returns a plain string uri
         list: list.uri as AtUriString,
@@ -125,7 +132,7 @@ function createListItem({
 }: {
   did: string
   listUri: string
-}): com.atproto.repo.applyWrites.$InputBody['writes'][number] {
+}): ComAtprotoRepoApplyWrites.$InputBody['writes'][number] {
   return {
     $type: 'com.atproto.repo.applyWrites#create',
     collection: 'app.bsky.graph.listitem',
@@ -141,14 +148,14 @@ function createListItem({
 async function whenAppViewReady(
   client: Client,
   uri: string,
-  fn: (res?: app.bsky.graph.getStarterPack.$OutputBody) => boolean,
+  fn: (res?: AppBskyGraphGetStarterPack.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
     () =>
-      client.call(app.bsky.graph.getStarterPack, {
+      client.call(AppBskyGraphGetStarterPack, {
         starterPack: uri as AtUriString,
       }),
   )

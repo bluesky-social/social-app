@@ -8,17 +8,20 @@ import {
 import chunk from 'lodash.chunk'
 
 import {until} from '#/lib/async/until'
-import {app, com} from '#/lexicons'
+import type * as AppBskyGraphFollow from '#/lexicons/app/bsky/graph/follow'
+import * as AppBskyGraphGetFollows from '#/lexicons/app/bsky/graph/getFollows'
+import * as ComAtprotoRepoApplyWrites from '#/lexicons/com/atproto/repo/applyWrites'
+import type * as ComAtprotoRepoStrongRef from '#/lexicons/com/atproto/repo/strongRef'
 
 export async function bulkWriteFollows(
   pdsClient: Client,
   appviewClient: Client,
   dids: string[],
-  via?: com.atproto.repo.strongRef.Main,
+  via?: ComAtprotoRepoStrongRef.Main,
 ) {
   const did = pdsClient.assertDid
 
-  const followRecords: $Typed<app.bsky.graph.follow.Main>[] = dids.map(did => {
+  const followRecords: $Typed<AppBskyGraphFollow.Main>[] = dids.map(did => {
     return {
       $type: 'app.bsky.graph.follow',
       // the helper takes the dids as plain strings
@@ -28,7 +31,7 @@ export async function bulkWriteFollows(
     }
   })
 
-  const followWrites: $Typed<com.atproto.repo.applyWrites.Create>[] =
+  const followWrites: $Typed<ComAtprotoRepoApplyWrites.Create>[] =
     followRecords.map(r => ({
       $type: 'com.atproto.repo.applyWrites#create',
       collection: 'app.bsky.graph.follow',
@@ -38,7 +41,7 @@ export async function bulkWriteFollows(
 
   const chunks = chunk(followWrites, 50)
   for (const chunk of chunks) {
-    await pdsClient.call(com.atproto.repo.applyWrites, {
+    await pdsClient.call(ComAtprotoRepoApplyWrites, {
       repo: did,
       writes: chunk,
     })
@@ -58,14 +61,14 @@ export async function bulkWriteFollows(
 async function whenFollowsIndexed(
   appviewClient: Client,
   actor: string,
-  fn: (res: app.bsky.graph.getFollows.$OutputBody) => boolean,
+  fn: (res: AppBskyGraphGetFollows.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
     () =>
-      appviewClient.call(app.bsky.graph.getFollows, {
+      appviewClient.call(AppBskyGraphGetFollows, {
         actor: actor as AtIdentifierString,
         limit: 1,
       }),

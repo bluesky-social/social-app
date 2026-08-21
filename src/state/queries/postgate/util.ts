@@ -1,7 +1,10 @@
 import {type $Typed} from '@atproto/lex'
 import {AtUri, type AtUriString, toDatetimeString} from '@atproto/syntax'
 
-import {app} from '#/lexicons'
+import * as AppBskyEmbedRecord from '#/lexicons/app/bsky/embed/record'
+import * as AppBskyEmbedRecordWithMedia from '#/lexicons/app/bsky/embed/recordWithMedia'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import type * as AppBskyFeedPostgate from '#/lexicons/app/bsky/feed/postgate'
 import * as bsky from '#/types/bsky'
 
 export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate'
@@ -13,13 +16,13 @@ export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate'
  */
 export function createPostgateRecord(
   postgate: Omit<
-    Partial<app.bsky.feed.postgate.Main>,
+    Partial<AppBskyFeedPostgate.Main>,
     'post' | 'detachedEmbeddingUris'
   > & {
     post: string
     detachedEmbeddingUris?: string[]
   },
-): app.bsky.feed.postgate.Main {
+): AppBskyFeedPostgate.Main {
   return {
     $type: POSTGATE_COLLECTION,
     createdAt: toDatetimeString(new Date()),
@@ -31,8 +34,8 @@ export function createPostgateRecord(
 }
 
 export function mergePostgateRecords(
-  prev: app.bsky.feed.postgate.Main,
-  next: Omit<Partial<app.bsky.feed.postgate.Main>, 'detachedEmbeddingUris'> & {
+  prev: AppBskyFeedPostgate.Main,
+  next: Omit<Partial<AppBskyFeedPostgate.Main>, 'detachedEmbeddingUris'> & {
     detachedEmbeddingUris?: string[]
   },
 ) {
@@ -59,8 +62,8 @@ export function createEmbedViewDetachedRecord({
   uri,
 }: {
   uri: AtUriString
-}): $Typed<app.bsky.embed.record.View> {
-  const record: $Typed<app.bsky.embed.record.ViewDetached> = {
+}): $Typed<AppBskyEmbedRecord.View> {
+  const record: $Typed<AppBskyEmbedRecord.ViewDetached> = {
     $type: 'app.bsky.embed.record#viewDetached',
     uri,
     detached: true,
@@ -78,25 +81,24 @@ export function createMaybeDetachedQuoteEmbed({
   detached,
 }:
   | {
-      post: app.bsky.feed.defs.PostView
-      quote: app.bsky.feed.defs.PostView
+      post: AppBskyFeedDefs.PostView
+      quote: AppBskyFeedDefs.PostView
       quoteUri: undefined
       detached: false
     }
   | {
-      post: app.bsky.feed.defs.PostView
+      post: AppBskyFeedDefs.PostView
       quote: undefined
       quoteUri: AtUriString
       detached: true
-    }):
-  app.bsky.embed.record.View | app.bsky.embed.recordWithMedia.View | undefined {
-  if (bsky.isType(app.bsky.embed.record.view, post.embed)) {
+    }): AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined {
+  if (bsky.isType(AppBskyEmbedRecord.view, post.embed)) {
     if (detached) {
       return createEmbedViewDetachedRecord({uri: quoteUri})
     } else {
       return createEmbedRecordView({post: quote})
     }
-  } else if (bsky.isType(app.bsky.embed.recordWithMedia.view, post.embed)) {
+  } else if (bsky.isType(AppBskyEmbedRecordWithMedia.view, post.embed)) {
     if (detached) {
       return {
         ...post.embed,
@@ -109,8 +111,8 @@ export function createMaybeDetachedQuoteEmbed({
 }
 
 export function createEmbedViewRecordFromPost(
-  post: app.bsky.feed.defs.PostView,
-): $Typed<app.bsky.embed.record.ViewRecord> {
+  post: AppBskyFeedDefs.PostView,
+): $Typed<AppBskyEmbedRecord.ViewRecord> {
   return {
     $type: 'app.bsky.embed.record#viewRecord',
     uri: post.uri,
@@ -130,8 +132,8 @@ export function createEmbedViewRecordFromPost(
 export function createEmbedRecordView({
   post,
 }: {
-  post: app.bsky.feed.defs.PostView
-}): app.bsky.embed.record.View {
+  post: AppBskyFeedDefs.PostView
+}): AppBskyEmbedRecord.View {
   return {
     $type: 'app.bsky.embed.record#view',
     record: createEmbedViewRecordFromPost(post),
@@ -142,10 +144,10 @@ export function createEmbedRecordWithMediaView({
   post,
   quote,
 }: {
-  post: app.bsky.feed.defs.PostView
-  quote: app.bsky.feed.defs.PostView
-}): app.bsky.embed.recordWithMedia.View | undefined {
-  if (!bsky.isType(app.bsky.embed.recordWithMedia.view, post.embed)) return
+  post: AppBskyFeedDefs.PostView
+  quote: AppBskyFeedDefs.PostView
+}): AppBskyEmbedRecordWithMedia.View | undefined {
+  if (!bsky.isType(AppBskyEmbedRecordWithMedia.view, post.embed)) return
   return {
     ...(post.embed || {}),
     record: {
@@ -159,11 +161,11 @@ export function getMaybeDetachedQuoteEmbed({
   post,
 }: {
   viewerDid: string
-  post: app.bsky.feed.defs.PostView
+  post: AppBskyFeedDefs.PostView
 }) {
-  if (bsky.isType(app.bsky.embed.record.view, post.embed)) {
+  if (bsky.isType(AppBskyEmbedRecord.view, post.embed)) {
     // detached
-    if (bsky.isType(app.bsky.embed.record.viewDetached, post.embed.record)) {
+    if (bsky.isType(AppBskyEmbedRecord.viewDetached, post.embed.record)) {
       const urip = new AtUri(post.embed.record.uri)
       return {
         embed: post.embed,
@@ -174,7 +176,7 @@ export function getMaybeDetachedQuoteEmbed({
     }
 
     // post
-    if (bsky.isType(app.bsky.embed.record.viewRecord, post.embed.record)) {
+    if (bsky.isType(AppBskyEmbedRecord.viewRecord, post.embed.record)) {
       const urip = new AtUri(post.embed.record.uri)
       return {
         embed: post.embed,
@@ -183,10 +185,10 @@ export function getMaybeDetachedQuoteEmbed({
         isDetached: false,
       }
     }
-  } else if (bsky.isType(app.bsky.embed.recordWithMedia.view, post.embed)) {
+  } else if (bsky.isType(AppBskyEmbedRecordWithMedia.view, post.embed)) {
     // detached
     if (
-      bsky.isType(app.bsky.embed.record.viewDetached, post.embed.record.record)
+      bsky.isType(AppBskyEmbedRecord.viewDetached, post.embed.record.record)
     ) {
       const urip = new AtUri(post.embed.record.record.uri)
       return {
@@ -198,9 +200,7 @@ export function getMaybeDetachedQuoteEmbed({
     }
 
     // post
-    if (
-      bsky.isType(app.bsky.embed.record.viewRecord, post.embed.record.record)
-    ) {
+    if (bsky.isType(AppBskyEmbedRecord.viewRecord, post.embed.record.record)) {
       const urip = new AtUri(post.embed.record.record.uri)
       return {
         embed: post.embed,

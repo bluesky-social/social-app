@@ -10,7 +10,8 @@ import {
 import {STALE} from '#/state/queries'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyFeedGetLikes from '#/lexicons/app/bsky/feed/getLikes'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -22,15 +23,15 @@ export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 export function useLikedByQuery(resolvedUri: string | undefined) {
   const client = useAppviewClient()
   return useInfiniteQuery<
-    app.bsky.feed.getLikes.$OutputBody,
+    AppBskyFeedGetLikes.$OutputBody,
     Error,
-    InfiniteData<app.bsky.feed.getLikes.$OutputBody>,
+    InfiniteData<AppBskyFeedGetLikes.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(resolvedUri || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      return await client.call(app.bsky.feed.getLikes, {
+      return await client.call(AppBskyFeedGetLikes, {
         // the enabled flag prevents this from running until resolvedUri is set
         uri: (resolvedUri || '') as AtUriString,
         limit: PAGE_SIZE,
@@ -64,7 +65,7 @@ export function useLikedBySampleQuery({uri}: {uri: string | undefined}) {
   return useQuery({
     queryKey: createLikedBySampleQueryKey({uri: uri ?? ''}),
     queryFn: async () => {
-      return await client.call(app.bsky.feed.getLikes, {
+      return await client.call(AppBskyFeedGetLikes, {
         uri: (uri ?? '') as AtUriString,
         limit: SAMPLE_SIZE,
       })
@@ -82,9 +83,9 @@ export function useLikedBySampleQuery({uri}: {uri: string | undefined}) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<app.bsky.actor.defs.ProfileView, void> {
+): Generator<AppBskyActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<app.bsky.feed.getLikes.$OutputBody>
+    InfiniteData<AppBskyFeedGetLikes.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })
@@ -101,7 +102,7 @@ export function* findAllProfilesInQueryData(
     }
   }
   const sampleQueryDatas =
-    queryClient.getQueriesData<app.bsky.feed.getLikes.$OutputBody>({
+    queryClient.getQueriesData<AppBskyFeedGetLikes.$OutputBody>({
       queryKey: [likedBySampleQueryKeyRoot],
     })
   for (const [_queryKey, queryData] of sampleQueryDatas) {

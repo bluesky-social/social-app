@@ -33,11 +33,13 @@ import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
 import * as bsky from '#/types/bsky'
 
 interface WhoCanReplyProps {
-  post: app.bsky.feed.defs.PostView
+  post: AppBskyFeedDefs.PostView
   isThreadAuthor: boolean
   style?: StyleProp<ViewStyle>
 }
@@ -54,7 +56,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
    * unexpectedly, we should check to make sure it's for sure the root URI.
    */
   const rootUri =
-    bsky.isType(app.bsky.feed.post, post.record) && post.record.reply?.root
+    bsky.isType(AppBskyFeedPost, post.record) && post.record.reply?.root
       ? post.record.reply.root.uri
       : post.uri
   const settings = useMemo(() => {
@@ -202,7 +204,7 @@ function WhoCanReplyDialog({
   embeddingDisabled,
 }: {
   control: Dialog.DialogControlProps
-  post: app.bsky.feed.defs.PostView
+  post: AppBskyFeedDefs.PostView
   settings: ThreadgateAllowUISetting[]
   embeddingDisabled: boolean
 }) {
@@ -248,7 +250,7 @@ function Rules({
   settings,
   embeddingDisabled,
 }: {
-  post: app.bsky.feed.defs.PostView
+  post: AppBskyFeedDefs.PostView
   settings: ThreadgateAllowUISetting[]
   embeddingDisabled: boolean
 }) {
@@ -306,8 +308,8 @@ function Rule({
   lists,
 }: {
   rule: ThreadgateAllowUISetting
-  post: app.bsky.feed.defs.PostView
-  lists: app.bsky.graph.defs.ListViewBasic[] | undefined
+  post: AppBskyFeedDefs.PostView
+  lists: AppBskyGraphDefs.ListViewBasic[] | undefined
 }) {
   if (rule.type === 'mention') {
     return <Trans>mentioned users</Trans>

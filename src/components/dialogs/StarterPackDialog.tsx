@@ -29,11 +29,12 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import type * as AppBskyGraphGetStarterPacksWithMembership from '#/lexicons/app/bsky/graph/getStarterPacksWithMembership'
+import * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
 import * as bsky from '#/types/bsky'
 
 type StarterPackWithMembership =
-  app.bsky.graph.getStarterPacksWithMembership.StarterPackWithMembership
+  AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership
 
 export type StarterPackDialogProps = {
   control: Dialog.DialogControlProps
@@ -321,7 +322,7 @@ function StarterPackItem({
 
   const {record} = starterPack
 
-  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
+  if (!bsky.isType(AppBskyGraphStarterpack, record)) {
     return null
   }
 

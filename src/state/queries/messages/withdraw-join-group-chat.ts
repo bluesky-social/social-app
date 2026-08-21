@@ -2,7 +2,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useChatClient, useSession} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyGroupWithdrawJoinRequest from '#/lexicons/chat/bsky/group/withdrawJoinRequest'
 import {
   type ConvoRequestListQueryData,
   optimisticDeleteJoinRequest,
@@ -13,7 +13,7 @@ export function useWithdrawJoinGroupChatRequest({
   onSuccess,
   onError,
 }: {
-  onSuccess?: (data: chat.bsky.group.withdrawJoinRequest.$OutputBody) => void
+  onSuccess?: (data: ChatBskyGroupWithdrawJoinRequest.$OutputBody) => void
   onError?: (error: Error) => void
 } = {}) {
   const client = useChatClient()
@@ -26,7 +26,7 @@ export function useWithdrawJoinGroupChatRequest({
         throw new Error('Must be logged in to withdraw a join request')
       if (!convoId) throw new Error('No convoId provided')
 
-      return await client.call(chat.bsky.group.withdrawJoinRequest, {convoId})
+      return await client.call(ChatBskyGroupWithdrawJoinRequest, {convoId})
     },
     onSuccess: (data, {convoId}) => {
       queryClient.setQueriesData<ConvoRequestListQueryData>(

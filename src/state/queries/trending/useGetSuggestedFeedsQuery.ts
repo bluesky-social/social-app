@@ -8,7 +8,7 @@ import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyUnspeccedGetSuggestedFeeds from '#/lexicons/app/bsky/unspecced/getSuggestedFeeds'
 
 export const DEFAULT_LIMIT = 15
 
@@ -26,7 +26,7 @@ export function useGetSuggestedFeedsQuery({enabled}: {enabled?: boolean}) {
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
       const data = await client.call(
-        app.bsky.unspecced.getSuggestedFeeds,
+        AppBskyUnspeccedGetSuggestedFeeds,
         {
           limit: DEFAULT_LIMIT,
         },

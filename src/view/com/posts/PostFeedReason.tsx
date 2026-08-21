@@ -14,7 +14,7 @@ import {Repost_Stroke2_Corner3_Rounded as RepostIcon} from '#/components/icons/R
 import {Link} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
 import * as bsky from '#/types/bsky'
 import {FeedNameText} from '../util/FeedInfoText'
 
@@ -25,8 +25,8 @@ export function PostFeedReason({
 }: {
   reason:
     | ReasonFeedSource
-    | app.bsky.feed.defs.ReasonRepost
-    | app.bsky.feed.defs.ReasonPin
+    | AppBskyFeedDefs.ReasonRepost
+    | AppBskyFeedDefs.ReasonPin
     | {[k: string]: unknown; $type: string}
   moderation?: ModerationDecision
   onOpenReposter?: () => void
@@ -65,7 +65,7 @@ export function PostFeedReason({
     )
   }
 
-  if (bsky.isType(app.bsky.feed.defs.reasonRepost, reason)) {
+  if (bsky.isType(AppBskyFeedDefs.reasonRepost, reason)) {
     const isOwner = reason.by.did === currentAccount?.did
     const reposter = createSanitizedDisplayName(
       reason.by,
@@ -104,7 +104,7 @@ export function PostFeedReason({
     )
   }
 
-  if (bsky.isType(app.bsky.feed.defs.reasonPin, reason)) {
+  if (bsky.isType(AppBskyFeedDefs.reasonPin, reason)) {
     return (
       <View style={styles.includeReason}>
         <PinIcon

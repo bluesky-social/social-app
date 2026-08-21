@@ -3,14 +3,14 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyGroupCreateGroup from '#/lexicons/chat/bsky/group/createGroup'
 import {precacheConvoQuery} from './conversation'
 
 export function useCreateGroupChat({
   onSuccess,
   onError,
 }: {
-  onSuccess?: (data: chat.bsky.group.createGroup.$OutputBody) => void
+  onSuccess?: (data: ChatBskyGroupCreateGroup.$OutputBody) => void
   onError?: (error: Error) => void
 }) {
   const queryClient = useQueryClient()
@@ -18,7 +18,7 @@ export function useCreateGroupChat({
 
   return useMutation({
     mutationFn: async ({name, members}: {name: string; members: string[]}) => {
-      return await client.call(chat.bsky.group.createGroup, {
+      return await client.call(ChatBskyGroupCreateGroup, {
         name,
         // callers pass already-resolved actor dids
         members: members as DidString[],

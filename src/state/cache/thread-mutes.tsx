@@ -8,7 +8,7 @@ import {
 import {type AtUriString} from '@atproto/syntax'
 
 import * as persisted from '#/state/persisted'
-import {app} from '#/lexicons'
+import * as AppBskyGraphMuteThread from '#/lexicons/app/bsky/graph/muteThread'
 import {useAppviewClient, useSession} from '../session'
 
 type StateContext = Map<string, boolean>
@@ -90,7 +90,7 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
           setThreadMute(root, true)
 
           await client
-            .call(app.bsky.graph.muteThread, {
+            .call(AppBskyGraphMuteThread, {
               // the persisted list only ever holds post at-uris
               root: root as AtUriString,
             })

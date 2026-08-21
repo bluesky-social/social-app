@@ -3,7 +3,7 @@ import {msg} from '@lingui/core/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {isDidBlockedInConvo} from '#/components/dms/getMessageInfo'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
 import * as bsky from '#/types/bsky'
 
 export type UserReactionInfo = {
@@ -18,16 +18,13 @@ export function getReactionInfo({
   primaryProfile,
   i18n,
 }: {
-  convo: chat.bsky.convo.defs.ConvoView
+  convo: ChatBskyConvoDefs.ConvoView
   currentAccountDid: string | undefined
   primaryProfile?: bsky.profile.AnyProfileView
   i18n: I18n
 }): UserReactionInfo | null {
   if (
-    !bsky.isType(
-      chat.bsky.convo.defs.messageAndReactionView,
-      convo.lastReaction,
-    )
+    !bsky.isType(ChatBskyConvoDefs.messageAndReactionView, convo.lastReaction)
   ) {
     return null
   }

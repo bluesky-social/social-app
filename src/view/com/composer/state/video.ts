@@ -17,7 +17,8 @@ import {uploadVideo} from '#/lib/media/video/upload'
 import {createTokenlessVideoServiceClient} from '#/lib/media/video/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {app} from '#/lexicons'
+import type * as AppBskyVideoDefs from '#/lexicons/app/bsky/video/defs'
+import * as AppBskyVideoGetJobStatus from '#/lexicons/app/bsky/video/getJobStatus'
 import {
   advanceVideoProgress,
   didSkipVideoCompression,
@@ -57,7 +58,7 @@ export type VideoAction =
     }
   | {
       type: 'update_job_status'
-      jobStatus: app.bsky.video.defs.JobStatus
+      jobStatus: AppBskyVideoDefs.JobStatus
       signal: AbortSignal
     }
 
@@ -127,7 +128,7 @@ type ProcessingState = {
   asset: ImagePickerAsset
   video: CompressedVideo
   jobId: string
-  jobStatus: app.bsky.video.defs.JobStatus | null
+  jobStatus: AppBskyVideoDefs.JobStatus | null
   pendingPublish?: undefined
   telemetry: VideoTelemetry
   altText: string
@@ -337,7 +338,7 @@ export async function processVideo(
     signal,
   })
 
-  let uploadResponse: app.bsky.video.defs.JobStatus | undefined
+  let uploadResponse: AppBskyVideoDefs.JobStatus | undefined
   try {
     telemetry.uploadStarted(video.size)
     uploadResponse = await uploadVideo({
@@ -381,10 +382,10 @@ export async function processVideo(
     }
 
     const videoClient = createTokenlessVideoServiceClient()
-    let status: app.bsky.video.defs.JobStatus | undefined
+    let status: AppBskyVideoDefs.JobStatus | undefined
     let blob: BlobRef | undefined
     try {
-      const response = await videoClient.call(app.bsky.video.getJobStatus, {
+      const response = await videoClient.call(AppBskyVideoGetJobStatus, {
         jobId,
       })
       status = response.jobStatus

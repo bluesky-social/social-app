@@ -3,7 +3,8 @@ import {
   type ReportCategoryConfig,
   type ReportOption,
 } from '#/components/moderation/ReportDialog/utils/useReportOptions'
-import {type app, tools} from '#/lexicons'
+import {type app} from '#/lexicons'
+import * as ToolsOzoneReportDefs from '#/lexicons/tools/ozone/report/defs'
 
 export type NciiQualification = {
   isDepicted?: boolean
@@ -124,7 +125,7 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
       }
     case 'selectOption': {
       const isNcii =
-        action.option.reason === tools.ozone.report.defs.reasonSexualNCII.value
+        action.option.reason === ToolsOzoneReportDefs.reasonSexualNCII.value
       return {
         ...state,
         selectedOption: action.option,

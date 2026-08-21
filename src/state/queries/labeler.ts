@@ -11,7 +11,9 @@ import {
 } from '#/state/queries/preferences'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient, usePdsClient} from '#/state/session'
-import {app} from '#/lexicons'
+import * as AppBskyActorGetProfiles from '#/lexicons/app/bsky/actor/getProfiles'
+import type * as AppBskyLabelerDefs from '#/lexicons/app/bsky/labeler/defs'
+import * as AppBskyLabelerGetServices from '#/lexicons/app/bsky/labeler/getServices'
 
 const labelerInfoQueryKeyRoot = 'labeler-info'
 export const labelerInfoQueryKey = (did: string) => [
@@ -40,11 +42,11 @@ export function useLabelerInfoQuery({
     enabled: !!did && enabled !== false,
     queryKey: labelerInfoQueryKey(did as string),
     queryFn: async () => {
-      const res = await client.call(app.bsky.labeler.getServices, {
+      const res = await client.call(AppBskyLabelerGetServices, {
         dids: [did! as DidString],
         detailed: true,
       })
-      return res.views[0] as app.bsky.labeler.defs.LabelerViewDetailed
+      return res.views[0] as AppBskyLabelerDefs.LabelerViewDetailed
     },
   })
 }
@@ -55,10 +57,10 @@ export function useLabelersInfoQuery({dids}: {dids: string[]}) {
     enabled: !!dids.length,
     queryKey: labelersInfoQueryKey(dids),
     queryFn: async () => {
-      const res = await client.call(app.bsky.labeler.getServices, {
+      const res = await client.call(AppBskyLabelerGetServices, {
         dids: dids as DidString[],
       })
-      return res.views as app.bsky.labeler.defs.LabelerView[]
+      return res.views as AppBskyLabelerDefs.LabelerView[]
     },
   })
 }
@@ -71,11 +73,11 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
     gcTime: GCTIME.INFINITY,
     staleTime: STALE.MINUTES.ONE,
     queryFn: async () => {
-      const res = await client.call(app.bsky.labeler.getServices, {
+      const res = await client.call(AppBskyLabelerGetServices, {
         dids: dids as DidString[],
         detailed: true,
       })
-      return res.views as app.bsky.labeler.defs.LabelerViewDetailed[]
+      return res.views as AppBskyLabelerDefs.LabelerViewDetailed[]
     },
   })
 }
@@ -126,7 +128,7 @@ export function useLabelerSubscriptionMutation() {
       ).map(l => l.did)
       const invalidLabelers: DidString[] = []
       if (labelerDids.length) {
-        const profiles = await appviewClient.call(app.bsky.actor.getProfiles, {
+        const profiles = await appviewClient.call(AppBskyActorGetProfiles, {
           actors: labelerDids,
         })
         if (profiles) {

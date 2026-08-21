@@ -2,7 +2,7 @@ import {type DidString} from '@atproto/syntax'
 import {useQuery} from '@tanstack/react-query'
 
 import {useChatClient, useSession} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoGetConvoAvailability from '#/lexicons/chat/bsky/convo/getConvoAvailability'
 import {STALE} from '..'
 
 const RQKEY_ROOT = 'convo-availability'
@@ -18,7 +18,7 @@ export function useGetConvoAvailabilityQuery(
   return useQuery({
     queryKey: RQKEY(did),
     queryFn: async () => {
-      return client.call(chat.bsky.convo.getConvoAvailability, {
+      return client.call(ChatBskyConvoGetConvoAvailability, {
         // callers pass an already-resolved actor did
         members: [did as DidString],
       })

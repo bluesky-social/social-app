@@ -21,14 +21,16 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {app, com} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyActorGetProfile from '#/lexicons/app/bsky/actor/getProfile'
+import * as ComGermnetworkDeclaration from '#/lexicons/com/germnetwork/declaration'
 import type * as bsky from '#/types/bsky'
 
 export function GermButton({
   germ,
   profile,
 }: {
-  germ: app.bsky.actor.defs.ProfileAssociatedGerm
+  germ: AppBskyActorDefs.ProfileAssociatedGerm
   profile: bsky.profile.AnyProfileView
 }) {
   const t = useTheme()
@@ -125,14 +127,14 @@ function GermSelfButton({did}: {did: string}) {
     mutationFn: async () => {
       const previousRecord = await pdsClient
         // the component takes the did as a plain string prop
-        .get(com.germnetwork.declaration, {
+        .get(ComGermnetworkDeclaration, {
           repo: did as DidString,
           rkey: 'self',
         })
         .then(res => res.value)
         .catch(() => null)
 
-      await pdsClient.delete(com.germnetwork.declaration, {
+      await pdsClient.delete(ComGermnetworkDeclaration, {
         repo: did as DidString,
         rkey: 'self',
       })
@@ -147,7 +149,7 @@ function GermSelfButton({did}: {did: string}) {
       async function undo() {
         if (!previousRecord) return
         try {
-          await pdsClient.put(com.germnetwork.declaration, previousRecord, {
+          await pdsClient.put(ComGermnetworkDeclaration, previousRecord, {
             repo: did as DidString,
             rkey: 'self',
           })
@@ -278,7 +280,7 @@ function GermSelfButton({did}: {did: string}) {
 }
 
 function constructGermUrl(
-  declaration: app.bsky.actor.defs.ProfileAssociatedGerm,
+  declaration: AppBskyActorDefs.ProfileAssociatedGerm,
   profile: bsky.profile.AnyProfileView,
   viewerDid?: string,
 ) {
@@ -326,14 +328,14 @@ function platform() {
 async function whenAppViewReady(
   appviewClient: Client,
   actor: string,
-  fn: (res: app.bsky.actor.getProfile.$OutputBody) => boolean,
+  fn: (res: AppBskyActorGetProfile.$OutputBody) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
     () =>
-      appviewClient.call(app.bsky.actor.getProfile, {
+      appviewClient.call(AppBskyActorGetProfile, {
         actor: actor as DidString,
       }),
   )

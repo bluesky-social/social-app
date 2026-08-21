@@ -34,7 +34,8 @@ import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
 import * as bsky from '#/types/bsky'
 
 export function Post({
@@ -44,16 +45,16 @@ export function Post({
   style,
   onBeforePress,
 }: {
-  post: app.bsky.feed.defs.PostView
+  post: AppBskyFeedDefs.PostView
   showReplyLine?: boolean
   hideTopBorder?: boolean
   style?: StyleProp<ViewStyle>
   onBeforePress?: () => void
 }) {
   const moderationOpts = useModerationOpts()
-  const record = useMemo<app.bsky.feed.post.Main | undefined>(
+  const record = useMemo<AppBskyFeedPost.Main | undefined>(
     () =>
-      bsky.matches(app.bsky.feed.post, post.record) ? post.record : undefined,
+      bsky.matches(AppBskyFeedPost, post.record) ? post.record : undefined,
     [post],
   )
   const postShadowed = usePostShadow(post)
@@ -103,8 +104,8 @@ function PostInner({
   style,
   onBeforePress: outerOnBeforePress,
 }: {
-  post: Shadow<app.bsky.feed.defs.PostView>
-  record: app.bsky.feed.post.Main
+  post: Shadow<AppBskyFeedDefs.PostView>
+  record: AppBskyFeedPost.Main
   richText: RichTextAPI
   moderation: ModerationDecision
   showReplyLine?: boolean

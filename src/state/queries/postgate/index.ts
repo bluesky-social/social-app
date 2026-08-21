@@ -16,7 +16,13 @@ import {
   POSTGATE_COLLECTION,
 } from '#/state/queries/postgate/util'
 import {usePdsClient} from '#/state/session'
-import {app, com} from '#/lexicons'
+import * as AppBskyEmbedRecord from '#/lexicons/app/bsky/embed/record'
+import * as AppBskyEmbedRecordWithMedia from '#/lexicons/app/bsky/embed/recordWithMedia'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPostgate from '#/lexicons/app/bsky/feed/postgate'
+import * as ComAtprotoIdentityResolveHandle from '#/lexicons/com/atproto/identity/resolveHandle'
+import * as ComAtprotoRepoGetRecord from '#/lexicons/com/atproto/repo/getRecord'
+import * as ComAtprotoRepoPutRecord from '#/lexicons/com/atproto/repo/putRecord'
 import * as bsky from '#/types/bsky'
 
 export async function getPostgateRecord({
@@ -25,11 +31,11 @@ export async function getPostgateRecord({
 }: {
   pdsClient: Client
   postUri: string
-}): Promise<app.bsky.feed.postgate.Main | undefined> {
+}): Promise<AppBskyFeedPostgate.Main | undefined> {
   const urip = new AtUri(postUri)
 
   if (!urip.host.startsWith('did:')) {
-    const {did} = await pdsClient.call(com.atproto.identity.resolveHandle, {
+    const {did} = await pdsClient.call(ComAtprotoIdentityResolveHandle, {
       handle: urip.host as HandleString,
     })
     urip.host = did
@@ -50,14 +56,14 @@ export async function getPostgateRecord({
         return true
       },
       () =>
-        pdsClient.call(com.atproto.repo.getRecord, {
+        pdsClient.call(ComAtprotoRepoGetRecord, {
           repo: urip.host,
           collection: POSTGATE_COLLECTION,
           rkey: urip.rkeySafe,
         }),
     )
 
-    if (data.value && bsky.matches(app.bsky.feed.postgate, data.value)) {
+    if (data.value && bsky.matches(AppBskyFeedPostgate, data.value)) {
       return data.value
     } else {
       return undefined
@@ -83,12 +89,12 @@ export async function writePostgateRecord({
 }: {
   pdsClient: Client
   postUri: string
-  postgate: app.bsky.feed.postgate.Main
+  postgate: AppBskyFeedPostgate.Main
 }) {
   const postUrip = new AtUri(postUri)
 
   await networkRetry(2, () =>
-    pdsClient.call(com.atproto.repo.putRecord, {
+    pdsClient.call(ComAtprotoRepoPutRecord, {
       repo: pdsClient.assertDid,
       collection: POSTGATE_COLLECTION,
       rkey: postUrip.rkeySafe,
@@ -106,8 +112,8 @@ export async function upsertPostgate(
     postUri: string
   },
   callback: (
-    postgate: app.bsky.feed.postgate.Main | undefined,
-  ) => Promise<app.bsky.feed.postgate.Main | undefined>,
+    postgate: AppBskyFeedPostgate.Main | undefined,
+  ) => Promise<AppBskyFeedPostgate.Main | undefined>,
 ) {
   const prev = await getPostgateRecord({
     pdsClient,
@@ -148,7 +154,7 @@ export function useWritePostgateMutation() {
       postgate,
     }: {
       postUri: string
-      postgate: app.bsky.feed.postgate.Main
+      postgate: AppBskyFeedPostgate.Main
     }) => {
       return writePostgateRecord({
         pdsClient,
@@ -168,7 +174,7 @@ export function useToggleQuoteDetachmentMutation() {
   const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const getPosts = useGetPosts()
-  const prevEmbed = useRef<app.bsky.feed.defs.PostView['embed']>(undefined)
+  const prevEmbed = useRef<AppBskyFeedDefs.PostView['embed']>(undefined)
 
   return useMutation({
     mutationFn: async ({
@@ -176,7 +182,7 @@ export function useToggleQuoteDetachmentMutation() {
       quoteUri,
       action,
     }: {
-      post: app.bsky.feed.defs.PostView
+      post: AppBskyFeedDefs.PostView
       quoteUri: AtUriString
       action: 'detach' | 'reattach'
     }) => {
@@ -242,8 +248,8 @@ export function useToggleQuoteDetachmentMutation() {
       if (action === 'detach' && prevEmbed.current) {
         // detach failed, add the embed back
         if (
-          bsky.isType(app.bsky.embed.record.view, prevEmbed.current) ||
-          bsky.isType(app.bsky.embed.recordWithMedia.view, prevEmbed.current)
+          bsky.isType(AppBskyEmbedRecord.view, prevEmbed.current) ||
+          bsky.isType(AppBskyEmbedRecordWithMedia.view, prevEmbed.current)
         ) {
           updatePostShadow(queryClient, post.uri, {
             embed: prevEmbed.current,

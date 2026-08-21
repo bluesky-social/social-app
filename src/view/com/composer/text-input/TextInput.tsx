@@ -27,7 +27,7 @@ import {
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
 import {IS_ANDROID} from '#/env'
-import {app} from '#/lexicons'
+import * as AppBskyRichtextFacet from '#/lexicons/app/bsky/richtext/facet'
 import * as bsky from '#/types/bsky'
 import {Autocomplete} from './mobile/Autocomplete'
 import {type TextInputProps} from './TextInput.types'
@@ -90,7 +90,7 @@ export function TextInput({
       if (newRt.facets) {
         for (const facet of newRt.facets) {
           for (const feature of facet.features) {
-            if (bsky.isType(app.bsky.richtext.facet.link, feature)) {
+            if (bsky.isType(AppBskyRichtextFacet.link, feature)) {
               if (isUriImage(feature.uri)) {
                 const res = await downloadAndResize({
                   uri: feature.uri,

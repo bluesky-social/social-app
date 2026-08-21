@@ -9,7 +9,8 @@ import {logger} from '#/logger'
 import {STALE} from '#/state/queries/index'
 import {createQueryKey, type StructuredQueryKey} from '#/state/queries/util'
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import * as ChatBskyGroupDefs from '#/lexicons/chat/bsky/group/defs'
+import * as ChatBskyGroupGetJoinLinkPreviews from '#/lexicons/chat/bsky/group/getJoinLinkPreviews'
 import * as bsky from '#/types/bsky'
 
 /**
@@ -18,9 +19,9 @@ import * as bsky from '#/types/bsky'
  * `ChatInvitePreview` for that.
  */
 export type KnownChatInvitePreview =
-  | $Typed<chat.bsky.group.defs.JoinLinkPreviewView>
-  | $Typed<chat.bsky.group.defs.DisabledJoinLinkPreviewView>
-  | $Typed<chat.bsky.group.defs.InvalidJoinLinkPreviewView>
+  | $Typed<ChatBskyGroupDefs.JoinLinkPreviewView>
+  | $Typed<ChatBskyGroupDefs.DisabledJoinLinkPreviewView>
+  | $Typed<ChatBskyGroupDefs.InvalidJoinLinkPreviewView>
 
 /**
  * The full open-union shape, including lex's `Unknown$TypedObject` fallback for
@@ -36,9 +37,9 @@ export function isKnownJoinLinkPreview(
   preview: unknown,
 ): preview is KnownChatInvitePreview {
   return (
-    bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, preview) ||
-    bsky.isType(chat.bsky.group.defs.disabledJoinLinkPreviewView, preview) ||
-    bsky.isType(chat.bsky.group.defs.invalidJoinLinkPreviewView, preview)
+    bsky.isType(ChatBskyGroupDefs.joinLinkPreviewView, preview) ||
+    bsky.isType(ChatBskyGroupDefs.disabledJoinLinkPreviewView, preview) ||
+    bsky.isType(ChatBskyGroupDefs.invalidJoinLinkPreviewView, preview)
   )
 }
 
@@ -87,7 +88,7 @@ export function setJoinLinkPreviewRequestedForCode(
   code: string,
   requested: boolean,
 ) {
-  queryClient.setQueriesData<chat.bsky.group.getJoinLinkPreviews.$OutputBody>(
+  queryClient.setQueriesData<ChatBskyGroupGetJoinLinkPreviews.$OutputBody>(
     {
       predicate: query => {
         const [root, args] = query.queryKey as Partial<
@@ -106,7 +107,7 @@ export function setJoinLinkPreviewRequestedForCode(
         ...old,
         joinLinkPreviews: old.joinLinkPreviews.map(preview => {
           if (
-            bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, preview) &&
+            bsky.isType(ChatBskyGroupDefs.joinLinkPreviewView, preview) &&
             preview.code === code
           ) {
             return {
@@ -142,11 +143,11 @@ export function invalidateJoinLinkPreviewsForConvo(
       const [root] = query.queryKey
       if (root !== joinLinkPreviewQueryKeyRoot) return false
       const data = query.state.data as
-        chat.bsky.group.getJoinLinkPreviews.$OutputBody | undefined
+        ChatBskyGroupGetJoinLinkPreviews.$OutputBody | undefined
       return (
         data?.joinLinkPreviews.some(
           preview =>
-            bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, preview) &&
+            bsky.isType(ChatBskyGroupDefs.joinLinkPreviewView, preview) &&
             preview.convoId === convoId,
         ) ?? false
       )
@@ -184,7 +185,7 @@ async function fetchJoinLinkPreviews({
   hasSession: boolean
 }) {
   return await (hasSession ? client : getPublicChatClient()).call(
-    chat.bsky.group.getJoinLinkPreviews,
+    ChatBskyGroupGetJoinLinkPreviews,
     {codes},
   )
 }
@@ -202,7 +203,7 @@ export function useJoinLinkPreviewsQuery({
    * Seed the query with an already-known preview (e.g. a DM message embed
    * already carries the resolved view), avoiding a duplicate fetch.
    */
-  initialData?: chat.bsky.group.getJoinLinkPreviews.$OutputBody
+  initialData?: ChatBskyGroupGetJoinLinkPreviews.$OutputBody
 }) {
   const client = useChatClient()
 

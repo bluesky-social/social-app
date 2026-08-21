@@ -13,7 +13,8 @@ import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {com, tools} from '#/lexicons'
+import * as ComAtprotoModerationCreateReport from '#/lexicons/com/atproto/moderation/createReport'
+import * as ToolsOzoneReportDefs from '#/lexicons/tools/ozone/report/defs'
 
 export function ChatDisabled({
   shape = 'pill',
@@ -100,9 +101,9 @@ function DialogInner() {
       if (!currentAccount)
         throw new Error('No current account, should be unreachable')
       await client.call(
-        com.atproto.moderation.createReport,
+        ComAtprotoModerationCreateReport,
         {
-          reasonType: tools.ozone.report.defs.reasonAppeal.value,
+          reasonType: ToolsOzoneReportDefs.reasonAppeal.value,
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
             did: currentAccount.did,

@@ -42,7 +42,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import * as AppBskyContactDismissMatch from '#/lexicons/app/bsky/contact/dismissMatch'
 import type * as bsky from '#/types/bsky'
 import {InviteInfo} from '../components/InviteInfo'
 import {type Action, type Contact, type Match, type State} from '../state'
@@ -224,7 +224,7 @@ export function ViewMatches({
 
   const {mutate: dismissMatch} = useMutation({
     mutationFn: async (did: string) => {
-      await client.call(app.bsky.contact.dismissMatch, {
+      await client.call(AppBskyContactDismissMatch, {
         subject: did as DidString,
       })
     },

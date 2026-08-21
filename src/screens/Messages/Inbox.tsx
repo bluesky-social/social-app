@@ -39,7 +39,9 @@ import {ListFooter} from '#/components/Lists'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import type * as ChatBskyConvoListConvoRequests from '#/lexicons/chat/bsky/convo/listConvoRequests'
+import * as ChatBskyGroupDefs from '#/lexicons/chat/bsky/group/defs'
 import * as bsky from '#/types/bsky'
 import {IncomingRequestListItem} from './components/IncomingRequestListItem'
 import {OutgoingRequestListItem} from './components/OutgoingRequestListItem'
@@ -48,8 +50,8 @@ import {useIsWithinSplitView} from './components/splitView/context'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>
 
 type RequestItem =
-  | {type: 'incoming'; view: chat.bsky.convo.defs.ConvoView}
-  | {type: 'outgoing'; view: chat.bsky.group.defs.JoinRequestConvoView}
+  | {type: 'incoming'; view: ChatBskyConvoDefs.ConvoView}
+  | {type: 'outgoing'; view: ChatBskyGroupDefs.JoinRequestConvoView}
 
 export function MessagesInboxScreen(props: Props) {
   const {t: l} = useLingui()
@@ -72,11 +74,9 @@ export function MessagesInboxScreenInner({}: Props) {
     const items: RequestItem[] = []
     for (const page of data.pages) {
       for (const item of page.requests) {
-        if (bsky.isType(chat.bsky.convo.defs.convoView, item)) {
+        if (bsky.isType(ChatBskyConvoDefs.convoView, item)) {
           items.push({type: 'incoming', view: item})
-        } else if (
-          bsky.isType(chat.bsky.group.defs.joinRequestConvoView, item)
-        ) {
+        } else if (bsky.isType(ChatBskyGroupDefs.joinRequestConvoView, item)) {
           items.push({type: 'outgoing', view: item})
         }
       }
@@ -111,7 +111,7 @@ function RequestList({
   conversations,
 }: {
   listConvosQuery: UseInfiniteQueryResult<
-    InfiniteData<chat.bsky.convo.listConvoRequests.$OutputBody>,
+    InfiniteData<ChatBskyConvoListConvoRequests.$OutputBody>,
     Error
   >
   conversations: RequestItem[]

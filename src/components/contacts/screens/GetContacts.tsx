@@ -29,7 +29,8 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {app} from '#/lexicons'
+import type * as AppBskyActorProfile from '#/lexicons/app/bsky/actor/profile'
+import * as AppBskyContactImportContacts from '#/lexicons/app/bsky/contact/importContacts'
 import {
   contactsWithPhoneNumbersOnly,
   filterMatchedNumbers,
@@ -86,7 +87,7 @@ export function GetContacts({
       )
 
       if (phoneNumbers.length > 0) {
-        const res = await appviewClient.call(app.bsky.contact.importContacts, {
+        const res = await appviewClient.call(AppBskyContactImportContacts, {
           token: state.token,
           contacts: phoneNumbers.slice(0, MAX_UPLOAD_COUNT),
         })
@@ -151,7 +152,7 @@ export function GetContacts({
         )
         return
       }
-      switch (matchXrpcError(err, app.bsky.contact.importContacts)) {
+      switch (matchXrpcError(err, AppBskyContactImportContacts)) {
         case 'TooManyContacts':
           Toast.show(
             _(
@@ -341,7 +342,7 @@ async function createProfileRecord(
       : undefined
 
   await pdsClient.call(upsertProfile, async existing => {
-    let next: Un$Typed<app.bsky.actor.profile.Main> = existing ?? {}
+    let next: Un$Typed<AppBskyActorProfile.Main> = existing ?? {}
 
     if (blobPromise) {
       const res = await blobPromise

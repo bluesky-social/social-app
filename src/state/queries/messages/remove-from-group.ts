@@ -7,7 +7,10 @@ import {
 
 import {logger} from '#/logger'
 import {useChatClient} from '#/state/session'
-import {chat} from '#/lexicons'
+import type * as ChatBskyActorDefs from '#/lexicons/chat/bsky/actor/defs'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import type * as ChatBskyConvoListConvos from '#/lexicons/chat/bsky/convo/listConvos'
+import * as ChatBskyGroupRemoveMembers from '#/lexicons/chat/bsky/group/removeMembers'
 import * as bsky from '#/types/bsky'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
@@ -19,7 +22,7 @@ export function useRemoveFromGroupChat(
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: chat.bsky.group.removeMembers.$OutputBody) => void
+    onSuccess?: (data: ChatBskyGroupRemoveMembers.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -29,7 +32,7 @@ export function useRemoveFromGroupChat(
   return useMutation({
     mutationFn: async ({members}: {members: string[]}) => {
       if (!convoId) throw new Error('No convoId provided')
-      return await client.call(chat.bsky.group.removeMembers, {
+      return await client.call(ChatBskyGroupRemoveMembers, {
         convoId,
         // callers pass already-resolved actor dids
         members: members as DidString[],
@@ -38,24 +41,23 @@ export function useRemoveFromGroupChat(
     onMutate: ({members}) => {
       if (!convoId) return
 
-      const prevConvo =
-        queryClient.getQueryData<chat.bsky.convo.defs.ConvoView>(
-          CONVO_KEY(convoId),
-        )
+      const prevConvo = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
+        CONVO_KEY(convoId),
+      )
       const prevListEntries = queryClient.getQueriesData<
-        InfiniteData<chat.bsky.convo.listConvos.$OutputBody>
+        InfiniteData<ChatBskyConvoListConvos.$OutputBody>
       >({queryKey: [CONVO_LIST_KEY]})
       const prevMemberList = queryClient.getQueryData<
-        chat.bsky.actor.defs.ProfileViewBasic[]
+        ChatBskyActorDefs.ProfileViewBasic[]
       >(listConvoMembersQueryKey(convoId))
 
-      queryClient.setQueryData<chat.bsky.convo.defs.ConvoView>(
+      queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
         CONVO_KEY(convoId),
         prev => {
           if (!prev) return
           const nextMembers = prev.members.filter(m => !members.includes(m.did))
           const removed = prev.members.length - nextMembers.length
-          if (!bsky.isType(chat.bsky.convo.defs.groupConvo, prev.kind)) {
+          if (!bsky.isType(ChatBskyConvoDefs.groupConvo, prev.kind)) {
             return {...prev, members: nextMembers}
           }
           return {
@@ -70,7 +72,7 @@ export function useRemoveFromGroupChat(
       )
 
       queryClient.setQueriesData<
-        InfiniteData<chat.bsky.convo.listConvos.$OutputBody>
+        InfiniteData<ChatBskyConvoListConvos.$OutputBody>
       >({queryKey: [CONVO_LIST_KEY]}, prev => {
         if (!prev?.pages) return
         return {
@@ -83,7 +85,7 @@ export function useRemoveFromGroupChat(
                 m => !members.includes(m.did),
               )
               const removed = convo.members.length - nextMembers.length
-              if (!bsky.isType(chat.bsky.convo.defs.groupConvo, convo.kind)) {
+              if (!bsky.isType(ChatBskyConvoDefs.groupConvo, convo.kind)) {
                 return {...convo, members: nextMembers}
               }
               return {
@@ -99,7 +101,7 @@ export function useRemoveFromGroupChat(
         }
       })
 
-      queryClient.setQueryData<chat.bsky.actor.defs.ProfileViewBasic[]>(
+      queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
         listConvoMembersQueryKey(convoId),
         prev => {
           if (!prev) return

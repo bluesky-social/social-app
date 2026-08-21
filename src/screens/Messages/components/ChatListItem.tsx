@@ -52,7 +52,7 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
 import * as bsky from '#/types/bsky'
 import {useIsWithinSplitView} from './splitView/context'
 
@@ -64,7 +64,7 @@ export function ChatListItem({
   selected = false,
   children,
 }: {
-  convo: chat.bsky.convo.defs.ConvoView
+  convo: ChatBskyConvoDefs.ConvoView
   showMenu?: boolean
   selected?: boolean
   children?: React.ReactNode
@@ -315,10 +315,7 @@ function BaseChatItem({
 
     // Deleted message
     if (
-      bsky.isType(
-        chat.bsky.convo.defs.deletedMessageView,
-        convo.view.lastMessage,
-      )
+      bsky.isType(ChatBskyConvoDefs.deletedMessageView, convo.view.lastMessage)
     ) {
       lastMessageSentAt = convo.view.lastMessage.sentAt
 
@@ -328,7 +325,7 @@ function BaseChatItem({
     }
 
     // Message
-    if (bsky.isType(chat.bsky.convo.defs.messageView, convo.view.lastMessage)) {
+    if (bsky.isType(ChatBskyConvoDefs.messageView, convo.view.lastMessage)) {
       const info = getMessageInfo({
         convo: convo.view,
         currentAccountDid: currentAccount?.did,
@@ -346,7 +343,7 @@ function BaseChatItem({
     // Reaction
     if (
       bsky.isType(
-        chat.bsky.convo.defs.messageAndReactionView,
+        ChatBskyConvoDefs.messageAndReactionView,
         convo.view.lastReaction,
       )
     ) {
@@ -369,10 +366,7 @@ function BaseChatItem({
 
     // System message
     if (
-      bsky.isType(
-        chat.bsky.convo.defs.systemMessageView,
-        convo.view.lastMessage,
-      )
+      bsky.isType(ChatBskyConvoDefs.systemMessageView, convo.view.lastMessage)
     ) {
       const info = getSystemMessageInfo(
         convo.view.lastMessage.data,

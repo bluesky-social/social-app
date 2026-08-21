@@ -6,7 +6,8 @@ import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyActorSearchActorsTypeahead from '#/lexicons/app/bsky/actor/searchActorsTypeahead'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from './preferences'
 
@@ -32,12 +33,12 @@ export function useActorAutocompleteQuery(
     prefix = prefix.slice(0, -1)
   }
 
-  return useQuery<app.bsky.actor.defs.ProfileViewBasic[]>({
+  return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(prefix || ''),
     async queryFn() {
       const data = prefix
-        ? await client.call(app.bsky.actor.searchActorsTypeahead, {
+        ? await client.call(AppBskyActorSearchActorsTypeahead, {
             q: prefix,
             limit: limit || 8,
           })
@@ -45,7 +46,7 @@ export function useActorAutocompleteQuery(
       return data?.actors || []
     },
     select: useCallback(
-      (data: app.bsky.actor.defs.ProfileViewBasic[]) => {
+      (data: AppBskyActorDefs.ProfileViewBasic[]) => {
         return computeSuggestions({
           q: prefix,
           searched: data,
@@ -74,7 +75,7 @@ export function useActorAutocompleteFn() {
             staleTime: STALE.MINUTES.ONE,
             queryKey: RQKEY(query || ''),
             queryFn: () =>
-              client.call(app.bsky.actor.searchActorsTypeahead, {
+              client.call(AppBskyActorSearchActorsTypeahead, {
                 q: query,
                 limit,
               }),
@@ -102,10 +103,10 @@ function computeSuggestions({
   moderationOpts,
 }: {
   q?: string
-  searched?: app.bsky.actor.defs.ProfileViewBasic[]
+  searched?: AppBskyActorDefs.ProfileViewBasic[]
   moderationOpts: ModerationOpts
 }) {
-  let items: app.bsky.actor.defs.ProfileViewBasic[] = []
+  let items: AppBskyActorDefs.ProfileViewBasic[] = []
   for (const item of searched) {
     if (!items.find(item2 => item2.handle === item.handle)) {
       items.push(item)

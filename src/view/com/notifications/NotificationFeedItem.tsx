@@ -67,13 +67,19 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {app, chat} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphFollow from '#/lexicons/app/bsky/graph/follow'
+import * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
+import * as ChatBskyConvoGetConvoForMembers from '#/lexicons/chat/bsky/convo/getConvoForMembers'
 import * as bsky from '#/types/bsky'
 
 const MAX_AUTHORS = 5
 
 interface Author {
-  profile: app.bsky.actor.defs.ProfileView
+  profile: AppBskyActorDefs.ProfileView
   href: string
   moderation: ModerationDecision
 }
@@ -186,7 +192,7 @@ let NotificationFeedItem = ({
     if (item.type !== 'follow') return false
     if (
       item.notification.author.viewer?.following &&
-      bsky.isType(app.bsky.graph.follow, item.notification.record)
+      bsky.isType(AppBskyGraphFollow, item.notification.record)
     ) {
       let followingTimestamp
       try {
@@ -722,7 +728,7 @@ export {NotificationFeedItem}
 function FollowedViaStarterPack({
   starterPack,
 }: {
-  starterPack: app.bsky.graph.defs.StarterPackViewBasic
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic
 }) {
   const t = useTheme()
   const link = useStarterPackLink({view: starterPack})
@@ -756,9 +762,9 @@ function FollowedViaStarterPack({
 }
 
 function getStarterPackName(
-  starterPack: app.bsky.graph.defs.StarterPackViewBasic,
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic,
 ) {
-  return bsky.isType(app.bsky.graph.starterpack, starterPack.record)
+  return bsky.isType(AppBskyGraphStarterpack, starterPack.record)
     ? starterPack.record.name
     : undefined
 }
@@ -792,11 +798,7 @@ function ExpandListPressable({
   }
 }
 
-function FollowBackButton({
-  profile,
-}: {
-  profile: app.bsky.actor.defs.ProfileView
-}) {
+function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   const {t: l} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const profileShadow = useProfileShadow(profile)
@@ -902,7 +904,7 @@ function FollowBackButton({
   )
 }
 
-function SayHelloBtn({profile}: {profile: app.bsky.actor.defs.ProfileView}) {
+function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
   const {t: l} = useLingui()
   const client = useChatClient()
   const {currentAccount} = useSession()
@@ -912,7 +914,7 @@ function SayHelloBtn({profile}: {profile: app.bsky.actor.defs.ProfileView}) {
   const onPress = async () => {
     try {
       setIsLoading(true)
-      const data = await client.call(chat.bsky.convo.getConvoForMembers, {
+      const data = await client.call(ChatBskyConvoGetConvoForMembers, {
         members: [profile.did, currentAccount!.did],
       })
       navigation.navigate('MessagesConversation', {
@@ -1134,9 +1136,9 @@ function ExpandedAuthorProfileCard({
   )
 }
 
-function AdditionalPostText({post}: {post?: app.bsky.feed.defs.PostView}) {
+function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
-  if (post && bsky.isType(app.bsky.feed.post, post?.record)) {
+  if (post && bsky.isType(AppBskyFeedPost, post?.record)) {
     const text = post.record.text
 
     return (

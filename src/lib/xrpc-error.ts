@@ -9,7 +9,7 @@ import {
   XrpcResponseError,
 } from '@atproto/lex'
 
-import {com} from '#/lexicons'
+import * as ComAtprotoRepoGetRecord from '#/lexicons/com/atproto/repo/getRecord'
 
 /**
  * True for an XRPC error from a lex `Client` (`XrpcError` is the abstract base
@@ -104,7 +104,7 @@ export function matchXrpcError<M extends Procedure | Query>(
  * turn a previously-handled absence into a thrown error.
  */
 export function isRecordNotFoundError(e: unknown): boolean {
-  if (matchXrpcError(e, com.atproto.repo.getRecord) === 'RecordNotFound') {
+  if (matchXrpcError(e, ComAtprotoRepoGetRecord) === 'RecordNotFound') {
     return true
   }
   return e instanceof Error && e.message.includes('Could not locate record:')

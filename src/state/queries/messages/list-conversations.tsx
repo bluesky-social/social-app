@@ -13,7 +13,9 @@ import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {invalidateJoinLinkPreviewsForConvo} from '#/state/queries/join-links'
 import {useChatClient, useSession} from '#/state/session'
-import {chat} from '#/lexicons'
+import type * as ChatBskyActorDefs from '#/lexicons/chat/bsky/actor/defs'
+import * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import * as ChatBskyConvoListConvos from '#/lexicons/chat/bsky/convo/listConvos'
 import * as bsky from '#/types/bsky'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {
@@ -60,7 +62,7 @@ export const RQKEY_PARTIAL = (
  * filters client-side or convos leak into lists that should exclude them.
  */
 export function convoMatchesQueryKey(
-  convo: chat.bsky.convo.defs.ConvoView,
+  convo: ChatBskyConvoDefs.ConvoView,
   queryKey: QueryKey,
 ): boolean {
   const [, status, readState, kind, lockStatus] = queryKey as ReturnType<
@@ -68,7 +70,7 @@ export function convoMatchesQueryKey(
   >
   if (status !== 'all' && status !== convo.status) return false
   if (readState === 'unread' && convo.unreadCount === 0) return false
-  if (bsky.isType(chat.bsky.convo.defs.groupConvo, convo.kind)) {
+  if (bsky.isType(ChatBskyConvoDefs.groupConvo, convo.kind)) {
     if (kind === 'direct') return false
     if (lockStatus && convo.kind.lockStatus !== lockStatus) return false
   } else {
@@ -86,7 +88,7 @@ export function convoMatchesQueryKey(
  * longer matches (e.g. unreadCount dropped to 0), mirroring how read/mute
  * log events update convos in place everywhere.
  */
-export function convoListQueryPredicate(convo: chat.bsky.convo.defs.ConvoView) {
+export function convoListQueryPredicate(convo: ChatBskyConvoDefs.ConvoView) {
   return (query: Query): boolean => {
     const data = query.state.data as ConvoListQueryData | undefined
     if (data && getConvoFromQueryData(convo.id, data)) return true
@@ -117,7 +119,7 @@ export function useListConvosQuery({
     enabled,
     queryKey: RQKEY(status ?? 'all', readState, kind, lockStatus, limit),
     queryFn: async ({pageParam}) => {
-      return await client.call(chat.bsky.convo.listConvos, {
+      return await client.call(ChatBskyConvoListConvos, {
         limit,
         cursor: pageParam,
         readState: readState === 'unread' ? 'unread' : undefined,
@@ -188,10 +190,10 @@ export function ListConvosProviderInner({
         function mutateMembers(
           convoId: string,
           fn: (
-            members: chat.bsky.actor.defs.ProfileViewBasic[],
-          ) => chat.bsky.actor.defs.ProfileViewBasic[],
+            members: ChatBskyActorDefs.ProfileViewBasic[],
+          ) => ChatBskyActorDefs.ProfileViewBasic[],
         ) {
-          queryClient.setQueryData<chat.bsky.actor.defs.ProfileViewBasic[]>(
+          queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
             listConvoMembersQueryKey(convoId),
             old => {
               if (!old) return // query doesn't exist yet, skip
@@ -203,8 +205,8 @@ export function ListConvosProviderInner({
         function updateConvoInAllLists(
           convoId: string,
           fn: (
-            convo: chat.bsky.convo.defs.ConvoView,
-          ) => chat.bsky.convo.defs.ConvoView,
+            convo: ChatBskyConvoDefs.ConvoView,
+          ) => ChatBskyConvoDefs.ConvoView,
         ) {
           queryClient.setQueriesData<ConvoListQueryData>(
             {queryKey: [RQKEY_ROOT]},
@@ -219,10 +221,10 @@ export function ListConvosProviderInner({
         function mutateConvoView(
           convoId: string,
           fn: (
-            convo: chat.bsky.convo.defs.ConvoView,
-          ) => chat.bsky.convo.defs.ConvoView,
+            convo: ChatBskyConvoDefs.ConvoView,
+          ) => ChatBskyConvoDefs.ConvoView,
         ) {
-          queryClient.setQueryData<chat.bsky.convo.defs.ConvoView>(
+          queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
             CONVO_KEY(convoId),
             old => (old ? fn(old) : old),
           )
@@ -243,7 +245,7 @@ export function ListConvosProviderInner({
         function handleMemberAdded(
           convoId: string,
           did: string,
-          relatedProfiles: chat.bsky.actor.defs.ProfileViewBasic[],
+          relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
           rev: string,
         ) {
           const newMember = relatedProfiles.find(r => r.did === did)
@@ -252,7 +254,7 @@ export function ListConvosProviderInner({
           // memberCount bump to avoid double-counting.
           const alreadyKnownMember =
             queryClient
-              .getQueryData<chat.bsky.actor.defs.ProfileViewBasic[]>(
+              .getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
                 listConvoMembersQueryKey(convoId),
               )
               ?.some(m => m.did === did) ?? false
@@ -276,7 +278,7 @@ export function ListConvosProviderInner({
           // list, skip the memberCount decrement to avoid double-counting.
           const alreadyRemovedMember =
             queryClient
-              .getQueryData<chat.bsky.actor.defs.ProfileViewBasic[]>(
+              .getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
                 listConvoMembersQueryKey(convoId),
               )
               ?.some(m => m.did === did) === false
@@ -290,34 +292,31 @@ export function ListConvosProviderInner({
         }
 
         for (const log of events.logs) {
-          if (bsky.isType(chat.bsky.convo.defs.logBeginConvo, log)) {
+          if (bsky.isType(ChatBskyConvoDefs.logBeginConvo, log)) {
             debouncedRefetch()
-          } else if (bsky.isType(chat.bsky.convo.defs.logLeaveConvo, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logLeaveConvo, log)) {
             deleteConvoFromAllLists(log.convoId)
             // The viewer is no longer in this convo (they left on another
             // device, or were removed - removed members receive a
             // logLeaveConvo, not a logRemoveMember). Refetch any cached join
             // link preview so its viewer state reflects the lost membership.
             void invalidateJoinLinkPreviewsForConvo(queryClient, log.convoId)
-          } else if (bsky.isType(chat.bsky.convo.defs.logDeleteMessage, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logDeleteMessage, log)) {
             updateConvoInAllLists(
               log.convoId,
               withRevGuard(log.rev, convo => {
                 if (
                   (bsky.isType(
-                    chat.bsky.convo.defs.deletedMessageView,
+                    ChatBskyConvoDefs.deletedMessageView,
                     log.message,
                   ) ||
-                    bsky.isType(
-                      chat.bsky.convo.defs.messageView,
-                      log.message,
-                    )) &&
+                    bsky.isType(ChatBskyConvoDefs.messageView, log.message)) &&
                   (bsky.isType(
-                    chat.bsky.convo.defs.deletedMessageView,
+                    ChatBskyConvoDefs.deletedMessageView,
                     convo.lastMessage,
                   ) ||
                     bsky.isType(
-                      chat.bsky.convo.defs.messageView,
+                      ChatBskyConvoDefs.messageView,
                       convo.lastMessage,
                     ))
                 ) {
@@ -333,9 +332,9 @@ export function ListConvosProviderInner({
                 }
               }),
             )
-          } else if (bsky.isType(chat.bsky.convo.defs.logCreateMessage, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logCreateMessage, log)) {
             // Store in a new var to avoid TS errors due to closures.
-            const logRef: chat.bsky.convo.defs.LogCreateMessage = log
+            const logRef: ChatBskyConvoDefs.LogCreateMessage = log
 
             // Get all matching queries
             const queries = queryClient.getQueriesData<ConvoListQueryData>({
@@ -343,7 +342,7 @@ export function ListConvosProviderInner({
             })
 
             // Check if convo exists in any query
-            let foundConvo: chat.bsky.convo.defs.ConvoView | null = null
+            let foundConvo: ChatBskyConvoDefs.ConvoView | null = null
             for (const [_key, query] of queries) {
               if (!query) continue
               const convo = getConvoFromQueryData(logRef.convoId, query)
@@ -387,11 +386,11 @@ export function ListConvosProviderInner({
               unreadCount:
                 foundConvo.id !== currentConvoId
                   ? (bsky.isType(
-                      chat.bsky.convo.defs.messageView,
+                      ChatBskyConvoDefs.messageView,
                       logRef.message,
                     ) ||
                       bsky.isType(
-                        chat.bsky.convo.defs.deletedMessageView,
+                        ChatBskyConvoDefs.deletedMessageView,
                         logRef.message,
                       )) &&
                     logRef.message.sender.did !== currentAccount?.did
@@ -400,9 +399,7 @@ export function ListConvosProviderInner({
                   : 0,
             }
 
-            function filterConvoFromPage(
-              convo: chat.bsky.convo.defs.ConvoView[],
-            ) {
+            function filterConvoFromPage(convo: ChatBskyConvoDefs.ConvoView[]) {
               return convo.filter(c => c.id !== logRef.convoId)
             }
 
@@ -465,7 +462,7 @@ export function ListConvosProviderInner({
                 old => moveConvoToTopInRequests(updatedConvo, old),
               )
             }
-          } else if (bsky.isType(chat.bsky.convo.defs.logReadMessage, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logReadMessage, log)) {
             updateConvoInAllLists(
               log.convoId,
               withRevGuard(log.rev, convo => ({
@@ -474,7 +471,7 @@ export function ListConvosProviderInner({
                 rev: log.rev,
               })),
             )
-          } else if (bsky.isType(chat.bsky.convo.defs.logReadConvo, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logReadConvo, log)) {
             updateConvoInAllLists(
               log.convoId,
               withRevGuard(log.rev, convo => ({
@@ -483,12 +480,12 @@ export function ListConvosProviderInner({
                 rev: log.rev,
               })),
             )
-          } else if (bsky.isType(chat.bsky.convo.defs.logAcceptConvo, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logAcceptConvo, log)) {
             const requestQueries =
               queryClient.getQueriesData<ConvoListQueryData>({
                 queryKey: RQKEY_PARTIAL('request'),
               })
-            let foundConvo: chat.bsky.convo.defs.ConvoView | null = null
+            let foundConvo: ChatBskyConvoDefs.ConvoView | null = null
             for (const [_key, data] of requestQueries) {
               if (!data) continue
               foundConvo = getConvoFromQueryData(log.convoId, data)
@@ -504,7 +501,7 @@ export function ListConvosProviderInner({
             if (log.rev <= foundConvo.rev) {
               continue
             }
-            const acceptedConvo: chat.bsky.convo.defs.ConvoView = {
+            const acceptedConvo: ChatBskyConvoDefs.ConvoView = {
               ...foundConvo,
               status: 'accepted',
               rev: log.rev,
@@ -565,7 +562,7 @@ export function ListConvosProviderInner({
                 }
               },
             )
-          } else if (bsky.isType(chat.bsky.convo.defs.logMuteConvo, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logMuteConvo, log)) {
             mutateConvoView(
               log.convoId,
               withRevGuard(log.rev, convo => ({
@@ -574,7 +571,7 @@ export function ListConvosProviderInner({
                 rev: log.rev,
               })),
             )
-          } else if (bsky.isType(chat.bsky.convo.defs.logUnmuteConvo, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logUnmuteConvo, log)) {
             mutateConvoView(
               log.convoId,
               withRevGuard(log.rev, convo => ({
@@ -583,11 +580,11 @@ export function ListConvosProviderInner({
                 rev: log.rev,
               })),
             )
-          } else if (bsky.isType(chat.bsky.convo.defs.logLockConvo, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logLockConvo, log)) {
             mutateConvoView(
               log.convoId,
               withRevGuard(log.rev, convo => {
-                if (bsky.isType(chat.bsky.convo.defs.groupConvo, convo.kind)) {
+                if (bsky.isType(ChatBskyConvoDefs.groupConvo, convo.kind)) {
                   return {
                     ...convo,
                     kind: {...convo.kind, lockStatus: 'locked'},
@@ -602,11 +599,11 @@ export function ListConvosProviderInner({
             void queryClient.invalidateQueries({
               queryKey: CONVO_KEY(log.convoId),
             })
-          } else if (bsky.isType(chat.bsky.convo.defs.logUnlockConvo, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logUnlockConvo, log)) {
             mutateConvoView(
               log.convoId,
               withRevGuard(log.rev, convo => {
-                if (bsky.isType(chat.bsky.convo.defs.groupConvo, convo.kind)) {
+                if (bsky.isType(ChatBskyConvoDefs.groupConvo, convo.kind)) {
                   return {
                     ...convo,
                     kind: {
@@ -622,12 +619,12 @@ export function ListConvosProviderInner({
               }),
             )
           } else if (
-            bsky.isType(chat.bsky.convo.defs.logLockConvoPermanently, log)
+            bsky.isType(ChatBskyConvoDefs.logLockConvoPermanently, log)
           ) {
             mutateConvoView(
               log.convoId,
               withRevGuard(log.rev, convo => {
-                if (bsky.isType(chat.bsky.convo.defs.groupConvo, convo.kind)) {
+                if (bsky.isType(ChatBskyConvoDefs.groupConvo, convo.kind)) {
                   return {
                     ...convo,
                     kind: {...convo.kind, lockStatus: 'locked-permanently'},
@@ -638,20 +635,20 @@ export function ListConvosProviderInner({
               }),
             )
           } else if (
-            bsky.isType(chat.bsky.convo.defs.logCreateJoinLink, log) ||
-            bsky.isType(chat.bsky.convo.defs.logEditJoinLink, log) ||
-            bsky.isType(chat.bsky.convo.defs.logEnableJoinLink, log) ||
-            bsky.isType(chat.bsky.convo.defs.logDisableJoinLink, log)
+            bsky.isType(ChatBskyConvoDefs.logCreateJoinLink, log) ||
+            bsky.isType(ChatBskyConvoDefs.logEditJoinLink, log) ||
+            bsky.isType(ChatBskyConvoDefs.logEnableJoinLink, log) ||
+            bsky.isType(ChatBskyConvoDefs.logDisableJoinLink, log)
           ) {
             // Join link data not included in the log event, trigger refetch to get it
             debouncedRefetch()
-          } else if (bsky.isType(chat.bsky.convo.defs.logEditGroup, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logEditGroup, log)) {
             // Updated group details (name etc.) aren't included in the log
             // event, so refetch to pick them up.
             debouncedRefetch()
           } else if (
-            bsky.isType(chat.bsky.convo.defs.logApproveJoinRequest, log) ||
-            bsky.isType(chat.bsky.convo.defs.logRejectJoinRequest, log)
+            bsky.isType(ChatBskyConvoDefs.logApproveJoinRequest, log) ||
+            bsky.isType(ChatBskyConvoDefs.logRejectJoinRequest, log)
           ) {
             // Route through mutateConvoView (not updateConvoInAllLists) so the
             // single-convo cache updates too, keeping the in-convo requests
@@ -663,7 +660,7 @@ export function ListConvosProviderInner({
               ),
             )
           } else if (
-            bsky.isType(chat.bsky.convo.defs.logIncomingJoinRequest, log)
+            bsky.isType(ChatBskyConvoDefs.logIncomingJoinRequest, log)
           ) {
             // Route through mutateConvoView (not updateConvoInAllLists) so the
             // single-convo cache updates too, letting the in-convo requests
@@ -674,16 +671,14 @@ export function ListConvosProviderInner({
                 applyJoinRequestCountDelta(convo, log.rev, 1),
               ),
             )
-          } else if (
-            bsky.isType(chat.bsky.convo.defs.logReadJoinRequests, log)
-          ) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logReadJoinRequests, log)) {
             // The owner marked join requests as read (possibly on another
             // device). Zero the unread count but keep the total, mirroring the
             // useMarkJoinRequestsRead mutation.
             mutateConvoView(
               log.convoId,
               withRevGuard(log.rev, convo => {
-                if (!bsky.isType(chat.bsky.convo.defs.groupConvo, convo.kind)) {
+                if (!bsky.isType(ChatBskyConvoDefs.groupConvo, convo.kind)) {
                   return {...convo, rev: log.rev}
                 }
                 return {
@@ -694,16 +689,13 @@ export function ListConvosProviderInner({
               }),
             )
           } else if (
-            bsky.isType(chat.bsky.convo.defs.logOutgoingJoinRequest, log)
+            bsky.isType(ChatBskyConvoDefs.logOutgoingJoinRequest, log)
           ) {
             // Viewer isn't in the chat yet, but the inbox surfaces outgoing
             // requests, so refetch to pick up the new entry.
             debouncedRefetch()
           } else if (
-            bsky.isType(
-              chat.bsky.convo.defs.logWithdrawIncomingJoinRequest,
-              log,
-            )
+            bsky.isType(ChatBskyConvoDefs.logWithdrawIncomingJoinRequest, log)
           ) {
             // A requester rescinded their request to a group the viewer owns.
             // Mirror of isLogIncomingJoinRequest: decrement the counts.
@@ -714,10 +706,7 @@ export function ListConvosProviderInner({
               ),
             )
           } else if (
-            bsky.isType(
-              chat.bsky.convo.defs.logWithdrawOutgoingJoinRequest,
-              log,
-            )
+            bsky.isType(ChatBskyConvoDefs.logWithdrawOutgoingJoinRequest, log)
           ) {
             // The viewer rescinded their own outgoing join request (possibly on
             // another device). Remove it from the requests inbox cache.
@@ -725,7 +714,7 @@ export function ListConvosProviderInner({
               {queryKey: [REQUESTS_RQKEY_ROOT]},
               old => optimisticDeleteJoinRequest(log.convoId, old),
             )
-          } else if (bsky.isType(chat.bsky.convo.defs.logAddReaction, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logAddReaction, log)) {
             updateConvoInAllLists(
               log.convoId,
               withRevGuard(log.rev, convo => {
@@ -750,15 +739,15 @@ export function ListConvosProviderInner({
                     $type: 'chat.bsky.convo.defs#messageAndReactionView',
                     reaction: log.reaction,
                     message: log.message,
-                  } as chat.bsky.convo.defs.ConvoView['lastReaction'],
+                  } as ChatBskyConvoDefs.ConvoView['lastReaction'],
                   rev: log.rev,
                 }
               }),
             )
-          } else if (bsky.isType(chat.bsky.convo.defs.logAddMember, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logAddMember, log)) {
             const data = log.message.data
             if (
-              bsky.isType(chat.bsky.convo.defs.systemMessageDataAddMember, data)
+              bsky.isType(ChatBskyConvoDefs.systemMessageDataAddMember, data)
             ) {
               handleMemberAdded(
                 log.convoId,
@@ -772,13 +761,10 @@ export function ListConvosProviderInner({
               queryKey: CONVO_KEY(log.convoId),
             })
             debouncedRefetch()
-          } else if (bsky.isType(chat.bsky.convo.defs.logRemoveMember, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logRemoveMember, log)) {
             const data = log.message.data
             if (
-              bsky.isType(
-                chat.bsky.convo.defs.systemMessageDataRemoveMember,
-                data,
-              )
+              bsky.isType(ChatBskyConvoDefs.systemMessageDataRemoveMember, data)
             ) {
               handleMemberRemoved(log.convoId, data.member.did, log.rev)
             }
@@ -787,13 +773,10 @@ export function ListConvosProviderInner({
               queryKey: CONVO_KEY(log.convoId),
             })
             debouncedRefetch()
-          } else if (bsky.isType(chat.bsky.convo.defs.logMemberJoin, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logMemberJoin, log)) {
             const data = log.message.data
             if (
-              bsky.isType(
-                chat.bsky.convo.defs.systemMessageDataMemberJoin,
-                data,
-              )
+              bsky.isType(ChatBskyConvoDefs.systemMessageDataMemberJoin, data)
             ) {
               handleMemberAdded(
                 log.convoId,
@@ -806,13 +789,10 @@ export function ListConvosProviderInner({
               queryKey: CONVO_KEY(log.convoId),
             })
             debouncedRefetch()
-          } else if (bsky.isType(chat.bsky.convo.defs.logMemberLeave, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logMemberLeave, log)) {
             const data = log.message.data
             if (
-              bsky.isType(
-                chat.bsky.convo.defs.systemMessageDataMemberLeave,
-                data,
-              )
+              bsky.isType(ChatBskyConvoDefs.systemMessageDataMemberLeave, data)
             ) {
               handleMemberRemoved(log.convoId, data.member.did, log.rev)
             }
@@ -820,7 +800,7 @@ export function ListConvosProviderInner({
               queryKey: CONVO_KEY(log.convoId),
             })
             debouncedRefetch()
-          } else if (bsky.isType(chat.bsky.convo.defs.logRemoveReaction, log)) {
+          } else if (bsky.isType(ChatBskyConvoDefs.logRemoveReaction, log)) {
             queryClient.setQueriesData(
               {queryKey: [RQKEY_ROOT]},
               (old?: ConvoListQueryData) =>
@@ -832,13 +812,10 @@ export function ListConvosProviderInner({
                       // if the convo is the same
                       log.convoId === convo.id &&
                       bsky.isType(
-                        chat.bsky.convo.defs.messageAndReactionView,
+                        ChatBskyConvoDefs.messageAndReactionView,
                         convo.lastReaction,
                       ) &&
-                      bsky.isType(
-                        chat.bsky.convo.defs.messageView,
-                        log.message,
-                      ) &&
+                      bsky.isType(ChatBskyConvoDefs.messageView, log.message) &&
                       // ...and the message is the same
                       convo.lastReaction.message.id === log.message.id &&
                       // ...and the reaction is the same
@@ -920,7 +897,7 @@ export function useUnreadMessageCount(): {
 
 export type ConvoListQueryData = {
   pageParams: Array<string | undefined>
-  pages: Array<chat.bsky.convo.listConvos.$OutputBody>
+  pages: Array<ChatBskyConvoListConvos.$OutputBody>
 }
 
 export function useOnMarkAsRead() {
@@ -957,8 +934,8 @@ export function useOnMarkAsRead() {
  */
 function withRevGuard(
   rev: string,
-  fn: (convo: chat.bsky.convo.defs.ConvoView) => chat.bsky.convo.defs.ConvoView,
-): (convo: chat.bsky.convo.defs.ConvoView) => chat.bsky.convo.defs.ConvoView {
+  fn: (convo: ChatBskyConvoDefs.ConvoView) => ChatBskyConvoDefs.ConvoView,
+): (convo: ChatBskyConvoDefs.ConvoView) => ChatBskyConvoDefs.ConvoView {
   return convo => (rev <= convo.rev ? convo : fn(convo))
 }
 
@@ -966,8 +943,8 @@ function optimisticUpdate(
   chatId: string,
   old?: ConvoListQueryData,
   updateFn?: (
-    convo: chat.bsky.convo.defs.ConvoView,
-  ) => chat.bsky.convo.defs.ConvoView,
+    convo: ChatBskyConvoDefs.ConvoView,
+  ) => ChatBskyConvoDefs.ConvoView,
 ) {
   if (!old || !updateFn) return old
 
@@ -983,12 +960,12 @@ function optimisticUpdate(
 }
 
 function applyJoinRequestCountDelta(
-  convo: chat.bsky.convo.defs.ConvoView,
+  convo: ChatBskyConvoDefs.ConvoView,
   rev: string,
   delta: 1 | -1,
-): chat.bsky.convo.defs.ConvoView {
+): ChatBskyConvoDefs.ConvoView {
   // Join requests are only meaningful for group convos.
-  if (!bsky.isType(chat.bsky.convo.defs.groupConvo, convo.kind)) {
+  if (!bsky.isType(ChatBskyConvoDefs.groupConvo, convo.kind)) {
     return {...convo, rev}
   }
   // Bump the total and unread counts together. Both are clamped at 0 and
@@ -1009,7 +986,7 @@ function applyJoinRequestCountDelta(
 }
 
 function moveConvoToTopInRequests(
-  updatedConvo: chat.bsky.convo.defs.ConvoView,
+  updatedConvo: ChatBskyConvoDefs.ConvoView,
   old: ConvoRequestListQueryData | undefined,
 ): ConvoRequestListQueryData | undefined {
   if (!old) return old
@@ -1023,7 +1000,7 @@ function moveConvoToTopInRequests(
     pages: old.pages.map((page, i) => {
       const filtered = page.requests.filter(
         item =>
-          !bsky.isType(chat.bsky.convo.defs.convoView, item) ||
+          !bsky.isType(ChatBskyConvoDefs.convoView, item) ||
           item.id !== updatedConvo.id,
       )
       if (i === 0) {
@@ -1038,13 +1015,13 @@ function moveConvoToTopInRequests(
 }
 
 function removeMemberFromConvoView(
-  convo: chat.bsky.convo.defs.ConvoView,
+  convo: ChatBskyConvoDefs.ConvoView,
   did: string,
   rev: string,
   alreadyRemovedMember: boolean,
-): chat.bsky.convo.defs.ConvoView {
+): ChatBskyConvoDefs.ConvoView {
   // Member add/remove/join/leave events are only meaningful for group convos.
-  if (!bsky.isType(chat.bsky.convo.defs.groupConvo, convo.kind)) return convo
+  if (!bsky.isType(ChatBskyConvoDefs.groupConvo, convo.kind)) return convo
   const nextMembers = convo.members.filter(m => m.did !== did)
   return {
     ...convo,
@@ -1060,13 +1037,13 @@ function removeMemberFromConvoView(
 }
 
 function addMemberToConvoView(
-  convo: chat.bsky.convo.defs.ConvoView,
-  member: chat.bsky.actor.defs.ProfileViewBasic,
+  convo: ChatBskyConvoDefs.ConvoView,
+  member: ChatBskyActorDefs.ProfileViewBasic,
   rev: string,
   alreadyKnownMember: boolean,
-): chat.bsky.convo.defs.ConvoView {
+): ChatBskyConvoDefs.ConvoView {
   // Member add/remove/join/leave events are only meaningful for group convos.
-  if (!bsky.isType(chat.bsky.convo.defs.groupConvo, convo.kind)) return convo
+  if (!bsky.isType(ChatBskyConvoDefs.groupConvo, convo.kind)) return convo
   const alreadyInCuratedList = convo.members.some(m => m.did === member.did)
   const nextMembers = alreadyInCuratedList
     ? convo.members
@@ -1112,7 +1089,7 @@ export function* findAllProfilesInQueryData(
   did: string,
 ) {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<chat.bsky.convo.listConvos.$OutputBody>
+    InfiniteData<ChatBskyConvoListConvos.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })

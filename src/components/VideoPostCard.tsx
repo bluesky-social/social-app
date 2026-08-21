@@ -20,7 +20,10 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import * as AppBskyEmbedVideo from '#/lexicons/app/bsky/embed/video'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedPost from '#/lexicons/app/bsky/feed/post'
 import * as bsky from '#/types/bsky'
 
 function getBlackColor(t: ReturnType<typeof useTheme>) {
@@ -37,7 +40,7 @@ export function VideoPostCard({
   moderation,
   onInteract,
 }: {
-  post: app.bsky.feed.defs.PostView
+  post: AppBskyFeedDefs.PostView
   sourceContext: VideoFeedSourceContext
   moderation: ModerationDecision
   /**
@@ -70,10 +73,10 @@ export function VideoPostCard({
    * Filtering should be done at a higher level, such as `PostFeed` or
    * `PostFeedVideoGridRow`, but we need to protect here as well.
    */
-  if (!bsky.isType(app.bsky.embed.video.view, embed)) return null
+  if (!bsky.isType(AppBskyEmbedVideo.view, embed)) return null
 
   const author = post.author
-  const text = bsky.isType(app.bsky.feed.post, post.record)
+  const text = bsky.isType(AppBskyFeedPost, post.record)
     ? post.record?.text
     : ''
   const likeCount = post?.likeCount ?? 0
@@ -267,7 +270,7 @@ export function VideoPostCardPlaceholder() {
 export function VideoPostCardTextPlaceholder({
   author,
 }: {
-  author?: app.bsky.actor.defs.ProfileViewBasic
+  author?: AppBskyActorDefs.ProfileViewBasic
 }) {
   const t = useTheme()
 
@@ -347,7 +350,7 @@ export function CompactVideoPostCard({
   moderation,
   onInteract,
 }: {
-  post: app.bsky.feed.defs.PostView
+  post: AppBskyFeedDefs.PostView
   sourceContext: VideoFeedSourceContext
   moderation: ModerationDecision
   /**
@@ -378,7 +381,7 @@ export function CompactVideoPostCard({
    * Filtering should be done at a higher level, such as `PostFeed` or
    * `PostFeedVideoGridRow`, but we need to protect here as well.
    */
-  if (!bsky.isType(app.bsky.embed.video.view, embed)) return null
+  if (!bsky.isType(AppBskyEmbedVideo.view, embed)) return null
 
   const likeCount = post?.likeCount ?? 0
   const showLikeCount = false

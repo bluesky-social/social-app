@@ -1,15 +1,16 @@
 import {type Client, type XrpcRequestParams} from '@atproto/lex'
 
 import {logger} from '#/logger'
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedGetPosts from '#/lexicons/app/bsky/feed/getPosts'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
-type GetPostsParams = XrpcRequestParams<typeof app.bsky.feed.getPosts.main>
+type GetPostsParams = XrpcRequestParams<typeof AppBskyFeedGetPosts.main>
 
 export class PostListFeedAPI implements FeedAPI {
   client: Client
   params: GetPostsParams
-  peek: app.bsky.feed.defs.FeedViewPost | null = null
+  peek: AppBskyFeedDefs.FeedViewPost | null = null
 
   constructor({
     client,
@@ -29,7 +30,7 @@ export class PostListFeedAPI implements FeedAPI {
     }
   }
 
-  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
+  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
     if (this.peek) return this.peek
     throw new Error('Has not fetched yet')
   }
@@ -41,7 +42,7 @@ export class PostListFeedAPI implements FeedAPI {
      * way - its `success` flag was only ever true - so the empty-page branch
      * this replaces was unreachable.
      */
-    const data = await this.client.call(app.bsky.feed.getPosts, {
+    const data = await this.client.call(AppBskyFeedGetPosts, {
       ...this.params,
     })
     this.peek = {post: data.posts[0]}

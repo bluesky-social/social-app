@@ -73,7 +73,8 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import {app} from '#/lexicons'
+import * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
 import * as bsky from '#/types/bsky'
 
 type StarterPackScreeProps = NativeStackScreenProps<
@@ -146,8 +147,8 @@ export function StarterPackScreenInner({
   const isValid =
     starterPack &&
     (starterPack.list || starterPack?.creator?.did === currentAccount?.did) &&
-    bsky.matches(app.bsky.graph.defs.starterPackView, starterPack) &&
-    bsky.matches(app.bsky.graph.starterpack, starterPack.record)
+    bsky.matches(AppBskyGraphDefs.starterPackView, starterPack) &&
+    bsky.matches(AppBskyGraphStarterpack, starterPack.record)
 
   if (!did || !starterPack || !isValid || !moderationOpts) {
     return (
@@ -178,7 +179,7 @@ function StarterPackScreenLoaded({
   routeParams,
   moderationOpts,
 }: {
-  starterPack: app.bsky.graph.defs.StarterPackView
+  starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   moderationOpts: ModerationOpts
 }) {
@@ -300,7 +301,7 @@ function Header({
   routeParams,
   onOpenShareDialog,
 }: {
-  starterPack: app.bsky.graph.defs.StarterPackView
+  starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
 }) {
@@ -349,7 +350,7 @@ function Header({
 
     setIsProcessing(true)
 
-    let listItems: app.bsky.graph.defs.ListItemView[] = []
+    let listItems: AppBskyGraphDefs.ListItemView[] = []
     try {
       listItems = await getAllListMembers(appviewClient, starterPack.list.uri)
     } catch (e) {
@@ -404,7 +405,7 @@ function Header({
     })
   }
 
-  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
+  if (!bsky.isType(AppBskyGraphStarterpack, record)) {
     return null
   }
 
@@ -515,7 +516,7 @@ function OverflowMenu({
   routeParams,
   onOpenShareDialog,
 }: {
-  starterPack: app.bsky.graph.defs.StarterPackView
+  starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
 }) {

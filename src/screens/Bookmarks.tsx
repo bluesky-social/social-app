@@ -34,7 +34,8 @@ import * as toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
-import {app} from '#/lexicons'
+import type * as AppBskyBookmarkDefs from '#/lexicons/app/bsky/bookmark/defs'
+import * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
 import * as bsky from '#/types/bsky'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>
@@ -76,15 +77,15 @@ type ListItem =
   | {
       type: 'bookmark'
       key: string
-      bookmark: Omit<app.bsky.bookmark.defs.BookmarkView, 'item'> & {
-        item: $Typed<app.bsky.feed.defs.PostView>
+      bookmark: Omit<AppBskyBookmarkDefs.BookmarkView, 'item'> & {
+        item: $Typed<AppBskyFeedDefs.PostView>
       }
     }
   | {
       type: 'bookmarkNotFound'
       key: string
-      bookmark: Omit<app.bsky.bookmark.defs.BookmarkView, 'item'> & {
-        item: $Typed<app.bsky.feed.defs.NotFoundPost>
+      bookmark: Omit<AppBskyBookmarkDefs.BookmarkView, 'item'> & {
+        item: $Typed<AppBskyFeedDefs.NotFoundPost>
       }
     }
 
@@ -130,7 +131,7 @@ function BookmarksInner() {
 
       if (bookmarks.length > 0) {
         for (const bookmark of bookmarks) {
-          if (bsky.isType(app.bsky.feed.defs.notFoundPost, bookmark.item)) {
+          if (bsky.isType(AppBskyFeedDefs.notFoundPost, bookmark.item)) {
             i.push({
               type: 'bookmarkNotFound',
               key: bookmark.item.uri,
@@ -140,7 +141,7 @@ function BookmarksInner() {
               },
             })
           }
-          if (bsky.isType(app.bsky.feed.defs.postView, bookmark.item)) {
+          if (bsky.isType(AppBskyFeedDefs.postView, bookmark.item)) {
             i.push({
               type: 'bookmark',
               key: bookmark.item.uri,
@@ -197,7 +198,7 @@ function BookmarkNotFound({
   post,
 }: {
   hideTopBorder: boolean
-  post: $Typed<app.bsky.feed.defs.NotFoundPost>
+  post: $Typed<AppBskyFeedDefs.NotFoundPost>
 }) {
   const t = useTheme()
   const {_} = useLingui()

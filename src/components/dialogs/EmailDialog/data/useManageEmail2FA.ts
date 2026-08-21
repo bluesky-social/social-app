@@ -1,7 +1,7 @@
 import {useMutation} from '@tanstack/react-query'
 
 import {usePdsClient, useSession, useSessionApi} from '#/state/session'
-import {com} from '#/lexicons'
+import * as ComAtprotoServerUpdateEmail from '#/lexicons/com/atproto/server/updateEmail'
 
 export function useManageEmail2FA() {
   const pdsClient = usePdsClient()
@@ -18,7 +18,7 @@ export function useManageEmail2FA() {
         throw new Error('No email found for the current account')
       }
 
-      await pdsClient.call(com.atproto.server.updateEmail, {
+      await pdsClient.call(ComAtprotoServerUpdateEmail, {
         email: currentAccount.email,
         emailAuthFactor: enabled,
         token,

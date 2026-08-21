@@ -23,10 +23,12 @@ import {parseConvoView} from '#/components/dms/util'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {chat} from '#/lexicons'
+import type * as ChatBskyConvoDefs from '#/lexicons/chat/bsky/convo/defs'
+import * as ChatBskyConvoLeaveConvo from '#/lexicons/chat/bsky/convo/leaveConvo'
+import * as ChatBskyGroupRemoveMembers from '#/lexicons/chat/bsky/group/removeMembers'
 import {type AnyProfileView} from '#/types/bsky/profile'
 
-type Item = chat.bsky.convo.defs.ConvoView
+type Item = ChatBskyConvoDefs.ConvoView
 
 type BlockDialogProps = {
   control: DialogControlProps
@@ -251,7 +253,7 @@ function MutualGroupChat({
   onOptimisticallyRemoveConvo,
   onRestoreConvo,
 }: {
-  view: chat.bsky.convo.defs.ConvoView
+  view: ChatBskyConvoDefs.ConvoView
   profileDid: string
   currentConvoId?: string
   onOptimisticallyRemoveConvo: (convoId: string) => void
@@ -280,7 +282,7 @@ function MutualGroupChat({
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
         } else {
-          switch (matchXrpcError(error, chat.bsky.convo.leaveConvo)) {
+          switch (matchXrpcError(error, ChatBskyConvoLeaveConvo)) {
             case 'InvalidConvo':
               errorMessage = l`Chat not found.`
               break
@@ -309,7 +311,7 @@ function MutualGroupChat({
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
         } else {
-          switch (matchXrpcError(error, chat.bsky.group.removeMembers)) {
+          switch (matchXrpcError(error, ChatBskyGroupRemoveMembers)) {
             case 'InvalidConvo':
               errorMessage = l`Chat not found.`
               break

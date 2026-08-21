@@ -7,11 +7,12 @@ import {
 } from '@atproto/lex'
 import {describe, expect, it} from '@jest/globals'
 
-import {app, com} from '#/lexicons'
+import * as AppBskyUnspeccedGetTrends from '#/lexicons/app/bsky/unspecced/getTrends'
+import * as ComAtprotoServerCreateAccount from '#/lexicons/com/atproto/server/createAccount'
 import {matchXrpcError} from '../xrpc-error'
 
-const createAccount = com.atproto.server.createAccount
-const getTrends = app.bsky.unspecced.getTrends
+const createAccount = ComAtprotoServerCreateAccount
+const getTrends = AppBskyUnspeccedGetTrends
 
 /**
  * An `XrpcResponseError` as a lex `Client` would construct it: the method

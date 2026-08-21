@@ -20,7 +20,7 @@ import {
   type MessagesEventBusParams,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoGetLog from '#/lexicons/chat/bsky/convo/getLog'
 
 const logger = Logger.create(Logger.Context.DMsAgent)
 
@@ -269,7 +269,7 @@ export class MessagesEventBus {
 
     try {
       const response = await networkRetry(2, () => {
-        return this.chatClient.call(chat.bsky.convo.getLog, {})
+        return this.chatClient.call(ChatBskyConvoGetLog, {})
       })
       // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
 
@@ -361,11 +361,11 @@ export class MessagesEventBus {
     // )
 
     let needsEmit = false
-    let batch: chat.bsky.convo.getLog.$OutputBody['logs'] = []
+    let batch: ChatBskyConvoGetLog.$OutputBody['logs'] = []
 
     try {
       const response = await networkRetry(2, () => {
-        return this.chatClient.call(chat.bsky.convo.getLog, {
+        return this.chatClient.call(ChatBskyConvoGetLog, {
           cursor: this.latestRev,
         })
       })

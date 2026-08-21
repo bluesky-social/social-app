@@ -21,7 +21,13 @@ import {RQKEY as listQueryKey} from '#/state/queries/list'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
-import {app} from '#/lexicons'
+import type * as AppBskyActorDefs from '#/lexicons/app/bsky/actor/defs'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import * as AppBskyFeedGetFeedGenerator from '#/lexicons/app/bsky/feed/getFeedGenerator'
+import * as AppBskyFeedGetFeedGenerators from '#/lexicons/app/bsky/feed/getFeedGenerators'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphGetList from '#/lexicons/app/bsky/graph/getList'
+import * as AppBskyUnspeccedGetPopularFeedGenerators from '#/lexicons/app/bsky/unspecced/getPopularFeedGenerators'
 import {router} from '#/routes'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {type FeedDescriptor} from './post-feed'
@@ -29,7 +35,7 @@ import {precacheResolvedUri} from './resolve-uri'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
-  view?: app.bsky.feed.defs.GeneratorView
+  view?: AppBskyFeedDefs.GeneratorView
   uri: string
   feedDescriptor: FeedDescriptor
   route: {
@@ -46,12 +52,12 @@ export type FeedSourceFeedInfo = {
   likeCount: number | undefined
   acceptsInteractions?: boolean
   likeUri: string | undefined
-  contentMode: app.bsky.feed.defs.GeneratorView['contentMode']
+  contentMode: AppBskyFeedDefs.GeneratorView['contentMode']
 }
 
 export type FeedSourceListInfo = {
   type: 'list'
-  view?: app.bsky.graph.defs.ListView
+  view?: AppBskyGraphDefs.ListView
   uri: string
   feedDescriptor: FeedDescriptor
   route: {
@@ -88,7 +94,7 @@ const feedSourceNSIDs = {
 }
 
 export function hydrateFeedGenerator(
-  view: app.bsky.feed.defs.GeneratorView,
+  view: AppBskyFeedDefs.GeneratorView,
 ): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
@@ -130,9 +136,7 @@ export function hydrateFeedGenerator(
   }
 }
 
-export function hydrateList(
-  view: app.bsky.graph.defs.ListView,
-): FeedSourceInfo {
+export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
     urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
@@ -190,12 +194,12 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
       let view: FeedSourceInfo
 
       if (type === 'feed') {
-        const data = await client.call(app.bsky.feed.getFeedGenerator, {
+        const data = await client.call(AppBskyFeedGetFeedGenerator, {
           feed: uri as AtUriString,
         })
         view = hydrateFeedGenerator(data.view)
       } else {
-        const data = await client.call(app.bsky.graph.getList, {
+        const data = await client.call(AppBskyGraphGetList, {
           list: uri as AtUriString,
           limit: 1,
         })
@@ -254,13 +258,10 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
     enabled: Boolean(moderationOpts) && options?.enabled !== false,
     queryKey: createGetPopularFeedsQueryKey(options),
     queryFn: async ({pageParam}) => {
-      const data = await client.call(
-        app.bsky.unspecced.getPopularFeedGenerators,
-        {
-          limit,
-          cursor: pageParam,
-        },
-      )
+      const data = await client.call(AppBskyUnspeccedGetPopularFeedGenerators, {
+        limit,
+        cursor: pageParam,
+      })
 
       // precache feeds
       for (const feed of data.feeds) {
@@ -274,7 +275,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
     getNextPageParam: lastPage => lastPage.cursor,
     select: useCallback(
       (
-        data: InfiniteData<app.bsky.unspecced.getPopularFeedGenerators.$OutputBody>,
+        data: InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.$OutputBody>,
       ) => {
         const {
           savedFeeds,
@@ -343,13 +344,10 @@ export function useSearchPopularFeedsMutation() {
 
   return useMutation({
     mutationFn: async (query: string) => {
-      const data = await client.call(
-        app.bsky.unspecced.getPopularFeedGenerators,
-        {
-          limit: 10,
-          query: query,
-        },
-      )
+      const data = await client.call(AppBskyUnspeccedGetPopularFeedGenerators, {
+        limit: 10,
+        query: query,
+      })
 
       if (moderationOpts) {
         return data.feeds.filter(feed => {
@@ -384,14 +382,11 @@ export function usePopularFeedsSearch({
     enabled: enabledInner,
     queryKey: createPopularFeedsSearchQueryKey(query),
     queryFn: async ({pageParam}) => {
-      const data = await client.call(
-        app.bsky.unspecced.getPopularFeedGenerators,
-        {
-          limit: 15,
-          query: query,
-          cursor: pageParam,
-        },
-      )
+      const data = await client.call(AppBskyUnspeccedGetPopularFeedGenerators, {
+        limit: 15,
+        query: query,
+        cursor: pageParam,
+      })
 
       return data
     },
@@ -414,7 +409,7 @@ export function usePopularFeedsSearch({
 }
 
 export type SavedFeedSourceInfo = FeedSourceInfo & {
-  savedFeed: app.bsky.actor.defs.SavedFeed
+  savedFeed: AppBskyActorDefs.SavedFeed
 }
 
 const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
@@ -485,7 +480,7 @@ export function usePinnedFeedsInfos() {
       let feedsPromise = Promise.resolve()
       if (pinnedFeeds.length > 0) {
         feedsPromise = client
-          .call(app.bsky.feed.getFeedGenerators, {
+          .call(AppBskyFeedGetFeedGenerators, {
             feeds: pinnedFeeds.map(f => f.value as AtUriString),
           })
           .then(data => {
@@ -500,7 +495,7 @@ export function usePinnedFeedsInfos() {
       const pinnedLists = pinnedItems.filter(feed => feed.type === 'list')
       const listsPromises = pinnedLists.map(list =>
         client
-          .call(app.bsky.graph.getList, {
+          .call(AppBskyGraphGetList, {
             list: list.value as AtUriString,
             limit: 1,
           })
@@ -553,17 +548,17 @@ export function usePinnedFeedsInfos() {
 export type SavedFeedItem =
   | {
       type: 'feed'
-      config: app.bsky.actor.defs.SavedFeed
-      view: app.bsky.feed.defs.GeneratorView
+      config: AppBskyActorDefs.SavedFeed
+      view: AppBskyFeedDefs.GeneratorView
     }
   | {
       type: 'list'
-      config: app.bsky.actor.defs.SavedFeed
-      view: app.bsky.graph.defs.ListView
+      config: AppBskyActorDefs.SavedFeed
+      view: AppBskyGraphDefs.ListView
     }
   | {
       type: 'timeline'
-      config: app.bsky.actor.defs.SavedFeed
+      config: AppBskyActorDefs.SavedFeed
       view: undefined
     }
 
@@ -591,8 +586,8 @@ export function useSavedFeeds() {
       )
     },
     queryFn: async () => {
-      const resolvedFeeds = new Map<string, app.bsky.feed.defs.GeneratorView>()
-      const resolvedLists = new Map<string, app.bsky.graph.defs.ListView>()
+      const resolvedFeeds = new Map<string, AppBskyFeedDefs.GeneratorView>()
+      const resolvedLists = new Map<string, AppBskyGraphDefs.ListView>()
 
       const savedFeeds = savedItems.filter(feed => feed.type === 'feed')
       const savedLists = savedItems.filter(feed => feed.type === 'list')
@@ -600,7 +595,7 @@ export function useSavedFeeds() {
       let feedsPromise = Promise.resolve()
       if (savedFeeds.length > 0) {
         feedsPromise = client
-          .call(app.bsky.feed.getFeedGenerators, {
+          .call(AppBskyFeedGetFeedGenerators, {
             feeds: savedFeeds.map(f => f.value as AtUriString),
           })
           .then(data => {
@@ -612,7 +607,7 @@ export function useSavedFeeds() {
 
       const listsPromises = savedLists.map(list =>
         client
-          .call(app.bsky.graph.getList, {
+          .call(AppBskyGraphGetList, {
             list: list.value as AtUriString,
             limit: 1,
           })
@@ -683,7 +678,7 @@ export function useFeedInfo(feedUri: string | undefined) {
         return null
       }
 
-      const data = await client.call(app.bsky.feed.getFeedGenerator, {
+      const data = await client.call(AppBskyFeedGetFeedGenerator, {
         feed: feedUri as AtUriString,
       })
 
@@ -707,10 +702,10 @@ function precacheFeed(queryClient: QueryClient, hydratedFeed: FeedSourceInfo) {
 
 export function precacheList(
   queryClient: QueryClient,
-  list: app.bsky.graph.defs.ListView,
+  list: AppBskyGraphDefs.ListView,
 ) {
   precacheResolvedUri(queryClient, list.creator.handle, list.creator.did)
-  queryClient.setQueryData<app.bsky.graph.defs.ListView>(
+  queryClient.setQueryData<AppBskyGraphDefs.ListView>(
     listQueryKey(list.uri),
     list,
   )
@@ -718,7 +713,7 @@ export function precacheList(
 
 export function precacheFeedFromGeneratorView(
   queryClient: QueryClient,
-  view: app.bsky.feed.defs.GeneratorView,
+  view: AppBskyFeedDefs.GeneratorView,
 ) {
   const hydratedFeed = hydrateFeedGenerator(view)
   precacheFeed(queryClient, hydratedFeed)

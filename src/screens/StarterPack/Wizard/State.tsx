@@ -3,7 +3,9 @@ import {msg, plural} from '@lingui/core/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import * as Toast from '#/components/Toast'
-import {app} from '#/lexicons'
+import type * as AppBskyFeedDefs from '#/lexicons/app/bsky/feed/defs'
+import type * as AppBskyGraphDefs from '#/lexicons/app/bsky/graph/defs'
+import * as AppBskyGraphStarterpack from '#/lexicons/app/bsky/graph/starterpack'
 import * as bsky from '#/types/bsky'
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const
@@ -17,7 +19,7 @@ type Action =
   | {type: 'SetDescription'; description: string}
   | {type: 'AddProfile'; profile: bsky.profile.AnyProfileView}
   | {type: 'RemoveProfile'; profileDid: string}
-  | {type: 'AddFeed'; feed: app.bsky.feed.defs.GeneratorView}
+  | {type: 'AddFeed'; feed: AppBskyFeedDefs.GeneratorView}
   | {type: 'RemoveFeed'; feedUri: string}
   | {type: 'SetProcessing'; processing: boolean}
   | {type: 'SetError'; error: string}
@@ -28,7 +30,7 @@ interface State {
   name?: string
   description?: string
   profiles: bsky.profile.AnyProfileView[]
-  feeds: app.bsky.feed.defs.GeneratorView[]
+  feeds: AppBskyFeedDefs.GeneratorView[]
   processing: boolean
   error?: string
   transitionDirection: 'Backward' | 'Forward'
@@ -121,8 +123,8 @@ export function Provider({
   targetProfile,
   children,
 }: {
-  starterPack?: app.bsky.graph.defs.StarterPackView
-  listItems?: app.bsky.graph.defs.ListItemView[]
+  starterPack?: AppBskyGraphDefs.StarterPackView
+  listItems?: AppBskyGraphDefs.ListItemView[]
   targetProfile: bsky.profile.AnyProfileView
   children: React.ReactNode
 }) {
@@ -131,7 +133,7 @@ export function Provider({
 
     if (
       starterPack &&
-      bsky.matches(app.bsky.graph.starterpack, starterPack.record)
+      bsky.matches(AppBskyGraphStarterpack, starterPack.record)
     ) {
       return {
         canNext: true,

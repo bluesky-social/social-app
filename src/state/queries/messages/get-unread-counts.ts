@@ -2,7 +2,7 @@ import {useQuery} from '@tanstack/react-query'
 
 import {useChatClient, useSession} from '#/state/session'
 import {useAgeAssurance} from '#/ageAssurance'
-import {chat} from '#/lexicons'
+import * as ChatBskyConvoGetUnreadCounts from '#/lexicons/chat/bsky/convo/getUnreadCounts'
 import {STALE} from '..'
 
 const RQKEY_ROOT = 'convo-unread-counts'
@@ -26,7 +26,7 @@ export function useUnreadCountsQuery() {
   return useQuery({
     queryKey: RQKEY(includeGroupChats),
     queryFn: async () => {
-      return await client.call(chat.bsky.convo.getUnreadCounts, {
+      return await client.call(ChatBskyConvoGetUnreadCounts, {
         includeGroupChats,
       })
     },
