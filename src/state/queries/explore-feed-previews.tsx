@@ -423,6 +423,12 @@ export function* findAllProfilesInQueryData(
         if (item.post.author.did === did) {
           yield item.post.author
         }
+        if (
+          bsky.isType(app.bsky.feed.defs.reasonRepost, item.reason) &&
+          item.reason.by.did === did
+        ) {
+          yield item.reason.by
+        }
         const quotedPost = getEmbeddedPost(item.post.embed)
         if (quotedPost?.author.did === did) {
           yield quotedPost.author
