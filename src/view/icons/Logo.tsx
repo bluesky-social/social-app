@@ -34,21 +34,18 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
 
   const logoVariant = useLogoVariant(allowVariants)
 
-  if (logoVariant !== 'default') {
-    const isJapanLogo = logoVariant === 'japan'
+  if (logoVariant === 'kawaii') {
     return (
       <Image
         source={
-          isJapanLogo
-            ? require('../../../assets/icons/custom/custom_logo_japan.svg')
-            : size > 100
-              ? require('../../../assets/kawaii.png')
-              : require('../../../assets/kawaii_smol.png')
+          size > 100
+            ? require('../../../assets/kawaii.png')
+            : require('../../../assets/kawaii_smol.png')
         }
         accessibilityLabel="Bluesky"
         accessibilityHint=""
         accessibilityIgnoresInvertColors
-        style={[{height: size, aspectRatio: isJapanLogo ? 2 : 1.4}]}
+        style={[{height: size, aspectRatio: 1.4}]}
       />
     )
   }
