@@ -9869,7 +9869,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/components/dms/ChatProfileTabs.tsx:153
+#: src/components/dms/ChatProfileTabs.tsx:155
 msgid "Remove {displayName} from group chat"
 msgstr "Remove {displayName} from group chat"
 
