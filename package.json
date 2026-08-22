@@ -96,7 +96,9 @@
     "make-deploy-bundle": "bash scripts/bundleUpdate.sh",
     "generate-webpack-stats-file": "EXPO_PUBLIC_GENERATE_STATS=1 pnpm build-web",
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 pnpm build-web",
-    "icons:optimize": "svgo -f ./assets/icons",
+    "icons:generate": "node ./scripts/icons/generate.mts",
+    "icons:check": "node ./scripts/icons/generate.mts --check",
+    "icons:test": "node --test ./scripts/icons/lib.test.mts",
     "prettier": "prettier --check ."
   },
   "dependencies": {
@@ -381,7 +383,7 @@
     "*{.js,.jsx,.ts,.tsx,.css}": [
       "prettier --cache --write --ignore-unknown"
     ],
-    "assets/icons/*.svg": [
+    "assets/icons/{ui,brands,community,custom}/*.svg": [
       "svgo"
     ]
   }
