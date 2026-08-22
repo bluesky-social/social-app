@@ -1160,10 +1160,10 @@ function MockAccountScreen({
         screenDescription={_(msg`profile`)}
         modui={moderation.ui('profileView')}>
         <ProfileHeaderStandard
-          // @ts-ignore ProfileViewBasic is close enough -prf
+          // @ts-expect-error ProfileViewBasic is close enough -prf
           profile={profile}
           moderationOpts={moderationOpts}
-          // @ts-ignore ProfileViewBasic is close enough -esb
+          // @ts-expect-error ProfileViewBasic is close enough -esb
           descriptionRT={new RichText({text: profile.description as string})}
         />
       </ScreenHider>

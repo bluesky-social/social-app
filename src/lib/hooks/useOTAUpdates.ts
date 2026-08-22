@@ -452,7 +452,7 @@ export const splash = (scheme: 'light' | 'dark') => {
       : require('../../../assets/splash/splash-dark.png')
 
   return {
-    image: RNImage.resolveAssetSource(source).uri,
+    image: RNImage.resolveAssetSource(source)!.uri,
     imageFullScreen: true,
     imageResizeMode: 'cover',
     backgroundColor: scheme === 'light' ? '#006AFF' : '#002861',

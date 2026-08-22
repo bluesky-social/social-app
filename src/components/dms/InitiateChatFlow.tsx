@@ -249,7 +249,7 @@ export function InitiateChatFlow({
   const listRef = useRef<ListMethods>(null)
   const {currentAccount} = useSession()
   const aa = useAgeAssurance()
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const accountTooNewPromptControl = Dialog.useDialogControl()
 
   const {data: convos} = useListConvosQuery({

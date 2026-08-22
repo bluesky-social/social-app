@@ -2,10 +2,6 @@ import {forwardRef, useCallback, useImperativeHandle, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
-import {
-  type InfiniteData,
-  type UseInfiniteQueryResult,
-} from '@tanstack/react-query'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -26,9 +22,6 @@ function keyExtractor(item: app.bsky.actor.defs.ProfileView, index: number) {
 
 interface ProfilesListProps {
   listUri: string
-  listMembersQuery: UseInfiniteQueryResult<
-    InfiniteData<app.bsky.graph.getList.$OutputBody>
-  >
   moderationOpts: ModerationOpts
   headerHeight: number
   scrollElRef: ListRef

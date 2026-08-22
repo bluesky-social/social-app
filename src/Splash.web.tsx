@@ -7,7 +7,7 @@
 import {useEffect, useRef, useState} from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {atoms as a, flatten} from '#/alf'
+import {atoms as a, flattenToCSS} from '#/alf'
 
 const size = 100
 const ratio = 57 / 64
@@ -72,7 +72,7 @@ export function Splash({
       {!isAnimationComplete && (
         <div
           ref={splashRef}
-          style={flatten([
+          style={flattenToCSS([
             a.fixed,
             a.inset_0,
             a.flex,

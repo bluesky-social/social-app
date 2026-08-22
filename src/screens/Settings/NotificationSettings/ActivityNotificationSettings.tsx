@@ -128,7 +128,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
         onEndReached={onEndReached}
         onEndReachedThreshold={4}
         ListEmptyComponent={
-          error ? null : (
+          error ? undefined : (
             <View style={[a.px_xl, a.py_md]}>
               {!isPending ? (
                 <Admonition.Outer type="tip">

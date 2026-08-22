@@ -379,7 +379,7 @@ function JoinRequestsList({
               style={[a.flex_1, a.align_center, a.justify_center, a.py_4xl]}>
               <Loader size="xl" />
             </View>
-          ) : null
+          ) : undefined
         }
         contentContainerStyle={
           showFooter ? {paddingBottom: footerHeight} : undefined

@@ -4,8 +4,6 @@ import {
   type GestureResponderEvent,
   type NativeSyntheticEvent,
   type NativeTouchEvent,
-  Pressable,
-  type PressableStateCallbackType,
   type StyleProp,
   StyleSheet,
   type TextStyle,
@@ -15,6 +13,10 @@ import {
 
 import {choose} from '#/lib/functions'
 import {useTheme} from '#/lib/ThemeContext'
+import {
+  Pressable,
+  type PressableStateCallbackType,
+} from '#/components/Pressable'
 import {Text} from '../text/Text'
 
 export type ButtonType =
@@ -27,15 +29,6 @@ export type ButtonType =
   | 'primary-light'
   | 'secondary-light'
   | 'default-light'
-
-// Augment type for react-native-web (see https://github.com/necolas/react-native-web/issues/1684#issuecomment-766451866)
-declare module 'react-native' {
-  interface PressableStateCallbackType {
-    // @ts-ignore web only
-    hovered?: boolean
-    focused?: boolean
-  }
-}
 
 /**
  * @deprecated use Button from `#/components/Button.tsx` instead

@@ -41,6 +41,7 @@ import {
 } from '#/state/shell/progress-guide'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
+import {type ListRef} from '#/view/com/util/List'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -248,8 +249,7 @@ function StarterPackScreenLoaded({
                 // Validated above
                 listUri={starterPack.list!.uri}
                 headerHeight={headerHeight}
-                // @ts-expect-error
-                scrollElRef={scrollElRef}
+                scrollElRef={scrollElRef as ListRef}
                 moderationOpts={moderationOpts}
               />
             )
@@ -257,11 +257,9 @@ function StarterPackScreenLoaded({
         {showFeedsTab
           ? ({headerHeight, scrollElRef}) => (
               <FeedsList
-                // @ts-expect-error ?
-                feeds={starterPack?.feeds}
+                feeds={starterPack.feeds!}
                 headerHeight={headerHeight}
-                // @ts-expect-error
-                scrollElRef={scrollElRef}
+                scrollElRef={scrollElRef as ListRef}
               />
             )
           : null}
@@ -271,9 +269,7 @@ function StarterPackScreenLoaded({
                 // Validated above
                 listUri={starterPack.list!.uri}
                 headerHeight={headerHeight}
-                // @ts-expect-error
-                scrollElRef={scrollElRef}
-                moderationOpts={moderationOpts}
+                scrollElRef={scrollElRef as ListRef}
               />
             )
           : null}

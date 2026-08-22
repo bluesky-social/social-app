@@ -244,7 +244,7 @@ export function Trigger({
   const context = useContextMenuContext()
   const playHaptic = useHaptics()
   const insets = useSafeAreaInsets()
-  const ref = useRef<View>(null)
+  const ref = useRef<React.ComponentRef<typeof View>>(null)
   const isFocused = useIsFocused()
   const [image, setImage] = useState<string | null>(null)
   const [pendingMeasurement, setPendingMeasurement] = useState<{
@@ -971,7 +971,10 @@ export function Divider() {
   )
 }
 
-function measureView(view: View | null, insets: EdgeInsets) {
+function measureView(
+  view: React.ComponentRef<typeof View> | null,
+  insets: EdgeInsets,
+) {
   if (!view) return Promise.resolve(null)
   return new Promise<Measurement>(resolve => {
     view?.measureInWindow((x, y, width, height) =>
