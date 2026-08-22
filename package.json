@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.131.0",
+  "version": "1.132.0",
   "private": true,
   "engines": {
     "node": ">=24.19.0"
@@ -223,7 +223,7 @@
     "psl": "1.9.0",
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
-    "react-compiler-runtime": "19.1.0-rc.3",
+    "react-compiler-runtime": "1.0.0",
     "react-dom": "19.2.3",
     "react-hotkeys-hook": "5.2.4",
     "react-image-crop": "^11.0.7",
@@ -288,7 +288,7 @@
     "@typescript/native": "npm:typescript@^7.0.2",
     "babel-jest": "^29.7.0",
     "babel-plugin-module-resolver": "^5.0.2",
-    "babel-plugin-react-compiler": "19.1.0-rc.3",
+    "babel-plugin-react-compiler": "1.0.0",
     "babel-preset-expo": "~57.0.4",
     "eslint-plugin-bsky-internal": "link:lint-rules",
     "eslint-plugin-react-native-a11y": "^3.5.1",

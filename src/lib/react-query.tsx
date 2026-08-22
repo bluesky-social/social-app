@@ -1,11 +1,15 @@
 import {useEffect, useRef, useState} from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
-import {focusManager, onlineManager, QueryClient} from '@tanstack/react-query'
+import {
+  type DehydrateOptions,
+  focusManager,
+  onlineManager,
+  QueryClient,
+} from '@tanstack/react-query'
 import {
   type PersistQueryClientOptions,
   PersistQueryClientProvider,
-  type PersistQueryClientProviderProps,
 } from '@tanstack/react-query-persist-client'
 
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
@@ -16,8 +20,7 @@ import {IS_NATIVE, IS_WEB} from '#/env'
 
 declare global {
   interface Window {
-    // eslint-disable-next-line  @typescript-eslint/consistent-type-imports
-    __TANSTACK_QUERY_CLIENT__: import('@tanstack/query-core').QueryClient
+    __TANSTACK_QUERY_CLIENT__: QueryClient
   }
 }
 
@@ -133,13 +136,12 @@ const createQueryClient = () =>
     },
   })
 
-const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehydrateOptions'] =
-  {
-    shouldDehydrateMutation: (_: any) => false,
-    shouldDehydrateQuery: query => {
-      return isQueryPersisted(query.queryKey)
-    },
-  }
+const dehydrateOptions: DehydrateOptions = {
+  shouldDehydrateMutation: (_: any) => false,
+  shouldDehydrateQuery: query => {
+    return isQueryPersisted(query.queryKey) && query.state.status === 'success'
+  },
+}
 
 export function QueryProvider({
   children,

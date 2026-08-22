@@ -26,6 +26,9 @@ export class SafelinkClient {
   private ozoneAgent: OzoneAgent
 
   private cursor?: string
+  private fetchEventsPromise?: Promise<void>
+  private fetchEventsTimeout?: NodeJS.Timeout
+  private stopped = false
 
   constructor({cfg, db}: {cfg: ServiceConfig; db: Database}) {
     this.domainCache = new LRUCache<string, SafelinkRule | 'ok'>({
@@ -98,13 +101,15 @@ export class SafelinkClient {
     url: string,
     pattern: ToolsOzoneSafelinkDefs.PatternType,
   ): Promise<SafelinkRule> {
-    return db.db
-      .selectFrom('safelink_rule')
-      .selectAll()
-      .where('url', '=', url)
-      .where('pattern', '=', pattern)
-      .orderBy('createdAt', 'desc')
-      .executeTakeFirstOrThrow()
+    return db.observeQuery(`resolve_safelink_${pattern}_rule`, () =>
+      db.db
+        .selectFrom('safelink_rule')
+        .selectAll()
+        .where('url', '=', url)
+        .where('pattern', '=', pattern)
+        .orderBy('createdAt', 'desc')
+        .executeTakeFirstOrThrow(),
+    )
   }
 
   private async addRule(db: Database, rule: SafelinkRule) {
@@ -122,7 +127,7 @@ export class SafelinkClient {
       return
     }
 
-    db.db
+    await db.db
       .insertInto('safelink_rule')
       .values({
         id: rule.id,
@@ -132,12 +137,14 @@ export class SafelinkClient {
         action: rule.action,
         createdAt: rule.createdAt,
       })
+      .onConflict(oc => oc.column('id').doNothing())
       .execute()
       .catch(err => {
         redirectLogger.error(
           {error: err, rule},
           'failed to add rule to database',
         )
+        throw err
       })
 
     if (rule.pattern === 'domain') {
@@ -172,6 +179,7 @@ export class SafelinkClient {
           {error: err, rule},
           'failed to remove rule from database',
         )
+        throw err
       })
 
     if (rule.pattern === 'domain') {
@@ -181,13 +189,71 @@ export class SafelinkClient {
     }
   }
 
-  public async runFetchEvents() {
+  public runFetchEvents(): Promise<void> {
+    if (this.stopped) {
+      return Promise.resolve()
+    }
+
+    this.fetchEventsPromise ??= this.fetchEvents().finally(() => {
+      this.fetchEventsPromise = undefined
+    })
+    return this.fetchEventsPromise
+  }
+
+  public async stop(timeoutMs: number): Promise<void> {
+    this.stopped = true
+    if (this.fetchEventsTimeout) {
+      clearTimeout(this.fetchEventsTimeout)
+      this.fetchEventsTimeout = undefined
+    }
+    const activePoll = this.fetchEventsPromise
+    if (!activePoll) {
+      return
+    }
+
+    let timeout: NodeJS.Timeout | undefined
+    const stopWaiting = new Promise<void>(resolve => {
+      timeout = setTimeout(() => {
+        redirectLogger.warn(
+          {timeoutMs},
+          'Safelink poll exceeded its shutdown deadline',
+        )
+        resolve()
+      }, timeoutMs)
+    })
+    try {
+      await Promise.race([activePoll, stopWaiting])
+    } finally {
+      if (timeout) {
+        clearTimeout(timeout)
+      }
+    }
+  }
+
+  private scheduleFetchEvents(delay: number) {
+    if (this.stopped) {
+      return
+    }
+    this.fetchEventsTimeout = setTimeout(() => {
+      this.fetchEventsTimeout = undefined
+      void this.runFetchEvents()
+    }, delay)
+  }
+
+  private async fetchEvents() {
     let agent: AtpAgent
     try {
       agent = await this.ozoneAgent.getAgent()
     } catch (err) {
+      if (this.stopped) {
+        return
+      }
       redirectLogger.error({error: err}, 'error getting Ozone agent')
-      setTimeout(() => this.runFetchEvents(), SAFELINK_MAX_FETCH_INTERVAL)
+      this.scheduleFetchEvents(SAFELINK_MAX_FETCH_INTERVAL)
+      return
+    }
+
+    if (this.stopped) {
       return
     }
 
@@ -200,10 +266,13 @@ export class SafelinkClient {
         sortDirection: 'asc',
       })
     } catch (err) {
+      if (this.stopped) {
+        return
+      }
       if (err instanceof ExpiredTokenError) {
         redirectLogger.info('ozone agent had expired session, refreshing...')
         await this.ozoneAgent.refreshSession()
-        setTimeout(() => this.runFetchEvents(), SAFELINK_MIN_FETCH_INTERVAL)
+        this.scheduleFetchEvents(SAFELINK_MIN_FETCH_INTERVAL)
         return
       }
 
@@ -211,37 +280,56 @@ export class SafelinkClient {
         {error: err},
         'error fetching safelink events from Ozone',
       )
-      setTimeout(() => this.runFetchEvents(), SAFELINK_MAX_FETCH_INTERVAL)
+      this.scheduleFetchEvents(SAFELINK_MAX_FETCH_INTERVAL)
+      return
+    }
+
+    if (this.stopped) {
       return
     }
 
     if (res.data.events.length === 0) {
       redirectLogger.info('received no new safelink events from ozone')
-      setTimeout(() => this.runFetchEvents(), SAFELINK_MAX_FETCH_INTERVAL)
+      this.scheduleFetchEvents(SAFELINK_MAX_FETCH_INTERVAL)
     } else {
-      await this.db.transaction(async db => {
-        for (const rule of res.data.events) {
-          switch (rule.eventType) {
-            case 'removeRule':
-              await this.removeRule(db, rule)
-              break
-            case 'addRule':
-            case 'updateRule':
-              await this.addRule(db, rule)
-              break
-            default:
-              redirectLogger.warn({rule}, 'received unknown rule event type')
+      try {
+        await this.db.transaction(async db => {
+          for (const rule of res.data.events) {
+            switch (rule.eventType) {
+              case 'removeRule':
+                await this.removeRule(db, rule)
+                break
+              case 'addRule':
+              case 'updateRule':
+                await this.addRule(db, rule)
+                break
+              default:
+                redirectLogger.warn({rule}, 'received unknown rule event type')
+            }
           }
+        })
+        if (this.stopped) {
+          return
         }
-      })
-      if (res.data.cursor) {
-        redirectLogger.info(
-          {cursor: res.data.cursor},
-          'received new safelink events from Ozone',
+        if (res.data.cursor) {
+          redirectLogger.info(
+            {cursor: res.data.cursor},
+            'received new safelink events from Ozone',
+          )
+          await this.setCursor(res.data.cursor)
+        }
+      } catch (err) {
+        if (this.stopped) {
+          return
+        }
+        redirectLogger.error(
+          {error: err},
+          'error applying safelink events from Ozone',
         )
-        await this.setCursor(res.data.cursor)
+        this.scheduleFetchEvents(SAFELINK_MAX_FETCH_INTERVAL)
+        return
       }
-      setTimeout(() => this.runFetchEvents(), SAFELINK_MIN_FETCH_INTERVAL)
+      this.scheduleFetchEvents(SAFELINK_MIN_FETCH_INTERVAL)
     }
   }
 

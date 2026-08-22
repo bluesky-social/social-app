@@ -385,6 +385,7 @@
     },
     {
       "files": [
+        "bskylink/**/*.{js,jsx,ts,tsx}",
         "bskyogcard/**/*.{js,jsx,ts,tsx}",
         "dev-env/**/*.{js,jsx,ts,tsx}"
       ],

@@ -2,6 +2,7 @@ import {createContext, useContext, useMemo} from 'react'
 import {
   type GestureResponderEvent,
   type StyleProp,
+  StyleSheet,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -254,10 +255,10 @@ export function Divider({style}: ViewStyleProp) {
   return (
     <View
       style={[
-        a.border_t,
-        t.atoms.border_contrast_low,
         a.w_full,
         a.my_sm,
+        {height: StyleSheet.hairlineWidth},
+        t.atoms.bg_contrast_100,
         style,
       ]}
     />
