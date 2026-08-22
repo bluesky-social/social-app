@@ -8,8 +8,8 @@ Bluesky Social is a cross-platform social media application built with React Nat
 
 **Tech Stack:**
 
-- React 19.1
-- React Native 0.81 with Expo 54
+- React 19.2
+- React Native 0.86 with Expo 57
 - TypeScript 7
 - React Navigation 7 for routing
 - TanStack Query (React Query) for data fetching
