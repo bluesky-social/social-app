@@ -11,6 +11,7 @@ import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import {type app} from '#/lexicons'
 
 export function TrendingTopicsPrompt({
@@ -42,15 +43,17 @@ export function TrendingTopicsPrompt({
           color="secondary"
           onPress={onConfirm}
         />
-        <Text
-          style={[
-            a.text_sm,
-            a.text_center,
-            t.atoms.text_contrast_medium,
-            a.py_xs,
-          ]}>
-          <Trans>You can update this later from your settings.</Trans>
-        </Text>
+        {!IS_WEB && (
+          <Text
+            style={[
+              a.text_sm,
+              a.text_center,
+              t.atoms.text_contrast_medium,
+              a.py_xs,
+            ]}>
+            <Trans>You can update this later from your settings.</Trans>
+          </Text>
+        )}
         <Prompt.Cancel cta={l`Close`} />
       </Prompt.Actions>
     </Prompt.Outer>
