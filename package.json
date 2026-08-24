@@ -2,6 +2,14 @@
   "name": "bsky.app",
   "version": "1.132.0",
   "private": true,
+  "sideEffects": [
+    "*.css",
+    "./src/logger/sentry/setup/*",
+    "./src/platform/polyfills*",
+    "./src/platform/markBundleStartTime.ts",
+    "./index.ts",
+    "./index.web.ts"
+  ],
   "engines": {
     "node": ">=24.19.0"
   },
