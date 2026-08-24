@@ -1,4 +1,4 @@
-import {type ComponentProps, type JSX} from 'react'
+import {type ComponentProps} from 'react'
 import {
   type GestureResponderEvent,
   type Pressable,
@@ -18,7 +18,7 @@ import {IS_WEB} from '#/env'
 
 export interface FABProps extends ComponentProps<typeof Pressable> {
   testID?: string
-  icon: JSX.Element
+  icon: React.JSX.Element
   style?: StyleProp<ViewStyle>
 }
 
@@ -32,8 +32,13 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
   const size = gtMobile ? styles.sizeLarge : styles.sizeRegular
 
   const tabletSpacing = gtMobile
-    ? {right: 50, bottom: 50}
-    : {right: 24, bottom: clamp(insets.bottom, 15, 60) + 15}
+    ? {right: a.pr_xl.paddingRight, bottom: a.pb_lg.paddingBottom}
+    : {
+        right: a.pr_lg.paddingRight,
+        bottom:
+          clamp(insets.bottom, a.pb_md.paddingBottom, 60) +
+          a.pb_md.paddingBottom,
+      }
 
   return (
     <Animated.View
