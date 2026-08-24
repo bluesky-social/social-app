@@ -24,6 +24,7 @@ export enum Features {
   CanonicalPostNumberingEnable = 'canonical_post_numbering:enable',
   ContentVisibilitySettingsEnable = 'content_visibility_settings:enable',
   ModerationInboxEnable = 'moderation_inbox:enable',
+  NotificationsV2Enable = 'notifications_v2:enable',
 
   // values
   TrendingDiscoverValues = 'trending_discover:values',
