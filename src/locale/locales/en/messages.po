@@ -2419,15 +2419,15 @@ msgstr ""
 msgid "Browse other feeds"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:88
+#: src/components/TrendingTopics.tsx:135
 msgid "Browse posts about {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:96
+#: src/components/TrendingTopics.tsx:143
 msgid "Browse posts tagged with {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:105
+#: src/components/TrendingTopics.tsx:152
 msgid "Browse starter pack {displayName}"
 msgstr ""
 
@@ -2437,7 +2437,7 @@ msgstr ""
 msgid "Browse topic {0}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:142
+#: src/components/TrendingTopics.tsx:189
 msgid "Browse topic {displayName}"
 msgstr ""
 
@@ -3026,6 +3026,7 @@ msgstr ""
 #: src/components/ProgressGuide/FollowDialog.tsx:462
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:119
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:125
+#: src/components/TrendingTopics.tsx:55
 #: src/components/verification/VerificationsDialog.tsx:146
 #: src/components/verification/VerifierDialog.tsx:147
 #: src/components/WhoCanReply.tsx:229
@@ -6161,7 +6162,6 @@ msgstr ""
 msgid "Hidden list"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:169
 #: src/components/interstitials/Trending.tsx:149
 #: src/components/interstitials/TrendingVideos.tsx:140
 #: src/components/moderation/ContentHider.tsx:217
@@ -6172,8 +6172,6 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:23
 #: src/lib/moderation/useLabelBehaviorDescription.ts:28
 #: src/lib/moderation/useLabelBehaviorDescription.ts:33
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:104
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:173
 msgid "Hide"
 msgstr ""
 
@@ -6239,13 +6237,11 @@ msgid "Hide translation"
 msgstr "Hide translation"
 
 #: src/components/interstitials/Trending.tsx:131
+#: src/components/TrendingTopics.tsx:42
 msgid "Hide trending topics"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:167
 #: src/components/interstitials/Trending.tsx:147
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:102
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:171
 msgid "Hide trending topics?"
 msgstr ""
 
@@ -10830,8 +10826,8 @@ msgstr ""
 
 #: src/components/FeedInterstitials.tsx:495
 #: src/components/FeedInterstitials.tsx:554
-#: src/components/interstitials/FeedTrendingTopics.tsx:113
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:80
+#: src/components/interstitials/FeedTrendingTopics.tsx:116
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "See more"
 msgstr ""
 
@@ -10839,8 +10835,8 @@ msgstr ""
 msgid "See more suggested profiles"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:99
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
+#: src/components/interstitials/FeedTrendingTopics.tsx:102
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:69
 msgid "See more trending topics"
 msgstr "See more trending topics"
 
@@ -13083,9 +13079,9 @@ msgstr "Translation to the same language is unavailable on your device."
 msgid "Tree view"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:95
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:69
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:63
+#: src/components/interstitials/FeedTrendingTopics.tsx:98
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:72
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
 msgid "Trending"
 msgstr ""
 
@@ -13094,11 +13090,19 @@ msgstr ""
 msgid "Trending GIFs"
 msgstr "Trending GIFs"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:122
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:72
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:90
+#: src/components/interstitials/FeedTrendingTopics.tsx:125
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:75
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:93
 msgid "Trending options"
 msgstr ""
+
+#: src/components/TrendingTopics.tsx:31
+msgid "Trending topics"
+msgstr "Trending topics"
+
+#: src/components/TrendingTopics.tsx:34
+msgid "Trending topics are based on what people are talking about on the network. Topic titles and descriptions are generated with AI."
+msgstr "Trending topics are based on what people are talking about on the network. Topic titles and descriptions are generated with AI."
 
 #: src/components/interstitials/TrendingVideos.tsx:88
 msgid "Trending videos"
@@ -14658,11 +14662,9 @@ msgstr "You can read chat history but can’t send new messages."
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:168
 #: src/components/interstitials/Trending.tsx:148
 #: src/components/interstitials/TrendingVideos.tsx:139
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:103
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:172
+#: src/components/TrendingTopics.tsx:53
 msgid "You can update this later from your settings."
 msgstr ""
 
