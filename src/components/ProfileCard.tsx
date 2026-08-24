@@ -160,7 +160,7 @@ export function Avatar({
   moderationOpts,
   onPress,
   disabledPreview,
-  disableNavigation,
+  disableLink,
   liveOverride,
   size = 40,
 }: {
@@ -168,7 +168,7 @@ export function Avatar({
   moderationOpts: ModerationOpts
   onPress?: () => void
   disabledPreview?: boolean
-  disableNavigation?: boolean
+  disableLink?: boolean
   liveOverride?: boolean
   size?: number
 }) {
@@ -190,7 +190,7 @@ export function Avatar({
       profile={profile}
       moderation={moderation.ui('avatar')}
       onBeforePress={onPress}
-      disableNavigation={disableNavigation}
+      disableLink={disableLink}
       live={liveOverride ?? live}
     />
   )
