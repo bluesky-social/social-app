@@ -26,7 +26,10 @@ import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/ic
 import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {SubtleHover} from '#/components/SubtleHover'
-import {useTrendingTopicSeen} from '#/components/TrendingTopics'
+import {
+  TrendingTopicsPrompt,
+  useTrendingTopicSeen,
+} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
@@ -162,11 +165,8 @@ function Inner({feedSliceIndex}: {feedSliceIndex: number}) {
           </View>
         </View>
       </View>
-      <Prompt.Basic
+      <TrendingTopicsPrompt
         control={trendingPrompt}
-        title={l`Hide trending topics?`}
-        description={l`You can update this later from your settings.`}
-        confirmButtonCta={l`Hide`}
         onConfirm={() => {
           ax.metric('trendingTopics:hide', {context: 'interstitial'})
           setTrendingDisabled(true)
