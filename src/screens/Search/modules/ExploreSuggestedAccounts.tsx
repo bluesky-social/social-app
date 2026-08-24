@@ -13,6 +13,7 @@ import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
 import {SubtleHover} from '#/components/SubtleHover'
 import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
@@ -138,6 +139,7 @@ let SuggestedProfileCard = ({
                 <ProfileCard.Avatar
                   profile={profile}
                   moderationOpts={moderationOpts}
+                  disableNavigation={IS_WEB}
                 />
                 <ProfileCard.NameAndHandle
                   profile={profile}
