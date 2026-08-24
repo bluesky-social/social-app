@@ -19,7 +19,7 @@ import {
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Reply as Bubble} from '#/components/icons/Reply'
+import {ReplyIcon as Bubble} from '#/components/icons/nano'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import * as Skele from '#/components/Skeleton'
 import * as Toast from '#/components/Toast'

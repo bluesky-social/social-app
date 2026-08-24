@@ -9,12 +9,12 @@ import {
 
 import {s} from '#/lib/styles'
 import {atoms as a, useTheme} from '#/alf'
-import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
 import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
-  Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
-} from '#/components/icons/Heart2'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+  BubbleIcon as Bubble,
+  HeartFilledIcon as HeartIconFilled,
+  HeartIcon as HeartIconOutline,
+  RepostCorner2Icon as Repost,
+} from '#/components/icons/nano'
 
 export function LoadingPlaceholder({
   width,

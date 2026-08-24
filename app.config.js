@@ -238,6 +238,10 @@ module.exports = function (_config) {
         'expo-localization',
         'expo-web-browser',
         [
+          'react-native-nano-icons',
+          {iconSets: [{inputDir: './assets/nano-icons/app-icons'}]},
+        ],
+        [
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
         ],
