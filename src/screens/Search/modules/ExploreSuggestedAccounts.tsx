@@ -139,7 +139,7 @@ let SuggestedProfileCard = ({
                 <ProfileCard.Avatar
                   profile={profile}
                   moderationOpts={moderationOpts}
-                  disableNavigation={IS_WEB}
+                  disableLink={IS_WEB}
                 />
                 <ProfileCard.NameAndHandle
                   profile={profile}
