@@ -43,17 +43,15 @@ export function TrendingTopicsPrompt({
           color="secondary"
           onPress={onConfirm}
         />
-        {!IS_WEB && (
-          <Text
-            style={[
-              a.text_sm,
-              a.text_center,
-              t.atoms.text_contrast_medium,
-              a.py_xs,
-            ]}>
-            <Trans>You can update this later from your settings.</Trans>
-          </Text>
-        )}
+        <Text
+          style={[
+            a.text_sm,
+            IS_WEB ? a.text_left : a.text_center,
+            t.atoms.text_contrast_medium,
+            a.py_xs,
+          ]}>
+          <Trans>You can update this later from your settings.</Trans>
+        </Text>
         <Prompt.Cancel cta={l`Close`} />
       </Prompt.Actions>
     </Prompt.Outer>
